@@ -1,3 +1,6 @@
+/*eslint-disable*/
+var istanbul = require('browserify-istanbul');
+
 module.exports = function(config) {
     var webdriverConfig = {
         hostname: 'fe.nhnent.com',
@@ -8,9 +11,14 @@ module.exports = function(config) {
     config.set({
         basePath: '',
 
-        frameworks: ['jasmine'],
+        frameworks: [
+            'browserify',
+            'jasmine'
+        ],
 
         files: [
+            'node_modules/moment/moment.js',
+            'index.js',
             'src/**/*.js',
             'test/**/*.spec.js'
         ],
@@ -19,7 +27,19 @@ module.exports = function(config) {
         ],
 
         preprocessors: {
-            'src/**/*.js': ['coverage']
+            'index.js': ['browserify'],
+            'src/**/*.js': ['browserify']
+        },
+
+        browserify: {
+            debug: true,
+            bundleDelay: 1000,
+            transform:[istanbul({
+                ignore: [
+                    'index.js', 
+                    '**/test/**'
+                ]
+            })]
         },
 
         reporters: [
@@ -56,29 +76,29 @@ module.exports = function(config) {
 
         customLaunchers: {
             'IE9': {
-                base: 'WebDriver', 
-                config: webdriverConfig, 
-                browserName: 'IE9' 
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'IE9'
             },
             'IE10': {
-                base: 'WebDriver', 
-                config: webdriverConfig, 
-                browserName: 'IE10' 
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'IE10'
             },
             'IE11': {
-                base: 'WebDriver', 
-                config: webdriverConfig, 
-                browserName: 'IE11' 
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'IE11'
             },
             'Chrome-WebDriver': {
-                base: 'WebDriver', 
-                config: webdriverConfig, 
-                browserName: 'chrome' 
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'chrome'
             },
             'Firefox-WebDriver': {
-                base: 'WebDriver', 
-                config: webdriverConfig, 
-                browserName: 'firefox' 
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'firefox'
             }
         },
 
