@@ -1,15 +1,19 @@
 /*eslint-disable*/
+var istanbul = require('browserify-istanbul');
+
 module.exports = function(config) {
     config.set({
         basePath: '',
 
         frameworks: [
+            'browserify',
             'jasmine'
         ],
 
         files: [
             'node_modules/moment/moment.js',
-            'dist/app.js',
+            'index.js',
+            'src/**/*.js',
             'test/**/*.spec.js'
         ],
 
@@ -17,7 +21,19 @@ module.exports = function(config) {
         ],
 
         preprocessors: {
-            'dist/app.js': ['coverage']
+            'index.js': ['browserify'],
+            'src/**/*.js': ['browserify']
+        },
+
+        browserify: {
+            debug: true,
+            bundleDelay: 1000,
+            transform:[istanbul({
+                ignore: [
+                    'index.js', 
+                    '**/test/**'
+                ]
+            })]
         },
 
         reporters: [
