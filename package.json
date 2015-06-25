@@ -1,0 +1,28 @@
+{
+  "name": "dooray-calendar",
+  "version": "0.0.0",
+  "description": "",
+  "private": true,
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "code-snippet": "git+http://70327b4564c7a80eb61724056876b960290946dd:x-oauth-basic@github.nhnent.com/fe/code-snippet.git#master",
+    "fedoc-template": "git+http://14bfd38a036366f7ca90355d202038126127bd01:x-oauth-basic@github.nhnent.com/fe/share-fedoc-template.git",
+    "gulp": "latest",
+    "gulp-connect": "latest",
+    "jasmine-core": "latest",
+    "karma": "latest",
+    "karma-coverage": "latest",
+    "karma-jasmine": "latest",
+    "karma-junit-reporter": "latest",
+    "karma-mocha-reporter": "latest",
+    "karma-phantomjs-launcher": "latest",
+    "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
+    "moment": "^2.10.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "doc": "./node_modules/.bin/jsdoc -c jsdoc-conf.json"
+  },
+  "author": "NHNEnt FE Development Team <e0242@nhnent.com>"
+}
