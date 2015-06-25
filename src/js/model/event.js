@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var util = global.ne.util;
 var moment = require('moment');
 var model = require('./model');
 
@@ -42,7 +43,31 @@ function Event() {
  **********/
 
 Event.schema = {
-    required: ['title']
+    required: ['title'],
+    dateRange: ['starts', 'ends']
+};
+
+/**********
+ * prototype props
+ **********/
+
+/**
+ * return duration between starts and ends.
+ * @returns {moment.Duration} duration
+ */
+Event.prototype.duration = function() {
+    var starts = this.starts,
+        ends = this.ends;
+
+    if (this.isAllDay) {
+        return moment.duration('24:00:00');
+    }
+
+    if (util.isExisty(starts) && util.isExisty(ends)) {
+        return moment.duration(ends.diff(starts));
+    }
+
+    return moment.duration();
 };
 
 model.mixin(Event.prototype);
