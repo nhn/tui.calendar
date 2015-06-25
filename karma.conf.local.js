@@ -8,6 +8,7 @@ module.exports = function(config) {
         ],
 
         files: [
+            'node_modules/moment/moment.js',
             'dist/app.js',
             'test/**/*.spec.js'
         ],
