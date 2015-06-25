@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "browserify": "^10.2.4",
-    "code-snippet": "git+http://70327b4564c7a80eb61724056876b960290946dd:x-oauth-basic@github.nhnent.com/fe/code-snippet.git#master",
+    "code-snippet": "git+https://github.nhnent.com/fe/code-snippet",
     "fedoc-template": "git+http://14bfd38a036366f7ca90355d202038126127bd01:x-oauth-basic@github.nhnent.com/fe/share-fedoc-template.git",
     "gulp": "latest",
     "gulp-connect": "latest",
