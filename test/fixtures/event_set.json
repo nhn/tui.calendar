@@ -1,0 +1,11 @@
+[{
+    "title": "hunting",
+    "isAllDay": true,
+    "starts": "2015-05-01",
+    "ends": "2015-05-02"
+}, {
+    "title": "meeting",
+    "isAllDay": false,
+    "starts": "2015-05-03 12:30:00",
+    "ends": "2015-05-03 16:00:00"
+}]
