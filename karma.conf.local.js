@@ -46,6 +46,8 @@ module.exports = function(config) {
             dir: 'report/',
             reporters: [{
                 type: 'text-summary'
+            }, {
+                type: 'html'
             }]
         },
 
