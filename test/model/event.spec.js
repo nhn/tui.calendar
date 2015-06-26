@@ -33,7 +33,6 @@ describe('model/event', function() {
 
             expect(event.duration()+'').toEqual(moment.duration('00:00:00')+'');
         });
-        
     });
 });
 

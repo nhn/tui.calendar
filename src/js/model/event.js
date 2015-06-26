@@ -36,6 +36,9 @@ function Event() {
      * @type {Date}
      */
     this.ends = null;
+
+    // initialize model id
+    util.stamp(this);
 }
 
 /**********
