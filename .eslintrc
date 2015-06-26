@@ -13,6 +13,7 @@
     },
     "rules": {
         "strict": [2, "global"],
+        "no-shadow": 0,
 
         //Possible Errors 
         "no-console": 1,
