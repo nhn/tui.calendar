@@ -43,8 +43,10 @@ module.exports = function(config) {
         ],
 
         coverageReporter: {
-            type: 'html',
-            dir: 'report/'
+            dir: 'report/',
+            reporters: [{
+                type: 'text-summary'
+            }]
         },
 
         junitReporter: {
