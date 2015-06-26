@@ -111,6 +111,12 @@ describe('model/event', function() {
 
             expect(event.isSame(compare)).toBe(true);
         });
+
+        it('no error for empty some properties', function() {
+            var event = Event.create();
+
+            expect(event.isSame(new Event())).toBe(true);
+        });
     });
 });
 

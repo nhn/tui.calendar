@@ -58,6 +58,7 @@ Event.schema = {
 Event.create = function(data) {
     var event = new Event();
 
+    data = data || {};
     event.title = data.title || '';
     event.isAllDay = util.isExisty(data.isAllDay) ? data.isAllDay : false;
     event.starts = moment(data.starts);
