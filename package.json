@@ -15,6 +15,7 @@
     "karma-browserify": "latest",
     "karma-coverage": "latest",
     "karma-jasmine": "latest",
+    "karma-jasmine-jquery": "^0.1.1",
     "karma-junit-reporter": "latest",
     "karma-mocha-reporter": "latest",
     "karma-phantomjs-launcher": "latest",

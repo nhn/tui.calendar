@@ -6,6 +6,7 @@ module.exports = function(config) {
         basePath: '',
 
         frameworks: [
+            'jasmine-jquery',
             'browserify',
             'jasmine'
         ],
@@ -14,7 +15,9 @@ module.exports = function(config) {
             'node_modules/moment/moment.js',
             'index.js',
             'src/**/*.js',
-            'test/**/*.spec.js'
+            'test/prepare.js',
+            'test/**/*.spec.js',
+            'test/fixtures/**/*'
         ],
 
         exclude: [
