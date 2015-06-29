@@ -7,6 +7,13 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var karma = require('karma').server;
 
+gulp.task('default', function() {
+    karma.start({
+        configFile: path.join(__dirname, 'karma.conf.js'),
+        singleRun: true
+    });
+});
+
 gulp.task('connect', function() {
     connect.server();
 });
