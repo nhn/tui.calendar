@@ -197,7 +197,7 @@ Collection.prototype.find = function(filter) {
 /**
  * Group element by specific key values.
  *
- * The value must annotated types. use carefully.
+ * The value must primitive types(string, number, boolean). use carefully.
  * @param {(string|number|boolean)} key key property
  * @returns {object.<string, Collection>} grouped object
  */
