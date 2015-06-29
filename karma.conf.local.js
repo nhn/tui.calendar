@@ -12,7 +12,6 @@ module.exports = function(config) {
         ],
 
         files: [
-            'node_modules/moment/moment.js',
             'index.js',
             'src/**/*.js',
             'test/prepare.js',

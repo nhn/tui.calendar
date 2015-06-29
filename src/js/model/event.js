@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var moment = require('moment');
+var datetime = require('../datetime');
 var model = require('./model');
 
 /**
@@ -13,6 +13,8 @@ var model = require('./model');
  * @constructor
  */
 function Event() {
+    var starts;
+
     /**
      * title for event.
      * @type {string}
@@ -27,15 +29,16 @@ function Event() {
 
     /**
      * event starts
-     * @type {Moment}
+     * @type {Date}
      */
-    this.starts = moment();
+    starts = this.starts = new Date();
 
     /**
      * event ends
-     * @type {Moment}
+     * @type {Date}
      */
-    this.ends = moment();
+    this.ends = new Date(starts.getTime());
+    this.ends.setMinutes(starts.getMinutes() + 31);
 
     // initialize model id
     util.stamp(this);
@@ -61,8 +64,8 @@ Event.create = function(data) {
     data = data || {};
     event.title = data.title || '';
     event.isAllDay = util.isExisty(data.isAllDay) ? data.isAllDay : false;
-    event.starts = moment(data.starts);
-    event.ends = moment(data.ends);
+    event.starts = new Date(data.starts);
+    event.ends = new Date(data.ends);
 
     return event;
 };
@@ -85,11 +88,11 @@ Event.prototype.isSame = function(event) {
         return false;
     }
 
-    if (!this.starts.isSame(event.starts)) {
+    if (datetime.compare(this.starts, event.starts) !== 0) {
         return false;
     }
 
-    if (!this.ends.isSame(event.ends)) {
+    if (datetime.compare(this.ends, event.ends) !== 0) {
         return false;
     }
 
@@ -98,17 +101,17 @@ Event.prototype.isSame = function(event) {
 
 /**
  * return duration between starts and ends.
- * @returns {moment.Duration} duration
+ * @returns {Date} duration (UTC)
  */
 Event.prototype.duration = function() {
     var starts = this.starts,
         ends = this.ends;
 
     if (this.isAllDay) {
-        return moment.duration('24:00:00');
+        return new Date(datetime.MILLISECONDS_PER_DAY);
     }
 
-    return moment.duration(ends.diff(starts));
+    return new Date(ends - starts);
 };
 
 model.mixin(Event.prototype);

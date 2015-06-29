@@ -20,7 +20,6 @@
     "karma-mocha-reporter": "latest",
     "karma-phantomjs-launcher": "latest",
     "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
-    "moment": "latest",
     "vinyl-buffer": "latest",
     "vinyl-source-stream": "latest"
   },

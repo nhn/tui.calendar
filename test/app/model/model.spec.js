@@ -32,24 +32,27 @@ describe('model/model', function() {
                 expect(model.validators.dateRange({}, [])).toBe(true);
             });
 
-            it('return false when one of supplied property is not Moment object.', function() {
-                
+            it('return false then one of date is not valid date object.', function() {
+                // this will valid (null will convert to 1970-01-01 00:00:00)
                 myObj = {
-                    starts: moment('2015-05-01'),
-                    ends: moment('2015-05-02')
+                    starts: null,
+                    ends: new Date('2015-05-01')
                 };
 
                 expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(true);
 
-                myObj.ends = null;
+                myObj = {
+                    starts: 'wer',
+                    ends: null
+                };
 
                 expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(false);
             });
 
             it('return true only starts and ends range are valid.', function() {
                 myObj = {
-                    starts: moment('2015-05-03'),
-                    ends: moment('2015-05-02')
+                    starts: new Date('2015-05-03'),
+                    ends: new Date('2015-05-02')
                 };
 
                 expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(false);

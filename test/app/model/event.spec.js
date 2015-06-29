@@ -26,10 +26,10 @@ describe('model/event', function() {
             event2.title = 'dance';
             event.isAllDay = true;
             event2.isAllDay = true;
-            event.starts = moment('2015-05-01');
-            event2.starts = moment('2015-05-01');
-            event.ends = moment('2015-05-02');
-            event2.ends = moment('2015-05-02');
+            event.starts = new Date('2015/05/01');
+            event2.starts = new Date('2015/05/01');
+            event.ends = new Date('2015/05/02');
+            event2.ends = new Date('2015/05/02');
 
             expect(event.isSame(event2)).toBe(true);
         });
@@ -55,15 +55,15 @@ describe('model/event', function() {
             event2.title = 'dance';
             event.isAllDay = true;
             event2.isAllDay = true;
-            event.starts = moment('2015-05-01');
-            event2.starts = moment('2015-04-01');
+            event.starts = new Date('2015/05/01');
+            event2.starts = new Date('2015/04/01');
 
             expect(event.isSame(event2)).toBe(false);
 
-            event2.starts = moment('2015-05-01');
+            event2.starts = new Date('2015/05/01');
 
-            event.ends = moment('2015-06-01');
-            event2.ends = moment('2015-07-01');
+            event.ends = new Date('2015/06/01');
+            event2.ends = new Date('2015/07/01');
 
             expect(event.isSame(event2)).toBe(false);
         });
@@ -71,24 +71,18 @@ describe('model/event', function() {
 
     describe('duration()', function() {
         beforeEach(function() {
-            event.starts = moment('9/25 12:30', 'MM/DD HH:mm');
-            event.ends = moment('9/25 13:00', 'MM/DD HH:mm');
+            event.starts = new Date('2015-09-25T00:00:00Z');
+            event.ends = new Date('2015-09-26T05:00:00Z');
         });
 
         it('can calculate duration between starts and ends.', function() {
-            expect(event.duration()+'').toEqual(moment.duration('00:30:00')+'');
+            expect(event.duration()).toEqual(new Date('1970-01-02T05:00:00Z'));
         });
 
         it('return 24 hours when event is all day event.', function() {
             event.isAllDay = true;
+            expect(event.duration()).toEqual(new Date('1970-01-02T00:00:00Z'));
 
-            expect(event.duration()+'').toEqual(moment.duration('24:00:00')+'');
-        });
-
-        it('starts and ends are invalid then return 00:00:00.', function() {
-            event.starts = null;
-
-            expect(event.duration()+'').toEqual(moment.duration('00:00:00')+'');
         });
     });
 
@@ -97,8 +91,8 @@ describe('model/event', function() {
             var mock = {
                 title: 'hunting',
                 isAllDay: true,
-                starts: '2015-05-02',
-                ends: '2015-05-02'
+                starts: '2015/05/02',
+                ends: '2015/05/02'
             };
 
             var event = Event.create(mock);
@@ -106,8 +100,8 @@ describe('model/event', function() {
             var compare = new Event();
             compare.title = 'hunting',
             compare.isAllDay = true;
-            compare.starts = moment('2015-05-02');
-            compare.ends = moment('2015-05-02');
+            compare.starts = new Date('2015/05/02');
+            compare.ends = new Date('2015/05/02');
 
             expect(event.isSame(compare)).toBe(true);
         });

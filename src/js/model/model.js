@@ -8,8 +8,7 @@ var util = global.ne.util,
     spaceRx = /^\s*|\s*$/g,
     model;
 
-var moment = require('moment');
-var isMoment = moment.isMoment;
+var datetime = require('../datetime');
 
 /**
  * string trim
@@ -53,7 +52,7 @@ model = {
         /**
          * check supplied fields are valid dates and valid date ranges.
          * @param {object} instance model instance.
-         * @param {moment[]} fields array of date range (starts, ends)
+         * @param {Date[]} fields array of date range (starts, ends)
          * @returns {boolean} is valid date range?
          */
         dateRange: function(instance, fields) {
@@ -64,14 +63,14 @@ model = {
                 return true;
             }
 
-            starts = instance[fields[0]];
-            ends = instance[fields[1]];
+            starts = new Date(instance[fields[0]]);
+            ends = new Date(instance[fields[1]]);
 
-            if (!isMoment(starts) || !isMoment(ends)) {
+            if (!datetime.isValid(starts) || !datetime.isValid(ends)) {
                 return false;
             }
 
-            if (starts.isAfter(ends)) {
+            if (datetime.compare(starts, ends) === -1) {
                 return false;
             }
 
