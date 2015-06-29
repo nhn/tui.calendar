@@ -195,6 +195,30 @@ Collection.prototype.find = function(filter) {
 };
 
 /**
+ * Group element by specific key values.
+ *
+ * The value must annotated types. use carefully.
+ * @param {(string|number|boolean)} key key property
+ * @returns {object.<string, Collection>} grouped object
+ */
+Collection.prototype.groupBy = function(key) {
+    var result = {},
+        collection;
+
+    this.each(function(item) {
+        collection = result[item[key]];
+
+        if (!collection) {
+            collection = result[item[key]] = new Collection(this.getItemIDFn);
+        }
+
+        collection.add(item);
+    });
+
+    return result;
+};
+
+/**
  * sort a basis of supplied compare function.
  * @param {function} compareFunction compareFunction
  * @returns {array} sorted array.

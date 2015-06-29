@@ -196,6 +196,56 @@ describe('Collection', function() {
        });
    });
 
+   describe('groupBy()', function() {
+       var item1,
+           item2,
+           item3;
+
+       beforeEach(function() {
+           item1 = {_id: 1, value: 20, isGood: false, no: function() {}};
+           item2 = {_id: 2, value: 50, isGood: true, no: function() {}};
+           item3 = {_id: 4, value: 2, isGood: true, no: function() {}};
+
+           c.add(item1, item2, item3);
+       });
+
+       it('group all elements by number values.', function() {
+           var grouped = c.groupBy('value');
+
+           var c1 = new Collection();
+           c1.add(item1);
+           var c2 = new Collection();
+           c2.add(item2);
+           var c3 = new Collection();
+           c3.add(item3);
+
+           expect(grouped).toEqual({
+               '20': c1,
+               '50': c2,
+               '2': c3
+           });
+       });
+
+       it('group by boolean values.', function() {
+           var grouped = c.groupBy('isGood');
+
+           var c1 = new Collection();
+           c1.add(item1);
+           var c2 = new Collection();
+           c2.add(item2, item3);
+
+           expect(grouped).toEqual({
+               'false': c1,
+               'true': c2
+           });
+       });
+
+       it('Don\'t work properly when value are not primitive type.', function() {
+           var grouped = c.groupBy('no');
+           expect(ne.util.keys(grouped).length).not.toBe(3);
+       });
+   });
+
    describe('sort()', function() {
        var item1,
            item2,
