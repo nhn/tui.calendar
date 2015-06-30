@@ -45,4 +45,16 @@ describe('datetime', function() {
         expect(Math.abs(utc - d)).toBe(9 * 60 * 60 * 1000);
         expect(d).not.toEqual(utc);
     });
+
+    describe('isValid()', function() {
+        it('return true when supplied parameter is valid dates.', function() {
+            var valid = new Date(),
+                notDate = null,
+                notValid = new Date('qweqd');
+
+            expect(dt.isValid(valid)).toBe(true);
+            expect(dt.isValid(notDate)).toBe(false);
+            expect(dt.isValid(notValid)).toBe(false);
+        });
+    });
 });
