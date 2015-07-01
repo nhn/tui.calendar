@@ -40,6 +40,39 @@ function Collection(getItemIDFn) {
     }
 }
 
+/**********
+ * static props
+ **********/
+
+/**
+ * Merge several collections.
+ *
+ * You can\'t merge collections different _getEventID functions. Take case of use.
+ * @param {...Collection} collections collection arguments to merge
+ * @returns {Collection} merged collection.
+ */
+Collection.merge = function(collections) {    // eslint-disable-line
+    var cols = aps.call(arguments),
+        newItems = {},
+        length = 0,
+        merged = new Collection(cols[0].getItemID),
+        extend = util.extend;
+
+    forEachArr(cols, function(col) {
+        extend(newItems, col.items);
+        length += col.length;
+    });
+
+    merged.items = newItems;
+    merged.length = length;
+
+    return merged;
+};
+
+/**********
+ * prototype props
+ **********/
+
 /**
  * get model's unique id.
  * @param {object} item model instance.
