@@ -90,5 +90,53 @@ describe('model/model', function() {
             expect(model.isValid.apply(myObj)).toBe(true);
         });
     });
+
+    describe('parameterize()', function() {
+        beforeEach(function() {
+            myObj = {
+                name: 'john',
+                age: 21,
+                hasJob: false,
+                brothers: ['mayer'],
+                collection: {
+                    'numberone': 'book'
+                },
+                talk: function() {}
+            };
+        });
+
+        it('make data object for communicate with server or etc.', function() {
+            var param = model.parameterize.apply(myObj);
+
+            expect(param).toEqual({
+                name: 'john',
+                age: 21,
+                hasJob: false,
+                brothers: ['mayer'],
+                collection: {
+                    'numberone': 'book'
+                }
+            });
+
+            expect(param.talk).not.toBeDefined();
+        });
+
+        it('not deep copy for object types.', function() {
+            var param = model.parameterize.apply(myObj);
+
+            myObj.brothers.push('mike');
+
+            expect(param).toEqual({
+                name: 'john',
+                age: 21,
+                hasJob: false,
+                brothers: ['mayer', 'mike'],
+                collection: {
+                    'numberone': 'book'
+                }
+            });
+            expect(param.brothers.length).toBe(2);
+        });
+    });
 });
 

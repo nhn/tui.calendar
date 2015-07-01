@@ -110,6 +110,25 @@ model = {
     },
 
     /**
+     * Make data object form instance.
+     *
+     * It return object fill with all owned properties but exclude functions.
+     * @returns {object} Data object
+     */
+    parameterize: function() {
+        var param = {},
+            isFunc = util.isFunction;
+
+        util.forEach(this, function(value, propName) {
+            if (!isFunc(value)) {
+                param[propName] = value;
+            }
+        });
+
+        return param;
+    },
+
+    /**
      * Mixin model module to supplied target.
      * @param {Object} target The object of want to mixed.
      * @example
