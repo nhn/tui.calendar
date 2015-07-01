@@ -10,6 +10,7 @@ var Collection = require('../common/collection');
 
 /**
  * @constructor
+ * @mixes util.CustomEvents
  */
 function Base() {
     /**
@@ -32,15 +33,38 @@ Base.prototype._getEventID = function(event) {
  **********/
 
 // Create
+/**
+ * Create an event instance.
+ * @param {object} options Data object to create event.
+ * @return {Base} this
+ */
 Base.prototype.create = function(options) {
-    var event = Event.create(options);
-    this.events.add(event);
+    if (options.constructor === Event) {
+        this.events.add(options);
+    } else {
+        this.events.add(Event.create(options));
+    }
     return this;
 };
 
 // Read
-Base.prototype.find = function() {};
-Base.prototype.getDateSchedule = function() {};
+
+/**
+ * @return {Collection} colllection with seached events.
+ * TODO: inplements method
+ */
+Base.prototype.find = function() {
+    return new Collection(this._getEventID);
+};
+
+/**
+ * @param {Collection} collection from Base#find(). all of quering methods are except collection object for first argument.
+ * @returns {array} result of query.
+ * TODO: implememts method
+ */
+Base.prototype.getDateSchedule = function(collection) {
+    return [];
+};
 
 // Update
 Base.prototype.update = function() {};
@@ -52,7 +76,11 @@ Base.prototype.delete = function() {};
  * API SYNC
  **********/
 
-Base.prototype.sync = function() {}; 
+Base.prototype.sync = function() {};
+Base.prototype.fetch = function(query) {};
+
+// mixin
+util.CustomEvents.mixin(Base);
 
 module.exports = Base;
 
