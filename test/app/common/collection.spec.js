@@ -339,5 +339,18 @@ describe('Collection', function() {
             expect(spy2).not.toHaveBeenCalled();
         });
     });
+
+    describe('single()', function() {
+        it('return single element in collection.', function() {
+            var item1 = {_id:1},
+                item2 = {_id:2},
+                item3 = {_id:5};
+
+            c.add(item3, item2, item1);
+
+            expect(c.single()).toBe(item3);
+            expect(c.single()).not.toBe(item1);
+        });
+    });
 });
 

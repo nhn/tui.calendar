@@ -219,6 +219,23 @@ Collection.prototype.groupBy = function(key) {
 };
 
 /**
+ * Return single item in collection.
+ *
+ * Returned item is inserted in this collection firstly.
+ * @returns {object} item.
+ */
+Collection.prototype.single = function() {
+    var result;
+
+    this.each(function(item) {
+        result = item;
+        return false;
+    }, this);
+
+    return result;
+};
+
+/**
  * sort a basis of supplied compare function.
  * @param {function} compareFunction compareFunction
  * @returns {array} sorted array.
