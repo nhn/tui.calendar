@@ -4,9 +4,39 @@
  */
 'use strict';
 
-var opt = Object.prototype.toString;
+var util = global.ne.util,
+    opt = Object.prototype.toString;
 
-var datetime = {
+var datetime,
+    tokenFunc;
+
+tokenFunc = {
+    /**
+     * @param {Date} date date object
+     * @returns {string} four digit year number
+     */
+    'YYYY': function(date) {
+        return date.getFullYear() + '';
+    },
+
+    /**
+     * @param {Date} date date object
+     * @returns {string} two digit month number
+     */
+    'MM': function(date) {
+        return datetime.leftPad(date.getMonth() + 1, 2);
+    },
+
+    /**
+     * @param {Date} date date object
+     * @returns {string} two digit date number
+     */
+    'DD': function(date) {
+        return datetime.leftPad(date.getDate(), 2);
+    }
+};
+
+datetime = {
     /**
      * The number of milliseconds one day.
      * @type {number}
@@ -63,6 +93,49 @@ var datetime = {
      */
     toUTC: function(d) {
         return new Date(d.getTime() + (new Date()).getTimezoneOffset() * 60000);
+    },
+
+    /**
+     * pad left zero characters.
+     * @param {number} number number value to pad zero.
+     * @param {number} length pad length to want.
+     * @returns {string} padded string.
+     */
+    leftPad: function(number, length) {
+        var zero = '',
+            i = 0;
+
+        if ((number + '').length > length) {
+            return number + '';
+        }
+
+        for (; i < (length - 1); i += 1) {
+            zero += '0';
+        }
+
+        return (zero + number).slice(length * -1);
+    },
+
+    /**
+     * Return formatted string as basis of supplied string.
+     *
+     * Supported Token Lists.
+     *
+     * - YYYY => 1988
+     * - MM => 01 ~ 12
+     * - DD => 01 ~ 31
+     * @param {Date} date String want to formatted.
+     * @param {string} format format str.
+     * @returns {string}  Formatted date string.
+     * TODO: if slower performance because of iterating token. then change the method to format limitation.
+     */
+    format: function(date, format) {
+        var result = format;
+        util.forEachOwnProperties(tokenFunc, function(converter, token) {
+            result = result.replace(token, converter(date));
+        });
+
+        return result;
     }
 };
 

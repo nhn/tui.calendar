@@ -57,4 +57,32 @@ describe('datetime', function() {
             expect(dt.isValid(notValid)).toBe(false);
         });
     });
+
+    describe('leftPad()', function() {
+        it('pad zero to supplied number and length.', function() {
+            var num = 2;
+            expect(dt.leftPad(num, 2)).toBe('02');
+            expect(dt.leftPad(num, 3)).toBe('002');
+            num = 2300;
+
+            expect(dt.leftPad(num, 5)).toBe('02300');
+        });
+
+        it('if number string length longer longer then length then just convert string and return it.', function() {
+            var num = 3000;
+
+            expect(dt.leftPad(num, 2)).toBe('3000');
+        });
+    });
+
+    describe('format()', function() {
+        it('return formatted date string as basis of supplied string.', function() {
+            var birth = new Date('1988-09-25');
+            expect(dt.format(birth, '')).toBe('');
+            expect(dt.format(birth, 'YYYY')).toBe('1988');
+            expect(dt.format(birth, 'MM')).toBe('09');
+            expect(dt.format(birth, 'DD')).toBe('25');
+            expect(dt.format(birth, 'YYYYMMDD')).toBe('19880925');
+        });
+    });
 });
