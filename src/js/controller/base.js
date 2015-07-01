@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var datetime = require('../datetime');
 var Event = require('../model/event');
 var Collection = require('../common/collection');
 
@@ -18,6 +19,12 @@ function Base() {
      * @type {Collection} events
      */
     this.events = new Collection(this._getEventID);
+
+    /**
+     * collections by YYYYMMDD
+     * @type {object.<string, Collection}
+     */
+    this.dates = {};
 }
 
 /**
@@ -39,12 +46,33 @@ Base.prototype._getEventID = function(event) {
  * @return {Base} this
  */
 Base.prototype.create = function(options) {
-    if (options.constructor === Event) {
-        this.events.add(options);
-    } else {
-        this.events.add(Event.create(options));
+    var event,
+        formatted,
+        dateCols;
+
+    event = Event.create(options);
+    formatted = datetime.format(datetime.toUTC(event.starts), 'YYYYMMDD');
+
+    dateCols = this.dates[formatted];
+
+    if (!dateCols) {
+        dateCols = this.dates[formatted] = new Collection(this._getEventID);
     }
+
+    dateCols.add(event);
+
     return this;
+
+
+
+    
+
+    // if (options.constructor === Event) {
+    //     this.events.add(options);
+    // } else {
+    //     this.events.add(Event.create(options));
+    // }
+    // return this;
 };
 
 // Read
