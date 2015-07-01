@@ -101,6 +101,7 @@ Event.prototype.isSame = function(event) {
 
 /**
  * return duration between starts and ends.
+ * TODO: applicable memoization patterns for duration.
  * @returns {Date} duration (UTC)
  */
 Event.prototype.duration = function() {
