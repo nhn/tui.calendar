@@ -8,4 +8,9 @@
     "isAllDay": false,
     "starts": "2015-05-03T12:30:00Z",
     "ends": "2015-05-03T16:00:00Z"
+}, {
+    "title": "physical training",
+    "isAllDay": false,
+    "starts": "2015-05-03T18:30:00",
+    "ends": "2015-05-03T19:30:00"
 }]
