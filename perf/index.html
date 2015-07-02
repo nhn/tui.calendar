@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>date performance check</title>
+    <style>
+    html, body {
+        height: 100%;
+    }
+    div {
+        height:110%;
+    }
+    </style>
+</head>
+<body>
+    <div id="result"></div>
+    <script src="../node_modules/JSON2/json2.js"></script>
+    <script src="../node_modules/code-snippet/code-snippet.js"></script>
+    <script src="perf.js"></script>
+    <script>
+        function ajax(url, callback) {
+            var xhr;
+            if (ne.util.isExisty(ne.util.pick(window, 'XMLHttpRequest'))) {
+                xhr = new XMLHttpRequest();
+            } else if (ne.util.isExisty(ne.util.pick(window, 'ActiveXObject'))) {
+                xhr = new ActiveXObject('Microsoft.XMLHTTP'); // jshint ignore:line
+            } else {
+                return false;
+            }
+
+            xhr.open('get', url, true);
+            xhr.setRequestHeader('type', 'application/json; charset=utf-8');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                var status,
+                    response;
+
+                if (xhr.readyState === 4) {
+                    status = xhr.status;
+
+                    if ((status >= 200 && status < 300) || status === 304) {
+                        callback(JSON.parse(xhr.responseText));
+                    }
+                }
+            };
+
+            xhr.send(null);
+        }
+
+        var METHOD = 2;
+        (function() {
+            var r;
+            var cnt;
+            var d;
+            var cons = document.getElementById('result');
+
+            window.onscroll = function() {
+                var start = window.start;
+
+                if (start) {
+                    cons.innerHTML += (new Date() - start);
+                }
+            };
+
+            window.scrollTo(0, 0);
+
+            if (METHOD === 1) {
+                ajax('fixtures/date_string.json', function(res) {
+                    r = fromDateObject(res);
+                    cnt = compareDate(1, r, r.length);
+                    d = durationDate(1, r, r.length);
+
+                    window.scrollTo(0, 10);
+                    cons.innerHTML += 'date_string<br />';
+                    cons.innerHTML += r.length + '<br />';
+                    cons.innerHTML += 'compare date ' + cnt + ' times.<br />';
+                    cons.innerHTML += 'duration date ' + cnt + ' times.<br />';
+                });
+            } else if (METHOD === 2) {
+                ajax('fixtures/date_object.json', function(res) {
+                    r = fromDateObject(res);
+                    cnt = compareDate(2, r, r.length);
+                    d = durationDate(1, r, r.length);
+                    window.scrollTo(0, 10);
+                    cons.innerHTML += 'date_object<br />';
+                    cons.innerHTML += r.length + '<br />';
+                    cons.innerHTML += 'compare date ' + cnt + ' times.<br />';
+                    cons.innerHTML += 'duration date ' + cnt + ' times.<br />';
+                });
+
+            } else {
+                ajax('fixtures/date_object.json', function(res) {
+                    r = fromDateObjectCustomize(res);
+                    cnt = compareDate(3, r, r.length);
+                    d = durationDate(1, r, r.length);
+                    window.scrollTo(0, 10);
+                    cons.innerHTML += 'date_object_custom<br />';
+                    cons.innerHTML += r.length + '<br />';
+                    cons.innerHTML += 'compare date ' + cnt + ' times.<br />';
+                    cons.innerHTML += 'duration date ' + cnt + ' times.<br />';
+                });
+
+            }
+        })();
+    </script>
+</body>
+</html>
