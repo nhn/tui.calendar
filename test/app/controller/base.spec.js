@@ -20,7 +20,7 @@ describe('controller/base', function() {
 
         it('create an event model instance by supplied data object.', function() {
             ctrl.create(set[0]);
-            expect(ctrl.dates['20150501'].single().isSame(Event.create(set[0]))).toBe(true);
+            expect(ctrl.dates['20150501'].single().equals(Event.create(set[0]))).toBe(true);
         });
     });
 

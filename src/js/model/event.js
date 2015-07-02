@@ -75,11 +75,11 @@ Event.create = function(data) {
  **********/
 
 /**
- * Check two event are same.
+ * Check two event are equals (means title, isAllDay, starts, ends are same)
  * @param {Event} event Event model instance to compare.
  * @returns {boolean} Return false when not same.
  */
-Event.prototype.isSame = function(event) {
+Event.prototype.equals = function(event) {
     if (this.title !== event.title) {
         return false;
     }

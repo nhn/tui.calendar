@@ -12,7 +12,7 @@ describe('model/event', function() {
         expect(event.isAllDay).toBe(false);
     });
 
-    describe('isSame()', function() {
+    describe('equals()', function() {
         var event,
             event2;
 
@@ -31,14 +31,14 @@ describe('model/event', function() {
             event.ends = new Date('2015/05/02');
             event2.ends = new Date('2015/05/02');
 
-            expect(event.isSame(event2)).toBe(true);
+            expect(event.equals(event2)).toBe(true);
         });
 
         it('return false when title is not equals.', function() {
             event.title = 'meeting';
             event2.title = 'working';
 
-            expect(event.isSame(event2)).toBe(false);
+            expect(event.equals(event2)).toBe(false);
         });
 
         it('return false when two event has different all day flags.', function() {
@@ -47,7 +47,7 @@ describe('model/event', function() {
             event.isAllDay = true;
             event2.isAllDay = false;
 
-            expect(event.isSame(event2)).toBe(false);
+            expect(event.equals(event2)).toBe(false);
         });
 
         it('return false when two event has different starts or ends.', function() {
@@ -58,14 +58,14 @@ describe('model/event', function() {
             event.starts = new Date('2015/05/01');
             event2.starts = new Date('2015/04/01');
 
-            expect(event.isSame(event2)).toBe(false);
+            expect(event.equals(event2)).toBe(false);
 
             event2.starts = new Date('2015/05/01');
 
             event.ends = new Date('2015/06/01');
             event2.ends = new Date('2015/07/01');
 
-            expect(event.isSame(event2)).toBe(false);
+            expect(event.equals(event2)).toBe(false);
         });
     });
 
@@ -103,13 +103,13 @@ describe('model/event', function() {
             compare.starts = new Date('2015/05/02');
             compare.ends = new Date('2015/05/02');
 
-            expect(event.isSame(compare)).toBe(true);
+            expect(event.equals(compare)).toBe(true);
         });
 
         it('no error for empty some properties', function() {
             var event = Event.create();
 
-            expect(event.isSame(new Event())).toBe(true);
+            expect(event.equals(new Event())).toBe(true);
         });
     });
 });
