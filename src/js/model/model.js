@@ -1,5 +1,5 @@
 /**
- * @fileoverview Mixin module for models. it provide simple model validator.
+ * @fileoverview Mixin module for models.
  * @author NHN Ent. FE Development Team <e0242@nhnent.com>
  */
 'use strict';
