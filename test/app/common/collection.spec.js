@@ -348,8 +348,7 @@ describe('Collection', function() {
 
             c.add(item3, item2, item1);
 
-            expect(c.single()).toBe(item3);
-            expect(c.single()).not.toBe(item1);
+            expect([item1, item2, item3]).toContain(c.single());
         });
     });
 
