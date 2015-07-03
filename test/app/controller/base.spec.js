@@ -7,7 +7,7 @@ describe('controller/base', function() {
 
     beforeEach(function() {
         ctrl = new Base();
-        set = getJSONFixture('event_set.json');
+        set = getJSONFixture('event_set_string.json');
     });
 
     describe('create2()', function() {
