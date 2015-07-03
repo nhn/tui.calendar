@@ -51,7 +51,7 @@ Base.prototype.create = function(options) {
         dateCols;
 
     event = Event.create(options);
-    formatted = datetime.format(datetime.toUTC(event.starts), 'YYYYMMDD');
+    formatted = datetime.format(event.starts, 'YYYYMMDD');
 
     dateCols = this.dates[formatted];
 
@@ -62,17 +62,6 @@ Base.prototype.create = function(options) {
     dateCols.add(event);
 
     return this;
-
-
-
-    
-
-    // if (options.constructor === Event) {
-    //     this.events.add(options);
-    // } else {
-    //     this.events.add(Event.create(options));
-    // }
-    // return this;
 };
 
 // Read
