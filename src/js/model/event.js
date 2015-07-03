@@ -38,7 +38,7 @@ function Event() {
      * @type {Date}
      */
     this.ends = new Date(starts.getTime());
-    this.ends.setMinutes(starts.getMinutes() + 31);
+    this.ends.setMinutes(starts.getMinutes() + 30);
 
     // initialize model id
     util.stamp(this);
