@@ -63,15 +63,35 @@ describe('datetime', function() {
             var num = 2;
             expect(dt.leftPad(num, 2)).toBe('02');
             expect(dt.leftPad(num, 3)).toBe('002');
-            num = 2300;
+            num = 2300; 
 
             expect(dt.leftPad(num, 5)).toBe('02300');
         });
 
-        it('if number string length longer longer then length then just convert string and return it.', function() {
+        it('if number string length longer then length, then just convert string and return it.', function() {
             var num = 3000;
 
             expect(dt.leftPad(num, 2)).toBe('3000');
+        });
+    });
+
+    describe('parse()', function() {
+        it('parse date string for safe usage.', function() {
+            var str1 = '2015-05-01 12:20:00',
+                str2 = '2015/05/01 10:00:00';
+
+            expect(dt.parse(str2)).toEqual(new Date(2015, 5, 1, 10, 0, 0));
+            expect(dt.parse(str1)).toEqual(new Date(2015, 5, 1, 12, 20, 0));
+        });
+
+        it('return false when supplied date string is not valid.', function() {
+            var valid = '2015-05-01 00:00:00';
+            var notValid = '2015-5-1 3:00:00';
+            var notValid2 = '2015-06-21T22:00:00Z';    // ISO date format.
+
+            expect(dt.parse(valid)).not.toBe(false);
+            expect(dt.parse(notValid)).toBe(false);
+            expect(dt.parse(notValid2)).toBe(false);
         });
     });
 

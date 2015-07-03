@@ -7,6 +7,8 @@
 var util = global.ne.util,
     opt = Object.prototype.toString;
 
+var dateFormatRx = /^\d{4}(-|\/)\d{2}(-|\/)\d{2} \d{2}:\d{2}:\d{2}$/;
+
 var datetime,
     tokenFunc;
 
@@ -114,6 +116,35 @@ datetime = {
         }
 
         return (zero + number).slice(length * -1);
+    },
+
+    /**
+     * Convert date string to date object.
+     *
+     * Only listed below formats avaliable.
+     *
+     * - YYYY/MM/DD HH:mm:SS
+     * - YYYY-MM-DD HH:mm:SS
+     *
+     * @param {string} str Formatted string.
+     * @returns {(Date|boolean)} Converted Date object. when supplied str is not available then return false.
+     */
+    parse: function(str) {
+        var separator,
+            parts,
+            ymd,
+            hms;
+
+        if (!dateFormatRx.test(str)) {
+            return false;
+        }
+
+        separator = ~str.indexOf('/') ? '/' : '-';
+        parts = str.split(' ');
+        ymd = parts[0].split(separator);
+        hms = parts[1].split(':');
+
+        return new Date(+ymd[0], +ymd[1], +ymd[2], +hms[0], +hms[1], +hms[2]);
     },
 
     /**
