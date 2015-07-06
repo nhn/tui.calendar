@@ -1,46 +1,61 @@
 'use strict';
 (function(w) {
     var cons = document.getElementById('cons');
-    var SWITCH = 1;
+    var SWITCH = 3;
 
-    window.onscroll = function() {
-        if (!window.starts) {
+    w.onscroll = function() {
+        if (!w.starts) {
             return;
         }
-        cons.innerHTML += (new Date()) - window.starts + ' ms';
+        cons.innerHTML += (new Date()) - w.starts + ' ms';
     };
-    window.scrollTo(0, 0);
+    w.scrollTo(0, 0);
 
-    window.perf.ajax('numbers.json', function(response) {
-        window.starts = new Date();
+    w.perf.ajax('numbers2.json', function(response) {
+        w.starts = new Date();
+
+        function compare(_a, _b) {
+            var a = _a,
+                b = _b;
+
+            if (a.f > b.f) {
+                return 1;
+            } else if (a.f < b.f) {
+                return -1;
+            } else if (a.s > b.s) {
+                return 1;
+            } else if (a.s < b.s) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
 
         switch (SWITCH) {
             case 1:
                 cons.innerHTML += 'browser sort <br />';
-                window.result = response.sort(function(a, b) {
-                    var _a = a,
-                        _b = b;
-
-                    return _a - _b;
-                });
+                w.result = response.sort(compare);
                 break;
             case 2:
                 cons.innerHTML += 'insertion sort <br />';
-                w.sort.insertion(response, w.compare.num);
+                w.sort.insertion(response, compare);
                 w.result = response;
                 break;
             case 3:
                 cons.innerHTML += 'quick sort <br />';
-                w.result = w.sort.quick(response, w.compare.num);
+                w.result = w.sort.quick(response, compare);
                 break;
             case 4:
                 cons.innerHTML += 'merge sort <br />';
-                window.result = w.sort.merge(response, w.compare.num);
+                w.result = w.sort.merge(response, compare);
                 break;
+            case 5:
+                cons.innerHTML += 'heap sort<br />';
+                w.result = w.sort.heap(response, compare);
             default:
                 break;
         }
 
-        window.scrollTo(0, 10);
+        w.scrollTo(0, 10);
     });
 })(window);

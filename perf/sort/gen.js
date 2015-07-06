@@ -9,7 +9,7 @@ function getRandomInt(min, max) {
   return ((Math.random() * (max - min)) + min) | 0;
 }
 
-for (var i = 0; i < 5000; i++) {
+for (var i = 0; i < 10000; i++) {
     result.push(getRandomInt(1, 500));
 
     result2.push({

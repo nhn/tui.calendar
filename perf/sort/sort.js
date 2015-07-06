@@ -101,10 +101,63 @@
         return arr;
     }
 
+    /**********
+     * Heap Sort
+     **********/
+
+    function swap(arr, from, to) {
+        var tmp = arr[to];
+        arr[to] = arr[from];
+        arr[from] = tmp;
+    }
+
+    function heapify(arr, size, i, compare) {
+        var left = i * 2 + 1,
+            right = i * 2 + 2,
+            largest;
+
+        if (left < size && compare(arr[left], arr[i]) > 0) {
+            largest = left;
+        } else {
+            largest = i;
+        }
+
+        if (right < size && compare(arr[right], arr[largest]) > 0) {
+            largest = right;
+        }
+
+        if (largest !== i) {
+            swap(arr, i, largest);
+            heapify(arr, size, largest, compare);
+        }
+    }
+
+    function buildHeap(arr, size, compare) {
+        var len = arr.length,
+            i = len / 2 | 0;
+
+        for (; i >= 0; i -= 1) {
+            heapify(arr, size, i, compare);
+        }
+    }
+
+    function heapSort(arr, compare) {
+        var size = arr.length;
+        buildHeap(arr, size, compare);
+        while (size > 1) {
+            swap(arr, 0, size - 1);
+            size -= 1;
+            heapify(arr, size, 0, compare);
+        }
+
+        return arr;
+    }
+
     w.sort = {
         insertion: insertionSort,
         quick: quickSort,
-        merge: mergeSort
+        merge: mergeSort,
+        heap: heapSort
     };
 })(window);
 
