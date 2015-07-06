@@ -6,8 +6,6 @@
 
 var util = global.ne.util;
 var datetime = require('../datetime');
-var Event = require('../model/event');
-var Collection = require('../common/collection');
 
 /**
  * @constructor
@@ -15,10 +13,9 @@ var Collection = require('../common/collection');
  */
 function Base() {
     /**
-     * Event collection instance
-     * @type {Collection} events
+     * @type {object.<string, Event[]>} event collection grouped by dates.
      */
-    this.events = new Collection(this._getEventID);
+    this.dates = {};
 }
 
 /**
@@ -40,11 +37,15 @@ Base.prototype._getEventID = function(event) {
  * @return {Base} this
  */
 Base.prototype.create = function(options) {
-    if (options.constructor === Event) {
-        this.events.add(options);
-    } else {
-        this.events.add(Event.create(options));
+    var event = Event.create(options),
+        ymd = datetime.format(event.starts, 'YYYYMMDD'),
+        targetDate = this.dates[ymd];
+
+    if (!targetDate) {
+        targetDate = this.dates[ymd] = [];
     }
+
+    targetDate.push(event);
 
     return this;
 };

@@ -14,6 +14,17 @@ var datetime,
 
 tokenFunc = {
     /**
+     * @param {Date} date date object.
+     * @returns {string} YYYYMMDD
+     */
+    'YYYYMMDD': function(date) {
+        return [
+            date.getFullYear(),
+            datetime.leftPad(date.getMonth() + 1, 2),
+            datetime.leftPad(date.getDate(), 2)
+        ].join('');
+    },
+    /**
      * @param {Date} date date object
      * @returns {string} four digit year number
      */
@@ -155,10 +166,10 @@ datetime = {
      * - YYYY => 1988
      * - MM => 01 ~ 12
      * - DD => 01 ~ 31
+     * - YYYYMMDD => 19880925
      * @param {Date} date String want to formatted.
      * @param {string} format format str.
      * @returns {string}  Formatted date string.
-     * TODO: if slower performance because of iterating token. then change the method to format limitation.
      */
     format: function(date, format) {
         var result = format;
