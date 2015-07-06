@@ -37,7 +37,7 @@
             window.scrollTo(0, 0);
 
             if (METHOD === 1) {
-                ajax('fixtures/date_string.json', function(res) {
+                ajax('date_string.json', function(res) {
                     r = fromDateObject(res);
                     cnt = compareDate(1, r, r.length);
                     d = durationDate(1, r, r.length);
@@ -49,7 +49,7 @@
                     cons.innerHTML += 'duration date ' + cnt + ' times.<br />';
                 });
             } else if (METHOD === 2) {
-                ajax('fixtures/date_object.json', function(res) {
+                ajax('date_object.json', function(res) {
                     r = fromDateObject(res);
                     cnt = compareDate(2, r, r.length);
                     d = durationDate(1, r, r.length);
@@ -61,7 +61,7 @@
                 });
 
             } else {
-                ajax('fixtures/date_object.json', function(res) {
+                ajax('date_object.json', function(res) {
                     r = fromDateObjectCustomize(res);
                     cnt = compareDate(3, r, r.length);
                     d = durationDate(1, r, r.length);

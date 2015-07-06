@@ -57,6 +57,6 @@ do {
     });
 } while (current.isBefore(END_DATE))
 
-fs.writeFileSync('fixtures/date_string.json', JSON.stringify(result1));
-fs.writeFileSync('fixtures/date_object.json', JSON.stringify(result2));
+fs.writeFileSync('date_string.json', JSON.stringify(result1));
+fs.writeFileSync('date_object.json', JSON.stringify(result2));
 

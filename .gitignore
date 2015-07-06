@@ -53,3 +53,6 @@ demo
 report
 dist
 *.vim
+
+# performance tester fixtures
+perf/**/*.json
