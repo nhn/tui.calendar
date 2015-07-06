@@ -16,37 +16,9 @@
     <div id="result"></div>
     <script src="../node_modules/JSON2/json2.js"></script>
     <script src="../node_modules/code-snippet/code-snippet.js"></script>
+    <script src="../common-perf.js"></script>
     <script src="perf.js"></script>
     <script>
-        function ajax(url, callback) {
-            var xhr;
-            if (ne.util.isExisty(ne.util.pick(window, 'XMLHttpRequest'))) {
-                xhr = new XMLHttpRequest();
-            } else if (ne.util.isExisty(ne.util.pick(window, 'ActiveXObject'))) {
-                xhr = new ActiveXObject('Microsoft.XMLHTTP'); // jshint ignore:line
-            } else {
-                return false;
-            }
-
-            xhr.open('get', url, true);
-            xhr.setRequestHeader('type', 'application/json; charset=utf-8');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = function() {
-                var status,
-                    response;
-
-                if (xhr.readyState === 4) {
-                    status = xhr.status;
-
-                    if ((status >= 200 && status < 300) || status === 304) {
-                        callback(JSON.parse(xhr.responseText));
-                    }
-                }
-            };
-
-            xhr.send(null);
-        }
-
         var METHOD = 2;
         (function() {
             var r;
