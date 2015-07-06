@@ -10,21 +10,7 @@ describe('controller/base', function() {
         set = getJSONFixture('event_set_string.json');
     });
 
-    describe('create2()', function() {
-        it('when created evnets, grouped them by YYYYMMDD formats.', function() {
-            ctrl.create(set[1]);
-            expect(ctrl.dates['20150503']).toBeDefined();
-            ctrl.create(set[2]);
-            expect(ctrl.dates['20150503'].length).toBe(2);
-        });
-
-        it('create an event model instance by supplied data object.', function() {
-            ctrl.create(set[0]);
-            expect(ctrl.dates['20150501'].single().equals(Event.create(set[0]))).toBe(true);
-        });
-    });
-
-    xdescribe('create()', function() {
+    describe('create()', function() {
         var created;
 
         it('return itself for chaining pattern.', function() {
@@ -36,8 +22,8 @@ describe('controller/base', function() {
 
             expect(ctrl.events.length).toBe(1);
             created = ctrl.events.single();
-            expect(created.starts).toEqual(new Date('2015-05-01'));
-            expect(created.starts).not.toEqual(new Date('2015-01-01'));
+            expect(created.starts).toEqual(new Date('2015/05/01'));
+            expect(created.starts).not.toEqual(new Date('2015/01/01'));
             expect(created.isAllDay).toBe(true);
         });
 

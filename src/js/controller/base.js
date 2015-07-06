@@ -19,12 +19,6 @@ function Base() {
      * @type {Collection} events
      */
     this.events = new Collection(this._getEventID);
-
-    /**
-     * collections by YYYYMMDD
-     * @type {object.<string, Collection}
-     */
-    this.dates = {};
 }
 
 /**
@@ -46,20 +40,11 @@ Base.prototype._getEventID = function(event) {
  * @return {Base} this
  */
 Base.prototype.create = function(options) {
-    var event,
-        formatted,
-        dateCols;
-
-    event = Event.create(options);
-    formatted = datetime.format(event.starts, 'YYYYMMDD');
-
-    dateCols = this.dates[formatted];
-
-    if (!dateCols) {
-        dateCols = this.dates[formatted] = new Collection(this._getEventID);
+    if (options.constructor === Event) {
+        this.events.add(options);
+    } else {
+        this.events.add(Event.create(options));
     }
-
-    dateCols.add(event);
 
     return this;
 };
