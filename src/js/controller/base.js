@@ -6,6 +6,9 @@
 
 var util = global.ne.util;
 var datetime = require('../datetime');
+var array = require('../common/array');
+
+var mabs = Math.abs;
 
 /**
  * @constructor
@@ -31,13 +34,24 @@ function Base() {
 Base.prototype.create = function(options) {
     var event = Event.create(options),
         ymd = datetime.format(event.starts, 'YYYYMMDD'),
-        targetDate = this.dates[ymd];
+        eventsInDate = this.dates[ymd],
+        index;
 
-    if (!targetDate) {
-        targetDate = this.dates[ymd] = [];
+    if (!eventsInDate) {
+        eventsInDate = this.dates[ymd] = [];
     }
 
-    targetDate.push(event);
+    // sort
+    //targetDate.push(event);
+    index = array.bsearch(
+        eventsInDate,
+        event.starts.getTime(),
+        function(e) {
+            return e.starts.getTime();
+        },
+        array.compare.num.asc
+    );
+
 
     return this;
 };
