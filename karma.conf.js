@@ -18,6 +18,7 @@ module.exports = function(config) {
         ],
 
         files: [
+            'node_modules/underscore/underscore.js',
             'index.js',
             'src/**/*.js',
             'test/prepare.js',

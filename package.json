@@ -21,6 +21,7 @@
     "karma-phantomjs-launcher": "latest",
     "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
     "moment": "^2.10.3",
+    "underscore": "^1.8.3",
     "vinyl-buffer": "latest",
     "vinyl-source-stream": "latest"
   },
