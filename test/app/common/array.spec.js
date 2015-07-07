@@ -1,5 +1,7 @@
 /*eslint-disable*/
+var util = ne.util;
 var array = ne.dooray.calendar.array;
+var Event = ne.dooray.calendar.Event;
 describe('common/array', function() {
     describe('common compare methods', function() {
         describe('compare.num', function() {
@@ -45,6 +47,45 @@ describe('common/array', function() {
             it('descIgnoreCase', function() {
                 arr.sort(array.compare.str.descIgnoreCase);
                 expect(arr).toEqual(['Z', 'x', 'f', 'e', 'd', 'c', 'c', 'B', 'a']);
+            });
+        });
+
+        describe('boolean', function() {
+            var arr;
+
+            beforeEach(function() {
+                arr = [false, true, false];
+            });
+
+            it('asc()', function() {
+                arr.sort(array.compare.bool.asc);
+                expect(arr).toEqual([true, false, false]);
+            });
+
+            it('desc()', function() {
+                arr.sort(array.compare.bool.desc);
+                expect(arr).toEqual([false, false, true]);
+            });
+        });
+
+        xdescribe('Event', function() {
+            var fixtures,
+                events;
+
+            beforeEach(function() {
+                fixtures = getJSONFixture('event_set_string2.json');
+                events = [];
+            });
+
+            it('isAllDay ASC, starts ASC, id ASC', function() {
+                util.forEach(fixtures, function(data) {
+                    events.push(Event.create(data));
+                });
+                console.log('before', _.pluck(events, 'title'));
+
+                events.sort(array.compare.event.asc);
+
+                console.log('after', _.pluck(events, 'title'));
             });
         });
     });
