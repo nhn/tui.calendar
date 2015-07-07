@@ -18,14 +18,6 @@ function Base() {
     this.dates = {};
 }
 
-/**
- * @param {Event} event The event instance.
- * @returns {number} The number of event's unique id.
- */
-Base.prototype._getEventID = function(event) {
-    return util.stamp(event);
-};
-
 /**********
  * CRUD
  **********/
