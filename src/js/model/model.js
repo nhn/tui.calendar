@@ -70,7 +70,7 @@ model = {
                 return false;
             }
 
-            if (datetime.compare(starts, ends) === -1) {
+            if (datetime.compare(starts, ends) === 1) {
                 return false;
             }
 
