@@ -205,21 +205,38 @@ function stringDESCIgnoreCase(_a, _b) {
 
 function eventASC(a, b) {
     /*
-     * 종일일정의 경우
-     * - 기간이 긴 순
-     * - 생성시간이 빠른 순
-     * 종일일정이 아닌 경우
-     * - 시작시간이 빠른 순
-     * - 기간이 긴 순
-     * - 생성시간이 빠른 순 
+     * - 종일일정 먼저
+     * - 시작시간 빠른 순
+     * - 기간 긴 순
+     * - 생성시간 빠른 순
      */
-    var allDayCompare = booleanASC(a, b),
-        dateCompare,
-        durationCompare,
-        stampA,
-        stampB,
-        durationA,
-        durationB;
+    var stampA = util.stamp(a),
+        stampB = util.stamp(b),
+        durationA = a.duration(),
+        durationB = b.duration(),
+        allDayCompare,
+        startsCompare,
+        durationCompare;
+
+    allDayCompare = booleanASC(a.isAllDay, b.isAllDay);
+
+    if (allDayCompare) {
+        return allDayCompare;
+    }
+
+    startsCompare = datetime.compare(a.starts, b.starts);
+
+    if (startsCompare) {
+        return startsCompare;
+    }
+
+    durationCompare = datetime.compare(durationA, durationB);
+
+    if (durationCompare) {
+        return durationCompare;
+    }
+
+    return stampA - stampB;
 }
 
 module.exports = {

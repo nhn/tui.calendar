@@ -68,7 +68,7 @@ describe('common/array', function() {
             });
         });
 
-        xdescribe('Event', function() {
+        describe('Event', function() {
             var fixtures,
                 events;
 
@@ -81,11 +81,16 @@ describe('common/array', function() {
                 util.forEach(fixtures, function(data) {
                     events.push(Event.create(data));
                 });
-                console.log('before', _.pluck(events, 'title'));
 
                 events.sort(array.compare.event.asc);
 
-                console.log('after', _.pluck(events, 'title'));
+                expect(_.pluck(events, 'title')).toEqual([
+                    'hunting',
+                    '평가기간',
+                    'drawing study',
+                    'meeting',
+                    'physical training'
+                ])
             });
         });
     });
