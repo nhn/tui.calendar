@@ -79,9 +79,9 @@ datetime = {
         var _d1 = d1.getTime(),
             _d2 = d2.getTime();
 
-        if (_d1 > _d2) {
+        if (_d1 < _d2) {
             return -1;
-        } else if (_d1 < _d2) {
+        } else if (_d1 > _d2) {
             return 1;
         }
         return 0;

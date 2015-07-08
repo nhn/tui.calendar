@@ -18,7 +18,7 @@ describe('datetime', function() {
 
             d2.setMinutes(d2.getMinutes() + 30);
 
-            expect(dt.compare(d2, d1)).toBe(-1);
+            expect(dt.compare(d2, d1)).toBe(1);
         });
 
         it('return 0 when two date are equals.', function() {
@@ -34,7 +34,7 @@ describe('datetime', function() {
 
             d2.setMinutes(d2.getMinutes() + 30);
 
-            expect(dt.compare(d1, d2)).toBe(1);
+            expect(dt.compare(d1, d2)).toBe(-1);
         });
     });
 
