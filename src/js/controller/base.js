@@ -41,17 +41,14 @@ Base.prototype.create = function(options) {
         eventsInDate = this.dates[ymd] = [];
     }
 
-    // sort
-    //targetDate.push(event);
     index = array.bsearch(
         eventsInDate,
-        event.starts.getTime(),
-        function(e) {
-            return e.starts.getTime();
-        },
-        array.compare.num.asc
+        event,
+        null,
+        array.compare.event.asc
     );
 
+    eventsInDate.splice(Math.abs(index), 0, event);
 
     return this;
 };
