@@ -15,9 +15,9 @@ describe('controller/base', function() {
 
         it('calculate contain dates for specific events.', function() {
             var expected = [
-                new Date(2015, 5, 1),
-                new Date(2015, 5, 2),
-                new Date(2015, 5, 3)
+                new Date('2015/05/01'),
+                new Date('2015/05/02'),
+                new Date('2015/05/03')
             ];
 
             event = Event.create({
@@ -32,9 +32,9 @@ describe('controller/base', function() {
 
         it('can calculate non all day event.', function() {
             var expected = [
-                new Date(2015, 5, 1),
-                new Date(2015, 5, 2),
-                new Date(2015, 5, 3)
+                new Date('2015/05/01'),
+                new Date('2015/05/02'),
+                new Date('2015/05/03')
             ];
 
             event = Event.create({
@@ -48,23 +48,32 @@ describe('controller/base', function() {
         });
     });
 
-    xdescribe('create()', function() {
+    describe('createEvent()', function() {
         var created;
 
         it('return itself for chaining pattern.', function() {
-            expect(ctrl.create(set[0])).toBe(ctrl);
+            var event = Event.create(set[0]);
+            expect(event.equals(ctrl.createEvent(set[0]))).toBe(true);
         });
 
-        it('when created evnets, grouped them by YYYYMMDD formats.', function() {		
-            ctrl.create(set[1]);		
-            expect(ctrl.dates['20150503']).toBeDefined();		
-            ctrl.create(set[2]);		
-            expect(ctrl.dates['20150503'].length).toBe(2);		
-        });		
-        
-        it('create an event model instance by supplied data object.', function() {		
-            ctrl.create(set[0]);		
-            expect(ctrl.dates['20150501'][0].equals(Event.create(set[0]))).toBe(true);		
+        it('create event instance by raw event data.', function() {
+            var id = util.stamp(ctrl.createEvent(set[0])),
+                id2 = util.stamp(ctrl.createEvent(set[1])),
+                id3;
+
+            id3 = util.stamp(ctrl.createEvent({
+                title: 'A',
+                isAllDay: false,
+                starts: '2015/05/02 12:30:00',
+                ends: '2015/05/03 09:20:00'
+            }));
+
+            expect(ctrl.events.length).toBe(3);
+            expect(ctrl.dateMatrix).toEqual({
+                '20150501': [id],
+                '20150502': [id, id3],
+                '20150503': [id2, id3]
+            });
         });
     });
 });

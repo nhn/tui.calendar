@@ -27,11 +27,6 @@ function Base() {
      * @type {object.<string, array>}
      */
     this.dateMatrix = {};
-
-    /**
-     * @type {object.<string, Event[]>} event collection grouped by dates.
-     */
-    this.dates = {};
 }
 
 /**
@@ -67,13 +62,43 @@ Base.prototype._getContainDatesInEvent = function(event) {
  * CRUD
  **********/
 
-// Create
 /**
- * Create an event instance.
+ * Create an event instance from raw data.
  * @param {object} options Data object to create event.
- * @return {Base} this
+ * @returns {Event} The instance of Event that created.
  */
-Base.prototype.create = function(options) {
+Base.prototype.createEvent = function(options) {
+    return this.addEvent(Event.create(options));
+};
+
+/**
+ * Add an event instance.
+ * @param {Event} event The instance of Event.
+ * @returns {Event} The instance of Event that added.
+ */
+Base.prototype.addEvent = function(event) {
+    var ownEvents = this.events,
+        ownMatrix = this.dateMatrix,
+        matrix,
+        containDates = this._getContainDatesInEvent(event),
+        dformat = datetime.format,
+        stamp = util.stamp,
+        key;
+
+    ownEvents.add(event);
+
+    util.forEach(containDates, function(date) {
+        key = dformat(date, 'YYYYMMDD');
+        matrix = ownMatrix[key];
+
+        if (!matrix) {
+            matrix = ownMatrix[key] = [];
+        }
+
+        matrix.push(stamp(event));
+    });
+
+    return event;
 };
 
 // Read
