@@ -100,7 +100,7 @@ datetime = {
     },
 
     /**
-     * convert non UTC date to UTC date.
+     * convert non local date to UTC date.
      * @param {Date} d Date to convert UTC.
      * @returns {Date} The UTC Date.
      */
