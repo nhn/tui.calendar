@@ -48,7 +48,7 @@ Base.prototype.create = function(options) {
         array.compare.event.asc
     );
 
-    eventsInDate.splice(Math.abs(index), 0, event);
+    eventsInDate.splice(mabs(index), 0, event);
 
     return this;
 };
