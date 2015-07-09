@@ -175,6 +175,26 @@ datetime = {
     },
 
     /**
+     * Return 00:00:00 supplied date.
+     * @param {Date} date date.
+     * @returns {Date} start date.
+     */
+    start: function(date) {
+        var raw = datetime.raw(date);
+        return new Date(raw.y, raw.M, raw.d);
+    },
+
+    /**
+     * Return 23:59:59 supplied date.
+     * @param {Date} date date.
+     * @returns {Date} end date.
+     */
+    end: function(date) {
+        var raw = datetime.raw(date);
+        return new Date(raw.y, raw.M, raw.d, 23, 59, 59);
+    },
+
+    /**
      * Return formatted string as basis of supplied string.
      *
      * Supported Token Lists.

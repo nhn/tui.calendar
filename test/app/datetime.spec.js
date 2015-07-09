@@ -2,6 +2,16 @@
 var dt = ne.dooray.calendar.datetime;
 describe('datetime', function() {
 
+    it('start() return 00:00:00 supplied date.', function() {
+        var d = new Date('2015/05/21 18:30:00');
+        expect(dt.start(d)).toEqual(new Date('2015/05/21'));
+    });
+
+    it('end() return 23:59:59 supplied date.', function() {
+        var d = new Date('2015/05/21 18:30:00');
+        expect(dt.end(d)).toEqual(new Date('2015/05/21 23:59:59'));
+    });
+
     it('raw() return date object from Date.', function() {
         var d = new Date('2015/05/01 13:20:05');
 
