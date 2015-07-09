@@ -59,14 +59,7 @@ describe('controller/base', function() {
         it('create event instance by raw event data.', function() {
             var id = util.stamp(ctrl.createEvent(set[0])),
                 id2 = util.stamp(ctrl.createEvent(set[1])),
-                id3;
-
-            id3 = util.stamp(ctrl.createEvent({
-                title: 'A',
-                isAllDay: false,
-                starts: '2015/05/02 12:30:00',
-                ends: '2015/05/03 09:20:00'
-            }));
+                id3 = util.stamp(ctrl.createEvent(set[3]));
 
             expect(ctrl.events.length).toBe(3);
             expect(ctrl.dateMatrix).toEqual({
@@ -74,6 +67,45 @@ describe('controller/base', function() {
                 '20150502': [id, id3],
                 '20150503': [id2, id3]
             });
+        });
+    });
+
+    describe('findByDateRange()', function() {
+        var eventList,
+            idList;
+
+        beforeEach(function() {
+
+            eventList = [];
+            idList = [];
+
+            util.forEach(set, function(data) {
+                var item = ctrl.createEvent(data);
+                eventList.push(item);
+                idList.push(util.stamp(item));
+            });
+
+            /*
+             * matrix: {
+             * '20150501': [id1],
+             * '20150502': [id1, id4],
+             * '20150503': [id2, id3, id4]
+             * }
+             */
+        });
+
+        it('by YMD', function() {
+            var expected = {
+                '20150501': [eventList[0]],
+                '20150502': [eventList[0], eventList[3]]
+            };
+
+            var starts = new Date('2015/04/30'),
+                ends = new Date('2015/05/02');
+
+            var result = ctrl.findByDateRange(starts, ends);
+
+            expect(result).toEqual(expected);
         });
     });
 });
