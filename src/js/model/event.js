@@ -6,11 +6,14 @@
 
 var util = global.ne.util;
 var datetime = require('../datetime');
-var model = require('./model');
+var dirty = require('../common/dirty');
+var model = require('../common/model');
 
 /**
  * The model of calendar events.
  * @constructor
+ * @mixes dirty
+ * @mixes model
  */
 function Event() {
     var starts;
@@ -116,6 +119,7 @@ Event.prototype.duration = function() {
 };
 
 model.mixin(Event.prototype);
+dirty.mixin(Event.prototype);
 
 module.exports = Event;
 
