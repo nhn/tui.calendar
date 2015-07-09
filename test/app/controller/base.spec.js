@@ -10,7 +10,45 @@ describe('controller/base', function() {
         set = getJSONFixture('event_set_string.json');
     });
 
-    describe('create()', function() {
+    describe('_getContainDatesInEvent()', function() {
+        var event;
+
+        it('calculate contain dates for specific events.', function() {
+            var expected = [
+                new Date(2015, 5, 1),
+                new Date(2015, 5, 2),
+                new Date(2015, 5, 3)
+            ];
+
+            event = Event.create({
+                title: 'A',
+                isAllDay: true,
+                starts: '2015/05/01',
+                ends: '2015/05/03'
+            });
+
+            expect(ctrl._getContainDatesInEvent(event)).toEqual(expected);
+        });
+
+        it('can calculate non all day event.', function() {
+            var expected = [
+                new Date(2015, 5, 1),
+                new Date(2015, 5, 2),
+                new Date(2015, 5, 3)
+            ];
+
+            event = Event.create({
+                title: 'A',
+                isAllDay: false,
+                starts: '2015/05/01 12:30:00',
+                ends: '2015/05/03 09:20:00'
+            });
+
+            expect(ctrl._getContainDatesInEvent(event)).toEqual(expected);
+        });
+    });
+
+    xdescribe('create()', function() {
         var created;
 
         it('return itself for chaining pattern.', function() {

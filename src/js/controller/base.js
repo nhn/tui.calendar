@@ -7,6 +7,7 @@
 var util = global.ne.util;
 var datetime = require('../datetime');
 var array = require('../common/array');
+var Collection = require('../common/collection');
 
 var mabs = Math.abs;
 
@@ -16,10 +17,51 @@ var mabs = Math.abs;
  */
 function Base() {
     /**
+     * events collection.
+     * @type {Collection}
+     */
+    this.events = new Collection(this._getEventID);
+
+    /**
+     * Matrix for multidate events.
+     * @type {object.<string, array>}
+     */
+    this.dateMatrix = {};
+
+    /**
      * @type {object.<string, Event[]>} event collection grouped by dates.
      */
     this.dates = {};
 }
+
+/**
+ * getter method for collection instance.
+ * @param {Event} event The instance of events.
+ * @returns {number} unique event id
+ */
+Base.prototype._getEventID = function(event) {
+    return util.stamp(event);
+};
+
+/**
+ * Calculate contain dates in event.
+ * @param {Event} event The instance of event.
+ * @returns {array} contain dates.
+ */
+Base.prototype._getContainDatesInEvent = function(event) {
+    var rawStart = datetime.raw(event.starts),
+        rawEnd = datetime.raw(event.ends),
+        start = new Date(rawStart.y, rawStart.M, rawStart.d),
+        end = new Date(rawEnd.y, rawEnd.M, rawEnd.d),
+        result = [];
+
+    while (start <= end) {
+        result.push(new Date(start.getTime()));
+        start.setDate(start.getDate() + 1);
+    }
+
+    return result;
+};
 
 /**********
  * CRUD
@@ -32,25 +74,6 @@ function Base() {
  * @return {Base} this
  */
 Base.prototype.create = function(options) {
-    var event = Event.create(options),
-        ymd = datetime.format(event.starts, 'YYYYMMDD'),
-        eventsInDate = this.dates[ymd],
-        index;
-
-    if (!eventsInDate) {
-        eventsInDate = this.dates[ymd] = [];
-    }
-
-    index = array.bsearch(
-        eventsInDate,
-        event,
-        null,
-        array.compare.event.asc
-    );
-
-    eventsInDate.splice(mabs(index), 0, event);
-
-    return this;
 };
 
 // Read
