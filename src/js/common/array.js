@@ -214,16 +214,8 @@ function stringDESCIgnoreCase(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function eventASC(a, b) {
-    /*
-     * - 종일일정 먼저
-     * - 시작시간 빠른 순
-     * - 기간 긴 순
-     * - 생성시간 빠른 순
-     */
-    var stampA = util.stamp(a),
-        stampB = util.stamp(b),
-        durationA = a.duration().getTime(),
-        durationB = b.duration().getTime(),
+    var durationA,
+        durationB,
         allDayCompare,
         startsCompare;
 
@@ -239,13 +231,16 @@ function eventASC(a, b) {
         return startsCompare;
     }
 
+    durationA = a.duration().getTime();
+    durationB = b.duration().getTime();
+
     if (durationA < durationB) {
         return 1;
     } else if (durationA > durationB) {
         return -1;
     }
 
-    return stampA - stampB;
+    return util.stamp(a) - util.stamp(b);
 }
 
 module.exports = {
