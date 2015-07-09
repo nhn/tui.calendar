@@ -108,5 +108,39 @@ describe('controller/base', function() {
             expect(result).toEqual(expected);
         });
     });
+
+    describe('updateEvent()', function() {
+        var id,
+            event;
+
+        it('update owned event.', function() {
+            event = ctrl.createEvent({
+                title: 'Go to work',
+                isAllDay: false,
+                starts: '2015/05/01 09:30:00',
+                ends: '2015/05/01 18:30:00'
+            });
+            id = util.stamp(event);
+
+            ctrl.updateEvent(id, {
+                title: 'Go to work',
+                isAllDay: false,
+                starts: '2015/05/02',
+                ends: '2015/05/02'
+            });
+
+            expect(ctrl.events.single()).toEqual(jasmine.objectContaining({
+                title: 'Go to work',
+                isAllDay: false,
+                starts: new Date('2015/05/02'),
+                ends: new Date('2015/05/02')
+            }));
+
+            expect(ctrl.dateMatrix).toEqual({
+                '20150502': [id]
+            });
+        });
+
+    });
 });
 

@@ -136,7 +136,41 @@ Base.prototype.findByDateRange = function(starts, ends) {
 };
 
 // Update
-Base.prototype.update = function() {};
+/**
+ * Update an event.
+ * @param {number} id The unique id of Event instance.
+ * @param {object} options updated object data.
+ * @returns {Event} The event instance updated.
+ */
+Base.prototype.updateEvent = function(id, options) {
+    var result = false;
+
+    this.events.doWhenHas(id, function(event) {
+        options = options || {};
+
+        if (options.title) {
+            event.set('title', options.title);
+        }
+
+        if (options.isAllDay) {
+            event.set('isAllDay', options.isAllDay);
+        }
+
+        if (options.starts) {
+            event.set('starts', new Date(options.starts));
+        }
+
+        if (options.ends) {
+            event.set('ends', new Date(options.ends));
+        }
+
+        //TODO: update matrix.
+
+        result = event;
+    });
+
+    return result;
+};
 
 // Delete
 Base.prototype.delete = function() {};
