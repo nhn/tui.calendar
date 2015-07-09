@@ -83,7 +83,7 @@ describe('common/array', function() {
                 events = [];
             });
 
-            it('isAllDay ASC, starts ASC, id ASC', function() {
+            it('isAllDay ASC, starts ASC, duration DESC, id ASC', function() {
                 util.forEach(fixtures, function(data) {
                     events.push(Event.create(data));
                 });
@@ -95,7 +95,8 @@ describe('common/array', function() {
                     '평가기간',
                     'drawing study',
                     'meeting',
-                    'physical training'
+                    'physical training',
+                    'logical training'
                 ])
             });
         });

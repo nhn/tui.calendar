@@ -202,7 +202,17 @@ function stringDESCIgnoreCase(_a, _b) {
     return 0;
 }
 
-
+/**
+ * Compare event models for sort.
+ *
+ * 1. all day event first.
+ * 2. early starts.
+ * 3. longest duration.
+ * 4. early created.
+ * @param {Event} a The object event instance.
+ * @param {Event} b The object event instance.
+ * @returns {number} Result of comparison.
+ */
 function eventASC(a, b) {
     /*
      * - 종일일정 먼저
@@ -212,11 +222,10 @@ function eventASC(a, b) {
      */
     var stampA = util.stamp(a),
         stampB = util.stamp(b),
-        durationA = a.duration(),
-        durationB = b.duration(),
+        durationA = a.duration().getTime(),
+        durationB = b.duration().getTime(),
         allDayCompare,
-        startsCompare,
-        durationCompare;
+        startsCompare;
 
     allDayCompare = booleanASC(a.isAllDay, b.isAllDay);
 
@@ -230,10 +239,10 @@ function eventASC(a, b) {
         return startsCompare;
     }
 
-    durationCompare = datetime.compare(durationA, durationB);
-
-    if (durationCompare) {
-        return durationCompare;
+    if (durationA < durationB) {
+        return 1;
+    } else if (durationA > durationB) {
+        return -1;
     }
 
     return stampA - stampB;

@@ -14,6 +14,11 @@
     "starts": "2015/05/03 18:30:00",
     "ends": "2015/05/03 19:30:00"
 }, {
+    "title": "logical training",
+    "isAllDay": false,
+    "starts": "2015/05/03 18:30:00",
+    "ends": "2015/05/03 19:20:00"
+}, {
     "title": "평가기간",
     "isAllDay": true,
     "starts": "2015/05/03",
