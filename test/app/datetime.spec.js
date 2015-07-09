@@ -7,7 +7,7 @@ describe('datetime', function() {
 
         expect(dt.raw(d)).toEqual({
             y: 2015,
-            M: 5,
+            M: 4,
             d: 1,
             h: 13,
             m: 20,

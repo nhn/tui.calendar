@@ -166,7 +166,7 @@ datetime = {
     raw: function(date) {
         return {
             y: date.getFullYear(),
-            M: date.getMonth() + 1,
+            M: date.getMonth(),
             d: date.getDate(),
             h: date.getHours(),
             m: date.getMinutes(),
