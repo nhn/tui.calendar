@@ -142,7 +142,7 @@ Base.prototype.update = function() {};
 Base.prototype.delete = function() {};
 
 /**********
- * API SYNC
+ * API
  **********/
 
 Base.prototype.sync = function() {};
