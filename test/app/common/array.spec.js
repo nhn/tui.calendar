@@ -96,8 +96,33 @@ describe('common/array', function() {
                     'drawing study',
                     'meeting',
                     'physical training',
+                    'logical training2',
                     'logical training'
                 ])
+            });
+
+            it('duration', function() {
+                var expected = ['B', 'A'];
+
+                fixtures = [{
+                    title: 'A',
+                    isAllDay: false,
+                    starts: '2015/05/03 12:00:00',
+                    ends: '2015/05/03 12:10:00'
+                }, {
+                    title: 'B',
+                    isAllDay: false,
+                    starts: '2015/05/03 12:00:00',
+                    ends: '2015/05/03 12:20:00'
+                }];
+
+                util.forEach(fixtures, function(data) {
+                    events.push(Event.create(data));
+                });
+
+                events.sort(array.compare.event.asc);
+
+                expect(_.pluck(events, 'title')).toEqual(expected);
             });
         });
     });
