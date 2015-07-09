@@ -16,8 +16,6 @@ var model = require('../common/model');
  * @mixes model
  */
 function Event() {
-    var starts;
-
     /**
      * title for event.
      * @type {string}
@@ -34,7 +32,7 @@ function Event() {
      * event starts
      * @type {Date}
      */
-    starts = null;
+    this.starts = null;
 
     /**
      * event ends
