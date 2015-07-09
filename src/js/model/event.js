@@ -34,14 +34,15 @@ function Event() {
      * event starts
      * @type {Date}
      */
-    starts = this.starts = new Date();
+    starts = null;
 
     /**
      * event ends
      * @type {Date}
      */
-    this.ends = new Date(starts.getTime());
-    this.ends.setMinutes(starts.getMinutes() + 30);
+    this.ends = null;
+
+    this.init();
 
     // initialize model id
     util.stamp(this);
@@ -64,11 +65,7 @@ Event.schema = {
 Event.create = function(data) {
     var event = new Event();
 
-    data = data || {};
-    event.title = data.title || '';
-    event.isAllDay = util.isExisty(data.isAllDay) ? data.isAllDay : false;
-    event.starts = new Date(data.starts);
-    event.ends = new Date(data.ends);
+    event.init(data);
 
     return event;
 };
@@ -76,6 +73,30 @@ Event.create = function(data) {
 /**********
  * prototype props
  **********/
+
+/**
+ * Initialize event instance.
+ * @param {object} options options.
+ */
+Event.prototype.init = function(options) {
+    options = options || {};
+
+    this.title = options.title || '';
+    this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
+
+    if (options.starts) {
+        this.starts = new Date(options.starts);
+    } else {
+        this.starts = new Date();
+    }
+
+    if (options.ends) {
+        this.ends = new Date(options.ends);
+    } else {
+        this.ends = new Date(this.starts.getTime());
+        this.ends.setMinutes(this.ends.getMinutes() + 30);
+    }
+};
 
 /**
  * Check two event are equals (means title, isAllDay, starts, ends are same)

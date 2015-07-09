@@ -1,6 +1,5 @@
 /*eslint-disable*/
 var Event = ne.dooray.calendar.Event;
-
 describe('model/event', function() {
     var event;
 
@@ -10,6 +9,48 @@ describe('model/event', function() {
 
     it('creation', function() {
         expect(event.isAllDay).toBe(false);
+    });
+
+    describe('init()', function() {
+        var oldDate;
+        beforeEach(function() {
+            oldDate = window.Date;
+
+            spyOn(window, 'Date').and.callFake(function() {
+                return new oldDate('2015/05/01 00:00:00');
+            });
+        });
+
+        it('initialize event with default values when data is not supplied.', function() {
+            var expected = {
+                title: '',
+                isAllDay: false,
+                starts: new Date('2015/05/01 00:00:00'),
+                ends: new Date('2015/05/01 00:30:00')
+            };
+
+            var myObj = {};
+
+            event.init.call(myObj);
+        });
+
+        it('initialize event with supplied options.', function() {
+            var expected = {
+                title: 'Go home',
+                isAllDay: false,
+                starts: new Date('2015/05/01 00:00:00'),
+                ends: new Date('2015/05/02 00:00:00')
+            };
+
+            var myObj = {};
+
+            event.init.call(myObj, {
+                title: 'Go home',
+                isAllDay: false,
+                starts: '2015/05/01 18:30:00',
+                ends: '2015/05/02 09:30:00'
+            });
+        });
     });
 
     describe('equals()', function() {
