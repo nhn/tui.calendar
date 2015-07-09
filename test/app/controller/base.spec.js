@@ -113,7 +113,7 @@ describe('controller/base', function() {
         var id,
             event;
 
-        it('update owned event.', function() {
+        it('update owned event and date matrix.', function() {
             event = ctrl.createEvent({
                 title: 'Go to work',
                 isAllDay: false,

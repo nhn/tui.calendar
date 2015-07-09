@@ -115,6 +115,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
         dformat = datetime.format,
         ymd;
 
+    // TODO: Date range iterator?
     while (start <= end) {
         ymd = dformat(start, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
