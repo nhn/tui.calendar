@@ -159,6 +159,22 @@ datetime = {
     },
 
     /**
+     * Return date object from Date.
+     * @param {Date} date date
+     * @returns {object} Date object.
+     */
+    raw: function(date) {
+        return {
+            y: date.getFullYear(),
+            M: date.getMonth() + 1,
+            d: date.getDate(),
+            h: date.getHours(),
+            m: date.getMinutes(),
+            s: date.getSeconds()
+        };
+    },
+
+    /**
      * Return formatted string as basis of supplied string.
      *
      * Supported Token Lists.

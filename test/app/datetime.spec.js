@@ -2,6 +2,19 @@
 var dt = ne.dooray.calendar.datetime;
 describe('datetime', function() {
 
+    it('raw() return date object from Date.', function() {
+        var d = new Date('2015/05/01 13:20:05');
+
+        expect(dt.raw(d)).toEqual({
+            y: 2015,
+            M: 5,
+            d: 1,
+            h: 13,
+            m: 20,
+            s: 5
+        });
+    });
+
     describe('clone()', function() {
         it('clone Date object', function() {
             var d1 = new Date();
