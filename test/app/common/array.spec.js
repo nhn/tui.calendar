@@ -48,6 +48,12 @@ describe('common/array', function() {
                 arr.sort(array.compare.str.descIgnoreCase);
                 expect(arr).toEqual(['Z', 'x', 'f', 'e', 'd', 'c', 'c', 'B', 'a']);
             });
+
+            it('sort check', function() {
+                arr = ['WA', 'TX', 'CA'];
+                arr.sort(array.compare.str.asc);
+                expect(arr).toEqual(['CA', 'TX', 'WA']);
+            });
         });
 
         describe('boolean', function() {
@@ -100,6 +106,11 @@ describe('common/array', function() {
 
         beforeEach(function() {
             arr = ['B', 'Z', 'a', 'c', 'd', 'e', 'f', 'x']; // asc
+        });
+
+        it('return correct index to insertion.', function() {
+            arr = ['CA', 'WA'];
+            expect(array.bsearch(arr, 'TX')).toBe(-1);
         });
 
         it('search item index using binary search.', function() {
