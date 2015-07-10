@@ -57,6 +57,31 @@ datetime = {
     MILLISECONDS_PER_DAY: 86400000,
 
     /**
+     * The number of milliseconds one hour.
+     * @type {number}
+     */
+    MILLISECONDS_PER_HOUR: 3600000,
+
+    /**
+     * Make date array from supplied paramters.
+     * @param {Date} start Start date.
+     * @param {Date} end End date.
+     * @param {number} step The number of milliseconds to use increment.
+     * @returns {array} Date array.
+     */
+    range: function(start, end, step) {
+        var cursor = new Date(start.getTime()),
+            result = [];
+
+        while (cursor <= end) {
+            result.push(cursor);
+            cursor = new Date(cursor.getTime() + step);
+        }
+
+        return result;
+    },
+
+    /**
      * Clone supplied date.
      * @param {Date} date date object to clone.
      * @returns {Date} Cloned date object

@@ -1,6 +1,41 @@
 /*eslint-disable*/
 var dt = ne.dooray.calendar.datetime;
 describe('datetime', function() {
+    describe('range()', function() {
+        it('makes date array by supplied dates.', function() {
+            var start = new Date('2015/05/01'),
+                end = new Date('2015/05/03'),
+                step = dt.MILLISECONDS_PER_DAY;
+
+            var expected = [
+                new Date('2015/05/01'),
+                new Date('2015/05/02'),
+                new Date('2015/05/03')
+            ];
+
+            expect(dt.range(start, end, step)).toEqual(expected);
+        });
+
+        it('step test', function() {
+            var start = new Date('2015/05/01 09:30:00'),
+                end = new Date('2015/05/01 18:30:00');
+
+            var expected = [
+                new Date('2015/05/01 09:30:00'),
+                new Date('2015/05/01 10:30:00'),
+                new Date('2015/05/01 11:30:00'),
+                new Date('2015/05/01 12:30:00'),
+                new Date('2015/05/01 13:30:00'),
+                new Date('2015/05/01 14:30:00'),
+                new Date('2015/05/01 15:30:00'),
+                new Date('2015/05/01 16:30:00'),
+                new Date('2015/05/01 17:30:00'),
+                new Date('2015/05/01 18:30:00')
+            ];
+
+            expect(dt.range(start, end, dt.MILLISECONDS_PER_HOUR)).toEqual(expected);
+        });
+    });
 
     it('start() return 00:00:00 supplied date.', function() {
         var d = new Date('2015/05/21 18:30:00');
