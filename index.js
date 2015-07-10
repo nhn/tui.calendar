@@ -7,6 +7,7 @@ var Event = require('./src/js/model/event');
 var Model = require('./src/js/common/model');
 var Colleciton = require('./src/js/common/collection');
 var Base = require('./src/js/controller/base');
+var EventViewModel = require('./src/js/model/eventViewModel');
 ne.util.defineNamespace('ne.dooray.calendar', {
     dirty: dirty,
     datetime: datetime,
@@ -14,5 +15,6 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     Model: Model,
     Collection: Colleciton,
     Event: Event,
-    Base: Base
+    Base: Base,
+    EventViewModel: EventViewModel
 });

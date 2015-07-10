@@ -1,6 +1,7 @@
 /*eslint-disable*/
 var Base = ne.dooray.calendar.Base;
 var Event = ne.dooray.calendar.Event;
+var EventViewModel = ne.dooray.calendar.EventViewModel;
 describe('controller/base', function() {
     var ctrl,
         set;
@@ -81,7 +82,7 @@ describe('controller/base', function() {
 
             util.forEach(set, function(data) {
                 var item = ctrl.createEvent(data);
-                eventList.push(item);
+                eventList.push(EventViewModel.create(item));
                 idList.push(util.stamp(item));
             });
 
