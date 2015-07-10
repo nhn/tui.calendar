@@ -1,5 +1,6 @@
 /*eslint-disable*/
 var istanbul = require('browserify-istanbul');
+var handlebars = require('browserify-handlebars');
 
 module.exports = function(config) {
     config.set({
@@ -31,10 +32,11 @@ module.exports = function(config) {
         browserify: {
             debug: true,
             bundleDelay: 1000,
-            transform:[istanbul({
+            transform:[handlebars, istanbul({
                 ignore: [
                     'index.js', 
-                    '**/test/**'
+                    '**/test/**',
+                    '**/template/**'
                 ]
             })]
         },

@@ -5,11 +5,13 @@
   "private": true,
   "devDependencies": {
     "browserify": "latest",
+    "browserify-handlebars": "latest",
     "browserify-istanbul": "latest",
     "code-snippet": "git+https://github.nhnent.com/fe/code-snippet",
     "fedoc-template": "git+http://14bfd38a036366f7ca90355d202038126127bd01:x-oauth-basic@github.nhnent.com/fe/share-fedoc-template.git",
     "gulp": "latest",
     "gulp-connect": "latest",
+    "handlebars": "^3.0.3",
     "jasmine-core": "latest",
     "karma": "latest",
     "karma-browserify": "latest",

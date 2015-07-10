@@ -6,6 +6,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var karma = require('karma').server;
+var handlebars = require('browserify-handlebars');
 
 gulp.task('default', function() {
     karma.start({
@@ -24,7 +25,8 @@ gulp.task('bundle', function() {
         debug: true
     });
 
-    return b.bundle()
+    return b.transform(handlebars)
+        .bundle()
         .pipe(source('app.js'))
         .pipe(buffer())
         .pipe(gulp.dest('dist'));
