@@ -66,10 +66,10 @@ Base.prototype.createEvent = function(options) {
 Base.prototype.addEvent = function(event) {
     var ownEvents = this.events,
         ownMatrix = this.dateMatrix,
-        matrix,
         containDates = this._getContainDatesInEvent(event),
         dformat = datetime.format,
         stamp = util.stamp,
+        matrix,
         ymd;
 
     ownEvents.add(event);
