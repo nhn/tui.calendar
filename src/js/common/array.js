@@ -209,8 +209,8 @@ function stringDESCIgnoreCase(_a, _b) {
  * 2. early starts.
  * 3. longest duration.
  * 4. early created.
- * @param {Event} a The object event instance.
- * @param {Event} b The object event instance.
+ * @param {(Event|EventViewModel)} a The object event instance.
+ * @param {(Event|EventViewModel)} b The object event instance.
  * @returns {number} Result of comparison.
  */
 function eventASC(a, b) {
@@ -218,6 +218,9 @@ function eventASC(a, b) {
         durationB,
         allDayCompare,
         startsCompare;
+
+    a = a.valueOf();
+    b = b.valueOf();
 
     allDayCompare = booleanASC(a.isAllDay, b.isAllDay);
 
