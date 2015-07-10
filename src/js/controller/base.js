@@ -36,16 +36,13 @@ function Base() {
  * @returns {array} contain dates.
  */
 Base.prototype._getContainDatesInEvent = function(event) {
-    var start = datetime.start(event.starts),
-        end = datetime.start(event.ends),
-        result = [];
+    var range = datetime.range(
+        datetime.start(event.starts),
+        datetime.start(event.ends),
+        datetime.MILLISECONDS_PER_DAY
+    );
 
-    while (start <= end) {
-        result.push(new Date(start.getTime()));
-        start.setDate(start.getDate() + 1);
-    }
-
-    return result;
+    return range;
 };
 
 /**********
@@ -101,37 +98,28 @@ Base.prototype.addEvent = function(event) {
  * @returns {object.<string, Event[]>} events grouped by dates.
  */
 Base.prototype.findByDateRange = function(starts, ends) {
-    var start = datetime.start(starts),
-        end = datetime.start(ends),
-        ownEvents = this.events,
-        items = ownEvents.items,
-
+    var range = datetime.range(
+            datetime.start(starts),
+            datetime.start(ends),
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        ownEvents = this.events.items,
         ownMatrix = this.dateMatrix,
-        matrix,
-
-        result = {},
-        target,
-
         dformat = datetime.format,
+        result = {},
+        matrix,
         ymd;
 
-    // TODO: Date range iterator?
-    while (start <= end) {
-        ymd = dformat(start, 'YYYYMMDD');
+    util.forEachArray(range, function(date) {
+        ymd = dformat(date, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
 
         if (matrix) {
-            target = result[ymd] = [];
-
-            /*eslint-disable*/
-            util.forEachArray(matrix, function(id) {
-                target.push(items[id]);
+            result[ymd] = util.map(matrix, function(id) {
+                return ownEvents[id];
             });
-            /*eslint-enable*/
         }
-
-        start.setDate(start.getDate() + 1);
-    }
+    });
 
     return result;
 };
