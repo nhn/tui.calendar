@@ -1,0 +1,3 @@
+describe('view/day', function() {
+});
+
