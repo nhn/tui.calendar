@@ -6,6 +6,7 @@
 
 var util = global.ne.util;
 var datetime = require('../datetime');
+var array = require('../common/array');
 var Collection = require('../common/collection');
 
 /**
@@ -117,7 +118,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
         if (matrix) {
             result[ymd] = util.map(matrix, function(id) {
                 return ownEvents[id];
-            });
+            }).sort(array.compare.event.asc);
         }
     });
 

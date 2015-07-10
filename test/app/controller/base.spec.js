@@ -107,6 +107,20 @@ describe('controller/base', function() {
 
             expect(result).toEqual(expected);
         });
+
+        it('return sorted dates.', function() {
+            var expected = {
+                '20150502': [eventList[0], eventList[3]],
+                '20150503': [eventList[3], eventList[1], eventList[2]]
+            };
+
+            var starts = new Date('2015/05/02'),
+                ends = new Date('2015/05/03');
+
+            var result = ctrl.findByDateRange(starts, ends);
+
+            expect(result).toEqual(expected);
+        });
     });
 
     describe('updateEvent()', function() {
