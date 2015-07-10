@@ -34,6 +34,7 @@ function Base() {
 
 /**
  * Calculate contain dates in event.
+ * @private
  * @param {Event} event The instance of event.
  * @returns {array} contain dates.
  */
