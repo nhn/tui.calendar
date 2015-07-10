@@ -16,9 +16,29 @@ function EventViewModel(event) {
     this.model = event;
 
     /**
-     * @type {HTMLElement[]} The array of rendered elements.
+     * @type {HTMLElement} The HTMLElement of rendered.
      */
-    this.elements = [];
+    this.elements = null;
+
+    /**
+     * @type {number}
+     */
+    this.top = 0;
+
+    /**
+     * @type {number}
+     */
+    this.left = 0;
+
+    /**
+     * @type {number}
+     */
+    this.width = 0;
+
+    /**
+     * @type {number}
+     */
+    this.height = 0;
 }
 
 /**********
