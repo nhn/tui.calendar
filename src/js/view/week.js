@@ -4,15 +4,6 @@
  */
 'use strict';
 var util = global.ne.util;
-var tmpl = require('./template/event.hbs');
-
-var Event = require('../model/event');
-
-var e = Event.create({
-    title: 'test'
-});
-
-console.log(tmpl({events: [e]}));
 
 /**
  * @constructor
