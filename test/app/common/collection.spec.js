@@ -195,6 +195,67 @@ describe('Collection', function() {
             expect(filtered.getItemID === cust).toBe(true);
         });
     });
+    
+    describe('filter', function() {
+        var item1,
+            item2,
+            item3;
+
+        beforeEach(function() {
+            item1 = { _id: 1, value: 20 };
+            item2 = { _id: 2, value: 50 };
+            item3 = { _id: 4, value: 2 };
+
+            c.add(item1, item2, item3);
+        });
+
+        it('it can use AND multiple filters.',  function() {
+            function filter1(item) {
+                return item._id === 1;
+            }
+
+            function filter2(item) {
+                return item.value === 21;
+            }
+
+            function filter3(item) {
+                return item.value === 20;
+            }
+
+            var result = c.find(function(item) {
+                return Collection.filter.and([filter1, filter2], item);
+            });
+
+            expect(result).toEqual(new Collection());
+
+            result = c.find(function(item) {
+                return Collection.filter.and([filter1, filter3], item);
+            });
+
+            var expected = new Collection();
+            expected.add(item1);
+            expect(result).toEqual(expected);
+        });
+
+        it('it can use OR multiple filters.', function() {
+            function filter1(item) {
+                return item._id === 1;
+            }
+
+            function filter2(item) {
+                return item.value === 21;
+            }
+
+            var result = c.find(function(item) {
+                return Collection.filter.or([filter1, filter2], item);
+            });
+
+            var expected = new Collection();
+            expected.add(item1);
+
+            expect(result).toEqual(expected);
+        });
+    });
 
     describe('groupBy()', function() {
         var item1,

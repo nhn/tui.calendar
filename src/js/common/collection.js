@@ -44,6 +44,52 @@ function Collection(getItemIDFn) {
  * static props
  **********/
 
+Collection.filter = {
+    /**
+     * return AND operate all of function's return value
+     * @param {array} arr filters
+     * @param {...*} [params] support filter parameters
+     * @return {boolean} AND operated value
+     */
+    and: function(arr, params) {    // eslint-disable-line
+        var args = aps.call(arguments, 1),
+            i = 0,
+            cnt = arr.length;
+
+        for (; i < cnt; i += 1) {
+            if (!arr[i].apply(null, args)) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    /**
+     * return OR operate all of function's return value
+     * @param {array} arr filters
+     * @param {...*} [params] support filter parameters
+     * @return {boolean} OR operated value
+     */
+    or: function(arr, params) {    // eslint-disable-line
+        var args = aps.call(arguments, 1),
+            tmp,
+            result;
+
+        forEachArr(arr, function(filter) {
+            tmp = filter.apply(null, args);
+
+            if (util.isUndefined(result)) {
+                result = tmp;
+            }
+
+            result = (result || tmp);
+        });
+
+        return result;
+    }
+};
+
 /**
  * Merge several collections.
  *
@@ -209,6 +255,22 @@ Collection.prototype.doWhenHas = function(id, fn, context) {
  * @example
  * collection.find(function(item) {
  *     return item.edited === true;
+ * });
+ *
+ * function filter1(item) {
+ *     return item.edited === false;
+ * }
+ *
+ * function filter2(item) {
+ *     return item.disabled === false;
+ * }
+ *
+ * collection.find(function(item) {
+ *     return Collection.filter.and([filter1, filter2], item);
+ * });
+ *
+ * collection.find(function(item) {
+ *     return Collection.filter.or([filter1, filter2], item);
  * });
  */
 Collection.prototype.find = function(filter) {
