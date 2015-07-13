@@ -1,14 +1,11 @@
 /**
- * @fileoverview 특정 프로퍼티가 변경 여부를 플래깅할 수 있는 모듈
- * @author FE개발팀 김민형 minhyeong.kim@nhnent.com
+ * @fileoverview Dirty flagging module for objects.
+ * @author NHN Ent. FE Development Team <e0242@nhnent.com>
  */
-
 'use strict';
 
 /**
- * 더티 플래깅 기능을 제공하는 믹스인 모듈
- *
- * *주의: 더티 플래깅을 하기 위해서는 반드시 객체의 속성 편집을 제공되는 API로만 해야 한다*
+ * Module for support dirty flagging for specific objects.
  * @module util/dirty
  * @example
  * var obj = { hello: 'good', test: '123' };
@@ -30,15 +27,15 @@ var common = ne.util,
     isFunc = common.isFunction;
 
 /**
- * 특정 객체에 믹스인하면 객체의 변경사항을 알 수 있는 기능을 추가하는 모듈
- *
- * *주의: 더티 플래깅을 하기 위해서는 반드시 객체의 속성 편집을 제공되는 API로만 해야 한다*
+ * Mixin module for dirty flagging on specific objects.
  * @exports dirty
  * @mixin
  */
 var dirty = {
     /**
-     * 객체에 프로퍼티 설정, 더티 플래깅
+     * Set property value with dirty flagging.
+     * @param {string} k Property name.
+     * @param {*} v Proprty value.
      */
     set: function(k, v) {
         var originValue = this[k];
@@ -73,15 +70,16 @@ var dirty = {
     },
 
     /**
-     * 객체의 더티 플래그를 확인
+     * Check dirty flag. 
+     * @returns {boolean} Property is changed.
      */
     isDirty: function() {
         return !!this._dirty;
     },
 
     /**
-     * 객체의 더티 플래그를 직접 설정
-     * @param {Boolean} [toDirty=true]
+     * Set dirty flag manually. 
+     * @param {Boolean} [toDirty=true] This will set dirty flag directly.
      */
     dirty: function(toDirty) {
         toDirty = existy(toDirty) ? toDirty : true;
@@ -95,8 +93,8 @@ var dirty = {
     },
 
     /**
-     * 인자로 제공된 이름의 프로퍼티를 안전히 제거
-     * @param {String} propName 제거할 프로퍼티명
+     * Delete property safety.
+     * @param {String} propName The name of property.
      */
     deleteProp: function(propName) {
         delete this[propName];
@@ -104,22 +102,19 @@ var dirty = {
     },
 
     /**
-     * 인자로 제공된 이름의 프로퍼티의 변경 여부를 검사
-     * @param {String} propName 변경여부확인 원하는 프로퍼티명
+     * Check the changes with specific property.
+     * @param {String} propName The name of property you want.
+     * @returns {boolean} Is property changed?
      */
     isPropChanged: function(propName) {
         return this._changed[propName] === true;
     },
 
     /**
-     * 더티 플래깅 기능을 제공된 객체에 믹스인
-     * @param {Object} target
+     * Mixin to specific objects.
+     * @param {Object} target The object to mix this module.
      * @memberof module:util/dirty
      * @example
-     * // 객체에 믹스인
-     * var obj = {};
-     * dirty.mixin(obj);
-     * // 프로토타입에 믹스인
      * function Animal() {}
      * dirty.mixin(Animal.prototype);
      */
@@ -134,14 +129,16 @@ var dirty = {
     },
 
     /**
-     * 객체의 메서드 호출 후 더티 플래깅을 자동 처리하도록 메서드 래핑
+     * Wrapper method for dirty flagging.
      *
-     * 프로토타입 객체에 래핑하는 경우 꼭 래핑하는 메서드를 만들어준 후 호출해야 한다
-     * @param {Object} target 더티 플래그 메서드 래핑을 원하는 대상 객체
-     * @param {(String|Object)} methodName
-     *  래핑할 메서드명 또는 메서드명: 플래그값 객체
-     * @param {Boolean} [flag=true]
-     *  false전달 시 래핑된 메서드 수행 후 더티 플래그를 false로 설정하도록 설정가능
+     * This method invoke after invoked specific method that added by you.
+     *
+     * The method want to add are must exist before add.
+     * @param {object} target Target object to method wrap.
+     * @param {(string|object)} methodName
+     *  Method name to wrap or methodName: flag objects.
+     * @param {boolean} [flag=true]
+     *  this will used to flagging by dirty flagger after invoke the methods added by you.
      * @memberof module:util/dirty
      * @example
      * function Animal(name) {
@@ -153,9 +150,9 @@ var dirty = {
      * };
      *
      * dirty.mixin(Animal.prototype);
-     * // 아래처럼 단일로 등록 또는
+     * // single
      * dirty.wrap(Animal.prototype, 'growl', true);
-     * // 메서드명: 플래그값 객체
+     * // multiple
      * dirty.wrap(Animap.prototype, {
      *     growl: true,
      *     test: false
@@ -177,9 +174,9 @@ var dirty = {
 
         if (!target._wrapper) {
             /**
-             * 자동 더티 체크를 위해 해당 객체에 추가되는 유틸 함수
-             *
-             * 이 메서드가 유실되면 더티 플래깅 기능에 문제 발생 가능
+             * @param {function} fn Original method to wrap.
+             * @param {boolean} flagToSet The boolean value to using dirty flagging.
+             * @returns {*} The result value of original method.
              * @name _wrapper
              * @memberof dirty
              */
