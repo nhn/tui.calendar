@@ -48,9 +48,7 @@ var dirty = {
 
         if (!this._changed) {
             /**
-             * 변경된 프로퍼티 이름 저장
-             *
-             * {@link module:util/dirty.dirty}를 false로 호출 시 비워진다
+             * Save changed properties.
              * @memberof dirty
              * @name _changed
              * @type {Object}
@@ -61,7 +59,7 @@ var dirty = {
         this._changed[k] = true;
 
         /**
-         * 변경사항 존재 여부 저장
+         * Dirty flag
          * @type {Boolean}
          * @name _dirty
          * @memberof dirty
@@ -70,7 +68,7 @@ var dirty = {
     },
 
     /**
-     * Check dirty flag. 
+     * Check dirty flag.
      * @returns {boolean} Property is changed.
      */
     isDirty: function() {
@@ -78,7 +76,7 @@ var dirty = {
     },
 
     /**
-     * Set dirty flag manually. 
+     * Set dirty flag manually.
      * @param {Boolean} [toDirty=true] This will set dirty flag directly.
      */
     dirty: function(toDirty) {
