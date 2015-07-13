@@ -57,7 +57,7 @@ module.exports = function(config) {
         },
 
         junitReporter: {
-            outputFile: 'report/junit-result.xml',
+            outputDir: 'report/',
             suite: ''
         },
 
@@ -69,7 +69,7 @@ module.exports = function(config) {
 
         autoWatch: true,
 
-        browsers: ['Chrome'],
+        browsers: ['Firefox'],
 
         singleRun: false,
 
