@@ -20,7 +20,21 @@ var datetime = require('../datetime');
  * @param {(string|number|boolean)} search value to search.
  * @param {function} [fn] iteratee for retrieve each element's value to search.
  * @param {function} [compare] compare function for specific sort status. default is string ascending.
- * @returns {number} The number of item index searched.
+ * @returns {number} The number of item index searched. return negative number when no exist that item.
+ * It can use insert index after Math.abs()
+ * @example
+ *
+ * var arr = [1, 3, 7, 11, 15, 23];
+ *
+ * function sortNumber(a, b) {
+ *     return a - b;
+ * }
+ *
+ * bsearch(arr, 15, null, sortNumber);    // 4
+ * bsearch(arr, 21, null, sortNumber);    // -5
+ *
+ * arr.splice(Math.abs(bsearch(arr, 21, null, sortNumber)), 0, 21);
+ * // [1, 2, 7, 11, 15, 21, 23]
  */
 function bsearch(arr, search, fn, compare) {
     var minIndex = 0,
@@ -29,10 +43,10 @@ function bsearch(arr, search, fn, compare) {
         value,
         comp;
 
-    compare = compare || array.compare.str.asc;
+    compare = compare || stringASC;
 
     while (minIndex <= maxIndex) {
-        currentIndex = (minIndex + maxIndex) / 2 | 0;
+        currentIndex = (minIndex + maxIndex) / 2 | 0;    // Math.floor
         value = fn ? fn(arr[currentIndex]) : arr[currentIndex];
         comp = compare(value, search);
 
