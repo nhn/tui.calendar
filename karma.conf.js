@@ -1,6 +1,6 @@
 /*eslint-disable*/
 var istanbul = require('browserify-istanbul');
-var handlebars = require('browserify-handlebars');
+var hbsfy = require('hbsfy');
 
 module.exports = function(config) {
     var webdriverConfig = {
@@ -38,7 +38,7 @@ module.exports = function(config) {
         browserify: {
             debug: true,
             bundleDelay: 1000,
-            transform:[handlebars, istanbul({
+            transform:[hbsfy, istanbul({
                 ignore: [
                     'index.js', 
                     '**/test/**',
