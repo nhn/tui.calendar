@@ -26,7 +26,8 @@ module.exports = function(config) {
 
         preprocessors: {
             'index.js': ['browserify'],
-            'src/**/*.js': ['browserify']
+            'src/**/*.js': ['browserify'],
+            'src/js/view/template/helper.js': ['browserify']
         },
 
         browserify: {
@@ -57,7 +58,7 @@ module.exports = function(config) {
         },
 
         junitReporter: {
-            outputDir: 'report/',
+            outputDir: 'report/junit',
             suite: ''
         },
 

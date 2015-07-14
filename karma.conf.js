@@ -32,7 +32,8 @@ module.exports = function(config) {
 
         preprocessors: {
             'index.js': ['browserify'],
-            'src/**/*.js': ['browserify']
+            'src/**/*.js': ['browserify'],
+            'src/js/view/template/helper.js': ['browserify']
         },
 
         browserify: {
@@ -54,12 +55,16 @@ module.exports = function(config) {
         ],
 
         coverageReporter: {
-            type: 'html',
-            dir: 'report/'
+            dir: 'report/',
+            reporters: [{
+                type: 'cobertura',
+                subdir: 'cobertura',
+                file: 'cobertura.txt'
+            }]
         },
 
         junitReporter: {
-            outputDir: 'report/',
+            outputDir: 'report/junit',
             suite: ''
         },
 
