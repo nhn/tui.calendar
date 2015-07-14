@@ -59,7 +59,7 @@ module.exports = function(config) {
             reporters: [{
                 type: 'cobertura',
                 subdir: 'cobertura',
-                file: 'cobertura.txt'
+                file: 'cobertura.xml'
             }]
         },
 
