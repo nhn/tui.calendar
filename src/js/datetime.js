@@ -205,8 +205,10 @@ datetime = {
      * @returns {Date} start date.
      */
     start: function(date) {
-        var raw = datetime.raw(date);
-        return new Date(raw.y, raw.M, raw.d);
+        var d = new Date(date.getTime());
+        d.setHours(0, 0, 0, 0);
+
+        return d;
     },
 
     /**
@@ -215,8 +217,10 @@ datetime = {
      * @returns {Date} end date.
      */
     end: function(date) {
-        var raw = datetime.raw(date);
-        return new Date(raw.y, raw.M, raw.d, 23, 59, 59);
+        var d = new Date(date.getTime());
+        d.setHours(23, 59, 59, 0);
+
+        return d;
     },
 
     /**

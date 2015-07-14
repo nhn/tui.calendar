@@ -112,18 +112,17 @@ describe('model/event', function() {
 
     describe('duration()', function() {
         beforeEach(function() {
-            event.starts = new Date('2015-09-25T00:00:00Z');
-            event.ends = new Date('2015-09-26T05:00:00Z');
+            event.starts = new Date('2015-09-25T05:00:00+09:00');
+            event.ends = new Date('2015-09-26T05:00:00+09:00');
         });
 
         it('can calculate duration between starts and ends.', function() {
-            expect(event.duration()).toEqual(new Date('1970-01-02T05:00:00Z'));
+            expect(event.duration()).toEqual(new Date('1970-01-02T00:00:00Z'));
         });
 
         it('return 24 hours when event is all day event.', function() {
-            event.isAllDay = true;
-            expect(event.duration()).toEqual(new Date('1970-01-02T00:00:00Z'));
-
+            event.set('isAllDay', true);
+            expect(event.duration()).toEqual(new Date('1970-01-03T08:59:59+09:00'));
         });
     });
 

@@ -40,6 +40,17 @@ function Event() {
      */
     this.ends = null;
 
+    /**
+     * event duration.
+     * @type {Date}
+     */
+    this._duration = null;
+
+    /**
+     * @type {object.<string, *>}
+     */
+    this._changed = {};
+
     this.init();
 
     // initialize model id
@@ -128,13 +139,20 @@ Event.prototype.equals = function(event) {
  */
 Event.prototype.duration = function() {
     var starts = this.starts,
-        ends = this.ends;
+        ends = this.ends,
+        duration;
 
     if (this.isAllDay) {
-        return new Date(datetime.MILLISECONDS_PER_DAY);
+        duration = new Date(datetime.end(ends) - datetime.start(starts));
+    } else {
+        duration = new Date(ends - starts);
     }
 
-    return new Date(ends - starts);
+    if (!this._duration || this.isDirty()) {
+        this._duration = duration;
+    }
+
+    return this._duration;
 };
 
 model.mixin(Event.prototype);
