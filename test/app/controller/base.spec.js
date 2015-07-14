@@ -124,7 +124,7 @@ describe('controller/base', function() {
         });
     });
 
-    describe('updateEvent()', function() {
+    xdescribe('updateEvent()', function() {
         var id,
             event;
 
