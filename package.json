@@ -6,8 +6,7 @@
   "devDependencies": {
     "browserify": "latest",
     "browserify-istanbul": "latest",
-    "code-snippet": "git+https://github.nhnent.com/fe/code-snippet",
-    "fedoc-template": "git+http://14bfd38a036366f7ca90355d202038126127bd01:x-oauth-basic@github.nhnent.com/fe/share-fedoc-template.git",
+    "code-snippet": "git+http://4316b69ceef56267d69d733515f0f6ef3651ca7f:x-oauth-basic@github.nhnent.com/fe/code-snippet.git",
     "gulp": "latest",
     "gulp-connect": "latest",
     "handlebars": "^3.0.3",
