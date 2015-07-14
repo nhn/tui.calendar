@@ -194,6 +194,12 @@ describe('dirty mixin', function() {
 
            expect(animal.isPropChanged('name')).toBe(true);
        });
+
+       it('no error with no set()', function() {
+           var animal = new Animal('bear');
+
+           expect(animal.isPropChanged('leg')).toBe(false);
+       });
    });
 
    describe('isDirty()', function() {
@@ -247,6 +253,15 @@ describe('dirty mixin', function() {
 
            expect(animal._changed).toEqual({ leg: true });
            expect(animal.jump).toBeUndefined();
+       });
+
+       it('no error with no set()', function() {
+           var animal = new Animal('frog');
+
+           expect(function() {
+               animal.deleteProp('leg');
+           }).not.toThrow();
+
        });
    });
 

@@ -96,7 +96,10 @@ var dirty = {
      */
     deleteProp: function(propName) {
         delete this[propName];
-        delete this._changed[propName];
+
+        if (this._changed) {
+            delete this._changed[propName];
+        }
     },
 
     /**
@@ -105,6 +108,10 @@ var dirty = {
      * @returns {boolean} Is property changed?
      */
     isPropChanged: function(propName) {
+        if (!this._changed) {
+            return false;
+        }
+
         return this._changed[propName] === true;
     },
 
