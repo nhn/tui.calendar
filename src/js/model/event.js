@@ -40,17 +40,6 @@ function Event() {
      */
     this.ends = null;
 
-    /**
-     * event duration.
-     * @type {Date}
-     */
-    this._duration = null;
-
-    /**
-     * @type {object.<string, *>}
-     */
-    this._changed = {};
-
     this.init();
 
     // initialize model id
@@ -134,7 +123,6 @@ Event.prototype.equals = function(event) {
 
 /**
  * return duration between starts and ends.
- * TODO: applicable memoization patterns for duration.
  * @returns {Date} duration (UTC)
  */
 Event.prototype.duration = function() {
@@ -148,11 +136,7 @@ Event.prototype.duration = function() {
         duration = new Date(ends - starts);
     }
 
-    if (!this._duration || this.isDirty()) {
-        this._duration = duration;
-    }
-
-    return this._duration;
+    return duration;
 };
 
 model.mixin(Event.prototype);

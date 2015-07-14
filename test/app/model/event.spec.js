@@ -121,7 +121,7 @@ describe('model/event', function() {
         });
 
         it('return 24 hours when event is all day event.', function() {
-            event.set('isAllDay', true);
+            event.isAllDay = true;
             expect(event.duration()).toEqual(new Date('1970-01-03T08:59:59+09:00'));
         });
     });
