@@ -168,9 +168,8 @@ Collection.prototype.remove = function(id) {
     }
 
     if (arguments.length > 1) {
-        removed = [];
-        forEachArr(aps.call(arguments), function(id) {
-            removed.push(this.remove(id));
+        removed = util.map(aps.call(arguments), function(id) {
+            return this.remove(id);
         }, this);
 
         return removed;
