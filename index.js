@@ -4,6 +4,7 @@ require('./src/js/view/template/helper');
 var dirty = require('./src/js/common/dirty');
 var datetime = require('./src/js/datetime');
 var array = require('./src/js/common/array');
+var Point = require('./src/js/common/point');
 var Event = require('./src/js/model/event');
 var model = require('./src/js/common/model');
 var Colleciton = require('./src/js/common/collection');
@@ -14,6 +15,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     dirty: dirty,
     datetime: datetime,
     array: array,
+    Point: Point, 
     model: model,
     Collection: Colleciton,
     Event: Event,
