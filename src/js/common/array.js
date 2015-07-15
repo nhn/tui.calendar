@@ -76,10 +76,7 @@ function bsearch(arr, search, fn, compare) {
  */
 function booleanASC(a, b) {
     if (a !== b) {
-        if (a) {
-            return -1;
-        }
-        return 1;
+        return a ? -1 : 1;
     }
     return 0;
 }
@@ -94,10 +91,7 @@ function booleanASC(a, b) {
  */
 function booleanDESC(a, b) {
     if (a !== b) {
-        if (a) {
-            return 1;
-        }
-        return -1;
+        return a ? 1 : -1;
     }
     return 0;
 }
