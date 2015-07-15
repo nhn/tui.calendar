@@ -148,7 +148,7 @@ describe('common/array', function() {
 
         it('it can be used to insert the element.', function() {
             arr.splice(Math.abs(array.bsearch(arr, 'g')), 0, 'g');
-            expect(arr.indexOf('g')).toBe(7);
+            expect(ne.util.inArray('g', arr)).toBe(7);
         });
 
         it('search by custom functions.', function() {

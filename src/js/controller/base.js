@@ -165,7 +165,7 @@ Base.prototype.updateEvent = function(id, options) {
 };
 
 // Delete
-Base.prototype.delete = function() {};
+Base.prototype.deleteEvent = function() {};
 
 /**********
  * API
