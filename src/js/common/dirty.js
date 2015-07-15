@@ -34,17 +34,17 @@ var common = ne.util,
 var dirty = {
     /**
      * Set property value with dirty flagging.
-     * @param {string} k Property name.
-     * @param {*} v Proprty value.
+     * @param {string} propName Property name.
+     * @param {*} value Proprty value.
      */
-    set: function(k, v) {
-        var originValue = this[k];
+    set: function(propName, value) {
+        var originValue = this[propName];
 
-        if (originValue === v) {
+        if (originValue === value) {
             return;
         }
 
-        this[k] = v;
+        this[propName] = value;
 
         if (!this._changed) {
             /**
@@ -56,7 +56,7 @@ var dirty = {
             this._changed = {};
         }
 
-        this._changed[k] = true;
+        this._changed[propName] = true;
 
         /**
          * Dirty flag
