@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var util = ne.util;
 var View = ne.dooray.calendar.View;
 describe('View', function() {
     var view;
@@ -8,22 +9,15 @@ describe('View', function() {
     });
 
     describe('View()', function() {
-        it('throw error when container element not supplied.', function() {
-            expect(function() {
-                new View();
-            }).toThrow();
+        it('make an container element on body when container is not supplied.', function() {
+            view = new View();
+            expect(document.getElementById('view-' + util.stamp(view))).toBe(view.container);
         });
 
         it('setting default container.', function() {
             var el = document.getElementById('container');
             view = new View(null, el);
-            expect(view.container).toEqual(el);
-        });
-
-        it('can use container element id for constructor', function() {
-            var el = document.getElementById('container');
-            view = new View(null, 'container');
-            expect(view.container).toEqual(el);
+            expect(view.container).toEqual(el.childNodes[0]);
         });
     });
 });
