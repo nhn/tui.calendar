@@ -12,7 +12,7 @@
     "handlebars": "^3.0.3",
     "hbsfy": "^2.2.1",
     "jasmine-core": "latest",
-    "karma": "latest",
+    "karma": "^0.12.37",
     "karma-browserify": "latest",
     "karma-coverage": "latest",
     "karma-firefox-launcher": "^0.1.6",
