@@ -116,20 +116,20 @@ describe('datetime', function() {
         });
     });
 
-    describe('leftPad()', function() {
+    describe('leadingZero()', function() {
         it('pad zero to supplied number and length.', function() {
             var num = 2;
-            expect(dt.leftPad(num, 2)).toBe('02');
-            expect(dt.leftPad(num, 3)).toBe('002');
+            expect(dt.leadingZero(num, 2)).toBe('02');
+            expect(dt.leadingZero(num, 3)).toBe('002');
             num = 2300; 
 
-            expect(dt.leftPad(num, 5)).toBe('02300');
+            expect(dt.leadingZero(num, 5)).toBe('02300');
         });
 
         it('if number string length longer then length, then just convert string and return it.', function() {
             var num = 3000;
 
-            expect(dt.leftPad(num, 2)).toBe('3000');
+            expect(dt.leadingZero(num, 2)).toBe('3000');
         });
     });
 

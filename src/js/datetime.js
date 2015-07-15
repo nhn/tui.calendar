@@ -20,8 +20,8 @@ tokenFunc = {
     'YYYYMMDD': function(date) {
         return [
             date.getFullYear(),
-            datetime.leftPad(date.getMonth() + 1, 2),
-            datetime.leftPad(date.getDate(), 2)
+            datetime.leadingZero(date.getMonth() + 1, 2),
+            datetime.leadingZero(date.getDate(), 2)
         ].join('');
     },
     /**
@@ -37,7 +37,7 @@ tokenFunc = {
      * @returns {string} two digit month number
      */
     'MM': function(date) {
-        return datetime.leftPad(date.getMonth() + 1, 2);
+        return datetime.leadingZero(date.getMonth() + 1, 2);
     },
 
     /**
@@ -45,9 +45,9 @@ tokenFunc = {
      * @returns {string} two digit date number
      */
     'DD': function(date) {
-        return datetime.leftPad(date.getDate(), 2);
+        return datetime.leadingZero(date.getDate(), 2);
     }
-};
+}
 
 datetime = {
     /**
@@ -139,7 +139,7 @@ datetime = {
      * @param {number} length pad length to want.
      * @returns {string} padded string.
      */
-    leftPad: function(number, length) {
+    leadingZero: function(number, length) {
         var zero = '',
             i = 0;
 
