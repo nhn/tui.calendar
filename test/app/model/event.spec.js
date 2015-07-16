@@ -152,5 +152,144 @@ describe('model/event', function() {
             expect(event.equals(new Event())).toBe(true);
         });
     });
+
+    describe('collidesWith()', function() {
+        /**
+         * type - A
+         * |---|
+         * | A |---|
+         * |---| B |
+         *     |---|
+         *
+         * type - B
+         *     |---|
+         * |---| B |
+         * | A |---|
+         * |---|
+         */
+        it('Check type A, B', function() {
+            var a = Event.create({
+                title: 'A',
+                isAllDay: false,
+                starts: '2015-05-01T09:30:00+09:00',
+                ends: '2015-05-01T10:00:00+09:00'
+            });
+            var b = Event.create({
+                title: 'B',
+                isAllDay: false,
+                starts: '2015-05-01T09:40:00+09:00',
+                ends: '2015-05-01T10:10:00+09:00'
+            });
+
+            expect(a.collidesWith(b)).toBe(true);
+            expect(b.collidesWith(a)).toBe(true);
+        });
+
+        /**
+         * type - C
+         *
+         * |---|
+         * |   |---|
+         * | A | B |
+         * |   |---|
+         * |---|
+         *
+         * type - D
+         *     |---|
+         * |---|   |
+         * | A | B |
+         * |---|   |
+         *     |---|
+         */
+        it('check type C, D', function() {
+            var a = Event.create({
+                title: 'A',
+                isAllDay: false,
+                starts: '2015-05-01T09:30:00+09:00',
+                ends: '2015-05-01T10:00:00+09:00'
+            });
+            var b = Event.create({
+                title: 'B',
+                isAllDay: false,
+                starts: '2015-05-01T09:00:00+09:00',
+                ends: '2015-05-01T10:30:00+09:00'
+            });
+
+            expect(a.collidesWith(b)).toBe(true);
+            expect(b.collidesWith(a)).toBe(true);
+        });
+
+        /**
+         * type - E
+         * |---|
+         * | A |
+         * |---|
+         *     |---|
+         *     | B |
+         *     |---|
+         *
+         * type - F
+         *     |---|
+         *     | B |
+         *     |---|
+         * |---|
+         * | A |
+         * |---|
+         */
+        it('check type E, F', function() {
+            var a = Event.create({
+                title: 'A',
+                isAllDay: false,
+                starts: '2015-05-01T09:30:00+09:00',
+                ends: '2015-05-01T10:00:00+09:00'
+            });
+            var b = Event.create({
+                title: 'B',
+                isAllDay: false,
+                starts: '2015-05-01T10:00:00+09:00',
+                ends: '2015-05-01T10:30:00+09:00'
+            });
+
+            expect(a.collidesWith(b)).toBe(true);
+            expect(b.collidesWith(a)).toBe(true);
+        });
+        
+        /**
+         * type - G
+         * |---|
+         * | A |
+         * |---|
+         *
+         *     |---|
+         *     | B |
+         *     |---|
+         *
+         * type - H
+         *     |---|
+         *     | B |
+         *     |---|
+         *
+         * |---|
+         * | A |
+         * |---|
+         */
+        it('check type G, H', function() {
+            var a = Event.create({
+                title: 'A',
+                isAllDay: false,
+                starts: '2015-05-01T09:30:00+09:00',
+                ends: '2015-05-01T09:50:00+09:00'
+            });
+            var b = Event.create({
+                title: 'B',
+                isAllDay: false,
+                starts: '2015-05-01T10:10:00+09:00',
+                ends: '2015-05-01T10:30:00+09:00'
+            });
+
+            expect(a.collidesWith(b)).toBe(false);
+            expect(b.collidesWith(a)).toBe(false);
+        });
+    });
 });
 

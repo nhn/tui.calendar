@@ -139,6 +139,21 @@ Event.prototype.duration = function() {
     return duration;
 };
 
+/**
+ * Returns true if the given Event coincides with the same time as the
+ * calling Event.
+ * @param {Event} event The other event to compare with this Event.
+ * @returns {boolean} If the other event occurs within the same time as the first object.
+ */
+Event.prototype.collidesWith = function(event) {
+    if ((event.starts >= this.starts && event.starts <= this.ends) ||
+        (event.ends >= this.starts && event.ends <= this.ends) ||
+        (event.starts <= this.starts && event.ends >= this.ends)) {
+        return true;
+    }
+    return false;
+};
+
 model.mixin(Event.prototype);
 dirty.mixin(Event.prototype);
 
