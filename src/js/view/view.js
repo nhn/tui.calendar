@@ -24,8 +24,7 @@ function View(options, container) {
         container = domutil.appendHTMLElement('div');
     }
 
-    container = domutil.appendHTMLElement('div', container);
-    container.setAttribute('id', 'view-' + id);
+    domutil.addClass(container, 'view-' + id);
 
     /**
      * unique id

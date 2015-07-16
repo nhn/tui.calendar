@@ -11,13 +11,14 @@ describe('View', function() {
     describe('View()', function() {
         it('make an container element on body when container is not supplied.', function() {
             view = new View();
-            expect(document.getElementById('view-' + util.stamp(view))).toBe(view.container);
+            expect(document.querySelector('.view-' + util.stamp(view))).toEqual(view.container);
         });
 
         it('setting default container.', function() {
             var el = document.getElementById('container');
             view = new View(null, el);
-            expect(view.container).toEqual(el.childNodes[0]);
+            expect(view.container).toEqual(el);
         });
     });
 });
+
