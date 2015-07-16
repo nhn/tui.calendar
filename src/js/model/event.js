@@ -146,8 +146,8 @@ Event.prototype.duration = function() {
  * @returns {boolean} If the other event occurs within the same time as the first object.
  */
 Event.prototype.collidesWith = function(event) {
-    if ((event.starts >= this.starts && event.starts <= this.ends) ||
-        (event.ends >= this.starts && event.ends <= this.ends) ||
+    if ((event.starts > this.starts && event.starts < this.ends) ||
+        (event.ends > this.starts && event.ends < this.ends) ||
         (event.starts <= this.starts && event.ends >= this.ends)) {
         return true;
     }

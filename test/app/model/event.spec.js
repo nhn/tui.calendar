@@ -250,8 +250,8 @@ describe('model/event', function() {
                 ends: '2015-05-01T10:30:00+09:00'
             });
 
-            expect(a.collidesWith(b)).toBe(true);
-            expect(b.collidesWith(a)).toBe(true);
+            expect(a.collidesWith(b)).toBe(false);
+            expect(b.collidesWith(a)).toBe(false);
         });
         
         /**
