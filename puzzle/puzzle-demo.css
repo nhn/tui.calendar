@@ -1,0 +1,38 @@
+#time-view {
+    position: relative;
+    width: 220px;
+    height: 920px;
+    border: 1px solid #ccc;
+}
+
+.time-line {
+    height: 37.333px;
+    border-bottom: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+}
+
+.time-line:before {
+    line-height: 60px;
+    content: '';
+}
+
+#event-list {
+    position:absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.event {
+    position: absolute;
+    background-color: #7CAFC2;
+    cursor: default;
+}
+
+.current {
+    position: absolute;
+    width: 220px;
+    height:1px;
+    border-bottom: 1px;
+    background-color: red;
+}
