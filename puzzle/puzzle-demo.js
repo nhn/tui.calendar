@@ -8,7 +8,6 @@
     var domutil = calendar.domutil;
     var aps = Array.prototype.slice;
 
-    var rootElement;
     var dataList;
     var collisionGroups;
     var matrices;
@@ -238,8 +237,10 @@
         return event;
     });
     eventList.sort(calendar.array.compare.event.asc);
+    console.log(util.map(eventList, function(event) {return event.title;}).join(', '));
     collisionGroups = calcCollision(eventList);
     matrices = calcMatrices(events, collisionGroups);
+
 
     // render
     container = domutil.appendHTMLElement('div', document.getElementById('event-list'));
