@@ -32,7 +32,7 @@ var View = require('./src/js/view/view');
 /**********
  * View Models
  **********/
-var DaysViewModel = require('./src/js/view/model/days');
+var DaysViewModel = require('./src/js/model/viewModel/days');
 
 // exports
 ne.util.defineNamespace('ne.dooray.calendar', {

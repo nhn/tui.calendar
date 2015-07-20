@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var DaysViewModel = require('../../view/model/days');
+var DaysViewModel = require('../../model/viewModel/days');
 
 /**
  * @mixin
