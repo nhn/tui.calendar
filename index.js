@@ -16,8 +16,7 @@ var model = require('./src/js/common/model');
 /**********
  * Controllers
  **********/
-var Base = require('./src/js/controller/base');
-Base.Days = require('./src/js/controller/viewMixin/days');
+var ControllerFactory = require('./src/js/controller/factory');
 
 /**********
  * Models
@@ -45,7 +44,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     Collection: Colleciton,
     model: model,
 
-    Base: Base,
+    ControllerFactory: ControllerFactory,
 
     Point: Point, 
     Event: Event,

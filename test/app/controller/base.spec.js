@@ -1,12 +1,12 @@
 /*eslint-disable*/
-var Base = ne.dooray.calendar.Base;
+var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 var Event = ne.dooray.calendar.Event;
 describe('controller/base', function() {
     var ctrl,
         set;
 
     beforeEach(function() {
-        ctrl = new Base();
+        ctrl = ControllerFactory();
         set = getJSONFixture('event_set_string.json');
     });
 
