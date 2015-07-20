@@ -53,8 +53,13 @@ function View(options, container) {
 /**
  * Add child views.
  * @param {View} view The view instance to add.
+ * @param {function} [fn] Function for invoke before add. parent view class is supplied first arguments.
  */
-View.prototype.addChild = function(view) {
+View.prototype.addChild = function(view, fn) {
+    if (fn) {
+        fn.call(view, this);
+    }
+
     this.childs.add(view);
 };
 

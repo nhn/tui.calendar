@@ -30,6 +30,17 @@ describe('View', function() {
 
             expect(view.childs.has(util.stamp(view2)));
         });
+
+        it('Can add some process before added.', function() {
+            view = new View();
+            var view2 = new View();
+            var spy = jasmine.createSpy('beforeAdd');
+
+            view.addChild(view2, spy);
+
+            expect(spy).toHaveBeenCalledWith(view);
+            expect(view.childs.has(util.stamp(view2)));
+        });
     });
 
     describe('resize()', function() {
