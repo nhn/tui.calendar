@@ -43,6 +43,33 @@ describe('View', function() {
         });
     });
 
+    describe('removeChild', function() {
+        var view2;
+
+        beforeEach(function() {
+            view = new View();
+            view2 = new View();
+            
+            view.addChild(view2);
+        });
+
+        it('Can remove child view.', function() {
+            view.removeChild(util.stamp(view2));
+            expect(view.childs.length).toBe(0);
+        });
+
+        it('Can remove child view by instance itself.', function() {
+            view.removeChild(view2);
+            expect(view.childs.length).toBe(0);
+        });
+
+        it('Can execute some process before view removed.', function() {
+            var spy = jasmine.createSpy('beforeRemove');
+            view.removeChild(view2, spy);
+            expect(spy).toHaveBeenCalledWith(view);
+        });
+    });
+
     describe('resize()', function() {
         it('capture resize event or invokes and send to child views.', function() {
             view = new View(null, document.getElementById('container2'));

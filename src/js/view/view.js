@@ -63,6 +63,23 @@ View.prototype.addChild = function(view, fn) {
     this.childs.add(view);
 };
 
+/**
+ * Remove added child view.
+ * @param {(number|View)} id View id or instance itself to remove.
+ * @param {function} [fn] Function for invoke before remove. parent view class is supplied first arguments.
+ */
+View.prototype.removeChild = function(id, fn) {
+    var view = util.isNumber(id) ? this.childs.items[id] : id;
+
+    id = util.stamp(view);
+
+    if (fn) {
+        fn.call(view, this);
+    }
+
+    this.childs.remove(id);
+};
+
 // TODO: propagate resize events to child views.
 View.prototype.resize = function() {
     var container = this.container,
