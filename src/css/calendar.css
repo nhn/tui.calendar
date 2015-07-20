@@ -1,0 +1,32 @@
+/**
+ * dooray-calendar
+ *
+ * View's minimum size values.
+ * Days 600 x 630
+ *
+ * Days.AllDay 600 x 30
+ * Days.Task = 200px
+ * Days.Time = 400px 
+ */
+
+.view-days-container {
+    width: 600px;
+    height: 630px;
+}
+
+.view-allday-container {
+    width: 600px;
+    height: 30px;
+}
+
+.view-task-container {
+    width: 600px;
+    height: 200px;
+}
+
+.view-time-container {
+    width: 600px;
+    height: 400px;
+    overflow: auto;
+}
+

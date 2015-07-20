@@ -28,6 +28,7 @@ var Event = require('./src/js/model/event');
  * Views
  **********/
 var View = require('./src/js/view/view');
+var Days = require('./src/js/view/days');
 
 /**********
  * View Models
@@ -50,6 +51,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     Event: Event,
 
     View: View,
+    Days: Days,
 
     DaysViewModel: DaysViewModel
 });
