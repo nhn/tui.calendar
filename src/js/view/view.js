@@ -39,6 +39,7 @@ function View(options, container) {
     this.container = container;
 }
 
+// TODO: propagate resize events to child views.
 View.prototype.resize = function() {
     var container = this.container,
         position = domutil.getPosition(container),
@@ -49,7 +50,7 @@ View.prototype.resize = function() {
         y: position[1],
         width: size[0],
         height: size[1]
-    }
+    };
 };
 
 module.exports = View;
