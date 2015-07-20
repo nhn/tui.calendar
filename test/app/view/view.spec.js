@@ -20,5 +20,18 @@ describe('View', function() {
             expect(view.container).toEqual(el);
         });
     });
+
+    describe('resize()', function() {
+        it('capture resize event or invokes and send to child views.', function() {
+            view = new View(null, document.getElementById('container2'));
+            expect(view.resize()).toEqual({
+                x: 10,
+                y: 10,
+                width: 250,
+                height: 200
+            });
+            expect(view.resize().x).not.toBe(50);
+        });
+    });
 });
 

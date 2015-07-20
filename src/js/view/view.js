@@ -39,5 +39,18 @@ function View(options, container) {
     this.container = container;
 }
 
+View.prototype.resize = function() {
+    var container = this.container,
+        position = domutil.getPosition(container),
+        size = domutil.getSize(container);
+
+    return {
+        x: position[0],
+        y: position[1],
+        width: size[0],
+        height: size[1]
+    }
+};
+
 module.exports = View;
 
