@@ -8,6 +8,11 @@ var util = global.ne.util;
 var domutil = require('../common/domutil');
 var View = require('./view');
 
+/**********
+ * Sub views
+ **********/
+var Time = require('./time');
+
 /**
  * @constructor
  * @extends {View}
@@ -47,9 +52,10 @@ function Days() {
      */
     this.timeContainer = domutil.appendHTMLElement(
         'div',
-        container,
-        'view-time-container'
+        container
     );
+
+    this.addChild(new Time(null, this.timeContainer));
 }
 
 util.inherit(Days, View);

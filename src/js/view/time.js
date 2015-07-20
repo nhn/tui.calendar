@@ -10,6 +10,7 @@ var View = require('./view');
 
 function Time() {
     View.apply(this, arguments);
+    domutil.addClass(this.container, 'view-time-container');
 }
 
 util.inherit(Time, View);
