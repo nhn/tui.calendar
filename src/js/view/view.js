@@ -6,6 +6,7 @@
 
 var util = global.ne.util;
 var domutil = require('../common/domutil');
+var Collection = require('../common/collection');
 
 /**
  * Base class of views.
@@ -37,7 +38,25 @@ function View(options, container) {
      * @type {HTMLDIVElement}
      */
     this.container = container;
+
+    /*eslint-disable*/
+    /**
+     * child views.
+     * @type {Collection}
+     */
+    this.childs = new Collection(function(view) {
+        return util.stamp(view);
+    });
+    /*eslint-enable*/
 }
+
+/**
+ * Add child views.
+ * @param {View} view The view instance to add.
+ */
+View.prototype.addChild = function(view) {
+    this.childs.add(view);
+};
 
 // TODO: propagate resize events to child views.
 View.prototype.resize = function() {

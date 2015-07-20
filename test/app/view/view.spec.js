@@ -21,6 +21,17 @@ describe('View', function() {
         });
     });
 
+    describe('addChild', function() {
+        it('Can add child views.', function() {
+            view = new View();
+            var view2 = new View();
+
+            view.addChild(view2);
+
+            expect(view.childs.has(util.stamp(view2)));
+        });
+    });
+
     describe('resize()', function() {
         it('capture resize event or invokes and send to child views.', function() {
             view = new View(null, document.getElementById('container2'));
