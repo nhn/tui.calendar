@@ -1,29 +1,56 @@
 /*eslint-disable*/
+
+/**********
+ * Common
+ **********/
 require('code-snippet');
 require('./src/js/view/template/helper');
 var dirty = require('./src/js/common/dirty');
 var datetime = require('./src/js/datetime');
 var array = require('./src/js/common/array');
-var Point = require('./src/js/common/point');
 var domevent = require('./src/js/common/domevent');
 var domutil = require('./src/js/common/domutil');
-var Event = require('./src/js/model/event');
-var model = require('./src/js/common/model');
 var Colleciton = require('./src/js/common/collection');
+var model = require('./src/js/common/model');
+
+/**********
+ * Controllers
+ **********/
 var Base = require('./src/js/controller/base');
-var EventViewModel = require('./src/js/model/eventViewModel');
+Base.Days = require('./src/js/controller/viewMixin/days');
+
+/**********
+ * Models
+ **********/
+var Point = require('./src/js/common/point');
+var Event = require('./src/js/model/event');
+
+/**********
+ * Views
+ **********/
 var View = require('./src/js/view/view');
+
+/**********
+ * View Models
+ **********/
+var DaysViewModel = require('./src/js/view/model/days');
+
+// exports
 ne.util.defineNamespace('ne.dooray.calendar', {
     dirty: dirty,
     datetime: datetime,
     array: array,
-    Point: Point, 
     domevent: domevent,
     domutil: domutil,
-    model: model,
     Collection: Colleciton,
-    Event: Event,
+    model: model,
+
     Base: Base,
-    EventViewModel: EventViewModel,
-    View: View
+
+    Point: Point, 
+    Event: Event,
+
+    View: View,
+
+    DaysViewModel: DaysViewModel
 });
