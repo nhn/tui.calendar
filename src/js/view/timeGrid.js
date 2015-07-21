@@ -41,17 +41,10 @@ util.inherit(TimeGrid, View);
  **********/
 
 /**
- * @override
+ * Get base viewModel.
+ * @returns {object} ViewModel
  */
-TimeGrid.prototype.render = function() {
-    this.renderGrid(this.container);
-};
-
-/**
- * Render base elements
- * @param {HTMLElement} container Container element.
- */
-TimeGrid.prototype.renderGrid = function(container) {
+TimeGrid.prototype._getBaseViewModel = function() {
     var options = this.options,
         end = options.hourEnd,
         i = options.hourStart,
@@ -61,36 +54,91 @@ TimeGrid.prototype.renderGrid = function(container) {
         hours.push({hour: i});
     }
 
-    container.innerHTML = mainTmpl({hours: hours});
-    this.hourMarker = domutil.find('.view-time-hourmarker', container);
-    this.hourMarker.style.display = 'block';
+    return {hours: hours};
 };
 
-TimeGrid.prototype.attachEvent = function() {
-    window.clearInterval(this.hourMarkerIntervalID);
-    this.hourMarkerIntervalID = window.setInterval(util.bind(this.onTickHourMarker, this), 1000 * 10);
+/**
+ * @override
+ */
+TimeGrid.prototype.render = function() {
+    var container = this.container,
+        baseViewModel = this._getBaseViewModel();
+
+    container.innerHTML = mainTmpl(baseViewModel);
+
+    this.hourmarker = domutil.find('.view-time-hourmarker', container);
+    this.refreshHourmarker();
+
+    //TODO: render childs.
 };
+
+TimeGrid.prototype.refreshHourmarker = function() {
+    var hourmarker = this.hourmarker,
+        viewModel = this._getHourmarkerViewModel();
+
+    if (!hourmarker || !viewModel) {
+        return;
+    }
+
+    hourmarker.style.display = 'block';
+    hourmarker.style.top = viewModel.top + 'px';
+    domutil.find('.view-time-hourmarker-time').innerHTML = viewModel.text;
+};
+
+/**
+ * Return grid size.
+ * @returns {number[]} The size of grid element.
+ */
+TimeGrid.prototype._getGridSize = function() {
+    var childNode = this.container.childNodes[0];
+
+    if (!childNode) {
+        return false;
+    }
+
+    return domutil.getSize(childNode);
+};
+
+/**
+ * Get Hourmarker viewmodel.
+ * @returns {object} ViewModel of hourmarker.
+ */
+TimeGrid.prototype._getHourmarkerViewModel = function() {
+    var now = new Date(),
+        todayStart = datetime.start(now),
+        offset,
+        gridSize = this._getGridSize(),
+        top;
+
+    if (!gridSize) {
+        return false;
+    }
+    console.log(now, todayStart);
+
+    offset = +now - +todayStart;
+    top = (offset * gridSize[1]) / datetime.MILLISECONDS_PER_DAY;
+
+    return {
+        top: top,
+        text: datetime.format(now, 'HH:mm')
+    };
+};
+
+/**
+ * Attach events
+ */
+TimeGrid.prototype.attachEvent = function() {
+    window.clearInterval(this.intervalID);
+    this.intervalID = window.setInterval(util.bind(this.onTick, this), 1000 * 10);
+};
+
 
 /**********
  * Event handlers
  **********/
 
-TimeGrid.prototype.onTickHourMarker = function() {
-    var hourMarker = this.hourMarker,
-        height,
-        current,
-        top;
-
-    if (!hourMarker) {
-        return;
-    }
-
-    height = domutil.getSize(this.container.childNodes[0])[1];
-    current = new Date() - datetime.start(new Date());
-    top = (current * height) / datetime.MILLISECONDS_PER_DAY;
-
-    hourMarker.style.top = top + 'px';
-    domutil.find('.view-time-hourmarker-time', hourMarker).innerHTML = datetime.format(new Date(), 'HH:mm');
+TimeGrid.prototype.onTick = function() {
+    this.refreshHourmarker();
 };
 
 module.exports = TimeGrid;
