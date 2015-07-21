@@ -155,12 +155,16 @@ describe('datetime', function() {
 
     describe('format()', function() {
         it('return formatted date string as basis of supplied string.', function() {
-            var birth = new Date('1988-09-25');
+            var birth = new Date('1988-09-25T15:30:00+09:00');
             expect(dt.format(birth, '')).toBe('');
             expect(dt.format(birth, 'YYYY')).toBe('1988');
             expect(dt.format(birth, 'MM')).toBe('09');
             expect(dt.format(birth, 'DD')).toBe('25');
             expect(dt.format(birth, 'YYYYMMDD')).toBe('19880925');
+            expect(dt.format(birth, 'HH:mm')).toBe(
+                dt.leadingZero(birth.getHours(), 2) + ':' +
+                dt.leadingZero(birth.getMinutes(), 2)
+            );
         });
     });
 });

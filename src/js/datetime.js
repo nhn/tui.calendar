@@ -46,8 +46,20 @@ tokenFunc = {
      */
     'DD': function(date) {
         return datetime.leadingZero(date.getDate(), 2);
+    },
+
+    /**
+     * @param {Date} date date object
+     * @returns {string} HH:mm
+     */
+    'HH:mm': function(date) {
+        var hour = date.getHours(),
+            minutes = date.getMinutes();
+
+        return datetime.leadingZero(hour, 2) + ':' +
+            datetime.leadingZero(minutes, 2);
     }
-}
+};
 
 datetime = {
     /**
