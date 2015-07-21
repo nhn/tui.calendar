@@ -1,0 +1,17 @@
+<div class="view-time">
+<div class="view-time-hourmarker" style="display:none;">
+    <div class="view-time-hourmarker-line"></div>
+    <div class="view-time-hourmarker-time">00:00</div>
+</div>
+<ul class="view-time-left">
+{{#each hours}}
+<li>{{hour}}</li>
+{{/each}}
+</ul>
+<div class="view-time-right">
+{{#each hours}}
+<div class="view-time-grid"></div>
+{{/each}}
+</div>
+<div id="view-time-times"></div>
+</div>
