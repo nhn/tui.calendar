@@ -13,6 +13,7 @@ module.exports = function(config) {
         ],
 
         files: [
+            'src/css/calendar.css',
             'node_modules/underscore/underscore.js',
             'index.js',
             'src/**/*.js',
