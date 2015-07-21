@@ -80,8 +80,20 @@ View.prototype.removeChild = function(id, fn) {
     this.childs.remove(id);
 };
 
-// TODO: propagate resize events to child views.
-View.prototype.resize = function() {
+/**
+ * Render view recursivly.
+ */
+View.prototype.render = function() {
+    this.childs.each(function(childView) {
+        childView.render();
+    });
+};
+
+/**
+ * Calculate view's container element bound.
+ * @returns {object} The bound of container element.
+ */
+View.prototype.getViewBound = function() {
     var container = this.container,
         position = domutil.getPosition(container),
         size = domutil.getSize(container);

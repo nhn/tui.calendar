@@ -70,7 +70,40 @@ describe('View', function() {
         });
     });
 
-    describe('resize()', function() {
+    describe('render', function() {
+        var view2;
+
+        beforeEach(function() {
+            view = new View();
+            view2 = new View();
+            
+            view.addChild(view2);
+        });
+
+        it('invoke render method recursivly.', function() {
+            spyOn(view2, 'render');
+
+            view.render();
+
+            expect(view2.render).toHaveBeenCalled();
+        });
+    });
+
+    describe('getViewBound()', function() {
+        it('calculate view\'s container element bounds.', function() {
+            view = new View(null, document.getElementById('container2'));
+            expect(view.getViewBound()).toEqual({
+                x: 10,
+                y: 10,
+                width: 250,
+                height: 200
+            });
+            expect(view.getViewBound().x).not.toBe(50);
+
+        });
+    });
+
+    xdescribe('resize()', function() {
         it('capture resize event or invokes and send to child views.', function() {
             view = new View(null, document.getElementById('container2'));
             expect(view.resize()).toEqual({
