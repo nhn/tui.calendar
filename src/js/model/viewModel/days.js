@@ -6,6 +6,7 @@
 
 /**
  * Days ViewModel
+ * TODO: useless.
  * @constructor
  * @param {Event} event Event instance.
  */
