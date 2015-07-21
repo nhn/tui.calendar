@@ -11,10 +11,8 @@
 
 .view-days-container {
     width: 598px;
-
     border: 1px solid #ccc;
     font-size: 0.7em;
-    font-family: 'Nanum Gothic', Arial;
 }
 
 .view-allday-container {
@@ -84,11 +82,12 @@
     border-bottom: none;
 }
 
-.view-time-right {
-}
+.view-time-right {}
 
 .view-time-grid {
-    height: 39px;
+    margin-top:19px;
+    border-top: 1px solid #eee;
+    height: 19px;
     border-bottom: 1px solid #ccc;
 }
 
