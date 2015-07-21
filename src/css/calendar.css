@@ -10,23 +10,88 @@
  */
 
 .view-days-container {
-    width: 600px;
-    height: 630px;
+    width: 598px;
+
+    border: 1px solid #ccc;
+    font-size: 0.7em;
+    font-family: 'Nanum Gothic', Arial;
 }
 
 .view-allday-container {
-    width: 600px;
-    height: 30px;
+    width: 598px;
+    height: 60px;
 }
 
 .view-task-container {
-    width: 600px;
-    height: 200px;
+    width: 598px;
+    height: 150px;
 }
 
 .view-time-container {
-    width: 600px;
-    height: 400px;
+    width: 598px;
+    height: 416px;
     overflow: auto;
+    border-top: 2px solid #ccc;
 }
 
+/**
+ * Times view
+ */
+
+.view-time {
+    position: relative;
+    overflow: hidden;
+}
+
+.view-time-hourmarker {
+    position:absolute;
+    width: 100%;
+    left: 60px;
+    z-index: 99;
+}
+
+.view-time-hourmarker-line {
+    width: 100%;
+    height: 1px;
+    background-color: red;
+}
+
+.view-time-hourmarker-time {
+    margin-left: 3px;
+    line-height: 1.5em;
+    color: red;
+}
+
+.view-time-left {
+    width: 60px;
+    float: left;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.view-time-left li {
+    padding: 3px 5px 0 0;
+    width: 54px;
+    height: 36px;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    text-align: right;
+    background-color: #eee;
+}
+
+.view-time-left li:last-child {
+    border-bottom: none;
+}
+
+.view-time-right {
+}
+
+.view-time-grid {
+    height: 39px;
+    border-bottom: 1px solid #ccc;
+}
+
+.view-time-grid:last-child {
+    border-bottom: none;
+}
