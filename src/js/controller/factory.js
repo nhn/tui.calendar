@@ -6,9 +6,9 @@
 
 var util = global.ne.util;
 var Base = require('./base');
-var Days = require('./viewMixin/days');
+var Week = require('./viewMixin/week');
 var mixins = {
-    'Days': Days
+    'Week': Week
 };
 
 /**

@@ -1,12 +1,12 @@
 /*eslint-disable*/
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 var DaysViewModel = ne.dooray.calendar.DaysViewModel;
-describe('Base.Days', function() {
+describe('Base.Week', function() {
     var ctrl,
         set;
 
     beforeEach(function() {
-        ctrl = ControllerFactory(['Days']);
+        ctrl = ControllerFactory(['Week']);
         set = getJSONFixture('event_set_string.json');
     });
 
@@ -42,7 +42,7 @@ describe('Base.Days', function() {
             var starts = new Date('2015/04/30'),
                 ends = new Date('2015/05/02');
 
-            var result = ctrl.Days.findByDateRange(starts, ends);
+            var result = ctrl.Week.findByDateRange(starts, ends);
 
             expect(result).toEqual(expected);
         });

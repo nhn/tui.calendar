@@ -67,6 +67,7 @@ TimeGrid.prototype.renderGrid = function(container) {
 };
 
 TimeGrid.prototype.attachEvent = function() {
+    window.clearInterval(this.hourMarkerIntervalID);
     this.hourMarkerIntervalID = window.setInterval(util.bind(this.onTickHourMarker, this), 1000 * 10);
 };
 
