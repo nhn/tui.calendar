@@ -72,6 +72,9 @@ TimeGrid.prototype.render = function() {
     //TODO: render childs.
 };
 
+/**
+ * Refresh hourmarker element.
+ */
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarker = this.hourmarker,
         viewModel = this._getHourmarkerViewModel();
@@ -136,6 +139,9 @@ TimeGrid.prototype.attachEvent = function() {
  * Event handlers
  **********/
 
+/**
+ * Interval tick handler
+ */
 TimeGrid.prototype.onTick = function() {
     this.refreshHourmarker();
 };
