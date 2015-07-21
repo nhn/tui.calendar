@@ -55,8 +55,11 @@
 }
 
 .view-time-hourmarker-time {
-    margin-left: 3px;
-    line-height: 1.5em;
+    position: absolute;
+    width: 55px;
+    left: -60px;
+    text-align: right;
+    line-height: 0.1em;
     color: red;
 }
 
@@ -86,7 +89,7 @@
 
 .view-time-grid {
     margin-top:19px;
-    border-top: 1px solid #eee;
+    border-top: 1px dotted #eee;
     height: 19px;
     border-bottom: 1px solid #ccc;
 }
