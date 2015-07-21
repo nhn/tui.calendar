@@ -113,7 +113,6 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
     if (!gridSize) {
         return false;
     }
-    console.log(now, todayStart);
 
     offset = +now - +todayStart;
     top = (offset * gridSize[1]) / datetime.MILLISECONDS_PER_DAY;
