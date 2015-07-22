@@ -7,8 +7,11 @@
 var util = global.ne.util;
 var domutil = require('../common/domutil');
 var datetime = require('../datetime');
+var reqAnimFrame = require('../common/reqAnimFrame');
 var View = require('./view');
 var mainTmpl = require('./template/timeGrid.hbs');
+
+var TICK_INTERVAL = 1000 * 10;  // 10 sec
 
 /**
  * @constructor
@@ -83,9 +86,11 @@ TimeGrid.prototype.refreshHourmarker = function() {
         return;
     }
 
-    hourmarker.style.display = 'block';
-    hourmarker.style.top = viewModel.top + 'px';
-    domutil.find('.view-time-hourmarker-time').innerHTML = viewModel.text;
+    reqAnimFrame.requestAnimFrame(function() {
+        hourmarker.style.display = 'block';
+        hourmarker.style.top = viewModel.top + 'px';
+        domutil.find('.view-time-hourmarker-time').innerHTML = viewModel.text;
+    });
 };
 
 /**
@@ -131,7 +136,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
  */
 TimeGrid.prototype.attachEvent = function() {
     window.clearInterval(this.intervalID);
-    this.intervalID = window.setInterval(util.bind(this.onTick, this), 1000 * 10);
+    this.intervalID = window.setInterval(util.bind(this.onTick, this), TICK_INTERVAL);
 };
 
 
