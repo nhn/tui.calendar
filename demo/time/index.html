@@ -11,11 +11,35 @@
 <script>
 (function(w) {
     var calendar = w.ne.dooray.calendar;
+    var ctrl = calendar.ControllerFactory(['Week']);
+    var week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
 
-    w.week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
-    w.ctrl = calendar.ControllerFactory(['Week']);
-    w.week.controller = w.ctrl;
-    w.week.render();
+
+    var events = [{
+        title: 'nodejs study',
+        isAllDay: false,
+        starts: '2015-07-22T22:00:00+09:00',
+        ends: '2015-07-22T22:30:00+09:00'
+    }, {
+        title: 'scrum',
+        isAllDay: false,
+        starts: '2015-07-23T09:40:00+09:00',
+        ends: '2015-07-23T10:00:00+09:00'
+    }];
+
+    // add event models
+    w.ne.util.forEach(events, function(data) {
+        ctrl.addEvent(calendar.Event.create(data));
+    });
+
+    // bind controller to week view
+    week.controller = ctrl.Week;
+
+    // render
+    week.render();
+
+    w.ctrl = ctrl;
+    w.week = week;
 })(window);
 </script>
 </body>
