@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var View = ne.dooray.calendar.View;
 var Week = ne.dooray.calendar.Week;
 describe('View/Week', function() {
     var view;
@@ -10,6 +11,21 @@ describe('View/Week', function() {
 
     it('Create child views', function() {
         expect(view.childs.length).not.toBe(0);
+    });
+
+    describe('render()', function() {
+        it('send viewmodels from controllers.', function() {
+            view.controller = jasmine.createSpyObj('Base.Week', ['findByDateRange']);
+            view.controller.findByDateRange.and.returnValue('helloWorld');
+
+            var child = new View();
+            spyOn(child, 'render');
+            view.addChild(child);
+
+            view.render();
+
+            expect(child.render).toHaveBeenCalledWith('helloWorld');
+        });
     });
 
     describe('_getRenderDateRange()', function() {

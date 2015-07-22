@@ -60,6 +60,25 @@ function Week(controller, options, container) {
 util.inherit(Week, View);
 
 /**********
+ * Override props
+ **********/
+
+/**
+ * Render each child view with events in ranges.
+ */
+Week.prototype.render = function() {
+    var options = this.options,
+        viewModel = this.controller.findByDateRange(
+            options.renderStartDate,
+            options.renderEndDate
+        );
+
+    this.childs.each(function(childView) {
+        childView.render(viewModel);
+    });
+};
+
+/**********
  * Prototype props
  **********/
 
