@@ -20,6 +20,7 @@ var HOUR_TO_MILLISECONDS = 60 * 60 * 1000;
  * @param {object} options The object for view customization.
  * @param {number} [options.hourStart=0] You can change view's start hours.
  * @param {number} [options.hourEnd=0] You can change view's end hours.
+ * @param {HTMLElement} container Container element.
  */
 function TimeGrid(options, container) {
     View.call(this, null, container);
