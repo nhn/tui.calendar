@@ -42,10 +42,15 @@ describe('View/TimeGrid', function() {
             originDate = window.Date;
             spyOn(window, 'Date');
             obj = {
-                _getGridSize: function() { return [200, 300]; }
+                _getGridSize: function() { return [200, 300]; },
+                _getBaseViewModel: function() { return {hours: {length: 9}} },
+                options: {
+                    hourStart: 3,
+                    hourEnd: 11
+                }
             };
 
-            current = new originDate('2015-05-05T12:00:00+09:00');
+            current = new originDate('2015-05-05T07:30:00+09:00');
             start = new originDate('2015-05-05T00:00:00+09:00');
 
             window.Date.and.returnValue(current);
@@ -55,7 +60,7 @@ describe('View/TimeGrid', function() {
         it('Calculate hourmarker viewModel accuratly.', function() {
             var expected = {
                 top: 150,
-                text: '12:00'
+                text: '07:30'
             };
 
             var result = proto._getHourmarkerViewModel.call(obj);

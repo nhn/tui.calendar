@@ -12,6 +12,7 @@ var View = require('./view');
 var mainTmpl = require('./template/timeGrid.hbs');
 
 var TICK_INTERVAL = 1000 * 10;  // 10 sec
+var HOUR_TO_MILLISECONDS = 60 * 60 * 1000;
 
 /**
  * @constructor
@@ -62,8 +63,9 @@ TimeGrid.prototype._getBaseViewModel = function() {
 
 /**
  * @override
+ * @param {object} eventViewModels ViewModel list from Week view.
  */
-TimeGrid.prototype.render = function() {
+TimeGrid.prototype.render = function(eventViewModels) {
     var container = this.container,
         baseViewModel = this._getBaseViewModel();
 
@@ -113,20 +115,22 @@ TimeGrid.prototype._getGridSize = function() {
  */
 TimeGrid.prototype._getHourmarkerViewModel = function() {
     var now = new Date(),
-        todayStart = datetime.start(now),
-        offset,
+        start = datetime.start(now),
+        hourStart = this.options.hourStart,
         gridSize = this._getGridSize(),
-        top;
+        offset;
 
     if (!gridSize) {
         return false;
     }
 
-    offset = +now - +todayStart;
-    top = (offset * gridSize[1]) / datetime.MILLISECONDS_PER_DAY;
+    offset = +now - +start;
+    if (hourStart) {
+        offset -= hourStart * HOUR_TO_MILLISECONDS;
+    }
 
     return {
-        top: top,
+        top: (offset * gridSize[1]) / (this._getBaseViewModel().hours.length * HOUR_TO_MILLISECONDS),
         text: datetime.format(now, 'HH:mm')
     };
 };
