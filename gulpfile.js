@@ -16,8 +16,12 @@ gulp.task('default', function() {
 });
 
 gulp.task('connect', function() {
-    connect.server();
+    connect.server({
+        livereload: true
+    });
+    gulp.watch(['./src/**/*.js', './index.js', './demo/**/*.html'], ['bundle']);
 });
+
 
 gulp.task('bundle', function() {
     var b = browserify({
@@ -29,7 +33,8 @@ gulp.task('bundle', function() {
         .bundle()
         .pipe(source('app.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist'))
+        .pipe(connect.reload());
 });
 
 gulp.task('dev', function() {
