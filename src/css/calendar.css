@@ -99,6 +99,8 @@
     border-bottom: none;
 }
 
+/*시간별 일정 출력*/
+
 .view-time-events {
     position:absolute;
     width: 100%;
