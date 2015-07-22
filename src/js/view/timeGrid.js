@@ -68,17 +68,37 @@ TimeGrid.prototype._getBaseViewModel = function() {
  */
 TimeGrid.prototype.render = function(eventViewModels) {
     var container = this.container,
-        baseViewModel = this._getBaseViewModel();
+        baseViewModel = this._getBaseViewModel(),
+        eventLen = util.keys(eventViewModels).length,
+        eventContainer,
+        eventContainerSize,
+        timeViewWidth;
 
     container.innerHTML = mainTmpl(baseViewModel);
 
     this.hourmarker = domutil.find('.view-time-hourmarker', container);
     this.refreshHourmarker();
 
+
+    eventContainer = domutil.find('.view-time-events-container', container);
+    eventContainerSize = domutil.getSize(eventContainer);
+    /**********
+     * Render childs
+     **********/
+    if (!eventLen || !eventContainerSize) {
+        return;
+    }
+
     // empty child view collection
     this.childs.clear();
+    //TODO: destroy child view
+    timeViewWidth = eventContainerSize[0] / eventLen;
 
+    // reconcilation of child views
     util.forEach(eventViewModels, function(events, ymd) {
+        var el = domutil.appendHTMLElement('div', eventContainer, 'view-time-date');
+        el.style.width = timeViewWidth + 'px';
+        el.style.height = '200px';
     });
 };
 
