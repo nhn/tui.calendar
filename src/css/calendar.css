@@ -79,6 +79,7 @@
     border-right: 1px solid #ccc;
     text-align: right;
     background-color: #eee;
+    color: #777;
 }
 
 .view-time-left li:last-child {

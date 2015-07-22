@@ -14,7 +14,8 @@
 
     w.ctrl = calendar.ControllerFactory(['Week']);
     w.week = new calendar.Week(
-        w.ctrl.Week, 
+        w.ctrl.Week,
+        null,
         document.getElementById('calendar')
     );
     w.week.render();
