@@ -75,7 +75,11 @@ TimeGrid.prototype.render = function(eventViewModels) {
     this.hourmarker = domutil.find('.view-time-hourmarker', container);
     this.refreshHourmarker();
 
-    //TODO: render childs.
+    // empty child view collection
+    this.childs.clear();
+
+    util.forEach(eventViewModels, function(events, ymd) {
+    });
 };
 
 /**
@@ -92,7 +96,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
     reqAnimFrame.requestAnimFrame(function() {
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.top + 'px';
-        domutil.find('.view-time-hourmarker-time').innerHTML = viewModel.text;
+        domutil.find('.view-time-hourmarker-time', hourmarker).innerHTML = viewModel.text;
     });
 };
 
