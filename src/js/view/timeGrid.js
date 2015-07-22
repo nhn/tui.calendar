@@ -27,10 +27,10 @@ function TimeGrid(options, container) {
      * Time view options.
      * @type {object}
      */
-    this.options = util.extend(options || {}, {
+    this.options = util.extend({
         hourStart: 0,
         hourEnd: 24
-    });
+    }, options || {});
 
     domutil.addClass(container, 'view-time-container');
 

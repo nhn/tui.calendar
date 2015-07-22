@@ -9,10 +9,6 @@ describe('View/Week', function() {
         view = new Week(null, null, document.getElementById('container2'));
     });
 
-    it('Create child views', function() {
-        expect(view.childs.length).not.toBe(0);
-    });
-
     describe('render()', function() {
         it('send viewmodels from controllers.', function() {
             view.controller = jasmine.createSpyObj('Base.Week', ['findByDateRange']);

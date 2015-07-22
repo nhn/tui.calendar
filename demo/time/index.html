@@ -12,12 +12,9 @@
 (function(w) {
     var calendar = w.ne.dooray.calendar;
 
+    w.week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
     w.ctrl = calendar.ControllerFactory(['Week']);
-    w.week = new calendar.Week(
-        w.ctrl.Week,
-        null,
-        document.getElementById('calendar')
-    );
+    w.week.controller = w.ctrl;
     w.week.render();
 })(window);
 </script>

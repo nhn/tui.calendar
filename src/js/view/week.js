@@ -9,11 +9,6 @@ var domutil = require('../common/domutil');
 var datetime = require('../datetime');
 var View = require('./view');
 
-/**********
- * Sub views
- **********/
-var TimeGrid = require('./timeGrid');
-
 /**
  * @constructor
  * @param {Base.Week} controller The controller mixin part.
@@ -36,7 +31,7 @@ function Week(controller, options, container) {
     this.options = util.extend({
         renderStartDate: range.start,
         renderEndDate: range.end
-    }, options);
+    }, options || {});
 
     /**
      * Week controller mixin.
@@ -46,15 +41,6 @@ function Week(controller, options, container) {
 
     domutil.addClass(container, 'view-days-container');
     domutil.disableTextSelection(container);
-
-    //TODO: add childs need to in service code (or factory)
-    this.addChild(new TimeGrid(
-        null,
-        domutil.appendHTMLElement(
-            'div',
-            container
-        )
-    ));
 }
 
 util.inherit(Week, View);
