@@ -98,3 +98,23 @@
 .view-time-grid:last-child {
     border-bottom: none;
 }
+
+.view-time-events {
+    position:absolute;
+    width: 100%;
+    top: 0px;
+}
+
+.view-time-events-container {
+    margin-left:60px;
+}
+
+.view-time-date {
+    float: left;
+    background-color: yellow;
+    opacity: 0.3;
+}
+
+.view-time-date:nth-of-type(odd) {
+    background-color: red;
+}
