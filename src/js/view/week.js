@@ -40,7 +40,6 @@ function Week(controller, options, container) {
     this.controller = controller;
 
     domutil.addClass(container, 'view-week-container');
-    domutil.disableTextSelection(container);
 }
 
 util.inherit(Week, View);
