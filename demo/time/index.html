@@ -14,7 +14,6 @@
     var ctrl = calendar.ControllerFactory(['Week']);
     var week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
 
-
     var events = [{
         title: 'nodejs study',
         isAllDay: false,
@@ -25,6 +24,11 @@
         isAllDay: false,
         starts: '2015-07-23T09:40:00+09:00',
         ends: '2015-07-23T10:00:00+09:00'
+    }, {
+        title: 'scrum',
+        isAllDay: false,
+        starts: '2015-07-24T09:40:00+09:00',
+        ends: '2015-07-24T10:00:00+09:00'
     }];
 
     // add event models

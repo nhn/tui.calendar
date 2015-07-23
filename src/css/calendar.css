@@ -104,19 +104,24 @@
 .view-time-events {
     position:absolute;
     width: 100%;
+    height: 100%;
     top: 0px;
 }
 
 .view-time-events-container {
     margin-left:60px;
+    height: 100%;
 }
 
 .view-time-date {
+    position: relative;
+    height: 100%;
     float: left;
-    background-color: yellow;
-    opacity: 0.3;
+    border-right: 1px solid #ccc;
+    margin-left: -1px;
 }
 
-.view-time-date:nth-of-type(odd) {
-    background-color: red;
+.view-time-date:last-child {
+    border-right: none;
+    margin: 0;
 }

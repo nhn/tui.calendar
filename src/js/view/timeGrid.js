@@ -92,13 +92,12 @@ TimeGrid.prototype.render = function(eventViewModels) {
     // empty child view collection
     this.childs.clear();
     //TODO: destroy child view
-    timeViewWidth = eventContainerSize[0] / eventLen;
+    timeViewWidth = 100 / eventLen;
 
     // reconcilation of child views
     util.forEach(eventViewModels, function(events, ymd) {
         var el = domutil.appendHTMLElement('div', eventContainer, 'view-time-date');
-        el.style.width = timeViewWidth + 'px';
-        el.style.height = '200px';
+        el.style.width = timeViewWidth + '%';
     });
 };
 
