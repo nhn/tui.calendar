@@ -273,11 +273,11 @@ describe('Collection', function() {
         it('group all elements by number values.', function() {
             var grouped = c.groupBy('value');
 
-            var c1 = new Collection();
+            var c1 = new Collection(c.getItemID);
             c1.add(item1);
-            var c2 = new Collection();
+            var c2 = new Collection(c.getItemID);
             c2.add(item2);
-            var c3 = new Collection();
+            var c3 = new Collection(c.getItemID);
             c3.add(item3);
 
             expect(grouped).toEqual({
@@ -290,9 +290,9 @@ describe('Collection', function() {
         it('group by boolean values.', function() {
             var grouped = c.groupBy('isGood');
 
-            var c1 = new Collection();
+            var c1 = new Collection(c.getItemID);
             c1.add(item1);
-            var c2 = new Collection();
+            var c2 = new Collection(c.getItemID);
             c2.add(item2, item3);
 
             expect(grouped).toEqual({
@@ -304,11 +304,11 @@ describe('Collection', function() {
         it('if base value is function then use returned value', function() {
             var grouped = c.groupBy('no');
 
-            var c1 = new Collection();
+            var c1 = new Collection(c.getItemID);
             c1.add(item1);
-            var c2 = new Collection();
+            var c2 = new Collection(c.getItemID);
             c2.add(item2);
-            var c3 = new Collection();
+            var c3 = new Collection(c.getItemID);
             c3.add(item3);
 
             expect(grouped).toEqual({

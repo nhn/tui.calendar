@@ -294,28 +294,57 @@ Collection.prototype.find = function(filter) {
  * if key parameter is function then invoke it and use returned value.
  * @param {(string|number|boolean|function)} key key property or getter function.
  * @returns {object.<string, Collection>} grouped object
+ * @example
+ * collection.groupBy(function(person) {
+ *     if (person.age > 19) {
+ *         return 'adult';
+ *     }
+ *
+ *     return 'youth';
+ * });
+ *
+ * // result {'adult': Collection, 'youth': Collection}
+ *
+ *
+ * // Assume this list in collection.
+ * [{
+ *     age: 21,
+ *     getAge: function() {return this.age;}
+ *  }, {
+ *     age: 15,
+ *     getAge: function() {return this.age;}
+ * }]
+ *
+ * collection.groupBy('getAge');
+ *
+ * // result {'21': Collection, '15': Collection}
  */
 Collection.prototype.groupBy = function(key) {
     var result = {},
         collection,
         baseValue,
-        isFunc = util.isFunction;
+        isFunc = util.isFunction,
+        keyIsFunc = isFunc(key);
 
     this.each(function(item) {
-        baseValue = item[key];
+        if (keyIsFunc) {
+            baseValue = key(item);
+        } else {
+            baseValue = item[key];
 
-        if (isFunc(baseValue)) {
-            baseValue = baseValue.apply(item);
+            if (isFunc(baseValue)) {
+                baseValue = baseValue.apply(item);
+            }
         }
 
         collection = result[baseValue];
 
         if (!collection) {
-            collection = result[baseValue] = new Collection(this.getItemIDFn);
+            collection = result[baseValue] = new Collection(this.getItemID);
         }
 
         collection.add(item);
-    });
+    }, this);
 
     return result;
 };
