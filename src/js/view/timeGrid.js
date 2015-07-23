@@ -9,6 +9,7 @@ var domutil = require('../common/domutil');
 var datetime = require('../datetime');
 var reqAnimFrame = require('../common/reqAnimFrame');
 var View = require('./view');
+var Time = require('./time');
 var mainTmpl = require('./template/timeGrid.hbs');
 
 var TICK_INTERVAL = 1000 * 10;  // 10 sec
@@ -71,34 +72,51 @@ TimeGrid.prototype.render = function(eventViewModels) {
         baseViewModel = this._getBaseViewModel(),
         eventLen = util.keys(eventViewModels).length,
         eventContainer,
-        eventContainerSize,
-        timeViewWidth;
+        timeViewWidth,
+        today,
+        isToday;
 
-    container.innerHTML = mainTmpl(baseViewModel);
-
-    this.hourmarker = domutil.find('.view-time-hourmarker', container);
-    this.refreshHourmarker();
-
-
-    eventContainer = domutil.find('.view-time-events-container', container);
-    eventContainerSize = domutil.getSize(eventContainer);
-    /**********
-     * Render childs
-     **********/
-    if (!eventLen || !eventContainerSize) {
+    if (!eventLen) {
         return;
     }
 
-    // empty child view collection
-    this.childs.clear();
-    //TODO: destroy child view
+    container.innerHTML = mainTmpl(baseViewModel);
+
+    /**********
+     * Render childs
+     **********/
     timeViewWidth = 100 / eventLen;
+    today = datetime.format(new Date(), 'YYYYMMDD');
+    eventContainer = domutil.find('.view-time-events-container', container);
+
+    // clear contents
+    eventContainer.innerHTML = '';
+    this.childs.clear();
+    this.todaymarkerLeft = null;
 
     // reconcilation of child views
     util.forEach(eventViewModels, function(events, ymd) {
-        var el = domutil.appendHTMLElement('div', eventContainer, 'view-time-date');
-        el.style.width = timeViewWidth + '%';
-    });
+        isToday = ymd === today;
+
+        if (isToday) {
+            this.todaymarkerLeft = timeViewWidth * this.childs.length;
+        }
+
+        this.addChild(new Time(
+            timeViewWidth,
+            events.time,
+            {isToday: isToday},
+            domutil.appendHTMLElement('div', eventContainer, 'view-time-date')
+        ));
+    }, this);
+
+    View.prototype.render.call(this);
+
+    /**********
+     * Render hourmarker
+     **********/
+    this.hourmarker = domutil.find('.view-time-hourmarker', container);
+    this.refreshHourmarker();
 };
 
 /**
@@ -106,16 +124,30 @@ TimeGrid.prototype.render = function(eventViewModels) {
  */
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarker = this.hourmarker,
-        viewModel = this._getHourmarkerViewModel();
+        viewModel = this._getHourmarkerViewModel(),
+        todaymarkerLeft = this.todaymarkerLeft,
+        todaymarker,
+        text;
 
     if (!hourmarker || !viewModel) {
         return;
     }
 
+    todaymarker = domutil.find('.view-time-todaymarker', hourmarker);
+    text = domutil.find('.view-time-hourmarker-time', hourmarker);
+
     reqAnimFrame.requestAnimFrame(function() {
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.top + 'px';
-        domutil.find('.view-time-hourmarker-time', hourmarker).innerHTML = viewModel.text;
+
+        if (todaymarkerLeft) {
+            todaymarker.style.display = 'block';
+            todaymarker.style.left = todaymarkerLeft + '%';
+        } else {
+            todaymarker.style.display = 'none';
+        }
+
+        text.innerHTML = viewModel.text;
     });
 };
 

@@ -41,11 +41,19 @@
     overflow: hidden;
 }
 
+/**
+ * Hourmarker
+ */
 .view-time-hourmarker {
     position:absolute;
     width: 100%;
     left: 60px;
-    z-index: 99;
+    z-index: 98;
+}
+
+.view-time-hourmarker-wrap {
+    position: relative;
+    margin-right:60px;
 }
 
 .view-time-hourmarker-line {
@@ -63,6 +71,21 @@
     color: red;
 }
 
+.view-time-todaymarker {
+    position:absolute;
+    text-indent: -9999px;
+    width: 3px;
+    height: 3px;
+    background-color: red;
+    margin: -2px 0 0 -2px;
+    outline: 2px solid #fff;
+    border-radius: 50%;
+    z-index: 99;
+}
+
+/**
+ * Layout
+ */
 .view-time-left {
     width: 60px;
     float: left;
