@@ -6,12 +6,19 @@
     <link rel="stylesheet" type="text/css" href="../../src/css/calendar.css" />
 </head>
 <body>
+<h1>Calendar Test</h1>
 <div id="calendar"></div>
 <script src="../../dist/app.js"></script>
 <script>
 (function(w) {
     var calendar = w.ne.dooray.calendar;
     var ctrl = calendar.ControllerFactory(['Week']);
+    // var week = calendar.ViewFactory('Week', {
+    //     renderStartDate: new Date('2015-07-22'),
+    //     renderEndDate: new Date('2015-07-25'),
+    //     hourStart: 9,
+    //     hourEnd: 23
+    // }, document.getElementById('calendar'));
     var week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
 
     var events = [{
