@@ -12,8 +12,9 @@ var View = require('./view');
 var Time = require('./time');
 var mainTmpl = require('./template/timeGrid.hbs');
 
-var TICK_INTERVAL = 1000 * 10;  // 10 sec
+var TICK_INTERVAL = 1000 * 10;    // 10 sec
 var HOUR_TO_MILLISECONDS = 60 * 60 * 1000;
+var PIXEL_RENDER_ERROR = 0.5;    // pixel rendering error value
 
 /**
  * @constructor
@@ -136,9 +137,10 @@ TimeGrid.prototype.refreshHourmarker = function() {
     todaymarker = domutil.find('.view-time-todaymarker', hourmarker);
     text = domutil.find('.view-time-hourmarker-time', hourmarker);
 
+    //TODO: debounce 0.5px units.
     reqAnimFrame.requestAnimFrame(function() {
         hourmarker.style.display = 'block';
-        hourmarker.style.top = viewModel.top + 'px';
+        hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
 
         if (todaymarkerLeft) {
             todaymarker.style.display = 'block';
