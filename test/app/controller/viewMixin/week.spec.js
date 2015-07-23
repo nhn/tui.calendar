@@ -1,6 +1,6 @@
 /*eslint-disable*/
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
-var DaysViewModel = ne.dooray.calendar.DaysViewModel;
+var EventViewModel = ne.dooray.calendar.EventViewModel;
 describe('Base.Week', function() {
     var ctrl,
         set;
@@ -20,7 +20,7 @@ describe('Base.Week', function() {
 
             util.forEach(set, function(data) {
                 var item = ctrl.createEvent(data);
-                eventList.push(DaysViewModel.create(item));
+                eventList.push(EventViewModel.create(item));
                 idList.push(util.stamp(item));
             });
 
@@ -35,8 +35,13 @@ describe('Base.Week', function() {
 
         it('by YMD', function() {
             var expected = {
-                '20150501': [eventList[0]],
-                '20150502': [eventList[0], eventList[3]]
+                '20150501': {
+                    allday: [eventList[0]]
+                },
+                '20150502': {
+                    allday: [eventList[0]],
+                    time: [eventList[3]]
+                }
             };
 
             var starts = new Date('2015/04/30'),
@@ -44,7 +49,9 @@ describe('Base.Week', function() {
 
             var result = ctrl.Week.findByDateRange(starts, ends);
 
-            expect(result).toEqual(expected);
+            expect(result['20150501'].allday).toBeDefined();
+            expect(result['20150501'].allday.single().model).toBe(eventList[0].model);
+            expect(result['20150502'].time.single().model).toBe(eventList[3].model);
         });
     });
 
