@@ -79,9 +79,9 @@ var week = /** @lends Base.prototype.week */{
                 col.add.apply(col, util.map(matrix, function(id) {
                     return EventViewModel.create(ownEvents[id]);
                 }));
-                // Gorup events by type.
             }
 
+            // Gorup events by type.
             result[ymd] = week._getGroupedEventList(col);
         });
 
