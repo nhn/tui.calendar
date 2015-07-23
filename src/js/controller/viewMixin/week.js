@@ -6,17 +6,48 @@
 
 var util = global.ne.util;
 var datetime = require('../../datetime');
+var array = require('../../common/array');
 var Collection = require('../../common/collection');
 var EventViewModel = require('../../model/viewModel/event');
 
 /**
  * @mixin
  */
-var days = /** @lends Base.prototype.days */{
+var week = /** @lends Base.prototype.week */{
     /**
+     * Group EventViewModel array by type and sort it.
+     * @param {Collection} collection ViewModel collection
+     * @returns {object} Grouped ViewModels
+     */
+    _getGroupedEventList: function(collection) {
+        var group,
+            result = {
+                allday: [],
+                task: [],
+                time: []
+            };
+
+        group = collection.groupBy(function(viewModel) {
+            viewModel = viewModel.valueOf();
+            if (viewModel.isAllDay) {
+                return 'allday';
+            }
+            //TODO: task event flag
+            return 'time';
+        });
+
+        util.forEach(group, function(collection, type, group) {
+            group[type] = collection.sort(array.compare.event.asc);
+        });
+
+        return util.extend(result, group);
+    },
+
+    /**
+     * Populate events in date range.
      * @param {Date} starts start date.
      * @param {Date} ends end date.
-     * @returns {object.<string, Event[]>} events grouped by dates.
+     * @returns {object} events grouped by dates.
      */
     findByDateRange: function(starts, ends) {
         var range = datetime.range(
@@ -37,29 +68,24 @@ var days = /** @lends Base.prototype.days */{
             matrix = ownMatrix[ymd];
 
             if (matrix) {
-                col = new Collection(function(event) {
-                    return util.stamp(event);
+                // Make viewmodel collection.
+                col = new Collection(function(viewModel) {
+                    return util.stamp(viewModel.model);
                 });
+
+                // Add populated event list. convert each events to viewmodel.
                 col.add.apply(col, util.map(matrix, function(id) {
-                    return new EventViewModel(ownEvents[id]);
+                    return EventViewModel.create(ownEvents[id]);
                 }));
 
-                result[ymd] = col.groupBy(function(item) {
-                    item = item.valueOf();
-                    if (item.isAllDay) {
-                        return 'allday';
-                    }
-                    //TODO: task event flag
-                    return 'time';
-                });
+                // Gorup events by type.
+                result[ymd] = week._getGroupedEventList(col);
             }
         });
-
-        console.table(result);
 
         return result;
     }
 };
 
-module.exports = days;
+module.exports = week;
 
