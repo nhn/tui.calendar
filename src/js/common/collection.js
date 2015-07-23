@@ -291,19 +291,27 @@ Collection.prototype.find = function(filter) {
 /**
  * Group element by specific key values.
  *
- * The value must primitive types(string, number, boolean). use carefully.
- * @param {(string|number|boolean)} key key property
+ * if key parameter is function then invoke it and use returned value.
+ * @param {(string|number|boolean|function)} key key property or getter function.
  * @returns {object.<string, Collection>} grouped object
  */
 Collection.prototype.groupBy = function(key) {
     var result = {},
-        collection;
+        collection,
+        baseValue,
+        isFunc = util.isFunction;
 
     this.each(function(item) {
-        collection = result[item[key]];
+        baseValue = item[key];
+
+        if (isFunc(baseValue)) {
+            baseValue = baseValue.apply(item);
+        }
+
+        collection = result[baseValue];
 
         if (!collection) {
-            collection = result[item[key]] = new Collection(this.getItemIDFn);
+            collection = result[baseValue] = new Collection(this.getItemIDFn);
         }
 
         collection.add(item);
