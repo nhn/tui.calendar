@@ -39,7 +39,7 @@ function Week(controller, options, container) {
      */
     this.controller = controller;
 
-    domutil.addClass(container, 'view-days-container');
+    domutil.addClass(container, 'view-week-container');
     domutil.disableTextSelection(container);
 }
 
