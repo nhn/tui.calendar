@@ -35,6 +35,11 @@ describe('Base.Week', function() {
 
         it('by YMD', function() {
             var expected = {
+                '20150430': {
+                    allday: [],
+                    task: [],
+                    time: []
+                },
                 '20150501': {
                     allday: [eventList[0]],
                     task: [],

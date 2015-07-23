@@ -27,6 +27,10 @@ var week = /** @lends Base.prototype.week */{
                 time: []
             };
 
+        if (collection.length < 1) {
+            return result;
+        }
+
         group = collection.groupBy(function(viewModel) {
             viewModel = viewModel.valueOf();
             if (viewModel.isAllDay) {
@@ -66,21 +70,19 @@ var week = /** @lends Base.prototype.week */{
         util.forEachArray(range, function(date) {
             ymd = dformat(date, 'YYYYMMDD');
             matrix = ownMatrix[ymd];
+            col = new Collection(function(viewModel) {
+                return util.stamp(viewModel.model);
+            });
 
             if (matrix) {
-                // Make viewmodel collection.
-                col = new Collection(function(viewModel) {
-                    return util.stamp(viewModel.model);
-                });
-
                 // Add populated event list. convert each events to viewmodel.
                 col.add.apply(col, util.map(matrix, function(id) {
                     return EventViewModel.create(ownEvents[id]);
                 }));
-
                 // Gorup events by type.
-                result[ymd] = week._getGroupedEventList(col);
             }
+
+            result[ymd] = week._getGroupedEventList(col);
         });
 
         return result;
