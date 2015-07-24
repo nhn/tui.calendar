@@ -4,13 +4,10 @@
  */
 'use strict';
 
-var aps = Array.prototype.slice;
 var util = global.ne.util;
 var domutil = require('../common/domutil');
 var View = require('./view');
 var timeTmpl = require('./template/time.hbs');
-
-var forEachArr = util.forEachArray;
 
 /**
  * @constructor
@@ -37,7 +34,9 @@ function Time(width, options, container) {
 
 util.inherit(Time, View);
 
-Time.prototype.render = function(viewModels) {};
+Time.prototype.render = function(viewModels) {
+    this.container.innerHTML = timeTmpl(viewModels);
+};
 
 module.exports = Time;
 
