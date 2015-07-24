@@ -120,6 +120,8 @@ Base.prototype.findByDateRange = function(starts, ends) {
             result[ymd] = util.map(matrix, function(id) {
                 return ownEvents[id];
             }).sort(array.compare.event.asc);
+        } else {
+            result[ymd] = [];
         }
     });
 

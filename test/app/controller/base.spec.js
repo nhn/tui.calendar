@@ -96,6 +96,7 @@ describe('controller/base', function() {
 
         it('by YMD', function() {
             var expected = {
+                '20150430': [],
                 '20150501': [eventList[0]],
                 '20150502': [eventList[0], eventList[3]]
             };
