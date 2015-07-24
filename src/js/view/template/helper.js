@@ -5,9 +5,10 @@
 'use strict';
 
 var util = global.ne.util;
-var Handlebars = require('hbsfy/runtime');
 
-Handlebars.registerHelper('eventName', function() {
-    return util.stamp(this) + ': ' + this.title;
-});
+module.exports = {
+    'time': function(rowArr) {
+        console.log(rowArr);
+    }
+};
 

@@ -4,7 +4,7 @@
  * Common
  **********/
 require('code-snippet');
-require('./src/js/view/template/helper');
+require('./src/js/view/template/registerHelpers');
 var dirty = require('./src/js/common/dirty');
 var datetime = require('./src/js/datetime');
 var array = require('./src/js/common/array');
