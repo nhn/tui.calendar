@@ -13,12 +13,12 @@ var timeTmpl = require('./template/time.hbs');
  * @constructor
  * @extends {View}
  * @param {number} width Date element width (percent)
- * @param {array} eventViewModels Models
  * @param {object} options Options
  * @param {HTMLElement} container Element to use container for this view.
  */
-function Time(width, eventViewModels, options, container) {
+function Time(width, options, container) {
     View.call(this, null, container);
+
     container.style.width = width + '%';
 
     this.options = util.extend({
@@ -31,7 +31,7 @@ util.inherit(Time, View);
 /**
  * @override
  */
-Time.prototype.render = function() {
+Time.prototype.render = function(viewModels) {
     var options = this.options;
 
     if (options.isToday) {

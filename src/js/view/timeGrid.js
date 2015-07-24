@@ -65,17 +65,56 @@ TimeGrid.prototype._getBaseViewModel = function() {
 };
 
 /**
+ * Reconcilation child views and render.
+ * @param {object} viewModels Viewmodel
+ * @param {number} width The width percent of each time view.
+ * @param {HTMLElement} container Container element for each time view.
+ */
+TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
+    var options = this.options,
+        childOption,
+        child,
+        isToday,
+        today = datetime.format(new Date(), 'YYYYMMDD');
+
+    // clear contents
+    container.innerHTML = '';
+    this.childs.clear();
+    this.todaymarkerLeft = null;
+
+    // reconcilation of child views
+    util.forEach(viewModels, function(events, ymd) {
+        isToday = ymd === today;
+
+        if (isToday) {
+            this.todaymarkerLeft = width * this.childs.length;
+        }
+
+        childOption = {
+            isToday: isToday,
+            hourStart: options.hourStart,
+            hourEnd: options.hourEnd
+        };
+
+        child = new Time(
+            width,
+            childOption,
+            domutil.appendHTMLElement('div', container, 'view-time-date')
+        );
+        child.render(events.time);
+
+        this.addChild(child);
+    }, this);
+};
+
+/**
  * @override
  * @param {object} eventViewModels ViewModel list from Week view.
  */
 TimeGrid.prototype.render = function(eventViewModels) {
     var container = this.container,
         baseViewModel = this._getBaseViewModel(),
-        eventLen = util.keys(eventViewModels).length,
-        eventContainer,
-        timeViewWidth,
-        today,
-        isToday;
+        eventLen = util.keys(eventViewModels).length;
 
     if (!eventLen) {
         return;
@@ -86,32 +125,11 @@ TimeGrid.prototype.render = function(eventViewModels) {
     /**********
      * Render childs
      **********/
-    timeViewWidth = 100 / eventLen;
-    today = datetime.format(new Date(), 'YYYYMMDD');
-    eventContainer = domutil.find('.view-time-events-container', container);
-
-    // clear contents
-    eventContainer.innerHTML = '';
-    this.childs.clear();
-    this.todaymarkerLeft = null;
-
-    // reconcilation of child views
-    util.forEach(eventViewModels, function(events, ymd) {
-        isToday = ymd === today;
-
-        if (isToday) {
-            this.todaymarkerLeft = timeViewWidth * this.childs.length;
-        }
-
-        this.addChild(new Time(
-            timeViewWidth,
-            events.time,
-            {isToday: isToday},
-            domutil.appendHTMLElement('div', eventContainer, 'view-time-date')
-        ));
-    }, this);
-
-    View.prototype.render.call(this);
+    this._renderChilds(
+        eventViewModels,
+        100 / eventLen,
+        domutil.find('.view-time-events-container', container)
+    );
 
     /**********
      * Render hourmarker
