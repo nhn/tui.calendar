@@ -6,7 +6,6 @@
 
 var util = global.ne.util;
 var array = require('../../common/array');
-var EventViewModel = require('../../model/viewModel/event');
 
 var aps = Array.prototype.slice;
 var forEachArr = util.forEachArray;
