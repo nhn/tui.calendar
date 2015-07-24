@@ -147,9 +147,9 @@ describe('model/event', function() {
         });
 
         it('no error for empty some properties', function() {
-            var event = Event.create();
-
-            expect(event.equals(new Event())).toBe(true);
+            expect(function() {
+                Event.create();
+            }).not.toThrow();
         });
     });
 
