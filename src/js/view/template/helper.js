@@ -4,11 +4,5 @@
  */
 'use strict';
 
-var util = global.ne.util;
-
-module.exports = {
-    'time': function(rowArr) {
-        console.log(rowArr);
-    }
-};
+module.exports = {};
 
