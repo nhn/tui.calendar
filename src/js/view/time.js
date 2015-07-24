@@ -4,10 +4,13 @@
  */
 'use strict';
 
+var aps = Array.prototype.slice;
 var util = global.ne.util;
 var domutil = require('../common/domutil');
 var View = require('./view');
 var timeTmpl = require('./template/time.hbs');
+
+var forEachArr = util.forEachArray;
 
 /**
  * @constructor
@@ -22,22 +25,19 @@ function Time(width, options, container) {
     container.style.width = width + '%';
 
     this.options = util.extend({
-        isToday: false
+        isToday: false,
+        hourStart: 0,
+        hourEnd: 24
     }, options || {});
+
+    if (this.options.isToday) {
+        domutil.addClass(this.container, 'view-time-date-today');
+    }
 }
 
 util.inherit(Time, View);
 
-/**
- * @override
- */
-Time.prototype.render = function(viewModels) {
-    var options = this.options;
-
-    if (options.isToday) {
-        domutil.addClass(this.container, 'view-time-date-today');
-    }
-};
+Time.prototype.render = function(viewModels) {};
 
 module.exports = Time;
 
