@@ -4,16 +4,17 @@ var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 var EventViewModel = ne.dooray.calendar.EventViewModel;
 var Collection = ne.dooray.calendar.Collection;
 describe('Base.Week', function() {
-    var ctrl,
+    var base,
+        ctrl,
         fixture,
         eventList;
 
     beforeEach(function() {
-        ctrl = ControllerFactory(['Week']).Week;
+        base = ControllerFactory(['Week']);
+        ctrl = base.Week;
         fixture = getJSONFixture('event_set_string3.json');
         eventList = util.map(fixture, function(data) {
-            var event = Event.create(data);
-            return EventViewModel.create(event);
+            return Event.create(data);
         }).sort(array.compare.event.asc);
     });
         
@@ -68,8 +69,8 @@ describe('Base.Week', function() {
             cg;
 
         beforeEach(function() {
-            collection = new Collection(function(viewModel) {
-                return util.stamp(viewModel.model);
+            collection = new Collection(function(model) {
+                return util.stamp(model);
             });
             collection.add.apply(collection, eventList);
             cg = ctrl.getCollisionGroup(eventList);
@@ -78,38 +79,39 @@ describe('Base.Week', function() {
         it('can calculate matrices accuratly.', function() {
             var expected = [
                 [
-                    [eventList[0], eventList[1]],
-                    [eventList[2]],
-                    [eventList[3]]
+                    [EventViewModel.create(eventList[0]), EventViewModel.create(eventList[1])],
+                    [EventViewModel.create(eventList[2])],
+                    [EventViewModel.create(eventList[3])]
                 ], [
-                    [eventList[4]]
+                    [EventViewModel.create(eventList[4])]
                 ], [
-                    [eventList[5], eventList[6]]
+                    [EventViewModel.create(eventList[5]), EventViewModel.create(eventList[6])]
                 ], [
-                    [eventList[7], eventList[8]],
-                    [eventList[9]]
+                    [EventViewModel.create(eventList[7]), EventViewModel.create(eventList[8])],
+                    [EventViewModel.create(eventList[9])]
                 ], [
-                    [eventList[10]]
+                    [EventViewModel.create(eventList[10])]
                 ]
             ];
             var result = ctrl.getMatrices(collection, cg);
+            //
+            // console.log(result[0]);
+            // console.log(expected[0]);
 
             expect(result).toEqual(expected);
         });
     });
 
-    xdescribe('findByDateRange', function() {
+    describe('findByDateRange', function() {
         var eventList,
             idList;
-
+ 
         beforeEach(function() {
             eventList = [];
             idList = [];
 
-            util.forEach(set, function(data) {
-                var item = ctrl.createEvent(data);
-                eventList.push(EventViewModel.create(item));
-                idList.push(util.stamp(item));
+            util.forEach(fixture, function(data) {
+                base.createEvent(data);
             });
 
             /*
@@ -122,34 +124,12 @@ describe('Base.Week', function() {
         });
 
         it('by YMD', function() {
-            var expected = {
-                '20150430': {
-                    allday: [],
-                    task: [],
-                    time: []
-                },
-                '20150501': {
-                    allday: [eventList[0]],
-                    task: [],
-                    time: []
-                },
-                '20150502': {
-                    allday: [eventList[0]],
-                    task: [],
-                    time: [eventList[3]]
-                }
-            };
-
             var starts = new Date('2015/04/30'),
                 ends = new Date('2015/05/02');
 
-            var result = ctrl.Week.findByDateRange(starts, ends);
-            
-            expect(result).toEqual(expected);
+            var result = ctrl.findByDateRange(starts, ends);
 
-            // expect(result['20150501'].allday).toBeDefined();
-            // expect(result['20150501'].allday.single().model).toBe(eventList[0].model);
-            // expect(result['20150502'].time.single().model).toBe(eventList[3].model);
+            expect(result['20150501'].time.length).toBe(5);
         });
     });
 

@@ -5,9 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../../datetime');
 var array = require('../../common/array');
-var Collection = require('../../common/collection');
 var EventViewModel = require('../../model/viewModel/event');
 
 var aps = Array.prototype.slice;
@@ -59,6 +57,10 @@ var week = /** @lends Base.prototype.week */{
         var collisionGroups = [],
             foundPrevCollisionEvent = false,
             previousEventList;
+
+        if (!viewModels.length) {
+            return collisionGroups;
+        }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
         forEachArr(viewModels.slice(1), function(event, index) {
@@ -115,11 +117,11 @@ var week = /** @lends Base.prototype.week */{
 
     /**
      * Calculate matrix for appointment block element placing.
-     * @param {Collection} viewModelCollection viewmodel collection.
+     * @param {Collection} collection model collection.
      * @param {array[]} collisionGroups Collision groups for event set.
      * @returns {array} matrices
      */
-    getMatrices: function(viewModelCollection, collisionGroups) {
+    getMatrices: function(collection, collisionGroups) {
         var event,
             result = [],
             matrix,
@@ -133,7 +135,7 @@ var week = /** @lends Base.prototype.week */{
             matrix = [[]];
 
             forEachArr(group, function(eventID) {
-                event = viewModelCollection.items[eventID];
+                event = collection.items[eventID];
                 col = 0;
                 found = false;
 
@@ -141,14 +143,14 @@ var week = /** @lends Base.prototype.week */{
                     lastRowInColumn = getLastRowInColumn(matrix, col);
 
                     if (lastRowInColumn === false) {
-                        matrix[0].push(event);
+                        matrix[0].push(EventViewModel.create(event));
                         found = true;
                     } else if (!event.valueOf().collidesWith(matrix[lastRowInColumn][col].valueOf())) {
                         nextRow = lastRowInColumn + 1;
                         if (util.isUndefined(matrix[nextRow])) {
                             matrix[nextRow] = [];
                         }
-                        matrix[nextRow][col] = event;
+                        matrix[nextRow][col] = EventViewModel.create(event);
                         found = true;
                     }
 
@@ -169,36 +171,26 @@ var week = /** @lends Base.prototype.week */{
      * @returns {object} events grouped by dates.
      */
     findByDateRange: function(starts, ends) {
-        var range = datetime.range(
-                datetime.start(starts),
-                datetime.start(ends),
-                datetime.MILLISECONDS_PER_DAY
-            ),
-            ownEvents = this.events.items,
-            ownMatrix = this.dateMatrix,
-            dformat = datetime.format,
-            matrix,
-            col,
-            ymd,
-            result = {};
+        var eventsInRange = this.findByDateRange(starts, ends),
+            grouped,
+            collisionGroups,
+            matrices,
+            result = {},
+            cursor;
 
-        util.forEachArray(range, function(date) {
-            ymd = dformat(date, 'YYYYMMDD');
-            matrix = ownMatrix[ymd];
-            col = new Collection(function(viewModel) {
-                return util.stamp(viewModel.model);
-            });
+        util.forEach(eventsInRange, function(collection, ymd) {
+            cursor = result[ymd] = {};
+            grouped = this._getGroupedEventList(collection);
 
-            if (matrix) {
-                // Add populated event list. convert each events to viewmodel.
-                col.add.apply(col, util.map(matrix, function(id) {
-                    return EventViewModel.create(ownEvents[id]);
-                }));
-            }
+            // Create view models.
+            // For time view
+            cursor.allday = [];
+            cursor.task = [];
 
-            // Gorup events by type.
-            result[ymd] = week._getGroupedEventList(col);
-        });
+            collisionGroups = this.getCollisionGroup(grouped.time);
+            matrices = this.getMatrices(collection, collisionGroups);
+            cursor.time = matrices;
+        }, week);
 
         return result;
     }

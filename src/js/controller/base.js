@@ -6,7 +6,6 @@
 
 var util = global.ne.util;
 var datetime = require('../datetime');
-var array = require('../common/array');
 var Collection = require('../common/collection');
 
 /**
