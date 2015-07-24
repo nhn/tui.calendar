@@ -79,18 +79,18 @@ describe('Base.Week', function() {
         it('can calculate matrices accuratly.', function() {
             var expected = [
                 [
-                    [EventViewModel.create(eventList[0]), EventViewModel.create(eventList[1])],
-                    [EventViewModel.create(eventList[2])],
-                    [EventViewModel.create(eventList[3])]
+                    [eventList[0], eventList[1]],
+                    [eventList[2]],
+                    [eventList[3]]
                 ], [
-                    [EventViewModel.create(eventList[4])]
+                    [eventList[4]]
                 ], [
-                    [EventViewModel.create(eventList[5]), EventViewModel.create(eventList[6])]
+                    [eventList[5], eventList[6]]
                 ], [
-                    [EventViewModel.create(eventList[7]), EventViewModel.create(eventList[8])],
-                    [EventViewModel.create(eventList[9])]
+                    [eventList[7], eventList[8]],
+                    [eventList[9]]
                 ], [
-                    [EventViewModel.create(eventList[10])]
+                    [eventList[10]]
                 ]
             ];
             var result = ctrl.getMatrices(collection, cg);

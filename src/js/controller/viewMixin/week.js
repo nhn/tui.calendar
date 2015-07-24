@@ -143,14 +143,14 @@ var week = /** @lends Base.prototype.week */{
                     lastRowInColumn = getLastRowInColumn(matrix, col);
 
                     if (lastRowInColumn === false) {
-                        matrix[0].push(EventViewModel.create(event));
+                        matrix[0].push(event);
                         found = true;
-                    } else if (!event.valueOf().collidesWith(matrix[lastRowInColumn][col].valueOf())) {
+                    } else if (!event.collidesWith(matrix[lastRowInColumn][col])) {
                         nextRow = lastRowInColumn + 1;
                         if (util.isUndefined(matrix[nextRow])) {
                             matrix[nextRow] = [];
                         }
-                        matrix[nextRow][col] = EventViewModel.create(event);
+                        matrix[nextRow][col] = event;
                         found = true;
                     }
 
