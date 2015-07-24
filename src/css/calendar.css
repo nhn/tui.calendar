@@ -148,3 +148,9 @@
     border-right: none;
     margin: 0;
 }
+
+.view-time-date-event-itself {
+    position: absolute;
+    background-color: #7CAFC2;
+    cursor: default;
+}
