@@ -97,7 +97,7 @@ Base.prototype.addEvent = function(event) {
  * available only YMD.
  * @param {Date} starts start date.
  * @param {Date} ends end date.
- * @returns {object.<string, Event[]>} events grouped by dates.
+ * @returns {object.<string, Collection>} event collection grouped by dates.
  */
 Base.prototype.findByDateRange = function(starts, ends) {
     var range = datetime.range(
@@ -110,18 +110,20 @@ Base.prototype.findByDateRange = function(starts, ends) {
         dformat = datetime.format,
         result = {},
         matrix,
-        ymd;
+        ymd,
+        collection;
 
     util.forEachArray(range, function(date) {
         ymd = dformat(date, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
+        collection = result[ymd] = new Collection(function(event) {
+            return util.stamp(event);
+        });
 
         if (matrix) {
-            result[ymd] = util.map(matrix, function(id) {
+            collection.add.apply(collection, util.map(matrix, function(id) {
                 return ownEvents[id];
-            }).sort(array.compare.event.asc);
-        } else {
-            result[ymd] = [];
+            }));
         }
     });
 

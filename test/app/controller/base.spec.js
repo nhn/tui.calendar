@@ -1,6 +1,8 @@
 /*eslint-disable*/
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 var Event = ne.dooray.calendar.Event;
+var Collection = ne.dooray.calendar.Collection;
+var util = ne.util;
 describe('controller/base', function() {
     var ctrl,
         set;
@@ -75,7 +77,6 @@ describe('controller/base', function() {
             idList;
 
         beforeEach(function() {
-
             eventList = [];
             idList = [];
 
@@ -83,6 +84,25 @@ describe('controller/base', function() {
                 var item = ctrl.createEvent(data);
                 eventList.push(item);
                 idList.push(util.stamp(item));
+            });
+
+            // Add event collection equation tester.
+            jasmine.addCustomEqualityTester(function(first, second) {
+                var isEqual = true;
+                if (first.constructor === Collection && second.constructor === Collection) {
+                    if (first.length !== second.length) {
+                        return false;
+                    }
+
+                    first.each(function(item, id) {
+                        if (!item.equals(second.items[id])) {
+                            isEqual = false;
+                            return false;
+                        }
+                    });
+                }
+
+                return isEqual;
             });
 
             /*
@@ -95,10 +115,22 @@ describe('controller/base', function() {
         });
 
         it('by YMD', function() {
+            var col1 = new Collection(function(event) {
+                return util.stamp(event);
+            });
+            var col2 = new Collection(function(event) {
+                return util.stamp(event);
+            });
+            var col3 = new Collection(function(event) {
+                return util.stamp(event);
+            });
+            col2.add(eventList[0]);
+            col3.add(eventList[0], eventList[1]);
+
             var expected = {
-                '20150430': [],
-                '20150501': [eventList[0]],
-                '20150502': [eventList[0], eventList[3]]
+                '20150430': col1,
+                '20150501': col2,
+                '20150502': col3
             };
 
             var starts = new Date('2015/04/30'),
@@ -110,9 +142,18 @@ describe('controller/base', function() {
         });
 
         it('return sorted dates.', function() {
+            var col1 = new Collection(function(event) {
+                return util.stamp(event);
+            });
+            var col2 = new Collection(function(event) {
+                return util.stamp(event);
+            });
+            col1.add(eventList[0], eventList[3]);
+            col2.add(eventList[3], eventList[1], eventList[2]);
+
             var expected = {
-                '20150502': [eventList[0], eventList[3]],
-                '20150503': [eventList[3], eventList[1], eventList[2]]
+                '20150502': col1,
+                '20150503': col2
             };
 
             var starts = new Date('2015/05/02'),
