@@ -18,7 +18,7 @@ describe('Base.Week', function() {
         }).sort(array.compare.event.asc);
     });
         
-    it('getCollisionGroup can calculate collision group arccuratly.', function() {
+    it('getCollisionGroup() can calculate collision group arccuratly.', function() {
         var expected = [
             [stamp(eventList[0].valueOf()), 
              stamp(eventList[1].valueOf()), 
@@ -42,7 +42,7 @@ describe('Base.Week', function() {
         expect(result).toEqual(expected);
     });
 
-    describe('_getLastRowInColumn()', function() {
+    describe('getLastRowInColumn()', function() {
         var test;
         beforeEach(function() {
             test = [
@@ -64,7 +64,7 @@ describe('Base.Week', function() {
         });
     });
 
-    describe('_calcMatrices()', function() {
+    describe('getMatrices()', function() {
         var collection,
             cg;
 
@@ -94,9 +94,6 @@ describe('Base.Week', function() {
                 ]
             ];
             var result = ctrl.getMatrices(collection, cg);
-            //
-            // console.log(result[0]);
-            // console.log(expected[0]);
 
             expect(result).toEqual(expected);
         });
