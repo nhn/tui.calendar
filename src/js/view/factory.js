@@ -8,14 +8,20 @@
 var Week = require('./week');
 
 // Sub views
+var DayName = require('./dayname');
 var TimeGrid = require('./timeGrid');
 
 module.exports = function(name, options, container) {
     var weekView,
+        dayNameView,
         timeGridView;
 
     if (name === 'Week') {
         weekView = new Week(null, options, container);
+
+        dayNameView = new DayName(weekView.container);
+        weekView.addChild(dayNameView);
+
         timeGridView = new TimeGrid(options, weekView.container);
         weekView.addChild(timeGridView);
 

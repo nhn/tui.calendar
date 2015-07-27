@@ -13,6 +13,19 @@ module.exports = {
         } else {
             return 'auto';
         }
+    },
+
+    /**
+     * Use in dayname.hbs
+     * @returns {string} css class
+     */
+    'dayname-isHolliday': function() {
+        if (this.dayName === '일' ||
+            this.dayName === '토') {
+            return 'view-dayname-item holliday';
+        }
+
+        return 'view-dayname-item';
     }
 };
 
