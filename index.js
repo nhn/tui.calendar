@@ -39,6 +39,12 @@ var Time = require('./src/js/view/time');
  **********/
 var EventViewModel = require('./src/js/model/viewModel/event');
 
+/**********
+ * Handlers
+ **********/
+var Drag = require('./src/js/handler/drag');
+
+
 // exports
 ne.util.defineNamespace('ne.dooray.calendar', {
     dirty: dirty,
@@ -61,5 +67,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     TimeGrid: TimeGrid,
     Time: Time,
 
-    EventViewModel: EventViewModel 
+    EventViewModel: EventViewModel,
+
+    Drag: Drag
 });
