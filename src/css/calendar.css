@@ -9,10 +9,22 @@
  * Days.Time = 400px 
  */
 
+.clear:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
 .view-week-container {
     display: inline-block;
     border: 1px solid #ccc;
     font-size: 0.7em;
+}
+
+.view-dayname-container {
+    padding-left:60px;
+    overflow-y: scroll;
+    background-color: #eee;
 }
 
 .view-allday-container {
@@ -28,9 +40,37 @@
 .view-timegrid-container {
     width: 598px;
     height: 416px;
-    overflow: auto;
+    overflow-y: scroll;
     border-top: 2px solid #ccc;
 }
+
+/**
+ * Dayname View
+ */
+.view-dayname-item {
+    height: 40px;
+    margin-left: -1px;
+    border-left: 1px solid #ccc;
+    background-color: #fff;
+    float: left;
+    line-height: 20px;
+}
+
+.view-dayname-dayname {
+    padding-left: 7px;
+    font-size: 1.2em;
+}
+
+.view-dayname-date {
+    padding-left: 7px;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.holliday {
+    color: red;
+}
+
 
 /**
  * Times view
@@ -77,8 +117,8 @@
     width: 3px;
     height: 3px;
     background-color: red;
-    margin: -2px 0 0 -2px;
-    outline: 2px solid #fff;
+    margin: -4px 0 0 -4px;
+    border: 2px solid #fff;
     border-radius: 50%;
     z-index: 99;
 }
