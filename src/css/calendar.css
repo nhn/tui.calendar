@@ -150,6 +150,8 @@
 }
 
 .view-time-date-event-itself {
+    left: 0px;
+    right: 0px;
     position: absolute;
     background-color: #7CAFC2;
     cursor: default;

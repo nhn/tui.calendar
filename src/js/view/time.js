@@ -51,9 +51,11 @@ Time.prototype.setViewModel = function(matrices) {
         hourEnd = options.hourEnd,
         containerBound = this.getViewBound(),
         leftPercents,
+        widthPercent,
         maxRowLength,
         todayStart,
         viewModel,
+        nextEvent,
         baseMil,
         height,
         width,
@@ -66,11 +68,11 @@ Time.prototype.setViewModel = function(matrices) {
             maxRowLength = Math.max(maxRowLength, row.length);
         });
 
-        width = 100 / maxRowLength;
+        widthPercent = 100 / maxRowLength;
 
         leftPercents = [];
         for (i = 0; i < maxRowLength; i += 1) {
-            leftPercents[i] = width * i;
+            leftPercents[i] = widthPercent * i;
         }
 
         forEachArr(matrix, function(row) {
@@ -88,6 +90,14 @@ Time.prototype.setViewModel = function(matrices) {
 
                     top = (containerBound.height * top) / baseMil;
                     height = (containerBound.height * event.duration()) / baseMil;
+
+                    // Matrix의 다음 이벤트와 겹치지 않는 이벤트일땐 width을 제거함
+                    nextEvent = scope[col + 1];
+                    if (col > 0 && nextEvent && !event.collidesWith(nextEvent)) {
+                        width = null;
+                    } else {
+                        width = widthPercent;
+                    }
 
                     viewModel = EventViewModel.create(event);
                     viewModel.width = width;
