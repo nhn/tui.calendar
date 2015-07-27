@@ -44,8 +44,25 @@ function Time(width, options, container) {
 
 util.inherit(Time, View);
 
-//TODO: REFACTORING!!!
-Time.prototype.setViewModel = function(matrices) {
+/**
+ * Convert YYYYMMDD formatted string date to Date.
+ * @param {string} str formatted string.
+ * @returns {Date} start of date.
+ */
+Time.prototype._parseDateGroup = function(str) {
+    var y = parseInt(str.substr(0, 4), 10),
+        m = parseInt(str.substr(4, 2), 10),
+        d = parseInt(str.substr(6, 2), 10);
+
+    return new Date(y, m - 1, d);
+};
+
+/**
+ * Set viewmodels for rendering.
+ * @param {string} ymd The date of events. YYYYMMDD format.
+ * @param {array} matrices The matrices for event placing.
+ */
+Time.prototype._getBaseViewModel = function(ymd, matrices) {
     var options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
@@ -53,14 +70,17 @@ Time.prototype.setViewModel = function(matrices) {
         leftPercents,
         widthPercent,
         maxRowLength,
-        todayStart,
-        viewModel,
+        todayStart = this._parseDateGroup(ymd),
         nextEvent,
         baseMil,
         height,
         width,
         top,
         i;
+
+    containerBound = this.getViewBound();
+    todayStart = this._parseDateGroup(ymd);
+    baseMil = ((hourEnd - hourStart) * HOUR_TO_MILLISECONDS);
 
     forEachArr(matrices, function(matrix) {
         maxRowLength = 1;
@@ -78,16 +98,10 @@ Time.prototype.setViewModel = function(matrices) {
         forEachArr(matrix, function(row) {
             forEachArr(row, function(event, col, scope) {
                 if (event) {
-                    todayStart = datetime.start(event.starts);
-
                     top = event.starts - todayStart;
-
                     if (hourStart) {
                         top -= hourStart * HOUR_TO_MILLISECONDS;
                     }
-
-                    baseMil = ((hourEnd - hourStart) * HOUR_TO_MILLISECONDS);
-
                     top = (containerBound.height * top) / baseMil;
                     height = (containerBound.height * event.duration()) / baseMil;
 
@@ -99,21 +113,25 @@ Time.prototype.setViewModel = function(matrices) {
                         width = widthPercent;
                     }
 
-                    viewModel = EventViewModel.create(event);
-                    viewModel.width = width;
-                    viewModel.height = height;
-                    viewModel.top = top;
-                    viewModel.left = leftPercents[col];
-
-                    scope[col] = viewModel;
+                    scope[col] = util.extend(EventViewModel.create(event), {
+                        width: width,
+                        height: height,
+                        top: top,
+                        left: leftPercents[col]
+                    });
                 }
             });
         });
     });
 };
 
-Time.prototype.render = function(matrices) {
-    this.setViewModel(matrices);
+/**
+ * @override
+ * @param {string} ymd The date of events. YYYYMMDD format
+ * @param {array} matrices Matrices for placing events
+ */
+Time.prototype.render = function(ymd, matrices) {
+    this._getBaseViewModel(ymd, matrices);
     this.container.innerHTML = timeTmpl({
         matrices: matrices
     });

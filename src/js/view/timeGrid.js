@@ -105,7 +105,7 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
             childOption,
             domutil.appendHTMLElement('div', container, 'view-time-date')
         );
-        child.render(events.time);
+        child.render(ymd, events.time);
 
         this.addChild(child);
     }, this);
