@@ -10,7 +10,7 @@
  */
 
 .view-week-container {
-    width: 598px;
+    display: inline-block;
     border: 1px solid #ccc;
     font-size: 0.7em;
 }
@@ -25,7 +25,7 @@
     height: 150px;
 }
 
-.view-time-container {
+.view-timegrid-container {
     width: 598px;
     height: 416px;
     overflow: auto;
