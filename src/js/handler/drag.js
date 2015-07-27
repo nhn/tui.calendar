@@ -10,5 +10,11 @@
 function Drag() {
 }
 
+Drag.prototype._onMouseDown = function() {};
+
+Drag.prototype._onMouseMove = function() {};
+
+Drag.prototype._onMouseUp = function() {};
+
 module.exports = Drag;
 
