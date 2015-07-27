@@ -25,6 +25,12 @@ var PIXEL_RENDER_ERROR = 0.5;    // pixel rendering error value
  * @param {HTMLElement} container Container element.
  */
 function TimeGrid(options, container) {
+    container = domutil.appendHTMLElement(
+        'div',
+        container,
+        'view-timegrid-container'
+    );
+
     View.call(this, null, container);
 
     /**
@@ -35,8 +41,6 @@ function TimeGrid(options, container) {
         hourStart: 0,
         hourEnd: 24
     }, options || {});
-
-    domutil.addClass(container, 'view-time-container');
 
     this.attachEvent();
 }
