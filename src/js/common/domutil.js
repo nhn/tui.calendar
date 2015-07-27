@@ -10,6 +10,8 @@ var util = global.ne.util,
     posKey = '_pos',
     domutil;
 
+var CSS_AUTO_REGEX = /^auto$|^$|%/;
+
 function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
@@ -271,7 +273,6 @@ domutil = {
     getPosition: function(el, clear) {
         var left,
             top,
-            autoRegex,
             bound;
 
         if (clear) {
@@ -284,9 +285,9 @@ domutil = {
 
         left = 0;
         top = 0;
-        autoRegex = /(^auto$|^$)/;
 
-        if ((autoRegex.test(el.style.left) || autoRegex.test(el.style.top)) && 'getBoundingClientRect' in el) {
+        if ((CSS_AUTO_REGEX.test(el.style.left) || CSS_AUTO_REGEX.test(el.style.top)) &&
+            'getBoundingClientRect' in el) {
             // 엘리먼트의 left또는 top이 'auto'일 때 수단
             bound = el.getBoundingClientRect();
 
@@ -306,8 +307,19 @@ domutil = {
      * @return {number[]} width, height
      */
     getSize: function(el) {
-        var width = parseFloat(domutil.getStyle(el, 'width')),
-            height = parseFloat(domutil.getStyle(el, 'height'));
+        var bound,
+            width = domutil.getStyle(el, 'width'),
+            height = domutil.getStyle(el, 'height');
+
+        if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height)) &&
+            'getBoundingClientRect' in el) {
+            bound = el.getBoundingClientRect();
+            width = bound.width;
+            height = bound.height;
+        } else {
+            width = parseFloat(width || 0);
+            height = parseFloat(height || 0);
+        }
 
         return [width, height];
     },
