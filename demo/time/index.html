@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <title>Time</title>
     <link rel="stylesheet" type="text/css" href="../../src/css/calendar.css" />
+    <style type="text/css">
+    div#calendar {
+        resize: both;
+            overflow: auto;
+    }
+    </style>
 </head>
 <body>
 <h1>Calendar Test</h1>
@@ -13,30 +19,71 @@
 (function(w) {
     var calendar = w.ne.dooray.calendar;
     var ctrl = calendar.ControllerFactory(['Week']);
-    // var week = calendar.ViewFactory('Week', {
-    //     renderStartDate: new Date('2015-07-22'),
-    //     renderEndDate: new Date('2015-07-25'),
-    //     hourStart: 9,
-    //     hourEnd: 23
-    // }, document.getElementById('calendar'));
-    var week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
+    var week = calendar.ViewFactory('Week', {
+        renderStartDate: new Date('2015-07-26'),
+        renderEndDate: new Date('2015-07-28')
+        // hourStart: 9,
+        // hourEnd: 23
+    }, document.getElementById('calendar'));
+    // var week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
 
     var events = [{
+        title: '스크럼',
+        isAllDay: false,
+        starts: '2015-07-27T09:40:00+09:00',
+        ends: '2015-07-27T10:00:00+09:00'
+    }, {
         title: 'nodejs study',
         isAllDay: false,
-        starts: '2015-07-22T22:00:00+09:00',
-        ends: '2015-07-22T22:30:00+09:00'
+        starts: '2015-07-27T12:00:00+09:00',
+        ends: '2015-07-27T13:00:00+09:00'
     }, {
-        title: 'scrum',
+        title: '주간보고 작성',
         isAllDay: false,
-        starts: '2015-07-23T09:40:00+09:00',
-        ends: '2015-07-23T10:00:00+09:00'
+        starts: '2015-07-27T09:30:00+09:00',
+        ends: '2015-07-27T13:30:00+09:00'
     }, {
-        title: 'scrum',
+        title: '커피한잔',
         isAllDay: false,
-        starts: '2015-07-24T09:40:00+09:00',
-        ends: '2015-07-24T10:00:00+09:00'
+        starts: '2015-07-27T11:10:00+09:00',
+        ends: '2015-07-27T12:30:00+09:00'
+    }, {
+        title: '끼어듬',
+        isAllDay: false,
+        starts: '2015-07-27T12:40:00+09:00',
+        ends: '2015-07-27T13:20:00+09:00'
     }];
+    // var events = [{
+    //     title: 'A',
+    //     isAllDay: false,
+    //     starts: '2015-07-27T09:30:00+09:00',
+    //     ends: '2015-07-27T11:00:00+09:00'
+    // }, {
+    //     title: 'B',
+    //     isAllDay: false,
+    //     starts: '2015-07-27T10:30:00+09:00',
+    //     ends: '2015-07-27T16:00:00+09:00'
+    // }, {
+    //     title: 'C',
+    //     isAllDay: false,
+    //     starts: '2015-07-27T10:30:00+09:00',
+    //     ends: '2015-07-27T14:00:00+09:00'
+    // }, {
+    //     title: 'D',
+    //     isAllDay: false,
+    //     starts: '2015-07-27T15:30:00+09:00',
+    //     ends: '2015-07-27T16:30:00+09:00'
+    // }, {
+    //     title: 'E',
+    //     isAllDay: false,
+    //     starts: '2015-07-27T17:00:00+09:00',
+    //     ends: '2015-07-27T18:00:00+09:00'
+    // }, {
+    //     title: 'F',
+    //     isAllDay: false,
+    //     starts: '2015-07-27T17:10:00+09:00',
+    //     ends: '2015-07-27T18:00:00+09:00'
+    // }];
 
     // add event models
     w.ne.util.forEach(events, function(data) {
