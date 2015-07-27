@@ -30,6 +30,7 @@ var Event = require('./src/js/model/event');
 var ViewFactory = require('./src/js/view/factory.js');
 var View = require('./src/js/view/view');
 var Week = require('./src/js/view/week');
+var DayName = require('./src/js/view/dayname');
 var TimeGrid = require('./src/js/view/timeGrid');
 var Time = require('./src/js/view/time');
 
@@ -56,6 +57,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     ViewFactory: ViewFactory,
     View: View,
     Week: Week,
+    DayName: DayName,
     TimeGrid: TimeGrid,
     Time: Time,
 
