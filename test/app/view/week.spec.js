@@ -20,7 +20,11 @@ describe('View/Week', function() {
 
             view.render();
 
-            expect(child.render).toHaveBeenCalledWith('helloWorld');
+            expect(child.render).toHaveBeenCalledWith({
+                eventsInDateRange: 'helloWorld',
+                renderStartDate: jasmine.any(Date),
+                renderEndDate: jasmine.any(Date)
+            });
         });
     });
 

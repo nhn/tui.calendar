@@ -109,12 +109,13 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
 
 /**
  * @override
- * @param {object} eventViewModels ViewModel list from Week view.
+ * @param {object} viewModel ViewModel list from Week view.
  */
-TimeGrid.prototype.render = function(eventViewModels) {
-    var container = this.container,
+TimeGrid.prototype.render = function(viewModel) {
+    var eventsInDateRange = viewModel.eventsInDateRange,
+        container = this.container,
         baseViewModel = this._getBaseViewModel(),
-        eventLen = util.keys(eventViewModels).length;
+        eventLen = util.keys(eventsInDateRange).length;
 
     if (!eventLen) {
         return;
@@ -126,7 +127,7 @@ TimeGrid.prototype.render = function(eventViewModels) {
      * Render childs
      **********/
     this._renderChilds(
-        eventViewModels,
+        eventsInDateRange,
         100 / eventLen,
         domutil.find('.view-time-events-container', container)
     );

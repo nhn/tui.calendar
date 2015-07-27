@@ -53,10 +53,15 @@ util.inherit(Week, View);
  */
 Week.prototype.render = function() {
     var options = this.options,
-        viewModel = this.controller.findByDateRange(
+        eventsInDateRange = this.controller.findByDateRange(
             options.renderStartDate,
             options.renderEndDate
-        );
+        ),
+        viewModel = {
+            eventsInDateRange: eventsInDateRange,
+            renderStartDate: options.renderStartDate,
+            renderEndDate: options.renderEndDate
+        };
 
     this.childs.each(function(childView) {
         childView.render(viewModel);
