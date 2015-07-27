@@ -5,7 +5,6 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../datetime');
 var domutil = require('../common/domutil');
 var View = require('./view');
 var EventViewModel = require('../model/viewModel/event');
@@ -66,11 +65,11 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
     var options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
-        containerBound = this.getViewBound(),
+        containerBound,
         leftPercents,
         widthPercent,
         maxRowLength,
-        todayStart = this._parseDateGroup(ymd),
+        todayStart,
         nextEvent,
         baseMil,
         height,
@@ -78,6 +77,10 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         top,
         i;
 
+    /**
+     * Calculate each event element bounds relative with rendered hour milliseconds and
+     * wrap each event model to viewmodels.
+     */
     containerBound = this.getViewBound();
     todayStart = this._parseDateGroup(ymd);
     baseMil = ((hourEnd - hourStart) * HOUR_TO_MILLISECONDS);
@@ -102,10 +105,11 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     if (hourStart) {
                         top -= hourStart * HOUR_TO_MILLISECONDS;
                     }
+                    // containerHeight : milliseconds in day = x : event's milliseconds
                     top = (containerBound.height * top) / baseMil;
                     height = (containerBound.height * event.duration()) / baseMil;
 
-                    // Matrix의 다음 이벤트와 겹치지 않는 이벤트일땐 width을 제거함
+                    // Set width 'auto' when not collides with next event after first event.
                     nextEvent = scope[col + 1];
                     if (col > 0 && nextEvent && !event.collidesWith(nextEvent)) {
                         width = null;
