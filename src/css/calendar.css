@@ -117,8 +117,7 @@
     width: 3px;
     height: 3px;
     background-color: red;
-    margin: -4px 0 0 -4px;
-    border: 2px solid #fff;
+    margin: -2px 0 0 -2px;
     border-radius: 50%;
     z-index: 99;
 }
