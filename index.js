@@ -44,7 +44,6 @@ var EventViewModel = require('./src/js/model/viewModel/event');
  **********/
 var Drag = require('./src/js/handler/drag');
 
-
 // exports
 ne.util.defineNamespace('ne.dooray.calendar', {
     dirty: dirty,

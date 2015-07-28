@@ -22,7 +22,6 @@ gulp.task('connect', function() {
     gulp.watch(['./src/**/*.js', './index.js', './demo/**/*.html'], ['bundle']);
 });
 
-
 gulp.task('bundle', function() {
     var b = browserify({
         entries: 'index.js',

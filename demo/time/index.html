@@ -18,12 +18,12 @@
 <script>
 (function(w) {
     var calendar = w.ne.dooray.calendar;
-    var ctrl = calendar.ControllerFactory(['Week']);
-    var week = calendar.ViewFactory('Week', {
+    var layout = calendar.ViewFactory('Week', {
         renderStartDate: '2015-07-25',
-        renderEndDate: '2015-07-29'
+        renderEndDate: '2015-07-29',
+        hourStart: 9,
+        hourEnd: 23
     }, document.getElementById('calendar'));
-    // var week = calendar.ViewFactory('Week', null, document.getElementById('calendar'));
 
     var events = [{
         title: '스크럼',
@@ -85,17 +85,13 @@
 
     // add event models
     w.ne.util.forEach(events, function(data) {
-        ctrl.addEvent(calendar.Event.create(data));
+        layout.controller.addEvent(calendar.Event.create(data));
     });
 
-    // bind controller to week view
-    week.controller = ctrl.Week;
-
     // render
-    week.render();
+    layout.render();
 
-    w.ctrl = ctrl;
-    w.week = week;
+    w.layout = layout;
 })(window);
 </script>
 </body>
