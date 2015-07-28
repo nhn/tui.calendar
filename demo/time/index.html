@@ -91,6 +91,23 @@
     // render
     layout.render();
 
+    
+    layout.dragHandler.on({
+        dragStart: function() {
+            console.log('dragStart');
+        },
+        drag: function() {
+            console.log('drag');
+        },
+        dragEnd: function() {
+            console.log('dragEnd');
+        },
+        click: function() {
+            console.log('click');
+        }
+    });
+
+
     w.layout = layout;
 })(window);
 </script>

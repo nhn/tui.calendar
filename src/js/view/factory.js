@@ -27,6 +27,7 @@ module.exports = function(name, options, container) {
 
     layoutView = new Layout(container);
     baseController = layoutView.controller = controllerFactory(['Week']);
+    layoutView.dragHandler = new Drag(layoutView);
 
     if (name === 'Week') {
         layoutView.addChild(function(container) {
