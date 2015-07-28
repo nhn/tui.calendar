@@ -42,6 +42,12 @@ function TimeGrid(options, container) {
         hourEnd: 24
     }, options || {});
 
+    /**
+     * Interval id for hourmarker animation.
+     * @type {number}
+     */
+    this.intervalID = 0;
+
     this.attachEvent();
 }
 
@@ -50,6 +56,15 @@ util.inherit(TimeGrid, View);
 /**********
  * Prototype props
  **********/
+
+/**
+ * Destory view.
+ * @override
+ */
+TimeGrid.prototype._beforeDestroy = function() {
+    window.clearInterval(this.intervalID);
+    this.hourmarker = null;
+};
 
 /**
  * Get base viewModel.
