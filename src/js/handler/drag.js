@@ -11,9 +11,11 @@ var domevent = require('../common/domevent');
 /**
  * @constructor
  * @mixes CustomEvents
- * @param {HTMLElement} container Container element to bind DOM event.
+ * @param {LayoutView} layoutView Layout view instance.
  */
-function Drag(container) {
+function Drag(layoutView) {
+    var container = layoutView.container;
+
     domevent.on(container, 'mousedown', this._onMouseDown, this);
 
     /**
