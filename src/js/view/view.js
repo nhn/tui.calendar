@@ -90,6 +90,41 @@ View.prototype.render = function() {
 };
 
 /**
+ * Invoking method before destroying.
+ */
+View.prototype._beforeDestroy = function() {};
+
+/**
+ * Clear properties
+ */
+View.prototype._destroy = function() {
+    this._beforeDestroy();
+    this.id = null;
+    this.childs.clear();
+    this.childs = null;
+    this.container.innerHTML = '';
+    this.container = null;
+};
+
+/*eslint-disable*/
+/**
+ * Destory child view recursivly.
+ */
+View.prototype.destroy = function(isChildView) {
+    this.childs.each(function(childView) {
+        childView.destroy(true);
+        childView._destroy();
+    });
+
+    if (isChildView) {
+        return;
+    }
+
+    this._destroy();
+};
+/*eslint-enable*/
+
+/**
  * Calculate view's container element bound.
  * @returns {object} The bound of container element.
  */

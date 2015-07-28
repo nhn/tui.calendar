@@ -43,6 +43,29 @@ describe('View', function() {
         });
     });
 
+    describe('destroy', function() {
+        var view2;
+        beforeEach(function() {
+            view = new View();
+            view2 = new View();
+
+            view.addChild(view2);
+        });
+
+        it('destroy child views recursivly.', function() {
+            spyOn(View.prototype, '_destroy').and.callThrough();
+
+            view.destroy();
+            expect(View.prototype._destroy.calls.count()).toBe(2);
+            expect(view2).toEqual(jasmine.objectContaining({
+                __fe_id: jasmine.any(Number),
+                id: null,
+                childs: null,
+                container: null
+            }));
+        });
+    });
+
     describe('removeChild', function() {
         var view2;
 
