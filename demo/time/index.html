@@ -20,9 +20,7 @@
     var calendar = w.ne.dooray.calendar;
     var layout = calendar.ViewFactory('Week', {
         renderStartDate: '2015-07-25',
-        renderEndDate: '2015-07-29',
-        hourStart: 9,
-        hourEnd: 23
+        renderEndDate: '2015-07-29'
     }, document.getElementById('calendar'));
 
     var events = [{
@@ -90,23 +88,6 @@
 
     // render
     layout.render();
-
-    
-    layout.dragHandler.on({
-        dragStart: function() {
-            console.log('dragStart');
-        },
-        drag: function() {
-            console.log('drag');
-        },
-        dragEnd: function() {
-            console.log('dragEnd');
-        },
-        click: function() {
-            console.log('click');
-        }
-    });
-
 
     w.layout = layout;
 })(window);

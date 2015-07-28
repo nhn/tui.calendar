@@ -14,12 +14,14 @@ var TimeGrid = require('./timeGrid');
 
 // Handlers
 var Drag = require('../handler/drag');
+var timeCreation = require('../handler/time/creation');
 
 // Controllers
 var controllerFactory = require('../controller/factory.js');
 
 module.exports = function(name, options, container) {
     var layoutView,
+        dragHandler,
         baseController,
         weekView,
         dayNameView,
@@ -27,18 +29,21 @@ module.exports = function(name, options, container) {
 
     layoutView = new Layout(container);
     baseController = layoutView.controller = controllerFactory(['Week']);
-    layoutView.dragHandler = new Drag(layoutView);
+    dragHandler = layoutView.dragHandler = new Drag(layoutView);
 
     if (name === 'Week') {
         layoutView.addChild(function(container) {
             weekView = new Week(null, options, container);
-
             dayNameView = new DayName(weekView.container);
-            weekView.addChild(dayNameView);
-
             timeGridView = new TimeGrid(options, weekView.container);
-            weekView.addChild(timeGridView);
 
+            // connect time creation event handler
+            timeCreation.connect(dragHandler, timeGridView);
+            // timeMove.connect(dragHandler, timeGridView);
+            // timeResize.connect(dragHandler, timeGridView);
+
+            weekView.addChild(dayNameView);
+            weekView.addChild(timeGridView);
             weekView.controller = baseController.Week;
 
             return weekView;
