@@ -40,8 +40,8 @@ var domevent = {
             return;
         }
 
-        util.forEachOwnProperties(types, function(fn, type) {
-            domevent._on(obj, type, fn, context);
+        util.forEachOwnProperties(types, function(handler, type) {
+            domevent._on(obj, type, handler, fn);
         });
     },
 
@@ -112,8 +112,8 @@ var domevent = {
             return;
         }
 
-        util.forEachOwnProperties(types, function(fn, type) {
-            domevent._off(obj, type, fn, context);
+        util.forEachOwnProperties(types, function(handler, type) {
+            domevent._off(obj, type, handler, fn);
         });
     },
 
