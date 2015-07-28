@@ -21,6 +21,12 @@ var View = require('./view');
 function Week(controller, options, container) {
     var range;
 
+    container = domutil.appendHTMLElement(
+        'div',
+        container,
+        'view-week-container'
+    );
+
     View.call(this, null, container);
 
     range = this._getRenderDateRange(new Date());
@@ -38,8 +44,6 @@ function Week(controller, options, container) {
      * @type {Base.Week}
      */
     this.controller = controller;
-
-    domutil.addClass(container, 'view-week-container');
 }
 
 util.inherit(Week, View);
@@ -70,6 +74,8 @@ Week.prototype.render = function() {
 /**********
  * Prototype props
  **********/
+
+Week.prototype.viewName = 'Week';
 
 /**
  * Calculate default render date range from supplied date.
