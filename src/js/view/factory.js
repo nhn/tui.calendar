@@ -5,6 +5,7 @@
 'use strict';
 
 // Parent views
+var Layout = require('./layout');
 var Week = require('./week');
 
 // Sub views
@@ -14,34 +15,35 @@ var TimeGrid = require('./timeGrid');
 // Handlers
 var Drag = require('../handler/drag');
 
+// Controllers
+var controllerFactory = require('../controller/factory.js');
+
 module.exports = function(name, options, container) {
-    var weekView,
+    var layoutView,
+        baseController,
+        weekView,
         dayNameView,
         timeGridView;
 
+    layoutView = new Layout(container);
+    baseController = layoutView.controller = controllerFactory(['Week']);
+
     if (name === 'Week') {
-        weekView = new Week(null, options, container);
+        layoutView.addChild(function(container) {
+            weekView = new Week(null, options, container);
 
-        dayNameView = new DayName(weekView.container);
-        weekView.addChild(dayNameView);
+            dayNameView = new DayName(weekView.container);
+            weekView.addChild(dayNameView);
 
-        timeGridView = new TimeGrid(options, weekView.container);
-        weekView.addChild(timeGridView);
+            timeGridView = new TimeGrid(options, weekView.container);
+            weekView.addChild(timeGridView);
 
-        var d = new Drag(weekView.container);
-        d.on({
-            'dragStart': function(e) {
-                console.log('dragStart', e);
-            },
-            'drag': function(e) {
-                console.log('drag', e);
-            },
-            'dragEnd': function(e) {
-                console.log('dragEnd', e);
-            }
+            weekView.controller = baseController.Week;
+
+            return weekView;
         });
-
-        return weekView;
     }
+
+    return layoutView;
 };
 
