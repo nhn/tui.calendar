@@ -86,10 +86,9 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
     baseMil = ((hourEnd - hourStart) * HOUR_TO_MILLISECONDS);
 
     forEachArr(matrices, function(matrix) {
-        maxRowLength = 1;
-        forEachArr(matrix, function(row) {
-            maxRowLength = Math.max(maxRowLength, row.length);
-        });
+        maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
+            return row.length;
+        }));
 
         widthPercent = 100 / maxRowLength;
 
@@ -100,30 +99,32 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
         forEachArr(matrix, function(row) {
             forEachArr(row, function(event, col, scope) {
-                if (event) {
-                    top = event.starts - todayStart;
-                    if (hourStart) {
-                        top -= hourStart * HOUR_TO_MILLISECONDS;
-                    }
-                    // containerHeight : milliseconds in day = x : event's milliseconds
-                    top = (containerBound.height * top) / baseMil;
-                    height = (containerBound.height * event.duration()) / baseMil;
-
-                    // Set width 'auto' when not collides with next event after first event.
-                    nextEvent = scope[col + 1];
-                    if (col > 0 && nextEvent && !event.collidesWith(nextEvent)) {
-                        width = null;
-                    } else {
-                        width = widthPercent;
-                    }
-
-                    scope[col] = util.extend(EventViewModel.create(event), {
-                        width: width,
-                        height: height,
-                        top: top,
-                        left: leftPercents[col]
-                    });
+                if (!event) {
+                    return;
                 }
+
+                top = event.starts - todayStart;
+                if (hourStart) {
+                    top -= hourStart * HOUR_TO_MILLISECONDS;
+                }
+                // containerHeight : milliseconds in day = x : event's milliseconds
+                top = (containerBound.height * top) / baseMil;
+                height = (containerBound.height * event.duration()) / baseMil;
+
+                // Set width 'auto' when not collides with next event after first event.
+                nextEvent = scope[col + 1];
+                if (col > 0 && nextEvent && !event.collidesWith(nextEvent)) {
+                    width = null;
+                } else {
+                    width = widthPercent;
+                }
+
+                scope[col] = util.extend(EventViewModel.create(event), {
+                    width: width,
+                    height: height,
+                    top: top,
+                    left: leftPercents[col]
+                });
             });
         });
     });
