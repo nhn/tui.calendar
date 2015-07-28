@@ -71,19 +71,12 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
  * @emits Drag#drag
  */
 Drag.prototype._onMouseMove = function(mouseMoveEvent) {
-    var eventData = {
-        target: mouseMoveEvent.target || mouseMoveEvent.srcElement,
-        originEvent: mouseMoveEvent
-    };
-
     /**
      * Events while dragging.
      * @event Drag#drag
      * @type {MouseEvent}
-     * @property {HTMLElement} target - The target element in this event.
-     * @property {MouseEvent} originEvent - Original MouseEvent object.
      */
-    this.fire('drag', eventData);
+    this.fire('drag', mouseMoveEvent);
 };
 
 /**
@@ -92,21 +85,14 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
  * @emits Drag#dragEnd
  */
 Drag.prototype._onMouseUp = function(mouseUpEvent) {
-    var eventData = {
-        target: mouseUpEvent.target || mouseUpEvent.srcElement,
-        originEvent: mouseUpEvent
-    };
-
     this._toggleDragEvent(false);
 
     /**
      * Drag end events.
      * @event Drag#dragEnd
      * @type {MouseEvent}
-     * @property {HTMLElement} target - The target element in this event.
-     * @property {MouseEvent} originEvent - Original MouseEvent object.
      */
-    this.fire('dragEnd', eventData);
+    this.fire('dragEnd', mouseUpEvent);
 };
 
 util.CustomEvents.mixin(Drag);
