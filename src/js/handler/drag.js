@@ -22,6 +22,11 @@ function Drag(layoutView) {
      * @type {HTMLElement}
      */
     this.container = container;
+
+    /**
+     * @type {boolean}
+     */
+    this._isMoved = false;
 }
 
 /**
@@ -73,6 +78,7 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
  * @emits Drag#drag
  */
 Drag.prototype._onMouseMove = function(mouseMoveEvent) {
+    this._isMoved = true;
     /**
      * Events while dragging.
      * @event Drag#drag
@@ -85,16 +91,30 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
  * MouseUp DOM event handler.
  * @param {MouseEvent} mouseUpEvent MouseUp event object.
  * @emits Drag#dragEnd
+ * @emits Drag#click
  */
 Drag.prototype._onMouseUp = function(mouseUpEvent) {
     this._toggleDragEvent(false);
 
+    // emit "click" event when not emitted drag event between mousedown and mouseup.
+    if (this._isMoved) {
+        this._isMoved = false;
+
+        /**
+         * Drag end events.
+         * @event Drag#dragEnd
+         * @type {MouseEvent}
+         */
+        this.fire('dragEnd', mouseUpEvent);
+        return;
+    }
+
     /**
-     * Drag end events.
-     * @event Drag#dragEnd
+     * Click events.
+     * @event Drag#click
      * @type {MouseEvent}
      */
-    this.fire('dragEnd', mouseUpEvent);
+    this.fire('click', mouseUpEvent);
 };
 
 util.CustomEvents.mixin(Drag);
