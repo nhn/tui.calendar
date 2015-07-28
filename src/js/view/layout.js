@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var domutil = require('../common/domutil');
 var Collection = require('../common/collection');
 var View = require('./view');
 
@@ -51,13 +52,27 @@ Layout.prototype.addChild = function(adderFunc) {
 /**
  * Remove child view.
  * @override
- * @param {string} name Name of view.
+ * @param {(string|View)} viewName - name of view or instance.
  */
-Layout.prototype.removeChild = function(name) {
-    this.childs.remove(name);
+Layout.prototype.removeChild = function(viewName) {
+    this.childs.remove(viewName);
 };
 
-Layout.prototype.toggleChildView = function(name, onOff) {};
+/**
+ * Toggle child views.
+ * @param {string} viewName - Name of view.
+ */
+Layout.prototype.toggleChildView = function(viewName) {
+    var container,
+        prefix = ['add', 'remove'],
+        flag;
+
+    this.childs.each(function(childView) {
+        container = childView.container;
+        flag = +(childView.viewName === viewName);
+        domutil[prefix[flag] + 'Class'](container, 'view-hidden');
+    });
+};
 
 module.exports = Layout;
 

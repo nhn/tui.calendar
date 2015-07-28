@@ -15,6 +15,10 @@
     clear: both;
 }
 
+.view-hidden {
+    display: none !important;
+}
+
 .view-week-container {
     display: inline-block;
     border: 1px solid #ccc;
