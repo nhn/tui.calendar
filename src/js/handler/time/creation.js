@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var number = require('../../common/number');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
