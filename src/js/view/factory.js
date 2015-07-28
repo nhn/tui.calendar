@@ -11,6 +11,9 @@ var Week = require('./week');
 var DayName = require('./dayname');
 var TimeGrid = require('./timeGrid');
 
+// Handlers
+var Drag = require('../handler/drag');
+
 module.exports = function(name, options, container) {
     var weekView,
         dayNameView,
@@ -24,6 +27,19 @@ module.exports = function(name, options, container) {
 
         timeGridView = new TimeGrid(options, weekView.container);
         weekView.addChild(timeGridView);
+
+        var d = new Drag(weekView.container);
+        d.on({
+            'dragStart': function(e) {
+                console.log('dragStart', e);
+            },
+            'drag': function(e) {
+                console.log('drag', e);
+            },
+            'dragEnd': function(e) {
+                console.log('dragEnd', e);
+            }
+        });
 
         return weekView;
     }

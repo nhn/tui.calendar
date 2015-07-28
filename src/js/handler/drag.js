@@ -4,17 +4,92 @@
  */
 'use strict';
 
+var util = global.ne.util;
+var domutil = require('../common/domutil');
+var domevent = require('../common/domevent');
+
 /**
  * @constructor
+ * @mixes CustomEvents
+ * @param {HTMLElement} container Container element to bind DOM event.
  */
-function Drag() {
+function Drag(container) {
+    domevent.on(container, 'mousedown', this._onMouseDown, this);
+
+    /**
+     * @type {HTMLElement}
+     */
+    this.container = container;
 }
 
-Drag.prototype._onMouseDown = function() {};
+/**
+ * Toggle event for mouse drags.
+ * @param {boolean} onOff Set true then bind events.
+ */
+Drag.prototype._toggleDragEvent = function(onOff) {
+    var prefix = ['disable', 'enable'],
+        prefixEvent = ['on', 'off'],
+        container = this.container,
+        flag = +(!onOff);
 
-Drag.prototype._onMouseMove = function() {};
+    domutil[prefix[flag] + 'TextSelection'](container);
+    domutil[prefix[flag] + 'ImageDrag'](container);
+    domevent[prefixEvent[flag]](global, {
+        mousemove: this._onMouseMove,
+        mouseup: this._onMouseUp
+    }, this);
+};
 
-Drag.prototype._onMouseUp = function() {};
+/**
+ * MouseDown DOM event handler.
+ * @param {MouseEvent} mouseDownEvent MouseDown event object.
+ * @emits Drag#dragStart
+ */
+Drag.prototype._onMouseDown = function(mouseDownEvent) {
+    /**
+     * Drag starts events. cancelable.
+     * @event Drag#dragStart
+     * @type {MouseEvent}
+     */
+    if (!this.invoke('dragStart', mouseDownEvent)) {
+        domevent.stop(mouseDownEvent);
+        return;
+    }
+
+    this._toggleDragEvent(true);
+};
+
+/**
+ * MouseMove DOM event handler.
+ * @param {MouseEvent} mouseMoveEvent MouseMove event object.
+ * @emits Drag#drag
+ */
+Drag.prototype._onMouseMove = function(mouseMoveEvent) {
+    /**
+     * Events while dragging.
+     * @event Drag#drag
+     * @type {MouseEvent}
+     */
+    this.fire('drag', mouseMoveEvent);
+};
+
+/**
+ * MouseUp DOM event handler.
+ * @param {MouseEvent} mouseUpEvent MouseUp event object.
+ * @emits Drag#dragEnd
+ */
+Drag.prototype._onMouseUp = function(mouseUpEvent) {
+    this._toggleDragEvent(false);
+
+    /**
+     * Drag end events.
+     * @event Drag#dragEnd
+     * @type {MouseEvent}
+     */
+    this.fire('dragEnd', mouseUpEvent);
+};
+
+util.CustomEvents.mixin(Drag);
 
 module.exports = Drag;
 
