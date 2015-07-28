@@ -13,8 +13,8 @@ var View = require('./view');
  * @constructor
  * @param {Base.Week} controller The controller mixin part.
  * @param {object} options View options
- * @param {Date} [options.renderStartDate] Start date of render. if not supplied then use -3d from today.
- * @param {Date} [options.renderEndDate] End date of render. if not supplied then use +3d from today.
+ * @param {string} [options.renderStartDate] Start date of render. if not supplied then use -3d from today. YYYY-MM-DD format.
+ * @param {string} [options.renderEndDate] End date of render. if not supplied then use +3d from today. YYYY-MM-DD format.
  * @param {HTMLElement} container The element to use container for this view.
  * @extends {View}
  */
@@ -29,8 +29,8 @@ function Week(controller, options, container) {
      * @type {object} Options for view.
      */
     this.options = util.extend({
-        renderStartDate: range.start,
-        renderEndDate: range.end
+        renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
+        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD')
     }, options || {});
 
     /**
@@ -53,14 +53,13 @@ util.inherit(Week, View);
  */
 Week.prototype.render = function() {
     var options = this.options,
-        eventsInDateRange = this.controller.findByDateRange(
-            options.renderStartDate,
-            options.renderEndDate
-        ),
+        renderStartDate = datetime.parse(options.renderStartDate),
+        renderEndDate = datetime.parse(options.renderEndDate),
+        eventsInDateRange = this.controller.findByDateRange(renderStartDate, renderEndDate),
         viewModel = {
             eventsInDateRange: eventsInDateRange,
-            renderStartDate: options.renderStartDate,
-            renderEndDate: options.renderEndDate
+            renderStartDate: renderStartDate,
+            renderEndDate: renderEndDate
         };
 
     this.childs.each(function(childView) {

@@ -7,7 +7,7 @@
 var util = global.ne.util,
     opt = Object.prototype.toString;
 
-var dateFormatRx = /^\d{4}(-|\/)\d{2}(-|\/)\d{2} \d{2}:\d{2}:\d{2}$/;
+var dateFormatRx = /^(\d{4}[-|\/]\d{2}[-|\/]\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 
 var datetime,
     tokenFunc;
@@ -171,6 +171,8 @@ datetime = {
      *
      * Only listed below formats avaliable.
      *
+     * - YYYY/MM/DD
+     * - YYYY-MM-DD
      * - YYYY/MM/DD HH:mm:SS
      * - YYYY-MM-DD HH:mm:SS
      *
@@ -179,20 +181,21 @@ datetime = {
      */
     parse: function(str) {
         var separator,
-            parts,
+            matches = str.match(dateFormatRx),
             ymd,
             hms;
 
-        if (!dateFormatRx.test(str)) {
+        if (!matches) {
             return false;
         }
 
         separator = ~str.indexOf('/') ? '/' : '-';
-        parts = str.split(' ');
-        ymd = parts[0].split(separator);
-        hms = parts[1].split(':');
+        matches = matches.splice(1);
 
-        return new Date(+ymd[0], +ymd[1], +ymd[2], +hms[0], +hms[1], +hms[2]);
+        ymd = matches[0].split(separator);
+        hms = matches[1] ? matches[1].split(':') : [0, 0, 0];
+
+        return new Date(+ymd[0], +ymd[1] - 1, +ymd[2], +hms[0], +hms[1], +hms[2]);
     },
 
     /**

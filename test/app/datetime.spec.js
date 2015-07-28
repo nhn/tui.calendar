@@ -135,8 +135,8 @@ describe('datetime', function() {
 
     describe('parse()', function() {
         it('parse date string for safe usage.', function() {
-            var str1 = '2015-05-01 12:20:00',
-                str2 = '2015/05/01 10:00:00';
+            var str1 = '2015-06-01 12:20:00',
+                str2 = '2015/06/01 10:00:00';
 
             expect(dt.parse(str2)).toEqual(new Date(2015, 5, 1, 10, 0, 0));
             expect(dt.parse(str1)).toEqual(new Date(2015, 5, 1, 12, 20, 0));
