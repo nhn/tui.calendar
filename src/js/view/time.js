@@ -5,13 +5,12 @@
 'use strict';
 
 var util = global.ne.util;
+var datetime = require('../datetime');
 var domutil = require('../common/domutil');
 var View = require('./view');
 var EventViewModel = require('../model/viewModel/event');
 var timeTmpl = require('./template/time.hbs');
-
 var forEachArr = util.forEachArray;
-var HOUR_TO_MILLISECONDS = 60 * 60 * 1000;
 
 /**
  * @constructor
@@ -83,7 +82,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
      */
     containerBound = this.getViewBound();
     todayStart = this._parseDateGroup(ymd);
-    baseMil = ((hourEnd - hourStart) * HOUR_TO_MILLISECONDS);
+    baseMil = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
 
     forEachArr(matrices, function(matrix) {
         maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
@@ -105,7 +104,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
                 top = event.starts - todayStart;
                 if (hourStart) {
-                    top -= hourStart * HOUR_TO_MILLISECONDS;
+                    top -= datetime.millisecondsFrom('hour', hourStart);
                 }
                 // containerHeight : milliseconds in day = x : event's milliseconds
                 top = (containerBound.height * top) / baseMil;

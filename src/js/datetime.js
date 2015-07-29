@@ -188,7 +188,10 @@ datetime = {
      * @returns {Date} The UTC Date.
      */
     toUTC: function(d) {
-        return new Date(d.getTime() + (new Date()).getTimezoneOffset() * 60000);
+        var l = d.getTime(),
+            offset = datetime.millisecondsFrom('minutes', new Date().getTimezoneOffset());
+
+        return new Date(l + offset);
     },
 
     /**

@@ -13,7 +13,6 @@ var Time = require('./time');
 var mainTmpl = require('./template/timeGrid.hbs');
 
 var TICK_INTERVAL = 1000 * 10;    // 10 sec
-var HOUR_TO_MILLISECONDS = 60 * 60 * 1000;
 var PIXEL_RENDER_ERROR = 0.5;    // pixel rendering error value
 
 /**
@@ -222,11 +221,11 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
 
     offset = +now - +start;
     if (hourStart) {
-        offset -= hourStart * HOUR_TO_MILLISECONDS;
+        offset -= datetime.millisecondsFrom('hour', hourStart);
     }
 
     return {
-        top: (offset * gridSize[1]) / (this._getBaseViewModel().hours.length * HOUR_TO_MILLISECONDS),
+        top: (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length)),
         text: datetime.format(now, 'HH:mm')
     };
 };
