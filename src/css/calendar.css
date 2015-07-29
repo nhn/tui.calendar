@@ -46,6 +46,7 @@
     height: 416px;
     overflow-y: scroll;
     border-top: 2px solid #ccc;
+    background-color: #ccc;
 }
 
 /**
@@ -83,6 +84,7 @@
 .view-time {
     position: relative;
     overflow: hidden;
+    background-color: #fff;
 }
 
 /**

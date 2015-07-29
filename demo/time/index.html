@@ -7,79 +7,86 @@
     <style type="text/css">
     div.view-timegrid-container {
         resize: both;
-        overflow: auto;
+    }
+    .calendar {
+        margin-bottom: 50px;
     }
     </style>
 </head>
 <body>
 <h1>Calendar Test</h1>
-<div id="calendar"></div>
+<div id="calendar" class="calendar"></div>
+<div id="calendar2" class="calendar"></div>
 <script src="../../dist/app.js"></script>
 <script>
 (function(w) {
     var calendar = w.ne.dooray.calendar;
-    var layout = calendar.ViewFactory('Week', {
-        renderStartDate: '2015-07-25',
-        renderEndDate: '2015-07-29'
-    }, document.getElementById('calendar'));
 
+    // data
     var events = [{
         title: '스크럼',
         isAllDay: false,
-        starts: '2015-07-27T09:40:00+09:00',
-        ends: '2015-07-27T10:00:00+09:00'
+        starts: '2015-07-29T09:40:00+09:00',
+        ends: '2015-07-29T10:00:00+09:00'
     }, {
         title: 'nodejs study',
         isAllDay: false,
-        starts: '2015-07-27T12:00:00+09:00',
-        ends: '2015-07-27T13:00:00+09:00'
+        starts: '2015-07-29T12:00:00+09:00',
+        ends: '2015-07-29T13:00:00+09:00'
     }, {
         title: '주간보고 작성',
         isAllDay: false,
-        starts: '2015-07-27T09:30:00+09:00',
-        ends: '2015-07-27T13:30:00+09:00'
+        starts: '2015-07-29T09:30:00+09:00',
+        ends: '2015-07-29T13:30:00+09:00'
     }, {
         title: '커피한잔',
         isAllDay: false,
-        starts: '2015-07-27T11:10:00+09:00',
-        ends: '2015-07-27T12:30:00+09:00'
+        starts: '2015-07-29T11:10:00+09:00',
+        ends: '2015-07-29T12:30:00+09:00'
     }, {
         title: '끼어듬',
         isAllDay: false,
-        starts: '2015-07-27T12:40:00+09:00',
-        ends: '2015-07-27T13:20:00+09:00'
+        starts: '2015-07-29T12:40:00+09:00',
+        ends: '2015-07-29T13:20:00+09:00'
     }];
-    // var events = [{
-    //     title: 'A',
-    //     isAllDay: false,
-    //     starts: '2015-07-27T09:30:00+09:00',
-    //     ends: '2015-07-27T11:00:00+09:00'
-    // }, {
-    //     title: 'B',
-    //     isAllDay: false,
-    //     starts: '2015-07-27T10:30:00+09:00',
-    //     ends: '2015-07-27T16:00:00+09:00'
-    // }, {
-    //     title: 'C',
-    //     isAllDay: false,
-    //     starts: '2015-07-27T10:30:00+09:00',
-    //     ends: '2015-07-27T14:00:00+09:00'
-    // }, {
-    //     title: 'D',
-    //     isAllDay: false,
-    //     starts: '2015-07-27T15:30:00+09:00',
-    //     ends: '2015-07-27T16:30:00+09:00'
-    // }, {
-    //     title: 'E',
-    //     isAllDay: false,
-    //     starts: '2015-07-27T17:00:00+09:00',
-    //     ends: '2015-07-27T18:00:00+09:00'
-    // }, {
-    //     title: 'F',
-    //     isAllDay: false,
-    //     starts: '2015-07-27T17:10:00+09:00',
-    //     ends: '2015-07-27T18:00:00+09:00'
-    // }];
+
+    var events2 = [{
+        title: 'A',
+        isAllDay: false,
+        starts: '2015-07-29T07:30:00+09:00',
+        ends: '2015-07-29T11:00:00+09:00'
+    }, {
+        title: 'B',
+        isAllDay: false,
+        starts: '2015-07-29T10:30:00+09:00',
+        ends: '2015-07-29T16:00:00+09:00'
+    }, {
+        title: 'C',
+        isAllDay: false,
+        starts: '2015-07-29T10:30:00+09:00',
+        ends: '2015-07-29T14:00:00+09:00'
+    }, {
+        title: 'D',
+        isAllDay: false,
+        starts: '2015-07-29T15:30:00+09:00',
+        ends: '2015-07-29T16:30:00+09:00'
+    }, {
+        title: 'E',
+        isAllDay: false,
+        starts: '2015-07-29T17:00:00+09:00',
+        ends: '2015-07-29T18:00:00+09:00'
+    }, {
+        title: 'F',
+        isAllDay: false,
+        starts: '2015-07-29T17:10:00+09:00',
+        ends: '2015-07-29T18:00:00+09:00'
+    }];
+
+    // calendar 1
+    var layout = calendar.ViewFactory('Week', {
+        renderStartDate: '2015-07-28',
+        renderEndDate: '2015-07-30'
+    }, document.getElementById('calendar'));
 
     // add event models
     w.ne.util.forEach(events, function(data) {
@@ -90,6 +97,22 @@
     layout.render();
 
     w.layout = layout;
+
+    // calendar 2
+    var layout2 = calendar.ViewFactory('Week', {
+        renderStartDate: '2015-07-29',
+        renderEndDate: '2015-07-30',
+        hourStart: 9,
+        hourEnd: 19
+    }, document.getElementById('calendar2'));
+
+    w.ne.util.forEach(events2, function(data) {
+        layout2.controller.addEvent(calendar.Event.create(data));
+    });
+
+    layout2.render();
+
+    w.layout2 = layout2;
 })(window);
 </script>
 </body>
