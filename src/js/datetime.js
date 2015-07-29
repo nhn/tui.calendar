@@ -114,7 +114,7 @@ datetime = {
      * @param {value} value - value to convert.
      * @returns {number} converted value.
      */
-    toMilliseconds: function(type, value) {
+    millisecondsFrom: function(type, value) {
         return datetime._convMilliseconds(type, value, function(memo, v) {
             return memo * v;
         });

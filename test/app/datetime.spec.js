@@ -13,13 +13,13 @@ describe('datetime', function() {
         });
     });
 
-    describe('toMilliseconds()', function() {
+    describe('millisecondsFrom()', function() {
         it('convert value to milliseconds', function() {
-            expect(dt.toMilliseconds('hour', 24)).toBe(86400000);
+            expect(dt.millisecondsFrom('hour', 24)).toBe(86400000);
         });
 
         it('return false when supplied parameter is not supported', function() {
-            expect(dt.toMilliseconds('day', 24)).toBe(false);
+            expect(dt.millisecondsFrom('day', 24)).toBe(false);
         });
     });
 
