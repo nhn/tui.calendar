@@ -180,7 +180,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
         hourmarker.style.display = 'block';
         hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
 
-        if (todaymarkerLeft) {
+        if (!util.isNull(todaymarkerLeft)) {
             todaymarker.style.display = 'block';
             todaymarker.style.left = todaymarkerLeft + '%';
         } else {
