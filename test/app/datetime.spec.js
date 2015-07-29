@@ -1,6 +1,28 @@
 /*eslint-disable*/
 var dt = ne.dooray.calendar.datetime;
 describe('datetime', function() {
+    describe('millisecondsTo()', function() {
+        it('convert millisecond value to other types.', function() {
+            expect(dt.millisecondsTo('hour', 86400000)).toBe(24);
+            expect(dt.millisecondsTo('minutes', 1800000)).toBe(30);
+            expect(dt.millisecondsTo('seconds', 10000)).toBe(10);
+        });
+
+        it('return false when not supported type', function() {
+            expect(dt.millisecondsTo('day', 86400000)).toBe(false);
+        });
+    });
+
+    describe('toMilliseconds()', function() {
+        it('convert value to milliseconds', function() {
+            expect(dt.toMilliseconds('hour', 24)).toBe(86400000);
+        });
+
+        it('return false when supplied parameter is not supported', function() {
+            expect(dt.toMilliseconds('day', 24)).toBe(false);
+        });
+    });
+
     describe('range()', function() {
         it('makes date array by supplied dates.', function() {
             var start = new Date('2015/05/01'),

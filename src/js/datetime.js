@@ -75,6 +75,52 @@ datetime = {
     MILLISECONDS_PER_HOUR: 3600000,
 
     /**
+     * convert milliseconds
+     * @param {string} type - type of value.
+     * @param {number} value - value to convert.
+     * @param {function} iteratee - iteratee function to use reduce.
+     * @returns {number} converted value.
+     */
+    _convMilliseconds: function(type, value, iteratee) {
+        var conv = [60, 60, 1000],
+            index = {
+                hour: 0,
+                minutes: 1,
+                seconds: 2
+            };
+
+        if (!(type in index) || global.isNaN(value)) {
+            return false;
+        }
+
+        return util.reduce([value].concat(conv.slice(index[type])), iteratee);
+    },
+
+    /**
+     * Convert milliseconds value to other type
+     * @param {type} type convert to type want to. support "hour", "minutes", "seconds" only.
+     * @param {value} value - value to convert.
+     * @returns {number} converted value.
+     */
+    millisecondsTo: function(type, value) {
+        return datetime._convMilliseconds(type, value, function(memo, v) {
+            return memo / v;
+        });
+    },
+
+    /**
+     * Convert value to milliseconds
+     * @param {type} type - type of supplied value. support "hour", "minutes", "seconds" only.
+     * @param {value} value - value to convert.
+     * @returns {number} converted value.
+     */
+    toMilliseconds: function(type, value) {
+        return datetime._convMilliseconds(type, value, function(memo, v) {
+            return memo * v;
+        });
+    },
+
+    /**
      * Make date array from supplied paramters.
      * @param {Date} start Start date.
      * @param {Date} end End date.
