@@ -147,6 +147,7 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
         targetView = this.checkExpectedCondition(target),
         viewOptions,
         viewHeight,
+        hourLength,
         eventData,
         baseMil,
         cached,
@@ -158,7 +159,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
 
     viewOptions = targetView.options;
     viewHeight = targetView.getViewBound().height;
-    baseMil = datetime.millisecondsFrom('hour', viewOptions.hourEnd - viewOptions.hourStart);
+    hourLength = viewOptions.hourEnd - viewOptions.hourStart;
+    baseMil = datetime.millisecondsFrom('hour', hourLength);
 
     cached = this._cached = util.bind(function(mouseEvent) {
         mouseY = Point.n(
@@ -171,6 +173,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
         return {
             gridYIndex: this._calcGridYIndex(baseMil, viewHeight, mouseY),
             container: targetView.container,
+            hourLength: hourLength,
+            viewHeight: viewHeight,
             originEvent: mouseEvent
         };
     }, this);
