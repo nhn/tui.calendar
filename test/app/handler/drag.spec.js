@@ -3,6 +3,7 @@ var Drag = ne.dooray.calendar.Drag;
 describe('Handler/Drag', function() {
     describe('_onMouseUp', function() {
         it('emit "click" when not emitted drag event between mousedown and mousedown', function() {
+            spyOn(ne.dooray.calendar.domevent, 'preventDefault');
             var mock = {
                 _isMoved: false,
                 _toggleDragEvent: function() {},
