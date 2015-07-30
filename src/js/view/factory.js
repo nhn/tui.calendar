@@ -14,7 +14,7 @@ var TimeGrid = require('./timeGrid');
 
 // Handlers
 var Drag = require('../handler/drag');
-var timeCreation = require('../handler/time/creation');
+var TimeCreation = require('../handler/time/creation');
 
 // Controllers
 var controllerFactory = require('../controller/factory.js');
@@ -38,7 +38,7 @@ module.exports = function(name, options, container) {
             timeGridView = new TimeGrid(options, weekView.container);
 
             // connect time creation event handler
-            timeCreation.connect(dragHandler, timeGridView);
+            new TimeCreation(dragHandler, timeGridView);
             // timeMove.connect(dragHandler, timeGridView);
             // timeResize.connect(dragHandler, timeGridView);
 
