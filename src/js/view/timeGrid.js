@@ -33,10 +33,12 @@ function TimeGrid(options, container) {
 
     View.call(this, null, container);
 
-    /**
-     * @type {AutoScroll}
-     */
-    this._autoScroll = new AutoScroll(container);
+    if (!util.browser.safari) {
+        /**
+         * @type {AutoScroll}
+         */
+        this._autoScroll = new AutoScroll(container);
+    }
 
     /**
      * Time view options.
@@ -68,7 +70,10 @@ util.inherit(TimeGrid, View);
  */
 TimeGrid.prototype._beforeDestroy = function() {
     window.clearInterval(this.intervalID);
-    this._autoScroll.destroy();
+
+    if (this._autoScroll) {
+        this._autoScroll.destroy();
+    }
 
     this._autoScroll = this.hourmarker = null;
 };
