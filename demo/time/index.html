@@ -50,38 +50,6 @@
         ends: '2015-07-29T13:20:00+09:00'
     }];
 
-    var events2 = [{
-        title: 'A',
-        isAllDay: false,
-        starts: '2015-07-29T07:30:00+09:00',
-        ends: '2015-07-29T11:00:00+09:00'
-    }, {
-        title: 'B',
-        isAllDay: false,
-        starts: '2015-07-29T10:30:00+09:00',
-        ends: '2015-07-29T16:00:00+09:00'
-    }, {
-        title: 'C',
-        isAllDay: false,
-        starts: '2015-07-29T10:30:00+09:00',
-        ends: '2015-07-29T14:00:00+09:00'
-    }, {
-        title: 'D',
-        isAllDay: false,
-        starts: '2015-07-29T15:30:00+09:00',
-        ends: '2015-07-29T16:30:00+09:00'
-    }, {
-        title: 'E',
-        isAllDay: false,
-        starts: '2015-07-29T17:00:00+09:00',
-        ends: '2015-07-29T18:00:00+09:00'
-    }, {
-        title: 'F',
-        isAllDay: false,
-        starts: '2015-07-29T17:10:00+09:00',
-        ends: '2015-07-29T18:00:00+09:00'
-    }];
-
     // calendar 1
     var layout = calendar.ViewFactory('Week', {
         renderStartDate: '2015-07-28',
@@ -97,20 +65,6 @@
     layout.render();
 
     w.layout = layout;
-
-    // calendar 2
-    var layout2 = calendar.ViewFactory('Week', {
-        renderStartDate: '2015-07-29',
-        renderEndDate: '2015-07-29'
-    }, document.getElementById('calendar2'));
-
-    w.ne.util.forEach(events2, function(data) {
-        layout2.controller.addEvent(calendar.Event.create(data));
-    });
-
-    layout2.render();
-
-    w.layout2 = layout2;
 })(window);
 </script>
 </body>
