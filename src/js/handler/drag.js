@@ -92,7 +92,11 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
  * @emits Drag#drag
  */
 Drag.prototype._onMouseMove = function(mouseMoveEvent) {
+    // prevent automatic scrolling.
+    domevent.preventDefault(mouseMoveEvent);
+
     this._isMoved = true;
+
     /**
      * Events while dragging.
      * @event Drag#drag

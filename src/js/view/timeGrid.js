@@ -10,6 +10,7 @@ var datetime = require('../datetime');
 var reqAnimFrame = require('../common/reqAnimFrame');
 var View = require('./view');
 var Time = require('./time');
+var AutoScroll = require('../common/autoScroll');
 var mainTmpl = require('./template/timeGrid.hbs');
 
 var TICK_INTERVAL = 1000 * 10;    // 10 sec
@@ -31,6 +32,11 @@ function TimeGrid(options, container) {
     );
 
     View.call(this, null, container);
+
+    /**
+     * @type {AutoScroll}
+     */
+    this._autoScroll = new AutoScroll(container);
 
     /**
      * Time view options.
@@ -62,7 +68,9 @@ util.inherit(TimeGrid, View);
  */
 TimeGrid.prototype._beforeDestroy = function() {
     window.clearInterval(this.intervalID);
-    this.hourmarker = null;
+    this._autoScroll.destroy();
+
+    this._autoScroll = this.hourmarker = null;
 };
 
 /**
