@@ -67,6 +67,11 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
         originEvent: mouseDownEvent
     };
 
+    // only primary button can start drag.
+    if (domevent.getButton(mouseDownEvent) !== 0) {
+        return;
+    }
+
     /**
      * Drag starts events. cancelable.
      * @event Drag#dragStart

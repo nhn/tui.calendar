@@ -376,7 +376,42 @@ var domevent = {
             evt.button = {0: 1, 1: 4, 2: 2}[evt.button] || evt.button;
         }
         return evt;
+    },
+
+    /**
+     * Normalize mouse event's button attributes.
+     *
+     * Can detect which button is clicked by this method.
+     *
+     * Meaning of return numbers
+     *
+     * - 0: primary mouse button
+     * - 1: wheel button or center button
+     * - 2: secondary mouse button
+     * @param {MouseEvent} mouseEvent - The mouse event object want to know.
+     * @returns {number} - The value of meaning which button is clicked?
+     */
+    getButton: function(mouseEvent) {
+        var button,
+            primary = '0,1,3,5,7',
+            secondary = '2,6',
+            wheel = '4';
+
+        /* istanbul ignore else */
+        if (document.implementation.hasFeature('MouseEvents', '2.0')) {
+            return mouseEvent.button;
+        }
+
+        button = mouseEvent.button + '';
+        if (~primary.indexOf(button)) {
+            return 0;
+        } else if (~secondary.indexOf(button)) {
+            return 2;
+        } else if (~wheel.indexOf(button)) {
+            return 1;
+        }
     }
 };
 
 module.exports = domevent;
+
