@@ -49,6 +49,17 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
 }
 
 /**
+ * Destroy method
+ */
+TimeCreation.prototype.destroy = function() {
+    this.dragHandler.off();
+    this.dragHandler = null;
+    this.timeGridView = null;
+    this.baseController = null;
+    this._cached = null;
+};
+
+/**
  * Connect handler, view, controllers for event creations.
  * @implements
  * @param {Drag} [dragHandler] - Drag handler instance.

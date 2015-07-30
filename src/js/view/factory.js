@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var util = global.ne.util;
+
 // Parent views
 var Layout = require('./layout');
 var Week = require('./week');
@@ -22,29 +24,35 @@ var controllerFactory = require('../controller/factory.js');
 module.exports = function(name, options, container) {
     var layoutView,
         dragHandler,
-        baseController,
-        weekView,
-        dayNameView,
-        timeGridView;
+        baseController;
 
+    baseController = controllerFactory(['Week']);
     layoutView = new Layout(container);
-    baseController = layoutView.controller = controllerFactory(['Week']);
-    dragHandler = layoutView.dragHandler = new Drag(layoutView);
+    dragHandler = new Drag(layoutView);
+
+    layoutView.controller = baseController;
+    layoutView._beforeDestroy = function() {
+        dragHandler.destroy();
+        dragHandler = null;
+    };
 
     if (name === 'Week') {
         layoutView.addChild(function(container) {
-            weekView = new Week(null, options, container);
-            dayNameView = new DayName(weekView.container);
-            timeGridView = new TimeGrid(options, weekView.container);
-
-            // connect time creation event handler
-            new TimeCreation(dragHandler, timeGridView);
-            // timeMove.connect(dragHandler, timeGridView);
-            // timeResize.connect(dragHandler, timeGridView);
+            var weekView = new Week(null, options, container);
+            var dayNameView = new DayName(weekView.container);
+            var timeGridView = new TimeGrid(options, weekView.container);
+            var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
+            // TODO: timeMoveHandler
+            // TODO: timeResizeHandler
 
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
+
             weekView.controller = baseController.Week;
+            weekView._beforeDestroy = function() {
+                timeCreationHandler.destroy();
+                timeCreationHandler = null;
+            };
 
             return weekView;
         });

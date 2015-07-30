@@ -30,6 +30,15 @@ function Drag(layoutView) {
 }
 
 /**
+ * Destroy method.
+ */
+Drag.prototype.destroy = function() {
+    domevent.off(this.container, 'mousedown', this._onMouseDown, this);
+    this._isMoved = null;
+    this.container = null;
+};
+
+/**
  * Toggle event for mouse drags.
  * @param {boolean} onOff Set true then bind events.
  */

@@ -34,6 +34,17 @@ function Layout(container) {
 util.inherit(Layout, View);
 
 /**
+ * Clear child views.
+ */
+Layout.prototype.clear = function() {
+    this.childs.each(function(childView) {
+        childView.destroy();
+    });
+
+    this.childs.clear();
+};
+
+/**
  * Add an view object by creation function **(adderFunc)**.
  *
  * Invocations of adderFunc is called with layout view's container.

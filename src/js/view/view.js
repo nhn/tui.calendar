@@ -99,10 +99,10 @@ View.prototype._beforeDestroy = function() {};
  */
 View.prototype._destroy = function() {
     this._beforeDestroy();
-    this.id = null;
     this.childs.clear();
-    this.childs = null;
     this.container.innerHTML = '';
+    this.id = null;
+    this.childs = null;
     this.container = null;
 };
 
