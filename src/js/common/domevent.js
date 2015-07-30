@@ -150,7 +150,13 @@ var domevent = {
             } catch (e) {}    //eslint-disable-line
         }
 
-        obj[eventKey][id] = null;
+        delete obj[eventKey][id];
+
+        if (util.keys(obj[eventKey]).length) {
+            return;
+        }
+
+        delete obj[eventKey];
     },
 
     /**

@@ -130,6 +130,22 @@ describe('module:domevent', function() {
             expect(handler.mouseenter).not.toHaveBeenCalled();
             expect(handler.mouseleave).not.toHaveBeenCalled();
         });
+
+        it('등록된 이벤트가 전부 해제되면 관련 프로퍼티를 아예 제거한다.', function() {
+            domevent.on(btn, {
+                'click': handler.click,
+                'mousedown': handler.mousedown,
+                'mousewheel': handler.mousewheel
+            });
+
+            domevent.off(btn, {
+                'click': handler.click,
+                'mousedown': handler.mousedown,
+                'mousewheel': handler.mousewheel
+            });
+
+            expect(btn._evt).toBeUndefined();
+        });
     });
 
     describe('once()', function() {
