@@ -198,6 +198,19 @@
     left: 0px;
     right: 0px;
     position: absolute;
-    background-color: #7CAFC2;
+    background-color: #A1B56C;
     cursor: default;
+}
+
+.view-time-creation-guide {
+    left: 1px;
+    right: 0px;
+    position: absolute;
+    background-color: #7CAFC2;
+    opacity: 0.6;
+    cursor: default;
+}
+
+.view-time-date:last-child .view-time-creation-guide {
+    left: 0px;
 }

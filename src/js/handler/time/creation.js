@@ -9,6 +9,7 @@ var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
+var TimeCreationGuide = require('./creationGuide');
 var parseViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
 /**
@@ -43,6 +44,11 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._cached = null;
 
+    /**
+     * @type {TimeCreationGuide}
+     */
+    this._guide = new TimeCreationGuide(this);
+
     if (arguments.length) {
         this.connect.apply(this, arguments);
     }
@@ -53,10 +59,13 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
  */
 TimeCreation.prototype.destroy = function() {
     this.dragHandler.off();
+    this._guide.destroy();
+
     this.dragHandler = null;
     this.timeGridView = null;
     this.baseController = null;
     this._cached = null;
+    this._guide = null;
 };
 
 /**
@@ -161,7 +170,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
 
         return {
             gridYIndex: this._calcGridYIndex(baseMil, viewHeight, mouseY),
-            container: targetView.container
+            container: targetView.container,
+            originEvent: mouseEvent
         };
     }, this);
     eventData = cached(dragStartEventData.originEvent);
@@ -214,6 +224,8 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @property {HTMLElement} container - Target view's container element.
      */
     this._onDrag(dragEndEventData, 'time_creation_dragend');
+
+    this._cached = null;
 };
 
 /**
@@ -228,10 +240,7 @@ TimeCreation.prototype._onClick = function(clickEventData) {
      * @property {number} gridYIndex - The number of hour point.
      * @property {HTMLElement} container - Target view's container element.
      */
-    this._onDragStart({
-        target: clickEventData.target || clickEventData.srcElement,
-        originEvent: clickEventData
-    }, 'time_creation_click');
+    this._onDrag(clickEventData, 'time_creation_click');
 
     this._cached = null;
 };
