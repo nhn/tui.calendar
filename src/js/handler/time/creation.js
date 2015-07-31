@@ -64,7 +64,12 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
-    this.dragHandler.off();
+    this.dragHandler.off({
+        dragStart: this._onDragStart,
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
     this._guide.destroy();
 
     this.dragHandler = null;
@@ -88,8 +93,6 @@ TimeCreation.prototype.connect = function(dragHandler, timeGridView, baseControl
 
     dragHandler.on({
         dragStart: this._onDragStart,
-        drag: this._onDrag,
-        dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
 };
@@ -166,6 +169,11 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
     if (!targetView) {
         return;
     }
+
+    this.dragHandler.on({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
 
     viewOptions = targetView.options;
     viewHeight = targetView.getViewBound().height;
@@ -272,6 +280,11 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      */
     this._onDrag(dragEndEventData, 'time_creation_dragend', reviseFunc);
 
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
     this._dragStartCache = this._cached = null;
 };
 
@@ -297,6 +310,11 @@ TimeCreation.prototype._onClick = function(clickEventData) {
      * @property {MouseEvent} originEvent - Original mouse event object.
      */
     this._onDrag(clickEventData, 'time_creation_click', reviseFunc);
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
 
     this._dragStartCache = this._cached = null;
 };
