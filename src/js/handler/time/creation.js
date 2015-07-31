@@ -45,6 +45,12 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
     this._cached = null;
 
     /**
+     * Temporary function for drag start data cache.
+     * @type {object}
+     */
+    this._dragStartCache = null;
+
+    /**
      * @type {TimeCreationGuide}
      */
     this._guide = new TimeCreationGuide(this);
@@ -141,17 +147,21 @@ TimeCreation.prototype._calcGridYIndex = function(baseMil, height, y) {
  * @emits TimeCreation#time_creation_dragstart
  * @param {object} dragStartEventData - Drag#dragStart event data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
+ * @param {function} [revise] - supply function for revise event data before emit.
  */
-TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEventName) {
+TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEventName, revise) {
     var target = dragStartEventData.target,
         targetView = this.checkExpectedCondition(target),
         viewOptions,
-        viewHeight,
         hourLength,
+        viewHeight,
+        gridYIndex,
         eventData,
+        viewDate,
         baseMil,
         cached,
-        mouseY;
+        mouseY,
+        time;
 
     if (!targetView) {
         return;
@@ -159,6 +169,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
 
     viewOptions = targetView.options;
     viewHeight = targetView.getViewBound().height;
+    viewDate = targetView.getDate();
+
     hourLength = viewOptions.hourEnd - viewOptions.hourStart;
     baseMil = datetime.millisecondsFrom('hour', hourLength);
 
@@ -170,21 +182,33 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
             )
         ).y;
 
+        gridYIndex = this._calcGridYIndex(baseMil, viewHeight, mouseY);
+        time = datetime.millisecondsFrom('hour', gridYIndex + viewOptions.hourStart);
+
         return {
-            gridYIndex: this._calcGridYIndex(baseMil, viewHeight, mouseY),
             container: targetView.container,
-            hourLength: hourLength,
             viewHeight: viewHeight,
+            hourLength: hourLength,
+            gridYIndex: gridYIndex,
+            time: viewDate.getTime() + time,
             originEvent: mouseEvent
         };
     }, this);
-    eventData = cached(dragStartEventData.originEvent);
+    eventData = this._dragStartCache = cached(dragStartEventData.originEvent);
+
+    if (revise) {
+        revise(eventData);
+    }
 
     /**
      * @event TimeCreation#time_creation_dragstart
      * @type {object}
-     * @property {number} gridYIndex - The number of hour point.
      * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {number} time - Milliseconds value of drag star point.
+     * @property {MouseEvent} originEvent - Original mouse event object.
      */
     this.fire(overrideEventName || 'time_creation_dragstart', eventData);
 };
@@ -194,8 +218,9 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
  * @emits TimeCreation#time_creation_drag
  * @param {MouseEvent} dragEventData - Mouse event of Drag#drag custom event.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
+ * @param {function} [revise] - supply function for revise event data before emit.
  */
-TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName) {
+TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revise) {
     var cached = this._cached,
         eventData;
 
@@ -206,11 +231,19 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName) {
     eventData = cached(dragEventData);
     eventData.gridYIndex += 0.5;
 
+    if (revise) {
+        revise(eventData);
+    }
+
     /**
      * @event TimeCreation#time_creation_drag
      * @type {object}
-     * @property {number} gridYIndex - The number of hour point.
      * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {number} time - Milliseconds value of drag star point.
+     * @property {MouseEvent} originEvent - Original mouse event object.
      */
     this.fire(overrideEventName || 'time_creation_drag', eventData);
 };
@@ -221,15 +254,25 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName) {
  * @param {MouseEvent} dragEndEventData - Mouse event of Drag#dragEnd custom event.
  */
 TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
+    var dragStartTime = this._dragStartCache.time;
+
+    function reviseFunc(eventData) {
+        eventData.range = [dragStartTime, eventData.time + datetime.millisecondsFrom('hour', 0.5)];
+    }
+
     /**
      * @event TimeCreation#time_creation_dragend
      * @type {object}
-     * @property {number} gridYIndex - The number of hour point.
      * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {Date[]} range - date range between drag start and drag end points.
+     * @property {MouseEvent} originEvent - Original mouse event object.
      */
-    this._onDrag(dragEndEventData, 'time_creation_dragend');
+    this._onDrag(dragEndEventData, 'time_creation_dragend', reviseFunc);
 
-    this._cached = null;
+    this._dragStartCache = this._cached = null;
 };
 
 /**
@@ -238,15 +281,24 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
  * @param {MouseEvent} clickEventData - Mouse event of Drag#click custom event.
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
+    var dragStartTime = this._dragStartCache.time;
+
+    function reviseFunc(eventData) {
+        eventData.range = [dragStartTime, eventData.time + datetime.millisecondsFrom('hour', 0.5)];
+    }
     /**
      * @event TimeCreation#time_creation_click
      * @type {object}
-     * @property {number} gridYIndex - The number of hour point.
      * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {Date[]} range - date range between drag start and drag end points.
+     * @property {MouseEvent} originEvent - Original mouse event object.
      */
-    this._onDrag(clickEventData, 'time_creation_click');
+    this._onDrag(clickEventData, 'time_creation_click', reviseFunc);
 
-    this._cached = null;
+    this._dragStartCache = this._cached = null;
 };
 
 util.CustomEvents.mixin(TimeCreation);

@@ -122,6 +122,7 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         }
 
         childOption = {
+            ymd: ymd,
             isToday: isToday,
             hourStart: options.hourStart,
             hourEnd: options.hourEnd

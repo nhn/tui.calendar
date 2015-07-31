@@ -130,6 +130,14 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 };
 
 /**
+ * @returns {Date} - Date of this view.
+ */
+Time.prototype.getDate = function() {
+    return this._parseDateGroup(this.options.ymd);
+};
+
+
+/**
  * @override
  * @param {string} ymd The date of events. YYYYMMDD format
  * @param {array} matrices Matrices for placing events
