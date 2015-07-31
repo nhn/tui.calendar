@@ -1,7 +1,12 @@
 {{#each matrices}}
     {{#each this}}
         {{#each this}}
-            {{#if this}}<div class="view-time-date-event-itself" style="top:{{top}}px;left:{{left}}%;width:{{elSize width}};height:{{height}}px">{{model.title}}</div>{{/if}}
+            {{#if this}}
+            <div class="view-time-date-event-block" style="{{time-eventBlock this}}">
+                <div class="view-time-event">
+                    {{model.title}}
+                </div>
+            </div>{{/if}}
         {{/each}}
     {{/each}}
 {{/each}}

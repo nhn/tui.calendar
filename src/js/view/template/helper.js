@@ -6,13 +6,32 @@
 
 var util = global.ne.util;
 
+function getElSize(value, postfix, prefix) {
+    prefix = prefix || '';
+    if (util.isNumber(value)) {
+        return prefix + ':' + value + postfix;
+    }
+
+    return prefix + ':auto';
+}
+
 module.exports = {
-    'elSize': function(value) {
-        if (util.isNumber(value)) {
-            return value + '%';
-        } else {
-            return 'auto';
-        }
+    'common-width': function(width) {
+        return getElSize(width, '%', 'width');
+    },
+
+    /**
+     * Use in time.hbs
+     * @param {EventViewModel} eventViewModel viewModel
+     * @returns {string} element size css class
+     */
+    'time-eventBlock': function(eventViewModel) {
+        var top = getElSize(eventViewModel.top, 'px', 'top'),
+            left = getElSize(eventViewModel.left, '%', 'left'),
+            width = getElSize(eventViewModel.width, '%', 'width'),
+            height = getElSize(eventViewModel.height, 'px', 'height');
+
+        return [top, left, width, height].join(';');
     },
 
     /**

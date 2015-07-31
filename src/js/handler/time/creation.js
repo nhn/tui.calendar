@@ -92,8 +92,7 @@ TimeCreation.prototype.connect = function(dragHandler, timeGridView, baseControl
     this.baseController = baseController;
 
     dragHandler.on({
-        dragStart: this._onDragStart,
-        click: this._onClick
+        dragStart: this._onDragStart
     }, this);
 };
 
@@ -171,7 +170,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
 
     this.dragHandler.on({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd
+        dragEnd: this._onDragEnd,
+        click: this._onClick
     }, this);
 
     viewOptions = targetView.options;
@@ -281,7 +281,8 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
 
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd
+        dragEnd: this._onDragEnd,
+        click: this._onClick
     }, this);
 
     this._dragStartCache = this._cached = null;
@@ -312,7 +313,8 @@ TimeCreation.prototype._onClick = function(clickEventData) {
 
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd
+        dragEnd: this._onDragEnd,
+        click: this._onClick
     }, this);
 
     this._dragStartCache = this._cached = null;

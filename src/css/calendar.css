@@ -194,10 +194,20 @@
     margin: 0;
 }
 
-.view-time-date-event-itself {
+/* 일정 블록 */
+.view-time-date-event-block{
     left: 0px;
     right: 0px;
     position: absolute;
+}
+
+.view-time-event {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 100%;
+    border-radius: 3px;
+    margin-right: 5px;
     background-color: #A1B56C;
     cursor: default;
 }
