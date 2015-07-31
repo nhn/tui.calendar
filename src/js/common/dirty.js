@@ -4,9 +4,14 @@
  */
 'use strict';
 
+var common = ne.util,
+    existy = common.isExisty,
+    pick = common.pick,
+    isFunc = common.isFunction;
+
 /**
- * Module for support dirty flagging for specific objects.
- * @module util/dirty
+ * Mixin module for dirty flagging on specific objects.
+ * @mixin
  * @example
  * var obj = { hello: 'good', test: '123' };
  * dirty.mixin(obj);
@@ -19,17 +24,6 @@
  *
  * obj.isDirty();    // false
  * obj.isPropChanged('hello');    // false
- */
-
-var common = ne.util,
-    existy = common.isExisty,
-    pick = common.pick,
-    isFunc = common.isFunction;
-
-/**
- * Mixin module for dirty flagging on specific objects.
- * @exports dirty
- * @mixin
  */
 var dirty = {
     /**

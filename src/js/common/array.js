@@ -7,6 +7,10 @@
 var util = global.ne.util;
 var datetime = require('../datetime');
 
+/**
+ * A module for sorting array.
+ * @module array
+ */
 
 /**********
  * Search
@@ -253,6 +257,7 @@ function eventASC(a, b) {
 
     return util.stamp(a) - util.stamp(b);
 }
+
 
 module.exports = {
     bsearch: bsearch,

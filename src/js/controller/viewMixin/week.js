@@ -11,9 +11,9 @@ var aps = Array.prototype.slice;
 var forEachArr = util.forEachArray;
 
 /**
- * @mixin
+ * @mixin Base.Week
  */
-var week = /** @lends Base.prototype.week */{
+var Week = {
     /**
      * Group EventViewModel array by type and sort it.
      * @param {Collection} collection ViewModel collection
@@ -128,7 +128,7 @@ var week = /** @lends Base.prototype.week */{
             col,
             nextRow,
             lastRowInColumn,
-            getLastRowInColumn = week.getLastRowInColumn;
+            getLastRowInColumn = Week.getLastRowInColumn;
 
         forEachArr(collisionGroups, function(group) {
             matrix = [[]];
@@ -189,11 +189,11 @@ var week = /** @lends Base.prototype.week */{
             collisionGroups = this.getCollisionGroup(grouped.time);
             matrices = this.getMatrices(collection, collisionGroups);
             cursor.time = matrices;
-        }, week);
+        }, Week);
 
         return result;
     }
 };
 
-module.exports = week;
+module.exports = Week;
 

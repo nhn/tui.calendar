@@ -11,20 +11,18 @@ var util = global.ne.util,
 var datetime = require('../datetime');
 
 /**
- * string trim
- * @param {string} str string to trim
- * @returns {string} trimed string
- */
-function trim(str) {
-    return str.replace(spaceRx, '');
-}
-
-/**
  * Mixin module for models.
- * @module ne.dooray.calendar.Model
  * @mixin
  */
 model = {
+    /**
+     * string trim
+     * @param {string} str string to trim
+     * @returns {string} trimed string
+     */
+    trim: function(str) {
+        return str.replace(spaceRx, '');
+    },
     /**
      * The collections of validator functions.
      */
@@ -38,7 +36,7 @@ model = {
         required: function(instance, fields) {
             var valid = true,
                 isValid = function(obj) {
-                    return !util.isUndefined(obj) && trim(obj) !== '';
+                    return !util.isUndefined(obj) && model.trim(obj) !== '';
                 };
 
             util.forEach(fields, function(fieldName) {

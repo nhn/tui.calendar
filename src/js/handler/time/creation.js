@@ -14,6 +14,7 @@ var parseViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
 /**
  * @constructor
+ * @implements {Handler}
  * @mixes util.CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
  * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
@@ -81,7 +82,6 @@ TimeCreation.prototype.destroy = function() {
 
 /**
  * Connect handler, view, controllers for event creations.
- * @implements
  * @param {Drag} [dragHandler] - Drag handler instance.
  * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
  * @param {Base} [baseController] - Base controller instance.
@@ -99,7 +99,6 @@ TimeCreation.prototype.connect = function(dragHandler, timeGridView, baseControl
 
 /**
  * Check target element is expected condition for activate this plugins.
- * @implements
  * @param {HTMLElement} target - The element to check
  * @returns {(boolean|Time)} - return Time view instance when satiate condition.
  */
