@@ -115,6 +115,22 @@ describe('module:domutil', function() {
     });
 
 
+    describe('dataset', function() {
+        it('setData()', function() {
+            var div = domutil.appendHTMLElement('div');
+            domutil.setData(div, 'test', 13);
+
+            expect(div.hasAttribute('data-test')).toBe(true);
+        });
+
+        it('getData()', function() {
+            var div = domutil.appendHTMLElement('div');
+            div.innerHTML = '<div data-test="good"></div>';
+
+            expect(domutil.getData(div.childNodes[0], 'test')).toBe('good');
+        });
+    });
+
 
     describe('createElement()', function() {
 

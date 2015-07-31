@@ -154,6 +154,23 @@ domutil = {
         return ret;
     },
 
+    setData: function(el, key, data) {
+        if ('dataset' in el) {
+            el.dataset[key] = data;
+            return;
+        }
+
+        el.setAttribute('data-' + key, data);
+    },
+
+    getData: function(el, key) {
+        if ('dataset' in el) {
+            return el.dataset[key];
+        }
+
+        return el.getAttribute('data-' + key);
+    },
+
     /**
      * Check element has specific design class name.
      * @param {HTMLElement} el target element
