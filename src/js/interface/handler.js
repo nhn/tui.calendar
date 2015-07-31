@@ -7,6 +7,11 @@
 function Handler() {}
 
 /**
+ * Destroy method
+ */
+Handler.prototype.destroy = function() {};
+
+/**
  * Connect view, dragHandler, controllers.
  */
 Handler.prototype.connect = function() {};
