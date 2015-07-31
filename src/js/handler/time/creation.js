@@ -10,6 +10,7 @@ var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
 var TimeCreationGuide = require('./creationGuide');
+
 var parseViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
 /**
@@ -102,7 +103,15 @@ TimeCreation.prototype.connect = function(dragHandler, timeGridView, baseControl
  * @returns {(boolean|Time)} - return Time view instance when satiate condition.
  */
 TimeCreation.prototype.checkExpectedCondition = function(target) {
-    var matches = domutil.getClass(target).match(parseViewIDRx);
+    var cssClass = domutil.getClass(target),
+        matches;
+
+    if (cssClass === 'view-time-date-event-block') {
+        target = target.parentNode;
+        cssClass = domutil.getClass(target);
+    }
+
+    matches = cssClass.match(parseViewIDRx);
 
     if (!matches || matches.length < 2) {
         return false;
