@@ -10,12 +10,14 @@ var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
 var TimeCreationGuide = require('./creationGuide');
+var timeCore = require('./core');
 
 var parseViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
 /**
  * @constructor
  * @implements {Handler}
+ * @mixes timeCore
  * @mixes util.CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
  * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
@@ -161,20 +163,19 @@ TimeCreation.prototype._calcGridYIndex = function(baseMil, height, y) {
  */
 TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEventName, revise) {
     var target = dragStartEventData.target,
-        targetView = this.checkExpectedCondition(target),
-        viewOptions,
-        hourLength,
-        viewHeight,
-        gridYIndex,
-        eventData,
-        viewDate,
-        baseMil,
-        cached,
-        mouseY,
-        time;
+        result = this.checkExpectedCondition(target),
+        getEventDataFunc,
+        eventData;
 
-    if (!targetView) {
+    if (!result) {
         return;
+    }
+
+    getEventDataFunc = this._cached = this._retriveEventData(result);
+    eventData = this._dragStartCache = getEventDataFunc(dragStartEventData.originEvent);
+
+    if (revise) {
+        revise(eventData);
     }
 
     this.dragHandler.on({
@@ -182,39 +183,6 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
-
-    viewOptions = targetView.options;
-    viewHeight = targetView.getViewBound().height;
-    viewDate = targetView.getDate();
-
-    hourLength = viewOptions.hourEnd - viewOptions.hourStart;
-    baseMil = datetime.millisecondsFrom('hour', hourLength);
-
-    cached = this._cached = util.bind(function(mouseEvent) {
-        mouseY = Point.n(
-            domevent.getMousePosition(
-                mouseEvent,
-                targetView.container
-            )
-        ).y;
-
-        gridYIndex = this._calcGridYIndex(baseMil, viewHeight, mouseY);
-        time = datetime.millisecondsFrom('hour', gridYIndex + viewOptions.hourStart);
-
-        return {
-            container: targetView.container,
-            viewHeight: viewHeight,
-            hourLength: hourLength,
-            gridYIndex: gridYIndex,
-            time: viewDate.getTime() + time,
-            originEvent: mouseEvent
-        };
-    }, this);
-    eventData = this._dragStartCache = cached(dragStartEventData.originEvent);
-
-    if (revise) {
-        revise(eventData);
-    }
 
     /**
      * @event TimeCreation#time_creation_dragstart
@@ -272,6 +240,12 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
 TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     var dragStartTime = this._dragStartCache.time;
 
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
     function reviseFunc(eventData) {
         eventData.range = [dragStartTime, eventData.time + datetime.millisecondsFrom('hour', 0.5)];
     }
@@ -288,12 +262,6 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      */
     this._onDrag(dragEndEventData, 'time_creation_dragend', reviseFunc);
 
-    this.dragHandler.off({
-        drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
-    }, this);
-
     this._dragStartCache = this._cached = null;
 };
 
@@ -304,6 +272,12 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
     var dragStartTime = this._dragStartCache.time;
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
 
     function reviseFunc(eventData) {
         eventData.range = [dragStartTime, eventData.time + datetime.millisecondsFrom('hour', 0.5)];
@@ -320,15 +294,10 @@ TimeCreation.prototype._onClick = function(clickEventData) {
      */
     this._onDrag(clickEventData, 'time_creation_click', reviseFunc);
 
-    this.dragHandler.off({
-        drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
-    }, this);
-
     this._dragStartCache = this._cached = null;
 };
 
+timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);
 
 module.exports = TimeCreation;

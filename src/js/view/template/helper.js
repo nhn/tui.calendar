@@ -16,6 +16,10 @@ function getElSize(value, postfix, prefix) {
 }
 
 module.exports = {
+    'stamp': function(obj) {
+        return util.stamp(obj);
+    },
+
     'common-width': function(width) {
         return getElSize(width, '%', 'width');
     },

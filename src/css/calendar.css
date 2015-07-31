@@ -207,6 +207,8 @@
     height: 100%;
     background-color: #A1B56C;
     cursor: default;
+    font-size: 0.8em;
+    color: #fff;
 }
 
 .view-time-creation-guide {

@@ -17,6 +17,7 @@ var TimeGrid = require('./timeGrid');
 // Handlers
 var Drag = require('../handler/drag');
 var TimeCreation = require('../handler/time/creation');
+var TimeMove = require('../handler/time/move');
 
 // Controllers
 var controllerFactory = require('../controller/factory.js');
@@ -42,6 +43,7 @@ module.exports = function(name, options, container) {
             var dayNameView = new DayName(weekView.container);
             var timeGridView = new TimeGrid(options, weekView.container);
             var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
+            var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
             // TODO: timeMoveHandler
             // TODO: timeResizeHandler
 
@@ -51,7 +53,9 @@ module.exports = function(name, options, container) {
             weekView.controller = baseController.Week;
             weekView._beforeDestroy = function() {
                 timeCreationHandler.destroy();
-                timeCreationHandler = null;
+                timeMoveHandler.destroy();
+
+                timeCreationHandler = timeMoveHandler = null;
             };
 
             return weekView;
