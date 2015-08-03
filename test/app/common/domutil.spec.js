@@ -80,6 +80,18 @@ describe('module:domutil', function() {
         expect(size).not.toBe([20, 10]);
     });
 
+    describe('closest()', function() {
+        it('selector에 해당하는 부모 엘리먼트가 나올때까지 찾는다', function() {
+            var li = document.getElementById('list-item');
+            expect(domutil.closest(li, '#parent')).toBe(document.getElementById('parent'));
+        });
+
+        it('selector에 해당하는 부모 엘리먼트가 없으면 undefined를 반환한다', function() {
+            var li = document.getElementById('list-item');
+            expect(domutil.closest(li, '#notexist')).toBeUndefined();
+        });
+    });
+
     describe('text()', function() {
         it('dom내부의 모든 텍스트를 태그 없이 볼 수 있다', function() {
             var div = domutil.find('#test');

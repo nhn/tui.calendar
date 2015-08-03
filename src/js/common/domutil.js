@@ -122,6 +122,31 @@ domutil = {
         return target;
     },
 
+    _matcher: function(el, selector) {
+        var cssClassSelector = /^\./,
+            idSelector = /^#/;
+
+        if (cssClassSelector.test(selector)) {
+            return domutil.hasClass(el, selector.replace('.', ''));
+        } else if (idSelector.test(selector)) {
+            return el.getAttribute('id') === selector.replace('#', '');
+        }
+
+        return el.nodeName.toLowerCase() === selector.toLowerCase();
+    },
+
+    closest: function(el, selector) {
+        var parent = el.parentNode;
+
+        while (parent !== global.document.body) {
+            if (domutil._matcher(parent, selector)) {
+                return parent;
+            }
+
+            parent = parent.parentNode;
+        }
+    },
+
     /**
      * Return texts inside element.
      * @param {HTMLElement} el target element
