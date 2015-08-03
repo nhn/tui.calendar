@@ -51,6 +51,25 @@ domutil = {
     },
 
     /**
+     * Check supplied element is matched selector.
+     * @param {HTMLElement} el - element to check
+     * @param {string} selector - selector string to check
+     * @return {boolean} match?
+     */
+    _matcher: function(el, selector) {
+        var cssClassSelector = /^\./,
+            idSelector = /^#/;
+
+        if (cssClassSelector.test(selector)) {
+            return domutil.hasClass(el, selector.replace('.', ''));
+        } else if (idSelector.test(selector)) {
+            return el.id === selector.replace('#', '');
+        }
+
+        return el.nodeName.toLowerCase() === selector.toLowerCase();
+    },
+
+    /**
      * Find DOM element by specific selectors.
      * below three selector only supported.
      *
@@ -62,25 +81,15 @@ domutil = {
      * @returns {HTMLElement} HTML element finded.
      */
     find: function(selector, root) {
-        var target = null,
-            rootType,
-            cssClassSelector = /^\./,
-            idSelector = /^#/,
-            matcher = (function() {
-                if (cssClassSelector.test(selector)) {
-                    return function(el, id) {
-                        return domutil.hasClass(el, id.replace('.', ''));
-                    };
-                } else if (idSelector.test(selector)) {
-                    return function(el, id) {
-                        return el.id === id.replace('#', '');
-                    };
-                }
+        var target = null;
 
-                return function(el, id) {
-                    return el.nodeName.toLowerCase() === id.toLowerCase();
-                };
-            })();
+        if (typeof root === 'string') {
+            root = domutil.get(root);
+        }
+
+        if (!root) {
+            root = window.document.body;
+        }
 
         /**
          * Find element recursivly
@@ -100,7 +109,7 @@ domutil = {
                     continue;
                 }
 
-                if (matcher(child, selector)) {
+                if (domutil._matcher(child, selector)) {
                     target = child;
                     return;
                 } else if (child.childNodes.length > 0) {
@@ -109,36 +118,21 @@ domutil = {
             }
         }
 
-        rootType = typeof root;
-
-        if (rootType === 'undefined') {
-            root = document.body;
-        } else if (rootType === 'string') {
-            root = domutil.get(root);
-        }
-
         findRecursive(root, selector);
 
         return target;
     },
 
-    _matcher: function(el, selector) {
-        var cssClassSelector = /^\./,
-            idSelector = /^#/;
-
-        if (cssClassSelector.test(selector)) {
-            return domutil.hasClass(el, selector.replace('.', ''));
-        } else if (idSelector.test(selector)) {
-            return el.getAttribute('id') === selector.replace('#', '');
-        }
-
-        return el.nodeName.toLowerCase() === selector.toLowerCase();
-    },
-
+    /**
+     * Find parent element recursivly.
+     * @param {HTMLElement} el - base element to start find.
+     * @param {string} selector - selector string for find
+     * @returns {HTMLElement} - element finded or undefined.
+     */
     closest: function(el, selector) {
         var parent = el.parentNode;
 
-        while (parent !== global.document.body) {
+        while (parent !== window.document.body) {
             if (domutil._matcher(parent, selector)) {
                 return parent;
             }
