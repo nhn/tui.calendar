@@ -223,3 +223,9 @@
 .view-time-date:last-child .view-time-creation-guide {
     left: 0px;
 }
+
+.view-time-move-guide div {
+    opacity: 0.8;
+    cursor: move;
+    z-index: 97;
+}
