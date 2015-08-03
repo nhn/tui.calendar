@@ -21,22 +21,29 @@ var parseTimeViewIDRx = /^view-time-date[\s]view-(\d+)/;
  */
 function TimeMove(dragHandler, timeGridView, baseController) {
     /**
-     * Drag handler instance.
      * @type {Drag}
      */
     this.dragHandler = null;
 
     /**
-     * TimeGrid view instance.
      * @type {TimeGrid}
      */
     this.timeGridView = null;
 
     /**
-     * Base controller instance.
      * @type {Base}
      */
     this.baseController = null;
+
+    /**
+     * @type {function}
+     */
+    this._getEventDataFunc = null;
+
+    /**
+     * @type {object}
+     */
+    this._dragStartEventData = null;
 
     if (arguments.length) {
         this.connect.apply(this, arguments);
@@ -93,7 +100,7 @@ TimeMove.prototype.checkExpectCondition = function(target) {
 };
 
 /**
- * @emits TimeMove#time_move_dratstart
+ * @emits TimeMove#time_move_dragstart
  * @param {object} dragStartEventData - Drag#dragStart event data.
  */
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
@@ -106,12 +113,116 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    getEventDataFunc = this._retriveEventData(timeView);
-    eventData = getEventDataFunc(dragStartEventData.originEvent);
-    eventData.eventElement = target;
-    eventData.modelID = domutil.getData(target, 'id');
+    getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
+    eventData = this._dragStartEventData = getEventDataFunc(
+        dragStartEventData.originEvent, {
+            eventElement: target,
+            modelID: domutil.getData(target, 'id')
+        }
+    );
 
-    console.log(eventData);
+    this.dragHandler.on({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
+    /**
+     * @event TimeMove#time_move_dragstart
+     * @type {object}
+     * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {number} time - Milliseconds value of drag star point.
+     * @property {HTMLElement} eventElement - The element emitted move event.
+     * @property {string} modelID - The model unique id emitted move event.
+     * @property {MouseEvent} originEvent - Original mouse event object.
+     */
+    this.fire('time_move_dragstart', eventData);
+};
+
+TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
+    var getEventDataFunc = this._getEventDataFunc,
+        startEventData = this._dragStartEventData,
+        eventData;
+
+    if (!getEventDataFunc || !startEventData) {
+        return;
+    }
+
+    eventData = getEventDataFunc(dragEventData, {
+        eventElement: startEventData.eventElement,
+        modelID: startEventData.modelID
+    });
+
+    /**
+     * @event TimeMove#time_move_drag
+     * @type {object}
+     * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {number} time - Milliseconds value of drag star point.
+     * @property {HTMLElement} eventElement - The element emitted move event.
+     * @property {string} modelID - The model unique id emitted move event.
+     * @property {MouseEvent} originEvent - Original mouse event object.
+     */
+    this.fire(overrideEventName || 'time_move_drag', eventData);
+};
+
+/**
+ * @emits TimeMove#time_move_dragend
+ */
+TimeMove.prototype._onDragEnd = function(dragEndEventData) {
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
+    /**
+     * @event TimeMove#time_move_dragend
+     * @type {object}
+     * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {number} time - Milliseconds value of drag star point.
+     * @property {HTMLElement} eventElement - The element emitted move event.
+     * @property {string} modelID - The model unique id emitted move event.
+     * @property {MouseEvent} originEvent - Original mouse event object.
+     */
+    this._onDrag(dragEndEventData, 'time_move_dragend');
+
+    this._getEventDataFunc = this._dragStartEventData = null;
+};
+
+/**
+ * @emits TimeMove#time_move_click
+ */
+TimeMove.prototype._onClick = function(clickEventData) {
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
+    /**
+     * @event TimeMove#time_move_click
+     * @type {object}
+     * @property {HTMLElement} container - Target view's container element.
+     * @property {number} viewHeight - Height of view container.
+     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
+     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
+     * @property {number} time - Milliseconds value of drag star point.
+     * @property {HTMLElement} eventElement - The element emitted move event.
+     * @property {string} modelID - The model unique id emitted move event.
+     * @property {MouseEvent} originEvent - Original mouse event object.
+     */
+    this._onDrag(clickEventData, 'time_move_click');
+
+    this._getEventDataFunc = this._dragStartEventData = null;
 };
 
 timeCore.mixin(TimeMove);
