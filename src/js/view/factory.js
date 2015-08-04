@@ -64,6 +64,8 @@ module.exports = function(name, options, container) {
 
             weekView.controller = baseController.Week;
             weekView._beforeDestroy = function() {
+                timeCreationHandler.off();
+                timeMoveHandler.off();
                 timeCreationHandler.destroy();
                 timeMoveHandler.destroy();
 
