@@ -9,6 +9,10 @@
  * Days.Time = 400px 
  */
 
+.view-dragging {
+    cursor: move;
+}
+
 .clear:after {
     content: '';
     display: block;
@@ -206,7 +210,6 @@
     right: 7px;
     height: 100%;
     background-color: #A1B56C;
-    cursor: default;
     font-size: 0.8em;
     color: #fff;
 }
@@ -217,7 +220,6 @@
     position: absolute;
     background-color: #7CAFC2;
     opacity: 0.6;
-    cursor: default;
 }
 
 .view-time-date:last-child .view-time-creation-guide {
@@ -226,6 +228,5 @@
 
 .view-time-move-guide div {
     opacity: 0.8;
-    cursor: move;
     z-index: 97;
 }

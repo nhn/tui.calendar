@@ -7,6 +7,7 @@
 var util = global.ne.util;
 var domutil = require('../../common/domutil');
 var timeCore = require('./core');
+var TimeMoveGuide = require('./moveGuide');
 
 var parseTimeViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
@@ -44,6 +45,11 @@ function TimeMove(dragHandler, timeGridView, baseController) {
      * @type {object}
      */
     this._dragStartEventData = null;
+
+    /**
+     * @type {TimeMoveGuide}
+     */
+    this._guide = new TimeMoveGuide(this);
 
     if (arguments.length) {
         this.connect.apply(this, arguments);
@@ -179,6 +185,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
     /**
      * @event TimeMove#time_move_drag
      * @type {object}
+     * @property {Time} currentTimeView - time view instance related with current mouse position.
      * @property {HTMLElement} container - Target view's container element.
      * @property {number} viewHeight - Height of view container.
      * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
@@ -196,11 +203,24 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
  * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
+    var getEventDataFunc = this._getEventDataFunc,
+        startEventData = this._dragStartEventData,
+        eventData;
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    if (!getEventDataFunc || !startEventData) {
+        return;
+    }
+
+    eventData = getEventDataFunc(dragEndEventData, {
+        eventElement: startEventData.eventElement,
+        modelID: startEventData.modelID
+    });
 
     /**
      * @event TimeMove#time_move_dragend
@@ -214,7 +234,7 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
      * @property {string} modelID - The model unique id emitted move event.
      * @property {MouseEvent} originEvent - Original mouse event object.
      */
-    this._onDrag(dragEndEventData, 'time_move_dragend');
+    this.fire('time_move_dragend', eventData);
 
     this._getEventDataFunc = this._dragStartEventData = null;
 };
@@ -224,11 +244,24 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
  * @param {MouseEvent} clickEventData - click mouse event object.
  */
 TimeMove.prototype._onClick = function(clickEventData) {
+    var getEventDataFunc = this._getEventDataFunc,
+        startEventData = this._dragStartEventData,
+        eventData;
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    if (!getEventDataFunc || !startEventData) {
+        return;
+    }
+
+    eventData = getEventDataFunc(clickEventData, {
+        eventElement: startEventData.eventElement,
+        modelID: startEventData.modelID
+    });
 
     /**
      * @event TimeMove#time_move_click
@@ -242,7 +275,7 @@ TimeMove.prototype._onClick = function(clickEventData) {
      * @property {string} modelID - The model unique id emitted move event.
      * @property {MouseEvent} originEvent - Original mouse event object.
      */
-    this._onDrag(clickEventData, 'time_move_click');
+    this.fire('time_move_click', eventData);
 
     this._getEventDataFunc = this._dragStartEventData = null;
 };

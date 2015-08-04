@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var domutil = require('../common/domutil');
 
 // Parent views
 var Layout = require('./layout');
@@ -48,6 +49,18 @@ module.exports = function(name, options, container) {
             // TODO: timeResizeHandler
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
+
+            timeMoveHandler.on({
+                'time_move_dragstart': function() {
+                    domutil.addClass(global.document.body, 'view-dragging');
+                },
+                'time_move_dragend': function() {
+                    domutil.removeClass(global.document.body, 'view-dragging');
+                },
+                'time_move_click': function() {
+                    domutil.removeClass(global.document.body, 'view-dragging');
+                }
+            });
 
             weekView.controller = baseController.Week;
             weekView._beforeDestroy = function() {
