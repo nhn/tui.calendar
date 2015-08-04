@@ -19,7 +19,11 @@ gulp.task('connect', function() {
     connect.server({
         livereload: true
     });
-    gulp.watch(['./src/**/*.js', './index.js', './demo/**/*.html'], ['bundle']);
+    gulp.watch([
+        './src/**/*',
+        './index.js',
+        './demo/**/*.html'
+    ], ['bundle']);
 });
 
 gulp.task('bundle', function() {
