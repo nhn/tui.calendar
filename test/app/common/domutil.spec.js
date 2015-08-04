@@ -81,6 +81,11 @@ describe('module:domutil', function() {
     });
 
     describe('closest()', function() {
+        it('첫번째 인자가 조건에 만족할때는 첫번째 인자를 그냥 반환함.', function() {
+            var li = document.getElementById('list-item');
+            expect(domutil.closest(li, '#list-item')).toBe(li);
+        });
+
         it('selector에 해당하는 부모 엘리먼트가 나올때까지 찾는다', function() {
             var li = document.getElementById('list-item');
             expect(domutil.closest(li, '#parent')).toBe(document.getElementById('parent'));
