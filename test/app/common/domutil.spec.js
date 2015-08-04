@@ -90,6 +90,22 @@ describe('module:domutil', function() {
             var li = document.getElementById('list-item');
             expect(domutil.closest(li, '#notexist')).toBeUndefined();
         });
+
+        it('렌더링 되지 않은 엘리먼트에 대해서도 동작함', function() {
+            var div = document.createElement('div');
+            div.setAttribute('id', 'good');
+            div.innerHTML = '<ul><li id="testtest">123</li></ul>';
+
+            var li = domutil.find('li', div);
+            console.log(domutil.closest(li, '#good'));
+
+            expect(domutil.closest(li, '#good')).toBe(div);
+        });
+
+        it('parentNode가 undefined일 경우 반환함.', function() {
+            var div = document.createElement('div');
+            expect(domutil.closest(div, '#good')).toBeUndefined();
+        });
     });
 
     describe('text()', function() {

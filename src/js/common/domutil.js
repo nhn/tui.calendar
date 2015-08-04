@@ -132,7 +132,7 @@ domutil = {
     closest: function(el, selector) {
         var parent = el.parentNode;
 
-        while (parent !== window.document.body) {
+        while (parent && parent !== window.document.body) {
             if (domutil._matcher(parent, selector)) {
                 return parent;
             }
