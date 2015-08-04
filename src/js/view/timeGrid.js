@@ -65,7 +65,7 @@ util.inherit(TimeGrid, View);
  **********/
 
 /**
- * Destory view.
+ * Destroy view.
  * @override
  */
 TimeGrid.prototype._beforeDestroy = function() {

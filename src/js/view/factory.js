@@ -19,6 +19,7 @@ var TimeGrid = require('./timeGrid');
 var Drag = require('../handler/drag');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
+var TimeResize = require('../handler/time/resize');
 
 // Controllers
 var controllerFactory = require('../controller/factory.js');
@@ -45,8 +46,8 @@ module.exports = function(name, options, container) {
             var timeGridView = new TimeGrid(options, weekView.container);
             var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
             var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
-            // TODO: timeMoveHandler
-            // TODO: timeResizeHandler
+            var timeResizeHandler = new TimeResize(dragHandler, timeGridView);
+
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
 
@@ -62,14 +63,28 @@ module.exports = function(name, options, container) {
                 }
             });
 
+            timeResizeHandler.on({
+                'time_resize_dragstart': function() {
+                    domutil.addClass(global.document.body, 'view-resizing');
+                },
+                'time_resize_dragend': function() {
+                    domutil.removeClass(global.document.body, 'view-resizing');
+                },
+                'time_resize_click': function() {
+                    domutil.removeClass(global.document.body, 'view-resizing');
+                }
+            });
+
             weekView.controller = baseController.Week;
             weekView._beforeDestroy = function() {
                 timeCreationHandler.off();
                 timeMoveHandler.off();
+                timeResizeHandler.off();
                 timeCreationHandler.destroy();
                 timeMoveHandler.destroy();
+                timeResizeHandler.destroy();
 
-                timeCreationHandler = timeMoveHandler = null;
+                timeCreationHandler = timeMoveHandler = timeResizeHandler = null;
             };
 
             return weekView;

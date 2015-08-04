@@ -48,7 +48,7 @@ function TimeCreationGuide(timeCreation) {
 }
 
 /**
- * Destory method.
+ * Destroy method.
  */
 TimeCreationGuide.prototype.destroy = function() {
     this._clearGuideElement();

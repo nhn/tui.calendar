@@ -108,7 +108,7 @@ View.prototype._destroy = function() {
 
 /*eslint-disable*/
 /**
- * Destory child view recursivly.
+ * Destroy child view recursivly.
  */
 View.prototype.destroy = function(isChildView) {
     this.childs.each(function(childView) {

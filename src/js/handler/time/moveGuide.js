@@ -54,7 +54,10 @@ TimeMoveGuide.prototype.destroy = function() {
         'time_move_click': this._clearGuideElement
     }, this);
 
-    this.guideElement = this.timeMove = null;
+    this._clearGuideElement();
+
+    this.guideElement = this.timeMove =
+        this._container = this._getTopFunc = null;
 };
 
 /**
@@ -113,9 +116,9 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         gridYIndex = dragEventData.gridYIndex,
         viewHeight = dragEventData.viewHeight,
         hourLength = dragEventData.hourLength,
-        heightHalf = domevent.getMousePosition(dragEventData.originEvent, dragEventData.eventElement)[1],
+        height = domevent.getMousePosition(dragEventData.originEvent, dragEventData.eventElement)[1],
         // offset for event element drag position.
-        offset = ((heightHalf * hourLength) / viewHeight) | 0;
+        offset = ((height * hourLength) / viewHeight) | 0;
 
     // move guide element's parent element to viewview container related with mouse position.
     if (this._container !== dragEventData.currentTimeView.container) {
