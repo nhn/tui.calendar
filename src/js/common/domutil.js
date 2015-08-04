@@ -267,6 +267,10 @@ domutil = {
      * @returns {string} element css class name
      */
     getClass: function(el) {
+        if (!el.className) {
+            return '';
+        }
+
         return util.isUndefined(el.className.baseVal) ? el.className : el.className.baseVal;
     },
 

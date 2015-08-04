@@ -46,7 +46,6 @@ module.exports = function(name, options, container) {
             var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
             // TODO: timeMoveHandler
             // TODO: timeResizeHandler
-
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
 

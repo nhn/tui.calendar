@@ -80,17 +80,30 @@ TimeMove.prototype.connect = function(dragHandler, timeGridView, baseController)
 /**
  * Check target element is expected condition for activate this plugins.
  * @param {HTMLElement} target - The element to check
- * @returns {(boolean|object)} - return object when satiate condition.
+ * @returns {boolean|object} - return object when satiate condition.
  */
 TimeMove.prototype.checkExpectCondition = function(target) {
-    var cssClass = domutil.getClass(target),
-        matches;
-
-    if (cssClass !== 'view-time-event') {
+    if (domutil.getClass(target) !== 'view-time-event') {
         return false;
     }
 
-    matches = domutil.getClass(target.parentNode.parentNode).match(parseTimeViewIDRx);
+    return this._getTimeView(target);
+};
+
+/**
+ * Get Time view container from supplied element.
+ * @param {HTMLElement} target - element to find time view container.
+ * @returns {object|boolean} - return time view instance when finded.
+ */
+TimeMove.prototype._getTimeView = function(target) {
+    var container = domutil.closest(target, '.view-time-date'),
+        matches;
+
+    if (!container) {
+        return false;
+    }
+
+    matches = domutil.getClass(container).match(parseTimeViewIDRx);
 
     if (!matches || matches.length < 2) {
         return false;
@@ -142,16 +155,23 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
     this.fire('time_move_dragstart', eventData);
 };
 
+/**
+ * @emits TimeMove#time_move_drag
+ * @param {MouseEvent} dragEventData - mousemove event object
+ * @param {string} [overrideEventName] - name of emitting event to override.
+ */
 TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
     var getEventDataFunc = this._getEventDataFunc,
         startEventData = this._dragStartEventData,
+        timeView = this._getTimeView(dragEventData.target || dragEventData.srcElement),
         eventData;
 
-    if (!getEventDataFunc || !startEventData) {
+    if (!timeView || !getEventDataFunc || !startEventData) {
         return;
     }
 
     eventData = getEventDataFunc(dragEventData, {
+        currentTimeView: timeView,
         eventElement: startEventData.eventElement,
         modelID: startEventData.modelID
     });
@@ -173,6 +193,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
 
 /**
  * @emits TimeMove#time_move_dragend
+ * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
     this.dragHandler.off({
@@ -200,6 +221,7 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
 
 /**
  * @emits TimeMove#time_move_click
+ * @param {MouseEvent} clickEventData - click mouse event object.
  */
 TimeMove.prototype._onClick = function(clickEventData) {
     this.dragHandler.off({
