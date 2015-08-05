@@ -50,7 +50,7 @@ function TimeMove(dragHandler, timeGridView, baseController) {
     /**
      * @type {TimeMoveGuide}
      */
-    // this._guide = new TimeMoveGuide(this);
+    this._guide = new TimeMoveGuide(this);
 
     if (arguments.length) {
         this.connect.apply(this, arguments);
@@ -148,6 +148,7 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event TimeMove#time_move_dragstart
      * @type {object}
+     * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
      * @property {number} mouseY - mouse Y px mouse event.
@@ -188,6 +189,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
     /**
      * @event TimeMove#time_move_drag
      * @type {object}
+     * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
      * @property {MouseEvent} originEvent - mouse event object.
      * @property {number} mouseY - mouse Y px mouse event.
@@ -206,7 +208,9 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
  * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
-    var dragStart = this._dragStart;
+    var getEventDataFunc = this._getEventDataFunc,
+        dragStart = this._dragStart,
+        eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -214,20 +218,28 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
-    function reviseFunc(eventData) {
-        eventData.range = [
-            dragStart.timeY,
-            eventData.timeY + datetime.millisecondsFrom('hour', 0.5)
-        ];
-        eventData.nearestRange = [
-            dragStart.nearestGridTimeY,
-            eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
-        ];
+    if (!getEventDataFunc || !dragStart) {
+        return;
     }
+
+    eventData = getEventDataFunc(dragEndEventData.originEvent, {
+        targetModelID: dragStart.targetModelID
+    });
+
+    eventData.range = [
+        dragStart.timeY,
+        eventData.timeY + datetime.millisecondsFrom('hour', 0.5)
+    ];
+
+    eventData.nearestRange = [
+        dragStart.nearestGridTimeY,
+        eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+    ];
 
     /**
      * @event TimeMove#time_move_dragend
      * @type {object}
+     * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
      * @property {MouseEvent} originEvent - mouse event object.
      * @property {number} mouseY - mouse Y px mouse event.
@@ -235,12 +247,11 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number} timeY - milliseconds value of mouseY points.
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
-     * @property {Time} currentView - time view instance related with current mouse position.
      * @property {string} targetModelID - The model unique id emitted move event.
      * @property {number[]} range - milliseconds range between drag start and end.
      * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this._onDrag(dragEndEventData, 'time_move_dragend', reviseFunc);
+    this.fire('time_move_dragend', eventData);
 };
 
 /**
@@ -248,9 +259,28 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
  * @param {MouseEvent} clickEventData - click mouse event object.
  */
 TimeMove.prototype._onClick = function(clickEventData) {
+    var getEventDataFunc = this._getEventDataFunc,
+        dragStart = this._dragStart,
+        eventData;
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
+    if (!getEventDataFunc || !dragStart) {
+        return;
+    }
+
+    eventData = getEventDataFunc(clickEventData.originEvent, {
+        targetModelID: dragStart.targetModelID
+    });
+
     /**
      * @event TimeMove#time_move_click
      * @type {object}
+     * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
      * @property {MouseEvent} originEvent - mouse event object.
      * @property {number} mouseY - mouse Y px mouse event.
@@ -258,10 +288,9 @@ TimeMove.prototype._onClick = function(clickEventData) {
      * @property {number} timeY - milliseconds value of mouseY points.
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
-     * @property {Time} currentView - time view instance related with current mouse position.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this._onDrag(clickEventData, 'time_move_click');
+    this.fire('time_move_click', eventData);
 };
 
 timeCore.mixin(TimeMove);

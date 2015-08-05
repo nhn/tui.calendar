@@ -71,6 +71,7 @@ var timeCore = {
                 nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);
 
             return util.extend({
+                target: mouseEvent.target || mouseEvent.srcElement,
                 relatedView: timeView,
                 originEvent: mouseEvent,
                 mouseY: mouseY,

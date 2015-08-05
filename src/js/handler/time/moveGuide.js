@@ -35,6 +35,16 @@ function TimeMoveGuide(timeMove) {
      */
     this._getTopFunc = null;
 
+    /**
+     * @type {number}
+     */
+    this._startGridY = 0;
+
+    /**
+     * @type {number}
+     */
+    this._startTopPixel = 0;
+
     timeMove.on({
         'time_move_dragstart': this._onDragStart,
         'time_move_drag': this._onDrag,
@@ -49,8 +59,8 @@ function TimeMoveGuide(timeMove) {
 TimeMoveGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.timeMove.off(this);
-    this.guideElement = this.timeMove =
-        this._container = this._getTopFunc = null;
+    this.guideElement = this.timeMove = this._container =
+        this._getTopFunc = this._startGridY = this._startTopPixel = null;
 };
 
 /**
@@ -63,7 +73,8 @@ TimeMoveGuide.prototype._clearGuideElement = function() {
         guideElement.parentNode.removeChild(guideElement);
     }
 
-    this.guideElement = this._getTopFunc = null;
+    this.guideElement = this._getTopFunc =
+        this._startGridY = this._startTopPixel = null;
 };
 
 /**
@@ -88,15 +99,22 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top) {
  * @param {object} dragStartEventData - dragstart event data
  */
 TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
-    var eventElement = dragStartEventData.eventElement,
-        guideElement = eventElement.parentNode.cloneNode(true);
+    var guideElement = domutil.closest(
+        dragStartEventData.target,
+        '.view-time-date-event-block'
+    );
 
+    if (!guideElement) {
+        return;
+    }
+
+    guideElement = guideElement.cloneNode(true);
     domutil.addClass(guideElement, 'view-time-move-guide');
 
+    this._startTopPixel = parseFloat(guideElement.style.top);
+    this._startGridY = dragStartEventData.nearestGridY;
     this.guideElement = guideElement;
-
-    this._container = dragStartEventData.container;
-
+    this._container = dragStartEventData.relatedView.container;
     this._container.appendChild(guideElement);
 };
 
@@ -105,28 +123,29 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
  * @param {object} dragEventData - drag event data
  */
 TimeMoveGuide.prototype._onDrag = function(dragEventData) {
-    var guideElement = this.guideElement,
-        gridYIndex = dragEventData.gridYIndex,
-        viewHeight = dragEventData.viewHeight,
-        hourLength = dragEventData.hourLength,
-        height = domevent.getMousePosition(dragEventData.originEvent, dragEventData.eventElement)[1],
-        // offset for event element drag position.
-        offset = ((height * hourLength) / viewHeight) | 0;
+    var timeView = dragEventData.currentView,
+        viewOptions = timeView.options,
+        viewHeight = timeView.getViewBound().height,
+        guideHeight = parseFloat(this.guideElement.style.height),
+        hourLength = viewOptions.hourEnd - viewOptions.hourStart,
+        gridYOffset = dragEventData.nearestGridY - this._startGridY,
+        // hourLength : viewHeight = gridYOffset : X;
+        gridYOffsetPixel = (gridYOffset * viewHeight) / hourLength,
+        bottomLimit,
+        top;
 
-    // move guide element's parent element to viewview container related with mouse position.
-    if (this._container !== dragEventData.currentTimeView.container) {
-        this._container = dragEventData.currentTimeView.container;
-        this._container.appendChild(guideElement);
+    if (this._container !== timeView.container) {
+        this._container = timeView.container;
+        this._container.appendChild(this.guideElement);
     }
 
-    if (!this._getTopFunc) {
-        this._getTopFunc = util.bind(function(index) {
-            // hourLength : viewHeight = index : X
-            return (((index - offset) * viewHeight) / hourLength);
-        }, this);
-    }
+    top = this._startTopPixel + gridYOffsetPixel;
+    bottomLimit = viewHeight - guideHeight;
 
-    this._refreshGuideElement(this._getTopFunc(gridYIndex));
+    top = Math.max(top, 0);
+    top = Math.min(top, bottomLimit);
+
+    this._refreshGuideElement(top);
 };
 
 module.exports = TimeMoveGuide;
