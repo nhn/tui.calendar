@@ -51,38 +51,35 @@ var timeCore = {
      * @returns {function} - Function that return event data from mouse event.
      */
     _retriveEventData: function(timeView) {
-        var that = this,
-            container = timeView.container,
+        var container = timeView.container,
             options = timeView.options,
             viewHeight = timeView.getViewBound().height,
-            viewDate = timeView.getDate(),
+            viewTime = +timeView.getDate(),
             hourLength = options.hourEnd - options.hourStart,
             baseMil = datetime.millisecondsFrom('hour', hourLength);
 
         /**
-         * @param {MouseEvent} mouseEvent - Mouse event object to get common event data.
-         * @param {object} [extend] - Object to extend event data before return.
-         * @returns {object} - Common event data for time.*
+         * @param {MouseEvent} mouseEvent - mouse event object to get common event data.
+         * @param {object} [extend] - object to extend event data before return.
+         * @returns {object} - common event data for time.*
          */
-        function getEventData(mouseEvent, extend) {
+        return util.bind(function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
-                gridYIndex,
-                time;
-
-            gridYIndex = that._calcGridYIndex(baseMil, viewHeight, mouseY);
-            time = datetime.millisecondsFrom('hour', gridYIndex + options.hourStart);
+                gridY = (hourLength * mouseY) / viewHeight,
+                timeY = viewTime + datetime.millisecondsFrom('hour', gridY),
+                nearestGridY = this._calcGridYIndex(baseMil, viewHeight, mouseY),
+                nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);
 
             return util.extend({
-                container: container,
-                viewHeight: viewHeight,
-                hourLength: hourLength,
-                gridYIndex: gridYIndex,
-                time: viewDate.getTime() + time,
-                originEvent: mouseEvent
-            }, extend || {});
-        }
-
-        return getEventData;
+                relatedView: timeView,
+                originEvent: mouseEvent,
+                mouseY: mouseY,
+                gridY: gridY,
+                timeY: timeY,
+                nearestGridY: nearestGridY,
+                nearestGridTimeY: nearestGridTimeY
+            }, extend);
+        }, this);
     },
 
     /**
