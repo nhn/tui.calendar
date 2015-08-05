@@ -2,8 +2,8 @@
     {{#each this}}
         {{#each this}}
             {{#if this}}
-            <div class="view-time-date-event-block" style="{{time-eventBlock this}}">
-                <div class="view-time-event" data-id="{{stamp model}}">{{model.title}}</div>
+            <div class="view-time-date-event-block" data-id="{{stamp model}}" style="{{time-eventBlock this}}">
+                <div class="view-time-event">{{model.title}}</div>
                 <div class="view-time-resize-handle">=</div>
             </div>{{/if}}
         {{/each}}

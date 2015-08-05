@@ -125,17 +125,18 @@ TimeMove.prototype._getTimeView = function(target) {
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
+        blockElement = domutil.closest(target, '.view-time-date-event-block'),
         getEventDataFunc,
         eventData;
 
-    if (!timeView) {
+    if (!timeView || !blockElement) {
         return;
     }
 
     getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
     eventData = this._dragStart = getEventDataFunc(
         dragStartEventData.originEvent, {
-            targetModelID: domutil.getData(target, 'id')
+            targetModelID: domutil.getData(blockElement, 'id')
         }
     );
 

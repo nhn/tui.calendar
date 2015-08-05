@@ -46,7 +46,7 @@ module.exports = function(name, options, container) {
             var timeGridView = new TimeGrid(options, weekView.container);
             // var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
             // var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
-            // var timeResizeHandler = new TimeResize(dragHandler, timeGridView);
+            var timeResizeHandler = new TimeResize(dragHandler, timeGridView);
 
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
@@ -82,18 +82,23 @@ module.exports = function(name, options, container) {
             //         console.log('click:', e);
             //     }
             // });
-            // timeResizeHandler.on({
-            //     'time_resize_dragstart': function() {
-            //         domutil.addClass(global.document.body, 'view-resizing');
-            //     },
-            //     'time_resize_dragend': function(e) {
-            //         domutil.removeClass(global.document.body, 'view-resizing');
-            //         console.log(e);
-            //     },
-            //     'time_resize_click': function() {
-            //         domutil.removeClass(global.document.body, 'view-resizing');
-            //     }
-            // });
+            timeResizeHandler.on({
+                'time_resize_dragstart': function(e) {
+                    domutil.addClass(global.document.body, 'view-resizing');
+                    console.log('dragstart:', e);
+                },
+                'time_resize_drag': function(e) {
+                    console.log('drag:', e);
+                },
+                'time_resize_dragend': function(e) {
+                    domutil.removeClass(global.document.body, 'view-resizing');
+                    console.log('dragend:', e);
+                },
+                'time_resize_click': function(e) {
+                    domutil.removeClass(global.document.body, 'view-resizing');
+                    console.log('click:', e);
+                }
+            });
 
             weekView.controller = baseController.Week;
             weekView._beforeDestroy = function() {

@@ -7,7 +7,7 @@ var util = global.ne.util;
 var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var timeCore = require('./core');
-var TimeResizeGuide = require('./resizeGuide');
+// var TimeResizeGuide = require('./resizeGuide');
 
 var parseTimeViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
@@ -44,12 +44,12 @@ function TimeResize(dragHandler, timeGridView, baseController) {
     /**
      * @type {object}
      */
-    this._dragStartEventData = null;
+    this._dragStart = null;
 
     /**
      * @type {TimeResizeGuide}
      */
-    this._guide = new TimeResizeGuide(this);
+    // this._guide = new TimeResizeGuide(this);
 
     if (arguments.length) {
         this.connect.apply(this, arguments);
@@ -60,9 +60,10 @@ function TimeResize(dragHandler, timeGridView, baseController) {
  * Destroy method
  */
 TimeResize.prototype.destroy = function() {
-    this.dragHandler.off({
-        dragStart: this._onDragStart
-    }, this);
+    this._guide.destroy();
+    this.dragHandler.off(this);
+    this.dragHandler = this.timeGridView = this.baseController =
+        this._getEventDataFunc = this._dragStart = this._guide = null;
 };
 
 /**
@@ -115,18 +116,18 @@ TimeResize.prototype.checkExpectCondition = function(target) {
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
+        blockElement = domutil.closest(target, '.view-time-date-event-block'),
         getEventDataFunc,
         eventData;
 
-    if (!timeView) {
+    if (!timeView || !blockElement) {
         return;
     }
 
     getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
-    eventData = this._dragStartEventData = getEventDataFunc(
+    eventData = this._dragStart = getEventDataFunc(
         dragStartEventData.originEvent, {
-            eventElement: target,
-            modelID: domutil.getData(target, 'id')
+            targetModelID: domutil.getData(blockElement, 'id')
         }
     );
 
@@ -139,14 +140,15 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event TimeResize#time_resize_dragstart
      * @type {object}
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {number} time - Milliseconds value of drag star point.
-     * @property {HTMLElement} eventElement - The element emitted resize event.
-     * @property {string} modelID - The model unique id emitted move event.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {HTMLElement} target - current target in mouse event object.
+     * @property {Time} relatedView - time view instance related with mouse position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {string} targetModelID - The model unique id emitted move event.
      */
     this.fire('time_resize_dragstart', eventData);
 };
@@ -154,18 +156,21 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
 /**
  * Drag#drag event handler
  * @emits TimeResize#time_resize_drag
- * @param {MouseEvent} dragEventData - Mouse event of Drag#drag custom event.
+ * @param {object} dragEventData - event data of Drag#drag custom event.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
  */
 TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise) {
     var getEventDataFunc = this._getEventDataFunc,
-        startEventData = this._dragStartEventData,
+        startEventData = this._dragStart,
         eventData;
 
-    eventData = getEventDataFunc(dragEventData, {
-        eventElement: startEventData.eventElement,
-        modelID: startEventData.modelID
+    if (!getEventDataFunc || !startEventData) {
+        return;
+    }
+
+    eventData = getEventDataFunc(dragEventData.originEvent, {
+        targetModelID: startEventData.targetModelID
     });
 
     if (revise) {
@@ -175,15 +180,15 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
     /**
      * @event TimeResize#time_resize_drag
      * @type {object}
-     * @property {Time} currentTimeView - time view instance related with current mouse position.
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {number} time - Milliseconds value of drag star point.
-     * @property {HTMLElement} eventElement - The element emitted move event.
-     * @property {string} modelID - The model unique id emitted move event.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {HTMLElement} target - current target in mouse event object.
+     * @property {Time} relatedView - time view instance related with drag start position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {string} targetModelID - The model unique id emitted move event.
      */
     this.fire(overrideEventName || 'time_resize_drag', eventData);
 };
@@ -194,7 +199,9 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
  * @param {MouseEvent} dragEndEventData - Mouse event of Drag#dragEnd custom event.
  */
 TimeResize.prototype._onDragEnd = function(dragEndEventData) {
-    var dragStartTime = this._dragStartEventData.time;
+    var getEventDataFunc = this._getEventDataFunc,
+        dragStart = this._dragStart,
+        eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -202,23 +209,42 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
-    function reviseFunc(eventData) {
-        eventData.range = [dragStartTime, eventData.time + datetime.millisecondsFrom('hour', 0.5)];
+    if (!getEventDataFunc || !dragStart) {
+        return;
     }
+
+    eventData = getEventDataFunc(dragEndEventData.originEvent, {
+        targetModelID: dragStart.targetModelID
+    });
+
+    eventData.range = [
+        dragStart.timeY,
+        eventData.timeY + datetime.millisecondsFrom('hour', 0.5)
+    ];
+
+    eventData.nearestRange = [
+        dragStart.nearestGridTimeY,
+        eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+    ];
 
     /**
      * @event TimeCreation#time_creation_dragend
      * @type {object}
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {Date[]} range - date range between drag start and drag end points.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {HTMLElement} target - current target in mouse event object.
+     * @property {Time} relatedView - time view instance related with drag start position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {string} targetModelID - The model unique id emitted move event.
+     * @property {number[]} range - milliseconds range between drag start and end.
+     * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this._onDrag(dragEndEventData, 'time_resize_dragend', reviseFunc);
+    this.fire('time_resize_dragend', eventData);
 
-    this._getEventDataFunc = this._dragStartEventData = null;
+    this._getEventDataFunc = this._dragStart = null;
 };
 
 TimeResize.prototype._onClick = function() {
