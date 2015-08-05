@@ -43,7 +43,7 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
     /**
      * @type {TimeCreationGuide}
      */
-    // this._guide = new TimeCreationGuide(this);
+    this._guide = new TimeCreationGuide(this);
 
     /**
      * Temporary function for single drag session's calc.

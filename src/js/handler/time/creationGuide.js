@@ -14,15 +14,11 @@ var reqAnimFrame = require('../../common/reqAnimFrame');
  * @param {TimeCreation} timeCreation - instance of TimeCreation.
  */
 function TimeCreationGuide(timeCreation) {
-    var guideElement;
-
     /**
      * Guide element for creation effect.
      * @type {HTMLElement}
      */
-    guideElement = this.guideElement = global.document.createElement('div');
-
-    domutil.addClass(guideElement, 'view-time-creation-guide');
+    this.guideElement = global.document.createElement('div');
 
     /**
      * @type {TimeCreation}
@@ -32,12 +28,14 @@ function TimeCreationGuide(timeCreation) {
     /**
      * @type {number}
      */
-    this.startY = 0;
+    this._startGridY = 0;
 
     /**
      * @type {function}
      */
-    this._cached = null;
+    this._getTopFunc = null;
+
+    domutil.addClass(this.guideElement, 'view-time-creation-guide');
 
     timeCreation.on({
         'time_creation_dragstart': this._onDragStart,
@@ -52,14 +50,9 @@ function TimeCreationGuide(timeCreation) {
  */
 TimeCreationGuide.prototype.destroy = function() {
     this._clearGuideElement();
-    this.timeCreation.off({
-        'time_creation_dragstart': this._onDragStart,
-        'time_creation_drag': this._onDrag,
-        'time_creation_dragend': this._clearGuideElement,
-        'time_creation_click': this._clearGuideElement
-    }, this);
-
-    this.guideElement = this.timeCreation = this.startY = null;
+    this.timeCreation.off(this);
+    this.guideElement = this.timeCreation = this._startGridY =
+        this._getTopFunc = null;
 };
 
 /**
@@ -72,9 +65,11 @@ TimeCreationGuide.prototype._clearGuideElement = function() {
         guideElement.parentNode.removeChild(guideElement);
     }
 
-    guideElement.style.display = 'none';
-    guideElement.style.top = 'auto';
-    guideElement.style.height = 'auto';
+    reqAnimFrame.requestAnimFrame(function() {
+        guideElement.style.display = 'none';
+        guideElement.style.top = '';
+        guideElement.style.height = '';
+    });
 };
 
 /**
@@ -93,44 +88,35 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height) {
 };
 
 /**
- * Calculate Y index ratio.
- * @param {number} viewHeight - Height of view container.
- * @param {number} hourLength - Length of hour.
- * @param {number} index - The number of want to get ratio index.
- * @returns {number} - The number of pixel ratio.
- */
-TimeCreationGuide.prototype._getYRatio = function(viewHeight, hourLength, index) {
-    // hourLength : viewHeight = index : X;
-    return (viewHeight * index) / hourLength;
-};
-
-/**
  * DragStart event handler
  * @param {object} dragStartEventData - dragStart event data.
  */
 TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
-    var guideElement = this.guideElement,
-        gridYIndex = dragStartEventData.gridYIndex,
-        viewHeight = dragStartEventData.viewHeight,
-        hourLength = dragStartEventData.hourLength,
-        cached,
-        startY;
+    var timeView = dragStartEventData.relatedView,
+        viewOptions = timeView.options,
+        viewHeight = timeView.getViewBound().height,
+        hourLength = viewOptions.hourEnd - viewOptions.hourStart,
+        getTopFunc;
 
-    cached = this._cached = util.bind(function(index) {
-        if (cached[index]) {
-            return cached[index];
+    getTopFunc = this._getTopFunc = util.bind(function(indexY) {
+        // memo
+        if (getTopFunc[indexY]) {
+            return getTopFunc[indexY];
         }
 
-        cached[index] = this._getYRatio(viewHeight, hourLength, index);
+        getTopFunc[indexY] = (viewHeight * indexY) / hourLength;
 
-        return cached[index];
+        return getTopFunc[indexY];
     }, this);
 
-    this.startY = startY = cached(gridYIndex);
+    this._startGridY = getTopFunc(dragStartEventData.nearestGridY);
 
-    this._refreshGuideElement(startY, cached(0.5));
+    this._refreshGuideElement(
+        this._startGridY,
+        getTopFunc(0.5)
+    );
 
-    dragStartEventData.container.appendChild(guideElement);
+    timeView.container.appendChild(this.guideElement);
 };
 
 /**
@@ -138,23 +124,25 @@ TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
  * @param {object} dragEventData - drag event data.
  */
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
-    var gridYIndex = dragEventData.gridYIndex,
-        cached = this._cached,
-        startY = this.startY,
-        dragEndY;
+    var getTopFunc = this._getTopFunc,
+        startGridY = this._startGridY,
+        endGridY;
 
-    if (!cached) {
+    if (!getTopFunc) {
         return;
     }
 
-    dragEndY = cached(gridYIndex);
+    endGridY = getTopFunc(dragEventData.nearestGridY);
 
-    if (dragEndY > startY) {
-        this._refreshGuideElement(startY, dragEndY - startY);
+    if (endGridY > startGridY) {
+        this._refreshGuideElement(startGridY, endGridY - startGridY);
         return;
     }
 
-    this._refreshGuideElement(dragEndY - cached(0.5), (startY + cached(1)) - dragEndY);
+    this._refreshGuideElement(
+        endGridY - getTopFunc(0.5),
+        (startGridY + getTopFunc(1)) - endGridY
+    );
 };
 
 module.exports = TimeCreationGuide;
