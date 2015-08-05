@@ -7,17 +7,24 @@ describe('Handler/Drag', function() {
             var mock = {
                 _isMoved: false,
                 _toggleDragEvent: function() {},
-                fire: jasmine.createSpy('Handler/Drag')
+                fire: jasmine.createSpy('Handler/Drag'),
+                _getEventData: Drag.prototype._getEventData
             };
 
             Drag.prototype._onMouseUp.call(mock, 'hello');
-            expect(mock.fire).toHaveBeenCalledWith('click', 'hello');
+            expect(mock.fire).toHaveBeenCalledWith('click', {
+                target: undefined,
+                originEvent: 'hello'
+            });
 
             // alternative to mock._isMoved = true;
             Drag.prototype._onMouseMove.call(mock, 'hello');
 
             Drag.prototype._onMouseUp.call(mock, 'hello');
-            expect(mock.fire).toHaveBeenCalledWith('dragEnd', 'hello');
+            expect(mock.fire).toHaveBeenCalledWith('dragEnd', {
+                target: undefined,
+                originEvent: 'hello'
+            });
         });
     });
 
@@ -29,7 +36,8 @@ describe('Handler/Drag', function() {
         it('makes custom event data from mousedown events', function() {
             var mock = {
                 invoke: jasmine.createSpy('Handler/Drag'),
-                _toggleDragEvent: function() {}
+                _toggleDragEvent: function() {},
+                _getEventData: Drag.prototype._getEventData
             };
             var input = {
                 iam: 'mouseEvent',
@@ -48,7 +56,8 @@ describe('Handler/Drag', function() {
         it('return false when implemented dragStart handler then stop drag.', function() {
             var mock = {
                 invoke: jasmine.createSpy('Handler/Drag'),
-                _toggleDragEvent: jasmine.createSpy('Handler/Drag#_toggleDragEvent')
+                _toggleDragEvent: jasmine.createSpy('Handler/Drag#_toggleDragEvent'),
+                _getEventData: Drag.prototype._getEventData
             };
 
             mock.invoke.and.returnValue(false);
@@ -63,7 +72,8 @@ describe('Handler/Drag', function() {
 
             var mock = {
                 invoke: jasmine.createSpy('Handler/Drag'),
-                _toggleDragEvent: jasmine.createSpy('Handler/Drag#_toggleDragEvent')
+                _toggleDragEvent: jasmine.createSpy('Handler/Drag#_toggleDragEvent'),
+                _getEventData: Drag.prototype._getEventData
             };
 
             mock.invoke.and.returnValue(true);

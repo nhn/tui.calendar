@@ -57,16 +57,23 @@ Drag.prototype._toggleDragEvent = function(onOff) {
 };
 
 /**
+ * Normalize mouse event object.
+ * @param {MouseEvent} mouseEvent - mouse event object.
+ * @returns {object} normalized mouse event data.
+ */
+Drag.prototype._getEventData = function(mouseEvent) {
+    return {
+        target: mouseEvent.target || mouseEvent.srcElement,
+        originEvent: mouseEvent
+    };
+};
+
+/**
  * MouseDown DOM event handler.
  * @param {MouseEvent} mouseDownEvent MouseDown event object.
  * @emits Drag#dragStart
  */
 Drag.prototype._onMouseDown = function(mouseDownEvent) {
-    var eventData = {
-        target: mouseDownEvent.target || mouseDownEvent.srcElement,
-        originEvent: mouseDownEvent
-    };
-
     // only primary button can start drag.
     if (domevent.getButton(mouseDownEvent) !== 0) {
         return;
@@ -76,10 +83,10 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
      * Drag starts events. cancelable.
      * @event Drag#dragStart
      * @type {object}
-     * @property {HTMLElement} target - The target element in this event.
-     * @property {MouseEvent} originEvent - Original MouseEvent object.
+     * @property {HTMLElement} target - target element in this event.
+     * @property {MouseEvent} originEvent - original mouse event object.
      */
-    if (!this.invoke('dragStart', eventData)) {
+    if (!this.invoke('dragStart', this._getEventData(mouseDownEvent))) {
         return;
     }
 
@@ -100,9 +107,11 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
     /**
      * Events while dragging.
      * @event Drag#drag
-     * @type {MouseEvent}
+     * @type {object}
+     * @property {HTMLElement} target - target element in this event.
+     * @property {MouseEvent} originEvent - original mouse event object.
      */
-    this.fire('drag', mouseMoveEvent);
+    this.fire('drag', this._getEventData(mouseMoveEvent));
 };
 
 /**
@@ -122,8 +131,10 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
          * Drag end events.
          * @event Drag#dragEnd
          * @type {MouseEvent}
+         * @property {HTMLElement} target - target element in this event.
+         * @property {MouseEvent} originEvent - original mouse event object.
          */
-        this.fire('dragEnd', mouseUpEvent);
+        this.fire('dragEnd', this._getEventData(mouseUpEvent));
         return;
     }
 
@@ -131,8 +142,10 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
      * Click events.
      * @event Drag#click
      * @type {MouseEvent}
+     * @property {HTMLElement} target - target element in this event.
+     * @property {MouseEvent} originEvent - original mouse event object.
      */
-    this.fire('click', mouseUpEvent);
+    this.fire('click', this._getEventData(mouseUpEvent));
 };
 
 util.CustomEvents.mixin(Drag);
