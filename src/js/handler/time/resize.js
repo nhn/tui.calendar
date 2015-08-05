@@ -7,7 +7,7 @@ var util = global.ne.util;
 var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var timeCore = require('./core');
-// var TimeResizeGuide = require('./resizeGuide');
+var TimeResizeGuide = require('./resizeGuide');
 
 var parseTimeViewIDRx = /^view-time-date[\s]view-(\d+)/;
 
@@ -49,7 +49,7 @@ function TimeResize(dragHandler, timeGridView, baseController) {
     /**
      * @type {TimeResizeGuide}
      */
-    // this._guide = new TimeResizeGuide(this);
+    this._guide = new TimeResizeGuide(this);
 
     if (arguments.length) {
         this.connect.apply(this, arguments);

@@ -5,10 +5,11 @@
 'use strict';
 var util = global.ne.util;
 var datetime = require('../../datetime');
-var timeCore = require('./core');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var reqAnimFrame = require('../../common/reqAnimFrame');
+
+var ratio = require('./core')._ratio;
 
 /**
  * Class for Time.Resize effect.
@@ -36,6 +37,21 @@ function TimeResizeGuide(timeResize) {
      */
     this._originEventElement = null;
 
+    /**
+     * @type {number}
+     */
+    this._startTopPixel = 0;
+
+    /**
+     * @type {number}
+     */
+    this._startHeightPixel = 0;
+
+    /**
+     * @type {number}
+     */
+    this._startGridY = 0;
+
     timeResize.on({
         'time_resize_dragstart': this._onDragStart,
         'time_resize_drag': this._onDrag,
@@ -48,16 +64,11 @@ function TimeResizeGuide(timeResize) {
  * Destroy method
  */
 TimeResizeGuide.prototype.destroy = function() {
-    this.timeResize.off({
-        'time_resize_dragstart': this._onDragStart,
-        'time_resize_drag': this._onDrag,
-        'time_resize_dragend': this._clearGuideElement,
-        'time_resize_click': this._clearGuideElement
-    }, this);
-
     this._clearGuideElement();
-
-    this.guideElement = this.timeResize = this._getTopFunc = null;
+    this.timeResize.off(this);
+    this.guideElement = this.timeResize = this._getTopFunc =
+        this._originEventElement = this._startHeightPixel =
+        this._startGridY = this._startTopPixel = null;
 };
 
 TimeResizeGuide.prototype._clearGuideElement = function() {
@@ -68,7 +79,8 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
         guideElement.parentNode.removeChild(guideElement);
     }
 
-    this.guideElement = this._getTopFunc = this._originEventElement = null;
+    this.guideElement = this._getTopFunc = this._originEventElement =
+        this._startHeightPixel = this._startGridY = this._startTopPixel = null;
 };
 
 TimeResizeGuide.prototype._refreshGuideElement = function(height) {
@@ -86,43 +98,54 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 
 
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
-    var eventElement = dragStartEventData.eventElement.parentNode,
-        guideElement = eventElement.cloneNode(true);
+    var originElement = domutil.closest(
+            dragStartEventData.target,
+            '.view-time-date-event-block'
+        ),
+        guideElement;
 
-    domutil.addClass(guideElement, 'view-time-resize-guide');
-
-    this.guideElement = guideElement;
-    this._originEventElement = eventElement;
-    eventElement.style.display = 'none';
-
-    dragStartEventData.container.appendChild(guideElement);
-};
-
-TimeResizeGuide.prototype._onDrag = function(dragEventData) {
-    var eventElement = dragEventData.eventElement.parentNode,
-        gridYIndex = dragEventData.gridYIndex,
-        viewHeight = dragEventData.viewHeight,
-        hourLength = dragEventData.hourLength,
-        offsetIndex = timeCore._calcGridYIndex(
-            datetime.millisecondsFrom('hour', hourLength),
-            viewHeight,
-            parseFloat(eventElement.style.top)
-        );
-
-    gridYIndex += 0.5;
-
-    if (offsetIndex >= gridYIndex) {
+    if (!originElement) {
         return;
     }
 
-    if (!this._getTopFunc) {
-        this._getTopFunc = util.bind(function(index) {
-            // hourLength : viewHeight = index : X
-            return ((index - offsetIndex) * viewHeight) / hourLength;
-        }, this);
-    }
+    this._startGridY = dragStartEventData.nearestGridY;
+    this._startHeightPixel = parseFloat(originElement.style.height);
+    this._startTopPixel = parseFloat(originElement.style.top);
 
-    this._refreshGuideElement(this._getTopFunc(gridYIndex));
+    this._originEventElement = originElement;
+    guideElement = this.guideElement = originElement.cloneNode(true);
+    domutil.addClass(guideElement, 'view-time-resize-guide');
+
+    originElement.style.display = 'none';
+    dragStartEventData.relatedView.container.appendChild(guideElement);
+};
+
+/**
+ * @param {object} dragEventData - event data from Drag#drag.
+ */
+TimeResizeGuide.prototype._onDrag = function(dragEventData) {
+    var timeView = dragEventData.relatedView,
+        viewOptions = timeView.options,
+        viewHeight = timeView.getViewBound().height,
+        hourLength = viewOptions.hourEnd - viewOptions.hourStart,
+        guideElement = this.guideElement,
+        guideTop = parseFloat(guideElement.style.top),
+        gridYOffset = dragEventData.nearestGridY - this._startGridY,
+        // hourLength : viewHeight = gridYOffset : X;
+        gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
+        minHeight,
+        maxHeight,
+        height;
+
+    height = (this._startHeightPixel + gridYOffsetPixel);
+    minHeight = guideTop + ratio(hourLength, viewHeight, 0.5);
+    minHeight -= this._startTopPixel;
+    maxHeight = viewHeight - guideTop;
+
+    height = Math.max(height, minHeight);
+    height = Math.min(height, maxHeight);
+
+    this._refreshGuideElement(height);
 };
 
 module.exports = TimeResizeGuide;

@@ -14,6 +14,24 @@ var Point = require('../../common/point');
  */
 var timeCore = {
     /**
+     * Get ratio value.
+     *
+     * a : b = y : X; 
+     *
+     * =
+     *
+     * X = (b * y) / a;
+     * @param {number} a - a
+     * @param {number} b - b
+     * @param {number} y - y
+     * @returns {number} ratio value
+     */
+    _ratio: function(a, b, y) {
+        // a : b = y : x;
+        return (b * y) / a;
+    },
+
+    /**
      * Find nearest value from supplied params.
      * @param {number} value - value to find.
      * @param {array} nearest - nearest array.
