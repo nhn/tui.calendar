@@ -228,7 +228,7 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
     ];
 
     /**
-     * @event TimeCreation#time_creation_dragend
+     * @event TimeResize#time_resize_dragend
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -247,7 +247,13 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
     this._getEventDataFunc = this._dragStart = null;
 };
 
+/**
+ * @emits TimeResize#time_resize_click
+ */
 TimeResize.prototype._onClick = function() {
+    /**
+     * @event TimeResize#time_resize_click
+     */
     this.fire('time_resize_click');
 };
 
