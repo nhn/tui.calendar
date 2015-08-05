@@ -69,6 +69,8 @@ TimeMoveGuide.prototype.destroy = function() {
 TimeMoveGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement;
 
+    domutil.removeClass(global.document.body, 'view-dragging');
+
     if (guideElement && guideElement.parentNode) {
         guideElement.parentNode.removeChild(guideElement);
     }
@@ -133,6 +135,8 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         gridYOffsetPixel = (gridYOffset * viewHeight) / hourLength,
         bottomLimit,
         top;
+
+    domutil.addClass(global.document.body, 'view-dragging');
 
     if (this._container !== timeView.container) {
         this._container = timeView.container;

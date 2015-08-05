@@ -72,8 +72,14 @@ TimeResizeGuide.prototype.destroy = function() {
 };
 
 TimeResizeGuide.prototype._clearGuideElement = function() {
-    var guideElement = this.guideElement;
-    this._originEventElement.style.display = 'block';
+    var guideElement = this.guideElement,
+        originElement = this._originEventElement;
+
+    domutil.removeClass(global.document.body, 'view-resizing');
+
+    if (originElement) {
+        originElement.style.display = 'block';
+    }
 
     if (guideElement && guideElement.parentNode) {
         guideElement.parentNode.removeChild(guideElement);
@@ -103,6 +109,8 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
             '.view-time-date-event-block'
         ),
         guideElement;
+
+    domutil.addClass(global.document.body, 'view-resizing');
 
     if (!originElement) {
         return;

@@ -51,29 +51,6 @@ module.exports = function(name, options, container) {
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
 
-            timeMoveHandler.on({
-                'time_move_dragstart': function() {
-                    domutil.addClass(global.document.body, 'view-dragging');
-                },
-                'time_move_dragend': function() {
-                    domutil.removeClass(global.document.body, 'view-dragging');
-                },
-                'time_move_click': function() {
-                    domutil.removeClass(global.document.body, 'view-dragging');
-                }
-            });
-            timeResizeHandler.on({
-                'time_resize_dragstart': function() {
-                    domutil.addClass(global.document.body, 'view-resizing');
-                },
-                'time_resize_dragend': function() {
-                    domutil.removeClass(global.document.body, 'view-resizing');
-                },
-                'time_resize_click': function() {
-                    domutil.removeClass(global.document.body, 'view-resizing');
-                }
-            });
-
             weekView.controller = baseController.Week;
             weekView._beforeDestroy = function() {
                 timeCreationHandler.off();
