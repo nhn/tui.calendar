@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var timeCore = require('./core');
 var TimeMoveGuide = require('./moveGuide');
@@ -44,12 +45,12 @@ function TimeMove(dragHandler, timeGridView, baseController) {
     /**
      * @type {object}
      */
-    this._dragStartEventData = null;
+    this._dragStart = null;
 
     /**
      * @type {TimeMoveGuide}
      */
-    this._guide = new TimeMoveGuide(this);
+    // this._guide = new TimeMoveGuide(this);
 
     if (arguments.length) {
         this.connect.apply(this, arguments);
@@ -60,11 +61,10 @@ function TimeMove(dragHandler, timeGridView, baseController) {
  * Destroy method.
  */
 TimeMove.prototype.destroy = function() {
-    this.dragHandler.off({
-        dragStart: this._onDragStart,
-        drag: this._onDrag,
-        dragEnd: this._onDragEnd
-    }, this);
+    this._guide.destroy();
+    this.dragHandler.off(this);
+    this.dragHandler = this.timeGridView = this.baseController =
+        this._getEventDataFunc = this._dragStart = this._guide = null;
 };
 
 /**
@@ -133,10 +133,9 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
     }
 
     getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
-    eventData = this._dragStartEventData = getEventDataFunc(
+    eventData = this._dragStart = getEventDataFunc(
         dragStartEventData.originEvent, {
-            eventElement: target,
-            modelID: domutil.getData(target, 'id')
+            targetModelID: domutil.getData(target, 'id')
         }
     );
 
@@ -149,14 +148,14 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event TimeMove#time_move_dragstart
      * @type {object}
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {number} time - Milliseconds value of drag star point.
-     * @property {HTMLElement} eventElement - The element emitted move event.
-     * @property {string} modelID - The model unique id emitted move event.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {Time} relatedView - time view instance related with mouse position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {string} targetModelID - The model unique id emitted move event.
      */
     this.fire('time_move_dragstart', eventData);
 };
@@ -165,35 +164,39 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
  * @emits TimeMove#time_move_drag
  * @param {MouseEvent} dragEventData - mousemove event object
  * @param {string} [overrideEventName] - name of emitting event to override.
+ * @param {function} [revise] - supply function for revise event data before emit.
  */
-TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
+TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) {
     var getEventDataFunc = this._getEventDataFunc,
-        startEventData = this._dragStartEventData,
-        timeView = this._getTimeView(dragEventData.target || dragEventData.srcElement),
+        timeView = this._getTimeView(dragEventData.target),
+        dragStart = this._dragStart,
         eventData;
 
-    if (!timeView || !getEventDataFunc || !startEventData) {
+    if (!timeView || !getEventDataFunc || !dragStart) {
         return;
     }
 
-    eventData = getEventDataFunc(dragEventData, {
-        currentTimeView: timeView,
-        eventElement: startEventData.eventElement,
-        modelID: startEventData.modelID
+    eventData = getEventDataFunc(dragEventData.originEvent, {
+        currentView: timeView,
+        targetModelID: dragStart.targetModelID
     });
+
+    if (revise) {
+        revise(eventData);
+    }
 
     /**
      * @event TimeMove#time_move_drag
      * @type {object}
-     * @property {Time} currentTimeView - time view instance related with current mouse position.
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {number} time - Milliseconds value of drag star point.
-     * @property {HTMLElement} eventElement - The element emitted move event.
-     * @property {string} modelID - The model unique id emitted move event.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {Time} relatedView - time view instance related with drag start position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {Time} currentView - time view instance related with current mouse position.
+     * @property {string} targetModelID - The model unique id emitted move event.
      */
     this.fire(overrideEventName || 'time_move_drag', eventData);
 };
@@ -203,9 +206,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName) {
  * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
-    var getEventDataFunc = this._getEventDataFunc,
-        startEventData = this._dragStartEventData,
-        eventData;
+    var dragStart = this._dragStart;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -213,30 +214,33 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
-    if (!getEventDataFunc || !startEventData) {
-        return;
+    function reviseFunc(eventData) {
+        eventData.range = [
+            dragStart.timeY,
+            eventData.timeY + datetime.millisecondsFrom('hour', 0.5)
+        ];
+        eventData.nearestRange = [
+            dragStart.nearestGridTimeY,
+            eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+        ];
     }
-
-    eventData = getEventDataFunc(dragEndEventData, {
-        eventElement: startEventData.eventElement,
-        modelID: startEventData.modelID
-    });
 
     /**
      * @event TimeMove#time_move_dragend
      * @type {object}
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {number} time - Milliseconds value of drag star point.
-     * @property {HTMLElement} eventElement - The element emitted move event.
-     * @property {string} modelID - The model unique id emitted move event.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {Time} relatedView - time view instance related with drag start position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {Time} currentView - time view instance related with current mouse position.
+     * @property {string} targetModelID - The model unique id emitted move event.
+     * @property {number[]} range - milliseconds range between drag start and end.
+     * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this.fire('time_move_dragend', eventData);
-
-    this._getEventDataFunc = this._dragStartEventData = null;
+    this._onDrag(dragEndEventData, 'time_move_dragend', reviseFunc);
 };
 
 /**
@@ -244,40 +248,20 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
  * @param {MouseEvent} clickEventData - click mouse event object.
  */
 TimeMove.prototype._onClick = function(clickEventData) {
-    var getEventDataFunc = this._getEventDataFunc,
-        startEventData = this._dragStartEventData,
-        eventData;
-
-    this.dragHandler.off({
-        drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
-    }, this);
-
-    if (!getEventDataFunc || !startEventData) {
-        return;
-    }
-
-    eventData = getEventDataFunc(clickEventData, {
-        eventElement: startEventData.eventElement,
-        modelID: startEventData.modelID
-    });
-
     /**
      * @event TimeMove#time_move_click
      * @type {object}
-     * @property {HTMLElement} container - Target view's container element.
-     * @property {number} viewHeight - Height of view container.
-     * @property {number} hourLength - Length of view hours. it depends on hourStart, hourEnd option.
-     * @property {number} gridYIndex - The number of hour number. it's not hour just index.
-     * @property {number} time - Milliseconds value of drag star point.
-     * @property {HTMLElement} eventElement - The element emitted move event.
-     * @property {string} modelID - The model unique id emitted move event.
-     * @property {MouseEvent} originEvent - Original mouse event object.
+     * @property {Time} relatedView - time view instance related with drag start position.
+     * @property {MouseEvent} originEvent - mouse event object.
+     * @property {number} mouseY - mouse Y px mouse event.
+     * @property {number} gridY - grid Y index value related with mouseY value.
+     * @property {number} timeY - milliseconds value of mouseY points.
+     * @property {number} nearestGridY - nearest grid index related with mouseY value.
+     * @property {number} nearestGridTimeY - time value for nearestGridY.
+     * @property {Time} currentView - time view instance related with current mouse position.
+     * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_move_click', eventData);
-
-    this._getEventDataFunc = this._dragStartEventData = null;
+    this._onDrag(clickEventData, 'time_move_click');
 };
 
 timeCore.mixin(TimeMove);

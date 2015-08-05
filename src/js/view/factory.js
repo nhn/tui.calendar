@@ -44,40 +44,45 @@ module.exports = function(name, options, container) {
             var weekView = new Week(null, options, container);
             var dayNameView = new DayName(weekView.container);
             var timeGridView = new TimeGrid(options, weekView.container);
-            var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
-            // var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
+            // var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
+            var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
             // var timeResizeHandler = new TimeResize(dragHandler, timeGridView);
 
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
 
-            timeCreationHandler.on({
-                'time_creation_dragstart': function(e) {
+            // timeCreationHandler.on({
+            //     'time_creation_dragstart': function(e) {
+            //         console.log('dragstart:', e);
+            //     },
+            //     'time_creation_drag': function(e) {
+            //         console.log('drag:', e);
+            //     },
+            //     'time_creation_dragend': function(e) {
+            //         console.log('dragend:', e);
+            //     },
+            //     'time_creation_click': function(e) {
+            //         console.log('click:', e);
+            //     }
+            // });
+
+            timeMoveHandler.on({
+                'time_move_dragstart': function(e) {
+                    domutil.addClass(global.document.body, 'view-dragging');
                     console.log('dragstart:', e);
                 },
-                'time_creation_drag': function(e) {
+                'time_move_drag': function(e) {
                     console.log('drag:', e);
                 },
-                'time_creation_dragend': function(e) {
+                'time_move_dragend': function(e) {
+                    domutil.removeClass(global.document.body, 'view-dragging');
                     console.log('dragend:', e);
                 },
-                'time_creation_click': function(e) {
+                'time_move_click': function(e) {
+                    domutil.removeClass(global.document.body, 'view-dragging');
                     console.log('click:', e);
                 }
             });
-
-            // timeMoveHandler.on({
-            //     'time_move_dragstart': function() {
-            //         domutil.addClass(global.document.body, 'view-dragging');
-            //     },
-            //     'time_move_dragend': function(e) {
-            //         domutil.removeClass(global.document.body, 'view-dragging');
-            //         console.log(e);
-            //     },
-            //     'time_move_click': function() {
-            //         domutil.removeClass(global.document.body, 'view-dragging');
-            //     }
-            // });
             //
             // timeResizeHandler.on({
             //     'time_resize_dragstart': function() {

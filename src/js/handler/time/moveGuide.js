@@ -47,15 +47,8 @@ function TimeMoveGuide(timeMove) {
  * Destroy method
  */
 TimeMoveGuide.prototype.destroy = function() {
-    this.timeMove.off({
-        'time_move_dragstart': this._onDragStart,
-        'time_move_drag': this._onDrag,
-        'time_move_dragend': this._clearGuideElement,
-        'time_move_click': this._clearGuideElement
-    }, this);
-
     this._clearGuideElement();
-
+    this.timeMove.off(this);
     this.guideElement = this.timeMove =
         this._container = this._getTopFunc = null;
 };
