@@ -13,8 +13,8 @@ var Time = require('./time');
 var AutoScroll = require('../common/autoScroll');
 var mainTmpl = require('./template/timeGrid.hbs');
 
-var TICK_INTERVAL = 1000 * 10;    // 10 sec
-var PIXEL_RENDER_ERROR = 0.5;    // pixel rendering error value
+var TICK_INTERVAL = 1000 * 10,    // 10 sec
+    PIXEL_RENDER_ERROR = 0.5;    // pixel rendering error value
 
 /**
  * @constructor
@@ -47,7 +47,7 @@ function TimeGrid(options, container) {
     this.options = util.extend({
         hourStart: 0,
         hourEnd: 24
-    }, options || {});
+    }, options);
 
     /**
      * Interval id for hourmarker animation.

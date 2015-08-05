@@ -11,13 +11,7 @@ var View = require('./view');
 var daynameTmpl = require('./template/daynames.hbs');
 
 var DAY_NAME = {
-    0: '일',
-    1: '월',
-    2: '화',
-    3: '수',
-    4: '목',
-    5: '금',
-    6: '토'
+    kor: ['일', '월', '화', '수', '목', '금', '토']
 };
 
 /**
@@ -52,7 +46,7 @@ DayName.prototype._getBaseViewModel = function(start, end) {
         datetime.MILLISECONDS_PER_DAY
     ), function(d, i, arr) {
         return {
-            dayName: DAY_NAME[d.getDay()],
+            dayName: DAY_NAME.kor[d.getDay()],
             date: d.getDate(),
             width: 100 / arr.length
         };

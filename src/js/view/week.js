@@ -37,7 +37,7 @@ function Week(controller, options, container) {
     this.options = util.extend({
         renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
         renderEndDate: datetime.format(range.end, 'YYYY-MM-DD')
-    }, options || {});
+    }, options);
 
     /**
      * Week controller mixin.

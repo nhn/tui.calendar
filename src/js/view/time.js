@@ -33,7 +33,7 @@ function Time(width, options, container) {
         isToday: false,
         hourStart: 0,
         hourEnd: 24
-    }, options || {});
+    }, options);
 
     if (this.options.isToday) {
         domutil.addClass(this.container, 'view-time-date-today');
@@ -65,16 +65,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
         containerBound,
-        leftPercents,
-        widthPercent,
-        maxRowLength,
         todayStart,
-        nextEvent,
-        baseMil,
-        height,
-        width,
-        top,
-        i;
+        baseMil;
 
     /**
      * Calculate each event element bounds relative with rendered hour milliseconds and
@@ -85,6 +77,11 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
     baseMil = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
 
     forEachArr(matrices, function(matrix) {
+        var maxRowLength,
+            widthPercent,
+            leftPercents,
+            i;
+
         maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
             return row.length;
         }));
@@ -98,6 +95,11 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
         forEachArr(matrix, function(row) {
             forEachArr(row, function(event, col, scope) {
+                var nextEvent,
+                    width,
+                    height,
+                    top;
+
                 if (!event) {
                     return;
                 }

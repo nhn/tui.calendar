@@ -352,7 +352,7 @@ var domevent = {
             metaKey: false,
             button: 0,
             relatedTarget: undefined  // eslint-disable-line
-        }, eventObj || {});
+        }, eventObj);
 
         // prevent throw error when inserting wheelDelta property to mouse event on below IE8
         if (browser.msie && browser.version < 9) {
