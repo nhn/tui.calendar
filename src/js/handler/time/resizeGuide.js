@@ -138,8 +138,10 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         height;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
+    // at least large than 30min from event start time.
     minHeight = guideTop + ratio(hourLength, viewHeight, 0.5);
     minHeight -= this._startTopPixel;
+    // smaller than 24h
     maxHeight = viewHeight - guideTop;
 
     height = Math.max(height, minHeight);
