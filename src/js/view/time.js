@@ -55,6 +55,20 @@ Time.prototype._parseDateGroup = function(str) {
     return new Date(y, m - 1, d);
 };
 
+Time.prototype._getLastEventInColumn = function(matrix, col) {
+    var row = 0,
+        evt;
+
+    for (;; row += 1) {
+        evt = util.pick(matrix, row, col);
+        if (!util.pick(matrix, row + 1, col)) {
+            break;
+        }
+    }
+
+    return evt;
+};
+
 /**
  * Set viewmodels for rendering.
  * @param {string} ymd The date of events. YYYYMMDD format.
@@ -96,6 +110,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         forEachArr(matrix, function(row) {
             forEachArr(row, function(event, col, scope) {
                 var nextEvent,
+                    lastEvent,
+                    nextCol,
                     width,
                     height,
                     top;
@@ -112,12 +128,19 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                 top = (containerBound.height * top) / baseMil;
                 height = (containerBound.height * event.duration()) / baseMil;
 
-                // Set width 'auto' when not collides with next event after first event.
                 nextEvent = scope[col + 1];
-                if (col > 0 && nextEvent && !event.collidesWith(nextEvent)) {
-                    width = null;
-                } else {
+                if (nextEvent && event.collidesWith(nextEvent)) {
                     width = widthPercent;
+                } else {
+                    // adjust width of event that has no next event but collides with event
+                    // in previous row of matrix.
+                    for (nextCol = col + 1; nextCol < maxRowLength; nextCol += 1) {
+                        lastEvent = this._getLastEventInColumn(matrix, nextCol).valueOf();
+                        if (event.collidesWith(lastEvent)) {
+                            width = widthPercent * (nextCol - col);
+                            break;
+                        }
+                    }
                 }
 
                 scope[col] = util.extend(EventViewModel.create(event), {
@@ -126,9 +149,9 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     top: top,
                     left: leftPercents[col]
                 });
-            });
-        });
-    });
+            }, this);
+        }, this);
+    }, this);
 };
 
 /**
