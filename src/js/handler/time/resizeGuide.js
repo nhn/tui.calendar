@@ -71,6 +71,9 @@ TimeResizeGuide.prototype.destroy = function() {
         this._startGridY = this._startTopPixel = null;
 };
 
+/**
+ * Clear guide element.
+ */
 TimeResizeGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement,
         originElement = this._originEventElement;
@@ -89,6 +92,10 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
         this._startHeightPixel = this._startGridY = this._startTopPixel = null;
 };
 
+/**
+ * Refresh guide element
+ * @param {string} top - guide element's style top.
+ */
 TimeResizeGuide.prototype._refreshGuideElement = function(height) {
     var guideElement = this.guideElement;
 
@@ -103,6 +110,10 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 };
 
 
+/**
+ * TimeMove#time_move_dragstart event handler
+ * @param {object} dragStartEventData - dragstart event data
+ */
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var originElement = domutil.closest(
             dragStartEventData.target,

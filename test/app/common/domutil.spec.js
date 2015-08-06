@@ -102,7 +102,6 @@ describe('module:domutil', function() {
             div.innerHTML = '<ul><li id="testtest">123</li></ul>';
 
             var li = domutil.find('li', div);
-            console.log(domutil.closest(li, '#good'));
 
             expect(domutil.closest(li, '#good')).toBe(div);
         });
