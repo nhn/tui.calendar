@@ -85,7 +85,12 @@ AutoScroll.prototype._getEdgePositions = function(clientRect) {
 /**
  * MouseDown event handler
  */
-AutoScroll.prototype._onMouseDown = function() {
+AutoScroll.prototype._onMouseDown = function(mouseDownEvent) {
+    // only primary button can start drag.
+    if (domevent.getButton(mouseDownEvent) !== 0) {
+        return;
+    }
+
     window.clearInterval(this._intervalID);
     this._intervalID = window.setInterval(util.bind(this._onTick, this), SCROLL_INTERVAL);
 
