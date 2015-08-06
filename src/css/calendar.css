@@ -212,7 +212,7 @@
     left: 0px;
     right: 7px;
     height: 100%;
-    background-color: #A1B56C;
+    background-color: #A16946;
     font-size: 0.8em;
     color: #fff;
 }
@@ -242,12 +242,12 @@
     left: 0px;
 }
 
-.view-time-move-guide div {
+.view-time-move-guide .view-time-event {
     opacity: 0.7;
     z-index: 97;
 }
 
-.view-time-resize-guide div {
+.view-time-resize-guide .view-time-event{
     opacity: 0.7;
     z-index: 97;
 }
