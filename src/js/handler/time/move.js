@@ -204,6 +204,34 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
     this.fire(overrideEventName || 'time_move_drag', eventData);
 };
 
+//TODO: 일정이 당일의 0시, 23시를 벗어나면 안됨.
+//TODO: 다른 일자로 변경 가능해야 함.
+TimeMove.prototype._updateEvent = function(eventData) {
+    var ctrl = this.baseController,
+        modelID = eventData.targetModelID,
+        range = eventData.nearestRange,
+        timeDiff = range[1] - range[0],
+        model = ctrl.events.items[modelID],
+        newStarts,
+        newEnds;
+
+    if (!model) {
+        return;
+    }
+
+    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+
+    newStarts = new Date(model.starts.getTime() + timeDiff);
+    newEnds = new Date(model.ends.getTime() + timeDiff);
+
+    ctrl.updateEvent(modelID, {
+        starts: newStarts,
+        ends: newEnds
+    });
+
+    global.layout.render();
+};
+
 /**
  * @emits TimeMove#time_move_dragend
  * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
@@ -236,6 +264,8 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
         dragStart.nearestGridTimeY,
         eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
     ];
+
+    this._updateEvent(eventData);
 
     /**
      * @event TimeMove#time_move_dragend
