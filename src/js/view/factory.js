@@ -44,9 +44,10 @@ module.exports = function(name, options, container) {
             var weekView = new Week(null, options, container);
             var dayNameView = new DayName(weekView.container);
             var timeGridView = new TimeGrid(options, weekView.container);
-            var timeCreationHandler = new TimeCreation(dragHandler, timeGridView);
-            var timeMoveHandler = new TimeMove(dragHandler, timeGridView);
-            var timeResizeHandler = new TimeResize(dragHandler, timeGridView);
+
+            var timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
+            var timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
+            var timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
