@@ -9,6 +9,8 @@ var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
+var ratio = require('./core')._ratio;
+
 /**
  * Class for Time.Move effect.
  * @constructor
@@ -132,7 +134,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         hourLength = viewOptions.hourEnd - viewOptions.hourStart,
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
         // hourLength : viewHeight = gridYOffset : X;
-        gridYOffsetPixel = (gridYOffset * viewHeight) / hourLength,
+        gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
         bottomLimit,
         top;
 

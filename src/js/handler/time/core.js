@@ -16,7 +16,7 @@ var timeCore = {
     /**
      * Get ratio value.
      *
-     * a : b = y : X; 
+     * a : b = y : X;
      *
      * =
      *
@@ -83,7 +83,7 @@ var timeCore = {
          */
         return util.bind(function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
-                gridY = (hourLength * mouseY) / viewHeight,
+                gridY = timeCore._ratio(viewHeight, hourLength, mouseY),
                 timeY = viewTime + datetime.millisecondsFrom('hour', gridY),
                 nearestGridY = this._calcGridYIndex(baseMil, viewHeight, mouseY),
                 nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);

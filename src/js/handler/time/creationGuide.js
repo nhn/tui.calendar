@@ -8,6 +8,8 @@ var util = global.ne.util;
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
+var ratio = require('./core')._ratio;
+
 /**
  * Class for Time.Creation dragging effect.
  * @constructor
@@ -104,7 +106,7 @@ TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
             return getTopFunc[indexY];
         }
 
-        getTopFunc[indexY] = (viewHeight * indexY) / hourLength;
+        getTopFunc[indexY] = ratio(hourLength, viewHeight, indexY);
 
         return getTopFunc[indexY];
     }, this);
