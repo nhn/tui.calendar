@@ -60,31 +60,45 @@ Base.prototype.createEvent = function(options) {
 };
 
 /**
+ * Set date matrix to supplied event instance.
+ * @param {Event} event - instance of event.
+ */
+Base.prototype._addToMatrix = function(event) {
+    var ownMatrix = this.dateMatrix,
+        containDates = this._getContainDatesInEvent(event);
+
+    util.forEach(containDates, function(date) {
+        var ymd = datetime.format(date, 'YYYYMMDD'),
+            matrix = ownMatrix[ymd] = ownMatrix[ymd] || [];
+
+        matrix.push(util.stamp(event));
+    });
+};
+
+/**
+ * Remove event's id from matrix.
+ * @param {Event} event - instance of event
+ */
+Base.prototype._removeFromMatrix = function(event) {
+    var modelID = util.stamp(event);
+
+    util.forEach(this.dateMatrix, function(matrix) {
+        var index = util.inArray(modelID, matrix);
+
+        if (~index) {
+            matrix.splice(index, 1);
+        }
+    }, this);
+};
+
+/**
  * Add an event instance.
  * @param {Event} event The instance of Event.
  * @returns {Event} The instance of Event that added.
  */
 Base.prototype.addEvent = function(event) {
-    var ownEvents = this.events,
-        ownMatrix = this.dateMatrix,
-        containDates = this._getContainDatesInEvent(event),
-        dformat = datetime.format,
-        stamp = util.stamp,
-        matrix,
-        ymd;
-
-    ownEvents.add(event);
-
-    util.forEach(containDates, function(date) {
-        ymd = dformat(date, 'YYYYMMDD');
-        matrix = ownMatrix[ymd];
-
-        if (!matrix) {
-            matrix = ownMatrix[ymd] = [];
-        }
-
-        matrix.push(stamp(event));
-    });
+    this.events.add(event);
+    this._addToMatrix(event);
 
     return event;
 };
@@ -134,7 +148,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
  * Update an event.
  * @param {number} id The unique id of Event instance.
  * @param {object} options updated object data.
- * @returns {Event} The event instance updated.
+ * @returns {Event|boolean} updated event instance, when it fail then return false.
  */
 Base.prototype.updateEvent = function(id, options) {
     var result = false;
@@ -158,16 +172,32 @@ Base.prototype.updateEvent = function(id, options) {
             event.set('ends', new Date(options.ends));
         }
 
-        //TODO: update matrix.
+        this._removeFromMatrix(event);
+        this._addToMatrix(event);
 
         result = event;
-    });
+    }, this);
 
     return result;
 };
 
 // Delete
-Base.prototype.deleteEvent = function() {};
+/**
+ * Delete event instance from controller.
+ * @param {number} id - unique id of model instance.
+ * @returns {Event} deleted model instance.
+ */
+Base.prototype.deleteEvent = function(id) {
+    var result = false;
+
+    this.events.doWhenHas(id, function(event) {
+        result = event;
+        this._removeFromMatrix(event);
+        this.events.remove(event);
+    }, this);
+
+    return result;
+};
 
 /**********
  * API

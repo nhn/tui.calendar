@@ -165,7 +165,7 @@ describe('controller/base', function() {
         });
     });
 
-    xdescribe('updateEvent()', function() {
+    describe('updateEvent()', function() {
         var id,
             event;
 
@@ -193,10 +193,33 @@ describe('controller/base', function() {
             }));
 
             expect(ctrl.dateMatrix).toEqual({
+                '20150501': [],
                 '20150502': [id]
             });
         });
+    });
 
+    describe('deleteEvent()', function() {
+        var id,
+            event;
+
+        beforeEach(function() {
+            event = ctrl.createEvent({
+                title: 'Go to work',
+                isAllDay: false,
+                starts: '2015/05/01 09:30:00',
+                ends: '2015/05/01 18:30:00'
+            });
+            id = util.stamp(event);
+        });
+
+        it('delete an event by modelID.', function() {
+            expect(ctrl.deleteEvent(id)).toEqual(event);
+            expect(ctrl.events.length).toBe(0);
+            expect(ctrl.dateMatrix).toEqual({
+                '20150501': []
+            });
+        });
     });
 });
 
