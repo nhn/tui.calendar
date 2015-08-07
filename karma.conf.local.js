@@ -44,7 +44,7 @@ module.exports = function(config) {
         },
 
         reporters: [
-            'mocha',
+            'dots',
             'coverage',
             'junit'
         ],

@@ -20,7 +20,6 @@
     "karma-jasmine": "latest",
     "karma-jasmine-jquery": "^0.1.1",
     "karma-junit-reporter": "^0.3.0",
-    "karma-mocha-reporter": "latest",
     "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
     "moment": "^2.10.3",
     "underscore": "^1.8.3",
