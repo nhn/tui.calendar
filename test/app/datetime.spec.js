@@ -78,7 +78,8 @@ describe('datetime', function() {
             d: 1,
             h: 13,
             m: 20,
-            s: 5
+            s: 5,
+            ms: 0
         });
     });
 

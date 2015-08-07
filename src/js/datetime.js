@@ -259,7 +259,8 @@ datetime = {
             d: date.getDate(),
             h: date.getHours(),
             m: date.getMinutes(),
-            s: date.getSeconds()
+            s: date.getSeconds(),
+            ms: date.getMilliseconds()
         };
     },
 
