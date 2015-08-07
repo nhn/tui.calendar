@@ -39,6 +39,10 @@ module.exports = function(name, options, container) {
         dragHandler = null;
     };
 
+    baseController.on('updateEvent', function() {
+        layoutView.render();
+    });
+
     if (name === 'Week') {
         layoutView.addChild(function(container) {
             var weekView = new Week(null, options, container);

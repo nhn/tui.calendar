@@ -146,6 +146,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
 // Update
 /**
  * Update an event.
+ * @emits Base#updateEvent
  * @param {number} id The unique id of Event instance.
  * @param {object} options updated object data.
  * @returns {Event|boolean} updated event instance, when it fail then return false.
@@ -177,6 +178,11 @@ Base.prototype.updateEvent = function(id, options) {
 
         result = event;
     }, this);
+
+    /**
+     * @event Base#updateEvent
+     */
+    this.fire('updateEvent');
 
     return result;
 };

@@ -194,6 +194,14 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
 };
 
 /**
+ * Update model instance by dragend event results.
+ * @param {object} eventData - event data from TimeResize#time_resize_dragend
+ */
+TimeResize.prototype._updateEvent = function(eventData) {
+    //TODO: Implements.
+};
+
+/**
  * Drag#dragEnd event handler
  * @emits TimeResize#time_resize_dragend
  * @param {MouseEvent} dragEndEventData - Mouse event of Drag#dragEnd custom event.
@@ -226,6 +234,8 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
         dragStart.nearestGridTimeY,
         eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
     ];
+
+    this._updateEvent(eventData);
 
     /**
      * @event TimeResize#time_resize_dragend

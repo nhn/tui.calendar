@@ -255,8 +255,6 @@ TimeMove.prototype._updateEvent = function(eventData) {
         starts: newStarts,
         ends: newEnds
     });
-
-    global.layout.render();
 };
 
 /**
