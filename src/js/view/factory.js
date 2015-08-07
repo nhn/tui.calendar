@@ -4,9 +4,6 @@
  */
 'use strict';
 
-var util = global.ne.util;
-var domutil = require('../common/domutil');
-
 // Parent views
 var Layout = require('./layout');
 var Week = require('./week');
@@ -36,7 +33,9 @@ module.exports = function(name, options, container) {
     layoutView.controller = baseController;
     layoutView._beforeDestroy = function() {
         dragHandler.destroy();
-        dragHandler = null;
+        baseController.off();
+
+        dragHandler = baseController = null;
     };
 
     baseController.on('updateEvent', function() {

@@ -12,6 +12,11 @@ var dateFormatRx = /^(\d{4}[-|\/]\d{2}[-|\/]\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 var datetime,
     tokenFunc;
 
+var memo = {
+    millisecondsTo: {},
+    millisecondsFrom: {}
+};
+
 tokenFunc = {
     /**
      * @param {Date} date date object.
@@ -103,9 +108,18 @@ datetime = {
      * @returns {number} converted value.
      */
     millisecondsTo: function(type, value) {
-        return datetime._convMilliseconds(type, value, function(memo, v) {
+        var cache = memo.millisecondsTo,
+            key = type + value;
+
+        if (cache[key]) {
+            return cache[key];
+        }
+
+        cache[key] = datetime._convMilliseconds(type, value, function(memo, v) {
             return memo / v;
         });
+
+        return cache[key];
     },
 
     /**
@@ -115,9 +129,18 @@ datetime = {
      * @returns {number} converted value.
      */
     millisecondsFrom: function(type, value) {
-        return datetime._convMilliseconds(type, value, function(memo, v) {
+        var cache = memo.millisecondsFrom,
+            key = type + value;
+
+        if (cache[key]) {
+            return cache[key];
+        }
+
+        cache[key] = datetime._convMilliseconds(type, value, function(memo, v) {
             return memo * v;
         });
+
+        return cache[key];
     },
 
     /**

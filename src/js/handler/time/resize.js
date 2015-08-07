@@ -199,6 +199,37 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
  */
 TimeResize.prototype._updateEvent = function(eventData) {
     //TODO: Implements.
+    var ctrl = this.baseController,
+        modelID = eventData.targetModelID,
+        range = eventData.nearestRange,
+        timeDiff = range[1] - range[0],
+        model = ctrl.events.items[modelID],
+        relatedView = eventData.relatedView,
+        dateEnd,
+        newEnds,
+        baseDate;
+
+    if (!model) {
+        return;
+    }
+
+    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+
+    baseDate = new Date(relatedView.getDate());
+    dateEnd = datetime.end(baseDate);
+    newEnds = new Date(model.ends.getTime() + timeDiff);
+
+    if (newEnds > dateEnd) {
+        newEnds = new Date(dateEnd.getTime());
+    }
+
+    if (newEnds.getTime() - model.starts.getTime() < datetime.millisecondsFrom('minutes', 30)) {
+        newEnds = new Date(model.starts.getTime() + datetime.millisecondsFrom('minutes', 30));
+    }
+
+    ctrl.updateEvent(modelID, {
+        ends: newEnds
+    });
 };
 
 /**
