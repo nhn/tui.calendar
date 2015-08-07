@@ -133,7 +133,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
             return util.stamp(event);
         });
 
-        if (matrix) {
+        if (matrix && matrix.length) {
             collection.add.apply(collection, util.map(matrix, function(id) {
                 return ownEvents[id];
             }));
