@@ -391,7 +391,7 @@ var domevent = {
      * @param {MouseEvent} mouseEvent - The mouse event object want to know.
      * @returns {number} - The value of meaning which button is clicked?
      */
-    getButton: function(mouseEvent) {
+    getMouseButton: function(mouseEvent) {
         var button,
             primary = '0,1,3,5,7',
             secondary = '2,6',

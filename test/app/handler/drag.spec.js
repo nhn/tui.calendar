@@ -30,7 +30,7 @@ describe('Handler/Drag', function() {
 
     describe('_onMouseDown', function() {
         beforeEach(function() {
-            spyOn(ne.dooray.calendar.domevent, 'getButton').and.returnValue(0);
+            spyOn(ne.dooray.calendar.domevent, 'getMouseButton').and.returnValue(0);
         });
 
         it('makes custom event data from mousedown events', function() {
@@ -68,7 +68,7 @@ describe('Handler/Drag', function() {
         });
 
         it('only primary mouse button can start drag events.', function() {
-            ne.dooray.calendar.domevent.getButton.and.returnValue(1);
+            ne.dooray.calendar.domevent.getMouseButton.and.returnValue(1);
 
             var mock = {
                 invoke: jasmine.createSpy('Handler/Drag'),

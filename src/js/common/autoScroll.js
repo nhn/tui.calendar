@@ -87,7 +87,7 @@ AutoScroll.prototype._getEdgePositions = function(clientRect) {
  */
 AutoScroll.prototype._onMouseDown = function(mouseDownEvent) {
     // only primary button can start drag.
-    if (domevent.getButton(mouseDownEvent) !== 0) {
+    if (domevent.getMouseButton(mouseDownEvent) !== 0) {
         return;
     }
 
