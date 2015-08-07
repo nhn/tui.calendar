@@ -251,6 +251,13 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
  * @emits TimeResize#time_resize_click
  */
 TimeResize.prototype._onClick = function() {
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
     /**
      * @event TimeResize#time_resize_click
      */
