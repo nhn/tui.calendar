@@ -52,6 +52,14 @@ module.exports = function(name, options, container) {
             var timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
             var timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
+            weekView.handlers = {
+                time: {
+                    creation: timeCreationHandler,
+                    move: timeMoveHandler,
+                    resize: timeResizeHandler
+                }
+            };
+
             weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
 
@@ -63,6 +71,8 @@ module.exports = function(name, options, container) {
                 timeCreationHandler.destroy();
                 timeMoveHandler.destroy();
                 timeResizeHandler.destroy();
+
+                delete weekView.handlers.time;
 
                 timeCreationHandler = timeMoveHandler = timeResizeHandler = null;
             };

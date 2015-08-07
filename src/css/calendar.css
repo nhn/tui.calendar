@@ -27,6 +27,7 @@
 }
 
 .view-week-container {
+    width: 100%;
     display: inline-block;
     border: 1px solid #ccc;
     font-size: 0.7em;
@@ -39,17 +40,14 @@
 }
 
 .view-allday-container {
-    width: 598px;
     height: 60px;
 }
 
 .view-task-container {
-    width: 598px;
     height: 150px;
 }
 
 .view-timegrid-container {
-    width: 598px;
     height: 416px;
     overflow-y: scroll;
     border-top: 2px solid #ccc;
