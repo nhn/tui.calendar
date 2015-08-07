@@ -238,6 +238,7 @@
     opacity: 0.6;
 }
 
+.view-time-date:last-child .view-time-event,
 .view-time-date:last-child .view-time-creation-guide {
     left: 0px;
 }

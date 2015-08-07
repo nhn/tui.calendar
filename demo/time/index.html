@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Time</title>
     <link rel="stylesheet" type="text/css" href="../../src/css/calendar.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/unsemantic/0/unsemantic-grid-responsive.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/docco.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
@@ -17,6 +18,9 @@
     </style>
 </head>
 <body>
+<div class="grid-container">
+    <div class="grid-50">
+        <h2>예제 코드</h2>
 <pre><code class="javascript">var calendar = w.ne.dooray.calendar;
 
 // data
@@ -60,7 +64,12 @@ w.ne.util.forEach(events, function(data) {
 
 // render
 layout.render();</code></pre>
+    </div>
+    <div class="grid-50">
+        <h2>실행 데모</h2>
 <div id="calendar" class="calendar"></div>
+    </div>
+</div>
 <script src="../../dist/app.js"></script>
 <script>
 (function(w) {
