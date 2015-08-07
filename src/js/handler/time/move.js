@@ -204,25 +204,52 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
     this.fire(overrideEventName || 'time_move_drag', eventData);
 };
 
-//TODO: 일정이 당일의 0시, 23시를 벗어나면 안됨.
-//TODO: 다른 일자로 변경 가능해야 함.
+/**
+ * Update model instance by dragend event results.
+ * @param {object} eventData - event data from TimeMove#time_move_dragend
+ */
 TimeMove.prototype._updateEvent = function(eventData) {
     var ctrl = this.baseController,
         modelID = eventData.targetModelID,
         range = eventData.nearestRange,
         timeDiff = range[1] - range[0],
+        dateDiff = 0,
         model = ctrl.events.items[modelID],
+        relatedView = eventData.relatedView,
+        currentView = eventData.currentView,
+        eventDuration,
+        dateStart,
+        dateEnd,
         newStarts,
-        newEnds;
+        newEnds,
+        baseDate;
 
-    if (!model) {
+    if (!model || !currentView) {
         return;
     }
 
     timeDiff -= datetime.millisecondsFrom('minutes', 30);
-
+    baseDate = new Date(relatedView.getDate());
+    dateStart = datetime.start(baseDate);
+    dateEnd = datetime.end(baseDate);
     newStarts = new Date(model.starts.getTime() + timeDiff);
     newEnds = new Date(model.ends.getTime() + timeDiff);
+    eventDuration = model.duration();
+
+    if (currentView) {
+        dateDiff = currentView.getDate() - relatedView.getDate();
+    }
+
+    if (newStarts < dateStart) {
+        newStarts = new Date(dateStart.getTime());
+        newEnds = new Date(newStarts.getTime() + eventDuration.getTime());
+    } else if (newEnds > dateEnd) {
+        newEnds = new Date(dateEnd.getTime());
+        newStarts = new Date(newEnds.getTime() - eventDuration.getTime());
+    }
+
+    newStarts = new Date(newStarts.getTime() + dateDiff);
+    newEnds = new Date(newEnds.getTime() + dateDiff);
 
     ctrl.updateEvent(modelID, {
         starts: newStarts,
@@ -238,6 +265,7 @@ TimeMove.prototype._updateEvent = function(eventData) {
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
     var getEventDataFunc = this._getEventDataFunc,
+        currentView = this._getTimeView(dragEndEventData.target),
         dragStart = this._dragStart,
         eventData;
 
@@ -252,6 +280,7 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
     }
 
     eventData = getEventDataFunc(dragEndEventData.originEvent, {
+        currentView: currentView,
         targetModelID: dragStart.targetModelID
     });
 
@@ -272,6 +301,7 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
+     * @property {Time} currentView - time view instance related with current mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
      * @property {number} mouseY - mouse Y px mouse event.
      * @property {number} gridY - grid Y index value related with mouseY value.
