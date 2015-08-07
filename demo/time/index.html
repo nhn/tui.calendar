@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <title>Time</title>
     <link rel="stylesheet" type="text/css" href="../../src/css/calendar.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/docco.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <style type="text/css">
-    body {
-        font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', 'Gulim';
-    }
     div.view-timegrid-container {
         resize: both;
     }
@@ -17,9 +17,50 @@
     </style>
 </head>
 <body>
-<h1>Calendar Test</h1>
+<pre><code class="javascript">var calendar = w.ne.dooray.calendar;
+
+// data
+var events = [{
+    title: '스크럼',
+    isAllDay: false,
+    starts: '2015-08-07T09:40:00+09:00',
+    ends: '2015-08-07T10:00:00+09:00'
+}, {
+    title: 'nodejs study',
+    isAllDay: false,
+    starts: '2015-08-07T12:00:00+09:00',
+    ends: '2015-08-07T13:00:00+09:00'
+}, {
+    title: '주간보고 작성',
+    isAllDay: false,
+    starts: '2015-08-07T09:30:00+09:00',
+    ends: '2015-08-07T13:30:00+09:00'
+}, {
+    title: '커피한잔',
+    isAllDay: false,
+    starts: '2015-08-07T11:10:00+09:00',
+    ends: '2015-08-07T12:30:00+09:00'
+}, {
+    title: '끼어듬',
+    isAllDay: false,
+    starts: '2015-08-07T12:40:00+09:00',
+    ends: '2015-08-07T13:20:00+09:00'
+}];
+
+// calendar 1
+var layout = calendar.ViewFactory('Week', {
+    renderStartDate: '2015-08-05',
+    renderEndDate: '2015-08-08'
+}, document.getElementById('calendar'));
+
+// 주간 뷰 생성
+w.ne.util.forEach(events, function(data) {
+    layout.controller.addEvent(calendar.Event.create(data));
+});
+
+// render
+layout.render();</code></pre>
 <div id="calendar" class="calendar"></div>
-<div id="calendar2" class="calendar"></div>
 <script src="../../dist/app.js"></script>
 <script>
 (function(w) {
