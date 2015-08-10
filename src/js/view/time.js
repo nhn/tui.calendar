@@ -113,7 +113,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         hourEnd = options.hourEnd,
         containerBound,
         todayStart,
-        baseMil;
+        baseMil,
+        abs = Math.abs;
 
 
     /**
@@ -125,8 +126,6 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
     baseMil = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
 
     forEachArr(matrices, function(matrix) {
-
-    console.clear();
         var binaryMap,
             maxRowLength,
             widthPercent,
@@ -148,12 +147,17 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
         forEachArr(matrix, function(row) {
             forEachArr(row, function(event, col, scope) {
-                var nextEvent,
-                    lastEvent,
-                    nextCol,
+                var collision = 0,
+                    emptySpace = 1,
+                    map,
                     width,
                     height,
-                    top;
+                    startStart,
+                    startEnd,
+                    endStart,
+                    endEnd,
+                    top,
+                    i;
 
                 if (!event) {
                     return;
@@ -167,74 +171,48 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                 top = (containerBound.height * top) / baseMil;
                 height = (containerBound.height * event.duration()) / baseMil;
 
-                console.log('title:' + event.title);
                 // search real collision by using binary map.
-                var collision = 0;
-                var emptySpace = 1;
-                var map;
-                for (var i = (col + 1); i < maxRowLength; i += 1) {
+                for (i = (col + 1); i < maxRowLength; i += 1) {
                     map = binaryMap[i - 1];
 
-                    console.log('col:' + i);
-                    var a = array.bsearch(
+                    if (!map.length) {
+                        break;
+                    }
+
+                    startStart = abs(array.bsearch(
                         map,
                         event.starts.getTime(),
                         function(m) { return m.starts + 1; },
                         array.compare.num.asc
-                    );
+                    ));
 
-                    var b = array.bsearch(
+                    startEnd = abs(array.bsearch(
                         map,
                         event.starts.getTime(),
                         function(m) { return m.ends - 1; },
                         array.compare.num.asc
-                    );
+                    ));
 
-                    var c = array.bsearch(
+                    endStart = abs(array.bsearch(
                         map,
                         event.ends.getTime(),
                         function(m) { return m.starts + 1; },
                         array.compare.num.asc
-                    );
+                    ));
 
-                    var d = array.bsearch(
+                    endEnd = abs(array.bsearch(
                         map,
                         event.ends.getTime(),
                         function(m) { return m.ends - 1; },
                         array.compare.num.asc
-                    );
+                    ));
 
-                    console.log(a, b, c, d);
-
-                    var absA = Math.abs(a),
-                        absB = Math.abs(b),
-                        absC = Math.abs(c),
-                        absD = Math.abs(d);
-
-
-                    if (absA - absB !== 0 || absC - absD !== 0) {
-                        console.log('collision detected! A');
+                    if (!(startStart === startEnd && startEnd === endStart && endStart === endEnd)) {
                         collision += 1;
                         break;
                     }
 
-                    if (absC - absA !== 0 ||
-                        absD - absB !== 0) {
-                        console.log('collision detected! C');
-                        collision += 1;
-                        break;
-                    }
-
-                    if (a < 0 && b < 0 && c < 0 && d < 0) {
-                        emptySpace += 1;
-                        continue;
-                    }
-
-                    if (a !== b || c !== d) {
-                        console.log('collision detected! B');
-                        collision += 1;
-                        break;
-                    }
+                    emptySpace += 1;
                 }
 
                 width = widthPercent * (emptySpace);
@@ -242,9 +220,6 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                 if (!collision) {
                     width = null;
                 }
-
-                console.log('collision: ' + collision + ', empty: ' + emptySpace);
-                console.log('=====');
 
                 scope[col] = util.extend(EventViewModel.create(event), {
                     width: width,
