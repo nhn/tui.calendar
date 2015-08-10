@@ -179,7 +179,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     var a = array.bsearch(
                         map,
                         event.starts.getTime(),
-                        function(m) { return m.starts; },
+                        function(m) { return m.starts + 1; },
                         array.compare.num.asc
                     );
 
@@ -193,7 +193,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     var c = array.bsearch(
                         map,
                         event.ends.getTime(),
-                        function(m) { return m.starts; },
+                        function(m) { return m.starts + 1; },
                         array.compare.num.asc
                     );
 
@@ -211,8 +211,16 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                         absC = Math.abs(c),
                         absD = Math.abs(d);
 
+
                     if (absA - absB !== 0 || absC - absD !== 0) {
                         console.log('collision detected! A');
+                        collision += 1;
+                        break;
+                    }
+
+                    if (absC - absA !== 0 ||
+                        absD - absB !== 0) {
+                        console.log('collision detected! C');
                         collision += 1;
                         break;
                     }
@@ -227,75 +235,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                         collision += 1;
                         break;
                     }
-
-                    if (Math.abs(c) - Math.abs(a) > 0) {
-                        console.log('collision detected! C');
-                        collision += 1;
-                        break;
-                    }
-
-
-
-
-
-
-                    // var from = array.bsearch(
-                    //     map,
-                    //     event.starts.getTime(),
-                    //     function(m) { return m.starts; },
-                    //     array.compare.num.asc
-                    // );
-                    //
-                    // var to = array.bsearch(
-                    //     map,
-                    //     event.ends.getTime(),
-                    //     function(m) { return m.starts; },
-                    //     array.compare.num.asc
-                    // );
-                    //
-                    // var from2 = array.bsearch(
-                    //     map,
-                    //     event.starts.getTime(),
-                    //     function(m) { return m.ends; },
-                    //     array.compare.num.asc
-                    // );
-                    //
-                    // var to2 = array.bsearch(
-                    //     map,
-                    //     event.ends.getTime(),
-                    //     function(m) { return m.ends; },
-                    //     array.compare.num.asc
-                    // );
-                    //
-                    //
-                    // from = Math.abs(from);
-                    // to = Math.abs(to);
-                    // from2 = Math.abs(from2);
-                    // to2 = Math.abs(to2);
-                    // var diff = to - from,
-                    //     diff2 = to2 - from2;
-                    //
-                    // console.log(from, to, from2, to2);
-                    //
-                    // if ((diff !== 0 || diff2 !== 0) ||
-                    //     ((from > 0 || to > 0 || from2 > 0 || to2 > 0) && (from !== to && from2 !== to2))) {
-                    //     console.log('collision detect!');
-                    //     collision += 1;
-                    //     break;
-                    // }
-                    //
-                    // emptySpace += 1;
                 }
 
-                // if (!collision) {
-                //     width = null;
-                // } else {
-                //
-                // }
-                //
-                // if (collision) {
-                //     width = widthPercent * (emptySpace);
-                // }
                 width = widthPercent * (emptySpace);
 
                 if (!collision) {
@@ -304,20 +245,6 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
                 console.log('collision: ' + collision + ', empty: ' + emptySpace);
                 console.log('=====');
-                // nextEvent = scope[col + 1];
-                // if (nextEvent && event.collidesWith(nextEvent)) {
-                //     width = widthPercent;
-                // } else {
-                //     // adjust width of event that has no next event but collides with event
-                //     // in previous row of matrix.
-                //     for (nextCol = col + 1; nextCol < maxRowLength; nextCol += 1) {
-                //         lastEvent = this._getLastEventInColumn(matrix, nextCol).valueOf();
-                //         if (event.collidesWith(lastEvent)) {
-                //             width = widthPercent * (nextCol - col);
-                //             break;
-                //         }
-                //     }
-                // }
 
                 scope[col] = util.extend(EventViewModel.create(event), {
                     width: width,
