@@ -134,7 +134,8 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
         return;
     }
 
-    endGridY = getTopFunc(dragEventData.nearestGridY);
+    // drawing guide from start point to at least 30min points.
+    endGridY = getTopFunc(dragEventData.nearestGridY) + getTopFunc(0.5);
 
     if (endGridY > startGridY) {
         this._refreshGuideElement(startGridY, endGridY - startGridY);

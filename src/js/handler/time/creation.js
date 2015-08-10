@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var array = require('../../common/array');
 var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var TimeCreationGuide = require('./creationGuide');
@@ -171,7 +172,6 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
     }
 
     eventData = getEventDataFunc(dragEventData.originEvent);
-    eventData.nearestGridY += 0.5;
 
     if (revise) {
         revise(eventData);
@@ -199,7 +199,7 @@ TimeCreation.prototype._createEvent = function(eventData) {
     var title = window.prompt('Name of event to create:'),
         ctrl = this.baseController,
         relatedView = eventData.relatedView,
-        nearestRange = eventData.nearestRange,
+        createRange = eventData.createRange,
         nearestGridTimeY = eventData.nearestGridTimeY,
         baseDate,
         dateStart,
@@ -211,15 +211,18 @@ TimeCreation.prototype._createEvent = function(eventData) {
         return;
     }
 
-    if (!nearestRange) {
-        nearestRange = [nearestGridTimeY, nearestGridTimeY + datetime.millisecondsFrom('minutes', 30)];
+    if (!createRange) {
+        createRange = [
+            nearestGridTimeY,
+            nearestGridTimeY + datetime.millisecondsFrom('minutes', 30)
+        ];
     }
 
     baseDate = new Date(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    newStarts = Math.max(dateStart.getTime(), nearestRange[0]);
-    newEnds = Math.min(dateEnd.getTime(), nearestRange[1]);
+    newStarts = Math.max(dateStart.getTime(), createRange[0]);
+    newEnds = Math.min(dateEnd.getTime(), createRange[1]);
 
     ctrl.createEvent({
         title: title,
@@ -244,14 +247,13 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     }, this);
 
     function reviseFunc(eventData) {
-        eventData.range = [
-            dragStart.timeY,
-            eventData.timeY + datetime.millisecondsFrom('hour', 0.5)
-        ];
-        eventData.nearestRange = [
+        var range = [
             dragStart.nearestGridTimeY,
-            eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
-        ];
+            eventData.nearestGridTimeY
+        ].sort(array.compare.num.asc);
+        range[1] += datetime.millisecondsFrom('hour', 0.5);
+
+        eventData.createRange = range;
 
         this._createEvent(eventData);
     }
@@ -266,8 +268,7 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number} timeY - milliseconds value of mouseY points.
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
-     * @property {number[]} range - milliseconds range between drag start and end.
-     * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
+     * @property {number[]} createRange - milliseconds range between drag start and end to create.
      */
     this._onDrag(dragEndEventData, 'time_creation_dragend', util.bind(reviseFunc, this));
 
