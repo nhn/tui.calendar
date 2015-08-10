@@ -60,6 +60,10 @@ Base.prototype._getContainDatesInEvent = function(event) {
 Base.prototype.createEvent = function(options) {
     var event = this.addEvent(Event.create(options));
 
+    if (event.duration().getTime() < datetime.millisecondsFrom('minutes', 30)) {
+        debugger;
+    }
+
     /**
      * @event Base#createdEvent
      * @type {Event}
