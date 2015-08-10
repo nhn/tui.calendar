@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var Event = require('../model/event');
 var datetime = require('../datetime');
 var Collection = require('../common/collection');
 
@@ -52,11 +53,20 @@ Base.prototype._getContainDatesInEvent = function(event) {
 
 /**
  * Create an event instance from raw data.
+ * @emits Base#createdEvent
  * @param {object} options Data object to create event.
  * @returns {Event} The instance of Event that created.
  */
 Base.prototype.createEvent = function(options) {
-    return this.addEvent(Event.create(options));
+    var event = this.addEvent(Event.create(options));
+
+    /**
+     * @event Base#createdEvent
+     * @type {Event}
+     */
+    this.fire('createdEvent', event);
+
+    return event;
 };
 
 /**

@@ -38,8 +38,13 @@ module.exports = function(name, options, container) {
         dragHandler = baseController = null;
     };
 
-    baseController.on('updateEvent', function() {
+    function refresh() {
         layoutView.render();
+    }
+
+    baseController.on({
+        updateEvent: refresh,
+        createdEvent: refresh
     });
 
     if (name === 'Week') {

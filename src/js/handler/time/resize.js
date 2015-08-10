@@ -198,7 +198,6 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
  * @param {object} eventData - event data from TimeResize#time_resize_dragend
  */
 TimeResize.prototype._updateEvent = function(eventData) {
-    //TODO: Implements.
     var ctrl = this.baseController,
         modelID = eventData.targetModelID,
         range = eventData.nearestRange,
