@@ -114,8 +114,13 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         containerBound,
         todayStart,
         baseMil,
-        abs = Math.abs;
-
+        abs = Math.abs,
+        getStartFunc = function(m) {
+            return m.starts + 1;
+        },
+        getEndFunc = function(m) {
+            return m.ends - 1;
+        };
 
     /**
      * Calculate each event element bounds relative with rendered hour milliseconds and
@@ -182,28 +187,28 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     startStart = abs(array.bsearch(
                         map,
                         event.starts.getTime(),
-                        function(m) { return m.starts + 1; },
+                        getStartFunc,
                         array.compare.num.asc
                     ));
 
                     startEnd = abs(array.bsearch(
                         map,
                         event.starts.getTime(),
-                        function(m) { return m.ends - 1; },
+                        getEndFunc,
                         array.compare.num.asc
                     ));
 
                     endStart = abs(array.bsearch(
                         map,
                         event.ends.getTime(),
-                        function(m) { return m.starts + 1; },
+                        getStartFunc,
                         array.compare.num.asc
                     ));
 
                     endEnd = abs(array.bsearch(
                         map,
                         event.ends.getTime(),
-                        function(m) { return m.ends - 1; },
+                        getEndFunc,
                         array.compare.num.asc
                     ));
 
