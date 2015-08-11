@@ -25,7 +25,7 @@ function View(options, container) {
         container = domutil.appendHTMLElement('div');
     }
 
-    domutil.addClass(container, 'view-' + id);
+    domutil.addClass(container, 'schedule-view-' + id);
 
     /**
      * unique id

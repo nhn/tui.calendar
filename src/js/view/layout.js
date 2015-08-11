@@ -81,7 +81,7 @@ Layout.prototype.toggleChildView = function(viewName) {
     this.childs.each(function(childView) {
         container = childView.container;
         flag = +(childView.viewName === viewName);
-        domutil[prefix[flag] + 'Class'](container, 'view-hidden');
+        domutil[prefix[flag] + 'Class'](container, 'schedule-view-hidden');
     });
 };
 

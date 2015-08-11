@@ -37,7 +37,7 @@ function TimeCreationGuide(timeCreation) {
      */
     this._getTopFunc = null;
 
-    domutil.addClass(this.guideElement, 'view-time-creation-guide');
+    domutil.addClass(this.guideElement, 'schedule-view-time-creation-guide');
 
     timeCreation.on({
         'time_creation_dragstart': this._onDragStart,

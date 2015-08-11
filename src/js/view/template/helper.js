@@ -45,10 +45,10 @@ module.exports = {
     'dayname-isHolliday': function() {
         if (this.dayName === '일' ||
             this.dayName === '토') {
-            return 'view-dayname-item holliday';
+            return 'schedule-view-dayname schedule-holliday';
         }
 
-        return 'view-dayname-item';
+        return 'schedule-view-dayname';
     }
 };
 

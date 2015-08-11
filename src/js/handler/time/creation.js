@@ -11,7 +11,7 @@ var domutil = require('../../common/domutil');
 var TimeCreationGuide = require('./creationGuide');
 var timeCore = require('./core');
 
-var parseViewIDRx = /^view-time-date[\s]view-(\d+)/;
+var parseViewIDRx = /^schedule-view-time-date[\s]schedule-view-(\d+)/;
 
 /**
  * @constructor
@@ -98,7 +98,7 @@ TimeCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass === 'view-time-date-event-block') {
+    if (cssClass === 'schedule-view-time-date-event-block') {
         target = target.parentNode;
         cssClass = domutil.getClass(target);
     }

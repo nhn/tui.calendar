@@ -24,7 +24,7 @@ function Week(controller, options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'view-week-container'
+        'schedule-view-week-container'
     );
 
     View.call(this, null, container);

@@ -71,7 +71,7 @@ TimeMoveGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement;
 
     if (!util.browser.msie) {
-        domutil.removeClass(global.document.body, 'view-dragging');
+        domutil.removeClass(global.document.body, 'schedule-view-dragging');
     }
 
     domutil.remove(guideElement);
@@ -104,7 +104,7 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top) {
 TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     var guideElement = domutil.closest(
         dragStartEventData.target,
-        '.view-time-date-event-block'
+        '.schedule-view-time-date-event-block'
     );
 
     if (!guideElement) {
@@ -112,7 +112,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     }
 
     guideElement = guideElement.cloneNode(true);
-    domutil.addClass(guideElement, 'view-time-move-guide');
+    domutil.addClass(guideElement, 'schedule-view-time-move-guide');
 
     this._startTopPixel = parseFloat(guideElement.style.top);
     this._startGridY = dragStartEventData.nearestGridY;
@@ -138,7 +138,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         top;
 
     if (!util.browser.msie) {
-        domutil.addClass(global.document.body, 'view-dragging');
+        domutil.addClass(global.document.body, 'schedule-view-dragging');
     }
 
     if (this._container !== timeView.container) {

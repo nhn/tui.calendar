@@ -28,7 +28,7 @@ function TimeGrid(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'view-timegrid-container'
+        'schedule-view-timegrid-container'
     );
 
     View.call(this, null, container);
@@ -136,7 +136,7 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         child = new Time(
             width,
             childOption,
-            domutil.appendHTMLElement('div', container, 'view-time-date')
+            domutil.appendHTMLElement('div', container, 'schedule-view-time-date')
         );
         child.render(ymd, events.time);
 
@@ -166,13 +166,13 @@ TimeGrid.prototype.render = function(viewModel) {
     this._renderChilds(
         eventsInDateRange,
         100 / eventLen,
-        domutil.find('.view-time-events-container', container)
+        domutil.find('.schedule-view-timegrid-events-container', container)
     );
 
     /**********
      * Render hourmarker
      **********/
-    this.hourmarker = domutil.find('.view-time-hourmarker', container);
+    this.hourmarker = domutil.find('.schedule-view-timegrid-hourmarker', container);
     this.refreshHourmarker();
 
     if (!this._scrolled) {
@@ -195,8 +195,8 @@ TimeGrid.prototype.refreshHourmarker = function() {
         return;
     }
 
-    todaymarker = domutil.find('.view-time-todaymarker', hourmarker);
-    text = domutil.find('.view-time-hourmarker-time', hourmarker);
+    todaymarker = domutil.find('.schedule-view-timegrid-todaymarker', hourmarker);
+    text = domutil.find('.schedule-view-timegrid-hourmarker-time', hourmarker);
 
     reqAnimFrame.requestAnimFrame(function() {
         hourmarker.style.display = 'block';

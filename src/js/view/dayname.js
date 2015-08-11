@@ -23,7 +23,7 @@ function DayName(container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'view-dayname-container'
+        'schedule-view-dayname-container'
     );
 
     View.call(this, null, container);

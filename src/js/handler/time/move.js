@@ -10,7 +10,7 @@ var domutil = require('../../common/domutil');
 var timeCore = require('./core');
 var TimeMoveGuide = require('./moveGuide');
 
-var parseTimeViewIDRx = /^view-time-date[\s]view-(\d+)/;
+var parseTimeViewIDRx = /^schedule-view-time-date[\s]schedule-view-(\d+)/;
 
 /**
  * @constructor
@@ -89,7 +89,7 @@ TimeMove.prototype.connect = function(dragHandler, timeGridView, baseController)
  * @returns {boolean|object} - return object when satiate condition.
  */
 TimeMove.prototype.checkExpectCondition = function(target) {
-    if (domutil.getClass(target) !== 'view-time-event') {
+    if (domutil.getClass(target) !== 'schedule-view-time-event') {
         return false;
     }
 
@@ -102,7 +102,7 @@ TimeMove.prototype.checkExpectCondition = function(target) {
  * @returns {object|boolean} - return time view instance when finded.
  */
 TimeMove.prototype._getTimeView = function(target) {
-    var container = domutil.closest(target, '.view-time-date'),
+    var container = domutil.closest(target, '.schedule-view-time-date'),
         matches;
 
     if (!container) {
@@ -125,7 +125,7 @@ TimeMove.prototype._getTimeView = function(target) {
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.view-time-date-event-block'),
+        blockElement = domutil.closest(target, '.schedule-view-time-date-event-block'),
         getEventDataFunc,
         eventData;
 

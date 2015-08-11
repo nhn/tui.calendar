@@ -9,45 +9,39 @@
  * Days.Time = 400px 
  */
 
-.view-dragging {
+.schedule-view-dragging {
     cursor: move;
 }
-.view-resizing {
+.schedule-view-resizing {
     cursor: row-resize;
 }
 
-.clear:after {
-    content: '';
-    display: block;
-    clear: both;
-}
-
-.view-hidden {
+.schedule-view-hidden {
     display: none !important;
 }
 
-.view-week-container {
+.schedule-view-week-container {
     width: 100%;
     display: inline-block;
     border: 1px solid #ccc;
     font-size: 0.7em;
 }
 
-.view-dayname-container {
+.schedule-view-dayname-container {
     padding-left:60px;
     overflow-y: scroll;
     background-color: #eee;
 }
 
-.view-allday-container {
+.schedule-view-allday-container {
     height: 60px;
 }
 
-.view-task-container {
+.schedule-view-task-container {
     height: 150px;
 }
 
-.view-timegrid-container {
+.schedule-view-timegrid-container {
     height: 416px;
     overflow-y: scroll;
     border-top: 2px solid #ccc;
@@ -57,7 +51,7 @@
 /**
  * Dayname View
  */
-.view-dayname-item {
+.schedule-view-dayname {
     height: 40px;
     margin-left: -1px;
     border-left: 1px solid #ccc;
@@ -66,27 +60,27 @@
     line-height: 20px;
 }
 
-.view-dayname-dayname {
+.schedule-view-dayname-label {
     padding-left: 7px;
     font-size: 1.2em;
 }
 
-.view-dayname-date {
+.schedule-view-dayname-date {
     padding-left: 7px;
     font-size: 1.3em;
     font-weight: bold;
 }
 
-.holliday {
+.schedule-holliday {
     color: red;
 }
 
 
 /**
- * Times view
+ * TimeGrid view
  */
 
-.view-time {
+.schedule-view-timegrid {
     position: relative;
     overflow: hidden;
     background-color: #fff;
@@ -95,25 +89,25 @@
 /**
  * Hourmarker
  */
-.view-time-hourmarker {
+.schedule-view-timegrid-hourmarker {
     position:absolute;
     width: 100%;
     left: 60px;
     z-index: 98;
 }
 
-.view-time-hourmarker-wrap {
+.schedule-view-timegrid-hourmarker-wrap {
     position: relative;
     margin-right:60px;
 }
 
-.view-time-hourmarker-line {
+.schedule-view-timegrid-hourmarker-line {
     width: 100%;
     height: 1px;
     background-color: red;
 }
 
-.view-time-hourmarker-time {
+.schedule-view-timegrid-hourmarker-time {
     position: absolute;
     width: 55px;
     left: -60px;
@@ -122,7 +116,7 @@
     color: red;
 }
 
-.view-time-todaymarker {
+.schedule-view-timegrid-todaymarker {
     position:absolute;
     text-indent: -9999px;
     width: 5px;
@@ -133,10 +127,7 @@
     z-index: 99;
 }
 
-/**
- * Layout
- */
-.view-time-left {
+.schedule-view-timegrid-left {
     width: 60px;
     float: left;
     list-style: none;
@@ -144,7 +135,7 @@
     padding: 0px;
 }
 
-.view-time-left li {
+.schedule-view-timegrid-left li {
     padding: 3px 5px 0 0;
     width: 54px;
     height: 36px;
@@ -155,38 +146,38 @@
     color: #777;
 }
 
-.view-time-left li:last-child {
+.schedule-view-timegrid-left li:last-child {
     border-bottom: none;
 }
 
-.view-time-right {}
+.schedule-view-timegrid-right {}
 
-.view-time-grid {
+.schedule-view-timegrid-grid {
     margin-top:19px;
     border-top: 1px dotted #eee;
     height: 19px;
     border-bottom: 1px solid #ccc;
 }
 
-.view-time-grid:last-child {
+.schedule-view-timegrid-grid:last-child {
     border-bottom: none;
 }
 
 /*시간별 일정 출력*/
 
-.view-time-events {
+.schedule-view-timegrid-events {
     position:absolute;
     width: 100%;
     height: 100%;
     top: 0px;
 }
 
-.view-time-events-container {
+.schedule-view-timegrid-events-container {
     margin-left:60px;
     height: 100%;
 }
 
-.view-time-date {
+.schedule-view-time-date {
     position: relative;
     height: 100%;
     float: left;
@@ -194,18 +185,18 @@
     margin-left: -1px;
 }
 
-.view-time-date:last-child {
+.schedule-view-time-date:last-child {
     border-right: none;
     margin: 0;
 }
 
 /* 일정 블록 */
-.view-time-date-event-block{
+.schedule-view-time-date-event-block{
     position: absolute;
     right: 0px;
 }
 
-.view-time-event {
+.schedule-view-time-event {
     position: relative;
     left: 1px;
     margin-right: 7px;
@@ -215,7 +206,7 @@
     color: #fff;
 }
 
-.view-time-resize-handle {
+.schedule-view-time-resize-handle {
     position: absolute;
     left: 0px;
     right: 7px;
@@ -228,7 +219,7 @@
     line-height: 0.6em;
 }
 
-.view-time-creation-guide {
+.schedule-view-time-creation-guide {
     left: 1px;
     right: 2px;
     position: absolute;
@@ -236,19 +227,19 @@
     opacity: 0.6;
 }
 
-.view-time-date:last-child .view-time-event,
-.view-time-date:last-child .view-time-creation-guide {
+.schedule-view-time-date:last-child .schedule-view-time-event,
+.schedule-view-time-date:last-child .schedule-view-time-creation-guide {
     left: 0px;
 }
 
-.view-time-move-guide .view-time-event,
-.view-time-move-guide .view-time-resize-handle {
+.schedule-view-time-move-guide .schedule-view-time-event,
+.schedule-view-time-move-guide .schedule-view-time-resize-handle {
     opacity: 0.7;
     z-index: 97;
 }
 
-.view-time-resize-guide .view-time-event,
-.view-time-resize-guide .view-time-resize-handle {
+.schedule-view-time-resize-guide .schedule-view-time-event,
+.schedule-view-time-resize-guide .schedule-view-time-resize-handle {
     opacity: 0.7;
     z-index: 97;
 }

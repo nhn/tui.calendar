@@ -37,7 +37,7 @@ function Time(width, options, container) {
     }, options);
 
     if (this.options.isToday) {
-        domutil.addClass(this.container, 'view-time-date-today');
+        domutil.addClass(this.container, 'schedule-view-time-date-today');
     }
 }
 
