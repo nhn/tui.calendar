@@ -11,7 +11,7 @@ describe('View', function() {
     describe('View()', function() {
         it('make an container element on body when container is not supplied.', function() {
             view = new View();
-            expect(document.querySelector('.view-' + util.stamp(view))).toEqual(view.container);
+            expect(document.querySelector('.schedule-view-' + util.stamp(view))).toEqual(view.container);
         });
 
         it('setting default container.', function() {
