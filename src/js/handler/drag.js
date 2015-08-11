@@ -39,18 +39,25 @@ Drag.prototype.destroy = function() {
 };
 
 /**
- * Toggle event for mouse drags.
- * @param {boolean} onOff Set true then bind events.
+ * Toggle events for mouse dragging.
+ * @param {boolean} toBind - bind events related with dragging when supplied "true"
  */
-Drag.prototype._toggleDragEvent = function(onOff) {
-    var prefix = ['disable', 'enable'],
-        prefixEvent = ['on', 'off'],
-        container = this.container,
-        flag = +(!onOff);
+Drag.prototype._toggleDragEvent = function(toBind) {
+    var container = this.container,
+        domMethod,
+        method;
 
-    domutil[prefix[flag] + 'TextSelection'](container);
-    domutil[prefix[flag] + 'ImageDrag'](container);
-    domevent[prefixEvent[flag]](global, {
+    if (toBind) {
+        domMethod = 'on';
+        method = 'disable';
+    } else {
+        domMethod = 'off';
+        method = 'enable';
+    }
+
+    domutil[method + 'TextSelection'](container);
+    domutil[method + 'ImageDrag'](container);
+    domevent[domMethod](global, {
         mousemove: this._onMouseMove,
         mouseup: this._onMouseUp
     }, this);
