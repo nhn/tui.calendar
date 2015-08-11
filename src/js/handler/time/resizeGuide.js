@@ -121,7 +121,9 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
         ),
         guideElement;
 
-    domutil.addClass(global.document.body, 'view-resizing');
+    if (!util.browser.msie) {
+        domutil.addClass(global.document.body, 'view-resizing');
+    }
 
     if (!originElement) {
         return;

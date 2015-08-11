@@ -138,7 +138,9 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         bottomLimit,
         top;
 
-    domutil.addClass(global.document.body, 'view-dragging');
+    if (!util.browser.msie) {
+        domutil.addClass(global.document.body, 'view-dragging');
+    }
 
     if (this._container !== timeView.container) {
         this._container = timeView.container;
