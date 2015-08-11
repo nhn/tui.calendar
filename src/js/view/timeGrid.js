@@ -55,6 +55,11 @@ function TimeGrid(options, container) {
      */
     this.intervalID = 0;
 
+    /**
+     * @type {boolean}
+     */
+    this._scrolled = false;
+
     this.attachEvent();
 }
 
@@ -170,7 +175,10 @@ TimeGrid.prototype.render = function(viewModel) {
     this.hourmarker = domutil.find('.view-time-hourmarker', container);
     this.refreshHourmarker();
 
-    this.scrollToNow();
+    if (!this._scrolled) {
+        this._scrolled = true;
+        this.scrollToNow();
+    }
 };
 
 /**
