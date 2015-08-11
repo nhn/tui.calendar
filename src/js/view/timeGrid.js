@@ -229,7 +229,8 @@ TimeGrid.prototype._getTopByTime = function(time) {
         start = datetime.start(now),
         hourStart = this.options.hourStart,
         gridSize = this._getGridSize(),
-        offset;
+        offset,
+        top;
 
     if (!gridSize) {
         return 0;
@@ -240,7 +241,9 @@ TimeGrid.prototype._getTopByTime = function(time) {
         offset -= datetime.millisecondsFrom('hour', hourStart);
     }
 
-    return (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length));
+    top = (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length));
+
+    return top;
 };
 
 /**
