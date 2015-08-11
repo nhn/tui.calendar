@@ -32,48 +32,37 @@ describe('View/TimeGrid', function() {
         expect(result).toEqual(expected);
     });
 
-    describe('_getHourmarkerViewModel()', function() {
+    describe('_getTopByTime()', function() {
         var originDate,
-            current,
-            start,
-            obj;
+            mock;
 
         beforeEach(function() {
-            originDate = window.Date;
-            spyOn(window, 'Date');
-            obj = {
+            mock = {
                 _getGridSize: function() { return [200, 300]; },
-                _getBaseViewModel: function() { return {hours: {length: 9}} },
+                _getBaseViewModel: function() { return {hours: {length: 24}} },
                 options: {
-                    hourStart: 3,
-                    hourEnd: 11
+                    hourStart: 0,
+                    hourEnd: 24 
                 }
             };
-
-            current = new originDate('2015-05-05T07:30:00+09:00');
-            start = new originDate('2015-05-05T00:00:00+09:00');
-
-            window.Date.and.returnValue(current);
-            spyOn(ne.dooray.calendar.datetime, 'start').and.returnValue(start);
         });
 
-        it('Calculate hourmarker viewModel accuratly.', function() {
-            var expected = {
-                top: 150,
-                text: '07:30'
-            };
-
-            var result = proto._getHourmarkerViewModel.call(obj);
-            
-            expect(result).toEqual(expected);
+        it('calculate related CSS top pixel value by time object.', function() {
+            // 12:00:00 is middle time of one days. return 150 when grid height is 300
+            expect(proto._getTopByTime.call(mock, new Date('2015-05-05T12:00:00+09:00'))).toBe(150);
         });
 
-        it('Return false when grid rendered yet.', function() {
-            spyOn(obj, '_getGridSize').and.returnValue(false);
+        it('calculate properly when hourStart, hourEnd is changed.', function() {
+            mock.options.hourStart = 9;
+            mock.options.hourEnd = 14;
+            mock._getBaseViewModel = function() { return {hours: {length: 5}}; };
 
-            var result = proto._getHourmarkerViewModel.call(obj);
+            expect(proto._getTopByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(120);
+        });
 
-            expect(result).toBe(false);
+        it('return 0 when view rendered yet.', function() {
+            mock._getGridSize = function() {return false;};
+            expect(proto._getTopByTime.call(mock, null)).toBe(0)
         });
     });
 });

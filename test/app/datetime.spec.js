@@ -62,6 +62,7 @@ describe('datetime', function() {
     it('start() return 00:00:00 supplied date.', function() {
         var d = new Date('2015/05/21 18:30:00');
         expect(dt.start(d)).toEqual(new Date('2015/05/21'));
+        expect(d).toEqual(new Date('2015/05/21 18:30:00'));
     });
 
     it('end() return 23:59:59 supplied date.', function() {

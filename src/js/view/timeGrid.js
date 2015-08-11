@@ -169,6 +169,8 @@ TimeGrid.prototype.render = function(viewModel) {
      **********/
     this.hourmarker = domutil.find('.view-time-hourmarker', container);
     this.refreshHourmarker();
+
+    this.scrollToNow();
 };
 
 /**
@@ -188,7 +190,6 @@ TimeGrid.prototype.refreshHourmarker = function() {
     todaymarker = domutil.find('.view-time-todaymarker', hourmarker);
     text = domutil.find('.view-time-hourmarker-time', hourmarker);
 
-    //TODO: debounce 0.5px units.
     reqAnimFrame.requestAnimFrame(function() {
         hourmarker.style.display = 'block';
         hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
@@ -219,18 +220,19 @@ TimeGrid.prototype._getGridSize = function() {
 };
 
 /**
- * Get Hourmarker viewmodel.
- * @returns {object} ViewModel of hourmarker.
+ * @param {Date} [time] - date object to convert pixel in grids.
+ * use **Date.now()** when not supplied.
+ * @returns {number} The pixel value represent current time in grids.
  */
-TimeGrid.prototype._getHourmarkerViewModel = function() {
-    var now = new Date(),
+TimeGrid.prototype._getTopByTime = function(time) {
+    var now = util.isDate(time) ? new Date(time.getTime()) : new Date(),
         start = datetime.start(now),
         hourStart = this.options.hourStart,
         gridSize = this._getGridSize(),
         offset;
 
     if (!gridSize) {
-        return false;
+        return 0;
     }
 
     offset = +now - +start;
@@ -238,9 +240,17 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
         offset -= datetime.millisecondsFrom('hour', hourStart);
     }
 
+    return (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length));
+};
+
+/**
+ * Get Hourmarker viewmodel.
+ * @returns {object} ViewModel of hourmarker.
+ */
+TimeGrid.prototype._getHourmarkerViewModel = function() {
     return {
-        top: (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length)),
-        text: datetime.format(now, 'HH:mm')
+        top: this._getTopByTime(),
+        text: datetime.format(new Date(), 'HH:mm')
     };
 };
 
@@ -250,6 +260,16 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
 TimeGrid.prototype.attachEvent = function() {
     window.clearInterval(this.intervalID);
     this.intervalID = window.setInterval(util.bind(this.onTick, this), TICK_INTERVAL);
+};
+
+/**
+ * Scroll time grid to current hourmarker.
+ */
+TimeGrid.prototype.scrollToNow = function() {
+    var currentHourTop = this._getTopByTime(),
+        viewBound = this.getViewBound();
+
+    this.container.scrollTop = (0, currentHourTop - (viewBound.height / 2));
 };
 
 
