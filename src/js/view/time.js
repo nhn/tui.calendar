@@ -56,20 +56,11 @@ Time.prototype._parseDateGroup = function(str) {
     return new Date(y, m - 1, d);
 };
 
-Time.prototype._getLastEventInColumn = function(matrix, col) {
-    var row = 0,
-        evt;
-
-    for (;; row += 1) {
-        evt = util.pick(matrix, row, col);
-        if (!util.pick(matrix, row + 1, col)) {
-            break;
-        }
-    }
-
-    return evt;
-};
-
+/**
+ * Make array with start and end times on events.
+ * @param {array[]} matrix - matrix from controller.
+ * @returns {array[]} starttime, endtime array (exclude first row's events)
+ */
 Time.prototype._generateRowMap = function(matrix) {
     var row,
         col,
@@ -88,11 +79,7 @@ Time.prototype._generateRowMap = function(matrix) {
                 break;
             }
 
-            cursor.push({
-                model: event,
-                starts: event.starts.getTime(),
-                ends: event.ends.getTime()
-            });
+            cursor.push([event.starts.getTime(), event.ends.getTime()]);
         }
 
         map.push(cursor);
@@ -100,6 +87,40 @@ Time.prototype._generateRowMap = function(matrix) {
     }
 
     return map;
+};
+
+/**
+ * Get collision information from list
+ * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
+ * @param {number} start - event start time that want to detect collisions.
+ * @param {number} end - event end time that want to detect collisions.
+ * @returns {boolean} target has collide in supplied array?
+ */
+Time.prototype._hasCollide = function(arr, start, end) {
+    var startStart,
+        startEnd,
+        endStart,
+        endEnd,
+        getFunc = function(index) {
+            return function(block) {
+                return block[index];
+            };
+        },
+        abs = Math.abs,
+        compare = array.compare.num.asc,
+        hasCollide;
+
+    if (!arr.length) {
+        return false;
+    }
+
+    startStart = abs(array.bsearch(arr, start, getFunc(0), compare));
+    startEnd = abs(array.bsearch(arr, start, getFunc(1), compare));
+    endStart = abs(array.bsearch(arr, end, getFunc(0), compare));
+    endEnd = abs(array.bsearch(arr, end, getFunc(1), compare));
+    hasCollide = !(startStart === startEnd && startEnd === endStart && endStart === endEnd);
+
+    return hasCollide;
 };
 
 /**
@@ -113,14 +134,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         hourEnd = options.hourEnd,
         containerBound,
         todayStart,
-        baseMil,
-        abs = Math.abs,
-        getStartFunc = function(m) {
-            return m.starts + 1;
-        },
-        getEndFunc = function(m) {
-            return m.ends - 1;
-        };
+        baseMil;
 
     /**
      * Calculate each event element bounds relative with rendered hour milliseconds and
@@ -152,15 +166,13 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
         forEachArr(matrix, function(row) {
             forEachArr(row, function(event, col, scope) {
-                var collision = 0,
+                var startTime,
+                    endTime,
+                    hasCollide,
+                    collision = 0,
                     emptySpace = 1,
-                    map,
                     width,
                     height,
-                    startStart,
-                    startEnd,
-                    endStart,
-                    endEnd,
                     top,
                     i;
 
@@ -176,43 +188,14 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                 top = (containerBound.height * top) / baseMil;
                 height = (containerBound.height * event.duration()) / baseMil;
 
+                startTime = event.starts.getTime() + 1;
+                endTime = event.ends.getTime() - 1;
+
                 // search real collision by using binary map.
                 for (i = (col + 1); i < maxRowLength; i += 1) {
-                    map = binaryMap[i - 1];
+                    hasCollide = this._hasCollide(binaryMap[i - 1], startTime, endTime);
 
-                    if (!map.length) {
-                        break;
-                    }
-
-                    startStart = abs(array.bsearch(
-                        map,
-                        event.starts.getTime(),
-                        getStartFunc,
-                        array.compare.num.asc
-                    ));
-
-                    startEnd = abs(array.bsearch(
-                        map,
-                        event.starts.getTime(),
-                        getEndFunc,
-                        array.compare.num.asc
-                    ));
-
-                    endStart = abs(array.bsearch(
-                        map,
-                        event.ends.getTime(),
-                        getStartFunc,
-                        array.compare.num.asc
-                    ));
-
-                    endEnd = abs(array.bsearch(
-                        map,
-                        event.ends.getTime(),
-                        getEndFunc,
-                        array.compare.num.asc
-                    ));
-
-                    if (!(startStart === startEnd && startEnd === endStart && endStart === endEnd)) {
+                    if (hasCollide) {
                         collision += 1;
                         break;
                     }
@@ -222,6 +205,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
                 width = widthPercent * (emptySpace);
 
+                // set width auto when has no collistions.
                 if (!collision) {
                     width = null;
                 }
