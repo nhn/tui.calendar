@@ -4,9 +4,7 @@
  */
 'use strict';
 var util = global.ne.util;
-var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
-var domevent = require('../../common/domevent');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
 var ratio = require('./core')._ratio;
@@ -94,7 +92,7 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
 
 /**
  * Refresh guide element
- * @param {string} top - guide element's style top.
+ * @param {string} height - guide element's style height.
  */
 TimeResizeGuide.prototype._refreshGuideElement = function(height) {
     var guideElement = this.guideElement;

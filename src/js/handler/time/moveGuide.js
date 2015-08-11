@@ -6,7 +6,6 @@
 
 var util = global.ne.util;
 var domutil = require('../../common/domutil');
-var domevent = require('../../common/domevent');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
 var ratio = require('./core')._ratio;
