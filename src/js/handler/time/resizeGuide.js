@@ -76,15 +76,15 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement,
         originElement = this._originEventElement;
 
-    domutil.removeClass(global.document.body, 'view-resizing');
+    if (!util.browser.msie) {
+        domutil.removeClass(global.document.body, 'view-resizing');
+    }
 
     if (originElement) {
         originElement.style.display = 'block';
     }
 
-    if (guideElement && guideElement.parentNode) {
-        guideElement.parentNode.removeChild(guideElement);
-    }
+    domutil.remove(guideElement);
 
     this.guideElement = this._getTopFunc = this._originEventElement =
         this._startHeightPixel = this._startGridY = this._startTopPixel = null;

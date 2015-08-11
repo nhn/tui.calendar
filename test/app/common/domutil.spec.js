@@ -11,6 +11,20 @@ describe('module:domutil', function() {
         btn = domutil.get('btn');
     });
 
+    it('can remove element with safely.', function() {
+        var vEl = document.createElement('div');
+
+        expect(function() {
+            domutil.remove(vEl);
+        }).not.toThrow();
+
+        var span = document.getElementById('myspan');
+
+        domutil.remove(span);
+
+        expect(document.getElementById('myspan')).toBe(null);
+    });
+
     it('문서 내 엘리먼트를 id를 이용하여 쉽게 탐색할 수 있다', function() {
         expect(map.id).toEqual('map');
         expect(map.tagName).toEqual('DIV');

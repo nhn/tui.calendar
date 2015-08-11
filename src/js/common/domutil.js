@@ -20,7 +20,8 @@ domutil = {
     /**
      * Create DOM element and return it.
      * @param {string} tagName Tag name to append.
-     * @param {HTMLElement} [container] HTML element will be parent to created element. if not supplied, document.body will use.
+     * @param {HTMLElement} [container] HTML element will be parent to created element.
+     * if not supplied, will use **document.body**
      * @param {string} [className] Design class names to appling created element.
      * @returns {HTMLElement} HTML element created.
      */
@@ -39,6 +40,16 @@ domutil = {
         }
 
         return el;
+    },
+
+    /**
+     * Remove element from parent node.
+     * @param {HTMLElement} el - element to remove.
+     */
+    remove: function(el) {
+        if (el && el.parentNode) {
+            el.parentNode.removeChild(el);
+        }
     },
 
     /**

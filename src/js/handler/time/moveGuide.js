@@ -70,11 +70,11 @@ TimeMoveGuide.prototype.destroy = function() {
 TimeMoveGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement;
 
-    domutil.removeClass(global.document.body, 'view-dragging');
-
-    if (guideElement && guideElement.parentNode) {
-        guideElement.parentNode.removeChild(guideElement);
+    if (!util.browser.msie) {
+        domutil.removeClass(global.document.body, 'view-dragging');
     }
+
+    domutil.remove(guideElement);
 
     this.guideElement = this._getTopFunc =
         this._startGridY = this._startTopPixel = null;

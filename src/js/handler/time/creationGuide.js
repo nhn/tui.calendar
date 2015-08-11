@@ -63,9 +63,7 @@ TimeCreationGuide.prototype.destroy = function() {
 TimeCreationGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement;
 
-    if (guideElement.parentNode) {
-        guideElement.parentNode.removeChild(guideElement);
-    }
+    domutil.remove(guideElement);
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.display = 'none';
