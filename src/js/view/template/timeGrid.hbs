@@ -1,6 +1,6 @@
 <div class="schedule-view-timegrid">
     <ul class="schedule-view-timegrid-left">
-        {{#each hours}}<li>{{hour}}</li>{{/each}}
+        {{#each hours}}<li class="schedule-view-timegrid-hour-{{hour}}"><span>{{hour}}</span></li>{{/each}}
     </ul>
     <div class="schedule-view-timegrid-right">
         {{#each hours}}<div class="schedule-view-timegrid-grid"></div>{{/each}}

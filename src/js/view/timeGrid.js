@@ -169,6 +169,8 @@ TimeGrid.prototype.render = function(viewModel) {
         domutil.find('.schedule-view-timegrid-events-container', container)
     );
 
+    this._hourLabels = domutil.find('ul', container);
+
     /**********
      * Render hourmarker
      **********/
@@ -185,11 +187,15 @@ TimeGrid.prototype.render = function(viewModel) {
  * Refresh hourmarker element.
  */
 TimeGrid.prototype.refreshHourmarker = function() {
-    var hourmarker = this.hourmarker,
+    var hourLabels = this._hourLabels,
+        hourmarker = this.hourmarker,
+
         viewModel = this._getHourmarkerViewModel(),
         todaymarkerLeft = this.todaymarkerLeft,
         todaymarker,
-        text;
+        text,
+        labelToVisible,
+        labelToInvisible;
 
     if (!hourmarker || !viewModel) {
         return;
@@ -197,8 +203,20 @@ TimeGrid.prototype.refreshHourmarker = function() {
 
     todaymarker = domutil.find('.schedule-view-timegrid-todaymarker', hourmarker);
     text = domutil.find('.schedule-view-timegrid-hourmarker-time', hourmarker);
+    labelToVisible = domutil.find('.schedule-invisible', hourLabels);
+    labelToInvisible = domutil.find('.schedule-view-timegrid-hour-' + viewModel.hour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
+        if (labelToVisible !== labelToInvisible) {
+            if (labelToVisible) {
+                domutil.removeClass(labelToVisible, 'schedule-invisible');
+            }
+
+            if (labelToInvisible) {
+                domutil.addClass(labelToInvisible, 'schedule-invisible');
+            }
+        }
+
         hourmarker.style.display = 'block';
         hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
 
@@ -259,9 +277,12 @@ TimeGrid.prototype._getTopByTime = function(time) {
  * @returns {object} ViewModel of hourmarker.
  */
 TimeGrid.prototype._getHourmarkerViewModel = function() {
+    var now = new Date();
+
     return {
         top: this._getTopByTime(),
-        text: datetime.format(new Date(), 'HH:mm')
+        hour: now.getHours(),
+        text: datetime.format(now, 'HH:mm')
     };
 };
 

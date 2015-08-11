@@ -20,6 +20,10 @@
     display: none !important;
 }
 
+.schedule-invisible span {
+    visibility: hidden;
+}
+
 .schedule-view-week-container {
     width: 100%;
     display: inline-block;
