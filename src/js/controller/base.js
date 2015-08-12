@@ -6,6 +6,7 @@
 
 var util = global.ne.util;
 var Event = require('../model/event');
+var EventViewModel = require('../model/viewModel/event');
 var datetime = require('../datetime');
 var Collection = require('../common/collection');
 
@@ -59,10 +60,6 @@ Base.prototype._getContainDatesInEvent = function(event) {
  */
 Base.prototype.createEvent = function(options) {
     var event = this.addEvent(Event.create(options));
-
-    if (event.duration().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        debugger;
-    }
 
     /**
      * @event Base#createdEvent
@@ -138,18 +135,18 @@ Base.prototype.findByDateRange = function(starts, ends) {
         result = {},
         matrix,
         ymd,
-        collection;
+        viewModels;
 
     util.forEachArray(range, function(date) {
         ymd = dformat(date, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
-        collection = result[ymd] = new Collection(function(event) {
-            return util.stamp(event);
+        viewModels = result[ymd] = new Collection(function(event) {
+            return util.stamp(event.model);
         });
 
         if (matrix && matrix.length) {
-            collection.add.apply(collection, util.map(matrix, function(id) {
-                return ownEvents[id];
+            viewModels.add.apply(viewModels, util.map(matrix, function(id) {
+                return EventViewModel.create(ownEvents[id]);
             }));
         }
     });

@@ -74,10 +74,12 @@ describe('controller/base', function() {
 
     describe('findByDateRange()', function() {
         var eventList,
+            viewModels,
             idList;
 
         beforeEach(function() {
             eventList = [];
+            viewModels = [];
             idList = [];
 
             util.forEach(set, function(data) {
@@ -86,23 +88,37 @@ describe('controller/base', function() {
                 idList.push(util.stamp(item));
             });
 
-            // Add event collection equation tester.
-            jasmine.addCustomEqualityTester(function(first, second) {
-                var isEqual = true;
-                if (first.constructor === Collection && second.constructor === Collection) {
-                    if (first.length !== second.length) {
-                        return false;
-                    }
+            // Add returned viewmodel matcher.
+            jasmine.addMatchers({
+                toEqualViewModel: function(util, customEqualityTesters) {
+                    return {
+                        compare: function(actual, expected) {
+                            var result = {},
+                                isEqual = true;
 
-                    first.each(function(item, id) {
-                        if (!item.equals(second.items[id])) {
-                            isEqual = false;
-                            return false;
+                            ne.util.forEach(expected, function(compareTo, ymd) {
+                                var models = actual[ymd];
+
+                                if (!models) {
+                                    isEqual = false;
+                                    return false;
+                                }
+
+                                titleList = ne.util.map(models.items, function(item) {
+                                    return item.valueOf().title;
+                                });
+
+                                isEqual = util.equals(titleList.sort(), expected[ymd].sort());
+
+                                return isEqual;
+                            });
+
+                            result.pass = isEqual;
+
+                            return result;
                         }
-                    });
+                    };
                 }
-
-                return isEqual;
             });
 
             /*
@@ -115,22 +131,10 @@ describe('controller/base', function() {
         });
 
         it('by YMD', function() {
-            var col1 = new Collection(function(event) {
-                return util.stamp(event);
-            });
-            var col2 = new Collection(function(event) {
-                return util.stamp(event);
-            });
-            var col3 = new Collection(function(event) {
-                return util.stamp(event);
-            });
-            col2.add(eventList[0]);
-            col3.add(eventList[0], eventList[1]);
-
             var expected = {
-                '20150430': col1,
-                '20150501': col2,
-                '20150502': col3
+                '20150430': [],
+                '20150501': ['hunting'],
+                '20150502': ['hunting', 'A']
             };
 
             var starts = new Date('2015/04/30'),
@@ -138,22 +142,13 @@ describe('controller/base', function() {
 
             var result = ctrl.findByDateRange(starts, ends);
 
-            expect(result).toEqual(expected);
+            expect(result).toEqualViewModel(expected);
         });
 
-        it('return sorted dates.', function() {
-            var col1 = new Collection(function(event) {
-                return util.stamp(event);
-            });
-            var col2 = new Collection(function(event) {
-                return util.stamp(event);
-            });
-            col1.add(eventList[0], eventList[3]);
-            col2.add(eventList[3], eventList[1], eventList[2]);
-
+        it('return viewmodels in dates properly.', function() {
             var expected = {
-                '20150502': col1,
-                '20150503': col2
+                '20150502': ['hunting', 'A'],
+                '20150503': ['A', 'meeting', 'physical training']
             };
 
             var starts = new Date('2015/05/02'),
@@ -161,7 +156,7 @@ describe('controller/base', function() {
 
             var result = ctrl.findByDateRange(starts, ends);
 
-            expect(result).toEqual(expected);
+            expect(result).toEqualViewModel(expected);
         });
     });
 
