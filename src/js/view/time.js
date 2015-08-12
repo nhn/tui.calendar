@@ -57,73 +57,6 @@ Time.prototype._parseDateGroup = function(str) {
 };
 
 /**
- * Make array with start and end times on events.
- * @param {array[]} matrix - matrix from controller.
- * @returns {array[]} starttime, endtime array (exclude first row's events)
- */
-Time.prototype._generateRowMap = function(matrix) {
-    var row,
-        col,
-        event,
-        map = [],
-        cursor = [],
-        maxColLen = Math.max.apply(null, util.map(matrix, function(col) {
-            return col.length;
-        }));
-
-    for (col = 1; col < maxColLen; col += 1) {
-        for (row = 0; ;row += 1) {
-            event = util.pick(matrix, row, col);
-
-            if (!event) {
-                break;
-            }
-
-            cursor.push([event.starts.getTime(), event.ends.getTime()]);
-        }
-
-        map.push(cursor);
-        cursor = [];
-    }
-
-    return map;
-};
-
-/**
- * Get collision information from list
- * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
- * @param {number} start - event start time that want to detect collisions.
- * @param {number} end - event end time that want to detect collisions.
- * @returns {boolean} target has collide in supplied array?
- */
-Time.prototype._hasCollide = function(arr, start, end) {
-    var startStart,
-        startEnd,
-        endStart,
-        endEnd,
-        getFunc = function(index) {
-            return function(block) {
-                return block[index];
-            };
-        },
-        abs = Math.abs,
-        compare = array.compare.num.asc,
-        hasCollide;
-
-    if (!arr.length) {
-        return false;
-    }
-
-    startStart = abs(array.bsearch(arr, start, getFunc(0), compare));
-    startEnd = abs(array.bsearch(arr, start, getFunc(1), compare));
-    endStart = abs(array.bsearch(arr, end, getFunc(0), compare));
-    endEnd = abs(array.bsearch(arr, end, getFunc(1), compare));
-    hasCollide = !(startStart === startEnd && startEnd === endStart && endStart === endEnd);
-
-    return hasCollide;
-};
-
-/**
  * Set viewmodels for rendering.
  * @param {string} ymd The date of events. YYYYMMDD format.
  * @param {array} matrices The matrices for event placing.
@@ -145,13 +78,10 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
     baseMil = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
 
     forEachArr(matrices, function(matrix) {
-        var binaryMap,
-            maxRowLength,
+        var maxRowLength,
             widthPercent,
             leftPercents,
             i;
-
-        binaryMap = this._generateRowMap(matrix);
 
         maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
             return row.length;
@@ -165,60 +95,38 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         }
 
         forEachArr(matrix, function(row) {
-            forEachArr(row, function(event, col, scope) {
-                var startTime,
-                    endTime,
-                    hasCollide,
-                    collision = 0,
-                    emptySpace = 1,
-                    width,
+            forEachArr(row, function(viewModel, col) {
+                var width,
                     height,
-                    top,
-                    i;
+                    top;
 
-                if (!event) {
+                if (!viewModel) {
                     return;
                 }
 
-                top = event.starts - todayStart;
+                top = viewModel.valueOf().starts - todayStart;
                 if (hourStart) {
                     top -= datetime.millisecondsFrom('hour', hourStart);
                 }
                 // containerHeight : milliseconds in day = x : event's milliseconds
                 top = (containerBound.height * top) / baseMil;
-                height = (containerBound.height * event.duration()) / baseMil;
+                height = (containerBound.height * viewModel.duration()) / baseMil;
+                width = widthPercent * (viewModel.extraSpace + 1);
 
-                startTime = event.starts.getTime() + 1;
-                endTime = event.ends.getTime() - 1;
-
-                // search real collision by using binary map.
-                for (i = (col + 1); i < maxRowLength; i += 1) {
-                    hasCollide = this._hasCollide(binaryMap[i - 1], startTime, endTime);
-
-                    if (hasCollide) {
-                        collision += 1;
-                        break;
-                    }
-
-                    emptySpace += 1;
-                }
-
-                width = widthPercent * (emptySpace);
-
-                // set width auto when has no collistions.
-                if (!collision) {
+                // set width auto when has no collisions.
+                if (!viewModel.hasCollide) {
                     width = null;
                 }
 
-                scope[col] = util.extend(EventViewModel.create(event), {
+                util.extend(viewModel, {
                     width: width,
                     height: height,
                     top: top,
                     left: leftPercents[col]
                 });
-            }, this);
-        }, this);
-    }, this);
+            });
+        });
+    });
 };
 
 /**
