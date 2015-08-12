@@ -20,6 +20,13 @@ describe('module:Time.Creation', function() {
     it('_retriveEventData()', function() {
         var container = document.createElement('div');
         container.style.height = '100px';
+        spyOn(container, 'getBoundingClientRect').and.returnValue({
+            left: 0,
+            top: 0
+        });
+        container.clientLeft = 0;
+        container.clientTop = 0;
+
         var time = new Time(100, null, container);
 
         spyOn(time, 'getDate').and.returnValue(new Date('2015-05-05T00:00:00+09:00'));
