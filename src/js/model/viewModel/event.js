@@ -12,14 +12,10 @@
  */
 function EventViewModel(event) {
     /**
-     * @type {Event} The model of event.
+     * The model of event.
+     * @type {Event}
      */
     this.model = event;
-
-    /**
-     * @type {HTMLElement} The HTMLElement of rendered.
-     */
-    this.elements = null;
 
     /**
      * @type {number}
@@ -40,6 +36,18 @@ function EventViewModel(event) {
      * @type {number}
      */
     this.height = 0;
+
+    /**
+     * Represent event has collide with other events when rendering.
+     * @type {boolean}
+     */
+    this.hasCollide = false;
+
+    /**
+     * Extra space at rigth side of this event.
+     * @type {number}
+     */
+    this.extraSpace = 0;
 }
 
 /**********
@@ -68,7 +76,22 @@ EventViewModel.prototype.valueOf = function() {
     return this.model;
 };
 
-// TODO: event handler, ... etc.
+/**
+ * Link duration method
+ * @returns {number} Event#duration result.
+ */
+EventViewModel.prototype.duration = function() {
+    return this.model.duration();
+};
+
+/**
+ * Link collidesWith method
+ * @param {Event|EventViewModel} viewModel - Model or viewmodel instance of Events.
+ * @returns {boolean} Event#collidesWith result.
+ */
+EventViewModel.prototype.collidesWith = function(viewModel) {
+    return this.model.collidesWith(viewModel.valueOf());
+};
 
 module.exports = EventViewModel;
 
