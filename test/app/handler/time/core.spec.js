@@ -1,5 +1,6 @@
 /*eslint-disable*/
 var core = ne.dooray.calendar.TimeCore;
+var Time = ne.dooray.calendar.Time;
 describe('module:Time.Creation', function() {
     it('_nearest()', function() {
         expect(core._nearest(0.5, [0.3, 0.6, 0.9])).toBe(0.6);
@@ -14,5 +15,38 @@ describe('module:Time.Creation', function() {
         // 처리를 하므로 1이 되고, 51px는 1.5가 된다.
         expect(core._calcGridYIndex(10800000, 100, 50)).toBe(1);
         expect(core._calcGridYIndex(10800000, 100, 51)).toBe(1.5);
+    });
+
+    it('_retriveEventData()', function() {
+        var container = document.createElement('div');
+        container.style.height = '100px';
+        var time = new Time(100, null, container);
+
+        spyOn(time, 'getDate').and.returnValue(new Date('2015-05-05T00:00:00+09:00'));
+        spyOn(time, 'getViewBound').and.returnValue({
+            height: 230 
+        });
+
+        var func = core._retriveEventData(time);
+
+        // center of timeview grid.
+        var vMouseEvent = {
+            target: 'hello',
+            clientX: 10,
+            clientY: 115 
+        };
+
+        var expected = {
+            target: 'hello',
+            relatedView: time,
+            originEvent: vMouseEvent,
+            mouseY: 115,
+            gridY: 12,
+            timeY: (new Date('2015-05-05T12:00:00+09:00').getTime()),
+            nearestGridY: 12,
+            nearestGridTimeY: (new Date('2015-05-05T12:00:00+09:00').getTime())
+        };
+
+        expect(func(vMouseEvent)).toEqual(expected);
     });
 });
