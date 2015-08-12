@@ -99,6 +99,74 @@ describe('Base.Week', function() {
         });
     });
 
+    describe('_hasCollide()', function() {
+        var supplied;
+
+        beforeEach(function() {
+            supplied = [[2, 5], [8, 11], [14, 17]];
+        });
+
+        it('return false when supplied empty array', function() {
+            expect(ctrl.hasCollide([], 3, 4)).toBe(false);
+        });
+
+        it('calculate collision information properly.', function() {
+            var expected = {collision: 0, emptySpace:1};
+            expect(ctrl.hasCollide(supplied, 6, 7)).toBe(false);
+        });
+    });
+
+    describe('generateTimeArrayInRow()', function() {
+        /**
+         * |---|---|
+         * | 1 | 2 |
+         * |---|---|
+         * | 3 | 5 |
+         * |---|---|
+         * | 4 |   |
+         * |---|---|
+         *
+         * to
+         *
+         * [
+         *     [[2.start, 2.end], [5.start, 5.end]]
+         * ]
+         */
+
+        var supplied,
+            expected;
+
+        function TimeMock(start, end) {
+            this.starts = {
+                getTime: function() {return start;}
+            };
+
+            this.ends = {
+                getTime: function() {return end;}
+            };
+        }
+
+        function getTime(start, end) {
+            return new TimeMock(start, end);
+        }
+
+        beforeEach(function() {
+            supplied = [
+                [getTime(1, 2), getTime(1, 2)],
+                [getTime(4, 5), getTime(5, 6)],
+                [getTime(7, 8)]
+            ];
+
+            expected = [
+                [[1, 2], [5, 6]]
+            ];
+        });
+
+        it('get rowmap properly.', function() {
+            expect(ctrl.generateTimeArrayInRow(supplied)).toEqual(expected);
+        });
+    });
+
     describe('findByDateRange', function() {
         var eventList,
             idList;
