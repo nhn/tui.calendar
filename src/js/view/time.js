@@ -57,6 +57,46 @@ Time.prototype._parseDateGroup = function(str) {
 };
 
 /**
+ * @param {EventViewModel} viewModel - view model instance to calculate bound.
+ * @param {object} options - options for calculating event element's bound.
+ * @param {Date} options.todayStart - date object represent event date's start (00:00:00)
+ * @param {number} options.baseMS - the number of milliseconds to render event blocks.
+ * @param {number} options.baseHeight - pixel value related with baseMS options.
+ * @param {number[]} options.baseLeft - left position percents for each columns.
+ * @param {number} options.baseWidth - the unit of event blocks width percent.
+ * @param {number} options.columnIndex - the number index of event blocks.
+ * it represent rendering index from left sides in view.
+ * @returns {object} bound object for supplied view model.
+ */
+Time.prototype.getEventViewBound = function(viewModel, options) {
+    var baseMS = options.baseMS,
+        baseHeight = options.baseHeight,
+        offsetStart,
+        width,
+        height,
+        top;
+
+    offsetStart = viewModel.valueOf().starts - options.todayStart;
+
+    // containerHeight : milliseconds in day = x : event's milliseconds
+    top = (baseHeight * offsetStart) / baseMS;
+    height = (baseHeight * viewModel.duration()) / baseMS;
+    width = options.baseWidth * (viewModel.extraSpace + 1);
+
+    // set width auto when has no collisions.
+    if (!viewModel.hasCollide) {
+        width = null;
+    }
+
+    return {
+        top: top,
+        left: options.baseLeft[options.columnIndex],
+        width: width,
+        height: height
+    };
+};
+
+/**
  * Set viewmodels for rendering.
  * @param {string} ymd The date of events. YYYYMMDD format.
  * @param {array} matrices The matrices for event placing.
@@ -65,17 +105,18 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
     var options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
-        containerBound,
+        containerHeight,
         todayStart,
-        baseMil;
+        baseMS;
 
     /**
      * Calculate each event element bounds relative with rendered hour milliseconds and
      * wrap each event model to viewmodels.
      */
-    containerBound = this.getViewBound();
+    containerHeight = this.getViewBound().height;
     todayStart = this._parseDateGroup(ymd);
-    baseMil = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
+    todayStart.setHours(hourStart);
+    baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
 
     forEachArr(matrices, function(matrix) {
         var maxRowLength,
@@ -96,37 +137,25 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
 
         forEachArr(matrix, function(row) {
             forEachArr(row, function(viewModel, col) {
-                var width,
-                    height,
-                    top;
+                var viewBound;
 
                 if (!viewModel) {
                     return;
                 }
 
-                top = viewModel.valueOf().starts - todayStart;
-                if (hourStart) {
-                    top -= datetime.millisecondsFrom('hour', hourStart);
-                }
-                // containerHeight : milliseconds in day = x : event's milliseconds
-                top = (containerBound.height * top) / baseMil;
-                height = (containerBound.height * viewModel.duration()) / baseMil;
-                width = widthPercent * (viewModel.extraSpace + 1);
-
-                // set width auto when has no collisions.
-                if (!viewModel.hasCollide) {
-                    width = null;
-                }
-
-                util.extend(viewModel, {
-                    width: width,
-                    height: height,
-                    top: top,
-                    left: leftPercents[col]
+                viewBound = this.getEventViewBound(viewModel, {
+                    todayStart: todayStart,
+                    baseMS: baseMS,
+                    baseLeft: leftPercents,
+                    baseWidth: widthPercent,
+                    baseHeight: containerHeight,
+                    columnIndex: col
                 });
-            });
-        });
-    });
+
+                util.extend(viewModel, viewBound);
+            }, this);
+        }, this);
+    }, this);
 };
 
 /**
