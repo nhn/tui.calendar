@@ -16,6 +16,7 @@ var forEachArr = util.forEachArray;
 var Week = {
     /**
      * Group EventViewModel array by type and sort it.
+     * @this Base.Week
      * @param {Collection} collection ViewModel collection
      * @returns {object} Grouped ViewModels
      */
@@ -49,6 +50,7 @@ var Week = {
 
     /**
      * Calculate collision group.
+     * @this Base.Week
      * @param {array} viewModels List of viewmodels.
      * @returns {array} Collision Group.
      */
@@ -97,6 +99,7 @@ var Week = {
 
     /**
      * Get row length by column index in 2d matrix.
+     * @this Base.Week
      * @param {array[]} arr2d Matrix
      * @param {number} col Column index.
      * @return {number} Last row number in column.
@@ -116,6 +119,7 @@ var Week = {
 
     /**
      * Calculate matrix for appointment block element placing.
+     * @this Base.Week
      * @param {Collection} collection model collection.
      * @param {array[]} collisionGroups Collision groups for event set.
      * @returns {array} matrices
@@ -161,6 +165,7 @@ var Week = {
 
     /**
      * Make array with start and end times on events.
+     * @this Base.Week
      * @param {array[]} matrix - matrix from controller.
      * @returns {array[]} starttime, endtime array (exclude first row's events)
      */
@@ -195,6 +200,7 @@ var Week = {
 
     /**
      * Get collision information from list
+     * @this Base.Week
      * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
      * @param {number} start - event start time that want to detect collisions.
      * @param {number} end - event end time that want to detect collisions.
@@ -229,6 +235,7 @@ var Week = {
 
     /**
      * Initialize values to viewmodels for detect real collision at rendering phase.
+     * @this Base.Week
      * @param {array[]} matrices - Matrix data.
      */
     getCollides: function(matrices) {
@@ -274,6 +281,7 @@ var Week = {
 
     /**
      * Populate events in date range.
+     * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
      * @returns {object} events grouped by dates.
@@ -282,7 +290,7 @@ var Week = {
         var eventsInRange = this.findByDateRange(starts, ends),
             result = {};
 
-        util.forEach(eventsInRange, function(collection, ymd) {
+        util.forEach(eventsInRange, /** @this Base.Week */ function(collection, ymd) {
             var grouped = this._getGroupedEventList(collection),
                 cursor = result[ymd] = {},
                 collisionGroups,
