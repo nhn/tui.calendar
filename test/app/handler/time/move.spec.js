@@ -1,7 +1,7 @@
 /*eslint-disable*/
-var domutil = ne.dooray.calendar.domutil;
-var TimeMove = ne.dooray.calendar.TimeMove;
 describe('handler/time.move', function() {
+    var domutil = ne.dooray.calendar.domutil;
+    var TimeMove = ne.dooray.calendar.TimeMove;
     var mockInstance;
 
     it('checkExpectedCondition()', function() {

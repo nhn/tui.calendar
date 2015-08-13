@@ -47,6 +47,9 @@ var TimeCore = require('./src/js/handler/time/core');
 var TimeCreation = require('./src/js/handler/time/creation');
 var TimeCreationGuide = require('./src/js/handler/time/creationGuide');
 var TimeMove = require('./src/js/handler/time/move');
+var TimeMoveGuide = require('./src/js/handler/time/moveGuide');
+var TimeResize = require('./src/js/handler/time/resize');
+var TimeResizeGuide = require('./src/js/handler/time/resizeGuide');
 
 /**
  * @namespace ne.dooray.calendar
@@ -78,5 +81,8 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     TimeCore: TimeCore,
     TimeCreation: TimeCreation,
     TimeCreationGuide: TimeCreationGuide,
-    TimeMove: TimeMove
+    TimeMove: TimeMove,
+    TimeMoveGuide: TimeMoveGuide,
+    TimeResize: TimeResize,
+    TimeResizeGuide: TimeResizeGuide
 });

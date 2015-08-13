@@ -1,7 +1,8 @@
 /*eslint-disable*/
-var core = ne.dooray.calendar.TimeCore;
-var Time = ne.dooray.calendar.Time;
 describe('module:Time.Creation', function() {
+    var core = ne.dooray.calendar.TimeCore;
+    var Time = ne.dooray.calendar.Time;
+
     it('_nearest()', function() {
         expect(core._nearest(0.5, [0.3, 0.6, 0.9])).toBe(0.6);
         expect(core._nearest(13, [5, 9, 11, 12, 15])).toBe(12);

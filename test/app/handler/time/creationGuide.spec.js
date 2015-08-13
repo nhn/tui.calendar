@@ -1,6 +1,6 @@
 /*eslint-disable*/
-var Guide = ne.dooray.calendar.TimeCreationGuide;
 describe('handler/time.creation.guide', function() {
+    var TimeResizeGuide = ne.dooray.calendar.TimeCreationGuide;
     var mockInstance;
 
     beforeEach(function() {
@@ -23,7 +23,7 @@ describe('handler/time.creation.guide', function() {
 
         timeViewMock.getViewBound.and.returnValue({height: 230});
 
-        Guide.prototype._onDragStart.call(mockInstance, eventData);
+        TimeResizeGuide.prototype._onDragStart.call(mockInstance, eventData);
 
         expect(mockInstance._refreshGuideElement).toHaveBeenCalledWith(115, jasmine.any(Number));
     });
@@ -34,19 +34,19 @@ describe('handler/time.creation.guide', function() {
             nearestGridY: 12
         };
         timeViewMock.getViewBound.and.returnValue({height: 230});
-        Guide.prototype._onDragStart.call(mockInstance, eventData);
+        TimeResizeGuide.prototype._onDragStart.call(mockInstance, eventData);
 
 
         // forward dragging. 
         mockInstance._refreshGuideElement.calls.reset();
         eventData.nearestGridY = 12.5;
-        Guide.prototype._onDrag.call(mockInstance, eventData);
+        TimeResizeGuide.prototype._onDrag.call(mockInstance, eventData);
         expect(mockInstance._refreshGuideElement).toHaveBeenCalledWith(115, jasmine.any(Number));
 
         // backward dragging.
         mockInstance._refreshGuideElement.calls.reset();
         eventData.nearestGridY = 10;
-        Guide.prototype._onDrag.call(mockInstance, eventData);
+        TimeResizeGuide.prototype._onDrag.call(mockInstance, eventData);
         var args = mockInstance._refreshGuideElement.calls.argsFor(0);
         expect(args[0]).toBeCloseTo(95.8, 0);
         expect(args[1]).toBeCloseTo(23.9, 0);
