@@ -3,10 +3,12 @@ var DayName = ne.dooray.calendar.DayName;
 describe('view/dayName', function() {
     it('Create viewmodel by date ranges.', function() {
         var expected = [{
+            day: 0,
             dayName: '일',
             date: 26,
             width: 50
         }, {
+            day: 1,
             dayName: '월',
             date: 27,
             width: 50

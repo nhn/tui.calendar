@@ -45,8 +45,11 @@ DayName.prototype._getBaseViewModel = function(start, end) {
         datetime.start(end),
         datetime.MILLISECONDS_PER_DAY
     ), function(d, i, arr) {
+        var day = d.getDay();
+
         return {
-            dayName: DAY_NAME.kor[d.getDay()],
+            day: day,
+            dayName: DAY_NAME.kor[day],
             date: d.getDate(),
             width: 100 / arr.length
         };

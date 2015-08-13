@@ -43,8 +43,7 @@ module.exports = {
      * @returns {string} css class
      */
     'dayname-isHolliday': function() {
-        if (this.dayName === '일' ||
-            this.dayName === '토') {
+        if (this.day === 0 || this.day === 6) {
             return 'schedule-view-dayname schedule-holliday';
         }
 
