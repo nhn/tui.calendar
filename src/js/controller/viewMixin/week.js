@@ -175,15 +175,15 @@ var Week = {
             }));
 
         for (col = 1; col < maxColLen; col += 1) {
-            for (row = 0; ;row += 1) {
-                event = util.pick(matrix, row, col);
+            row = 0;
+            event = util.pick(matrix, row, col);
 
-                if (!event) {
-                    break;
-                }
-
+            while (event) {
                 event = event.valueOf();
                 cursor.push([event.starts.getTime(), event.ends.getTime()]);
+
+                row += 1;
+                event = util.pick(matrix, row, col);
             }
 
             map.push(cursor);
@@ -234,8 +234,7 @@ var Week = {
     getCollides: function(matrices) {
         forEachArr(matrices, function(matrix) {
             var binaryMap,
-                maxRowLength,
-                i;
+                maxRowLength;
 
             binaryMap = this.generateTimeArrayInRow(matrix);
             maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
@@ -247,7 +246,8 @@ var Week = {
                     var model,
                         startTime,
                         endTime,
-                        hasCollide;
+                        hasCollide,
+                        i;
 
                     if (!viewModel) {
                         return;

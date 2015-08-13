@@ -17,14 +17,12 @@ var mixins = {
  * @returns {Base} The controller instance.
  */
 module.exports = function(mixinNames, ctrl) {
-    var target;
-
     mixinNames = mixinNames || [];
 
     ctrl = ctrl || new Base();
 
     util.forEach(mixinNames, function(name) {
-        target = ctrl[name] = {};
+        var target = ctrl[name] = {};
 
         util.forEach(mixins[name], function(method, methodName) {
             target[methodName] = util.bind(method, ctrl);
