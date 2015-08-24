@@ -3,7 +3,7 @@
  * Class for represent two dimensional x, y coordinates.
  *
  * It suppliy a group of functions for manipulate coordinates.
- * @author NHN Ent. FE Development Team <e0242@nhnent.com>
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @example
  * var p = point(10, 10);
  * var r1 = p.add(Point(5, 5));

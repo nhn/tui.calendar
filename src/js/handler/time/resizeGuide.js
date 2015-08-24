@@ -1,6 +1,6 @@
 /**
  * @fileoverview Module for Time.Resize effect while dragging.
- * @author NHN Ent. FE Development Team <e0242@nhnent.com>
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 var util = global.ne.util;

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Utility module for array sort, binary search.
- * @author NHN Ent. FE Development Team <e0242@nhnent.com>
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
