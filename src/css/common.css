@@ -1,0 +1,18 @@
+/**
+ * css for common design classes.
+ */
+
+.schedule-view-dragging {
+    cursor: move;
+}
+.schedule-view-resizing {
+    cursor: row-resize;
+}
+
+.schedule-view-hidden {
+    display: none !important;
+}
+
+.schedule-invisible span {
+    visibility: hidden;
+}

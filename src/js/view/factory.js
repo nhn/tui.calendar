@@ -11,6 +11,7 @@ var Week = require('./week');
 // Sub views
 var DayName = require('./dayname');
 var TimeGrid = require('./timeGrid');
+var Allday = require('./allday');
 
 // Handlers
 var Drag = require('../handler/drag');
@@ -49,13 +50,29 @@ module.exports = function(name, options, container) {
 
     if (name === 'Week') {
         layoutView.addChild(function(container) {
-            var weekView = new Week(null, options, container);
-            var dayNameView = new DayName(weekView.container);
-            var timeGridView = new TimeGrid(options, weekView.container);
+            var weekView,
+                dayNameView,
+                alldayView,
+                timeGridView,
+                timeCreationHandler,
+                timeMoveHandler,
+                timeResizeHandler;
 
-            var timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
-            var timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
-            var timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
+            weekView = new Week(null, options, container);
+
+            // Dayname
+            dayNameView = new DayName(weekView.container);
+            weekView.addChild(dayNameView);
+
+            // Allday
+            alldayView = new Allday(options, weekView.container);
+            weekView.addChild(alldayView);
+
+            // TimeGrid
+            timeGridView = new TimeGrid(options, weekView.container);
+            timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
+            timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
+            timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
             weekView.handlers = {
                 time: {
@@ -65,10 +82,12 @@ module.exports = function(name, options, container) {
                 }
             };
 
-            weekView.addChild(dayNameView);
             weekView.addChild(timeGridView);
 
+            // add controller
             weekView.controller = baseController.Week;
+
+            // add destroy
             weekView._beforeDestroy = function() {
                 timeCreationHandler.off();
                 timeMoveHandler.off();

@@ -1,6 +1,7 @@
 /*eslint-disable*/
 var path = require('path');
 var gulp = require('gulp');
+var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -27,6 +28,10 @@ gulp.task('connect', function() {
 });
 
 gulp.task('bundle', function() {
+    gulp.src('src/css/*')
+        .pipe(concat('calendar.css'))
+        .pipe(gulp.dest('dist'));
+
     var b = browserify({
         entries: 'index.js',
         debug: true

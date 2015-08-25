@@ -297,7 +297,7 @@ var Week = {
                 matrices;
 
             // viewmodels for AllDay view
-            cursor.allday = [];
+            cursor.allday = grouped.allday;
 
             // viewmodels for Task view
             cursor.task = [];

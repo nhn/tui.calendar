@@ -9,6 +9,7 @@
     "code-snippet": "git+http://4316b69ceef56267d69d733515f0f6ef3651ca7f:x-oauth-basic@github.nhnent.com/fe/code-snippet.git",
     "fedoc-template": "git+http://70327b4564c7a80eb61724056876b960290946dd:x-oauth-basic@github.nhnent.com/fe/share-fedoc-template.git",
     "gulp": "latest",
+    "gulp-concat": "^2.6.0",
     "gulp-connect": "latest",
     "handlebars": "^3.0.3",
     "hbsfy": "^2.2.1",
