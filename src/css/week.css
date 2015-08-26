@@ -62,8 +62,48 @@
     margin-left: 60px;
 }
 
-.schedule-view-allday-monthweek-container {
+.schedule-view-allday-monthweek {
+    position: relative;
 }
+
+.schedule-view-monthweek-grid {
+    width: 100%;
+}
+
+.schedule-view-monthweek-grid-line {
+    float: left;
+    margin-left: -1px;
+    border-left: 1px solid #ccc;
+}
+
+.schedule-view-monthweek-events {
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+}
+
+    /* allday view > event block */
+    .schedule-view-allday-event-block {
+        padding-top: 2px;
+        position: absolute;
+    }
+
+    .schedule-view-allday-event {
+        margin: 0 3px 0 2px;
+        background-color: #A16946;
+    }
+
+    .schedule-view-day:last-child .schedule-view-allday-event {
+        margin-right: 2px;
+    }
+    
+    .schedule-view-allday-event span {
+        padding-left: 3px;
+        line-height: 18px;
+        font-size: 0.8em;
+        color: #fff;
+    }
 
 /* task view */
 .schedule-view-task-container {

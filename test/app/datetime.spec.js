@@ -160,10 +160,12 @@ describe('datetime', function() {
     describe('parse()', function() {
         it('parse date string for safe usage.', function() {
             var str1 = '2015-06-01 12:20:00',
-                str2 = '2015/06/01 10:00:00';
+                str2 = '2015/06/01 10:00:00',
+                str3 = '20150601';
 
             expect(dt.parse(str2)).toEqual(new Date(2015, 5, 1, 10, 0, 0));
             expect(dt.parse(str1)).toEqual(new Date(2015, 5, 1, 12, 20, 0));
+            expect(dt.parse(str3)).toEqual(new Date(2015, 5, 1, 0, 0, 0));
         });
 
         it('return false when supplied date string is not valid.', function() {
@@ -174,6 +176,11 @@ describe('datetime', function() {
             expect(dt.parse(valid)).not.toBe(false);
             expect(dt.parse(notValid)).toBe(false);
             expect(dt.parse(notValid2)).toBe(false);
+        });
+
+        it('can adjust month value fixing options.', function() {
+            var str = '2015-05-01';
+            expect(dt.parse(str, +1)).toEqual(new Date(2015, 6, 1, 0, 0, 0));
         });
     });
 

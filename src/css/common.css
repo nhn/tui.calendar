@@ -16,3 +16,13 @@
 .schedule-invisible span {
     visibility: hidden;
 }
+
+.schedule-view-clear {
+    *zoom: 1;
+}
+
+.schedule-view-clear:after {
+    content: '';
+    display: block;
+    clear: both;
+}

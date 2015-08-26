@@ -48,6 +48,16 @@ function EventViewModel(event) {
      * @type {number}
      */
     this.extraSpace = 0;
+
+    /**
+     * represent this event block is not visible after rendered.
+     *
+     * in month view, some viewmodel in date need to hide when already rendered before dates.
+     *
+     * set true then it just shows empty space.
+     * @type {boolean}
+     */
+    this.hidden = false;
 }
 
 /**********

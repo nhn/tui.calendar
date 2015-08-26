@@ -7,7 +7,7 @@
 var util = global.ne.util,
     opt = Object.prototype.toString;
 
-var dateFormatRx = /^(\d{4}[-|\/]\d{2}[-|\/]\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
+var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 
 var datetime,
     tokenFunc;
@@ -243,31 +243,48 @@ datetime = {
      *
      * Only listed below formats avaliable.
      *
+     * - YYYYMMDD
      * - YYYY/MM/DD
      * - YYYY-MM-DD
      * - YYYY/MM/DD HH:mm:SS
      * - YYYY-MM-DD HH:mm:SS
      *
      * @param {string} str Formatted string.
+     * @param {number} [fixMonth=-1] - number for fix month calculating.
      * @returns {(Date|boolean)} Converted Date object. when supplied str is not available then return false.
      */
-    parse: function(str) {
+    parse: function(str, fixMonth) {
         var separator,
             matches = str.match(dateFormatRx),
             ymd,
             hms;
 
+        if (util.isUndefined(fixMonth)) {
+            fixMonth = -1;
+        }
+
         if (!matches) {
             return false;
         }
 
-        separator = ~str.indexOf('/') ? '/' : '-';
-        matches = matches.splice(1);
+        if (str.length > 8) {
+            // YYYY/MM/DD
+            // YYYY-MM-DD
+            // YYYY/MM/DD HH:mm:SS
+            // YYYY-MM-DD HH:mm:SS
+            separator = ~str.indexOf('/') ? '/' : '-';
+            matches = matches.splice(1);
 
-        ymd = matches[0].split(separator);
-        hms = matches[1] ? matches[1].split(':') : [0, 0, 0];
+            ymd = matches[0].split(separator);
+            hms = matches[1] ? matches[1].split(':') : [0, 0, 0];
+        } else {
+            // YYYYMMDD
+            matches = matches[0];
+            ymd = [matches.substr(0, 4), matches.substr(4, 2), matches.substr(6, 2)];
+            hms = [0, 0, 0];
+        }
 
-        return new Date(+ymd[0], +ymd[1] - 1, +ymd[2], +hms[0], +hms[1], +hms[2]);
+        return new Date(+ymd[0], +ymd[1] + fixMonth, +ymd[2], +hms[0], +hms[1], +hms[2]);
     },
 
     /**

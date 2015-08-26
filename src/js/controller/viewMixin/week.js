@@ -5,10 +5,13 @@
 'use strict';
 
 var util = global.ne.util;
+var datetime = require('../../datetime');
 var array = require('../../common/array');
 
 var aps = Array.prototype.slice;
 var forEachArr = util.forEachArray;
+
+var ALLDAY_EVENTBLOCK_HEIGHT = 20;
 
 /**
  * @mixin Base.Week
@@ -279,6 +282,43 @@ var Week = {
         }, this);
     },
 
+    /**********
+     * Allday
+     **********/
+
+    /**
+     * set viewmodel properties for Allday views.
+     * @param {number} dateIndex - number of date index.
+     * @param {string} ymd - ymd each view models in one day.
+     * @param {object} viewModels - viewmodel list for allday view.
+     * @returns {object} view models.
+     */
+    setAlldayViewModels: function(dateIndex, ymd, viewModels) {
+        var dateStart = datetime.parse(ymd),
+            dateEnd = datetime.end(dateStart);
+
+        util.forEach(viewModels, function(viewModel, index) {
+            var model = viewModel.model,
+                dateLength = datetime.range(model.starts, model.ends, datetime.MILLISECONDS_PER_DAY).length;
+
+            // need multiplication in views.
+            viewModel.width = dateLength;
+            viewModel.left = dateIndex;
+
+            // use value directly in views.
+            viewModel.top = index * ALLDAY_EVENTBLOCK_HEIGHT;
+
+            viewModel.height = ALLDAY_EVENTBLOCK_HEIGHT;
+
+
+            if ((model.starts < dateStart) || (model.starts > dateEnd)) {
+                viewModel.hidden = true;
+            }
+        });
+
+        return viewModels;
+    },
+
     /**
      * Populate events in date range.
      * @this Base
@@ -288,6 +328,7 @@ var Week = {
      */
     findByDateRange: function(starts, ends) {
         var eventsInRange = this.findByDateRange(starts, ends),
+            dateIndex = 0,
             result = {};
 
         util.forEach(eventsInRange, /** @this Base.Week */ function(collection, ymd) {
@@ -297,7 +338,8 @@ var Week = {
                 matrices;
 
             // viewmodels for AllDay view
-            cursor.allday = grouped.allday;
+            cursor.allday = this.setAlldayViewModels(dateIndex, ymd, grouped.allday);
+            dateIndex += 1;
 
             // viewmodels for Task view
             cursor.task = [];
