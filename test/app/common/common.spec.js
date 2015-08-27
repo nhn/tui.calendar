@@ -1,0 +1,17 @@
+/*eslint-disable*/
+var common = ne.dooray.calendar.common;
+describe('module:common', function() {
+    fit('pick2 can use return value by method chaining.', function() {
+        var obj = {
+            one: {
+                two: 'hello',
+                method: function() {return 'good';}
+            }
+        };
+
+        expect(common.pick2(obj, 'one', 'two').val()).toBe('hello');
+        expect(common.pick2(obj, 'one', 'two').then(function(val) { return val + ' world'; })).toBe('hello world');
+        expect(common.pick2(obj, 'one').then('method')).toBe('good');
+        expect(common.pick2(obj, 'def').then('good')).toBeUndefined();
+    });
+});
