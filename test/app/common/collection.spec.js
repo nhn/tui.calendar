@@ -458,5 +458,16 @@ describe('Collection', function() {
             expect(merged.getItemID).toBe(c.getItemID);
         });
     });
+
+    describe('toArray()', function() {
+        it('return new array with collection items.', function() {
+            var item1 = {_id:1},
+                item2 = {_id:2},
+                item3 = {_id:5};
+
+            c.add(item1, item2, item3);
+            expect(c.toArray()).toEqual([item1, item2, item3]);
+        });
+    });
 });
 

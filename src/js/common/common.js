@@ -27,6 +27,9 @@ module.exports = {
             },
 
             /**
+             * invoke supplied function in picked object.
+             *
+             * the callback context is set picked object.
              * @param {string|function} fn - function to invoke in picked object.
              * @returns {*} result of invoke.
              */
@@ -34,10 +37,10 @@ module.exports = {
                 var args = aps.call(arguments, 1);
 
                 if (util.isString(fn)) {
-                    return (util.pick(result, fn) || function() {}).apply(null, args);
+                    return (util.pick(result, fn) || function() {}).apply(result, args);
                 }
 
-                return fn(result);
+                return fn.call(result, result);
             }
         };
 

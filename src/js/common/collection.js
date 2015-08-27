@@ -396,5 +396,19 @@ Collection.prototype.each = function(iteratee, context) {
     forEachProp(this.items, iteratee, context || this);
 };
 
+/**
+ * return new array with collection items.
+ * @returns {array} new array.
+ */
+Collection.prototype.toArray = function() {
+    if (!this.length) {
+        return [];
+    }
+
+    return util.map(this.items, function(item) {
+        return item;
+    });
+};
+
 module.exports = Collection;
 
