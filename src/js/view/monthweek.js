@@ -6,6 +6,7 @@
 
 var util = global.ne.util;
 var domutil = require('../common/domutil');
+var datetime = require('../datetime');
 var View = require('./view');
 var Day = require('./day');
 var tmpl = require('./template/week/monthweek.hbs');
@@ -39,16 +40,15 @@ util.inherit(MonthWeek, View);
 
 /**
  * get base viewmodel for monthweek view.
- * @param {object} viewModel - viewModel from parent views.
+ * @param {array} range - date array to rendering.
  * @returns {object} view model for monthweek view.
  */
-MonthWeek.prototype._getBaseViewModel = function(viewModel) {
-    var eventsInDateRange = viewModel.eventsInDateRange,
-        widthPercent = 100 / util.keys(eventsInDateRange).length;
+MonthWeek.prototype._getBaseViewModel = function(range) {
+    var widthPercent = 100 / range.length;
 
     return {
         height: this.options.height,
-        eventGrid: util.map(eventsInDateRange, function() {
+        eventGrid: util.map(range, function() {
             return widthPercent;
         })
     };
@@ -59,15 +59,19 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
  * @param {object} viewModel - viewModel from parent views.
  */
 MonthWeek.prototype.render = function(viewModel) {
-    var container = this.container,
-        eventsInDateRange = viewModel.eventsInDateRange;
+    var range = datetime.range(
+            viewModel.renderStartDate,
+            viewModel.renderEndDate,
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        container = this.container;
 
-    container.innerHTML = tmpl(this._getBaseViewModel(viewModel));
+    container.innerHTML = tmpl(this._getBaseViewModel(range));
 
-    util.forEach(eventsInDateRange, function(eventViewModels, ymd) {
+    util.forEach(range, function(date) {
         var dayView = new Day({
-            ymd: ymd,
-            width: 100 / util.keys(eventsInDateRange).length
+            ymd: datetime.format(date, 'YYYYMMDD'),
+            width: 100 / range.length
         }, domutil.find('.schedule-view-monthweek-events'));
 
         this.addChild(dayView);

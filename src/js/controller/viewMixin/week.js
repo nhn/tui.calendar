@@ -317,6 +317,20 @@ var Week = {
         return viewModels;
     },
 
+
+    /**
+     * create view model for allday view part.
+     * @param {Collection} collection - allday event collection.
+     * @returns {object} allday view model.
+     */
+    getViewModelForAlldayView: function(collection) {
+        if (!collection) {
+            return [];
+        }
+
+        return collection.sort(array.compare.event.asc);
+    },
+
     /**********
      * READ
      **********/
@@ -354,11 +368,7 @@ var Week = {
 
         // view model for allday
         result.allday = common.pick2(viewModelCollection, 'allday').then(function(allday) {
-            if (!allday) {
-                return [];
-            }
-
-            return allday.sort(array.compare.event.asc);
+            return util.bind(Week.getViewModelForAlldayView, that)(allday);
         });
 
         // view model for Time.
