@@ -97,6 +97,13 @@ Event.prototype.init = function(options) {
 };
 
 /**
+ * @returns {number} instance unique id.
+ */
+Event.prototype.id = function() {
+    return util.stamp(this);
+};
+
+/**
  * Check two event are equals (means title, isAllDay, starts, ends are same)
  * @param {Event} event Event model instance to compare.
  * @returns {boolean} Return false when not same.

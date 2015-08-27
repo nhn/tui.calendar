@@ -5,8 +5,10 @@
 'use strict';
 
 var util = global.ne.util;
+var common = require('../../common/common');
 var datetime = require('../../datetime');
 var array = require('../../common/array');
+var EventViewModel = require('../../model/viewModel/event');
 
 var aps = Array.prototype.slice;
 var forEachArr = util.forEachArray;
@@ -17,39 +19,9 @@ var ALLDAY_EVENTBLOCK_HEIGHT = 20;
  * @mixin Base.Week
  */
 var Week = {
-    /**
-     * Group EventViewModel array by type and sort it.
-     * @this Base.Week
-     * @param {Collection} collection ViewModel collection
-     * @returns {object} Grouped ViewModels
-     */
-    _getGroupedEventList: function(collection) {
-        var group,
-            result = {
-                allday: [],
-                task: [],
-                time: []
-            };
-
-        if (collection.length < 1) {
-            return result;
-        }
-
-        group = collection.groupBy(function(viewModel) {
-            viewModel = viewModel.valueOf();
-            if (viewModel.isAllDay) {
-                return 'allday';
-            }
-            //TODO: task event flag
-            return 'time';
-        });
-
-        util.forEach(group, function(collection, type, group) {
-            group[type] = collection.sort(array.compare.event.asc);
-        });
-
-        return util.extend(result, group);
-    },
+    /**********
+     * TIME VIEW
+     **********/
 
     /**
      * Calculate collision group.
@@ -84,7 +56,7 @@ var Week = {
                             group.push(util.stamp(event.valueOf()));
                             return false;
                         }
-                    }, this);
+                    });
 
                     return false;
                 }
@@ -246,7 +218,7 @@ var Week = {
             var binaryMap,
                 maxRowLength;
 
-            binaryMap = this.generateTimeArrayInRow(matrix);
+            binaryMap = Week.generateTimeArrayInRow(matrix);
             maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
                 return row.length;
             }));
@@ -268,7 +240,7 @@ var Week = {
                     endTime = model.ends.getTime() - 1;
 
                     for (i = (col + 1); i < maxRowLength; i += 1) {
-                        hasCollide = this.hasCollide(binaryMap[i - 1], startTime, endTime);
+                        hasCollide = Week.hasCollide(binaryMap[i - 1], startTime, endTime);
 
                         if (hasCollide) {
                             viewModel.hasCollide = true;
@@ -277,13 +249,39 @@ var Week = {
 
                         viewModel.extraSpace += 1;
                     }
-                }, this);
-            }, this);
-        }, this);
+                });
+            });
+        });
+    },
+
+    /**
+     * @this Base
+     * @param {Date} starts - start date.
+     * @param {Date} ends - end date.
+     * @param {Collection} time - view model collection.
+     * @returns {object} view model for time part.
+     */
+    getViewModelForTimeView: function(starts, ends, time) {
+        var ymdSplitted = this.splitEventByDateRange(starts, ends, time),
+            result = {};
+
+        util.forEach(ymdSplitted, function(collection, ymd) {
+            var viewModels = collection.sort(array.compare.event.asc),
+                collisionGroups,
+                matrices;
+
+            collisionGroups = this.getCollisionGroup(viewModels);
+            matrices = this.getMatrices(collection, collisionGroups);
+            this.getCollides(matrices);
+
+            result[ymd] = matrices;
+        }, Week);
+
+        return result;
     },
 
     /**********
-     * Allday
+     * ALLDAY VIEW
      **********/
 
     /**
@@ -319,39 +317,54 @@ var Week = {
         return viewModels;
     },
 
+    /**********
+     * READ
+     **********/
+
     /**
      * Populate events in date range.
      * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
      * @returns {object} events grouped by dates.
+     * TODO: task
      */
     findByDateRange: function(starts, ends) {
-        var eventsInRange = this.findByDateRange(starts, ends),
-            dateIndex = 0,
+        var that = this,
+            eventsInDateRange,
+            viewModelCollection,
             result = {};
 
-        util.forEach(eventsInRange, /** @this Base.Week */ function(collection, ymd) {
-            var grouped = this._getGroupedEventList(collection),
-                cursor = result[ymd] = {},
-                collisionGroups,
-                matrices;
+        eventsInDateRange = this.events.find(function(model) {
+            return (model.starts >= starts && model.ends <= ends);
+        });
 
-            // viewmodels for AllDay view
-            cursor.allday = this.setAlldayViewModels(dateIndex, ymd, grouped.allday);
-            dateIndex += 1;
+        // CONVERT TO VIEWMODEL.
+        viewModelCollection = common.createEventCollection.apply(
+            null,
+            util.map(eventsInDateRange.items, function(event) {
+                return EventViewModel.create(event);
+            })
+        ).groupBy(function(viewModel) {
+            if (viewModel.model.isAllDay) {
+                return 'allday';
+            }
+            return 'time';
+        });
 
-            // viewmodels for Task view
-            cursor.task = [];
+        // view model for allday
+        result.allday = common.pick2(viewModelCollection, 'allday').then(function(allday) {
+            if (!allday) {
+                return [];
+            }
 
-            /**********
-             * ViewModels for Time view.
-             **********/
-            collisionGroups = this.getCollisionGroup(grouped.time);
-            matrices = this.getMatrices(collection, collisionGroups);
-            this.getCollides(matrices);
-            cursor.time = matrices;
-        }, Week);
+            return allday.sort(array.compare.event.asc);
+        });
+
+        // view model for Time.
+        result.time = common.pick2(viewModelCollection, 'time').then(function(time) {
+            return util.bind(Week.getViewModelForTimeView, that)(starts, ends, time);
+        });
 
         return result;
     }

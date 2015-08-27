@@ -216,5 +216,72 @@ describe('controller/base', function() {
             });
         });
     });
+
+    describe('splitEventByDateRange()', function() {
+        var events,
+            collection;
+
+        beforeEach(function() {
+            collection = new Collection(function(item) {
+                return util.stamp(item);
+            });
+
+            events = [
+                Event.create({
+                    title: 'A',
+                    isAllDay: false,
+                    starts: '2015/05/01 09:30:00',
+                    ends: '2015/05/01 18:30:00'
+                }),
+                Event.create({
+                    title: 'B',
+                    isAllDay: false,
+                    starts: '2015/05/02 09:30:00',
+                    ends: '2015/05/02 18:30:00'
+                }),
+                Event.create({
+                    title: 'C',
+                    isAllDay: true,
+                    starts: '2015/05/01 09:00:00',
+                    ends: '2015/05/02 09:00:00'
+                })
+            ];
+
+            collection.add.apply(collection, events);
+
+            ctrl.addEvent(events[0]);
+            ctrl.addEvent(events[1]);
+            ctrl.addEvent(events[2]);
+        });
+
+        it('split event by ymd.', function() {
+            var result = ctrl.splitEventByDateRange(
+                new Date('2015-05-01T00:00:00+09:00'),
+                new Date('2015-05-03T23:59:59+09:00'),
+                collection
+            );
+
+            var expected = {
+                '20150501': new Collection(function(item) {
+                    return util.stamp(item);
+                }),
+                '20150502': new Collection(function(item) {
+                    return util.stamp(item);
+                }),
+                '20150503': new Collection(function(item) {
+                    return util.stamp(item);
+                })
+            };
+
+            expected['20150501'].add(events[0]);
+            expected['20150501'].add(events[2]);
+            expected['20150502'].add(events[1]);
+            expected['20150502'].add(events[2]);
+
+            expect(result['20150501'].items).toEqual(expected['20150501'].items);
+            expect(result['20150502'].items).toEqual(expected['20150502'].items);
+            expect(result['20150503'].items).toEqual(expected['20150503'].items);
+        });
+    });
 });
 

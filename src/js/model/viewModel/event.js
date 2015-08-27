@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var util = global.ne.util;
+
 /**
  * Event ViewModel
  * TODO: useless.
@@ -77,6 +79,13 @@ EventViewModel.create = function(event) {
 /**********
  * prototype props
  **********/
+
+/**
+ * @returns {number} unique number for model.
+ */
+EventViewModel.prototype.id = function() {
+    return util.stamp(this.model);
+};
 
 /**
  * Shadowing valueOf method for event sorting.

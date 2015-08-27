@@ -18,30 +18,6 @@ describe('Base.Week', function() {
         }).sort(array.compare.event.asc);
     });
         
-    it('getCollisionGroup() can calculate collision group arccuratly.', function() {
-        var expected = [
-            [stamp(eventList[0].valueOf()), 
-             stamp(eventList[1].valueOf()), 
-             stamp(eventList[2].valueOf()), 
-             stamp(eventList[3].valueOf())],
-
-            [stamp(eventList[4].valueOf())],
-
-            [stamp(eventList[5].valueOf()),
-             stamp(eventList[6].valueOf())],
-
-            [stamp(eventList[7].valueOf()),
-             stamp(eventList[8].valueOf()),
-             stamp(eventList[9].valueOf())],
-
-            [stamp(eventList[10].valueOf())]
-        ];
-
-        var result = ctrl.getCollisionGroup(eventList);
-
-        expect(result).toEqual(expected);
-    });
-
     describe('getLastRowInColumn()', function() {
         var test;
         beforeEach(function() {
@@ -194,7 +170,7 @@ describe('Base.Week', function() {
 
             var result = ctrl.findByDateRange(starts, ends);
 
-            expect(result['20150501'].time.length).toBe(5);
+            expect(result.time['20150501'].length).toBe(5);
         });
     });
 

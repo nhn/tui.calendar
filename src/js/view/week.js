@@ -59,7 +59,10 @@ Week.prototype.render = function() {
     var options = this.options,
         renderStartDate = datetime.parse(options.renderStartDate),
         renderEndDate = datetime.parse(options.renderEndDate),
-        eventsInDateRange = this.controller.findByDateRange(renderStartDate, renderEndDate),
+        eventsInDateRange = this.controller.findByDateRange(
+            datetime.start(renderStartDate),
+            datetime.end(renderEndDate)
+        ),
         viewModel = {
             eventsInDateRange: eventsInDateRange,
             renderStartDate: renderStartDate,

@@ -5,14 +5,32 @@
 'use strict';
 
 var util = global.ne.util;
+var Collection = require('../common/collection');
 var aps = Array.prototype.slice;
 
+function eventIDGetter(event) {
+    return event.id();
+}
+
 module.exports = {
+    /**
+     * @param {...*} initItems - items to add newly created collection.
+     * @returns {Collection} new collection for event models.
+     */
+    createEventCollection: function(initItems) {    // eslint-disable-line
+        var collection = new Collection(eventIDGetter);
+
+        if (arguments.length) {
+            collection.add.apply(collection, arguments);
+        }
+
+        return collection;
+    },
     /**
      * pick value from object then return utility object to treat it.
      * @param {object} obj - object to search supplied path property.
      * @param {...string} paths - rest parameter that string value to search property in object.
-     * @return {object} pick object.
+     * @returns {object} pick object.
      */
     pick2: function(obj, paths) {    // eslint-disable-line
         var result = util.pick.apply(null, arguments),

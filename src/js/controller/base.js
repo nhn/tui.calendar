@@ -8,22 +8,18 @@ var util = global.ne.util;
 var Event = require('../model/event');
 var EventViewModel = require('../model/viewModel/event');
 var datetime = require('../datetime');
-var Collection = require('../common/collection');
+var common = require('../common/common');
 
 /**
  * @constructor
  * @mixes util.CustomEvents
  */
 function Base() {
-    /*eslint-disable*/
     /**
      * events collection.
      * @type {Collection}
      */
-    this.events = new Collection(function(event) {
-        return util.stamp(event);
-    });
-    /*eslint-enable*/
+    this.events = common.createEventCollection();
 
     /**
      * Matrix for multidate events.
@@ -114,6 +110,40 @@ Base.prototype.addEvent = function(event) {
     return event;
 };
 
+/**
+ * split event model by ymd.
+ * @param {Date} starts - start date
+ * @param {Date} ends - end date
+ * @param {Collection} - collection of event model.
+ * @returns {object.<string, Collection>} splitted event model collections.
+ */
+Base.prototype.splitEventByDateRange = function(starts, ends, eventCollection) {
+    var range = datetime.range(
+            datetime.start(starts),
+            datetime.start(ends),
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        ownMatrix = this.dateMatrix,
+        result = {};
+
+    util.forEachArray(range, function(date) {
+        var ymd = datetime.format(date, 'YYYYMMDD'),
+            matrix = ownMatrix[ymd],
+            collection;
+
+        collection = result[ymd] = common.createEventCollection();
+
+        if (matrix && matrix.length) {
+            util.forEachArray(matrix, function(id) {
+                eventCollection.doWhenHas(id, function(event) {
+                    collection.add(event);
+                });
+            });
+        }
+    });
+
+    return result;
+};
 
 /**
  * Return events in supplied date range.
@@ -140,9 +170,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
     util.forEachArray(range, function(date) {
         ymd = dformat(date, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
-        viewModels = result[ymd] = new Collection(function(event) {
-            return util.stamp(event.model);
-        });
+        viewModels = result[ymd] = common.createEventCollection();
 
         if (matrix && matrix.length) {
             viewModels.add.apply(viewModels, util.map(matrix, function(id) {
