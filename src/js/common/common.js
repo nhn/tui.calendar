@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var aps = Array.prototype.slice;
 
 module.exports = {
     /**
@@ -30,8 +31,10 @@ module.exports = {
              * @returns {*} result of invoke.
              */
             then: function(fn) {
+                var args = aps.call(arguments, 1);
+
                 if (util.isString(fn)) {
-                    return (util.pick(result, fn) || function() {})();
+                    return (util.pick(result, fn) || function() {}).apply(null, args);
                 }
 
                 return fn(result);
