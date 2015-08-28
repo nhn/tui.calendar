@@ -30,7 +30,8 @@ function MonthWeek(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        height: 72    // default value when Month view rendering.
+        height: 72,              // default value when Month view rendering.
+        eventBlockHeight: 20    // event block's height value.
     }, options);
 
     View.call(this, null, container);
@@ -43,43 +44,63 @@ util.inherit(MonthWeek, View);
  * @param {array} range - date array to rendering.
  * @returns {object} view model for monthweek view.
  */
-MonthWeek.prototype._getBaseViewModel = function(range) {
-    var widthPercent = 100 / range.length;
+// MonthWeek.prototype._getBaseViewModel = function(range) {
+//     var widthPercent = 100 / range.length;
+//
+//     return {
+//         height: this.options.height,
+//         eventGrid: util.map(range, function() {
+//             return widthPercent;
+//         })
+//     };
+// };
+
+
+/**
+ * @param {object} viewModel - viewModel from parent views.
+ * @returns {object} viewModel to rendering.
+ */
+MonthWeek.prototype._getBaseViewModel = function(viewModel) {
+    var options = this.options,
+        range = datetime.range(
+            viewModel.renderStartDate,
+            viewModel.renderEndDate,
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        matrices = viewModel.eventsInDateRange.allday,
+        widthPercent = 100 / range.length;
 
     return {
-        height: this.options.height,
+        width: widthPercent,
+        height: options.height,
+        eventBlockHeight: options.eventBlockHeight,
         eventGrid: util.map(range, function() {
             return widthPercent;
-        })
+        }),
+        matrices: matrices
     };
 };
+
 
 /**
  * @override
  * @param {object} viewModel - viewModel from parent views.
  */
 MonthWeek.prototype.render = function(viewModel) {
-    var range = datetime.range(
-            viewModel.renderStartDate,
-            viewModel.renderEndDate,
-            datetime.MILLISECONDS_PER_DAY
-        ),
-        container = this.container;
+    this.container.innerHTML = tmpl(this._getBaseViewModel(viewModel));
 
-    container.innerHTML = tmpl(this._getBaseViewModel(range));
-
-    util.forEach(range, function(date) {
-        var dayView = new Day({
-            ymd: datetime.format(date, 'YYYYMMDD'),
-            width: 100 / range.length
-        }, domutil.find('.schedule-view-monthweek-events'));
-
-        this.addChild(dayView);
-    }, this);
-
-    this.childs.each(function(childView) {
-        childView.render(viewModel);
-    });
+    // util.forEach(range, function(date) {
+    //     var dayView = new Day({
+    //         ymd: datetime.format(date, 'YYYYMMDD'),
+    //         width: 100 / range.length
+    //     }, domutil.find('.schedule-view-monthweek-events'));
+    //
+    //     this.addChild(dayView);
+    // }, this);
+    //
+    // this.childs.each(function(childView) {
+    //     childView.render(viewModel);
+    // });
 };
 
 module.exports = MonthWeek;

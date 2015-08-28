@@ -5,22 +5,18 @@
 'use strict';
 
 var util = global.ne.util;
-var common = require('../../common/common');
 var datetime = require('../../datetime');
+var common = require('../../common/common');
 var array = require('../../common/array');
 var EventViewModel = require('../../model/viewModel/event');
-
 var aps = Array.prototype.slice;
-var forEachArr = util.forEachArray;
-
-var ALLDAY_EVENTBLOCK_HEIGHT = 20;
 
 /**
  * @mixin Base.Week
  */
 var Week = {
     /**********
-     * TIME VIEW
+     * COMMON
      **********/
 
     /**
@@ -39,17 +35,17 @@ var Week = {
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
-        forEachArr(viewModels.slice(1), function(event, index) {
+        util.forEachArray(viewModels.slice(1), function(event, index) {
             foundPrevCollisionEvent = false;
             previousEventList = aps.apply(viewModels, [0, index + 1]).reverse();
 
-            forEachArr(previousEventList, function(previous) {
+            util.forEachArray(previousEventList, function(previous) {
                 if (event.collidesWith(previous)) {
                     // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
                     // 찾아 이 일정을 추가한다
                     foundPrevCollisionEvent = true;
 
-                    forEachArr(collisionGroups.slice(0).reverse(), function(group) {
+                    util.forEachArray(collisionGroups.slice(0).reverse(), function(group) {
                         if (~util.inArray(util.stamp(previous.valueOf()), group)) {
                             // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
                             // Collision Group에 이 일정을 포함시킨다.
@@ -103,10 +99,10 @@ var Week = {
         var result = [],
             getLastRowInColumn = Week.getLastRowInColumn;
 
-        forEachArr(collisionGroups, function(group) {
+        util.forEachArray(collisionGroups, function(group) {
             var matrix = [[]];
 
-            forEachArr(group, function(eventID) {
+            util.forEachArray(group, function(eventID) {
                 var event = collection.items[eventID],
                     col = 0,
                     found = false,
@@ -137,6 +133,10 @@ var Week = {
 
         return result;
     },
+
+    /**********
+     * TIME GRID VIEW
+     **********/
 
     /**
      * Make array with start and end times on events.
@@ -214,7 +214,7 @@ var Week = {
      * @param {array[]} matrices - Matrix data.
      */
     getCollides: function(matrices) {
-        forEachArr(matrices, function(matrix) {
+        util.forEachArray(matrices, function(matrix) {
             var binaryMap,
                 maxRowLength;
 
@@ -223,8 +223,8 @@ var Week = {
                 return row.length;
             }));
 
-            forEachArr(matrix, function(row) {
-                forEachArr(row, function(viewModel, col) {
+            util.forEachArray(matrix, function(row) {
+                util.forEachArray(row, function(viewModel, col) {
                     var model,
                         startTime,
                         endTime,
@@ -285,50 +285,52 @@ var Week = {
      **********/
 
     /**
-     * set viewmodel properties for Allday views.
-     * @param {number} dateIndex - number of date index.
-     * @param {string} ymd - ymd each view models in one day.
-     * @param {object} viewModels - viewmodel list for allday view.
-     * @returns {object} view models.
-     */
-    setAlldayViewModels: function(dateIndex, ymd, viewModels) {
-        var dateStart = datetime.parse(ymd),
-            dateEnd = datetime.end(dateStart);
-
-        util.forEach(viewModels, function(viewModel, index) {
-            var model = viewModel.model,
-                dateLength = datetime.range(model.starts, model.ends, datetime.MILLISECONDS_PER_DAY).length;
-
-            // need multiplication in views.
-            viewModel.width = dateLength;
-            viewModel.left = dateIndex;
-
-            // use value directly in views.
-            viewModel.top = index * ALLDAY_EVENTBLOCK_HEIGHT;
-
-            viewModel.height = ALLDAY_EVENTBLOCK_HEIGHT;
-
-
-            if ((model.starts < dateStart) || (model.starts > dateEnd)) {
-                viewModel.hidden = true;
-            }
-        });
-
-        return viewModels;
-    },
-
-
-    /**
      * create view model for allday view part.
-     * @param {Collection} collection - allday event collection.
-     * @returns {object} allday view model.
+     * @param {Date} starts start date.
+     * @param {Date} ends end date.
+     * @param {Collection} viewModels - allday event viewModel viewModels.
+     * @returns {object} allday viewModel.
      */
-    getViewModelForAlldayView: function(collection) {
-        if (!collection) {
+    getViewModelForAlldayView: function(starts, ends, viewModels) {
+        var list,
+            ymdsToRender,
+            collisionGroups,
+            matrices;
+
+        if (!viewModels || !viewModels.length) {
             return [];
         }
 
-        return collection.sort(array.compare.event.asc);
+        ymdsToRender = util.map(
+            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
+            function(date) {
+                return datetime.format(date, 'YYYYMMDD');
+            }
+        );
+
+        list = viewModels.sort(array.compare.event.asc);
+        collisionGroups = Week.getCollisionGroup(list);
+        matrices = Week.getMatrices(viewModels, collisionGroups);
+
+        util.forEachArray(matrices, function(matrix) {
+            util.forEachArray(matrix, function(column) {
+                util.forEachArray(column, function(viewModel, index) {
+                    var model = viewModel.valueOf(),
+                        ymd = datetime.format(model.starts, 'YYYYMMDD'),
+                        dateLength = datetime.range(
+                            model.starts,
+                            model.ends,
+                            datetime.MILLISECONDS_PER_DAY
+                        ).length;
+
+                    viewModel.top = index;
+                    viewModel.left = util.inArray(ymd, ymdsToRender);
+                    viewModel.width = dateLength;
+                });
+            });
+        });
+
+        return matrices;
     },
 
     /**********
@@ -345,18 +347,18 @@ var Week = {
      */
     findByDateRange: function(starts, ends) {
         var that = this,
-            eventsInDateRange,
-            viewModelCollection,
+            events,
+            viewModels,
             result = {};
 
-        eventsInDateRange = this.events.find(function(model) {
+        events = this.events.find(function(model) {
             return (model.starts >= starts && model.ends <= ends);
         });
 
         // CONVERT TO VIEWMODEL.
-        viewModelCollection = common.createEventCollection.apply(
+        viewModels = common.createEventCollection.apply(
             null,
-            util.map(eventsInDateRange.items, function(event) {
+            util.map(events.items, function(event) {
                 return EventViewModel.create(event);
             })
         ).groupBy(function(viewModel) {
@@ -367,12 +369,12 @@ var Week = {
         });
 
         // view model for allday
-        result.allday = common.pick2(viewModelCollection, 'allday').then(function(allday) {
-            return util.bind(Week.getViewModelForAlldayView, that)(allday);
+        result.allday = common.pick2(viewModels, 'allday').then(function(allday) {
+            return util.bind(Week.getViewModelForAlldayView, that)(starts, ends, allday);
         });
 
         // view model for Time.
-        result.time = common.pick2(viewModelCollection, 'time').then(function(time) {
+        result.time = common.pick2(viewModels, 'time').then(function(time) {
             return util.bind(Week.getViewModelForTimeView, that)(starts, ends, time);
         });
 

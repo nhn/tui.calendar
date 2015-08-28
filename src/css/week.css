@@ -118,6 +118,10 @@
     background-color: #ccc;
 }
 
+.schedule-view-timegrid-scroll-contents {
+    height: 416px;
+}
+
 .schedule-view-timegrid {
     position: relative;
     overflow: hidden;

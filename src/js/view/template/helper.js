@@ -48,6 +48,10 @@ module.exports = {
         }
 
         return 'schedule-view-dayname';
+    },
+
+    'multiply': function(a, b) {
+        return a * b;
     }
 };
 

@@ -6,6 +6,7 @@
 
 var util = global.ne.util;
 var domevent = require('../common/domevent');
+var domutil = require('../common/domutil');
 var Point = require('../common/point');
 
 var SCROLL_INTERVAL = 30;
@@ -83,13 +84,46 @@ AutoScroll.prototype._getEdgePositions = function(clientRect) {
 };
 
 /**
+ * Check container element has scrollbar.
+ * @returns {object} - has scrollbar on each side?
+ */
+AutoScroll.prototype.hasScrollbar = function() {
+    var container = this.container,
+        border,
+        padding,
+        styles;
+
+    border = parseInt(domutil.getStyle(container, 'borderTopWidth'), 10) +
+        parseInt(domutil.getStyle(container, 'borderBottomWidth', 10));
+    padding = parseInt(domutil.getStyle(container, 'paddingTop'), 10) +
+        parseInt(domutil.getStyle(container, 'paddingBottom', 10));
+
+    // styles = window.getComputedStyle(container);
+    // border = parseInt(styles.borderTopWidth, 10) + parseInt(styles.borderBottomWidth, 10);
+    // padding = parseInt(styles.paddingTop, 10) + parseInt(styles.paddingBottom, 10);
+
+    return {
+        horizontal: container.offsetWidth > (container.clientWidth + border + padding),
+        vertical: container.offsetHeight > (container.clientHeight + border + padding)
+    };
+};
+
+/**
  * MouseDown event handler
+ * @param {MouseEvent} mouseDownEvent - mouse down event
  */
 AutoScroll.prototype._onMouseDown = function(mouseDownEvent) {
+    var hasScrollbar = this.hasScrollbar();
+
     // only primary button can start drag.
     if (domevent.getMouseButton(mouseDownEvent) !== 0) {
         return;
     }
+
+    console.log(hasScrollbar.horizontal);
+    console.log(hasScrollbar.vertical);
+
+
 
     window.clearInterval(this._intervalID);
     this._intervalID = window.setInterval(util.bind(this._onTick, this), SCROLL_INTERVAL);

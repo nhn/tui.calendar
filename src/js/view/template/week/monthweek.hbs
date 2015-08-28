@@ -3,4 +3,16 @@
 <div class="schedule-view-monthweek-grid-line" style="width:{{this}}%;height:{{../height}}px">&nbsp;</div>
 {{/each}}
 </div>
-<div class="schedule-view-monthweek-events"></div>
+<div class="schedule-view-monthweek-events">
+{{#each matrices}}
+{{#each this}} {{! matrix }}
+{{#each this}} {{! column }}
+<div class="schedule-view-allday-event-block" style="top:{{multiply top @root.eventBlockHeight}}px;left:{{multiply left @root.width}}%;width:{{multiply width @root.width}}%;height:{{@root.eventBlockHeight}}px">
+    <div class="schedule-view-allday-event">
+        <span>{{model.title}}</span>
+    </div> 
+</div>
+{{/each}}
+{{/each}}
+{{/each}}
+</div>
