@@ -38,7 +38,7 @@ util.inherit(Day, View);
  * @param {object} viewModel - view model from parent view.
  */
 Day.prototype.render = function(viewModel) {
-    var events = util.pick(viewModel.eventsInDateRange, this.options.ymd, 'allday');
+    var events = util.pick(viewModel.eventsInDateRange.allday, this.options.ymd);
 
     if (!events) {
         return;

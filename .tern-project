@@ -1,0 +1,15 @@
+{
+    "libs": [
+        "browser"
+    ],
+    "loadEagerly": [
+        "src/js/**/*"
+    ],
+    "plugins": {
+        "complete_strings": {},
+        "node": {},
+        "doc_comment": {
+            "fullDocs": true
+        }
+    }
+}
