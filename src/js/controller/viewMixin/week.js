@@ -315,13 +315,19 @@ var Week = {
         util.forEachArray(matrices, function(matrix) {
             util.forEachArray(matrix, function(column) {
                 util.forEachArray(column, function(viewModel, index) {
-                    var model = viewModel.valueOf(),
-                        ymd = datetime.format(model.starts, 'YYYYMMDD'),
-                        dateLength = datetime.range(
-                            model.starts,
-                            model.ends,
-                            datetime.MILLISECONDS_PER_DAY
-                        ).length;
+                    var model, ymd, dateLength;
+
+                    if (!viewModel) {
+                        return;
+                    }
+
+                    model = viewModel.valueOf();
+                    ymd = datetime.format(model.starts, 'YYYYMMDD');
+                    dateLength = datetime.range(
+                        model.starts,
+                        model.ends,
+                        datetime.MILLISECONDS_PER_DAY
+                    ).length;
 
                     viewModel.top = index;
                     viewModel.left = util.inArray(ymd, ymdsToRender);
