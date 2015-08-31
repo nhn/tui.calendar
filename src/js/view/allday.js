@@ -25,11 +25,6 @@ function Allday(options, container) {
         'schedule-view-allday-container'
     );
 
-    /**
-     * @type {HTMLDIVElement}
-     */
-    this.monthweekContainer = null;
-
     View.call(this, null, container);
 }
 
@@ -48,9 +43,7 @@ Allday.prototype.render = function(viewModel) {
 
     this.childs.clear();
 
-    monthWeekInst = new MonthWeek({
-        height: 62
-    }, domutil.find('.schedule-view-allday-monthweek-container', container));
+    monthWeekInst = new MonthWeek(null, domutil.find('.schedule-view-allday-monthweek-container', container));
 
     this.addChild(monthWeekInst);
 

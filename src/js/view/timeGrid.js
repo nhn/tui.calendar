@@ -15,7 +15,7 @@ var mainTmpl = require('./template/timeGrid.hbs');
 
 var TICK_INTERVAL = 1000 * 10,  // 10 sec
     PIXEL_RENDER_ERROR = 0.5,   // pixel rendering error value
-    SET_SCROLL_DELAY = 100;     // scroll delay for IE.
+    SET_SCROLL_DELAY = util.browser.msie ? 50 : 100;     // scroll delay for IE.
 
 /**
  * @constructor
@@ -69,6 +69,11 @@ util.inherit(TimeGrid, View);
 /**********
  * Prototype props
  **********/
+
+/**
+ * @type {string}
+ */
+TimeGrid.prototype.viewName = 'timegrid';
 
 /**
  * Destroy view.

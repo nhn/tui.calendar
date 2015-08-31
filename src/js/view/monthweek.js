@@ -62,13 +62,41 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
     };
 };
 
-
 /**
  * @override
  * @param {object} viewModel - viewModel from parent views.
  */
 MonthWeek.prototype.render = function(viewModel) {
-    this.container.innerHTML = tmpl(this._getBaseViewModel(viewModel));
+    var baseViewModel = this._getBaseViewModel(viewModel),
+        maxEventInDay = 0;
+
+    maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
+        return Math.max.apply(null, util.map(matrix, function(row) {
+            return row.length;
+        }));
+    }));
+
+    this.resize(maxEventInDay);
+
+    this.container.innerHTML = tmpl(baseViewModel);
+};
+
+/**
+ * Resize MonthWeek container and send information to parent views.
+ * @override
+ * @param {number} maxEventInDay - how largest event block in one day?
+ */
+MonthWeek.prototype.resize = function(maxEventInDay) {
+    var options = this.options,
+        newHeight = maxEventInDay * options.eventBlockHeight + 2,
+        diff;
+
+    newHeight = Math.max(newHeight, options.height);
+    diff = newHeight - options.height;
+
+    this.container.style.height = newHeight + 'px';
+
+    View.prototype.resize.call(this, 'monthweek:resize', diff);
 };
 
 module.exports = MonthWeek;
