@@ -1,6 +1,6 @@
 <div class="schedule-view-monthweek-grid schedule-view-clear">
 {{#each eventGrid}}
-<div class="schedule-view-monthweek-grid-line" style="width:{{this}}%;height:{{../height}}px">&nbsp;</div>
+<div class="schedule-view-monthweek-grid-line" style="width:{{this}}%;left:{{multiply this @index}}%;">&nbsp;</div>
 {{/each}}
 </div>
 <div class="schedule-view-monthweek-events">
