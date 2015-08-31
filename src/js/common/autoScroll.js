@@ -11,6 +11,7 @@ var Point = require('../common/point');
 
 var SCROLL_INTERVAL = 30;
 var SCROLL_MAX = 15;
+var SCROLL_CLICK_INCREASED = 2;    // IE에서 스크롤 바 클릭 시 실제 UI pixel 보다 넓게 잡히는 현상 offset.
 
 /**
  * Add autoscroll feature to elements that prevented text selection.
@@ -125,7 +126,8 @@ AutoScroll.prototype.isOnScrollbar = function(el, mouseEvent) {
         pos = domevent.getMousePosition(mouseEvent, el),
         mouseInScrollbar = false;
 
-    mouseInScrollbar = (realSize[0] - 2 < pos[0] || realSize[1] - 2 < pos[1]);
+    mouseInScrollbar = (realSize[0] - SCROLL_CLICK_INCREASED < pos[0] ||
+                        realSize[1] - SCROLL_CLICK_INCREASED < pos[1]);
 
     return mouseInScrollbar;
 };
