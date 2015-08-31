@@ -28,8 +28,8 @@ function MonthWeek(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        height: 72,              // default value when Month view rendering.
-        eventBlockHeight: 20    // event block's height value.
+        height: 62,              // default value when Month view rendering.
+        eventBlockHeight: 20     // event block's height value.
     }, options);
 
     View.call(this, null, container);

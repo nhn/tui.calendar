@@ -43,7 +43,7 @@
 
 /* allday view */
 .schedule-view-allday-container {
-    height: 60px;
+    min-height: 62px;
     border-top: 2px solid #ccc;
     background-color: #eee;
     overflow-y: scroll;

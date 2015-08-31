@@ -49,7 +49,7 @@ Allday.prototype.render = function(viewModel) {
     this.childs.clear();
 
     monthWeekInst = new MonthWeek({
-        height: 60
+        height: 62
     }, domutil.find('.schedule-view-allday-monthweek-container', container));
 
     this.addChild(monthWeekInst);
