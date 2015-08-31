@@ -84,28 +84,50 @@ AutoScroll.prototype._getEdgePositions = function(clientRect) {
 };
 
 /**
- * Check container element has scrollbar.
- * @returns {object} - has scrollbar on each side?
+ * Get element real size ("real size" -> size without scrollbar)
+ * @param {HTMLElement} el - element want to know real size ("real size" -> size without scrollbar)
+ * @returns {number[]} real size [width, height]
  */
-AutoScroll.prototype.hasScrollbar = function() {
-    var container = this.container,
+AutoScroll.prototype.getRealSize = function(el) {
+    var computed = domutil.getComputedStyle(el),
         border,
-        padding,
-        styles;
+        padding;
 
-    border = parseInt(domutil.getStyle(container, 'borderTopWidth'), 10) +
-        parseInt(domutil.getStyle(container, 'borderBottomWidth', 10));
-    padding = parseInt(domutil.getStyle(container, 'paddingTop'), 10) +
-        parseInt(domutil.getStyle(container, 'paddingBottom', 10));
+    border = parseFloat(computed.getPropertyValue('border-top-width')) +
+        parseFloat(computed.getPropertyValue('border-bottom-width'));
+    padding = parseFloat(computed.getPropertyValue('padding-top')) +
+        parseFloat(computed.getPropertyValue('padding-bottom'));
 
-    // styles = window.getComputedStyle(container);
-    // border = parseInt(styles.borderTopWidth, 10) + parseInt(styles.borderBottomWidth, 10);
-    // padding = parseInt(styles.paddingTop, 10) + parseInt(styles.paddingBottom, 10);
+    return [el.clientWidth + border + padding, el.clientHeight + border + padding];
+};
 
-    return {
-        horizontal: container.offsetWidth > (container.clientWidth + border + padding),
-        vertical: container.offsetHeight > (container.clientHeight + border + padding)
-    };
+/**
+ * Check supplied element has scrollbar.
+ * @param {HTMLElement} el - element want to know has scrollbar.
+ * @returns {boolean[]} has scrollbar? [horizontal, vertical]
+ */
+AutoScroll.prototype.hasScrollbar = function(el) {
+    var realSize = this.getRealSize(el);
+
+    return [
+        el.offsetWidth > Math.ceil(realSize[0]),
+        el.offsetHeight > Math.ceil(realSize[1])
+    ];
+};
+
+/**
+ * @param {HTMLElement} el - element want to know.
+ * @param {MouseEvent} mouseEvent - mouse event object.
+ * @returns {boolean} mouse pointer is on the scrollbar?
+ */
+AutoScroll.prototype.isOnScrollbar = function(el, mouseEvent) {
+    var realSize = this.getRealSize(el),
+        pos = domevent.getMousePosition(mouseEvent, el),
+        mouseInScrollbar = false;
+
+    mouseInScrollbar = (realSize[0] - 2 < pos[0] || realSize[1] - 2 < pos[1]);
+
+    return mouseInScrollbar;
 };
 
 /**
@@ -113,17 +135,15 @@ AutoScroll.prototype.hasScrollbar = function() {
  * @param {MouseEvent} mouseDownEvent - mouse down event
  */
 AutoScroll.prototype._onMouseDown = function(mouseDownEvent) {
-    var hasScrollbar = this.hasScrollbar();
-
     // only primary button can start drag.
     if (domevent.getMouseButton(mouseDownEvent) !== 0) {
         return;
     }
 
-    console.log(hasScrollbar.horizontal);
-    console.log(hasScrollbar.vertical);
-
-
+    // deactivate autoscroll feature when mouse is on the scrollbar. (IE)
+    if (util.browser.msie && this.isOnScrollbar(this.container, mouseDownEvent)) {
+        return;
+    }
 
     window.clearInterval(this._intervalID);
     this._intervalID = window.setInterval(util.bind(this._onTick, this), SCROLL_INTERVAL);
