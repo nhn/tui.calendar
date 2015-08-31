@@ -50,28 +50,27 @@
 }
 
 .schedule-view-allday-left {
-    padding: 3px 5px 0 0;
-    width: 54px;
+    width: 60px;
+    height: 100%;
     float: left;
     text-align: right;
     color: #777;
 }
 
+.schedule-view-allday-left span {
+    display: block;
+    padding: 3px 5px 0 0;
+}
+
 .schedule-view-allday-right {
+    position: relative;
     background-color: #fff;
     margin-left: 60px;
 }
 
-.schedule-view-allday-monthweek {
-    position: relative;
-}
-
-.schedule-view-monthweek-grid {
-    width: 100%;
-}
-
 .schedule-view-monthweek-grid-line {
-    float: left;
+    position:absolute;
+    height: 100%;
     margin-left: -1px;
     border-left: 1px solid #ccc;
 }
@@ -85,7 +84,7 @@
 
     /* allday view > event block */
     .schedule-view-allday-event-block {
-        padding-top: 2px;
+        margin-top: 2px;
         position: absolute;
     }
 
