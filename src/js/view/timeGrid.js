@@ -13,8 +13,9 @@ var Time = require('./time');
 var AutoScroll = require('../common/autoScroll');
 var mainTmpl = require('./template/timeGrid.hbs');
 
-var TICK_INTERVAL = 1000 * 10,    // 10 sec
-    PIXEL_RENDER_ERROR = 0.5;    // pixel rendering error value
+var TICK_INTERVAL = 1000 * 10,  // 10 sec
+    PIXEL_RENDER_ERROR = 0.5,   // pixel rendering error value
+    SET_SCROLL_DELAY = 100;     // scroll delay for IE.
 
 /**
  * @constructor
@@ -299,11 +300,13 @@ TimeGrid.prototype.attachEvent = function() {
  */
 TimeGrid.prototype.scrollToNow = function() {
     var currentHourTop = this._getTopByTime(),
-        viewBound = this.getViewBound();
+        viewBound = this.getViewBound(),
+        container = this.container;
 
-    this.container.scrollTop = (0, currentHourTop - (viewBound.height / 2));
+    window.setTimeout(function() {
+        container.scrollTop = (0, currentHourTop - (viewBound.height / 2));
+    }, SET_SCROLL_DELAY);
 };
-
 
 /**********
  * Event handlers
