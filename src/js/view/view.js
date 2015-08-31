@@ -48,6 +48,12 @@ function View(options, container) {
         return util.stamp(view);
     });
     /*eslint-enable*/
+
+    /**
+     * parent view instance.
+     * @type {View}
+     */
+    this.parent = null;
 }
 
 /**
@@ -59,6 +65,8 @@ View.prototype.addChild = function(view, fn) {
     if (fn) {
         fn.call(view, this);
     }
+    // add parent view
+    view.parent = this;
 
     this.childs.add(view);
 };
@@ -90,6 +98,22 @@ View.prototype.render = function() {
 };
 
 /**
+ * Resize view recursivly to parent.
+ */
+View.prototype.resize = function() {
+    var args = Array.prototype.slice.call(arguments),
+        parent = this.parent;
+
+    while (parent) {
+        if (util.isFunction(parent._onResize)) {
+            parent._onResize.apply(parent, args);
+        }
+
+        parent = parent.parent;
+    }
+};
+
+/**
  * Invoking method before destroying.
  */
 View.prototype._beforeDestroy = function() {};
@@ -101,9 +125,8 @@ View.prototype._destroy = function() {
     this._beforeDestroy();
     this.childs.clear();
     this.container.innerHTML = '';
-    this.id = null;
-    this.childs = null;
-    this.container = null;
+
+    this.id = this.parent = this.childs = this.container = null;
 };
 
 /*eslint-disable*/

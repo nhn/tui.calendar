@@ -125,5 +125,30 @@ describe('View', function() {
 
         });
     });
+
+    describe('resize()', function() {
+        it('can send recursivly to each parent instances.', function() {
+            view._onResize = jasmine.createSpy('viewOnResize');
+            var view2 = new View(null, document.getElementById('container3'));
+
+            view.addChild(view2);
+            view2.resize(view2);
+
+            expect(view._onResize).toHaveBeenCalledWith(view2);
+        });
+
+        it('send resize message properly.', function() {
+            view._onResize = jasmine.createSpy('viewOnResize');
+            var view2 = new View(null, document.getElementById('container3'));
+            var view3 = new View(null, document.getElementById('container4'));
+
+            // view <- view2 <- view3
+            view.addChild(view2);
+            view2.addChild(view3);
+
+            view3.resize(view3);
+            expect(view._onResize).toHaveBeenCalledWith(view3);
+        });
+    });
 });
 
