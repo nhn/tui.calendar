@@ -358,7 +358,9 @@ var Week = {
             result = {};
 
         events = this.events.find(function(model) {
-            return (model.starts >= starts && model.ends <= ends);
+            return (model.starts >= starts && model.ends <= ends) ||
+                (model.starts < starts && model.ends >= starts) ||
+                (model.ends > ends && model.starts <= ends);
         });
 
         // CONVERT TO VIEWMODEL.
