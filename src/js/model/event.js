@@ -97,6 +97,20 @@ Event.prototype.init = function(options) {
 };
 
 /**
+ * @returns {Date} render start date.
+ */
+Event.prototype.getStarts = function() {
+    return this.starts;
+};
+
+/**
+ * @returns {Date} render end date.
+ */
+Event.prototype.getEnds = function() {
+    return this.ends;
+};
+
+/**
  * @returns {number} instance unique id.
  */
 Event.prototype.id = function() {
@@ -117,11 +131,11 @@ Event.prototype.equals = function(event) {
         return false;
     }
 
-    if (datetime.compare(this.starts, event.starts) !== 0) {
+    if (datetime.compare(this.getStarts(), event.getStarts()) !== 0) {
         return false;
     }
 
-    if (datetime.compare(this.ends, event.ends) !== 0) {
+    if (datetime.compare(this.getEnds(), event.getEnds()) !== 0) {
         return false;
     }
 
@@ -133,8 +147,8 @@ Event.prototype.equals = function(event) {
  * @returns {Date} duration (UTC)
  */
 Event.prototype.duration = function() {
-    var starts = this.starts,
-        ends = this.ends,
+    var starts = this.getStarts(),
+        ends = this.getEnds(),
         duration;
 
     if (this.isAllDay) {
@@ -153,9 +167,14 @@ Event.prototype.duration = function() {
  * @returns {boolean} If the other event occurs within the same time as the first object.
  */
 Event.prototype.collidesWith = function(event) {
-    if ((event.starts > this.starts && event.starts < this.ends) ||
-        (event.ends > this.starts && event.ends < this.ends) ||
-        (event.starts <= this.starts && event.ends >= this.ends)) {
+    var ownStarts = this.getStarts(),
+        ownEnds = this.getEnds(),
+        starts = event.getStarts(),
+        ends = event.getEnds();
+
+    if ((starts > ownStarts && starts < ownEnds) ||
+        (ends > ownStarts && ends < ownEnds) ||
+        (starts <= ownStarts && ends >= ownEnds)) {
         return true;
     }
     return false;

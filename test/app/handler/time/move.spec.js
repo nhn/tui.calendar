@@ -50,6 +50,12 @@ describe('handler/time.move', function() {
             baseControllerMock.events = {
                 items: {
                     '20': {
+                        getStarts: function() {
+                            return new Date('2015-05-01T09:30:00+09:00');
+                        },
+                        getEnds: function() {
+                            return new Date('2015-05-01T10:30:00+09:00');
+                        },
                         starts: new Date('2015-05-01T09:30:00+09:00'),
                         ends: new Date('2015-05-01T10:30:00+09:00'),
                         duration: function() {
@@ -89,6 +95,12 @@ describe('handler/time.move', function() {
             var oneHour = ne.dooray.calendar.datetime.millisecondsFrom('hour', 1);
             baseControllerMock.events.items['20'].starts = new Date('2015-05-01T00:00:00+09:00');
             baseControllerMock.events.items['20'].starts = new Date('2015-05-01T00:30:00+09:00');
+            baseControllerMock.events.items['20'].getStarts = function() {
+                return new Date('2015-05-01T00:00:00+09:00')
+            };
+            baseControllerMock.events.items['20'].getEnds = function() {
+                return new Date('2015-05-01T00:30:00+09:00')
+            };
             baseControllerMock.events.items['20'].duration = function() {
                 return new Date((new Date('2015-05-01T00:30:00+09:00').getTime()) - (new Date('2015-05-01T00:00:00+09:00').getTime()));
             };

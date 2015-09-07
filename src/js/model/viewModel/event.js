@@ -60,6 +60,22 @@ function EventViewModel(event) {
      * @type {boolean}
      */
     this.hidden = false;
+
+    /**
+     * represent render start date used at rendering.
+     *
+     * if set null then use model's 'starts' property.
+     * @type {Date}
+     */
+    this.renderStarts = null;
+
+    /**
+     * represent render end date used at rendering.
+     *
+     * if set null then use model's 'ends' property.
+     * @type {Date}
+     */
+    this.renderEnds = null;
 }
 
 /**********
@@ -79,6 +95,40 @@ EventViewModel.create = function(event) {
 /**********
  * prototype props
  **********/
+
+/**
+ * return renderStarts property to render properly when specific event that exceed rendering date range.
+ *
+ * if renderStarts is not set. return model's starts property.
+ * @override
+ * @returns {Date} render start date.
+ */
+EventViewModel.prototype.getStarts = function() {
+    if (this.renderStarts) {
+        return this.renderStarts;
+    }
+
+    return this.model.starts;
+};
+
+/**
+ * return renderStarts property to render properly when specific event that exceed rendering date range.
+ *
+ * if renderEnds is not set. return model's ends property.
+ * @override
+ * @returns {Date} render end date.
+ */
+EventViewModel.prototype.getEnds = function() {
+    if (this.renderEnds) {
+        return this.renderEnds;
+    }
+
+    return this.model.ends;
+};
+
+EventViewModel.prototype.isExceeded = function() {
+    return (!this.renderStarts) || (!this.renderEnds);
+};
 
 /**
  * @returns {number} unique number for model.

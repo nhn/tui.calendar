@@ -232,8 +232,8 @@ TimeMove.prototype._updateEvent = function(eventData) {
     baseDate = new Date(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    newStarts = new Date(model.starts.getTime() + timeDiff);
-    newEnds = new Date(model.ends.getTime() + timeDiff);
+    newStarts = new Date(model.getStarts().getTime() + timeDiff);
+    newEnds = new Date(model.getEnds().getTime() + timeDiff);
     eventDuration = model.duration();
 
     if (currentView) {

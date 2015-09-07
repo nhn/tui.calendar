@@ -7,11 +7,15 @@
 {{#each matrices}}
 {{#each this}} {{! matrix }}
 {{#each this}} {{! column }}
+{{#if this}} {{! viewmodel }}
 <div class="schedule-view-allday-event-block" style="top:{{multiply top @root.eventBlockHeight}}px;left:{{multiply left @root.width}}%;width:{{multiply width @root.width}}%;height:{{@root.eventBlockHeight}}px">
     <div class="schedule-view-allday-event">
+        {{#if renderStarts ~}}<span class="schedule-view-allday-exceed-starts">&lt;</span>{{/if ~}}
         <span>{{model.title}}</span>
+        {{#if renderEnds ~}}<span class="schedule-view-allday-exceed-ends">&gt;</span>{{/if ~}}
     </div> 
 </div>
+{{/if}}
 {{/each}}
 {{/each}}
 {{/each}}

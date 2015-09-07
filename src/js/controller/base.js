@@ -36,8 +36,8 @@ function Base() {
  */
 Base.prototype._getContainDatesInEvent = function(event) {
     var range = datetime.range(
-        datetime.start(event.starts),
-        datetime.start(event.ends),
+        datetime.start(event.getStarts()),
+        datetime.start(event.getEnds()),
         datetime.MILLISECONDS_PER_DAY
     );
 

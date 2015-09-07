@@ -52,7 +52,13 @@ module.exports = {
              * @returns {*} result of invoke.
              */
             then: function(fn) {
-                var args = aps.call(arguments, 1);
+                var args;
+
+                if (!result) {
+                    return undefined;    //eslint-disable-line
+                }
+
+                args = aps.call(arguments, 1);
 
                 if (util.isString(fn)) {
                     return (util.pick(result, fn) || function() {}).apply(result, args);

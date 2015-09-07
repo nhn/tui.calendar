@@ -240,7 +240,7 @@ function eventASC(a, b) {
         return allDayCompare;
     }
 
-    startsCompare = datetime.compare(a.starts, b.starts);
+    startsCompare = datetime.compare(a.getStarts(), b.getStarts());
 
     if (startsCompare) {
         return startsCompare;

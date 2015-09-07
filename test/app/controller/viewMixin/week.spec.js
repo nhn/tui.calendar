@@ -113,12 +113,16 @@ describe('Base.Week', function() {
             expected;
 
         function TimeMock(start, end) {
-            this.starts = {
-                getTime: function() {return start;}
+            this.getStarts = function() {
+                return {
+                    getTime: function() {return start;}
+                };
             };
 
-            this.ends = {
-                getTime: function() {return end;}
+            this.getEnds = function () {
+                return {
+                    getTime: function() {return end;}
+                };
             };
         }
 

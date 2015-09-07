@@ -159,8 +159,7 @@ var Week = {
             event = util.pick(matrix, row, col);
 
             while (event) {
-                event = event.valueOf();
-                cursor.push([event.starts.getTime(), event.ends.getTime()]);
+                cursor.push([event.getStarts().getTime(), event.getEnds().getTime()]);
 
                 row += 1;
                 event = util.pick(matrix, row, col);
@@ -225,8 +224,7 @@ var Week = {
 
             util.forEachArray(matrix, function(row) {
                 util.forEachArray(row, function(viewModel, col) {
-                    var model,
-                        startTime,
+                    var startTime,
                         endTime,
                         hasCollide,
                         i;
@@ -235,9 +233,8 @@ var Week = {
                         return;
                     }
 
-                    model = viewModel.valueOf();
-                    startTime = model.starts.getTime() + 1;
-                    endTime = model.ends.getTime() - 1;
+                    startTime = viewModel.getStarts().getTime() + 1;
+                    endTime = viewModel.getEnds().getTime() - 1;
 
                     for (i = (col + 1); i < maxRowLength; i += 1) {
                         hasCollide = Week.hasCollide(binaryMap[i - 1], startTime, endTime);
@@ -315,17 +312,16 @@ var Week = {
         util.forEachArray(matrices, function(matrix) {
             util.forEachArray(matrix, function(column) {
                 util.forEachArray(column, function(viewModel, index) {
-                    var model, ymd, dateLength;
+                    var ymd, dateLength;
 
                     if (!viewModel) {
                         return;
                     }
 
-                    model = viewModel.valueOf();
-                    ymd = datetime.format(model.starts, 'YYYYMMDD');
+                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
                     dateLength = datetime.range(
-                        model.starts,
-                        model.ends,
+                        viewModel.getStarts(),
+                        viewModel.getEnds(),
                         datetime.MILLISECONDS_PER_DAY
                     ).length;
 
@@ -358,9 +354,12 @@ var Week = {
             result = {};
 
         events = this.events.find(function(model) {
-            return (model.starts >= starts && model.ends <= ends) ||
-                (model.starts < starts && model.ends >= starts) ||
-                (model.ends > ends && model.starts <= ends);
+            var ownStarts = model.getStarts(),
+                ownEnds = model.getEnds();
+
+            return (ownStarts >= starts && ownEnds <= ends) ||
+                (ownStarts < starts && ownEnds >= starts) ||
+                (ownEnds > ends && ownStarts <= ends);
         });
 
         // CONVERT TO VIEWMODEL.
@@ -378,6 +377,20 @@ var Week = {
 
         // view model for allday
         result.allday = common.pick2(viewModels, 'allday').then(function(allday) {
+            // set render limitation of event starts, ends.
+            allday.each(function(viewModel) {
+                var ownStarts = viewModel.getStarts(),
+                    ownEnds = viewModel.getEnds();
+
+                if (ownStarts < starts) {
+                    viewModel.renderStarts = new Date(starts.getTime());
+                }
+
+                if (ownEnds > ends) {
+                    viewModel.renderEnds = new Date(ends.getTime());
+                }
+            });
+
             return util.bind(Week.getViewModelForAlldayView, that)(starts, ends, allday);
         });
 

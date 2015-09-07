@@ -216,14 +216,14 @@ TimeResize.prototype._updateEvent = function(eventData) {
 
     baseDate = new Date(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
-    newEnds = new Date(model.ends.getTime() + timeDiff);
+    newEnds = new Date(model.getEnds().getTime() + timeDiff);
 
     if (newEnds > dateEnd) {
         newEnds = new Date(dateEnd.getTime());
     }
 
-    if (newEnds.getTime() - model.starts.getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new Date(model.starts.getTime() + datetime.millisecondsFrom('minutes', 30));
+    if (newEnds.getTime() - model.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
+        newEnds = new Date(model.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
     }
 
     ctrl.updateEvent(modelID, {

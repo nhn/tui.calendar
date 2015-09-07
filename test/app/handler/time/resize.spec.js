@@ -41,6 +41,12 @@ describe('TimeResize', function() {
             baseControllerMock.events = {
                 items: {
                     '20': {
+                        getStarts: function() {
+                            return new Date('2015-05-01T09:30:00+09:00');
+                        },
+                        getEnds: function() {
+                            return new Date('2015-05-01T10:30:00+09:00');
+                        },
                         starts: new Date('2015-05-01T09:30:00+09:00'),
                         ends: new Date('2015-05-01T10:30:00+09:00'),
                         duration: function() {

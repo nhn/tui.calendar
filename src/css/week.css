@@ -104,6 +104,11 @@
         color: #fff;
     }
 
+    .schedule-view-allday-exceed-ends {
+        float: right;
+        padding-right: 3px;
+    }
+
 /* task view */
 .schedule-view-task-container {
     height: 150px;
