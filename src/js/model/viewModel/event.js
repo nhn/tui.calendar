@@ -126,10 +126,6 @@ EventViewModel.prototype.getEnds = function() {
     return this.model.ends;
 };
 
-EventViewModel.prototype.isExceeded = function() {
-    return (!this.renderStarts) || (!this.renderEnds);
-};
-
 /**
  * @returns {number} unique number for model.
  */
