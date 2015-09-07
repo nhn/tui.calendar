@@ -52,6 +52,8 @@ var TimeMoveGuide = require('./src/js/handler/time/moveGuide');
 var TimeResize = require('./src/js/handler/time/resize');
 var TimeResizeGuide = require('./src/js/handler/time/resizeGuide');
 
+var AlldayCreation = require('./src/js/handler/allday/creation');
+
 /**
  * @namespace ne.dooray.calendar
  */
@@ -86,5 +88,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     TimeMove: TimeMove,
     TimeMoveGuide: TimeMoveGuide,
     TimeResize: TimeResize,
-    TimeResizeGuide: TimeResizeGuide
+    TimeResizeGuide: TimeResizeGuide,
+
+    AlldayCreation: AlldayCreation
 });

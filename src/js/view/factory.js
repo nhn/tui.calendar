@@ -15,6 +15,7 @@ var Allday = require('./allday');
 
 // Handlers
 var Drag = require('../handler/drag');
+var AlldayCreation = require('../handler/allday/creation');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
@@ -54,6 +55,7 @@ module.exports = function(name, options, container) {
                 dayNameView,
                 alldayView,
                 timeGridView,
+                alldayCreationHandler,
                 timeCreationHandler,
                 timeMoveHandler,
                 timeResizeHandler;
@@ -66,6 +68,8 @@ module.exports = function(name, options, container) {
 
             // Allday
             alldayView = new Allday(options, weekView.container);
+            alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
+
             weekView.addChild(alldayView);
 
             // TimeGrid
