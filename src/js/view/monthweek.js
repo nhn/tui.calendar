@@ -10,7 +10,7 @@ var datetime = require('../datetime');
 var View = require('./view');
 var tmpl = require('./template/week/monthweek.hbs');
 
-var FREE_HEIGHT_TO_CREATION = 7;    // bottom free space to make creation action easier.
+var FREE_HEIGHT_TO_CREATION = 8;    // bottom free space to make creation action easier.
 
 /**
  * @constructor
