@@ -10,6 +10,8 @@ var datetime = require('../datetime');
 var View = require('./view');
 var tmpl = require('./template/week/monthweek.hbs');
 
+var FREE_HEIGHT_TO_CREATION = 7;    // bottom free space to make creation action easier.
+
 /**
  * @constructor
  * @extends {View}
@@ -94,7 +96,7 @@ MonthWeek.prototype.resize = function(maxEventInDay) {
     newHeight = Math.max(newHeight, options.height);
     diff = newHeight - options.height;
 
-    this.container.style.height = newHeight + 'px';
+    this.container.style.height = newHeight + FREE_HEIGHT_TO_CREATION + 'px';
 
     View.prototype.resize.call(this, 'monthweek:resize', diff);
 };
