@@ -106,9 +106,12 @@
         color: #fff;
     }
 
-    .schedule-view-allday-exceed-ends {
-        float: right;
-        padding-right: 3px;
+    .schedule-view-allday-exceed-left .schedule-view-allday-event {
+        margin-left: 0px;
+    }
+
+    .schedule-view-allday-exceed-right .schedule-view-allday-event {
+        margin-right: 0px;
     }
 
 /* task view */
