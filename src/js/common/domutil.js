@@ -278,7 +278,7 @@ domutil = {
      * @returns {string} element css class name
      */
     getClass: function(el) {
-        if (!el.className) {
+        if (!el || !el.className) {
             return '';
         }
 
