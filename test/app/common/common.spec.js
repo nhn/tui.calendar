@@ -14,6 +14,18 @@ describe('module:common', function() {
         expect(common.nearest(0.12, [0.5, 0.1, 0.11, 0.3])).not.toBe(0.5);
     });
 
+    it('mixin()', function() {
+        var from = {
+            a: 123
+        };
+        var to = function() {};
+
+        common.mixin(from, to);
+
+        expect(to.prototype.a).toBe(123);
+        expect(to.a).toBeUndefined();
+    });
+
     describe('pick2()', function() {
         it('pick2 can use return value by method chaining.', function() {
             var obj = {

@@ -103,6 +103,17 @@ module.exports = {
         };
 
         return pick;
+    },
+
+    /**
+     * Mixin method.
+     *
+     * (extend methods except property name 'mixin')
+     * @param {object} from - mixin object.
+     * @param {object} to - object to mixin.
+     */
+    mixin: function(from, to) {
+        util.extend(to.prototype, from);
     }
 };
 
