@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var datetime = window.ne.dooray.calendar.datetime;
 var AlldayCreation = window.ne.dooray.calendar.AlldayCreation;
 describe('handler:AlldayCreation', function() {
     var proto;
@@ -29,5 +30,72 @@ describe('handler:AlldayCreation', function() {
 
         container.appendChild(div);
         expect(proto.checkExpectedCondition.call(inst, div)).toBe('hello world');
+    });
+
+    describe('event handler methods', function() {
+        var inst;
+
+        beforeEach(function() {
+            inst = new AlldayCreation();
+            spyOn(inst, 'fire');
+            spyOn(inst, '_retriveEventData').and.returnValue(function() {return 'good'});
+            inst.dragHandler = jasmine.createSpyObj('dragHandler', ['on', 'off']);
+        });
+
+        it('_onDragStart() not fire dragstart event when not meet expected conditions.', function() {
+            spyOn(inst, 'checkExpectedCondition').and.returnValue(false);
+            inst._onDragStart({});
+            expect(inst.fire).not.toHaveBeenCalled();
+
+            inst.checkExpectedCondition.and.returnValue({});
+            inst._onDragStart({});
+            expect(inst.fire).toHaveBeenCalled();
+        });
+
+        describe('_onDrag()', function() {
+            it('always work after initialize drag start event data.', function() {
+                inst.getEventDataFunc = null;
+                inst._onDrag({});
+                expect(inst.fire).not.toHaveBeenCalled();
+
+                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({a:1});
+                inst._onDrag({});
+                expect(inst.fire).toHaveBeenCalled();
+            });
+
+            it('extend eventData. add more property to complete creation action.', function() {
+                inst._dragStartXIndex = 3;
+                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({xIndex:5});
+                inst._onDrag({});
+
+                expect(inst.fire).toHaveBeenCalledWith('allday_creation_drag', {
+                    width: 2,
+                    xIndex: 5
+                });
+            });
+        });
+
+        describe('_onDragEnd()', function() {
+            it('always work after initialize drag start event data.', function() {
+                inst.getEventDataFunc = null;
+                inst._onDragEnd({});
+                expect(inst.fire).not.toHaveBeenCalled();
+
+                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({a:1});
+                inst._onDragEnd({});
+                expect(inst.fire).toHaveBeenCalled();
+            });
+
+            it('extend eventData. add more property to complete creation action.', function() {
+                inst._dragStartXIndex = 3;
+                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({xIndex:5});
+                inst._onDragEnd({});
+
+                expect(inst.fire).toHaveBeenCalledWith('allday_creation_dragend', {
+                    width: 2,
+                    xIndex: 5
+                });
+            });
+        });
     });
 });
