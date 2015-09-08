@@ -7,6 +7,7 @@ var util = global.ne.util;
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var alldayCore = require('./core');
+var AlldayCreationGuide = require('./creationGuide');
 
 var parseViewIDRx = /^schedule-view-allday-monthweek[\s]schedule-view-(\d+)/;
 
@@ -47,6 +48,11 @@ function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-
      * @type {number}
      */
     this._dragStartXIndex = null;
+
+    /**
+     * @type {AlldayCreationGuide}
+     */
+    this.guide = new AlldayCreationGuide(this);
 
     if (arguments.length) {
         this.connect.apply(this, arguments);
