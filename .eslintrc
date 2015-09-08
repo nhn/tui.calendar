@@ -40,6 +40,7 @@
 
         //Variables
         "no-undefined": 2,
+        "no-unused-vars": 2,
         "no-use-before-define": [2, "nofunc"],
         "no-alert": 0,
 
