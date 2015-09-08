@@ -25,6 +25,12 @@ function Allday(options, container) {
         'schedule-view-allday-container'
     );
 
+    /**
+     * rendering options.
+     * @type {object}
+     */
+    this.options = options || {};
+
     View.call(this, null, container);
 }
 
