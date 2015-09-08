@@ -8,7 +8,7 @@ var util = global.ne.util;
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
-var ratio = require('./core')._ratio;
+var ratio = require('../../common/common').ratio;
 
 /**
  * Class for Time.Move effect.

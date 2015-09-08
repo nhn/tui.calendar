@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var common = require('../../common/common');
 var datetime = require('../../datetime');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
@@ -13,39 +14,6 @@ var Point = require('../../common/point');
  * @mixin Time.Core
  */
 var timeCore = {
-    /**
-     * Get ratio value.
-     *
-     * a : b = y : X;
-     *
-     * =
-     *
-     * X = (b * y) / a;
-     * @param {number} a - a
-     * @param {number} b - b
-     * @param {number} y - y
-     * @returns {number} ratio value
-     */
-    _ratio: function(a, b, y) {
-        // a : b = y : x;
-        return (b * y) / a;
-    },
-
-    /**
-     * Find nearest value from supplied params.
-     * @param {number} value - value to find.
-     * @param {array} nearest - nearest array.
-     * @returns {number} nearest value
-     */
-    _nearest: function(value, nearest) {
-        var diff = util.map(nearest, function(v) {
-                return Math.abs(value - v);
-            }),
-            nearestIndex = util.inArray(Math.min.apply(null, diff), diff);
-
-        return nearest[nearestIndex];
-    },
-
     /**
      * Get Y index ratio(hour) in time grids by supplied parameters.
      * @param {number} baseMil - base milliseconds number for supplied height.
@@ -58,7 +26,7 @@ var timeCore = {
         // and convert milliseconds value to hours.
         var result = datetime.millisecondsTo('hour', (y * baseMil) / height),
             floored = result | 0,
-            nearest = this._nearest(result - floored, [0, 1]);
+            nearest = common.nearest(result - floored, [0, 1]);
 
         return floored + (nearest ? 0.5 : 0);
     },
@@ -83,7 +51,7 @@ var timeCore = {
          */
         return util.bind(function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
-                gridY = timeCore._ratio(viewHeight, hourLength, mouseY),
+                gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = viewTime + datetime.millisecondsFrom('hour', gridY),
                 nearestGridY = this._calcGridYIndex(baseMil, viewHeight, mouseY),
                 nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);

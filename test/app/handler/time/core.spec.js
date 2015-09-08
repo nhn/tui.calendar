@@ -3,12 +3,6 @@ describe('module:Time.Creation', function() {
     var core = ne.dooray.calendar.TimeCore;
     var Time = ne.dooray.calendar.Time;
 
-    it('_nearest()', function() {
-        expect(core._nearest(0.5, [0.3, 0.6, 0.9])).toBe(0.6);
-        expect(core._nearest(13, [5, 9, 11, 12, 15])).toBe(12);
-        expect(core._nearest(0.12, [0.5, 0.1, 0.11, 0.3])).toBe(0.11);
-    });
-
     it('_calcGridYIndex()', function() {
         // 24시간이 100px일 때  50px은 12시임
         expect(core._calcGridYIndex(86400000, 100, 50)).toBe(12);

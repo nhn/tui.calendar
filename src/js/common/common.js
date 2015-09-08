@@ -26,6 +26,40 @@ module.exports = {
 
         return collection;
     },
+
+    /**
+     * Get ratio value.
+     *
+     * a : b = y : X;
+     *
+     * =
+     *
+     * X = (b * y) / a;
+     * @param {number} a - a
+     * @param {number} b - b
+     * @param {number} y - y
+     * @returns {number} ratio value
+     */
+    ratio: function(a, b, y) {
+        // a : b = y : x;
+        return (b * y) / a;
+    },
+
+    /**
+     * Find nearest value from supplied params.
+     * @param {number} value - value to find.
+     * @param {array} nearest - nearest array.
+     * @returns {number} nearest value
+     */
+    nearest: function(value, nearest) {
+        var diff = util.map(nearest, function(v) {
+                return Math.abs(value - v);
+            }),
+            nearestIndex = util.inArray(Math.min.apply(null, diff), diff);
+
+        return nearest[nearestIndex];
+    },
+
     /**
      * pick value from object then return utility object to treat it.
      * @param {object} obj - object to search supplied path property.
