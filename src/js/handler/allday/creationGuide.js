@@ -8,6 +8,7 @@ var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var config = require('../../config');
 var EVENT_TOP_MARGIN = config.monthweek.view.EVENT_TOP_MARGIN;
+var TEXT_FOR_NEW_EVENT = config.monthweek.handler.guide.TEXT_FOR_NEW_EVENT;
 
 /**
  * Class for Allday.Creation dragging effect.
@@ -57,7 +58,7 @@ AlldayCreationGuide.prototype.initializeGuideElement = function() {
     domutil.addClass(guideElement, 'schedule-view-allday-creation-guide-block');
     domutil.appendHTMLElement('div', guideElement, 'schedule-view-allday-creation-guide');
     spanElement = domutil.appendHTMLElement('span', guideElement);
-    spanElement.innerHTML = '새 일정';
+    spanElement.innerHTML = TEXT_FOR_NEW_EVENT;
 
     guideElement.style.height = (eventBlockHeight - EVENT_TOP_MARGIN) + 'px';
 };
@@ -75,6 +76,7 @@ AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
         leftPercent,
         widthPercent;
 
+    // when revert dragging.
     if (width < 0) {
         dragStartXIndex = xIndex;
         width = Math.abs(width);

@@ -10,6 +10,11 @@ module.exports = {
             CONTAINER_PADDING_LEFT: 60,    // 이벤트 컨테이너 엘리먼트의 left padding.
             EVENT_TOP_MARGIN: 2,    // 이벤트 블록 상단 여백 높이
             FREE_HEIGHT_TO_CREATION: 8    // 생성 액션을 편하게 하기 위해 하단에 추가하는 여백 높이
+        },
+        handler: {
+            guide: {
+                TEXT_FOR_NEW_EVENT: '새 일정'    // 종일일정 생성 효과 엘리먼트 텍스트
+            }
         }
     },
     dayname: {    // dayname
