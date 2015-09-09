@@ -13,6 +13,7 @@ var domutil = require('./src/js/common/domutil');
 var Colleciton = require('./src/js/common/collection');
 var model = require('./src/js/common/model');
 var common = require('./src/js/common/common');
+var reqAnimFrame = require('./src/js/common/reqAnimFrame');
 
 /**********
  * Controllers
@@ -68,6 +69,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     Collection: Colleciton,
     model: model,
     common: common,
+    reqAnimFrame: reqAnimFrame,
 
     ControllerFactory: ControllerFactory,
 
