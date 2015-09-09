@@ -14,8 +14,10 @@ var mainTmpl = require('./template/week/allday.hbs');
  * @constructor
  * @extends {View}
  * @param {object} options The object for view customization.
- * @param {number} [options.hourStart=0] You can change view's start hours.
- * @param {number} [options.hourEnd=0] You can change view's end hours.
+ * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
+ * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
+ * @param {number} [options.height=62] - minimum height of event container element.
+ * @param {number} [options.eventBlockHeight=20] - height of each event block.
  * @param {HTMLElement} container Container element.
  */
 function Allday(options, container) {
@@ -29,7 +31,12 @@ function Allday(options, container) {
      * rendering options.
      * @type {object}
      */
-    this.options = options || {};
+    this.options = util.extend({
+        renderStartDate: '',
+        renderEndDate: '',
+        height: 62,
+        eventBlockHeight: 20
+    }, options);
 
     View.call(this, null, container);
 }
@@ -49,7 +56,7 @@ Allday.prototype.render = function(viewModel) {
 
     this.childs.clear();
 
-    monthWeekInst = new MonthWeek(null, domutil.find('.schedule-view-allday-monthweek-container', container));
+    monthWeekInst = new MonthWeek(this.options, domutil.find('.schedule-view-allday-monthweek-container', container));
 
     this.addChild(monthWeekInst);
 

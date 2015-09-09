@@ -16,7 +16,8 @@ var FREE_HEIGHT_TO_CREATION = 8;    // bottom free space to make creation action
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {object} [options.height=72] - height of monthweek views.
+ * @param {number} [options.height=62] - minimum height of event container element.
+ * @param {number} [options.eventBlockHeight=20] - height of each event block.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
 function MonthWeek(options, container) {
