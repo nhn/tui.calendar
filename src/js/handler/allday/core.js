@@ -39,6 +39,7 @@ var alldayCore = {
                 mouseX = pos[0] - CONTAINER_PADDING_LEFT;
 
             return {
+                datesInRange: datesInRange,
                 xIndex: common.ratio(containerWidth, datesInRange, mouseX) | 0
             };
         };

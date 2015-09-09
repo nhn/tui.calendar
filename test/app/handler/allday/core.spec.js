@@ -19,11 +19,17 @@ describe('handler:AlldayCore', function() {
             // Simulate mouse event action.
             spyOn(window.ne.dooray.calendar.domevent, 'getMousePosition').and.returnValue([180, 10]);
             result = AlldayCore._retriveEventData.call(null, mockAlldayView);
-            expect(result()).toEqual({xIndex:3});
+            expect(result()).toEqual({
+                datesInRange: 6,
+                xIndex: 3
+            });
 
             window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([60, 25]);
             result = AlldayCore._retriveEventData.call(null, mockAlldayView);
-            expect(result()).toEqual({xIndex:0});
+            expect(result()).toEqual({
+                datesInRange: 6,
+                xIndex: 0
+            });
         });
     });
 });
