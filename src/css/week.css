@@ -92,7 +92,7 @@
 
     .schedule-view-allday-event {
         margin: 0 3px 0 2px;
-        background-color: #A16946;
+        background-color: #a1b56c;
     }
 
     .schedule-view-day:last-child .schedule-view-allday-event {
@@ -112,6 +112,37 @@
 
     .schedule-view-allday-exceed-right .schedule-view-allday-event {
         margin-right: 0px;
+    }
+
+    /* allday view creation guide element */
+    .schedule-view-allday-creation-guide-block {
+        position: absolute;
+    }
+
+    .schedule-view-allday-creation-guide-block span {
+        position: absolute;
+        top: 0px;
+        left: 3px;
+        display:block;
+        line-height: 18px;
+        margin-top: 2px;
+        padding-left: 3px;
+        color: #fff;
+        font-size: 0.8em;
+        text-shadow: 1px 1px #585858;
+    }
+
+    .schedule-view-allday-creation-guide {
+        margin: 2px 2px 0 2px;
+        padding-left: 3px;
+        background-color: #f7ca88;
+        line-height: 18px;
+        opacity: 0.8;
+        outline: 2px solid #fff;
+    }
+
+    .schedule-view-allday-creation-guide:after {
+        content: '\00a0';
     }
 
 /* task view */
@@ -249,7 +280,7 @@
             left: 1px;
             margin-right: 7px;
             height: 100%;
-            background-color: #A16946;
+            background-color: #7cafc2;
             font-size: 0.8em;
             color: #fff;
         }
