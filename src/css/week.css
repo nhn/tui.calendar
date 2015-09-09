@@ -129,11 +129,11 @@
         padding-left: 3px;
         color: #fff;
         font-size: 0.8em;
-        text-shadow: 1px 1px #585858;
+        text-shadow: 0px 0px 2px #282828;
     }
 
     .schedule-view-allday-creation-guide {
-        margin: 2px 2px 0 2px;
+        margin: 2px 3px 0 2px;
         padding-left: 3px;
         background-color: #f7ca88;
         line-height: 18px;

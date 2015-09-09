@@ -8,9 +8,9 @@
 {{#each this}} {{! matrix }}
 {{#each this}} {{! column }}
 {{#if this}} {{! viewmodel }}
-<div class="schedule-view-allday-event-block{{#if renderStarts}} schedule-view-allday-exceed-left{{/if}}{{#if renderEnds}} schedule-view-allday-exceed-right{{/if}}" style="top:{{multiply top @root.eventBlockHeight}}px;left:{{multiply left @root.width}}%;width:{{multiply width @root.width}}%;height:{{@root.eventBlockHeight}}px">
+<div data-id="{{stamp model}}" class="schedule-view-allday-event-block{{#if renderStarts}} schedule-view-allday-exceed-left{{/if}}{{#if renderEnds}} schedule-view-allday-exceed-right{{/if}}" style="top:{{multiply top @root.eventBlockHeight}}px;left:{{multiply left @root.width}}%;width:{{multiply width @root.width}}%;height:{{@root.eventBlockHeight}}px">
     <div class="schedule-view-allday-event">
-        <span>{{model.title}}</span>
+        <span class="schedule-view-allday-event-title">{{model.title}}</span>
     </div> 
 </div>
 {{/if}}
