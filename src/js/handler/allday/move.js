@@ -7,6 +7,7 @@ var util = global.ne.util;
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var AlldayCore = require('./core');
+var AlldayMoveGuide = require('./moveGuide');
 
 var checkExpectedConditionIDRx = /^schedule-view-allday-event(-title)?$/;
 var parseViewIDRx = /^schedule-view-allday-monthweek[\s]schedule-view-(\d+)/;
@@ -47,6 +48,11 @@ function AlldayMove(dragHandler, alldayView, baseController) {
     dragHandler.on({
         dragStart: this._onDragStart
     }, this);
+
+    /**
+     * @type {AlldayMoveGuide}
+     */
+    this.guide = new AlldayMoveGuide(this);
 }
 
 /**
@@ -88,6 +94,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         result = this.checkExpectedCondition(target),
         controller = this.baseController,
+        eventBlockElement,
         modelID,
         targetModel,
         getEventDataFunc,
@@ -97,7 +104,8 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    modelID = domutil.getData(domutil.closest(target, '.schedule-view-allday-event-block'), 'id');
+    eventBlockElement = domutil.closest(target, '.schedule-view-allday-event-block');
+    modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 
     if (!targetModel) {
@@ -107,6 +115,11 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView);
     eventData = getEventDataFunc(dragStartEventData.originEvent);
     this._dragStartXIndex = eventData.xIndex;
+
+    util.extend(eventData, {
+        eventBlockElement: eventBlockElement,
+        model: targetModel
+    });
 
     this.dragHandler.on({
         drag: this._onDrag,
@@ -119,7 +132,8 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
      * @type {object}
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
-     * TODO: add information of model instance related with this event.
+     * @property {Event} model - data object of model isntance.
+     * @property {HTMLDivElement} eventBlockElement - target event block element.
      */
     this.fire('allday_move_dragstart', eventData);
 };
