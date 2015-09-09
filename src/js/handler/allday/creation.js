@@ -49,14 +49,14 @@ function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-
      */
     this._dragStartXIndex = null;
 
+    if (arguments.length) {
+        this.connect.apply(this, arguments);
+    }
+
     /**
      * @type {AlldayCreationGuide}
      */
     this.guide = new AlldayCreationGuide(this);
-
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
 }
 
 /**
@@ -131,6 +131,7 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event AlldayCreation#allday_creation_dragstart
      * @type {object}
+     * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire('allday_creation_dragstart', eventData);
@@ -160,6 +161,7 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
     /**
      * @event AlldayCreation#allday_creation_drag
      * @type {object}
+     * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      * @property {number} width - grid count in drag range.
      */
@@ -197,6 +199,7 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
     /**
      * @event AlldayCreation#allday_creation_dragend
      * @type {object}
+     * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      * @property {number} width - grid count in drag range.
      */
@@ -214,6 +217,7 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
     /**
      * @event AlldayCreation#allday_creation_click
      * @type {object}
+     * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      * @property {number} width - grid count in drag range.
      */

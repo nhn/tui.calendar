@@ -11,6 +11,9 @@ var common = require('../../common/common');
 var config = require('../../config');
 var CONTAINER_PADDING_LEFT = config.monthweek.view.CONTAINER_PADDING_LEFT;
 
+var mmax = Math.max,
+    mmin = Math.min;
+
 /**
  * @mixin Allday.Core
  */
@@ -37,11 +40,16 @@ var alldayCore = {
          */
         return function(mouseEvent) {
             var pos = domevent.getMousePosition(mouseEvent, container),
-                mouseX = pos[0] - CONTAINER_PADDING_LEFT;
+                mouseX = pos[0] - CONTAINER_PADDING_LEFT,
+                xIndex = common.ratio(containerWidth, datesInRange, mouseX) | 0;
+
+            // apply limitation of creation event X index.
+            xIndex = mmax(xIndex, 0);
+            xIndex = mmin(xIndex, datesInRange - 1);
 
             return {
                 datesInRange: datesInRange,
-                xIndex: common.ratio(containerWidth, datesInRange, mouseX) | 0
+                xIndex: xIndex
             };
         };
     }
