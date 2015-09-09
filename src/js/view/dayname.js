@@ -10,9 +10,7 @@ var domutil = require('../common/domutil');
 var View = require('./view');
 var daynameTmpl = require('./template/daynames.hbs');
 
-var DAY_NAME = {
-    kor: ['일', '월', '화', '수', '목', '금', '토']
-};
+var DAY_NAME = require('../config').dayname.view.DAY_NAME;
 
 /**
  * @constructor

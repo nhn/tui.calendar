@@ -4,6 +4,9 @@
  */
 'use strict';
 var domutil = require('../../common/domutil');
+var reqAnimFrame = require('../../common/reqAnimFrame');
+var config = require('../../config');
+var EVENT_TOP_MARGIN = config.monthweek.view.EVENT_TOP_MARGIN;
 
 /**
  * Class for Allday.Creation dragging effect.
