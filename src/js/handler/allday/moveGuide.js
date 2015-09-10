@@ -77,7 +77,7 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(left, width) {
  * @param {object} dragStartEventData - event data from Allday.Move handler.
  * @returns {function} function that return event block information.
  */
-AlldayMoveGuide.prototype._getEventBlockData = function(dragStartEventData) {
+AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         datesInRange = dragStartEventData.datesInRange,
         baseWidthPercent = (100 / datesInRange),
@@ -86,21 +86,61 @@ AlldayMoveGuide.prototype._getEventBlockData = function(dragStartEventData) {
         viewOptions = this.alldayMove.alldayView.options,
         renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
         renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
-        diffByRenderStartDate = (new Date(originEventStarts.getTime() - renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
-        diffByRenderEndDate = (new Date(originEventEnds.getTime() - renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
+        fromLeft = (new Date(originEventStarts.getTime() - renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
+        fromRight = (new Date(originEventEnds.getTime() - renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
 
     return function(indexOffset) {
+        var fromLeft2 = fromLeft + indexOffset,
+            fromRight2 = fromRight + indexOffset;
+
         return {
             baseWidthPercent: baseWidthPercent,
-            fromLeft: diffByRenderStartDate + indexOffset,
-            fromRight: diffByRenderEndDate + indexOffset
+            fromLeft: fromLeft2,
+            fromRight: fromRight2,
+            startIndex: fromLeft2,
+            width: (fromLeft2 * -1) + (datesInRange + fromRight2)
         };
     };
 };
 
-AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {};
+AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
+    var alldayViewContainer = this.alldayMove.alldayView.container,
+        guideElement = this.guideElement = dragStartEventData.eventBlockElement.cloneNode(true),
+        eventContainer;
 
-AlldayMoveGuide.prototype._onDrag = function(dragEventData) {};
+    if (!util.browser.msie) {
+        domutil.addClass(global.document.body, 'schedule-view-dragging');
+    }
+
+    eventContainer = domutil.find('.schedule-view-monthweek-events', alldayViewContainer);
+    domutil.addClass(guideElement, 'schedule-view-allday-move-guide');
+    eventContainer.appendChild(guideElement);
+
+    this._dragStartXIndex = dragStartEventData.xIndex;
+    this.getEventDataFunc = this._getEventBlockDataFunc(dragStartEventData);
+};
+
+AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
+    var getEventDataFunc = this.getEventDataFunc,
+        dragStartXIndex = this._dragStartXIndex,
+        eventBlockData,
+        newLeft,
+        newWidth;
+
+    if (!getEventDataFunc) {
+        return;
+    }
+
+    eventBlockData = getEventDataFunc(dragEventData.xIndex - dragStartXIndex);
+
+    newLeft = eventBlockData.startIndex;
+    newLeft = Math.max(0, newLeft) * eventBlockData.baseWidthPercent;
+
+    newWidth = eventBlockData.width + eventBlockData.startIndex;
+    newWidth = Math.min(eventBlockData.width, newWidth) * eventBlockData.baseWidthPercent;
+
+    this.refreshGuideElement(newLeft, newWidth);
+};
 
 module.exports = AlldayMoveGuide;
 
