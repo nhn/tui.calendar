@@ -145,6 +145,15 @@
         content: '\00a0';
     }
 
+    /* allday view move guide element */
+    .schedule-view-allday-move-guide {
+        opacity: 0.6;
+    }
+
+    .schedule-view-allday-move-guide .schedule-view-allday-event {
+        background-color: red;
+    }
+
 /* task view */
 .schedule-view-task-container {
     height: 150px;
