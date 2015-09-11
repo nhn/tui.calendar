@@ -4,7 +4,6 @@
  */
 'use strict';
 var util = global.ne.util;
-var common = require('../../common/common');
 var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
@@ -44,6 +43,9 @@ function AlldayMoveGuide(alldayMove) {
     }, this);
 }
 
+/**
+ * Clear guide element.
+ */
 AlldayMoveGuide.prototype._clearGuideElement = function() {
     domutil.remove(this.guideElement);
 
@@ -54,12 +56,31 @@ AlldayMoveGuide.prototype._clearGuideElement = function() {
     this._dragStartXIndex = this.getEventDataFunc = this.guideElement = null;
 };
 
-AlldayMoveGuide.prototype.refreshGuideElement = function(left, width) {
+/**
+ * Refresh guide element.
+ * @param {number} leftPercent - left percent of guide element.
+ * @param {number} widthPercent - width percent of guide element.
+ * @param {boolean} isExceededLeft - event starts is faster then render start date?
+ * @param {boolean} isExceededRight - event ends is later then render end date?
+ */
+AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPercent, isExceededLeft, isExceededRight) {
     var guideElement = this.guideElement;
 
     reqAnimFrame.requestAnimFrame(function() {
-        guideElement.style.left = left + '%';
-        guideElement.style.width = width + '%';
+        guideElement.style.left = leftPercent + '%';
+        guideElement.style.width = widthPercent + '%';
+
+        if (isExceededLeft) {
+            domutil.addClass(guideElement, 'schedule-view-allday-exceed-left');
+        } else {
+            domutil.removeClass(guideElement, 'schedule-view-allday-exceed-left');
+        }
+
+        if (isExceededRight) {
+            domutil.addClass(guideElement, 'schedule-view-allday-exceed-right');
+        } else {
+            domutil.removeClass(guideElement, 'schedule-view-allday-exceed-right');
+        }
     });
 };
 
@@ -103,6 +124,10 @@ AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) 
     };
 };
 
+/**
+ * DragStart event handler.
+ * @param {object} dragStartEventData - event data.
+ */
 AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     var alldayViewContainer = this.alldayMove.alldayView.container,
         guideElement = this.guideElement = dragStartEventData.eventBlockElement.cloneNode(true),
@@ -120,10 +145,16 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     this.getEventDataFunc = this._getEventBlockDataFunc(dragStartEventData);
 };
 
+/**
+ * Drag event handler.
+ * @param {object} dragEventData - event data.
+ */
 AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
     var getEventDataFunc = this.getEventDataFunc,
         dragStartXIndex = this._dragStartXIndex,
         eventBlockData,
+        isExceededLeft,
+        isExceededRight,
         newLeft,
         newWidth;
 
@@ -134,12 +165,14 @@ AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
     eventBlockData = getEventDataFunc(dragEventData.xIndex - dragStartXIndex);
 
     newLeft = eventBlockData.startIndex;
+    isExceededLeft = newLeft < 0;
     newLeft = Math.max(0, newLeft) * eventBlockData.baseWidthPercent;
 
     newWidth = eventBlockData.width + eventBlockData.startIndex;
+    isExceededRight = newWidth > dragEventData.datesInRange;
     newWidth = Math.min(eventBlockData.width, newWidth) * eventBlockData.baseWidthPercent;
 
-    this.refreshGuideElement(newLeft, newWidth);
+    this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 };
 
 module.exports = AlldayMoveGuide;
