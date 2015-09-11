@@ -102,7 +102,7 @@
     .schedule-view-allday-event span {
         padding-left: 3px;
         line-height: 18px;
-        font-size: 0.8em;
+        font-size: 0.9em;
         color: #fff;
     }
 
@@ -128,7 +128,7 @@
         margin-top: 2px;
         padding-left: 3px;
         color: #fff;
-        font-size: 0.8em;
+        font-size: 0.9em;
         text-shadow: 0px 0px 2px #282828;
     }
 
@@ -137,7 +137,7 @@
         padding-left: 3px;
         background-color: #f7ca88;
         line-height: 18px;
-        opacity: 0.8;
+        opacity: 0.9;
         outline: 2px solid #fff;
     }
 
@@ -290,7 +290,7 @@
             margin-right: 7px;
             height: 100%;
             background-color: #7cafc2;
-            font-size: 0.8em;
+            font-size: 0.9em;
             color: #fff;
         }
 
