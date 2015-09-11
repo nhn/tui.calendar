@@ -26,3 +26,15 @@
     display: block;
     clear: both;
 }
+
+.handle-x {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAECAMAAACEE47CAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMrQJG5H4EIAAAAEUlEQVR4AWNgYoRABhjEFAEAArQAIcHQcPsAAAAASUVORK5CYII=);
+}
+
+.handle-y {
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAICAMAAADp7a43AAAACVBMVEX///////////+OSuX+AAAAA3RSTlMrQJG5H4EIAAAAEUlEQVR4AWNgYmRiZABB/CwAAtgAIUTUNkMAAAAASUVORK5CYII=);
+}

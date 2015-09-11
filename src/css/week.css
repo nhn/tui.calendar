@@ -154,6 +154,15 @@
         background-color: red;
     }
 
+    /* allday view resize */
+    .schedule-view-allday-resize-handle {
+        display: block;
+        float: right;
+        width: 6px;
+        background-position: 3px center;
+        cursor: col-resize;
+    }
+
 /* task view */
 .schedule-view-task-container {
     height: 150px;
@@ -305,6 +314,7 @@
             font-size: 0.6em;
             font-family: 'Arial';
             line-height: 0.6em;
+            background-position: center top;
         }
 
         .schedule-view-time-creation-guide {
