@@ -130,11 +130,71 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
     this.fire('allday_resize_dragstart', eventData);
 };
 
-AlldayResize.prototype._onDrag = function() {};
+/**
+ * Drag event handler method.
+ * @emits AlldayResize#allday_resize_drag
+ * @param {object} dragEventData - Drag#drag event handler eventdata.
+ */
+AlldayResize.prototype._onDrag = function(dragEventData) {
+    var getEventDataFunc = this.getEventDataFunc;
 
-AlldayResize.prototype._onDragEnd = function() {};
+    if (!getEventDataFunc) {
+        return;
+    }
 
-AlldayResize.prototype._onClick = function() {};
+    /**
+     * @event AlldayResize#allday_resize_drag
+     * @type {object}
+     * @property {number} datesInRange - date count of this view.
+     * @property {number} xIndex - index number of mouse positions.
+     */
+    this.fire('allday_resize_drag', getEventDataFunc(dragEventData.originEvent));
+};
+
+/**
+ * DragEnd event hander method.
+ * @emits AlldayResize#allday_resize_dragend
+ * @param {object} dragEndEventData - Drag#DragEnd event handler data.
+ * @param {string} [overrideEventName] - override emitted event name when supplied.
+ */
+AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
+    var getEventDataFunc = this.getEventDataFunc;
+
+    if (!getEventDataFunc) {
+        return;
+    }
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd,
+        click: this._onClick
+    }, this);
+
+    /**
+     * @event AlldayResize#allday_resize_dragend
+     * @type {object}
+     * @property {number} datesInRange - date count of this view.
+     * @property {number} xIndex - index number of mouse positions.
+     */
+    this.fire(overrideEventName || 'allday_resize_dragend', getEventDataFunc(dragEndEventData.originEvent));
+
+    this.getEventDataFunc = this._dragStartXIndex = null;
+};
+
+/**
+ * Click event handler method.
+ * @emits AlldayResize#allday_resize_click
+ * @param {object} clickEventData - Drag#Click event handler data.
+ */
+AlldayResize.prototype._onClick = function(clickEventData) {
+    /**
+     * @event AlldayResize#allday_resize_click
+     * @type {object}
+     * @property {number} datesInRange - date count of this view.
+     * @property {number} xIndex - index number of mouse positions.
+     */
+    this._onDragEnd(clickEventData, 'allday_resize_click');
+};
 
 common.mixin(AlldayCore, AlldayResize);
 util.CustomEvents.mixin(AlldayResize);
