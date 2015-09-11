@@ -311,10 +311,7 @@
             bottom: 0px;
             color: #fff;
             cursor: row-resize;
-            font-size: 0.6em;
-            font-family: 'Arial';
-            line-height: 0.6em;
-            background-position: center top;
+            background-position: center 7px;
         }
 
         .schedule-view-time-creation-guide {
