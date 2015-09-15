@@ -49,7 +49,6 @@ calendar.on({
     'event:afterCreate': function() {
     },
 
-
     'event:beforeUpdate': function() {},
     'event:afterUpdate': function() {},
 
