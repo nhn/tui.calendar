@@ -1,7 +1,3 @@
-/**
- * css for common design classes.
- */
-
 /* clearing bootstrap's box-sizing css. */
 .schedule-view-layout *,
 .schedule-view-layout *:before,
@@ -16,6 +12,9 @@
 }
 .schedule-view-resizing {
     cursor: row-resize;
+}
+.schedule-view-resizing-x {
+    cursor: col-resize;
 }
 
 .schedule-view-hidden {

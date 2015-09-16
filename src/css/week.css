@@ -114,6 +114,10 @@
         margin-right: 0px;
     }
 
+    .schedule-view-allday-exceed-right .schedule-view-allday-resize-handle {
+        display: none;
+    }
+
     /* allday view creation guide element */
     .schedule-view-allday-creation-guide-block {
         position: absolute;

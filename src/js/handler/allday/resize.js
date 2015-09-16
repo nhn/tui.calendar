@@ -7,6 +7,7 @@ var util = global.ne.util;
 var domutil = require('../../common/domutil');
 var common = require('../../common/common');
 var AlldayCore = require('./core');
+var AlldayResizeGuide = require('./resizeGuide');
 
 var parseViewIDRx = /^schedule-view-allday-monthweek[\s]schedule-view-(\d+)/;
 
@@ -46,6 +47,11 @@ function AlldayResize(dragHandler, alldayView, baseController) {
     dragHandler.on({
         dragStart: this._onDragStart
     }, this);
+
+    /**
+     * @type {AlldayResizeGuide}
+     */
+    this.guide = new AlldayResizeGuide(this);
 }
 
 /**
