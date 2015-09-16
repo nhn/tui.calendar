@@ -1,7 +1,7 @@
 {
   "name": "dooray-calendar",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "calendar module for dooray.",
   "private": true,
   "devDependencies": {
     "browserify": "^11.0.1",
@@ -11,6 +11,7 @@
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^2.2.0",
+    "gulp-header": "^1.7.1",
     "handlebars": "^4.0.2",
     "hbsfy": "^2.2.1",
     "jasmine-core": "^2.3.4",

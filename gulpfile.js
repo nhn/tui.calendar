@@ -3,6 +3,7 @@ var path = require('path');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
+var header = require('gulp-header');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
@@ -28,8 +29,20 @@ gulp.task('connect', function() {
 });
 
 gulp.task('bundle', function() {
-    gulp.src('src/css/*')
+    var pkg = require('./package.json');
+    var banner = [
+        '/**',
+        ' * <%= pkg.name %> - <%= pkg.description %>',
+        ' * @version <%= pkg.version %>',
+        ' */',
+        ''].join('\n');
+
+    gulp.src([
+            'src/css/common.css',
+            'src/css/*.css'
+        ])
         .pipe(concat('calendar.css'))
+        .pipe(header(banner, {pkg: pkg}))
         .pipe(gulp.dest('dist'));
 
     var b = browserify({
@@ -45,6 +58,7 @@ gulp.task('bundle', function() {
         })
         .pipe(source('app.js'))
         .pipe(buffer())
+        .pipe(header(banner, {pkg: pkg}))
         .pipe(gulp.dest('dist'))
         .pipe(connect.reload());
 });
