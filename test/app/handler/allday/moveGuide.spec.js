@@ -31,18 +31,14 @@ describe('handler:AlldayMoveGuide', function() {
             expect(func(0)).toEqual({
                 baseWidthPercent: 20,
                 fromLeft: 0,
-                fromRight: -2,
-                startIndex: 0,
-                width: 3
+                fromRight: -2
             });
 
             // 마우스가 오른쪽 그리드로 한칸 이동
             expect(func(1)).toEqual({
                 baseWidthPercent: 20,
                 fromLeft: 1,
-                fromRight: -1,
-                startIndex: 1,
-                width: 3
+                fromRight: -1
             });
         });
     });
@@ -84,7 +80,7 @@ describe('handler:AlldayMoveGuide', function() {
                 expect(inst.refreshGuideElement).toHaveBeenCalledWith(20, 40, false, false);
 
                 inst.refreshGuideElement.calls.reset();
-                // 3일짜리 일정을
+                // 4일짜리 일정을
                 inst.getEventDataFunc = inst._getEventBlockDataFunc({
                     model: {
                         starts: new Date('2015-05-02T00:00:00+09:00'),
@@ -100,8 +96,8 @@ describe('handler:AlldayMoveGuide', function() {
                     datesInRange: 5
                 });
 
-                // left: 40, width: 80 이지만 오른쪽으로 렌더링 범위를 초과했음.
-                expect(inst.refreshGuideElement).toHaveBeenCalledWith(40, 80, false, true);
+                // left: 40, width: 80 이지만 오른쪽으로 렌더링 범위를 초과했으므로 width는 60%
+                expect(inst.refreshGuideElement).toHaveBeenCalledWith(40, 60, false, true);
             });
         });
     });

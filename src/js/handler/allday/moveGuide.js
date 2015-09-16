@@ -111,15 +111,10 @@ AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) 
         fromRight = (new Date(originEventEnds.getTime() - renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
 
     return function(indexOffset) {
-        var fromLeft2 = fromLeft + indexOffset,
-            fromRight2 = fromRight + indexOffset;
-
         return {
             baseWidthPercent: baseWidthPercent,
-            fromLeft: fromLeft2,
-            fromRight: fromRight2,
-            startIndex: fromLeft2,
-            width: (fromLeft2 * -1) + (datesInRange + fromRight2)
+            fromLeft: fromLeft + indexOffset,
+            fromRight: fromRight + indexOffset
         };
     };
 };
@@ -152,9 +147,11 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
 AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
     var getEventDataFunc = this.getEventDataFunc,
         dragStartXIndex = this._dragStartXIndex,
-        eventBlockData,
+        datesInRange = dragEventData.datesInRange,
+        eventData,
         isExceededLeft,
         isExceededRight,
+        originLength,
         newLeft,
         newWidth;
 
@@ -162,15 +159,17 @@ AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
         return;
     }
 
-    eventBlockData = getEventDataFunc(dragEventData.xIndex - dragStartXIndex);
+    eventData = getEventDataFunc(dragEventData.xIndex - dragStartXIndex);
+    isExceededLeft = eventData.fromLeft < 0;
+    isExceededRight = eventData.fromRight > 0;
 
-    newLeft = eventBlockData.startIndex;
-    isExceededLeft = newLeft < 0;
-    newLeft = Math.max(0, newLeft) * eventBlockData.baseWidthPercent;
+    newLeft = Math.max(0, eventData.fromLeft);
+    originLength = (eventData.fromLeft * -1) + (datesInRange + eventData.fromRight);
+    newWidth = isExceededLeft ? (originLength + eventData.fromLeft) : originLength;
+    newWidth = isExceededRight ? (newWidth - eventData.fromRight) : newWidth;
 
-    newWidth = eventBlockData.width + eventBlockData.startIndex;
-    isExceededRight = newWidth > dragEventData.datesInRange;
-    newWidth = Math.min(eventBlockData.width, newWidth) * eventBlockData.baseWidthPercent;
+    newLeft *= eventData.baseWidthPercent;
+    newWidth *= eventData.baseWidthPercent;
 
     this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 };
