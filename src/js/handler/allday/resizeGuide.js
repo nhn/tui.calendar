@@ -38,7 +38,8 @@ function AlldayResizeGuide(alldayResize) {
     alldayResize.on({
         'allday_resize_dragstart': this._onDragStart,
         'allday_resize_drag': this._onDrag,
-        'allday_resize_dragend': this._clearGuideElement
+        'allday_resize_dragend': this._clearGuideElement,
+        'allday_resize_click': this._clearGuideElement
     }, this);
 }
 
