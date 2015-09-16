@@ -3,13 +3,12 @@
  */
 
 /* clearing bootstrap's box-sizing css. */
-.schedule-view-container *,
-.schedule-view-container *:before,
-.schedule-view-container *:after {
+.schedule-view-layout *,
+.schedule-view-layout *:before,
+.schedule-view-layout *:after {
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-
 }
 
 .schedule-view-dragging {

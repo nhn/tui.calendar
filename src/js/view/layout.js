@@ -25,6 +25,8 @@ function Layout(container) {
     });
     /*eslint-enable*/
 
+    domutil.addClass(container, 'schedule-view-layout');
+
     /**
      * @type {HTMLElement}
      */
