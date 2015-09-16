@@ -60,6 +60,16 @@ function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-
 }
 
 /**
+ * Destroy method
+ */
+AlldayCreation.prototype.destroy = function() {
+    this.guide.destroy();
+    this.dragHandler.off(this);
+    this.dragHandler = this.alldayView = this.baseController =
+        this.getEventDataFunc = this._dragStartXIndex = null;
+};
+
+/**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
  * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.

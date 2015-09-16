@@ -44,6 +44,16 @@ function AlldayMoveGuide(alldayMove) {
 }
 
 /**
+ * Destroy method
+ */
+AlldayMoveGuide.prototype.destroy = function() {
+    this._clearGuideElement();
+    this.alldayMove.off(this);
+    this.alldayMove = this.eventContainer = this._dragStartXIndex =
+        this.guideElement = null;
+};
+
+/**
  * Clear guide element.
  */
 AlldayMoveGuide.prototype._clearGuideElement = function() {

@@ -55,6 +55,13 @@ function AlldayMove(dragHandler, alldayView, baseController) {
     this.guide = new AlldayMoveGuide(this);
 }
 
+AlldayMove.prototype.destroy = function() {
+    this.guide.destroy();
+    this.dragHandler.off(this);
+    this.dragHandler = this.alldayView = this.baseController =
+        this._dragStartXIndex = this.guide = null;
+};
+
 /**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.

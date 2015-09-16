@@ -76,19 +76,6 @@ module.exports = function(name, options, container) {
             alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
             alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
 
-            // alldayResizeHandler.on({
-            //     'allday_resize_dragstart': function() {
-            //         console.log('dragstart', arguments[0]);
-            //     },
-            //     'allday_resize_drag': function() {
-            //         console.log('drag', arguments[0]);
-            //     },
-            //     'allday_resize_dragend': function() {
-            //         console.log('dragend', arguments[0]);
-            //     },
-            //     'allday_resize_click': function() {}
-            // });
-
             weekView.addChild(alldayView);
 
             // TimeGrid
@@ -124,7 +111,15 @@ module.exports = function(name, options, container) {
                 timeMoveHandler.destroy();
                 timeResizeHandler.destroy();
 
+                alldayCreationHandler.off();
+                alldayMoveHandler.off();
+                alldayResizeHandler.off();
+                alldayCreationHandler.destroy();
+                alldayMoveHandler.destroy();
+                alldayResizeHandler.destroy();
+
                 delete weekView.handlers.time;
+                delete weekView.handlers.allday;
 
                 timeCreationHandler = timeMoveHandler = timeResizeHandler = null;
             };

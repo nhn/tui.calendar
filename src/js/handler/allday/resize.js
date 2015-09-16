@@ -55,6 +55,16 @@ function AlldayResize(dragHandler, alldayView, baseController) {
 }
 
 /**
+ * Destroy method
+ */
+AlldayResize.prototype.destroy = function() {
+    this.guide.destroy();
+    this.dragHandler.off(this);
+    this.dragHandler = this.alldayView = this.baseController =
+        this._dragStartXIndex = this.guide = null;
+};
+
+/**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
  * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.

@@ -14,6 +14,7 @@
     }
     .calendar {
         width: 100%;
+        font-size: 15px;
     }
     </style>
 </head>
@@ -22,10 +23,6 @@
     <div class="grid-100">
         <h2>실행 데모</h2>
         <div id="calendar" class="calendar"></div>
-        <div class="cons">
-            <input type="button" value="add allday event" id="add-allday-event" />
-            <input type="button" value="remove last allday event" id="remove-allday-event" />
-        </div>
     </div>
 </div>
 <script src="../../dist/app.js"></script>
@@ -101,25 +98,6 @@
     w.ne.util.forEach(events, function(data) {
         layout.controller.addEvent(calendar.Event.create(data));
     });
-
-    document.getElementById('add-allday-event').onclick = function() {
-        layout.controller.createEvent({
-            title: 'X',
-            isAllDay: true,
-            starts: '2015-08-10T00:00:00+09:00',
-            ends: '2015-08-11T23:59:59+09:00'
-        });
-    };
-
-    document.getElementById('remove-allday-event').onclick = function() {
-        var controller = layout.controller;
-        var lastEvent = controller.events.find(function(e) {return e.isAllDay;}).sort(function(a, b) {
-            return a.id() - b.id();
-        }).pop();
-
-        controller.deleteEvent(lastEvent.id());
-        layout.render();
-    };
 
     // render
     layout.render();

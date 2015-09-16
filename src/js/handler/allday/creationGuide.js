@@ -47,6 +47,16 @@ function AlldayCreationGuide(alldayCreation) {
 }
 
 /**
+ * Destroy method
+ */
+AlldayCreationGuide.prototype.destroy = function() {
+    this._clearGuideElement();
+    this.alldayCreation.off(this);
+    this.alldayCreation = this.eventContainer = this._dragStartXIndex =
+        this.guideElement = null;
+};
+
+/**
  * initialize guide element's default style.
  */
 AlldayCreationGuide.prototype.initializeGuideElement = function() {

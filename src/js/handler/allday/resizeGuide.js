@@ -43,6 +43,16 @@ function AlldayResizeGuide(alldayResize) {
 }
 
 /**
+ * Destroy method
+ */
+AlldayResizeGuide.prototype.destroy = function() {
+    this._clearGuideElement();
+    this.alldayResize.off(this);
+    this.alldayResize = this.eventContainer = this.getEventDataFunc =
+        this.guideElement = null;
+};
+
+/**
  * Clear guide element.
  */
 AlldayResizeGuide.prototype._clearGuideElement = function() {
