@@ -7,14 +7,14 @@ var header = require('gulp-header');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-var karma = require('karma').server;
+var KarmaServer = require('karma').Server;
 var hbsfy = require('hbsfy');
 
-gulp.task('default', function() {
-    karma.start({
+gulp.task('default', function(done) {
+    new KarmaServer({
         configFile: path.join(__dirname, 'karma.conf.js'),
         singleRun: true
-    });
+    }, done).start();
 });
 
 gulp.task('connect', function() {
@@ -67,9 +67,9 @@ gulp.task('dev', function() {
     gulp.watch(['index.js', 'src/**/*.js'], ['bundle']);
 });
 
-gulp.task('test-w', function() {
-    karma.start({
+gulp.task('test-w', function(done) {
+    new KarmaServer({
         configFile: path.join(__dirname, 'karma.conf.local.js')
-    });
+    }, done).start();
 });
 
