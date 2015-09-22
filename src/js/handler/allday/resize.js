@@ -4,6 +4,7 @@
  */
 'use strict';
 var util = global.ne.util;
+var datetime = require('../../datetime');
 var domutil = require('../../common/domutil');
 var common = require('../../common/common');
 var AlldayCore = require('./core');
@@ -178,6 +179,7 @@ AlldayResize.prototype._updateEvent = function(eventData) {
         newEnds = new Date(model.ends.getTime());
 
     newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
+    newEnds = new Date(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
 
     ctrl.updateEvent(model.id(), {
         ends: newEnds

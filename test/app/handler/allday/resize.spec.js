@@ -21,6 +21,32 @@ describe('handler:AlldayResize', function() {
             };
         });
 
+        it('update property when supplied inverse dragstart, dragend.', function() {
+            // 하루짜리 일정
+            mockEventInstance = {
+                id: function() { return '30'; },
+                starts: new Date('2015-05-02T00:00:00+09:00'),
+                ends: new Date('2015-05-03T23:59:59+09:00')
+            };
+
+            // 이벤트 데이터 Mock
+            // 시작일자보다 앞선 그리드까지 리사이즈 했다
+            mockEventData = {
+                targetModel: mockEventInstance,
+                relatedView: mockAlldayView,
+                dragStartXIndex: 4,
+                xIndex: 2
+            };
+
+            AlldayResize.prototype._updateEvent.call(inst, mockEventData);
+
+            // 종료일자는 시작일자보다 앞설 수 없다.
+            expect(inst.baseController.updateEvent).toHaveBeenCalledWith('30', {
+                ends: new Date('2015-05-02T23:59:59+09:00')
+            });
+            
+        });
+
         it('update event model properly by supplied event data.', function() {
             // 하루짜리 일정
             mockEventInstance = {
