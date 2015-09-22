@@ -192,8 +192,9 @@ AlldayMove.prototype._updateEvent = function(eventData) {
  * @emits AlldayMove#allday_move_dragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
+ * @param {?boolean} skipUpdate - true then skip update event model.
  */
-AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
+AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
     var getEventDataFunc = this.getEventDataFunc,
         dragStart = this._dragStart,
         eventData;
@@ -213,7 +214,9 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName) 
         targetModel: dragStart.model
     });
     
-    this._updateEvent(eventData);
+    if (!skipUpdate) {
+        this._updateEvent(eventData);
+    }
 
     /**
      * @event AlldayMove#allday_move_dragend
@@ -238,7 +241,7 @@ AlldayMove.prototype._onClick = function(clickEventData) {
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_move_click');
+    this._onDragEnd(clickEventData, 'allday_move_click', true);
 };
 
 common.mixin(AlldayCore, AlldayMove);

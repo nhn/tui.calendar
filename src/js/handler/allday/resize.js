@@ -192,7 +192,7 @@ AlldayResize.prototype._updateEvent = function(eventData) {
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
-AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
+AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
     var getEventDataFunc = this.getEventDataFunc,
         dragStart = this._dragStart,
         eventData;
@@ -212,7 +212,9 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
         targetModel: dragStart.model
     });
 
-    this._updateEvent(eventData);
+    if (!skipUpdate) {
+        this._updateEvent(eventData);
+    }
 
     /**
      * @event AlldayResize#allday_resize_dragend
@@ -237,7 +239,7 @@ AlldayResize.prototype._onClick = function(clickEventData) {
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_resize_click');
+    this._onDragEnd(clickEventData, 'allday_resize_click', true);
 };
 
 common.mixin(AlldayCore, AlldayResize);
