@@ -11,7 +11,7 @@
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^2.2.0",
-    "gulp-header": "^1.7.1",
+    "gulp-insert": "^0.5.0",
     "handlebars": "^4.0.2",
     "hbsfy": "^2.2.1",
     "jasmine-core": "^2.3.4",
@@ -24,6 +24,7 @@
     "karma-junit-reporter": "^0.3.4",
     "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
     "moment": "^2.10.6",
+    "through2": "^2.0.0",
     "underscore": "^1.8.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

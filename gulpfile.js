@@ -3,12 +3,21 @@ var path = require('path');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
-var header = require('gulp-header');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var KarmaServer = require('karma').Server;
 var hbsfy = require('hbsfy');
+var handlebars = require('handlebars');
+var insert = require('gulp-insert');
+var through = require('through2');
+
+var HEADER = [
+'/**',
+' * {{ name }} - {{ description }}',
+' * @version {{ version }}',
+' */',
+''].join('\n');
 
 gulp.task('default', function(done) {
     new KarmaServer({
@@ -30,19 +39,15 @@ gulp.task('connect', function() {
 
 gulp.task('bundle', function() {
     var pkg = require('./package.json');
-    var banner = [
-        '/**',
-        ' * <%= pkg.name %> - <%= pkg.description %>',
-        ' * @version <%= pkg.version %>',
-        ' */',
-        ''].join('\n');
+    var tmpl = handlebars.compile(HEADER);
+    var versionHeader = tmpl(pkg);
 
     gulp.src([
             'src/css/common.css',
             'src/css/*.css'
         ])
         .pipe(concat('calendar.css'))
-        .pipe(header(banner, {pkg: pkg}))
+        .pipe(insert.prepend(versionHeader))
         .pipe(gulp.dest('dist'));
 
     var b = browserify({
@@ -50,7 +55,15 @@ gulp.task('bundle', function() {
         debug: true
     });
 
+    function prependTransform(file) {
+        return through(function (buf, enc, next) {
+            this.push(versionHeader + buf.toString('utf8'));
+            next();
+        });
+    }
+
     return b.transform(hbsfy)
+        .transform(prependTransform)
         .bundle()
         .on('error', function(err) {
             console.log(err.message);
@@ -58,7 +71,6 @@ gulp.task('bundle', function() {
         })
         .pipe(source('app.js'))
         .pipe(buffer())
-        .pipe(header(banner, {pkg: pkg}))
         .pipe(gulp.dest('dist'))
         .pipe(connect.reload());
 });
