@@ -35,6 +35,68 @@ describe('handler:AlldayCreation', function() {
         expect(proto.checkExpectedCondition.call(inst, div)).toBe('hello world');
     });
 
+    describe('_createEvent()', function() {
+        var mockEventData,
+            mockAlldayView,
+            inst;
+
+        beforeEach(function() {
+            window.prompt.and.returnValue('myEvent');
+
+            // 인스턴스 Mock
+            inst = {
+                baseController: jasmine.createSpyObj('baseController', ['createEvent'])
+            };
+
+            // 4일짜리 주간 뷰 렌더링 Mock
+            mockAlldayView = {
+                options: {
+                    renderStartDate: '2015-05-01',
+                    renderEndDate: '2015-05-04'
+                } 
+            };
+        });
+
+        it('request event model creation to base controller by supplied eventdata.', function() {
+            // 이벤트 데이터 Mock
+            // 2일부터 3일까지 드래그함.
+            mockEventData = {
+                relatedView: mockAlldayView,
+                dragStartXIndex: 1,
+                xIndex: 2
+            };
+
+            proto._createEvent.call(inst, mockEventData);
+
+            expect(inst.baseController.createEvent).toHaveBeenCalledWith({
+                title: 'myEvent',
+                isAllDay: true,
+                starts: new Date('2015-05-02T00:00:00+09:00'),
+                ends: new Date('2015-05-03T23:59:59+09:00')
+            });
+        });
+
+        it('create event instance properly when supplied inverse dragstart, dragend index.', function() {
+            // 이벤트 데이터 Mock
+            // 4일부터 2일까지 드래그함.
+            // 역방향으로 드래그했다
+            mockEventData = {
+                relatedView: mockAlldayView,
+                dragStartXIndex: 3,
+                xIndex: 1
+            };
+
+            proto._createEvent.call(inst, mockEventData);
+
+            expect(inst.baseController.createEvent).toHaveBeenCalledWith({
+                title: 'myEvent',
+                isAllDay: true,
+                starts: new Date('2015-05-02T00:00:00+09:00'),
+                ends: new Date('2015-05-04T23:59:59+09:00')
+            });
+        });
+    });
+
     describe('event handler methods', function() {
         var inst;
 
