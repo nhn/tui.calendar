@@ -39,6 +39,12 @@ function AlldayResize(dragHandler, alldayView, baseController) {
      */
     this.baseController = baseController;
 
+    /**
+     * Temporary variable for dragStart event data.
+     * @type {object}
+     */
+    this._dragStart = null;
+
     dragHandler.on({
         dragStart: this._onDragStart
     }, this);
@@ -56,7 +62,7 @@ AlldayResize.prototype.destroy = function() {
     this.guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.alldayView = this.baseController =
-        this.guide = null;
+        this.guide = this._dragStart = null;
 };
 
 /**
@@ -116,7 +122,7 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
     }
 
     getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
-    eventData = getEventDataFunc(dragStartEventData.originEvent);
+    eventData = this._dragStart = getEventDataFunc(dragStartEventData.originEvent);
 
     util.extend(eventData, {
         eventBlockElement: eventBlockElement,
@@ -162,15 +168,34 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
 };
 
 /**
+ * Request update event instance to base controller.
+ * @param {object} eventData - event data from AlldayResize handler.
+ */
+AlldayResize.prototype._updateEvent = function(eventData) {
+    var ctrl = this.baseController,
+        model = eventData.targetModel,
+        dateOffset = eventData.xIndex - eventData.dragStartXIndex,
+        newEnds = new Date(model.ends.getTime());
+
+    newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
+
+    ctrl.updateEvent(model.id(), {
+        ends: newEnds
+    });
+};
+
+/**
  * DragEnd event hander method.
  * @emits AlldayResize#allday_resize_dragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
 AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-    var getEventDataFunc = this.getEventDataFunc;
+    var getEventDataFunc = this.getEventDataFunc,
+        dragStart = this._dragStart,
+        eventData;
 
-    if (!getEventDataFunc) {
+    if (!getEventDataFunc || !dragStart) {
         return;
     }
 
@@ -180,15 +205,22 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
         click: this._onClick
     }, this);
 
+    eventData = getEventDataFunc(dragEndEventData.originEvent);
+    util.extend(eventData, {
+        targetModel: dragStart.model
+    });
+
+    this._updateEvent(eventData);
+
     /**
      * @event AlldayResize#allday_resize_dragend
      * @type {object}
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_resize_dragend', getEventDataFunc(dragEndEventData.originEvent));
+    this.fire(overrideEventName || 'allday_resize_dragend', eventData);
 
-    this.getEventDataFunc = null;
+    this.getEventDataFunc = this._dragStart = null;
 };
 
 /**
