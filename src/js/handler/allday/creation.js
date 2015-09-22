@@ -173,8 +173,9 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event AlldayCreation#allday_creation_dragstart
      * @type {object}
-     * @property {number} dragStartXIndex - the number of drag start index in week grids.
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire('allday_creation_dragstart', eventData);
@@ -198,8 +199,9 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
     /**
      * @event AlldayCreation#allday_creation_drag
      * @type {object}
-     * @property {number} dragStartXIndex - the number of drag start index in week grids.
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire('allday_creation_drag', eventData);
@@ -232,8 +234,9 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
     /**
      * @event AlldayCreation#allday_creation_dragend
      * @type {object}
-     * @property {number} dragStartXIndex - the number of drag start index in week grids.
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire(overrideEventName || 'allday_creation_dragend', eventData);
@@ -250,8 +253,9 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
     /**
      * @event AlldayCreation#allday_creation_click
      * @type {object}
-     * @property {number} dragStartXIndex - the number of drag start index in week grids.
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this._onDragEnd(clickEventData, 'allday_creation_click');

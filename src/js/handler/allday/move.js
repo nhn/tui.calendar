@@ -137,7 +137,9 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event AlldayMove#allday_move_dragstart
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      * @property {Event} model - data object of model isntance.
      * @property {HTMLDivElement} eventBlockElement - target event block element.
@@ -161,7 +163,9 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
     /**
      * @event AlldayMove#allday_move_drag
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire('allday_move_drag', getEventDataFunc(dragEventData.originEvent));
@@ -221,7 +225,9 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, 
     /**
      * @event AlldayMove#allday_move_dragend
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire(overrideEventName || 'allday_move_dragend', eventData);
@@ -238,7 +244,9 @@ AlldayMove.prototype._onClick = function(clickEventData) {
     /**
      * @event AlldayMove#allday_move_click
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this._onDragEnd(clickEventData, 'allday_move_click', true);

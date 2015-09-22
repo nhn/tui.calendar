@@ -139,7 +139,9 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
     /**
      * @event AlldayResize#allday_resize_dragstart
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      * @property {Event} model - data object of model isntance.
      * @property {HTMLDivElement} eventBlockElement - target event block element.
@@ -162,7 +164,9 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
     /**
      * @event AlldayResize#allday_resize_drag
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire('allday_resize_drag', getEventDataFunc(dragEventData.originEvent));
@@ -191,6 +195,7 @@ AlldayResize.prototype._updateEvent = function(eventData) {
  * @emits AlldayResize#allday_resize_dragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
+ * @param {?boolean} skipUpdate - true then skip update event model.
  */
 AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
     var getEventDataFunc = this.getEventDataFunc,
@@ -219,7 +224,9 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
     /**
      * @event AlldayResize#allday_resize_dragend
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this.fire(overrideEventName || 'allday_resize_dragend', eventData);
@@ -236,7 +243,9 @@ AlldayResize.prototype._onClick = function(clickEventData) {
     /**
      * @event AlldayResize#allday_resize_click
      * @type {object}
+     * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
+     * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
     this._onDragEnd(clickEventData, 'allday_resize_click', true);
