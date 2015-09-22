@@ -67,9 +67,15 @@ gulp.task('bundle', function() {
         debug: true
     });
 
+    var added = false;
     function prependTransform(file) {
         return through(function (buf, enc, next) {
-            this.push(versionHeader + buf.toString('utf8'));
+            if (!added) {
+                this.push(versionHeader + buf.toString('utf8'));
+                added = true;
+            } else {
+                this.push(buf.toString('utf8'));
+            }
             next();
         });
     }
