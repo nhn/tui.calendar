@@ -43,6 +43,7 @@ describe('handler:AlldayCreation', function() {
             spyOn(inst, 'fire');
             spyOn(inst, '_retriveEventData').and.returnValue(function() {return 'good'});
             inst.dragHandler = jasmine.createSpyObj('dragHandler', ['on', 'off']);
+            spyOn(inst, '_createEvent');
         });
 
         it('_onDragStart() not fire dragstart event when not meet expected conditions.', function() {
