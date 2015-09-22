@@ -40,6 +40,12 @@ function AlldayMove(dragHandler, alldayView, baseController) {
      */
     this.baseController = baseController;
 
+    /**
+     * Temporary variable for dragstart event data.
+     * @type {object}
+     */
+    this._dragStart = null;
+
     dragHandler.on({
         dragStart: this._onDragStart
     }, this);
@@ -54,7 +60,7 @@ AlldayMove.prototype.destroy = function() {
     this.guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.alldayView = this.baseController =
-        this.guide = null;
+        this.guide = this._dragStart = null;
 };
 
 /**
@@ -115,7 +121,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     }
 
     getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
-    eventData = getEventDataFunc(dragStartEventData.originEvent);
+    eventData = this._dragStart = getEventDataFunc(dragStartEventData.originEvent);
 
     util.extend(eventData, {
         eventBlockElement: eventBlockElement,
@@ -162,15 +168,37 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
 };
 
 /**
+ * Request update event model to base controller.
+ * @param {object} eventData - event data from AlldayMove handler module.
+ */
+AlldayMove.prototype._updateEvent = function(eventData) {
+    var ctrl = this.baseController,
+        model = eventData.targetModel,
+        dateOffset = eventData.xIndex - eventData.dragStartXIndex,
+        newStarts = new Date(model.starts.getTime()),
+        newEnds = new Date(model.ends.getTime());
+
+    newStarts = new Date(newStarts.setDate(newStarts.getDate() + dateOffset));
+    newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
+
+    ctrl.updateEvent(model.id(), {
+        starts: newStarts,
+        ends: newEnds
+    });
+};
+
+/**
  * DragEnd event hander method.
  * @emits AlldayMove#allday_move_dragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
 AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-    var getEventDataFunc = this.getEventDataFunc;
+    var getEventDataFunc = this.getEventDataFunc,
+        dragStart = this._dragStart,
+        eventData;
 
-    if (!getEventDataFunc) {
+    if (!getEventDataFunc || !dragStart) {
         return;
     }
 
@@ -180,15 +208,22 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName) 
         click: this._onClick
     }, this);
 
+    eventData = getEventDataFunc(dragEndEventData.originEvent);
+    util.extend(eventData, {
+        targetModel: dragStart.model
+    });
+    
+    this._updateEvent(eventData);
+
     /**
      * @event AlldayMove#allday_move_dragend
      * @type {object}
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_move_dragend', getEventDataFunc(dragEndEventData.originEvent));
+    this.fire(overrideEventName || 'allday_move_dragend', eventData);
 
-    this.getEventDataFunc = null;
+    this.getEventDataFunc = this._dragStart = null;
 };
 
 /**
