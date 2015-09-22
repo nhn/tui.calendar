@@ -54,6 +54,7 @@ var alldayCore = {
             xIndex = mmin(xIndex, datesInRange - 1);
 
             return {
+                relatedView: alldayView,
                 dragStartXIndex: dragStartXIndex,
                 datesInRange: datesInRange,
                 xIndex: xIndex

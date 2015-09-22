@@ -22,34 +22,34 @@ describe('handler:AlldayCreationGuide', function() {
 
     describe('_refreshGuideElement()', function() {
         it('can refresh guide element to express creation actions.', function() {
-            // // 세 번째 날짜 그리드에서 마우스 다운 시
-            // var mockEventData = {
-            //     dragStartXIndex: 2,
-            //     datesInRange: 5,
-            //     xIndex: 2,
-            //     length: 1
-            // };
-            // proto._refreshGuideElement.call(mockInst, mockEventData);
-            // expect(mockGuideElement.style).toEqual({
-            //     width: '20%',
-            //     left: '40%',
-            //     display: 'block'
-            // });
-            //
-            //
-            // // 두 번째 그리드에서 네 번째 그리드까지 드래그 시
-            // mockEventData = {
-            //     dragStartXIndex: 1,
-            //     datesInRange: 5,
-            //     xIndex: 3,
-            //     length: 3    // 드래그 이벤트에는 width 프로퍼티가 제공됨.
-            // };
-            // proto._refreshGuideElement.call(mockInst, mockEventData);
-            // expect(mockGuideElement.style).toEqual({
-            //     width: '60%',
-            //     left: '20%',
-            //     display: 'block'
-            // });
+            // 세 번째 날짜 그리드에서 마우스 다운 시
+            var mockEventData = {
+                dragStartXIndex: 2,
+                datesInRange: 5,
+                xIndex: 2,
+                length: 1
+            };
+            proto._refreshGuideElement.call(mockInst, mockEventData);
+            expect(mockGuideElement.style).toEqual({
+                width: '20%',
+                left: '40%',
+                display: 'block'
+            });
+
+
+            // 두 번째 그리드에서 네 번째 그리드까지 드래그 시
+            mockEventData = {
+                dragStartXIndex: 1,
+                datesInRange: 5,
+                xIndex: 3,
+                length: 3    // 드래그 이벤트에는 width 프로퍼티가 제공됨.
+            };
+            proto._refreshGuideElement.call(mockInst, mockEventData);
+            expect(mockGuideElement.style).toEqual({
+                width: '60%',
+                left: '20%',
+                display: 'block'
+            });
 
             // 세 번째 그리드에서 첫 번째 그리드로 드래그 (역방향)
             mockEventData = {

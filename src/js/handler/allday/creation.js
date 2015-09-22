@@ -4,6 +4,7 @@
  */
 'use strict';
 var util = global.ne.util;
+var datetime = require('../../datetime');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var alldayCore = require('./core');
@@ -104,9 +105,45 @@ AlldayCreation.prototype.connect = function(dragHandler, alldayView, baseControl
     }, this);
 };
 
+/**
+ * Request event model creation to controller by custom events.
+ * @param {object} eventData - event data from AlldayCreation module.
+ */
 AlldayCreation.prototype._createEvent = function(eventData) {
-    console.log(eventData);
-    //TODO: implements
+    var title = window.prompt('Name of event to create:'),
+        ctrl = this.baseController,
+        viewOptions = eventData.relatedView.options,
+        dateRange = datetime.range(
+            datetime.start(datetime.parse(viewOptions.renderStartDate)),
+            datetime.end(datetime.parse(viewOptions.renderEndDate)),
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        startXIndex = eventData.dragStartXIndex,
+        xIndex = eventData.xIndex,
+        newStarts,
+        newEnds;
+
+    if (!title) {
+        return;
+    }
+
+    // when inverse start, end then change it.
+    if (xIndex < startXIndex) {
+        startXIndex = xIndex + startXIndex;
+        xIndex = startXIndex - xIndex;
+        startXIndex = startXIndex - xIndex;
+    }
+
+    newStarts = new Date(dateRange[startXIndex].getTime());
+    newEnds = datetime.end(dateRange[xIndex]);
+
+    // request event creation to "base" controller.
+    ctrl.createEvent({
+        title: title,
+        isAllDay: true,
+        starts: newStarts,
+        ends: newEnds
+    });
 };
 
 /**

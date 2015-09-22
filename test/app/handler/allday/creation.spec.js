@@ -8,6 +8,7 @@ describe('handler:AlldayCreation', function() {
         proto = AlldayCreation.prototype;
         // 테스트와 무관한 모듈 목 처리
         spyOn(window.ne.dooray.calendar.AlldayCreationGuide.prototype, 'initializeGuideElement').and.returnValue();
+        spyOn(window, 'prompt');
     });
 
     it('checkExpectedCondition() can judge specific event target is suitable for creation handler.', function() {

@@ -23,6 +23,7 @@ describe('handler:AlldayCore', function() {
             // drag end position
             window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([180 + 60, 10]);
             expect(result()).toEqual({
+                relatedView: mockAlldayView,
                 dragStartXIndex: 0,
                 datesInRange: 5,
                 xIndex: 3
@@ -34,6 +35,7 @@ describe('handler:AlldayCore', function() {
             // drag end position
             window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([20 + 60, 25]);
             expect(result()).toEqual({
+                relatedView: mockAlldayView,
                 dragStartXIndex: 1,
                 datesInRange: 5,
                 xIndex: 0
