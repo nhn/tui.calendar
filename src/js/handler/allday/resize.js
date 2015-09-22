@@ -39,11 +39,6 @@ function AlldayResize(dragHandler, alldayView, baseController) {
      */
     this.baseController = baseController;
 
-    /**
-     * @type {number}
-     */
-    this._dragStartXIndex = null;
-
     dragHandler.on({
         dragStart: this._onDragStart
     }, this);
@@ -61,7 +56,7 @@ AlldayResize.prototype.destroy = function() {
     this.guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.alldayView = this.baseController =
-        this._dragStartXIndex = this.guide = null;
+        this.guide = null;
 };
 
 /**
@@ -120,9 +115,8 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView);
+    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
     eventData = getEventDataFunc(dragStartEventData.originEvent);
-    this._dragStartXIndex = eventData.xIndex;
 
     util.extend(eventData, {
         eventBlockElement: eventBlockElement,
@@ -194,7 +188,7 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
      */
     this.fire(overrideEventName || 'allday_resize_dragend', getEventDataFunc(dragEndEventData.originEvent));
 
-    this.getEventDataFunc = this._dragStartXIndex = null;
+    this.getEventDataFunc = null;
 };
 
 /**

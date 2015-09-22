@@ -44,11 +44,6 @@ function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-
      */
     this.getEventDataFunc = null;
 
-    /**
-     * @type {number}
-     */
-    this._dragStartXIndex = null;
-
     if (arguments.length) {
         this.connect.apply(this, arguments);
     }
@@ -66,7 +61,7 @@ AlldayCreation.prototype.destroy = function() {
     this.guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.alldayView = this.baseController =
-        this.getEventDataFunc = this._dragStartXIndex = null;
+        this.getEventDataFunc = null;
 };
 
 /**
@@ -110,6 +105,7 @@ AlldayCreation.prototype.connect = function(dragHandler, alldayView, baseControl
 };
 
 AlldayCreation.prototype._createEvent = function(eventData) {
+    console.log(eventData);
     //TODO: implements
 };
 
@@ -134,13 +130,13 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
         click: this._onClick
     }, this);
 
-    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView);
+    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
     eventData = getEventDataFunc(dragStartEventData.originEvent);
-    this._dragStartXIndex = eventData.xIndex;
 
     /**
      * @event AlldayCreation#allday_creation_dragstart
      * @type {object}
+     * @property {number} dragStartXIndex - the number of drag start index in week grids.
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
      */
@@ -154,26 +150,20 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
  */
 AlldayCreation.prototype._onDrag = function(dragEventData) {
     var getEventDataFunc = this.getEventDataFunc,
-        dragStartXIndex,
         eventData;
 
     if (!getEventDataFunc) {
         return;
     }
 
-    dragStartXIndex = this._dragStartXIndex;
     eventData = getEventDataFunc(dragEventData.originEvent);
-
-    util.extend(eventData, {
-        width: eventData.xIndex - dragStartXIndex
-    });
 
     /**
      * @event AlldayCreation#allday_creation_drag
      * @type {object}
+     * @property {number} dragStartXIndex - the number of drag start index in week grids.
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
-     * @property {number} width - grid count in drag range.
      */
     this.fire('allday_creation_drag', eventData);
 };
@@ -186,7 +176,6 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
  */
 AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
     var getEventDataFunc = this.getEventDataFunc,
-        dragStartXIndex,
         eventData;
 
     if (!getEventDataFunc) {
@@ -199,23 +188,20 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
         click: this._onClick
     }, this);
 
-    dragStartXIndex = this._dragStartXIndex;
     eventData = getEventDataFunc(dragEndEventData.originEvent);
 
-    util.extend(eventData, {
-        width: eventData.xIndex - dragStartXIndex
-    });
+    this._createEvent(eventData);
 
     /**
      * @event AlldayCreation#allday_creation_dragend
      * @type {object}
+     * @property {number} dragStartXIndex - the number of drag start index in week grids.
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
-     * @property {number} width - grid count in drag range.
      */
     this.fire(overrideEventName || 'allday_creation_dragend', eventData);
 
-    this.getEventDataFunc = this._dragStartXIndex = null;
+    this.getEventDataFunc = null;
 };
 
 /**
@@ -227,9 +213,9 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
     /**
      * @event AlldayCreation#allday_creation_click
      * @type {object}
+     * @property {number} dragStartXIndex - the number of drag start index in week grids.
      * @property {number} datesInRange - date count of this view.
      * @property {number} xIndex - index number of mouse positions.
-     * @property {number} width - grid count in drag range.
      */
     this._onDragEnd(clickEventData, 'allday_creation_click');
 };

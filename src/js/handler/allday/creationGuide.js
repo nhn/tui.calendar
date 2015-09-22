@@ -27,11 +27,6 @@ function AlldayCreationGuide(alldayCreation) {
     this.eventContainer = null;
 
     /**
-     * @type {number}
-     */
-    this._dragStartXIndex = null;
-
-    /**
      * @type {HTMLDIVElement}
      */
     this.guideElement = document.createElement('div');
@@ -52,7 +47,7 @@ function AlldayCreationGuide(alldayCreation) {
 AlldayCreationGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.alldayCreation.off(this);
-    this.alldayCreation = this.eventContainer = this._dragStartXIndex =
+    this.alldayCreation = this.eventContainer =
         this.guideElement = null;
 };
 
@@ -80,20 +75,20 @@ AlldayCreationGuide.prototype.initializeGuideElement = function() {
 AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
     var guideElement = this.guideElement,
         baseWidthPercent = (100 / eventData.datesInRange),
-        dragStartXIndex = this._dragStartXIndex,
+        dragStartXIndex = eventData.dragStartXIndex,
         xIndex = eventData.xIndex,
-        width = eventData.width || 0,
+        length = xIndex - dragStartXIndex,
         leftPercent,
         widthPercent;
 
     // when revert dragging.
-    if (width < 0) {
+    if (length < 0) {
         dragStartXIndex = xIndex;
-        width = Math.abs(width);
+        length = Math.abs(length);
     }
 
     leftPercent = baseWidthPercent * dragStartXIndex;
-    widthPercent = baseWidthPercent * (width + 1);
+    widthPercent = baseWidthPercent * (length + 1);
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.display = 'block';
@@ -113,8 +108,6 @@ AlldayCreationGuide.prototype._clearGuideElement = function() {
     guideElement.style.display = 'none';
     guideElement.style.left = '';
     guideElement.style.width = '';
-
-    this._dragStartXIndex = null;
 };
 
 /**
@@ -127,7 +120,6 @@ AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
         alldayContainerElement = alldayView.container,
         eventContainer = domutil.find('.schedule-view-monthweek-events', alldayContainerElement);
 
-    this._dragStartXIndex = dragStartEventData.xIndex;
     eventContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);
 };
@@ -137,10 +129,6 @@ AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
  * @param {object} dragEventData - event data object of Allday.Creation.
  */
 AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
-    if (!util.isExisty(this._dragStartXIndex)) {
-        return;
-    }
-
     this._refreshGuideElement(dragEventData);
 };
 

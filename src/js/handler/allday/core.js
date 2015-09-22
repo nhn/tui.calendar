@@ -20,19 +20,25 @@ var mmax = Math.max,
 var alldayCore = {
     /**
      * @param {Allday} alldayView - view instance of allday.
+     * @param {MouseEvent} mouseEvent - mouse event object.
      * @returns {function} function that return event data by mouse events.
      */
-    _retriveEventData: function(alldayView) {
+    _retriveEventData: function(alldayView, mouseEvent) {
         var container = alldayView.container,
             renderStartDate,
             renderEndDate,
             datesInRange,
-            containerWidth;
+            containerWidth,
+            mousePos,
+            dragStartXIndex;
 
         renderStartDate = datetime.parse(alldayView.options.renderStartDate);
         renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
         datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
         containerWidth = domutil.getSize(container)[0] - CONTAINER_PADDING_LEFT;    // subtract container left padding.
+
+        mousePos = domevent.getMousePosition(mouseEvent, container);
+        dragStartXIndex = common.ratio(containerWidth, datesInRange, mousePos[0] - CONTAINER_PADDING_LEFT) | 0;
 
         /**
          * @param {MouseEvent} mouseEvent - mouse event in drag actions.
@@ -48,6 +54,7 @@ var alldayCore = {
             xIndex = mmin(xIndex, datesInRange - 1);
 
             return {
+                dragStartXIndex: dragStartXIndex,
                 datesInRange: datesInRange,
                 xIndex: xIndex
             };

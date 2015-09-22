@@ -40,11 +40,6 @@ function AlldayMove(dragHandler, alldayView, baseController) {
      */
     this.baseController = baseController;
 
-    /**
-     * @type {number}
-     */
-    this._dragStartXIndex = null;
-
     dragHandler.on({
         dragStart: this._onDragStart
     }, this);
@@ -59,7 +54,7 @@ AlldayMove.prototype.destroy = function() {
     this.guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.alldayView = this.baseController =
-        this._dragStartXIndex = this.guide = null;
+        this.guide = null;
 };
 
 /**
@@ -119,9 +114,8 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView);
+    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
     eventData = getEventDataFunc(dragStartEventData.originEvent);
-    this._dragStartXIndex = eventData.xIndex;
 
     util.extend(eventData, {
         eventBlockElement: eventBlockElement,
@@ -194,7 +188,7 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName) 
      */
     this.fire(overrideEventName || 'allday_move_dragend', getEventDataFunc(dragEndEventData.originEvent));
 
-    this.getEventDataFunc = this._dragStartXIndex = null;
+    this.getEventDataFunc = null;
 };
 
 /**

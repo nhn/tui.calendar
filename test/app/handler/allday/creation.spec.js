@@ -66,12 +66,14 @@ describe('handler:AlldayCreation', function() {
             });
 
             it('extend eventData. add more property to complete creation action.', function() {
-                inst._dragStartXIndex = 3;
-                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({xIndex:5});
+                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({
+                    dragStartXIndex: 3,
+                    xIndex:5
+                });
                 inst._onDrag({});
 
                 expect(inst.fire).toHaveBeenCalledWith('allday_creation_drag', {
-                    width: 2,
+                    dragStartXIndex: 3,
                     xIndex: 5
                 });
             });
@@ -89,12 +91,14 @@ describe('handler:AlldayCreation', function() {
             });
 
             it('extend eventData. add more property to complete creation action.', function() {
-                inst._dragStartXIndex = 3;
-                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({xIndex:5});
+                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({
+                    dragStartXIndex: 3,
+                    xIndex:5
+                });
                 inst._onDragEnd({});
 
                 expect(inst.fire).toHaveBeenCalledWith('allday_creation_dragend', {
-                    width: 2,
+                    dragStartXIndex: 3,
                     xIndex: 5
                 });
             });
