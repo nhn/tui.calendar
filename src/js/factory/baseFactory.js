@@ -10,6 +10,7 @@ var Layout = require('../view/layout');
 var Drag = require('../handler/drag');
 var controllerFactory = require('./controllerFactory');
 var weekViewFactory = require('./weekViewFactory');
+var Calendar = require('./calendar');
 
 function setOptions(options) {
     var today = datetime.start(new Date()),
@@ -97,13 +98,5 @@ module.exports = function(options, container) {
     }
     //TODO: month view
     
-    function Calendar() {
-        this.controller = controller;
-        this.view = layoutView;
-
-        //TODO: 이벤트 잇는 작업 (public api 등록)
-    };
-    util.CustomEvents.mixin(Calendar);
-
-    return new Calendar();
+    return new Calendar(options, layoutView, controller);
 }
