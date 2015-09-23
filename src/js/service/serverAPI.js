@@ -89,36 +89,32 @@ API.prototype._onReadyStateChange = function(options, xhr) {
  * @param {boolean} [options.async=true] 비동기 요청 사용 여부
  * @param {string} [options.type='application/json; charset=utf-8'] type 헤더 값
  * @param {string} [options.contentType='application/json'] Content-Type 헤더 값
- * @param {function()} [options.beforeRequest] 요청 전 수행할 콜백
- * @param {function()} [options.error] 요청에 대한 에러 발생 시 수행할 콜백
- * @param {function()} [options.complete] 요청이 끝났을 때 (성공, 실패 여부와 무관) 수행하는 콜백
+ * @param {string} [options.dataType='json'] 서버에서 응답받기 바라는 결과의 타입
+ * @param {function} [optoins.success] - isSuccessful true에 대한 콜백
+ * @param {function} [options.fail] - isSuccessful false 에 대한 콜백
+ * @param {function} [options.error] 요청에 대한 에러 발생 시 수행할 콜백
+ * @param {function} [options.complete] 요청이 끝났을 때 (성공, 실패 여부와 무관) 수행하는 콜백
+ * @param {bollean} [options.cache=true] - false 일 경우 timestamp 파라미터를 url에 붙여 캐시를 무시
  */
 API.prototype.ajax = function(url, options) {
     var xhr,
+        data,
+        separator,
         defaultOptions = {
             method: 'GET',
             async: true,
             type: 'application/json; charset=utf-8',
             contentType: 'application/json',
             dataType: 'json',
-            beforeRequest: function() {},
             success: function() {},
             fail: function() {},
             error: function() {},
             complete: function() {},
             cache: true
-        },
-        data,
-        separator;
+        };
 
     options = util.extend(defaultOptions, options);
-    data = util.isExisty(util.pick(options, 'data'));
-    if (!data) {
-        data = null;
-    }
-
-    options.beforeRequest(data);
-
+    data = util.pick(options, 'data');
     if (!options.cache) {
         separator = ~url.indexOf('?') ? '&' : '?';
         url = url + separator + '_=' + +(new Date());
@@ -127,9 +123,9 @@ API.prototype.ajax = function(url, options) {
     xhr = this._createXHR();
     xhr.open(options.method, url, options.async);
     xhr.setRequestHeader('type', options.type);
-    xhr.setRequestHeader('Content-Type', options.contentType);
+    xhr.setRequestHeader('content-type', options.contentType);
     xhr.onreadystatechange = util.bind(this._onReadyStateChange, this, options, xhr);
-    xhr.send();
+    xhr.send(data ? data : null);
 };
 
 module.exports = function() {

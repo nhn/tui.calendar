@@ -22,9 +22,14 @@ describe('API', function() {
             mock = stringify(origin);
         });
 
-        it('ajax 데이터를 가공한다', function() {
+        it('type 파라미터가 json이면 결과를 파싱하여 객체로 반환한다.', function() {
             var processed = serverAPI._processRawData('json', mock);
             expect(processed).toEqual(origin);
+        });
+
+        it('json이외의 타입은 그냥 반환한다', function() {
+            var processed = serverAPI._processRawData('text/html', mock);
+            expect(processed).toBe(stringify(origin));
         });
     });
 
@@ -96,6 +101,32 @@ describe('API', function() {
             doneFn = jasmine.createSpy('success');
         });
 
+        it('can ignore server cache to use \'cache\' options.', function() {
+            serverAPI.ajax('/serverAPI.test', {
+                cache: false
+            });
+
+            var url1 = jasmine.Ajax.requests.mostRecent().url;
+
+            serverAPI.ajax('/serverAPI.test', {
+                cache: true 
+            });
+
+            var url2 = jasmine.Ajax.requests.mostRecent().url;
+
+            expect(url1).not.toBe(url2);
+        });
+
+        it('timestamp to disable cache attach safely to url', function() {
+            serverAPI.ajax('/serverAPI.test?myname=hong', {
+                cache: false 
+            });
+
+            var url = jasmine.Ajax.requests.mostRecent().url;
+
+            expect(url).toMatch(/\/serverAPI\.test\?myname\=hong&_=\d+/)
+        });
+
         it('ajax 요청을 보낸다', function() {
             serverAPI.ajax('/serverAPI.test', {
                 success: doneFn
@@ -106,7 +137,7 @@ describe('API', function() {
             expect(req.url).toBe('/serverAPI.test');
         });
 
-        it('데이터를 주고 받는다', function() {
+        it('응답 결과를 콜백에서 받을 수 있다', function() {
             var testResponse = {
                 isSuccessful: true,
                 result: {
@@ -116,7 +147,6 @@ describe('API', function() {
             };
 
             serverAPI.ajax('/serverAPI.test', {
-                data: {hello:"world"},
                 success: doneFn
             });
 
@@ -127,6 +157,16 @@ describe('API', function() {
             });
 
             expect(doneFn).toHaveBeenCalledWith(testResponse.result);
+        });
+
+        it('POST인 경우 데이터를 보낼 수 있다.', function() {
+            serverAPI.ajax('/serverAPI.test', {
+                method: 'POST',
+                data: 'good',
+                success: doneFn
+            });
+
+            expect(jasmine.Ajax.requests.mostRecent().params).toBe('good');
         });
 
         it('http method를 설정할 수 있다', function() {
@@ -155,20 +195,7 @@ describe('API', function() {
             req = jasmine.Ajax.requests.mostRecent();
 
             expect(req.requestHeaders['type']).toBe('text');
-            expect(req.requestHeaders['Content-Type']).toBe('text/html');
-        });
-
-        it('beforeRequest옵션으로 ajax요청 전 특정 동작을 수행할 수 있다', function() {
-            var bE = jasmine.createSpy('beforeRequest');
-
-            serverAPI.ajax('/serverAPI.test', {
-                beforeRequest: bE
-            });
-
-            jasmine.Ajax.requests.mostRecent().respondWith({
-                'status': 200
-            });
-            expect(bE).toHaveBeenCalledWith(null);
+            expect(req.requestHeaders['content-type']).toBe('text/html');
         });
 
         it('error옵션으로 ajax요청에 문제가 발생했을 때 콜백을 수행할 수 있다', function() {
@@ -203,8 +230,6 @@ describe('API', function() {
             });
 
             expect(spy.complete).toHaveBeenCalled();
-
         });
-
     });
 });
