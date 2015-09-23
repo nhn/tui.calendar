@@ -92,44 +92,23 @@
         defaultView: 'week'
     }, document.getElementById('calendar'));
 
-    // calendar.controller.createEvent({
-    //     title: '추석',
-    //     isAllDay: true,
-    //     starts: '2015-09-25T00:00:00+09:00',
-    //     ends: '2015-09-25T23:59:59+09:00'
-    // }, true);
-    //
-    // calendar.controller.createEvent({
-    //     title: '주간보고',
-    //     isAllDay: false,
-    //     starts: '2015-09-24T14:00:00+09:00',
-    //     ends: '2015-09-24T14:20:00+09:00'
-    // }, true);
+    calendar.controller.createEvent({
+        title: '추석연휴',
+        isAllDay: true,
+        starts: '2015-09-25T00:00:00+09:00',
+        ends: '2015-09-29T23:59:59+09:00'
+    }, true);
+
+    calendar.controller.createEvent({
+        title: '주간보고',
+        isAllDay: false,
+        starts: '2015-09-24T14:00:00+09:00',
+        ends: '2015-09-24T14:30:00+09:00'
+    }, true);
 
     calendar.view.render();
 
     w.calendar = calendar;
-
-    // w.ne.util.forEach(events, function(data) {
-    //     calendar.controller.createEvent(data);
-    // });
-
-    // calendar 1
-    // var layout = calendar.ViewFactory('Week', {
-    //     renderStartDate: '2015-08-10',
-    //     renderEndDate: '2015-08-14'
-    // }, document.getElementById('calendar'));
-    //
-    //
-    // // add event models
-    // w.ne.util.forEach(events, function(data) {
-    //     layout.controller.addEvent(calendar.Event.create(data));
-    // });
-    //
-    // // render
-    // layout.render();
-    //
-    // w.layout = layout;
 })(window);
 </script>
 </body>
