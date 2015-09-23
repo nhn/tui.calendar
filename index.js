@@ -21,6 +21,7 @@ var AJAX = require('./src/js/common/ajax');
  **********/
 var controllerFactory = require('./src/js/factory/controllerFactory');
 var baseFactory = require('./src/js/factory/baseFactory');
+var serviceFactory = require('./src/js/service/factory');
 
 /**********
  * Models
@@ -111,6 +112,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
 
     BaseFactory: baseFactory,
     ControllerFactory: controllerFactory,
+    Calendar: serviceFactory,
 
     calendarAPI: calendarAPI
 });
