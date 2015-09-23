@@ -50,7 +50,7 @@ Desktop.ini
 temp
 doc
 report
-dist
+#dist
 *.vim
 
 # performance tester fixtures
