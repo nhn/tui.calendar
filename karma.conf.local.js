@@ -9,6 +9,7 @@ module.exports = function(config) {
         frameworks: [
             'jasmine-jquery',
             'browserify',
+            'jasmine-ajax',
             'jasmine'
         ],
 
