@@ -75,7 +75,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     model: model,
     common: common,
     reqAnimFrame: reqAnimFrame,
-    AJAX: AJAX(),
+    AJAX: AJAX,
 
     ControllerFactory: ControllerFactory,
 

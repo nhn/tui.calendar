@@ -11,6 +11,10 @@ var util = global.ne.util;
  */
 function AJAX() {}
 
+AJAX.ERROR = {
+    NOT_SUPPORT: '사용하시는 브라우저가 서비스 이용에 필요한 필수 기능을 지원하지 않습니다. 최신 버전의 브라우저를 사용해 주세요.'
+};
+
 /**********
  * ajax
  **********/
@@ -26,7 +30,7 @@ AJAX.prototype._createXHR = function() {
         return new ActiveXObject('Microsoft.XMLHTTP'); // jshint ignore:line
     }
 
-    window.alert('사용하시는 브라우저가 서비스 이용의 필수 기능을 지원하지 않습니다. 최신 버전의 브라우저를 사용해 주세요.');
+    window.alert(AJAX.ERROR.NOT_SUPPORT);
 };
 
 /**
@@ -128,12 +132,5 @@ AJAX.prototype.ajax = function(url, options) {
     xhr.send(data ? data : null);
 };
 
-module.exports = function() {
-    var instance = AJAX.instance;
+module.exports = AJAX;
 
-    if (!instance) {
-        instance =  AJAX.instance = new AJAX();
-    }
-
-    return instance;
-}
