@@ -62,6 +62,11 @@ var AlldayMoveGuide = require('./src/js/handler/allday/moveGuide');
 var AlldayResize = require('./src/js/handler/allday/resize');
 var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
 
+/**********
+ * SERVICE MODULE
+ **********/
+var calendarAPI = require('./src/js/service/calendarAPI');
+
 /**
  * @namespace ne.dooray.calendar
  */
@@ -106,6 +111,8 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayMove: AlldayMove,
     AlldayMoveGuide: AlldayMoveGuide,
     AlldayResize: AlldayResize,
-    AlldayResizeGuide: AlldayResizeGuide
+    AlldayResizeGuide: AlldayResizeGuide,
+
+    calendarAPI: calendarAPI
 });
 
