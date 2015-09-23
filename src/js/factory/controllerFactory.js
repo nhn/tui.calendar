@@ -7,28 +7,18 @@
 var util = global.ne.util;
 var Base = require('../controller/base');
 var Week = require('../controller/viewMixin/week');
-var mixins = {
-    'Week': Week
-};
 
 /**
- * @param {string[]} mixinNames The array of mixin module names.
- * @param {Base} [ctrl] The controller instance to reuse. if not supplied then make new one.
  * @returns {Base} The controller instance.
  */
-module.exports = function(mixinNames, ctrl) {
-    mixinNames = mixinNames || [];
+module.exports = function() {
+    var controller = new Base();
 
-    ctrl = ctrl || new Base();
-
-    util.forEach(mixinNames, function(name) {
-        var target = ctrl[name] = {};
-
-        util.forEach(mixins[name], function(method, methodName) {
-            target[methodName] = util.bind(method, ctrl);
-        });
+    controller.Week = {};
+    util.forEach(Week, function(method, methodName) {
+        controller.Week[methodName] = util.bind(method, controller);
     });
 
-    return ctrl;
+    return controller;
 };
 

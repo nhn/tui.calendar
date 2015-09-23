@@ -19,8 +19,8 @@ var AJAX = require('./src/js/common/ajax');
 /**********
  * Factory
  **********/
-var ControllerFactory = require('./src/js/factory/controllerFactory');
-var ViewFactory = require('./src/js/factory/viewFactory');
+var controllerFactory = require('./src/js/factory/controllerFactory');
+var baseFactory = require('./src/js/factory/baseFactory');
 
 /**********
  * Models
@@ -81,20 +81,16 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     common: common,
     reqAnimFrame: reqAnimFrame,
     AJAX: AJAX,
-
-    ControllerFactory: ControllerFactory,
-
     Point: Point, 
-    Event: Event,
 
-    ViewFactory: ViewFactory,
+    Event: Event,
+    EventViewModel: EventViewModel,
+
     View: View,
     Week: Week,
     DayName: DayName,
     TimeGrid: TimeGrid,
     Time: Time,
-
-    EventViewModel: EventViewModel,
 
     Drag: Drag,
     TimeCore: TimeCore,
@@ -112,6 +108,9 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayMoveGuide: AlldayMoveGuide,
     AlldayResize: AlldayResize,
     AlldayResizeGuide: AlldayResizeGuide,
+
+    BaseFactory: baseFactory,
+    ControllerFactory: controllerFactory,
 
     calendarAPI: calendarAPI
 });

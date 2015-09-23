@@ -52,16 +52,19 @@ Base.prototype._getContainDatesInEvent = function(event) {
  * Create an event instance from raw data.
  * @emits Base#createdEvent
  * @param {object} options Data object to create event.
+ * @param {boolean} silent - set true then don't fire events.
  * @returns {Event} The instance of Event that created.
  */
-Base.prototype.createEvent = function(options) {
+Base.prototype.createEvent = function(options, silent) {
     var event = this.addEvent(Event.create(options));
 
-    /**
-     * @event Base#createdEvent
-     * @type {Event}
-     */
-    this.fire('createdEvent', event);
+    if (!silent) {
+        /**
+         * @event Base#createdEvent
+         * @type {Event}
+         */
+        this.fire('createdEvent', event);
+    }
 
     return event;
 };
@@ -100,12 +103,22 @@ Base.prototype._removeFromMatrix = function(event) {
 
 /**
  * Add an event instance.
+ * @emits Base#addedEvent
  * @param {Event} event The instance of Event.
+ * @param {boolean} silent - set true then don't fire events.
  * @returns {Event} The instance of Event that added.
  */
-Base.prototype.addEvent = function(event) {
+Base.prototype.addEvent = function(event, silent) {
     this.events.add(event);
     this._addToMatrix(event);
+
+    if (!silent) {
+        /**
+         * @event Base#addedEvent
+         * @type {object}
+         */
+        this.fire('addedEvent', event);
+    }
 
     return event;
 };

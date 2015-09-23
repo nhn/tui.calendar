@@ -374,6 +374,8 @@ var Week = {
             }
             return 'time';
         });
+        viewModels.allday = viewModels.allday || common.createEventCollection();
+        viewModels.time = viewModels.time || common.createEventCollection();
 
         // view model for allday
         result.allday = common.pick2(viewModels, 'allday').then(function(allday) {
