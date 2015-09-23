@@ -1,5 +1,5 @@
 /**
- * @fileoverview Module for full management of requesting API from server.
+ * @fileoverview Module for full management of requesting AJAX from server.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -9,7 +9,7 @@ var util = global.ne.util;
 /**
  * @constructor
  */
-function API() {}
+function AJAX() {}
 
 /**********
  * ajax
@@ -19,7 +19,7 @@ function API() {}
  * 비동기 요청을 위한 객체를 만들어 반환한다
  * @return {(XMLHttpRequest|ActiveXObject)} 비동기 통신 지원 객체
  */
-API.prototype._createXHR = function() {
+AJAX.prototype._createXHR = function() {
     if (util.isExisty(util.pick(window, 'XMLHttpRequest'))) {
         return new XMLHttpRequest();
     } else if (util.isExisty(util.pick(window, 'ActiveXObject'))) {
@@ -37,7 +37,7 @@ API.prototype._createXHR = function() {
  * @param {*} data 가공할 데이터
  * @return {*} 가공된 데이터
  */
-API.prototype._processRawData = function(dataType, data) {
+AJAX.prototype._processRawData = function(dataType, data) {
     var result = data;
     if (dataType === 'json') {
         try {
@@ -55,7 +55,7 @@ API.prototype._processRawData = function(dataType, data) {
  * @param {object} options ajax옵션 객체
  * @param {(XMLHttpRequest|ActiveXObject)} xhr     비동기 요청 객체
  */
-API.prototype._onReadyStateChange = function(options, xhr) {
+AJAX.prototype._onReadyStateChange = function(options, xhr) {
     var status,
         response;
 
@@ -96,7 +96,7 @@ API.prototype._onReadyStateChange = function(options, xhr) {
  * @param {function} [options.complete] 요청이 끝났을 때 (성공, 실패 여부와 무관) 수행하는 콜백
  * @param {bollean} [options.cache=true] - false 일 경우 timestamp 파라미터를 url에 붙여 캐시를 무시
  */
-API.prototype.ajax = function(url, options) {
+AJAX.prototype.ajax = function(url, options) {
     var xhr,
         data,
         separator,
@@ -129,10 +129,10 @@ API.prototype.ajax = function(url, options) {
 };
 
 module.exports = function() {
-    var instance = API.instance;
+    var instance = AJAX.instance;
 
     if (!instance) {
-        instance =  API.instance = new API();
+        instance =  AJAX.instance = new AJAX();
     }
 
     return instance;

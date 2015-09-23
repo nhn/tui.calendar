@@ -1,4 +1,4 @@
-var serverAPI = window.ne.dooray.calendar.serverAPI;
+var AJAX = window.ne.dooray.calendar.AJAX;
 
 function stringify(obj) {
     return JSON.stringify(obj);
@@ -23,12 +23,12 @@ describe('API', function() {
         });
 
         it('type 파라미터가 json이면 결과를 파싱하여 객체로 반환한다.', function() {
-            var processed = serverAPI._processRawData('json', mock);
+            var processed = AJAX._processRawData('json', mock);
             expect(processed).toEqual(origin);
         });
 
         it('json이외의 타입은 그냥 반환한다', function() {
-            var processed = serverAPI._processRawData('text/html', mock);
+            var processed = AJAX._processRawData('text/html', mock);
             expect(processed).toBe(stringify(origin));
         });
     });
@@ -56,7 +56,7 @@ describe('API', function() {
                 responseText: '{"isSuccessful":true}'
             };
 
-            serverAPI._onReadyStateChange(mockOption, mockXHR);
+            AJAX._onReadyStateChange(mockOption, mockXHR);
             expect(spies.success).toHaveBeenCalled();
 
             mockXHR = {
@@ -65,7 +65,7 @@ describe('API', function() {
                 responseText: '{"isSuccessful":false}'
             };
 
-            serverAPI._onReadyStateChange(mockOption, mockXHR);
+            AJAX._onReadyStateChange(mockOption, mockXHR);
             expect(spies.fail).toHaveBeenCalled();
         });
 
@@ -76,7 +76,7 @@ describe('API', function() {
                 responseText: null
             };
 
-            serverAPI._onReadyStateChange(mockOption, mockXHR);
+            AJAX._onReadyStateChange(mockOption, mockXHR);
             expect(spies.success).not.toHaveBeenCalled();
             expect(spies.error).toHaveBeenCalled();
         });
@@ -88,7 +88,7 @@ describe('API', function() {
                 responseText: '{"isSuccessful":false}'
             };
 
-            serverAPI._onReadyStateChange(mockOption, mockXHR);
+            AJAX._onReadyStateChange(mockOption, mockXHR);
             expect(spies.complete).toHaveBeenCalled();
         });
     });
@@ -102,13 +102,13 @@ describe('API', function() {
         });
 
         it('can ignore server cache to use \'cache\' options.', function() {
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 cache: false
             });
 
             var url1 = jasmine.Ajax.requests.mostRecent().url;
 
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 cache: true 
             });
 
@@ -118,23 +118,23 @@ describe('API', function() {
         });
 
         it('timestamp to disable cache attach safely to url', function() {
-            serverAPI.ajax('/serverAPI.test?myname=hong', {
+            AJAX.ajax('/AJAX.test?myname=hong', {
                 cache: false 
             });
 
             var url = jasmine.Ajax.requests.mostRecent().url;
 
-            expect(url).toMatch(/\/serverAPI\.test\?myname\=hong&_=\d+/)
+            expect(url).toMatch(/\/AJAX\.test\?myname\=hong&_=\d+/)
         });
 
         it('ajax 요청을 보낸다', function() {
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 success: doneFn
             });
 
             req = jasmine.Ajax.requests.mostRecent();
 
-            expect(req.url).toBe('/serverAPI.test');
+            expect(req.url).toBe('/AJAX.test');
         });
 
         it('응답 결과를 콜백에서 받을 수 있다', function() {
@@ -146,7 +146,7 @@ describe('API', function() {
                 }
             };
 
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 success: doneFn
             });
 
@@ -160,7 +160,7 @@ describe('API', function() {
         });
 
         it('POST인 경우 데이터를 보낼 수 있다.', function() {
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 method: 'POST',
                 data: 'good',
                 success: doneFn
@@ -170,7 +170,7 @@ describe('API', function() {
         });
 
         it('http method를 설정할 수 있다', function() {
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 method: 'GET',
                 success: doneFn
             });
@@ -178,7 +178,7 @@ describe('API', function() {
             req = jasmine.Ajax.requests.mostRecent();
             expect(req.method).toBe('GET');
 
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 method: 'DELETE'
             });
 
@@ -187,7 +187,7 @@ describe('API', function() {
         });
 
         it('type, contentType 을 설정할 수 있다', function() {
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 type: 'text',
                 contentType: 'text/html'
             });
@@ -202,7 +202,7 @@ describe('API', function() {
             var successFn = jasmine.createSpy('success'),
                 errFn = jasmine.createSpy('error');
 
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 success: successFn,
                 error: errFn
             });
@@ -219,7 +219,7 @@ describe('API', function() {
         it('complete콜백은 성공/실패 유무와 상관없이 수행된다', function() {
             var spy = jasmine.createSpyObj('callback', ['success', 'error', 'complete']);
 
-            serverAPI.ajax('/serverAPI.test', {
+            AJAX.ajax('/AJAX.test', {
                 success: spy.success,
                 error: spy.error,
                 complete: spy.complete
