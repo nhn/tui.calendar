@@ -97,7 +97,15 @@ View.prototype.render = function() {
     });
 };
 
+/**
+ * Invoke function recursivly.
+ * @param {function} fn - function to invoke child view recursivly
+ */
 View.prototype.recursivly = function(fn) {
+    if (!util.isFunction(fn)) {
+        return;
+    }
+
     fn(this);
     this.childs.each(function(childView) {
         childView.recursivly(fn);

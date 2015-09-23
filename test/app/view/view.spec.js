@@ -43,6 +43,21 @@ describe('View', function() {
         });
     });
 
+    it('recursivly() can invoke function each child views recursivly.', function() {
+            view = new View();
+            var view2 = new View();
+            var view3 = new View();
+
+            view.addChild(view2);
+            view2.addChild(view3);
+
+            spyOn(view3, 'recursivly');
+
+            view.recursivly(function() {});
+
+            expect(view3.recursivly).toHaveBeenCalled();
+    });
+
     describe('destroy', function() {
         var view2;
         beforeEach(function() {
