@@ -97,6 +97,13 @@ View.prototype.render = function() {
     });
 };
 
+View.prototype.recursivly = function(fn) {
+    fn(this);
+    this.childs.each(function(childView) {
+        childView.recursivly(fn);
+    });
+};
+
 /**
  * Resize view recursivly to parent.
  */

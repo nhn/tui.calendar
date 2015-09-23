@@ -24,7 +24,7 @@
         <h2>실행 데모</h2>
         <div id="panel">
             <input type="button" id="calendar-prev" value="이전" />
-            <input type="button" id="calendar-current" value="오늘" />
+            <input type="button" id="calendar-today" value="오늘" />
             <input type="button" id="calendar-next" value="다음" />
         </div>
         <div id="calendar" class="calendar"></div>
@@ -61,6 +61,9 @@
     };
     document.getElementById('calendar-prev').onclick = function() {
         w.calendar.prev();
+    };
+    document.getElementById('calendar-today').onclick = function() {
+        w.calendar.today();
     };
 })(window);
 </script>

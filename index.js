@@ -1,5 +1,4 @@
-/*eslint-disable*/
-
+/* eslint vars-on-top:0, strict:0 */
 /**********
  * Common
  **********/
@@ -19,8 +18,7 @@ var AJAX = require('./src/js/common/ajax');
 /**********
  * Factory
  **********/
-var controllerFactory = require('./src/js/factory/controllerFactory');
-var baseFactory = require('./src/js/factory/baseFactory');
+var controllerFactory = require('./src/js/factory/controller');
 var serviceFactory = require('./src/js/service/factory');
 
 /**********
@@ -110,7 +108,6 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayResize: AlldayResize,
     AlldayResizeGuide: AlldayResizeGuide,
 
-    BaseFactory: baseFactory,
     ControllerFactory: controllerFactory,
     Calendar: serviceFactory,
 

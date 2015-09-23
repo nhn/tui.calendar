@@ -4,13 +4,13 @@
  */
 'use strict';
 
-var baseFactory = require('../factory/baseFactory');
+var Calendar = require('../factory/calendar');
 var calendarAPI = require('./calendarAPI');
 
 module.exports = function(options, container) {
-    var calendar = baseFactory(options, container);
+    var instance = new Calendar(options, container);
 
-    calendar.api = calendarAPI;
+    instance.api = calendarAPI;
 
-    return calendar;
+    return instance;
 }

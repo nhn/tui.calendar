@@ -104,7 +104,7 @@ Week.prototype._onResize = function(source, param) {
  * Prototype props
  **********/
 
-Week.prototype.viewName = 'Week';
+Week.prototype.viewName = 'week';
 
 /**
  * Calculate default render date range from supplied date.
