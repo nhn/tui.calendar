@@ -127,7 +127,7 @@ Base.prototype.addEvent = function(event, silent) {
  * split event model by ymd.
  * @param {Date} starts - start date
  * @param {Date} ends - end date
- * @param {Collection} - collection of event model.
+ * @param {Collection} eventCollection - collection of event model.
  * @returns {object.<string, Collection>} splitted event model collections.
  */
 Base.prototype.splitEventByDateRange = function(starts, ends, eventCollection) {
