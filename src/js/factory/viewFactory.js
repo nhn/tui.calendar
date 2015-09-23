@@ -5,13 +5,13 @@
 'use strict';
 
 // Parent views
-var Layout = require('./layout');
-var Week = require('./week');
+var Layout = require('../view/layout');
+var Week = require('../view/week');
 
 // Sub views
-var DayName = require('./dayname');
-var TimeGrid = require('./timeGrid');
-var Allday = require('./allday');
+var DayName = require('../view/dayname');
+var TimeGrid = require('../view/timeGrid');
+var Allday = require('../view/allday');
 
 // Handlers
 var Drag = require('../handler/drag');
@@ -23,7 +23,7 @@ var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
 
 // Controllers
-var controllerFactory = require('../controller/factory.js');
+var controllerFactory = require('./controllerFactory');
 
 module.exports = function(name, options, container) {
     var layoutView,

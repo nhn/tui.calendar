@@ -5,8 +5,8 @@
 'use strict';
 
 var util = global.ne.util;
-var Base = require('./base');
-var Week = require('./viewMixin/week');
+var Base = require('../controller/base');
+var Week = require('../controller/viewMixin/week');
 var mixins = {
     'Week': Week
 };

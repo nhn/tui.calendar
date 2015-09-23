@@ -17,9 +17,10 @@ var reqAnimFrame = require('./src/js/common/reqAnimFrame');
 var AJAX = require('./src/js/common/ajax');
 
 /**********
- * Controllers
+ * Factory
  **********/
-var ControllerFactory = require('./src/js/controller/factory');
+var ControllerFactory = require('./src/js/factory/controllerFactory');
+var ViewFactory = require('./src/js/factory/viewFactory');
 
 /**********
  * Models
@@ -30,7 +31,6 @@ var Event = require('./src/js/model/event');
 /**********
  * Views
  **********/
-var ViewFactory = require('./src/js/view/factory.js');
 var View = require('./src/js/view/view');
 var Week = require('./src/js/view/week');
 var DayName = require('./src/js/view/dayname');
