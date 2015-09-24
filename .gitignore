@@ -52,7 +52,10 @@ doc
 report
 # dist
 *.vim
+
+# for local dev purpose
 demo/
+build/
 
 # performance tester fixtures
 perf/**/*.json
