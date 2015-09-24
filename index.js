@@ -36,6 +36,8 @@ var DayName = require('./src/js/view/dayname');
 var TimeGrid = require('./src/js/view/timeGrid');
 var Time = require('./src/js/view/time');
 
+var MiniCalendar = require('./src/js/service/view/minicalendar');
+
 /**********
  * View Models
  **********/
@@ -109,8 +111,10 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayResizeGuide: AlldayResizeGuide,
 
     ControllerFactory: controllerFactory,
-    Calendar: serviceFactory,
 
-    calendarAPI: calendarAPI
+    // FOR SERVICE
+    Calendar: serviceFactory,
+    calendarAPI: calendarAPI,
+    MiniCalendar: MiniCalendar
 });
 
