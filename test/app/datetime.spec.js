@@ -198,4 +198,34 @@ describe('datetime', function() {
             );
         });
     });
+
+    describe('arr2dCalendar()', function() {
+        it('2014/10은 일요일 기준일 때 9/28 ~ 11/1 까지 렌더링된다.', function() {
+            var month = new Date('2014-10-01T00:00:00+09:00');
+            var actual = datetime.arr2dCalendar(month, 0);
+            var expected = [
+                [-28, -29, -30, 1, 2, 3, 4],
+                [5, 6, 7, 8, 9, 10, 11],
+                [12, 13, 14, 15, 16, 17, 18],
+                [19, 20, 21, 22, 23, 24, 25],
+                [26, 27, 28, 29, 30, 31, -1]
+            ];
+
+            expect(actual).toEqual(expected);
+        });
+
+        it('2015/12는 월요일 기준일 때 11/30 ~ 2016/1/3까지 렌더링된다.', function() {
+            var month = new Date('2015-12-01T00:00:00+09:00');
+            var actual = datetime.arr2dCalendar(month, 1);
+            var expected = [
+                [-30, 1, 2, 3, 4, 5, 6],
+                [7, 8, 9, 10, 11, 12, 13],
+                [14, 15, 16, 17, 18, 19, 20],
+                [21, 22, 23, 24, 25, 26, 27],
+                [28, 29, 30, 31, -1, -2, -3]
+            ];
+
+            expect(actual).toEqual(expected);
+        });
+    });
 });

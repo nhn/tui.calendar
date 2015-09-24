@@ -348,6 +348,50 @@ datetime = {
         });
 
         return result;
+    },
+
+    arr2dCalendar: function(month, startDayOfWeek) {
+        var starts, ends,
+            renderStart, renderEnd,
+            leftOffsetDate, rightOffsetDate,
+            weekCount,
+            week, cursor, i, j, date, flag,
+            calendar = [],
+            abs = Math.abs;
+
+        startDayOfWeek = startDayOfWeek || 0;
+
+        // 달의 시작일, 렌더링 시작일 계산
+        starts = new Date(new Date(month.getTime()).setDate(1));
+        leftOffsetDate = startDayOfWeek - starts.getDay();
+        renderStart = new Date(starts.getTime()).setDate(starts.getDate() + leftOffsetDate);
+        renderStart = new Date(renderStart);
+
+        // 달의 종료일, 렌더링 종료일 계산
+        ends = new Date(new Date(starts.getTime()).setMonth(starts.getMonth() + 1));
+        ends = new Date(new Date(ends.getTime()).setDate(ends.getDate() - 1));
+        rightOffsetDate = 6 - ends.getDay();
+        renderEnd = new Date(ends.getTime()).setDate(ends.getDate() + rightOffsetDate);
+        renderEnd = new Date(renderEnd);
+
+        weekCount = Math.ceil((leftOffsetDate + ends.getDate() + rightOffsetDate) / 7);
+        cursor = new Date(renderStart.getTime());
+        flag = leftOffsetDate ? -1 : 1;
+
+        for (i = 0; i < weekCount; i += 1) {
+            week = calendar[i] = [];
+
+            for (j = 0; j < 7; j += 1) {
+                date = cursor.getDate();
+                if (j > 0 && abs(date - abs(week[j - 1])) > 1) {
+                    flag *= -1;
+                }
+                week.push(date * flag);
+                cursor = new Date(cursor.setDate(cursor.getDate() + 1));
+            }
+        }
+
+        return calendar;
     }
 };
 
