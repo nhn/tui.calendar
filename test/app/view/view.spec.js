@@ -43,7 +43,7 @@ describe('View', function() {
         });
     });
 
-    it('recursivly() can invoke function each child views recursivly.', function() {
+    it('recursive() can invoke function each child views recursivly.', function() {
             view = new View();
             var view2 = new View();
             var view3 = new View();
@@ -51,11 +51,11 @@ describe('View', function() {
             view.addChild(view2);
             view2.addChild(view3);
 
-            spyOn(view3, 'recursivly');
+            spyOn(view3, 'recursive');
 
-            view.recursivly(function() {});
+            view.recursive(function() {});
 
-            expect(view3.recursivly).toHaveBeenCalled();
+            expect(view3.recursive).toHaveBeenCalled();
     });
 
     describe('destroy', function() {

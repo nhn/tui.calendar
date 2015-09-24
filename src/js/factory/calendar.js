@@ -104,7 +104,7 @@ Calendar.prototype.today = function() {
             renderStartDate: originOptions.renderStartDate,
             renderEndDate: originOptions.renderEndDate 
         };
-        currentView.recursivly(function(view) {
+        currentView.recursive(function(view) {
             if (!view.options) {
                 return;
             }
@@ -136,7 +136,7 @@ Calendar.prototype.move = function(direction) {
             renderStartDate: newStart,
             renderEndDate: newEnd
         };
-        currentView.recursivly(function(view) {
+        currentView.recursive(function(view) {
             if (!view.options) {
                 return;
             }

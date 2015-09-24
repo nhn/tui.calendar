@@ -89,7 +89,7 @@ View.prototype.removeChild = function(id, fn) {
 };
 
 /**
- * Render view recursivly.
+ * Render view recursively.
  */
 View.prototype.render = function() {
     this.childs.each(function(childView) {
@@ -98,22 +98,22 @@ View.prototype.render = function() {
 };
 
 /**
- * Invoke function recursivly.
- * @param {function} fn - function to invoke child view recursivly
+ * Invoke function recursively.
+ * @param {function} fn - function to invoke child view recursively
  */
-View.prototype.recursivly = function(fn) {
+View.prototype.recursive = function(fn) {
     if (!util.isFunction(fn)) {
         return;
     }
 
     fn(this);
     this.childs.each(function(childView) {
-        childView.recursivly(fn);
+        childView.recursive(fn);
     });
 };
 
 /**
- * Resize view recursivly to parent.
+ * Resize view recursively to parent.
  */
 View.prototype.resize = function() {
     var args = Array.prototype.slice.call(arguments),
@@ -146,7 +146,7 @@ View.prototype._destroy = function() {
 
 /*eslint-disable*/
 /**
- * Destroy child view recursivly.
+ * Destroy child view recursively.
  */
 View.prototype.destroy = function(isChildView) {
     this.childs.each(function(childView) {

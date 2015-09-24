@@ -103,7 +103,7 @@ domutil = {
         }
 
         /**
-         * Find element recursivly
+         * Find element recursively
          * @param {HTMLElement} el root element
          * @param {string} selector selector
          */
@@ -135,7 +135,7 @@ domutil = {
     },
 
     /**
-     * Find parent element recursivly.
+     * Find parent element recursively.
      * @param {HTMLElement} el - base element to start find.
      * @param {string} selector - selector string for find
      * @returns {HTMLElement} - element finded or undefined.
