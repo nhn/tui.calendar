@@ -55,7 +55,7 @@ describe('API', function() {
             mockXHR = {
                 status: 200,
                 readyState: 4,
-                responseText: '{"isSuccessful":true}'
+                responseText: '{"header":{"isSuccessful":true}}'
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
@@ -64,7 +64,7 @@ describe('API', function() {
             mockXHR = {
                 status: 200,
                 readyState: 4,
-                responseText: '{"isSuccessful":false}'
+                responseText: '{"header":{"isSuccessful":false}}'
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
@@ -87,7 +87,7 @@ describe('API', function() {
             mockXHR = {
                 status: 200,
                 readyState: 4,
-                responseText: '{"isSuccessful":false}'
+                responseText: '{"header":{"isSuccessful":false}}'
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
@@ -141,7 +141,9 @@ describe('API', function() {
 
         it('응답 결과를 콜백에서 받을 수 있다', function() {
             var testResponse = {
-                isSuccessful: true,
+                header: {
+                    isSuccessful: true
+                },
                 result: {
                     name: 'cony',
                     age: 12
@@ -158,7 +160,7 @@ describe('API', function() {
                 responseText: stringify(testResponse)
             });
 
-            expect(doneFn).toHaveBeenCalledWith(testResponse.result);
+            expect(doneFn).toHaveBeenCalledWith(testResponse);
         });
 
         it('POST인 경우 데이터를 보낼 수 있다.', function() {

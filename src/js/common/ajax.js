@@ -56,37 +56,46 @@ AJAX.prototype._processRawData = function(dataType, data) {
 
 /**
  * XHR의 응답 데이터를 처리한다
- * @param {object} options ajax옵션 객체
- * @param {(XMLHttpRequest|ActiveXObject)} xhr     비동기 요청 객체
+ * @param {object} options - ajax옵션 객체
+ * @param {(XMLHttpRequest|ActiveXObject)} xhr - 비동기 요청 객체
  */
 AJAX.prototype._onReadyStateChange = function(options, xhr) {
     var status,
-        response;
+        response,
+        responseHeader;
 
-    if (xhr.readyState === 4) {
-        status = xhr.status;
-
-        // 정상적으로 응답을 받은 경우
-        if ((status >= 200 && status < 300) || status === 304) {
-            // 응답이 문제없는 경우
-            response = this._processRawData(options.dataType, xhr.responseText);
-
-            if (response.isSuccessful) {
-                options.success(response.result);
-            } else {
-                options.fail(response.result, response.code);
-            }
-        } else if (status !== 0) {
-            options.error();
-        }
-
-        options.complete();
+    if (xhr.readyState !== 4) {
+        return;
     }
+
+    status = xhr.status;
+
+    if ((status >= 200 && status < 300) || status === 304) {
+        response = this._processRawData(options.dataType, xhr.responseText);
+        responseHeader = util.pick(response, 'header');
+
+        if (!responseHeader) {
+            options.error();
+        } else if (responseHeader.isSuccessful) {
+            options.success(response);
+        } else {
+            options.fail(response);
+        }
+    } else if (status !== 0) {
+        options.error();
+    }
+
+    options.complete();
 };
 
 
 /**
- * ajax 요청
+ * ajax 요청을 수행한다.
+ * 
+ * 요청 타입에 따른 추가 데이터 처리는 따로 하지 않으므로 사전에 미리 준비해야 한다
+ * 예를 들어, get요청은 QueryString으로 url을 설정해야 하고, post등의 data를 사용하
+ * 는 요청은 미리 stringfy된 값을 data옵션으로 전달해야 한다.
+ *
  * @param {string} url ajax요청 할 url
  * @param {Object} options 옵션
  * @param {string} [options.method='POST'] 요청 시 사용할 http methods
