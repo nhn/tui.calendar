@@ -35,8 +35,6 @@ var HEADER = [
 ' */',
 ''].join('\n');
 
-var isProduction = gutil.env.production;
-
 gulp.task('default', function(done) {
     new KarmaServer({
         configFile: path.join(__dirname, 'karma.conf.js'),
@@ -52,10 +50,10 @@ gulp.task('connect', function() {
         './src/**/*',
         './index.js',
         './demo/**/*.html'
-    ], ['bundle']);
+    ], ['bundle-dev']);
 });
 
-gulp.task('bundle', function() {
+function bundle(outputPath, isProduction) {
     var pkg = require('./package.json');
     var tmpl = handlebars.compile(HEADER);
     var versionHeader = tmpl(pkg);
@@ -64,17 +62,19 @@ gulp.task('bundle', function() {
         gutil.log(gutil.colors.yellow('<< Bundling for Production >>'));
     }
 
+    outputPath = outputPath || 'dist';
+
     gulp.src([
             'src/css/common.css',
             'src/css/*.css'
         ])
         .pipe(concat('calendar.css'))
         .pipe(insert.prepend(versionHeader))
-        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest(outputPath))
         .pipe(isProduction ? cssmin() : gutil.noop())
         .pipe(isProduction ? rename({extname: '.min.css'}) : gutil.noop())
         .pipe(insert.prepend(versionHeader))
-        .pipe(isProduction ? gulp.dest('dist') : gutil.noop());
+        .pipe(isProduction ? gulp.dest(outputPath) : gutil.noop());
 
     var b = browserify({
         entries: 'index.js',
@@ -103,12 +103,20 @@ gulp.task('bundle', function() {
         })
         .pipe(source('calendar.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest(outputPath))
         .pipe(isProduction ? uglify({compress:{}}) : gutil.noop())
         .pipe(isProduction ? rename({extname: '.min.js'}) : gutil.noop())
         .pipe(isProduction ? insert.prepend(versionHeader) : gutil.noop())
-        .pipe(isProduction ? gulp.dest('dist') : gutil.noop())
+        .pipe(isProduction ? gulp.dest(outputPath) : gutil.noop())
         .pipe(connect.reload());
+}
+
+gulp.task('bundle-dev', function() {
+    return bundle('build', false);
+});
+
+gulp.task('bundle', function() {
+    return bundle('dist', gutil.env.production);
 });
 
 gulp.task('dev', function() {
