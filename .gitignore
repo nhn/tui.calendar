@@ -50,8 +50,9 @@ Desktop.ini
 temp
 doc
 report
-#dist
+# dist
 *.vim
+demo/
 
 # performance tester fixtures
 perf/**/*.json
