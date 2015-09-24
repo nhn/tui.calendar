@@ -81,6 +81,20 @@ describe('API', function() {
             ajax._onReadyStateChange(mockOption, mockXHR);
             expect(spies.success).not.toHaveBeenCalled();
             expect(spies.error).toHaveBeenCalled();
+
+            spies.success.calls.reset();
+            spies.error.calls.reset();
+
+            // header 가 없는경우
+            mockXHR = {
+                status: 500,
+                readyState: 4,
+                responseText: '{"result":{"test":"123"}}'
+            };
+
+            ajax._onReadyStateChange(mockOption, mockXHR);
+            expect(spies.success).not.toHaveBeenCalled();
+            expect(spies.error).toHaveBeenCalled();
         });
 
         it('success, fail, error여부와 별개로 맨 마지막에 complete를 호출한다', function() {
