@@ -100,13 +100,17 @@ View.prototype.render = function() {
 /**
  * Invoke function recursively.
  * @param {function} fn - function to invoke child view recursively
+ * @param {boolean} [skipThis=false] - set true then skip invoke with this(root) view.
  */
-View.prototype.recursive = function(fn) {
+View.prototype.recursive = function(fn, skipThis) {
     if (!util.isFunction(fn)) {
         return;
     }
 
-    fn(this);
+    if (!skipThis) {
+        fn(this);
+    }
+
     this.childs.each(function(childView) {
         childView.recursive(fn);
     });

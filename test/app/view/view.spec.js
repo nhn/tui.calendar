@@ -43,19 +43,38 @@ describe('View', function() {
         });
     });
 
-    it('recursive() can invoke function each child views recursivly.', function() {
-            view = new View();
-            var view2 = new View();
-            var view3 = new View();
+    describe('recursive()', function() {
+        it('can invoke function each child views recursivly.', function() {
+                view = new View();
+                var view2 = new View();
+                var view3 = new View();
 
-            view.addChild(view2);
-            view2.addChild(view3);
+                view.addChild(view2);
+                view2.addChild(view3);
 
-            spyOn(view3, 'recursive');
+                spyOn(view3, 'recursive');
 
-            view.recursive(function() {});
+                view.recursive(function() {});
 
-            expect(view3.recursive).toHaveBeenCalled();
+                expect(view3.recursive).toHaveBeenCalled();
+        });
+
+        it('set skipThis true then skip invoke function with root view.', function() {
+                view = new View();
+                var view2 = new View();
+                var view3 = new View();
+
+                view.addChild(view2);
+                view2.addChild(view3);
+
+                var spy = jasmine.createSpy('recursive');
+
+                view.recursive(spy, true);
+
+                expect(spy.calls.argsFor(0)[0]).not.toBe(view);
+                expect(spy.calls.argsFor(0)[0]).toBe(view2);
+                expect(spy.calls.count()).toBe(2);
+        });
     });
 
     describe('destroy', function() {
