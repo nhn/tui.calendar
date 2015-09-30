@@ -66,7 +66,7 @@ function bundle(outputPath, isProduction) {
 
     gulp.src([
             'src/css/common.css',
-            'src/css/*.css'
+            'src/css/**/*.css'
         ])
         .pipe(concat('calendar.css'))
         .pipe(insert.prepend(versionHeader))
