@@ -350,6 +350,14 @@ datetime = {
         return result;
     },
 
+    /**
+     * Return 2-dimensional array month calendar
+     *
+     * dates that different month with given date are negative values
+     * @param {Date} month - date want to calculate month calendar
+     * @param {number} [startDayOfWeek=0] - start day of week
+     * @returns {Array.<string[]>} calendar 2d array
+     */
     arr2dCalendar: function(month, startDayOfWeek) {
         var weekDayMatrix = [
                 [0, 1, 2, 3, 4, 5, 6],
@@ -367,9 +375,9 @@ datetime = {
             cursor, week, flag,
             calendar = [];
 
-        starts = new Date(new Date(month.getTime()).setDate(1));
-        ends = new Date(new Date(starts.getTime()).setMonth(starts.getMonth() + 1));
-        ends = new Date(new Date(ends.getTime()).setDate(ends.getDate() - 1));
+        starts = new Date(new Date(+month).setDate(1));
+        ends = new Date(new Date(+starts).setMonth(starts.getMonth() + 1));
+        ends = new Date(new Date(+ends).setDate(ends.getDate() - 1));
 
         weekArr = weekDayMatrix[startDayOfWeek || 0];
         startIndex = util.inArray(starts.getDay(), weekArr);
@@ -377,7 +385,7 @@ datetime = {
 
         afterDates = 7 - (endIndex + 1);
 
-        cursor = new Date(new Date(starts.getTime()).setDate(starts.getDate() - startIndex));
+        cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
         flag = startIndex > 0 ? -1 : 1;
 
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
