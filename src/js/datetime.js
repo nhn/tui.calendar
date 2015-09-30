@@ -393,7 +393,7 @@ datetime = {
                 week = calendar[i / 7] = [];
             }
 
-            if (i === startIndex || i === (startIndex + ends.getDate())) {
+            if ((startIndex > 0 && i === startIndex) || i === (startIndex + ends.getDate())) {
                 flag *= -1;
             }
 
