@@ -1,1 +1,22 @@
-<div>{{ test }}</div>
+<table>
+<caption>
+    <button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-prev"><span>&lt;</span></button>&nbsp;{{ renderMonth }}&nbsp;<button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-next"><span>&gt;</span></button>
+</caption>
+<thead>
+{{{ minical-header }}}
+</thead>
+<tbody>
+{{#each calendar ~}}
+<tr>
+{{#each this ~}}
+<td class="{{ minical-otherdate }}">
+    <button type="button" tabindex="-1" class="schedule-view-minicalendar-date">
+        <span class="schedule-view-minicalendar-label">{{ minical-abs }}</span>
+        <span class="schedule-view-minicalendar-dots">{{{ minical-dots @root.eventsInDates }}}</span>
+    </button>
+</td>
+{{/each ~}}
+</tr>
+{{/each ~}}
+</tbody>
+</table>

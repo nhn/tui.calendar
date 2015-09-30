@@ -4,7 +4,17 @@
  */
 'use strict';
 
-module.exports = {
+var label = {
+    DAY_NAME: {
+        kor: ['일', '월', '화', '수', '목', '금', '토']
+    },
+    NEW_EVENT: {
+        kor: '새 일정'
+    }
+}
+
+var config = {
+    label: label,
     monthweek: {    // 종일일정
         view: {
             CONTAINER_PADDING_LEFT: 60,    // 이벤트 컨테이너 엘리먼트의 left padding.
@@ -13,14 +23,14 @@ module.exports = {
         },
         handler: {
             guide: {
-                TEXT_FOR_NEW_EVENT: '새 일정'    // 종일일정 생성 효과 엘리먼트 텍스트
+                TEXT_FOR_NEW_EVENT: label.NEW_EVENT.kor    // 종일일정 생성 효과 엘리먼트 텍스트
             }
         }
     },
     dayname: {    // dayname
         view: {
             DAY_NAME: {    // Date.day 인덱스에 해당하는 일자 레이블 텍스트
-                kor: ['일', '월', '화', '수', '목', '금', '토']
+                kor: label.DAY_NAME.kor
             }
         }
     },
@@ -31,5 +41,7 @@ module.exports = {
             SET_SCROLL_DELAY: global.ne.util.browser.msie ? 100 : 50
         }
     }
-};
+}
+
+module.exports = config;
 

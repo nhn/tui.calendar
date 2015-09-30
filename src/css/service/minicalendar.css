@@ -1,0 +1,119 @@
+/**********
+ * service/MiniCalendar
+ **********/
+
+.schedule-view-minicalendar table {
+    table-layout: fixed;
+}
+
+.schedule-view-minicalendar caption {
+    text-align: center;
+    margin-bottom: 7px;
+}
+
+.schedule-view-minicalendar caption button { 
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 16px;
+}
+
+.schedule-view-minicalendar-prev {
+    background-repeat: no-repeat;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAKklEQVR42q3IsQEAIAyEwDca9h/ZOrRKx+Wl8jN/wfwWNIIyZBtyiCXfuj9BAHLLHGpeAAAAAElFTkSuQmCC);
+}
+
+.schedule-view-minicalendar-next {
+    background-repeat: no-repeat;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==);
+}
+
+.schedule-view-minicalendar-prev span, 
+.schedule-view-minicalendar-next span {
+    visibility: hidden;
+}
+
+.schedule-view-minicalendar th,
+.schedule-view-minicalendar td {
+    text-align: center;
+    color: #181818;
+    position: relative;
+    margin: 0; padding: 0;
+}
+
+.schedule-view-minicalendar-date {
+    position: relative;
+    display: block;
+    width: 25px;
+    height: 25px;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #181818;
+    padding: 0px;
+    margin: 0px;
+}
+
+.schedule-view-minicalendar-other .schedule-view-minicalendar-date {
+    color: #b8b8b8;
+}
+
+.schedule-view-minicalendar-label {
+    display: block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.schedule-view-minicalendar-dots {
+    display: block;
+    position: relative;
+    width: 25px;
+    height: 7px;
+    top: -7px;
+    line-height: 7px;
+    font-size: 0.7em;
+}
+
+.schedule-view-minicalendar-focused .schedule-view-minicalendar-label{
+    font-size: 1.1em;
+    color: #f8f8f8;
+}
+
+.schedule-view-minicalendar-focused:before{
+    content: '';
+    margin: 0; padding: 0;
+    position: absolute;
+    display: block;
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15.5px;
+    background-repeat: no-repeat;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABC1BMVEW4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLjl4Ll7AAAAWHRSTlMAAgQFBwgLEBESExkdICIjJCYpMTQ3Pj9DREpOUFFSU1VWWFlaaGlrbHN0dXt8fYqMjY+QlJWboaOnsLO0vL2/wMPHyczO1NXX2d3f4+Xt7u/w9Pb3/P3+rFZGPwAAAOBJREFUeAF9yfk+MlEcwOHv+04WOoQwRGTflyxRhlD2Ypjid/9X4jOWphnnnOffh25qMl/IZVPoDK2f3fttaTWvj6YdEtIHzxKpzREz35C4kwEiW++SVM9EKxq3im+zH6JTTRFKN0Rvh9ChGLwOA8oXk31gTYye+sATMxf1YOlNXN/SJfJtS1coiIVHLrB0mWzT0nv01iy9DMfmDUZhytzVf+DUjb0AMGPaK4fQqX5b43wZvNH2Cj8yd5rdpkOdJ/NtlS49uy+xvZwgbqT4+HvBxeJ//uh3N0oVr1xcGqPjE1ib4uyZugn1AAAAAElFTkSuQmCC);
+}
+
+.schedule-view-minicalendar-focused .schedule-view-minicalendar-dots {
+    color: #f8f8f8;
+}
+
+@media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-devicepixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx) {
+    .schedule-view-minicalendar-focused:before{
+        background-size: 30px 30px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAA21BMVEW4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLhFEwyhAAAASHRSTlMABgcNEBESICEkJSYrLD0+UVJTVF9lZ2lqbXZ3eHp7fX6cnZ+goaSlpqepqre4ubrExsfIzM3O3d/h4uzu8PHy9PX2+fr8/f55pye0AAABcElEQVR42rXXaVPCMBCA4QTkVKgI5ZIbDwSreACK2NJKy/7/X2SmOMhRaLKr7/dnptMmzYb9QzxbbQ+nFoA1fbqpZbm8PNENG7ayDT0mRTNdBwJyuplQmhh4cCBvkDhKed2BIzkNftimXyGkcfqQPTchNDMXbMsuSOSWg2wTJGvu2xJIV9q1OVceuxfbNvUJCpmpTRsZgVLjyAaug2KNX5u0VbGdXOMeKHe3XpWuOvZOf3AbEHVWNjrH4HnUxwVAVfDxPQ4bTMRtHLYjAmuATBP4EourAt9icUfgZyweCvyOxW8CW1j8ITBg+yJh0mOTXhjpU5EWCWl5kjYGdUsyg/AzYDoO6z6OORjrxJjfFQZfs1VnS3W7XA9WfXXcJx109COWfrizlIkeK0R5lYEmTxql9mrhhzhRxZOhXoUFlsMPrqL0CD0yi3gjbFjHXhOWgyTlgiJTvPiwezV6LMaZdFyrdoaT2WIxm7z0ahpnf983slHi3dkHUpsAAAAASUVORK5CYII=);
+    }
+
+    .schedule-view-minicalendar-prev {
+        background-size: 16px 16px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABESURBVHgB7co5DoAwEMVQsy///vcFJLpI4z6KWz+6bbJ/2Y/9GpypwZE3+5FfgD0CbgPzLzCBCYoWA6wfMIEJpI2m0QOuugMZwyotsAAAAABJRU5ErkJggg==);
+    }
+
+    .schedule-view-minicalendar-next {
+        background-size: 16px 16px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC);
+    }
+}
