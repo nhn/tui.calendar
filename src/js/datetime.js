@@ -351,45 +351,47 @@ datetime = {
     },
 
     arr2dCalendar: function(month, startDayOfWeek) {
-        var starts, ends,
-            renderStart, renderEnd,
-            leftOffsetDate, rightOffsetDate,
-            weekCount,
-            week, cursor, i, j, date, flag,
-            calendar = [],
-            abs = Math.abs;
+        var weekDayMatrix = [
+                [0, 1, 2, 3, 4, 5, 6],
+                [1, 2, 3, 4, 5, 6, 0],
+                [2, 3, 4, 5, 6, 0, 1],
+                [3, 4, 5, 6, 0, 1, 2],
+                [4, 5, 6, 0, 1, 2, 3],
+                [5, 6, 0, 1, 2, 3, 4],
+                [6, 0, 1, 2, 3, 4, 5]
+            ],
+            weekArr,
+            starts, ends,
+            startIndex, endIndex,
+            afterDates,
+            cursor, week, flag,
+            calendar = [];
 
-        startDayOfWeek = startDayOfWeek || 0;
-
-        // 달의 시작일, 렌더링 시작일 계산
         starts = new Date(new Date(month.getTime()).setDate(1));
-        leftOffsetDate = startDayOfWeek - starts.getDay();
-        renderStart = new Date(starts.getTime()).setDate(starts.getDate() + leftOffsetDate);
-        renderStart = new Date(renderStart);
-
-        // 달의 종료일, 렌더링 종료일 계산
         ends = new Date(new Date(starts.getTime()).setMonth(starts.getMonth() + 1));
         ends = new Date(new Date(ends.getTime()).setDate(ends.getDate() - 1));
-        rightOffsetDate = 6 - ends.getDay();
-        renderEnd = new Date(ends.getTime()).setDate(ends.getDate() + rightOffsetDate);
-        renderEnd = new Date(renderEnd);
 
-        weekCount = Math.ceil((leftOffsetDate + ends.getDate() + rightOffsetDate) / 7);
-        cursor = new Date(renderStart.getTime());
-        flag = leftOffsetDate ? -1 : 1;
+        weekArr = weekDayMatrix[startDayOfWeek || 0];
+        startIndex = util.inArray(starts.getDay(), weekArr);
+        endIndex = util.inArray(ends.getDay(), weekArr);
 
-        for (i = 0; i < weekCount; i += 1) {
-            week = calendar[i] = [];
+        afterDates = 7 - (endIndex + 1);
 
-            for (j = 0; j < 7; j += 1) {
-                date = cursor.getDate();
-                if (j > 0 && abs(date - abs(week[j - 1])) > 1) {
-                    flag *= -1;
-                }
-                week.push(date * flag);
-                cursor = new Date(cursor.setDate(cursor.getDate() + 1));
+        cursor = new Date(new Date(starts.getTime()).setDate(starts.getDate() - startIndex));
+        flag = startIndex > 0 ? -1 : 1;
+
+        util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
+            if (!(i % 7)) {
+                week = calendar[i / 7] = [];
             }
-        }
+
+            if (i === startIndex || i === (startIndex + ends.getDate())) {
+                flag *= -1;
+            }
+
+            week.push(cursor.getDate() * flag);
+            cursor = new Date(cursor.setDate(cursor.getDate() + 1));
+        });
 
         return calendar;
     }

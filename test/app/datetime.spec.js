@@ -227,5 +227,20 @@ describe('datetime', function() {
 
             expect(actual).toEqual(expected);
         });
+
+        it('2016/8은 화요일 기준일 때 7/26 ~ 9/5까지 렌더링된다.', function() {
+            var month = new Date('2016-08-01T00:00:00+09:00');
+            var actual = datetime.arr2dCalendar(month, 2);
+            var expected = [
+                [-26, -27, -28, -29, -30, -31, 1],
+                [2, 3, 4, 5, 6, 7, 8],
+                [9, 10, 11, 12, 13, 14, 15],
+                [16, 17, 18, 19, 20, 21, 22],
+                [23, 24, 25, 26, 27, 28, 29],
+                [30, 31, -1, -2, -3, -4, -5]
+            ];
+
+            expect(actual).toEqual(expected);
+        });
     });
 });
