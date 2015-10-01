@@ -13,17 +13,7 @@ var datetime = require('../../datetime');
 var Handlebars = require('hbsfy/runtime');
 var tmpl = require('./minicalendar.hbs');
 
-Handlebars.registerHelper('minical-otherdate', function() {
-    if (this < 0) {
-        return 'schedule-view-minicalendar-other';
-    }
-});
-
-Handlebars.registerHelper('minical-abs', function() {
-    return Math.abs(this);
-});
-
-Handlebars.registerHelper('minical-header', function() {
+Handlebars.registerHelper('minical-dayname', function() {
     var dayname = this.dayname,
         index = this.startDayOfWeek;
 
@@ -35,14 +25,6 @@ Handlebars.registerHelper('minical-header', function() {
         }
         return tag;
     }).join('');
-});
-
-Handlebars.registerHelper('minical-dots', function(eventsInDates) {
-    var events = eventsInDates[this];
-
-    if (events) {
-        return util.map(util.range(events.length), function() { return '&bull;'; }).join('');
-    }
 });
 
 /**
@@ -61,13 +43,13 @@ function MiniCalendar(options, container) {
 
     domutil.addClass(container, 'schedule-view-minicalendar');
 
-
     defaultMonth = util.pick(options, 'renderMonth');
     if (defaultMonth) {
         defaultMonth = datetime.parse(defaultMonth + '-01');
     } else {
         defaultMonth = new Date();
     }
+    defaultMonth.setHours(0, 0, 0);
 
     domevent.on(this.container, 'click', this._onClick, this);
 
@@ -140,25 +122,95 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
 };
 
 /**
+ * Get selected data
+ * @returns {Date} selected date
+ */
+MiniCalendar.prototype.getSelectedDate = function() {
+    var selected = domutil.find('.schedule-view-minicalendar-focused', this.container),
+        y, m, d,
+        date;
+
+    if (!selected) {
+        return null;
+    }
+
+    y = domutil.getData(selected, 'y');
+    m = domutil.getData(selected, 'm');
+    d = domutil.getData(selected, 'd');
+
+    date = new Date(y, m, d);
+
+    return date;
+};
+
+/**
  * Render view
  */
 MiniCalendar.prototype.render = function() {
     var container = this.container,
         options = this.options,
+        renderDate = options.renderMonth,
+        startDayOfWeek = options.startDayOfWeek,
         viewModel = {
-            month: options.renderMonth,
-            renderMonth: datetime.format(options.renderMonth, 'YYYY.MM'),
-            startDayOfWeek: options.startDayOfWeek,
+            title: datetime.format(renderDate, 'YYYY.MM'),
             dayname: config.label.DAY_NAME.kor,
-            eventsInDates: {
-                '-30': [{}, {}],
-                '4': [{}]
-            },
-            calendar: datetime.arr2dCalendar(options.renderMonth, options.startDayOfWeek)
+            startDayOfWeek: startDayOfWeek,
+            calendar: null,
+            events: null
+        },
+        renderMonth = renderDate.getMonth(),
+        renderYear = renderDate.getFullYear(),
+        today = new Date(),
+        todayDate = today.getDate(),
+        todayMonth = today.getMonth(),
+        todayYear = today.getFullYear(),
+
+        //TODO: from controller
+        events = {
+            '2015-10-2': [{color:'dc9656'}, {color:'a1b56c'}],
+            '2015-10-18': [{color:'a1b56c'}]
         };
+
+    // 뷰 모델을 만든다
+    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(d) {
+        var month = d.getMonth(),
+            year = d.getFullYear(),
+            date = d.getDate(),
+            isCurrentMonth = (year === todayYear && month === todayMonth),
+            eventsInDate,
+            result = {
+                y: year,
+                m: month,
+                d: d.getDate(),
+            };
+
+        if (year !== renderYear || month !== renderMonth) {
+            // 렌더링 된 월 이외의 날짜들 처리
+            result.isOtherDate = true;
+        }
+
+        if (isCurrentMonth && date === todayDate) {
+            // 오늘이 렌더링 된 미니캘린더의 월인 경우 오늘을 선택 처리
+            result.focused = true;
+        } else if (!isCurrentMonth && date === 1) {
+            // 오늘이 렌더링 된 미니캘린더의 월이 아닌 경우 1일을 선택 처리
+            result.focused = true;
+        }
+
+        eventsInDate = events[[year, month + 1, date].join('-')];
+
+        if (eventsInDate) {
+            result.events = eventsInDate;
+        }
+
+        return result;
+    });
+
 
     container.innerHTML = tmpl(viewModel);
 };
+
+util.CustomEvents.mixin(MiniCalendar);
 
 module.exports = MiniCalendar;
 

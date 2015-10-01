@@ -77,9 +77,13 @@
     font-size: 0.7em;
 }
 
-.schedule-view-minicalendar-focused .schedule-view-minicalendar-label{
+.schedule-view-minicalendar-focused .schedule-view-minicalendar-label {
     font-size: 1.1em;
     color: #f8f8f8;
+}
+
+.schedule-view-minicalendar-focused .schedule-view-minicalendar-dots span {
+    color: #f8f8f8 !important;
 }
 
 .schedule-view-minicalendar-focused:before{

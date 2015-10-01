@@ -20,6 +20,14 @@ module.exports = {
         return util.stamp(obj);
     },
 
+    'equal': function(a, b) {
+        return a === b;
+    },
+
+    'or': function(a, b) {
+        return a || b;
+    },
+
     'common-width': function(width) {
         return getElSize(width, '%', 'width');
     },
