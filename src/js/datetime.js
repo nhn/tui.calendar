@@ -372,7 +372,7 @@ datetime = {
             starts, ends,
             startIndex, endIndex,
             afterDates,
-            cursor, week, flag,
+            cursor, week,
             calendar = [];
 
         starts = new Date(new Date(+month).setDate(1));
@@ -382,22 +382,20 @@ datetime = {
         weekArr = weekDayMatrix[startDayOfWeek || 0];
         startIndex = util.inArray(starts.getDay(), weekArr);
         endIndex = util.inArray(ends.getDay(), weekArr);
-
         afterDates = 7 - (endIndex + 1);
 
         cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
-        flag = startIndex > 0 ? -1 : 1;
-
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
             if (!(i % 7)) {
                 week = calendar[i / 7] = [];
             }
 
-            if ((startIndex > 0 && i === startIndex) || i === (startIndex + ends.getDate())) {
-                flag *= -1;
-            }
+            week.push({
+                y: cursor.getFullYear(),
+                m: cursor.getMonth(),
+                d: cursor.getDate()
+            });
 
-            week.push(cursor.getDate() * flag);
             cursor = new Date(cursor.setDate(cursor.getDate() + 1));
         });
 
