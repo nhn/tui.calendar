@@ -373,6 +373,7 @@ datetime = {
             startIndex, endIndex,
             afterDates,
             cursor, week,
+            baseMonth, baseYear, 
             calendar = [];
 
         starts = new Date(new Date(+month).setDate(1));
@@ -384,15 +385,24 @@ datetime = {
         endIndex = util.inArray(ends.getDay(), weekArr);
         afterDates = 7 - (endIndex + 1);
 
+        baseMonth = starts.getMonth();
+        baseYear = starts.getFullYear();
         cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
+            var year, month;
+
             if (!(i % 7)) {
                 week = calendar[i / 7] = [];
             }
 
+            month = cursor.getMonth();
+            year = cursor.getFullYear();
+
             week.push({
-                y: cursor.getFullYear(),
-                m: cursor.getMonth(),
+                prev: (year < baseYear) || (year === baseYear && month < baseMonth),
+                next: (year > baseYear) || (year === baseYear && month > baseMonth),
+                y: year,
+                m: month,
                 d: cursor.getDate()
             });
 
