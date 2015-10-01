@@ -43,6 +43,7 @@ module.exports = function(config) {
             bundleDelay: 1000,
             transform:[hbsfy, istanbul({
                 ignore: [
+                    '**/*.hbs',
                     'index.js', 
                     '**/test/**',
                     '**/template/**'
