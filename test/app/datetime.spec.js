@@ -199,50 +199,70 @@ describe('datetime', function() {
         });
     });
 
+    function createDate(y, M, d) {
+        y = y + '';
+        M = M + '';
+        d = d + '';
+
+        M.length < 2 && (M = '0' + M);
+        d.length < 2 && (d = '0' + d);
+
+        return new Date([y, M, d].join('-') + 'T00:00:00+09:00');
+    }
+
     describe('arr2dCalendar()', function() {
+        it('iteratee를 제공하면 각 일자 요소를 조작할 수 있다.', function() {
+            var month = new Date('2014-10-01T00:00:00+09:00');
+            var actual = datetime.arr2dCalendar(month, 0, function(date) {
+                return { customize: true, date: date };
+            });
+
+            expect(actual[0][0]).toEqual({ customize: true, date: new Date('2014-09-28T00:00:00+09:00') });
+        });
+
         it('2014/10은 일요일 기준일 때 9/28 ~ 11/1 까지 렌더링된다.', function() {
             var month = new Date('2014-10-01T00:00:00+09:00');
             var actual = datetime.arr2dCalendar(month, 0);
             var expected = [
-                [{y:2014,m:8,d:28,prev:true,next:false},
-                 {y:2014,m:8,d:29,prev:true,next:false},
-                 {y:2014,m:8,d:30,prev:true,next:false},
-                 {y:2014,m:9,d:1,prev:false,next:false},
-                 {y:2014,m:9,d:2,prev:false,next:false},
-                 {y:2014,m:9,d:3,prev:false,next:false},
-                 {y:2014,m:9,d:4,prev:false,next:false}],
+                [createDate(2014, 9, 28),
+                 createDate(2014, 9, 29),
+                 createDate(2014, 9, 30),
+                 createDate(2014, 10, 1),
+                 createDate(2014, 10, 2),
+                 createDate(2014, 10, 3),
+                 createDate(2014, 10, 4)],
 
-                [{y:2014,m:9,d:5,prev:false,next:false},
-                 {y:2014,m:9,d:6,prev:false,next:false},
-                 {y:2014,m:9,d:7,prev:false,next:false},
-                 {y:2014,m:9,d:8,prev:false,next:false},
-                 {y:2014,m:9,d:9,prev:false,next:false},
-                 {y:2014,m:9,d:10,prev:false,next:false},
-                 {y:2014,m:9,d:11,prev:false,next:false}],
+                [createDate(2014, 10, 5),
+                 createDate(2014, 10, 6),
+                 createDate(2014, 10, 7),
+                 createDate(2014, 10, 8),
+                 createDate(2014, 10, 9),
+                 createDate(2014, 10, 10),
+                 createDate(2014, 10, 11)],
 
-                [{y:2014,m:9,d:12,prev:false,next:false},
-                 {y:2014,m:9,d:13,prev:false,next:false},
-                 {y:2014,m:9,d:14,prev:false,next:false},
-                 {y:2014,m:9,d:15,prev:false,next:false},
-                 {y:2014,m:9,d:16,prev:false,next:false},
-                 {y:2014,m:9,d:17,prev:false,next:false},
-                 {y:2014,m:9,d:18,prev:false,next:false}],
+                [createDate(2014, 10, 12),
+                 createDate(2014, 10, 13),
+                 createDate(2014, 10, 14),
+                 createDate(2014, 10, 15),
+                 createDate(2014, 10, 16),
+                 createDate(2014, 10, 17),
+                 createDate(2014, 10, 18)],
 
-                [{y:2014,m:9,d:19,prev:false,next:false},
-                 {y:2014,m:9,d:20,prev:false,next:false},
-                 {y:2014,m:9,d:21,prev:false,next:false},
-                 {y:2014,m:9,d:22,prev:false,next:false},
-                 {y:2014,m:9,d:23,prev:false,next:false},
-                 {y:2014,m:9,d:24,prev:false,next:false},
-                 {y:2014,m:9,d:25,prev:false,next:false}],
+                [createDate(2014, 10, 19),
+                 createDate(2014, 10, 20),
+                 createDate(2014, 10, 21),
+                 createDate(2014, 10, 22),
+                 createDate(2014, 10, 23),
+                 createDate(2014, 10, 24),
+                 createDate(2014, 10, 25)],
 
-                [{y:2014,m:9,d:26,prev:false,next:false},
-                 {y:2014,m:9,d:27,prev:false,next:false},
-                 {y:2014,m:9,d:28,prev:false,next:false},
-                 {y:2014,m:9,d:29,prev:false,next:false},
-                 {y:2014,m:9,d:30,prev:false,next:false},
-                 {y:2014,m:9,d:31,prev:false,next:false},
-                 {y:2014,m:10,d:1,prev:false,next:true}]
+                [createDate(2014, 10, 26),
+                 createDate(2014, 10, 27),
+                 createDate(2014, 10, 28),
+                 createDate(2014, 10, 29),
+                 createDate(2014, 10, 30),
+                 createDate(2014, 10, 31),
+                 createDate(2014, 11, 1)]
             ];
 
             expect(actual).toEqual(expected);
@@ -252,45 +272,45 @@ describe('datetime', function() {
             var month = new Date('2015-12-01T00:00:00+09:00');
             var actual = datetime.arr2dCalendar(month, 1);
             var expected = [
-                [{y:2015,m:10,d:30,prev:true,next:false},
-                 {y:2015,m:11,d:1,prev:false,next:false},
-                 {y:2015,m:11,d:2,prev:false,next:false},
-                 {y:2015,m:11,d:3,prev:false,next:false},
-                 {y:2015,m:11,d:4,prev:false,next:false},
-                 {y:2015,m:11,d:5,prev:false,next:false},
-                 {y:2015,m:11,d:6,prev:false,next:false}],
+                [createDate(2015, 11, 30),
+                 createDate(2015, 12, 1),
+                 createDate(2015, 12, 2),
+                 createDate(2015, 12, 3),
+                 createDate(2015, 12, 4),
+                 createDate(2015, 12, 5),
+                 createDate(2015, 12, 6)],
 
-                [{y:2015,m:11,d:7,prev:false,next:false},
-                 {y:2015,m:11,d:8,prev:false,next:false},
-                 {y:2015,m:11,d:9,prev:false,next:false},
-                 {y:2015,m:11,d:10,prev:false,next:false},
-                 {y:2015,m:11,d:11,prev:false,next:false},
-                 {y:2015,m:11,d:12,prev:false,next:false},
-                 {y:2015,m:11,d:13,prev:false,next:false}],
+                [createDate(2015, 12, 7),
+                 createDate(2015, 12, 8),
+                 createDate(2015, 12, 9),
+                 createDate(2015, 12, 10),
+                 createDate(2015, 12, 11),
+                 createDate(2015, 12, 12),
+                 createDate(2015, 12, 13)],
 
-                [{y:2015,m:11,d:14,prev:false,next:false},
-                 {y:2015,m:11,d:15,prev:false,next:false},
-                 {y:2015,m:11,d:16,prev:false,next:false},
-                 {y:2015,m:11,d:17,prev:false,next:false},
-                 {y:2015,m:11,d:18,prev:false,next:false},
-                 {y:2015,m:11,d:19,prev:false,next:false},
-                 {y:2015,m:11,d:20,prev:false,next:false}],
+                [createDate(2015, 12, 14),
+                 createDate(2015, 12, 15),
+                 createDate(2015, 12, 16),
+                 createDate(2015, 12, 17),
+                 createDate(2015, 12, 18),
+                 createDate(2015, 12, 19),
+                 createDate(2015, 12, 20)],
 
-                [{y:2015,m:11,d:21,prev:false,next:false},
-                 {y:2015,m:11,d:22,prev:false,next:false},
-                 {y:2015,m:11,d:23,prev:false,next:false},
-                 {y:2015,m:11,d:24,prev:false,next:false},
-                 {y:2015,m:11,d:25,prev:false,next:false},
-                 {y:2015,m:11,d:26,prev:false,next:false},
-                 {y:2015,m:11,d:27,prev:false,next:false}],
+                [createDate(2015, 12, 21),
+                 createDate(2015, 12, 22),
+                 createDate(2015, 12, 23),
+                 createDate(2015, 12, 24),
+                 createDate(2015, 12, 25),
+                 createDate(2015, 12, 26),
+                 createDate(2015, 12, 27)],
 
-                [{y:2015,m:11,d:28,prev:false,next:false},
-                 {y:2015,m:11,d:29,prev:false,next:false},
-                 {y:2015,m:11,d:30,prev:false,next:false},
-                 {y:2015,m:11,d:31,prev:false,next:false},
-                 {y:2016,m:0,d:1,prev:false,next:true},
-                 {y:2016,m:0,d:2,prev:false,next:true},
-                 {y:2016,m:0,d:3,prev:false,next:true}]
+                [createDate(2015, 12, 28),
+                 createDate(2015, 12, 29),
+                 createDate(2015, 12, 30),
+                 createDate(2015, 12, 31),
+                 createDate(2016, 1, 1),
+                 createDate(2016, 1, 2),
+                 createDate(2016, 1, 3)]
             ];
 
             expect(actual).toEqual(expected);
@@ -300,53 +320,53 @@ describe('datetime', function() {
             var month = new Date('2016-08-01T00:00:00+09:00');
             var actual = datetime.arr2dCalendar(month, 2);
             var expected = [
-                [{y:2016,m:6,d:26,prev:true,next:false},
-                 {y:2016,m:6,d:27,prev:true,next:false},
-                 {y:2016,m:6,d:28,prev:true,next:false},
-                 {y:2016,m:6,d:29,prev:true,next:false},
-                 {y:2016,m:6,d:30,prev:true,next:false},
-                 {y:2016,m:6,d:31,prev:true,next:false},
-                 {y:2016,m:7,d:1,prev:false,next:false}],
+                [createDate(2016, 7, 26),
+                 createDate(2016, 7, 27),
+                 createDate(2016, 7, 28),
+                 createDate(2016, 7, 29),
+                 createDate(2016, 7, 30),
+                 createDate(2016, 7, 31),
+                 createDate(2016, 8, 1)],
 
-                [{y:2016,m:7,d:2,prev:false,next:false},
-                 {y:2016,m:7,d:3,prev:false,next:false},
-                 {y:2016,m:7,d:4,prev:false,next:false},
-                 {y:2016,m:7,d:5,prev:false,next:false},
-                 {y:2016,m:7,d:6,prev:false,next:false},
-                 {y:2016,m:7,d:7,prev:false,next:false},
-                 {y:2016,m:7,d:8,prev:false,next:false}],
+                [createDate(2016, 8, 2),
+                 createDate(2016, 8, 3),
+                 createDate(2016, 8, 4),
+                 createDate(2016, 8, 5),
+                 createDate(2016, 8, 6),
+                 createDate(2016, 8, 7),
+                 createDate(2016, 8, 8)],
 
-                [{y:2016,m:7,d:9,prev:false,next:false},
-                 {y:2016,m:7,d:10,prev:false,next:false},
-                 {y:2016,m:7,d:11,prev:false,next:false},
-                 {y:2016,m:7,d:12,prev:false,next:false},
-                 {y:2016,m:7,d:13,prev:false,next:false},
-                 {y:2016,m:7,d:14,prev:false,next:false},
-                 {y:2016,m:7,d:15,prev:false,next:false}],
+                [createDate(2016, 8, 9),
+                 createDate(2016, 8, 10),
+                 createDate(2016, 8, 11),
+                 createDate(2016, 8, 12),
+                 createDate(2016, 8, 13),
+                 createDate(2016, 8, 14),
+                 createDate(2016, 8, 15)],
 
-                [{y:2016,m:7,d:16,prev:false,next:false},
-                 {y:2016,m:7,d:17,prev:false,next:false},
-                 {y:2016,m:7,d:18,prev:false,next:false},
-                 {y:2016,m:7,d:19,prev:false,next:false},
-                 {y:2016,m:7,d:20,prev:false,next:false},
-                 {y:2016,m:7,d:21,prev:false,next:false},
-                 {y:2016,m:7,d:22,prev:false,next:false}],
+                [createDate(2016, 8, 16),
+                 createDate(2016, 8, 17),
+                 createDate(2016, 8, 18),
+                 createDate(2016, 8, 19),
+                 createDate(2016, 8, 20),
+                 createDate(2016, 8, 21),
+                 createDate(2016, 8, 22)],
 
-                [{y:2016,m:7,d:23,prev:false,next:false},
-                 {y:2016,m:7,d:24,prev:false,next:false},
-                 {y:2016,m:7,d:25,prev:false,next:false},
-                 {y:2016,m:7,d:26,prev:false,next:false},
-                 {y:2016,m:7,d:27,prev:false,next:false},
-                 {y:2016,m:7,d:28,prev:false,next:false},
-                 {y:2016,m:7,d:29,prev:false,next:false}],
+                [createDate(2016, 8, 23),
+                 createDate(2016, 8, 24),
+                 createDate(2016, 8, 25),
+                 createDate(2016, 8, 26),
+                 createDate(2016, 8, 27),
+                 createDate(2016, 8, 28),
+                 createDate(2016, 8, 29)],
 
-                [{y:2016,m:7,d:30,prev:false,next:false},
-                 {y:2016,m:7,d:31,prev:false,next:false},
-                 {y:2016,m:8,d:1,prev:false,next:true},
-                 {y:2016,m:8,d:2,prev:false,next:true},
-                 {y:2016,m:8,d:3,prev:false,next:true},
-                 {y:2016,m:8,d:4,prev:false,next:true},
-                 {y:2016,m:8,d:5,prev:false,next:true}]
+                [createDate(2016, 8, 30),
+                 createDate(2016, 8, 31),
+                 createDate(2016, 9, 1),
+                 createDate(2016, 9, 2),
+                 createDate(2016, 9, 3),
+                 createDate(2016, 9, 4),
+                 createDate(2016, 9, 5)]
             ];
 
             expect(actual).toEqual(expected);
@@ -356,45 +376,45 @@ describe('datetime', function() {
             var month = new Date('2015-11-01T00:00:00+09:00');
             var actual = datetime.arr2dCalendar(month, 0);
             var expected = [
-                [{y:2015,m:10,d:1,prev:false,next:false},
-                 {y:2015,m:10,d:2,prev:false,next:false},
-                 {y:2015,m:10,d:3,prev:false,next:false},
-                 {y:2015,m:10,d:4,prev:false,next:false},
-                 {y:2015,m:10,d:5,prev:false,next:false},
-                 {y:2015,m:10,d:6,prev:false,next:false},
-                 {y:2015,m:10,d:7,prev:false,next:false}],
+                [createDate(2015, 11, 1),
+                 createDate(2015, 11, 2),
+                 createDate(2015, 11, 3),
+                 createDate(2015, 11, 4),
+                 createDate(2015, 11, 5),
+                 createDate(2015, 11, 6),
+                 createDate(2015, 11, 7)],
 
-                [{y:2015,m:10,d:8,prev:false,next:false},
-                 {y:2015,m:10,d:9,prev:false,next:false},
-                 {y:2015,m:10,d:10,prev:false,next:false},
-                 {y:2015,m:10,d:11,prev:false,next:false},
-                 {y:2015,m:10,d:12,prev:false,next:false},
-                 {y:2015,m:10,d:13,prev:false,next:false},
-                 {y:2015,m:10,d:14,prev:false,next:false}],
+                [createDate(2015, 11, 8),
+                 createDate(2015, 11, 9),
+                 createDate(2015, 11, 10),
+                 createDate(2015, 11, 11),
+                 createDate(2015, 11, 12),
+                 createDate(2015, 11, 13),
+                 createDate(2015, 11, 14)],
 
-                [{y:2015,m:10,d:15,prev:false,next:false},
-                 {y:2015,m:10,d:16,prev:false,next:false},
-                 {y:2015,m:10,d:17,prev:false,next:false},
-                 {y:2015,m:10,d:18,prev:false,next:false},
-                 {y:2015,m:10,d:19,prev:false,next:false},
-                 {y:2015,m:10,d:20,prev:false,next:false},
-                 {y:2015,m:10,d:21,prev:false,next:false}],
+                [createDate(2015, 11, 15),
+                 createDate(2015, 11, 16),
+                 createDate(2015, 11, 17),
+                 createDate(2015, 11, 18),
+                 createDate(2015, 11, 19),
+                 createDate(2015, 11, 20),
+                 createDate(2015, 11, 21)],
 
-                [{y:2015,m:10,d:22,prev:false,next:false},
-                 {y:2015,m:10,d:23,prev:false,next:false},
-                 {y:2015,m:10,d:24,prev:false,next:false},
-                 {y:2015,m:10,d:25,prev:false,next:false},
-                 {y:2015,m:10,d:26,prev:false,next:false},
-                 {y:2015,m:10,d:27,prev:false,next:false},
-                 {y:2015,m:10,d:28,prev:false,next:false}],
+                [createDate(2015, 11, 22),
+                 createDate(2015, 11, 23),
+                 createDate(2015, 11, 24),
+                 createDate(2015, 11, 25),
+                 createDate(2015, 11, 26),
+                 createDate(2015, 11, 27),
+                 createDate(2015, 11, 28)],
 
-                [{y:2015,m:10,d:29,prev:false,next:false},
-                 {y:2015,m:10,d:30,prev:false,next:false},
-                 {y:2015,m:11,d:1,prev:false,next:true},
-                 {y:2015,m:11,d:2,prev:false,next:true},
-                 {y:2015,m:11,d:3,prev:false,next:true},
-                 {y:2015,m:11,d:4,prev:false,next:true},
-                 {y:2015,m:11,d:5,prev:false,next:true}]
+                [createDate(2015, 11, 29),
+                 createDate(2015, 11, 30),
+                 createDate(2015, 12, 1),
+                 createDate(2015, 12, 2),
+                 createDate(2015, 12, 3),
+                 createDate(2015, 12, 4),
+                 createDate(2015, 12, 5)]
             ];
 
             expect(actual).toEqual(expected);

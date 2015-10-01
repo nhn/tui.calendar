@@ -356,9 +356,10 @@ datetime = {
      * dates that different month with given date are negative values
      * @param {Date} month - date want to calculate month calendar
      * @param {number} [startDayOfWeek=0] - start day of week
+     * @param {function} [iteratee] - iteratee for customizing calendar object
      * @returns {Array.<string[]>} calendar 2d array
      */
-    arr2dCalendar: function(month, startDayOfWeek) {
+    arr2dCalendar: function(month, startDayOfWeek, iteratee) {
         var weekDayMatrix = [
                 [0, 1, 2, 3, 4, 5, 6],
                 [1, 2, 3, 4, 5, 6, 0],
@@ -373,7 +374,6 @@ datetime = {
             startIndex, endIndex,
             afterDates,
             cursor, week,
-            baseMonth, baseYear, 
             calendar = [];
 
         starts = new Date(new Date(+month).setDate(1));
@@ -385,26 +385,17 @@ datetime = {
         endIndex = util.inArray(ends.getDay(), weekArr);
         afterDates = 7 - (endIndex + 1);
 
-        baseMonth = starts.getMonth();
-        baseYear = starts.getFullYear();
         cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
-            var year, month;
+            var date;
 
             if (!(i % 7)) {
                 week = calendar[i / 7] = [];
             }
 
-            month = cursor.getMonth();
-            year = cursor.getFullYear();
-
-            week.push({
-                prev: (year < baseYear) || (year === baseYear && month < baseMonth),
-                next: (year > baseYear) || (year === baseYear && month > baseMonth),
-                y: year,
-                m: month,
-                d: cursor.getDate()
-            });
+            date = new Date(+cursor);
+            date = iteratee ? iteratee(date) : date;
+            week.push(date);
 
             cursor = new Date(cursor.setDate(cursor.getDate() + 1));
         });
