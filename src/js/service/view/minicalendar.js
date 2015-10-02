@@ -112,8 +112,7 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
  */
 MiniCalendar.prototype.getSelectedDate = function() {
     var selected = domutil.find('.schedule-view-minicalendar-focused', this.container),
-        y, m, d,
-        date;
+        y, m, d;
 
     if (!selected) {
         return null;
@@ -123,9 +122,7 @@ MiniCalendar.prototype.getSelectedDate = function() {
     m = domutil.getData(selected, 'm');
     d = domutil.getData(selected, 'd');
 
-    date = new Date(y, m, d);
-
-    return date;
+    return new Date(y, m, d);
 };
 
 /**
@@ -139,8 +136,8 @@ MiniCalendar.prototype.getSelectedDate = function() {
 MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, today, eventsInMonth) {
     var viewModel = {
             title: datetime.format(renderDate, 'YYYY.MM'),
-            dayname: null, 
             startDayOfWeek: startDayOfWeek,
+            dayname: null,
             calendar: null
         },
         dayname = config.label.DAY_NAME.kor,
@@ -153,9 +150,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
 
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7), 
-        function(i) {
-            return dayname[i];
-        }
+        function(i) { return dayname[i]; }
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(d) {
@@ -209,6 +204,7 @@ MiniCalendar.prototype.render = function() {
         options = this.options,
         renderDate = options.renderMonth,
         startDayOfWeek = options.startDayOfWeek,
+        //TODO: this will provide by controller
         events = {
             '2015-10-2': [{color:'dc9656'}, {color:'a1b56c'}],
             '2015-10-18': [{color:'a1b56c'}]

@@ -371,16 +371,22 @@ datetime = {
         ends = new Date(new Date(+starts).setMonth(starts.getMonth() + 1));
         ends = new Date(new Date(+ends).setDate(ends.getDate() - 1));
 
+        // create day number array by startDayOfWeek number
+        // 4 -> [4, 5, 6, 0, 1, 2, 3]
+        // 2 -> [2, 3, 4, 5, 6, 0, 1]
         weekArr = util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7);
         startIndex = util.inArray(starts.getDay(), weekArr);
         endIndex = util.inArray(ends.getDay(), weekArr);
+        // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
         cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
+        // iteratee all dates to render
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
             var date;
 
             if (!(i % 7)) {
+                // group each date by week
                 week = calendar[i / 7] = [];
             }
 
@@ -388,6 +394,7 @@ datetime = {
             date = iteratee ? iteratee(date) : date;
             week.push(date);
 
+            // add date
             cursor = new Date(cursor.setDate(cursor.getDate() + 1));
         });
 
