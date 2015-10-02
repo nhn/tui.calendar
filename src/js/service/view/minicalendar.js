@@ -10,22 +10,7 @@ var View = require('../../view/view');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var datetime = require('../../datetime');
-var Handlebars = require('hbsfy/runtime');
 var tmpl = require('./minicalendar.hbs');
-
-Handlebars.registerHelper('minical-dayname', function() {
-    var dayname = this.dayname,
-        index = this.startDayOfWeek;
-
-    return util.map(util.range(7), function() {
-        var tag = '<th>' + dayname[index] + '</th>';
-        index += 1;
-        if (index > 6) {
-            index = 0;
-        }
-        return tag;
-    }).join('');
-});
 
 /**
  * @constructor
@@ -144,6 +129,75 @@ MiniCalendar.prototype.getSelectedDate = function() {
 };
 
 /**
+ * Get minicalendar view model
+ * @param {Date} renderDate - Date to render minicalendar
+ * @param {number} startDayOfWeek - number of start of week (0:sun ...)
+ * @param {Date} today - today Date object
+ * @param {Object.<string, array>} eventsInMonth - events array to represent dots in minicalendar
+ * @returns {object} viewmodel
+ */
+MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, today, eventsInMonth) {
+    var viewModel = {
+            title: datetime.format(renderDate, 'YYYY.MM'),
+            dayname: null, 
+            startDayOfWeek: startDayOfWeek,
+            calendar: null
+        },
+        dayname = config.label.DAY_NAME.kor,
+        renderMonth = renderDate.getMonth(),
+        renderYear = renderDate.getFullYear(),
+        todayDate = today.getDate(),
+        todayMonth = today.getMonth(),
+        todayYear = today.getFullYear(),
+        todayIsRenderedMonth = (renderYear === todayYear && renderMonth === todayMonth);
+
+    viewModel.dayname = util.map(
+        util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7), 
+        function(i) {
+            return dayname[i];
+        }
+    );
+
+    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(d) {
+        var month = d.getMonth(),
+            year = d.getFullYear(),
+            date = d.getDate(),
+            isOtherDate = year !== renderYear || month !== renderMonth,
+            eventsInDate,
+            result = {
+                y: year,
+                m: month,
+                d: d.getDate(),
+                isOtherDate: isOtherDate
+            };
+
+        if (!isOtherDate) {
+            // dates in rendered month
+            
+            if ((todayIsRenderedMonth && date === todayDate) ||
+                (!todayIsRenderedMonth && date === 1)) {
+                // today is include in rendered month then autoselect today date or
+                // today is not include in rendered month then autoselect first date of month
+                result.focused = true;
+            }
+        }
+
+        if (eventsInMonth) {
+            eventsInDate = eventsInMonth[[year, month + 1, date].join('-')];
+
+            if (eventsInDate) {
+                // if has events in date then add.
+                result.events = eventsInDate;
+            }
+        }
+
+        return result;
+    });
+
+    return viewModel;
+};
+
+/**
  * Render view
  */
 MiniCalendar.prototype.render = function() {
@@ -151,61 +205,13 @@ MiniCalendar.prototype.render = function() {
         options = this.options,
         renderDate = options.renderMonth,
         startDayOfWeek = options.startDayOfWeek,
-        viewModel = {
-            title: datetime.format(renderDate, 'YYYY.MM'),
-            dayname: config.label.DAY_NAME.kor,
-            startDayOfWeek: startDayOfWeek,
-            calendar: null,
-            events: null
-        },
-        renderMonth = renderDate.getMonth(),
-        renderYear = renderDate.getFullYear(),
-        today = new Date(),
-        todayDate = today.getDate(),
-        todayMonth = today.getMonth(),
-        todayYear = today.getFullYear(),
-
-        //TODO: from controller
         events = {
             '2015-10-2': [{color:'dc9656'}, {color:'a1b56c'}],
             '2015-10-18': [{color:'a1b56c'}]
-        };
+        },
+        viewModel;
 
-    // 뷰 모델을 만든다
-    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(d) {
-        var month = d.getMonth(),
-            year = d.getFullYear(),
-            date = d.getDate(),
-            isCurrentMonth = (year === todayYear && month === todayMonth),
-            eventsInDate,
-            result = {
-                y: year,
-                m: month,
-                d: d.getDate(),
-            };
-
-        if (year !== renderYear || month !== renderMonth) {
-            // 렌더링 된 월 이외의 날짜들 처리
-            result.isOtherDate = true;
-        }
-
-        if (isCurrentMonth && date === todayDate) {
-            // 오늘이 렌더링 된 미니캘린더의 월인 경우 오늘을 선택 처리
-            result.focused = true;
-        } else if (!isCurrentMonth && date === 1) {
-            // 오늘이 렌더링 된 미니캘린더의 월이 아닌 경우 1일을 선택 처리
-            result.focused = true;
-        }
-
-        eventsInDate = events[[year, month + 1, date].join('-')];
-
-        if (eventsInDate) {
-            result.events = eventsInDate;
-        }
-
-        return result;
-    });
-
+    viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date(), events);
 
     container.innerHTML = tmpl(viewModel);
 };
