@@ -360,16 +360,7 @@ datetime = {
      * @returns {Array.<string[]>} calendar 2d array
      */
     arr2dCalendar: function(month, startDayOfWeek, iteratee) {
-        var weekDayMatrix = [
-                [0, 1, 2, 3, 4, 5, 6],
-                [1, 2, 3, 4, 5, 6, 0],
-                [2, 3, 4, 5, 6, 0, 1],
-                [3, 4, 5, 6, 0, 1, 2],
-                [4, 5, 6, 0, 1, 2, 3],
-                [5, 6, 0, 1, 2, 3, 4],
-                [6, 0, 1, 2, 3, 4, 5]
-            ],
-            weekArr,
+        var weekArr,
             starts, ends,
             startIndex, endIndex,
             afterDates,
@@ -380,7 +371,7 @@ datetime = {
         ends = new Date(new Date(+starts).setMonth(starts.getMonth() + 1));
         ends = new Date(new Date(+ends).setDate(ends.getDate() - 1));
 
-        weekArr = weekDayMatrix[startDayOfWeek || 0];
+        weekArr = util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7);
         startIndex = util.inArray(starts.getDay(), weekArr);
         endIndex = util.inArray(ends.getDay(), weekArr);
         afterDates = 7 - (endIndex + 1);
