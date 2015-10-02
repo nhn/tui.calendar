@@ -1,6 +1,8 @@
 <table>
 <caption>
-    <button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-prev"><span>&lt;</span></button>&nbsp;{{title}}&nbsp;<button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-next"><span>&gt;</span></button>
+    <button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-prev"><span>&lt;</span></button>
+    <span class="schedule-view-minicalendar-title">{{title}}</span>
+    <button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-next"><span>&gt;</span></button>
 </caption>
 <thead><tr>
 {{#each dayname}}
@@ -12,10 +14,10 @@
 <tr>
 {{#each this ~}}
 {{! table cell (date button) }}
-<td class="{{#if isOtherDate}}schedule-view-minicalendar-other{{/if}} {{#if focused}}schedule-view-minicalendar-focused{{/if}} " data-y="{{y}}" data-m="{{m}}" data-d="{{d}}">
+<td class="{{#if isOtherDate}}schedule-view-minicalendar-other{{/if}} {{#if focused}}schedule-view-minicalendar-focused{{/if}} {{#if today}}schedule-view-minicalendar-today{{/if}}" data-y="{{y}}" data-m="{{m}}" data-d="{{d}}">
 <button type="button" tabindex="-1" class="schedule-view-minicalendar-date">
-    <span class="schedule-view-minicalendar-label">{{d}}</span>
-    <span class="schedule-view-minicalendar-dots">{{#each events}}<span style="color:#{{color}}">&bull;</span>{{/each}}</span>
+    <div class="schedule-view-minicalendar-label"><span>{{d}}</span></div>
+    <div class="schedule-view-minicalendar-dots">{{#each events}}<span style="background-color:#{{color}}">&bull;</span>{{/each}}</span>
 </button>
 </td>
 {{! table cell (date button) }}

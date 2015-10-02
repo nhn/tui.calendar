@@ -173,10 +173,14 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
 
         if (!isOtherDate) {
             // dates in rendered month
+            if (todayIsRenderedMonth && date === todayDate) {
+                result.today = true;
+
+                // today is include in rendered month then autoselect today date
+                result.focused = true;
+            }
             
-            if ((todayIsRenderedMonth && date === todayDate) ||
-                (!todayIsRenderedMonth && date === 1)) {
-                // today is include in rendered month then autoselect today date or
+            if (!todayIsRenderedMonth && date === 1) {
                 // today is not include in rendered month then autoselect first date of month
                 result.focused = true;
             }
