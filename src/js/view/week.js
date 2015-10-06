@@ -8,6 +8,7 @@ var util = global.ne.util;
 var domutil = require('../common/domutil');
 var datetime = require('../datetime');
 var View = require('./view');
+var tmpl = require('./template/week/week.hbs');
 
 /**
  * @constructor
@@ -26,6 +27,12 @@ function Week(controller, options, container) {
         container,
         'schedule-view-week-container'
     );
+
+    container.innerHTML = tmpl({
+        allday: {
+            minHeight: 60
+        }
+    });
 
     View.call(this, null, container);
 
