@@ -58,7 +58,8 @@ describe('handler/time.creation', function() {
             spyOn(window, 'prompt').and.returnValue('my event');
             baseControllerMock = jasmine.createSpyObj('Base', ['createEvent']);
             mock = {
-                baseController: baseControllerMock
+                baseController: baseControllerMock,
+                guide: jasmine.createSpyObj('timeCreation', ['clearGuideElement'])
             };
         });
             

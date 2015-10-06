@@ -45,7 +45,8 @@ describe('handler:AlldayCreation', function() {
 
             // 인스턴스 Mock
             inst = {
-                baseController: jasmine.createSpyObj('baseController', ['createEvent'])
+                baseController: jasmine.createSpyObj('baseController', ['createEvent']),
+                guide: jasmine.createSpyObj('alldayCreation', ['clearGuideElement'])
             };
 
             // 4일짜리 주간 뷰 렌더링 Mock
