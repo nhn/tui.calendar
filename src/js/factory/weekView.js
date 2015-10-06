@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var domutil = require('../common/domutil');
+
 // Parent views
 var Week = require('../view/week');
 
@@ -35,11 +37,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView = new Week(null, options.week, layoutContainer);
 
     // Dayname
-    dayNameView = new DayName(weekView.container);
+    dayNameView = new DayName(domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
     // Allday
-    alldayView = new Allday(options.week, weekView.container);
+    alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -47,7 +49,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView.addChild(alldayView);
 
     // TimeGrid
-    timeGridView = new TimeGrid(options.week, weekView.container);
+    timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
