@@ -32,6 +32,7 @@ function Allday(options, container) {
      * @type {object}
      */
     this.options = util.extend({
+        title: '종일일정',
         renderStartDate: '',
         renderEndDate: '',
         height: 62,
@@ -52,11 +53,14 @@ Allday.prototype.render = function(viewModel) {
     var container = this.container,
         monthWeekInst;
 
-    container.innerHTML = mainTmpl();
+    container.innerHTML = mainTmpl(this.options);
 
     this.childs.clear();
 
-    monthWeekInst = new MonthWeek(this.options, domutil.find('.schedule-view-allday-monthweek-container', container));
+    monthWeekInst = new MonthWeek(
+        this.options, 
+        domutil.find('.schedule-view-allday-monthweek-container', container)
+    );
 
     this.addChild(monthWeekInst);
 
