@@ -16,6 +16,7 @@ var ROOT_PATH = '/task-tracker';
 
 /**
  * 해당 프로젝트의 캘린더 목록 확인
+ * @memberof CalendarAPI
  * @param {string} [projectCode='*'] - 프로젝트 코드 '*' 사용가능
  * @param {object} ajaxOptions - ajax 모듈에 사용할 옵션 객체
  */ 
@@ -31,6 +32,7 @@ function getCalendars(projectCode, ajaxOptions) {
 
 /**
  * 캘린더 만들기
+ * @memberof CalendarAPI
  * @param {string} projectCode - 프로젝트 코드
  * @param {service/model/calendar} data - 캘린더 생성 관련 데이터
  * @param {object} ajaxOptions - ajax 모듈에 사용할 옵션 객체
@@ -55,6 +57,7 @@ function postCalendars(projectCode, data, ajaxOptions) {
 
 /**
  * 일정 목록 조회
+ * @memberof CalendarAPI
  * @param {string} [projectCode='*'] - 프로젝트 코드
  * @param {string} [calendarId='*'] - 캘린더 ID
  * @param {string} [timeMin] - 조회시작일자
@@ -76,7 +79,11 @@ function getCalendarTasks(projectCode, calendarId, timeMin, timeMax, ajaxOptions
     new Ajax().ajax(url, ajaxOptions || {});
 }
 
-module.exports = {
+/**
+ * 캘린더에 관련된 API호출 기능을 모아둔 믹스인 모듈. service/calendar 모듈에서 사용한다.
+ * @mixin CalendarAPI
+ */
+module.exports = /** @lends CalendarAPI */ {
     getCalendars: getCalendars,
     postCalendars: postCalendars,
     getCalendarTasks: getCalendarTasks
