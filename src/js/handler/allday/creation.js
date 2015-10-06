@@ -123,6 +123,8 @@ AlldayCreation.prototype._createEvent = function(eventData) {
         newStarts,
         newEnds;
 
+    this.guide.clearGuideElement();
+
     if (!title) {
         return;
     }

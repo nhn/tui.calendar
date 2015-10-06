@@ -3,7 +3,6 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.ne.util;
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var config = require('../../config');
@@ -36,8 +35,8 @@ function AlldayCreationGuide(alldayCreation) {
     alldayCreation.on({
         'allday_creation_dragstart': this._onDragStart,
         'allday_creation_drag': this._onDrag,
-        'allday_creation_dragend': this._clearGuideElement,
-        'allday_creation_click': this._clearGuideElement
+        // 'allday_creation_dragend': this.clearGuideElement,
+        'allday_creation_click': this.clearGuideElement
     }, this);
 }
 
@@ -45,7 +44,7 @@ function AlldayCreationGuide(alldayCreation) {
  * Destroy method
  */
 AlldayCreationGuide.prototype.destroy = function() {
-    this._clearGuideElement();
+    this.clearGuideElement();
     this.alldayCreation.off(this);
     this.alldayCreation = this.eventContainer =
         this.guideElement = null;
@@ -100,7 +99,7 @@ AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
 /**
  * Clear guide element.
  */
-AlldayCreationGuide.prototype._clearGuideElement = function() {
+AlldayCreationGuide.prototype.clearGuideElement = function() {
     var guideElement = this.guideElement;
 
     domutil.remove(guideElement);

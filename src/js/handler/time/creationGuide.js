@@ -42,8 +42,8 @@ function TimeCreationGuide(timeCreation) {
     timeCreation.on({
         'time_creation_dragstart': this._onDragStart,
         'time_creation_drag': this._onDrag,
-        'time_creation_dragend': this._clearGuideElement,
-        'time_creation_click': this._clearGuideElement
+        // 'time_creation_dragend': this.clearGuideElement,
+        'time_creation_click': this.clearGuideElement
     }, this);
 }
 
@@ -51,7 +51,7 @@ function TimeCreationGuide(timeCreation) {
  * Destroy method.
  */
 TimeCreationGuide.prototype.destroy = function() {
-    this._clearGuideElement();
+    this.clearGuideElement();
     this.timeCreation.off(this);
     this.guideElement = this.timeCreation = this._startGridY =
         this._getTopFunc = null;
@@ -60,7 +60,7 @@ TimeCreationGuide.prototype.destroy = function() {
 /**
  * Clear guide element.
  */
-TimeCreationGuide.prototype._clearGuideElement = function() {
+TimeCreationGuide.prototype.clearGuideElement = function() {
     var guideElement = this.guideElement;
 
     domutil.remove(guideElement);

@@ -44,7 +44,7 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
     /**
      * @type {TimeCreationGuide}
      */
-    this._guide = new TimeCreationGuide(this);
+    this.guide = new TimeCreationGuide(this);
 
     /**
      * Temporary function for single drag session's calc.
@@ -67,10 +67,10 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
-    this._guide.destroy();
+    this.guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
-        this._getEventDataFunc = this._dragStart = this._guide = null;
+        this._getEventDataFunc = this._dragStart = this.guide = null;
 };
 
 /**
@@ -206,6 +206,8 @@ TimeCreation.prototype._createEvent = function(eventData) {
         dateEnd,
         newStarts,
         newEnds;
+
+    this.guide.clearGuideElement();
 
     if (!title) {
         return;
