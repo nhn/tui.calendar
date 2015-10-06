@@ -1,0 +1,25 @@
+/**********
+ * Week view vertical layout
+ **********/
+
+.schedule-view-display-table {
+    width: 100%;
+    display: table;
+}
+
+.schedule-view-display-table-row {
+    display: table-row;
+}
+
+.scehdule-view-display-table-cell {
+    display: table-cell;
+}
+
+.schedule-view-scroll-y {
+    border-bottom: 2px solid #ccc;
+    overflow-y: scroll;
+}
+
+.schedule-view-display-table-row:last-child .schedule-view-scroll-y {
+    border-bottom: 0;
+}

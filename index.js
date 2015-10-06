@@ -19,6 +19,7 @@ var AJAX = require('./src/js/common/ajax');
  * Factory
  **********/
 var controllerFactory = require('./src/js/factory/controller');
+var OriginCalendar = require('./src/js/factory/calendar');
 
 /**********
  * Models
@@ -114,6 +115,9 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayResizeGuide: AlldayResizeGuide,
 
     ControllerFactory: controllerFactory,
+    OriginCalendar: function (options, container) {
+        return new OriginCalendar(options, container);
+    },
 
     // FOR SERVICE
     calendarAPI: calendarAPI,
