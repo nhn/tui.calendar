@@ -5,14 +5,14 @@
 'use strict';
 
 var util = global.ne.util;
-var domutil = require('../common/domutil');
-var datetime = require('../datetime');
-var reqAnimFrame = require('../common/reqAnimFrame');
-var View = require('./view');
+var domutil = require('../../common/domutil');
+var datetime = require('../../datetime');
+var reqAnimFrame = require('../../common/reqAnimFrame');
+var View = require('../view');
 var Time = require('./time');
-var AutoScroll = require('../common/autoScroll');
-var mainTmpl = require('./template/week/timeGrid.hbs');
-var config = require('../config').timeGrid.view;
+var AutoScroll = require('../../common/autoScroll');
+var mainTmpl = require('../template/week/timeGrid.hbs');
+var config = require('../../config').timeGrid.view;
 
 /**
  * @constructor

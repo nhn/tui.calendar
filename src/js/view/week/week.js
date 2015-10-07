@@ -5,9 +5,9 @@
 'use strict';
 
 var util = global.ne.util;
-var domutil = require('../common/domutil');
-var datetime = require('../datetime');
-var View = require('./view');
+var domutil = require('../../common/domutil');
+var datetime = require('../../datetime');
+var View = require('../view');
 
 /**
  * @constructor

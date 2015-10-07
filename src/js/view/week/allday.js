@@ -5,10 +5,10 @@
 'use strict';
 
 var util = global.ne.util;
-var domutil = require('../common/domutil');
-var View = require('./view');
-var MonthWeek = require('./monthweek');
-var mainTmpl = require('./template/week/allday.hbs');
+var domutil = require('../../common/domutil');
+var View = require('../view');
+var MonthWeek = require('../monthweek');
+var mainTmpl = require('../template/week/allday.hbs');
 
 /**
  * @constructor

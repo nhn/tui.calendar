@@ -31,11 +31,12 @@ var Event = require('./src/js/model/event');
  * Views
  **********/
 var View = require('./src/js/view/view');
-var Week = require('./src/js/view/week');
-var DayName = require('./src/js/view/dayname');
-var TimeGrid = require('./src/js/view/timeGrid');
-var Time = require('./src/js/view/time');
 var MonthWeek = require('./src/js/view/monthweek');
+
+var Week = require('./src/js/view/week/week');
+var DayName = require('./src/js/view/week/dayname');
+var TimeGrid = require('./src/js/view/week/timeGrid');
+var Time = require('./src/js/view/week/time');
 
 var MiniCalendar = require('./src/js/service/view/minicalendar');
 

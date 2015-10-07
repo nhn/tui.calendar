@@ -7,12 +7,12 @@
 var util = global.ne.util;
 
 // Parent views
-var Week = require('../../view/week');
+var Week = require('../../view/week/week');
 
 // Sub views
-var DayName = require('../../view/dayname');
-var TimeGrid = require('../../view/timeGrid');
-var Allday = require('../../view/allday');
+var DayName = require('../../view/week/dayname');
+var TimeGrid = require('../../view/week/timeGrid');
+var Allday = require('../../view/week/allday');
 
 // Handlers
 var AlldayCreation = require('../../handler/allday/creation');

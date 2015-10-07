@@ -8,7 +8,7 @@ var util = global.ne.util;
 var domutil = require('../common/domutil');
 var datetime = require('../datetime');
 var View = require('./view');
-var tmpl = require('./template/week/monthweek.hbs');
+var tmpl = require('./template/monthweek.hbs');
 
 var config = require('../config');
 var FREE_HEIGHT_TO_CREATION = config.monthweek.view.FREE_HEIGHT_TO_CREATION;
