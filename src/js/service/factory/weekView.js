@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var domutil = require('../../common/domutil');
 
 // Parent views
 var Week = require('../../view/week/week');
@@ -22,6 +23,9 @@ var TimeCreation = require('../../handler/time/creation');
 var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
 
+// Base Templates
+var weekViewTmpl = require('../../service/view/template/factory/weekView.hbs');
+
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
         dayNameView,
@@ -37,8 +41,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     weekView = new Week(null, options.week, layoutContainer);
 
+    weekView.container.innerHTML = weekViewTmpl();
+
     // Dayname
-    dayNameView = new DayName(weekView.container);
+    dayNameView = new DayName(domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
     /**********
@@ -51,23 +57,23 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // Allday - milestone
     alldayOptions.title = '마일스톤';
-    alldayView = new Allday(alldayOptions, weekView.container);
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
     // Allday - morning
     alldayOptions.title = '출근전';
-    alldayView = new Allday(alldayOptions, weekView.container);
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
     // Allday - lunch
     alldayOptions.title = '점심전';
-    alldayView = new Allday(alldayOptions, weekView.container);
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
     // Allday - evening
     alldayOptions.title = '퇴근전';
-    alldayView = new Allday(alldayOptions, weekView.container);
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
     // Allday - wholeDay
     alldayOptions.title = '종일일정';
-    alldayView = new Allday(alldayOptions, weekView.container);
+    alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -76,7 +82,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * TimeGrid View
      **********/
-    timeGridView = new TimeGrid(options.week, weekView.container);
+    timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);

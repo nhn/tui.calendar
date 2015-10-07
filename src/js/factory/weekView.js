@@ -39,11 +39,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     weekView = new Week(null, options.week, layoutContainer);
 
-    weekView.container.innerHTML = weekViewTmpl({
-        allday: {
-            minHeight: 68
-        }
-    });
+    weekView.container.innerHTML = weekViewTmpl();
 
     // Dayname
     dayNameView = new DayName(domutil.find('.schedule-view-dayname-layout', weekView.container));

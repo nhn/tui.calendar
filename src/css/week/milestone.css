@@ -1,0 +1,8 @@
+/* 마일스톤, 출근전, 점심전, 퇴근전 영역 */
+.schedule-view-milestone-layout > div:first-child {
+    border-top: 0;
+}
+
+.schedule-view-milestone-layout > div {
+    border-top: 1px solid #ccc;
+}
