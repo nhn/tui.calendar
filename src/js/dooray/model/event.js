@@ -79,13 +79,13 @@ DoorayEvent.prototype.init = function(options) {
     options = options || {};
 
     this.title = options.subject;
-    this.category = optinos.category;
+    this.category = options.category;
     this.dueDateClass = options.dueDateClass;
     this.isAllDay = util.isExisty(options.wholeDayFlag) ? options.wholeDayFlag : false;
     this.detailUrl = options.detailUrl || '';
 
-    if (category === doorayConfig.model.EVENT_CATEGORY.GENERAL) {
-        starts = new Date(options.createdAt);
+    if (this.category === doorayConfig.model.EVENT_CATEGORY.GENERAL) {
+        starts = new Date(options.startedAt);
         ends = new Date(options.endedAt);
     } else {
         // 마일스톤, 업무 일정은 종료일 기준으로 계산
@@ -108,5 +108,5 @@ DoorayEvent.prototype.init = function(options) {
     this.raw = options;
 };
 
-module.export = DoorayEvent;
+module.exports = DoorayEvent;
 
