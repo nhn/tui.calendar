@@ -78,57 +78,152 @@
 }
 
 
-/**
- * css for Week view
- */
+/**********
+ * service/MiniCalendar
+ **********/
 
-/* week container */
-.schedule-view-week-container {
-    width: 100%;
+.schedule-view-minicalendar table {
+    table-layout: fixed;
+}
+
+.schedule-view-minicalendar caption {
+    text-align: center;
+    margin-bottom: 7px;
+}
+
+.schedule-view-minicalendar caption button { 
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 16px;
+}
+
+.schedule-view-minicalendar-title {
     display: inline-block;
-    border: 1px solid #ccc;
-    font-size: 0.7em;
+    width: 60px;
 }
 
-/* dayname view */
-.schedule-view-dayname-container {
-    padding-left:60px;
-    overflow-y: scroll;
-    background-color: #eee;
+.schedule-view-minicalendar-prev {
+    background-repeat: no-repeat;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAKklEQVR42q3IsQEAIAyEwDca9h/ZOrRKx+Wl8jN/wfwWNIIyZBtyiCXfuj9BAHLLHGpeAAAAAElFTkSuQmCC);
 }
 
-.schedule-view-dayname {
-    height: 40px;
-    margin-left: -1px;
-    border-left: 1px solid #ccc;
-    background-color: #fff;
-    float: left;
-    line-height: 20px;
+.schedule-view-minicalendar-next {
+    background-repeat: no-repeat;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==);
 }
 
-.schedule-view-dayname-label {
-    padding-left: 7px;
-    font-size: 1.2em;
+.schedule-view-minicalendar-prev span, 
+.schedule-view-minicalendar-next span {
+    visibility: hidden;
 }
 
-.schedule-view-dayname-date {
-    padding-left: 7px;
-    font-size: 1.3em;
+.schedule-view-minicalendar th,
+.schedule-view-minicalendar td {
+    text-align: center;
+    color: #181818;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.schedule-view-minicalendar-date {
+    display: block;
+    width: 25px;
+    height: 25px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #181818;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.schedule-view-minicalendar-other .schedule-view-minicalendar-date {
+    color: #b8b8b8;
+}
+
+.schedule-view-minicalendar-label {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 25px;
+    height: 21px;
+    line-height: 25px;
+}
+
+.schedule-view-minicalendar-dots {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    height: 4px;
+    line-height: 4px;
+}
+
+.schedule-view-minicalendar-dots span {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    color: transparent;
+    margin-right: 2px;
+}
+
+.schedule-view-minicalendar-dots span:last-child {
+    margin-right: 0px;
+}
+
+.schedule-view-minicalendar-focused .schedule-view-minicalendar-label {
+    font-size: 1.1em;
     font-weight: bold;
+    color: #f8f8f8;
 }
 
-.schedule-holliday {
-    color: red;
+.schedule-view-minicalendar-focused .schedule-view-minicalendar-dots span {
+    background-color: #f8f8f8 !important;
+}
+
+.schedule-view-minicalendar-focused:before{
+    content: '';
+    margin: 0; padding: 0;
+    position: absolute;
+    display: block;
+    width: 29px;
+    height: 29px;
+    top: 50%;
+    left: 50%;
+    margin-top: -14px;
+    margin-left: -15px;
+    background-color: #b8b8b8;
+    border-radius: 50%;
+}
+
+/* emphasize selected today */
+.schedule-view-minicalendar-today:before {
+    background-color: #86c1b9;
+}
+
+
+@media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-devicepixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx) {
+    .schedule-view-minicalendar-prev {
+        background-size: 16px 16px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABESURBVHgB7co5DoAwEMVQsy///vcFJLpI4z6KWz+6bbJ/2Y/9GpypwZE3+5FfgD0CbgPzLzCBCYoWA6wfMIEJpI2m0QOuugMZwyotsAAAAABJRU5ErkJggg==);
+    }
+
+    .schedule-view-minicalendar-next {
+        background-size: 16px 16px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC);
+    }
 }
 
 /* allday view */
-.schedule-view-allday-container {
-    min-height: 62px;
-    border-top: 2px solid #ccc;
-    background-color: #eee;
-    overflow-y: scroll;
-}
-
 .schedule-view-allday-left {
     width: 60px;
     height: 100%;
@@ -166,7 +261,6 @@
 
     /* allday view > event block */
     .schedule-view-allday-event-block {
-        margin-top: 2px;
         position: absolute;
     }
 
@@ -247,16 +341,85 @@
         cursor: col-resize;
     }
 
-/* task view */
-.schedule-view-task-container {
-    height: 150px;
+/* dayname view */
+.schedule-view-dayname-container {
+    padding-left:60px;
+    height: 40px;
+    background-color: #eee;
+}
+
+.schedule-view-dayname {
+    height: 40px;
+    margin-left: -1px;
+    border-left: 1px solid #ccc;
+    background-color: #fff;
+    float: left;
+    line-height: 20px;
+}
+
+.schedule-view-dayname-label {
+    padding-left: 7px;
+    font-size: 1.2em;
+}
+
+.schedule-view-dayname-date {
+    padding-left: 7px;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.schedule-holliday {
+    color: red;
+}
+
+/* week container */
+.schedule-view-week-container {
+    width: 100%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    font-size: 0.7em;
+    background-color: #eee;
+}
+
+/**********
+ * Week view vertical layout
+ **********/
+
+.schedule-view-display-table {
+    width: 100%;
+    display: table;
+}
+
+.schedule-view-display-table-row {
+    display: table-row;
+}
+
+.scehdule-view-display-table-cell {
+    display: table-cell;
+}
+
+.schedule-view-scroll-y {
+    border-bottom: 2px solid #ccc;
+    overflow-y: scroll;
+}
+
+.schedule-view-display-table-row:last-child .schedule-view-scroll-y {
+    border-bottom: 0;
+}
+
+/* 마일스톤, 출근전, 점심전, 퇴근전 영역 */
+.schedule-view-milestone-layout > div:first-child {
+    border-top: 0;
+}
+
+.schedule-view-milestone-layout > div {
+    border-top: 1px solid #ccc;
 }
 
 /* timegrid view */
 .schedule-view-timegrid-container {
     height: 416px;
     overflow-y: scroll;
-    border-top: 2px solid #ccc;
     background-color: #ccc;
 }
 
