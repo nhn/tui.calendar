@@ -17,8 +17,9 @@ var FREE_HEIGHT_TO_CREATION = config.monthweek.view.FREE_HEIGHT_TO_CREATION;
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {number} [options.height=62] - minimum height of event container element.
- * @param {number} [options.eventBlockHeight=20] - height of each event block.
+ * @param {number} [options.height=60] - minimum height of event container element.
+ * @param {number} [options.eventBlockHeight=18] - height of each event block.
+ * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
 function MonthWeek(options, container) {
@@ -32,9 +33,12 @@ function MonthWeek(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        height: 62,              // default value when Month view rendering.
-        eventBlockHeight: 20     // event block's height value.
+        height: 60,              // default value when Month view rendering.
+        eventBlockHeight: 18,    // event block's height value.
+        eventBlockGutter: 2      // gutter between each event blocks
     }, options);
+
+    container.style.minHeight = this.options.height + FREE_HEIGHT_TO_CREATION + 'px';
 
     View.call(this, null, container);
 }
@@ -58,7 +62,8 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
     return {
         width: widthPercent,
         height: options.height,
-        eventBlockHeight: options.eventBlockHeight,
+        eventBlockHeight: options.eventBlockHeight + options.eventBlockGutter,
+        eventBlockGutter: options.eventBlockGutter,
         eventGrid: util.map(range, function() {
             return widthPercent;
         }),
@@ -92,15 +97,11 @@ MonthWeek.prototype.render = function(viewModel) {
  */
 MonthWeek.prototype.resize = function(maxEventInDay) {
     var options = this.options,
-        newHeight = (maxEventInDay * options.eventBlockHeight) + 2,
-        diff;
+        newHeight = (maxEventInDay * (options.eventBlockHeight + options.eventBlockGutter));
 
     newHeight = Math.max(newHeight, options.height);
-    diff = newHeight - options.height;
-
+    
     this.container.style.height = newHeight + FREE_HEIGHT_TO_CREATION + 'px';
-
-    View.prototype.resize.call(this, 'monthweek:resize', diff);
 };
 
 module.exports = MonthWeek;

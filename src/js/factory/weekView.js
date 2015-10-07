@@ -22,6 +22,9 @@ var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
 
+// Base Templates
+var weekViewTmpl = require('../view/template/factory/weekView.hbs');
+
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
         dayNameView,
@@ -35,6 +38,12 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
+
+    weekView.container.innerHTML = weekViewTmpl({
+        allday: {
+            minHeight: 68
+        }
+    });
 
     // Dayname
     dayNameView = new DayName(domutil.find('.schedule-view-dayname-layout', weekView.container));
