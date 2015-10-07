@@ -83,17 +83,23 @@ function Calendar(options, container) {
     this.toggleView(options.defaultView, true);
 }
 
-/**********
- * REFACTOR BELOW
- **********/
+/**
+ * Move next.
+ */
 Calendar.prototype.next = function() {
     this.move(1);
 };
 
+/**
+ * Move previous.
+ */
 Calendar.prototype.prev = function() {
     this.move(-1);
 };
 
+/**
+ * Move to today.
+ */
 Calendar.prototype.today = function() {
     var currentView = this.getCurrentView(),
         originOptions = this.originOptions;
@@ -117,6 +123,10 @@ Calendar.prototype.today = function() {
     this.refreshChildView(currentView.viewName);
 };
 
+/**
+ * Move calendar by direction
+ * @param {number} direction - the number that want to move (+1, -1)
+ */
 Calendar.prototype.move = function(direction) {
     var currentView = this.getCurrentView(),
         options = this.options,
@@ -148,9 +158,6 @@ Calendar.prototype.move = function(direction) {
 
     this.refreshChildView(currentView.viewName);
 }
-/**********
- * REFACTOR UPPER
- **********/
 
 /**
  * Return current rendered view.

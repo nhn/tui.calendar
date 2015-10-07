@@ -10,6 +10,7 @@ var serviceWeekViewFactory = require('./weekView');
 var calendarAPI = require('../calendarAPI');
 
 /**
+ * Calendar factor module for service (dooray)
  * @constructor
  * @extends {Calendar}
  * @mixed {CalendarAPI}
