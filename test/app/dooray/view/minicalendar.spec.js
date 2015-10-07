@@ -1,4 +1,4 @@
-var MiniCalendar = window.ne.dooray.calendar.MiniCalendar;
+var MiniCalendar = window.ne.dooray.calendar.service.MiniCalendar;
 describe('service:view/MiniCalendar', function() {
     var mockInst;
 

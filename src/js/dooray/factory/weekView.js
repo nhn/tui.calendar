@@ -24,7 +24,7 @@ var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
 
 // Base Templates
-var weekViewTmpl = require('../../service/view/template/factory/weekView.hbs');
+var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,

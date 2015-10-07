@@ -1,4 +1,4 @@
-var calendarAPI = window.ne.dooray.calendar.calendarAPI;
+var calendarAPI = window.ne.dooray.calendar.service.calendarAPI;
 var undef = (function() {})();
 describe('service/calendarAPI', function() {
     var ajaxSpy;

@@ -1,4 +1,5 @@
 /* eslint vars-on-top:0, strict:0 */
+
 /**********
  * Common
  **********/
@@ -14,12 +15,6 @@ var model = require('./src/js/common/model');
 var common = require('./src/js/common/common');
 var reqAnimFrame = require('./src/js/common/reqAnimFrame');
 var AJAX = require('./src/js/common/ajax');
-
-/**********
- * Factory
- **********/
-var controllerFactory = require('./src/js/factory/controller');
-var OriginCalendar = require('./src/js/factory/calendar');
 
 /**********
  * Models
@@ -38,7 +33,6 @@ var DayName = require('./src/js/view/week/dayname');
 var TimeGrid = require('./src/js/view/week/timeGrid');
 var Time = require('./src/js/view/week/time');
 
-var MiniCalendar = require('./src/js/service/view/minicalendar');
 
 /**********
  * View Models
@@ -66,15 +60,12 @@ var AlldayResize = require('./src/js/handler/allday/resize');
 var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
 
 /**********
- * SERVICE MODULE
+ * Factory
  **********/
-var calendarAPI = require('./src/js/service/calendarAPI');
-var ServiceCalendar = require('./src/js/service/factory/calendar');
+var controllerFactory = require('./src/js/factory/controller');
 
-/**
- * @namespace ne.dooray.calendar
- */
-ne.util.defineNamespace('ne.dooray.calendar', {
+global.ne.util.defineNamespace('ne.dooray.calendar', {
+    // common
     dirty: dirty,
     datetime: datetime,
     array: array,
@@ -85,12 +76,13 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     common: common,
     reqAnimFrame: reqAnimFrame,
     AJAX: AJAX,
-
     Point: Point, 
-    Event: Event,
 
+    // model
+    Event: Event,
     EventViewModel: EventViewModel,
 
+    // view
     View: View,
     Week: Week,
     DayName: DayName,
@@ -98,7 +90,9 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     Time: Time,
     MonthWeek: MonthWeek,
 
+    // handler, guide
     Drag: Drag,
+
     TimeCore: TimeCore,
     TimeCreation: TimeCreation,
     TimeCreationGuide: TimeCreationGuide,
@@ -115,18 +109,33 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayResize: AlldayResize,
     AlldayResizeGuide: AlldayResizeGuide,
 
-    ControllerFactory: controllerFactory,
-    OriginCalendar: function (options, container) {
-        return new OriginCalendar(options, container);
-    },
-
-    // FOR SERVICE
-    calendarAPI: calendarAPI,
-    Calendar: function(options, container) {
-        return new ServiceCalendar(options, container);
-    },
-
-    // Service UI
-    MiniCalendar: MiniCalendar
+    // only for test
+    ControllerFactory: controllerFactory
 });
+
+/**********
+ * SERVICE MODULE
+ **********/
+var calendarAPI = require('./src/js/dooray/calendarAPI');
+var MiniCalendar = require('./src/js/dooray/view/minicalendar');
+
+global.ne.util.defineNamespace('ne.dooray.calendar.service', {
+    MiniCalendar: MiniCalendar,
+    calendarAPI: calendarAPI
+});
+
+/**********
+ * Calendar Factory
+ **********/
+
+var Calendar = require('./src/js/factory/calendar');
+var ServiceCalendar = require('./src/js/dooray/factory/calendar');
+
+global.ne.dooray.calendar.OriginCalendar = function (options, container) {
+    return new Calendar(options, container);
+};
+
+global.ne.dooray.calendar.Calendar = function(options, container) {
+    return new ServiceCalendar(options, container);
+};
 
