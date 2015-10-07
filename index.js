@@ -64,6 +64,8 @@ var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
  **********/
 var controllerFactory = require('./src/js/factory/controller');
 
+/** @namespace ne.dooray.calendar */
+
 global.ne.util.defineNamespace('ne.dooray.calendar', {
     // common
     dirty: dirty,
@@ -118,8 +120,12 @@ global.ne.util.defineNamespace('ne.dooray.calendar', {
  **********/
 var calendarAPI = require('./src/js/dooray/calendarAPI');
 var MiniCalendar = require('./src/js/dooray/view/minicalendar');
+var DoorayEvent = require('./src/js/dooray/model/event');
+
+/** @namespace ne.dooray.calendar.service */
 
 global.ne.util.defineNamespace('ne.dooray.calendar.service', {
+    DoorayEvent: DoorayEvent,
     MiniCalendar: MiniCalendar,
     calendarAPI: calendarAPI
 });

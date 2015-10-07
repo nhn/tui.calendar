@@ -112,7 +112,6 @@
 
 .schedule-view-minicalendar-focused:before{
     content: '';
-    z-index: -1;
     margin: 0; padding: 0;
     position: absolute;
     display: block;
