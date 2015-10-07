@@ -5,12 +5,12 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../datetime');
-var domutil = require('../common/domutil');
-var View = require('./view');
-var daynameTmpl = require('./template/daynames.hbs');
+var datetime = require('../../datetime');
+var domutil = require('../../common/domutil');
+var View = require('../view');
+var daynameTmpl = require('../template/week/daynames.hbs');
 
-var DAY_NAME = require('../config').dayname.view.DAY_NAME;
+var DAY_NAME = require('../../config').dayname.view.DAY_NAME;
 
 /**
  * @constructor

@@ -19,7 +19,7 @@ var AJAX = require('./src/js/common/ajax');
  * Factory
  **********/
 var controllerFactory = require('./src/js/factory/controller');
-var serviceFactory = require('./src/js/service/factory');
+var OriginCalendar = require('./src/js/factory/calendar');
 
 /**********
  * Models
@@ -31,10 +31,12 @@ var Event = require('./src/js/model/event');
  * Views
  **********/
 var View = require('./src/js/view/view');
-var Week = require('./src/js/view/week');
-var DayName = require('./src/js/view/dayname');
-var TimeGrid = require('./src/js/view/timeGrid');
-var Time = require('./src/js/view/time');
+var MonthWeek = require('./src/js/view/monthweek');
+
+var Week = require('./src/js/view/week/week');
+var DayName = require('./src/js/view/week/dayname');
+var TimeGrid = require('./src/js/view/week/timeGrid');
+var Time = require('./src/js/view/week/time');
 
 var MiniCalendar = require('./src/js/service/view/minicalendar');
 
@@ -67,6 +69,7 @@ var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
  * SERVICE MODULE
  **********/
 var calendarAPI = require('./src/js/service/calendarAPI');
+var ServiceCalendar = require('./src/js/service/factory/calendar');
 
 /**
  * @namespace ne.dooray.calendar
@@ -82,9 +85,10 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     common: common,
     reqAnimFrame: reqAnimFrame,
     AJAX: AJAX,
-    Point: Point, 
 
+    Point: Point, 
     Event: Event,
+
     EventViewModel: EventViewModel,
 
     View: View,
@@ -92,6 +96,7 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     DayName: DayName,
     TimeGrid: TimeGrid,
     Time: Time,
+    MonthWeek: MonthWeek,
 
     Drag: Drag,
     TimeCore: TimeCore,
@@ -111,10 +116,17 @@ ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayResizeGuide: AlldayResizeGuide,
 
     ControllerFactory: controllerFactory,
+    OriginCalendar: function (options, container) {
+        return new OriginCalendar(options, container);
+    },
 
     // FOR SERVICE
-    Calendar: serviceFactory,
     calendarAPI: calendarAPI,
+    Calendar: function(options, container) {
+        return new ServiceCalendar(options, container);
+    },
+
+    // Service UI
     MiniCalendar: MiniCalendar
 });
 

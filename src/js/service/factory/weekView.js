@@ -1,35 +1,37 @@
 /**
- * @fileoverview Factory module for WeekView
+ * @fileoverview Factory module for WeekView (customized for service)
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
-var domutil = require('../common/domutil');
+var util = global.ne.util;
+var domutil = require('../../common/domutil');
 
 // Parent views
-var Week = require('../view/week/week');
+var Week = require('../../view/week/week');
 
 // Sub views
-var DayName = require('../view/week/dayname');
-var TimeGrid = require('../view/week/timeGrid');
-var Allday = require('../view/week/allday');
+var DayName = require('../../view/week/dayname');
+var TimeGrid = require('../../view/week/timeGrid');
+var Allday = require('../../view/week/allday');
 
 // Handlers
-var AlldayCreation = require('../handler/allday/creation');
-var AlldayMove = require('../handler/allday/move');
-var AlldayResize = require('../handler/allday/resize');
-var TimeCreation = require('../handler/time/creation');
-var TimeMove = require('../handler/time/move');
-var TimeResize = require('../handler/time/resize');
+var AlldayCreation = require('../../handler/allday/creation');
+var AlldayMove = require('../../handler/allday/move');
+var AlldayResize = require('../../handler/allday/resize');
+var TimeCreation = require('../../handler/time/creation');
+var TimeMove = require('../../handler/time/move');
+var TimeResize = require('../../handler/time/resize');
 
 // Base Templates
-var weekViewTmpl = require('../view/template/factory/weekView.hbs');
+var weekViewTmpl = require('../../service/view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
         dayNameView,
         alldayView,
         timeGridView,
+        alldayOptions,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
@@ -45,15 +47,41 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     dayNameView = new DayName(domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
-    // Allday
+    /**********
+     * AllDay View
+     **********/
+    alldayOptions = util.extend({
+        title: null,
+        height: 20
+    }, options.week);
+
+    // Allday - milestone
+    alldayOptions.title = '마일스톤';
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
+    weekView.addChild(alldayView);
+    // Allday - morning
+    alldayOptions.title = '출근전';
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
+    weekView.addChild(alldayView);
+    // Allday - lunch
+    alldayOptions.title = '점심전';
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
+    weekView.addChild(alldayView);
+    // Allday - evening
+    alldayOptions.title = '퇴근전';
+    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
+    weekView.addChild(alldayView);
+    // Allday - wholeDay
+    alldayOptions.title = '종일일정';
     alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
-
     weekView.addChild(alldayView);
 
-    // TimeGrid
+    /**********
+     * TimeGrid View
+     **********/
     timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);

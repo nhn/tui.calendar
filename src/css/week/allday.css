@@ -1,0 +1,117 @@
+/* allday view */
+.schedule-view-allday-left {
+    width: 60px;
+    height: 100%;
+    float: left;
+    text-align: right;
+    color: #777;
+}
+
+.schedule-view-allday-left span {
+    display: block;
+    padding: 3px 5px 0 0;
+}
+
+.schedule-view-allday-right {
+    position: relative;
+    background-color: #fff;
+    margin-left: 60px;
+}
+
+.schedule-view-monthweek-grid-line {
+    position:absolute;
+    height: 100%;
+    margin-left: -1px;
+    border-left: 1px solid #ccc;
+}
+
+.schedule-view-monthweek-events {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+}
+
+    /* allday view > event block */
+    .schedule-view-allday-event-block {
+        position: absolute;
+    }
+
+    .schedule-view-allday-event {
+        margin: 0 3px 0 2px;
+        background-color: #a1b56c;
+    }
+
+    .schedule-view-day:last-child .schedule-view-allday-event {
+        margin-right: 2px;
+    }
+    
+    .schedule-view-allday-event span {
+        padding-left: 3px;
+        line-height: 18px;
+        font-size: 0.9em;
+        color: #fff;
+    }
+
+    .schedule-view-allday-exceed-left .schedule-view-allday-event {
+        margin-left: 0px;
+    }
+
+    .schedule-view-allday-exceed-right .schedule-view-allday-event {
+        margin-right: 0px;
+    }
+
+    .schedule-view-allday-exceed-right .schedule-view-allday-resize-handle {
+        display: none;
+    }
+
+    /* allday view creation guide element */
+    .schedule-view-allday-creation-guide-block {
+        position: absolute;
+    }
+
+    .schedule-view-allday-creation-guide-block span {
+        position: absolute;
+        top: 0px;
+        left: 3px;
+        display:block;
+        line-height: 18px;
+        margin-top: 2px;
+        padding-left: 3px;
+        color: #fff;
+        font-size: 0.9em;
+        text-shadow: 0px 0px 2px #282828;
+    }
+
+    .schedule-view-allday-creation-guide {
+        margin: 2px 3px 0 2px;
+        padding-left: 3px;
+        background-color: #f7ca88;
+        line-height: 18px;
+        opacity: 0.9;
+        outline: 2px solid #fff;
+    }
+
+    .schedule-view-allday-creation-guide:after {
+        content: '\00a0';
+    }
+
+    /* allday view move guide element */
+    .schedule-view-allday-move-guide {
+        opacity: 0.6;
+    }
+
+    .schedule-view-allday-move-guide .schedule-view-allday-event {
+        background-color: red;
+    }
+
+    /* allday view resize */
+    .schedule-view-allday-resize-handle {
+        display: block;
+        float: right;
+        width: 6px;
+        background-position: 3px center;
+        cursor: col-resize;
+    }

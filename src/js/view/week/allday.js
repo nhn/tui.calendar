@@ -5,10 +5,10 @@
 'use strict';
 
 var util = global.ne.util;
-var domutil = require('../common/domutil');
-var View = require('./view');
-var MonthWeek = require('./monthweek');
-var mainTmpl = require('./template/week/allday.hbs');
+var domutil = require('../../common/domutil');
+var View = require('../view');
+var MonthWeek = require('../monthweek');
+var mainTmpl = require('../template/week/allday.hbs');
 
 /**
  * @constructor
@@ -16,8 +16,9 @@ var mainTmpl = require('./template/week/allday.hbs');
  * @param {object} options The object for view customization.
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.height=62] - minimum height of event container element.
- * @param {number} [options.eventBlockHeight=20] - height of each event block.
+ * @param {number} [options.height=60] - minimum height of event container element.
+ * @param {number} [options.eventBlockHeight=18] - height of each event block.
+ * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
  * @param {HTMLElement} container Container element.
  */
 function Allday(options, container) {
@@ -32,10 +33,12 @@ function Allday(options, container) {
      * @type {object}
      */
     this.options = util.extend({
+        title: '종일일정',
         renderStartDate: '',
         renderEndDate: '',
-        height: 62,
-        eventBlockHeight: 20
+        height: 60,
+        eventBlockHeight: 18,
+        eventBlockGutter: 2
     }, options);
 
     View.call(this, null, container);
@@ -52,11 +55,14 @@ Allday.prototype.render = function(viewModel) {
     var container = this.container,
         monthWeekInst;
 
-    container.innerHTML = mainTmpl();
+    container.innerHTML = mainTmpl(this.options);
 
     this.childs.clear();
 
-    monthWeekInst = new MonthWeek(this.options, domutil.find('.schedule-view-allday-monthweek-container', container));
+    monthWeekInst = new MonthWeek(
+        this.options, 
+        domutil.find('.schedule-view-allday-monthweek-container', container)
+    );
 
     this.addChild(monthWeekInst);
 

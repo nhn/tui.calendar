@@ -5,9 +5,9 @@
 'use strict';
 
 var util = global.ne.util;
-var domutil = require('../common/domutil');
-var datetime = require('../datetime');
-var View = require('./view');
+var domutil = require('../../common/domutil');
+var datetime = require('../../datetime');
+var View = require('../view');
 
 /**
  * @constructor
@@ -79,26 +79,26 @@ Week.prototype.render = function() {
  * @param {string} source - the string to use group requests.
  * @param {number} param - additional information for resizing session.
  */
-Week.prototype._onResize = function(source, param) {
-    var ownChilds = this.childs,
-        timegrid,
-        height;
-
-    if (source === 'monthweek:resize') {
-        timegrid = ownChilds.find(function(view) {
-            return view.viewName === 'timegrid';
-        }).single();
-
-        height = this.timeGridOriginHeight;
-
-        if (!this.timeGridOriginHeight) {
-            height = this.timeGridOriginHeight = domutil.getSize(timegrid.container)[1];
-        }
-
-        timegrid.container.style.height = (height - param) + 'px';
-        return;
-    }
-};
+// Week.prototype._onResize = function(source, param) {
+//     var ownChilds = this.childs,
+//         timegrid,
+//         height;
+//
+//     if (source === 'monthweek:resize') {
+//         timegrid = ownChilds.find(function(view) {
+//             return view.viewName === 'timegrid';
+//         }).single();
+//
+//         height = this.timeGridOriginHeight;
+//
+//         if (!this.timeGridOriginHeight) {
+//             height = this.timeGridOriginHeight = domutil.getSize(timegrid.container)[1];
+//         }
+//
+//         timegrid.container.style.height = (height - param) + 'px';
+//         return;
+//     }
+// };
 
 /**********
  * Prototype props

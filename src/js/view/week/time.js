@@ -5,12 +5,10 @@
 'use strict';
 
 var util = global.ne.util;
-var array = require('../common/array');
-var datetime = require('../datetime');
-var domutil = require('../common/domutil');
-var View = require('./view');
-var EventViewModel = require('../model/viewModel/event');
-var timeTmpl = require('./template/time.hbs');
+var datetime = require('../../datetime');
+var domutil = require('../../common/domutil');
+var View = require('../view');
+var timeTmpl = require('../template/week/time.hbs');
 var forEachArr = util.forEachArray;
 
 /**
