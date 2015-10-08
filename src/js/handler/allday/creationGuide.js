@@ -5,9 +5,8 @@
 'use strict';
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
-var config = require('../../config');
-var EVENT_TOP_MARGIN = config.monthweek.view.EVENT_TOP_MARGIN;
-var TEXT_FOR_NEW_EVENT = config.monthweek.handler.guide.TEXT_FOR_NEW_EVENT;
+
+var CREATE_NEW_LABEL = '새 일정';
 
 /**
  * Class for Allday.Creation dragging effect.
@@ -61,10 +60,9 @@ AlldayCreationGuide.prototype.initializeGuideElement = function() {
 
     domutil.addClass(guideElement, 'schedule-view-allday-creation-guide-block');
     domutil.appendHTMLElement('div', guideElement, 'schedule-view-allday-creation-guide');
-    spanElement = domutil.appendHTMLElement('span', guideElement);
-    spanElement.innerHTML = TEXT_FOR_NEW_EVENT;
 
-    guideElement.style.height = (eventBlockHeight - EVENT_TOP_MARGIN) + 'px';
+    spanElement = domutil.appendHTMLElement('span', guideElement);
+    spanElement.innerHTML = CREATE_NEW_LABEL;
 };
 
 /**

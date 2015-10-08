@@ -5,7 +5,6 @@
 'use strict';
 
 var util = global.ne.util;
-var config = require('../../config');
 var View = require('../../view/view');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
@@ -42,7 +41,8 @@ function MiniCalendar(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        startDayOfWeek: 0
+        startDayOfWeek: 0,
+        daynames: ['일', '월', '화', '수', '목', '금', '토']
     }, options);
 
     this.options.renderMonth = defaultMonth;
@@ -140,7 +140,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
             dayname: null,
             calendar: null
         },
-        dayname = config.label.DAY_NAME.kor,
+        daynames = this.options.daynames,
         renderMonth = renderDate.getMonth(),
         renderYear = renderDate.getFullYear(),
         todayDate = today.getDate(),
@@ -150,7 +150,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
 
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7), 
-        function(i) { return dayname[i]; }
+        function(i) { return daynames[i]; }
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(d) {

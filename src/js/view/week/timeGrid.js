@@ -12,7 +12,10 @@ var View = require('../view');
 var Time = require('./time');
 var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
-var config = require('../../config').timeGrid.view;
+
+var PIXEL_RENDER_ERROR = 0.5;
+var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
+var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
 
 /**
  * @constructor
@@ -221,7 +224,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
         }
 
         hourmarker.style.display = 'block';
-        hourmarker.style.top = (viewModel.top - config.PIXEL_RENDER_ERROR) + 'px';
+        hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
 
         if (!util.isNull(todaymarkerLeft)) {
             todaymarker.style.display = 'block';
@@ -294,7 +297,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
  */
 TimeGrid.prototype.attachEvent = function() {
     window.clearInterval(this.intervalID);
-    this.intervalID = window.setInterval(util.bind(this.onTick, this), config.TICK_INTERVAL);
+    this.intervalID = window.setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
 };
 
 /**
@@ -307,7 +310,7 @@ TimeGrid.prototype.scrollToNow = function() {
 
     window.setTimeout(function() {
         container.scrollTop = (0, currentHourTop - (viewBound.height / 2));
-    }, config.SET_SCROLL_DELAY);
+    }, INITIAL_AUTOSCROLL_DELAY);
 };
 
 /**********

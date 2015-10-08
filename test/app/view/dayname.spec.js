@@ -14,7 +14,11 @@ describe('view/dayName', function() {
             width: 50
         }];
 
-        var result = DayName.prototype._getBaseViewModel(
+        var result = DayName.prototype._getBaseViewModel.call({
+                options: {
+                    daynames: ['일', '월', '화', '수', '목', '금', '토']
+                }
+            },
             new Date('2015-07-26'),
             new Date('2015-07-27')
         );

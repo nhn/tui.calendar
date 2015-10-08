@@ -8,11 +8,9 @@ var domevent = require('../../common/domevent');
 var datetime = require('../../datetime');
 var common = require('../../common/common');
 
-var config = require('../../config');
-var CONTAINER_PADDING_LEFT = config.monthweek.view.CONTAINER_PADDING_LEFT;
-
 var mmax = Math.max,
-    mmin = Math.min;
+    mmin = Math.min,
+    CONTAINER_PADDING_LEFT = 60;
 
 /**
  * @mixin Allday.Core

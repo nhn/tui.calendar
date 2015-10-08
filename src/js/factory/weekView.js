@@ -42,7 +42,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView.container.innerHTML = weekViewTmpl();
 
     // Dayname
-    dayNameView = new DayName(domutil.find('.schedule-view-dayname-layout', weekView.container));
+    dayNameView = new DayName(null, domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
     // Allday

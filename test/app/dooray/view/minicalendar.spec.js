@@ -2,15 +2,17 @@ var MiniCalendar = window.ne.dooray.calendar.service.MiniCalendar;
 describe('service:view/MiniCalendar', function() {
     var mockInst;
 
+    beforeEach(function() {
+        mockInst = {
+            options: {
+                renderMonth: jasmine.createSpyObj('Date', ['setMonth', 'getMonth']),
+                daynames: ['일', '월', '화', '수', '목', '금', '토']
+            },
+            render: jasmine.createSpy('render')
+        };
+    });
+
     describe('nav()', function() {
-        beforeEach(function() {
-            mockInst = {
-                options: {
-                    renderMonth: jasmine.createSpyObj('Date', ['setMonth', 'getMonth'])
-                },
-                render: jasmine.createSpy('render')
-            };
-        });
 
         it('can move rendered month.', function() {
             var button = document.createElement('button');
@@ -48,7 +50,7 @@ describe('service:view/MiniCalendar', function() {
             var today = new Date('2015-10-02T11:36:00+09:00');
 
             // September!
-            var actual = MiniCalendar.prototype._getViewModel(renderMonth, 0, today);
+            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today);
             expect(actual).toEqual({
                 title: '2015.09',
                 dayname: jasmine.any(Array),
@@ -74,7 +76,7 @@ describe('service:view/MiniCalendar', function() {
         it('when today included render month then autoselect today', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-09-02T11:36:00+09:00');
-            var actual = MiniCalendar.prototype._getViewModel(renderMonth, 0, today);
+            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today);
 
             expect(actual.calendar[0][3].focused).toBe(true);
         });
@@ -83,7 +85,7 @@ describe('service:view/MiniCalendar', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-09-02T11:36:00+09:00');
             var events = {'2015-9-3': [{color:'fff'}, {color:'fff'}]};
-            var actual = MiniCalendar.prototype._getViewModel(renderMonth, 0, today, events);
+            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today, events);
 
             expect(actual.calendar[0][4].events).toEqual(events['2015-9-3']);
         });

@@ -10,19 +10,22 @@ var domutil = require('../../common/domutil');
 var View = require('../view');
 var daynameTmpl = require('../template/week/daynames.hbs');
 
-var DAY_NAME = require('../../config').dayname.view.DAY_NAME;
-
 /**
  * @constructor
+ * @paran {object} options - options for dayname view
  * @param {HTMLElement} container Container element to use.
  * @extends {View}
  */
-function DayName(container) {
+function DayName(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
         'schedule-view-dayname-container'
     );
+
+    this.options = util.extend({
+        daynames: ['일', '월', '화', '수', '목', '금', '토']
+    }, options);
 
     View.call(this, null, container);
 }
@@ -36,7 +39,8 @@ util.inherit(DayName, View);
  * @returns {array} viewmodel.
  */
 DayName.prototype._getBaseViewModel = function(start, end) {
-    var viewModel;
+    var daynames = this.options.daynames,
+        viewModel;
 
     viewModel = util.map(datetime.range(
         datetime.start(start),
@@ -47,7 +51,7 @@ DayName.prototype._getBaseViewModel = function(start, end) {
 
         return {
             day: day,
-            dayName: DAY_NAME.kor[day],
+            dayName: daynames[day],
             date: d.getDate(),
             width: 100 / arr.length
         };

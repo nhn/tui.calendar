@@ -10,16 +10,14 @@ var datetime = require('../datetime');
 var View = require('./view');
 var tmpl = require('./template/monthweek.hbs');
 
-var config = require('../config');
-var FREE_HEIGHT_TO_CREATION = config.monthweek.view.FREE_HEIGHT_TO_CREATION;
-
 /**
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {number} [options.height=60] - minimum height of event container element.
- * @param {number} [options.eventBlockHeight=18] - height of each event block.
- * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
+ * @param {number} [options.containerHeight=40] - minimum height of event container element.
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to make create easy.
+ * @param {number} [options.eventHeight=18] - height of each event block.
+ * @param {number} [options.eventGutter=2] - gutter height of each event block.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
 function MonthWeek(options, container) {
@@ -32,13 +30,14 @@ function MonthWeek(options, container) {
     /**
      * @type {object}
      */
-    this.options = util.extend({
-        height: 60,              // default value when Month view rendering.
-        eventBlockHeight: 18,    // event block's height value.
-        eventBlockGutter: 2      // gutter between each event blocks
+    options = this.options = util.extend({
+        containerHeight: 40,
+        containerBottomGutter: 8,
+        eventHeight: 18,
+        eventGutter: 2
     }, options);
 
-    container.style.minHeight = this.options.height + FREE_HEIGHT_TO_CREATION + 'px';
+    options.minHeight = options.containerHeight + options.containerBottomGutter;
 
     View.call(this, null, container);
 }
@@ -61,9 +60,9 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
 
     return {
         width: widthPercent,
-        height: options.height,
-        eventBlockHeight: options.eventBlockHeight + options.eventBlockGutter,
-        eventBlockGutter: options.eventBlockGutter,
+        height: options.containerHeight,
+        eventBlockHeight: options.eventHeight + options.eventGutter,
+        eventBlockGutter: options.eventGutter,
         eventGrid: util.map(range, function() {
             return widthPercent;
         }),
@@ -97,11 +96,11 @@ MonthWeek.prototype.render = function(viewModel) {
  */
 MonthWeek.prototype.resize = function(maxEventInDay) {
     var options = this.options,
-        newHeight = (maxEventInDay * (options.eventBlockHeight + options.eventBlockGutter));
+        newHeight = (maxEventInDay * (options.eventHeight + options.eventGutter)) + options.containerBottomGutter;
 
-    newHeight = Math.max(newHeight, options.height);
+    newHeight = Math.max(newHeight, options.minHeight);
     
-    this.container.style.height = newHeight + FREE_HEIGHT_TO_CREATION + 'px';
+    this.container.style.height = newHeight + 'px';
 };
 
 module.exports = MonthWeek;
