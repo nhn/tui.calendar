@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var array = require('../../common/array');
 var EventViewModel = require('../../model/viewModel/event');

@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../datetime');
+var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
 

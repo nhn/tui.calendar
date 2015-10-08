@@ -5,7 +5,7 @@
 'use strict';
 var util = window.ne.util;
 var domutil = require('../../common/domutil');
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
 

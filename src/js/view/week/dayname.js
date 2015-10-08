@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var daynameTmpl = require('../template/week/daynames.hbs');

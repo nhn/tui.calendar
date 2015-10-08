@@ -7,7 +7,7 @@
 var util = global.ne.util;
 var Event = require('../model/event');
 var EventViewModel = require('../model/viewModel/event');
-var datetime = require('../datetime');
+var datetime = require('../common/datetime');
 var common = require('../common/common');
 
 /**

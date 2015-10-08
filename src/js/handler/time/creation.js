@@ -6,7 +6,7 @@
 
 var util = global.ne.util;
 var array = require('../../common/array');
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var TimeCreationGuide = require('./creationGuide');
 var timeCore = require('./core');

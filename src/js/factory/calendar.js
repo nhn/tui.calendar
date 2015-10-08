@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-var datetime = require('../datetime');
+var datetime = require('../common/datetime');
 var Layout = require('../view/layout');
 var Drag = require('../handler/drag');
 var controllerFactory = require('./controller');

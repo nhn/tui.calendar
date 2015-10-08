@@ -8,7 +8,7 @@ var util = global.ne.util;
 var View = require('../../view/view');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var tmpl = require('./minicalendar.hbs');
 
 /**

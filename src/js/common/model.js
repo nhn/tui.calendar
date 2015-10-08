@@ -8,7 +8,7 @@ var util = global.ne.util,
     spaceRx = /^\s*|\s*$/g,
     model;
 
-var datetime = require('../datetime');
+var datetime = require('../common/datetime');
 
 /**
  * Mixin module for models.

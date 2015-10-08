@@ -6,7 +6,7 @@
 
 var util = global.ne.util;
 var domutil = require('../../common/domutil');
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var View = require('../view');
 var Time = require('./time');

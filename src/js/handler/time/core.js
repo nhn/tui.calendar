@@ -6,7 +6,7 @@
 
 var util = global.ne.util;
 var common = require('../../common/common');
-var datetime = require('../../datetime');
+var datetime = require('../../common/datetime');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
 
