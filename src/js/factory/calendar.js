@@ -47,11 +47,7 @@ function Calendar(options, container) {
      * base controller
      * @type {Base}
      */
-    this.controller = controllerFactory({
-        groupFunc: function() {
-            return 'time';
-        }
-    });
+    this.controller = controllerFactory();
 
     /**
      * layout view (layout manager)
