@@ -15,6 +15,7 @@ var weekViewFactory = require('./weekView');
  * Calendar class
  * @constructor
  * @param {object} options - options for calendar
+ * @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  * @param {string} [options.defaultView='week'] - default view of calendar
  * @param {object} [options.week] - options for week view
  * @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
@@ -46,7 +47,11 @@ function Calendar(options, container) {
      * base controller
      * @type {Base}
      */
-    this.controller = controllerFactory();
+    this.controller = controllerFactory({
+        groupFunc: function() {
+            return 'time';
+        }
+    });
 
     /**
      * layout view (layout manager)

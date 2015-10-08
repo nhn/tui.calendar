@@ -8,7 +8,6 @@ var util = global.ne.util;
 
 /**
  * Event ViewModel
- * TODO: useless.
  * @constructor
  * @param {Event} event Event instance.
  */

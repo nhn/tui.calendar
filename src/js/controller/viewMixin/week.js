@@ -345,7 +345,6 @@ var Week = {
      * @param {Date} starts start date.
      * @param {Date} ends end date.
      * @returns {object} events grouped by dates.
-     * TODO: task
      */
     findByDateRange: function(starts, ends) {
         var that = this,
@@ -368,12 +367,8 @@ var Week = {
             util.map(events.items, function(event) {
                 return EventViewModel.create(event);
             })
-        ).groupBy(function(viewModel) {
-            if (viewModel.model.isAllDay) {
-                return 'allday';
-            }
-            return 'time';
-        });
+        ).groupBy(this.groupFunc);
+
         viewModels.allday = viewModels.allday || common.createEventCollection();
         viewModels.time = viewModels.time || common.createEventCollection();
 

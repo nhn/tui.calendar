@@ -12,9 +12,26 @@ var common = require('../common/common');
 
 /**
  * @constructor
+ * @param {object} options - options for base controller
+ * @param {function} [options.groupFunc] - function for group each models {@see Collection#groupBy}
  * @mixes util.CustomEvents
  */
-function Base() {
+function Base(options) {
+    options = options || {};
+
+    /**
+     * function for group each event models.
+     * @type {function}
+     * @param {EventViewModel} viewModel - view model instance
+     * @return {string} group key
+     */
+    this.groupFunc = options.groupFunc || function(viewModel) {
+        if (viewModel.model.isAllDay) {
+            return 'allday';
+        }
+        return 'time';
+    }
+
     /**
      * events collection.
      * @type {Collection}
