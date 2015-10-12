@@ -89,49 +89,55 @@ domutil = {
      * 3. nodeName selector
      * @param {string} selector selector
      * @param {(HTMLElement|string)} [root] You can assign root element to find. if not supplied, document.body will use.
+     * @param {boolean|function} [first=true] - set false then return all elements that meet condition, if set function then use it filter function.
      * @returns {HTMLElement} HTML element finded.
      */
-    find: function(selector, root) {
-        var target = null;
+    find: function(selector, root, first) {
+        var result = [],
+            found = false,
+            isFirst = util.isUndefined(first) || first === false,
+            isFilter = util.isFunction(first);
 
-        if (typeof root === 'string') {
+        if (util.isString(root)) {
             root = domutil.get(root);
         }
+        
+        root = root || window.document.body;
 
-        if (!root) {
-            root = window.document.body;
-        }
-
-        /**
-         * Find element recursively
-         * @param {HTMLElement} el root element
-         * @param {string} selector selector
-         */
-        function findRecursive(el, selector) {
+        function recurse(el, selector) {
             var childNodes = el.childNodes,
-                i,
-                len,
-                child;
+                i = 0,
+                len = childNodes.length,
+                cursor;
 
-            for (i = 0, len = childNodes.length; i < len; i += 1) {
-                child = childNodes[i];
+            for (; i < len; i += 1) {
+                cursor = childNodes[i];
 
-                if (child.nodeName === '#text') {
+                if (cursor.nodeName === '#text') {
                     continue;
                 }
 
-                if (domutil._matcher(child, selector)) {
-                    target = child;
-                    return;
-                } else if (child.childNodes.length > 0) {
-                    findRecursive(child, selector);
+                if (domutil._matcher(cursor, selector)) {
+                    if ((isFilter && first(cursor)) || !isFilter) {
+                        result.push(cursor);
+                    }
+
+                    if (isFirst) {
+                        found = true;
+                        break;
+                    }
+                } else if (cursor.childNodes.length > 0) {
+                    recurse(cursor, selector);
+                    if (found) {
+                        break;
+                    }
                 }
             }
         }
 
-        findRecursive(root, selector);
+        recurse(root, selector);
 
-        return target;
+        return isFirst ? (result[0] || null) : result;
     },
 
     /**

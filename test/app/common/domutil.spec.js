@@ -158,6 +158,35 @@ describe('module:domutil', function() {
 
             expect(span.getAttribute('id')).toBe('myspan');
         });
+
+        it('엘리먼트가 없을 경우 null 반환', function() {
+            var firstCheckedInput = domutil.find('form', document.getElementById('find-test'));
+            expect(firstCheckedInput).toBe(null);
+        });
+
+        it('세 번째 인자를 설정하지 않으면 조건을 만족하는 첫 번째 엘리먼트만 반환한다.', function() {
+            var firstCheckedInput = domutil.find('input', document.getElementById('find-test'));
+            expect(firstCheckedInput).toBe(document.getElementById('find-test-first'));
+        });
+
+        it('세 번째 인자를 true로 설정하면 조건에 맞는 모든 엘리먼트를 반환한다.', function() {
+            var inputs = domutil.find('input', document.getElementById('find-test'), true);
+            expect(inputs.length).toBe(3);
+            expect(inputs).toEqual([
+                document.getElementById('find-test-first'),
+                document.getElementById('find-test-second'),
+                document.getElementById('find-test-third')
+            ]);
+        });
+
+        it('세 번째 인자에 함수를 전달하면 필터로 사용한다.', function() {
+            var inputs = domutil.find('input', document.getElementById('find-test'), function(el) { return el.checked; });
+            expect(inputs.length).toBe(2);
+            expect(inputs).toEqual([
+                document.getElementById('find-test-first'),
+                document.getElementById('find-test-third')
+            ]);
+        });
     });
 
 
