@@ -55,24 +55,39 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         height: 20
     }, options.week);
 
+    function getViewModelFunc(key) {
+        return function(viewModel) {
+            return viewModel.eventsInDateRange[key];
+        };
+    }
+
     // Allday - milestone
     alldayOptions.title = '마일스톤';
+    alldayOptions._getViewModelFunc = getViewModelFunc('milestone');
     alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
+
     // Allday - morning
     alldayOptions.title = '출근전';
+    alldayOptions._getViewModelFunc = getViewModelFunc('task-morning');
     alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
+
     // Allday - lunch
     alldayOptions.title = '점심전';
+    alldayOptions._getViewModelFunc = getViewModelFunc('task-lunch');
     alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
+
     // Allday - evening
     alldayOptions.title = '퇴근전';
+    alldayOptions._getViewModelFunc = getViewModelFunc('task-evening');
     alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(alldayView);
+
     // Allday - wholeDay
     alldayOptions.title = '종일일정';
+    alldayOptions._getViewModelFunc = getViewModelFunc('allday');
     alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);

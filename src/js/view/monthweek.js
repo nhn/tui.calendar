@@ -18,6 +18,7 @@ var tmpl = require('./template/monthweek.hbs');
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
 function MonthWeek(options, container) {
@@ -55,7 +56,7 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
             viewModel.renderEndDate,
             datetime.MILLISECONDS_PER_DAY
         ),
-        matrices = viewModel.eventsInDateRange.allday,
+        matrices = options._getViewModelFunc(viewModel),
         widthPercent = 100 / range.length;
 
     return {

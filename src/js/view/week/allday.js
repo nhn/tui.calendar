@@ -19,6 +19,7 @@ var mainTmpl = require('../template/week/allday.hbs');
  * @param {number} [options.height=60] - minimum height of event container element.
  * @param {number} [options.eventBlockHeight=18] - height of each event block.
  * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
+ * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLElement} container Container element.
  */
 function Allday(options, container) {
@@ -39,7 +40,10 @@ function Allday(options, container) {
         containerHeight: 40,
         containerBottomGutter: 8,
         eventHeight: 18,
-        eventGutter: 2
+        eventGutter: 2,
+        _getViewModelFunc: function(viewModel) {
+            return viewModel.eventsInDateRange.allday;
+        }
     }, options);
 
     View.call(this, null, container);
