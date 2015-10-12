@@ -180,7 +180,9 @@ describe('module:domutil', function() {
         });
 
         it('세 번째 인자에 함수를 전달하면 필터로 사용한다.', function() {
-            var inputs = domutil.find('input', document.getElementById('find-test'), function(el) { return el.checked; });
+            var inputs = domutil.find('input', document.getElementById('find-test'), function(el) {
+                return el.checked; 
+            });
             expect(inputs.length).toBe(2);
             expect(inputs).toEqual([
                 document.getElementById('find-test-first'),
