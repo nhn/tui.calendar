@@ -63,7 +63,8 @@ describe('service:view/MiniCalendar', function() {
                 y: 2015,
                 m: 7,
                 d: 30,
-                isOtherDate: true
+                isOtherDate: true,
+                weekend: true
             });
 
             // autoselect 9/1 because it first date of september
@@ -84,10 +85,10 @@ describe('service:view/MiniCalendar', function() {
         it('when supplied events data then add to date.', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-09-02T11:36:00+09:00');
-            var events = {'2015-9-3': [{color:'fff'}, {color:'fff'}]};
+            var events = ['2015-09-03'];
             var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today, events);
 
-            expect(actual.calendar[0][4].events).toEqual(events['2015-9-3']);
+            expect(actual.calendar[0][4].hasEvents).toBe(true);
         });
     });
 });

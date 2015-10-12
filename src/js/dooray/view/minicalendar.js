@@ -157,8 +157,8 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
         var month = d.getMonth(),
             year = d.getFullYear(),
             date = d.getDate(),
+            day = d.getDay(),
             isOtherDate = year !== renderYear || month !== renderMonth,
-            eventsInDate,
             result = {
                 y: year,
                 m: month,
@@ -181,13 +181,12 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
             }
         }
 
-        if (eventsInMonth) {
-            eventsInDate = eventsInMonth[[year, month + 1, date].join('-')];
+        if (day === 0 || day === 6) {
+            result.weekend = true;
+        }
 
-            if (eventsInDate) {
-                // if has events in date then add.
-                result.events = eventsInDate;
-            }
+        if (eventsInMonth && ~util.inArray(datetime.format(d, 'YYYY-MM-DD'), eventsInMonth)) {
+            result.hasEvents = true;
         }
 
         return result;
@@ -205,10 +204,7 @@ MiniCalendar.prototype.render = function() {
         renderDate = options.renderMonth,
         startDayOfWeek = options.startDayOfWeek,
         //TODO: this will provide by controller
-        events = {
-            '2015-10-2': [{color:'dc9656'}, {color:'a1b56c'}],
-            '2015-10-18': [{color:'a1b56c'}]
-        },
+        events = ['2015-10-02', '2015-10-18'],
         viewModel;
 
     viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date(), events);
