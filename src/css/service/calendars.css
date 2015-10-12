@@ -1,0 +1,22 @@
+/**********
+ * service/Calendars
+ **********/
+
+.schedule-view-calendars-general {
+    margin-bottom: 21px;
+}
+
+.schedule-view-calendars h6 {
+    margin: 0; padding: 0 0 7px;
+    font-size: 13px;
+}
+
+.schedule-view-calendars ol {
+    margin: 0; padding: 0;
+    list-style: none;
+}
+
+.schedule-view-calendars li {
+    font-size: 12px;
+    line-height: 12px;
+}

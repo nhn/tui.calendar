@@ -1,0 +1,18 @@
+<div class="schedule-view-calendars">
+    <div class="schedule-view-calendars-general">
+        <h6>일반 캘린더</h6>
+        <ol>
+            {{#each general.items}}
+            <li><label><input type="checkbox" data-id="{{id}}" {{#if isDefault}}checked{{/if}}/>&nbsp;{{name}}</label></li>
+            {{/each}}
+        </ol>
+    </div>
+    <div class="schedule-view-calendars-project">
+        <h6>프로젝트 캘린더</h6>
+        <ol>
+            {{#each project.items}}
+            <li><label><input type="checkbox" data-id="{{id}}"/>&nbsp;{{name}}</label></li>
+            {{/each}}
+        </ol>
+    </div>
+</div>
