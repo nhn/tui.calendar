@@ -7,7 +7,7 @@ describe('dooray:model/Event', function() {
     });
 
     it('create "general" task instance', function() {
-        var task = DoorayEvent.createEvent(jsonFixtures.general[0]);
+        var task = DoorayEvent.create(jsonFixtures.general[0]);
 
         expect(task).toEqual(jasmine.objectContaining({
             __fe_id: jasmine.any(Number),
@@ -27,7 +27,7 @@ describe('dooray:model/Event', function() {
     });
 
     it('create "task" task instance', function() {
-        var task = DoorayEvent.createEvent(jsonFixtures.task[0]);
+        var task = DoorayEvent.create(jsonFixtures.task[0]);
 
         expect(task).toEqual(jasmine.objectContaining({
             __fe_id: jasmine.any(Number),
@@ -47,7 +47,7 @@ describe('dooray:model/Event', function() {
     });
 
     it('create "milestone" task instance', function() {
-        var task = DoorayEvent.createEvent(jsonFixtures.milestone[0]);
+        var task = DoorayEvent.create(jsonFixtures.milestone[0]);
 
         expect(task).toEqual(jasmine.objectContaining({
             __fe_id: jasmine.any(Number),

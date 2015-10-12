@@ -6,7 +6,7 @@
 
 var util = global.ne.util;
 var Event = require('../../model/event');
-var doorayConfig = require('../config');
+var enums = require('../enums');
 
 /**
  * Event class for dooray project
@@ -20,7 +20,7 @@ function DoorayEvent() {
      * 일정 카테고리
      * @type {EVENT_CATEGORY}
      */
-    this.category = doorayConfig.model.EVENT_CATEGORY.GENERAL;
+    this.category = enums.model.EVENT_CATEGORY.GENERAL;
 
     /**
      * 일정 마감 분류
@@ -58,7 +58,7 @@ util.inherit(DoorayEvent, Event);
  * @param {object} data object for model.
  * @returns {Event} DoorayEvent model instance.
  */
-DoorayEvent.createEvent = function(data) {
+DoorayEvent.create = function(data) {
     var event = new DoorayEvent();
 
     event.init(data);
@@ -84,7 +84,7 @@ DoorayEvent.prototype.init = function(options) {
     this.isAllDay = util.isExisty(options.wholeDayFlag) ? options.wholeDayFlag : false;
     this.detailUrl = options.detailUrl || '';
 
-    if (this.category === doorayConfig.model.EVENT_CATEGORY.GENERAL) {
+    if (this.category === enums.model.EVENT_CATEGORY.GENERAL) {
         starts = new Date(options.startedAt);
         ends = new Date(options.endedAt);
     } else {
