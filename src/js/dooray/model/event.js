@@ -14,16 +14,16 @@ var enums = require('../enums');
  * @extends {Event}
  */
 function DoorayEvent() {
-    Event.apply(this);
+    Event.call(this);
 
     /**
-     * 일정 카테고리
-     * @type {EVENT_CATEGORY}
+     * 일정 카테고리 (마일스톤, 업무, 일반일정)
+     * @type {string}
      */
-    this.category = enums.model.EVENT_CATEGORY.GENERAL;
+    this.category = '';
 
     /**
-     * 일정 마감 분류
+     * 업무 일정의 경우 구분 (출근전, 점심전, 퇴근전)
      * @type {string}
      */
     this.dueDateClass = '';
@@ -44,6 +44,12 @@ function DoorayEvent() {
     this.detailUrl = '';
 
     /**
+     * 장소정보
+     * @type {string}
+     */
+    this.location = '';
+
+    /**
      * 기타정보
      * @type {object}
      */
@@ -53,43 +59,72 @@ function DoorayEvent() {
 util.inherit(DoorayEvent, Event);
 
 /**
- * create event model from json(object) data.
  * @override
- * @param {object} data object for model.
- * @returns {Event} DoorayEvent model instance.
  */
 DoorayEvent.create = function(data) {
-    var event = new DoorayEvent();
+    var inst = new DoorayEvent();
+    inst.init(data);
 
-    event.init(data);
-
-    return event;
+    return inst;
 };
 
 /**
- * Initialize event instance.
  * @override
  * @param {object} options options.
  */
 DoorayEvent.prototype.init = function(options) {
+    options = options || {};
+
+    Event.prototype.init.call(this, options);
+
+    this.category = options.category || enums.model.EVENT_CATEGORY.GENERAL;
+    this.dueDateClass = options.dueDateClass || '';
+};
+
+/**
+ * Marshal data to communicate with dooray API server
+ * @returns {object} - data object that accept from dooray API server
+ */
+DoorayEvent.prototype.marshal = function() {
+    var result = util.extend({}, this.raw);
+
+    result.subject = this.title;
+    result.category = this.category;
+    result.dueDateClass = this.dueDateClass;
+    result.wholeDayFlag = this.isAllDay;
+    result.startedAt = this.starts.toISOString();
+    result.endedAt = this.ends.toISOString();
+    result.body = this.body;
+    result.detailUrl = this.detailUrl;
+    result.location = this.location;
+
+    return result;
+};
+
+/**
+ * Unmarshal data from server response data object
+ * @param {object} dataObject - data object from dooray API server
+ */
+DoorayEvent.prototype.unmarshal = function(dataObject) {
     var starts,
         ends,
         body;
 
-    options = options || {};
+    dataObject = dataObject || {};
 
-    this.title = options.subject;
-    this.category = options.category;
-    this.dueDateClass = options.dueDateClass;
-    this.isAllDay = util.isExisty(options.wholeDayFlag) ? options.wholeDayFlag : false;
-    this.detailUrl = options.detailUrl || '';
+    this.title = dataObject.subject;
+    this.category = dataObject.category;
+    this.dueDateClass = dataObject.dueDateClass;
+    this.isAllDay = util.isExisty(dataObject.wholeDayFlag) ? dataObject.wholeDayFlag : false;
+    this.detailUrl = dataObject.detailUrl || '';
+    this.location = dataObject.location || '';
 
     if (this.category === enums.model.EVENT_CATEGORY.GENERAL) {
-        starts = new Date(options.startedAt);
-        ends = new Date(options.endedAt);
+        starts = new Date(dataObject.startedAt);
+        ends = new Date(dataObject.endedAt);
     } else {
         // 마일스톤, 업무 일정은 종료일 기준으로 계산
-        starts = new Date(options.dueDate);
+        starts = new Date(dataObject.dueDate);
         ends = new Date(+starts)
 
         // 일정 시작시간을 종료시간 30분 전으로 지정
@@ -99,13 +134,13 @@ DoorayEvent.prototype.init = function(options) {
     this.starts = starts;
     this.ends = ends;
 
-    body = util.pick(options, 'body');
+    body = util.pick(dataObject, 'body');
     if (body) {
         this.body.mimeType = body.mimeType;
         this.body.content = body.content;
     }
 
-    this.raw = options;
+    this.raw = dataObject;
 };
 
 module.exports = DoorayEvent;

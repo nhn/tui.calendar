@@ -40,8 +40,6 @@ function Event() {
      */
     this.ends = null;
 
-    this.init();
-
     // initialize model id
     util.stamp(this);
 }
@@ -61,11 +59,10 @@ Event.schema = {
  * @returns {Event} Event model instance.
  */
 Event.create = function(data) {
-    var event = new Event();
+    var inst = new Event();
+    inst.init(data);
 
-    event.init(data);
-
-    return event;
+    return inst;
 };
 
 /**********
