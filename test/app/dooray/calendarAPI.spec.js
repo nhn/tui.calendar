@@ -12,14 +12,14 @@ describe('service/calendarAPI', function() {
         calendarAPI.getCalendars('123');
 
         expect(ajaxSpy).toHaveBeenCalledWith(
-            '/task-tracker/projects/123/calendars',
+            '/wapi/task-tracker/projects/123/calendars',
             {}
         );
 
         calendarAPI.getCalendars();
 
         expect(ajaxSpy).toHaveBeenCalledWith(
-            '/task-tracker/projects/*/calendars',
+            '/wapi/task-tracker/projects/*/calendars',
             {}
         )
     });
@@ -28,7 +28,7 @@ describe('service/calendarAPI', function() {
         calendarAPI.postCalendars('123', {hello: 'world'});
 
         expect(ajaxSpy).toHaveBeenCalledWith(
-            '/task-tracker/projects/123/calendars',
+            '/wapi/task-tracker/projects/123/calendars',
             {hello: 'world'},
             {method: 'POST'}
         );
@@ -44,7 +44,7 @@ describe('service/calendarAPI', function() {
             );
 
             expect(ajaxSpy).toHaveBeenCalledWith(
-                '/task-tracker/projects/bug/calendars/1/tasks?calendars=&timeMin=&timeMax=2015-02-01T00:00:00+09:00',
+                '/wapi/task-tracker/projects/bug/calendars/1/tasks?calendars=&timeMin=&timeMax=2015-02-01T00:00:00+09:00',
                 {}
             );
         });
@@ -58,7 +58,7 @@ describe('service/calendarAPI', function() {
             );
 
             expect(ajaxSpy).toHaveBeenCalledWith(
-                '/task-tracker/projects/*/calendars/*/tasks?calendars=1,2,3&timeMin=&timeMax=2015-02-01T00:00:00+09:00',
+                '/wapi/task-tracker/projects/*/calendars/*/tasks?calendars=1,2,3&timeMin=&timeMax=2015-02-01T00:00:00+09:00',
                 {}
             );
             

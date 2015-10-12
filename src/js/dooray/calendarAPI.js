@@ -8,7 +8,7 @@ var util = global.ne.util;
 var Ajax = require('../common/ajax');
 
 // 캘린더 API 기본 PATH
-var ROOT_PATH = '/task-tracker';
+var ROOT_PATH = '/wapi/task-tracker';
 
 /**********
  * CALENDAR

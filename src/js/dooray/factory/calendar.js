@@ -17,7 +17,8 @@ var Week = require('../../controller/viewMixin/week');
 var serviceWeekViewFactory = require('./weekView');
 
 // API
-var calendarAPI = require('../calendarAPI');
+// var calendarAPI = require('../calendarAPI');
+var API = require('../controller/api');
 
 var enums = require('../enums');
 
@@ -70,7 +71,14 @@ function ServiceCalendar(options, container) {
 
     Calendar.call(this, options, container);
 
-    this.api = calendarAPI;
+    this.api = new API({
+        beforeRequest: function() {
+            console.log('before');
+        },
+        afterResponse: function() {
+            console.log('after');
+        }
+    });
 }
 
 util.inherit(ServiceCalendar, Calendar);
