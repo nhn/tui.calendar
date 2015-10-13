@@ -79,6 +79,29 @@
 
 
 /**********
+ * service/Calendars
+ **********/
+
+.schedule-view-calendars-general {
+    margin-bottom: 21px;
+}
+
+.schedule-view-calendars h6 {
+    margin: 0; padding: 0 0 7px;
+    font-size: 13px;
+}
+
+.schedule-view-calendars ol {
+    margin: 0; padding: 0;
+    list-style: none;
+}
+
+.schedule-view-calendars li {
+    font-size: 12px;
+    line-height: 12px;
+}
+
+/**********
  * service/MiniCalendar
  **********/
 
@@ -150,57 +173,33 @@
     top: 0;
     left: 0;
     display: block;
-    width: 25px;
-    height: 21px;
     line-height: 25px;
 }
 
-.schedule-view-minicalendar-dots {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: block;
-    height: 4px;
-    line-height: 4px;
+.schedule-view-minicalendar-has-events .schedule-view-minicalendar-label {
+    font-weight: bold;
 }
 
-.schedule-view-minicalendar-dots span {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    color: transparent;
-    margin-right: 2px;
-}
-
-.schedule-view-minicalendar-dots span:last-child {
-    margin-right: 0px;
+.schedule-view-minicalendar-weekend .schedule-view-minicalendar-label {
+    color: red;
 }
 
 .schedule-view-minicalendar-focused .schedule-view-minicalendar-label {
-    font-size: 1.1em;
-    font-weight: bold;
     color: #f8f8f8;
-}
-
-.schedule-view-minicalendar-focused .schedule-view-minicalendar-dots span {
-    background-color: #f8f8f8 !important;
 }
 
 .schedule-view-minicalendar-focused:before{
     content: '';
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     position: absolute;
     display: block;
-    width: 29px;
-    height: 29px;
+    width: 25px;
+    height: 25px;
     top: 50%;
     left: 50%;
-    margin-top: -14px;
-    margin-left: -15px;
+    margin-top: -50%;
+    margin-left: -50%;
     background-color: #b8b8b8;
     border-radius: 50%;
 }
@@ -265,6 +264,7 @@
     }
 
     .schedule-view-allday-event {
+        position: relative;
         margin: 0 3px 0 2px;
         background-color: #a1b56c;
     }
@@ -278,6 +278,14 @@
         line-height: 18px;
         font-size: 0.9em;
         color: #fff;
+    }
+
+    .schedule-view-allday-event-title {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
     }
 
     .schedule-view-allday-exceed-left .schedule-view-allday-event {
@@ -306,7 +314,6 @@
         margin-top: 2px;
         padding-left: 3px;
         color: #fff;
-        font-size: 0.9em;
         text-shadow: 0px 0px 2px #282828;
     }
 
@@ -334,8 +341,8 @@
 
     /* allday view resize */
     .schedule-view-allday-resize-handle {
-        display: block;
-        float: right;
+        position: absolute;
+        top: 0; right: 0;
         width: 6px;
         background-position: 3px center;
         cursor: col-resize;
