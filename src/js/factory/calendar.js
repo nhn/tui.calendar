@@ -86,6 +86,15 @@ function Calendar(options, container) {
 }
 
 /**
+ * Delete all data and clear view.
+ */
+Calendar.prototype.clear = function() {
+    this.controller.dateMatrix = {};
+    this.controller.events.clear();
+    this.view.render();
+};
+
+/**
  * Move next.
  */
 Calendar.prototype.next = function() {

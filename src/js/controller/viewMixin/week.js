@@ -349,9 +349,9 @@ var Week = {
     findByDateRange: function(starts, ends) {
         var that = this,
             events,
-            viewModels,
-            result = {};
+            viewModels;
 
+        // QUERY EVENTS
         events = this.events.find(function(model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
@@ -361,42 +361,37 @@ var Week = {
                 (ownEnds > ends && ownStarts <= ends);
         });
 
-        // CONVERT TO VIEWMODEL.
+        // CONVERT TO VIEWMODEL
         viewModels = common.createEventCollection.apply(
             null,
             util.map(events.items, function(event) {
                 return EventViewModel.create(event);
             })
-        ).groupBy(this.groupFunc);
+        ).groupBy(['allday', 'time'], this.groupFunc);
 
-        viewModels.allday = viewModels.allday || common.createEventCollection();
-        viewModels.time = viewModels.time || common.createEventCollection();
+        // CUSTOMIZE VIEWMODEL FOR EACH VIEW
+        util.forEach(viewModels, function(coll, key, obj) {
+            if (key === 'allday') {
+                coll.each(function(viewModel) {
+                    var ownStarts = viewModel.getStarts(),
+                        ownEnds = viewModel.getEnds();
 
-        // view model for allday
-        result.allday = common.pick2(viewModels, 'allday').then(function(allday) {
-            // set render limitation of event starts, ends.
-            allday.each(function(viewModel) {
-                var ownStarts = viewModel.getStarts(),
-                    ownEnds = viewModel.getEnds();
+                    if (ownStarts < starts) {
+                        viewModel.renderStarts = new Date(starts.getTime());
+                    }
 
-                if (ownStarts < starts) {
-                    viewModel.renderStarts = new Date(starts.getTime());
-                }
+                    if (ownEnds > ends) {
+                        viewModel.renderEnds = new Date(ends.getTime());
+                    }
+                });
 
-                if (ownEnds > ends) {
-                    viewModel.renderEnds = new Date(ends.getTime());
-                }
-            });
-
-            return util.bind(Week.getViewModelForAlldayView, that)(starts, ends, allday);
+                obj.allday = util.bind(Week.getViewModelForAlldayView, that)(starts, ends, coll);
+            } else if (key === 'time') {
+                obj.time = util.bind(Week.getViewModelForTimeView, that)(starts, ends, coll);
+            }
         });
 
-        // view model for Time.
-        result.time = common.pick2(viewModels, 'time').then(function(time) {
-            return util.bind(Week.getViewModelForTimeView, that)(starts, ends, time);
-        });
-
-        return result;
+        return viewModels;
     }
 };
 

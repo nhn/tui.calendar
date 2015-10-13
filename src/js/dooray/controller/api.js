@@ -5,10 +5,15 @@
 'use strict';
 
 var util = global.ne.util;
+var common = require('../../common/common');
+var datetime = require('../../common/datetime');
 var calendarAPI = require('../calendarAPI');
-var CalendarReference = require('../model/calendar');
 var Collection = require('../../common/collection');
 var noop = (function() {});
+
+// model
+var DoorayEvent = require('../model/event');
+var CalendarReference = require('../model/calendar');
 
 /**
  * @constructor
@@ -44,16 +49,17 @@ API.prototype._onFailFunc = function(callback) {
  */
 API.prototype.getCalendars = function(projectCode, callback) {
     var options = this.options,
-        onFail = this._onFailFunc(callback);
+        onFail = this._onFailFunc(callback),
+        calendars = new Collection(function(calendarRef) {
+            return calendarRef.id + '';
+        });
 
     calendarAPI.getCalendars(projectCode, {
         success: function(res) {
-            var calendars = new Collection(function(calendarRef) {
-                return calendarRef.id + '';
-            });
+            var dataObject = util.pick(res, 'result', 'calendars');
 
-            if (res.result.calendars.length) {
-                calendars.add.apply(calendars, util.map(res.result.calendars, function(data) {
+            if (dataObject && dataObject.length) {
+                calendars.add.apply(calendars, util.map(dataObject, function(data) {
                     var inst = new CalendarReference();
                     inst.unmarshal(data);
                     return inst;
@@ -61,6 +67,44 @@ API.prototype.getCalendars = function(projectCode, callback) {
             }
 
             callback(false, calendars);
+        },
+        error: onFail,
+        fail: onFail,
+        complete: options.afterResponse
+    });
+
+    options.beforeRequest();
+};
+
+/**
+ * 일정 목록을 조회한다
+ * @param {string} [projectCode='*'] - 프로젝트 코드
+ * @param {string} [calendarId='*'] - 캘린더 ID
+ * @param {string|Date} [timeMin] - 조회시작일자 Timezone offset 을 포함한 UTC필요
+ * @param {string|Date} [timeMax] - 조회 종료일자 Timezone offset 을 포함한 UTC필요
+ * @param {function} callback - 콜백 함수. 첫 번째 인자는 오류 여부, 두 번째 인자는 일정 콜렉션
+ */
+API.prototype.getTasks = function(projectCode, calendarId, timeMin, timeMax, callback) {
+    var options = this.options,
+        onFail = this._onFailFunc(callback),
+        tasks = common.createEventCollection();
+
+    timeMin = util.isDateSafe(timeMin) ? datetime.format(timeMin, 'LOCAL') : timeMin;
+    timeMax = util.isDateSafe(timeMax) ? datetime.format(timeMax, 'LOCAL') : timeMax;
+
+    calendarAPI.getCalendarTasks(projectCode, calendarId, timeMin, timeMax, {
+        success: function(res) {
+            var dataObject = util.pick(res, 'result', 'tasks');
+
+            if (dataObject && dataObject.length) {
+                tasks.add.apply(tasks, util.map(dataObject, function(data) {
+                    var inst = new DoorayEvent();
+                    inst.unmarshal(data);
+                    return inst;
+                }));
+            }
+
+            callback(false, tasks);
         },
         error: onFail,
         fail: onFail,

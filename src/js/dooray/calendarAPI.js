@@ -71,7 +71,7 @@ function getCalendarTasks(projectCode, calendarId, timeMin, timeMax, ajaxOptions
     calendarId = calendarId.replace(/\s/g, '');
 
     url = ROOT_PATH + '/' + url.replace('{{ projectCode }}', projectCode || '*')
-        .replace('{{ calendarId }}', ~calendarId.indexOf(',') ? '*' : calendarId)
+        .replace('{{ calendarId }}', ~calendarId.indexOf(',') ? '*' : calendarId || '*')
         .replace('{{ calendars }}', ~calendarId.indexOf(',') ? calendarId : '')
         .replace('{{ timeMin }}', timeMin || '')
         .replace('{{ timeMax }}', timeMax || '');

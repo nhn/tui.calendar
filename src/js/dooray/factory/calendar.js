@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+// var datetime = require('../../common/datetime');
 
 // FACTORY
 var Calendar = require('../../factory/calendar');
@@ -50,7 +51,7 @@ function ServiceCalendar(options, container) {
             isAllDay = model.isAllDay;
 
         if (category === enums.model.EVENT_CATEGORY.TASK) {
-            return category + '-' + viewModel.dueDateClass;
+            return category + '-' + model.dueDateClass;
         } else if (category === enums.model.EVENT_CATEGORY.GENERAL) {
             return isAllDay ? 'allday' : 'time';
         }
@@ -58,13 +59,34 @@ function ServiceCalendar(options, container) {
         return 'milestone';
     };
 
+    // 컨트롤러 만들기
     options.controller = (function() {
-        var controller = new DoorayBase(options);
+        var controller = new DoorayBase(options),
+            originFindByDateRange;
 
         controller.Week = {};
         util.forEach(Week, function(method, methodName) {
             controller.Week[methodName] = util.bind(method, controller);
         });
+
+        // 마일스톤, 업무 뷰 용 뷰모델 처리기 추가
+        originFindByDateRange = controller.Week.findByDateRange;
+        controller.Week.findByDateRange = function(starts, ends) {
+            var viewModel = originFindByDateRange(starts, ends);
+
+            util.forEach(viewModel, function(coll, key, obj) {
+                if (key === 'milestone' ||
+                    key === 'task-morning' ||
+                    key === 'task-lunch' ||
+                    key === 'task-evening') {
+                    //TODO: 마일스톤, 업무 뷰 바뀌면 여기 수정되어야 함
+                    obj[key] = util.bind(Week.getViewModelForAlldayView, controller)(starts, ends, coll);
+                    return;
+                }
+            });
+
+            return viewModel;
+        };
 
         return controller;
     })();
