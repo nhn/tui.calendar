@@ -40,6 +40,7 @@
     }
 
     .schedule-view-allday-event {
+        position: relative;
         margin: 0 3px 0 2px;
         background-color: #a1b56c;
     }
@@ -53,6 +54,14 @@
         line-height: 18px;
         font-size: 0.9em;
         color: #fff;
+    }
+
+    .schedule-view-allday-event-title {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
     }
 
     .schedule-view-allday-exceed-left .schedule-view-allday-event {
@@ -81,7 +90,6 @@
         margin-top: 2px;
         padding-left: 3px;
         color: #fff;
-        font-size: 0.9em;
         text-shadow: 0px 0px 2px #282828;
     }
 
@@ -109,8 +117,8 @@
 
     /* allday view resize */
     .schedule-view-allday-resize-handle {
-        display: block;
-        float: right;
+        position: absolute;
+        top: 0; right: 0;
         width: 6px;
         background-position: 3px center;
         cursor: col-resize;
