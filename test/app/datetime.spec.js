@@ -196,6 +196,12 @@ describe('datetime', function() {
                 dt.leadingZero(birth.getHours(), 2) + ':' +
                 dt.leadingZero(birth.getMinutes(), 2)
             );
+
+            expect(new Date(dt.format(birth, 'LOCAL'))).toEqual(birth);
+
+            var d2 = new Date('2015-05-01T09:30:00+09:00');
+            var d3 = new Date('2015-05-01T10:00:00+09:00');
+            expect(new Date(dt.format(d2, 'LOCAL'))).not.toEqual(d3);
         });
     });
 

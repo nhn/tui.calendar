@@ -63,6 +63,28 @@ tokenFunc = {
 
         return datetime.leadingZero(hour, 2) + ':' +
             datetime.leadingZero(minutes, 2);
+    },
+
+    /**
+     * format to local date
+     * @param {Date} date date object
+     * @returns {string} 1988-09-25T09:00:00+09:00
+     */
+    'LOCAL': function(date) {
+        var timeZoneOffset = -date.getTimezoneOffset(),
+            diff = timeZoneOffset >= 0 ? '+' : '-',
+            pad = function(num) {
+                return datetime.leadingZero(num, 2);
+            };
+
+        return date.getFullYear() 
+            + '-' + pad(date.getMonth() + 1)
+            + '-' + pad(date.getDate())
+            + 'T' + pad(date.getHours())
+            + ':' + pad(date.getMinutes()) 
+            + ':' + pad(date.getSeconds()) 
+            + diff + pad(timeZoneOffset / 60) 
+            + ':' + pad(timeZoneOffset % 60);
     }
 };
 
