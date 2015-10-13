@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
-// var datetime = require('../../common/datetime');
+var datetime = require('../../common/datetime');
 
 // FACTORY
 var Calendar = require('../../factory/calendar');
@@ -51,7 +51,7 @@ function ServiceCalendar(options, container) {
             isAllDay = model.isAllDay;
 
         if (category === enums.model.EVENT_CATEGORY.TASK) {
-            return category + '-' + model.dueDateClass;
+            return 'task';
         } else if (category === enums.model.EVENT_CATEGORY.GENERAL) {
             return isAllDay ? 'allday' : 'time';
         }
@@ -72,17 +72,33 @@ function ServiceCalendar(options, container) {
         // 마일스톤, 업무 뷰 용 뷰모델 처리기 추가
         originFindByDateRange = controller.Week.findByDateRange;
         controller.Week.findByDateRange = function(starts, ends) {
-            var viewModel = originFindByDateRange(starts, ends);
+            var dateRange = util.map(datetime.range(
+                    datetime.start(starts),
+                    datetime.end(ends),
+                    datetime.MILLISECONDS_PER_DAY
+                ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
+                viewModel = originFindByDateRange(starts, ends);
 
             util.forEach(viewModel, function(coll, key, obj) {
-                if (key === 'milestone' ||
-                    key === 'task-morning' ||
-                    key === 'task-lunch' ||
-                    key === 'task-evening') {
-                    //TODO: 마일스톤, 업무 뷰 바뀌면 여기 수정되어야 함
-                    obj[key] = util.bind(Week.getViewModelForAlldayView, controller)(starts, ends, coll);
-                    return;
+                if (key === 'task') {
+                    obj.task = coll.groupBy(dateRange, function(viewModel) {
+                        return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
+                    });
+
+                    util.forEach(obj.task, function(coll, ymd, obj) {
+                        obj[ymd] = coll.groupBy(function(viewModel) {
+                            return viewModel.model.dueDateClass;
+                        });
+                    });
                 }
+                // if (key === 'milestone' ||
+                //     key === 'task-morning' ||
+                //     key === 'task-lunch' ||
+                //     key === 'task-evening') {
+                //     //TODO: 마일스톤, 업무 뷰 바뀌면 여기 수정되어야 함
+                //     obj[key] = util.bind(Week.getViewModelForAlldayView, controller)(starts, ends, coll);
+                //     return;
+                // }
             });
 
             return viewModel;

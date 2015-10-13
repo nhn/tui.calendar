@@ -14,6 +14,7 @@ var Week = require('../../view/week/week');
 var DayName = require('../../view/week/dayname');
 var TimeGrid = require('../../view/week/timeGrid');
 var Allday = require('../../view/week/allday');
+var TaskView = require('../view/taskview');
 
 // Handlers
 var AlldayCreation = require('../../handler/allday/creation');
@@ -29,6 +30,7 @@ var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
         dayNameView,
+        taskView,
         alldayView,
         timeGridView,
         alldayOptions,
@@ -62,28 +64,14 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     }
 
     // Allday - milestone
-    alldayOptions.title = '마일스톤';
-    alldayOptions._getViewModelFunc = getViewModelFunc('milestone');
-    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
-    weekView.addChild(alldayView);
+    // alldayOptions.title = '마일스톤';
+    // alldayOptions._getViewModelFunc = getViewModelFunc('milestone');
+    // alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
+    // weekView.addChild(alldayView);
 
-    // Allday - morning
-    alldayOptions.title = '출근전';
-    alldayOptions._getViewModelFunc = getViewModelFunc('task-morning');
-    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
-    weekView.addChild(alldayView);
-
-    // Allday - lunch
-    alldayOptions.title = '점심전';
-    alldayOptions._getViewModelFunc = getViewModelFunc('task-lunch');
-    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
-    weekView.addChild(alldayView);
-
-    // Allday - evening
-    alldayOptions.title = '퇴근전';
-    alldayOptions._getViewModelFunc = getViewModelFunc('task-evening');
-    alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
-    weekView.addChild(alldayView);
+    // 업무 뷰
+    taskView = new TaskView(options.week, domutil.find('.schedule-view-milestone-layout'));
+    weekView.addChild(taskView);
 
     // Allday - wholeDay
     alldayOptions.title = '종일일정';

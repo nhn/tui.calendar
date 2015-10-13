@@ -1,0 +1,35 @@
+/* taskview */
+.schedule-view-task-left {
+    width: 60px;
+    height: 100%;
+    float: left;
+    text-align: right;
+    color: #777;
+}
+
+.schedule-view-task-left span {
+    display: block;
+    padding: 3px 5px 0 0;
+}
+
+.schedule-view-task-right {
+    background-color: #fff;
+    margin-left: 60px;
+}
+
+.schedule-view-task-day {
+    float:left;
+    background-color: #fff;
+    margin-left: -1px;
+    border-left: 1px solid #ccc;
+}
+
+.schedule-view-task-day h6,
+.schedule-view-task-day ul {
+    margin: 0; padding: 0;
+}
+
+.schedule-view-task-day li {
+    padding-left: 6px;
+    list-style: disc inside;
+}
