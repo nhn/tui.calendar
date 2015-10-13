@@ -57,25 +57,28 @@ Calendars.prototype.render = function(viewModel) {
     this.container.innerHTML = tmpl(viewModel);
 };
 
+Calendars.prototype.getSelectedCalendarID = function() {
+    var container = this.container,
+        inputs = domutil.find('input', container, function(el) {
+            return el.checked;
+        });
+
+    return util.map(inputs, function(el) {
+        return domutil.getData(el, 'id');
+    });
+};
+
 /**
  * calendar checkbox onchange event handler
  * @emits Calendars#changeCalendarSelection
  * @param {Event} changeEventData - input event
  */
 Calendars.prototype._onChange = function() {
-    var container = this.container,
-        inputs = domutil.find('input', container, function(el) {
-            return el.checked;
-        }),
-        calendarIdToRender = util.map(inputs, function(el) {
-            return domutil.getData(el, 'id');
-        });
-
     /**
      * @events Calendars#changeCalendarSelection
      * @type {string[]} calendar id list
      */
-    this.fire('changeCalendarSelection', calendarIdToRender);
+    this.fire('changeCalendarSelection', this.getSelectedCalendarID());
 };
 
 util.CustomEvents.mixin(Calendars);
