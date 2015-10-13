@@ -292,39 +292,56 @@ Collection.prototype.find = function(filter) {
  * Group element by specific key values.
  *
  * if key parameter is function then invoke it and use returned value.
- * @param {(string|number|boolean|function)} key key property or getter function.
+ * @param {(string|number|function|array)} key key property or getter function. if string[] supplied, create each collection before grouping.
+ * @param {function} [groupFunc] - function that return each group's key
  * @returns {object.<string, Collection>} grouped object
  * @example
- * collection.groupBy(function(person) {
- *     if (person.age > 19) {
- *         return 'adult';
+ * 
+ * // pass `string`, `number`, `boolean` type value then group by property value.
+ * collection.groupBy('gender');    // group by 'gender' property value.
+ * collection.groupBy(50);          // group by '50' property value.
+ * 
+ * // pass `function` then group by return value. each invocation `function` is called with `(item)`.
+ * collection.groupBy(function(item) {
+ *     if (item.score > 60) {
+ *         return 'pass';
  *     }
- *
- *     return 'youth';
+ *     return 'fail';
  * });
  *
- * // result {'adult': Collection, 'youth': Collection}
+ * // pass `array` with first arguments then create each collection before grouping.
+ * collection.groupBy(['go', 'ruby', 'javascript']);
+ * // result: { 'go': empty Collection, 'ruby': empty Collection, 'javascript': empty Collection }
  *
+ * // can pass `function` with `array` then group each elements.
+ * collection.groupBy(['go', 'ruby', 'javascript'], function(item) {
+ *     if (item.isFast) {
+ *         return 'go';
+ *     }
  *
- * // Assume this list in collection.
- * [{
- *     age: 21,
- *     getAge: function() {return this.age;}
- *  }, {
- *     age: 15,
- *     getAge: function() {return this.age;}
- * }]
- *
- * collection.groupBy('getAge');
- *
- * // result {'21': Collection, '15': Collection}
+ *     return item.name;
+ * });
  */
-Collection.prototype.groupBy = function(key) {
+Collection.prototype.groupBy = function(key, groupFunc) {
     var result = {},
         collection,
         baseValue,
         isFunc = util.isFunction,
-        keyIsFunc = isFunc(key);
+        keyIsFunc = isFunc(key),
+        getItemIDFn = this.getItemID;
+
+    if (util.isArray(key)) {
+        util.forEachArray(key, function(k) {
+            result[k + ''] = new Collection(getItemIDFn);
+        });
+
+        if (!groupFunc) {
+            return result;
+        }
+
+        key = groupFunc;
+        keyIsFunc = true;
+    }
 
     this.each(function(item) {
         if (keyIsFunc) {
@@ -340,11 +357,11 @@ Collection.prototype.groupBy = function(key) {
         collection = result[baseValue];
 
         if (!collection) {
-            collection = result[baseValue] = new Collection(this.getItemID);
+            collection = result[baseValue] = new Collection(getItemIDFn);
         }
 
         collection.add(item);
-    }, this);
+    });
 
     return result;
 };

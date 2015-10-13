@@ -263,9 +263,9 @@ describe('Collection', function() {
         item3;
 
         beforeEach(function() {
-            item1 = {_id: 1, value: 20, isGood: false, no: function() { return this.value; }};
-            item2 = {_id: 2, value: 50, isGood: true, no: function() { return this.value; }};
-            item3 = {_id: 4, value: 2, isGood: true, no: function() { return this.value; }};
+            item1 = {_id: 1, value: 20, isGood: false, '30': 'a', 'true': 'c', no: function() { return this.value; }};
+            item2 = {_id: 2, value: 50, isGood: true, '30': 'b', 'true': 'c', no: function() { return this.value; }};
+            item3 = {_id: 4, value: 2, isGood: true, '30': 'b', 'true': 'd', no: function() { return this.value; }};
 
             c.add(item1, item2, item3);
         });
@@ -285,6 +285,18 @@ describe('Collection', function() {
                 '50': c2,
                 '2': c3
             });
+        });
+
+        it('group by number property', function() {
+            var grouped = c.groupBy(30);
+
+            var c1 = new Collection(c.getItemID);
+            c1.add.apply(c1, [item1]);
+            var c2 = new Collection(c.getItemID);
+            c2.add.apply(c2, [item2, item3]);
+
+            expect(grouped.a).toEqual(c1);
+            expect(grouped.b).toEqual(c2);
         });
 
         it('group by boolean values.', function() {
@@ -311,6 +323,44 @@ describe('Collection', function() {
             var c3 = new Collection(c.getItemID);
             c3.add(item3);
 
+            expect(grouped).toEqual({
+                '20': c1,
+                '50': c2,
+                '2': c3
+            });
+        });
+
+        it('group by custom functions', function() {
+            var grouped = c.groupBy(function(item) {
+                return item.value > 10 ? 'upper' : 'lower';
+            });
+
+            var c1 = new Collection(c.getItemID);
+            c1.add.apply(c1, [item1, item2]);
+            var c2 = new Collection(c.getItemID);
+            c2.add.apply(c2, [item3]);
+
+            expect(grouped.upper).toEqual(c1);
+            expect(grouped.lower).toEqual(c2);
+        });
+
+        it('create each collection with keys when array of key values supplied by first arguments.', function() {
+            var grouped = c.groupBy(['20', '50']);
+
+            expect(grouped['20'].constructor).toBe(Collection);
+            expect(grouped['50'].constructor).toBe(Collection);
+
+            // can supply group function after key array.
+            grouped = c.groupBy(['20', '50'], function (item) {
+                return item.value + '';
+            });
+
+            var c1 = new Collection(c.getItemID);
+            c1.add(item1);
+            var c2 = new Collection(c.getItemID);
+            c2.add(item2);
+            var c3 = new Collection(c.getItemID);
+            c3.add(item3);
             expect(grouped).toEqual({
                 '20': c1,
                 '50': c2,
