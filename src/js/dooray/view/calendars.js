@@ -59,6 +59,7 @@ Calendars.prototype.render = function(viewModel) {
 
 /**
  * calendar checkbox onchange event handler
+ * @emits Calendars#changeCalendarSelection
  * @param {Event} changeEventData - input event
  */
 Calendars.prototype._onChange = function() {
@@ -70,7 +71,11 @@ Calendars.prototype._onChange = function() {
             return domutil.getData(el, 'id');
         });
 
-    console.log(calendarIdToRender);
+    /**
+     * @events Calendars#changeCalendarSelection
+     * @type {string[]} calendar id list
+     */
+    this.fire('changeCalendarSelection', calendarIdToRender);
 };
 
 util.CustomEvents.mixin(Calendars);
