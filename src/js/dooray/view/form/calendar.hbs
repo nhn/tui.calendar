@@ -1,0 +1,48 @@
+<form name="create-calendar" method="{{method}}" action="{{action}}">
+    <p>
+        <label for="name">이름</label>
+        <input type="text" name="name" placeholder="캘린더 이름" />
+    </p>
+    <p>
+        <label for="type">공유설정</label>
+        <select name="type">
+            <option value="private" selected>개인 캘린더</option>
+            <option value="shared">공유 캘린더</option>
+        </select>
+    </p>
+
+        <select name="type">
+            <option value="shared">공유 캘린더</option>
+        </select>
+    <p>
+        <input type="checkbox" name="good" value="1" />
+        <input type="checkbox" name="good" value="2" />
+        <input type="checkbox" name="good" value="3" />
+    </p>
+{{#if isPrivate ~}}
+    <p class="schedule-view-createcalendar-delegation">
+        <label for="delegation">권한설정</label>
+        <textarea name="delegation" rows="5" cols="5" placeholder="id:permission, id:permission, ..."></textarea>
+    </p>
+{{/if ~}}
+{{#unless isPrivate ~}}
+    <p class="schedule-view-createcalendar-shared">
+        <label for="shared">공유설정</label>
+        <textarea name="shared" rows="5" cols="5" placeholder="id:permission, id:permission, ..."></textarea>
+    </p>
+{{/unless ~}}
+    <p>
+        <label for="color">색상</label>
+        <input type="text" name="color" placeholder="#ffffff" />
+    </p>
+{{#if isCreateMode ~}}
+    <p>
+        <input type="submit" value="생성" />
+    </p>
+{{/if ~}}
+{{#unless isCreateMode ~}}
+    <p>
+        <input type="submit" value="수정" />
+    </p>
+{{/unless ~}}
+</form>

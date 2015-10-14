@@ -76,6 +76,22 @@ API.prototype.getCalendars = function(projectCode, callback) {
     options.beforeRequest();
 };
 
+API.prototype.postCalendar = function(dataObject, callback) {
+    var options = this.options,
+        onFail = this._onFailFunc(callback);
+
+    calendarAPI.postCalendars(dataObject.projectCode, dataObject, {
+        success: function(res) {
+            callback(false, res);
+        },
+        error: onFail,
+        fail: onFail,
+        complete: options.afterResponse
+    });
+
+    options.beforeRequest();
+};
+
 /**
  * 일정 목록을 조회한다
  * @param {string} [projectCode='*'] - 프로젝트 코드
