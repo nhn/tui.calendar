@@ -24,12 +24,26 @@
     border-left: 1px solid #ccc;
 }
 
+.schedule-view-task-day-wrap {
+    padding: 2px;
+}
+
 .schedule-view-task-day h6,
 .schedule-view-task-day ul {
     margin: 0; padding: 0;
 }
 
+.schedule-view-task-day h6 {
+    font-size: 11px;
+    padding-bottom: 1px;
+}
+
+
 .schedule-view-task-day li {
+    font-size: 11px;
     padding-left: 6px;
-    list-style: disc inside;
+    list-style: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

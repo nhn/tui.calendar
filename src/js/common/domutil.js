@@ -89,14 +89,14 @@ domutil = {
      * 3. nodeName selector
      * @param {string} selector selector
      * @param {(HTMLElement|string)} [root] You can assign root element to find. if not supplied, document.body will use.
-     * @param {boolean|function} [first=true] - set false then return all elements that meet condition, if set function then use it filter function.
+     * @param {boolean|function} [multiple=false] - set true then return all elements that meet condition, if set function then use it filter function.
      * @returns {HTMLElement} HTML element finded.
      */
-    find: function(selector, root, first) {
+    find: function(selector, root, multiple) {
         var result = [],
             found = false,
-            isFirst = util.isUndefined(first) || first === false,
-            isFilter = util.isFunction(first);
+            isFirst = util.isUndefined(multiple) || multiple === false,
+            isFilter = util.isFunction(multiple);
 
         if (util.isString(root)) {
             root = domutil.get(root);
@@ -118,7 +118,7 @@ domutil = {
                 }
 
                 if (domutil._matcher(cursor, selector)) {
-                    if ((isFilter && first(cursor)) || !isFilter) {
+                    if ((isFilter && multiple(cursor)) || !isFilter) {
                         result.push(cursor);
                     }
 

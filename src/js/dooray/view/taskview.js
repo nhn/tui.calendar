@@ -14,6 +14,7 @@ var tmpl = require('./taskview.hbs');
  * @constructor
  * @extends {View}
  * @param {object} options - options for TaskView
+ * @param {number} [options.minHeight=60] - min-height of taskview
  * @param {HTMLElement} container - container element
  */
 function TaskView(options, container) {
@@ -29,7 +30,7 @@ function TaskView(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        height: 60
+        minHeight: 60
     }, options);
 }
 
@@ -58,18 +59,20 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
     return {
         events: events,
         width: 100 / range.length,
-        height: options.height
+        height: options.minHeight
     };
 };
 
 /**
+ * 업무 뷰 렌더링
  * @override
  */
 TaskView.prototype.render = function(viewModel) {
-    var baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'task'));
+    var container = this.container,
+        baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'task'));
 
-    this.container.style.height = this.options.height + 'px';
-    this.container.innerHTML = tmpl(baseViewModel);
+    container.style.minHeight = this.options.minHeight + 'px';
+    container.innerHTML = tmpl(baseViewModel);
 };
 
 module.exports = TaskView;
