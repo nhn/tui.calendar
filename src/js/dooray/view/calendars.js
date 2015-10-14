@@ -57,6 +57,10 @@ Calendars.prototype.render = function(viewModel) {
     this.container.innerHTML = tmpl(viewModel);
 };
 
+/**
+ * 현재 뷰를 참조해 체크된 캘린더 ID배열을 반환한다.
+ * @returns {string[]} 선택된 캘린더 id 배열
+ */
 Calendars.prototype.getSelectedCalendarID = function() {
     var container = this.container,
         inputs = domutil.find('input', container, function(el) {
