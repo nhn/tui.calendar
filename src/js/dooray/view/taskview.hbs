@@ -10,7 +10,7 @@
         {{#if morning ~}}
         <h6>출근 전</h6>
         {{#each morning.items ~}}
-        <li title="{{model.title}}">{{model.title}}</li>
+        <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
         {{/each ~}}
         {{/if ~}}
 
@@ -18,7 +18,7 @@
         {{#if lunch ~}}
         <h6>점심 전</h6>
         {{#each lunch.items ~}}
-        <li title="{{model.title}}">{{model.title}}</li>
+        <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
         {{/each ~}}
         {{/if ~}}
 
@@ -27,7 +27,7 @@
         <h6>퇴근 전</h6>
         <ul>
         {{#each evening.items ~}}
-        <li title="{{model.title}}">{{model.title}}</li>
+        <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
         {{/each ~}}
         </ul>
         {{/if ~}}

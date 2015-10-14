@@ -14,6 +14,8 @@ var tmpl = require('./taskview.hbs');
  * @constructor
  * @extends {View}
  * @param {object} options - options for TaskView
+ * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
+ * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
  * @param {number} [options.minHeight=60] - min-height of taskview
  * @param {HTMLElement} container - container element
  */
@@ -30,6 +32,8 @@ function TaskView(options, container) {
      * @type {object}
      */
     this.options = util.extend({
+        renderStartDate: '',
+        renderEndDate: '',
         minHeight: 60
     }, options);
 }
@@ -73,6 +77,12 @@ TaskView.prototype.render = function(viewModel) {
 
     container.style.minHeight = this.options.minHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);
+
+    util.forEach(domutil.find('li', container, true), function(el) {
+        if (el.offsetWidth < el.scrollWidth) {
+            el.setAttribute('title', domutil.getData(el, 'title'));
+        }
+    });
 };
 
 module.exports = TaskView;
