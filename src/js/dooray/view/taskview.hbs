@@ -9,26 +9,30 @@
         {{! 출근전 }}
         {{#if morning ~}}
         <h6>출근 전</h6>
-        {{#each morning.items ~}}
-        <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
-        {{/each ~}}
+        <ul>
+            {{#each morning.items ~}}
+            <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
+            {{/each ~}}
+        </ul>
         {{/if ~}}
 
         {{! 점심전 }}
         {{#if lunch ~}}
         <h6>점심 전</h6>
-        {{#each lunch.items ~}}
-        <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
-        {{/each ~}}
+        <ul>
+            {{#each lunch.items ~}}
+            <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
+            {{/each ~}}
+        </ul>
         {{/if ~}}
 
         {{! 퇴근전 }}
         {{#if evening ~}}
         <h6>퇴근 전</h6>
         <ul>
-        {{#each evening.items ~}}
-        <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
-        {{/each ~}}
+            {{#each evening.items ~}}
+            <li data-title="{{model.title}}" class="schedule-view-task-item">{{model.title}}</li>
+            {{/each ~}}
         </ul>
         {{/if ~}}
     </div>

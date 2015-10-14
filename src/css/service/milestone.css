@@ -1,5 +1,5 @@
-/* taskview */
-.schedule-view-task-left {
+/* milestoneview */
+.schedule-view-milestone-left {
     width: 60px;
     height: 100%;
     float: left;
@@ -7,44 +7,34 @@
     color: #777;
 }
 
-.schedule-view-task-left span {
+.schedule-view-milestone-left span {
     display: block;
     padding: 3px 5px 0 0;
 }
 
-.schedule-view-task-right {
+.schedule-view-milestone-right {
     background-color: #fff;
     margin-left: 60px;
 }
 
-.schedule-view-task-day {
+.schedule-view-milestone-day {
     float:left;
     background-color: #fff;
     margin-left: -1px;
     border-left: 1px solid #ccc;
 }
 
-.schedule-view-task-day-wrap {
+.schedule-view-milestone-list {
     margin: 2px; 
     padding: 0;
     overflow: hidden;
 }
 
-.schedule-view-task-day h6,
-.schedule-view-task-day ul {
-    margin: 0; padding: 0;
-}
-
-.schedule-view-task-day h6 {
+.schedule-view-milestone-item {
     font-size: 11px;
-    padding-bottom: 1px;
-}
-
-
-.schedule-view-task-day li {
-    font-size: 11px;
+    line-height: 11px;
     padding-left: 6px;
-    list-style: none;
+    list-style: disc inside;
     white-space: nowrap;
     overflow: hidden;
 }

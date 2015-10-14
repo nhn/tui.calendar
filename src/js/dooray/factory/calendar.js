@@ -80,25 +80,24 @@ function ServiceCalendar(options, container) {
                 viewModel = originFindByDateRange(starts, ends);
 
             util.forEach(viewModel, function(coll, key, obj) {
-                if (key === 'task') {
-                    obj.task = coll.groupBy(dateRange, function(viewModel) {
+                var groupedByYMD;
+
+                // 마일스톤, 업무 뷰 뷰모델 가공
+                if (key === 'task' || key === 'milestone') {
+                    groupedByYMD = coll.groupBy(dateRange, function(viewModel) {
                         return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
                     });
 
-                    util.forEach(obj.task, function(coll, ymd, obj) {
-                        obj[ymd] = coll.groupBy(function(viewModel) {
-                            return viewModel.model.dueDateClass;
+                    if (key === 'task') {
+                        util.forEach(groupedByYMD, function(coll, ymd, obj) {
+                            obj[ymd] = coll.groupBy(function(viewModel) {
+                                return viewModel.model.dueDateClass;
+                            });
                         });
-                    });
+                    }
+
+                    obj[key] = groupedByYMD;
                 }
-                // if (key === 'milestone' ||
-                //     key === 'task-morning' ||
-                //     key === 'task-lunch' ||
-                //     key === 'task-evening') {
-                //     //TODO: 마일스톤, 업무 뷰 바뀌면 여기 수정되어야 함
-                //     obj[key] = util.bind(Week.getViewModelForAlldayView, controller)(starts, ends, coll);
-                //     return;
-                // }
             });
 
             return viewModel;

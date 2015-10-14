@@ -12,9 +12,11 @@ var Week = require('../../view/week/week');
 
 // Sub views
 var DayName = require('../../view/week/dayname');
+var Milestone = require('../view/milestone');
+var TaskView = require('../view/taskview');
 var TimeGrid = require('../../view/week/timeGrid');
 var Allday = require('../../view/week/allday');
-var TaskView = require('../view/taskview');
+
 
 // Handlers
 var AlldayCreation = require('../../handler/allday/creation');
@@ -30,6 +32,7 @@ var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
         dayNameView,
+        milestoneView,
         taskView,
         alldayView,
         timeGridView,
@@ -62,12 +65,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             return viewModel.eventsInDateRange[key];
         };
     }
-
-    // Allday - milestone
-    // alldayOptions.title = '마일스톤';
-    // alldayOptions._getViewModelFunc = getViewModelFunc('milestone');
-    // alldayView = new Allday(alldayOptions, domutil.find('.schedule-view-milestone-layout'));
-    // weekView.addChild(alldayView);
+    
+    // 마일스톤 뷰
+    milestoneView = new Milestone(options.week, domutil.find('.schedule-view-milestone-layout'));
+    weekView.addChild(milestoneView);
 
     // 업무 뷰
     taskView = new TaskView(options.week, domutil.find('.schedule-view-milestone-layout'));
