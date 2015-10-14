@@ -16,7 +16,7 @@ var tmpl = require('./taskview.hbs');
  * @param {object} options - options for TaskView
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=60] - min-height of taskview
+ * @param {number} [options.minHeight=40] - min-height of taskview
  * @param {HTMLElement} container - container element
  */
 function TaskView(options, container) {
@@ -34,7 +34,7 @@ function TaskView(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 60
+        minHeight: 40
     }, options);
 }
 
