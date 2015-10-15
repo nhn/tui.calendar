@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var util = global.ne.util;
 var Ajax = require('../common/ajax');
 
 // 캘린더 API 기본 PATH
@@ -43,12 +42,10 @@ function postCalendars(projectCode, data, ajaxOptions) {
     url = ROOT_PATH + '/' + url.replace('{{ projectCode }}', projectCode);
 
     ajaxOptions = ajaxOptions || {};
+    ajaxOptions.data = JSON.stringify([data]);
+    ajaxOptions.method = 'POST';
 
-    util.extend(ajaxOptions, {
-        method: 'POST'
-    });
-
-    new Ajax().ajax(url, data, ajaxOptions);
+    new Ajax().ajax(url, ajaxOptions);
 }
 
 /**********

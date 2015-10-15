@@ -29,8 +29,10 @@ describe('service/calendarAPI', function() {
 
         expect(ajaxSpy).toHaveBeenCalledWith(
             '/wapi/task-tracker/projects/123/calendars',
-            {hello: 'world'},
-            {method: 'POST'}
+            {
+                method: 'POST',
+                data: '[{"hello":"world"}]'
+            }
         );
     });
 
