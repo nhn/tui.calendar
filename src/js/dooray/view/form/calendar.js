@@ -5,23 +5,52 @@
 'use strict';
 
 var util = global.ne.util;
-var Collection = require('../../../common/collection');
 var domutil = require('../../../common/domutil');
 var domevent = require('../../../common/domevent');
 var View = require('../../../view/view');
 var tmpl = require('./calendar.hbs');
 
-function createDummyCollection() {
-    return new Collection(function() {
-        return this.length + '';
-    });
-}
+var CALENDAR_TYPE_LIST = [{
+    value: 'private',
+    label: '개인 캘린더'
+}, {
+    value: 'shared',
+    label: '공유 캘린더'
+}];
+
+var PRIVATE_LIST = [{
+    value: 'opaque_view',
+    label: '단순 조회'
+}, {
+    value: 'view',
+    label: '조회'
+}, {
+    value: 'read_write',
+    label: '위임'
+}];
+
+var SHARE_LIST = [{
+    value: 'view',
+    label: '조회'
+}, {
+    value: 'read_write',
+    label: '수정/삭제'
+}, {
+    value: 'all',
+    label: '모든권한'
+}];
 
 /**
  * @constructor
  * @extends {View}
  * @param {API} api - instance of api module
  * @param {object} options - options
+ *  @param {string} [options.projectCode] - project code for creation
+ *  @param {boolean} [options.isCreateMode=true] - mode. set true then `creation`, false then `modify`
+ *  @param {boolean} [options.isPrivate] - 개인 캘린더 여부
+ *  @param {string} [options.method=POST] - http method
+ *  @param {string} [options.action] - url
+ *  @param {object} [options.formData] - 미리 채워 둘 폼 데이터 (없어도 무방)
  * @param {HTMLElenent} container - container element
  */
 function CalendarForm(api, options, container) {
@@ -42,12 +71,22 @@ function CalendarForm(api, options, container) {
     this.options = util.extend({
         projectCode: '*',
         isCreateMode: true,
-        isPrivate: true,
         method: 'POST',
-        action: '/wapi/task-tracker/projects/{{projectCode}}/calendars'
+        action: '/wapi/task-tracker/projects/{{projectCode}}/calendars',
+        
+        calendarList: CALENDAR_TYPE_LIST,
+        privateList : PRIVATE_LIST,
+        shareList: SHARE_LIST,
+        formData: {
+            type: 'private'
+        } 
     }, options);
 
-    domevent.on(container, 'submit', this._onSubmit);
+    domevent.on(container, {
+        'submit': this._onSubmit,
+        'change': this._onChange,
+        'click': this._onClick
+    }, this);
 
     this.render();
 }
@@ -55,118 +94,85 @@ function CalendarForm(api, options, container) {
 util.inherit(CalendarForm, View);
 
 /**
- * Get form data
- *
- * When output type is 'object', 'JSON' then input elements has duplicate name and type is not 'checkbox', 
- * 'radio' are can be omitted each values. because of JavaScript objects property name limitations.
- *
- * @param {string} [outputType='object'] - data output type. can use `object`, `json`, `queryString`.
- * @returns {object|string} form data
+ * 캘린더 폼으로부터 객체 형태의 데이터를 추출함
+ * @returns {object} 폼 데이터
  */
-CalendarForm.prototype.getFormData = function(outputType) {
-    var container = this.container,
-        groupByName = new Collection(function() { return this.length; }),
-        output;
+CalendarForm.prototype.getFormData = function() {
+    var formData = domutil.getFormData(domutil.find('form', this.container)),
+        userId = formData['userId[]'] || [],
+        authority = formData['authority[]'] || [],
+        result = {
+            name: formData.name,
+            color: formData.color,
+            type: formData.type,
+            share: []
+        };
 
-    function noDisabled(el) {
-        return !el.disabled;
+    userId = util.isArray(userId) ? userId : [userId];
+    authority = util.isArray(authority) ? authority : [authority];
+
+    util.forEach(userId, function(id, index) {
+        result.share.push({
+            id: id,
+            authority: authority[index]
+        });
+    });
+
+    return result;
+};
+
+/**
+ * @override
+ * @param {object} [formData] - 폼 데이터를 넘기면 렌더링 시 적용한다
+ */
+CalendarForm.prototype.render = function(formData) {
+    var options = this.options;
+
+    if (formData) {
+        options.formData = formData;
     }
 
-    groupByName.add.apply(
-        groupByName, 
-        domutil.find('input', container, noDisabled)
-            .concat(domutil.find('select', container, noDisabled))
-            .concat(domutil.find('textarea', container, noDisabled))
-    );
-
-    // 인풋 타입은 name으로 한번 그룹
-    groupByName = groupByName.groupBy(function(el) {
-        var name = el.getAttribute('name');
-
-        if (name) {
-            return name;
-        }
-
-        return '_other';
-    });
-
-    output = {};
-    util.forEach(groupByName, function(coll, name) {
-        var tmp;
-
-        if (name === '_other') {
-            return;
-        }
-
-        coll.each(function(el) {
-            var nodeName = el.nodeName.toLowerCase(),
-                type = el.type;
-
-            if (nodeName === 'select') {
-                tmp = util.map(
-                    coll.find(function(sel) { return sel.childNodes.length > 0; }).items,
-                    function(sel) {
-                        return util.pick(
-                            domutil.find('option', sel, function(opt) { return opt.selected; }),
-                            '0',
-                            'value'
-                        );
-                    }
-                );
-                return;
-            } else if (type === 'radio' || type === 'checkbox') {
-                tmp = util.map(
-                    coll.find(function(el) { return el.checked; }).items,
-                    function(el) { return el.value; }
-                );
-                return;
-            }
-
-            tmp = [el.value];
-        });
-
-        if (!tmp.length) {
-            tmp = '';
-        } else if (tmp.length === 1) {
-            tmp = tmp[0];
-        }
-
-        output[name] = tmp;
-    });
-
-    return output;
+    this.container.innerHTML = tmpl(options);
 };
 
+/**
+ * 캘린더 유형 변경 시 핸들러
+ * @param {Event} e - 캘린더 유형 셀렉트박스 변경 이벤트 객체
+ */
+CalendarForm.prototype._onChange = function(e) {
+    if (e.target.name === 'type') {
+        this.render(this.getFormData());
+    }
+};
+
+/**
+ * 공유설정 추가 버튼 클릭 핸들러
+ * @param {Event} e - 버튼 클릭 이벤트
+ */
+CalendarForm.prototype._onClick = function(e) {
+    var that = this,
+        formData;
+
+    if (e.target.type === 'button') {
+        formData = that.getFormData();
+        formData.share.push({id: '', authority: ''});
+        that.render(formData);
+
+        util.debounce(function() {
+            domutil.find('input', that.container, function(el) {
+                return el.name === 'userId[]';
+            }).pop().focus();
+        }, 0)();
+    }
+};
+
+/**
+ * 생성/수정 버튼 클릭 시 핸들러
+ * @param {Event} e - 전송 이벤트 객체
+ */
 CalendarForm.prototype._onSubmit = function(e) {
-    // domevent.stop(e);
-    //
-    // this.api.post
-};
-
-// CalendarForm.prototype._getBaseViewModel = function() {
-//     var options = this.options,
-//         url = options.action.replace(
-//
-//
-// };
-
-CalendarForm.prototype.render = function(projectCode, isCreateMode, isPrivate, method) {
-    var options = this.options,
-        action = '';
-
-    projectCode = projectCode || options.projectCode;
-    isCreateMode = util.isExisty(isCreateMode) ? isCreateMode : options.isCreateMode;
-    isPrivate = util.isExisty(isPrivate) ? isPrivate: options.isPrivate;
-    method = method || options.method;
-    action = options.action.replace('{{projectCode}}', projectCode);
-
-    this.container.innerHTML = tmpl({
-        projectCode: projectCode,
-        isCreateMode: isCreateMode,
-        isPrivate: isPrivate,
-        method: method,
-        action: action
-    });
+    domevent.stop(e);
+    console.log(this.getFormData());
 };
 
 module.exports = CalendarForm;

@@ -1,48 +1,49 @@
 <form name="create-calendar" method="{{method}}" action="{{action}}">
+    <legend>캘린더 {{#if isCreateMode}}만들기{{else}}수정하기{{/if}}</legend>
+
+{{#with formData ~}}
     <p>
         <label for="name">이름</label>
-        <input type="text" name="name" placeholder="캘린더 이름" />
+        <input type="text" name="name" placeholder="캘린더 이름" value="{{name}}" />
     </p>
-    <p>
-        <label for="type">공유설정</label>
-        <select name="type">
-            <option value="private" selected>개인 캘린더</option>
-            <option value="shared">공유 캘린더</option>
-        </select>
-    </p>
-
-        <select name="type">
-            <option value="shared">공유 캘린더</option>
-        </select>
-    <p>
-        <input type="checkbox" name="good" value="1" />
-        <input type="checkbox" name="good" value="2" />
-        <input type="checkbox" name="good" value="3" />
-    </p>
-{{#if isPrivate ~}}
-    <p class="schedule-view-createcalendar-delegation">
-        <label for="delegation">권한설정</label>
-        <textarea name="delegation" rows="5" cols="5" placeholder="id:permission, id:permission, ..."></textarea>
-    </p>
-{{/if ~}}
-{{#unless isPrivate ~}}
-    <p class="schedule-view-createcalendar-shared">
-        <label for="shared">공유설정</label>
-        <textarea name="shared" rows="5" cols="5" placeholder="id:permission, id:permission, ..."></textarea>
-    </p>
-{{/unless ~}}
     <p>
         <label for="color">색상</label>
-        <input type="text" name="color" placeholder="#ffffff" />
+        <input type="text" name="color" placeholder="ffffff" value="{{color}}" />
     </p>
-{{#if isCreateMode ~}}
     <p>
-        <input type="submit" value="생성" />
+        <label for="type">캘린더 유형</label>
+        {{{selectbox 'type' @root.calendarList type}}}
     </p>
-{{/if ~}}
-{{#unless isCreateMode ~}}
+    <div>
+        <label>공유설정<input type="button" class="schedule-view-createcalendar-addshare" value="+" /></label>
+        <table>
+            <colgroup><col span="1" style="width:60%" /><col span="1" style="width:40%" /></colgroup>
+            <tbody>
+            <tr class="schedule-view-createcalendar-master"><td>나</td><td>마스터</td></tr>
+            {{#each share}}
+            <tr>
+                <td>
+                    <input type="text" name="userId[]" placeholder="사용자명" value="{{id}}"/>
+                </td>
+                <td>
+                    {{#fi ../type '===' 'private' ~}}
+                    {{{selectbox 'authority[]' @root.privateList authority}}}
+                    {{else ~}}
+                    {{{selectbox 'authority[]' @root.shareList authority}}}
+                    {{/fi ~}}
+                </td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+{{/with ~}}
+
     <p>
-        <input type="submit" value="수정" />
+    {{#if isCreateMode ~}}
+        <input type="submit" value="만들기" />
+    {{else ~}}
+        <input type="submit" value="수정하기" />
+    {{/if ~}}
     </p>
-{{/unless ~}}
 </form>

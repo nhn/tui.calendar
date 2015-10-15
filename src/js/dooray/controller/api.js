@@ -26,6 +26,7 @@ function API(options) {
      * @type {object}
      */
     this.options = util.extend({
+        member: null,
         beforeRequest: noop,
         afterResponse: noop
     }, options);
@@ -76,11 +77,26 @@ API.prototype.getCalendars = function(projectCode, callback) {
     options.beforeRequest();
 };
 
-API.prototype.postCalendar = function(dataObject, callback) {
+API.prototype.postCalendar = function(data, callback) {
     var options = this.options,
-        onFail = this._onFailFunc(callback);
+        member = options.member,
+        onFail = this._onFailFunc(callback),
+        projectCode;
 
-    calendarAPI.postCalendars(dataObject.projectCode, dataObject, {
+    if (data.type === 'private') {
+        // 개인 캘린더의 경우 projectCode는 @userCode
+        projectCode = '@' + member.userCode;
+        data.delegation = [];
+        // data.delegation = data.delegation || [];
+        data.delegation.push({
+            user: {
+                id: member.orgMemberId 
+            },
+            permission: 'read_write'
+        });
+    }
+
+    calendarAPI.postCalendars(projectCode, data, {
         success: function(res) {
             callback(false, res);
         },
