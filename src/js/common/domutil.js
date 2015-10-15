@@ -5,6 +5,7 @@
 'use strict';
 
 var domevent = require('./domevent');
+var Collection = require('./collection');
 
 var util = global.ne.util,
     posKey = '_pos',
@@ -436,6 +437,65 @@ domutil = {
             }
         }
         return false;
+    },
+
+    /**
+     * Get form data
+     * @param {HTMLFormElement} formElement - form element to extract data
+     * @returns {object} form data
+     */
+    getFormData: function(formElement) {
+        var groupedByName = new Collection(function() { return this.length; }),
+            noDisabledFilter = function(el) { return !el.disabled; },
+            output = {};
+            
+        groupedByName.add.apply(
+            groupedByName, 
+            domutil.find('input', formElement, noDisabledFilter)
+                .concat(domutil.find('select', formElement, noDisabledFilter))
+                .concat(domutil.find('textarea', formElement, noDisabledFilter))
+        );
+
+        groupedByName = groupedByName.groupBy(function(el) {
+            return el && el.getAttribute('name') || '_other';
+        });
+
+        util.forEach(groupedByName, function(elements, name) {
+            if (name === '_other') {
+                return;
+            }
+
+            elements.each(function(el) {
+                var nodeName = el.nodeName.toLowerCase(),
+                    type = el.type,
+                    result = [];
+
+                if (type === 'radio' || type === 'checkbox') {
+                    result = elements.find(function(el) { return el.checked; }).toArray();
+                } else if (nodeName === 'select') {
+                    elements.find(function(el) { return !!el.childNodes.length; })
+                        .each(function(el) {
+                            result = result.concat(domutil.find('option', el, function(opt) {
+                                return opt.selected;
+                            }));
+                        });
+                } else {
+                    result = elements.find(function(el) { return el.value !== ''; }).toArray();
+                }
+
+                result = util.map(result, function(el) { return el.value; });
+
+                if (!result.length) {
+                    result = '';
+                } else if (result.length === 1) {
+                    result = result[0];
+                }
+
+                output[name] = result;
+            });
+        });
+
+        return output;
     }
 };
 

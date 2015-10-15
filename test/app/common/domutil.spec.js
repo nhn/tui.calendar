@@ -191,7 +191,6 @@ describe('module:domutil', function() {
         });
     });
 
-
     describe('dataset', function() {
         it('setData()', function() {
             var div = domutil.appendHTMLElement('div');
@@ -236,6 +235,34 @@ describe('module:domutil', function() {
             var el = domutil.appendHTMLElement('div', null, 'my-wrap');
 
             expect(domutil.getClass(el)).toBe('my-wrap');
+        });
+    });
+
+    describe('getFormData()', function() {
+        it('폼 엘리먼트 내의 입력값을 객체로 출력한다', function() {
+            var actual = domutil.getFormData(document.getElementById('testform1'));
+
+            var expected = {
+                name: 'test-name',
+                tag: ['test2', 'test3'],
+                gender: 'female',
+                content: 'werwer',
+                type: '3',
+                type3: ''
+            };
+
+            expect(actual).toEqual(expected);
+        });
+
+        it('selectbox 이면서 option 이 하나도 없으면 emptyString', function() {
+            var actual = domutil.getFormData(document.getElementById('testform1'));
+            expect(actual['type3']).toBe('');
+        });
+        
+        it('disabled인 엘리먼트는 뺌', function() {
+            var actual = domutil.getFormData(document.getElementById('testform1'));
+            expect(actual['type2']).not.toBeDefined();
+            expect(actual['name2']).not.toBeDefined();
         });
     });
 });
