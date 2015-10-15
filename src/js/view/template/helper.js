@@ -28,6 +28,17 @@ module.exports = {
         return a || b;
     },
 
+    'fi': function(a, oper, b, options) {
+        switch (oper) {
+            case '==':
+                return (a == b) ? options.fn(this) : options.inverse(this);
+            case '===':
+                return  (a === b) ? options.fn(this) : options.inverse(this);
+            default:
+                break;
+        }
+    },
+
     'common-width': function(width) {
         return getElSize(width, '%', 'width');
     },
@@ -60,6 +71,23 @@ module.exports = {
 
     'multiply': function(a, b) {
         return a * b;
+    },
+
+    /**
+     * 셀렉트박스 헬퍼
+     * @param {string} name - 셀렉트박스 name 속성값
+     * @param {{value: string, label: string}} list - 옵션 리스트
+     * @param {string} selectedValue - 기본선택처리 원하는 값
+     * @returns {string} html tag
+     */
+    'selectbox': function(name, list, selectedValue) {
+        var html = '<select name="' + name + '">';
+
+        util.forEach(list, function(data) {
+            html += '<option value="' + data.value + '"' + (selectedValue === data.value ? ' selected' : '') + '>' + data.label + '</option>';
+        });
+
+        return html + '</select>';
     }
 };
 
