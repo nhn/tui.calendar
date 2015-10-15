@@ -75,8 +75,6 @@ Milestone.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'milestone'));
 
-    console.log(viewModel);
-
     container.style.minHeight = this.options.minHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);
 
