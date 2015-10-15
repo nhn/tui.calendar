@@ -32,6 +32,9 @@ var enums = require('../enums');
  * @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  * @param {function} [options.controller] - controller instance
  * @param {string} [options.defaultView='week'] - default view of calendar
+ * @param {object} options.member - member information from dooray server.
+ * @param {string} options.member.orgMemberId - user id
+ * @param {string} options.member.userCode - user code
  * @param {object} [options.week] - options for week view
  * @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  * @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
@@ -109,6 +112,7 @@ function ServiceCalendar(options, container) {
     Calendar.call(this, options, container);
 
     this.api = new API({
+        member: options.member,
         beforeRequest: function() {
             console.log('before');
         },
