@@ -10,6 +10,7 @@ var domevent = require('../../../common/domevent');
 var View = require('../../../view/view');
 var tmpl = require('./calendar.hbs');
 
+// 캘린더 유형 셀렉트박스 리스트
 var CALENDAR_TYPE_LIST = [{
     value: 'private',
     label: '개인 캘린더'
@@ -18,6 +19,7 @@ var CALENDAR_TYPE_LIST = [{
     label: '공유 캘린더'
 }];
 
+// 개인 캘린더 공유 시 사용자 권한 리스트
 var PRIVATE_LIST = [{
     value: 'opaque_view',
     label: '단순 조회'
@@ -29,6 +31,7 @@ var PRIVATE_LIST = [{
     label: '위임'
 }];
 
+// 공유 캘린더 공유 시 사용자 권한 리스트
 var SHARE_LIST = [{
     value: 'view',
     label: '조회'
@@ -38,6 +41,30 @@ var SHARE_LIST = [{
 }, {
     value: 'all',
     label: '모든권한'
+}];
+
+// 라디오박스 리스트 프리셋
+var COLOR_LIST = [{
+    value: 'ed2327',
+    label: 'ed2327'
+}, {
+    value: 'ee5307',
+    label: 'ee5307'
+}, {
+    value: 'f4c30a',
+    label: 'f4c30a'
+}, {
+    value: '55d72b',
+    label: '55d72b'
+}, {
+    value: '3d9af6',
+    label: '3d9af6'
+}, {
+    value: 'be55da',
+    label: 'be55da'
+}, {
+    value: '946651',
+    label: '946651'
 }];
 
 /**
@@ -77,6 +104,7 @@ function CalendarForm(api, options, container) {
         calendarList: CALENDAR_TYPE_LIST,
         privateList : PRIVATE_LIST,
         shareList: SHARE_LIST,
+        colorList: COLOR_LIST,
         formData: {
             type: 'private'
         } 
@@ -94,6 +122,19 @@ function CalendarForm(api, options, container) {
 util.inherit(CalendarForm, View);
 
 /**
+ * @override
+ */
+CalendarForm.prototype._beforeDestroy = function() {
+    domevent.off(this.container, {
+        'submit': this._onSubmit,
+        'change': this._onChange,
+        'click': this._onClick
+    }, this);
+
+    this.api = this.options = null;
+};
+
+/**
  * 캘린더 폼으로부터 객체 형태의 데이터를 추출함
  * @returns {object} 폼 데이터
  */
@@ -102,8 +143,11 @@ CalendarForm.prototype.getFormData = function() {
         userId = formData['userId[]'] || [],
         authority = formData['authority[]'] || [],
         result = {
+            projectName: formData.projectName,
+            projectCode: formData.projectCode,
             name: formData.name,
             color: formData.color,
+            colorHex: formData.colorHex,
             type: formData.type,
             share: []
         };
@@ -140,8 +184,17 @@ CalendarForm.prototype.render = function(formData) {
  * @param {Event} e - 캘린더 유형 셀렉트박스 변경 이벤트 객체
  */
 CalendarForm.prototype._onChange = function(e) {
+    var that = this;
+
     if (e.target.name === 'type') {
         this.render(this.getFormData());
+
+        util.debounce(function() {
+            var select = domutil.find('select', that.container);
+            if (select) {
+                select.focus();
+            }
+        }, 0)();
     }
 };
 
@@ -172,6 +225,7 @@ CalendarForm.prototype._onClick = function(e) {
  */
 CalendarForm.prototype._onSubmit = function(e) {
     domevent.stop(e);
+    //TODO: submit data to API server.
     console.log(this.getFormData());
 };
 

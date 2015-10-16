@@ -88,6 +88,16 @@ module.exports = {
         });
 
         return html + '</select>';
+    },
+
+    'radioCalendarColor': function(name, list, checkedValue) {
+        return util.map(list, function(data) {
+            return '<label>' + 
+                '<input type="radio" name="' + name + '" value="' + data.value + '"' + 
+                (data.value === checkedValue ? ' checked' : '') + ' />' + 
+                '<span style="background-color:#' + data.value + '">&nbsp;</span>' +
+                '</label>';
+        }).join('');
     }
 };
 

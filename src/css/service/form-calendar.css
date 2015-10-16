@@ -1,18 +1,45 @@
+.schedule-view-form-title {
+    font-size: 13px;
+    font-weight: bold;
+    display: block;
+}
+
+
+/*create - calendar*/
 .schedule-view-calendar-form {
-    width: 230px;
-    padding: 10px;
+    width: 250px;
+    padding: 11px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.schedule-view-calendar-form legend {
-    font-weight: bold;
+.schedule-view-calendar-form-colors label {
+    display: inline-block;
+    position: relative;
 }
 
-.schedule-view-calendar-form label {
-    font-size: 13px;
+.schedule-view-calendar-form-colors span {
+    position: absolute;
+    top: 50%; left: 50%;
+    margin: -7.5px 0 0 -7.5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 30%;
+}
+
+.schedule-view-calendar-form-colors input:checked ~ span {
+    margin: -7.5px 0 0 -7.5px;
+    width: 11px;
+    height: 11px;
+    border: 2px solid #000;
+}
+
+.schedule-view-calendar-form-colors input[type=text] {
+    width: 60px;
+}
+
+.schedule-view-calendar-form legend {
     font-weight: bold;
-    display: block;
 }
 
 .schedule-view-calendar-form table {
