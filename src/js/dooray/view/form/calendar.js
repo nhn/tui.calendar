@@ -80,8 +80,8 @@ var COLOR_LIST = [{
  *  @param {string} [options.method=POST] - http method
  *  @param {string} [options.action] - url
  *  @param {object} [options.formData] - 미리 채워 둘 폼 데이터 (없어도 무방)
- *  @param {function} [afterRender] - 렌더 완료 후 콜백. 첫 번째 인자는 프로젝트 입력 영역 두 번째 인자는 공유설명 영역
- *  @param {function} [beforeSubmit] - 폼 서브밋 전 이벤트 첫 번째 인자는 서버로 보낼 데이터. 조작 가능
+ *  @param {function} [options.afterRender] - 렌더 완료 후 콜백. 첫 번째 인자는 프로젝트 입력 영역 두 번째 인자는 공유설명 영역
+ *  @param {function} [options.beforeSubmit] - 폼 서브밋 전 이벤트 첫 번째 인자는 서버로 보낼 데이터. 조작 가능
  * @param {HTMLElenent} container - container element
  */
 function CalendarForm(options, container) {
