@@ -1,6 +1,6 @@
 {
   "name": "dooray-calendar",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "calendar module for dooray.",
   "private": true,
   "devDependencies": {

@@ -12,7 +12,7 @@
  * ██║      ██╔══██║ ██║      ██╔══╝   ██║╚██╗██║ ██║  ██║ ██╔══██║ ██╔══██╗
  * ╚██████╗ ██║  ██║ ███████╗ ███████╗ ██║ ╚████║ ██████╔╝ ██║  ██║ ██║  ██║
  *  ╚═════╝ ╚═╝  ╚═╝ ╚══════╝ ╚══════╝ ╚═╝  ╚═══╝ ╚═════╝  ╚═╝  ╚═╝ ╚═╝  ╚═╝
- * @version 0.1.4
+ * @version 0.1.5
  */
 /* clearing bootstrap's box-sizing css. */
 .schedule-view-layout *,
@@ -101,6 +101,66 @@
     line-height: 12px;
 }
 
+.schedule-view-form-title {
+    font-size: 13px;
+    font-weight: bold;
+    display: block;
+}
+
+
+/*create - calendar*/
+.schedule-view-calendar-form {
+    width: 250px;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.schedule-view-calendar-form-colors label {
+    display: inline-block;
+    position: relative;
+}
+
+.schedule-view-calendar-form-colors span {
+    position: absolute;
+    top: 50%; left: 50%;
+    margin: -7.5px 0 0 -7.5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 30%;
+}
+
+.schedule-view-calendar-form-colors input:checked ~ span {
+    margin: -7.5px 0 0 -7.5px;
+    width: 11px;
+    height: 11px;
+    border: 2px solid #000;
+}
+
+.schedule-view-calendar-form-colors input[type=text] {
+    width: 60px;
+}
+
+.schedule-view-calendar-form legend {
+    font-weight: bold;
+}
+
+.schedule-view-calendar-form table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.schedule-view-calendar-form table td {
+    padding: 2px;
+    font-size: 11px;
+}
+
+.schedule-view-calendar-form table input[type=text] {
+    width: 95%;
+}
+
+
 /* milestoneview */
 .schedule-view-milestone-left {
     width: 60px;
@@ -127,21 +187,19 @@
     border-left: 1px solid #ccc;
 }
 
-.schedule-view-milestone-day-list {
-    padding: 2px;
+.schedule-view-milestone-list {
+    margin: 2px; 
+    padding: 0;
+    overflow: hidden;
 }
 
-.schedule-view-milestone-day ul {
-    margin: 0; padding: 0;
-}
-
-.schedule-view-milestone-day li {
+.schedule-view-milestone-item {
     font-size: 11px;
+    line-height: 11px;
     padding-left: 6px;
-    list-style: none;
+    list-style: disc inside;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /**********
@@ -263,6 +321,57 @@
         background-size: 16px 16px;
         background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC);
     }
+}
+
+/* taskview */
+.schedule-view-task-left {
+    width: 60px;
+    height: 100%;
+    float: left;
+    text-align: right;
+    color: #777;
+}
+
+.schedule-view-task-left span {
+    display: block;
+    padding: 3px 5px 0 0;
+}
+
+.schedule-view-task-right {
+    background-color: #fff;
+    margin-left: 60px;
+}
+
+.schedule-view-task-day {
+    float:left;
+    background-color: #fff;
+    margin-left: -1px;
+    border-left: 1px solid #ccc;
+}
+
+.schedule-view-task-day-wrap {
+    margin: 2px; 
+    padding: 0;
+    overflow: hidden;
+}
+
+.schedule-view-task-day h6,
+.schedule-view-task-day ul {
+    margin: 0; padding: 0;
+}
+
+.schedule-view-task-day h6 {
+    font-size: 11px;
+    padding-bottom: 1px;
+}
+
+
+.schedule-view-task-day li {
+    font-size: 11px;
+    padding-left: 6px;
+    list-style: none;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /* allday view */
