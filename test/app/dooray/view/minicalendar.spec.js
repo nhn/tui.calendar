@@ -81,14 +81,5 @@ describe('service:view/MiniCalendar', function() {
 
             expect(actual.calendar[0][3].focused).toBe(true);
         });
-
-        it('when supplied events data then add to date.', function() {
-            var renderMonth = new Date('2015-09-01T00:00:00+09:00');
-            var today = new Date('2015-09-02T11:36:00+09:00');
-            var events = ['2015-09-03'];
-            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today, events);
-
-            expect(actual.calendar[0][4].hasEvents).toBe(true);
-        });
     });
 });

@@ -10,6 +10,7 @@ var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
 var tmpl = require('./minicalendar.hbs');
+var api = require('../controller/api');
 
 /**
  * @constructor
@@ -18,6 +19,7 @@ var tmpl = require('./minicalendar.hbs');
  * @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
  * @param {string} [options.renderMonth] - YYYY-MM formatted date to render. 
  * if not supplied use current month
+ * @param {ServiceCalendar} [options.calendar] - dooray calendar instance
  * @param {HTMLDivElement} container - element to use container
  */
 function MiniCalendar(options, container) {
@@ -42,13 +44,40 @@ function MiniCalendar(options, container) {
      */
     this.options = util.extend({
         startDayOfWeek: 0,
-        daynames: ['일', '월', '화', '수', '목', '금', '토']
+        daynames: ['일', '월', '화', '수', '목', '금', '토'],
+        calendar: null
     }, options);
 
     this.options.renderMonth = defaultMonth;
+
+    /**
+     * 미니캘린더 일 별 일정존재여부 debounce 함수
+     * @type {function}
+     */
+    this._loadTasks = util.debounce(util.bind(this._loadTasks, this), 300);
+
+    this.render();
 }
 
 util.inherit(MiniCalendar, View);
+
+/**
+ * 서버로부터 일자별 존재 일정 정보를 비동기로 받아오고 콜백을 호출한다
+ * @param {object} viewModel - viewModel
+ * @param {function} callback - nodejs common callback
+ */
+MiniCalendar.prototype._loadTasks = function(viewModel, callback) {
+    var renderStart = viewModel.calendar[0][0],
+        renderEnd = (function() {
+            var lastRow = viewModel.calendar[viewModel.calendar.length - 1];
+            return lastRow[lastRow.length - 1];
+        })();
+
+    renderStart = datetime.start(new Date(renderStart.y, renderStart.m, renderStart.d));
+    renderEnd = datetime.end(new Date(renderEnd.y, renderEnd.m, renderEnd.d));
+
+    api().getMinicalendarTasks(renderStart, renderEnd, callback);
+};
 
 /**
  * Next, Prev button event handler
@@ -130,10 +159,9 @@ MiniCalendar.prototype.getSelectedDate = function() {
  * @param {Date} renderDate - Date to render minicalendar
  * @param {number} startDayOfWeek - number of start of week (0:sun ...)
  * @param {Date} today - today Date object
- * @param {Object.<string, array>} eventsInMonth - events array to represent dots in minicalendar
  * @returns {object} viewmodel
  */
-MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, today, eventsInMonth) {
+MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, today) {
     var viewModel = {
             title: datetime.format(renderDate, 'YYYY.MM'),
             startDayOfWeek: startDayOfWeek,
@@ -185,10 +213,6 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
             result.weekend = true;
         }
 
-        if (eventsInMonth && ~util.inArray(datetime.format(d, 'YYYY-MM-DD'), eventsInMonth)) {
-            result.hasEvents = true;
-        }
-
         return result;
     });
 
@@ -203,13 +227,18 @@ MiniCalendar.prototype.render = function() {
         options = this.options,
         renderDate = options.renderMonth,
         startDayOfWeek = options.startDayOfWeek,
-        //TODO: this will provide by controller
-        events = ['2015-10-02', '2015-10-18'],
         viewModel;
 
-    viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date(), events);
+    viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date());
 
     container.innerHTML = tmpl(viewModel);
+
+    // 렌더 완료 후 일정있는 일자 강조
+    this._loadTasks(viewModel, function(err, res) {
+        if (!err) {
+            //TODO: 여기서 일자 강조
+        }
+    });
 };
 
 util.CustomEvents.mixin(MiniCalendar);

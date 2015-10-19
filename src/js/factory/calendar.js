@@ -83,6 +83,8 @@ function Calendar(options, container) {
     }, this);
 
     this.toggleView(options.defaultView, true);
+
+    this.view.render();
 }
 
 /**

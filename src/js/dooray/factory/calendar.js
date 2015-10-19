@@ -111,7 +111,8 @@ function ServiceCalendar(options, container) {
 
     Calendar.call(this, options, container);
 
-    this.api = new API({
+    // initialize API module
+    API({
         member: options.member,
         beforeRequest: function() {
             console.log('before');
