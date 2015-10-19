@@ -1,7 +1,7 @@
 <form name="create-calendar" method="{{method}}" action="{{action}}">
     <legend>캘린더 {{#if isCreateMode}}만들기{{else}}수정하기{{/if}}</legend>
 {{#with formData ~}}
-    <p>
+    <p class="schedule-view-calendar-form-project">
         <label class="schedule-view-form-title" for="projectName">프로젝트</label>
         <input type="text" name="projectName" placeholder="프로젝트명" value="{{projectName}}" />
         <input type="hidden" name="projectCode" value="{{projectCode}}" />
@@ -21,7 +21,7 @@
         <label class="schedule-view-form-title" for="type">유형</label>
         {{{selectbox 'type' @root.calendarList type}}}
     </p>
-    <div>
+    <div class="schedule-view-calendar-form-share">
         <label class="schedule-view-form-title">공유설정<input type="button" class="schedule-view-createcalendar-addshare" value="+" /></label>
         <table>
             <colgroup><col span="1" style="width:60%" /><col span="1" style="width:40%" /></colgroup>

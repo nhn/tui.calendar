@@ -8,7 +8,9 @@ var util = global.ne.util;
 var domutil = require('../../../common/domutil');
 var domevent = require('../../../common/domevent');
 var View = require('../../../view/view');
+var API = require('../../controller/api');
 var tmpl = require('./calendar.hbs');
+var noop = function() {};
 
 // 캘린더 유형 셀렉트박스 리스트
 var CALENDAR_TYPE_LIST = [{
@@ -70,17 +72,19 @@ var COLOR_LIST = [{
 /**
  * @constructor
  * @extends {View}
- * @param {ServiceCalendar} calendar - instance of DoorayCalendar
  * @param {object} options - options
+ *  @param {object} [options.member] - 로그인 사용자 정보
  *  @param {string} [options.projectCode] - project code for creation
  *  @param {boolean} [options.isCreateMode=true] - mode. set true then `creation`, false then `modify`
  *  @param {boolean} [options.isPrivate] - 개인 캘린더 여부
  *  @param {string} [options.method=POST] - http method
  *  @param {string} [options.action] - url
  *  @param {object} [options.formData] - 미리 채워 둘 폼 데이터 (없어도 무방)
+ *  @param {function} [afterRender] - 렌더 완료 후 콜백. 첫 번째 인자는 프로젝트 입력 영역 두 번째 인자는 공유설명 영역
+ *  @param {function} [beforeSubmit] - 폼 서브밋 전 이벤트 첫 번째 인자는 서버로 보낼 데이터. 조작 가능
  * @param {HTMLElenent} container - container element
  */
-function CalendarForm(calendar, options, container) {
+function CalendarForm(options, container) {
     options = options || {};
     container = domutil.appendHTMLElement(
         'div', container, 'schedule-view-calendar-form');
@@ -90,7 +94,9 @@ function CalendarForm(calendar, options, container) {
     /**
      * @type {API}
      */
-    this.api = calendar.api;
+    this.api = new API({
+        member: options.member
+    });
 
     /**
      * @type {object}
@@ -105,6 +111,10 @@ function CalendarForm(calendar, options, container) {
         privateList : PRIVATE_LIST,
         shareList: SHARE_LIST,
         colorList: COLOR_LIST,
+
+        afterRender: noop,
+        beforeSubmit: noop,
+
         formData: {
             type: 'private'
         } 
@@ -170,13 +180,23 @@ CalendarForm.prototype.getFormData = function() {
  * @param {object} [formData] - 폼 데이터를 넘기면 렌더링 시 적용한다
  */
 CalendarForm.prototype.render = function(formData) {
-    var options = this.options;
+    var options = this.options,
+        container = this.container,
+        projectInput,
+        shareInput;
 
     if (formData) {
         options.formData = formData;
     }
 
-    this.container.innerHTML = tmpl(options);
+    container.innerHTML = tmpl(options);
+
+    projectInput = domutil.find('.schedule-view-calendar-form-project', container);
+    shareInput = domutil.find('.schedule-view-calendar-form-share', container);
+
+    if (projectInput && shareInput) {
+        options.afterRender(projectInput, shareInput);
+    }
 };
 
 /**
@@ -237,9 +257,15 @@ CalendarForm.prototype._onClick = function(e) {
  * @param {Event} e - 전송 이벤트 객체
  */
 CalendarForm.prototype._onSubmit = function(e) {
+    var formData;
     domevent.stop(e);
+
+    formData = this.getFormData();
+
+    this.options.beforeSubmit(formData);
+
     //TODO: submit data to API server.
-    console.log(this.getFormData());
+    console.log(formData);
 };
 
 module.exports = CalendarForm;
