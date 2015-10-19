@@ -184,9 +184,12 @@ CalendarForm.prototype.render = function(formData) {
  * @param {Event} e - 캘린더 유형 셀렉트박스 변경 이벤트 객체
  */
 CalendarForm.prototype._onChange = function(e) {
-    var that = this;
+    var that = this,
+        target = e.target,
+        newAction,
+        form;
 
-    if (e.target.name === 'type') {
+    if (target.name === 'type') {
         this.render(this.getFormData());
 
         util.debounce(function() {
@@ -195,6 +198,16 @@ CalendarForm.prototype._onChange = function(e) {
                 select.focus();
             }
         }, 0)();
+    }
+
+    // 프로젝트 코드 변경 시 처리
+    if (target.name === 'projectName') {
+        form = domutil.find('form', that.container);
+        if (form) {
+            //TODO: 프로젝트 코드 받아와야 함
+            newAction = that.options.action.replace('{{projectCode}}', window.encodeURIComponent(target.value));
+            form.setAttribute('action', newAction);
+        }
     }
 };
 
