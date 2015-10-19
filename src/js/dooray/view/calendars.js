@@ -136,7 +136,7 @@ Calendars.prototype.getSelectedCalendarID = function() {
         });
 
     return util.map(inputs, function(el) {
-        return domutil.getData(el, 'id');
+        return domutil.getData(domutil.closest(el, 'li'), 'id');
     });
 };
 
