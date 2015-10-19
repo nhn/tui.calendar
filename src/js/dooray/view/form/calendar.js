@@ -70,7 +70,7 @@ var COLOR_LIST = [{
 /**
  * @constructor
  * @extends {View}
- * @param {API} api - instance of api module
+ * @param {ServiceCalendar} calendar - instance of DoorayCalendar
  * @param {object} options - options
  *  @param {string} [options.projectCode] - project code for creation
  *  @param {boolean} [options.isCreateMode=true] - mode. set true then `creation`, false then `modify`
@@ -80,7 +80,7 @@ var COLOR_LIST = [{
  *  @param {object} [options.formData] - 미리 채워 둘 폼 데이터 (없어도 무방)
  * @param {HTMLElenent} container - container element
  */
-function CalendarForm(api, options, container) {
+function CalendarForm(calendar, options, container) {
     options = options || {};
     container = domutil.appendHTMLElement(
         'div', container, 'schedule-view-calendar-form');
@@ -90,7 +90,7 @@ function CalendarForm(api, options, container) {
     /**
      * @type {API}
      */
-    this.api = api;
+    this.api = calendar.api;
 
     /**
      * @type {object}
