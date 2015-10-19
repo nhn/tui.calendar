@@ -77,6 +77,11 @@ API.prototype.getCalendars = function(projectCode, callback) {
     options.beforeRequest();
 };
 
+/**
+ * 캘린더를 생성한다
+ * @param {object} data - 폼 데이터
+ * @param {function} callback - 첫 번째 인자는 오류 여부, 두 번째 인자는 캘린더 생성.
+ */
 API.prototype.postCalendar = function(data, callback) {
     var options = this.options,
         member = options.member,
@@ -146,5 +151,40 @@ API.prototype.getTasks = function(projectCode, calendarId, timeMin, timeMax, cal
     options.beforeRequest();
 };
 
-module.exports = API;
+/**
+ * 미니캘린더의 각 일자에 일정 존재 여부를 표시하기 위한 API호출 수행
+ * @param {string|Date} [timeMin] - 조회시작일자 Timezone offset 을 포함한 UTC필요
+ * @param {string|Date} [timeMax] - 조회 종료일자 Timezone offset 을 포함한 UTC필요
+ * @param {function} callback - 콜백 함수. 첫 번째 인자는 오류 여부, 두 번째 인자는 일정 콜렉션
+ */
+API.prototype.getMinicalendarTasks = function(timeMin, timeMax, callback) {
+    var options = this.options,
+        member = options.member,
+        onFail = this._onFailFunc(callback);
+
+    timeMin = util.isDateSafe(timeMin) ? datetime.format(timeMin, 'LOCAL') : timeMin;
+    timeMax = util.isDateSafe(timeMax) ? datetime.format(timeMax, 'LOCAL') : timeMax;
+
+    calendarAPI.getFreeBusy([member.orgMemberId], timeMin, timeMax, 'summary', {
+        success: function(res) {
+            callback(false, util.pick(res, 'result'));
+        },
+        error: onFail,
+        fail: onFail,
+        complete: options.afterResponse
+    });
+
+    options.beforeRequest();
+};
+
+module.exports = function(options) {
+    var api = global.ne.dooray.calendar._api;
+
+    if (api) {
+        return api;
+    }
+    
+    api = global.ne.dooray.calendar._api = new API(options);
+    return api;
+}
 

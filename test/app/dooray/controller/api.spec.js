@@ -1,7 +1,5 @@
-var API = window.ne.dooray.calendar.service.API;
+var api = window.ne.dooray.calendar.service.API;
 describe('service:controller/API', function() {
-    var inst;
-
     describe('beforeRequest, afterResponse', function() {
         var beforeSpy,
             afterSpy;
@@ -10,7 +8,9 @@ describe('service:controller/API', function() {
             beforeSpy = jasmine.createSpy('beforeReq');
             afterSpy = jasmine.createSpy('afterRes');
 
-            inst = new API({
+            // 초기화
+            delete window.ne.dooray.calendar._api;
+            api({
                 beforeRequest: beforeSpy,
                 afterResponse: afterSpy
             });
@@ -23,7 +23,7 @@ describe('service:controller/API', function() {
         });
 
         it('beforeRequest called before all request sends.', function() {
-            inst.getCalendars();
+            api().getCalendars();
 
             expect(beforeSpy).toHaveBeenCalled();
             expect(afterSpy).not.toHaveBeenCalled();
@@ -31,7 +31,7 @@ describe('service:controller/API', function() {
 
         it('afterResponse called after all request is responded.', function() {
             var callbackSpy = jasmine.createSpy('callback');
-            inst.getCalendars(null, callbackSpy);
+            api().getCalendars(null, callbackSpy);
 
             jasmine.Ajax.requests.mostRecent().respondWith({
                 status: 200,
@@ -56,7 +56,6 @@ describe('service:controller/API', function() {
 
     describe('API', function() {
         beforeEach(function() {
-            inst = new API();
             jasmine.Ajax.install();
         });
 
@@ -65,7 +64,7 @@ describe('service:controller/API', function() {
         });
 
         it('getCalendars() 는 요청에 해당하는 캘린더 목록을 콜렉션으로 반환한다.', function() {
-            inst.getCalendars(null, function(err, res) {
+            api().getCalendars(null, function(err, res) {
                 if (err) {
                     return;
                 }
