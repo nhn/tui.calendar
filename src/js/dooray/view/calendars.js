@@ -14,6 +14,7 @@ var api = require('../controller/api');
 /**
  * @constructor
  * @extends {View}
+ * @mixes CustomEvents
  * @param {object} options - options for calendar list view
  * @param {ServiceCalendar} options.calendar - dooray calendar instance
  * @param {HTMLDivElement} container - view container

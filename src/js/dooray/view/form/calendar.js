@@ -72,6 +72,7 @@ var COLOR_LIST = [{
 /**
  * @constructor
  * @extends {View}
+ * @mixes {CustomEvents}
  * @param {object} options - options
  *  @param {object} [options.member] - 로그인 사용자 정보
  *  @param {string} [options.projectCode] - project code for creation
@@ -80,8 +81,6 @@ var COLOR_LIST = [{
  *  @param {string} [options.method=POST] - http method
  *  @param {string} [options.action] - url
  *  @param {object} [options.formData] - 미리 채워 둘 폼 데이터 (없어도 무방)
- *  @param {function} [options.afterRender] - 렌더 완료 후 콜백. 첫 번째 인자는 프로젝트 입력 영역 두 번째 인자는 공유설명 영역
- *  @param {function} [options.beforeSubmit] - 폼 서브밋 전 이벤트 첫 번째 인자는 서버로 보낼 데이터. 조작 가능
  * @param {HTMLElenent} container - container element
  */
 function CalendarForm(options, container) {
@@ -177,6 +176,7 @@ CalendarForm.prototype.getFormData = function() {
 
 /**
  * @override
+ * @fires CalendarForm#afterRender
  * @param {object} [formData] - 폼 데이터를 넘기면 렌더링 시 적용한다
  */
 CalendarForm.prototype.render = function(formData) {
@@ -195,7 +195,17 @@ CalendarForm.prototype.render = function(formData) {
     shareInput = domutil.find('.schedule-view-calendar-form-share', container);
 
     if (projectInput && shareInput) {
-        options.afterRender(projectInput, shareInput);
+        /**
+         * 렌더링 직후 발생하는 이벤트
+         * @event Calendars#afterRender
+         * @type {object}
+         * @property {HTMLElement} projectInput - 프로젝트 선택 영역
+         * @property {HTMLEelement} shareInput - 공유 설정 영역
+         */
+        this.fire('afterRender', {
+            projectInput: projectInput,
+            shareInput: shareInput
+        });
     }
 };
 
@@ -254,6 +264,7 @@ CalendarForm.prototype._onClick = function(e) {
 
 /**
  * 생성/수정 버튼 클릭 시 핸들러
+ * @fires Calendars#beforeSubmit
  * @param {Event} e - 전송 이벤트 객체
  */
 CalendarForm.prototype._onSubmit = function(e) {
@@ -262,11 +273,24 @@ CalendarForm.prototype._onSubmit = function(e) {
 
     formData = this.getFormData();
 
-    this.options.beforeSubmit(formData);
+    /**
+     * 폼 전송 전 발생 이벤트. 값 조작 가능.
+     * @event CalendarForm#beforeSubmit
+     * @type {object}
+     * @property {string} projectCode - 프로젝트 코드
+     * @property {string} projectName - 프로젝트 이름
+     * @property {string} name - 캘린더 이름
+     * @property {string} color - 체크박스 선택 컬러 값
+     * @property {string} colorHex - 직접입력 컬러 값
+     * @property {Array.{string: id, string: permission}} share - 사용자 별 권한설정 정보
+     * @property {string} type - 캘린더 유형
+     */
+    this.fire('beforeSubmit', formData);
 
     //TODO: submit data to API server.
-    console.log(formData);
 };
+
+util.CustomEvents.mixin(CalendarForm);
 
 module.exports = CalendarForm;
 
