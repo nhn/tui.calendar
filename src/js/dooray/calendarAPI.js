@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var util = global.ne.util;
 var Ajax = require('../common/ajax');
 
 // 캘린더 API 기본 PATH
@@ -20,9 +21,9 @@ var ROOT_PATH = '/wapi/task-tracker';
  * @param {object} ajaxOptions - ajax 모듈에 사용할 옵션 객체
  */ 
 function getCalendars(projectCode, ajaxOptions) {
-    var url = 'projects/{{ projectCode }}/calendars';
+    var url = 'projects/{{projectCode}}/calendars';
     projectCode = projectCode || '*';
-    url = ROOT_PATH + '/' + url.replace('{{ projectCode }}', projectCode);
+    url = ROOT_PATH + '/' + url.replace('{{projectCode}}', projectCode);
 
     ajaxOptions = ajaxOptions || {};
 
@@ -37,9 +38,9 @@ function getCalendars(projectCode, ajaxOptions) {
  * @param {object} ajaxOptions - ajax 모듈에 사용할 옵션 객체
  */
 function postCalendars(projectCode, data, ajaxOptions) {
-    var url = 'projects/{{ projectCode }}/calendars';
+    var url = 'projects/{{projectCode}}/calendars';
     projectCode = projectCode || '*';
-    url = ROOT_PATH + '/' + url.replace('{{ projectCode }}', projectCode);
+    url = ROOT_PATH + '/' + url.replace('{{projectCode}}', projectCode);
 
     ajaxOptions = ajaxOptions || {};
     ajaxOptions.data = JSON.stringify([data]);
@@ -62,16 +63,44 @@ function postCalendars(projectCode, data, ajaxOptions) {
  * @param {object} [ajaxOptions] - ajax 모듈에 사용할 옵션 객체
  */
 function getCalendarTasks(projectCode, calendarId, timeMin, timeMax, ajaxOptions) {
-    var url = 'projects/{{ projectCode }}/calendars/{{ calendarId }}/tasks' +
-        '?calendars={{ calendars }}&timeMin={{ timeMin }}&timeMax={{ timeMax }}';
+    var url = 'projects/{{projectCode}}/calendars/{{calendarId}}/tasks' +
+        '?calendars={{calendars}}&timeMin={{timeMin}}&timeMax={{timeMax}}',
+        encode = window.encodeURIComponent;
 
     calendarId = calendarId.replace(/\s/g, '');
 
-    url = ROOT_PATH + '/' + url.replace('{{ projectCode }}', projectCode || '*')
-        .replace('{{ calendarId }}', ~calendarId.indexOf(',') ? '*' : calendarId || '*')
-        .replace('{{ calendars }}', ~calendarId.indexOf(',') ? calendarId : '')
-        .replace('{{ timeMin }}', timeMin || '')
-        .replace('{{ timeMax }}', timeMax || '');
+    url = ROOT_PATH + '/' + url.replace('{{projectCode}}', projectCode || '*')
+        .replace('{{calendarId}}', ~calendarId.indexOf(',') ? '*' : calendarId || '*')
+        .replace('{{calendars}}', ~calendarId.indexOf(',') ? calendarId : '')
+        .replace('{{timeMin}}', encode(timeMin) || '')
+        .replace('{{timeMax}}', encode(timeMax) || '');
+
+    new Ajax().ajax(url, ajaxOptions || {});
+}
+
+
+/**********
+ * Free Busy
+ **********/
+
+/**
+ * @param {string[]} to - 대상 사용자 목록
+ * @param {string} [timeMin] - 조회시작일자
+ * @param {string} [timeMax] - 조회 종료일자
+ * @param {string} type - '' or 'summary'
+ * @param {object} [ajaxOptions] - ajax 모듈에 사용할 옵션 객체
+ */
+function getFreeBusy(to, timeMin, timeMax, type, ajaxOptions) {
+    var url = 'projects/*/calendars/*/freebusy?to={{to}}&' + 
+        'timeMin={{timeMin}}&timeMax={{timeMax}}&type={{type}}',
+        encode = window.encodeURIComponent;
+
+    to = util.map(to, function(id) { return encode(id); }).join(',');
+
+    url = ROOT_PATH + '/' + url.replace('{{to}}', to)
+        .replace('{{timeMin}}', encode(timeMin))
+        .replace('{{timeMax}}', encode(timeMax))
+        .replace('{{type}}', type || 'summary');
 
     new Ajax().ajax(url, ajaxOptions || {});
 }
@@ -83,5 +112,6 @@ function getCalendarTasks(projectCode, calendarId, timeMin, timeMax, ajaxOptions
 module.exports = /** @lends CalendarAPI */ {
     getCalendars: getCalendars,
     postCalendars: postCalendars,
-    getCalendarTasks: getCalendarTasks
+    getCalendarTasks: getCalendarTasks,
+    getFreeBusy: getFreeBusy
 };

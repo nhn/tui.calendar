@@ -1,5 +1,6 @@
 var calendarAPI = window.ne.dooray.calendar.service.calendarAPI;
 var undef = (function() {})();
+var encode = window.encodeURIComponent;
 describe('service/calendarAPI', function() {
     var ajaxSpy;
 
@@ -46,7 +47,8 @@ describe('service/calendarAPI', function() {
             );
 
             expect(ajaxSpy).toHaveBeenCalledWith(
-                '/wapi/task-tracker/projects/bug/calendars/1/tasks?calendars=&timeMin=&timeMax=2015-02-01T00:00:00+09:00',
+                '/wapi/task-tracker/projects/bug/calendars/1/tasks' + 
+                '?calendars=&timeMin=&timeMax=' + encode('2015-02-01T00:00:00+09:00'),
                 {}
             );
         });
@@ -60,10 +62,23 @@ describe('service/calendarAPI', function() {
             );
 
             expect(ajaxSpy).toHaveBeenCalledWith(
-                '/wapi/task-tracker/projects/*/calendars/*/tasks?calendars=1,2,3&timeMin=&timeMax=2015-02-01T00:00:00+09:00',
+                '/wapi/task-tracker/projects/*/calendars/*/tasks' + 
+                '?calendars=1,2,3&timeMin=&timeMax=' + encode('2015-02-01T00:00:00+09:00'),
                 {}
             );
             
+        });
+    });
+
+    describe('getFreeBusy()', function() {
+        it('type 미지정시 summary 적용', function() {
+            calendarAPI.getFreeBusy(['123'], '', '', '');
+
+            expect(ajaxSpy).toHaveBeenCalledWith(
+                '/wapi/task-tracker/projects/*/calendars/*/freebusy' +
+                '?to=123&timeMin=&timeMax=&type=summary',
+                {}
+            );
         });
     });
 });
