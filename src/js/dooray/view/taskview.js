@@ -57,7 +57,6 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
             datetime.end(datetime.parse(options.renderEndDate)),
             datetime.MILLISECONDS_PER_DAY
         ),
-        lineHeight = options.lineHeight,
         height = 0,
         mmax = Math.max;
 
@@ -67,15 +66,16 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
 
     util.extend(events, viewModel);
 
+    // (출근전, 점심전, 퇴근전 항목 수 * 12px) + (각 항목의 아이템 수 * 12px)
     height = mmax.apply(null, util.map(events, function(g) {
-        var subtotal = util.keys(g).length * lineHeight;
+        var subcount = util.keys(g).length;
 
         util.forEach(g, function(coll) {
-            subtotal += (coll.length * lineHeight);
+            subcount += coll.length;
         });
 
-        return subtotal;
-    }));
+        return subcount;
+    })) * options.lineHeight;
 
     height = mmax(options.minHeight, height);
 
