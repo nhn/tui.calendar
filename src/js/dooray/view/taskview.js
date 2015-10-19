@@ -77,10 +77,11 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         return subtotal;
     }));
 
+    height = mmax(options.minHeight, height);
+
     return {
         events: events,
         width: 100 / range.length,
-        minHeight: options.minHeight,
         height: height + PADDING,
         lineHeight: options.lineHeight
     };
