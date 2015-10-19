@@ -46,7 +46,10 @@ function Calendars(options, container) {
     });
 
     // bind event
-    domevent.on(container, 'change', this._onChange, this);
+    domevent.on(container, {
+        'change': this._onChange,
+        'click': this._onClick
+    }, this);
 
     // bind custom event
     this.on({
@@ -129,7 +132,7 @@ Calendars.prototype.render = function(viewModel) {
 Calendars.prototype.getSelectedCalendarID = function() {
     var container = this.container,
         inputs = domutil.find('input', container, function(el) {
-            return el.checked;
+            return el.type === 'checkbox' && el.checked;
         });
 
     return util.map(inputs, function(el) {
@@ -148,6 +151,22 @@ Calendars.prototype._onChange = function() {
      * @type {string[]} calendar id list
      */
     this.fire('changeCalendarSelection', this.getSelectedCalendarID());
+};
+
+/**
+ * calendar click event handler
+ * @emits Calendars@onClickCreateCalendar
+ * @param {MouseEvent} clickEvent - click event object
+ */
+Calendars.prototype._onClick = function(clickEvent) {
+    var target = clickEvent.target;
+
+    if (domutil.hasClass(target, 'schedule-view-calendars-create')) {
+        /**
+         * @events Calendars#onClickCreateCalendar
+         */
+        this.fire('onClickCreateCalendar');
+    }
 };
 
 util.CustomEvents.mixin(Calendars);

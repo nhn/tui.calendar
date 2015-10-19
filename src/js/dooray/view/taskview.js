@@ -10,6 +10,8 @@ var domutil = require('../../common/domutil');
 var View = require('../../view/view');
 var tmpl = require('./taskview.hbs');
 
+var PADDING = 4;    // 그리드 내 패딩 값 (top + height)
+
 /**
  * @constructor
  * @extends {View}
@@ -17,6 +19,7 @@ var tmpl = require('./taskview.hbs');
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
  * @param {number} [options.minHeight=40] - min-height of taskview
+ * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */
 function TaskView(options, container) {
@@ -34,7 +37,8 @@ function TaskView(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 40
+        minHeight: 40,
+        lineHeight: 12
     }, options);
 }
 
@@ -52,7 +56,10 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
             datetime.start(datetime.parse(options.renderStartDate)),
             datetime.end(datetime.parse(options.renderEndDate)),
             datetime.MILLISECONDS_PER_DAY
-        );
+        ),
+        lineHeight = options.lineHeight,
+        height = 0,
+        mmax = Math.max;
 
     util.forEach(range, function(d) {
         events[datetime.format(d, 'YYYY-MM-DD')] = {};
@@ -60,10 +67,22 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
 
     util.extend(events, viewModel);
 
+    height = mmax.apply(null, util.map(events, function(g) {
+        var subtotal = util.keys(g).length * lineHeight;
+
+        util.forEach(g, function(coll) {
+            subtotal += (coll.length * lineHeight);
+        });
+
+        return subtotal;
+    }));
+
     return {
         events: events,
         width: 100 / range.length,
-        height: options.minHeight
+        minHeight: options.minHeight,
+        height: height + PADDING,
+        lineHeight: options.lineHeight
     };
 };
 

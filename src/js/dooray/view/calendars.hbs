@@ -1,9 +1,16 @@
 <div class="schedule-view-calendars">
+    <div>
+        <input type="button" value="캘린더 생성" class="schedule-view-calendars-create" />
+    </div>
     <div class="schedule-view-calendars-general">
         <h6>일반 캘린더</h6>
         <ol>
             {{#each general.items}}
-            <li><label><input type="checkbox" data-id="{{id}}" {{#if isDefault}}checked{{/if}}/>&nbsp;{{name}}</label></li>
+            <li data-id="{{id}}">
+                <label><input type="checkbox"{{#if isDefault}} checked{{/if}}/>&nbsp;{{name}}</label>
+                <input type="button" value="수정" class="schedule-view-calendars-edit" />
+                <input type="button" value="삭제" class="schedule-view-calendars-delete" />
+            </li>
             {{/each}}
         </ol>
     </div>
@@ -11,7 +18,11 @@
         <h6>프로젝트 캘린더</h6>
         <ol>
             {{#each project.items}}
-            <li><label><input type="checkbox" data-id="{{id}}"/>&nbsp;{{name}}</label></li>
+            <li data-id="{{id}}">
+                <label><input type="checkbox" />&nbsp;{{name}}</label>
+                <input type="button" value="수정" class="schedule-view-calendars-edit" />
+                <input type="button" value="삭제" class="schedule-view-calendars-delete" />
+            </li>
             {{/each}}
         </ol>
     </div>

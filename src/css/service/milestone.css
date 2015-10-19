@@ -32,9 +32,7 @@
 
 .schedule-view-milestone-item {
     font-size: 11px;
-    line-height: 11px;
-    padding-left: 6px;
-    list-style: disc inside;
+    list-style: none;
     white-space: nowrap;
     overflow: hidden;
 }
