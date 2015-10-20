@@ -72,7 +72,7 @@ var COLOR_LIST = [{
 /**
  * @constructor
  * @extends {View}
- * @mixes {CustomEvents}
+ * @mixes CustomEvents
  * @param {object} options - options
  *  @param {object} [options.member] - 로그인 사용자 정보
  *  @param {string} [options.projectCode] - project code for creation
@@ -110,9 +110,6 @@ function CalendarForm(options, container) {
         privateList : PRIVATE_LIST,
         shareList: SHARE_LIST,
         colorList: COLOR_LIST,
-
-        afterRender: noop,
-        beforeSubmit: noop,
 
         formData: {
             type: 'private'
