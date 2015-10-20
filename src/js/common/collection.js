@@ -100,17 +100,15 @@ Collection.filter = {
 Collection.merge = function(collections) {    // eslint-disable-line
     var cols = aps.call(arguments),
         newItems = {},
-        length = 0,
         merged = new Collection(cols[0].getItemID),
         extend = util.extend;
 
     forEachArr(cols, function(col) {
         extend(newItems, col.items);
-        length += col.length;
     });
 
     merged.items = newItems;
-    merged.length = length;
+    merged.length = util.keys(merged.items).length;
 
     return merged;
 };

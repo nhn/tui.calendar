@@ -507,6 +507,24 @@ describe('Collection', function() {
 
             expect(merged.getItemID).toBe(c.getItemID);
         });
+
+        it('item with same id did not affect total item counts', function() {
+            var item1 = {_id:1},
+                item2 = {_id:2},
+                item3 = {_id:5},
+                item4 = {_id:1, hello: 'world'},
+                item5 = {_id:2},
+                item6 = {_id:5},
+                c2 = new Collection();
+
+            c.add(item1, item2, item3);
+            c2.add(item4, item5, item6);
+
+            var merged = Collection.merge(c, c2);
+
+            expect(merged.length).toBe(3);
+            expect(merged.items['1']).toEqual({_id: 1, hello: 'world'});
+        });
     });
 
     describe('toArray()', function() {
