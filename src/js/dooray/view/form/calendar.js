@@ -247,9 +247,10 @@ CalendarForm.prototype._onChange = function(e) {
  */
 CalendarForm.prototype._onClick = function(e) {
     var that = this,
+        target = e.target,
         formData;
 
-    if (e.target.type === 'button') {
+    if (domutil.hasClass(target, 'schedule-view-createcalendar-addshare')) {
         formData = that.getFormData();
         formData.share.push({id: '', authority: ''});
         that.render(formData);
