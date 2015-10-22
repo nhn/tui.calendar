@@ -124,7 +124,6 @@ var MiniCalendar = require('./src/js/dooray/view/minicalendar');
 var DoorayEvent = require('./src/js/dooray/model/event');
 var Calendars = require('./src/js/dooray/view/calendars');
 var TaskView = require('./src/js/dooray/view/taskview');
-var CalendarForm = require('./src/js/dooray/view/form/calendar');
 
 /** @namespace ne.dooray.calendar.service */
 
@@ -135,9 +134,7 @@ global.ne.util.defineNamespace('ne.dooray.calendar.service', {
 
     MiniCalendar: MiniCalendar,
     Calendars: Calendars,
-    TaskView: TaskView,
-
-    CalendarForm: CalendarForm
+    TaskView: TaskView
 });
 
 /**********

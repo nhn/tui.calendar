@@ -8,8 +8,10 @@ var util = global.ne.util;
 var View = require('../../view/view');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
+var Collection = require('../../common/collection');
 var tmpl = require('./calendars.hbs');
 var api = require('../controller/api');
+var API_REQUEST_DELAY = 300;
 
 /**
  * @constructor
@@ -20,43 +22,44 @@ var api = require('../controller/api');
  * @param {HTMLDivElement} container - view container
  */
 function Calendars(options, container) {
-    var that;
+    var that = this;
 
-    View.call(this, null, container);
+    View.call(that, null, container);
 
     /**
      * @type {object}
      */
-    this.options = options;
+    that.options = options;
 
     /**
      * debounced load task api method
      * @type {function}
      */
-    this._loadTasks = util.debounce(util.bind(this._loadTasks, this), 300);
+    that._loadTasks = util.debounce(util.bind(that._loadTasks, that), API_REQUEST_DELAY);
 
-    // 캘린더 목록 조회
-    that = this;
-    api().getCalendars(null, function(err, res) {
-        if (err) {
-            window.alert('캘린더 목록을 받아오는 중 문제가 발생했습니다. \n잠시 후 다시 시도하세요');
-            return;
-        }
+    /**
+     * 선택한 캘린더 목록
+     * @type {string[]}
+     */
+    that._selected = [];
 
-        that.render(res);
+    /**
+     * 캘린더 참조 객체 콜렉션
+     * @type {Collection}
+     */
+    that._calendars = new Collection(function(calendarRef) {
+        return calendarRef.id + '';
     });
 
     // bind event
     domevent.on(container, {
-        'change': this._onChange,
-        'click': this._onClick
-    }, this);
+        'change': that._onChange,
+        'click': that._onClick
+    }, that);
 
-    // bind custom event
-    this.on({
-        'afterRender': this._loadTasks,
-        'changeCalendarSelection': this._loadTasks
-    }, this);
+    that.render(function() {
+        that._selected = that.getSelectedCalendarID();
+    });
 }
 
 util.inherit(Calendars, View);
@@ -93,6 +96,8 @@ Calendars.prototype._loadTasks = function(calendarIDList) {
  * @returns {object} view model
  */
 Calendars.prototype._getViewModel = function(viewModel) {
+    var that = this;
+
     // 일반 캘린더와 프로젝트 캘린더를 나눈다
     var grouped = viewModel.groupBy(function(calendarRef) {
         var raw = calendarRef.raw;
@@ -109,21 +114,25 @@ Calendars.prototype._getViewModel = function(viewModel) {
 
 /**
  * @override
- * @fires Calendars#afterRender
- * @param {Collection} viewModel - collection for CalendarReference
  */
-Calendars.prototype.render = function(viewModel) {
-    if (viewModel) {
-        viewModel = this._getViewModel(viewModel);
-    }
+Calendars.prototype.render = function(callback) {
+    // 캘린더 목록 조회
+    var that = this;
 
-    this.container.innerHTML = tmpl(viewModel);
+    api().getCalendars(null, function(err, res) {
+        if (err) {
+            window.alert('캘린더 목록을 받아오는 중 문제가 발생했습니다. \n잠시 후 다시 시도하세요');
+            return;
+        }
 
-    /**
-     * @event Calendars#afterRender
-     * @type {Calendars}
-     */
-    this.fire('afterRender', this.getSelectedCalendarID());
+        that._calendars = Collection.merge(that._calendars, res);
+        
+        that.container.innerHTML = tmpl(that._getViewModel(res));
+
+        that._loadTasks(that.getSelectedCalendarID());
+
+        callback && callback();
+    });
 };
 
 /**
@@ -143,20 +152,18 @@ Calendars.prototype.getSelectedCalendarID = function() {
 
 /**
  * calendar checkbox onchange event handler
- * @emits Calendars#changeCalendarSelection
  * @param {Event} changeEventData - input event
  */
 Calendars.prototype._onChange = function() {
-    /**
-     * @events Calendars#changeCalendarSelection
-     * @type {string[]} calendar id list
-     */
-    this.fire('changeCalendarSelection', this.getSelectedCalendarID());
+    this._selected = this.getSelectedCalendarID();
+
+    this._loadTasks(this._selected);
+    // this._loadTasks(this.getSelectedCalendarID());
 };
 
 /**
  * calendar click event handler
- * @emits Calendars@onClickCreateCalendar
+ * @emits Calendars@createCalendar
  * @param {MouseEvent} clickEvent - click event object
  */
 Calendars.prototype._onClick = function(clickEvent) {
@@ -164,9 +171,9 @@ Calendars.prototype._onClick = function(clickEvent) {
 
     if (domutil.hasClass(target, 'schedule-view-calendars-create')) {
         /**
-         * @events Calendars#onClickCreateCalendar
+         * @events Calendars#createCalendar
          */
-        this.fire('onClickCreateCalendar');
+        this.fire('createCalendar');
     }
 };
 
