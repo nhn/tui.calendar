@@ -118,22 +118,15 @@ global.ne.util.defineNamespace('ne.dooray.calendar', {
 /**********
  * SERVICE MODULE
  **********/
-var calendarAPI = require('./src/js/dooray/calendarAPI');
-var API = require('./src/js/dooray/controller/api');
 var MiniCalendar = require('./src/js/dooray/view/minicalendar');
 var DoorayEvent = require('./src/js/dooray/model/event');
-var Calendars = require('./src/js/dooray/view/calendars');
 var TaskView = require('./src/js/dooray/view/taskview');
 
 /** @namespace ne.dooray.calendar.service */
 
 global.ne.util.defineNamespace('ne.dooray.calendar.service', {
     DoorayEvent: DoorayEvent,
-    calendarAPI: calendarAPI,
-    API: API,
-
     MiniCalendar: MiniCalendar,
-    Calendars: Calendars,
     TaskView: TaskView
 });
 

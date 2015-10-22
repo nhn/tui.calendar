@@ -10,7 +10,6 @@ var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
 var tmpl = require('./minicalendar.hbs');
-var api = require('../controller/api');
 
 /**
  * @constructor
@@ -50,34 +49,10 @@ function MiniCalendar(options, container) {
 
     this.options.renderMonth = defaultMonth;
 
-    /**
-     * 미니캘린더 일 별 일정존재여부 debounce 함수
-     * @type {function}
-     */
-    this._loadTasks = util.debounce(util.bind(this._loadTasks, this), 300);
-
     this.render();
 }
 
 util.inherit(MiniCalendar, View);
-
-/**
- * 서버로부터 일자별 존재 일정 정보를 비동기로 받아오고 콜백을 호출한다
- * @param {object} viewModel - viewModel
- * @param {function} callback - nodejs common callback
- */
-MiniCalendar.prototype._loadTasks = function(viewModel, callback) {
-    var renderStart = viewModel.calendar[0][0],
-        renderEnd = (function() {
-            var lastRow = viewModel.calendar[viewModel.calendar.length - 1];
-            return lastRow[lastRow.length - 1];
-        })();
-
-    renderStart = datetime.start(new Date(renderStart.y, renderStart.m, renderStart.d));
-    renderEnd = datetime.end(new Date(renderEnd.y, renderEnd.m, renderEnd.d));
-
-    api().getMinicalendarTasks(renderStart, renderEnd, callback);
-};
 
 /**
  * Next, Prev button event handler
@@ -232,13 +207,6 @@ MiniCalendar.prototype.render = function() {
     viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date());
 
     container.innerHTML = tmpl(viewModel);
-
-    // 렌더 완료 후 일정있는 일자 강조
-    this._loadTasks(viewModel, function(err, res) {
-        if (!err) {
-            //TODO: 여기서 일자 강조
-        }
-    });
 };
 
 util.CustomEvents.mixin(MiniCalendar);

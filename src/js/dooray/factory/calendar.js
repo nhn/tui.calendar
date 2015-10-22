@@ -17,17 +17,12 @@ var Week = require('../../controller/viewMixin/week');
 // VIEW
 var serviceWeekViewFactory = require('./weekView');
 
-// API
-// var calendarAPI = require('../calendarAPI');
-var API = require('../controller/api');
-
 var enums = require('../enums');
 
 /**
  * Calendar factor module for service (dooray)
  * @constructor
  * @extends {Calendar}
- * @mixed {CalendarAPI}
  * @param {object} options - options for calendar
  * @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  * @param {function} [options.controller] - controller instance
@@ -110,17 +105,6 @@ function ServiceCalendar(options, container) {
     })();
 
     Calendar.call(this, options, container);
-
-    // initialize API module
-    API({
-        member: options.member,
-        beforeRequest: function() {
-            console.log('before');
-        },
-        afterResponse: function() {
-            console.log('after');
-        }
-    });
 }
 
 util.inherit(ServiceCalendar, Calendar);

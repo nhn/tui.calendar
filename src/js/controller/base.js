@@ -274,13 +274,6 @@ Base.prototype.deleteEvent = function(id) {
     return result;
 };
 
-/**********
- * API
- **********/
-
-Base.prototype.sync = function() {};
-Base.prototype.fetch = function(query) {};
-
 // mixin
 util.CustomEvents.mixin(Base);
 
