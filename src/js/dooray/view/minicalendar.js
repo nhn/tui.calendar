@@ -18,11 +18,15 @@ var tmpl = require('./minicalendar.hbs');
  * @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
  * @param {string} [options.renderMonth] - YYYY-MM formatted date to render. 
  * if not supplied use current month
- * @param {ServiceCalendar} [options.calendar] - dooray calendar instance
+ * @param {string[]} [options.daynames] - array of each days name.
  * @param {HTMLDivElement} container - element to use container
  */
 function MiniCalendar(options, container) {
     var defaultMonth;
+
+    if (!(this instanceof MiniCalendar)) {
+        return new MiniCalendar(options, container);
+    }
 
     View.call(this, options, container);
 
@@ -43,8 +47,7 @@ function MiniCalendar(options, container) {
      */
     this.options = util.extend({
         startDayOfWeek: 0,
-        daynames: ['일', '월', '화', '수', '목', '금', '토'],
-        calendar: null
+        daynames: ['일', '월', '화', '수', '목', '금', '토']
     }, options);
 
     this.options.renderMonth = defaultMonth;
@@ -56,25 +59,43 @@ util.inherit(MiniCalendar, View);
 
 /**
  * Next, Prev button event handler
+ * @fires Minicalendar#change
  * @param {HTMLButtonElement} buttonElement - next, prev button from _onClick event handler
  */
-MiniCalendar.prototype.nav = function(buttonElement) {
+MiniCalendar.prototype._nav = function(buttonElement) {
     var isNext = domutil.hasClass(buttonElement, 'schedule-view-minicalendar-next'),
         options = this.options,
-        offset = isNext ? 1 : -1;
+        offset = isNext ? 1 : -1,
+        eventData = {
+            before: this.getSelectedDate()
+        };
 
     options.renderMonth.setMonth(options.renderMonth.getMonth() + offset);
 
     this.render();
+
+    eventData.after = this.getSelectedDate();
+
+    /**
+     * @event MiniCalendar#change
+     * @type {object}
+     * @property {Date} before - the date of before changed
+     * @property {Date} after - the date of after changed
+     */
+    this.fire('change', eventData);
 };
 
 /**
  * Date button event handler
+ * @fires Minicalendar#change
  * @param {HTMLButtonElement} buttonElement - date button from _onClick event handler
  */
-MiniCalendar.prototype.date = function(buttonElement) {
+MiniCalendar.prototype._date = function(buttonElement) {
     var td = domutil.closest(buttonElement, 'td'),
-        previous;
+        previous,
+        eventData = {
+            before: this.getSelectedDate()
+        };
 
     if (td) {
         previous = domutil.find('.schedule-view-minicalendar-focused', this.container);
@@ -84,6 +105,16 @@ MiniCalendar.prototype.date = function(buttonElement) {
         }
 
         domutil.addClass(td, 'schedule-view-minicalendar-focused');
+
+        eventData.after = this.getSelectedDate();
+
+        /**
+         * @event MiniCalendar#change
+         * @type {object}
+         * @property {Date} before - the date of before changed
+         * @property {Date} after - the date of after changed
+         */
+        this.fire('change', eventData);
     }
 };
 
@@ -100,12 +131,12 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
     }
 
     if (domutil.hasClass(button, 'schedule-view-minicalendar-date')) {
-        this.date(button);
+        this._date(button);
         return;
     }
 
     if (domutil.hasClass(button, 'schedule-view-minicalendar-nav')) {
-        this.nav(button);
+        this._nav(button);
         return;
     }
 };

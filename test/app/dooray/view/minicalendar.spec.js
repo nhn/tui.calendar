@@ -8,26 +8,38 @@ describe('service:view/MiniCalendar', function() {
                 renderMonth: jasmine.createSpyObj('Date', ['setMonth', 'getMonth']),
                 daynames: ['일', '월', '화', '수', '목', '금', '토']
             },
-            render: jasmine.createSpy('render')
+            render: jasmine.createSpy('render'),
+            getSelectedDate: jasmine.createSpy('getSelectedDate'),
+            fire: jasmine.createSpy('fire')
         };
     });
 
-    describe('nav()', function() {
-
+    describe('_nav()', function() {
         it('can move rendered month.', function() {
             var button = document.createElement('button');
             mockInst.options.renderMonth.getMonth.and.returnValue(5);
 
             // click next button
             button.className = 'schedule-view-minicalendar-next';
-            MiniCalendar.prototype.nav.call(mockInst, button);
+            MiniCalendar.prototype._nav.call(mockInst, button);
             expect(mockInst.options.renderMonth.setMonth).toHaveBeenCalledWith(6);
 
 
             // click prev button
             button.className = 'schedule-view-minicalendar-prev';
-            MiniCalendar.prototype.nav.call(mockInst, button);
+            MiniCalendar.prototype._nav.call(mockInst, button);
             expect(mockInst.options.renderMonth.setMonth).toHaveBeenCalledWith(4);
+        });
+
+        it('invoke "change" custom event.', function() {
+            var button = document.createElement('button');
+            mockInst.options.renderMonth.getMonth.and.returnValue(5);
+
+            // click next button
+            button.className = 'schedule-view-minicalendar-next';
+            MiniCalendar.prototype._nav.call(mockInst, button);
+
+            expect(mockInst.fire).toHaveBeenCalled();
         });
     });
 
