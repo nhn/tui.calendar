@@ -101,66 +101,6 @@
     line-height: 12px;
 }
 
-.schedule-view-form-title {
-    font-size: 13px;
-    font-weight: bold;
-    display: block;
-}
-
-
-/*create - calendar*/
-.schedule-view-calendar-form {
-    width: 250px;
-    padding: 11px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.schedule-view-calendar-form-colors label {
-    display: inline-block;
-    position: relative;
-}
-
-.schedule-view-calendar-form-colors span {
-    position: absolute;
-    top: 50%; left: 50%;
-    margin: -7.5px 0 0 -7.5px;
-    width: 15px;
-    height: 15px;
-    border-radius: 30%;
-}
-
-.schedule-view-calendar-form-colors input:checked ~ span {
-    margin: -7.5px 0 0 -7.5px;
-    width: 11px;
-    height: 11px;
-    border: 2px solid #000;
-}
-
-.schedule-view-calendar-form-colors input[type=text] {
-    width: 60px;
-}
-
-.schedule-view-calendar-form legend {
-    font-weight: bold;
-}
-
-.schedule-view-calendar-form table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-}
-
-.schedule-view-calendar-form table td {
-    padding: 2px;
-    font-size: 11px;
-}
-
-.schedule-view-calendar-form table input[type=text] {
-    width: 95%;
-}
-
-
 /* milestoneview */
 .schedule-view-milestone-left {
     width: 60px;
@@ -195,9 +135,7 @@
 
 .schedule-view-milestone-item {
     font-size: 11px;
-    line-height: 11px;
-    padding-left: 6px;
-    list-style: disc inside;
+    list-style: none;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -362,7 +300,6 @@
 
 .schedule-view-task-day h6 {
     font-size: 11px;
-    padding-bottom: 1px;
 }
 
 
