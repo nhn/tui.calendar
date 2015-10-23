@@ -14,10 +14,10 @@
 <tr>
 {{#each this ~}}
 {{! table cell (date button) }}
-<td class="{{#if isOtherDate}}schedule-view-minicalendar-other {{/if ~}}
-{{#if focused ~}}schedule-view-minicalendar-focused {{/if ~}}
+<td class="{{#if isNotThisMonth ~}}schedule-view-minicalendar-other {{/if ~}}
+{{#if selected ~}}schedule-view-minicalendar-focused {{/if ~}}
 {{#if today ~}}schedule-view-minicalendar-today {{/if~}}
-{{#if hasEvents ~}}schedule-view-minicalendar-has-events {{/if ~}}
+{{#if hasSchedule ~}}schedule-view-minicalendar-has-schedule {{/if ~}}
 {{#if weekend ~}}schedule-view-minicalendar-weekend {{/if ~}}" data-y="{{y}}" data-m="{{m}}" data-d="{{d}}">
 <button type="button" tabindex="-1" class="schedule-view-minicalendar-date">
     <div class="schedule-view-minicalendar-label"><span>{{d}}</span></div>

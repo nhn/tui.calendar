@@ -15,48 +15,46 @@ var tmpl = require('./minicalendar.hbs');
  * @constructor
  * @extends {View}
  * @param {object} options - options for minicalendar view
- * @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
- * @param {string} [options.renderMonth] - YYYY-MM formatted date to render. 
- * if not supplied use current month
- * @param {string[]} [options.daynames] - array of each days name.
+ *  @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
+ *  @param {string|Date} [options.renderMonth] - month to render
+ *  @param {string[]} [options.highlightDate] - dates to highlight
+ *  @param {string[]} [options.daynames] - array of each days name.
  * @param {HTMLDivElement} container - element to use container
  */
 function MiniCalendar(options, container) {
-    var defaultMonth;
+    var today = datetime.start(new Date());
 
     if (!(this instanceof MiniCalendar)) {
         return new MiniCalendar(options, container);
     }
 
     View.call(this, options, container);
-
     domutil.addClass(container, 'schedule-view-minicalendar');
-
-    defaultMonth = util.pick(options, 'renderMonth');
-    if (defaultMonth) {
-        defaultMonth = datetime.parse(defaultMonth + '-01');
-    } else {
-        defaultMonth = new Date();
-    }
-    defaultMonth.setHours(0, 0, 0);
-
     domevent.on(this.container, 'click', this._onClick, this);
+
+    /**
+     * @type {object}
+     */
+    options = this.options = util.extend({
+        startDayOfWeek: 0,
+        renderMonth: new Date(+today),
+        highlightDate: [],
+        daynames: ['일', '월', '화', '수', '목', '금', '토']
+    }, options);
+
+    // parse renderMonth options if it is an string
+    if (util.isString(options.renderMonth)) {
+        options.renderMonth = datetime.start(datetime.parse(options.renderMonth));
+    }
 
     /**
      * 일자 강조 데이터
      * @type {object}
      */
     this.hlData = {};
-
-    /**
-     * @type {object}
-     */
-    this.options = util.extend({
-        startDayOfWeek: 0,
-        daynames: ['일', '월', '화', '수', '목', '금', '토']
-    }, options);
-
-    this.options.renderMonth = defaultMonth;
+    if (options.highlightDate.length) {
+        this.highlightDate(options.highlightDate);
+    }
 
     this.render();
 }
@@ -170,72 +168,63 @@ MiniCalendar.prototype.getSelectedDate = function() {
  * Get minicalendar view model
  * @param {Date} renderDate - Date to render minicalendar
  * @param {number} startDayOfWeek - number of start of week (0:sun ...)
- * @param {Date} today - today Date object
+ * @param {Date} selected - selected Date object
  * @returns {object} viewmodel
  */
-MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, today) {
-    var viewModel = {
-            title: datetime.format(renderDate, 'YYYY.MM'),
-            startDayOfWeek: startDayOfWeek,
-            dayname: null,
-            calendar: null
-        },
-        hlData = this.hlData || {},
-        daynames = this.options.daynames,
-        renderMonth = renderDate.getMonth(),
+MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, selected) {
+    var daynames = this.options.daynames,
+        hlData = this.hlData,
         renderYear = renderDate.getFullYear(),
-        todayDate = today.getDate(),
-        todayMonth = today.getMonth(),
-        todayYear = today.getFullYear(),
-        todayIsRenderedMonth = (renderYear === todayYear && renderMonth === todayMonth);
+        renderMonth = renderDate.getMonth(),
+        selectedDate = selected.getDate(),
+        today = datetime.start(new Date()),
+        isCurrentMonth = (today.getFullYear() === renderYear && today.getMonth() === renderMonth),
+        viewModel = {
+            title: datetime.format(renderDate, 'YYYY.MM'),
+            startDayOfWeek: startDayOfWeek
+        };
 
     viewModel.dayname = util.map(
-        util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7), 
-        function(i) { return daynames[i]; }
+        util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
+        function(i) { return daynames[i]; } 
     );
 
-    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(d) {
-        var month = d.getMonth(),
-            year = d.getFullYear(),
-            date = d.getDate(),
-            day = d.getDay(),
-            isOtherDate = year !== renderYear || month !== renderMonth,
-            ymd = datetime.format(d, 'YYYY-MM-DD'),
-            result = {
-                y: year,
-                m: month,
-                d: d.getDate(),
-                isOtherDate: isOtherDate
-            };
+    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
+        var y = date.getFullYear(),
+            m = date.getMonth(),
+            d = date.getDate(),
+            day = date.getDay(),
+            ymd = datetime.format(date, 'YYYY-MM-DD'),
+            dateIsInThisMonth = (y === renderYear && m === renderMonth),
+            selected = false,
+            isToday = false;
 
+        if (dateIsInThisMonth) {
+            if (isCurrentMonth) {
 
-        if (!isOtherDate) {
-            // dates in rendered month
-            if (todayIsRenderedMonth && date === todayDate) {
-                result.today = true;
+                if (d === selectedDate) {
+                    selected = true;
+                }
 
-                // today is include in rendered month then autoselect today date
-                result.focused = true;
-            }
-            
-            if (!todayIsRenderedMonth && date === 1) {
-                // today is not include in rendered month then autoselect first date of month
-                result.focused = true;
+            } else if (d === 1) {
+                selected = true;
             }
         }
 
-        if (day === 0 || day === 6) {
-            result.weekend = true;
-        }
-
-        if (hlData[ymd]) {
-            result.hasEvents = true;
-        }
-
-        return result;
+        return {
+            y: y,
+            m: m,
+            d: d,
+            hasSchedule: hlData[ymd],
+            isNotThisMonth: !dateIsInThisMonth,
+            weekend: (day === 0 || day === 6),
+            selected: selected,
+            today: isToday
+        };
     });
 
     return viewModel;
+
 };
 
 /**
@@ -248,7 +237,7 @@ MiniCalendar.prototype.render = function() {
         startDayOfWeek = options.startDayOfWeek,
         viewModel;
 
-    viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date());
+    viewModel = this._getViewModel(renderDate, startDayOfWeek, this.getSelectedDate() || new Date());
 
     container.innerHTML = tmpl(viewModel);
 };
