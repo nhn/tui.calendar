@@ -93,5 +93,51 @@ describe('service:view/MiniCalendar', function() {
 
             expect(actual.calendar[0][3].focused).toBe(true);
         });
+
+        it('when cached hlData then apply it to highlight dates for represent the date has schedule.', function() {
+            var renderMonth = new Date('2015-09-01T00:00:00+09:00');
+            var today = new Date('2015-09-02T11:36:00+09:00');
+            var hlData = {'2015-09-03': true};
+            mockInst.hlData = hlData;
+
+            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today);
+
+            expect(actual.calendar[0][4].hasEvents).toBe(true);
+        });
+    });
+
+    describe('highlight', function() {
+        var inst;
+
+        beforeEach(function() {
+            inst = MiniCalendar(null, document.createElement('div'));
+
+            spyOn(inst, 'render');
+        });
+
+        it('highlightDate() cache data for minicalendar date hightlighting', function() {
+            inst.highlightDate(['2015-05-01', '2015-05-12']);
+
+            expect(inst.hlData).toEqual({
+                '2015-05-01': true,
+                '2015-05-12': true
+            });
+
+            expect(inst.render).toHaveBeenCalled();
+        });
+
+        it('set "silent" option true then does not render after highlightDate invoked.', function() {
+            inst.highlightDate(['2015-05-01', '2015-05-12'], true);
+
+            expect(inst.render).not.toHaveBeenCalled();
+        });
+
+        it('clearHighlightDate() clear cached data for highlighting specific event for represent the date has schedule.', function() {
+            inst.highlightDate(['2015-05-01', '2015-05-12']);
+
+            inst.clearHighlightDate();
+
+            expect(inst.hlData).toEqual({});
+        });
     });
 });

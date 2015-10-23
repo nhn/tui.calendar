@@ -43,6 +43,12 @@ function MiniCalendar(options, container) {
     domevent.on(this.container, 'click', this._onClick, this);
 
     /**
+     * 일자 강조 데이터
+     * @type {object}
+     */
+    this.hlData = {};
+
+    /**
      * @type {object}
      */
     this.options = util.extend({
@@ -174,6 +180,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
             dayname: null,
             calendar: null
         },
+        hlData = this.hlData || {},
         daynames = this.options.daynames,
         renderMonth = renderDate.getMonth(),
         renderYear = renderDate.getFullYear(),
@@ -193,12 +200,14 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
             date = d.getDate(),
             day = d.getDay(),
             isOtherDate = year !== renderYear || month !== renderMonth,
+            ymd = datetime.format(d, 'YYYY-MM-DD'),
             result = {
                 y: year,
                 m: month,
                 d: d.getDate(),
                 isOtherDate: isOtherDate
             };
+
 
         if (!isOtherDate) {
             // dates in rendered month
@@ -217,6 +226,10 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, toda
 
         if (day === 0 || day === 6) {
             result.weekend = true;
+        }
+
+        if (hlData[ymd]) {
+            result.hasEvents = true;
         }
 
         return result;
@@ -238,6 +251,36 @@ MiniCalendar.prototype.render = function() {
     viewModel = this._getViewModel(renderDate, startDayOfWeek, new Date());
 
     container.innerHTML = tmpl(viewModel);
+};
+
+/**
+ * Cache data for highlight specific dates in calendar.
+ * @param {string[]} dateStrList - the array of dates to highlight. (YYYY-MM-DD)
+ * @param {boolean} [silent=false] - set true for prevent auto rendering.
+ */
+MiniCalendar.prototype.highlightDate = function(dateStrList, silent) {
+    var ownData = this.hlData;
+
+    util.forEach(dateStrList, function(ymd) {
+        ownData[ymd] = true;
+    });
+
+    if (!silent) {
+        this.render();
+    }
+};
+
+/**
+ * Clear cached data for highlighting specific date for represent the date has schedule.
+ * @param {boolean} [silent=false] - set true for prevent auto rendering.
+ */
+MiniCalendar.prototype.clearHighlightDate = function(silent) {
+    delete this.hlData;
+    this.hlData = {};
+
+    if (!silent) {
+        this.render();
+    }
 };
 
 util.CustomEvents.mixin(MiniCalendar);
