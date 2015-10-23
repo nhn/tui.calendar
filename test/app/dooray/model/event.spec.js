@@ -1,4 +1,4 @@
-var DoorayEvent = window.ne.dooray.calendar.service.DoorayEvent;
+var DoorayEvent = window.ne.dooray.calendar.DoorayEvent;
 describe('dooray:model/Event', function() {
     var jsonFixtures;
 

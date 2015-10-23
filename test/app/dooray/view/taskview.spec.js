@@ -1,4 +1,4 @@
-var TaskView = window.ne.dooray.calendar.service.TaskView;
+var TaskView = window.ne.dooray.calendar.TaskView;
 describe('service:view/TaskView', function() {
     var mockInst;
 

@@ -64,6 +64,13 @@ var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
  **********/
 var controllerFactory = require('./src/js/factory/controller');
 
+/**********
+ * SERVICE MODULE
+ **********/
+var MiniCalendar = require('./src/js/dooray/view/minicalendar');
+var DoorayEvent = require('./src/js/dooray/model/event');
+var TaskView = require('./src/js/dooray/view/taskview');
+
 /** @namespace ne.dooray.calendar */
 
 global.ne.util.defineNamespace('ne.dooray.calendar', {
@@ -112,19 +119,9 @@ global.ne.util.defineNamespace('ne.dooray.calendar', {
     AlldayResizeGuide: AlldayResizeGuide,
 
     // only for test
-    ControllerFactory: controllerFactory
-});
+    ControllerFactory: controllerFactory,
 
-/**********
- * SERVICE MODULE
- **********/
-var MiniCalendar = require('./src/js/dooray/view/minicalendar');
-var DoorayEvent = require('./src/js/dooray/model/event');
-var TaskView = require('./src/js/dooray/view/taskview');
-
-/** @namespace ne.dooray.calendar.service */
-
-global.ne.util.defineNamespace('ne.dooray.calendar.service', {
+    // service modules
     DoorayEvent: DoorayEvent,
     MiniCalendar: MiniCalendar,
     TaskView: TaskView
