@@ -5,14 +5,12 @@ var hbsfy = require('hbsfy');
 module.exports = function(config) {
     config.set({
         basePath: '',
-
         frameworks: [
             'jasmine-jquery',
             'browserify',
             'jasmine-ajax',
             'jasmine'
         ],
-
         files: [
             'src/css/*.css',
             'node_modules/underscore/underscore.js',
@@ -22,16 +20,12 @@ module.exports = function(config) {
             'test/**/*.spec.js',
             'test/fixtures/**/*'
         ],
-
-        exclude: [
-        ],
-
+        exclude: [],
         preprocessors: {
             'index.js': ['browserify'],
             'src/**/*.js': ['browserify'],
             'src/js/view/template/helper.js': ['browserify']
         },
-
         browserify: {
             debug: true,
             bundleDelay: 1000,
@@ -44,13 +38,11 @@ module.exports = function(config) {
                 ]
             })]
         },
-
         reporters: [
             'dots',
             'coverage',
             'junit'
         ],
-
         coverageReporter: {
             dir: 'report/',
             reporters: [{
@@ -59,24 +51,17 @@ module.exports = function(config) {
                 type: 'html'
             }]
         },
-
         junitReporter: {
             outputDir: 'report/junit',
             suite: ''
         },
-
         port: 9876,
-
         colors: true,
-
         logLevel: config.LOG_INFO,
-
         autoWatch: true,
-
+        autoWatchBatchDelay: 1000,
         browsers: ['Firefox'],
-
         singleRun: false,
-
         browserNoActivityTimeout: 30000
     });
 };
