@@ -24,7 +24,7 @@ describe('handler:AlldayResize', function() {
         it('update property when supplied inverse dragstart, dragend.', function() {
             // 하루짜리 일정
             mockEventInstance = {
-                id: function() { return '30'; },
+                cid: function() { return '30'; },
                 starts: new Date('2015-05-02T00:00:00+09:00'),
                 ends: new Date('2015-05-03T23:59:59+09:00')
             };
@@ -50,7 +50,7 @@ describe('handler:AlldayResize', function() {
         it('update event model properly by supplied event data.', function() {
             // 하루짜리 일정
             mockEventInstance = {
-                id: function() { return '30'; },
+                cid: function() { return '30'; },
                 starts: new Date('2015-04-30T00:00:00+09:00'),
                 ends: new Date('2015-04-30T23:59:59+09:00')
             };

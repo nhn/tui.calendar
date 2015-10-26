@@ -9,7 +9,7 @@ var Collection = require('../common/collection');
 var aps = Array.prototype.slice;
 
 function eventIDGetter(event) {
-    return event.id();
+    return event.cid();
 }
 
 module.exports = {

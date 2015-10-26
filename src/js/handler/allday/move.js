@@ -185,7 +185,7 @@ AlldayMove.prototype._updateEvent = function(eventData) {
     newStarts = new Date(newStarts.setDate(newStarts.getDate() + dateOffset));
     newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
 
-    ctrl.updateEvent(model.id(), {
+    ctrl.updateEvent(model.cid(), {
         starts: newStarts,
         ends: newEnds
     });

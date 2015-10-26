@@ -110,7 +110,7 @@ Event.prototype.getEnds = function() {
 /**
  * @returns {number} instance unique id.
  */
-Event.prototype.id = function() {
+Event.prototype.cid = function() {
     return util.stamp(this);
 };
 

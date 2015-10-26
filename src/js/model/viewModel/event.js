@@ -128,7 +128,7 @@ EventViewModel.prototype.getEnds = function() {
 /**
  * @returns {number} unique number for model.
  */
-EventViewModel.prototype.id = function() {
+EventViewModel.prototype.cid = function() {
     return util.stamp(this.model);
 };
 

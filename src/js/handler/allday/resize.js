@@ -185,7 +185,7 @@ AlldayResize.prototype._updateEvent = function(eventData) {
     newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
     newEnds = new Date(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
 
-    ctrl.updateEvent(model.id(), {
+    ctrl.updateEvent(model.cid(), {
         ends: newEnds
     });
 };
