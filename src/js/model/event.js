@@ -17,6 +17,12 @@ var model = require('../common/model');
  */
 function Event() {
     /**
+     * `Optional` unique id for various use.
+     * @type {string}
+     */
+    this.id = '';
+
+    /**
      * title for event.
      * @type {string}
      */
@@ -39,6 +45,18 @@ function Event() {
      * @type {Date}
      */
     this.ends = null;
+
+    /**
+     * event text color
+     * @type {string}
+     */
+    this.color = '#000';
+
+    /**
+     * event background color
+     * @type {string}
+     */
+    this.backgroundColor = '#b5d592';
 
     // initialize model id
     util.stamp(this);
@@ -76,6 +94,7 @@ Event.create = function(data) {
 Event.prototype.init = function(options) {
     options = options || {};
 
+    this.id = options.id || '';
     this.title = options.title || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
 
@@ -91,6 +110,9 @@ Event.prototype.init = function(options) {
         this.ends = new Date(this.starts.getTime());
         this.ends.setMinutes(this.ends.getMinutes() + 30);
     }
+
+    this.color = options.color || this.color;
+    this.backgroundColor = options.backgroundColor || this.backgroundColor;
 };
 
 /**
@@ -120,6 +142,10 @@ Event.prototype.cid = function() {
  * @returns {boolean} Return false when not same.
  */
 Event.prototype.equals = function(event) {
+    if (this.id !== event.id) {
+        return false;
+    }
+
     if (this.title !== event.title) {
         return false;
     }
@@ -133,6 +159,14 @@ Event.prototype.equals = function(event) {
     }
 
     if (datetime.compare(this.getEnds(), event.getEnds()) !== 0) {
+        return false;
+    }
+
+    if (this.color !== event.color) {
+        return false;
+    }
+
+    if (this.backgroundColor !== event.backgroundColor) {
         return false;
     }
 

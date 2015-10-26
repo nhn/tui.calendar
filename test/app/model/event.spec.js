@@ -23,33 +23,40 @@ describe('model/event', function() {
 
         it('initialize event with default values when data is not supplied.', function() {
             var expected = {
+                id: '',
                 title: '',
                 isAllDay: false,
-                starts: new Date('2015/05/01 00:00:00'),
-                ends: new Date('2015/05/01 00:30:00')
+                starts: null,
+                ends: null,
+                color: '#000',
+                backgroundColor: '#b5d592'
             };
 
-            var myObj = {};
-
-            event.init.call(myObj);
+            expect(event).toEqual(jasmine.objectContaining(expected));
         });
 
         it('initialize event with supplied options.', function() {
             var expected = {
+                id: '123',
                 title: 'Go home',
                 isAllDay: false,
-                starts: new Date('2015/05/01 00:00:00'),
-                ends: new Date('2015/05/02 00:00:00')
+                starts: new Date('2015-05-01T00:00:00+09:00'),
+                ends: new Date('2015-05-02T00:00:00+09:00'),
+                color: '#000',
+                backgroundColor: '#b5d592'
             };
 
             var myObj = {};
 
-            event.init.call(myObj, {
+            event.init({
+                id: '123',
                 title: 'Go home',
                 isAllDay: false,
-                starts: '2015/05/01 18:30:00',
-                ends: '2015/05/02 09:30:00'
+                starts: '2015-05-01T00:00:00+09:00',
+                ends: '2015-05-02T00:00:00+09:00'
             });
+
+            expect(event).toEqual(jasmine.objectContaining(expected));
         });
     });
 
