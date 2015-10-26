@@ -20,6 +20,15 @@ var serviceWeekViewFactory = require('./weekView');
 var enums = require('../enums');
 
 /**
+ * @typedef {object} ServiceCalendar~Events
+ * @property {string} title - 이벤트 제목
+ * @property {string} category - 이벤트 타입
+ * @property {string} dueDateClass - 업무 일정 분류 (category가 'task'일 때 유효)
+ * @property {string} starts - 일정 시작 시간
+ * @property {string} ends - 일정 종료 시간
+ */
+
+/**
  * Calendar factor module for service (dooray)
  * @constructor
  * @extends {Calendar}
@@ -27,12 +36,10 @@ var enums = require('../enums');
  * @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  * @param {function} [options.controller] - controller instance
  * @param {string} [options.defaultView='week'] - default view of calendar
- * @param {object} options.member - member information from dooray server.
- * @param {string} options.member.orgMemberId - user id
- * @param {string} options.member.userCode - user code
  * @param {object} [options.week] - options for week view
  * @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  * @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
+ * @param {ServiceCalendar~Events[]} options.events - 기본 일정 목록
  * @param {object} [options.month] - options for month view
  * @param {string} options.month.renderMonth - YYYY-MM render month
  * @param {HTMLDivElement} container = container element for calendar
@@ -44,17 +51,7 @@ function ServiceCalendar(options, container) {
      * @returns {string} 구분 키 값
      */
     options.groupFunc = function(viewModel) {
-        var model = viewModel.model,
-            category = model.category,
-            isAllDay = model.isAllDay;
-
-        if (category === enums.model.EVENT_CATEGORY.TASK) {
-            return 'task';
-        } else if (category === enums.model.EVENT_CATEGORY.GENERAL) {
-            return isAllDay ? 'allday' : 'time';
-        }
-
-        return 'milestone';
+        return viewModel.model.category;
     };
 
     // 컨트롤러 만들기
@@ -103,6 +100,12 @@ function ServiceCalendar(options, container) {
 
         return controller;
     })();
+
+    if (options.events) {
+        util.forEach(options.events, function(data) {
+            options.controller.createEvent(data);
+        });
+    }
 
     Calendar.call(this, options, container);
 }

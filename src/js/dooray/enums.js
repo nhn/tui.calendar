@@ -10,9 +10,10 @@
  * @enum {string}
  */
 var EVENT_CATEGORY = {
-    GENERAL: 'general',
+    MILESTONE: 'milestone',
     TASK: 'task',
-    MILESTONE: 'milestone'
+    ALLDAY: 'allday',
+    TIME: 'time'
 };
 
 /**
