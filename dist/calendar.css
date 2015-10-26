@@ -215,12 +215,16 @@
     line-height: 25px;
 }
 
-.schedule-view-minicalendar-has-events .schedule-view-minicalendar-label {
+.schedule-view-minicalendar-has-schedule .schedule-view-minicalendar-label {
     font-weight: bold;
 }
 
 .schedule-view-minicalendar-weekend .schedule-view-minicalendar-label {
     color: red;
+}
+
+.schedule-view-minicalendar-weekend.schedule-view-minicalendar-other .schedule-view-minicalendar-label {
+    color: #ffcccc;
 }
 
 .schedule-view-minicalendar-focused .schedule-view-minicalendar-label {
