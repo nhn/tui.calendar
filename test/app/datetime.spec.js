@@ -426,4 +426,22 @@ describe('datetime', function() {
             expect(actual).toEqual(expected);
         });
     });
+
+    it('isSameMonth', function() {
+        var d1 = new Date('2015-06-12T09:30:00+09:00');
+        var d2 = new Date('2015-06-13T09:30:00+09:00');
+        var d3 = new Date('2015-07-12T09:30:00+09:00');
+
+        expect(datetime.isSameMonth(d1, d2)).toBe(true);
+        expect(datetime.isSameMonth(d1, d3)).toBe(false);
+    });
+
+    it('isSameDate', function() {
+        var d1 = new Date('2015-06-12T09:30:00+09:00');
+        var d2 = new Date('2015-06-13T09:30:00+09:00');
+        var d3 = new Date('2015-07-12T09:30:00+09:00');
+
+        expect(datetime.isSameDate(d1, d2)).toBe(false);
+        expect(datetime.isSameDate(d1, d3)).toBe(false);
+    });
 });

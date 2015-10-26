@@ -216,6 +216,26 @@ datetime = {
     },
 
     /**
+     * @param {Date} d1 - date one
+     * @param {Date} d2 - date two
+     * @returns {boolean} is two date are same year, month?
+     */
+    isSameMonth: function(d1, d2) {
+        return (d1.getFullYear() === d2.getFullYear() &&
+                d1.getMonth() === d2.getMonth());
+    },
+
+    /**
+     * @param {Date} d1 - date one
+     * @param {Date} d2 - date two
+     * @returns {boolean} is two date are same year, month, date?
+     */
+    isSameDate: function(d1, d2) {
+        var sameMonth = datetime.isSameMonth(d1, d2);
+        return sameMonth && (d1.getDate() === d2.getDate());
+    },
+
+    /**
      * Check supplied parameter is valid date object.
      * @param {*} d Object to validate.
      * @returns {boolean} return true when parameter is valid date object.
