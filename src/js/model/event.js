@@ -56,7 +56,7 @@ function Event() {
      * event background color
      * @type {string}
      */
-    this.backgroundColor = '#b5d592';
+    this.backgroundColor = '#a1b56c';
 
     // initialize model id
     util.stamp(this);

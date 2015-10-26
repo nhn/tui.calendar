@@ -42,7 +42,6 @@
     .schedule-view-allday-event {
         position: relative;
         margin: 0 3px 0 2px;
-        background-color: #a1b56c;
     }
 
     .schedule-view-day:last-child .schedule-view-allday-event {
@@ -53,7 +52,6 @@
         padding-left: 3px;
         line-height: 18px;
         font-size: 0.9em;
-        color: #fff;
     }
 
     .schedule-view-allday-event-title {

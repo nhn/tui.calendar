@@ -29,7 +29,7 @@ describe('model/event', function() {
                 starts: null,
                 ends: null,
                 color: '#000',
-                backgroundColor: '#b5d592'
+                backgroundColor: '#a1b56c'
             };
 
             expect(event).toEqual(jasmine.objectContaining(expected));
@@ -43,7 +43,7 @@ describe('model/event', function() {
                 starts: new Date('2015-05-01T00:00:00+09:00'),
                 ends: new Date('2015-05-02T00:00:00+09:00'),
                 color: '#000',
-                backgroundColor: '#b5d592'
+                backgroundColor: '#a1b56c'
             };
 
             var myObj = {};

@@ -13,7 +13,7 @@
         <ul>
             {{#each morning.items ~}}
             <li data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px">{{model.title}}</li>
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -24,7 +24,7 @@
         <ul>
             {{#each lunch.items ~}}
             <li data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px">{{model.title}}</li>
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -35,7 +35,7 @@
         <ul>
             {{#each evening.items ~}}
             <li data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px">{{model.title}}</li>
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
