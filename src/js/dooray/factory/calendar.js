@@ -17,8 +17,6 @@ var Week = require('../../controller/viewMixin/week');
 // VIEW
 var serviceWeekViewFactory = require('./weekView');
 
-var enums = require('../enums');
-
 /**
  * @typedef {object} ServiceCalendar~Events
  * @property {string} title - 이벤트 제목
@@ -102,9 +100,7 @@ function ServiceCalendar(options, container) {
     })();
 
     if (options.events) {
-        util.forEach(options.events, function(data) {
-            options.controller.createEvent(data);
-        });
+        options.controller.createEvents(options.events, true);
     }
 
     Calendar.call(this, options, container);

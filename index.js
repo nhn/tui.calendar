@@ -69,6 +69,7 @@ var controllerFactory = require('./src/js/factory/controller');
  **********/
 var MiniCalendar = require('./src/js/dooray/view/minicalendar');
 var DoorayEvent = require('./src/js/dooray/model/event');
+var DoorayController = require('./src/js/dooray/controller/base');
 var TaskView = require('./src/js/dooray/view/taskview');
 
 /** @namespace ne.dooray.calendar */
@@ -123,6 +124,7 @@ global.ne.util.defineNamespace('ne.dooray.calendar', {
 
     // service modules
     DoorayEvent: DoorayEvent,
+    DoorayController: DoorayController,
     MiniCalendar: MiniCalendar,
     TaskView: TaskView
 });
