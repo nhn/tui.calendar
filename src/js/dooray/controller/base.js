@@ -27,50 +27,50 @@ util.inherit(DoorayBase, Base);
 /**
  * Create an event instance from raw data.
  * @override
+ * @emits Base#beforeCreateEvent
  * @emits Base#createdEvent
  * @param {ServiceCalendar~Events} data - Data object to create event.
  * @param {boolean} silent - set true then don't fire events.
  * @returns {DoorayEvent} The instance of Event that created.
  */
 DoorayBase.prototype.createEvent = function(data, silent) {
-    var event = this.addEvent(DoorayEvent.create(data));
+    var inst,
+        eventData = {
+            data: data
+        };
+
+    /**
+     * @event Base#beforeCreateEvent
+     * @type {ServiceCalendar~Events[]}
+     */
+    if (!this.invoke('beforeCreateEvent', eventData)) {
+        return;
+    }
+
+    inst = this.addEvent(DoorayEvent.create(data));
 
     if (!silent) {
         /**
          * @event Base#createdEvent
          * @type {DoorayEvent}
          */
-        this.fire('createdEvent', event);
+        this.fire('createdEvent', inst);
     }
 
-    return event;
+    return inst;
 };
 
 /**
+ * @emits Base#beforeCreateEvent
  * @emits Base#createdEvent
  * @param {ServiceCalendar~Events[]} dataList - dataObject list to create event.
  * @param {boolean} [silent=false] - set true then don't fire events.
  * @returns {DoorayEvent[]} The instance list of Event that created.
  */
 DoorayBase.prototype.createEvents = function(dataList, silent) {
-    var events = [];
-
-    util.forEach(dataList, function(data) {
-        var inst = DoorayEvent.create(data);
-        events.push(inst);
-
-        this.addEvent(inst);
+    return util.map(dataList, function(data) {
+        return this.createEvent(data, silent);
     }, this);
-
-    if (!silent) {
-        /**
-         * @event Base#createdEvent
-         * @type {DoorayEvent[]}
-         */
-        this.fire('createdEvent', events);
-    }
-
-    return events;
 };
 
 module.exports = DoorayBase;

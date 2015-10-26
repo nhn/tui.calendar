@@ -43,6 +43,7 @@ var serviceWeekViewFactory = require('./weekView');
  * @param {HTMLDivElement} container = container element for calendar
  */
 function ServiceCalendar(options, container) {
+    var controller;
     /**
      * 서비스에서 사용되는 모델 구분용 옵션 함수
      * @param {EventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
@@ -53,7 +54,7 @@ function ServiceCalendar(options, container) {
     };
 
     // 컨트롤러 만들기
-    options.controller = (function() {
+    controller = options.controller = (function() {
         var controller = new DoorayBase(options),
             originFindByDateRange;
 
@@ -99,8 +100,18 @@ function ServiceCalendar(options, container) {
         return controller;
     })();
 
+    // FullCalendar 기본 모듈은 category, dueDateClass 플래그를 모름. 때문에
+    // 이곳에서 이벤트 핸들러를 등록해서 category를 수동으로 지정해준다
+    controller.on('beforeCreateEvent', function(e) {
+        var data = e.data;
+
+        if (!data.category) {
+            data.category = data.isAllDay ? 'allday' : 'time';
+        }
+    });
+
     if (options.events) {
-        options.controller.createEvents(options.events, true);
+        controller.createEvents(options.events, true);
     }
 
     Calendar.call(this, options, container);
