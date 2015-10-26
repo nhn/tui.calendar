@@ -1,4 +1,5 @@
 var MiniCalendar = window.ne.dooray.calendar.MiniCalendar;
+var undef = (function() {})();
 describe('service:view/MiniCalendar', function() {
     var mockInst;
 
@@ -8,6 +9,7 @@ describe('service:view/MiniCalendar', function() {
                 renderMonth: jasmine.createSpyObj('Date', ['setMonth', 'getMonth']),
                 daynames: ['일', '월', '화', '수', '목', '금', '토']
             },
+            hlData: {},
             render: jasmine.createSpy('render'),
             getSelectedDate: jasmine.createSpy('getSelectedDate'),
             fire: jasmine.createSpy('fire')
@@ -46,9 +48,7 @@ describe('service:view/MiniCalendar', function() {
     it('getSelectedDate() can get selected date in minicalendar', function() {
         // click date button is 2015-01-15
         var button = document.createElement('div');
-        button.setAttribute('data-y', 2015);
-        button.setAttribute('data-m', 0);
-        button.setAttribute('data-d', 15);
+        button.className = 'schedule-view-minicalendar-2015-01-15';
         spyOn(window.ne.dooray.calendar.domutil, 'find').and.returnValue(button);
 
         // check result
@@ -62,7 +62,7 @@ describe('service:view/MiniCalendar', function() {
             var today = new Date('2015-10-02T11:36:00+09:00');
 
             // September!
-            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today);
+            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
             expect(actual).toEqual({
                 title: '2015.09',
                 dayname: jasmine.any(Array),
@@ -72,26 +72,20 @@ describe('service:view/MiniCalendar', function() {
 
             // 8/30 is previous date
             expect(actual.calendar[0][0]).toEqual({
-                y: 2015,
-                m: 7,
                 d: 30,
-                isOtherDate: true,
-                weekend: true
+                ymd: '2015-08-30',
+                hasSchedule: undef,
+                isNotThisMonth: true,
+                weekend: true,
+                selected: false,
+                today: false
             });
 
             // autoselect 9/1 because it first date of september
-            expect(actual.calendar[0][2].focused).toBe(true);
+            expect(actual.calendar[0][2].selected).toBe(true);
 
             // 10/2 is next month. no autoselect
-            expect(actual.calendar[4][5].focused).not.toBeDefined();
-        });
-
-        it('when today included render month then autoselect today', function() {
-            var renderMonth = new Date('2015-09-01T00:00:00+09:00');
-            var today = new Date('2015-09-02T11:36:00+09:00');
-            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today);
-
-            expect(actual.calendar[0][3].focused).toBe(true);
+            expect(actual.calendar[4][5].selected).toBe(false);
         });
 
         it('when cached hlData then apply it to highlight dates for represent the date has schedule.', function() {
@@ -100,9 +94,9 @@ describe('service:view/MiniCalendar', function() {
             var hlData = {'2015-09-03': true};
             mockInst.hlData = hlData;
 
-            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0, today);
+            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
 
-            expect(actual.calendar[0][4].hasEvents).toBe(true);
+            expect(actual.calendar[0][4].hasSchedule).toBe(true);
         });
     });
 

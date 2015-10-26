@@ -81,6 +81,10 @@
     color: red;
 }
 
+.schedule-view-minicalendar-weekend.schedule-view-minicalendar-other .schedule-view-minicalendar-label {
+    color: #ffcccc;
+}
+
 .schedule-view-minicalendar-focused .schedule-view-minicalendar-label {
     color: #f8f8f8;
 }

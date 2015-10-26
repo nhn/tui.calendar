@@ -11,6 +11,8 @@ var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
 var tmpl = require('./minicalendar.hbs');
 
+var getDateRx = /schedule-view-minicalendar-(\d{4}-\d{2}-\d{2})/;
+
 /**
  * @constructor
  * @extends {View}
@@ -96,7 +98,9 @@ MiniCalendar.prototype._nav = function(buttonElement) {
  */
 MiniCalendar.prototype._date = function(buttonElement) {
     var td = domutil.closest(buttonElement, 'td'),
+        today = (new Date()),
         previous,
+        selected,
         eventData = {
             before: this.getSelectedDate()
         };
@@ -110,7 +114,13 @@ MiniCalendar.prototype._date = function(buttonElement) {
 
         domutil.addClass(td, 'schedule-view-minicalendar-focused');
 
-        eventData.after = this.getSelectedDate();
+        selected = this.getSelectedDate();
+
+        if (datetime.isSameDate(selected, today)) {
+            domutil.addClass(td, 'schedule-view-minicalendar-today');
+        }
+
+        eventData.after = selected;
 
         /**
          * @event MiniCalendar#change
@@ -151,34 +161,55 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
  */
 MiniCalendar.prototype.getSelectedDate = function() {
     var selected = domutil.find('.schedule-view-minicalendar-focused', this.container),
-        y, m, d;
+        matches;
 
     if (!selected) {
         return null;
     }
 
-    y = domutil.getData(selected, 'y');
-    m = domutil.getData(selected, 'm');
-    d = domutil.getData(selected, 'd');
+    matches = selected.className.match(getDateRx);
 
-    return new Date(y, m, d);
+    if (!matches || matches.length < 2) {
+        return;
+    }
+
+    return datetime.parse(matches[1]);
+};
+
+/**
+ * select specific date.
+ * @param {Date|string} date - date to select
+ */
+MiniCalendar.prototype.selectDate = function(date) {
+    var _date,
+        td, button;
+
+    if (util.isString(date)) {
+        date = datetime.parse(date);
+    }
+
+    _date = datetime.format(date, 'YYYY-MM-DD');
+    td = domutil.find('.schedule-view-minicalendar-' + _date, this.container);
+    button = domutil.find('button', td);
+
+    if (!td || !button) {
+        return;
+    }
+
+    this._date(button);
 };
 
 /**
  * Get minicalendar view model
  * @param {Date} renderDate - Date to render minicalendar
  * @param {number} startDayOfWeek - number of start of week (0:sun ...)
- * @param {Date} selected - selected Date object
  * @returns {object} viewmodel
  */
-MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, selected) {
+MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
     var daynames = this.options.daynames,
         hlData = this.hlData,
-        renderYear = renderDate.getFullYear(),
-        renderMonth = renderDate.getMonth(),
-        selectedDate = selected.getDate(),
         today = datetime.start(new Date()),
-        isCurrentMonth = (today.getFullYear() === renderYear && today.getMonth() === renderMonth),
+        isCurrentMonth = datetime.isSameMonth(renderDate, today),
         viewModel = {
             title: datetime.format(renderDate, 'YYYY.MM'),
             startDayOfWeek: startDayOfWeek
@@ -190,31 +221,27 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, sele
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
-        var y = date.getFullYear(),
-            m = date.getMonth(),
-            d = date.getDate(),
-            day = date.getDay(),
+        var d = date.getDate(),
             ymd = datetime.format(date, 'YYYY-MM-DD'),
-            dateIsInThisMonth = (y === renderYear && m === renderMonth),
+            day = date.getDay(),
             selected = false,
-            isToday = false;
+            isToday = datetime.isSameDate(date, today),
+            dateIsInThisMonth = datetime.isSameMonth(date, renderDate);
 
         if (dateIsInThisMonth) {
             if (isCurrentMonth) {
-
-                if (d === selectedDate) {
+                if (isToday) {
                     selected = true;
+                    isToday = true;
                 }
-
             } else if (d === 1) {
                 selected = true;
             }
         }
 
         return {
-            y: y,
-            m: m,
             d: d,
+            ymd: ymd,
             hasSchedule: hlData[ymd],
             isNotThisMonth: !dateIsInThisMonth,
             weekend: (day === 0 || day === 6),
@@ -224,7 +251,6 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek, sele
     });
 
     return viewModel;
-
 };
 
 /**
@@ -237,7 +263,7 @@ MiniCalendar.prototype.render = function() {
         startDayOfWeek = options.startDayOfWeek,
         viewModel;
 
-    viewModel = this._getViewModel(renderDate, startDayOfWeek, this.getSelectedDate() || new Date());
+    viewModel = this._getViewModel(renderDate, startDayOfWeek);
 
     container.innerHTML = tmpl(viewModel);
 };
