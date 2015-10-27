@@ -60,7 +60,7 @@ function Calendar(options, container) {
      * global drag handler
      * @type {Drag}
      */
-    this.dragHandler = new Drag(this.view);
+    this.dragHandler = new Drag(null, this.view);
 
     /**
      * current rendered view name.

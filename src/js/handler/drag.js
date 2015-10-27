@@ -11,12 +11,18 @@ var domevent = require('../common/domevent');
 /**
  * @constructor
  * @mixes CustomEvents
+ * @param {object} options - options for drag handler
+ * @param {number} [options.distance=10] - distance in pixels after mouse must move before dragging should start
  * @param {LayoutView} layoutView Layout view instance.
  */
-function Drag(layoutView) {
+function Drag(options, layoutView) {
     var container = layoutView.container;
 
     domevent.on(container, 'mousedown', this._onMouseDown, this);
+
+    this.options = util.extend({
+        distance: 10
+    }, options);
 
     /**
      * @type {HTMLElement}
@@ -27,6 +33,22 @@ function Drag(layoutView) {
      * @type {boolean}
      */
     this._isMoved = false;
+
+    /**
+     * dragging distance in pixel between mousedown and firing dragStart events
+     * @type {number}
+     */
+    this._distance = 0;
+
+    /**
+     * @type {boolean}
+     */
+    this._dragStartFired = false;
+
+    /**
+     * @type {object}
+     */
+    this._dragStartEventData = null;
 }
 
 /**
@@ -78,7 +100,6 @@ Drag.prototype._getEventData = function(mouseEvent) {
 /**
  * MouseDown DOM event handler.
  * @param {MouseEvent} mouseDownEvent MouseDown event object.
- * @emits Drag#dragStart
  */
 Drag.prototype._onMouseDown = function(mouseDownEvent) {
     // only primary button can start drag.
@@ -86,30 +107,46 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
         return;
     }
 
-    /**
-     * Drag starts events. cancelable.
-     * @event Drag#dragStart
-     * @type {object}
-     * @property {HTMLElement} target - target element in this event.
-     * @property {MouseEvent} originEvent - original mouse event object.
-     */
-    if (!this.invoke('dragStart', this._getEventData(mouseDownEvent))) {
-        return;
-    }
+    this._distance = 0;
+    this._dragStartFired = false;
+    this._dragStartEventData = this._getEventData(mouseDownEvent);
 
     this._toggleDragEvent(true);
 };
 
 /**
  * MouseMove DOM event handler.
- * @param {MouseEvent} mouseMoveEvent MouseMove event object.
  * @emits Drag#drag
+ * @emits Drag#dragStart
+ * @param {MouseEvent} mouseMoveEvent MouseMove event object.
  */
 Drag.prototype._onMouseMove = function(mouseMoveEvent) {
+    var distance = this.options.distance;
     // prevent automatic scrolling.
     domevent.preventDefault(mouseMoveEvent);
 
     this._isMoved = true;
+
+    if (this._distance < distance) {
+        this._distance += 1;
+        return;
+    }
+
+    if (!this._dragStartFired) {
+        this._dragStartFired = true;
+
+        /**
+         * Drag starts events. cancelable.
+         * @event Drag#dragStart
+         * @type {object}
+         * @property {HTMLElement} target - target element in this event.
+         * @property {MouseEvent} originEvent - original mouse event object.
+         */
+        if (!this.invoke('dragStart', this._dragStartEventData)) {
+            this._toggleDragEvent(false);
+            return;
+        }
+    }
 
     /**
      * Events while dragging.
