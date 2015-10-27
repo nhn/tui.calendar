@@ -1,22 +1,22 @@
 {
-    "name": "dooray-calendar",
-    "main": [
-        "dist/calendar.js",
-        "dist/calendar.min.js",
-        "dist/calendar.css",
-        "dist/calendar.min.css"
-    ],
-    "version": "0.1.6",
-    "authors": [
-        "NHNEnt FE Dev tean <dl_javascript@nhnent.com>"
-    ],
-    "description": "dooray-calendar",
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ]
+  "name": "dooray-calendar",
+  "main": [
+    "dist/calendar.js",
+    "dist/calendar.min.js",
+    "dist/calendar.css",
+    "dist/calendar.min.css"
+  ],
+  "version": "0.1.6",
+  "authors": [
+    "NHNEnt FE Dev tean <dl_javascript@nhnent.com>"
+  ],
+  "description": "dooray-calendar",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
