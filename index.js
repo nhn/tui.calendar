@@ -44,6 +44,7 @@ var EventViewModel = require('./src/js/model/viewModel/event');
  **********/
 var Drag = require('./src/js/handler/drag');
 var TimeCore = require('./src/js/handler/time/core');
+var TimeClick = require('./src/js/handler/time/click');
 var TimeCreation = require('./src/js/handler/time/creation');
 var TimeCreationGuide = require('./src/js/handler/time/creationGuide');
 var TimeMove = require('./src/js/handler/time/move');
@@ -104,6 +105,7 @@ global.ne.util.defineNamespace('ne.dooray.calendar', {
     Drag: Drag,
 
     TimeCore: TimeCore,
+    TimeClick: TimeClick,
     TimeCreation: TimeCreation,
     TimeCreationGuide: TimeCreationGuide,
     TimeMove: TimeMove,

@@ -22,6 +22,7 @@ var Allday = require('../../view/week/allday');
 var AlldayCreation = require('../../handler/allday/creation');
 var AlldayMove = require('../../handler/allday/move');
 var AlldayResize = require('../../handler/allday/resize');
+var TimeClick = require('../../handler/time/click');
 var TimeCreation = require('../../handler/time/creation');
 var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
@@ -40,6 +41,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
+        timeClickHandler,
         timeCreationHandler,
         timeMoveHandler,
         timeResizeHandler;
@@ -87,6 +89,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      * TimeGrid View
      **********/
     timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
+
+    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -98,6 +102,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             resize: alldayResizeHandler
         },
         time: {
+            click: timeClickHandler,
             creation: timeCreationHandler,
             move: timeMoveHandler,
             resize: timeResizeHandler
@@ -111,9 +116,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
+        timeClickHandler.off();
         timeCreationHandler.off();
         timeMoveHandler.off();
         timeResizeHandler.off();
+        timeClickHandler.destroy();
         timeCreationHandler.destroy();
         timeMoveHandler.destroy();
         timeResizeHandler.destroy();
@@ -128,7 +135,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         delete weekView.handlers.time;
         delete weekView.handlers.allday;
 
-        timeCreationHandler = timeMoveHandler = timeResizeHandler = null;
+        timeClickHandler = timeCreationHandler = timeMoveHandler = timeResizeHandler = 
+            alldayCreationHandler = alldayMoveHandler = alldayResizeHandler = null;
     };
 
     return weekView;
