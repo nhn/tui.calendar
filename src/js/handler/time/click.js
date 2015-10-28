@@ -36,6 +36,14 @@ function TimeClick(dragHandler, timeGridView, baseController) {
 }
 
 /**
+ * Destroy method
+ */
+TimeClick.prototype.destroy = function() {
+    this.dragHandler.off(this);
+    this.timeGridView = this.baseController = this.dragHandler = null;
+};
+
+/**
  * Connect hander, view, controller.
  * @param {Drag} dragHandler - dragHandler instance
  * @param {TimeGrid} timeGridView - timeGrid instance
