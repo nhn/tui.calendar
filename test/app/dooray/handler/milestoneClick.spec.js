@@ -22,7 +22,7 @@ describe('service:handler:MilestoneClick', function() {
         MilestoneClick.prototype._onClick.call(mockInst, {});
 
         // 이벤트가 아래처럼 발생한다
-        expect(mockInst.fire).toHaveBeenCalledWith('milestone_click', {
+        expect(mockInst.fire).toHaveBeenCalledWith('click', {
             model: {
                 _id: '2',
                 text: 'hello'

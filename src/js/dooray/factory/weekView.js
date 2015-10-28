@@ -95,23 +95,23 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
     weekView.handlers = {
-        milestone: {
-            click: milestoneClickHandler
+        click: {
+            milestone: milestoneClickHandler,
+            task: taskClickHandler,
+            allday: alldayClickHandler,
+            time: timeClickHandler
         },
-        task: {
-            click: taskClickHandler
+        creation: {
+            allday: alldayCreationHandler,
+            time: timeCreationHandler
         },
-        allday: {
-            click: alldayClickHandler,
-            creation: alldayCreationHandler,
-            move: alldayMoveHandler,
-            resize: alldayResizeHandler
+        move: {
+            allday: alldayMoveHandler,
+            time: timeMoveHandler
         },
-        time: {
-            click: timeClickHandler,
-            creation: timeCreationHandler,
-            move: timeMoveHandler,
-            resize: timeResizeHandler
+        resize: {
+            allday: alldayResizeHandler,
+            time: timeResizeHandler
         }
     };
 
@@ -121,8 +121,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
-        util.forEach(weekView.handlers, function(group) {
-            util.forEach(group, function(handler) {
+        util.forEach(weekView.handlers, function(type) {
+            util.forEach(type, function(handler) {
                 handler.off();
                 handler.destroy();
             });

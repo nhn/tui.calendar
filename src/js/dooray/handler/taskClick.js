@@ -58,11 +58,15 @@ TaskClick.prototype.checkExpectedCondition = function(target) {
 
     target = domutil.closest(target, '.schedule-view-task-item');
 
+    if (!target) {
+        return false;
+    }
+
     return domutil.getData(target, 'id');
 };
 
 /**
- * @emits TaskClick#task_click
+ * @emits TaskClick#click
  * @param {object} clickEvent - click event object
  */
 TaskClick.prototype._onClick = function(clickEvent) {
@@ -74,11 +78,11 @@ TaskClick.prototype._onClick = function(clickEvent) {
 
     this.baseController.events.doWhenHas(modelID, function(model) {
         /**
-         * @events TaskClick#task_click
+         * @events TaskClick#click
          * @type {object}
          * @property {Event} model - model instance
          */
-        this.fire('task_click', {
+        this.fire('click', {
             model:  model
         });
     }, this);

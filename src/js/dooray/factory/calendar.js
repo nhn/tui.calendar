@@ -123,6 +123,29 @@ function ServiceCalendar(options, container) {
 
 util.inherit(ServiceCalendar, Calendar);
 
+ServiceCalendar.prototype._onClick = function(e) {
+    this.fire('click', e);
+};
+
+/**
+ * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
+ * @param {boolean} isAttah - true면 이벤트 연결함.
+ * @param {Week|Month} view - 주뷰 또는 월뷰
+ * @param {ServiceCalendar} calendar - 캘린더 팩토리 클래스
+ */
+ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
+    var handlers = view.handlers;
+
+    util.forEach(handlers.click, function(handler) {
+        if (isAttach) {
+            handler.on('click', calendar._onClick, calendar);
+            return;
+        }
+
+        handler.off('click', calendar._onClick, calendar);
+    });
+};
+
 /**
  * @override
  */
@@ -135,8 +158,11 @@ ServiceCalendar.prototype.toggleView = function(viewName, force) {
     if (!force && this.currentViewName === viewName) {
         return;
     }
+    
+    layout.childs.doWhenHas(viewName, function(view) {
+        this._toggleViewEvent(false, view, this);
+    }, this);
 
-    this.currentViewName = viewName;
     layout.clear();
 
     if (viewName === 'week') {
@@ -144,6 +170,13 @@ ServiceCalendar.prototype.toggleView = function(viewName, force) {
             return serviceWeekViewFactory(controller, layout.container, dragHandler, options);
         });
     }
+
+    this.currentViewName = viewName;
+    layout.childs.doWhenHas(viewName, function(view) {
+        this._toggleViewEvent(true, view, this);
+    }, this);
+
+    layout.render();
 };
 
 module.exports = ServiceCalendar;

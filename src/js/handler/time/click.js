@@ -52,8 +52,14 @@ TimeClick.prototype.destroy = function() {
  * @returns {string} - model id
  */
 TimeClick.prototype.checkExpectCondition = function(target) {
-    var container = domutil.closest(target, '.schedule-view-time-date'),
+    var container,
         matches;
+
+    if (!domutil.hasClass(target, 'schedule-view-time-event')) {
+        return false;
+    }
+
+    container = domutil.closest(target, '.schedule-view-time-date');
 
     if (!container) {
         return false;
@@ -71,7 +77,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
 /**
  * Click event hander
  * @param {object} clickEvent - click event from {@link Drag}
- * @emits TimeClick#time_click_click
+ * @emits TimeClick#click
  */
 TimeClick.prototype._onClick = function(clickEvent) {
     var target = clickEvent.target,
@@ -85,11 +91,11 @@ TimeClick.prototype._onClick = function(clickEvent) {
 
     eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
         /**
-         * @events TimeClick#time_click_click
+         * @events TimeClick#click
          * @type {object}
          * @property {Event} model - model instance
          */
-        this.fire('time_click_click', {
+        this.fire('click', {
             model:  model
         });
     }, this);
