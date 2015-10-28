@@ -40,23 +40,28 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
-
     weekView.container.innerHTML = weekViewTmpl();
 
-    // Dayname
+    /**********
+     * 일자표기 (상단 일월화수...)
+     **********/
     dayNameView = new DayName(null, domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
-    // Allday
+    /**********
+     * 종일일정
+     **********/
     alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
+    weekView.addChild(alldayView);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
 
-    weekView.addChild(alldayView);
-
-    // TimeGrid
+    /**********
+     * 시간별 일정
+     **********/
     timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
+    weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGirdView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
@@ -76,34 +81,17 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         }
     };
 
-    weekView.addChild(timeGridView);
-
     // add controller
     weekView.controller = baseController.Week;
 
     // add destroy
     weekView._beforeDestroy = function() {
-        timeClickHandler.off();
-        timeCreationHandler.off();
-        timeMoveHandler.off();
-        timeResizeHandler.off();
-        timeClickHandler.destroy();
-        timeCreationHandler.destroy();
-        timeMoveHandler.destroy();
-        timeResizeHandler.destroy();
-
-        alldayCreationHandler.off();
-        alldayMoveHandler.off();
-        alldayResizeHandler.off();
-        alldayCreationHandler.destroy();
-        alldayMoveHandler.destroy();
-        alldayResizeHandler.destroy();
-
-        delete weekView.handlers.time;
-        delete weekView.handlers.allday;
-
-        timeClickHandler = timeCreationHandler = timeMoveHandler = timeResizeHandler =
-            alldayCreationHandler = alldayMoveHandler = alldayResizeHandler = null;
+        util.forEach(weekView.handlers, function(group) {
+            util.forEach(group, function(handler) {
+                handler.off();
+                handler.destroy();
+            });
+        });
     };
 
     return weekView;

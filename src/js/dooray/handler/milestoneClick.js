@@ -38,6 +38,14 @@ function MilestoneClick(dragHandler, milestoneView, baseController) {
 }
 
 /**
+ * Destroy
+ */
+MilestoneClick.prototype.destroy = function() {
+    this.dragHandler.off(this);
+    this.dragHandler = this.milestoneView = this.baseController = null;
+};
+
+/**
  * @param {HTMLElement} target - check reponsibility to this handler module supplied element
  * @returns {boolean|string} return false when handler has no responsibility for supplied element. 
  * otherwise, return event model id that related with target element.

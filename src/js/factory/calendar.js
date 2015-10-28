@@ -223,6 +223,7 @@ Calendar.prototype.destory = function() {
     this.dragHandler.destroy();
     this.controller.off();
     this.view.clear();
+    this.view.destroy();
 
     this.options = this.baseDate = this.controller =
         this.view = this.dragHandler = null;
