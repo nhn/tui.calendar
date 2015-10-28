@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var util = global.ne.util;
 var domutil = require('../../common/domutil');
 
 // Parent views
@@ -28,6 +27,7 @@ var TimeCreation = require('../../handler/time/creation');
 var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
 var MilestoneClick = require('../handler/milestoneClick');
+var TaskClick = require('../handler/taskClick');
 
 // Base Templates
 var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
@@ -40,6 +40,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayView,
         timeGridView,
         milestoneClickHandler,
+        taskClickHandler,
         alldayClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
@@ -70,6 +71,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      **********/
     taskView = new TaskView(options.week, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(taskView);
+    taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 
     /**********
      * 종일일정
@@ -94,6 +96,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         milestone: {
             click: milestoneClickHandler
         },
+        task: {
+            click: taskClickHandler
+        },
         allday: {
             click: alldayClickHandler,
             creation: alldayCreationHandler,
@@ -116,6 +121,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     // add destroy
     weekView._beforeDestroy = function() {
         milestoneClickHandler.destroy();
+        taskClickHandler.destroy();
 
         timeClickHandler.destroy();
         timeCreationHandler.destroy();
@@ -128,10 +134,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayResizeHandler.destroy();
 
         delete weekView.handlers.milestone;
+        delete weekView.handlers.task;
         delete weekView.handlers.time;
         delete weekView.handlers.allday;
 
-        milestoneClickHandler = null;
+        taskClickHandler = milestoneClickHandler = null;
         timeClickHandler = timeCreationHandler = timeMoveHandler = timeResizeHandler = null;
         alldayClickHandler = alldayCreationHandler = alldayMoveHandler = alldayResizeHandler = null;
     };

@@ -12,7 +12,7 @@
         <h6 style="line-height:{{@root.lineHeight}}px">출근 전</h6>
         <ul>
             {{#each morning.items ~}}
-            <li data-title="{{model.title}}" class="schedule-view-task-item" 
+            <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
             style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.backgroundColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
@@ -23,7 +23,7 @@
         <h6 style="line-height:{{@root.lineHeight}}px">점심 전</h6>
         <ul>
             {{#each lunch.items ~}}
-            <li data-title="{{model.title}}" class="schedule-view-task-item" 
+            <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
             style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.backgroundColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
@@ -34,7 +34,7 @@
         <h6 style="line-height:{{@root.lineHeight}}px">퇴근 전</h6>
         <ul>
             {{#each evening.items ~}}
-            <li data-title="{{model.title}}" class="schedule-view-task-item" 
+            <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
             style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.backgroundColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
