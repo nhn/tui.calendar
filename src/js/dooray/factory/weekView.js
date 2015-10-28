@@ -27,6 +27,7 @@ var TimeClick = require('../../handler/time/click');
 var TimeCreation = require('../../handler/time/creation');
 var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
+var MilestoneClick = require('../handler/milestoneClick');
 
 // Base Templates
 var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
@@ -38,6 +39,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         taskView,
         alldayView,
         timeGridView,
+        milestoneClickHandler,
         alldayClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
@@ -48,24 +50,31 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
-
     weekView.container.innerHTML = weekViewTmpl();
 
-    // Dayname
+    /**********
+     * 일자표기 (상단 일월화수...)
+     **********/
     dayNameView = new DayName(null, domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
-    // 마일스톤 뷰
+    /**********
+     * 마일스톤
+     **********/
     milestoneView = new Milestone(options.week, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(milestoneView);
+    milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
-    // 업무 뷰
+    /**********
+     * 업무
+     **********/
     taskView = new TaskView(options.week, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(taskView);
 
-    // 종일일정 뷰
+    /**********
+     * 종일일정
+     **********/
     alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
-
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
@@ -73,16 +82,18 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView.addChild(alldayView);
 
     /**********
-     * TimeGrid View
+     * 시간별 일정
      **********/
     timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
-
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
     weekView.handlers = {
+        milestone: {
+            click: milestoneClickHandler
+        },
         allday: {
             click: alldayClickHandler,
             creation: alldayCreationHandler,
@@ -104,28 +115,24 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
-        timeClickHandler.off();
-        timeCreationHandler.off();
-        timeMoveHandler.off();
-        timeResizeHandler.off();
+        milestoneClickHandler.destroy();
+
         timeClickHandler.destroy();
         timeCreationHandler.destroy();
         timeMoveHandler.destroy();
         timeResizeHandler.destroy();
 
-        alldayClickHandler.off();
-        alldayCreationHandler.off();
-        alldayMoveHandler.off();
-        alldayResizeHandler.off();
         alldayClickHandler.destroy();
         alldayCreationHandler.destroy();
         alldayMoveHandler.destroy();
         alldayResizeHandler.destroy();
 
+        delete weekView.handlers.milestone;
         delete weekView.handlers.time;
         delete weekView.handlers.allday;
 
-        timeClickHandler = timeCreationHandler = timeMoveHandler = timeResizeHandler = 
+        milestoneClickHandler = null;
+        timeClickHandler = timeCreationHandler = timeMoveHandler = timeResizeHandler = null;
         alldayClickHandler = alldayCreationHandler = alldayMoveHandler = alldayResizeHandler = null;
     };
 
