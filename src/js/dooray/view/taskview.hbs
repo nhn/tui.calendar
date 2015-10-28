@@ -13,7 +13,7 @@
         <ul>
             {{#each morning.items ~}}
             <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.backgroundColor}}"></span> {{model.title}}</li>
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -24,7 +24,7 @@
         <ul>
             {{#each lunch.items ~}}
             <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.backgroundColor}}"></span> {{model.title}}</li>
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -35,7 +35,7 @@
         <ul>
             {{#each evening.items ~}}
             <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.backgroundColor}}"></span> {{model.title}}</li>
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}

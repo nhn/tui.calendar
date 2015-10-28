@@ -56,7 +56,7 @@ function Event() {
      * event background color
      * @type {string}
      */
-    this.backgroundColor = '#a1b56c';
+    this.bgColor = '#a1b56c';
 
     // initialize model id
     util.stamp(this);
@@ -112,7 +112,7 @@ Event.prototype.init = function(options) {
     }
 
     this.color = options.color || this.color;
-    this.backgroundColor = options.backgroundColor || this.backgroundColor;
+    this.bgColor = options.bgColor || this.bgColor;
 };
 
 /**
@@ -166,7 +166,7 @@ Event.prototype.equals = function(event) {
         return false;
     }
 
-    if (this.backgroundColor !== event.backgroundColor) {
+    if (this.bgColor !== event.bgColor) {
         return false;
     }
 
