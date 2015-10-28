@@ -12,17 +12,28 @@ var controllerFactory = require('./controller');
 var weekViewFactory = require('./weekView');
 
 /**
+ * @typedef {object} Calendar~Events
+ * @property {string} title - 이벤트 제목
+ * @property {boolean} isAllDay - 종일일정여부
+ * @property {string} starts - 일정 시작 시간
+ * @property {string} ends - 일정 종료 시간
+ * @property {string} [color] - 일정 텍스트색
+ * @property {string} [bgColor] - 일정 배경색
+ */
+
+/**
  * Calendar class
  * @constructor
+ * @mixes util.CustomEvents
  * @param {object} options - options for calendar
- * @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
- * @param {function} [options.controller] - controller instance
- * @param {string} [options.defaultView='week'] - default view of calendar
- * @param {object} [options.week] - options for week view
- * @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
- * @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
- * @param {object} [options.month] - options for month view
- * @param {string} options.month.renderMonth - YYYY-MM render month
+ *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
+ *  @param {function} [options.controller] - controller instance
+ *  @param {string} [options.defaultView='week'] - default view of calendar
+ *  @param {object} [options.week] - options for week view
+ *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
+ *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
+ *  @param {object} [options.month] - options for month view
+ *   @param {string} options.month.renderMonth - YYYY-MM render month
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
@@ -266,6 +277,8 @@ Calendar.prototype.setOptions = function(options) {
 
     return options;
 };
+
+util.CustomEvents.mixin(Calendar);
 
 module.exports = Calendar;
 

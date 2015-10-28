@@ -19,11 +19,15 @@ var serviceWeekViewFactory = require('./weekView');
 
 /**
  * @typedef {object} ServiceCalendar~Events
+ * @property {string} [id] - 일정의 uniqueID.
+ * @property {string} [calendarID] - 각 일정을 캘린더별로 그룹지을 수 있는 값.
  * @property {string} title - 이벤트 제목
  * @property {string} category - 이벤트 타입
  * @property {string} dueDateClass - 업무 일정 분류 (category가 'task'일 때 유효)
  * @property {string} starts - 일정 시작 시간
  * @property {string} ends - 일정 종료 시간
+ * @property {string} [color] - 일정 텍스트색
+ * @property {string} [bgColor] - 일정 배경색
  */
 
 /**
@@ -31,15 +35,15 @@ var serviceWeekViewFactory = require('./weekView');
  * @constructor
  * @extends {Calendar}
  * @param {object} options - options for calendar
- * @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
- * @param {function} [options.controller] - controller instance
- * @param {string} [options.defaultView='week'] - default view of calendar
- * @param {object} [options.week] - options for week view
- * @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
- * @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
- * @param {ServiceCalendar~Events[]} options.events - 기본 일정 목록
- * @param {object} [options.month] - options for month view
- * @param {string} options.month.renderMonth - YYYY-MM render month
+ *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
+ *  @param {function} [options.controller] - controller instance
+ *  @param {string} [options.defaultView='week'] - default view of calendar
+ *  @param {object} [options.week] - options for week view
+ *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
+ *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
+ *  @param {ServiceCalendar~Events[]} options.events - 기본 일정 목록
+ *  @param {object} [options.month] - options for month view
+ *  @param {string} options.month.renderMonth - YYYY-MM render month
  * @param {HTMLDivElement} container = container element for calendar
  */
 function ServiceCalendar(options, container) {

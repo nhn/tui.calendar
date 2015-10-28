@@ -6,7 +6,25 @@
 
 var util = global.ne.util;
 var Event = require('../../model/event');
-var enums = require('../enums');
+
+/**
+ * 일정 카테고리
+ * @readonly
+ * @enum {string}
+ */
+var EVENT_CATEGORY = {
+    /** 마일스톤 */
+    MILESTONE: 'milestone',
+
+    /** 업무 */
+    TASK: 'task',
+    
+    /** 종일일정 */
+    ALLDAY: 'allday',
+
+    /** 시간별 일정 */
+    TIME: 'time'
+};
 
 /**
  * Event class for dooray project
@@ -50,12 +68,12 @@ DoorayEvent.prototype.init = function(options) {
 
     Event.prototype.init.call(this, options);
 
-    this.isAllDay = options.category === enums.model.EVENT_CATEGORY.ALLDAY;
+    this.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
 
-    if (options.category === enums.model.EVENT_CATEGORY.MILESTONE ||
-        options.category === enums.model.EVENT_CATEGORY.TASK) {
+    if (options.category === EVENT_CATEGORY.MILESTONE ||
+        options.category === EVENT_CATEGORY.TASK) {
         this.starts = new Date(+this.ends);
         this.starts.setMinutes(this.starts.getMinutes() - 30);
     }
