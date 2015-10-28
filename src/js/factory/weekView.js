@@ -15,6 +15,7 @@ var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
 
 // Handlers
+var AlldayClick = require('../handler/allday/click');
 var AlldayCreation = require('../handler/allday/creation');
 var AlldayMove = require('../handler/allday/move');
 var AlldayResize = require('../handler/allday/resize');
@@ -31,6 +32,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         dayNameView,
         alldayView,
         timeGridView,
+        alldayClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
@@ -53,6 +55,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      **********/
     alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
     weekView.addChild(alldayView);
+    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -69,12 +72,13 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     weekView.handlers = {
         allday: {
+            click: alldayClickHandler,
             creation: alldayCreationHandler,
             move: alldayMoveHandler,
             resize: alldayResizeHandler
         },
         time: {
-            click: timeClick,
+            click: timeClickHandler,
             creation: timeCreationHandler,
             move: timeMoveHandler,
             resize: timeResizeHandler
