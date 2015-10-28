@@ -65,7 +65,6 @@ TaskClick.prototype._onClick = function(clickEvent) {
     }
 
     this.baseController.events.doWhenHas(modelID, function(model) {
-        console.log(model);
         /**
          * @events TaskClick#task_click
          * @type {object}
