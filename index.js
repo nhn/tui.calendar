@@ -53,6 +53,7 @@ var TimeResize = require('./src/js/handler/time/resize');
 var TimeResizeGuide = require('./src/js/handler/time/resizeGuide');
 
 var AlldayCore = require('./src/js/handler/allday/core');
+var AlldayClick = require('./src/js/handler/allday/click');
 var AlldayCreation = require('./src/js/handler/allday/creation');
 var AlldayCreationGuide = require('./src/js/handler/allday/creationGuide');
 var AlldayMove = require('./src/js/handler/allday/move');
@@ -114,6 +115,7 @@ global.ne.util.defineNamespace('ne.dooray.calendar', {
     TimeResizeGuide: TimeResizeGuide,
 
     AlldayCore: AlldayCore,
+    AlldayClick: AlldayClick,
     AlldayCreation: AlldayCreation,
     AlldayCreationGuide: AlldayCreationGuide,
     AlldayMove: AlldayMove,

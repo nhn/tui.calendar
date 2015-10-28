@@ -19,6 +19,7 @@ var Allday = require('../../view/week/allday');
 
 
 // Handlers
+var AlldayClick = require('../../handler/allday/click');
 var AlldayCreation = require('../../handler/allday/creation');
 var AlldayMove = require('../../handler/allday/move');
 var AlldayResize = require('../../handler/allday/resize');
@@ -37,7 +38,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         taskView,
         alldayView,
         timeGridView,
-        alldayOptions,
+        alldayClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
@@ -54,20 +55,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     dayNameView = new DayName(null, domutil.find('.schedule-view-dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
-    /**********
-     * AllDay View
-     **********/
-    alldayOptions = util.extend({
-        title: null,
-        height: 20
-    }, options.week);
-
-    function getViewModelFunc(key) {
-        return function(viewModel) {
-            return viewModel.eventsInDateRange[key];
-        };
-    }
-    
     // 마일스톤 뷰
     milestoneView = new Milestone(options.week, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(milestoneView);
@@ -76,10 +63,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     taskView = new TaskView(options.week, domutil.find('.schedule-view-milestone-layout'));
     weekView.addChild(taskView);
 
-    // Allday - wholeDay
-    alldayOptions.title = '종일일정';
-    alldayOptions._getViewModelFunc = getViewModelFunc('allday');
+    // 종일일정 뷰
     alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
+
+    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -97,6 +84,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     weekView.handlers = {
         allday: {
+            click: alldayClickHandler,
             creation: alldayCreationHandler,
             move: alldayMoveHandler,
             resize: alldayResizeHandler
@@ -125,9 +113,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeMoveHandler.destroy();
         timeResizeHandler.destroy();
 
+        alldayClickHandler.off();
         alldayCreationHandler.off();
         alldayMoveHandler.off();
         alldayResizeHandler.off();
+        alldayClickHandler.destroy();
         alldayCreationHandler.destroy();
         alldayMoveHandler.destroy();
         alldayResizeHandler.destroy();
@@ -136,7 +126,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         delete weekView.handlers.allday;
 
         timeClickHandler = timeCreationHandler = timeMoveHandler = timeResizeHandler = 
-            alldayCreationHandler = alldayMoveHandler = alldayResizeHandler = null;
+        alldayClickHandler = alldayCreationHandler = alldayMoveHandler = alldayResizeHandler = null;
     };
 
     return weekView;

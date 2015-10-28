@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.ne.util;
+var TimeMove = require('./move');
 var domutil = require('../../common/domutil');
 var parseTimeViewIDRx = /^schedule-view-time-date[\s]schedule-view-(\d+)/;
 
@@ -20,19 +21,21 @@ function TimeClick(dragHandler, timeGridView, baseController) {
     /**
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * @type {TimeGrid}
      */
-    this.timeGridView = null;
+    this.timeGridView = timeGridView;
 
     /**
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
-    this.connect(dragHandler, timeGridView, baseController);
+    dragHandler.on({
+        'click': this._onClick
+    }, this);
 }
 
 /**
@@ -41,22 +44,6 @@ function TimeClick(dragHandler, timeGridView, baseController) {
 TimeClick.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.timeGridView = this.baseController = this.dragHandler = null;
-};
-
-/**
- * Connect hander, view, controller.
- * @param {Drag} dragHandler - dragHandler instance
- * @param {TimeGrid} timeGridView - timeGrid instance
- * @param {Base} baseController - controller instance
- */
-TimeClick.prototype.connect = function(dragHandler, timeGridView, baseController) {
-    this.dragHandler = dragHandler;
-    this.timeGridView = timeGridView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        'click': this._onClick
-    }, this);
 };
 
 /**
