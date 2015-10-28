@@ -197,7 +197,7 @@ Calendar.prototype.getCurrentView = function() {
  * @param {boolean} force - force render despite of current view and new view are equal
  */
 Calendar.prototype.toggleView = function(viewName, force) {
-    var view = this.layout,
+    var layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
         options = this.options;
@@ -207,11 +207,11 @@ Calendar.prototype.toggleView = function(viewName, force) {
     }
 
     this.currentViewName = viewName;
-    view.clear();
+    layout.clear();
 
     if (viewName === 'week') {
-        view.addChild(function() {
-            return weekViewFactory(controller, view.container, dragHandler, options);
+        layout.addChild(function() {
+            return weekViewFactory(controller, layout.container, dragHandler, options);
         });
     }
 }

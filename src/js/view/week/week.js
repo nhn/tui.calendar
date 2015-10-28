@@ -54,6 +54,7 @@ util.inherit(Week, View);
 
 /**
  * Render each child view with events in ranges.
+ * @override
  */
 Week.prototype.render = function() {
     var options = this.options,
@@ -73,32 +74,6 @@ Week.prototype.render = function() {
         childView.render(viewModel);
     });
 };
-
-/**
- * Listen child view's resize event and handle it.
- * @param {string} source - the string to use group requests.
- * @param {number} param - additional information for resizing session.
- */
-// Week.prototype._onResize = function(source, param) {
-//     var ownChilds = this.childs,
-//         timegrid,
-//         height;
-//
-//     if (source === 'monthweek:resize') {
-//         timegrid = ownChilds.find(function(view) {
-//             return view.viewName === 'timegrid';
-//         }).single();
-//
-//         height = this.timeGridOriginHeight;
-//
-//         if (!this.timeGridOriginHeight) {
-//             height = this.timeGridOriginHeight = domutil.getSize(timegrid.container)[1];
-//         }
-//
-//         timegrid.container.style.height = (height - param) + 'px';
-//         return;
-//     }
-// };
 
 /**********
  * Prototype props

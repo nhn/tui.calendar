@@ -44,6 +44,7 @@ Layout.prototype.clear = function() {
     });
 
     this.childs.clear();
+    this.container.innerHTML = '';
 };
 
 /**
