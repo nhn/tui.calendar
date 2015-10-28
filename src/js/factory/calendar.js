@@ -65,13 +65,13 @@ function Calendar(options, container) {
      * layout view (layout manager)
      * @type {Layout}
      */
-    this.view = new Layout(container);
+    this.layout = new Layout(container);
 
     /**
      * global drag handler
      * @type {Drag}
      */
-    this.dragHandler = new Drag(null, this.view);
+    this.dragHandler = new Drag(null, this.layout);
 
     /**
      * current rendered view name.
@@ -82,7 +82,7 @@ function Calendar(options, container) {
     /**********
      * SETTING
      **********/
-    this.view.controller = this.controller;
+    this.layout.controller = this.controller;
 
     function refresh() {
         this.refreshChildView();
@@ -95,7 +95,7 @@ function Calendar(options, container) {
 
     this.toggleView(options.defaultView, true);
 
-    this.view.render();
+    this.layout.render();
 }
 
 /**
@@ -104,7 +104,7 @@ function Calendar(options, container) {
 Calendar.prototype.clear = function() {
     this.controller.dateMatrix = {};
     this.controller.events.clear();
-    this.view.render();
+    this.layout.render();
 };
 
 /**
@@ -188,7 +188,7 @@ Calendar.prototype.move = function(direction) {
  * @returns {View} current view instance
  */
 Calendar.prototype.getCurrentView = function() {
-    return util.pick(this.view.childs.items, this.currentViewName);
+    return util.pick(this.layout.childs.items, this.currentViewName);
 }
 
 /**
@@ -197,7 +197,7 @@ Calendar.prototype.getCurrentView = function() {
  * @param {boolean} force - force render despite of current view and new view are equal
  */
 Calendar.prototype.toggleView = function(viewName, force) {
-    var view = this.view,
+    var view = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
         options = this.options;
@@ -222,11 +222,11 @@ Calendar.prototype.toggleView = function(viewName, force) {
 Calendar.prototype.destory = function() {
     this.dragHandler.destroy();
     this.controller.off();
-    this.view.clear();
-    this.view.destroy();
+    this.layout.clear();
+    this.layout.destroy();
 
     this.options = this.baseDate = this.controller =
-        this.view = this.dragHandler = null;
+        this.layout = this.dragHandler = null;
 }
 
 /**
@@ -235,11 +235,11 @@ Calendar.prototype.destory = function() {
  */
 Calendar.prototype.refreshChildView = function(viewName) {
     if (!viewName) {
-        this.view.render();
+        this.layout.render();
         return;
     }
 
-    this.view.childs.items[viewName].render();
+    this.layout.childs.items[viewName].render();
 };
 
 /**

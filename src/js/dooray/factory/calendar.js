@@ -127,7 +127,7 @@ util.inherit(ServiceCalendar, Calendar);
  * @override
  */
 ServiceCalendar.prototype.toggleView = function(viewName, force) {
-    var view = this.view,
+    var layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
         options = this.options;
@@ -137,11 +137,11 @@ ServiceCalendar.prototype.toggleView = function(viewName, force) {
     }
 
     this.currentViewName = viewName;
-    view.clear();
+    layout.clear();
 
     if (viewName === 'week') {
-        view.addChild(function() {
-            return serviceWeekViewFactory(controller, view.container, dragHandler, options);
+        layout.addChild(function() {
+            return serviceWeekViewFactory(controller, layout.container, dragHandler, options);
         });
     }
 };
