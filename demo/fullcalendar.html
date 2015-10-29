@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Fullcalendar Demo</title>
+<link rel="stylesheet" type="text/css" href="../dist/calendar.css" />
+</head>
+<body>
+<div id="calendar-container"></div>
+<div>
+    <input type="button" id="add-event" value="금일 점심일정 추가" />
+</div>
+<script src="../dist/calendar.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+(function() {
+    // 캘린더 인스턴스 생성
+    var calendar = ne.dooray.calendar.Calendar({
+        defaultView: 'week'
+    }, document.getElementById('calendar-container'));
+
+    // 점심일정 추가 버튼 클릭
+    document.getElementById('add-event').onclick = function() {
+        var lunchStart = new Date(),
+            lunchEnd = new Date();
+
+        calendar.clear();
+
+        lunchStart.setHours(12, 30, 0);
+        lunchEnd.setHours(13, 0, 0);
+
+        calendar.createEvent([{
+            id: '',
+            calendarID: '',
+            title: '점심식사',
+            isAllDay: false,
+            category: 'time',
+            dueDateClass: '',
+            starts: lunchStart.toUTCString(),
+            ends: lunchEnd.toUTCString(),
+            color: '#282828',
+            bgColor: '#f7ca88'
+        }]);
+    };
+})();
+</script>
+</body>
+</html>

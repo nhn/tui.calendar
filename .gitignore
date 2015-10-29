@@ -54,7 +54,7 @@ report
 *.vim
 
 # for local dev purpose
-demo/
+demo-dev/
 build/
 
 # performance tester fixtures
