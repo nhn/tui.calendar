@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util,
+var util = global.tui.util,
     forEachProp = util.forEachOwnProperties,
     forEachArr = util.forEachArray,
     isFunc = util.isFunction,

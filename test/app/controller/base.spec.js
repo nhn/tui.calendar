@@ -2,7 +2,7 @@
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 var Event = ne.dooray.calendar.Event;
 var Collection = ne.dooray.calendar.Collection;
-var util = ne.util;
+var util = tui.util;
 describe('controller/base', function() {
     var ctrl,
         set;
@@ -96,7 +96,7 @@ describe('controller/base', function() {
                             var result = {},
                                 isEqual = true;
 
-                            ne.util.forEach(expected, function(compareTo, ymd) {
+                            tui.util.forEach(expected, function(compareTo, ymd) {
                                 var models = actual[ymd];
 
                                 if (!models) {
@@ -104,7 +104,7 @@ describe('controller/base', function() {
                                     return false;
                                 }
 
-                                titleList = ne.util.map(models.items, function(item) {
+                                titleList = tui.util.map(models.items, function(item) {
                                     return item.valueOf().title;
                                 });
 

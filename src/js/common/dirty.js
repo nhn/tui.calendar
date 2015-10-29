@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var common = ne.util,
+var common = global.tui.util,
     existy = common.isExisty,
     pick = common.pick,
     isFunc = common.isFunction;

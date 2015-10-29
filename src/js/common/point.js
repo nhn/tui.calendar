@@ -16,7 +16,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 
 /**
  * Class for represent two dimentional x, y coordinates.

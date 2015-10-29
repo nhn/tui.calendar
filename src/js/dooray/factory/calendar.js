@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 var datetime = require('../../common/datetime');
 var Calendar = require('../../factory/calendar');
 var DoorayBase = require('../controller/base');

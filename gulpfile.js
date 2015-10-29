@@ -94,6 +94,10 @@ function bundle(outputPath, isProduction) {
         });
     }
 
+    if (isProduction) {
+        b.ignore('tui-code-snippet');
+    }
+
     return b.transform(hbsfy)
         .transform(prependTransform)
         .bundle()

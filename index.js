@@ -3,7 +3,7 @@
 /**********
  * Common
  **********/
-require('code-snippet');
+require('tui-code-snippet');
 require('./src/js/view/template/registerHelpers');
 var dirty = require('./src/js/common/dirty');
 var datetime = require('./src/js/common/datetime');
@@ -78,7 +78,7 @@ var TaskClick = require('./src/js/dooray/handler/taskClick');
 
 /** @namespace ne.dooray.calendar */
 
-global.ne.util.defineNamespace('ne.dooray.calendar', {
+global.tui.util.defineNamespace('ne.dooray.calendar', {
     // common
     dirty: dirty,
     datetime: datetime,

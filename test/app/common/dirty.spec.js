@@ -102,7 +102,7 @@ describe('dirty mixin', function() {
                Animal.call(this);
                this.name = 'bear';
            }
-           ne.util.inherit(Bear, Animal);
+           tui.util.inherit(Bear, Animal);
            Bear.prototype.run = function() {
                return 'run!';
            };
@@ -119,7 +119,7 @@ describe('dirty mixin', function() {
                Animal.call(this);
                this.name = 'bear';
            }
-           ne.util.inherit(Bear, Animal);
+           tui.util.inherit(Bear, Animal);
            Bear.prototype.run = function() {
                return 'run!';
            };

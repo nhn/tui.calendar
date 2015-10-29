@@ -7,7 +7,7 @@
 var domevent = require('./domevent');
 var Collection = require('./collection');
 
-var util = global.ne.util,
+var util = global.tui.util,
     posKey = '_pos',
     domutil;
 

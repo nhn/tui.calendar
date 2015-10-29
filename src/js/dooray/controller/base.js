@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 var Base = require('../../controller/base');
 var DoorayEvent = require('../model/event');
 

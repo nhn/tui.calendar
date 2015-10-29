@@ -1,5 +1,5 @@
 /*eslint-disable*/
-var stamp = ne.util.stamp;
+var stamp = tui.util.stamp;
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 var EventViewModel = ne.dooray.calendar.EventViewModel;
 var Collection = ne.dooray.calendar.Collection;

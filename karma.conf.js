@@ -11,33 +11,28 @@ module.exports = function(config) {
 
     config.set({
         basePath: '',
-
         frameworks: [
             'jasmine-jquery',
             'browserify',
             'jasmine-ajax',
             'jasmine'
         ],
-
         files: [
             'src/css/*.css',
             'node_modules/underscore/underscore.js',
+            'node_modules/tui-code-snippet/code-snippet.js',
             'index.js',
             'src/**/*.js',
             'test/prepare.js',
             'test/**/*.spec.js',
             'test/fixtures/**/*'
         ],
-
-        exclude: [
-        ],
-
+        exclude: [],
         preprocessors: {
             'index.js': ['browserify'],
             'src/**/*.js': ['browserify'],
             'src/js/view/template/helper.js': ['browserify']
         },
-
         browserify: {
             debug: true,
             bundleDelay: 1000,
@@ -50,13 +45,11 @@ module.exports = function(config) {
                 ]
             })]
         },
-
         reporters: [
             'dots',
             'coverage',
             'junit'
         ],
-
         coverageReporter: {
             dir: 'report/',
             reporters: [{
@@ -65,20 +58,14 @@ module.exports = function(config) {
                 file: 'cobertura.xml'
             }]
         },
-
         junitReporter: {
             outputDir: 'report/junit',
             suite: ''
         },
-
         port: 9876,
-
         colors: true,
-
         logLevel: config.LOG_INFO,
-
         autoWatch: false,
-
         browsers: [
             'IE9',
             'IE10',
@@ -86,7 +73,6 @@ module.exports = function(config) {
             'Chrome-WebDriver',
             'Firefox-WebDriver'
         ],
-
         customLaunchers: {
             'IE9': {
                 base: 'WebDriver',
@@ -117,9 +103,7 @@ module.exports = function(config) {
                 browserName: 'firefox'
             }
         },
-
         singleRun: true,
-
         browserNoActivityTimeout: 30000
     });
 };

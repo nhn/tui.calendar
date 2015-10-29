@@ -1,5 +1,5 @@
 /*eslint-disable*/
-var util = ne.util;
+var util = tui.util;
 var array = ne.dooray.calendar.array;
 var Event = ne.dooray.calendar.Event;
 describe('common/array', function() {
@@ -148,7 +148,7 @@ describe('common/array', function() {
 
         it('it can be used to insert the element.', function() {
             arr.splice(Math.abs(array.bsearch(arr, 'g')), 0, 'g');
-            expect(ne.util.inArray('g', arr)).toBe(7);
+            expect(tui.util.inArray('g', arr)).toBe(7);
         });
 
         it('search by custom functions.', function() {

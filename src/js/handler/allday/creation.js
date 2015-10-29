@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.ne.util;
+var util = global.tui.util;
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');

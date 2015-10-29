@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util,
+var util = global.tui.util,
     opt = Object.prototype.toString;
 
 var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;

@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var array = require('../../common/array');

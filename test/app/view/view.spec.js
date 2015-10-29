@@ -1,5 +1,5 @@
 /*eslint-disable*/
-var util = ne.util;
+var util = tui.util;
 var View = ne.dooray.calendar.View;
 describe('View', function() {
     var view;

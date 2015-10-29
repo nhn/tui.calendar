@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var MonthWeek = require('../monthweek');

@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 var TimeMove = require('./move');
 var domutil = require('../../common/domutil');
 var parseTimeViewIDRx = /^schedule-view-time-date[\s]schedule-view-(\d+)/;

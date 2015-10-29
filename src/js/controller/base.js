@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.ne.util;
+var util = global.tui.util;
 var Event = require('../model/event');
 var EventViewModel = require('../model/viewModel/event');
 var datetime = require('../common/datetime');
