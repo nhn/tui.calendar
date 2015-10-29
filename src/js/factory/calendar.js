@@ -95,8 +95,24 @@ function Calendar(options, container) {
 
     this.toggleView(options.defaultView, true);
 
-    this.layout.render();
+    this.render();
 }
+
+/**
+ * Create events instance and render calendar.
+ * @param {Calendar~Event[]} dataObjectList - array of {@see Calendar~Event} object
+ */
+Calendar.prototype.createEvent = function(dataObjectList) {
+    this.controller.createEvents(dataObjectList, true);
+    this.render();
+};
+
+/**
+ * Render calendar.
+ */
+Calendar.prototype.render = function() {
+    this.layout.render();
+};
 
 /**
  * Delete all data and clear view.
@@ -104,7 +120,7 @@ function Calendar(options, container) {
 Calendar.prototype.clear = function() {
     this.controller.dateMatrix = {};
     this.controller.events.clear();
-    this.layout.render();
+    this.render();
 };
 
 /**
@@ -235,7 +251,7 @@ Calendar.prototype.destory = function() {
  */
 Calendar.prototype.refreshChildView = function(viewName) {
     if (!viewName) {
-        this.layout.render();
+        this.render();
         return;
     }
 
