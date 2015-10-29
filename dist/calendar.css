@@ -51,6 +51,16 @@
     clear: both;
 }
 
+.schedule-view-dot {
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
 .handle-x {
     background-position: center center;
     background-repeat: no-repeat;
@@ -359,7 +369,6 @@
     .schedule-view-allday-event {
         position: relative;
         margin: 0 3px 0 2px;
-        background-color: #a1b56c;
     }
 
     .schedule-view-day:last-child .schedule-view-allday-event {
@@ -370,7 +379,6 @@
         padding-left: 3px;
         line-height: 18px;
         font-size: 0.9em;
-        color: #fff;
     }
 
     .schedule-view-allday-event-title {
@@ -645,9 +653,7 @@
             left: 1px;
             margin-right: 7px;
             height: 100%;
-            background-color: #7cafc2;
             font-size: 0.9em;
-            color: #fff;
         }
 
         .schedule-view-time-resize-handle {
