@@ -41,6 +41,11 @@
             bgColor: '#f7ca88'
         }]);
     };
+
+    // 일정 클릭 이벤트 핸들러
+    calendar.on('click', function(e) {
+        console.log(e.model);
+    });
 })();
 </script>
 </body>
