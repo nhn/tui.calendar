@@ -156,6 +156,11 @@ var domevent = {
             return;
         }
 
+        if (util.browser.msie && util.browser.version < 8) {
+            obj.removeAttribute(eventKey);
+            return;
+        }
+
         delete obj[eventKey];
     },
 

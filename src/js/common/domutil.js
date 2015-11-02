@@ -195,6 +195,12 @@ domutil = {
         return ret;
     },
 
+    /**
+     * Set data attribute to target element
+     * @param {HTMLElement} el - element to set data attribute
+     * @param {string} key - key
+     * @param {string|number} data - data value
+     */
     setData: function(el, key, data) {
         if ('dataset' in el) {
             el.dataset[key] = data;
@@ -204,6 +210,12 @@ domutil = {
         el.setAttribute('data-' + key, data);
     },
 
+    /**
+     * Get data value from data-attribute
+     * @param {HTMLElement} el - target element
+     * @param {string} key - key
+     * @returns {string} value
+     */
     getData: function(el, key) {
         if ('dataset' in el) {
             return el.dataset[key];
@@ -470,7 +482,9 @@ domutil = {
                     type = el.type,
                     result = [];
 
-                if (type === 'radio' || type === 'checkbox') {
+                if (type === 'radio') {
+                    result = [elements.find(function(el) { return el.checked; }).toArray().pop()];
+                } else if (type === 'checkbox') {
                     result = elements.find(function(el) { return el.checked; }).toArray();
                 } else if (nodeName === 'select') {
                     elements.find(function(el) { return !!el.childNodes.length; })
