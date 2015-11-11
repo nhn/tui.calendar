@@ -7,6 +7,8 @@ var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
+var stylus = require('gulp-stylus');
+var oStylus = require('stylus');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
@@ -15,7 +17,6 @@ var hbsfy = require('hbsfy');
 var handlebars = require('handlebars');
 var insert = require('gulp-insert');
 var through = require('through2');
-var stylus = require('gulp-stylus');
 var preprocessify = require('preprocessify');
 
 var HEADER = [
@@ -24,24 +25,6 @@ var HEADER = [
 ' * @version {{ version }}',
 ' */',
 ''].join('\n');
-
-gulp.task('default', function(done) {
-    new KarmaServer({
-        configFile: path.join(__dirname, 'karma.conf.js'),
-        singleRun: true
-    }, done).start();
-});
-
-gulp.task('connect', function() {
-    connect.server({
-        livereload: true
-    });
-    gulp.watch([
-        './src/**/*',
-        './index.js',
-        './demo/**/*.html'
-    ], ['bundle-dev']);
-});
 
 function bundle(outputPath, isProduction) {
     var pkg = require('./package.json');
@@ -65,6 +48,13 @@ function bundle(outputPath, isProduction) {
         .pipe(isProduction ? rename({extname: '.min.css'}) : gutil.noop())
         .pipe(insert.prepend(versionHeader))
         .pipe(isProduction ? gulp.dest(outputPath) : gutil.noop());
+
+    gulp.src('src/css/style.styl')
+        .pipe(stylus({
+            // base64 image data
+            define: { url: oStylus.url({paths: [__dirname + '/src/css']}) }
+        }))
+        .pipe(gulp.dest(outputPath));
 
     var b = browserify({
         entries: 'index.js',
@@ -105,16 +95,31 @@ function bundle(outputPath, isProduction) {
         .pipe(connect.reload());
 }
 
+gulp.task('default', function(done) {
+    new KarmaServer({
+        configFile: path.join(__dirname, 'karma.conf.js'),
+        singleRun: true
+    }, done).start();
+});
+
+gulp.task('connect', function() {
+    connect.server({
+        livereload: true
+    });
+    gulp.watch([
+        './src/**/*',
+        './index.js',
+        './demo/**/*.html'
+    ], ['bundle-dev']);
+});
+
+
 gulp.task('bundle-dev', function() {
     return bundle('build', false);
 });
 
 gulp.task('bundle', function() {
     return bundle('dist', gutil.env.production);
-});
-
-gulp.task('dev', function() {
-    gulp.watch(['index.js', 'src/**/*.js'], ['bundle']);
 });
 
 gulp.task('test-w', function(done) {
