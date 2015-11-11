@@ -61,7 +61,7 @@ module.exports = function(config) {
         logLevel: config.LOG_INFO,
         autoWatch: true,
         autoWatchBatchDelay: 1000,
-        browsers: ['Firefox'],
+        browsers: ['Chrome'],
         singleRun: false,
         browserNoActivityTimeout: 30000
     });
