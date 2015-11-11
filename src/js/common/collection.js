@@ -44,50 +44,51 @@ function Collection(getItemIDFn) {
  * static props
  **********/
 
-Collection.filter = {
-    /**
-     * return AND operate all of function's return value
-     * @param {array} arr filters
-     * @param {...*} [params] support filter parameters
-     * @return {boolean} AND operated value
-     */
-    and: function(arr, params) {    // eslint-disable-line
-        var args = aps.call(arguments, 1),
-            i = 0,
-            cnt = arr.length;
+/**
+ * Combind supplied function filters and condition.
+ * @param {...function} filters - function filters
+ * @returns {function} combined filter
+ */
+Collection.and = function(filters) {
+    var cnt;
+
+    filters = aps.call(arguments);
+    cnt = filters.length;
+
+    return function(item) {
+        var i = 0;
 
         for (; i < cnt; i += 1) {
-            if (!arr[i].apply(null, args)) {
+            if (!filters[i].call(null, item)) {
                 return false;
             }
         }
-
+        
         return true;
-    },
+    };
+};
 
-    /**
-     * return OR operate all of function's return value
-     * @param {array} arr filters
-     * @param {...*} [params] support filter parameters
-     * @return {boolean} OR operated value
-     */
-    or: function(arr, params) {    // eslint-disable-line
-        var args = aps.call(arguments, 1),
-            tmp,
-            result;
+/**
+ * Combine multiple function filters with OR clause.
+ * @param {...function} filters - function filters
+ * @returns {function} combined filter
+ */
+Collection.or = function(filters) {
+    var cnt;
 
-        forEachArr(arr, function(filter) {
-            tmp = filter.apply(null, args);
+    filters = aps.call(arguments);
+    cnt = filters.length;
 
-            if (util.isUndefined(result)) {
-                result = tmp;
-            }
+    return function(item) {
+        var i = 1,
+            result = filters[0].call(null, item);
 
-            result = (result || tmp);
-        });
+        for (; i < cnt; i += 1) {
+            result = (result || filters[i].call(null, item));
+        }
 
         return result;
-    }
+    };
 };
 
 /**
@@ -262,13 +263,9 @@ Collection.prototype.doWhenHas = function(id, fn, context) {
  *     return item.disabled === false;
  * }
  *
- * collection.find(function(item) {
- *     return Collection.filter.and([filter1, filter2], item);
- * });
+ * collection.find(Collection.and(filter1, filter2));
  *
- * collection.find(function(item) {
- *     return Collection.filter.or([filter1, filter2], item);
- * });
+ * collection.find(Collection.or(filter1, filter2));
  */
 Collection.prototype.find = function(filter) {
     var result = new Collection();

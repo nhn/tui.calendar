@@ -156,8 +156,9 @@ var domevent = {
             return;
         }
 
-        if (util.browser.msie && util.browser.version < 8) {
-            obj.removeAttribute(eventKey);
+        // throw exception when deleting host object's property in below IE8
+        if (util.browser.msie && util.browser.version < 9) {
+            obj[eventKey] = null;
             return;
         }
 

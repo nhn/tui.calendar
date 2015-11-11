@@ -144,7 +144,7 @@ describe('module:domevent', function() {
                 'mousewheel': handler.mousewheel
             });
 
-            expect(btn._evt).toBeUndefined();
+            expect(btn._evt).toBeFalsy();
         });
     });
 

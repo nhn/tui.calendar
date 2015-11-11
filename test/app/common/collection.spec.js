@@ -196,7 +196,7 @@ describe('Collection', function() {
         });
     });
     
-    describe('filter', function() {
+    describe('Collection.and()', function() {
         var item1,
             item2,
             item3;
@@ -209,51 +209,62 @@ describe('Collection', function() {
             c.add(item1, item2, item3);
         });
 
-        it('it can use AND multiple filters.',  function() {
+        it('combind multiple function filter AND clause.', function() {
             function filter1(item) {
-                return item._id === 1;
+                return item._id === 2;
             }
 
             function filter2(item) {
-                return item.value === 21;
+                return item.value === 50;
             }
 
             function filter3(item) {
-                return item.value === 20;
+                return item.label === '';
             }
 
-            var result = c.find(function(item) {
-                return Collection.filter.and([filter1, filter2], item);
-            });
-
-            expect(result).toEqual(new Collection());
-
-            result = c.find(function(item) {
-                return Collection.filter.and([filter1, filter3], item);
-            });
+            var combinedFilter = Collection.and(filter1, filter2);
+            var result = c.find(combinedFilter);
 
             var expected = new Collection();
-            expected.add(item1);
+            expected.add(item2);
             expect(result).toEqual(expected);
+
+            result = c.find(Collection.and(filter1, filter2, filter3));
+            expect(result.length).toBe(0);
+
+            expect(c.find(combinedFilter).length).toBe(1);
+        });
+    });
+
+    describe('Collection.or()', function() {
+        var item1,
+            item2,
+            item3;
+
+        beforeEach(function() {
+            item1 = { _id: 1, value: 20 };
+            item2 = { _id: 2, value: 50 };
+            item3 = { _id: 4, value: 2 };
+
+            c.add(item1, item2, item3);
         });
 
-        it('it can use OR multiple filters.', function() {
+        it('combine multiple function filter with OR clause.', function() {
             function filter1(item) {
-                return item._id === 1;
+                return item._id === 2;
             }
 
             function filter2(item) {
-                return item.value === 21;
+                return item.value === 2;
             }
 
-            var result = c.find(function(item) {
-                return Collection.filter.or([filter1, filter2], item);
-            });
+            var combined = Collection.or(filter1, filter2);
+            var result = c.find(combined);
 
-            var expected = new Collection();
-            expected.add(item1);
+            expect(result.length).toBe(2);
+            expect(result.has(1)).toBe(false);
 
-            expect(result).toEqual(expected);
+            expect(c.find(function(model) { return model._id === 2 || model.value === 2; })).toEqual(result);
         });
     });
 
