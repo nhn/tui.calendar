@@ -15,6 +15,8 @@ var hbsfy = require('hbsfy');
 var handlebars = require('handlebars');
 var insert = require('gulp-insert');
 var through = require('through2');
+var stylus = require('gulp-stylus');
+var preprocessify = require('preprocessify');
 
 var HEADER = [
 '/**',
