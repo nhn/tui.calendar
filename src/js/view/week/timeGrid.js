@@ -209,17 +209,17 @@ TimeGrid.prototype.refreshHourmarker = function() {
 
     todaymarker = domutil.find('.schedule-view-timegrid-todaymarker', hourmarker);
     text = domutil.find('.schedule-view-timegrid-hourmarker-time', hourmarker);
-    labelToVisible = domutil.find('.schedule-invisible', hourLabels);
+    labelToVisible = domutil.find('.schedule-view-invisible', hourLabels);
     labelToInvisible = domutil.find('.schedule-view-timegrid-hour-' + viewModel.hour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
         if (labelToVisible !== labelToInvisible) {
             if (labelToVisible) {
-                domutil.removeClass(labelToVisible, 'schedule-invisible');
+                domutil.removeClass(labelToVisible, 'schedule-view-invisible');
             }
 
             if (labelToInvisible) {
-                domutil.addClass(labelToInvisible, 'schedule-invisible');
+                domutil.addClass(labelToInvisible, 'schedule-view-invisible');
             }
         }
 

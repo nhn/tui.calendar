@@ -1,0 +1,14 @@
+css-prefix = 'schedule-view-'
+
+vendor(prop, args)
+    -webkit-{prop} args
+    -moz-{prop} args
+    {prop} args
+
+clearfix()
+    zoom: 1;
+    &:after
+        content: '';
+        display: block;
+        clear: both;
+    
