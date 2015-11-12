@@ -1,0 +1,95 @@
+.{css-prefix}minicalendar
+    table
+        table-layout: fixed
+
+    caption 
+        text-align: center
+        margin-bottom: 7px
+        button
+            border: none
+            background-color: transparent
+            cursor: pointer
+            width: 16px
+
+    th,
+    td
+        position: relative
+        margin: 0
+        padding: 0
+        text-align: center
+        color: #181818
+
++prefix-classes(minicalendar)
+    .title
+        display: inline-block
+        width: 60px
+
+    .prev
+        background-repeat: no-repeat
+        background-image: url(minicalendar-prev.png)
+
+    .next
+        background-repeat: no-repeat
+        background-image: url(minicalendar-next.png)
+
+    .prev span,
+    .next span
+        visibility: hidden
+
+    .date
+        display: block
+        wh(25px, 25px)
+        margin: 0
+        padding: 0
+        cursor: pointer
+        outline: none
+        border: none
+        text-align: center
+        background-color: transparent
+        color: #181818
+
+    .other .date
+        color: #b8b8b8
+
+    .label
+        position: relative
+        pos(0, 0)
+        display: block
+        line-height: 25px
+
+    .has-schedule  .label
+        font-weight: bold
+
+    .weekend .label
+        color: red
+
+    .weekend.other .label
+        color: #ffcccc
+
+    .focused
+        .label
+            color: #f8f8f8
+        &:before
+            content: ''
+            margin: -50% 0 0 -50%
+            display: block
+            position: absolute
+            wh(25px, 25px)
+            pos(50%, 50%)
+            background-color: #b8b8b8
+            border-radius: 50%
+    .today
+        &:before
+            background-color: #86c1b9
+        
+
+@media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-devicepixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx)
+    +prefix-classes(minicalendar)
+        .prev
+            background-size: 16px 16px
+            background-image: url(minicalendar-prev@2x.png)
+
+        .next
+            background-size: 16px 16px
+            background-image: url(minicalendar-next@2x.png)
+
