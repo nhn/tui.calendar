@@ -1,0 +1,99 @@
+// Allday view
++prefix-classes(allday)
+    .left
+        wh(60px, 100%)
+        float: left
+        text-align: right
+        color: #777
+
+    .left span
+        display: block
+        padding: 3px 5px 0 0
+
+    .right
+        position: relative
+        background-color: #fff
+        margin-left: 60px
+
+    .resize-handle
+        position: absolute
+        top: 0
+        right: 0
+        width: 6px
+        background-position: 3px center
+        cursor: col-resize
+
+// Monthweek view
++prefix-classes(monthweek)
+    .grid-line
+        position: absolute
+        height: 100%
+        margin-left: -1px
+        border-left: 1px solid #ccc
+
+    .events
+        pos(0px, 0px)
+        wh(100%, 100%)
+        overflow: hidden
+        position: absolute
+
+// Event blocks
++prefix-classes(allday)
+    .event-block
+        position: absolute
+
+    .event
+        position: relative
+        margin: 0 3px 0 2px
+
+    .event span
+        padding-left: 3px
+        line-height: 18px
+        font-size: 0.9em
+
+    .event-title
+        display: block
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        margin-right: 10px
+
+    .exceed-left .event
+        margin-left: 0px
+
+    .exceed-right .event
+        margin-right: 0px
+
+    .exceed-right .resize-handle
+        display: none
+
+// Guide element
++prefix-classes(allday + guide-)
+    .creation-block
+        position: absolute
+
+    .creation-block span
+        position: absolute
+        pos(0px, 3px)
+        display: block
+        line-height: 18px
+        margin-top: 2px
+        padding-left: 3px
+        color: #fff
+        vendor(text-shadow, 0px 0px 2px #282828)
+
+    .creation
+        margin: 2px 3px 0 2px
+        padding-left: 3px
+        background-color: #f7ca88
+        line-height: 18px
+        opacity: 0.9
+        outline: 2px solid #fff
+        &:after
+            content: '\00a0'
+
+    // Resize guide element use Move guide style.
+    .move
+        opacity: 0.6
+
+

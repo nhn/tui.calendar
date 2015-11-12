@@ -54,12 +54,10 @@ AlldayCreationGuide.prototype.destroy = function() {
  */
 AlldayCreationGuide.prototype.initializeGuideElement = function() {
     var guideElement = this.guideElement,
-        alldayView = this.alldayCreation.alldayView,
-        eventBlockHeight = alldayView.options.eventBlockHeight,
         spanElement;
 
-    domutil.addClass(guideElement, 'schedule-view-allday-creation-guide-block');
-    domutil.appendHTMLElement('div', guideElement, 'schedule-view-allday-creation-guide');
+    domutil.addClass(guideElement, 'schedule-view-allday-guide-creation-block');
+    domutil.appendHTMLElement('div', guideElement, 'schedule-view-allday-guide-creation');
 
     spanElement = domutil.appendHTMLElement('span', guideElement);
     spanElement.innerHTML = CREATE_NEW_LABEL;

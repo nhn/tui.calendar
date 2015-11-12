@@ -64,6 +64,7 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
         height: options.containerHeight,
         eventBlockHeight: options.eventHeight + options.eventGutter,
         eventBlockGutter: options.eventGutter,
+        eventHeight: options.eventHeight,
         eventGrid: util.map(range, function() {
             return widthPercent;
         }),

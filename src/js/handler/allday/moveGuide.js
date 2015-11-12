@@ -143,7 +143,7 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     }
 
     eventContainer = domutil.find('.schedule-view-monthweek-events', alldayViewContainer);
-    domutil.addClass(guideElement, 'schedule-view-allday-move-guide');
+    domutil.addClass(guideElement, 'schedule-view-allday-guide-move');
     eventContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;
