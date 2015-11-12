@@ -63,7 +63,7 @@ module.exports = {
      */
     'dayname-isHolliday': function() {
         if (this.day === 0 || this.day === 6) {
-            return 'schedule-view-dayname schedule-holliday';
+            return 'schedule-view-dayname schedule-view-holliday';
         }
 
         return 'schedule-view-dayname';
