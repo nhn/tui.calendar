@@ -30,6 +30,7 @@
     "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
     "moment": "^2.10.6",
     "preprocessify": "0.0.6",
+    "stylus": "^0.52.4",
     "through2": "^2.0.0",
     "tui-code-snippet": "^1.0.4",
     "underscore": "^1.8.3",
@@ -37,7 +38,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "doc": "./node_modules/.bin/jsdoc -c jsdoc-conf.json -t ./node_modules/fedoc-template"
+    "doc": "./node_modules/.bin/jsdoc -c jsdoc-conf.json"
   },
   "author": "NHNEnt FE Development Team <e0242@nhnent.com>"
 }
