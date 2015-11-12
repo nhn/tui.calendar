@@ -1,0 +1,129 @@
+// Timegrid
+.{css-prefix}timegrid
+    position: relative
+    overflow: hidden
+    background-color: #fff
+
++prefix-classes(timegrid)
+    .container
+        height: 416px
+        overflow-y: scroll
+        background-color: #ccc
+
+    .scroll-contents
+        height: 416px
+
+    .left
+        width: 60px
+        float: left
+        list-style: none
+        margin: 0
+        padding: 0
+
+    .left li
+        padding: 3px 5px 0 0
+        wh(54px, 36px)
+        border-right: 1px solid #ccc
+        border-bottom: 1px solid #ccc
+        text-align: right
+        background-color: #eee
+        color: #777
+        &:last-child
+            border-bottom: none
+
+    .grid
+        margin-top: 19px
+        height: 19px
+        border-top: 1px dotted #eee
+        border-bottom: 1px solid #ccc
+        &:last-child
+            border-bottom: none
+
+    .events
+        position: absolute
+        wh(100%, 100%)
+        top: 0px
+
+    .events-container
+        margin-left: 60px
+        height: 100%
+
+    // Hourmarker
+    .hourmarker-wrap
+        position: relative
+        margin-right: 60px
+
+    .hourmarker-line
+        wh(100%, 1px)
+        background-color: red
+
+    .hourmarker-time
+        position: absolute
+        width: 55px
+        left: -60px
+        text-align: right
+        line-height: 0.1em
+        color: red
+
+    // Todaymarker
+    .todaymarker
+        position: absolute
+        text-indent: -9999px
+        wh(5px, 5px)
+        background-color: red
+        margin: -3px 0 0 -3px
+        border-radius: 50%
+        z-index: 99
+
+// Time view
++prefix-classes(time)
+    .date
+        position: relative
+        height: 100%
+        float: left
+        border-right: 1px solid #ccc
+        margin-left: -1px
+        &:last-child
+            border-right: none
+            margin: 0
+            // last creation guide element
+            .event,
+            .guide-creation
+                left: 0px
+
+    .date-event-block
+        position: absolute
+        right: 0px
+
+    .event
+        position: relative
+        left: 1px
+        margin-right: 7px
+        height: 100%
+        font-size: 0.9em
+
+    .resize-handle
+        position: absolute
+        right: 7px
+        bottom: 0px
+        left: 0px
+        text-align: center
+        color: #fff
+        cursor: row-resize
+        background-position: center 7px
+
+    // Guide element
+    .guide-creation
+        position: absolute
+        right: 2px
+        left: 1px
+        background-color: #7cafc2
+        opacity: 0.8
+
+    .guide-move,
+    .guide-resize
+        .event,
+        .resize-handle
+            opacity: 0.7
+            z-index: 97
+

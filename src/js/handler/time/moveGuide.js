@@ -112,7 +112,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     }
 
     guideElement = guideElement.cloneNode(true);
-    domutil.addClass(guideElement, 'schedule-view-time-move-guide');
+    domutil.addClass(guideElement, 'schedule-view-time-guide-move');
 
     this._startTopPixel = parseFloat(guideElement.style.top);
     this._startGridY = dragStartEventData.nearestGridY;

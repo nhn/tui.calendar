@@ -133,7 +133,7 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
 
     this._originEventElement = originElement;
     guideElement = this.guideElement = originElement.cloneNode(true);
-    domutil.addClass(guideElement, 'schedule-view-time-resize-guide');
+    domutil.addClass(guideElement, 'schedule-view-time-guide-resize');
 
     originElement.style.display = 'none';
     dragStartEventData.relatedView.container.appendChild(guideElement);

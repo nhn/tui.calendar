@@ -37,12 +37,11 @@ function TimeCreationGuide(timeCreation) {
      */
     this._getTopFunc = null;
 
-    domutil.addClass(this.guideElement, 'schedule-view-time-creation-guide');
+    domutil.addClass(this.guideElement, 'schedule-view-time-guide-creation');
 
     timeCreation.on({
         'time_creation_dragstart': this._onDragStart,
         'time_creation_drag': this._onDrag,
-        // 'time_creation_dragend': this.clearGuideElement,
         'time_creation_click': this.clearGuideElement
     }, this);
 }
