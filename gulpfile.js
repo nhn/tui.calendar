@@ -37,24 +37,18 @@ function bundle(outputPath, isProduction) {
 
     outputPath = outputPath || 'dist';
 
-    gulp.src([
-            'src/css/common.css',
-            'src/css/**/*.css'
-        ])
-        .pipe(concat('calendar.css'))
+    gulp.src('src/css/main.styl')
+        .pipe(stylus({
+            // base64 image data
+            define: { url: oStylus.url({paths: [__dirname + '/src/css']}) }
+        }))
+        .pipe(rename('calendar.css'))
         .pipe(insert.prepend(versionHeader))
         .pipe(gulp.dest(outputPath))
         .pipe(isProduction ? cssmin() : gutil.noop())
         .pipe(isProduction ? rename({extname: '.min.css'}) : gutil.noop())
         .pipe(insert.prepend(versionHeader))
         .pipe(isProduction ? gulp.dest(outputPath) : gutil.noop());
-
-    gulp.src('src/css/style.styl')
-        .pipe(stylus({
-            // base64 image data
-            define: { url: oStylus.url({paths: [__dirname + '/src/css']}) }
-        }))
-        .pipe(gulp.dest(outputPath));
 
     var b = browserify({
         entries: 'index.js',
