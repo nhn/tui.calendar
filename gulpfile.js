@@ -40,7 +40,7 @@ function bundle(outputPath, isProduction) {
     gulp.src('src/css/main.styl')
         .pipe(stylus({
             // base64 image data
-            define: { url: oStylus.url({paths: [__dirname + '/src/css']}) }
+            define: { url: oStylus.url({paths: [__dirname + '/src/css/image']}) }
         }))
         .pipe(rename('calendar.css'))
         .pipe(insert.prepend(versionHeader))
