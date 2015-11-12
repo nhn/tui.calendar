@@ -23,7 +23,7 @@ var forEachArr = util.forEachArray;
  * @param {HTMLElement} container Element to use container for this view.
  */
 function Time(width, options, container) {
-    View.call(this, null, container);
+    View.call(this, container);
 
     container.style.width = width + '%';
 
@@ -35,7 +35,7 @@ function Time(width, options, container) {
     }, options);
 
     if (this.options.isToday) {
-        domutil.addClass(this.container, 'schedule-view-time-date-today');
+        domutil.addClass(this.container, '/* @echo CSS_PREFIX */time-date-today');
     }
 }
 

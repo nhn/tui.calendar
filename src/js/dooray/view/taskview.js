@@ -26,10 +26,10 @@ function TaskView(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'schedule-view-task-container'
+        '/* @echo CSS_PREFIX */task-container'
     );
 
-    View.call(this, options, container);
+    View.call(this, container);
 
     /**
      * @type {object}

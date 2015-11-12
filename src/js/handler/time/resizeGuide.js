@@ -77,7 +77,7 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
         originElement = this._originEventElement;
 
     if (!util.browser.msie) {
-        domutil.removeClass(global.document.body, 'schedule-view-resizing');
+        domutil.removeClass(global.document.body, '/* @echo CSS_PREFIX */resizing');
     }
 
     if (originElement) {
@@ -115,12 +115,12 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var originElement = domutil.closest(
             dragStartEventData.target,
-            '.schedule-view-time-date-event-block'
+            './* @echo CSS_PREFIX */time-date-event-block'
         ),
         guideElement;
 
     if (!util.browser.msie) {
-        domutil.addClass(global.document.body, 'schedule-view-resizing');
+        domutil.addClass(global.document.body, '/* @echo CSS_PREFIX */resizing');
     }
 
     if (!originElement) {
@@ -133,7 +133,7 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
 
     this._originEventElement = originElement;
     guideElement = this.guideElement = originElement.cloneNode(true);
-    domutil.addClass(guideElement, 'schedule-view-time-guide-resize');
+    domutil.addClass(guideElement, '/* @echo CSS_PREFIX */time-guide-resize');
 
     originElement.style.display = 'none';
     dragStartEventData.relatedView.container.appendChild(guideElement);

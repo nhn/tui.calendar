@@ -11,7 +11,7 @@ var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
 var tmpl = require('./minicalendar.hbs');
 
-var getDateRx = /schedule-view-minicalendar-(\d{4}-\d{2}-\d{2})/;
+var getDateRx = new RegExp('/* @echo CSS_PREFIX */minicalendar-(\\d{4}-\\d{2}-\\d{2})');
 
 /**
  * @constructor
@@ -30,8 +30,8 @@ function MiniCalendar(options, container) {
         return new MiniCalendar(options, container);
     }
 
-    View.call(this, options, container);
-    domutil.addClass(container, 'schedule-view-minicalendar');
+    View.call(this, container);
+    domutil.addClass(container, '/* @echo CSS_PREFIX */minicalendar');
     domevent.on(this.container, 'click', this._onClick, this);
 
     /**
@@ -69,7 +69,7 @@ util.inherit(MiniCalendar, View);
  * @param {HTMLButtonElement} buttonElement - next, prev button from _onClick event handler
  */
 MiniCalendar.prototype._nav = function(buttonElement) {
-    var isNext = domutil.hasClass(buttonElement, 'schedule-view-minicalendar-next'),
+    var isNext = domutil.hasClass(buttonElement, '/* @echo CSS_PREFIX */minicalendar-next'),
         options = this.options,
         offset = isNext ? 1 : -1,
         eventData = {
@@ -106,18 +106,18 @@ MiniCalendar.prototype._date = function(buttonElement) {
         };
 
     if (td) {
-        previous = domutil.find('.schedule-view-minicalendar-focused', this.container);
+        previous = domutil.find('./* @echo CSS_PREFIX */minicalendar-focused', this.container);
 
         if (previous) {
-            domutil.removeClass(previous, 'schedule-view-minicalendar-focused');
+            domutil.removeClass(previous, '/* @echo CSS_PREFIX */minicalendar-focused');
         }
 
-        domutil.addClass(td, 'schedule-view-minicalendar-focused');
+        domutil.addClass(td, '/* @echo CSS_PREFIX */minicalendar-focused');
 
         selected = this.getSelectedDate();
 
         if (datetime.isSameDate(selected, today)) {
-            domutil.addClass(td, 'schedule-view-minicalendar-today');
+            domutil.addClass(td, '/* @echo CSS_PREFIX */minicalendar-today');
         }
 
         eventData.after = selected;
@@ -144,12 +144,12 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
         return;
     }
 
-    if (domutil.hasClass(button, 'schedule-view-minicalendar-date')) {
+    if (domutil.hasClass(button, '/* @echo CSS_PREFIX */minicalendar-date')) {
         this._date(button);
         return;
     }
 
-    if (domutil.hasClass(button, 'schedule-view-minicalendar-nav')) {
+    if (domutil.hasClass(button, '/* @echo CSS_PREFIX */minicalendar-nav')) {
         this._nav(button);
         return;
     }
@@ -160,7 +160,7 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
  * @returns {Date} selected date
  */
 MiniCalendar.prototype.getSelectedDate = function() {
-    var selected = domutil.find('.schedule-view-minicalendar-focused', this.container),
+    var selected = domutil.find('./* @echo CSS_PREFIX */minicalendar-focused', this.container),
         matches;
 
     if (!selected) {
@@ -189,7 +189,7 @@ MiniCalendar.prototype.selectDate = function(date) {
     }
 
     _date = datetime.format(date, 'YYYY-MM-DD');
-    td = domutil.find('.schedule-view-minicalendar-' + _date, this.container);
+    td = domutil.find('./* @echo CSS_PREFIX */minicalendar-' + _date, this.container);
     button = domutil.find('button', td);
 
     if (!td || !button) {

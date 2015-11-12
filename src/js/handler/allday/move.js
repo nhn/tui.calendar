@@ -9,8 +9,8 @@ var domutil = require('../../common/domutil');
 var AlldayCore = require('./core');
 var AlldayMoveGuide = require('./moveGuide');
 
-var checkExpectedConditionIDRx = /^schedule-view-allday-event(-title)?$/;
-var parseViewIDRx = /^schedule-view-allday-monthweek[\s]schedule-view-(\d+)/;
+var checkExpectedConditionIDRx = new RegExp('^/* @echo CSS_PREFIX */allday-event(-title)?$');
+var parseViewIDRx = new RegExp('^/* @echo CSS_PREFIX */allday-monthweek[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -77,7 +77,7 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    parentView = domutil.closest(target, '.schedule-view-allday-monthweek');
+    parentView = domutil.closest(target, './* @echo CSS_PREFIX */allday-monthweek');
 
     if (!parentView) {
         return false;
@@ -112,7 +112,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.schedule-view-allday-event-block');
+    eventBlockElement = domutil.closest(target, './* @echo CSS_PREFIX */allday-event-block');
     modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 

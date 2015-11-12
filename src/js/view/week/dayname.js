@@ -12,7 +12,7 @@ var daynameTmpl = require('../template/week/daynames.hbs');
 
 /**
  * @constructor
- * @paran {object} options - options for dayname view
+ * @param {object} options - options for dayname view
  * @param {HTMLElement} container Container element to use.
  * @extends {View}
  */
@@ -20,14 +20,14 @@ function DayName(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'schedule-view-dayname-container'
+        '/* @echo CSS_PREFIX */dayname-container'
     );
 
     this.options = util.extend({
         daynames: ['일', '월', '화', '수', '목', '금', '토']
     }, options);
 
-    View.call(this, null, container);
+    View.call(this, container);
 }
 
 util.inherit(DayName, View);

@@ -60,7 +60,7 @@ AlldayClick.prototype.checkExpectCondition = AlldayMove.prototype.checkExpectedC
 AlldayClick.prototype._onClick = function(clickEvent) {
     var target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.schedule-view-allday-event-block'),
+        blockElement = domutil.closest(target, './* @echo CSS_PREFIX */allday-event-block'),
         eventCollection = this.baseController.events;
 
     if (!timeView || !blockElement) {

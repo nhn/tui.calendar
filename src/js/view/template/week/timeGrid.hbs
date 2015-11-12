@@ -1,18 +1,18 @@
-<div class="schedule-view-timegrid">
-    <ul class="schedule-view-timegrid-left">
-        {{#each hours}}<li class="schedule-view-timegrid-hour-{{hour}}"><span>{{hour}}</span></li>{{/each}}
+<div class="{{CSS_PREFIX}}timegrid">
+    <ul class="{{CSS_PREFIX}}timegrid-left">
+        {{#each hours}}<li class="{{CSS_PREFIX}}timegrid-hour-{{hour}}"><span>{{hour}}</span></li>{{/each}}
     </ul>
-    <div class="schedule-view-timegrid-right">
-        {{#each hours}}<div class="schedule-view-timegrid-grid"></div>{{/each}}
+    <div class="{{CSS_PREFIX}}timegrid-right">
+        {{#each hours}}<div class="{{CSS_PREFIX}}timegrid-grid"></div>{{/each}}
     </div>
-    <div class="schedule-view-timegrid-events">
-        <div class="schedule-view-timegrid-events-container"></div>
+    <div class="{{CSS_PREFIX}}timegrid-events">
+        <div class="{{CSS_PREFIX}}timegrid-events-container"></div>
     </div>
-    <div class="schedule-view-timegrid-hourmarker" style="display:none;">
-        <div class="schedule-view-timegrid-hourmarker-wrap">
-            <div class="schedule-view-timegrid-hourmarker-line"></div>
-            <div class="schedule-view-timegrid-hourmarker-time">00:00</div>
-            <div class="schedule-view-timegrid-todaymarker">today</div>
+    <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="display:none;">
+        <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line"></div>
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-time">00:00</div>
+            <div class="{{CSS_PREFIX}}timegrid-todaymarker">today</div>
         </div>
     </div>
 </div>

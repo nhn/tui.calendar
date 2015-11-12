@@ -63,41 +63,18 @@ module.exports = {
      */
     'dayname-isHolliday': function() {
         if (this.day === 0 || this.day === 6) {
-            return 'schedule-view-dayname schedule-view-holliday';
+            return '/* @echo CSS_PREFIX */dayname /* @echo CSS_PREFIX */holliday';
         }
 
-        return 'schedule-view-dayname';
+        return '/* @echo CSS_PREFIX */dayname';
     },
 
     'multiply': function(a, b) {
         return a * b;
     },
 
-    /**
-     * 셀렉트박스 헬퍼
-     * @param {string} name - 셀렉트박스 name 속성값
-     * @param {{value: string, label: string}} list - 옵션 리스트
-     * @param {string} selectedValue - 기본선택처리 원하는 값
-     * @returns {string} html tag
-     */
-    'selectbox': function(name, list, selectedValue) {
-        var html = '<select name="' + name + '">';
-
-        util.forEach(list, function(data) {
-            html += '<option value="' + data.value + '"' + (selectedValue === data.value ? ' selected' : '') + '>' + data.label + '</option>';
-        });
-
-        return html + '</select>';
-    },
-
-    'radioCalendarColor': function(name, list, checkedValue) {
-        return util.map(list, function(data) {
-            return '<label>' + 
-                '<input type="radio" name="' + name + '" value="' + data.value + '"' + 
-                (data.value === checkedValue ? ' checked' : '') + ' />' + 
-                '<span style="background-color:#' + data.value + '">&nbsp;</span>' +
-                '</label>';
-        }).join('');
+    'CSS_PREFIX': function() {
+        return '/* @echo CSS_PREFIX */';
     }
 };
 

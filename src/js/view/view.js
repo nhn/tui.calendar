@@ -13,19 +13,16 @@ var Collection = require('../common/collection');
  *
  * All views create own container element inside supplied container element.
  * @constructor
- * @param {options} options The object for describe view's specs.
  * @param {HTMLElement} container Default container element for view. you can use this element for this.container syntax.
  */
-function View(options, container) {
+function View(container) {
     var id = util.stamp(this);
-
-    options = options || {};
 
     if (util.isUndefined(container)) {
         container = domutil.appendHTMLElement('div');
     }
 
-    domutil.addClass(container, 'schedule-view-' + id);
+    domutil.addClass(container, this.cssprefix(id));
 
     /**
      * unique id
@@ -55,6 +52,12 @@ function View(options, container) {
      */
     this.parent = null;
 }
+
+/**
+ * CSS classname prefix
+ * @type {string}
+ */
+View.prototype.cssPrefix = '/* @echo CSS_PREFIX */' || 'tui-view-';
 
 /**
  * Add child views.
@@ -181,6 +184,16 @@ View.prototype.getViewBound = function() {
         width: size[0],
         height: size[1]
     };
+};
+
+
+/**
+ * Return view default CSS prefix
+ * @param {string} [className] - if supplied then return prefix added class name
+ * @returns {string} CSS prefix value
+ */
+View.prototype.cssprefix = function(className) {
+    return this.cssPrefix + (className || '');
 };
 
 module.exports = View;

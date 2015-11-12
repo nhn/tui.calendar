@@ -29,10 +29,10 @@ function TimeGrid(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'schedule-view-timegrid-container'
+        '/* @echo CSS_PREFIX */timegrid-container'
     );
 
-    View.call(this, null, container);
+    View.call(this, container);
 
     if (!util.browser.safari) {
         /**
@@ -142,7 +142,7 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         child = new Time(
             width,
             childOption,
-            domutil.appendHTMLElement('div', container, 'schedule-view-time-date')
+            domutil.appendHTMLElement('div', container, '/* @echo CSS_PREFIX */time-date')
         );
         child.render(ymd, events);
 
@@ -172,7 +172,7 @@ TimeGrid.prototype.render = function(viewModel) {
     this._renderChilds(
         timeViewModel,
         100 / eventLen,
-        domutil.find('.schedule-view-timegrid-events-container', container)
+        domutil.find('./* @echo CSS_PREFIX */timegrid-events-container', container)
     );
 
     this._hourLabels = domutil.find('ul', container);
@@ -180,7 +180,7 @@ TimeGrid.prototype.render = function(viewModel) {
     /**********
      * Render hourmarker
      **********/
-    this.hourmarker = domutil.find('.schedule-view-timegrid-hourmarker', container);
+    this.hourmarker = domutil.find('./* @echo CSS_PREFIX */timegrid-hourmarker', container);
     this.refreshHourmarker();
 
     if (!this._scrolled) {
@@ -207,19 +207,19 @@ TimeGrid.prototype.refreshHourmarker = function() {
         return;
     }
 
-    todaymarker = domutil.find('.schedule-view-timegrid-todaymarker', hourmarker);
-    text = domutil.find('.schedule-view-timegrid-hourmarker-time', hourmarker);
-    labelToVisible = domutil.find('.schedule-view-invisible', hourLabels);
-    labelToInvisible = domutil.find('.schedule-view-timegrid-hour-' + viewModel.hour, hourLabels);
+    todaymarker = domutil.find('./* @echo CSS_PREFIX */timegrid-todaymarker', hourmarker);
+    text = domutil.find('./* @echo CSS_PREFIX */timegrid-hourmarker-time', hourmarker);
+    labelToVisible = domutil.find('./* @echo CSS_PREFIX */invisible', hourLabels);
+    labelToInvisible = domutil.find('./* @echo CSS_PREFIX */timegrid-hour-' + viewModel.hour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
         if (labelToVisible !== labelToInvisible) {
             if (labelToVisible) {
-                domutil.removeClass(labelToVisible, 'schedule-view-invisible');
+                domutil.removeClass(labelToVisible, '/* @echo CSS_PREFIX */invisible');
             }
 
             if (labelToInvisible) {
-                domutil.addClass(labelToInvisible, 'schedule-view-invisible');
+                domutil.addClass(labelToInvisible, '/* @echo CSS_PREFIX */invisible');
             }
         }
 

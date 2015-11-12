@@ -15,19 +15,18 @@ var View = require('../view');
  * @param {object} options View options
  * @param {string} [options.renderStartDate] Start date of render. if not supplied then use -3d from today. YYYY-MM-DD format.
  * @param {string} [options.renderEndDate] End date of render. if not supplied then use +3d from today. YYYY-MM-DD format.
+ * @param {string} [options.cssPrefix] - CSS classname prefix
  * @param {HTMLElement} container The element to use container for this view.
  * @extends {View}
  */
 function Week(controller, options, container) {
     var range;
 
-    container = domutil.appendHTMLElement(
-        'div',
-        container,
-        'schedule-view-week-container'
-    );
+    container = domutil.appendHTMLElement('div', container);
 
-    View.call(this, null, container);
+    View.call(this, container);
+
+    domutil.addClass(container, '/* @echo CSS_PREFIX */week-container');
 
     range = this._getRenderDateRange(new Date());
 

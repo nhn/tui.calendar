@@ -25,7 +25,7 @@ function MonthWeek(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'schedule-view-allday-monthweek'
+        '/* @echo CSS_PREFIX */allday-monthweek'
     );
 
     /**
@@ -40,7 +40,7 @@ function MonthWeek(options, container) {
 
     options.minHeight = options.containerHeight + options.containerBottomGutter;
 
-    View.call(this, null, container);
+    View.call(this, container);
 }
 
 util.inherit(MonthWeek, View);

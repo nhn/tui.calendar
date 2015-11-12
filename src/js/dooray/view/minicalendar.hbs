@@ -1,8 +1,8 @@
 <table>
 <caption>
-    <button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-prev"><span>&lt;</span></button>
-    <span class="schedule-view-minicalendar-title">{{title}}</span>
-    <button type="button" class="schedule-view-minicalendar-nav schedule-view-minicalendar-next"><span>&gt;</span></button>
+    <button type="button" class="{{CSS_PREFIX}}minicalendar-nav {{CSS_PREFIX}}minicalendar-prev"><span>&lt;</span></button>
+    <span class="{{CSS_PREFIX}}minicalendar-title">{{title}}</span>
+    <button type="button" class="{{CSS_PREFIX}}minicalendar-nav {{CSS_PREFIX}}minicalendar-next"><span>&gt;</span></button>
 </caption>
 <thead><tr>
 {{#each dayname}}
@@ -14,14 +14,14 @@
 <tr>
 {{#each this ~}}
 {{! table cell (date button) }}
-<td class="schedule-view-minicalendar-{{ymd}} 
-{{#if isNotThisMonth ~}}schedule-view-minicalendar-other {{/if ~}}
-{{#if selected ~}}schedule-view-minicalendar-focused {{/if ~}}
-{{#if today ~}}schedule-view-minicalendar-today {{/if~}}
-{{#if hasSchedule ~}}schedule-view-minicalendar-has-schedule {{/if ~}}
-{{#if weekend ~}}schedule-view-minicalendar-weekend {{/if ~}}">
-<button type="button" tabindex="-1" class="schedule-view-minicalendar-date">
-    <div class="schedule-view-minicalendar-label"><span>{{d}}</span></div>
+<td class="{{CSS_PREFIX}}minicalendar-{{ymd}} 
+{{#if isNotThisMonth ~}}{{CSS_PREFIX}}minicalendar-other {{/if ~}}
+{{#if selected ~}}{{CSS_PREFIX}}minicalendar-focused {{/if ~}}
+{{#if today ~}}{{CSS_PREFIX}}minicalendar-today {{/if~}}
+{{#if hasSchedule ~}}{{CSS_PREFIX}}minicalendar-has-schedule {{/if ~}}
+{{#if weekend ~}}{{CSS_PREFIX}}minicalendar-weekend {{/if ~}}">
+<button type="button" tabindex="-1" class="{{CSS_PREFIX}}minicalendar-date">
+    <div class="{{CSS_PREFIX}}minicalendar-label"><span>{{d}}</span></div>
 </button>
 </td>
 {{! table cell (date button) }}

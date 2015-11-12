@@ -10,7 +10,7 @@ var domutil = require('../../common/domutil');
 var alldayCore = require('./core');
 var AlldayCreationGuide = require('./creationGuide');
 
-var parseViewIDRx = /^schedule-view-allday-monthweek[\s]schedule-view-(\d+)/;
+var parseViewIDRx = new RegExp('^/* @echo CSS_PREFIX */allday-monthweek[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -74,7 +74,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass !== 'schedule-view-monthweek-events') {
+    if (cssClass !== '/* @echo CSS_PREFIX */monthweek-events') {
         return false;
     }
 

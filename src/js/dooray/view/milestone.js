@@ -26,10 +26,10 @@ function Milestone(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'schedule-view-milestone-container'
+        '/* @echo CSS_PREFIX */milestone-container'
     );
 
-    View.call(this, options, container);
+    View.call(this, container);
 
     /**
      * @type {object}

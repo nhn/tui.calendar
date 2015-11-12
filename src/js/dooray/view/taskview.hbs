@@ -1,19 +1,19 @@
-<div class="schedule-view-task-left">
+<div class="{{CSS_PREFIX}}task-left">
     <span>업무</span>
 </div>
-<div class="schedule-view-task-right schedule-view clear">
+<div class="{{CSS_PREFIX}}task-right schedule-view clear">
 {{#each events ~}}
-<div class="schedule-view-task-day" 
+<div class="{{CSS_PREFIX}}task-day" 
     style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;
         min-height:{{@root.minHeight}}px;height:{{@root.height}}px;">
-    <div class="schedule-view-task-day-wrap">
+    <div class="{{CSS_PREFIX}}task-day-wrap">
         {{! 출근전 }}
         {{#if morning ~}}
         <h6 style="line-height:{{@root.lineHeight}}px">출근 전</h6>
         <ul>
             {{#each morning.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
+            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -23,8 +23,8 @@
         <h6 style="line-height:{{@root.lineHeight}}px">점심 전</h6>
         <ul>
             {{#each lunch.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
+            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -34,8 +34,8 @@
         <h6 style="line-height:{{@root.lineHeight}}px">퇴근 전</h6>
         <ul>
             {{#each evening.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="schedule-view-task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="schedule-view-dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
+            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}

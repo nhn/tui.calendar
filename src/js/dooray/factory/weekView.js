@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var CSS_PREFIX = '/* @echo CSS_PREFIX */';
+
 var util = global.tui.util;
 var domutil = require('../../common/domutil');
 
@@ -57,27 +59,27 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, domutil.find('.schedule-view-dayname-layout', weekView.container));
+    dayNameView = new DayName(null, domutil.find('.' + CSS_PREFIX + 'dayname-layout', weekView.container));
     weekView.addChild(dayNameView);
 
     /**********
      * 마일스톤
      **********/
-    milestoneView = new Milestone(options.week, domutil.find('.schedule-view-milestone-layout'));
+    milestoneView = new Milestone(options.week, domutil.find('.' + CSS_PREFIX + 'milestone-layout'));
     weekView.addChild(milestoneView);
     milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
     /**********
      * 업무
      **********/
-    taskView = new TaskView(options.week, domutil.find('.schedule-view-milestone-layout'));
+    taskView = new TaskView(options.week, domutil.find('.' + CSS_PREFIX + 'milestone-layout'));
     weekView.addChild(taskView);
     taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, domutil.find('.schedule-view-allday-layout', weekView.container));
+    alldayView = new Allday(options.week, domutil.find('.' + CSS_PREFIX + 'allday-layout', weekView.container));
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -87,7 +89,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, domutil.find('.schedule-view-timegrid-layout', weekView.container));
+    timeGridView = new TimeGrid(options.week, domutil.find('.' + CSS_PREFIX + 'timegrid-layout', weekView.container));
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);

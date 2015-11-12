@@ -60,7 +60,7 @@ AlldayMoveGuide.prototype._clearGuideElement = function() {
     domutil.remove(this.guideElement);
 
     if (!util.browser.msie) {
-        domutil.removeClass(global.document.body, 'schedule-view-dragging');
+        domutil.removeClass(global.document.body, '/* @echo CSS_PREFIX */dragging');
     }
 
     this._dragStartXIndex = this.getEventDataFunc = this.guideElement = null;
@@ -81,15 +81,15 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
         guideElement.style.width = widthPercent + '%';
 
         if (isExceededLeft) {
-            domutil.addClass(guideElement, 'schedule-view-allday-exceed-left');
+            domutil.addClass(guideElement, '/* @echo CSS_PREFIX */allday-exceed-left');
         } else {
-            domutil.removeClass(guideElement, 'schedule-view-allday-exceed-left');
+            domutil.removeClass(guideElement, '/* @echo CSS_PREFIX */allday-exceed-left');
         }
 
         if (isExceededRight) {
-            domutil.addClass(guideElement, 'schedule-view-allday-exceed-right');
+            domutil.addClass(guideElement, '/* @echo CSS_PREFIX */allday-exceed-right');
         } else {
-            domutil.removeClass(guideElement, 'schedule-view-allday-exceed-right');
+            domutil.removeClass(guideElement, '/* @echo CSS_PREFIX */allday-exceed-right');
         }
     });
 };
@@ -139,11 +139,11 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         eventContainer;
 
     if (!util.browser.msie) {
-        domutil.addClass(global.document.body, 'schedule-view-dragging');
+        domutil.addClass(global.document.body, '/* @echo CSS_PREFIX */dragging');
     }
 
-    eventContainer = domutil.find('.schedule-view-monthweek-events', alldayViewContainer);
-    domutil.addClass(guideElement, 'schedule-view-allday-guide-move');
+    eventContainer = domutil.find('./* @echo CSS_PREFIX */monthweek-events', alldayViewContainer);
+    domutil.addClass(guideElement, '/* @echo CSS_PREFIX */allday-guide-move');
     eventContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;

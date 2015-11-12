@@ -60,7 +60,7 @@ AlldayResizeGuide.prototype._clearGuideElement = function() {
     domutil.remove(this.guideElement);
 
     if (!util.browser.msie) {
-        domutil.removeClass(global.document.body, 'schedule-view-resizing-x');
+        domutil.removeClass(global.document.body, '/* @echo CSS_PREFIX */resizing-x');
     }
 
     this.getEventDataFunc = null;
@@ -112,11 +112,11 @@ AlldayResizeGuide.prototype._onDragStart = function(dragStartEventData) {
         eventContainer;
 
     if (!util.browser.msie) {
-        domutil.addClass(global.document.body, 'schedule-view-resizing-x');
+        domutil.addClass(global.document.body, '/* @echo CSS_PREFIX */resizing-x');
     }
 
-    eventContainer = domutil.find('.schedule-view-monthweek-events', alldayViewContainer);
-    domutil.addClass(guideElement, 'schedule-view-allday-guide-move');
+    eventContainer = domutil.find('./* @echo CSS_PREFIX */monthweek-events', alldayViewContainer);
+    domutil.addClass(guideElement, '/* @echo CSS_PREFIX */allday-guide-move');
     eventContainer.appendChild(guideElement);
 
     this.getEventDataFunc = this.getGuideElementWidthFunc(dragStartEventData);

@@ -29,6 +29,7 @@ var serviceWeekViewFactory = require('./weekView');
  * @constructor
  * @extends {Calendar}
  * @param {object} options - options for calendar
+ *  @param {string} [options.cssPrefix] - CSS classname prefix
  *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar

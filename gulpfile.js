@@ -17,6 +17,7 @@ var hbsfy = require('hbsfy');
 var handlebars = require('handlebars');
 var insert = require('gulp-insert');
 var through = require('through2');
+var preprocess = require('gulp-preprocess');
 var preprocessify = require('preprocessify');
 
 var HEADER = [
@@ -30,6 +31,10 @@ function bundle(outputPath, isProduction) {
     var pkg = require('./package.json');
     var tmpl = handlebars.compile(HEADER);
     var versionHeader = tmpl(pkg);
+    var context = {
+        CSS_PREFIX: gutil.env.cssprefix || 'dooray-calendar-',
+        RELEASE: isProduction
+    };
 
     if (isProduction) {
         gutil.log(gutil.colors.yellow('<< Bundling for Production >>'));
@@ -42,6 +47,7 @@ function bundle(outputPath, isProduction) {
             // base64 image data
             define: { url: oStylus.url({paths: [__dirname + '/src/css/image']}) }
         }))
+        .pipe(preprocess({context: context}))
         .pipe(rename('calendar.css'))
         .pipe(insert.prepend(versionHeader))
         .pipe(gulp.dest(outputPath))
@@ -73,6 +79,7 @@ function bundle(outputPath, isProduction) {
     }
 
     return b.transform(hbsfy)
+        .transform(preprocessify(context))
         .transform(prependTransform)
         .bundle()
         .on('error', function(err) {

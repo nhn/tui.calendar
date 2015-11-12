@@ -11,12 +11,12 @@ describe('View', function() {
     describe('View()', function() {
         it('make an container element on body when container is not supplied.', function() {
             view = new View();
-            expect(document.querySelector('.schedule-view-' + util.stamp(view))).toEqual(view.container);
+            expect(document.querySelector('.tui-view-' + util.stamp(view))).toEqual(view.container);
         });
 
         it('setting default container.', function() {
             var el = document.getElementById('container');
-            view = new View(null, el);
+            view = new View(el);
             expect(view.container).toEqual(el);
         });
     });
@@ -148,7 +148,7 @@ describe('View', function() {
 
     describe('getViewBound()', function() {
         it('calculate view\'s container element bounds.', function() {
-            view = new View(null, document.getElementById('container2'));
+            view = new View(document.getElementById('container2'));
             expect(view.getViewBound()).toEqual({
                 x: 10,
                 y: 10,
@@ -163,7 +163,7 @@ describe('View', function() {
     describe('resize()', function() {
         it('can send recursivly to each parent instances.', function() {
             view._onResize = jasmine.createSpy('viewOnResize');
-            var view2 = new View(null, document.getElementById('container3'));
+            var view2 = new View(document.getElementById('container3'));
 
             view.addChild(view2);
             view2.resize(view2);
@@ -173,8 +173,8 @@ describe('View', function() {
 
         it('send resize message properly.', function() {
             view._onResize = jasmine.createSpy('viewOnResize');
-            var view2 = new View(null, document.getElementById('container3'));
-            var view3 = new View(null, document.getElementById('container4'));
+            var view2 = new View(document.getElementById('container3'));
+            var view3 = new View(document.getElementById('container4'));
 
             // view <- view2 <- view3
             view.addChild(view2);

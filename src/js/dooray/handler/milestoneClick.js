@@ -51,12 +51,12 @@ MilestoneClick.prototype.destroy = function() {
  * otherwise, return event model id that related with target element.
  */
 MilestoneClick.prototype.checkExpectedCondition = function(target) {
-    if (!domutil.hasClass(target, 'schedule-view-dot') &&
-        !domutil.hasClass(target, 'schedule-view-milestone-item')) {
+    if (!domutil.hasClass(target, '/* @echo CSS_PREFIX */dot') &&
+        !domutil.hasClass(target, '/* @echo CSS_PREFIX */milestone-item')) {
         return false;
     }
 
-    target = domutil.closest(target, '.schedule-view-milestone-item');
+    target = domutil.closest(target, './* @echo CSS_PREFIX */milestone-item');
     
     if (!target) {
         return false;

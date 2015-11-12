@@ -56,8 +56,8 @@ AlldayCreationGuide.prototype.initializeGuideElement = function() {
     var guideElement = this.guideElement,
         spanElement;
 
-    domutil.addClass(guideElement, 'schedule-view-allday-guide-creation-block');
-    domutil.appendHTMLElement('div', guideElement, 'schedule-view-allday-guide-creation');
+    domutil.addClass(guideElement, '/* @echo CSS_PREFIX */allday-guide-creation-block');
+    domutil.appendHTMLElement('div', guideElement, '/* @echo CSS_PREFIX */allday-guide-creation');
 
     spanElement = domutil.appendHTMLElement('span', guideElement);
     spanElement.innerHTML = CREATE_NEW_LABEL;
@@ -113,7 +113,7 @@ AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
-        eventContainer = domutil.find('.schedule-view-monthweek-events', alldayContainerElement);
+        eventContainer = domutil.find('./* @echo CSS_PREFIX */monthweek-events', alldayContainerElement);
 
     eventContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);

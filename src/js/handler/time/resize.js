@@ -9,7 +9,7 @@ var domutil = require('../../common/domutil');
 var timeCore = require('./core');
 var TimeResizeGuide = require('./resizeGuide');
 
-var parseTimeViewIDRx = /^schedule-view-time-date[\s]schedule-view-(\d+)/;
+var parseTimeViewIDRx = new RegExp('^/* @echo CSS_PREFIX */time-date[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -90,11 +90,11 @@ TimeResize.prototype.checkExpectCondition = function(target) {
     var container,
         matches;
 
-    if (!domutil.hasClass(target, 'schedule-view-time-resize-handle')) {
+    if (!domutil.hasClass(target, '/* @echo CSS_PREFIX */time-resize-handle')) {
         return false;
     }
 
-    container = domutil.closest(target, '.schedule-view-time-date');
+    container = domutil.closest(target, './* @echo CSS_PREFIX */time-date');
 
     if (!container) {
         return false;
@@ -116,7 +116,7 @@ TimeResize.prototype.checkExpectCondition = function(target) {
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.schedule-view-time-date-event-block'),
+        blockElement = domutil.closest(target, './* @echo CSS_PREFIX */time-date-event-block'),
         getEventDataFunc,
         eventData;
 

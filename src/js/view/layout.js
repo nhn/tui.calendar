@@ -25,7 +25,7 @@ function Layout(container) {
     });
     /*eslint-enable*/
 
-    domutil.addClass(container, 'schedule-view-layout');
+    domutil.addClass(container, '/* @echo CSS_PREFIX */layout');
 
     /**
      * @type {HTMLElement}
@@ -84,7 +84,7 @@ Layout.prototype.toggleChildView = function(viewName) {
     this.childs.each(function(childView) {
         container = childView.container;
         flag = +(childView.viewName === viewName);
-        domutil[prefix[flag] + 'Class'](container, 'schedule-view-hidden');
+        domutil[prefix[flag] + 'Class'](container, '/* @echo CSS_PREFIX */hidden');
     });
 };
 

@@ -26,7 +26,7 @@ function Allday(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        'schedule-view-allday-container'
+        '/* @echo CSS_PREFIX */allday-container'
     );
 
     /**
@@ -46,7 +46,7 @@ function Allday(options, container) {
         }
     }, options);
 
-    View.call(this, null, container);
+    View.call(this, container);
 }
 
 util.inherit(Allday, View);
@@ -66,7 +66,7 @@ Allday.prototype.render = function(viewModel) {
 
     monthWeekInst = new MonthWeek(
         this.options, 
-        domutil.find('.schedule-view-allday-monthweek-container', container)
+        domutil.find('./* @echo CSS_PREFIX */allday-monthweek-container', container)
     );
 
     this.addChild(monthWeekInst);
