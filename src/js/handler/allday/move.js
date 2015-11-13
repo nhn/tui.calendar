@@ -71,7 +71,7 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
         parentView,
         matches;
 
-    if (!config.allday.move.checkConditionRegExp.test(cssClass)) {
+    if (!config.allday.checkCondRegExp.test(cssClass)) {
         return false;
     }
 

@@ -2,6 +2,10 @@
 var istanbul = require('browserify-istanbul');
 var hbsfy = require('hbsfy');
 var preprocessify = require('preprocessify');
+var CONTEXT = {
+    BUNDLE_TYPE: 'Release',
+    CSS_PREFIX: 'dooray-calendar-'
+};
 
 module.exports = function(config) {
     var webdriverConfig = {
@@ -19,7 +23,6 @@ module.exports = function(config) {
             'jasmine'
         ],
         files: [
-            'src/css/*.css',
             'node_modules/underscore/underscore.js',
             'node_modules/tui-code-snippet/code-snippet.js',
             'index.js',
@@ -30,14 +33,14 @@ module.exports = function(config) {
         ],
         exclude: [],
         preprocessors: {
+            'test/**/*.js': ['preprocess'],
             'index.js': ['browserify'],
-            'src/**/*.js': ['browserify'],
-            'src/js/view/template/helper.js': ['browserify']
+            'src/**/*.js': ['browserify']
         },
         browserify: {
             debug: true,
             bundleDelay: 1000,
-            transform:[hbsfy, preprocessify({CSS_PREFIX: 'dooray-calendar-'}), istanbul({
+            transform:[hbsfy, preprocessify(CONTEXT), istanbul({
                 ignore: [
                     '**/*.hbs',
                     'index.js', 
@@ -45,6 +48,9 @@ module.exports = function(config) {
                     '**/template/**'
                 ]
             })]
+        },
+        preprocessPreprocessor: {
+            context: CONTEXT
         },
         reporters: [
             'dots',

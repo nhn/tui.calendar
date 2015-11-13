@@ -5,6 +5,7 @@
  **********/
 require('tui-code-snippet');
 require('./src/js/view/template/registerHelpers');
+var config = require('./src/js/config');
 var dirty = require('./src/js/common/dirty');
 var datetime = require('./src/js/common/datetime');
 var array = require('./src/js/common/array');
@@ -26,6 +27,8 @@ var Event = require('./src/js/model/event');
  * Views
  **********/
 var View = require('./src/js/view/view');
+View.prototype.cssPrefix = config.cssPrefix;
+
 var MonthWeek = require('./src/js/view/monthweek');
 
 var Week = require('./src/js/view/week/week');
@@ -80,6 +83,7 @@ var TaskClick = require('./src/js/dooray/handler/taskClick');
 
 global.tui.util.defineNamespace('ne.dooray.calendar', {
     // common
+    config: config,
     dirty: dirty,
     datetime: datetime,
     array: array,

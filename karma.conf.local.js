@@ -1,6 +1,11 @@
 /*eslint-disable*/
 var istanbul = require('browserify-istanbul');
 var hbsfy = require('hbsfy');
+var preprocessify = require('preprocessify');
+var CONTEXT = {
+    BUNDLE_TYPE: 'Release',
+    CSS_PREFIX: 'dooray-calendar-'
+};
 
 module.exports = function(config) {
     config.set({
@@ -22,14 +27,14 @@ module.exports = function(config) {
         ],
         exclude: [],
         preprocessors: {
+            'test/**/*.js': ['preprocess'],
             'index.js': ['browserify'],
-            'src/**/*.js': ['browserify', 'preprocess'],
-            'test/**/*.js': ['preprocess']
+            'src/**/*.js': ['browserify']
         },
         browserify: {
             debug: true,
             bundleDelay: 1000,
-            transform:[hbsfy, istanbul({
+            transform:[hbsfy, preprocessify(CONTEXT), istanbul({
                 ignore: [
                     '**/*.hbs',
                     'index.js', 
@@ -39,9 +44,7 @@ module.exports = function(config) {
             })]
         },
         preprocessPreprocessor: {
-            context: {
-                CSS_PREFIX: 'dooray-calendar-'
-            }
+            context: CONTEXT
         },
         reporters: [
             'dots',
