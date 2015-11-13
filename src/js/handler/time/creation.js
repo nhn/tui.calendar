@@ -5,13 +5,12 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var TimeCreationGuide = require('./creationGuide');
 var timeCore = require('./core');
-
-var parseViewIDRx = new RegExp('^/* @echo CSS_PREFIX */time-date[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -98,12 +97,12 @@ TimeCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass === '/* @echo CSS_PREFIX */time-date-event-block') {
+    if (cssClass === config.classname('time-date-event-block')) {
         target = target.parentNode;
         cssClass = domutil.getClass(target);
     }
 
-    matches = cssClass.match(parseViewIDRx);
+    matches = cssClass.match(config.time.getViewIDRegExp);
 
     if (!matches || matches.length < 2) {
         return false;

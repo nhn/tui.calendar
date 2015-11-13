@@ -4,13 +4,12 @@
  */
 'use strict';
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var alldayCore = require('./core');
 var AlldayCreationGuide = require('./creationGuide');
-
-var parseViewIDRx = new RegExp('^/* @echo CSS_PREFIX */allday-monthweek[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -74,13 +73,13 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass !== '/* @echo CSS_PREFIX */monthweek-events') {
+    if (cssClass !== config.classname('monthweek-events')) {
         return false;
     }
 
     target = target.parentNode;
     cssClass = domutil.getClass(target);
-    matches = cssClass.match(parseViewIDRx);
+    matches = cssClass.match(config.allday.getViewIDRegExp);
 
     if (!matches || matches.length < 2) {
         return false;

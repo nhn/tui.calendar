@@ -12,7 +12,6 @@ module.exports = function(config) {
             'jasmine'
         ],
         files: [
-            'src/css/*.css',
             'node_modules/underscore/underscore.js',
             'node_modules/tui-code-snippet/code-snippet.js',
             'index.js',
@@ -24,8 +23,8 @@ module.exports = function(config) {
         exclude: [],
         preprocessors: {
             'index.js': ['browserify'],
-            'src/**/*.js': ['browserify'],
-            'src/js/view/template/helper.js': ['browserify']
+            'src/**/*.js': ['browserify', 'preprocess'],
+            'test/**/*.js': ['preprocess']
         },
         browserify: {
             debug: true,
@@ -38,6 +37,11 @@ module.exports = function(config) {
                     '**/template/**'
                 ]
             })]
+        },
+        preprocessPreprocessor: {
+            context: {
+                CSS_PREFIX: 'dooray-calendar-'
+            }
         },
         reporters: [
             'dots',

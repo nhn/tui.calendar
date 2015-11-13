@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
@@ -20,7 +21,7 @@ function DayName(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        '/* @echo CSS_PREFIX */dayname-container'
+        config.classname('dayname-container')
     );
 
     this.options = util.extend({

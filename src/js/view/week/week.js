@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var View = require('../view');
@@ -26,7 +27,7 @@ function Week(controller, options, container) {
 
     View.call(this, container);
 
-    domutil.addClass(container, '/* @echo CSS_PREFIX */week-container');
+    domutil.addClass(container, config.classname('week-container'));
 
     range = this._getRenderDateRange(new Date());
 

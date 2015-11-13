@@ -1,5 +1,5 @@
 release:
-	@gulp bundle --production --cssprefix=dooray-calendar
+	@gulp bundle --production --cssprefix=dcal-
 
 .PHONY: release
 

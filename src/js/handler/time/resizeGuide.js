@@ -4,9 +4,9 @@
  */
 'use strict';
 var util = global.tui.util;
+var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
-
 var ratio = require('../../common/common').ratio;
 
 /**
@@ -77,7 +77,7 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
         originElement = this._originEventElement;
 
     if (!util.browser.msie) {
-        domutil.removeClass(global.document.body, '/* @echo CSS_PREFIX */resizing');
+        domutil.removeClass(global.document.body, config.classname('resizing'));
     }
 
     if (originElement) {
@@ -115,12 +115,12 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var originElement = domutil.closest(
             dragStartEventData.target,
-            './* @echo CSS_PREFIX */time-date-event-block'
+            '.' + config.classname('time-date-event-block')
         ),
         guideElement;
 
     if (!util.browser.msie) {
-        domutil.addClass(global.document.body, '/* @echo CSS_PREFIX */resizing');
+        domutil.addClass(global.document.body, config.classname('resizing'));
     }
 
     if (!originElement) {
@@ -133,7 +133,7 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
 
     this._originEventElement = originElement;
     guideElement = this.guideElement = originElement.cloneNode(true);
-    domutil.addClass(guideElement, '/* @echo CSS_PREFIX */time-guide-resize');
+    domutil.addClass(guideElement, config.classname('time-guide-resize'));
 
     originElement.style.display = 'none';
     dragStartEventData.relatedView.container.appendChild(guideElement);

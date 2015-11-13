@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../../view/view');
@@ -26,7 +27,7 @@ function Milestone(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        '/* @echo CSS_PREFIX */milestone-container'
+        config.classname('milestone-container')
     );
 
     View.call(this, container);

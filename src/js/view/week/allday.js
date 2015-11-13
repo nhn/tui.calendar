@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var MonthWeek = require('../monthweek');
@@ -26,7 +27,7 @@ function Allday(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        '/* @echo CSS_PREFIX */allday-container'
+        config.classname('allday-container')
     );
 
     /**
@@ -66,7 +67,7 @@ Allday.prototype.render = function(viewModel) {
 
     monthWeekInst = new MonthWeek(
         this.options, 
-        domutil.find('./* @echo CSS_PREFIX */allday-monthweek-container', container)
+        domutil.find('.' + config.classname('allday-monthweek-container'), container)
     );
 
     this.addChild(monthWeekInst);

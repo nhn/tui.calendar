@@ -9,11 +9,11 @@ describe('TimeResize', function() {
         var parent = document.createElement('div');
         expect(TimeResize.prototype.checkExpectCondition(target)).toBe(false);
 
-        domutil.addClass(target, 'schedule-view-time-resize-handle');
+        domutil.addClass(target, '/* @echo CSS_PREFIX */time-resize-handle');
         expect(TimeResize.prototype.checkExpectCondition(target)).toBe(false);
 
-        domutil.addClass(parent, 'schedule-view-time-date');
-        domutil.addClass(parent, 'schedule-view-20');
+        domutil.addClass(parent, '/* @echo CSS_PREFIX */time-date');
+        domutil.addClass(parent, '/* @echo CSS_PREFIX */20');
 
         parent.appendChild(target);
 
@@ -29,7 +29,7 @@ describe('TimeResize', function() {
 
         expect(TimeResize.prototype.checkExpectCondition.call(mockInstance, target)).toBe('hello');
 
-        domutil.removeClass(parent, 'schedule-view-20');
+        domutil.removeClass(parent, '/* @echo CSS_PREFIX */20');
         expect(TimeResize.prototype.checkExpectCondition.call(mockInstance, target)).toBe(false);
     });
 

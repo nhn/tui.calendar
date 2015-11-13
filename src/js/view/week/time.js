@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
@@ -35,7 +36,7 @@ function Time(width, options, container) {
     }, options);
 
     if (this.options.isToday) {
-        domutil.addClass(this.container, '/* @echo CSS_PREFIX */time-date-today');
+        domutil.addClass(this.container, config.classname('time-date-today'));
     }
 }
 

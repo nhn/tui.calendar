@@ -4,12 +4,11 @@
  */
 'use strict';
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var timeCore = require('./core');
 var TimeResizeGuide = require('./resizeGuide');
-
-var parseTimeViewIDRx = new RegExp('^/* @echo CSS_PREFIX */time-date[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -90,17 +89,17 @@ TimeResize.prototype.checkExpectCondition = function(target) {
     var container,
         matches;
 
-    if (!domutil.hasClass(target, '/* @echo CSS_PREFIX */time-resize-handle')) {
+    if (!domutil.hasClass(target, config.classname('time-resize-handle'))) {
         return false;
     }
 
-    container = domutil.closest(target, './* @echo CSS_PREFIX */time-date');
+    container = domutil.closest(target, '.' + config.classname('time-date'));
 
     if (!container) {
         return false;
     }
 
-    matches = domutil.getClass(container).match(parseTimeViewIDRx);
+    matches = domutil.getClass(container).match(config.time.getViewIDRegExp);
 
     if (!matches || matches.length < 2) {
         return false;
@@ -116,7 +115,7 @@ TimeResize.prototype.checkExpectCondition = function(target) {
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, './* @echo CSS_PREFIX */time-date-event-block'),
+        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
         getEventDataFunc,
         eventData;
 

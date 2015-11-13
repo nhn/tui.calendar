@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../config');
 var domutil = require('../common/domutil');
 var Collection = require('../common/collection');
 var View = require('./view');
@@ -25,7 +26,7 @@ function Layout(container) {
     });
     /*eslint-enable*/
 
-    domutil.addClass(container, '/* @echo CSS_PREFIX */layout');
+    domutil.addClass(container, config.classname('layout'));
 
     /**
      * @type {HTMLElement}
@@ -84,7 +85,7 @@ Layout.prototype.toggleChildView = function(viewName) {
     this.childs.each(function(childView) {
         container = childView.container;
         flag = +(childView.viewName === viewName);
-        domutil[prefix[flag] + 'Class'](container, '/* @echo CSS_PREFIX */hidden');
+        domutil[prefix[flag] + 'Class'](container, config.classname('hidden'));
     });
 };
 

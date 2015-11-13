@@ -27,14 +27,16 @@ var HEADER = [
 ' */',
 ''].join('\n');
 
-function bundle(outputPath, isProduction) {
+var CONTEXT = {
+    CSS_PREFIX: (gutil.env.cssprefix || 'dooray-calendar-'),
+    BUNDLE_TYPE: (!!gutil.env.production ? 'Release' : 'Debug')
+};
+
+function bundle(outputPath) {
+    var isProduction = CONTEXT.BUNDLE_TYPE === 'Release';
     var pkg = require('./package.json');
     var tmpl = handlebars.compile(HEADER);
     var versionHeader = tmpl(pkg);
-    var context = {
-        CSS_PREFIX: gutil.env.cssprefix || 'dooray-calendar-',
-        RELEASE: isProduction
-    };
 
     if (isProduction) {
         gutil.log(gutil.colors.yellow('<< Bundling for Production >>'));
@@ -47,7 +49,7 @@ function bundle(outputPath, isProduction) {
             // base64 image data
             define: { url: oStylus.url({paths: [__dirname + '/src/css/image']}) }
         }))
-        .pipe(preprocess({context: context}))
+        .pipe(preprocess({context: CONTEXT}))
         .pipe(rename('calendar.css'))
         .pipe(insert.prepend(versionHeader))
         .pipe(gulp.dest(outputPath))
@@ -79,7 +81,7 @@ function bundle(outputPath, isProduction) {
     }
 
     return b.transform(hbsfy)
-        .transform(preprocessify(context))
+        .transform(preprocessify(CONTEXT))
         .transform(prependTransform)
         .bundle()
         .on('error', function(err) {
@@ -114,13 +116,12 @@ gulp.task('connect', function() {
     ], ['bundle-dev']);
 });
 
-
 gulp.task('bundle-dev', function() {
-    return bundle('build', false);
+    return bundle('build');
 });
 
 gulp.task('bundle', function() {
-    return bundle('dist', gutil.env.production);
+    return bundle('dist');
 });
 
 gulp.task('test-w', function(done) {

@@ -11,8 +11,8 @@ describe('handler/time.creation', function() {
 
     it('activate time.creation handler when mousedown time grids.', function() {
         var target = document.createElement('div');
-        domutil.addClass(target, 'schedule-view-time-date');
-        domutil.addClass(target, 'schedule-view-20');
+        domutil.addClass(target, '/* @echo CSS_PREFIX */time-date');
+        domutil.addClass(target, '/* @echo CSS_PREFIX */20');
 
         var mock = {
             timeGridView: {
@@ -29,11 +29,11 @@ describe('handler/time.creation', function() {
 
     it('activate time.creation handler when mousedown on gutter element between events.', function() {
         var target = document.createElement('div');
-        domutil.addClass(target, 'schedule-view-time-date');
-        domutil.addClass(target, 'schedule-view-20');
+        domutil.addClass(target, '/* @echo CSS_PREFIX */time-date');
+        domutil.addClass(target, '/* @echo CSS_PREFIX */20');
 
         var gutter = document.createElement('div');
-        domutil.addClass(gutter, 'schedule-view-time-date-event-block');
+        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-event-block');
 
         target.appendChild(gutter);
 

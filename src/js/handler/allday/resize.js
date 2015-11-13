@@ -4,13 +4,12 @@
  */
 'use strict';
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var common = require('../../common/common');
 var AlldayCore = require('./core');
 var AlldayResizeGuide = require('./resizeGuide');
-
-var parseViewIDRx = new RegExp('^/* @echo CSS_PREFIX */allday-monthweek[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -75,18 +74,18 @@ AlldayResize.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (!~cssClass.indexOf('/* @echo CSS_PREFIX */allday-resize-handle')) {
+    if (!~cssClass.indexOf(config.classname('allday-resize-handle'))) {
         return false;
     }
 
-    target = domutil.closest(target, './* @echo CSS_PREFIX */allday-monthweek');
+    target = domutil.closest(target, '.' + config.classname('allday-monthweek'));
 
     if (!target) {
         return false;
     }
 
     cssClass = domutil.getClass(target);
-    matches = cssClass.match(parseViewIDRx);
+    matches = cssClass.match(config.allday.getViewIDRegExp);
 
     if (!matches || matches.length < 2) {
         return false;
@@ -114,7 +113,7 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, './* @echo CSS_PREFIX */allday-event-block');
+    eventBlockElement = domutil.closest(target, '.' + config.classname('allday-event-block'));
     modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 

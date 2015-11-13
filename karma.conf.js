@@ -1,6 +1,7 @@
 /*eslint-disable*/
 var istanbul = require('browserify-istanbul');
 var hbsfy = require('hbsfy');
+var preprocessify = require('preprocessify');
 
 module.exports = function(config) {
     var webdriverConfig = {
@@ -36,7 +37,7 @@ module.exports = function(config) {
         browserify: {
             debug: true,
             bundleDelay: 1000,
-            transform:[hbsfy, istanbul({
+            transform:[hbsfy, preprocessify({CSS_PREFIX: 'dooray-calendar-'}), istanbul({
                 ignore: [
                     '**/*.hbs',
                     'index.js', 

@@ -22,13 +22,13 @@ describe('service:view/MiniCalendar', function() {
             mockInst.options.renderMonth.getMonth.and.returnValue(5);
 
             // click next button
-            button.className = 'schedule-view-minicalendar-next';
+            button.className = '/* @echo CSS_PREFIX */minicalendar-next';
             MiniCalendar.prototype._nav.call(mockInst, button);
             expect(mockInst.options.renderMonth.setMonth).toHaveBeenCalledWith(6);
 
 
             // click prev button
-            button.className = 'schedule-view-minicalendar-prev';
+            button.className = '/* @echo CSS_PREFIX */minicalendar-prev';
             MiniCalendar.prototype._nav.call(mockInst, button);
             expect(mockInst.options.renderMonth.setMonth).toHaveBeenCalledWith(4);
         });
@@ -38,7 +38,7 @@ describe('service:view/MiniCalendar', function() {
             mockInst.options.renderMonth.getMonth.and.returnValue(5);
 
             // click next button
-            button.className = 'schedule-view-minicalendar-next';
+            button.className = '/* @echo CSS_PREFIX */minicalendar-next';
             MiniCalendar.prototype._nav.call(mockInst, button);
 
             expect(mockInst.fire).toHaveBeenCalled();
@@ -48,7 +48,7 @@ describe('service:view/MiniCalendar', function() {
     it('getSelectedDate() can get selected date in minicalendar', function() {
         // click date button is 2015-01-15
         var button = document.createElement('div');
-        button.className = 'schedule-view-minicalendar-2015-01-15';
+        button.className = '/* @echo CSS_PREFIX */minicalendar-2015-01-15';
         spyOn(window.ne.dooray.calendar.domutil, 'find').and.returnValue(button);
 
         // check result

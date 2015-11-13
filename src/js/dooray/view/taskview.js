@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../../view/view');
@@ -26,7 +27,7 @@ function TaskView(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        '/* @echo CSS_PREFIX */task-container'
+        config.classname('task-container')
     );
 
     View.call(this, container);

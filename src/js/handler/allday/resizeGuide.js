@@ -4,6 +4,7 @@
  */
 'use strict';
 var util = global.tui.util;
+var config = require('../../config');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
@@ -60,7 +61,7 @@ AlldayResizeGuide.prototype._clearGuideElement = function() {
     domutil.remove(this.guideElement);
 
     if (!util.browser.msie) {
-        domutil.removeClass(global.document.body, '/* @echo CSS_PREFIX */resizing-x');
+        domutil.removeClass(global.document.body, config.classname('resizing-x'));
     }
 
     this.getEventDataFunc = null;
@@ -112,11 +113,11 @@ AlldayResizeGuide.prototype._onDragStart = function(dragStartEventData) {
         eventContainer;
 
     if (!util.browser.msie) {
-        domutil.addClass(global.document.body, '/* @echo CSS_PREFIX */resizing-x');
+        domutil.addClass(global.document.body, config.classname('resizing-x'));
     }
 
-    eventContainer = domutil.find('./* @echo CSS_PREFIX */monthweek-events', alldayViewContainer);
-    domutil.addClass(guideElement, '/* @echo CSS_PREFIX */allday-guide-move');
+    eventContainer = domutil.find('.' + config.classname('monthweek-events'), alldayViewContainer);
+    domutil.addClass(guideElement, config.classname('allday-guide-move'));
     eventContainer.appendChild(guideElement);
 
     this.getEventDataFunc = this.getGuideElementWidthFunc(dragStartEventData);

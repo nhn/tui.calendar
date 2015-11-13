@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../config');
 var domutil = require('../common/domutil');
 var datetime = require('../common/datetime');
 var View = require('./view');
@@ -25,7 +26,7 @@ function MonthWeek(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        '/* @echo CSS_PREFIX */allday-monthweek'
+        config.classname('allday-monthweek')
     );
 
     /**

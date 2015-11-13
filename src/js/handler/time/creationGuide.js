@@ -5,9 +5,9 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
-
 var ratio = require('../../common/common').ratio;
 
 /**
@@ -37,7 +37,7 @@ function TimeCreationGuide(timeCreation) {
      */
     this._getTopFunc = null;
 
-    domutil.addClass(this.guideElement, '/* @echo CSS_PREFIX */time-guide-creation');
+    domutil.addClass(this.guideElement, config.classname('time-guide-creation'));
 
     timeCreation.on({
         'time_creation_dragstart': this._onDragStart,

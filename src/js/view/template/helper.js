@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 
 function getElSize(value, postfix, prefix) {
     prefix = prefix || '';
@@ -63,10 +64,10 @@ module.exports = {
      */
     'dayname-isHolliday': function() {
         if (this.day === 0 || this.day === 6) {
-            return '/* @echo CSS_PREFIX */dayname /* @echo CSS_PREFIX */holliday';
+            return config.classname('dayname') + ' ' + config.classname('holliday');
         }
 
-        return '/* @echo CSS_PREFIX */dayname';
+        return config.classname('dayname');
     },
 
     'multiply': function(a, b) {
@@ -74,7 +75,7 @@ module.exports = {
     },
 
     'CSS_PREFIX': function() {
-        return '/* @echo CSS_PREFIX */';
+        return config.cssPrefix;
     }
 };
 

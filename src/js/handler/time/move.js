@@ -5,12 +5,11 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var timeCore = require('./core');
 var TimeMoveGuide = require('./moveGuide');
-
-var parseTimeViewIDRx = new RegExp('^/* @echo CSS_PREFIX */time-date[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -89,7 +88,7 @@ TimeMove.prototype.connect = function(dragHandler, timeGridView, baseController)
  * @returns {boolean|object} - return object when satiate condition.
  */
 TimeMove.prototype.checkExpectCondition = function(target) {
-    if (domutil.getClass(target) !== '/* @echo CSS_PREFIX */time-event') {
+    if (domutil.getClass(target) !== config.classname('time-event')) {
         return false;
     }
 
@@ -102,14 +101,14 @@ TimeMove.prototype.checkExpectCondition = function(target) {
  * @returns {object|boolean} - return time view instance when finded.
  */
 TimeMove.prototype._getTimeView = function(target) {
-    var container = domutil.closest(target, './* @echo CSS_PREFIX */time-date'),
+    var container = domutil.closest(target, '.' + config.classname('time-date')),
         matches;
 
     if (!container) {
         return false;
     }
 
-    matches = domutil.getClass(container).match(parseTimeViewIDRx);
+    matches = domutil.getClass(container).match(config.time.getViewIDRegExp);
 
     if (!matches || matches.length < 2) {
         return false;
@@ -125,7 +124,7 @@ TimeMove.prototype._getTimeView = function(target) {
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, './* @echo CSS_PREFIX */time-date-event-block'),
+        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
         getEventDataFunc,
         eventData;
 

@@ -5,8 +5,8 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var domutil = require('../../common/domutil');
-var parseTimeViewIDRx = new RegExp('^/* @echo CSS_PREFIX */time-date[\\s]/* @echo CSS_PREFIX */(\\d+)');
 
 /**
  * @constructor
@@ -54,17 +54,17 @@ TimeClick.prototype.checkExpectCondition = function(target) {
     var container,
         matches;
 
-    if (!domutil.hasClass(target, '/* @echo CSS_PREFIX */time-event')) {
+    if (!domutil.hasClass(target, config.classname('time-event'))) {
         return false;
     }
 
-    container = domutil.closest(target, './* @echo CSS_PREFIX */time-date');
+    container = domutil.closest(target, '.' + config.classname('time-date'));
 
     if (!container) {
         return false;
     }
 
-    matches = domutil.getClass(container).match(parseTimeViewIDRx);
+    matches = domutil.getClass(container).match(config.time.getViewIDRegExp);
 
     if (!matches || matches.length < 2) {
         return false;
@@ -81,7 +81,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
 TimeClick.prototype._onClick = function(clickEvent) {
     var target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, './* @echo CSS_PREFIX */time-date-event-block'),
+        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
         eventCollection = this.baseController.events;
 
     if (!timeView || !blockElement) {

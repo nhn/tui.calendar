@@ -57,7 +57,7 @@ function View(container) {
  * CSS classname prefix
  * @type {string}
  */
-View.prototype.cssPrefix = '/* @echo CSS_PREFIX */' || 'tui-view-';
+View.prototype.cssPrefix = 'tui-view-';
 
 /**
  * Add child views.

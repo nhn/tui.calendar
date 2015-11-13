@@ -4,16 +4,14 @@
  */
 'use strict';
 
+var config = require('../config');
 var domutil = require('../common/domutil');
-
 // Parent views
 var Week = require('../view/week/week');
-
 // Sub views
 var DayName = require('../view/week/dayname');
 var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
-
 // Handlers
 var AlldayClick = require('../handler/allday/click');
 var AlldayCreation = require('../handler/allday/creation');
@@ -23,7 +21,6 @@ var TimeClick = require('../handler/time/click');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
-
 // Base Templates
 var weekViewTmpl = require('../view/template/factory/weekView.hbs');
 
@@ -47,13 +44,13 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, domutil.find('./* @echo CSS_PREFIX */dayname-layout', weekView.container));
+    dayNameView = new DayName(null, domutil.find('.' + config.classname('dayname-layout'), weekView.container));
     weekView.addChild(dayNameView);
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, domutil.find('./* @echo CSS_PREFIX */allday-layout', weekView.container));
+    alldayView = new Allday(options.week, domutil.find('.' + config.classname('allday-layout'), weekView.container));
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -63,7 +60,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, domutil.find('./* @echo CSS_PREFIX */timegrid-layout', weekView.container));
+    timeGridView = new TimeGrid(options.week, domutil.find('.' + config.classname('timegrid-layout'), weekView.container));
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGirdView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
