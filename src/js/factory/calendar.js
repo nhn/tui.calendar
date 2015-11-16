@@ -73,7 +73,9 @@ function Calendar(options, container) {
      * global drag handler
      * @type {Drag}
      */
-    this.dragHandler = new Drag(null, this.layout);
+    this.dragHandler = new Drag({
+        distance: 5
+    }, this.layout);
 
     /**
      * current rendered view name.
