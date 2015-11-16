@@ -34,6 +34,7 @@ var serviceWeekViewFactory = require('./weekView');
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
  *  @param {object} [options.week] - options for week view
+ *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록

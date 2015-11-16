@@ -30,6 +30,7 @@ var weekViewFactory = require('./weekView');
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
  *  @param {object} [options.week] - options for week view
+ *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *  @param {object} [options.month] - options for month view
@@ -315,7 +316,9 @@ Calendar.prototype.refreshChildView = function(viewName) {
  */
 Calendar.prototype.setOptions = function(options) {
     var today = this.baseDate,
-        dateRange;
+        start, end, day,
+        weekOpt;
+        // dateRange;
 
     options = util.extend({
         defaultView: 'week',    // 기본 주간 뷰 설정
@@ -323,17 +326,30 @@ Calendar.prototype.setOptions = function(options) {
         month: null 
     }, options);
 
-    if (!options.week) {
-        dateRange = datetime.range(
-            datetime.start(new Date(new Date(today).setDate(today.getDate() - 3))),
-            datetime.end(new Date(new Date(today).setDate(today.getDate() + 3))),
-            datetime.MILLISECONDS_PER_DAY
-        );
+    weekOpt = options.week = util.extend({
+        startDayOfWeek: 0
+    }, options.week);
 
-        options.week = {
-            renderStartDate: datetime.format(dateRange[0], 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(dateRange[6], 'YYYY-MM-DD')
-        };
+    if (!weekOpt.renderStartDate || !weekOpt.renderEndDate) {
+        day = today.getDay();
+
+        start = new Date(+today);
+        start.setDate(start.getDate() - day);
+        end = new Date(+start);
+        end.setDate(end.getDate() + 6);
+
+        if (weekOpt.startDayOfWeek) {
+            start.setDate(start.getDate() + weekOpt.startDayOfWeek);
+            end.setDate(end.getDate() + weekOpt.startDayOfWeek);
+        }
+
+        if (day < weekOpt.startDayOfWeek) {
+            start.setDate(start.getDate() - 7);
+            end.setDate(end.getDate() - 7);
+        }
+
+        weekOpt.renderStartDate = datetime.format(start, 'YYYY-MM-DD');
+        weekOpt.renderEndDate = datetime.format(end, 'YYYY-MM-DD');
     }
 
     if (!options.month) {
