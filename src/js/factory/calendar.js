@@ -120,6 +120,24 @@ Calendar.prototype.getEvent = function(id) {
     return util.pick(this.controller.events.items, id);
 };
 
+/**
+ * Update event instance
+ * @param {string} id - ID of event instance to update data
+ * @param {object} data - object data to update instance
+ */
+Calendar.prototype.updateEvent = function(id, data) {
+    // body...
+};
+
+/**
+ * Delete event instance
+ * @param {string} id - ID of event instance to delete
+ */
+Calendar.prototype.deleteEvent = function(id) {
+    this.controller.events.remove(id);
+    this.render();
+};
+
 /**********
  * General Methods
  **********/

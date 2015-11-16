@@ -136,6 +136,23 @@ ServiceCalendar.prototype.getEvent = function(id) {
     });
 };
 
+/**
+ * Delete DoorayEvent instance
+ * @override
+ * @param {string} id - ID of event to delete
+ */
+ServiceCalendar.prototype.deleteEvent = function(id) {
+    var ownEvents = this.controller.events,
+        model = ownEvents.single(function(model) {
+            return model.id === id;
+        });
+
+    if (model) {
+        ownEvents.remove(model);
+        this.render();
+    }
+};
+
 /**********
  * Events
  **********/
