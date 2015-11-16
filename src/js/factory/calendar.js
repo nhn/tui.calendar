@@ -98,6 +98,10 @@ function Calendar(options, container) {
     this.render();
 }
 
+/**********
+ * CRUD Methods
+ **********/
+
 /**
  * Create events instance and render calendar.
  * @param {Calendar~Event[]} dataObjectList - array of {@see Calendar~Event} object
@@ -106,6 +110,19 @@ Calendar.prototype.createEvent = function(dataObjectList) {
     this.controller.createEvents(dataObjectList, true);
     this.render();
 };
+
+/**
+ * Get event instance by event id
+ * @param {string} id - ID of event instance
+ * @returns {Event} event instance
+ */
+Calendar.prototype.getEvent = function(id) {
+    return util.pick(this.controller.events.items, id);
+};
+
+/**********
+ * General Methods
+ **********/
 
 /**
  * Render calendar.

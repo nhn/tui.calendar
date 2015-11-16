@@ -121,6 +121,25 @@ function ServiceCalendar(options, container) {
 
 util.inherit(ServiceCalendar, Calendar);
 
+/**********
+ * CRUD override
+ **********/
+
+/**
+ * @override
+ * @param {string} id - id of event instance from server API
+ * @returns {DoorayEvent} founded event instance.
+ */
+ServiceCalendar.prototype.getEvent = function(id) {
+    return this.controller.events.single(function(model) {
+        return model.id === id;
+    });
+};
+
+/**********
+ * Events
+ **********/
+
 /**
  * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
  * @emits ServiceCalendar#click
@@ -153,6 +172,10 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
         handler.off('click', calendar._onClick, calendar);
     });
 };
+
+/**********
+ * Methods
+ **********/
 
 /**
  * 주뷰, 월뷰 간 전환
