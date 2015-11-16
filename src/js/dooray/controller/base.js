@@ -29,7 +29,7 @@ util.inherit(DoorayBase, Base);
  * @override
  * @emits Base#beforeCreateEvent
  * @emits Base#createdEvent
- * @param {ServiceCalendar~Events} data - Data object to create event.
+ * @param {ServiceCalendar~CalEvent} data - Data object to create event.
  * @param {boolean} silent - set true then don't fire events.
  * @returns {DoorayEvent} The instance of CalEvent that created.
  */
@@ -63,7 +63,7 @@ DoorayBase.prototype.createEvent = function(data, silent) {
 /**
  * @emits Base#beforeCreateEvent
  * @emits Base#createdEvent
- * @param {ServiceCalendar~Events[]} dataList - dataObject list to create event.
+ * @param {ServiceCalendar~CalEvent[]} dataList - dataObject list to create event.
  * @param {boolean} [silent=false] - set true then don't fire events.
  * @returns {DoorayEvent[]} The instance list of CalEvent that created.
  */
