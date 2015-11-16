@@ -4,7 +4,12 @@
     ],
     "loadEagerly": [
         "node_modules/tui-code-snippet/code-snippet.js",
+        "index.js",
         "src/js/**/*"
+    ],
+    "dontLoad":[
+        "src/js/config.js",
+        "*.hbs"
     ],
     "plugins": {
         "complete_strings": {},
