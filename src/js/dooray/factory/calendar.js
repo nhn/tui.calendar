@@ -137,6 +137,26 @@ ServiceCalendar.prototype.getEvent = function(id) {
 };
 
 /**
+ * @override
+ * @param {string} id - ID of event instance to update data
+ * @param {object} data - data object to update event
+ */
+ServiceCalendar.prototype.updateEvent = function(id, data) {
+    var ownEvents = this.controller.events,
+        model = ownEvents.single(function(model) {
+            return model.id === id;
+        });
+
+    if (model) {
+        util.forEach(data, function(value, key) {
+            model.set(key, value);
+        });
+        this.render();
+        model.dirty(false);
+    }
+};
+
+/**
  * Delete DoorayEvent instance
  * @override
  * @param {string} id - ID of event to delete

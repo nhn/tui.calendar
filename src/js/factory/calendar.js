@@ -126,7 +126,17 @@ Calendar.prototype.getEvent = function(id) {
  * @param {object} data - object data to update instance
  */
 Calendar.prototype.updateEvent = function(id, data) {
-    // body...
+    var found;
+
+    this.controller.events.doWhenHas(id, function(model) {
+        found = model;
+        util.forEach(data, function(value, key) {
+            model.set(key, value);
+        });
+    });
+
+    this.render();
+    found.dirty(false);
 };
 
 /**
