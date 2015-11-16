@@ -484,6 +484,20 @@ describe('Collection', function() {
 
             expect([item1, item2, item3]).toContain(c.single());
         });
+
+        it('return first single item that meet with supplied function filter', function() {
+            var item1 = {_id:1},
+                item2 = {_id:2},
+                item3 = {_id:5};
+
+            c.add(item3, item2, item1);
+
+            var result = c.single(function(model) {
+                return model._id === 2;
+            });
+
+            expect(result).toBe(item2);
+        });
     });
 
     describe('merge()', function() {

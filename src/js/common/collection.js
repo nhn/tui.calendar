@@ -365,14 +365,21 @@ Collection.prototype.groupBy = function(key, groupFunc) {
  * Return single item in collection.
  *
  * Returned item is inserted in this collection firstly.
+ * @param {function} [filter] - function filter
  * @returns {object} item.
  */
-Collection.prototype.single = function() {
-    var result;
+Collection.prototype.single = function(filter) {
+    var result,
+        useFilter = util.isFunction(filter);
 
     this.each(function(item) {
-        result = item;
-        return false;
+        if (!useFilter) {
+            result = item;
+            return false;
+        } else if (filter(item)) {
+            result = item;
+            return false;
+        }
     }, this);
 
     return result;
