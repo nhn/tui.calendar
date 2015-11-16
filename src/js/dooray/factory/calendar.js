@@ -12,7 +12,7 @@ var Week = require('../../controller/viewMixin/week');
 var serviceWeekViewFactory = require('./weekView');
 
 /**
- * @typedef {object} ServiceCalendar~Events
+ * @typedef {object} ServiceCalendar~DoorayEvent
  * @property {string} [id] - 일정의 uniqueID.
  * @property {string} [calendarID] - 각 일정을 캘린더별로 그룹지을 수 있는 값.
  * @property {string} title - 이벤트 제목
@@ -36,7 +36,7 @@ var serviceWeekViewFactory = require('./weekView');
  *  @param {object} [options.week] - options for week view
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
- *  @param {ServiceCalendar~Events[]} options.events - 기본 일정 목록
+ *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  *  @param {object} [options.month] - options for month view
  *  @param {string} options.month.renderMonth - YYYY-MM render month
  * @param {HTMLDivElement} container = container element for calendar
@@ -45,7 +45,7 @@ function ServiceCalendar(options, container) {
     var controller;
     /**
      * 서비스에서 사용되는 모델 구분용 옵션 함수
-     * @param {EventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
+     * @param {CalEventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
      * @returns {string} 구분 키 값
      */
     options.groupFunc = function(viewModel) {
@@ -170,7 +170,7 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
 };
 
 /**********
- * Events
+ * CalEvents
  **********/
 
 /**

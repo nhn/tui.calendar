@@ -46,7 +46,7 @@ module.exports = {
 
     /**
      * Use in time.hbs
-     * @param {EventViewModel} eventViewModel viewModel
+     * @param {CalEventViewModel} eventViewModel viewModel
      * @returns {string} element size css class
      */
     'time-eventBlock': function(eventViewModel) {

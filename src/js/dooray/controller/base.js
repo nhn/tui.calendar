@@ -6,7 +6,7 @@
 
 var util = global.tui.util;
 var Base = require('../../controller/base');
-var DoorayEvent = require('../model/event');
+var DoorayEvent = require('../model/calEvent');
 
 /**
  * @constructor
@@ -31,7 +31,7 @@ util.inherit(DoorayBase, Base);
  * @emits Base#createdEvent
  * @param {ServiceCalendar~Events} data - Data object to create event.
  * @param {boolean} silent - set true then don't fire events.
- * @returns {DoorayEvent} The instance of Event that created.
+ * @returns {DoorayEvent} The instance of CalEvent that created.
  */
 DoorayBase.prototype.createEvent = function(data, silent) {
     var inst,
@@ -65,7 +65,7 @@ DoorayBase.prototype.createEvent = function(data, silent) {
  * @emits Base#createdEvent
  * @param {ServiceCalendar~Events[]} dataList - dataObject list to create event.
  * @param {boolean} [silent=false] - set true then don't fire events.
- * @returns {DoorayEvent[]} The instance list of Event that created.
+ * @returns {DoorayEvent[]} The instance list of CalEvent that created.
  */
 DoorayBase.prototype.createEvents = function(dataList, silent) {
     return util.map(dataList, function(data) {

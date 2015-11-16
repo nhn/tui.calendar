@@ -7,14 +7,14 @@
 var util = global.tui.util;
 
 /**
- * Event ViewModel
+ * CalEvent ViewModel
  * @constructor
- * @param {Event} event Event instance.
+ * @param {CalEvent} event CalEvent instance.
  */
-function EventViewModel(event) {
+function CalEventViewModel(event) {
     /**
      * The model of event.
-     * @type {Event}
+     * @type {CalEvent}
      */
     this.model = event;
 
@@ -82,12 +82,12 @@ function EventViewModel(event) {
  **********/
 
 /**
- * EventViewModel factory method.
- * @param {Event} event Event instance.
- * @returns {EventViewModel} EventViewModel instance.
+ * CalEventViewModel factory method.
+ * @param {CalEvent} event CalEvent instance.
+ * @returns {CalEventViewModel} CalEventViewModel instance.
  */
-EventViewModel.create = function(event) {
-    return new EventViewModel(event);
+CalEventViewModel.create = function(event) {
+    return new CalEventViewModel(event);
 };
 
 
@@ -102,7 +102,7 @@ EventViewModel.create = function(event) {
  * @override
  * @returns {Date} render start date.
  */
-EventViewModel.prototype.getStarts = function() {
+CalEventViewModel.prototype.getStarts = function() {
     if (this.renderStarts) {
         return this.renderStarts;
     }
@@ -117,7 +117,7 @@ EventViewModel.prototype.getStarts = function() {
  * @override
  * @returns {Date} render end date.
  */
-EventViewModel.prototype.getEnds = function() {
+CalEventViewModel.prototype.getEnds = function() {
     if (this.renderEnds) {
         return this.renderEnds;
     }
@@ -128,34 +128,34 @@ EventViewModel.prototype.getEnds = function() {
 /**
  * @returns {number} unique number for model.
  */
-EventViewModel.prototype.cid = function() {
+CalEventViewModel.prototype.cid = function() {
     return util.stamp(this.model);
 };
 
 /**
  * Shadowing valueOf method for event sorting.
- * @returns {Event} The model of event.
+ * @returns {CalEvent} The model of event.
  */
-EventViewModel.prototype.valueOf = function() {
+CalEventViewModel.prototype.valueOf = function() {
     return this.model;
 };
 
 /**
  * Link duration method
- * @returns {number} Event#duration result.
+ * @returns {number} CalEvent#duration result.
  */
-EventViewModel.prototype.duration = function() {
+CalEventViewModel.prototype.duration = function() {
     return this.model.duration();
 };
 
 /**
  * Link collidesWith method
- * @param {Event|EventViewModel} viewModel - Model or viewmodel instance of Events.
- * @returns {boolean} Event#collidesWith result.
+ * @param {CalEvent|CalEventViewModel} viewModel - Model or viewmodel instance of CalEvents.
+ * @returns {boolean} CalEvent#collidesWith result.
  */
-EventViewModel.prototype.collidesWith = function(viewModel) {
+CalEventViewModel.prototype.collidesWith = function(viewModel) {
     return this.model.collidesWith(viewModel.valueOf());
 };
 
-module.exports = EventViewModel;
+module.exports = CalEventViewModel;
 

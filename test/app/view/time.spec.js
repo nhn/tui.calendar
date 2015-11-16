@@ -1,7 +1,7 @@
 /*eslint-disable*/
 var Time = ne.dooray.calendar.Time;
-var Event = ne.dooray.calendar.Event;
-var EventViewModel = ne.dooray.calendar.EventViewModel;
+var CalEvent = ne.dooray.calendar.CalEvent;
+var CalEventViewModel = ne.dooray.calendar.CalEventViewModel;
 var datetime = ne.dooray.calendar.datetime;
 describe('View/Time', function() {
     it('_parseDateGroup()', function() {
@@ -11,12 +11,12 @@ describe('View/Time', function() {
     });
 
     it('getEventViewBound()', function() {
-        var event = Event.create({
+        var event = CalEvent.create({
             starts: '2015-05-01T09:00:00+09:00',
             ends: '2015-05-01T10:00:00+09:00'
         });
 
-        var viewModel = EventViewModel.create(event);
+        var viewModel = CalEventViewModel.create(event);
 
         var result = Time.prototype.getEventViewBound(viewModel, {
             todayStart: new Date('2015-05-01T00:00:00+09:00'),

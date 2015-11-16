@@ -5,8 +5,8 @@
 'use strict';
 
 var util = global.tui.util;
-var Event = require('../model/event');
-var EventViewModel = require('../model/viewModel/event');
+var CalEvent = require('../model/calEvent');
+var CalEventViewModel = require('../model/viewModel/calEvent');
 var datetime = require('../common/datetime');
 var common = require('../common/common');
 
@@ -22,7 +22,7 @@ function Base(options) {
     /**
      * function for group each event models.
      * @type {function}
-     * @param {EventViewModel} viewModel - view model instance
+     * @param {CalEventViewModel} viewModel - view model instance
      * @return {string} group key
      */
     this.groupFunc = options.groupFunc || function(viewModel) {
@@ -48,7 +48,7 @@ function Base(options) {
 /**
  * Calculate contain dates in event.
  * @private
- * @param {Event} event The instance of event.
+ * @param {CalEvent} event The instance of event.
  * @returns {array} contain dates.
  */
 Base.prototype._getContainDatesInEvent = function(event) {
@@ -70,15 +70,15 @@ Base.prototype._getContainDatesInEvent = function(event) {
  * @emits Base#createdEvent
  * @param {object} options Data object to create event.
  * @param {boolean} silent - set true then don't fire events.
- * @returns {Event} The instance of Event that created.
+ * @returns {CalEvent} The instance of CalEvent that created.
  */
 Base.prototype.createEvent = function(options, silent) {
-    var event = this.addEvent(Event.create(options));
+    var event = this.addEvent(CalEvent.create(options));
 
     if (!silent) {
         /**
          * @event Base#createdEvent
-         * @type {Event}
+         * @type {CalEvent}
          */
         this.fire('createdEvent', event);
     }
@@ -88,7 +88,7 @@ Base.prototype.createEvent = function(options, silent) {
 
 /**
  * Set date matrix to supplied event instance.
- * @param {Event} event - instance of event.
+ * @param {CalEvent} event - instance of event.
  */
 Base.prototype._addToMatrix = function(event) {
     var ownMatrix = this.dateMatrix,
@@ -104,7 +104,7 @@ Base.prototype._addToMatrix = function(event) {
 
 /**
  * Remove event's id from matrix.
- * @param {Event} event - instance of event
+ * @param {CalEvent} event - instance of event
  */
 Base.prototype._removeFromMatrix = function(event) {
     var modelID = util.stamp(event);
@@ -121,9 +121,9 @@ Base.prototype._removeFromMatrix = function(event) {
 /**
  * Add an event instance.
  * @emits Base#addedEvent
- * @param {Event} event The instance of Event.
+ * @param {CalEvent} event The instance of CalEvent.
  * @param {boolean} silent - set true then don't fire events.
- * @returns {Event} The instance of Event that added.
+ * @returns {CalEvent} The instance of CalEvent that added.
  */
 Base.prototype.addEvent = function(event, silent) {
     this.events.add(event);
@@ -204,7 +204,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
 
         if (matrix && matrix.length) {
             viewModels.add.apply(viewModels, util.map(matrix, function(id) {
-                return EventViewModel.create(ownEvents[id]);
+                return CalEventViewModel.create(ownEvents[id]);
             }));
         }
     });
@@ -216,36 +216,36 @@ Base.prototype.findByDateRange = function(starts, ends) {
 /**
  * Update an event.
  * @emits Base#updateEvent
- * @param {number} id The unique id of Event instance.
+ * @param {number} id The unique id of CalEvent instance.
  * @param {object} options updated object data.
- * @returns {Event|boolean} updated event instance, when it fail then return false.
+ * @returns {CalEvent|boolean} updated event instance, when it fail then return false.
  */
 Base.prototype.updateEvent = function(id, options) {
     var result = false;
 
-    this.events.doWhenHas(id, function(event) {
+    this.events.doWhenHas(id, function(model) {
         options = options || {};
 
         if (options.title) {
-            event.set('title', options.title);
+            model.set('title', options.title);
         }
 
         if (options.isAllDay) {
-            event.set('isAllDay', options.isAllDay);
+            model.set('isAllDay', options.isAllDay);
         }
 
         if (options.starts) {
-            event.set('starts', new Date(options.starts));
+            model.set('starts', new Date(options.starts));
         }
 
         if (options.ends) {
-            event.set('ends', new Date(options.ends));
+            model.set('ends', new Date(options.ends));
         }
 
-        this._removeFromMatrix(event);
-        this._addToMatrix(event);
+        this._removeFromMatrix(model);
+        this._addToMatrix(model);
 
-        result = event;
+        result = model;
     }, this);
 
     /**
@@ -260,7 +260,7 @@ Base.prototype.updateEvent = function(id, options) {
 /**
  * Delete event instance from controller.
  * @param {number} id - unique id of model instance.
- * @returns {Event} deleted model instance.
+ * @returns {CalEvent} deleted model instance.
  */
 Base.prototype.deleteEvent = function(id) {
     var result = false;

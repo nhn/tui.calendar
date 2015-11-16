@@ -149,7 +149,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
     }
 
     /**
-     * Events while dragging.
+     * CalEvents while dragging.
      * @event Drag#drag
      * @type {object}
      * @property {HTMLElement} target - target element in this event.

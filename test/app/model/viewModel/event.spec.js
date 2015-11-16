@@ -1,4 +1,4 @@
 /*eslint-disable*/
-var EventViewModel = ne.dooray.calendar.EventViewModel;
-describe('EventViewModel', function() {
+var CalEventViewModel = ne.dooray.calendar.CalEventViewModel;
+describe('CalEventViewModel', function() {
 });

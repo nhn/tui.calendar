@@ -1,10 +1,10 @@
 /*eslint-disable*/
-var Event = ne.dooray.calendar.Event;
+var CalEvent = ne.dooray.calendar.CalEvent;
 describe('model/event', function() {
     var event;
 
     beforeEach(function() {
-        event = new Event();
+        event = new CalEvent();
     });
 
     it('creation', function() {
@@ -65,8 +65,8 @@ describe('model/event', function() {
             event2;
 
         beforeEach(function() {
-            event = new Event(),
-            event2 = new Event();
+            event = new CalEvent(),
+            event2 = new CalEvent();
         });
 
         it('return true when event\'s property are same', function() {
@@ -133,7 +133,7 @@ describe('model/event', function() {
         });
     });
 
-    describe('Event.create()', function() {
+    describe('CalEvent.create()', function() {
         it('create event model instance from data object.', function() {
             var mock = {
                 title: 'hunting',
@@ -142,9 +142,9 @@ describe('model/event', function() {
                 ends: '2015/05/02'
             };
 
-            var event = Event.create(mock);
+            var event = CalEvent.create(mock);
 
-            var compare = new Event();
+            var compare = new CalEvent();
             compare.title = 'hunting',
             compare.isAllDay = true;
             compare.starts = new Date('2015/05/02');
@@ -155,7 +155,7 @@ describe('model/event', function() {
 
         it('no error for empty some properties', function() {
             expect(function() {
-                Event.create();
+                CalEvent.create();
             }).not.toThrow();
         });
     });
@@ -175,13 +175,13 @@ describe('model/event', function() {
          * |---|
          */
         it('Check type A, B', function() {
-            var a = Event.create({
+            var a = CalEvent.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T10:00:00+09:00'
             });
-            var b = Event.create({
+            var b = CalEvent.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T09:40:00+09:00',
@@ -209,13 +209,13 @@ describe('model/event', function() {
          *     |---|
          */
         it('check type C, D', function() {
-            var a = Event.create({
+            var a = CalEvent.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T10:00:00+09:00'
             });
-            var b = Event.create({
+            var b = CalEvent.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T09:00:00+09:00',
@@ -244,13 +244,13 @@ describe('model/event', function() {
          * |---|
          */
         it('check type E, F', function() {
-            var a = Event.create({
+            var a = CalEvent.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T10:00:00+09:00'
             });
-            var b = Event.create({
+            var b = CalEvent.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T10:00:00+09:00',
@@ -281,13 +281,13 @@ describe('model/event', function() {
          * |---|
          */
         it('check type G, H', function() {
-            var a = Event.create({
+            var a = CalEvent.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T09:50:00+09:00'
             });
-            var b = Event.create({
+            var b = CalEvent.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T10:10:00+09:00',

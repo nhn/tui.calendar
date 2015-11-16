@@ -5,7 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
-var Event = require('../../model/event');
+var CalEvent = require('../../model/calEvent');
 
 /**
  * 일정 카테고리
@@ -27,12 +27,12 @@ var EVENT_CATEGORY = {
 };
 
 /**
- * Event class for dooray project
+ * CalEvent class for dooray project
  * @constructor
- * @extends {Event}
+ * @extends {CalEvent}
  */
 function DoorayEvent() {
-    Event.call(this);
+    CalEvent.call(this);
 
     /**
      * 일정 카테고리 (마일스톤, 업무, 종일일정, 시간별일정)
@@ -47,7 +47,7 @@ function DoorayEvent() {
     this.dueDateClass = '';
 }
 
-util.inherit(DoorayEvent, Event);
+util.inherit(DoorayEvent, CalEvent);
 
 /**
  * @override
@@ -66,7 +66,7 @@ DoorayEvent.create = function(data) {
 DoorayEvent.prototype.init = function(options) {
     options = options || {};
 
-    Event.prototype.init.call(this, options);
+    CalEvent.prototype.init.call(this, options);
 
     this.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     this.category = options.category;

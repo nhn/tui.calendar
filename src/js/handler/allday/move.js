@@ -139,7 +139,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
-     * @property {Event} model - data object of model isntance.
+     * @property {CalEvent} model - data object of model isntance.
      * @property {HTMLDivElement} eventBlockElement - target event block element.
      */
     this.fire('allday_move_dragstart', eventData);

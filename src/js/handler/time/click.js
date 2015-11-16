@@ -92,7 +92,7 @@ TimeClick.prototype._onClick = function(clickEvent) {
         /**
          * @events TimeClick#click
          * @type {object}
-         * @property {Event} model - model instance
+         * @property {CalEvent} model - model instance
          */
         this.fire('click', {
             model:  model

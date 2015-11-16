@@ -8,7 +8,7 @@ var util = global.tui.util;
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var array = require('../../common/array');
-var EventViewModel = require('../../model/viewModel/event');
+var CalEventViewModel = require('../../model/viewModel/calEvent');
 var aps = Array.prototype.slice;
 
 /**
@@ -365,7 +365,7 @@ var Week = {
         viewModels = common.createEventCollection.apply(
             null,
             util.map(events.items, function(event) {
-                return EventViewModel.create(event);
+                return CalEventViewModel.create(event);
             })
         ).groupBy(['allday', 'time'], this.groupFunc);
 

@@ -315,7 +315,7 @@ TimeGrid.prototype.scrollToNow = function() {
 };
 
 /**********
- * Event handlers
+ * CalEvent handlers
  **********/
 
 /**

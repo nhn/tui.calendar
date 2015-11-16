@@ -15,7 +15,7 @@ var model = require('../common/model');
  * @mixes dirty
  * @mixes model
  */
-function Event() {
+function CalEvent() {
     /**
      * `Optional` unique id for various use.
      * @type {string}
@@ -66,7 +66,7 @@ function Event() {
  * static props
  **********/
 
-Event.schema = {
+CalEvent.schema = {
     required: ['title'],
     dateRange: ['starts', 'ends']
 };
@@ -74,10 +74,10 @@ Event.schema = {
 /**
  * create event model from json(object) data.
  * @param {object} data object for model.
- * @returns {Event} Event model instance.
+ * @returns {CalEvent} CalEvent model instance.
  */
-Event.create = function(data) {
-    var inst = new Event();
+CalEvent.create = function(data) {
+    var inst = new CalEvent();
     inst.init(data);
 
     return inst;
@@ -91,7 +91,7 @@ Event.create = function(data) {
  * Initialize event instance.
  * @param {object} options options.
  */
-Event.prototype.init = function(options) {
+CalEvent.prototype.init = function(options) {
     options = options || {};
 
     this.id = options.id || '';
@@ -118,30 +118,30 @@ Event.prototype.init = function(options) {
 /**
  * @returns {Date} render start date.
  */
-Event.prototype.getStarts = function() {
+CalEvent.prototype.getStarts = function() {
     return this.starts;
 };
 
 /**
  * @returns {Date} render end date.
  */
-Event.prototype.getEnds = function() {
+CalEvent.prototype.getEnds = function() {
     return this.ends;
 };
 
 /**
  * @returns {number} instance unique id.
  */
-Event.prototype.cid = function() {
+CalEvent.prototype.cid = function() {
     return util.stamp(this);
 };
 
 /**
  * Check two event are equals (means title, isAllDay, starts, ends are same)
- * @param {Event} event Event model instance to compare.
+ * @param {CalEvent} event CalEvent model instance to compare.
  * @returns {boolean} Return false when not same.
  */
-Event.prototype.equals = function(event) {
+CalEvent.prototype.equals = function(event) {
     if (this.id !== event.id) {
         return false;
     }
@@ -177,7 +177,7 @@ Event.prototype.equals = function(event) {
  * return duration between starts and ends.
  * @returns {Date} duration (UTC)
  */
-Event.prototype.duration = function() {
+CalEvent.prototype.duration = function() {
     var starts = this.getStarts(),
         ends = this.getEnds(),
         duration;
@@ -192,12 +192,12 @@ Event.prototype.duration = function() {
 };
 
 /**
- * Returns true if the given Event coincides with the same time as the
- * calling Event.
- * @param {Event} event The other event to compare with this Event.
+ * Returns true if the given CalEvent coincides with the same time as the
+ * calling CalEvent.
+ * @param {CalEvent} event The other event to compare with this CalEvent.
  * @returns {boolean} If the other event occurs within the same time as the first object.
  */
-Event.prototype.collidesWith = function(event) {
+CalEvent.prototype.collidesWith = function(event) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
         starts = event.getStarts(),
@@ -211,8 +211,8 @@ Event.prototype.collidesWith = function(event) {
     return false;
 };
 
-model.mixin(Event.prototype);
-dirty.mixin(Event.prototype);
+model.mixin(CalEvent.prototype);
+dirty.mixin(CalEvent.prototype);
 
-module.exports = Event;
+module.exports = CalEvent;
 

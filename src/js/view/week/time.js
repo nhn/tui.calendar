@@ -56,7 +56,7 @@ Time.prototype._parseDateGroup = function(str) {
 };
 
 /**
- * @param {EventViewModel} viewModel - view model instance to calculate bound.
+ * @param {CalEventViewModel} viewModel - view model instance to calculate bound.
  * @param {object} options - options for calculating event element's bound.
  * @param {Date} options.todayStart - date object represent event date's start (00:00:00)
  * @param {number} options.baseMS - the number of milliseconds to render event blocks.

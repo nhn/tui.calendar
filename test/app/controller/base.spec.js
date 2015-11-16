@@ -1,6 +1,6 @@
 /*eslint-disable*/
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
-var Event = ne.dooray.calendar.Event;
+var CalEvent = ne.dooray.calendar.CalEvent;
 var Collection = ne.dooray.calendar.Collection;
 var util = tui.util;
 describe('controller/base', function() {
@@ -22,7 +22,7 @@ describe('controller/base', function() {
                 new Date('2015/05/03')
             ];
 
-            event = Event.create({
+            event = CalEvent.create({
                 title: 'A',
                 isAllDay: true,
                 starts: '2015/05/01',
@@ -39,7 +39,7 @@ describe('controller/base', function() {
                 new Date('2015/05/03')
             ];
 
-            event = Event.create({
+            event = CalEvent.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015/05/01 12:30:00',
@@ -54,7 +54,7 @@ describe('controller/base', function() {
         var created;
 
         it('return itself for chaining pattern.', function() {
-            var event = Event.create(set[0]);
+            var event = CalEvent.create(set[0]);
             expect(event.equals(ctrl.createEvent(set[0]))).toBe(true);
         });
 
@@ -162,16 +162,16 @@ describe('controller/base', function() {
 
     describe('updateEvent()', function() {
         var id,
-            event;
+            model;
 
         it('update owned event and date matrix.', function() {
-            event = ctrl.createEvent({
+            model = ctrl.createEvent({
                 title: 'Go to work',
                 isAllDay: false,
                 starts: '2015/05/01 09:30:00',
                 ends: '2015/05/01 18:30:00'
             });
-            id = util.stamp(event);
+            id = util.stamp(model);
 
             ctrl.updateEvent(id, {
                 title: 'Go to work',
@@ -227,19 +227,19 @@ describe('controller/base', function() {
             });
 
             events = [
-                Event.create({
+                CalEvent.create({
                     title: 'A',
                     isAllDay: false,
                     starts: '2015/05/01 09:30:00',
                     ends: '2015/05/01 18:30:00'
                 }),
-                Event.create({
+                CalEvent.create({
                     title: 'B',
                     isAllDay: false,
                     starts: '2015/05/02 09:30:00',
                     ends: '2015/05/02 18:30:00'
                 }),
-                Event.create({
+                CalEvent.create({
                     title: 'C',
                     isAllDay: true,
                     starts: '2015/05/01 09:00:00',

@@ -21,7 +21,8 @@ var AJAX = require('./src/js/common/ajax');
  * Models
  **********/
 var Point = require('./src/js/common/point');
-var Event = require('./src/js/model/event');
+var CalEvent = require('./src/js/model/calEvent');
+var CalEventViewModel = require('./src/js/model/viewModel/calEvent');
 
 /**********
  * Views
@@ -30,17 +31,10 @@ var View = require('./src/js/view/view');
 View.prototype.cssPrefix = config.cssPrefix;
 
 var MonthWeek = require('./src/js/view/monthweek');
-
 var Week = require('./src/js/view/week/week');
 var DayName = require('./src/js/view/week/dayname');
 var TimeGrid = require('./src/js/view/week/timeGrid');
 var Time = require('./src/js/view/week/time');
-
-
-/**********
- * View Models
- **********/
-var EventViewModel = require('./src/js/model/viewModel/event');
 
 /**********
  * Handlers
@@ -73,7 +67,7 @@ var controllerFactory = require('./src/js/factory/controller');
  * SERVICE MODULE
  **********/
 var MiniCalendar = require('./src/js/dooray/view/minicalendar');
-var DoorayEvent = require('./src/js/dooray/model/event');
+var DoorayEvent = require('./src/js/dooray/model/calEvent');
 var DoorayController = require('./src/js/dooray/controller/base');
 var TaskView = require('./src/js/dooray/view/taskview');
 var MilestoneClick = require('./src/js/dooray/handler/milestoneClick');
@@ -97,8 +91,8 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     Point: Point, 
 
     // model
-    Event: Event,
-    EventViewModel: EventViewModel,
+    CalEvent: CalEvent,
+    CalEventViewModel: CalEventViewModel,
 
     // view
     View: View,

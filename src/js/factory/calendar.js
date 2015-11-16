@@ -12,7 +12,7 @@ var controllerFactory = require('./controller');
 var weekViewFactory = require('./weekView');
 
 /**
- * @typedef {object} Calendar~Events
+ * @typedef {object} Calendar~Event
  * @property {string} title - 이벤트 제목
  * @property {boolean} isAllDay - 종일일정여부
  * @property {string} starts - 일정 시작 시간
@@ -34,7 +34,7 @@ var weekViewFactory = require('./weekView');
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *  @param {object} [options.month] - options for month view
  *   @param {string} options.month.renderMonth - YYYY-MM render month
- *  @param {Event[]} [options.events] - array of Event data for add calendar after initialize.
+ *  @param {CalEvent[]} [options.events] - array of CalEvent data for add calendar after initialize.
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
@@ -119,7 +119,7 @@ Calendar.prototype.createEvent = function(dataObjectList) {
 /**
  * Get event instance by event id
  * @param {string} id - ID of event instance
- * @returns {Event} event instance
+ * @returns {CalEvent} event instance
  */
 Calendar.prototype.getEvent = function(id) {
     return util.pick(this.controller.events.items, id);

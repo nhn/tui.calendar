@@ -221,8 +221,8 @@ function stringDESCIgnoreCase(_a, _b) {
  * 2. early starts.
  * 3. longest duration.
  * 4. early created.
- * @param {(Event|EventViewModel)} a The object event instance.
- * @param {(Event|EventViewModel)} b The object event instance.
+ * @param {CalEvent|CalEventViewModel} a The object event instance.
+ * @param {CalEvent|CalEventViewModel} b The object event instance.
  * @returns {number} Result of comparison.
  */
 function eventASC(a, b) {

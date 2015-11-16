@@ -1,7 +1,7 @@
 /*eslint-disable*/
 var stamp = tui.util.stamp;
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
-var EventViewModel = ne.dooray.calendar.EventViewModel;
+var CalEventViewModel = ne.dooray.calendar.CalEventViewModel;
 var Collection = ne.dooray.calendar.Collection;
 describe('Base.Week', function() {
     var base,
@@ -14,7 +14,7 @@ describe('Base.Week', function() {
         ctrl = base.Week;
         fixture = getJSONFixture('event_set_string3.json');
         eventList = util.map(fixture, function(data) {
-            return Event.create(data);
+            return CalEvent.create(data);
         }).sort(array.compare.event.asc);
     });
         

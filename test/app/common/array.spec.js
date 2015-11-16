@@ -1,7 +1,7 @@
 /*eslint-disable*/
 var util = tui.util;
 var array = ne.dooray.calendar.array;
-var Event = ne.dooray.calendar.Event;
+var CalEvent = ne.dooray.calendar.CalEvent;
 describe('common/array', function() {
     describe('common compare methods', function() {
         describe('compare.num', function() {
@@ -74,7 +74,7 @@ describe('common/array', function() {
             });
         });
 
-        describe('Event', function() {
+        describe('CalEvent', function() {
             var fixtures,
                 events;
 
@@ -85,7 +85,7 @@ describe('common/array', function() {
 
             it('isAllDay ASC, starts ASC, duration DESC, id ASC', function() {
                 util.forEach(fixtures, function(data) {
-                    events.push(Event.create(data));
+                    events.push(CalEvent.create(data));
                 });
 
                 events.sort(array.compare.event.asc);
@@ -117,7 +117,7 @@ describe('common/array', function() {
                 }];
 
                 util.forEach(fixtures, function(data) {
-                    events.push(Event.create(data));
+                    events.push(CalEvent.create(data));
                 });
 
                 events.sort(array.compare.event.asc);
