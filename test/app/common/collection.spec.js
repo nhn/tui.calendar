@@ -1,5 +1,6 @@
 /*eslint-disable*/
 var Collection = ne.dooray.calendar.Collection;
+var undef = (function() {})();
 
 describe('Collection', function() {
     var c;
@@ -497,6 +498,16 @@ describe('Collection', function() {
             });
 
             expect(result).toBe(item2);
+        });
+
+        it('return undefined when no item.', function() {
+            var item1 = {_id:1};
+
+            expect(c.single()).toBe(undef);
+
+            c.add(item1);
+
+            expect(c.single(function() { return false; })).toBe(undef);
         });
     });
 
