@@ -67,7 +67,7 @@ MilestoneClick.prototype.checkExpectedCondition = function(target) {
 };
 
 /**
- * @emits MilestoneClick#click
+ * @emits MilestoneClick#clickCalEvent
  * @param {object} clickEvent - click event object
  */
 MilestoneClick.prototype._onClick = function(clickEvent) {
@@ -79,12 +79,14 @@ MilestoneClick.prototype._onClick = function(clickEvent) {
 
     this.baseController.events.doWhenHas(modelID, function(model) {
         /**
-         * @events MilestoneClick#click
+         * @events MilestoneClick#clickCalEvent
          * @type {object}
          * @property {CalEvent} model - model instance
+         * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('click', {
-            model:  model
+        this.fire('clickCalEvent', {
+            model:  model,
+            jsEvent: clickEvent.originEvent
         });
     }, this);
 };

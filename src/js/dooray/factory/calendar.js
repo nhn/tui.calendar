@@ -170,21 +170,22 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
 };
 
 /**********
- * CalEvents
+ * Custom Events
  **********/
 
 /**
  * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
- * @emits ServiceCalendar#click
- * @param {object} clickEventData - 'click' 핸들러의 이벤트 데이터
+ * @emits ServiceCalendar#clickCalEvent
+ * @param {object} clickEventData - 'clickCalEvent' 핸들러의 이벤트 데이터
  */
 ServiceCalendar.prototype._onClick = function(clickEventData) {
     /**
-     * @events ServiceCalendar#click
+     * @events ServiceCalendar#clickCalEvent
      * @type {object}
      * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
+     * @property {MouseEvent} jsEvent - 마우스 이벤트
      */
-    this.fire('click', clickEventData);
+    this.fire('clickCalEvent', clickEventData);
 };
 
 /**
@@ -198,11 +199,11 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
 
     util.forEach(handlers.click, function(handler) {
         if (isAttach) {
-            handler.on('click', calendar._onClick, calendar);
+            handler.on('clickCalEvent', calendar._onClick, calendar);
             return;
         }
 
-        handler.off('click', calendar._onClick, calendar);
+        handler.off('clickCalEvent', calendar._onClick, calendar);
     });
 };
 

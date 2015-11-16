@@ -56,7 +56,7 @@ AlldayClick.prototype.checkExpectCondition = AlldayMove.prototype.checkExpectedC
 /**
  * Click event handler
  * @param {object} clickEvent - click event data
- * @emits AlldayClick#click
+ * @emits AlldayClick#clickCalEvent
  */
 AlldayClick.prototype._onClick = function(clickEvent) {
     var target = clickEvent.target,
@@ -70,12 +70,14 @@ AlldayClick.prototype._onClick = function(clickEvent) {
 
     eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
         /**
-         * @events AlldayClick#click
+         * @events AlldayClick#clickCalEvent
          * @type {object}
          * @property {CalEvent} model - model instance
+         * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('click', {
-            model:  model
+        this.fire('clickCalEvent', {
+            model:  model,
+            jsEvent: clickEvent.originEvent
         });
     }, this);
 };
