@@ -112,10 +112,6 @@ function ServiceCalendar(options, container) {
         }
     });
 
-    if (options.events) {
-        controller.createEvents(options.events, true);
-    }
-
     Calendar.call(this, options, container);
 }
 

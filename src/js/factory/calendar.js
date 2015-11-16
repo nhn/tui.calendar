@@ -34,6 +34,7 @@ var weekViewFactory = require('./weekView');
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *  @param {object} [options.month] - options for month view
  *   @param {string} options.month.renderMonth - YYYY-MM render month
+ *  @param {Event[]} [options.events] - array of Event data for add calendar after initialize.
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
@@ -94,6 +95,10 @@ function Calendar(options, container) {
     }, this);
 
     this.toggleView(options.defaultView, true);
+
+    if (options.events && options.events.length) {
+        this.controller.createEvents(options.events, true);
+    }
 
     this.render();
 }
