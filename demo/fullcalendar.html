@@ -3,14 +3,14 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Fullcalendar Demo</title>
-<link rel="stylesheet" type="text/css" href="../dist/calendar.css" />
+<link rel="stylesheet" type="text/css" href="../build/calendar.css" />
 </head>
 <body>
 <div id="calendar-container"></div>
 <div>
     <input type="button" id="add-event" value="금일 점심일정 추가" />
 </div>
-<script src="../dist/calendar.js" type="text/javascript" charset="utf-8"></script>
+<script src="../build/calendar.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 (function() {
     // 캘린더 인스턴스 생성
@@ -29,7 +29,7 @@
         lunchEnd.setHours(13, 0, 0);
 
         calendar.createEvent([{
-            id: '',
+            id: '1',
             calendarID: '',
             title: '점심식사',
             isAllDay: false,
@@ -46,6 +46,8 @@
     calendar.on('click', function(e) {
         console.log(e.model);
     });
+
+    window.cal = calendar;
 })();
 </script>
 </body>
