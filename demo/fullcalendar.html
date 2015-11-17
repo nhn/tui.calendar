@@ -4,6 +4,11 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Fullcalendar Demo</title>
 <link rel="stylesheet" type="text/css" href="../build/calendar.css" />
+<style type="text/css">
+    .dooray-calendar-timegrid-container {
+        height: 600px;
+    }
+</style>
 </head>
 <body>
 <div id="calendar-container"></div>
@@ -15,7 +20,36 @@
 (function() {
     // 캘린더 인스턴스 생성
     var calendar = ne.dooray.calendar.Calendar({
-        defaultView: 'week'
+        defaultView: 'week',
+        events: [{
+            id: "1",
+            title: '스크럼',
+            category: 'time',
+            dueDateClass: '',
+            starts: '2015-11-19T09:40:00+09:00',
+            ends: '2015-11-19T10:40:00+09:00'
+        }, {
+            id: "2",
+            title: '[홍길동]연차',
+            category: 'allday',
+            dueDateClass: '',
+            starts: '2015-11-19T00:00:00+09:00',
+            ends: '2015-11-19T23:59:59+09:00'
+        }, {
+            id: "3",
+            title: '테스트 마일스톤1',
+            category: 'milestone',
+            dueDateClass: '',
+            starts: '',
+            ends: '2015-11-19T23:59:59+09:00'
+        }, {
+            id: "4",
+            title: '테스트 업무',
+            category: 'task',
+            dueDateClass: 'morning',
+            starts: '',
+            ends: '2015-11-19T23:59:59+09:00'
+        }]
     }, document.getElementById('calendar-container'));
 
     // 점심일정 추가 버튼 클릭
@@ -30,7 +64,7 @@
 
         calendar.createEvent([{
             id: '1',
-            calendarID: '',
+            calendarID: '1',
             title: '점심식사',
             isAllDay: false,
             category: 'time',
@@ -43,8 +77,8 @@
     };
 
     // 일정 클릭 이벤트 핸들러
-    calendar.on('click', function(e) {
-        console.log(e.model);
+    calendar.on('clickCalEvent', function(e) {
+        console.log(e);
     });
 
     window.cal = calendar;
