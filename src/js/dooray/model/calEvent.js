@@ -35,6 +35,12 @@ function DoorayEvent() {
     CalEvent.call(this);
 
     /**
+     * 캘린더 ID
+     * @type {string}
+     */
+    this.calendarID = '';
+
+    /**
      * 일정 카테고리 (마일스톤, 업무, 종일일정, 시간별일정)
      * @type {string}
      */
@@ -69,6 +75,7 @@ DoorayEvent.prototype.init = function(options) {
     CalEvent.prototype.init.call(this, options);
 
     this.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
+    this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
 

@@ -6,7 +6,7 @@
 'use strict';
 
 var config = {
-    throwError: function() {
+    throwError: function(msg) {
         /* @if BUNDLE_TYPE='Release' */
         alert(msg);
         /* @endif */

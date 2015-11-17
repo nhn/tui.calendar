@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../../config');
 var datetime = require('../../common/datetime');
 var Calendar = require('../../factory/calendar');
 var DoorayBase = require('../controller/base');
@@ -33,6 +34,7 @@ var serviceWeekViewFactory = require('./weekView');
  *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
+ *  @param {object} [options.calendarColor] - {@see ServiceCalendar~DoorayEvent} 의 calendarID별로 스타일을 미리 지정 가능
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
@@ -113,6 +115,11 @@ function ServiceCalendar(options, container) {
         }
     });
 
+    /**
+     * @type {object}
+     */
+    this.calendarColor = options.calendarColor || {};
+
     Calendar.call(this, options, container);
 }
 
@@ -121,6 +128,25 @@ util.inherit(ServiceCalendar, Calendar);
 /**********
  * CRUD override
  **********/
+
+/**
+ * Create events instance and render calendar.
+ * @param {ServiceCalendar~DoorayEvent[]} dataObjectList - array of {@see ServiceCalendar~DoorayEvent[]} object
+ */
+ServiceCalendar.prototype.createEvent = function(dataObjectList) {
+    var calColor = this.calendarColor;
+
+    util.forEach(dataObjectList, function(obj) {
+        var color = calColor[obj.calendarID];
+
+        if (color) {
+            obj.color = color[0];
+            obj.bgColor = color[1];
+        }
+    });
+
+    Calendar.prototype.createEvent.call(this, dataObjectList);
+};
 
 /**
  * @override
@@ -211,6 +237,33 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
 /**********
  * Methods
  **********/
+
+/**
+ * 같은 calendarID를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
+ * @param {string} calendarID - calendarID value
+ * @param {array} color - color array
+ */
+ServiceCalendar.prototype.changeCalendarColor = function(calendarID, color) {
+    var calColor = this.calendarColor,
+        ownEvents = this.controller.events;
+
+    if (color.length !== 2) {
+        config.throwError('Calendar#changeCalendarColor(): color 는 [color, bgColor] 형태여야 합니다.');
+    }
+
+    calColor[calendarID] = color.slice(0);
+
+    ownEvents.each(function(model) {
+        if (model.calendarID !== calendarID) {
+            return;
+        }
+
+        model.color = color[0];
+        model.bgColor = color[1];
+    });
+
+    this.render();
+};
 
 /**
  * 주뷰, 월뷰 간 전환

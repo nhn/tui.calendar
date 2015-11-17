@@ -100,7 +100,7 @@ function Calendar(options, container) {
     this.toggleView(options.defaultView, true);
 
     if (options.events && options.events.length) {
-        this.controller.createEvents(options.events, true);
+        this.createEvent(options.events, true);
     }
 
     this.render();
