@@ -102,6 +102,12 @@ datetime = {
     MILLISECONDS_PER_HOUR: 3600000,
 
     /**
+     * The number of milliseconds one minutes.
+     * @type {number}
+     */
+    MILLISECONDS_PER_MINUTES: 60000,
+
+    /**
      * convert milliseconds
      * @param {string} type - type of value.
      * @param {number} value - value to convert.

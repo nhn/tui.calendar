@@ -4,11 +4,13 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var common = require('../../common/common');
+var datetime = require('../../common/datetime');
 var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
+var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30)
 
 /**
  * Class for Time.Creation dragging effect.
@@ -23,21 +25,35 @@ function TimeCreationGuide(timeCreation) {
     this.guideElement = global.document.createElement('div');
 
     /**
+     * @type {HTMLDivElement}
+     */
+    this.guideTimeElement = domutil.appendHTMLElement(
+        'span', 
+        this.guideElement, 
+        config.classname('time-guide-creation-label')
+    );
+
+    domutil.addClass(this.guideElement, config.classname('time-guide-creation'));
+
+    /**
      * @type {TimeCreation}
      */
     this.timeCreation = timeCreation;
 
     /**
-     * @type {number}
+     * @type {array}
      */
-    this._startGridY = 0;
+    this._styleUnit = null;
+
+    /**
+     * @type {array}
+     */
+    this._styleStart = null;
 
     /**
      * @type {function}
      */
-    this._getTopFunc = null;
-
-    domutil.addClass(this.guideElement, config.classname('time-guide-creation'));
+    this._styleFunc = null;
 
     timeCreation.on({
         'time_creation_dragstart': this._onDragStart,
@@ -60,7 +76,8 @@ TimeCreationGuide.prototype.destroy = function() {
  * Clear guide element.
  */
 TimeCreationGuide.prototype.clearGuideElement = function() {
-    var guideElement = this.guideElement;
+    var guideElement = this.guideElement,
+        timeElement = this.guideTimeElement;
 
     domutil.remove(guideElement);
 
@@ -68,22 +85,99 @@ TimeCreationGuide.prototype.clearGuideElement = function() {
         guideElement.style.display = 'none';
         guideElement.style.top = '';
         guideElement.style.height = '';
+        timeElement.innerHTML = '';
     });
 };
 
 /**
  * Refresh guide element
- * @param {number} top - The number of guide element's style top.
- * @param {number} height - The number of guide element's style height.
+ * @param {number} top - The number of guide element's style top
+ * @param {number} height - The number of guide element's style height
+ * @param {Date} start - start time of event to create
+ * @param {Date} end - end time of event to create
+ * @param {boolean} bottomLabel - is label need to render bottom of guide element?
  */
-TimeCreationGuide.prototype._refreshGuideElement = function(top, height) {
-    var guideElement = this.guideElement;
+TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
+    var guideElement = this.guideElement,
+        timeElement = this.guideTimeElement;
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.top = top + 'px';
         guideElement.style.height = height + 'px';
         guideElement.style.display = 'block';
+
+        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') + 
+            ' ~ ' + datetime.format(new Date(end), 'HH:mm');
+
+        if (!!bottomLabel) {
+            domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
+        } else {
+            domutil.addClass(timeElement, config.classname('time-guide-bottom'));
+        }
     });
+};
+
+/**
+ * Get unit data of calculating new style of guide element by user interaction
+ * @param {Time} relatedView - time view instance related with event
+ * @returns {array} unit data.
+ */
+TimeCreationGuide.prototype._getUnitData = function(relatedView) {
+    var viewOpt = relatedView.options,
+        viewHeight = relatedView.getViewBound().height,
+        hourLength = viewOpt.hourEnd - viewOpt.hourStart,
+        todayStart = +datetime.parse(viewOpt.ymd),
+        todayEnd = todayStart + (datetime.MILLISECONDS_PER_DAY);
+
+    // [0] height of view
+    // [1] hour length of view
+    // [2] start time of view
+    // [3] end time of view
+    // [4] height of view for one hour
+    return [viewHeight, hourLength, todayStart, todayEnd, viewHeight / hourLength];
+};
+
+/**
+ * Applying limitation to supplied data and return it.
+ * @param {number} top - top pixel of guide element
+ * @param {number} height - height pixel of guide element
+ * @param {number} start - relative time value of dragstart point
+ * @param {number} end - relative time value of dragend point
+ * @returns {array} limited style data
+ */
+TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) {
+    var unitData = this._styleUnit;
+
+    top = common.limit(top, [0], [unitData[0]]);
+    height = common.limit(top + height, [0], [unitData[0]]) - top;
+    start = common.limit(start, [unitData[2]], [unitData[3]]);
+    end = common.limit(end, [unitData[2]], [unitData[3]]);
+
+    return [top, height, start, end];
+};
+
+/**
+ * Get function to calculate guide element UI data from supplied units
+ * @param {number} viewHeight - total height of view's container element
+ * @param {number} hourLength - hour length that rendered in time view
+ * @param {number} todayStart - time for view's start date
+ * @returns {function} UI data calculator function
+ */
+TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
+    var todayEnd = todayStart + (datetime.MILLISECONDS_PER_DAY - 1000);
+
+    function getStyleData(eventData) {
+        var gridY = eventData.nearestGridY,
+            gridTimeY = eventData.nearestGridTimeY,
+            top, time;
+
+        top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);
+        time = common.limit(gridTimeY, [todayStart], [todayEnd]);
+
+        return [top, time];
+    }
+        
+    return getStyleData;
 };
 
 /**
@@ -91,31 +185,23 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height) {
  * @param {object} dragStartEventData - dragStart event data.
  */
 TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
-    var timeView = dragStartEventData.relatedView,
-        viewOptions = timeView.options,
-        viewHeight = timeView.getViewBound().height,
-        hourLength = viewOptions.hourEnd - viewOptions.hourStart,
-        getTopFunc;
+    var relatedView = dragStartEventData.relatedView,
+        unitData, styleFunc, styleData, result;
 
-    getTopFunc = this._getTopFunc = util.bind(function(indexY) {
-        // memo
-        if (getTopFunc[indexY]) {
-            return getTopFunc[indexY];
-        }
+    unitData = this._styleUnit = this._getUnitData(relatedView);
+    styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
+    styleData = this._styleStart = styleFunc(dragStartEventData);
 
-        getTopFunc[indexY] = ratio(hourLength, viewHeight, indexY);
-
-        return getTopFunc[indexY];
-    }, this);
-
-    this._startGridY = getTopFunc(dragStartEventData.nearestGridY);
-
-    this._refreshGuideElement(
-        this._startGridY,
-        getTopFunc(0.5)
+    result = this._limitStyleData(
+        styleData[0],
+        (unitData[4] / 2),
+        styleData[1],
+        (styleData[1] + MIN30)
     );
 
-    timeView.container.appendChild(this.guideElement);
+    this._refreshGuideElement.apply(this, result);
+
+    relatedView.container.appendChild(this.guideElement);
 };
 
 /**
@@ -123,26 +209,39 @@ TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
  * @param {object} dragEventData - drag event data.
  */
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
-    var getTopFunc = this._getTopFunc,
-        startGridY = this._startGridY,
-        endGridY;
+    var styleFunc = this._styleFunc,
+        unitData = this._styleUnit,
+        startStyle = this._styleStart,
+        heightOfHalfHour,
+        endStyle,
+        result;
 
-    if (!getTopFunc) {
+    if (!styleFunc || !unitData || !startStyle) {
         return;
     }
 
-    // drawing guide from start point to at least 30min points.
-    endGridY = getTopFunc(dragEventData.nearestGridY) + getTopFunc(0.5);
+    heightOfHalfHour = (unitData[4] / 2);
+    endStyle = styleFunc(dragEventData);
 
-    if (endGridY > startGridY) {
-        this._refreshGuideElement(startGridY, endGridY - startGridY);
-        return;
+    if (endStyle[0] > startStyle[0]) {
+        result = this._limitStyleData(
+            startStyle[0],
+            (endStyle[0] - startStyle[0]) + heightOfHalfHour,
+            startStyle[1],
+            (endStyle[1] + MIN30)
+        );
+
+        this._refreshGuideElement.apply(this, result);
+    } else {
+        result = this._limitStyleData(
+            endStyle[0],
+            (startStyle[0] - endStyle[0]) + heightOfHalfHour,
+            endStyle[1],
+            (startStyle[1] + MIN30)
+        );
+
+        this._refreshGuideElement.apply(this, result.concat([true]));
     }
-
-    this._refreshGuideElement(
-        endGridY - getTopFunc(0.5),
-        (startGridY + getTopFunc(1)) - endGridY
-    );
 };
 
 module.exports = TimeCreationGuide;
