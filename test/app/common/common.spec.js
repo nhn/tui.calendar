@@ -58,4 +58,10 @@ describe('module:common', function() {
             expect(spy).not.toHaveBeenCalled();
         });
     });
+
+    it('limit can applying limitation supplied number', function() {
+        expect(common.limit(3, [0], [2])).toBe(2);
+        expect(common.limit(-20, [0], [2])).toBe(0);
+        expect(common.limit(10, [0, 15], [20])).toBe(15);
+    });
 });

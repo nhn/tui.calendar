@@ -126,15 +126,18 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
     var viewOpt = relatedView.options,
         viewHeight = relatedView.getViewBound().height,
         hourLength = viewOpt.hourEnd - viewOpt.hourStart,
-        todayStart = +datetime.parse(viewOpt.ymd),
-        todayEnd = todayStart + (datetime.MILLISECONDS_PER_DAY);
+        todayStart = datetime.parse(viewOpt.ymd),
+        todayEnd = datetime.end(todayStart);
+
+    todayStart.setHours(0, 0, 0);
+    todayStart.setHours(viewOpt.hourStart);
 
     // [0] height of view
     // [1] hour length of view
     // [2] start time of view
     // [3] end time of view
     // [4] height of view for one hour
-    return [viewHeight, hourLength, todayStart, todayEnd, viewHeight / hourLength];
+    return [viewHeight, hourLength, +todayStart, +todayEnd, viewHeight / hourLength];
 };
 
 /**
@@ -164,7 +167,7 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
  * @returns {function} UI data calculator function
  */
 TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
-    var todayEnd = todayStart + (datetime.MILLISECONDS_PER_DAY - 1000);
+    var todayEnd = +datetime.end(new Date(+todayStart));
 
     function getStyleData(eventData) {
         var gridY = eventData.nearestGridY,

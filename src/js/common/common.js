@@ -116,6 +116,13 @@ module.exports = {
         util.extend(to.prototype, from);
     },
 
+    /**
+     * Limit supplied value base on `minArr`, `maxArr`
+     * @param {number} value - value
+     * @param {array} minArr - min
+     * @param {array} maxArr - max
+     * @return {number} limited value
+     */
     limit: function(value, minArr, maxArr) {
         var v = Math.max.apply(null, [value].concat(minArr));
         v = Math.min.apply(null, [v].concat(maxArr));
