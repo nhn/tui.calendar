@@ -129,7 +129,7 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
         todayStart = datetime.parse(viewOpt.ymd),
         todayEnd = datetime.end(todayStart);
 
-    todayStart.setHours(0, 0, 0);
+    todayStart.setHours(0, 0, 0, 0);
     todayStart.setHours(viewOpt.hourStart);
 
     // [0] height of view
