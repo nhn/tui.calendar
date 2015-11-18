@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var config = require('../config');
 var datetime = require('../common/datetime');
 var Layout = require('../view/layout');
 var Drag = require('../handler/drag');
@@ -77,6 +78,7 @@ function Calendar(options, container) {
         distance: 5
     }, this.layout);
 
+
     /**
      * current rendered view name.
      * @type {string}
@@ -97,13 +99,21 @@ function Calendar(options, container) {
         createdEvent: refresh
     }, this);
 
-    this.toggleView(options.defaultView, true);
-
     if (options.events && options.events.length) {
         this.createEvent(options.events, true);
     }
 
-    this.render();
+    /**
+     * @type {Date}
+     */
+    this._currentStartDate = null;
+
+    /**
+     * @type {Date}
+     */
+    this._currentEndDate = null;
+
+    this.initializeView();
 }
 
 /**********
@@ -113,10 +123,14 @@ function Calendar(options, container) {
 /**
  * Create events instance and render calendar.
  * @param {Calendar~Event[]} dataObjectList - array of {@see Calendar~Event} object
+ * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-Calendar.prototype.createEvent = function(dataObjectList) {
-    this.controller.createEvents(dataObjectList, true);
-    this.render();
+Calendar.prototype.createEvent = function(dataObjectList, silent) {
+    this.controller.createEvents(dataObjectList, silent);
+
+    if (!silent) {
+        this.render();
+    }
 };
 
 /**
@@ -157,15 +171,59 @@ Calendar.prototype.deleteEvent = function(id) {
 };
 
 /**********
- * General Methods
+ * Private Methods
  **********/
 
 /**
- * Render calendar.
+ * Set child view's options recursively
+ * @param {View} view - parent view
+ * @param {function} func - option manipulate function
+ * @private
  */
-Calendar.prototype.render = function() {
-    this.layout.render();
+Calendar.prototype._setOptionRecurseively = function(view, func) {
+    view.recursive(function(childView) {
+        var opt = childView.options;
+
+        if (!opt) {
+            return;
+        }
+
+        func(opt);
+    });
 };
+
+/**
+ * @param {string|Date} date - date to show in calendar
+ * @param {number} [startDayOfWeek=0] - start day of week
+ * @return {array} render range
+ * @private
+ */
+Calendar.prototype._getWeekRenderRange = function(date, startDayOfWeek) {
+    var day, start, end;
+
+    date = util.isDate(date) ? date : new Date(date);
+    startDayOfWeek = (startDayOfWeek || 0);
+    day = date.getDay();
+
+    function mil(d) {
+        return datetime.MILLISECONDS_PER_DAY * d;
+    }
+
+    // calculate default render range first.
+    start = new Date(+date - mil(day) + mil(startDayOfWeek));
+    end = new Date(+start + mil(6));
+
+    if (day < startDayOfWeek) {
+        start = new Date(+start - mil(7));
+        end = new Date(+end - mil(7));
+    }
+
+    return [start, end];
+};
+
+/**********
+ * General Methods
+ **********/
 
 /**
  * Delete all data and clear view.
@@ -177,80 +235,123 @@ Calendar.prototype.clear = function() {
 };
 
 /**
- * Move next.
+ * Render calendar.
  */
-Calendar.prototype.next = function() {
-    this.move(1);
+Calendar.prototype.render = function() {
+    this.layout.render();
 };
 
 /**
- * Move previous.
+ * Initialize current view.
  */
-Calendar.prototype.prev = function() {
-    this.move(-1);
+Calendar.prototype.initializeView = function() {
+    var currentViewName = this.currentViewName,
+        options;
+
+    this.toggleView(currentViewName, true, true);
+
+    if (this.currentViewName === 'week') {
+        options = this.options.week;
+        this.setDate(options.renderStartDate, options.renderEndDate);
+    } else {
+        //TODO: month view.
+    }
+};
+
+/**
+ * Set calendar's render date range and refresh view
+ * @param {string|Date} start - start date of render
+ * @param {string|Date} end - end date of render
+ */
+Calendar.prototype.setDate = function(start, end) {
+    var ymd = 'YYYY-MM-DD';
+    start = util.isDate(start) ? start : new Date(start);
+
+    if (this.currentViewName === 'week') {
+        if (!end) {
+            config.throwError('Calendar#setDate() Need 2 parameter (start, end) in "week" view.');
+            return;
+        }
+        end = util.isDate(end) ? end : new Date(end);
+
+        this._currentStartDate = new Date(+start);
+        this._currentEndDate = new Date(+end);
+
+        start = datetime.format(start, ymd);
+        end = datetime.format(end, ymd);
+
+        this._setOptionRecurseively(this.getCurrentView(), function(viewOption) {
+            viewOption.renderStartDate = start;
+            viewOption.renderEndDate = end;
+        });
+    } else {
+        //TODO: month view.
+    }
+
+    this.refreshChildView(this.currentViewName);
+};
+
+/**
+ * Move current render range to range that include supplied date
+ * @param {string|Date} date - date to show
+ */
+Calendar.prototype.showDate = function(date) {
+    var options = this.options;
+
+    date = util.isDate(date) ? date : new Date(date);
+
+    if (this.currentViewName === 'week') {
+        this.setDate.apply(this, this._getWeekRenderRange(date, options.startDayOfWeek));
+    } else {
+        //TODO: month view.
+    }
 };
 
 /**
  * Move to today.
  */
 Calendar.prototype.today = function() {
-    var currentView = this.getCurrentView(),
-        originOptions = this.originOptions;
-
-    if (currentView.viewName === 'week') {
-        originOptions = originOptions.week;
-        this.options.week = {
-            renderStartDate: originOptions.renderStartDate,
-            renderEndDate: originOptions.renderEndDate 
-        };
-        currentView.recursive(function(view) {
-            if (!view.options) {
-                return;
-            }
-
-            view.options.renderStartDate = originOptions.renderStartDate;
-            view.options.renderEndDate = originOptions.renderEndDate;
-        });
-    }
-
-    this.refreshChildView(currentView.viewName);
+    this.showDate(new Date());
 };
 
 /**
- * Move calendar by direction
- * @param {number} direction - the number that want to move (+1, -1)
+ * Move the calendar amount of offset value
+ * @param {number} offset - offset value.
+ * @example
+ * // move previous week when "week" view.
+ * // move previous month when "month" view.
+ * calendar.move(-1);
  */
-Calendar.prototype.move = function(direction) {
-    var currentView = this.getCurrentView(),
-        options = this.options,
+Calendar.prototype.move = function(offset) {
+    var start = this._currentStartDate,
+        end = this._currentEndDate,
+        diff;
 
-        dateOffset,
-        newStart,
-        newEnd;
+    if (this.currentViewName === 'week') {
+        diff = ((end - start) + datetime.MILLISECONDS_PER_DAY) * (offset || 0);
 
-    if (currentView.viewName === 'week') {
-        newStart = datetime.start(datetime.parse(options.week.renderStartDate));
-        newEnd = datetime.end(datetime.parse(options.week.renderEndDate));
-        dateOffset = datetime.range(newStart, newEnd, datetime.MILLISECONDS_PER_DAY).length * direction;
-        newStart = datetime.format(new Date(newStart.setDate(newStart.getDate() + dateOffset)), 'YYYY-MM-DD');
-        newEnd = datetime.format(new Date(newEnd.setDate(newEnd.getDate() + dateOffset)), 'YYYY-MM-DD');
+        start = new Date(+start + diff);
+        end = new Date(+end + diff);
 
-        options.week = {
-            renderStartDate: newStart,
-            renderEndDate: newEnd
-        };
-        currentView.recursive(function(view) {
-            if (!view.options) {
-                return;
-            }
-
-            view.options.renderStartDate = newStart;
-            view.options.renderEndDate = newEnd;
-        });
+        this.setDate(start, end);
+    } else {
+        //TODO: month view.
     }
+};
 
-    this.refreshChildView(currentView.viewName);
-}
+/**
+ * Move the calendar forward an arvitrary amount of unit
+ */
+Calendar.prototype.next = function() {
+    this.move(1);
+};
+
+/**
+ * Move the calendar backward an arvitrary amount of unit
+ */
+Calendar.prototype.prev = function() {
+    this.move(-1);
+};
 
 /**
  * Return current rendered view.
@@ -288,7 +389,7 @@ Calendar.prototype.toggleView = function(viewName, force) {
 /**
  * Destroy calendar instance.
  */
-Calendar.prototype.destory = function() {
+Calendar.prototype.destroy = function() {
     this.dragHandler.destroy();
     this.controller.off();
     this.layout.clear();
@@ -318,7 +419,8 @@ Calendar.prototype.refreshChildView = function(viewName) {
  */
 Calendar.prototype.setOptions = function(options) {
     var today = this.baseDate,
-        start, end, day,
+        ymd = 'YYYY-MM-DD',
+        renderRange,
         weekOpt;
         // dateRange;
 
@@ -333,25 +435,9 @@ Calendar.prototype.setOptions = function(options) {
     }, options.week);
 
     if (!weekOpt.renderStartDate || !weekOpt.renderEndDate) {
-        day = today.getDay();
-
-        start = new Date(+today);
-        start.setDate(start.getDate() - day);
-        end = new Date(+start);
-        end.setDate(end.getDate() + 6);
-
-        if (weekOpt.startDayOfWeek) {
-            start.setDate(start.getDate() + weekOpt.startDayOfWeek);
-            end.setDate(end.getDate() + weekOpt.startDayOfWeek);
-        }
-
-        if (day < weekOpt.startDayOfWeek) {
-            start.setDate(start.getDate() - 7);
-            end.setDate(end.getDate() - 7);
-        }
-
-        weekOpt.renderStartDate = datetime.format(start, 'YYYY-MM-DD');
-        weekOpt.renderEndDate = datetime.format(end, 'YYYY-MM-DD');
+        renderRange = this._getWeekRenderRange(new Date(), weekOpt.startDayOfWeek);
+        weekOpt.renderStartDate = datetime.format(renderRange[0], ymd);
+        weekOpt.renderEndDate = datetime.format(renderRange[1], ymd);
     }
 
     if (!options.month) {

@@ -62,7 +62,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      **********/
     timeGridView = new TimeGrid(options.week, domutil.find('.' + config.classname('timegrid-layout'), weekView.container));
     weekView.addChild(timeGridView);
-    timeClickHandler = new TimeClick(dragHandler, timeGirdView);
+    timeClickHandler = new TimeClick(dragHandler, timeGridView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);

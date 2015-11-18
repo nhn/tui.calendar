@@ -132,8 +132,9 @@ util.inherit(ServiceCalendar, Calendar);
 /**
  * Create events instance and render calendar.
  * @param {ServiceCalendar~DoorayEvent[]} dataObjectList - array of {@see ServiceCalendar~DoorayEvent[]} object
+ * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-ServiceCalendar.prototype.createEvent = function(dataObjectList) {
+ServiceCalendar.prototype.createEvent = function(dataObjectList, silent) {
     var calColor = this.calendarColor;
 
     util.forEach(dataObjectList, function(obj) {
@@ -145,7 +146,7 @@ ServiceCalendar.prototype.createEvent = function(dataObjectList) {
         }
     });
 
-    Calendar.prototype.createEvent.call(this, dataObjectList);
+    Calendar.prototype.createEvent.call(this, dataObjectList, silent);
 };
 
 /**
@@ -270,8 +271,9 @@ ServiceCalendar.prototype.changeCalendarColor = function(calendarID, color) {
  * @override
  * @param {string} viewName - 'week', 'month' 중 하나
  * @param {boolean} [force=false] - true 지정시 뷰 전환이 없어도 전환을 위한 동작을 수행한다
+ * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-ServiceCalendar.prototype.toggleView = function(viewName, force) {
+ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
     var layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
@@ -298,9 +300,12 @@ ServiceCalendar.prototype.toggleView = function(viewName, force) {
     layout.childs.doWhenHas(viewName, function(view) {
         this._toggleViewEvent(true, view, this);
     }, this);
-    layout.render();
 
     this.currentViewName = viewName;
+
+    if (!silent) {
+        this.render();
+    }
 };
 
 module.exports = ServiceCalendar;

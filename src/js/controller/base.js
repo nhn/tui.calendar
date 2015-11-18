@@ -87,6 +87,79 @@ Base.prototype.createEvent = function(options, silent) {
 };
 
 /**
+ * @emits Base#beforeCreateEvent
+ * @emits Base#createdEvent
+ * @param {Calendar~CalEvent[]} dataList - dataObject list to create event.
+ * @param {boolean} [silent=false] - set true then don't fire events.
+ * @returns {CalEvent[]} The instance list of CalEvent that created.
+ */
+Base.prototype.createEvents = function(dataList, silent) {
+    return util.map(dataList, function(data) {
+        return this.createEvent(data, silent);
+    }, this);
+};
+
+/**
+ * Update an event.
+ * @emits Base#updateEvent
+ * @param {number} id The unique id of CalEvent instance.
+ * @param {object} options updated object data.
+ * @returns {CalEvent|boolean} updated event instance, when it fail then return false.
+ */
+Base.prototype.updateEvent = function(id, options) {
+    var result = false;
+
+    this.events.doWhenHas(id, function(model) {
+        options = options || {};
+
+        if (options.title) {
+            model.set('title', options.title);
+        }
+
+        if (options.isAllDay) {
+            model.set('isAllDay', options.isAllDay);
+        }
+
+        if (options.starts) {
+            model.set('starts', new Date(options.starts));
+        }
+
+        if (options.ends) {
+            model.set('ends', new Date(options.ends));
+        }
+
+        this._removeFromMatrix(model);
+        this._addToMatrix(model);
+
+        result = model;
+    }, this);
+
+    /**
+     * @event Base#updateEvent
+     */
+    this.fire('updateEvent');
+
+    return result;
+};
+
+/**
+ * Delete event instance from controller.
+ * @param {number} id - unique id of model instance.
+ * @returns {CalEvent} deleted model instance.
+ */
+Base.prototype.deleteEvent = function(id) {
+    var result = false;
+
+    this.events.doWhenHas(id, function(event) {
+        result = event;
+        this._removeFromMatrix(event);
+        this.events.remove(event);
+    }, this);
+
+    return result;
+};
+
+/**
  * Set date matrix to supplied event instance.
  * @param {CalEvent} event - instance of event.
  */
@@ -208,68 +281,6 @@ Base.prototype.findByDateRange = function(starts, ends) {
             }));
         }
     });
-
-    return result;
-};
-
-// Update
-/**
- * Update an event.
- * @emits Base#updateEvent
- * @param {number} id The unique id of CalEvent instance.
- * @param {object} options updated object data.
- * @returns {CalEvent|boolean} updated event instance, when it fail then return false.
- */
-Base.prototype.updateEvent = function(id, options) {
-    var result = false;
-
-    this.events.doWhenHas(id, function(model) {
-        options = options || {};
-
-        if (options.title) {
-            model.set('title', options.title);
-        }
-
-        if (options.isAllDay) {
-            model.set('isAllDay', options.isAllDay);
-        }
-
-        if (options.starts) {
-            model.set('starts', new Date(options.starts));
-        }
-
-        if (options.ends) {
-            model.set('ends', new Date(options.ends));
-        }
-
-        this._removeFromMatrix(model);
-        this._addToMatrix(model);
-
-        result = model;
-    }, this);
-
-    /**
-     * @event Base#updateEvent
-     */
-    this.fire('updateEvent');
-
-    return result;
-};
-
-// Delete
-/**
- * Delete event instance from controller.
- * @param {number} id - unique id of model instance.
- * @returns {CalEvent} deleted model instance.
- */
-Base.prototype.deleteEvent = function(id) {
-    var result = false;
-
-    this.events.doWhenHas(id, function(event) {
-        result = event;
-        this._removeFromMatrix(event);
-        this.events.remove(event);
-    }, this);
 
     return result;
 };

@@ -60,18 +60,5 @@ DoorayBase.prototype.createEvent = function(data, silent) {
     return inst;
 };
 
-/**
- * @emits Base#beforeCreateEvent
- * @emits Base#createdEvent
- * @param {ServiceCalendar~CalEvent[]} dataList - dataObject list to create event.
- * @param {boolean} [silent=false] - set true then don't fire events.
- * @returns {DoorayEvent[]} The instance list of CalEvent that created.
- */
-DoorayBase.prototype.createEvents = function(dataList, silent) {
-    return util.map(dataList, function(data) {
-        return this.createEvent(data, silent);
-    }, this);
-};
-
 module.exports = DoorayBase;
 
