@@ -68,8 +68,8 @@ function TimeCreationGuide(timeCreation) {
 TimeCreationGuide.prototype.destroy = function() {
     this.clearGuideElement();
     this.timeCreation.off(this);
-    this.guideElement = this.timeCreation = this._startGridY =
-        this._getTopFunc = null;
+    this.timeCreation = this._styleUnit = this._styleStart =
+        this._styleFunc = this.guideElement = this.guideTimeElement = null;
 };
 
 /**

@@ -1,8 +1,8 @@
 /*eslint-disable*/
-var istanbul = require('browserify-istanbul');
 var hbsfy = require('hbsfy');
 var preprocessify = require('preprocessify');
-var CONTEXT = {
+
+var preprocessOption = {
     BUNDLE_TYPE: 'Release',
     CSS_PREFIX: 'dooray-calendar-'
 };
@@ -13,6 +13,7 @@ module.exports = function(config) {
         frameworks: [
             'jasmine-jquery',
             'browserify',
+            'source-map-support',
             'jasmine-ajax',
             'jasmine'
         ],
@@ -34,35 +35,14 @@ module.exports = function(config) {
         browserify: {
             debug: true,
             bundleDelay: 1000,
-            transform:[hbsfy, preprocessify(CONTEXT), istanbul({
-                ignore: [
-                    '**/*.hbs',
-                    'index.js', 
-                    '**/test/**',
-                    '**/template/**'
-                ]
-            })]
+            transform: [hbsfy, preprocessify(preprocessOption)]
         },
         preprocessPreprocessor: {
-            context: CONTEXT
+            context: preprocessOption 
         },
         reporters: [
-            'dots',
-            'coverage',
-            'junit'
+            'dots'
         ],
-        coverageReporter: {
-            dir: 'report/',
-            reporters: [{
-                type: 'text-summary'
-            }, {
-                type: 'html'
-            }]
-        },
-        junitReporter: {
-            outputDir: 'report/junit',
-            suite: ''
-        },
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
