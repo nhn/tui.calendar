@@ -34,7 +34,6 @@ module.exports = function(config) {
         },
         browserify: {
             debug: true,
-            bundleDelay: 1000,
             transform: [hbsfy, preprocessify(preprocessOption)]
         },
         preprocessPreprocessor: {
@@ -47,7 +46,6 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        autoWatchBatchDelay: 1000,
         browsers: ['Chrome'],
         singleRun: false,
         browserNoActivityTimeout: 30000
