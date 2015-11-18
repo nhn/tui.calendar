@@ -34,6 +34,7 @@ module.exports = function(config) {
         },
         browserify: {
             debug: true,
+            bundleDelay: 1000,
             transform: [hbsfy, preprocessify(preprocessOption)]
         },
         preprocessPreprocessor: {
