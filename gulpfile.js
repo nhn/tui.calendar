@@ -112,7 +112,8 @@ gulp.task('connect', function() {
     gulp.watch([
         './src/**/*',
         './index.js',
-        './demo/**/*.html'
+        './demo/**/*.html',
+        './demo-dev/**/*.html'
     ], ['bundle-dev']);
 });
 
