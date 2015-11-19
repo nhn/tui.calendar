@@ -1,20 +1,26 @@
+var View = ne.dooray.calendar.View;
 var Calendar = ne.dooray.calendar.OriginCalendar;
 var ControllerFactory = ne.dooray.calendar.ControllerFactory;
 
 describe('Calendar', function() {
     var controller,
-        container,
         inst;
 
     beforeEach(function() {
-        container = document.createElement('div');
+        loadFixtures('view.html');
+
+        // IE9 에서 scrollTop을 조정하려고 할 때 unspecified error발생하는 문제 해결용
+        spyOn(ne.dooray.calendar.TimeGrid.prototype, 'scrollToNow');
+        spyOn(View.prototype, 'getViewBound').and.returnValue({ height: 100 });
+
         controller = ControllerFactory();
+        spyOn(controller, 'createEvents');
+
         inst = Calendar({ 
             defaultView: 'week',
             controller: controller
-        }, container);
+        }, document.getElementById('container'));
 
-        spyOn(controller, 'createEvents');
         spyOn(inst, 'render');
     });
 

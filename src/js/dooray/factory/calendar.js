@@ -46,6 +46,11 @@ var serviceWeekViewFactory = require('./weekView');
  */
 function ServiceCalendar(options, container) {
     var controller;
+
+    if (!(this instanceof ServiceCalendar)) {
+        return new ServiceCalendar(options, container);
+    }
+
     /**
      * 서비스에서 사용되는 모델 구분용 옵션 함수
      * @param {CalEventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델

@@ -40,6 +40,10 @@ var weekViewFactory = require('./weekView');
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
+    if (!(this instanceof Calendar)) {
+        return new Calendar(options, container);
+    }
+
     /**
      * base date of view (today() will use this property)
      * @type {Date}

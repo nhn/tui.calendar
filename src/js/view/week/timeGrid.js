@@ -310,7 +310,7 @@ TimeGrid.prototype.scrollToNow = function() {
         container = this.container;
 
     window.setTimeout(function() {
-        container.scrollTop = (0, currentHourTop - (viewBound.height / 2));
+        container.scrollTop = (currentHourTop - (viewBound.height / 2));
     }, INITIAL_AUTOSCROLL_DELAY);
 };
 

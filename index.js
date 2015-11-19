@@ -73,8 +73,14 @@ var TaskView = require('./src/js/dooray/view/taskview');
 var MilestoneClick = require('./src/js/dooray/handler/milestoneClick');
 var TaskClick = require('./src/js/dooray/handler/taskClick');
 
-/** @namespace ne.dooray.calendar */
+/**********
+ * Calendar Factory
+ **********/
 
+var Calendar = require('./src/js/factory/calendar');
+var ServiceCalendar = require('./src/js/dooray/factory/calendar');
+
+/** @namespace ne.dooray.calendar */
 global.tui.util.defineNamespace('ne.dooray.calendar', {
     // common
     config: config,
@@ -132,21 +138,10 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     MiniCalendar: MiniCalendar,
     TaskView: TaskView,
     MilestoneClick: MilestoneClick,
-    TaskClick: TaskClick
+    TaskClick: TaskClick,
+
+    // factory class
+    OriginCalendar: Calendar,
+    Calendar: ServiceCalendar
 });
-
-/**********
- * Calendar Factory
- **********/
-
-var Calendar = require('./src/js/factory/calendar');
-var ServiceCalendar = require('./src/js/dooray/factory/calendar');
-
-global.ne.dooray.calendar.OriginCalendar = function (options, container) {
-    return new Calendar(options, container);
-};
-
-global.ne.dooray.calendar.Calendar = function(options, container) {
-    return new ServiceCalendar(options, container);
-};
 
