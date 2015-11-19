@@ -3,16 +3,27 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Fullcalendar Demo</title>
-<link rel="stylesheet" type="text/css" href="../build/calendar.css" />
+<link rel="stylesheet" type="text/css" href="../dist/calendar.css" />
 <style type="text/css">
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
     #calendar-container {
-        height: 800px;
+        margin: 0;
+        padding: 0;
+        width: 90%;
+        height: 90%;
     }
 </style>
 </head>
 <body>
 <div id="calendar-container"></div>
-<script src="../build/calendar.js" type="text/javascript" charset="utf-8"></script>
+<script src="../bower_components/tui-code-snippet/code-snippet.js"></script>
+<script src="../dist/calendar.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 (function() {
     // 캘린더 인스턴스 생성
@@ -62,6 +73,10 @@
     calendar.on('clickCalEvent', function(e) {
         console.log(e);
     });
+
+    window.onresize = function() {
+        calendar.refresh();
+    };
 
     window.cal = calendar;
 })();
