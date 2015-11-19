@@ -35,7 +35,6 @@ function AlldayCreationGuide(alldayCreation) {
     alldayCreation.on({
         'allday_creation_dragstart': this._onDragStart,
         'allday_creation_drag': this._onDrag,
-        // 'allday_creation_dragend': this.clearGuideElement,
         'allday_creation_click': this.clearGuideElement
     }, this);
 }
