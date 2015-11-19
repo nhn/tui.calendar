@@ -433,8 +433,6 @@ Calendar.prototype.refreshChildView = function(viewName) {
     this.layout.childs.items[viewName].render();
 };
 
-Calendar.prototype.tmplKeys = ['time', 'allday'];
-
 /**
  * Create default option
  * @param {object} options - option from service page
@@ -444,8 +442,8 @@ Calendar.prototype.setOptions = function(options) {
     var today = this.baseDate,
         ymd = 'YYYY-MM-DD',
         renderRange,
-        weekOpt,
-        tmplOpt;
+        weekOpt = options.week,
+        tmplOpt = options.template;
 
     options = util.extend({
         defaultView: 'week',    // 기본 주간 뷰 설정
@@ -469,18 +467,7 @@ Calendar.prototype.setOptions = function(options) {
         };
     }
 
-    // template
-    function defaultTmpl(model) {
-        return common.stripTags(model.title);
-    }
-
-    tmplOpt = options.template = util.extend({
-        allday: defaultTmpl,
-        time: defaultTmpl
-    }, options.template);
-
-    util.forEach(this.tmplKeys, function(name) {
-        var func = tmplOpt[name] || defaultTmpl;
+    util.forEach(tmplOpt, function(func, name) {
         Handlebars.registerHelper(name + '-tmpl', func);
     });
 
