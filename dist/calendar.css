@@ -1,6 +1,6 @@
 /**
  * Dooray Calendar
- * @version 0.1.9
+ * @version 0.1.10
  */
 .dcal-layout *,
 .dcal-layout *:before,
@@ -10,7 +10,12 @@
   box-sizing: content-box;
 }
 .dcal-layout {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
   border: 1px solid #ccc;
+  background-color: #ccc;
 }
 .dcal-dragging {
   cursor: move;
@@ -34,19 +39,6 @@
   content: '';
   display: block;
   clear: both;
-}
-.dcal-display-table {
-  width: 100%;
-  display: table;
-}
-.dcal-display-table-row {
-  display: table-row;
-}
-.dcal-display-table-row:last-child .dcal-scroll-y {
-  border-bottom: 0;
-}
-.dcal-display-table-cell {
-  display: table-cell;
 }
 .dcal-scroll-y {
   border-bottom: 2px solid #ccc;
