@@ -130,6 +130,8 @@ function ServiceCalendar(options, container) {
 
 util.inherit(ServiceCalendar, Calendar);
 
+ServiceCalendar.prototype.tmplKeys = ['milestone', 'task', 'allday', 'time'];
+
 /**********
  * CRUD override
  **********/

@@ -12,8 +12,8 @@
         <h6 style="line-height:{{@root.lineHeight}}px">출근 전</h6>
         <ul>
             {{#each morning.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
+            <li data-id="{{stamp model}}" data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{{task-tmpl model}}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -23,8 +23,8 @@
         <h6 style="line-height:{{@root.lineHeight}}px">점심 전</h6>
         <ul>
             {{#each lunch.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
+            <li data-id="{{stamp model}}" data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{{task-tmpl model}}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}
@@ -34,8 +34,8 @@
         <h6 style="line-height:{{@root.lineHeight}}px">퇴근 전</h6>
         <ul>
             {{#each evening.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
+            <li data-id="{{stamp model}}" data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
+            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{{task-tmpl model}}}</li>
             {{/each ~}}
         </ul>
         {{/if ~}}

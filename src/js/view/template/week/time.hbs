@@ -3,7 +3,7 @@
         {{#each this}}
             {{#if this}}
             <div class="{{CSS_PREFIX}}time-date-event-block" data-id="{{stamp model}}" style="{{time-eventBlock this}}">
-                <div class="{{CSS_PREFIX}}time-event" style="color:{{model.color}};background-color:{{model.bgColor}}">{{model.title}}</div>
+                <div class="{{CSS_PREFIX}}time-event" style="color:{{model.color}};background-color:{{model.bgColor}}">{{{time-tmpl model}}}</div>
                 <div class="{{CSS_PREFIX}}time-resize-handle handle-x">&nbsp;</div>
             </div>{{/if}}
         {{/each}}
