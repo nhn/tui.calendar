@@ -6,7 +6,10 @@
         vendor('box-sizing', content-box);
 
     .layout
+        vendor('box-sizing', border-box);
+        height: 100%;
         border: 1px solid #ccc
+        background-color: #ccc
 
     // Related with user interaction
     .dragging
@@ -26,20 +29,6 @@
 
     .clear
         clearfix()
-
-    // display layout
-    .display-table
-        width: 100%
-        display: table
-
-    .display-table-row
-        display: table-row
-        &:last-child
-            .scroll-y
-                border-bottom: 0
-
-    .display-table-cell
-        display: table-cell
 
     .scroll-y
         border-bottom: 2px solid #ccc

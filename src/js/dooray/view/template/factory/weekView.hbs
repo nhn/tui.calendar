@@ -1,26 +1,4 @@
-<div class="{{CSS_PREFIX}}display-table" style="height:inherit">
-    {{! 요일명 영역 }}
-    <div class="{{CSS_PREFIX}}display-table-row">
-        <div class="{{CSS_PREFIX}}display-table-cell">
-            <div class="{{CSS_PREFIX}}scroll-y {{CSS_PREFIX}}dayname-layout"></div>
-        </div>
-    </div>
-
-    {{! 마일스톤, 업무 }}
-    <div class="{{CSS_PREFIX}}display-table-row">
-        <div class="{{CSS_PREFIX}}display-table-cell">
-            <div class="{{CSS_PREFIX}}scroll-y {{CSS_PREFIX}}milestone-layout" style="min-height:80px;max-height:100px"></div>
-        </div>
-    </div>
-
-    {{! 종일일정 }}
-    <div class="{{CSS_PREFIX}}display-table-row">
-        <div class="{{CSS_PREFIX}}display-table-cell">
-            <div class="{{CSS_PREFIX}}scroll-y {{CSS_PREFIX}}allday-layout" style="min-height:48x;max-height:68px"></div>
-        </div>
-    </div>
-    {{! 시간별 }}
-    <div class="{{CSS_PREFIX}}display-table-row" style="height:100%">
-        <div class="{{CSS_PREFIX}}display-table-cell {{CSS_PREFIX}}timegrid-layout"></div>
-    </div>
-</div>
+<div class="{{CSS_PREFIX}}scroll-y {{CSS_PREFIX}}dayname-layout"></div>
+<div class="{{CSS_PREFIX}}scroll-y {{CSS_PREFIX}}milestone-layout" style="min-height:80px;max-height:100px"></div>
+<div class="{{CSS_PREFIX}}scroll-y {{CSS_PREFIX}}allday-layout" style="min-height:48x;max-height:68px"></div>
+<div class="{{CSS_PREFIX}}timegrid-layout"></div>

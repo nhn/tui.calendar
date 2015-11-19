@@ -117,6 +117,11 @@ function Calendar(options, container) {
      */
     this._currentEndDate = null;
 
+    /**
+     * @type {function}
+     */
+    this._refreshMethod = null;
+
     this.initializeView();
 }
 
@@ -243,6 +248,15 @@ Calendar.prototype.clear = function() {
  */
 Calendar.prototype.render = function() {
     this.layout.render();
+};
+
+/**
+ * Refresh calendar layout.
+ */
+Calendar.prototype.refresh = function() {
+    if (this._refreshMethod) {
+        this._refreshMethod();
+    }
 };
 
 /**
@@ -384,9 +398,7 @@ Calendar.prototype.toggleView = function(viewName, force) {
     layout.clear();
 
     if (viewName === 'week') {
-        layout.addChild(function() {
-            return weekViewFactory(controller, layout.container, dragHandler, options);
-        });
+        layout.addChild(weekViewFactory(controller, layout.container, dragHandler, options));
     }
 }
 

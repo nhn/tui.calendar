@@ -54,6 +54,7 @@ util.inherit(Week, View);
 
 /**
  * Render each child view with events in ranges.
+ * @fires Week#afterRender
  * @override
  */
 Week.prototype.render = function() {
@@ -73,6 +74,11 @@ Week.prototype.render = function() {
     this.childs.each(function(childView) {
         childView.render(viewModel);
     });
+
+    /**
+     * @event Week#afterRender
+     */
+    this.fire('afterRender');
 };
 
 /**********
@@ -99,6 +105,8 @@ Week.prototype._getRenderDateRange = function(baseDate) {
         end: end
     };
 };
+
+util.CustomEvents.mixin(Week);
 
 module.exports = Week;
 

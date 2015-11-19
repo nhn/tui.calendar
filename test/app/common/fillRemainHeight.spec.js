@@ -10,15 +10,12 @@ describe('FillRemainHeight', function() {
 
     it('refresh() can calculate rest height(px) of container and set to listed elements.', function() {
         // A, B, C 엘리먼트 중 C엘리먼트를 가변높이로 지정한 경우
-        mockInst = {
-            _container: {
-                childNodes: ['A', 'B', 'C']
-            },
-            _listed: {
-                'C': 'myelement' 
-            },
-            _getOtherElementHeight: jasmine.createSpy('_getOtherElementHeight'),
-            _setHeight: jasmine.createSpy('_setHeight')
+        mockInst = jasmine.createSpyObj('FillRemainHeight', ['_getOtherElementHeight', '_setHeight', '_getHeight']);
+        mockInst._container = {
+            childNodes: ['A', 'B', 'C']
+        };
+        mockInst._listed = {
+            'C': 'myelement'
         };
 
         mockInst._getOtherElementHeight.and.callFake(function(_, node) {
@@ -29,13 +26,8 @@ describe('FillRemainHeight', function() {
 
             return 0;
         });
-
-        domutil.getSize.and.callFake(function(el) {
-            // 컨테이너 사이즈는 100
-            if (el === mockInst._container) {
-                return [0, 100];
-            }
-        });
+        // 컨테이너 사이즈는 100
+        domutil.getSize.and.returnValue([0, 100]);
 
         FillRemainHeight.prototype.refresh.call(mockInst);
 

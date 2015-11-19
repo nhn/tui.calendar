@@ -52,6 +52,10 @@ FillRemainHeight.prototype._setHeight = function(element, height) {
     element.style.height = height + 'px';
 };
 
+FillRemainHeight.prototype._getHeight = function(element) {
+    return element.offsetHeight;
+};
+
 /**
  * Add managed element
  * @param {HTMLElement} element - element to managing height
@@ -96,7 +100,7 @@ FillRemainHeight.prototype._getOtherElementHeight = function(listed, element) {
         return 0;
     }
 
-    return domutil.getSize(element)[1];
+    return this._getHeight(element);
 };
 
 /**

@@ -282,7 +282,8 @@ ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
     var layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
-        options = this.options;
+        options = this.options,
+        created;
 
     if (!force && this.currentViewName === viewName) {
         return;
@@ -294,12 +295,11 @@ ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
     layout.clear();
 
     if (viewName === 'week') {
-        layout.addChild(function() {
-            return serviceWeekViewFactory(controller, layout.container, dragHandler, options);
-        });
+        created = serviceWeekViewFactory(controller, layout.container, dragHandler, options);
+        layout.addChild(created.view);
+        this._refreshMethod = created.refresh;
     } else if (viewName === 'month') {
-        //TODO: implements
-        console.log('월뷰 전환');
+        //TODO: month view. 
     }
 
     layout.childs.doWhenHas(viewName, function(view) {

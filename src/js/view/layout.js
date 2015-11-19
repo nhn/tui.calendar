@@ -17,6 +17,13 @@ var View = require('./view');
  * @param {HTMLElement} container Container element to use layout view.
  */
 function Layout(container) {
+    container = domutil.appendHTMLElement('div', container, config.classname('layout'));
+
+    /**
+     * @type {HTMLElement}
+     */
+    this.container = container;
+
     /*eslint-disable*/
     /**
      * @type {Collection} Child view collection.
@@ -25,13 +32,6 @@ function Layout(container) {
         return childView.viewName;
     });
     /*eslint-enable*/
-
-    domutil.addClass(container, config.classname('layout'));
-
-    /**
-     * @type {HTMLElement}
-     */
-    this.container = container;
 }
 
 util.inherit(Layout, View);
@@ -46,22 +46,6 @@ Layout.prototype.clear = function() {
 
     this.childs.clear();
     this.container.innerHTML = '';
-};
-
-/**
- * Add an view object by creation function **(adderFunc)**.
- *
- * Invocations of adderFunc is called with layout view's container.
- *
- * As result of adderFunc. added it to layout view's childs.
- * @override
- * @param {function} adderFunc The adder function.
- * @returns {View} View instance added.
- */
-Layout.prototype.addChild = function(adderFunc) {
-    var childView = adderFunc(this.container);
-    this.childs.add(childView);
-    return childView;
 };
 
 /**

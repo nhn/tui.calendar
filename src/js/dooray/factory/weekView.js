@@ -7,14 +7,18 @@
 var util = global.tui.util;
 var config = require('../../config');
 var domutil = require('../../common/domutil');
+var fillRemainHeight = require('../../common/fillRemainHeight');
+
 // Parent views
 var Week = require('../../view/week/week');
+
 // Sub views
 var DayName = require('../../view/week/dayname');
 var Milestone = require('../view/milestone');
 var TaskView = require('../view/taskview');
 var TimeGrid = require('../../view/week/timeGrid');
 var Allday = require('../../view/week/allday');
+
 // Handlers
 var AlldayClick = require('../../handler/allday/click');
 var AlldayCreation = require('../../handler/allday/creation');
@@ -26,6 +30,7 @@ var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
 var MilestoneClick = require('../handler/milestoneClick');
 var TaskClick = require('../handler/taskClick');
+
 // Base Templates
 var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
 
@@ -35,6 +40,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         milestoneView,
         taskView,
         alldayView,
+        timeGridContainer,
         timeGridView,
         milestoneClickHandler,
         taskClickHandler,
@@ -45,7 +51,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler;
+        timeResizeHandler,
+        frh;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.container.innerHTML = weekViewTmpl();
@@ -83,12 +90,20 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, domutil.find('.' + config.classname('timegrid-layout'), weekView.container));
+    timeGridContainer = domutil.find('.' + config.classname('timegrid-layout'), weekView.container);
+    timeGridView = new TimeGrid(options.week, timeGridContainer);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
+
+    // 가변높이 모듈 초기화
+    frh = fillRemainHeight([timeGridContainer], weekView.container);
+
+    weekView.on('afterRender', function() {
+        frh.refresh();
+    });
 
     weekView.handlers = {
         click: {
@@ -125,5 +140,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         });
     };
 
-    return weekView;
+    return {
+        view: weekView,
+        refresh: function() {
+            frh.refresh();
+        }
+    };
 };
