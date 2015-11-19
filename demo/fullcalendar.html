@@ -5,24 +5,27 @@
 <title>Fullcalendar Demo</title>
 <link rel="stylesheet" type="text/css" href="../build/calendar.css" />
 <style type="text/css">
-    .dooray-calendar-timegrid-container {
-        height: 600px;
+    #calendar-container {
+        height: 800px;
     }
 </style>
 </head>
 <body>
 <div id="calendar-container"></div>
-<div>
-    <input type="button" id="add-event" value="금일 점심일정 추가" />
-</div>
 <script src="../build/calendar.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 (function() {
     // 캘린더 인스턴스 생성
     var calendar = ne.dooray.calendar.Calendar({
         defaultView: 'week',
+        calendarColor: {
+            '1': ['#e8e8e8', '#585858'],
+            '2': ['#282828', '#dc9656'],
+            '3': ['#a16946', '#ab4642']
+        },
         events: [{
             id: "1",
+            calendarID: '1',
             title: '스크럼',
             category: 'time',
             dueDateClass: '',
@@ -30,6 +33,7 @@
             ends: '2015-11-19T10:40:00+09:00'
         }, {
             id: "2",
+            calendarID: '2',
             title: '[홍길동]연차',
             category: 'allday',
             dueDateClass: '',
@@ -37,6 +41,7 @@
             ends: '2015-11-19T23:59:59+09:00'
         }, {
             id: "3",
+            calendarID: '3',
             title: '테스트 마일스톤1',
             category: 'milestone',
             dueDateClass: '',
@@ -44,6 +49,7 @@
             ends: '2015-11-19T23:59:59+09:00'
         }, {
             id: "4",
+            calendarID: '3',
             title: '테스트 업무',
             category: 'task',
             dueDateClass: 'morning',
@@ -51,30 +57,6 @@
             ends: '2015-11-19T23:59:59+09:00'
         }]
     }, document.getElementById('calendar-container'));
-
-    // 점심일정 추가 버튼 클릭
-    document.getElementById('add-event').onclick = function() {
-        var lunchStart = new Date(),
-            lunchEnd = new Date();
-
-        calendar.clear();
-
-        lunchStart.setHours(12, 30, 0);
-        lunchEnd.setHours(13, 0, 0);
-
-        calendar.createEvent([{
-            id: '1',
-            calendarID: '1',
-            title: '점심식사',
-            isAllDay: false,
-            category: 'time',
-            dueDateClass: '',
-            starts: lunchStart.toUTCString(),
-            ends: lunchEnd.toUTCString(),
-            color: '#282828',
-            bgColor: '#f7ca88'
-        }]);
-    };
 
     // 일정 클릭 이벤트 핸들러
     calendar.on('clickCalEvent', function(e) {
