@@ -296,13 +296,12 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
 ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarID, toHide, render) {
     var ownEvents = this.controller.events;
 
-    ownEvents.each(function(model) {
-        if (model.calendarID !== calendarID) {
-            return;
-        }
+    calendarID = util.isArray(calendarID) ? calendarID : [calendarID];
 
-        model.set('visible', !toHide);
-        // model.visible = !toHide;
+    ownEvents.each(function(model) {
+        if (~util.inArray(model.calendarID, calendarID)) {
+            model.set('visible', !toHide);
+        }
     });
 
     if (render) {
@@ -312,20 +311,22 @@ ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarID, toHid
 
 /**
  * Show events visibility by calendar ID
- * @param {string} calendarID - calendar id value
- * @param {boolean} [render=true] - set true then render after change visible property each models
+ * @param {string|string[]} calendarID - calendar id value
+ * @param {boolean} [render=true] - set false then doesn't render after change model's property.
  */
 ServiceCalendar.prototype.showEventsByCalendarID = function(calendarID, render) {
-    this._toggleEventsByCalendarID(calendarID, false, !render);
+    render = util.isExisty(render) ? render : true;
+    this._toggleEventsByCalendarID(calendarID, false, render);
 };
 
 /**
  * Hide events visibility by calendar ID
- * @param {string} calendarID - calendar id value
- * @param {boolean} [render=true] - set true then render after change visible property each models
+ * @param {string|string[]} calendarID - calendar id value
+ * @param {boolean} [render=true] - set false then doesn't render after change model's property.
  */
 ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarID, render) {
-    this._toggleEventsByCalendarID(calendarID, true, !render);
+    render = util.isExisty(render) ? render : true;
+    this._toggleEventsByCalendarID(calendarID, true, render);
 };
 
 /**
