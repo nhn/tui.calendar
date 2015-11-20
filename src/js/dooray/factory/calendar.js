@@ -292,6 +292,7 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
  * @param {string} calendarID - calendar id value
  * @param {boolean} toHide - set true to hide events
  * @param {boolean} render - set true then render after change visible property each models
+ * @private
  */
 ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarID, toHide, render) {
     var ownEvents = this.controller.events;
