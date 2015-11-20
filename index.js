@@ -73,6 +73,7 @@ var DoorayController = require('./src/js/dooray/controller/base');
 var TaskView = require('./src/js/dooray/view/taskview');
 var MilestoneClick = require('./src/js/dooray/handler/milestoneClick');
 var TaskClick = require('./src/js/dooray/handler/taskClick');
+var Freebusy = require('./src/js/dooray/view/freebusy');
 
 /**********
  * Calendar Factory
@@ -141,6 +142,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     TaskView: TaskView,
     MilestoneClick: MilestoneClick,
     TaskClick: TaskClick,
+    Freebusy: Freebusy,
 
     // factory class
     OriginCalendar: Calendar,
