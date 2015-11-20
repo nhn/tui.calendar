@@ -503,18 +503,11 @@
   padding: 0;
   overflow: hidden;
 }
-.dcal-task-day h6,
-.dcal-task-day ul {
+.dcal-task-duedate-class strong {
+  font-weight: normal;
+}
+.dcal-task-list {
   margin: 0;
   padding: 0;
-}
-.dcal-task-day h6 {
-  font-size: 11px;
-}
-.dcal-task-day li {
-  font-size: 11px;
-  padding-left: 6px;
   list-style: none;
-  white-space: nowrap;
-  overflow: hidden;
 }
