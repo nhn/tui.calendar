@@ -27,47 +27,63 @@
 <script type="text/javascript" charset="utf-8">
 (function() {
     // 캘린더 인스턴스 생성
-    var calendar = ne.dooray.calendar.Calendar({
+    var calendar = ne.dooray.calendar.FullCalendar({
         defaultView: 'week',
-        calendarColor: {
-            '1': ['#e8e8e8', '#585858'],
-            '2': ['#282828', '#dc9656'],
-            '3': ['#a16946', '#ab4642']
-        },
-        events: [{
-            id: "1",
-            calendarID: '1',
-            title: '스크럼',
-            category: 'time',
-            dueDateClass: '',
-            starts: '2015-11-19T09:40:00+09:00',
-            ends: '2015-11-19T10:40:00+09:00'
-        }, {
-            id: "2",
-            calendarID: '2',
-            title: '[홍길동]연차',
-            category: 'allday',
-            dueDateClass: '',
-            starts: '2015-11-19T00:00:00+09:00',
-            ends: '2015-11-19T23:59:59+09:00'
-        }, {
-            id: "3",
-            calendarID: '3',
-            title: '테스트 마일스톤1',
-            category: 'milestone',
-            dueDateClass: '',
-            starts: '',
-            ends: '2015-11-19T23:59:59+09:00'
-        }, {
-            id: "4",
-            calendarID: '3',
-            title: '테스트 업무',
-            category: 'task',
-            dueDateClass: 'morning',
-            starts: '',
-            ends: '2015-11-19T23:59:59+09:00'
-        }]
+        template: {
+            milestone: function(model) {
+                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
+            },
+            task: function(model) {
+                return '&nbsp;&nbsp;#' + model.title;
+            },
+            allday: function(model) {
+                return model.title + ' <i class="fa fa-refresh"></i>';
+            },
+            time: function(model) {
+                return model.title + ' <i class="fa fa-refresh"></i><br />' + model.starts;
+            }
+        }
     }, document.getElementById('calendar-container'));
+
+    calendar.setCalendarColor('1', { color: '#e8e8e8', bgColor: '#585858', render: false });
+    calendar.setCalendarColor('2', { color: '#282828', bgColor: '#dc9656', render: false });
+    calendar.setCalendarColor('3', { color: '#a16946', bgColor: '#ab4642', render: false });
+
+    calendar.createEvents([{
+        id: "1",
+        calendarID: '1',
+        title: '스크럼',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2015-11-19T09:40:00+09:00',
+        ends: '2015-11-19T10:40:00+09:00'
+    }, {
+        id: "2",
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2015-11-19T00:00:00+09:00',
+        ends: '2015-11-19T23:59:59+09:00'
+    }, {
+        id: "3",
+        calendarID: '3',
+        title: '테스트 마일스톤1',
+        category: 'milestone',
+        dueDateClass: '',
+        starts: '',
+        ends: '2015-11-19T23:59:59+09:00'
+    }, {
+        id: "4",
+        calendarID: '3',
+        title: '테스트 업무',
+        category: 'task',
+        dueDateClass: 'morning',
+        starts: '',
+        ends: '2015-11-19T23:59:59+09:00'
+    }], true);
+
+    calendar.render();
 
     // 일정 클릭 이벤트 핸들러
     calendar.on('clickCalEvent', function(e) {

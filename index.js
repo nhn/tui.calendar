@@ -144,6 +144,6 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
 
     // factory class
     OriginCalendar: Calendar,
-    Calendar: ServiceCalendar
+    FullCalendar: ServiceCalendar
 });
 
