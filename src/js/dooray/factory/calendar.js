@@ -74,13 +74,19 @@ function ServiceCalendar(options, container) {
         // 일정 조회 API에 기존 캘린더에 없었던 milstone, task를 지원하도록
         // 하기 위해 메서드를 오버라이딩한다.
         originFindByDateRange = controller.Week.findByDateRange;
+
+        // visible이 true인 일정만 필터링 하기 위한 필터 함수
+        function filterModelIsVisible(model) {
+            return !!model.visible;
+        }
+
         controller.Week.findByDateRange = function(starts, ends) {
             var dateRange = util.map(datetime.range(
                     datetime.start(starts),
                     datetime.end(ends),
                     datetime.MILLISECONDS_PER_DAY
                 ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
-                viewModel = originFindByDateRange(starts, ends);
+                viewModel = originFindByDateRange(starts, ends, [filterModelIsVisible]);
 
             util.forEach(viewModel, function(coll, key, obj) {
                 var groupedByYMD;
@@ -279,6 +285,47 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
     if (!!ownColor.render) {
         this.render();
     }
+};
+
+/**
+ * Toggle events visibility by calendar ID
+ * @param {string} calendarID - calendar id value
+ * @param {boolean} toHide - set true to hide events
+ * @param {boolean} render - set true then render after change visible property each models
+ */
+ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarID, toHide, render) {
+    var ownEvents = this.controller.events;
+
+    ownEvents.each(function(model) {
+        if (model.calendarID !== calendarID) {
+            return;
+        }
+
+        model.set('visible', !toHide);
+        // model.visible = !toHide;
+    });
+
+    if (render) {
+        this.render();
+    }
+};
+
+/**
+ * Show events visibility by calendar ID
+ * @param {string} calendarID - calendar id value
+ * @param {boolean} [render=true] - set true then render after change visible property each models
+ */
+ServiceCalendar.prototype.showEventsByCalendarID = function(calendarID, render) {
+    this._toggleEventsByCalendarID(calendarID, false, !render);
+};
+
+/**
+ * Hide events visibility by calendar ID
+ * @param {string} calendarID - calendar id value
+ * @param {boolean} [render=true] - set true then render after change visible property each models
+ */
+ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarID, render) {
+    this._toggleEventsByCalendarID(calendarID, true, !render);
 };
 
 /**

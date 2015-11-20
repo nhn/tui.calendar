@@ -51,6 +51,12 @@ function DoorayEvent() {
      * @type {string}
      */
     this.dueDateClass = '';
+
+    /**
+     * 일정 노출 여부
+     * @type {boolean}
+     */
+    this.visible = true;
 }
 
 util.inherit(DoorayEvent, CalEvent);
@@ -78,6 +84,7 @@ DoorayEvent.prototype.init = function(options) {
     this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
+    this.visible = util.isExisty(options.visible) ? options.visible : true;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {

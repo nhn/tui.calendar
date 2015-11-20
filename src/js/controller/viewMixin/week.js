@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var Collection = require('../../common/collection');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var array = require('../../common/array');
@@ -344,22 +345,30 @@ var Week = {
      * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
+     * @param {object} [andFilter] - additional filter to AND clause
      * @returns {object} events grouped by dates.
      */
-    findByDateRange: function(starts, ends) {
+    findByDateRange: function(starts, ends, andFilter) {
         var that = this,
             events,
-            viewModels;
+            viewModels,
+            filter;
 
-        // QUERY EVENTS
-        events = this.events.find(function(model) {
+        filter = function(model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
 
             return (ownStarts >= starts && ownEnds <= ends) ||
                 (ownStarts < starts && ownEnds >= starts) ||
                 (ownEnds > ends && ownStarts <= ends);
-        });
+        };
+
+        if (andFilter) {
+            filter = Collection.and.apply(null, [filter].concat(andFilter));
+        }
+
+        // QUERY EVENTS
+        events = this.events.find(filter);
 
         // CONVERT TO VIEWMODEL
         viewModels = common.createEventCollection.apply(
