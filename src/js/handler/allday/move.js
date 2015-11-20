@@ -67,15 +67,8 @@ AlldayMove.prototype.destroy = function() {
  * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
  */
 AlldayMove.prototype.checkExpectedCondition = function(target) {
-    var cssClass = domutil.getClass(target),
-        parentView,
-        matches;
-
-    if (!config.allday.checkCondRegExp.test(cssClass)) {
-        return false;
-    }
-
-    parentView = domutil.closest(target, '.' + config.classname('allday-monthweek'));
+    var parentView = domutil.closest(target, '.' + config.classname('allday-monthweek')),
+        cssClass, matches;
 
     if (!parentView) {
         return false;

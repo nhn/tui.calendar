@@ -3,43 +3,48 @@
 </div>
 <div class="{{CSS_PREFIX}}task-right schedule-view clear">
 {{#each events ~}}
-<div class="{{CSS_PREFIX}}task-day" 
-    style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;
-        min-height:{{@root.minHeight}}px;height:{{@root.height}}px;">
-    <div class="{{CSS_PREFIX}}task-day-wrap">
-        {{! 출근전 }}
-        {{#if morning ~}}
-        <h6 style="line-height:{{@root.lineHeight}}px">출근 전</h6>
-        <ul>
-            {{#each morning.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
-            {{/each ~}}
-        </ul>
-        {{/if ~}}
+<div class="{{CSS_PREFIX}}task-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.minHeight}}px;height:{{@root.height}}px;">
+<div class="{{CSS_PREFIX}}task-day-wrap">
+    {{! 출근전 }}
+    {{#if morning ~}}
+    <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>출근 전</strong></div>
+    <ul class="{{CSS_PREFIX}}task-list">
+        {{#each morning.items ~}}
+        <li data-id="{{stamp model}}" 
+        data-title="{{model.title}}" 
+        class="{{CSS_PREFIX}}task-item" 
+        style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{task-tmpl model}}}</li>
+        {{/each ~}}
+    </ul>
+    {{/if ~}}
 
-        {{! 점심전 }}
-        {{#if lunch ~}}
-        <h6 style="line-height:{{@root.lineHeight}}px">점심 전</h6>
-        <ul>
-            {{#each lunch.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
-            {{/each ~}}
-        </ul>
-        {{/if ~}}
+    {{! 점심전 }}
+    {{#if lunch ~}}
+    <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>점심 전</strong></div>
+    <div style="line-height:{{@root.lineHeight}}px">점심 전</div>
+    <ul class="{{CSS_PREFIX}}task-list">
+        {{#each lunch.items ~}}
+        <li data-id="{{stamp model}}" 
+        data-title="{{model.title}}" 
+        class="{{CSS_PREFIX}}task-item" 
+        style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{task-tmpl model}}}</li>
+        {{/each ~}}
+    </ul>
+    {{/if ~}}
 
-        {{! 퇴근전 }}
-        {{#if evening ~}}
-        <h6 style="line-height:{{@root.lineHeight}}px">퇴근 전</h6>
-        <ul>
-            {{#each evening.items ~}}
-            <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}task-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
-            {{/each ~}}
-        </ul>
-        {{/if ~}}
-    </div>
+    {{! 퇴근전 }}
+    {{#if evening ~}}
+    <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>퇴근 전</strong></div>
+    <ul class="{{CSS_PREFIX}}task-list">
+        {{#each evening.items ~}}
+        <li data-id="{{stamp model}}" 
+        data-title="{{model.title}}" 
+        class="{{CSS_PREFIX}}task-item" 
+        style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{task-tmpl model}}}</li>
+        {{/each ~}}
+    </ul>
+    {{/if ~}}
+</div>
 </div>
 {{/each ~}}
 </div>

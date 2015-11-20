@@ -52,11 +52,6 @@ MilestoneClick.prototype.destroy = function() {
  * otherwise, return event model id that related with target element.
  */
 MilestoneClick.prototype.checkExpectedCondition = function(target) {
-    if (!domutil.hasClass(target, config.classname('dot')) &&
-        !domutil.hasClass(target, config.classname('milestone-item'))) {
-        return false;
-    }
-
     target = domutil.closest(target, '.' + config.classname('milestone-item'));
     
     if (!target) {

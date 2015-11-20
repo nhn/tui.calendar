@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var common = require('../../common/common');
 var config = require('../../config');
 
 function getElSize(value, postfix, prefix) {
@@ -76,6 +77,27 @@ module.exports = {
 
     'CSS_PREFIX': function() {
         return config.cssPrefix;
+    },
+
+
+    /**********
+     * Default event template
+     **********/
+
+    'milestone-tmpl': function(model) {
+        return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
+    },
+
+    'task-tmpl': function(model) {
+        return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
+    },
+
+    'allday-tmpl': function(model) {
+        return common.stripTags(model.title);
+    },
+
+    'time-tmpl': function(model) {
+        return common.stripTags(model.title);
     }
 };
 

@@ -3,14 +3,16 @@
 </div>
 <div class="{{CSS_PREFIX}}milestone-right {{CSS_PREFIX}}clear">
 {{#each events ~}}
-    <div class="{{CSS_PREFIX}}milestone-day" 
-        style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.minHeight}}px;height:{{@root.height}}px">
-        <ul class="{{CSS_PREFIX}}milestone-list">
-{{#each items ~}}
-        <li data-id={{stamp model}} data-title="{{model.title}}" class="{{CSS_PREFIX}}milestone-item" 
-            style="line-height:{{@root.lineHeight}}px;color:{{model.color}}"><span class="{{CSS_PREFIX}}dot" style="background-color:{{model.bgColor}}"></span> {{model.title}}</li>
-{{/each ~}}
-        </ul>
-    </div>
+<div class="{{CSS_PREFIX}}milestone-day" 
+     style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.minHeight}}px;height:{{@root.height}}px">
+    <ul class="{{CSS_PREFIX}}milestone-list">
+    {{#each items ~}}
+        <li data-id="{{stamp model}}" 
+        data-title="{{model.title}}" 
+        class="{{CSS_PREFIX}}milestone-item" 
+        style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{milestone-tmpl model}}}</li>
+    {{/each ~}}
+    </ul>
+</div>
 {{/each ~}}
 </div>

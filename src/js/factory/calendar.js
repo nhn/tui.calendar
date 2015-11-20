@@ -6,11 +6,13 @@
 
 var util = global.tui.util;
 var config = require('../config');
+var common = require('../common/common');
 var datetime = require('../common/datetime');
 var Layout = require('../view/layout');
 var Drag = require('../handler/drag');
 var controllerFactory = require('./controller');
 var weekViewFactory = require('./weekView');
+var Handlebars = require('hbsfy/runtime');
 
 /**
  * @typedef {object} Calendar~CalEvent
@@ -30,6 +32,9 @@ var weekViewFactory = require('./weekView');
  *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
+ *  @param {object} [options.template] - template option
+ *   @param {function} [options.template.allday] - allday template function
+ *   @param {function} [options.template.time] - time template function
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
@@ -437,8 +442,8 @@ Calendar.prototype.setOptions = function(options) {
     var today = this.baseDate,
         ymd = 'YYYY-MM-DD',
         renderRange,
-        weekOpt;
-        // dateRange;
+        weekOpt = options.week,
+        tmplOpt = options.template;
 
     options = util.extend({
         defaultView: 'week',    // 기본 주간 뷰 설정
@@ -461,6 +466,10 @@ Calendar.prototype.setOptions = function(options) {
             renderMonth: datetime.format(today, 'YYYY-MM')
         };
     }
+
+    util.forEach(tmplOpt, function(func, name) {
+        Handlebars.registerHelper(name + '-tmpl', func);
+    });
 
     return options;
 };

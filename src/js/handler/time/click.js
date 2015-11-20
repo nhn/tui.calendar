@@ -54,10 +54,6 @@ TimeClick.prototype.checkExpectCondition = function(target) {
     var container,
         matches;
 
-    if (!domutil.hasClass(target, config.classname('time-event'))) {
-        return false;
-    }
-
     container = domutil.closest(target, '.' + config.classname('time-date'));
 
     if (!container) {

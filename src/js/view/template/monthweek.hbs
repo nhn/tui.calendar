@@ -11,8 +11,8 @@
 <div data-id="{{stamp model}}" 
     class="{{CSS_PREFIX}}allday-event-block {{#if renderStarts}} {{CSS_PREFIX}}allday-exceed-left{{/if}}{{#if renderEnds}} {{CSS_PREFIX}}allday-exceed-right{{/if}}"
     style="top:{{multiply top @root.eventBlockHeight}}px;left:{{multiply left @root.width}}%;width:{{multiply width @root.width}}%;height:{{@root.eventBlockHeight}}px;margin-top:{{@root.eventBlockGutter}}px">
-    <div class="{{CSS_PREFIX}}allday-event" style="height:{{@root.eventHeight}}px;background-color:{{model.bgColor}}">
-        <span class="{{CSS_PREFIX}}allday-event-title" style="color:{{model.color}}">{{model.title}}</span>
+    <div class="{{CSS_PREFIX}}allday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}">
+        <span class="{{CSS_PREFIX}}allday-event-title">{{{allday-tmpl model}}}</span>
         <span class="{{CSS_PREFIX}}allday-resize-handle handle-y">&nbsp;</span>
     </div> 
 </div>
