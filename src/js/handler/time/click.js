@@ -76,7 +76,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
 /**
  * Click event hander
  * @param {object} clickEvent - click event from {@link Drag}
- * @emits TimeClick#clickCalEvent
+ * @emits TimeClick#clickEvent
  */
 TimeClick.prototype._onClick = function(clickEvent) {
     var target = clickEvent.target,
@@ -90,12 +90,12 @@ TimeClick.prototype._onClick = function(clickEvent) {
 
     eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
         /**
-         * @events TimeClick#clickCalEvent
+         * @events TimeClick#clickEvent
          * @type {object}
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickCalEvent', {
+        this.fire('clickEvent', {
             model:  model,
             jsEvent: clickEvent.originEvent
         });

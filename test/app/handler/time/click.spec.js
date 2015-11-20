@@ -27,7 +27,7 @@ describe('handler:TimeClick', function() {
         TimeClick.prototype._onClick.call(mockInst, vMouseEvent);
 
         // 이벤트가 아래처럼 발생한다
-        expect(mockInst.fire).toHaveBeenCalledWith('clickCalEvent', {
+        expect(mockInst.fire).toHaveBeenCalledWith('clickEvent', {
             model: {
                 _id: '2',
                 text: 'hello'

@@ -29,12 +29,12 @@ describe('Calendar', function() {
     });
 
     describe('CRUD', function() {
-        it('createEvent() can create CalEvent model from dataObject list', function() {
-            inst.createEvent('hello world', true);
+        it('createEvents() can create CalEvent model from dataObject list', function() {
+            inst.createEvents('hello world', true);
             expect(controller.createEvents).toHaveBeenCalledWith('hello world', true);
             expect(inst.render).not.toHaveBeenCalled();
 
-            inst.createEvent('hello world');
+            inst.createEvents('hello world');
             expect(inst.render).toHaveBeenCalled();
         });
 

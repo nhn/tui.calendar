@@ -139,19 +139,19 @@ util.inherit(ServiceCalendar, Calendar);
  * @param {ServiceCalendar~DoorayEvent[]} dataObjectList - array of {@see ServiceCalendar~DoorayEvent[]} object
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-ServiceCalendar.prototype.createEvent = function(dataObjectList, silent) {
+ServiceCalendar.prototype.createEvents = function(dataObjectList, silent) {
     var calColor = this.calendarColor;
 
     util.forEach(dataObjectList, function(obj) {
         var color = calColor[obj.calendarID];
 
         if (color) {
-            obj.color = color[0];
-            obj.bgColor = color[1];
+            obj.color = color.color;
+            obj.bgColor = color.bgColor;
         }
     });
 
-    Calendar.prototype.createEvent.call(this, dataObjectList, silent);
+    Calendar.prototype.createEvents.call(this, dataObjectList, silent);
 };
 
 /**
@@ -208,17 +208,17 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
 
 /**
  * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
- * @emits ServiceCalendar#clickCalEvent
- * @param {object} clickEventData - 'clickCalEvent' 핸들러의 이벤트 데이터
+ * @emits ServiceCalendar#clickEvent
+ * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
  */
 ServiceCalendar.prototype._onClick = function(clickEventData) {
     /**
-     * @events ServiceCalendar#clickCalEvent
+     * @events ServiceCalendar#clickEvent
      * @type {object}
      * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
      * @property {MouseEvent} jsEvent - 마우스 이벤트
      */
-    this.fire('clickCalEvent', clickEventData);
+    this.fire('clickEvent', clickEventData);
 };
 
 /**
@@ -232,11 +232,11 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
 
     util.forEach(handlers.click, function(handler) {
         if (isAttach) {
-            handler.on('clickCalEvent', calendar._onClick, calendar);
+            handler.on('clickEvent', calendar._onClick, calendar);
             return;
         }
 
-        handler.off('clickCalEvent', calendar._onClick, calendar);
+        handler.off('clickEvent', calendar._onClick, calendar);
     });
 };
 
@@ -247,28 +247,38 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
 /**
  * 같은 calendarID를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
  * @param {string} calendarID - calendarID value
- * @param {array} color - color array
+ * @param {object} option - color data object
+ *  @param {string} option.color - text color of event element
+ *  @param {string} option.bgColor - bg color of event element
+ *  @param {boolean} [option.render=true] - set false then does not auto render.
  */
-ServiceCalendar.prototype.changeCalendarColor = function(calendarID, color) {
+ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
     var calColor = this.calendarColor,
-        ownEvents = this.controller.events;
+        ownEvents = this.controller.events,
+        ownColor = calColor[calendarID];
 
-    if (color.length !== 2) {
-        config.throwError('Calendar#changeCalendarColor(): color 는 [color, bgColor] 형태여야 합니다.');
+    if (!util.isObject(option)) {
+        config.throwError('Calendar#changeCalendarColor(): color 는 {color: \'\', bgColor: \'\'} 형태여야 합니다.');
     }
 
-    calColor[calendarID] = color.slice(0);
+    ownColor = calColor[calendarID] = util.extend({
+        color: '#000',
+        bgColor: '#a1b56c',
+        render: true
+    }, option);
 
     ownEvents.each(function(model) {
         if (model.calendarID !== calendarID) {
             return;
         }
 
-        model.color = color[0];
-        model.bgColor = color[1];
+        model.color = ownColor.color;
+        model.bgColor = ownColor.bgColor;
     });
 
-    this.render();
+    if (!!ownColor.render) {
+        this.render();
+    }
 };
 
 /**

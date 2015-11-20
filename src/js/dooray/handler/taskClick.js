@@ -67,7 +67,7 @@ TaskClick.prototype.checkExpectedCondition = function(target) {
 };
 
 /**
- * @emits TaskClick#clickCalEvent
+ * @emits TaskClick#clickEvent
  * @param {object} clickEvent - click event object
  */
 TaskClick.prototype._onClick = function(clickEvent) {
@@ -79,12 +79,12 @@ TaskClick.prototype._onClick = function(clickEvent) {
 
     this.baseController.events.doWhenHas(modelID, function(model) {
         /**
-         * @events TaskClick#clickCalEvent
+         * @events TaskClick#clickEvent
          * @type {object}
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickCalEvent', {
+        this.fire('clickEvent', {
             model:  model,
             jsEvent: clickEvent.originEvent
         });

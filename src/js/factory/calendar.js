@@ -134,7 +134,7 @@ function Calendar(options, container) {
  * @param {Calendar~Event[]} dataObjectList - array of {@see Calendar~Event} object
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-Calendar.prototype.createEvent = function(dataObjectList, silent) {
+Calendar.prototype.createEvents = function(dataObjectList, silent) {
     this.controller.createEvents(dataObjectList, silent);
 
     if (!silent) {
