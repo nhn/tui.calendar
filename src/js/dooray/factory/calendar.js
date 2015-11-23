@@ -194,6 +194,7 @@ ServiceCalendar.prototype.updateEvent = function(id, data) {
 /**
  * Delete DoorayEvent instance
  * @override
+ * @fires ServiceCalendar#beforeDeleteEvent
  * @param {string} id - ID of event to delete
  */
 ServiceCalendar.prototype.deleteEvent = function(id) {
@@ -202,10 +203,21 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
             return model.id === id;
         });
 
-    if (model) {
-        ownEvents.remove(model);
-        this.render();
+    if (!model) {
+        return;
     }
+
+    /**
+     * @event ServiceCalendar#beforeDeleteEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to delete
+     */
+    this.fire('beforeDeleteEvent', {
+        model: model
+    });
+    
+    ownEvents.remove(model);
+    this.render();
 };
 
 /**********
