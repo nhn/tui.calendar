@@ -185,7 +185,7 @@ AlldayResize.prototype._updateEvent = function(eventData) {
     newEnds = new Date(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
 
     /**
-     * @event TimeResize#beforeUpdateEvent
+     * @event AlldayResize#beforeUpdateEvent
      * @type {object}
      * @property {CalEvent} model - model instance to update
      * @property {date} starts - start time to update
