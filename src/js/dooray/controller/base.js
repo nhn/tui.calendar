@@ -60,5 +60,61 @@ DoorayBase.prototype.createEvent = function(data, silent) {
     return inst;
 };
 
+/**
+ * Update an event.
+ * @emits DoorayBase#updateEvent
+ * @param {CalEvent} calEvent - event instance to update 
+ * @param {object} options updated object data
+ * @returns {CalEvent|boolean} updated event instance, when it fail then return false
+ */
+DoorayBase.prototype.updateEvent = function(calEvent, options) {
+    if (options.title) {
+        calEvent.set('title', options.title);
+    }
+
+    if (options.isAllDay) {
+        calEvent.set('isAllDay', options.isAllDay);
+    }
+
+    if (options.starts) {
+        calEvent.set('starts', new Date(options.starts));
+    }
+
+    if (options.ends) {
+        calEvent.set('ends', new Date(options.ends));
+    }
+
+    if (options.color) {
+        calEvent.set('color', options.color);
+    }
+
+    if (options.bgColor) {
+        calEvent.set('bgColor', options.bgColor);
+    }
+
+    this._removeFromMatrix(calEvent);
+    this._addToMatrix(calEvent);
+
+    /**
+     * @event DoorayBase#updateEvent
+     */
+    this.fire('updateEvent');
+
+    return true;
+};
+
+/**
+ * Delete event instance from controller
+ * @param {CalEvent} calEvent - event instance to delete
+ * @returns {CalEvent} deleted model instance
+ */
+DoorayBase.prototype.deleteEvent = function(calEvent) {
+    this._removeFromMatrix(calEvent);
+    this.events.remove(calEvent);
+
+    return true;
+};
+
+
 module.exports = DoorayBase;
 

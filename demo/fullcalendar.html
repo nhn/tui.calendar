@@ -92,9 +92,28 @@
             console.log('click', e);
         },
         'beforeCreateEvent': function(e) {
+            var title = prompt('Name of event to create:');
+
+            if (!title) {
+                return;
+            }
+
+            calendar.createEvents([{
+                title: title,
+                isAllDay: e.isAllDay,
+                starts: e.starts,
+                ends: e.ends,
+                category: e.isAllDay ? 'allday' : 'time',
+                dueDateClass: ''
+            }]);
             console.log('select', e);
         },
         'beforeUpdateEvent': function(e) {
+            calendar.updateEvent(e.model.id, {
+                starts: e.starts,
+                ends: e.ends
+            });
+
             console.log('update', e);
         },
         'beforeDeleteEvent': function(e) {

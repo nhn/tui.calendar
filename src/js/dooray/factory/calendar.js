@@ -177,17 +177,15 @@ ServiceCalendar.prototype.getEvent = function(id) {
  * @param {object} data - data object to update event
  */
 ServiceCalendar.prototype.updateEvent = function(id, data) {
-    var ownEvents = this.controller.events,
-        model = ownEvents.single(function(model) {
+    var ctrl = this.controller,
+        ownEvents = ctrl.events,
+        calEvent = ownEvents.single(function(model) {
             return model.id === id;
         });
 
-    if (model) {
-        util.forEach(data, function(value, key) {
-            model.set(key, value);
-        });
+    if (calEvent) {
+        ctrl.updateEvent(calEvent, data);
         this.render();
-        model.dirty(false);
     }
 };
 
@@ -198,12 +196,13 @@ ServiceCalendar.prototype.updateEvent = function(id, data) {
  * @param {string} id - ID of event to delete
  */
 ServiceCalendar.prototype.deleteEvent = function(id) {
-    var ownEvents = this.controller.events,
-        model = ownEvents.single(function(model) {
+    var ctrl = this.controller,
+        ownEvents = ctrl.events,
+        calEvent = ownEvents.single(function(model) {
             return model.id === id;
         });
 
-    if (!model) {
+    if (!calEvent) {
         return;
     }
 
@@ -213,10 +212,10 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
      * @property {CalEvent} model - model instance to delete
      */
     this.fire('beforeDeleteEvent', {
-        model: model
+        model: calEvent 
     });
     
-    ownEvents.remove(model);
+    ctrl.deleteEvent(calEvent);
     this.render();
 };
 
