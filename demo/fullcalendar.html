@@ -23,6 +23,7 @@
 </head>
 <body>
 <div id="calendar-container"></div>
+<div><input type="button" id="delete-example" value="스크럼 일정 삭제하기" /></div>
 <script type="text/javascript" charset="utf-8" src="./code-snippet.js"></script>
 <script type="text/javascript" charset="utf-8" src="../dist/calendar.js"></script>
 <script type="text/javascript" charset="utf-8">
@@ -86,6 +87,8 @@
 
     calendar.render();
 
+    var idx = 5;
+
     // 일정 클릭 이벤트 핸들러
     calendar.on({
         'clickEvent': function(e) {
@@ -99,6 +102,8 @@
             }
 
             calendar.createEvents([{
+                id: idx + '',
+                calendarID: '',
                 title: title,
                 isAllDay: e.isAllDay,
                 starts: e.starts,
@@ -106,6 +111,9 @@
                 category: e.isAllDay ? 'allday' : 'time',
                 dueDateClass: ''
             }]);
+
+            idx += 1;
+
             console.log('select', e);
         },
         'beforeUpdateEvent': function(e) {
@@ -120,6 +128,10 @@
             console.log('delete', e);
         }
     });
+
+    document.getElementById('delete-example').onclick = function() {
+        calendar.deleteEvent('1');
+    };
 
     window.onresize = function() {
         calendar.refresh();
