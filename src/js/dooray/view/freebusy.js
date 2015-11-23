@@ -35,9 +35,24 @@ function Freebusy(options, container) {
 
 util.inherit(Freebusy, View);
 
+/**
+ * @override
+ */
 Freebusy.prototype.render = function() {
     this.container.innerHTML = tmpl();
 };
+
+Freebusy.prototype.addUser = function() {};
+
+Freebusy.prototype.addUsers = function() {};
+
+Freebusy.prototype.removeUser = function() {};
+
+Freebusy.prototype.removeUsers = function() {};
+
+Freebusy.prototype.clear = function() {};
+
+Freebusy.prototype.select = function() {};
 
 module.exports = Freebusy;
 
