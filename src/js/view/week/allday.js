@@ -38,7 +38,7 @@ function Allday(options, container) {
         title: '종일일정',
         renderStartDate: '',
         renderEndDate: '',
-        containerHeight: 40,
+        containerHeight: 60,
         containerBottomGutter: 8,
         eventHeight: 18,
         eventGutter: 2,
