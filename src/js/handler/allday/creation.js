@@ -106,12 +106,11 @@ AlldayCreation.prototype.connect = function(dragHandler, alldayView, baseControl
 
 /**
  * Request event model creation to controller by custom events.
+ * @fires {AlldayCreation#beforeCreateEvent}
  * @param {object} eventData - event data from AlldayCreation module.
  */
 AlldayCreation.prototype._createEvent = function(eventData) {
-    var title = window.prompt('Name of event to create:'),
-        ctrl = this.baseController,
-        viewOptions = eventData.relatedView.options,
+    var viewOptions = eventData.relatedView.options,
         dateRange = datetime.range(
             datetime.start(datetime.parse(viewOptions.renderStartDate)),
             datetime.end(datetime.parse(viewOptions.renderEndDate)),
@@ -119,14 +118,7 @@ AlldayCreation.prototype._createEvent = function(eventData) {
         ),
         startXIndex = eventData.dragStartXIndex,
         xIndex = eventData.xIndex,
-        newStarts,
-        newEnds;
-
-    this.guide.clearGuideElement();
-
-    if (!title) {
-        return;
-    }
+        starts, ends;
 
     // when inverse start, end then change it.
     if (xIndex < startXIndex) {
@@ -135,15 +127,20 @@ AlldayCreation.prototype._createEvent = function(eventData) {
         startXIndex = startXIndex - xIndex;
     }
 
-    newStarts = new Date(dateRange[startXIndex].getTime());
-    newEnds = datetime.end(dateRange[xIndex]);
+    starts = new Date(dateRange[startXIndex].getTime());
+    ends = datetime.end(dateRange[xIndex]);
 
-    // request event creation to "base" controller.
-    ctrl.createEvent({
-        title: title,
+    /**
+     * @event {AlldayCreation#beforeCreateEvent}
+     * @type {object}
+     * @property {boolean} isAllDay - whether event is fired in allday view area?
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', {
         isAllDay: true,
-        starts: newStarts,
-        ends: newEnds
+        starts: starts,
+        ends: ends
     });
 };
 

@@ -104,6 +104,10 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     }
 
     eventBlockElement = domutil.closest(target, '.' + config.classname('allday-event-block'));
+    if (!eventBlockElement) {
+        return;
+    }
+
     modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 

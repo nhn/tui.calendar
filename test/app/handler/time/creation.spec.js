@@ -59,7 +59,8 @@ describe('handler/time.creation', function() {
             baseControllerMock = jasmine.createSpyObj('Base', ['createEvent']);
             mock = {
                 baseController: baseControllerMock,
-                guide: jasmine.createSpyObj('timeCreation', ['clearGuideElement'])
+                guide: jasmine.createSpyObj('timeCreation', ['clearGuideElement']),
+                fire: jasmine.createSpy('fire')
             };
         });
             
@@ -79,8 +80,7 @@ describe('handler/time.creation', function() {
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
 
-            expect(baseControllerMock.createEvent).toHaveBeenCalledWith({
-                title: 'my event',
+            expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
                 starts: new Date('2015-05-05T01:00:00+09:00'),
                 ends: new Date('2015-05-05T01:30:00+09:00')
@@ -99,8 +99,7 @@ describe('handler/time.creation', function() {
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
 
-            expect(baseControllerMock.createEvent).toHaveBeenCalledWith({
-                title: 'my event',
+            expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
                 starts: new Date('2015-05-05T01:30:00+09:00'),
                 ends: new Date('2015-05-05T02:00:00+09:00')

@@ -46,7 +46,8 @@ describe('handler:AlldayCreation', function() {
             // 인스턴스 Mock
             inst = {
                 baseController: jasmine.createSpyObj('baseController', ['createEvent']),
-                guide: jasmine.createSpyObj('alldayCreation', ['clearGuideElement'])
+                guide: jasmine.createSpyObj('alldayCreation', ['clearGuideElement']),
+                fire: jasmine.createSpy('on')
             };
 
             // 4일짜리 주간 뷰 렌더링 Mock
@@ -69,8 +70,7 @@ describe('handler:AlldayCreation', function() {
 
             proto._createEvent.call(inst, mockEventData);
 
-            expect(inst.baseController.createEvent).toHaveBeenCalledWith({
-                title: 'myEvent',
+            expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: true,
                 starts: new Date('2015-05-02T00:00:00+09:00'),
                 ends: new Date('2015-05-03T23:59:59+09:00')
@@ -89,8 +89,7 @@ describe('handler:AlldayCreation', function() {
 
             proto._createEvent.call(inst, mockEventData);
 
-            expect(inst.baseController.createEvent).toHaveBeenCalledWith({
-                title: 'myEvent',
+            expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: true,
                 starts: new Date('2015-05-02T00:00:00+09:00'),
                 ends: new Date('2015-05-04T23:59:59+09:00')

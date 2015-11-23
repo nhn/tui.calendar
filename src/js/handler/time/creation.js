@@ -191,26 +191,19 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
 };
 
 /**
+ * @fires TimeCreation#beforeCreateEvent
  * @param {object} eventData - event data object from TimeCreation#time_creation_dragend
  * or TimeCreation#time_creation_click
  */
 TimeCreation.prototype._createEvent = function(eventData) {
-    var title = window.prompt('Name of event to create:'),
-        ctrl = this.baseController,
-        relatedView = eventData.relatedView,
+    var relatedView = eventData.relatedView,
         createRange = eventData.createRange,
         nearestGridTimeY = eventData.nearestGridTimeY,
         baseDate,
         dateStart,
         dateEnd,
-        newStarts,
-        newEnds;
-
-    this.guide.clearGuideElement();
-
-    if (!title) {
-        return;
-    }
+        starts,
+        ends;
 
     if (!createRange) {
         createRange = [
@@ -222,14 +215,20 @@ TimeCreation.prototype._createEvent = function(eventData) {
     baseDate = new Date(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    newStarts = Math.max(dateStart.getTime(), createRange[0]);
-    newEnds = Math.min(dateEnd.getTime(), createRange[1]);
+    starts = Math.max(dateStart.getTime(), createRange[0]);
+    ends = Math.min(dateEnd.getTime(), createRange[1]);
 
-    ctrl.createEvent({
-        title: title,
+    /**
+     * @event TimeCreation#beforeCreateEvent
+     * @type {object}
+     * @property {boolean} isAllDay - whether event is fired in allday view area?
+     * @property {Date} starts - select start time
+     * @property {Date] ends - select end time
+     */
+    this.fire('beforeCreateEvent', {
         isAllDay: false,
-        starts: new Date(newStarts),
-        ends: new Date(newEnds)
+        starts: new Date(starts),
+        ends: new Date(ends)
     });
 };
 

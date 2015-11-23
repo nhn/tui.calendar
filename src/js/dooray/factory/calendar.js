@@ -228,21 +228,36 @@ ServiceCalendar.prototype._onClick = function(clickEventData) {
 };
 
 /**
+ * @fires {ServiceCalendar#beforeCreateEvent}
+ * @param {object} createEventData - select event data from allday, time
+ */
+ServiceCalendar.prototype._onBeforeCreate = function(createEventData) {
+    /**
+     * @events ServiceCalendar#beforeCreateEvent
+     * @type {object}
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', createEventData);
+};
+
+/**
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
  * @param {ServiceCalendar} calendar - 캘린더 팩토리 클래스
  */
 ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
-    var handlers = view.handlers;
+    var handler = view.handler,
+        calendar = this,
+        method = isAttach ? 'on' : 'off';
 
-    util.forEach(handlers.click, function(handler) {
-        if (isAttach) {
-            handler.on('clickEvent', calendar._onClick, calendar);
-            return;
-        }
+    util.forEach(handler.click, function(handlerInstance) {
+        handlerInstance[method]('clickEvent', calendar._onClick, calendar);
+    });
 
-        handler.off('clickEvent', calendar._onClick, calendar);
+    util.forEach(handler.creation, function(handlerInstance) {
+        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
     });
 };
 

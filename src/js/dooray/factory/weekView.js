@@ -105,7 +105,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         frh.refresh();
     });
 
-    weekView.handlers = {
+    weekView.handler = {
         click: {
             milestone: milestoneClickHandler,
             task: taskClickHandler,
