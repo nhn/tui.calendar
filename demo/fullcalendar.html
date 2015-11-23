@@ -56,16 +56,16 @@
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: '2015-11-19T09:40:00+09:00',
-        ends: '2015-11-19T10:40:00+09:00'
+        starts: '2015-11-25T09:40:00+09:00',
+        ends: '2015-11-25T10:40:00+09:00'
     }, {
         id: "2",
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
         dueDateClass: '',
-        starts: '2015-11-19T00:00:00+09:00',
-        ends: '2015-11-19T23:59:59+09:00'
+        starts: '2015-11-25T00:00:00+09:00',
+        ends: '2015-11-25T23:59:59+09:00'
     }, {
         id: "3",
         calendarID: '3',
@@ -73,7 +73,7 @@
         category: 'milestone',
         dueDateClass: '',
         starts: '',
-        ends: '2015-11-19T23:59:59+09:00'
+        ends: '2015-11-25T23:59:59+09:00'
     }, {
         id: "4",
         calendarID: '3',
@@ -81,14 +81,25 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2015-11-19T23:59:59+09:00'
+        ends: '2015-11-25T23:59:59+09:00'
     }], true);
 
     calendar.render();
 
     // 일정 클릭 이벤트 핸들러
-    calendar.on('clickEvent', function(e) {
-        console.log(e);
+    calendar.on({
+        'clickEvent': function(e) {
+            console.log('click', e);
+        },
+        'beforeCreateEvent': function(e) {
+            console.log('select', e);
+        },
+        'beforeUpdateEvent': function(e) {
+            console.log('update', e);
+        },
+        'beforeDeleteEvent': function(e) {
+            console.log('delete', e);
+        }
     });
 
     window.onresize = function() {
