@@ -51,5 +51,27 @@ describe('dooray:model/Event', function() {
             ends: new Date('2015-10-26T23:59:59+09:00')
         }));
     });
+
+    it('raw data', function() {
+        var raw = {
+            hello: 'world'
+        };
+
+        e = DoorayEvent.create({
+            title: '굿',
+            category: 'task',
+            dueDateClass: 'morning',
+            isAllDay: false,
+            starts: new Date('2015-10-26T23:29:59+09:00'),
+            ends: new Date('2015-10-26T23:59:59+09:00'),
+            raw: raw
+        });
+
+        expect(e.raw).toEqual({ hello: 'world' });
+
+        raw.hello2 = 'good';
+
+        expect(e.raw).toEqual({ hello: 'world', hello2: 'good' });
+    });
 });
 

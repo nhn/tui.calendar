@@ -57,6 +57,12 @@ function DoorayEvent() {
      * @type {boolean}
      */
     this.visible = true;
+
+    /**
+     * 렌더링과 관계 없는 별도 데이터 저장 공간.
+     * @type {object}
+     */
+    this.raw = null;
 }
 
 util.inherit(DoorayEvent, CalEvent);
@@ -91,6 +97,8 @@ DoorayEvent.prototype.init = function(options) {
         this.starts = new Date(+this.ends);
         this.starts.setMinutes(this.starts.getMinutes() - 30);
     }
+
+    this.raw = options.raw || null;
 };
 
 module.exports = DoorayEvent;
