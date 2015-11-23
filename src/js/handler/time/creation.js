@@ -240,6 +240,8 @@ TimeCreation.prototype._createEvent = function(eventData) {
 TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     var dragStart = this._dragStart;
 
+    this.guide.clearGuideElement();
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,

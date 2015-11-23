@@ -219,6 +219,8 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
         return;
     }
 
+    this.guide.clearGuideElement();
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
