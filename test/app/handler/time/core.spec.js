@@ -22,7 +22,7 @@ describe('module:Time.Creation', function() {
         container.clientLeft = 0;
         container.clientTop = 0;
 
-        var time = new Time(100, null, container);
+        var time = new Time({ width: 100 }, container);
 
         spyOn(time, 'getDate').and.returnValue(new Date('2015-05-05T00:00:00+09:00'));
         spyOn(time, 'getViewBound').and.returnValue({

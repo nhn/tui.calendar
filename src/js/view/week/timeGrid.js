@@ -309,13 +309,14 @@ TimeGrid.prototype.attachEvent = function() {
  * Scroll time grid to current hourmarker.
  */
 TimeGrid.prototype.scrollToNow = function() {
-    var currentHourTop = this._getTopByTime(),
-        viewBound = this.getViewBound(),
-        container = this.container;
+    var container = this.container;
 
-    window.setTimeout(function() {
+    window.setTimeout(util.bind(function() {
+        var currentHourTop = this._getTopByTime(),
+            viewBound = this.getViewBound();
+
         container.scrollTop = (currentHourTop - (viewBound.height / 2));
-    }, INITIAL_AUTOSCROLL_DELAY);
+    }, this), INITIAL_AUTOSCROLL_DELAY);
 };
 
 /**********
