@@ -118,7 +118,8 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         childOption,
         child,
         isToday,
-        today = datetime.format(new Date(), 'YYYYMMDD');
+        today = datetime.format(new Date(), 'YYYYMMDD'),
+        i = 0;
 
     // clear contents
     container.innerHTML = '';
@@ -134,6 +135,8 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         }
 
         childOption = {
+            index: i,
+            width: width,
             ymd: ymd,
             isToday: isToday,
             hourStart: options.hourStart,
@@ -141,13 +144,14 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         };
 
         child = new Time(
-            width,
             childOption,
             domutil.appendHTMLElement('div', container, config.classname('time-date'))
         );
         child.render(ymd, events);
 
         this.addChild(child);
+
+        i += 1;
     }, this);
 };
 

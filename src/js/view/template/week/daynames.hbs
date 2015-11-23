@@ -1,5 +1,5 @@
 {{#each this}}
-<div class="{{dayname-isHolliday}}" style="{{common-width width}}">
+<div class="{{dayname-isHolliday}}" style="{{common-width width}};left:{{multiply @index width}}%">
     <div class="{{CSS_PREFIX}}dayname-label">{{dayName}}</div>
     <div class="{{CSS_PREFIX}}dayname-date">{{date}}</div>
 </div>

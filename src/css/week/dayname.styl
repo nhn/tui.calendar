@@ -2,16 +2,18 @@
     color: red
 
 .{css-prefix}dayname
+    top: 0;
+    position: absolute;
     height: 40px
     margin-left: -1px
     border-left: 1px solid #ccc
     background-color: #fff
-    float: left
     line-height: 20px
 
 +prefix-classes(dayname)
     .container
-        padding-left: 60px
+        position: relative
+        margin-left: 60px
         height: 40px
         background-color: #eee
 

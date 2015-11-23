@@ -1,60 +1,61 @@
-// Timegrid
-.{css-prefix}timegrid
-    position: relative
-    overflow: hidden
-    background-color: #fff
-
 +prefix-classes(timegrid)
     .container
-        height: 100%;
+        height: 100%
+        position: relative
         overflow-y: scroll
         background-color: #ccc
 
     .left
-        width: 60px
-        float: left
-        list-style: none
-        margin: 0
-        padding: 0
-
-    .left li
-        padding: 3px 5px 0 0
-        wh(54px, 36px)
+        position: absolute
+        wh(60px, auto)
+        
+    .hour
+        height: 39px
         border-right: 1px solid #ccc
         border-bottom: 1px solid #ccc
-        text-align: right
         background-color: #eee
         color: #777
+        text-align: right
         &:last-child
             border-bottom: none
 
-    .grid
-        margin-top: 19px
-        height: 19px
-        border-top: 1px dotted #eee
+    .hour span
+        line-height: 25px
+        padding-right: 5px
+
+    .right
+        position: relative
+        margin-left: 60px
+
+    .h-grid
+        background-color: #fff
+
+    .gridline
+        height: 39px
         border-bottom: 1px solid #ccc
         &:last-child
             border-bottom: none
+
+    .gridline:after
+        content: ''
+        display: block
+        height: 19px
+        border-bottom: 1px dotted #eee
 
     .events
         position: absolute
         wh(100%, 100%)
-        top: 0px
+        pos(0, 0)
 
-    .events-container
-        margin-left: 60px
-        height: 100%
-
-    // Hourmarker
+     // Hourmarker
     .hourmarker
         position: absolute
         width: 100%
-        left: 60px
         z-index: 98
 
     .hourmarker-wrap
+        margin-left: 60px
         position: relative
-        margin-right: 60px
 
     .hourmarker-line
         wh(100%, 1px)
@@ -78,14 +79,12 @@
         border-radius: 50%
         z-index: 99
 
-// Time view
 +prefix-classes(time)
     .date
-        position: relative
+        position: absolute
         height: 100%
-        float: left
-        border-right: 1px solid #ccc
         margin-left: -1px
+        border-right: 1px solid #ccc
         &:last-child
             border-right: none
             margin: 0

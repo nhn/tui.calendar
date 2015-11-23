@@ -15,25 +15,29 @@ var forEachArr = util.forEachArray;
 /**
  * @constructor
  * @extends {View}
- * @param {number} width Date element width (percent)
  * @param {object} options Options
+ * @param {number} options.index Date index in week view.
+ * @param {number} options.width Date element width (percent)
  * @param {string} options.ymd YYYMMDD string for this view
  * @param {boolean} options.isToday when set true then assign today design class to container.
  * @param {number} options.hourStart Can limit of render hour start.
  * @param {number} options.hourEnd Can limit of render hour end.
  * @param {HTMLElement} container Element to use container for this view.
  */
-function Time(width, options, container) {
+function Time(options, container) {
     View.call(this, container);
 
-    container.style.width = width + '%';
-
     this.options = util.extend({
+        index: 0,
+        width: 0,
         ymd: '',
         isToday: false,
         hourStart: 0,
         hourEnd: 24
     }, options);
+
+    container.style.width = options.width + '%';
+    container.style.left = (options.index * options.width) + '%';
 
     if (this.options.isToday) {
         domutil.addClass(this.container, config.classname('time-date-today'));
