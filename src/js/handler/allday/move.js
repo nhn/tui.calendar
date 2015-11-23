@@ -67,8 +67,15 @@ AlldayMove.prototype.destroy = function() {
  * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
  */
 AlldayMove.prototype.checkExpectedCondition = function(target) {
-    var parentView = domutil.closest(target, '.' + config.classname('allday-monthweek')),
-        cssClass, matches;
+    var cssClass = domutil.getClass(target),
+        parentView,
+        matches;
+
+    if (~cssClass.indexOf(config.classname('allday-resize-handle'))) {
+        return false;
+    }
+
+    parentView = domutil.closest(target, '.' + config.classname('allday-monthweek'));
 
     if (!parentView) {
         return false;
@@ -168,11 +175,11 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
 
 /**
  * Request update event model to base controller.
+ * @fires AlldayMove#beforeUpdateEvent
  * @param {object} eventData - event data from AlldayMove handler module.
  */
 AlldayMove.prototype._updateEvent = function(eventData) {
-    var ctrl = this.baseController,
-        model = eventData.targetModel,
+    var model = eventData.targetModel,
         dateOffset = eventData.xIndex - eventData.dragStartXIndex,
         newStarts = new Date(model.starts.getTime()),
         newEnds = new Date(model.ends.getTime());
@@ -180,7 +187,15 @@ AlldayMove.prototype._updateEvent = function(eventData) {
     newStarts = new Date(newStarts.setDate(newStarts.getDate() + dateOffset));
     newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
 
-    ctrl.updateEvent(model.cid(), {
+    /**
+     * @event AlldayMove#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
         starts: newStarts,
         ends: newEnds
     });

@@ -173,18 +173,27 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
 
 /**
  * Request update event instance to base controller.
+ * @fires AlldayResize#beforeUpdateEvent
  * @param {object} eventData - event data from AlldayResize handler.
  */
 AlldayResize.prototype._updateEvent = function(eventData) {
-    var ctrl = this.baseController,
-        model = eventData.targetModel,
+    var model = eventData.targetModel,
         dateOffset = eventData.xIndex - eventData.dragStartXIndex,
         newEnds = new Date(model.ends.getTime());
 
     newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
     newEnds = new Date(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
 
-    ctrl.updateEvent(model.cid(), {
+    /**
+     * @event TimeResize#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
+        starts: model.getStarts(),
         ends: newEnds
     });
 };

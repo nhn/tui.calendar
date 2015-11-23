@@ -242,6 +242,21 @@ ServiceCalendar.prototype._onBeforeCreate = function(createEventData) {
 };
 
 /**
+ * @fires ServiceCalendar#beforeUpdateEvent
+ * @param {object} updateEventData - update event data
+ */
+ServiceCalendar.prototype._onBeforeUpdate = function(updateEventData) {
+    /**
+     * @event ServiceCalendar#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeUpdateEvent', updateEventData);
+};
+
+/**
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
@@ -258,6 +273,14 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
 
     util.forEach(handler.creation, function(handlerInstance) {
         handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    });
+
+    util.forEach(handler.move, function(handlerInstance) {
+        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
+    });
+
+    util.forEach(handler.resize, function(handlerInstance) {
+        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
     });
 };
 

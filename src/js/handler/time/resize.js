@@ -194,6 +194,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
 
 /**
  * Update model instance by dragend event results.
+ * @fires TimeResize#beforeUpdateEvent
  * @param {object} eventData - event data from TimeResize#time_resize_dragend
  */
 TimeResize.prototype._updateEvent = function(eventData) {
@@ -225,7 +226,16 @@ TimeResize.prototype._updateEvent = function(eventData) {
         newEnds = new Date(model.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
     }
 
-    ctrl.updateEvent(modelID, {
+    /**
+     * @event TimeResize#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
+        starts: model.getStarts(),
         ends: newEnds
     });
 };

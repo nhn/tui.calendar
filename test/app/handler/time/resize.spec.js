@@ -57,7 +57,8 @@ describe('TimeResize', function() {
             }
 
             mockInstance = {
-                baseController: baseControllerMock
+                baseController: baseControllerMock,
+                fire: jasmine.createSpy('fire')
             };
         });
 
@@ -75,7 +76,9 @@ describe('TimeResize', function() {
 
             TimeResize.prototype._updateEvent.call(mockInstance, eventData);
 
-            expect(baseControllerMock.updateEvent).toHaveBeenCalledWith(20, {
+            expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
+                model: baseControllerMock.events.items[20],
+                starts: new Date('2015-05-01T09:30:00+09:00'),
                 ends: new Date('2015-05-01T11:00:00+09:00')
             });
         });
@@ -95,7 +98,9 @@ describe('TimeResize', function() {
 
             TimeResize.prototype._updateEvent.call(mockInstance, eventData);
 
-            expect(baseControllerMock.updateEvent).toHaveBeenCalledWith(20, {
+            expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
+                model: baseControllerMock.events.items[20],
+                starts: new Date('2015-05-01T09:30:00+09:00'),
                 ends: new Date('2015-05-01T10:00:00+09:00')
             });
         });
@@ -114,7 +119,9 @@ describe('TimeResize', function() {
 
             TimeResize.prototype._updateEvent.call(mockInstance, eventData);
 
-            expect(baseControllerMock.updateEvent).toHaveBeenCalledWith(20, {
+            expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
+                model: baseControllerMock.events.items[20],
+                starts: new Date('2015-05-01T09:30:00+09:00'),
                 ends: new Date('2015-05-01T23:59:59+09:00')
             });
         });

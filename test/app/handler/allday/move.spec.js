@@ -54,7 +54,8 @@ describe('handler:AlldayMove', function() {
         beforeEach(function() {
             // 인스턴스 Mock
             inst = {
-                baseController: jasmine.createSpyObj('baseController', ['updateEvent'])
+                baseController: jasmine.createSpyObj('baseController', ['updateEvent']),
+                fire: jasmine.createSpy('fire')
             };
 
             // 5일짜리 주간 뷰 렌더링 Mock
@@ -86,7 +87,8 @@ describe('handler:AlldayMove', function() {
             proto._updateEvent.call(inst, mockEventData);
 
             // 하루 증가함
-            expect(inst.baseController.updateEvent).toHaveBeenCalledWith('30', {
+            expect(inst.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
+                model: mockEventInstance,
                 starts: new Date('2015-05-01T00:00:00+09:00'),
                 ends: new Date('2015-05-01T23:59:59+09:00')
             });

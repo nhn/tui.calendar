@@ -205,6 +205,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
 
 /**
  * Update model instance by dragend event results.
+ * @fires TimeMove#beforeUpdateEvent
  * @param {object} eventData - event data from TimeMove#time_move_dragend
  */
 TimeMove.prototype._updateEvent = function(eventData) {
@@ -250,7 +251,15 @@ TimeMove.prototype._updateEvent = function(eventData) {
     newStarts = new Date(newStarts.getTime() + dateDiff);
     newEnds = new Date(newEnds.getTime() + dateDiff);
 
-    ctrl.updateEvent(modelID, {
+    /**
+     * @event TimeMove#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
         starts: newStarts,
         ends: newEnds
     });
