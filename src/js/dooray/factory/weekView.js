@@ -73,7 +73,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 업무
      **********/
-    taskView = new TaskView(options.week, domutil.find('.' + config.classname('milestone-layout')));
+    taskView = new TaskView(options.week, domutil.find('.' + config.classname('task-layout')));
     weekView.addChild(taskView);
     taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 
