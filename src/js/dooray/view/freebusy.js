@@ -4,7 +4,8 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = global.tui.util,
+    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
 var config = require('../../config'),
     common = require('../../common/common'),
@@ -19,6 +20,8 @@ var config = require('../../config'),
  * @extends {View}
  * @mixes CustomEvents
  * @param {object} options - options for Freebusy component
+ * @param {boolean} [options.showTimeHeader=true] - set true then show time header
+ * @param {User[]} [options.users] - initial users
  * @param {HTMLDivElement} container - container element for Freebusy component
  */
 function Freebusy(options, container) {
@@ -35,6 +38,22 @@ function Freebusy(options, container) {
 
     View.call(this, container);
 
+    this.options = util.extend({
+        showTimeHeader: true
+    }, options);
+
+    /**
+     * 이름 들어갈 영역
+     * @type {HTMLDivElement}
+     */
+    this.namesContainer = null;
+
+    /**
+     * 여유시간 표 들어갈 영역
+     * @type {HTMLDivElement}
+     */
+    this.freebusyContainer = null;
+
     /**
      * @type {Colleciton}
      */
@@ -45,6 +64,10 @@ function Freebusy(options, container) {
 
         return user.id;
     });
+
+    if (this.options.users) {
+        this.addUsers(this.options.users);
+    }
 
     this.render();
 }
@@ -67,6 +90,13 @@ Freebusy.prototype._getMilliseconds = function(date) {
 
     return mils;
 };
+
+/**
+ * @typedef {object} User
+ * @property {string} id - unique id for each users
+ * @property {string} name - name of user
+ * @property {Block[]} freebusy - freebusy data
+ */
 
 /**
  * @typedef {object} Block
@@ -97,17 +127,20 @@ Freebusy.prototype._getBlockBound = function(block) {
  */
 Freebusy.prototype._getViewModel = function() {
     var viewModel = {
-            names: [],
-            freebusy: []
+            names: {},
+            showTimeHeader: this.options.showTimeHeader,
+            times: dayArr,
+            freebusy: {} 
         },
         names = viewModel.names,
         freebusy = viewModel.freebusy;
 
     this.users.each(function(user) {
-        names.push(user.name);
-        
-        util.forEach(user.freebusy, function(block) {
-            freebusy.push(this._getBlockBound(block));
+        var id = user.id;
+
+        names[id] = user.name;
+        freebusy[id] = util.map(user.freebusy, function(block) {
+            return this._getBlockBound(block);
         }, this);
     }, this);
 
@@ -118,20 +151,65 @@ Freebusy.prototype._getViewModel = function() {
  * @override
  */
 Freebusy.prototype.render = function() {
-    this.container.innerHTML = tmpl();
+    var container = this.container,
+        viewModel = this._getViewModel();
+
+    container.innerHTML = tmpl(viewModel);
+
+    this.namesContainer = domutil.find('.' + config.classname('freebusy-left'), container);
+    this.freebusyContainer = domutil.find('.' + config.classname('freebusy-chart'), container);
 };
 
-Freebusy.prototype.addUser = function() {};
+/**
+ * Add a single user
+ * @param {User} user - user to add
+ */
+Freebusy.prototype.addUser = function(user) {
+    this.users.add(user);
+};
 
-Freebusy.prototype.addUsers = function() {};
+/**
+ * Add mutiple user
+ * @param {User[]} users - users to add
+ */
+Freebusy.prototype.addUsers = function(users) {
+    util.forEach(users, function(user) {
+        this.addUser(user);
+    }, this);
+};
 
-Freebusy.prototype.removeUser = function() {};
+/**
+ * Remove single user
+ * @param {string} id - id to delete
+ */
+Freebusy.prototype.removeUser = function(id) {
+    this.users.remove(id);
+};
 
-Freebusy.prototype.removeUsers = function() {};
+/**
+ * Remove mutiple user
+ * @param {string[]} idArr - array of id to delete
+ */
+Freebusy.prototype.removeUsers = function(idArr) {
+    util.forEach(idArr, function(id) {
+        this.removeUser(id);
+    }, this);
+};
 
-Freebusy.prototype.clear = function() {};
+/**
+ * Clear all users
+ */
+Freebusy.prototype.clear = function() {
+    this.users.clear();
+};
 
-Freebusy.prototype.select = function() {};
+/**
+ * Select specific time
+ */
+Freebusy.prototype.select = function() {
+};
+
+util.CustomEvents.mixin(Freebusy);
 
 module.exports = Freebusy;
 

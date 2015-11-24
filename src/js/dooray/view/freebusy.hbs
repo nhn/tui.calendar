@@ -1,5 +1,25 @@
 <div class="{{CSS_PREFIX}}freebusy-left">
+    {{#each names}}
+    <div class="{{CSS_PREFIX}}freebusy-name">{{this}}</div>
+    {{/each}}
 </div>
 <div class="{{CSS_PREFIX}}freebusy-right">
-    <div class="{{CSS_PREFIX}}freebusy-users"></div>
+    {{#if showTimeHeader}}
+    <div class="{{CSS_PREFIX}}freebusy-grid-wrap">
+        {{#each times}}
+        <div class="{{CSS_PREFIX}}freebusy-grid" style="width:4.16%;left:{{multiply 4.16 @index}}%">{{this}}</div>
+        {{/each}}
+    </div>
+    {{/if}}
+    <div class="{{CSS_PREFIX}}freebusy-chart">
+        {{#each freebusy}}
+        <div class="{{CSS_PREFIX}}freebusy-item">
+            {{#each this}}
+                <div class="{{CSS_PREFIX}}freebusy-block" style="left:{{[0]}}%;width:{{[1]}}%">
+                    <div class="{{CSS_PREFIX}}freebusy-fill"></div>
+                </div>
+            {{/each}}
+        </div>
+        {{/each}}
+    </div>
 </div>

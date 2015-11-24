@@ -1,5 +1,11 @@
 var Freebusy = ne.dooray.calendar.Freebusy;
 describe('Freebusy', function() {
+    var inst;
+
+    beforeEach(function() {
+        inst = new Freebusy({}, document.createElement('div'));
+    });
+
     it('_getBlockBound() calculate relative bound of blocks', function() {
         var event1 = {
             from: '2015-01-01T00:00:00+09:00',
@@ -26,5 +32,33 @@ describe('Freebusy', function() {
 
         var date2 = '2015-01-20T03:30:00+09:00';
         expect(Freebusy.prototype._getMilliseconds(date2)).toBe(10800000 + 1800000);
+    });
+
+
+    describe('addUser()', function() {
+        it('Throw error when adding a non id user object', function() {
+            spyOn(window, 'alert');
+            
+            inst.addUser({id: ''});
+
+            expect(window.alert).toHaveBeenCalled();
+        });
+
+        it('Add user data properly.', function() {
+            var user1 = {
+                id: '1',
+                name: '김민형',
+                freebusy: [{
+                    from: '2015-01-01T09:30:00+09:00',
+                    to: '2015-01-01T11:30:00+09:00'
+                }]
+            };
+
+            inst.addUser(user1);
+            
+            expect(inst.users.length).toBe(1);
+            expect(inst.users.length).not.toBe(2);
+            expect(inst.users.single()).toBe(user1);
+        });
     });
 });
