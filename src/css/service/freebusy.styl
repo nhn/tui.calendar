@@ -1,25 +1,88 @@
-.{freebusy}container
-    min-height: 75px
+headerHeight = 20px
+minHeightOfFreebusy = 75px
+
+mainBorder = 1px solid #ccc
+halfTimeBorder = 1px dotted #eee
+
+minHeight(height)
+    min-height: height
     height: auto !important
+    height: height 
+
+.{freebusy}container
     height: 75px
 
 +prefix-classes(freebusy)
     .left
-        background-color: red
         float: left
         width: 80px
-        min-height: 75px 
-        height: auto !important
-        height: 75px
+        height: 100%
+        &:before
+            content: ''
+            display: block
+            height: headerHeight
+            border-bottom: mainBorder
+            background-color: #eee
 
+    .name
+        padding-right: 3px
+        text-align: right
+        height: headerHeight
+        line-height: headerHeight
+        border-bottom: mainBorder
 
     .right
+        position: relative
+        height: 100%
         margin-left: 80px
 
-    .users
-        min-height: 75px
-        height: auto !important
-        height: 75px
-        background-color: blue
+    .chart
+        position: absolute
+        pos(headerHeight + 1, 0)
         width: 100%
+
+    .item
+        position: relative
+        height: headerHeight
+        border-bottom: mainBorder
+
+    .block
+        position: absolute
+        top: 0
+        height: headerHeight
+
+    .fill
+        height: headerHeight
+        background-color: #aaa
+
+    .grid-wrap
+        position: relative
+        height: 100%
+        overflow: hidden
+        &:after
+            content: ''
+            display: block
+            height: headerHeight
+            width: 100%
+            border-bottom: mainBorder
+            background-color: #eee
+
+    .grid
+        position: absolute
+        height: 100%
+        line-height: headerHeight 
+        border-right: mainBorder
+        text-align: center
+        &:after
+            content: ''
+            display: block
+            position: absolute
+            z-index: -1
+            width: 50%
+            height: 100% 
+            border-right: halfTimeBorder
+        &:first-child
+            border-left: mainBorder
+        &:last-child
+            border-right: none
 
