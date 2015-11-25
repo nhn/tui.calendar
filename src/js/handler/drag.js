@@ -14,11 +14,9 @@ var domevent = require('../common/domevent');
  * @param {object} options - options for drag handler
  * @param {number} [options.distance=10] - distance in pixels after mouse must move before dragging should start
  * @param {function} [options.exclude] - filter function for don't fire drag events that specific conditions.
- * @param {LayoutView} layoutView Layout view instance.
+ * @param {HTMLElement} container element to watching drag interaction.
  */
-function Drag(options, layoutView) {
-    var container = layoutView.container;
-
+function Drag(options, container) {
     domevent.on(container, 'mousedown', this._onMouseDown, this);
 
     this.options = util.extend({
