@@ -13,6 +13,7 @@ var domevent = require('../common/domevent');
  * @mixes CustomEvents
  * @param {object} options - options for drag handler
  * @param {number} [options.distance=10] - distance in pixels after mouse must move before dragging should start
+ * @param {function} [options.exclude] - filter function for don't fire drag events that specific conditions.
  * @param {LayoutView} layoutView Layout view instance.
  */
 function Drag(options, layoutView) {
@@ -21,13 +22,20 @@ function Drag(options, layoutView) {
     domevent.on(container, 'mousedown', this._onMouseDown, this);
 
     this.options = util.extend({
-        distance: 10
+        distance: 10,
+        exclude: null
     }, options);
 
     /**
      * @type {HTMLElement}
      */
     this.container = container;
+
+    /**
+     * Flag for represent current dragging session has been cancelled for exclude option.
+     * @type {boolean}
+     */
+    this._cancelled = false;
 
     /**
      * @type {boolean}
@@ -60,6 +68,14 @@ Drag.prototype.destroy = function() {
     this.container = null;
 };
 
+Drag.prototype._clearData = function() {
+    this._cancelled = false;
+    this._distance = 0;
+    this._isMoved = false;
+    this._dragStartFired = false;
+    this._dragStartEventData = null;
+};
+
 /**
  * Toggle events for mouse dragging.
  * @param {boolean} toBind - bind events related with dragging when supplied "true"
@@ -75,6 +91,7 @@ Drag.prototype._toggleDragEvent = function(toBind) {
     } else {
         domMethod = 'off';
         method = 'enable';
+        this._clearData();
     }
 
     domutil[method + 'TextSelection'](container);
@@ -102,13 +119,20 @@ Drag.prototype._getEventData = function(mouseEvent) {
  * @param {MouseEvent} mouseDownEvent MouseDown event object.
  */
 Drag.prototype._onMouseDown = function(mouseDownEvent) {
+    var opt = this.options,
+        target = (mouseDownEvent.srcElement || mouseDownEvent.target);
+
     // only primary button can start drag.
     if (domevent.getMouseButton(mouseDownEvent) !== 0) {
         return;
     }
 
-    this._distance = 0;
-    this._dragStartFired = false;
+    if (opt.exclude && opt.exclude(target)) {
+        this._cancelled = true;
+        return;
+    }
+
+    this._clearData();
     this._dragStartEventData = this._getEventData(mouseDownEvent);
 
     this._toggleDragEvent(true);
@@ -121,7 +145,14 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
  * @param {MouseEvent} mouseMoveEvent MouseMove event object.
  */
 Drag.prototype._onMouseMove = function(mouseMoveEvent) {
-    var distance = this.options.distance;
+    var distance;
+
+    if (this._cancelled) {
+        this._clearData();
+        return;
+    }
+
+    distance = this.options.distance;
     // prevent automatic scrolling.
     domevent.preventDefault(mouseMoveEvent);
 
@@ -165,6 +196,10 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
  * @emits Drag#click
  */
 Drag.prototype._onMouseUp = function(mouseUpEvent) {
+    if (this._cancelled) {
+        return;
+    }
+
     this._toggleDragEvent(false);
 
     // emit "click" event when not emitted drag event between mousedown and mouseup.
