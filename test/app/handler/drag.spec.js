@@ -1,31 +1,35 @@
 /*eslint-disable*/
 var Drag = ne.dooray.calendar.Drag;
 describe('Handler/Drag', function() {
+    var mockInst;
+
+    beforeEach(function() {
+        mockInst = jasmine.createSpyObj('Drag', ['invoke', 'fire', '_toggleDragEvent', '_getEventData', '_clearData']);
+        mockInst._getEventData = Drag.prototype._getEventData;
+        mockInst._distance = 0;
+        mockInst._dragStartFired = false;
+    });
+
     describe('_onMouseUp', function() {
+
         it('emit "click" when not emitted drag event between mousedown and mousedown', function() {
             spyOn(ne.dooray.calendar.domevent, 'preventDefault');
-            var mock = {
-                options: {
-                    distance: 10
-                },
-                _distance: 0,
-                _isMoved: false,
-                _toggleDragEvent: function() {},
-                fire: jasmine.createSpy('Handler/Drag'),
-                _getEventData: Drag.prototype._getEventData
+            mockInst.options = {
+                distance: 10
             };
+            mockInst._isMoved = false;
 
-            Drag.prototype._onMouseUp.call(mock, 'hello');
-            expect(mock.fire).toHaveBeenCalledWith('click', {
+            Drag.prototype._onMouseUp.call(mockInst, 'hello');
+            expect(mockInst.fire).toHaveBeenCalledWith('click', {
                 target: undefined,
                 originEvent: 'hello'
             });
 
-            // alternative to mock._isMoved = true;
-            Drag.prototype._onMouseMove.call(mock, 'hello');
+            // alternative to mockInst._isMoved = true;
+            Drag.prototype._onMouseMove.call(mockInst, 'hello');
 
-            Drag.prototype._onMouseUp.call(mock, 'hello');
-            expect(mock.fire).toHaveBeenCalledWith('dragEnd', {
+            Drag.prototype._onMouseUp.call(mockInst, 'hello');
+            expect(mockInst.fire).toHaveBeenCalledWith('dragEnd', {
                 target: undefined,
                 originEvent: 'hello'
             });
@@ -33,16 +37,8 @@ describe('Handler/Drag', function() {
     });
 
     describe('dragging', function() {
-        var mockInst;
-
-
         beforeEach(function() {
             spyOn(ne.dooray.calendar.domevent, 'getMouseButton').and.returnValue(0);
-
-            mockInst = jasmine.createSpyObj('Drag', ['invoke', 'fire', '_toggleDragEvent', '_getEventData', '_clearData']);
-            mockInst._getEventData = Drag.prototype._getEventData;
-            mockInst._distance = 0;
-            mockInst._dragStartFired = false;
         });
 
         it('_dragStart fired only once every drag sessions.', function() {
@@ -113,40 +109,27 @@ describe('Handler/Drag', function() {
         });
 
         it('return false when implemented dragStart handler then stop drag.', function() {
-            var mock = {
-                options: {
-                    distance: 10
-                },
-                _distance: 10,
-                invoke: jasmine.createSpy('Handler/Drag'),
-                _toggleDragEvent: jasmine.createSpy('Handler/Drag#_toggleDragEvent'),
-                _getEventData: Drag.prototype._getEventData
+            mockInst.options = {
+                distance: 10
             };
+            mockInst._distance = 10;
 
-            mock.invoke.and.returnValue(false);
-
-            Drag.prototype._onMouseMove.call(mock, {});
-
-            expect(mock._toggleDragEvent).toHaveBeenCalled();
+            mockInst.invoke.and.returnValue(false);
+            Drag.prototype._onMouseMove.call(mockInst, {});
+            expect(mockInst._toggleDragEvent).toHaveBeenCalled();
         });
 
         it('only primary mouse button can start drag events.', function() {
             ne.dooray.calendar.domevent.getMouseButton.and.returnValue(1);
 
-            var mock = {
-                options: {
-                    distance: 10
-                },
-                _distance: 0,
-                invoke: jasmine.createSpy('Handler/Drag'),
-                _toggleDragEvent: jasmine.createSpy('Handler/Drag#_toggleDragEvent'),
-                _getEventData: Drag.prototype._getEventData
+            mockInst.options = {
+                distance: 10
             };
 
-            mock.invoke.and.returnValue(true);
-            Drag.prototype._onMouseDown.call(mock, {});
+            mockInst.invoke.and.returnValue(true);
+            Drag.prototype._onMouseDown.call(mockInst, {});
 
-            expect(mock._toggleDragEvent).not.toHaveBeenCalled();
+            expect(mockInst._toggleDragEvent).not.toHaveBeenCalled();
         });
     });
 

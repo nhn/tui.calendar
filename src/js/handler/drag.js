@@ -68,6 +68,9 @@ Drag.prototype.destroy = function() {
     this.container = null;
 };
 
+/**
+ * Clear cache data for single dragging session.
+ */
 Drag.prototype._clearData = function() {
     this._cancelled = false;
     this._distance = 0;
@@ -91,7 +94,6 @@ Drag.prototype._toggleDragEvent = function(toBind) {
     } else {
         domMethod = 'off';
         method = 'enable';
-        this._clearData();
     }
 
     domutil[method + 'TextSelection'](container);
@@ -175,6 +177,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
          */
         if (!this.invoke('dragStart', this._dragStartEventData)) {
             this._toggleDragEvent(false);
+            this._clearData();
             return;
         }
     }
@@ -214,17 +217,18 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
          * @property {MouseEvent} originEvent - original mouse event object.
          */
         this.fire('dragEnd', this._getEventData(mouseUpEvent));
-        return;
+    } else {
+        /**
+         * Click events.
+         * @event Drag#click
+         * @type {MouseEvent}
+         * @property {HTMLElement} target - target element in this event.
+         * @property {MouseEvent} originEvent - original mouse event object.
+         */
+        this.fire('click', this._getEventData(mouseUpEvent));
     }
 
-    /**
-     * Click events.
-     * @event Drag#click
-     * @type {MouseEvent}
-     * @property {HTMLElement} target - target element in this event.
-     * @property {MouseEvent} originEvent - original mouse event object.
-     */
-    this.fire('click', this._getEventData(mouseUpEvent));
+    this._clearData();
 };
 
 util.CustomEvents.mixin(Drag);
