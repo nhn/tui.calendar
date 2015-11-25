@@ -20,7 +20,7 @@ module.exports = function(config) {
         ],
         files: [
             'node_modules/underscore/underscore.js',
-            'node_modules/tui-code-snippet/code-snippet.js',
+            'bower_components/tui-code-snippet/code-snippet.js',
             'index.js',
             'src/**/*.js',
             'test/prepare.js',

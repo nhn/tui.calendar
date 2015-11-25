@@ -60,7 +60,7 @@ function bundle(outputPath) {
 
     var b = browserify({
         entries: 'index.js',
-        debug: true
+        debug: !isProduction
     });
 
     var added = false;
@@ -74,10 +74,6 @@ function bundle(outputPath) {
             }
             next();
         });
-    }
-
-    if (isProduction) {
-        b.ignore('tui-code-snippet');
     }
 
     return b.transform(hbsfy)

@@ -35,7 +35,6 @@
     "preprocessify": "0.0.6",
     "stylus": "^0.52.4",
     "through2": "^2.0.0",
-    "tui-code-snippet": "^1.0.4",
     "underscore": "^1.8.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

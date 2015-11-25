@@ -3,7 +3,6 @@
 /**********
  * Common
  **********/
-require('tui-code-snippet');
 require('./src/js/view/template/registerHelpers');
 var config = require('./src/js/config');
 var dirty = require('./src/js/common/dirty');
