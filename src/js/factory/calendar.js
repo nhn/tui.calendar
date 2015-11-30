@@ -85,7 +85,7 @@ function Calendar(options, container) {
      */
     this.dragHandler = new Drag({
         distance: 5
-    }, this.layout);
+    }, this.layout.container);
 
 
     /**
