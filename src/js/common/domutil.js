@@ -420,8 +420,8 @@ domutil = {
         if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height)) &&
             'getBoundingClientRect' in el) {
             bound = el.getBoundingClientRect();
-            width = bound.width;
-            height = bound.height;
+            width = bound.width || el.offsetwidth;
+            height = bound.height || el.offsetHeight;
         } else {
             width = parseFloat(width || 0);
             height = parseFloat(height || 0);
