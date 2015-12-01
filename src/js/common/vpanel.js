@@ -42,6 +42,10 @@ VPanel.prototype.setHeight = function(container, newHeight) {
     container.style.height = newHeight + 'px';
 };
 
+/**
+ * get outer height of panel element
+ * @returns {number} outer height of panel element
+ */
 VPanel.prototype.getHeight = function() {
     return this.container.offsetHeight;
 };
