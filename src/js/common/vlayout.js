@@ -4,9 +4,11 @@
  */
 'use strict';
 var util = global.tui.util;
-var domutil = require('./domutil'),
+var config = require('../config'),
+    domutil = require('./domutil'),
     View = require('../view/view'),
-    VPanel = require('./vpanel');
+    VPanel = require('./vpanel'),
+    Drag = require('../handler/drag');
 
 /**
  * @typedef PanelOptions
@@ -46,6 +48,16 @@ function VLayout(options, container) {
      * @type {VPanel[]}
      */
     this._panels = [];
+
+    /**
+     * @type {Drag}
+     */
+    this._drag = new Drag({
+        distance: 0,
+        exclude: function(target) {
+            return !domutil.hasClass(target, config.classname('splitter'));
+        }
+    }, container);
 
     if (options.panels.length) {
         frag = document.createDocumentFragment();
