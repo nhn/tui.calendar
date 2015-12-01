@@ -5,9 +5,11 @@
 'use strict';
 var util = global.tui.util;
 var config = require('../config'),
+    array = require('./array'),
     common = require('./common'),
     domutil = require('./domutil'),
     domevent = require('./domevent'),
+    reqAnimFrame = require('./reqAnimFrame'),
     View = require('../view/view'),
     VPanel = require('./vpanel'),
     Drag = require('../handler/drag');
@@ -126,14 +128,97 @@ VLayout.prototype._clearGuideElement = function(element) {
     domutil.remove(element);
 };
 
+VLayout.prototype._getHeightOfAsideSplitter = function(splitter) {
+    var unitHeight = splitter.getHeight(),
+        splitterIndex = this._indexOf(splitter.container),
+        before = 0,
+        after = 0;
+
+    util.forEach(this._panels, function(panel, index) {
+        if (splitterIndex === index || !panel.options.isSplitter) {
+            return;
+        }
+
+        if (index < splitterIndex) {
+            before += unitHeight;
+        } else {
+            after += unitHeight;
+        }
+    });
+
+    return [before, after];
+};
+
 VLayout.prototype._resize = function(splitter, splitterIndex, startY, mouseY) {
     var panels = this._panels,
-        sizeMap = util.map(panels, function(vPanel) {
-            return vPanel.getHeight();
-        }),
-        diffY = mouseY - startY;
+        sumHeight = 0,
+        sizeMap = [],
+        diffY = mouseY - startY,
+        absDiffY = Math.abs(diffY),
+        toDown = diffY > 0,
+        startIndexY, mouseIndexY, temp,
+        resizeRange,
+        resizeMap = {},
+        firstIndex, first,
+        lastIndex, last,
+        asideSplitterHeight;
 
-    console.log(startY, mouseY);
+    asideSplitterHeight = this._getHeightOfAsideSplitter(splitter);
+
+    util.forEach(panels, function(panel) {
+        sumHeight += panel.getHeight();
+        sizeMap.push(sumHeight);
+    });
+
+    startIndexY = Math.abs(array.bsearch(sizeMap, startY, null, array.compare.num.asc));
+    mouseIndexY = Math.abs(array.bsearch(sizeMap, mouseY + 4, null, array.compare.num.asc));
+    
+    if (!toDown) {
+        temp = startIndexY;
+        startIndexY = mouseIndexY;
+        mouseIndexY = (temp + 2);
+    }
+
+    if (panels[startIndexY].options.isSplitter) {
+        startIndexY -= (toDown ? -1 : 1);
+    }
+
+    startIndexY = common.limit(startIndexY, [0], [panels.length - 1]);
+    mouseIndexY = common.limit(mouseIndexY, [0], [panels.length - 1]);
+
+    resizeRange = util.range(startIndexY, mouseIndexY + 1, 2);
+
+    if (!toDown) {
+        resizeRange.reverse();
+    }
+
+    firstIndex = resizeRange.shift();
+    first = panels[firstIndex];
+    resizeMap[firstIndex] = first.getHeight() + absDiffY;
+
+    lastIndex = resizeRange.pop();
+    last = panels[lastIndex];
+
+    util.forEach(resizeRange, function(index) {
+        var panel = panels[index],
+            panelHeight = panel.getHeight();
+
+        absDiffY -= panelHeight;
+
+        resizeMap[index] = 0;
+    });
+
+    resizeMap[lastIndex] = Math.max(0, last.getHeight() - absDiffY);
+
+    if (!resizeMap[lastIndex]) {
+        resizeMap[firstIndex] -= toDown ? asideSplitterHeight[1] : asideSplitterHeight[0];
+    }
+
+    reqAnimFrame.requestAnimFrame(function() {
+        util.forEach(resizeMap, function(height, index) {
+            panels[index].setHeight(null, height);
+        });
+    });
 };
 
 /**********
@@ -147,7 +232,7 @@ VLayout.prototype._onDragStart = function(e) {
         splitterOffsetY = domevent.getMousePosition(e.originEvent, e.target)[1],
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1],
         guideElement = this._initializeGuideElement(e.target, mouseY);
-
+    
     splitter.addClass(config.classname('splitter-focused'));
 
     this._dragData = {

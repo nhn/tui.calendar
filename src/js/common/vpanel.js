@@ -43,11 +43,19 @@ VPanel.prototype.setHeight = function(container, newHeight) {
 };
 
 /**
+ * set height relative
+ * @param {number} diff - relative value to change height
+ */
+VPanel.prototype.setHeightBy = function(diff) {
+    this.setHeight(null, this.getHeight() + diff);
+};
+
+/**
  * get outer height of panel element
  * @returns {number} outer height of panel element
  */
 VPanel.prototype.getHeight = function() {
-    return this.container.offsetHeight;
+    return domutil.getSize(this.container)[1];
 };
 
 /**
