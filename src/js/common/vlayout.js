@@ -126,21 +126,35 @@ VLayout.prototype._clearGuideElement = function(element) {
     domutil.remove(element);
 };
 
+VLayout.prototype._resize = function(splitter, splitterIndex, startY, mouseY) {
+    var panels = this._panels,
+        sizeMap = util.map(panels, function(vPanel) {
+            return vPanel.getHeight();
+        }),
+        diffY = mouseY - startY;
+
+    console.log(startY, mouseY);
+};
+
 /**********
  * Drag Handlers
  **********/
 
 VLayout.prototype._onDragStart = function(e) {
-    var splitter = this._panels[this._indexOf(e.target)],
+    var splitterIndex = this._indexOf(e.target),
+        splitter = this._panels[splitterIndex],
         splitterHeight = splitter.getHeight(),
+        splitterOffsetY = domevent.getMousePosition(e.originEvent, e.target)[1],
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1],
         guideElement = this._initializeGuideElement(e.target, mouseY);
 
     splitter.addClass(config.classname('splitter-focused'));
 
     this._dragData = {
+        splitterIndex: splitterIndex,
         splitter: splitter,
         guideElement: guideElement,
+        startY: mouseY - splitterOffsetY,
         minY: 0,
         maxY: this.getViewBound().height - splitterHeight
     };
@@ -159,13 +173,16 @@ VLayout.prototype._onDrag = function(e) {
     this._refreshGuideElement(dragData.guideElement, mouseY);
 };
 
-VLayout.prototype._onDragEnd = function() {
-    var dragData = this._dragData;
+VLayout.prototype._onDragEnd = function(e) {
+    var dragData = this._dragData,
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
-    dragData.splitter.removeClass(config.classname('splitter-focused'));
-    this._clearGuideElement(dragData.guideElement);
+    mouseY = common.limit(mouseY, [dragData.minY], [dragData.maxY]);
+    this._resize(dragData.splitter, dragData.splitterIndex, dragData.startY, mouseY);
+
     this._dragData = null;
-
+    this._clearGuideElement(dragData.guideElement);
+    dragData.splitter.removeClass(config.classname('splitter-focused'));
     domutil.removeClass(document.body, config.classname('resizing'));
 };
 
