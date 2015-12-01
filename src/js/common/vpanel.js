@@ -51,6 +51,22 @@ VPanel.prototype.getHeight = function() {
 };
 
 /**
+ * add design class to panel element
+ * @param {string} className - classname string
+ */
+VPanel.prototype.addClass = function(className) {
+    domutil.addClass(this.container, className);
+}
+
+/**
+ * remove design class to panel element
+ * @param {string} className - classname string
+ */
+VPanel.prototype.removeClass = function(className) {
+    domutil.removeClass(this.container, className);
+};
+
+/**
  * initialize panel element
  * @param {PanelOptions} options - options for panel
  * @param {HTMLDivElement} container - panel element

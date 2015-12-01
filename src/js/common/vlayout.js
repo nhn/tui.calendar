@@ -5,7 +5,9 @@
 'use strict';
 var util = global.tui.util;
 var config = require('../config'),
+    common = require('./common'),
     domutil = require('./domutil'),
+    domevent = require('./domevent'),
     View = require('../view/view'),
     VPanel = require('./vpanel'),
     Drag = require('../handler/drag');
@@ -36,6 +38,8 @@ function VLayout(options, container) {
     }
 
     View.call(this, container);
+
+    domutil.addClass(container, config.classname('vlayout-container'));
     
     /**
      * @type {object}
@@ -59,6 +63,17 @@ function VLayout(options, container) {
         }
     }, container);
 
+    this._drag.on({
+        dragStart: this._onDragStart,
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    /**
+     * @type {object}
+     */
+    this._dragData = null;
+
     if (options.panels.length) {
         frag = document.createDocumentFragment();
 
@@ -73,6 +88,90 @@ function VLayout(options, container) {
 }
 
 util.inherit(VLayout, View);
+
+/**
+ * find index of specific panel that use container to supplied element 
+ * @param {HTMLElement} element - html element to find panel
+ * @returns {number} index of panel
+ */
+VLayout.prototype._indexOf = function(element) {
+    var index = -1;
+
+    util.forEach(this._panels, function(vPanel, i) {
+        if (element === vPanel.container) {
+            index = i;
+            return false;
+        }
+    });
+    
+    return index;
+};
+
+VLayout.prototype._initializeGuideElement = function(element, top) {
+    var cloned = element.cloneNode(true);
+
+    domutil.addClass(cloned, config.classname('splitter-guide'));
+    this._refreshGuideElement(cloned, top);
+
+    this.container.appendChild(cloned);
+
+    return cloned;
+};
+
+VLayout.prototype._refreshGuideElement = function(element, top) {
+    element.style.top = top + 'px';
+};
+
+VLayout.prototype._clearGuideElement = function(element) {
+    domutil.remove(element);
+};
+
+/**********
+ * Drag Handlers
+ **********/
+
+VLayout.prototype._onDragStart = function(e) {
+    var splitter = this._panels[this._indexOf(e.target)],
+        splitterHeight = splitter.getHeight(),
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1],
+        guideElement = this._initializeGuideElement(e.target, mouseY);
+
+    splitter.addClass(config.classname('splitter-focused'));
+
+    this._dragData = {
+        splitter: splitter,
+        guideElement: guideElement,
+        minY: 0,
+        maxY: this.getViewBound().height - splitterHeight
+    };
+
+    if (!util.browser.msie) {
+        domutil.addClass(document.body, config.classname('resizing'));
+    }
+};
+
+VLayout.prototype._onDrag = function(e) {
+    var dragData = this._dragData,
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
+
+    mouseY = common.limit(mouseY, [dragData.minY], [dragData.maxY]);
+
+    this._refreshGuideElement(dragData.guideElement, mouseY);
+};
+
+VLayout.prototype._onDragEnd = function() {
+    var dragData = this._dragData;
+
+    dragData.splitter.removeClass(config.classname('splitter-focused'));
+    this._clearGuideElement(dragData.guideElement);
+    this._dragData = null;
+
+    domutil.removeClass(document.body, config.classname('resizing'));
+};
+
+/**********
+ * Methods
+ **********/
 
 /**
  * refresh each panels
