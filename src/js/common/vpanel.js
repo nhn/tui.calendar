@@ -33,6 +33,14 @@ function VPanel(options, container) {
 util.inherit(VPanel, View);
 
 /**
+ * whether this panel is splitter?
+ * @returns {boolean} panel is splitter?
+ */
+VPanel.prototype.isSplitter = function() {
+    return this.options.isSplitter;
+};
+
+/**
  * set height of html element
  * @param {HTMLElement} [container] - container element
  * @param {number} newHeight - height
