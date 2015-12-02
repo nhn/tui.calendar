@@ -111,6 +111,12 @@ VLayout.prototype._indexOf = function(element) {
     return index;
 };
 
+/**
+ * Initialize resizing guide element
+ * @param {HTMLElement} element - element to use guide element after cloned
+ * @param {number} top - top pixel value for guide element
+ * @returns {HTMLElement} cloned element == guide element
+ */
 VLayout.prototype._initializeGuideElement = function(element, top) {
     var cloned = element.cloneNode(true);
 
@@ -122,19 +128,33 @@ VLayout.prototype._initializeGuideElement = function(element, top) {
     return cloned;
 };
 
+/**
+ * Refresh guide element position
+ * @param {HTMLElement} element - guide element
+ * @param {number} top - top pixel value for guide element
+ */
 VLayout.prototype._refreshGuideElement = function(element, top) {
     element.style.top = top + 'px';
 };
 
+/**
+ * Clear guide element position
+ * @param {HTMLElement} element - guide element
+ */
 VLayout.prototype._clearGuideElement = function(element) {
     domutil.remove(element);
 };
 
+/**
+ * get summation height of upper, below splitter based on supplied splitter
+ * @param {VPanel} splitter - splitter panel
+ * @returns {number[]} upper, below splitter's height summation.
+ */
 VLayout.prototype._getHeightOfAsideSplitter = function(splitter) {
     var unitHeight = splitter.getHeight(),
         splitterIndex = this._indexOf(splitter.container),
-        before = 0,
-        after = 0;
+        upper = 0,
+        below = 0;
 
     util.forEach(this._panels, function(panel, index) {
         if (splitterIndex === index || !panel.isSplitter()) {
@@ -142,15 +162,20 @@ VLayout.prototype._getHeightOfAsideSplitter = function(splitter) {
         }
 
         if (index < splitterIndex) {
-            before += unitHeight;
+            upper += unitHeight;
         } else {
-            after += unitHeight;
+            below += unitHeight;
         }
     });
 
-    return [before, after];
+    return [upper, below];
 };
 
+/**
+ * get increment height of each panel's container element.
+ * @param {VPanel[]} panels - panels
+ * @returns {number[]} increment heights
+ */
 VLayout.prototype._getPanelIncreaseHeights = function(panels) {
     var increase = 0,
         panelSizeMap = [];
@@ -163,14 +188,20 @@ VLayout.prototype._getPanelIncreaseHeights = function(panels) {
     return panelSizeMap;
 };
 
-VLayout.prototype._extendIndexUntilNoSplitter = function(index, toDown, skip) {
+/**
+ * extend supplied number of index until next normal panel found
+ * @param {number} index - index to increase
+ * @param {boolean} toDown - search normal panel to below?
+ * @returns {number|undefined} extended number of index. return undefined when supplied index is not valid
+ */
+VLayout.prototype._extendIndexUntilNoSplitter = function(index, toDown) {
     var panels = this._panels,
         panel,
         isValidIndex = function(i) {
             return i >= 0 && i < panels.length;
         },
         factor = toDown ? 1 : -1,
-        result = index + (skip || 0);
+        result = index;
 
     if (!isValidIndex(index)) {
         return;
@@ -188,6 +219,18 @@ VLayout.prototype._extendIndexUntilNoSplitter = function(index, toDown, skip) {
     return common.limit(result, [0], [panels.length]);
 }
 
+/**
+ * Correct binary search results.
+ *
+ * Because of binary search's limitation. when array has same value more than one.
+ * first index of same values in array are returned.
+ *
+ * This method return increment value to push backward returned index to last index of same values.
+ * @param {number[]} arr - sorted number array
+ * @param {number} value - value to find last index of same values.
+ * @param {number} index - index value of second parameter
+ * @returns {number} count to increment index to binary search results
+ */
 VLayout.prototype._correctBinarySearch = function(arr, value, index) {
     var increase = 0;
 
@@ -237,8 +280,8 @@ VLayout.prototype._resize = function(splitter, startY, mouseY) {
         asideSplitHeight = this._getHeightOfAsideSplitter(splitter),
         panelSizeMap = this._getPanelIncreaseHeights(panels),
         resizeRange = this._getPanelResizeRange(panelSizeMap, startY, mouseY),
-        increaseIndex,
-        decreaseIndex,
+        panelIndexToGrow,
+        panelIndexToShrink,
         panelToShrink;
 
     resizeRange = util.range(resizeRange[0], resizeRange[1] + 1);
@@ -251,11 +294,11 @@ VLayout.prototype._resize = function(splitter, startY, mouseY) {
         resizeRange.sort(array.compare.num.desc);
     }
 
-    increaseIndex = resizeRange.shift();
-    newPanelHeightMap[increaseIndex] = panels[increaseIndex].getHeight() + resizedHeight;
+    panelIndexToGrow = resizeRange.shift();
+    newPanelHeightMap[panelIndexToGrow] = panels[panelIndexToGrow].getHeight() + resizedHeight;
 
-    decreaseIndex = resizeRange.pop();
-    panelToShrink = panels[decreaseIndex];
+    panelIndexToShrink = resizeRange.pop();
+    panelToShrink = panels[panelIndexToShrink];
 
     // panels between of start, end panel
     util.forEach(resizeRange, function(index) {
@@ -267,11 +310,11 @@ VLayout.prototype._resize = function(splitter, startY, mouseY) {
         }
     });
 
-    newPanelHeightMap[decreaseIndex] = Math.max(0, panelToShrink.getHeight() - resizedHeight);
+    newPanelHeightMap[panelIndexToShrink] = Math.max(0, panelToShrink.getHeight() - resizedHeight);
 
     // consider splitter panel's height when set 0 height to shrink panel
-    if (!newPanelHeightMap[decreaseIndex]) {
-        newPanelHeightMap[increaseIndex] -= asideSplitHeight[+toDown];
+    if (!newPanelHeightMap[panelIndexToShrink]) {
+        newPanelHeightMap[panelIndexToGrow] -= asideSplitHeight[+toDown];
     }
 
     reqAnimFrame.requestAnimFrame(function() {
