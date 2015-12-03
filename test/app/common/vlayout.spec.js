@@ -1,95 +1,124 @@
 var VLayout = ne.dooray.calendar.VLayout;
-xdescribe('VLayout', function() {
-    it('_extendIndexUntilNoSplitter() extend index until find next normal panel', function() {
-        var mockInst = {
-            _panels: [{
-                isSplitter: function() {return false;}
-            }, {
-                isSplitter: function() {return true;}
-            }, {
-                isSplitter: function() {return false;}
-            }]
-        };
+var VPanel = ne.dooray.calendar.VPanel;
 
-        var actual = VLayout.prototype._extendIndexUntilNoSplitter.call(mockInst, 2, false);
-        expect(actual).toBe(2);
+function getDiv() {
+    return document.createElement('div');
+}
 
-        actual = VLayout.prototype._extendIndexUntilNoSplitter.call(mockInst, 1, false);
-        expect(actual).toBe(0);
+describe('VLayout', function() {
+    var inst;
 
-        actual = VLayout.prototype._extendIndexUntilNoSplitter.call(mockInst, 0, false);
-        expect(actual).toBe(0);
+    it('refresh() resize autoHeight true panel\'s container', function() {
+        spyOn(VPanel.prototype, 'setHeight');
+        spyOn(VPanel.prototype, 'getHeight').and.callFake(function() {
+            if (this.options.isSplitter) {
+                return 5;
+            } else {
+                return this.options.minHeight;
+            }
+        });
 
-        actual = VLayout.prototype._extendIndexUntilNoSplitter.call(mockInst, 0, true);
-        expect(actual).toBe(0);
+        inst = new VLayout({
+            panels: [
+                {minHeight: 50},
+                {isSplitter: true},
+                {autoHeight: true},
+                {autoHeight: true}
+            ]
+        }, getDiv());
 
-        actual = VLayout.prototype._extendIndexUntilNoSplitter.call(mockInst, 20, true);
-        expect(actual).toBeUndefined();
+        spyOn(inst, 'getViewBound').and.returnValue({height: 500});
+        VPanel.prototype.setHeight.calls.reset();
+
+        inst.refresh();
+        expect(VPanel.prototype.setHeight.calls.allArgs()).toEqual([
+            [null, 222.5],
+            [null, 222.5]
+        ]);
     });
 
-    it('_indexOf() find index of panel by panel container', function() {
-        var mockInst = {
-            _panels: [{
-                container: 'A'
-            }, {
-                container: 'B'
-            }, {
-                container: 'C'
-            }]
-        };
+    it('_getMouseYAdditionalLimit() can calculate additional limit from supplied splitter panel item.', function() {
+        spyOn(VPanel.prototype, 'getHeight').and.returnValue(5);
 
-        var actual = VLayout.prototype._indexOf.call(mockInst, 'B');
-        expect(actual).toBe(1);
+        inst = new VLayout({
+            panels: [
+                {minHeight: 50},
+                {isSplitter: true},
+                {minHeight: 0},
+                {isSplitter: true},
+                {minHeight: 20}
+            ]
+        }, getDiv());
 
-        actual = VLayout.prototype._indexOf.call(mockInst, 'D');
-        expect(actual).toBe(-1);
+        // 두 번째 스플리터 기준 위 아래 추가 드래그 제한 값은 50, 25
+        var baseSplitterItem = inst._panels.get(1);
+        var actual = inst._getMouseYAdditionalLimit(baseSplitterItem);
+        expect(actual).toEqual([50, 25]);
+
+
+        // 네 번째 스플리터 기준 위 아래 추가 드래그 제한 값은 55, 20
+        baseSplitterItem = inst._panels.get(3);
+        actual = inst._getMouseYAdditionalLimit(baseSplitterItem);
+        expect(actual).toEqual([55, 20]);
     });
 
-    it('_getHeightOfAsideSplitter() get height of upper, below splitter based on supplied index.', function() {
-        var mockInst = {
-            _panels: [{
-                isSplitter: function() {return true;}
-            }, {
-                isSplitter: function() {return false;}
-            }, {
-                isSplitter: function() {return true;}
-            }, {
-                isSplitter: function() {return true;}
-            }],
-            _indexOf: jasmine.createSpy('_indexOf')
-        };
+    describe('_resize', function() {
+        beforeEach(function() {
+            inst = new VLayout({}, getDiv());
 
-        var mockSplitter = jasmine.createSpyObj('VPanel', ['isSplitter', 'getHeight']);
-        mockSplitter.getHeight.and.returnValue(5);
+            spyOn(VPanel.prototype, 'getHeight').and.callFake(function() {
+                // 테스트에서는 스플리터 사이즈는 무시한다
+                if (this.options.isSplitter) {
+                    return 0;
+                }
 
-        // 첫 번째 index의 splitter기준으로 위, 아래에 있는 splitter들의 높이 합계를 구함.
-        mockInst._indexOf.and.returnValue(0);
-        var actual = VLayout.prototype._getHeightOfAsideSplitter.call(mockInst, mockSplitter);
-        expect(actual).toEqual([0, 10]);
+                return this.options.height;
+            });
+        });
 
-        // 두 번째 index의 splitter기준으로 위, 아래에 있는 splitter들의 높이 합계를 구함.
-        mockInst._indexOf.and.returnValue(1);
-        var actual = VLayout.prototype._getHeightOfAsideSplitter.call(mockInst, mockSplitter);
-        expect(actual).toEqual([5, 10]);
+        it('resize at 1 splitter between 2 panels.', function() {
+            inst.addPanels([
+                {height: 100},         // 100,  100
+                {isSplitter: true},    // 
+                {height: 100},         // 100,  205
+            ], inst.container);
+            spyOn(tui.util, 'forEach');
+            inst._resize(inst._panels.get(1), 100, 110);
 
-        // 세 번째 index의 splitter기준으로 위, 아래에 있는 splitter들의 높이 합계를 구함.
-        mockInst._indexOf.and.returnValue(2);
-        var actual = VLayout.prototype._getHeightOfAsideSplitter.call(mockInst, mockSplitter);
-        expect(actual).toEqual([5, 5]);
-    });
+            // 첫 번째 패널은 10 증가, 두 번째 패널은 10 감소
+            var allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
+            expect(allArgs).toEqual([110, 90]);
+        });
 
-    it('_getPanelResizeRange() get index of panel that need to resize for after user dragging splitter', function() {
-        var mockInst = jasmine.createSpyObj('VLayout', ['_correctBinarySearch', '_extendIndexUntilNoSplitter']);
-        var mockSizeMap = [1,2,3];
-        spyOn(Math, 'abs').and.returnValue(0);
-        mockInst._correctBinarySearch.and.returnValue(0);
+        it('resize first splitter across to 2 splitter', function() {
+            inst.addPanels([
+                {height: 100},         // 100,  100
+                {isSplitter: true},    // 
+                {height: 100},         // 100,  200
+                {isSplitter: true},    // 
+                {height: 30}           // 30 ,  230
+            ], inst.container);
+            spyOn(tui.util, 'forEach');
 
-        VLayout.prototype._getPanelResizeRange.call(mockInst, mockSizeMap, 1, 3);
-        expect(mockInst._extendIndexUntilNoSplitter.calls.count()).toBe(2);
+            // 첫 번째 스플리터를 마지막 패널까지 드래그 했다고 가정
+            inst._resize(inst._panels.get(1), 100, 210);
+            var allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
+            expect(allArgs).toEqual([210, 0, 20]);
+        });
 
-        mockInst._extendIndexUntilNoSplitter.calls.reset();
+        it('두 번째 스플리터를 30만큼 위로 드래그했다고 가정', function() {
+            inst.addPanels([
+                {height: 100},         // 100,  100
+                {isSplitter: true},    // 
+                {height: 100},         // 100,  200
+                {isSplitter: true},    // 
+                {height: 30}           // 30 ,  230
+            ], inst.container);
+            spyOn(tui.util, 'forEach');
 
-        var actual = VLayout.prototype._getPanelResizeRange.call(mockInst, mockSizeMap, 3, 1);
-        expect(mockInst._extendIndexUntilNoSplitter.calls.count()).toBe(3);
+            inst._resize(inst._panels.get(3), 200, 170);
+            allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
+            expect(allArgs).toEqual([60, 70, 100]);
+        });
     });
 });

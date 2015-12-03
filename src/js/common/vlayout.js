@@ -78,37 +78,13 @@ function VLayout(options, container) {
     this._dragData = null;
 
     if (this.options.panels.length) {
-        frag = document.createDocumentFragment();
-
-        util.forEach(options.panels, function(panelOptions) {
-            this.addPanel(panelOptions, frag);
-        }, this);
-
-        this.container.appendChild(frag);
+        this.addPanels(this.options.panels, this.container);
     }
 
     this.refresh();
 }
 
 util.inherit(VLayout, View);
-
-/**
- * find index of specific panel that use container to supplied element 
- * @param {HTMLElement} element - html element to find panel
- * @returns {number} index of panel
- */
-VLayout.prototype._indexOf = function(element) {
-    var index = -1;
-
-    util.forEach(this._panels, function(vPanel, i) {
-        if (element === vPanel.container) {
-            index = i;
-            return false;
-        }
-    });
-    
-    return index;
-};
 
 /**
  * Initialize resizing guide element
@@ -121,7 +97,6 @@ VLayout.prototype._initializeGuideElement = function(element, top) {
 
     domutil.addClass(cloned, config.classname('splitter-guide'));
     this._refreshGuideElement(cloned, top);
-
     this.container.appendChild(cloned);
 
     return cloned;
@@ -179,10 +154,8 @@ VLayout.prototype._resize = function(splItem, startY, mouseY) {
         }
     }
 
-    reqAnimFrame.requestAnimFrame(function() {
-        util.forEach(resizeMap, function(pair) {
-            pair[0].setHeight(null, pair[1]);
-        });
+    util.forEach(resizeMap, function(pair) {
+        pair[0].setHeight(null, pair[1]);
     });
 };
 
@@ -191,7 +164,7 @@ VLayout.prototype._resize = function(splItem, startY, mouseY) {
  * @param {LinkedListItem} splItem - linkedlist item with splitter
  * @returns {number[]} upper and below splitter's height and panel minimum height summation.
  */
-VLayout.prototype._getSplitterYMinMax = function(splItem) {
+VLayout.prototype._getMouseYAdditionalLimit = function(splItem) {
     var upper = 0,
         below = 0,
         cursor = splItem,
@@ -270,7 +243,7 @@ VLayout.prototype._onDrag = function(e) {
  */
 VLayout.prototype._onDragEnd = function(e) {
     var dragData = this._dragData,
-        asideMinMax = this._getSplitterYMinMax(dragData.splItem),
+        asideMinMax = this._getMouseYAdditionalLimit(dragData.splItem),
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
     // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
@@ -316,16 +289,28 @@ VLayout.prototype.refresh = function() {
 /**
  * add panel
  * @param {PanelOptions} options - options for panel
- * @param {container} container - container element
+ * @param {container} [container] - container element
  */
 VLayout.prototype.addPanel = function(options, container) {
     var element = document.createElement('div'),
         panel = new VPanel(options, element),
 
+    container = container || this.container;
+
     panel = this._panels.add(panel);
     domutil.setData(element, 'pnid', panel.id);
 
     container.appendChild(element);
+};
+
+VLayout.prototype.addPanels = function(options, container) {
+    var frag = document.createDocumentFragment();
+
+    util.forEach(options, function(option) {
+        this.addPanel(option, frag);
+    }, this);
+
+    container.appendChild(frag);
 };
 
 module.exports = VLayout;

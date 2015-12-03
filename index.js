@@ -19,6 +19,7 @@ var reqAnimFrame = require('./src/js/common/reqAnimFrame');
 var AJAX = require('./src/js/common/ajax');
 var FillRemainHeight = require('./src/js/common/fillRemainHeight');
 var VLayout = require('./src/js/common/vlayout');
+var VPanel = require('./src/js/common/vpanel');
 
 /**********
  * Models
@@ -102,6 +103,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     Point: Point, 
     FillRemainHeight: FillRemainHeight,
     VLayout: VLayout,
+    VPanel: VPanel,
 
     // model
     CalEvent: CalEvent,

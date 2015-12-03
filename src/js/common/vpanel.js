@@ -109,7 +109,9 @@ VPanel.prototype._initPanel = function(options, container) {
         return;
     }
 
-    domutil.addClass(container, options.className);
+    if (options.className) {
+        domutil.addClass(container, options.className);
+    }
 
     if (options.autoHeight) {
         domutil.setData(container, 'autoHeight', true);
