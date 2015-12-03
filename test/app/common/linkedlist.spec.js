@@ -6,6 +6,26 @@ describe('LinkedList', function() {
         inst = new LinkedList();
     });
 
+    it('each() iteratee each LinkedListItem', function() {
+        var mockInst = {
+            _list: {
+                1: 'one',
+                2: 'two',
+                3: 'three'
+            }
+        };
+
+        var spy = jasmine.createSpy('iteratee');
+
+        inst.each.call(mockInst, spy);
+
+        expect(spy.calls.allArgs()).toEqual([
+            ['one'],
+            ['two'],
+            ['three']
+        ]);
+    });
+
     it('_traverse', function() {
         var mockInst = {
             _list: {

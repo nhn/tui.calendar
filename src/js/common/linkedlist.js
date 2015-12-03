@@ -32,6 +32,12 @@ function LinkedList() {
     this.length = 0;
 }
 
+/**
+ * iterate list
+ * @param {function} iteratee - iteratee function. each invocation of iteratee
+ * is called with {@see LinkedListItem}
+ * @param {*} context - context object for iteratee function
+ */
 LinkedList.prototype.each = function(iteratee, context) {
     var ownList = this._list,
         orders = util.keys(ownList).sort(array.compare.num.asc);
