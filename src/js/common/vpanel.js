@@ -96,7 +96,6 @@ VPanel.prototype._initPanel = function(options, container) {
     }
 
     domutil.addClass(container, options.className);
-    domutil.setData(container, 'pnid', util.stamp(this));
 
     if (options.autoHeight) {
         domutil.setData(container, 'autoHeight', true);

@@ -1,5 +1,5 @@
 var VLayout = ne.dooray.calendar.VLayout;
-describe('VLayout', function() {
+xdescribe('VLayout', function() {
     it('_extendIndexUntilNoSplitter() extend index until find next normal panel', function() {
         var mockInst = {
             _panels: [{

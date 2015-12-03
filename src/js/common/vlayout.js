@@ -12,6 +12,7 @@ var config = require('../config'),
     domutil = require('./domutil'),
     domevent = require('./domevent'),
     reqAnimFrame = require('./reqAnimFrame'),
+    LinkedList = require('./linkedlist'),
     View = require('../view/view'),
     VPanel = require('./vpanel'),
     Drag = require('../handler/drag');
@@ -53,9 +54,9 @@ function VLayout(options, container) {
     }, options);
 
     /**
-     * @type {VPanel[]}
+     * @type {LinkedList}
      */
-    this._panels = [];
+    this._panels = new LinkedList();
 
     /**
      * @type {Drag}
@@ -78,7 +79,7 @@ function VLayout(options, container) {
      */
     this._dragData = null;
 
-    if (options.panels.length) {
+    if (this.options.panels.length) {
         frag = document.createDocumentFragment();
 
         util.forEach(options.panels, function(panelOptions) {
@@ -145,208 +146,29 @@ VLayout.prototype._clearGuideElement = function(element) {
     domutil.remove(element);
 };
 
-/**
- * get summation height of upper, below splitter based on supplied splitter
- * @param {VPanel} splitter - splitter panel
- * @returns {number[]} upper, below splitter's height summation.
- */
-VLayout.prototype._getHeightOfAsideSplitter = function(splitter) {
-    var unitHeight = splitter.getHeight(),
-        splitterIndex = this._indexOf(splitter.container),
-        upper = 0,
-        below = 0;
-
-    util.forEach(this._panels, function(panel, index) {
-        if (splitterIndex === index || !panel.isSplitter()) {
-            return;
-        }
-
-        if (index < splitterIndex) {
-            upper += unitHeight;
-        } else {
-            below += unitHeight;
-        }
-    });
-
-    return [upper, below];
-};
-
-/**
- * get increment height of each panel's container element.
- * @param {VPanel[]} panels - panels
- * @returns {number[]} increment heights
- */
-VLayout.prototype._getPanelIncreaseHeights = function(panels) {
-    var increase = 0,
-        panelSizeMap = [];
-
-    util.forEach(panels, function(panel) {
-        increase += panel.getHeight();
-        panelSizeMap.push(increase);
-    });
-
-    return panelSizeMap;
-};
-
-/**
- * extend supplied number of index until next normal panel found
- * @param {number} index - index to increase
- * @param {boolean} toDown - search normal panel to below?
- * @returns {number|undefined} extended number of index. return undefined when supplied index is not valid
- */
-VLayout.prototype._extendIndexUntilNoSplitter = function(index, toDown) {
-    var panels = this._panels,
-        panel,
-        isValidIndex = function(i) {
-            return i >= 0 && i < panels.length;
-        },
-        factor = toDown ? 1 : -1,
-        result = index;
-
-    if (!isValidIndex(index)) {
-        return;
-    }
-
-    if (!panels[result].isSplitter()) {
-        return result;
-    }
-
-    do {
-        result += factor;
-        panel = panels[result];
-    } while (isValidIndex(result) && panel.isSplitter());
-
-    return common.limit(result, [0], [panels.length]);
-}
-
-/**
- * Correct binary search results.
- *
- * Because of binary search's limitation. when array has same value more than one.
- * first index of same values in array are returned.
- *
- * This method return increment value to push backward returned index to last index of same values.
- * @param {number[]} arr - sorted number array
- * @param {number} value - value to find last index of same values.
- * @param {number} index - index value of second parameter
- * @returns {number} count to increment index to binary search results
- */
-VLayout.prototype._correctBinarySearch = function(arr, value, index) {
-    var increase = 0;
-
-    util.forEach(arr, function(v, i) {
-        if (i > index) {
-            return false;
-        }
-
-        if (value === v) {
-            increase += 1;
-        }
-    });
-
-    return increase;
-}
-
-VLayout.prototype._getPanelResizeRange = function(panelSizeMap, startY, mouseY) {
-    var panelCount = panelSizeMap.length,
-        numberASC = array.compare.num.asc,
-        fromIndexY, toIndexY;
-
-    fromIndexY = mAbs(array.bsearch(panelSizeMap, startY, null, numberASC));
-    fromIndexY += this._correctBinarySearch(panelSizeMap, startY, fromIndexY);
-    toIndexY = mAbs(array.bsearch(panelSizeMap, mouseY, null, numberASC));
-
-    fromIndexY = this._extendIndexUntilNoSplitter(fromIndexY, false);
-    toIndexY = this._extendIndexUntilNoSplitter(toIndexY, true);
-
-    // binary search just find supplied position's new index. because of that, 
-    // from index is smaller then index of panel to increase height when dragging to upper side.
-    // so, increase from index directly.
-    if (mouseY < startY) {
-        fromIndexY = this._extendIndexUntilNoSplitter(fromIndexY + 1, true);
-    }
-
-    fromIndexY = common.limit(fromIndexY, [0], [panelCount]);
-    toIndexY = common.limit(toIndexY, [0], [panelCount]);
-
-    return [fromIndexY, toIndexY].sort(numberASC);
-};
-
-VLayout.prototype._resize = function(splitter, startY, mouseY) {
-    var panels = this._panels,
-        toDown = mouseY > startY,
-        resizedHeight = Math.abs(mouseY - startY),
-        newPanelHeightMap = {},
-        asideSplitHeight = this._getHeightOfAsideSplitter(splitter),
-        panelSizeMap = this._getPanelIncreaseHeights(panels),
-        resizeRange = this._getPanelResizeRange(panelSizeMap, startY, mouseY),
-        panelIndexToGrow,
-        panelIndexToShrink,
-        panelToShrink;
-
-    resizeRange = util.range(resizeRange[0], resizeRange[1] + 1);
-
-    if (!resizeRange) {
-        return;
-    }
-
-    if (!toDown) {
-        resizeRange.sort(array.compare.num.desc);
-    }
-
-    panelIndexToGrow = resizeRange.shift();
-    newPanelHeightMap[panelIndexToGrow] = panels[panelIndexToGrow].getHeight() + resizedHeight;
-
-    panelIndexToShrink = resizeRange.pop();
-    panelToShrink = panels[panelIndexToShrink];
-
-    // panels between of start, end panel
-    util.forEach(resizeRange, function(index) {
-        var panel = panels[index];
-
-        if (!panel.isSplitter()) {
-            resizedHeight -= panel.getHeight();
-            newPanelHeightMap[index] = 0;
-        }
-    });
-
-    newPanelHeightMap[panelIndexToShrink] = Math.max(0, panelToShrink.getHeight() - resizedHeight);
-
-    // consider splitter panel's height when set 0 height to shrink panel
-    if (!newPanelHeightMap[panelIndexToShrink]) {
-        newPanelHeightMap[panelIndexToGrow] -= asideSplitHeight[+toDown];
-    }
-
-    reqAnimFrame.requestAnimFrame(function() {
-        util.forEach(newPanelHeightMap, function(height, index) {
-            panels[index].setHeight(null, height);
-        });
-    });
-    return;
-};
-
 /**********
  * Drag Handlers
  **********/
 
 VLayout.prototype._onDragStart = function(e) {
-    var splitterIndex = this._indexOf(e.target),
-        splitter = this._panels[splitterIndex],
-        splitterHeight = splitter.getHeight(),
-        splitterOffsetY = domevent.getMousePosition(e.originEvent, e.target)[1],
-        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1],
-        guideElement = this._initializeGuideElement(e.target, mouseY);
-    
-    splitter.addClass(config.classname('splitter-focused'));
+    var oEvent = e.originEvent,
+        target = e.target,
+        splID = domutil.getData(target, 'pnid'),
+        splPanel = util.pick(this._panels.get(splID), 'data'),
+        splHeight = splPanel.getHeight(),
+        splOffsetY = domevent.getMousePosition(oEvent, target)[1],
+        mouseY = domevent.getMousePosition(oEvent, this.container)[1],
+        guideElement = this._initializeGuideElement(target, mouseY);
+        
+    splPanel.addClass(config.classname('splitter-focused'));
 
     this._dragData = {
-        splitterIndex: splitterIndex,
-        splitterOffsetY: splitterOffsetY,
-        splitter: splitter,
+        splPanel: splPanel,
+        splOffsetY: splOffsetY,
         guideElement: guideElement,
-        startY: mouseY - splitterOffsetY,
+        startY: mouseY - splOffsetY,
         minY: 0,
-        maxY: this.getViewBound().height - splitterHeight
+        maxY: this.getViewBound().height - splHeight
     };
 
     if (!util.browser.msie) {
@@ -355,10 +177,9 @@ VLayout.prototype._onDragStart = function(e) {
 };
 
 VLayout.prototype._getMouseY = function(dragData, originEvent) {
-    var splitterOffsetY = dragData.splitterOffsetY,
-        mouseY = domevent.getMousePosition(originEvent, this.container)[1];
+    var mouseY = domevent.getMousePosition(originEvent, this.container)[1];
 
-    return common.limit(mouseY - splitterOffsetY, [dragData.minY], [dragData.maxY]);
+    return common.limit(mouseY - dragData.splOffsetY, [dragData.minY], [dragData.maxY]);
 };
 
 VLayout.prototype._onDrag = function(e) {
@@ -372,11 +193,11 @@ VLayout.prototype._onDragEnd = function(e) {
     var dragData = this._dragData,
         mouseY = this._getMouseY(dragData, e.originEvent);
 
-    this._resize(dragData.splitter, dragData.startY, mouseY);
+    // this._resize(dragData.splPanel, dragData.startY, mouseY);
 
     this._dragData = null;
     this._clearGuideElement(dragData.guideElement);
-    dragData.splitter.removeClass(config.classname('splitter-focused'));
+    dragData.splPanel.removeClass(config.classname('splitter-focused'));
     domutil.removeClass(document.body, config.classname('resizing'));
 };
 
@@ -392,20 +213,21 @@ VLayout.prototype.refresh = function() {
         usedHeight = 0,
         remainHeight;
 
-    util.forEach(this._panels, function(vPanel) {
-        var element = vPanel.container;
+    this._panels.each(function(item) {
+        var panel = item.data,
+            element = panel.container;
 
         if (domutil.getData(element, 'autoHeight')) {
-            panelToFillHeight.push(vPanel);
+            panelToFillHeight.push(panel);
         } else {
-            usedHeight += vPanel.getHeight();
+            usedHeight += panel.getHeight();
         }
     });
 
     remainHeight = (this.getViewBound().height - usedHeight) / panelToFillHeight.length;
 
-    util.forEach(panelToFillHeight, function(vPanel) {
-        vPanel.setHeight(null, remainHeight);
+    util.forEach(panelToFillHeight, function(panel) {
+        panel.setHeight(null, remainHeight);
     });
 };
 
@@ -416,9 +238,10 @@ VLayout.prototype.refresh = function() {
  */
 VLayout.prototype.addPanel = function(options, container) {
     var element = document.createElement('div'),
-        vPanel = new VPanel(options, element);
+        panel = new VPanel(options, element),
 
-    this._panels.push(vPanel);
+    panel = this._panels.add(panel);
+    domutil.setData(element, 'pnid', panel.id);
 
     container.appendChild(element);
 };

@@ -3,7 +3,9 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var LinkedListItem = require('./linkedlistitem');
+var util = global.tui.util;
+var array = require('./array'),
+    LinkedListItem = require('./linkedlistitem');
 
 /**
  * @constructor
@@ -29,6 +31,15 @@ function LinkedList() {
      */
     this.length = 0;
 }
+
+LinkedList.prototype.each = function(iteratee, context) {
+    var ownList = this._list,
+        orders = util.keys(ownList).sort(array.compare.num.asc);
+
+    util.forEach(orders, function(index) {
+        iteratee.call(context, ownList[index]);
+    });
+};
 
 /**
  * traverse prev, next items by idx
@@ -80,6 +91,10 @@ LinkedList.prototype.add = function(item) {
     }
 
     return inst;
+};
+
+LinkedList.prototype.get = function(id) {
+    return this._list[id];
 };
 
 /**
