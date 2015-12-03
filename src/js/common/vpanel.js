@@ -13,14 +13,21 @@ var config = require('../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - options for VPanel
+ *  @param {number} [options.minHeight=0] - minimum height of panel
+ *  @param {number} [options.height] - initial height of panel
+ *  @param {boolean} [options.isSplitter=false] - set true then this panel works splitter
+ *  @param {boolean} [options.autoHeight=false] - set true then this panel use remain height after other panel resized.
+ *  @param {string} [options.className] - additional class name to add element
  * @param {HTMLElement} container - container element
  */
 function VPanel(options, container) {
     View.call(this, container);
 
+    /**
+     * @type {object}
+     */
     this.options = util.extend({
         minHeight: 0,
-        maxHeight: null,
         height: null,
         isSplitter: false,
         autoHeight: false,
@@ -50,6 +57,11 @@ VPanel.prototype.setHeight = function(container, newHeight) {
     container.style.height = newHeight + 'px';
 };
 
+/**
+ * Calculate new height of panel and remains by supplied height growth
+ * @param {number} growth - growth value
+ * @returns {number[]} newHeight, remainHeight
+ */
 VPanel.prototype.getResizeInfoByGrowth = function(growth) {
     var height = this.getHeight(),
         newHeight = height + growth,

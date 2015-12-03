@@ -7,7 +7,6 @@ var util = global.tui.util,
     mAbs = Math.abs;
 
 var config = require('../config'),
-    array = require('./array'),
     common = require('./common'),
     domutil = require('./domutil'),
     domevent = require('./domevent'),
@@ -21,7 +20,6 @@ var config = require('../config'),
  * @typedef PanelOptions
  * @type {object}
  * @property {number} [minHeight=0] - minimum height of panel
- * @property {number} [maxHeight] - maximum height of panel. default is container height.
  * @property {number} [height=0] - current panel height
  * @property {boolean} [splitter=false] - is this panel uses splitter?
  * @property {boolean} [autoHeight=false] - is this panel uses remain height of container?
@@ -299,10 +297,9 @@ VLayout.prototype.refresh = function() {
         remainHeight;
 
     this._panels.each(function(item) {
-        var panel = item.data,
-            element = panel.container;
+        var panel = item.data;
 
-        if (domutil.getData(element, 'autoHeight')) {
+        if (panel.options.autoHeight) {
             panelToFillHeight.push(panel);
         } else {
             usedHeight += panel.getHeight();
