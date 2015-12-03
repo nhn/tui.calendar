@@ -2,11 +2,15 @@ var VLayout = ne.dooray.calendar.VLayout;
 var VPanel = ne.dooray.calendar.VPanel;
 
 function getDiv() {
-    return document.createElement('div');
+    return document.getElementById('vlayout');
 }
 
 describe('VLayout', function() {
     var inst;
+    
+    beforeEach(function() {
+        loadFixtures('vlayout.html');
+    });
 
     it('refresh() resize autoHeight true panel\'s container', function() {
         spyOn(VPanel.prototype, 'setHeight');

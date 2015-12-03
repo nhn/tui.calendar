@@ -303,6 +303,11 @@ VLayout.prototype.addPanel = function(options, container) {
     container.appendChild(element);
 };
 
+/**
+ * Add multiple panel
+ * @param {PanelOptions[]} options - panel options list
+ * @param {HTMLElement} container - container element
+ */
 VLayout.prototype.addPanels = function(options, container) {
     var frag = document.createDocumentFragment();
 
