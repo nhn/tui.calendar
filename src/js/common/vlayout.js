@@ -146,6 +146,54 @@ VLayout.prototype._clearGuideElement = function(element) {
     domutil.remove(element);
 };
 
+
+VLayout.prototype._resize = function(splItem, startY, mouseY) {
+    var diffY = startY - mouseY,
+        resizedHeight = mAbs(diffY),
+        resizeMap = {},
+        toDown = mouseY > startY,
+        traverseMethod = ['prev', 'next'],
+        cursor = splItem[traverseMethod[+!toDown]](), 
+        resizeTo, panel, height, minHeight, maxHeight,
+        panel;
+
+    panel = cursor.data;
+    resizeTo = panel.getHeight() + resizedHeight;
+    console.log(panel.container.className, resizeTo, '남음: ', resizedHeight);
+    resizeMap[panel.id] = [panel, resizeTo];
+
+    while (cursor = cursor[traverseMethod[+toDown]]()) {
+        panel = cursor.data;
+        
+        if (panel.isSplitter()) {
+            continue;
+        }
+
+        height = panel.getHeight();
+        // minHeight = panel.options.minHeight;
+        // maxHeight = panel.options.maxHeight;
+
+        resizeTo = Math.max(0, height - resizedHeight);
+        resizedHeight -= height;
+
+        console.log(panel.container.className, resizeTo, '남음: ', resizedHeight);
+
+        resizeMap[panel.id] = [panel, resizeTo];
+
+        if (resizedHeight < 0) {
+            break;
+        }
+    }
+
+    console.log(resizeMap);
+
+    reqAnimFrame.requestAnimFrame(function() {
+        util.forEach(resizeMap, function(pair) {
+            pair[0].setHeight(null, pair[1]);
+        });
+    });
+};
+
 /**********
  * Drag Handlers
  **********/
@@ -154,7 +202,8 @@ VLayout.prototype._onDragStart = function(e) {
     var oEvent = e.originEvent,
         target = e.target,
         splID = domutil.getData(target, 'pnid'),
-        splPanel = util.pick(this._panels.get(splID), 'data'),
+        splItem = this._panels.get(splID),
+        splPanel = util.pick(splItem, 'data'),
         splHeight = splPanel.getHeight(),
         splOffsetY = domevent.getMousePosition(oEvent, target)[1],
         mouseY = domevent.getMousePosition(oEvent, this.container)[1],
@@ -163,7 +212,7 @@ VLayout.prototype._onDragStart = function(e) {
     splPanel.addClass(config.classname('splitter-focused'));
 
     this._dragData = {
-        splPanel: splPanel,
+        splItem: splItem,
         splOffsetY: splOffsetY,
         guideElement: guideElement,
         startY: mouseY - splOffsetY,
@@ -189,15 +238,42 @@ VLayout.prototype._onDrag = function(e) {
     this._refreshGuideElement(dragData.guideElement, mouseY);
 };
 
+VLayout.prototype._getAsideSplitterHeightSummation = function(splItem) {
+    var upper = 0,
+        below = 0,
+        cursor = splItem,
+        unitHeight = splItem.data.getHeight();
+
+    while (cursor = cursor.prev()) {
+        if (cursor.data.isSplitter()) {
+            upper += unitHeight;
+        }
+    }
+
+    cursor = splItem;
+
+    while (cursor = cursor.next()) {
+        if (cursor.data.isSplitter()) {
+            below += unitHeight;
+        }
+    }
+
+    return [upper, below];
+};
+
 VLayout.prototype._onDragEnd = function(e) {
     var dragData = this._dragData,
+        asideSplHeights = this._getAsideSplitterHeightSummation(dragData.splItem),
         mouseY = this._getMouseY(dragData, e.originEvent);
 
-    // this._resize(dragData.splPanel, dragData.startY, mouseY);
+    // 스플리터의 이동가능 범위는 다른 스플리터의 높이가 고려되어야 함
+    mouseY = common.limit(mouseY, [dragData.minY + asideSplHeights[0]], [dragData.maxY - asideSplHeights[1]]);
+
+    this._resize(dragData.splItem, dragData.startY, mouseY);
 
     this._dragData = null;
     this._clearGuideElement(dragData.guideElement);
-    dragData.splPanel.removeClass(config.classname('splitter-focused'));
+    dragData.splItem.data.removeClass(config.classname('splitter-focused'));
     domutil.removeClass(document.body, config.classname('resizing'));
 };
 
