@@ -99,6 +99,11 @@ LinkedList.prototype.add = function(item) {
     return inst;
 };
 
+/**
+ * Get linkedlist item by id
+ * @param {number} id - id
+ * @returns {LinkedListItem} item
+ */
 LinkedList.prototype.get = function(id) {
     return this._list[id];
 };
