@@ -146,21 +146,24 @@ VLayout.prototype._clearGuideElement = function(element) {
     domutil.remove(element);
 };
 
-
+/**
+ * Resize overall panels size
+ * @param {LinkedListItem} splItem - linkedlist item with splitter panel
+ * @param {number} startY - dragstart Y position
+ * @param {number} mouseY - dragend Y position
+ */
 VLayout.prototype._resize = function(splItem, startY, mouseY) {
     var diffY = startY - mouseY,
         resizedHeight = mAbs(diffY),
-        resizeMap = {},
+        resizeMap = [],
         toDown = mouseY > startY,
         traverseMethod = ['prev', 'next'],
         cursor = splItem[traverseMethod[+!toDown]](), 
-        resizeTo, panel, height, minHeight, maxHeight,
-        panel;
+        panel, resizeInfo;
 
     panel = cursor.data;
-    resizeTo = panel.getHeight() + resizedHeight;
-    console.log(panel.container.className, resizeTo, '남음: ', resizedHeight);
-    resizeMap[panel.id] = [panel, resizeTo];
+    resizeInfo = panel.getResizeInfoByGrowth(+resizedHeight);
+    resizeMap.push([panel, resizeInfo[0]]);
 
     while (cursor = cursor[traverseMethod[+toDown]]()) {
         panel = cursor.data;
@@ -169,23 +172,14 @@ VLayout.prototype._resize = function(splItem, startY, mouseY) {
             continue;
         }
 
-        height = panel.getHeight();
-        // minHeight = panel.options.minHeight;
-        // maxHeight = panel.options.maxHeight;
-
-        resizeTo = Math.max(0, height - resizedHeight);
-        resizedHeight -= height;
-
-        console.log(panel.container.className, resizeTo, '남음: ', resizedHeight);
-
-        resizeMap[panel.id] = [panel, resizeTo];
+        resizeInfo = panel.getResizeInfoByGrowth(-resizedHeight);
+        resizeMap.push([panel, resizeInfo[0]]);
+        resizedHeight -= resizeInfo[1];
 
         if (resizedHeight < 0) {
             break;
         }
     }
-
-    console.log(resizeMap);
 
     reqAnimFrame.requestAnimFrame(function() {
         util.forEach(resizeMap, function(pair) {
@@ -194,10 +188,44 @@ VLayout.prototype._resize = function(splItem, startY, mouseY) {
     });
 };
 
+/**
+ * Get summation of splitter and panel's minimum height upper and below of supplied splitter
+ * @param {LinkedListItem} splItem - linkedlist item with splitter
+ * @returns {number[]} upper and below splitter's height and panel minimum height summation.
+ */
+VLayout.prototype._getSplitterYMinMax = function(splItem) {
+    var upper = 0,
+        below = 0,
+        cursor = splItem,
+        func = function(panel) {
+            if (panel.isSplitter()) {
+                return panel.getHeight();
+            }
+
+            return panel.options.minHeight;
+        };
+
+    while (cursor = cursor.prev()) {
+        upper += func(cursor.data);
+    }
+
+    cursor = splItem;
+
+    while (cursor = cursor.next()) {
+        below += func(cursor.data);
+    }
+
+    return [upper, below];
+};
+
 /**********
  * Drag Handlers
  **********/
 
+/**
+ * Drag start event handler
+ * @param {object} e - drag start event data
+ */
 VLayout.prototype._onDragStart = function(e) {
     var oEvent = e.originEvent,
         target = e.target,
@@ -225,49 +253,30 @@ VLayout.prototype._onDragStart = function(e) {
     }
 };
 
-VLayout.prototype._getMouseY = function(dragData, originEvent) {
-    var mouseY = domevent.getMousePosition(originEvent, this.container)[1];
-
-    return common.limit(mouseY - dragData.splOffsetY, [dragData.minY], [dragData.maxY]);
-};
-
+/**
+ * Drag event handler
+ * @param {object} e - drag event data
+ */
 VLayout.prototype._onDrag = function(e) {
     var dragData = this._dragData,
-        mouseY = this._getMouseY(dragData, e.originEvent);
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
+
+    common.limit(mouseY - dragData.splOffsetY, [dragData.minY], [dragData.maxY]);
 
     this._refreshGuideElement(dragData.guideElement, mouseY);
 };
 
-VLayout.prototype._getAsideSplitterHeightSummation = function(splItem) {
-    var upper = 0,
-        below = 0,
-        cursor = splItem,
-        unitHeight = splItem.data.getHeight();
-
-    while (cursor = cursor.prev()) {
-        if (cursor.data.isSplitter()) {
-            upper += unitHeight;
-        }
-    }
-
-    cursor = splItem;
-
-    while (cursor = cursor.next()) {
-        if (cursor.data.isSplitter()) {
-            below += unitHeight;
-        }
-    }
-
-    return [upper, below];
-};
-
+/**
+ * Drag end event handler
+ * @param {object} e - dragend event data
+ */
 VLayout.prototype._onDragEnd = function(e) {
     var dragData = this._dragData,
-        asideSplHeights = this._getAsideSplitterHeightSummation(dragData.splItem),
-        mouseY = this._getMouseY(dragData, e.originEvent);
+        asideMinMax = this._getSplitterYMinMax(dragData.splItem),
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
-    // 스플리터의 이동가능 범위는 다른 스플리터의 높이가 고려되어야 함
-    mouseY = common.limit(mouseY, [dragData.minY + asideSplHeights[0]], [dragData.maxY - asideSplHeights[1]]);
+    // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
+    mouseY = common.limit(mouseY, [dragData.minY + asideMinMax[0]], [dragData.maxY - asideMinMax[1]]);
 
     this._resize(dragData.splItem, dragData.startY, mouseY);
 

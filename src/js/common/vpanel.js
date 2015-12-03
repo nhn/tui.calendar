@@ -27,7 +27,7 @@ function VPanel(options, container) {
         className: ''
     }, options);
 
-    this._initPanel(options, container);
+    this._initPanel(this.options, container);
 }
 
 util.inherit(VPanel, View);
@@ -50,12 +50,14 @@ VPanel.prototype.setHeight = function(container, newHeight) {
     container.style.height = newHeight + 'px';
 };
 
-/**
- * set height relative
- * @param {number} diff - relative value to change height
- */
-VPanel.prototype.setHeightBy = function(diff) {
-    this.setHeight(null, this.getHeight() + diff);
+VPanel.prototype.getResizeInfoByGrowth = function(growth) {
+    var height = this.getHeight(),
+        newHeight = height + growth,
+        resizeTo = Math.max(0, newHeight);
+
+    resizeTo = Math.max(resizeTo, this.options.minHeight);
+    
+    return [resizeTo, height - resizeTo];
 };
 
 /**
@@ -102,7 +104,7 @@ VPanel.prototype._initPanel = function(options, container) {
     } else {
         height = common.limit(options.height || 0, 
             [options.minHeight],
-            options.maxHeight ? [options.maxHeight] : []
+            [options.maxHeight || options.height]
         );
 
         this.setHeight(container, height);
