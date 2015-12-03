@@ -10,7 +10,6 @@ var config = require('../config'),
     common = require('./common'),
     domutil = require('./domutil'),
     domevent = require('./domevent'),
-    reqAnimFrame = require('./reqAnimFrame'),
     LinkedList = require('./linkedlist'),
     View = require('../view/view'),
     VPanel = require('./vpanel'),
@@ -34,8 +33,6 @@ var config = require('../config'),
  * @param {HTMLElement} container - container element
  */
 function VLayout(options, container) {
-    var frag;
-
     if (!(this instanceof VLayout)) {
         return new VLayout(options, container);
     }
