@@ -127,15 +127,16 @@ VLayout.prototype._resize = function(splItem, startY, mouseY) {
         resizedHeight = mAbs(diffY),
         resizeMap = [],
         toDown = mouseY > startY,
-        traverseMethod = ['prev', 'next'],
-        cursor = splItem[traverseMethod[+!toDown]](), 
-        panel, resizeInfo;
+        backwardMethod = toDown ? 'prev' : 'next',
+        forwardMethod = toDown ? 'next' : 'prev',
+        cursor, panel, resizeInfo;
 
+    cursor = splItem[backwardMethod]();
     panel = cursor.data;
     resizeInfo = panel.getResizeInfoByGrowth(+resizedHeight);
     resizeMap.push([panel, resizeInfo[0]]);
 
-    while (cursor = cursor[traverseMethod[+toDown]]()) {
+    while (cursor = cursor[forwardMethod]()) {
         panel = cursor.data;
         
         if (panel.isSplitter()) {
