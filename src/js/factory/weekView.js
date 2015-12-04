@@ -6,7 +6,7 @@
 
 var config = require('../config');
 var domutil = require('../common/domutil');
-var fillRemainHeight = require('../common/fillRemainHeight');
+var VLayout = require('../common/vlayout');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views
@@ -27,9 +27,10 @@ var weekViewTmpl = require('../view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
+        vlayoutContainer,
+        vlayout,
         dayNameView,
         alldayView,
-        timeGridContainer,
         timeGridView,
         alldayClickHandler,
         alldayCreationHandler,
@@ -38,8 +39,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler,
-        frh;
+        timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.container.innerHTML = weekViewTmpl();
@@ -51,9 +51,23 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView.addChild(dayNameView);
 
     /**********
+     * 수직 레이아웃 모듈 초기화
+     **********/
+    vlayoutContainer = domutil.find('.' + config.classname('vlayout-area'), weekView.container);
+    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.getViewBound().height) + 'px';
+
+    vlayout = new VLayout({
+        panels: [
+            {height: 52, minHeight: 52},
+            {isSplitter: true},
+            {autoHeight: true}
+        ]
+    }, vlayoutContainer);
+
+    /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, domutil.find('.' + config.classname('allday-layout'), weekView.container));
+    alldayView = new Allday(options.week, vlayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -63,19 +77,15 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridContainer = domutil.find('.' + config.classname('timegrid-layout'), weekView.container);
-    timeGridView = new TimeGrid(options.week, timeGridContainer);
+    timeGridView = new TimeGrid(options.week, vlayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
-    // 가변높이 모듈 초기화
-    frh = fillRemainHeight([timeGridContainer], weekView.container);
-
     weekView.on('afterRender', function() {
-        frh.refresh();
+        vlayout.refresh();
     });
 
     weekView.handlers = {
@@ -113,7 +123,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     return {
         view: weekView,
         refresh: function() {
-            frh.refresh();
+            vlayout.refresh();
         }
     };
 };
