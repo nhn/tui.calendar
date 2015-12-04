@@ -21,7 +21,9 @@ describe('LinkedListItem', function() {
         });
 
         it('get next item that fullfill filter function conditions.', function() {
-            expect(inst.next(function(item) { return item.data.order === 3; }).data).toBe(inst3.data);
+            expect(inst.next(function(item) { 
+                return item.data.order === 3; 
+            }).data).toBe(inst3.data);
         });
     });
 
@@ -31,7 +33,9 @@ describe('LinkedListItem', function() {
         });
 
         it('get next item that fullfill filter function conditions.', function() {
-            expect(inst3.prev(function(item) { return item.data.order === 1; }).data).toBe(inst.data);
+            expect(inst3.prev(function(item) {
+                return item.data.order === 1; 
+            }).data).toBe(inst.data);
         });
 
         it('no throw error when instance has not next items', function() {
