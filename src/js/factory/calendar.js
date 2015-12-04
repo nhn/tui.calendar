@@ -109,7 +109,7 @@ function Calendar(options, container) {
     }, this);
 
     if (options.events && options.events.length) {
-        this.createEvent(options.events, true);
+        this.createEvents(options.events, true);
     }
 
     /**
@@ -393,7 +393,8 @@ Calendar.prototype.toggleView = function(viewName, force) {
     var layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
-        options = this.options;
+        options = this.options,
+        created;
 
     if (!force && this.currentViewName === viewName) {
         return;
@@ -403,7 +404,9 @@ Calendar.prototype.toggleView = function(viewName, force) {
     layout.clear();
 
     if (viewName === 'week') {
-        layout.addChild(weekViewFactory(controller, layout.container, dragHandler, options));
+        created = weekViewFactory(controller, layout.container, dragHandler, options);
+        layout.addChild(created.view);
+        this._refreshMethod = created.refresh;
     }
 }
 

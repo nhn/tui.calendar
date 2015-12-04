@@ -6,6 +6,7 @@
 
 var config = require('../config');
 var domutil = require('../common/domutil');
+var fillRemainHeight = require('../common/fillRemainHeight');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views
@@ -28,6 +29,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var weekView,
         dayNameView,
         alldayView,
+        timeGridContainer,
         timeGridView,
         alldayClickHandler,
         alldayCreationHandler,
@@ -36,7 +38,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler;
+        timeResizeHandler,
+        frh;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.container.innerHTML = weekViewTmpl();
@@ -60,12 +63,20 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, domutil.find('.' + config.classname('timegrid-layout'), weekView.container));
+    timeGridContainer = domutil.find('.' + config.classname('timegrid-layout'), weekView.container);
+    timeGridView = new TimeGrid(options.week, timeGridContainer);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
+
+    // 가변높이 모듈 초기화
+    frh = fillRemainHeight([timeGridContainer], weekView.container);
+
+    weekView.on('afterRender', function() {
+        frh.refresh();
+    });
 
     weekView.handlers = {
         click: {
@@ -99,5 +110,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         });
     };
 
-    return weekView;
+    return {
+        view: weekView,
+        refresh: function() {
+            frh.refresh();
+        }
+    };
 };
