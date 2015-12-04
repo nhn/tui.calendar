@@ -55,13 +55,13 @@ describe('VLayout', function() {
         }, getDiv());
 
         // 두 번째 스플리터 기준 위 아래 추가 드래그 제한 값은 50, 25
-        var baseSplitterItem = inst._panels.get(1);
+        var baseSplitterItem = inst.panels[1]
         var actual = inst._getMouseYAdditionalLimit(baseSplitterItem);
         expect(actual).toEqual([50, 25]);
 
 
         // 네 번째 스플리터 기준 위 아래 추가 드래그 제한 값은 55, 20
-        baseSplitterItem = inst._panels.get(3);
+        baseSplitterItem = inst.panels[3];
         actual = inst._getMouseYAdditionalLimit(baseSplitterItem);
         expect(actual).toEqual([55, 20]);
     });
@@ -87,7 +87,7 @@ describe('VLayout', function() {
                 {height: 100},         // 100,  205
             ], inst.container);
             spyOn(tui.util, 'forEach');
-            inst._resize(inst._panels.get(1), 100, 110);
+            inst._resize(inst.panels[1], 100, 110);
 
             // 첫 번째 패널은 10 증가, 두 번째 패널은 10 감소
             var allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
@@ -105,7 +105,7 @@ describe('VLayout', function() {
             spyOn(tui.util, 'forEach');
 
             // 첫 번째 스플리터를 마지막 패널까지 드래그 했다고 가정
-            inst._resize(inst._panels.get(1), 100, 210);
+            inst._resize(inst.panels[1], 100, 210);
             var allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
             expect(allArgs).toEqual([210, 0, 20]);
         });
@@ -120,7 +120,7 @@ describe('VLayout', function() {
             ], inst.container);
             spyOn(tui.util, 'forEach');
 
-            inst._resize(inst._panels.get(3), 200, 170);
+            inst._resize(inst.panels[3], 200, 170);
             allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
             expect(allArgs).toEqual([60, 70, 100]);
         });

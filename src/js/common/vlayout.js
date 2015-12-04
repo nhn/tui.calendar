@@ -10,7 +10,6 @@ var config = require('../config'),
     common = require('./common'),
     domutil = require('./domutil'),
     domevent = require('./domevent'),
-    LinkedList = require('./linkedlist'),
     View = require('../view/view'),
     VPanel = require('./vpanel'),
     Drag = require('../handler/drag');
@@ -49,9 +48,9 @@ function VLayout(options, container) {
     }, options);
 
     /**
-     * @type {LinkedList}
+     * @type {VPanel[]}
      */
-    this._panels = new LinkedList();
+    this.panels = [];
 
     /**
      * @type {Drag}
@@ -82,6 +81,14 @@ function VLayout(options, container) {
 }
 
 util.inherit(VLayout, View);
+
+VLayout.prototype.nextPanel = function(panel) {
+    return this.panels[panel.index + 1];
+};
+
+VLayout.prototype.prevPanel = function(panel) {
+    return this.panels[panel.index - 1];
+};
 
 /**
  * Initialize resizing guide element
@@ -118,33 +125,30 @@ VLayout.prototype._clearGuideElement = function(element) {
 
 /**
  * Resize overall panels size
- * @param {LinkedListItem} splItem - linkedlist item with splitter panel
+ * @param {VPanel} splPanel - splitter panel instance
  * @param {number} startY - dragstart Y position
  * @param {number} mouseY - dragend Y position
  */
-VLayout.prototype._resize = function(splItem, startY, mouseY) {
+VLayout.prototype._resize = function(splPanel, startY, mouseY) {
     var diffY = startY - mouseY,
         resizedHeight = mAbs(diffY),
         resizeMap = [],
         toDown = mouseY > startY,
-        backwardMethod = toDown ? 'prev' : 'next',
-        forwardMethod = toDown ? 'next' : 'prev',
-        cursor, panel, resizeInfo;
+        backwardMethod = toDown ? 'prevPanel' : 'nextPanel',
+        forwardMethod = toDown ? 'nextPanel' : 'prevPanel',
+        cursor, resizeInfo;
 
-    cursor = splItem[backwardMethod]();
-    panel = cursor.data;
-    resizeInfo = panel.getResizeInfoByGrowth(+resizedHeight);
-    resizeMap.push([panel, resizeInfo[0]]);
+    cursor = this[backwardMethod](splPanel);
+    resizeInfo = cursor.getResizeInfoByGrowth(+resizedHeight);
+    resizeMap.push([cursor, resizeInfo[0]]);
 
-    while (cursor = cursor[forwardMethod]()) {
-        panel = cursor.data;
-        
-        if (panel.isSplitter()) {
+    while (cursor = this[forwardMethod](cursor)) {
+        if (cursor.isSplitter()) {
             continue;
         }
 
-        resizeInfo = panel.getResizeInfoByGrowth(-resizedHeight);
-        resizeMap.push([panel, resizeInfo[0]]);
+        resizeInfo = cursor.getResizeInfoByGrowth(-resizedHeight);
+        resizeMap.push([cursor, resizeInfo[0]]);
         resizedHeight -= resizeInfo[1];
 
         if (resizedHeight < 0) {
@@ -159,13 +163,13 @@ VLayout.prototype._resize = function(splItem, startY, mouseY) {
 
 /**
  * Get summation of splitter and panel's minimum height upper and below of supplied splitter
- * @param {LinkedListItem} splItem - linkedlist item with splitter
+ * @param {VPanel} splPanel - splitter panel instance
  * @returns {number[]} upper and below splitter's height and panel minimum height summation.
  */
-VLayout.prototype._getMouseYAdditionalLimit = function(splItem) {
+VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
     var upper = 0,
         below = 0,
-        cursor = splItem,
+        cursor = splPanel,
         func = function(panel) {
             if (panel.isSplitter()) {
                 return panel.getHeight();
@@ -174,14 +178,14 @@ VLayout.prototype._getMouseYAdditionalLimit = function(splItem) {
             return panel.options.minHeight;
         };
 
-    while (cursor = cursor.prev()) {
-        upper += func(cursor.data);
+    while (cursor = this.prevPanel(cursor)) {
+        upper += func(cursor);
     }
 
-    cursor = splItem;
+    cursor = splPanel;
 
-    while (cursor = cursor.next()) {
-        below += func(cursor.data);
+    while (cursor = this.nextPanel(cursor)) {
+        below += func(cursor);
     }
 
     return [upper, below];
@@ -198,9 +202,8 @@ VLayout.prototype._getMouseYAdditionalLimit = function(splItem) {
 VLayout.prototype._onDragStart = function(e) {
     var oEvent = e.originEvent,
         target = e.target,
-        splID = domutil.getData(target, 'pnid'),
-        splItem = this._panels.get(splID),
-        splPanel = util.pick(splItem, 'data'),
+        splIndex = domutil.getData(target, 'panelIndex'),
+        splPanel = this.panels[splIndex],
         splHeight = splPanel.getHeight(),
         splOffsetY = domevent.getMousePosition(oEvent, target)[1],
         mouseY = domevent.getMousePosition(oEvent, this.container)[1],
@@ -209,7 +212,7 @@ VLayout.prototype._onDragStart = function(e) {
     splPanel.addClass(config.classname('splitter-focused'));
 
     this._dragData = {
-        splItem: splItem,
+        splPanel: splPanel,
         splOffsetY: splOffsetY,
         guideElement: guideElement,
         startY: mouseY - splOffsetY,
@@ -241,17 +244,17 @@ VLayout.prototype._onDrag = function(e) {
  */
 VLayout.prototype._onDragEnd = function(e) {
     var dragData = this._dragData,
-        asideMinMax = this._getMouseYAdditionalLimit(dragData.splItem),
+        asideMinMax = this._getMouseYAdditionalLimit(dragData.splPanel),
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
     // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
     mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY + asideMinMax[0]], [dragData.maxY - asideMinMax[1]]);
 
-    this._resize(dragData.splItem, dragData.startY, mouseY);
+    this._resize(dragData.splPanel, dragData.startY, mouseY);
 
     this._dragData = null;
     this._clearGuideElement(dragData.guideElement);
-    dragData.splItem.data.removeClass(config.classname('splitter-focused'));
+    dragData.splPanel.removeClass(config.classname('splitter-focused'));
     domutil.removeClass(document.body, config.classname('resizing'));
 };
 
@@ -267,9 +270,7 @@ VLayout.prototype.refresh = function() {
         usedHeight = 0,
         remainHeight;
 
-    this._panels.each(function(item) {
-        var panel = item.data;
-
+    util.forEach(this.panels, function(panel) {
         if (panel.options.autoHeight) {
             panelToFillHeight.push(panel);
         } else {
@@ -291,12 +292,14 @@ VLayout.prototype.refresh = function() {
  */
 VLayout.prototype.addPanel = function(options, container) {
     var element = document.createElement('div'),
-        panel = new VPanel(options, element),
+        panels = this.panels,
+        index = panels.length;
 
-    container = container || this.container;
+    options = util.extend({
+        index: index
+    }, options);
 
-    panel = this._panels.add(panel);
-    domutil.setData(element, 'pnid', panel.id);
+    panels.push(new VPanel(options, element));
 
     container.appendChild(element);
 };

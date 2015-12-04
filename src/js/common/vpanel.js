@@ -13,6 +13,7 @@ var config = require('../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - options for VPanel
+ *  @param {number} options.index - index of panel in vlayout
  *  @param {number} [options.minHeight=0] - minimum height of panel
  *  @param {number} [options.height] - initial height of panel
  *  @param {boolean} [options.isSplitter=false] - set true then this panel works splitter
@@ -27,12 +28,18 @@ function VPanel(options, container) {
      * @type {object}
      */
     this.options = util.extend({
+        index: 0,
         minHeight: 0,
         height: null,
         isSplitter: false,
         autoHeight: false,
         className: ''
     }, options);
+
+    /**
+     * @type {number}
+     */
+    this.index = this.options.index;
 
     this._initPanel(this.options, container);
 }
@@ -101,6 +108,8 @@ VPanel.prototype.removeClass = function(className) {
  */
 VPanel.prototype._initPanel = function(options, container) {
     var height;
+
+    domutil.setData(container, 'panelIndex', options.index);
 
     if (options.isSplitter) {
         domutil.addClass(container, config.classname('splitter'));
