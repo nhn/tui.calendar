@@ -82,10 +82,20 @@ function VLayout(options, container) {
 
 util.inherit(VLayout, View);
 
+/**
+ * Get next panel instance by specific panel
+ * @param {VPanel} panel - panel instance
+ * @returns {VPanel} next panel
+ */
 VLayout.prototype.nextPanel = function(panel) {
     return this.panels[panel.index + 1];
 };
 
+/**
+ * Get previous panel instance by specific panel
+ * @param {VPanel} panel - panel instance
+ * @returns {VPanel} previous panel
+ */
 VLayout.prototype.prevPanel = function(panel) {
     return this.panels[panel.index - 1];
 };
