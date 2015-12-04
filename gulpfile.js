@@ -127,3 +127,9 @@ gulp.task('test-w', function(done) {
     }, done).start();
 });
 
+gulp.task('cover', function(done) {
+    new KarmaServer({
+        configFile: path.join(__dirname, 'karma.conf.cover.js')
+    }, done).start();
+});
+

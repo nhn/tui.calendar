@@ -96,7 +96,7 @@ Drag.prototype._toggleDragEvent = function(toBind) {
 
     domutil[method + 'TextSelection'](container);
     domutil[method + 'ImageDrag'](container);
-    domevent[domMethod](global, {
+    domevent[domMethod](global.document, {
         mousemove: this._onMouseMove,
         mouseup: this._onMouseUp
     }, this);

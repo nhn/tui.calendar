@@ -10,13 +10,14 @@ var datetime = require('./src/js/common/datetime');
 var array = require('./src/js/common/array');
 var domevent = require('./src/js/common/domevent');
 var domutil = require('./src/js/common/domutil');
-var Colleciton = require('./src/js/common/collection');
+var Collection = require('./src/js/common/collection');
 var model = require('./src/js/common/model');
 var common = require('./src/js/common/common');
 var reqAnimFrame = require('./src/js/common/reqAnimFrame');
 var AJAX = require('./src/js/common/ajax');
 var FillRemainHeight = require('./src/js/common/fillRemainHeight');
 var VLayout = require('./src/js/common/vlayout');
+var VPanel = require('./src/js/common/vpanel');
 
 /**********
  * Models
@@ -90,7 +91,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     array: array,
     domevent: domevent,
     domutil: domutil,
-    Collection: Colleciton,
+    Collection: Collection,
     model: model,
     common: common,
     reqAnimFrame: reqAnimFrame,
@@ -98,6 +99,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     Point: Point, 
     FillRemainHeight: FillRemainHeight,
     VLayout: VLayout,
+    VPanel: VPanel,
 
     // model
     CalEvent: CalEvent,
