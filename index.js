@@ -10,7 +10,7 @@ var datetime = require('./src/js/common/datetime');
 var array = require('./src/js/common/array');
 var domevent = require('./src/js/common/domevent');
 var domutil = require('./src/js/common/domutil');
-var Colleciton = require('./src/js/common/collection');
+var Collection = require('./src/js/common/collection');
 var LinkedList = require('./src/js/common/linkedlist');
 var LinkedListItem = require('./src/js/common/linkedlistitem');
 var model = require('./src/js/common/model');
@@ -93,7 +93,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     array: array,
     domevent: domevent,
     domutil: domutil,
-    Collection: Colleciton,
+    Collection: Collection,
     LinkedList: LinkedList,
     LinkedListItem: LinkedListItem,
     model: model,
