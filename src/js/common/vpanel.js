@@ -65,10 +65,8 @@ VPanel.prototype.setHeight = function(container, newHeight) {
 VPanel.prototype.getResizeInfoByGrowth = function(growth) {
     var height = this.getHeight(),
         newHeight = height + growth,
-        resizeTo = Math.max(0, newHeight);
+        resizeTo = Math.max(0, newHeight, this.options.minHeight);
 
-    resizeTo = Math.max(resizeTo, this.options.minHeight);
-    
     return [resizeTo, height - resizeTo];
 };
 
