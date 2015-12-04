@@ -1,10 +1,14 @@
 // Allday view
 +prefix-classes(allday)
+    .container
+        height: 100%
+
     .left
-        wh(60px, 100%)
+        wh(59px, 100%)
         float: left
         text-align: right
         color: #777
+        border-right: 1px solid #ccc
 
     .left span
         display: block
@@ -12,8 +16,10 @@
 
     .right
         position: relative
+        height: 100%
         background-color: #fff
         margin-left: 60px
+        overflow-y: scroll
 
     .resize-handle
         position: absolute
@@ -25,6 +31,10 @@
 
 // Monthweek view
 +prefix-classes(monthweek)
+    .grid
+        position: relative
+        height: 100%
+
     .grid-line
         position: absolute
         height: 100%
@@ -34,11 +44,14 @@
     .events
         pos(0px, 0px)
         wh(100%, 100%)
-        overflow: hidden
         position: absolute
 
 // Event blocks
 +prefix-classes(allday)
+    .monthweek,
+    .monthweek-container
+        height: 100%
+
     .event-block
         position: absolute
 

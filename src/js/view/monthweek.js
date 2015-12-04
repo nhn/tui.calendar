@@ -103,7 +103,7 @@ MonthWeek.prototype.resize = function(maxEventInDay) {
 
     newHeight = Math.max(newHeight, options.minHeight);
     
-    this.container.style.height = newHeight + 'px';
+    this.container.style.minHeight = newHeight + 'px';
 };
 
 module.exports = MonthWeek;
