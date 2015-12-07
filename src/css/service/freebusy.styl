@@ -1,88 +1,81 @@
 headerHeight = 20px
-minHeightOfFreebusy = 75px
+minHeightOfFreebusy = 20px
+itemHeight = 20px
+nameWidth = 80px
 
 mainBorder = 1px solid #ccc
 halfTimeBorder = 1px dotted #eee
 
-minHeight(height)
-    min-height: height
-    height: auto !important
-    height: height 
-
-.{freebusy}container
-    height: 75px
-
 +prefix-classes(freebusy)
-    .left
-        float: left
-        width: 80px
-        height: 100%
-        &:before
-            content: ''
-            display: block
-            height: headerHeight
-            border-bottom: mainBorder
-            background-color: #eee
-
-    .name
-        padding-right: 3px
-        text-align: right
-        height: headerHeight
-        line-height: headerHeight
-        border-bottom: mainBorder
-
-    .right
+    .container
+        padding-top: minHeightOfFreebusy
         position: relative
-        height: 100%
-        margin-left: 80px
+        min-height: minHeightOfFreebusy
 
-    .chart
+    .timegrid
         position: absolute
-        pos(headerHeight + 1, 0)
+        pos(0, 0)
         width: 100%
-
-    .item
-        position: relative
-        height: headerHeight
-        border-bottom: mainBorder
-
-    .block
-        position: absolute
-        top: 0
-        height: headerHeight
-
-    .fill
-        height: headerHeight
-        background-color: #aaa
+        height: 100%
+        z-index: -1
 
     .grid-wrap
         position: relative
+        margin-left: nameWidth
         height: 100%
-        overflow: hidden
-        &:after
-            content: ''
-            display: block
-            height: headerHeight
-            width: 100%
-            border-bottom: mainBorder
-            background-color: #eee
 
     .grid
         position: absolute
         height: 100%
-        line-height: headerHeight 
-        border-right: mainBorder
+        border-left: mainBorder
+        overflow: visible
+        background-image: url(freebusy-half-dot.gif)
+        background-position: 49.5% top
+        background-repeat: repeat-y
         text-align: center
-        &:after
-            content: ''
-            display: block
-            position: absolute
-            z-index: -1
-            width: 50%
-            height: 100% 
-            border-right: halfTimeBorder
-        &:first-child
-            border-left: mainBorder
-        &:last-child
-            border-right: none
 
+    .grid > div
+        height: headerHeight
+        background-color: #fff
+
+    // 일정 표 영역
+    .chart
+        clearfix()
+        border-top: mainBorder
+        border-width: 2px
+
+    .item
+        padding-left: nameWidth
+        height: itemHeight
+        border-bottom: mainBorder
+
+    .item-last
+        border: none
+
+    .name
+        position: absolute
+        left: 0
+        wh(nameWidth, itemHeight)
+        line-height: itemHeight
+        text-align: right
+
+    .blocks
+        position: relative
+        width: 100%
+        height: itemHeight
+        float: right
+
+    .block
+        position: absolute
+        top: 0
+        height: itemHeight 
+        z-index: 1
+
+    .fill
+        height: itemHeight
+        background-color: #aaa
+
+    //
+    // .item
+    //     position: absolute
+    //     z-index: 1

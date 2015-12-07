@@ -75,6 +75,10 @@ module.exports = {
         return a * b;
     },
 
+    'divide': function(a, b) {
+        return a / b;
+    },
+
     'CSS_PREFIX': function() {
         return config.cssPrefix;
     },

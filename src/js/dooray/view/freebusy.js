@@ -127,21 +127,19 @@ Freebusy.prototype._getBlockBound = function(block) {
  */
 Freebusy.prototype._getViewModel = function() {
     var viewModel = {
-            names: {},
             showTimeHeader: this.options.showTimeHeader,
             times: dayArr,
+            timeWidth: 100 / dayArr.length,
             freebusy: {} 
-        },
-        names = viewModel.names,
-        freebusy = viewModel.freebusy;
+        };
 
     this.users.each(function(user) {
-        var id = user.id;
-
-        names[id] = user.name;
-        freebusy[id] = util.map(user.freebusy, function(block) {
-            return this._getBlockBound(block);
-        }, this);
+        viewModel.freebusy[user.id] = {
+            name: user.name,
+            busy: util.map(user.freebusy, function(block) {
+                return this._getBlockBound(block);
+            }, this)
+        };
     }, this);
 
     return viewModel;
