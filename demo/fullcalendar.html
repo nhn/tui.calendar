@@ -38,12 +38,18 @@
             task: function(model) {
                 return '&nbsp;&nbsp;#' + model.title;
             },
+            taskTitle: function() {
+                return '<label><input type="checkbox" /> 업무</label>';
+            },
             allday: function(model) {
                 return model.title + ' <i class="fa fa-refresh"></i>';
             },
             time: function(model) {
                 return model.title + ' <i class="fa fa-refresh"></i><br />' + model.starts;
             }
+        },
+        week: {
+            panelHeights: [80, 80, 120]
         }
     }, document.getElementById('calendar-container'));
 
@@ -129,6 +135,9 @@
         },
         'beforeDeleteEvent': function(e) {
             console.log('delete', e);
+        },
+        'resizePanel': function(e) {
+            console.log('resizePanel', e);
         }
     });
 
