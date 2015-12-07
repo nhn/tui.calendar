@@ -71,15 +71,17 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     vlayout = new VLayout({
         panels: [
-            {height: 52, minHeight: 52},
+            {height: 56, minHeight: 56},
             {isSplitter: true},
-            {height: 52, minHeight: 52},
+            {height: 56, minHeight: 56},
             {isSplitter: true},
             {height: 68, minHeight: 68},
             {isSplitter: true},
             {autoHeight: true}
-        ]
+        ],
+        panelHeights: options.week.panelHeights
     }, vlayoutContainer);
+    weekView.vlayout = vlayout;
 
     /**********
      * 마일스톤
@@ -152,6 +154,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                 handler.destroy();
             });
         });
+
+        weekView.off();
     };
 
     return {

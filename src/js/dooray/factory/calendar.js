@@ -39,6 +39,7 @@ var serviceWeekViewFactory = require('./weekView');
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
+ *   @param {string} [options.week.panelHeights] - each panel height
  *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  *  @param {object} [options.month] - options for month view
  *  @param {string} options.month.renderMonth - YYYY-MM render month
@@ -268,6 +269,19 @@ ServiceCalendar.prototype._onBeforeUpdate = function(updateEventData) {
 };
 
 /**
+ * @fires ServiceCalendar#resizePanel
+ * @param {object} resizeEventData - resize event data object
+ */
+ServiceCalendar.prototype._onResizePanel = function(resizeEventData) {
+    /**
+     * @event ServiceCalendar#resizePanel
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     */
+    this.fire('resizePanel', resizeEventData);
+};
+
+/**
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
@@ -293,11 +307,21 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
     util.forEach(handler.resize, function(handlerInstance) {
         handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
     });
+
+    view.vlayout[method]('resize', calendar._onResizePanel, calendar);
 };
 
 /**********
  * Methods
  **********/
+
+/**
+ * 현재 화면의 각 영역에 대한 높이 값을 반환한다.
+ * @returns {number[]} splitter와 autoHeight를 제외한 나머지 패널의 높이 배열
+ */
+ServiceCalendar.prototype.getLayoutData = function() {
+    return this.layout.vlayout.getLayoutData();
+};
 
 /**
  * 같은 calendarID를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다

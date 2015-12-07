@@ -29,9 +29,12 @@ var config = require('../config'),
  * @extends {View}
  * @param {object} options - options for VLayout module
  *  @param {PanelOptions[]} [options.panels] - panels to add layout when initialize
+ *  @param {number[]} [options.panelHeights] - panel height list
  * @param {HTMLElement} container - container element
  */
 function VLayout(options, container) {
+    var opt;
+
     if (!(this instanceof VLayout)) {
         return new VLayout(options, container);
     }
@@ -43,8 +46,9 @@ function VLayout(options, container) {
     /**
      * @type {object}
      */
-    this.options = util.extend({
-        panels: []
+    opt = this.options = util.extend({
+        panels: [],
+        panelHeights: []
     }, options);
 
     /**
@@ -73,14 +77,60 @@ function VLayout(options, container) {
      */
     this._dragData = null;
 
-    if (this.options.panels.length) {
-        this.addPanels(this.options.panels, this.container);
+    if (opt.panels.length) {
+        if (opt.panelHeights.length) {
+            util.forEach(opt.panels, function(panelOpt) {
+                if (!panelOpt.isSplitter && !panelOpt.autoHeight) {
+                    panelOpt.height = opt.panelHeights.shift();
+                }
+            });
+        }
+
+        this.addPanels(opt.panels, this.container);
     }
 
     this.refresh();
 }
 
 util.inherit(VLayout, View);
+
+/**
+ * Get current panels height in layout
+ * @returns {number[]} height of panels with `autoHeight` false
+ */
+VLayout.prototype.getLayoutData = function() {
+    var heightList = [];
+
+    util.forEach(this.panels, function(panel) {
+        if (panel.isSplitter() || panel.options.autoHeight) {
+            return;
+        }
+
+        heightList.push(panel.getHeight());
+    });
+
+    return heightList;
+};
+
+/**
+ * Set panels height in layout
+ * @param {number[]} heightList of panels with `autoHeight` false
+ */
+VLayout.prototype.setLayoutData = function(heightList) {
+    if (!heightList.length) {
+        return;
+    }
+
+    util.forEach(this.panels, function(panel) {
+        if (panel.isSplitter() || panel.options.autoHeight) {
+            return;
+        }
+
+        panel.setHeight(null, heightList.shift());
+    });
+
+    this.refresh();
+};
 
 /**
  * Get next panel instance by specific panel
@@ -250,6 +300,7 @@ VLayout.prototype._onDrag = function(e) {
 
 /**
  * Drag end event handler
+ * @fires VLayout#resize
  * @param {object} e - dragend event data
  */
 VLayout.prototype._onDragEnd = function(e) {
@@ -261,6 +312,15 @@ VLayout.prototype._onDragEnd = function(e) {
     mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY + asideMinMax[0]], [dragData.maxY - asideMinMax[1]]);
 
     this._resize(dragData.splPanel, dragData.startY, mouseY);
+
+    /**
+     * @event VLayout#resize
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     */
+    this.fire('resize', {
+        layoutData: this.getLayoutData()
+    });
 
     this._dragData = null;
     this._clearGuideElement(dragData.guideElement);
@@ -328,6 +388,8 @@ VLayout.prototype.addPanels = function(options, container) {
 
     container.appendChild(frag);
 };
+
+util.CustomEvents.mixin(VLayout);
 
 module.exports = VLayout;
 

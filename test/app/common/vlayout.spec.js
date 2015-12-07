@@ -12,6 +12,35 @@ describe('VLayout', function() {
         loadFixtures('vlayout.html');
     });
 
+    it('getLayoutData() return height list for each normal panels with `autoHeight` false', function() {
+        inst = new VLayout({
+            panels: [
+                {minHeight: 50, height: 60},
+                {isSplitter: true},
+                {autoHeight: true}
+            ]
+        }, getDiv());
+
+        expect(inst.getLayoutData()).toEqual([60]);
+    });
+
+    it('setLayoutData()', function() {
+        spyOn(VPanel.prototype, 'setHeight');
+
+        inst = new VLayout({
+            panels: [
+                {minHeight: 50, height: 60},
+                {isSplitter: true},
+                {autoHeight: true}
+            ]
+        }, getDiv());
+        spyOn(inst, 'refresh');
+
+        VPanel.prototype.setHeight.calls.reset();
+        inst.setLayoutData([80])
+        expect(VPanel.prototype.setHeight.calls.allArgs()).toEqual([[null, 80]]);
+    });
+
     it('refresh() resize autoHeight true panel\'s container', function() {
         spyOn(VPanel.prototype, 'setHeight');
         spyOn(VPanel.prototype, 'getHeight').and.callFake(function() {
