@@ -12,8 +12,11 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     Collection = require('../../common/collection'),
     domutil = require('../../common/domutil'),
+    domevent = require('../../common/domevent'),
     View = require('../../view/view'),
     tmpl = require('./freebusy.hbs');
+
+var PADDING_LEFT = 80;
 
 /**
  * @constructor
@@ -43,18 +46,6 @@ function Freebusy(options, container) {
     }, options);
 
     /**
-     * 이름 들어갈 영역
-     * @type {HTMLDivElement}
-     */
-    this.namesContainer = null;
-
-    /**
-     * 여유시간 표 들어갈 영역
-     * @type {HTMLDivElement}
-     */
-    this.freebusyContainer = null;
-
-    /**
      * @type {Colleciton}
      */
     this.users = new Collection(function(user) {
@@ -69,10 +60,70 @@ function Freebusy(options, container) {
         this.addUsers(this.options.users);
     }
 
+    domutil.disableTextSelection(container);
+
+    domevent.on(container, {
+        click: this._onClick
+    }, this);
+
     this.render();
 }
 
 util.inherit(Freebusy, View);
+
+/**
+ * Invoke before destroy
+ * @private
+ * @override
+ */
+Freebusy.prototype._beforeDestroy = function() {
+    var container = this.container;
+    domutil.enableTextSelection(container);
+    domevent.off(container, 'click', this._onClick, this);
+
+    container.innerHTML = '';
+    this.options = this.users = null;
+};
+
+/**********
+ * Mouse Event Handlers
+ **********/
+
+/**
+ * @fires Freebusy#click
+ * @param {MouseEvent} clickEventData - click mouse event data
+ */
+Freebusy.prototype._onClick = function(clickEventData) {
+    var target = clickEventData.srcElement || clickEventData.target,
+        isValid = domutil.closest(target, '.' + config.classname('freebusy-blocks')),
+        container, containerWidth,
+        mouseX, timeX, dateX;
+
+    if (!isValid) {
+        return;
+    }
+
+    container = this.container;
+    containerWidth = this.getViewBound().width - PADDING_LEFT;
+    mouseX = domevent.getMousePosition(clickEventData, container)[0] - PADDING_LEFT;
+    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
+    dateX = new Date(timeX);
+
+    /**
+     * @event Freebusy#click
+     * @type {object}
+     * @property {number} hour - hour value
+     * @property {number} minutes - minutes value
+     */
+    this.fire('click', {
+        hour: dateX.getUTCHours(),
+        minutes: common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2
+    });
+};
+
+/**********
+ * Methods
+ **********/
 
 /**
  * Get total milliseconds from hour, minutes, seconds part of supplied date object.
@@ -153,9 +204,6 @@ Freebusy.prototype.render = function() {
         viewModel = this._getViewModel();
 
     container.innerHTML = tmpl(viewModel);
-
-    this.namesContainer = domutil.find('.' + config.classname('freebusy-left'), container);
-    this.freebusyContainer = domutil.find('.' + config.classname('freebusy-chart'), container);
 };
 
 /**
@@ -199,6 +247,7 @@ Freebusy.prototype.removeUsers = function(idArr) {
  */
 Freebusy.prototype.clear = function() {
     this.users.clear();
+    this.render();
 };
 
 /**

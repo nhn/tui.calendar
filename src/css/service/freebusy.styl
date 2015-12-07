@@ -2,15 +2,16 @@ headerHeight = 20px
 minHeightOfFreebusy = 20px
 itemHeight = 20px
 nameWidth = 80px
+headerBottomBorderWidth = 2px
 
 mainBorder = 1px solid #ccc
 halfTimeBorder = 1px dotted #eee
 
 +prefix-classes(freebusy)
     .container
-        padding-top: minHeightOfFreebusy
         position: relative
-        min-height: minHeightOfFreebusy
+        min-height: minHeightOfFreebusy + headerBottomBorderWidth
+        padding-top: minHeightOfFreebusy
 
     .timegrid
         position: absolute
@@ -42,7 +43,7 @@ halfTimeBorder = 1px dotted #eee
     .chart
         clearfix()
         border-top: mainBorder
-        border-width: 2px
+        border-width: headerBottomBorderWidth
 
     .item
         padding-left: nameWidth
@@ -57,13 +58,13 @@ halfTimeBorder = 1px dotted #eee
         left: 0
         wh(nameWidth, itemHeight)
         line-height: itemHeight
-        text-align: right
 
     .blocks
         position: relative
         width: 100%
         height: itemHeight
         float: right
+        cursor: pointer
 
     .block
         position: absolute
@@ -74,8 +75,5 @@ halfTimeBorder = 1px dotted #eee
     .fill
         height: itemHeight
         background-color: #aaa
+        cursor: default
 
-    //
-    // .item
-    //     position: absolute
-    //     z-index: 1
