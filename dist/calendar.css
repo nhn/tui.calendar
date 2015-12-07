@@ -1,18 +1,8 @@
 /**
  * Dooray Calendar
- * @version 0.1.14
+ * @version 0.1.15
  */
-.dcal-layout *,
-.dcal-layout *:before,
-.dcal-layout *:after {
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-}
 .dcal-layout {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   height: 100%;
   border: 1px solid #ccc;
   background-color: #ccc;
@@ -41,7 +31,6 @@
   clear: both;
 }
 .dcal-scroll-y {
-  border-bottom: 2px solid #ccc;
   overflow-y: scroll;
 }
 .dcal-dot {
@@ -93,10 +82,14 @@
   line-height: 20px;
 }
 .dcal-dayname-container {
-  position: relative;
-  margin-left: 60px;
   height: 40px;
   background-color: #eee;
+  border-bottom: 2px solid #ccc;
+  overflow-y: scroll;
+}
+.dcal-dayname-leftmargin {
+  position: relative;
+  margin-left: 60px;
 }
 .dcal-dayname-label {
   padding-left: 7px;
@@ -107,12 +100,16 @@
   font-size: 1.3em;
   font-weight: bold;
 }
+.dcal-allday-container {
+  height: 100%;
+}
 .dcal-allday-left {
-  width: 60px;
+  width: 59px;
   height: 100%;
   float: left;
   text-align: right;
   color: #777;
+  border-right: 1px solid #ccc;
 }
 .dcal-allday-left span {
   display: block;
@@ -120,8 +117,10 @@
 }
 .dcal-allday-right {
   position: relative;
+  height: 100%;
   background-color: #fff;
   margin-left: 60px;
+  overflow-y: scroll;
 }
 .dcal-allday-resize-handle {
   position: absolute;
@@ -130,6 +129,10 @@
   width: 6px;
   background-position: 3px center;
   cursor: col-resize;
+}
+.dcal-monthweek-grid {
+  position: relative;
+  height: 100%;
 }
 .dcal-monthweek-grid-line {
   position: absolute;
@@ -142,8 +145,11 @@
   left: 0px;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   position: absolute;
+}
+.dcal-allday-monthweek,
+.dcal-allday-monthweek-container {
+  height: 100%;
 }
 .dcal-allday-event-block {
   position: absolute;
@@ -347,6 +353,9 @@
   position: absolute;
   bottom: 0;
 }
+.dcal-milestone-container {
+  height: 100%;
+}
 .dcal-milestone-layout > div {
   border-top: 1px solid #ccc;
 }
@@ -354,11 +363,12 @@
   border-top: 0;
 }
 .dcal-milestone-left {
-  width: 60px;
+  width: 59px;
   height: 100%;
   float: left;
   text-align: right;
   color: #777;
+  border-right: 1px solid #ccc;
 }
 .dcal-milestone-left span {
   display: block;
@@ -368,12 +378,15 @@
   position: relative;
   background-color: #fff;
   margin-left: 60px;
+  height: 100%;
+  overflow-y: scroll;
 }
 .dcal-milestone-day {
   position: absolute;
   background-color: #fff;
   margin-left: -1px;
   border-left: 1px solid #ccc;
+  height: 100%;
 }
 .dcal-milestone-list {
   margin: 2px;
@@ -483,12 +496,16 @@
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC");
   }
 }
+.dcal-task-container {
+  height: 100%;
+}
 .dcal-task-left {
-  width: 60px;
+  width: 59px;
   height: 100%;
   float: left;
   text-align: right;
   color: #777;
+  border-right: 1px solid #ccc;
 }
 .dcal-task-left span {
   display: block;
@@ -498,12 +515,15 @@
   position: relative;
   background-color: #fff;
   margin-left: 60px;
+  height: 100%;
+  overflow-y: scroll;
 }
 .dcal-task-day {
   position: absolute;
   background-color: #fff;
   margin-left: -1px;
   border-left: 1px solid #ccc;
+  height: 100%;
 }
 .dcal-task-day-wrap {
   margin: 2px;
@@ -522,4 +542,24 @@
   list-style: none;
   white-space: nowrap;
   overflow: hidden;
+}
+.dcal-vlayout-container {
+  position: relative;
+}
+.dcal-splitter {
+  height: 5px;
+  background-color: #ccc;
+  cursor: row-resize;
+}
+.dcal-splitter-focused {
+  height: 5px;
+  background-color: #ffa9a9;
+  border: none;
+}
+.dcal-splitter-guide {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  border: none;
+  background-color: #ff4545;
 }

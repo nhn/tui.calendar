@@ -2,7 +2,7 @@
 (function (global){
 /**
  * Dooray Calendar
- * @version 0.1.14
+ * @version 0.1.15
  */
 /* eslint vars-on-top:0, strict:0 */
 
@@ -16,12 +16,13 @@ var datetime = require('./src/js/common/datetime');
 var array = require('./src/js/common/array');
 var domevent = require('./src/js/common/domevent');
 var domutil = require('./src/js/common/domutil');
-var Colleciton = require('./src/js/common/collection');
+var Collection = require('./src/js/common/collection');
 var model = require('./src/js/common/model');
 var common = require('./src/js/common/common');
 var reqAnimFrame = require('./src/js/common/reqAnimFrame');
 var AJAX = require('./src/js/common/ajax');
-var FillRemainHeight = require('./src/js/common/fillRemainHeight');
+var VLayout = require('./src/js/common/vlayout');
+var VPanel = require('./src/js/common/vpanel');
 
 /**********
  * Models
@@ -95,13 +96,14 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     array: array,
     domevent: domevent,
     domutil: domutil,
-    Collection: Colleciton,
+    Collection: Collection,
     model: model,
     common: common,
     reqAnimFrame: reqAnimFrame,
     AJAX: AJAX,
     Point: Point, 
-    FillRemainHeight: FillRemainHeight,
+    VLayout: VLayout,
+    VPanel: VPanel,
 
     // model
     CalEvent: CalEvent,
@@ -154,7 +156,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/fillRemainHeight":31,"./src/js/common/model":32,"./src/js/common/point":33,"./src/js/common/reqAnimFrame":34,"./src/js/config":35,"./src/js/dooray/controller/base":38,"./src/js/dooray/factory/calendar":39,"./src/js/dooray/handler/milestoneClick":41,"./src/js/dooray/handler/taskClick":42,"./src/js/dooray/model/calEvent":43,"./src/js/dooray/view/minicalendar":47,"./src/js/dooray/view/taskview":49,"./src/js/factory/calendar":51,"./src/js/factory/controller":52,"./src/js/handler/allday/click":54,"./src/js/handler/allday/core":55,"./src/js/handler/allday/creation":56,"./src/js/handler/allday/creationGuide":57,"./src/js/handler/allday/move":58,"./src/js/handler/allday/moveGuide":59,"./src/js/handler/allday/resize":60,"./src/js/handler/allday/resizeGuide":61,"./src/js/handler/drag":62,"./src/js/handler/time/click":63,"./src/js/handler/time/core":64,"./src/js/handler/time/creation":65,"./src/js/handler/time/creationGuide":66,"./src/js/handler/time/move":67,"./src/js/handler/time/moveGuide":68,"./src/js/handler/time/resize":69,"./src/js/handler/time/resizeGuide":70,"./src/js/model/calEvent":71,"./src/js/model/viewModel/calEvent":72,"./src/js/view/monthweek":74,"./src/js/view/template/registerHelpers":78,"./src/js/view/view":83,"./src/js/view/week/dayname":85,"./src/js/view/week/time":86,"./src/js/view/week/timeGrid":87,"./src/js/view/week/week":88}],2:[function(require,module,exports){
+},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":39,"./src/js/dooray/factory/calendar":40,"./src/js/dooray/handler/milestoneClick":42,"./src/js/dooray/handler/taskClick":43,"./src/js/dooray/model/calEvent":44,"./src/js/dooray/view/minicalendar":48,"./src/js/dooray/view/taskview":50,"./src/js/factory/calendar":52,"./src/js/factory/controller":53,"./src/js/handler/allday/click":55,"./src/js/handler/allday/core":56,"./src/js/handler/allday/creation":57,"./src/js/handler/allday/creationGuide":58,"./src/js/handler/allday/move":59,"./src/js/handler/allday/moveGuide":60,"./src/js/handler/allday/resize":61,"./src/js/handler/allday/resizeGuide":62,"./src/js/handler/drag":63,"./src/js/handler/time/click":64,"./src/js/handler/time/core":65,"./src/js/handler/time/creation":66,"./src/js/handler/time/creationGuide":67,"./src/js/handler/time/move":68,"./src/js/handler/time/moveGuide":69,"./src/js/handler/time/resize":70,"./src/js/handler/time/resizeGuide":71,"./src/js/model/calEvent":72,"./src/js/model/viewModel/calEvent":73,"./src/js/view/monthweek":75,"./src/js/view/template/registerHelpers":79,"./src/js/view/view":84,"./src/js/view/week/dayname":86,"./src/js/view/week/time":87,"./src/js/view/week/timeGrid":88,"./src/js/view/week/week":89}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1941,7 +1943,7 @@ module.exports = AutoScroll;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domevent":29,"../common/domutil":30,"../common/point":33}],25:[function(require,module,exports){
+},{"../common/domevent":29,"../common/domutil":30,"../common/point":32}],25:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Common collections.
@@ -4034,8 +4036,8 @@ domutil = {
         if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height)) &&
             'getBoundingClientRect' in el) {
             bound = el.getBoundingClientRect();
-            width = bound.width;
-            height = bound.height;
+            width = bound.width || el.offsetwidth;
+            height = bound.height || el.offsetHeight;
         } else {
             width = parseFloat(width || 0);
             height = parseFloat(height || 0);
@@ -4194,139 +4196,6 @@ module.exports = domutil;
 },{"./collection":25,"./domevent":29}],31:[function(require,module,exports){
 (function (global){
 /**
- * @fileoverview Module for specific element's height set to remain height of container element.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
- */
-'use strict';
-var util = global.tui.util;
-var domutil = require('../common/domutil');
-
-/**
- * @constructor
- * @param {HTMLElement[]} elements - element list to managing height
- * @param {HTMLElement} container - wrapping container element
- */
-function FillRemainHeight(elements, container) {
-    if (!(this instanceof FillRemainHeight)) {
-        return new FillRemainHeight(elements, container);
-    }
-
-    /**
-     * @type {number}
-     */
-    this._idx = 0;
-
-    /**
-     * @type {object}
-     */
-    this._listed = {};
-
-    /**
-     * @type {HTMLElement}
-     */
-    this._container = container;
-
-    util.forEach(elements, function(element) {
-        this.addElement(element);
-    }, this);
-}
-
-/**
- * Destroy method
- */
-FillRemainHeight.prototype.destroy = function() {
-    this._idx = this._listed = this._container = null;
-};
-
-/**
- * @param {HTMLElement} element - element to set height px
- * @param {number} height - pixel height value
- * @private
- */
-FillRemainHeight.prototype._setHeight = function(element, height) {
-    element.style.height = height + 'px';
-};
-
-FillRemainHeight.prototype._getHeight = function(element) {
-    return element.offsetHeight;
-};
-
-/**
- * Add managed element
- * @param {HTMLElement} element - element to managing height
- */
-FillRemainHeight.prototype.addElement = function(element) {
-    var id = this._idx;
-
-    domutil.setData(element, 'elid', id);
-
-    this._listed[id] = element;
-    this._idx += 1;
-};
-
-/**
- * Remove managed element
- * @param {HTMLElement} element - element to remove
- */
-FillRemainHeight.prototype.removeElement = function(element) {
-    var id = domutil.getData(element, 'elid');
-
-    domutil.setData(element, 'elid', '');
-
-    delete this._listed[id];
-};
-
-/**
- * Get height of element that not listed in this module
- * @param {object} listed - this._listed property
- * @param {HTMLElement} element - element to calculate height
- * @returns {number} height
- */
-FillRemainHeight.prototype._getOtherElementHeight = function(listed, element) {
-    var id;
-
-    if (element.nodeName === '#text') {
-        return 0;
-    }
-
-    id = domutil.getData(element, 'elid');
-
-    if (listed[id]) {
-        return 0;
-    }
-
-    return this._getHeight(element);
-};
-
-/**
- * calculate rest height of container and set it to listed elements.
- */
-FillRemainHeight.prototype.refresh = function() {
-    var container = this._container,
-        containerHeight = domutil.getSize(container)[1],
-        childs = container.childNodes,
-        i = 0, len = childs.length,
-        listed = this._listed,
-        usedHeight = 0,
-        height;
-
-    for (; i < len; i += 1) {
-        usedHeight += this._getOtherElementHeight(listed, childs[i]);
-    }
-
-    height = (containerHeight - usedHeight) / util.keys(listed).length;
-    util.forEach(listed, function(element) {
-        this._setHeight(element, height);
-    }, this);
-};
-
-module.exports = FillRemainHeight;
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domutil":30}],32:[function(require,module,exports){
-(function (global){
-/**
  * @fileoverview Mixin module for models.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
@@ -4476,7 +4345,7 @@ module.exports = model;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27}],33:[function(require,module,exports){
+},{"../common/datetime":27}],32:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview
@@ -4812,7 +4681,7 @@ module.exports = Point;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview RequestAnimFrame
@@ -4869,7 +4738,546 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Layout module that supplied split height, resize height features.
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util,
+    mAbs = Math.abs;
+
+var config = require('../config'),
+    common = require('./common'),
+    domutil = require('./domutil'),
+    domevent = require('./domevent'),
+    View = require('../view/view'),
+    VPanel = require('./vpanel'),
+    Drag = require('../handler/drag');
+
+/**
+ * @typedef PanelOptions
+ * @type {object}
+ * @property {number} [minHeight=0] - minimum height of panel
+ * @property {number} [height=0] - current panel height
+ * @property {boolean} [splitter=false] - is this panel uses splitter?
+ * @property {boolean} [autoHeight=false] - is this panel uses remain height of container?
+ * @property {string} [className=''] - className string for add created element
+ */
+
+/**
+ * @constructor
+ * @extends {View}
+ * @param {object} options - options for VLayout module
+ *  @param {PanelOptions[]} [options.panels] - panels to add layout when initialize
+ *  @param {number[]} [options.panelHeights] - panel height list
+ * @param {HTMLElement} container - container element
+ */
+function VLayout(options, container) {
+    var opt;
+
+    if (!(this instanceof VLayout)) {
+        return new VLayout(options, container);
+    }
+
+    View.call(this, container);
+
+    domutil.addClass(container, config.classname('vlayout-container'));
+    
+    /**
+     * @type {object}
+     */
+    opt = this.options = util.extend({
+        panels: [],
+        panelHeights: []
+    }, options);
+
+    /**
+     * @type {VPanel[]}
+     */
+    this.panels = [];
+
+    /**
+     * @type {Drag}
+     */
+    this._drag = new Drag({
+        distance: 0,
+        exclude: function(target) {
+            return !domutil.hasClass(target, config.classname('splitter'));
+        }
+    }, container);
+
+    this._drag.on({
+        dragStart: this._onDragStart,
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    /**
+     * @type {object}
+     */
+    this._dragData = null;
+
+    if (opt.panels.length) {
+        if (opt.panelHeights.length) {
+            util.forEach(opt.panels, function(panelOpt) {
+                if (!panelOpt.isSplitter && !panelOpt.autoHeight) {
+                    panelOpt.height = opt.panelHeights.shift();
+                }
+            });
+        }
+
+        this.addPanels(opt.panels, this.container);
+    }
+
+    this.refresh();
+}
+
+util.inherit(VLayout, View);
+
+/**
+ * Get current panels height in layout
+ * @returns {number[]} height of panels with `autoHeight` false
+ */
+VLayout.prototype.getLayoutData = function() {
+    var heightList = [];
+
+    util.forEach(this.panels, function(panel) {
+        if (panel.isSplitter() || panel.options.autoHeight) {
+            return;
+        }
+
+        heightList.push(panel.getHeight());
+    });
+
+    return heightList;
+};
+
+/**
+ * Set panels height in layout
+ * @param {number[]} heightList of panels with `autoHeight` false
+ */
+VLayout.prototype.setLayoutData = function(heightList) {
+    if (!heightList.length) {
+        return;
+    }
+
+    util.forEach(this.panels, function(panel) {
+        if (panel.isSplitter() || panel.options.autoHeight) {
+            return;
+        }
+
+        panel.setHeight(null, heightList.shift());
+    });
+
+    this.refresh();
+};
+
+/**
+ * Get next panel instance by specific panel
+ * @param {VPanel} panel - panel instance
+ * @returns {VPanel} next panel
+ */
+VLayout.prototype.nextPanel = function(panel) {
+    return this.panels[panel.index + 1];
+};
+
+/**
+ * Get previous panel instance by specific panel
+ * @param {VPanel} panel - panel instance
+ * @returns {VPanel} previous panel
+ */
+VLayout.prototype.prevPanel = function(panel) {
+    return this.panels[panel.index - 1];
+};
+
+/**
+ * Initialize resizing guide element
+ * @param {HTMLElement} element - element to use guide element after cloned
+ * @param {number} top - top pixel value for guide element
+ * @returns {HTMLElement} cloned element == guide element
+ */
+VLayout.prototype._initializeGuideElement = function(element, top) {
+    var cloned = element.cloneNode(true);
+
+    domutil.addClass(cloned, config.classname('splitter-guide'));
+    this._refreshGuideElement(cloned, top);
+    this.container.appendChild(cloned);
+
+    return cloned;
+};
+
+/**
+ * Refresh guide element position
+ * @param {HTMLElement} element - guide element
+ * @param {number} top - top pixel value for guide element
+ */
+VLayout.prototype._refreshGuideElement = function(element, top) {
+    element.style.top = top + 'px';
+};
+
+/**
+ * Clear guide element position
+ * @param {HTMLElement} element - guide element
+ */
+VLayout.prototype._clearGuideElement = function(element) {
+    domutil.remove(element);
+};
+
+/**
+ * Resize overall panels size
+ * @param {VPanel} splPanel - splitter panel instance
+ * @param {number} startY - dragstart Y position
+ * @param {number} mouseY - dragend Y position
+ */
+VLayout.prototype._resize = function(splPanel, startY, mouseY) {
+    var diffY = startY - mouseY,
+        resizedHeight = mAbs(diffY),
+        resizeMap = [],
+        toDown = mouseY > startY,
+        backwardMethod = toDown ? 'prevPanel' : 'nextPanel',
+        forwardMethod = toDown ? 'nextPanel' : 'prevPanel',
+        cursor, resizeInfo;
+
+    cursor = this[backwardMethod](splPanel);
+    resizeInfo = cursor.getResizeInfoByGrowth(+resizedHeight);
+    resizeMap.push([cursor, resizeInfo[0]]);
+
+    while (cursor = this[forwardMethod](cursor)) {
+        if (cursor.isSplitter()) {
+            continue;
+        }
+
+        resizeInfo = cursor.getResizeInfoByGrowth(-resizedHeight);
+        resizeMap.push([cursor, resizeInfo[0]]);
+        resizedHeight -= resizeInfo[1];
+
+        if (resizedHeight < 0) {
+            break;
+        }
+    }
+
+    util.forEach(resizeMap, function(pair) {
+        pair[0].setHeight(null, pair[1]);
+    });
+};
+
+/**
+ * Get summation of splitter and panel's minimum height upper and below of supplied splitter
+ * @param {VPanel} splPanel - splitter panel instance
+ * @returns {number[]} upper and below splitter's height and panel minimum height summation.
+ */
+VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
+    var upper = 0,
+        below = 0,
+        cursor = splPanel,
+        func = function(panel) {
+            if (panel.isSplitter()) {
+                return panel.getHeight();
+            }
+
+            return panel.options.minHeight;
+        };
+
+    while (cursor = this.prevPanel(cursor)) {
+        upper += func(cursor);
+    }
+
+    cursor = splPanel;
+
+    while (cursor = this.nextPanel(cursor)) {
+        below += func(cursor);
+    }
+
+    return [upper, below];
+};
+
+/**********
+ * Drag Handlers
+ **********/
+
+/**
+ * Drag start event handler
+ * @param {object} e - drag start event data
+ */
+VLayout.prototype._onDragStart = function(e) {
+    var oEvent = e.originEvent,
+        target = e.target,
+        splIndex = domutil.getData(target, 'panelIndex'),
+        splPanel = this.panels[splIndex],
+        splHeight = splPanel.getHeight(),
+        splOffsetY = domevent.getMousePosition(oEvent, target)[1],
+        mouseY = domevent.getMousePosition(oEvent, this.container)[1],
+        guideElement = this._initializeGuideElement(target, mouseY);
+        
+    splPanel.addClass(config.classname('splitter-focused'));
+
+    this._dragData = {
+        splPanel: splPanel,
+        splOffsetY: splOffsetY,
+        guideElement: guideElement,
+        startY: mouseY - splOffsetY,
+        minY: 0,
+        maxY: this.getViewBound().height - splHeight
+    };
+
+    if (!util.browser.msie) {
+        domutil.addClass(document.body, config.classname('resizing'));
+    }
+};
+
+/**
+ * Drag event handler
+ * @param {object} e - drag event data
+ */
+VLayout.prototype._onDrag = function(e) {
+    var dragData = this._dragData,
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
+
+    mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY], [dragData.maxY]);
+
+    this._refreshGuideElement(dragData.guideElement, mouseY);
+};
+
+/**
+ * Drag end event handler
+ * @fires VLayout#resize
+ * @param {object} e - dragend event data
+ */
+VLayout.prototype._onDragEnd = function(e) {
+    var dragData = this._dragData,
+        asideMinMax = this._getMouseYAdditionalLimit(dragData.splPanel),
+        mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
+
+    // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
+    mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY + asideMinMax[0]], [dragData.maxY - asideMinMax[1]]);
+
+    this._resize(dragData.splPanel, dragData.startY, mouseY);
+
+    /**
+     * @event VLayout#resize
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     */
+    this.fire('resize', {
+        layoutData: this.getLayoutData()
+    });
+
+    this._dragData = null;
+    this._clearGuideElement(dragData.guideElement);
+    dragData.splPanel.removeClass(config.classname('splitter-focused'));
+    domutil.removeClass(document.body, config.classname('resizing'));
+};
+
+/**********
+ * Methods
+ **********/
+
+/**
+ * refresh each panels
+ */
+VLayout.prototype.refresh = function() {
+    var panelToFillHeight = [],
+        usedHeight = 0,
+        remainHeight;
+
+    util.forEach(this.panels, function(panel) {
+        if (panel.options.autoHeight) {
+            panelToFillHeight.push(panel);
+        } else {
+            usedHeight += panel.getHeight();
+        }
+    });
+
+    remainHeight = (this.getViewBound().height - usedHeight) / panelToFillHeight.length;
+
+    util.forEach(panelToFillHeight, function(panel) {
+        panel.setHeight(null, remainHeight);
+    });
+};
+
+/**
+ * add panel
+ * @param {PanelOptions} options - options for panel
+ * @param {container} [container] - container element
+ */
+VLayout.prototype.addPanel = function(options, container) {
+    var element = document.createElement('div'),
+        panels = this.panels,
+        index = panels.length;
+
+    options = util.extend({
+        index: index
+    }, options);
+
+    panels.push(new VPanel(options, element));
+
+    container.appendChild(element);
+};
+
+/**
+ * Add multiple panel
+ * @param {PanelOptions[]} options - panel options list
+ * @param {HTMLElement} container - container element
+ */
+VLayout.prototype.addPanels = function(options, container) {
+    var frag = document.createDocumentFragment();
+
+    util.forEach(options, function(option) {
+        this.addPanel(option, frag);
+    }, this);
+
+    container.appendChild(frag);
+};
+
+util.CustomEvents.mixin(VLayout);
+
+module.exports = VLayout;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../config":36,"../handler/drag":63,"../view/view":84,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":35}],35:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Panel class for VLayout module
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+var config = require('../config'),
+    common = require('./common'),
+    domutil = require('./domutil'),
+    View = require('../view/view');
+
+/**
+ * @constructor
+ * @extends {View}
+ * @param {object} options - options for VPanel
+ *  @param {number} options.index - index of panel in vlayout
+ *  @param {number} [options.minHeight=0] - minimum height of panel
+ *  @param {number} [options.height] - initial height of panel
+ *  @param {boolean} [options.isSplitter=false] - set true then this panel works splitter
+ *  @param {boolean} [options.autoHeight=false] - set true then this panel use remain height after other panel resized.
+ *  @param {string} [options.className] - additional class name to add element
+ * @param {HTMLElement} container - container element
+ */
+function VPanel(options, container) {
+    View.call(this, container);
+
+    /**
+     * @type {object}
+     */
+    this.options = util.extend({
+        index: 0,
+        minHeight: 0,
+        height: null,
+        isSplitter: false,
+        autoHeight: false,
+        className: ''
+    }, options);
+
+    /**
+     * @type {number}
+     */
+    this.index = this.options.index;
+
+    this._initPanel(this.options, container);
+}
+
+util.inherit(VPanel, View);
+
+/**
+ * whether this panel is splitter?
+ * @returns {boolean} panel is splitter?
+ */
+VPanel.prototype.isSplitter = function() {
+    return this.options.isSplitter;
+};
+
+/**
+ * set height of html element
+ * @param {HTMLElement} [container] - container element
+ * @param {number} newHeight - height
+ */
+VPanel.prototype.setHeight = function(container, newHeight) {
+    container = container || this.container;
+    container.style.height = newHeight + 'px';
+};
+
+/**
+ * Calculate new height of panel and remains by supplied height growth
+ * @param {number} growth - growth value
+ * @returns {number[]} newHeight, remainHeight
+ */
+VPanel.prototype.getResizeInfoByGrowth = function(growth) {
+    var height = this.getHeight(),
+        newHeight = height + growth,
+        resizeTo = Math.max(0, newHeight, this.options.minHeight);
+
+    return [resizeTo, height - resizeTo];
+};
+
+/**
+ * get outer height of panel element
+ * @returns {number} outer height of panel element
+ */
+VPanel.prototype.getHeight = function() {
+    return domutil.getSize(this.container)[1];
+};
+
+/**
+ * add design class to panel element
+ * @param {string} className - classname string
+ */
+VPanel.prototype.addClass = function(className) {
+    domutil.addClass(this.container, className);
+}
+
+/**
+ * remove design class to panel element
+ * @param {string} className - classname string
+ */
+VPanel.prototype.removeClass = function(className) {
+    domutil.removeClass(this.container, className);
+};
+
+/**
+ * initialize panel element
+ * @param {PanelOptions} options - options for panel
+ * @param {HTMLDivElement} container - panel element
+ */
+VPanel.prototype._initPanel = function(options, container) {
+    var height;
+
+    domutil.setData(container, 'panelIndex', options.index);
+
+    if (options.isSplitter) {
+        domutil.addClass(container, config.classname('splitter'));
+        return;
+    }
+
+    if (options.className) {
+        domutil.addClass(container, options.className);
+    }
+
+    if (options.autoHeight) {
+        domutil.setData(container, 'autoHeight', true);
+    } else {
+        height = common.limit(options.height || 0, 
+            [options.minHeight],
+            [options.maxHeight || options.height]
+        );
+
+        this.setHeight(container, height);
+    }
+};
+
+module.exports = VPanel;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../config":36,"../view/view":84,"./common":26,"./domutil":30}],36:[function(require,module,exports){
 /* eslint-disable */
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
@@ -4905,7 +5313,7 @@ var config = {
 module.exports = config;
 
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Base calendar controller
@@ -5201,7 +5609,7 @@ module.exports = Base;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../model/calEvent":71,"../model/viewModel/calEvent":72}],37:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../model/calEvent":72,"../model/viewModel/calEvent":73}],38:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller mixin modules for day views.
@@ -5613,7 +6021,7 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":72}],38:[function(require,module,exports){
+},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":73}],39:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Base controller for Dooray service project.
@@ -5737,7 +6145,7 @@ module.exports = DoorayBase;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../controller/base":36,"../model/calEvent":43}],39:[function(require,module,exports){
+},{"../../controller/base":37,"../model/calEvent":44}],40:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Calendar for service.
@@ -5780,6 +6188,7 @@ var serviceWeekViewFactory = require('./weekView');
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
  *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
+ *   @param {string} [options.week.panelHeights] - each panel height
  *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  *  @param {object} [options.month] - options for month view
  *  @param {string} options.month.renderMonth - YYYY-MM render month
@@ -6009,6 +6418,19 @@ ServiceCalendar.prototype._onBeforeUpdate = function(updateEventData) {
 };
 
 /**
+ * @fires ServiceCalendar#resizePanel
+ * @param {object} resizeEventData - resize event data object
+ */
+ServiceCalendar.prototype._onResizePanel = function(resizeEventData) {
+    /**
+     * @event ServiceCalendar#resizePanel
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     */
+    this.fire('resizePanel', resizeEventData);
+};
+
+/**
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
@@ -6034,11 +6456,21 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
     util.forEach(handler.resize, function(handlerInstance) {
         handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
     });
+
+    view.vlayout[method]('resize', calendar._onResizePanel, calendar);
 };
 
 /**********
  * Methods
  **********/
+
+/**
+ * 현재 화면의 각 영역에 대한 높이 값을 반환한다.
+ * @returns {number[]} splitter와 autoHeight를 제외한 나머지 패널의 높이 배열
+ */
+ServiceCalendar.prototype.getLayoutData = function() {
+    return this.layout.vlayout.getLayoutData();
+};
 
 /**
  * 같은 calendarID를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
@@ -6166,7 +6598,7 @@ module.exports = ServiceCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../config":35,"../../controller/viewMixin/week":37,"../../factory/calendar":51,"../controller/base":38,"./weekView":40}],40:[function(require,module,exports){
+},{"../../common/datetime":27,"../../config":36,"../../controller/viewMixin/week":38,"../../factory/calendar":52,"../controller/base":39,"./weekView":41}],41:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for WeekView (customized for service)
@@ -6177,7 +6609,7 @@ module.exports = ServiceCalendar;
 var util = global.tui.util;
 var config = require('../../config');
 var domutil = require('../../common/domutil');
-var fillRemainHeight = require('../../common/fillRemainHeight');
+var VLayout = require('../../common/vlayout');
 
 // Parent views
 var Week = require('../../view/week/week');
@@ -6206,11 +6638,12 @@ var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
+        vlayoutContainer,
+        vlayout,
         dayNameView,
         milestoneView,
         taskView,
         alldayView,
-        timeGridContainer,
         timeGridView,
         milestoneClickHandler,
         taskClickHandler,
@@ -6222,7 +6655,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeCreationHandler,
         timeMoveHandler,
         timeResizeHandler,
-        frh;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.container.innerHTML = weekViewTmpl();
@@ -6234,23 +6666,43 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView.addChild(dayNameView);
 
     /**********
+     * 수직 레이아웃 모듈 초기화
+     **********/
+    vlayoutContainer = domutil.find('.' + config.classname('vlayout-area'), weekView.container);
+    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
+
+    vlayout = new VLayout({
+        panels: [
+            {height: 56, minHeight: 56},
+            {isSplitter: true},
+            {height: 56, minHeight: 56},
+            {isSplitter: true},
+            {height: 68, minHeight: 68},
+            {isSplitter: true},
+            {autoHeight: true}
+        ],
+        panelHeights: options.week.panelHeights
+    }, vlayoutContainer);
+    weekView.vlayout = vlayout;
+
+    /**********
      * 마일스톤
      **********/
-    milestoneView = new Milestone(options.week, domutil.find('.' + config.classname('milestone-layout')));
+    milestoneView = new Milestone(options.week, vlayout.panels[0].container);
     weekView.addChild(milestoneView);
     milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
     /**********
      * 업무
      **********/
-    taskView = new TaskView(options.week, domutil.find('.' + config.classname('task-layout')));
+    taskView = new TaskView(options.week, vlayout.panels[2].container);
     weekView.addChild(taskView);
     taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, domutil.find('.' + config.classname('allday-layout'), weekView.container));
+    alldayView = new Allday(options.week, vlayout.panels[4].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -6260,19 +6712,15 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridContainer = domutil.find('.' + config.classname('timegrid-layout'), weekView.container);
-    timeGridView = new TimeGrid(options.week, timeGridContainer);
+    timeGridView = new TimeGrid(options.week, vlayout.panels[6].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
-    // 가변높이 모듈 초기화
-    frh = fillRemainHeight([timeGridContainer], weekView.container);
-
     weekView.on('afterRender', function() {
-        frh.refresh();
+        vlayout.refresh();
     });
 
     weekView.handler = {
@@ -6308,18 +6756,20 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                 handler.destroy();
             });
         });
+
+        weekView.off();
     };
 
     return {
         view: weekView,
         refresh: function() {
-            frh.refresh();
+            vlayout.refresh();
         }
     };
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../common/fillRemainHeight":31,"../../config":35,"../../dooray/view/template/factory/weekView.hbs":50,"../../handler/allday/click":54,"../../handler/allday/creation":56,"../../handler/allday/move":58,"../../handler/allday/resize":60,"../../handler/time/click":63,"../../handler/time/creation":65,"../../handler/time/move":67,"../../handler/time/resize":69,"../../view/week/allday":84,"../../view/week/dayname":85,"../../view/week/timeGrid":87,"../../view/week/week":88,"../handler/milestoneClick":41,"../handler/taskClick":42,"../view/milestone":45,"../view/taskview":49}],41:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../dooray/view/template/factory/weekView.hbs":51,"../../handler/allday/click":55,"../../handler/allday/creation":57,"../../handler/allday/move":59,"../../handler/allday/resize":61,"../../handler/time/click":64,"../../handler/time/creation":66,"../../handler/time/move":68,"../../handler/time/resize":70,"../../view/week/allday":85,"../../view/week/dayname":86,"../../view/week/timeGrid":88,"../../view/week/week":89,"../handler/milestoneClick":42,"../handler/taskClick":43,"../view/milestone":46,"../view/taskview":50}],42:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -6415,7 +6865,7 @@ module.exports = MilestoneClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":35}],42:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],43:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -6511,7 +6961,7 @@ module.exports = TaskClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":35}],43:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],44:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Extend model class for Dooray Calendar project.
@@ -6620,7 +7070,7 @@ module.exports = DoorayEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../model/calEvent":71}],44:[function(require,module,exports){
+},{"../../model/calEvent":72}],45:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -6628,13 +7078,11 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "milestone-day\" \n     style=\"width:"
+    + "milestone-day\" style=\"width:"
     + alias4(alias5(((stack1 = (data && data.root)) && stack1.width), depth0))
     + "%;left:"
     + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
     + "%;min-height:"
-    + alias4(alias5(((stack1 = (data && data.root)) && stack1.minHeight), depth0))
-    + "px;height:"
     + alias4(alias5(((stack1 = (data && data.root)) && stack1.height), depth0))
     + "px\">\n    <ul class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -6666,14 +7114,12 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "milestone-right "
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "clear\" style=\"height:"
-    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
-    + "px\">\n"
+    + "clear\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.events : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],45:[function(require,module,exports){
+},{"hbsfy/runtime":21}],46:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 뷰
@@ -6688,7 +7134,8 @@ var domutil = require('../../common/domutil');
 var View = require('../../view/view');
 var tmpl = require('./milestone.hbs');
 
-var PADDING = 4;    // 마일스톤 그리드 내 패딩 값 (top + height)
+var PADDING_TOP = 2,
+    PADDING_BOTTOM = 2;
 
 /**
  * @constructor
@@ -6696,7 +7143,7 @@ var PADDING = 4;    // 마일스톤 그리드 내 패딩 값 (top + height)
  * @param {object} options - options
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=40] - min-height of milestone view 
+ * @param {number} [options.minHeight=52] - min-height of milestone view 
  * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */
@@ -6715,7 +7162,7 @@ function Milestone(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 60,
+        minHeight: 52,
         lineHeight: 12
     }, options);
 }
@@ -6737,8 +7184,9 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         ),
         height;
 
+    // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {
-        events[datetime.format(d, 'YYYY-MM-DD')] = {};
+        events[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
     });
 
     util.extend(events, viewModel);
@@ -6753,7 +7201,7 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         events: events,
         width: 100 / range.length,
         minHeight: options.minHeight,
-        height: height + PADDING,
+        height: height + PADDING_TOP + PADDING_BOTTOM,
         lineHeight: options.lineHeight
     };
 };
@@ -6780,7 +7228,7 @@ module.exports = Milestone;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"../../view/view":83,"./milestone.hbs":44}],46:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":84,"./milestone.hbs":45}],47:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -6860,7 +7308,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</tbody>\n</table>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],47:[function(require,module,exports){
+},{"hbsfy/runtime":21}],48:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Minicalendar view.
@@ -7166,7 +7614,7 @@ module.exports = MiniCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":35,"../../view/view":83,"./minicalendar.hbs":46}],48:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":84,"./minicalendar.hbs":47}],49:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7179,15 +7627,13 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "%;left:"
     + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
     + "%;min-height:"
-    + alias4(alias5(((stack1 = (data && data.root)) && stack1.minHeight), depth0))
-    + "px;height:"
     + alias4(alias5(((stack1 = (data && data.root)) && stack1.height), depth0))
-    + "px;\">\n<div class=\""
+    + "px\">\n<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "task-day-wrap\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.morning : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.lunch : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.evening : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.morning : depth0)) != null ? stack1.length : stack1),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.lunch : depth0)) != null ? stack1.length : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.evening : depth0)) != null ? stack1.length : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n</div>\n";
 },"2":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -7246,16 +7692,16 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "task-left\">\n    <span>업무</span>\n</div>\n<div class=\""
+    + "task-left\">\n    <span>"
+    + ((stack1 = ((helper = (helper = helpers["taskTitle-tmpl"] || (depth0 != null ? depth0["taskTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"taskTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "</span>\n</div>\n<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "task-right schedule-view clear\" style=\"height:"
-    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
-    + "px\">\n"
+    + "task-right schedule-view clear\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.events : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],49:[function(require,module,exports){
+},{"hbsfy/runtime":21}],50:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Task view for upper area of Week view.
@@ -7270,7 +7716,8 @@ var domutil = require('../../common/domutil');
 var View = require('../../view/view');
 var tmpl = require('./taskview.hbs');
 
-var PADDING = 4;    // 그리드 내 패딩 값 (top + height)
+var PADDING_TOP = 2,
+    PADDING_BOTTOM = 2;
 
 /**
  * @constructor
@@ -7278,7 +7725,7 @@ var PADDING = 4;    // 그리드 내 패딩 값 (top + height)
  * @param {object} options - options for TaskView
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=60] - min-height of taskview
+ * @param {number} [options.minHeight=52] - min-height of taskview
  * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */
@@ -7297,7 +7744,7 @@ function TaskView(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 60,
+        minHeight: 52,
         lineHeight: 12
     }, options);
 }
@@ -7321,7 +7768,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         mmax = Math.max;
 
     util.forEach(range, function(d) {
-        events[datetime.format(d, 'YYYY-MM-DD')] = {};
+        events[datetime.format(d, 'YYYY-MM-DD')] = {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}};
     });
 
     util.extend(events, viewModel);
@@ -7342,7 +7789,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
     return {
         events: events,
         width: 100 / range.length,
-        height: height + PADDING,
+        height: height + PADDING_TOP + PADDING_BOTTOM,
         lineHeight: options.lineHeight
     };
 };
@@ -7355,7 +7802,6 @@ TaskView.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'task'));
 
-    container.style.minHeight = this.options.minHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);
 
     util.forEach(domutil.find('li', container, true), function(el) {
@@ -7369,7 +7815,7 @@ module.exports = TaskView;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"../../view/view":83,"./taskview.hbs":48}],50:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":84,"./taskview.hbs":49}],51:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -7377,26 +7823,12 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "scroll-y "
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "dayname-layout\"></div>\n<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "scroll-y "
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "milestone-layout\" style=\"min-height:52px;max-height:100px\"></div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "scroll-y "
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "task-layout\" style=\"min-height:52px;max-height:100px\"></div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "scroll-y "
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-layout\" style=\"min-height:68x;max-height:88px\"></div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-layout\"></div>\n";
+    + "vlayout-area\"></div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],51:[function(require,module,exports){
+},{"hbsfy/runtime":21}],52:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for control all other factory.
@@ -7485,7 +7917,7 @@ function Calendar(options, container) {
      */
     this.dragHandler = new Drag({
         distance: 5
-    }, this.layout);
+    }, this.layout.container);
 
 
     /**
@@ -7509,7 +7941,7 @@ function Calendar(options, container) {
     }, this);
 
     if (options.events && options.events.length) {
-        this.createEvent(options.events, true);
+        this.createEvents(options.events, true);
     }
 
     /**
@@ -7793,7 +8225,8 @@ Calendar.prototype.toggleView = function(viewName, force) {
     var layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
-        options = this.options;
+        options = this.options,
+        created;
 
     if (!force && this.currentViewName === viewName) {
         return;
@@ -7803,7 +8236,9 @@ Calendar.prototype.toggleView = function(viewName, force) {
     layout.clear();
 
     if (viewName === 'week') {
-        layout.addChild(weekViewFactory(controller, layout.container, dragHandler, options));
+        created = weekViewFactory(controller, layout.container, dragHandler, options);
+        layout.addChild(created.view);
+        this._refreshMethod = created.refresh;
     }
 }
 
@@ -7880,7 +8315,7 @@ module.exports = Calendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../config":35,"../handler/drag":62,"../view/layout":73,"./controller":52,"./weekView":53,"hbsfy/runtime":21}],52:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../config":36,"../handler/drag":63,"../view/layout":74,"./controller":53,"./weekView":54,"hbsfy/runtime":21}],53:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller factory module.
@@ -7910,7 +8345,7 @@ module.exports = function(options) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../controller/base":36,"../controller/viewMixin/week":37}],53:[function(require,module,exports){
+},{"../controller/base":37,"../controller/viewMixin/week":38}],54:[function(require,module,exports){
 /**
  * @fileoverview Factory module for WeekView
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -7919,6 +8354,7 @@ module.exports = function(options) {
 
 var config = require('../config');
 var domutil = require('../common/domutil');
+var VLayout = require('../common/vlayout');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views
@@ -7939,6 +8375,8 @@ var weekViewTmpl = require('../view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
+        vlayoutContainer,
+        vlayout,
         dayNameView,
         alldayView,
         timeGridView,
@@ -7961,9 +8399,23 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     weekView.addChild(dayNameView);
 
     /**********
+     * 수직 레이아웃 모듈 초기화
+     **********/
+    vlayoutContainer = domutil.find('.' + config.classname('vlayout-area'), weekView.container);
+    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
+
+    vlayout = new VLayout({
+        panels: [
+            {height: 52, minHeight: 52},
+            {isSplitter: true},
+            {autoHeight: true}
+        ]
+    }, vlayoutContainer);
+
+    /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, domutil.find('.' + config.classname('allday-layout'), weekView.container));
+    alldayView = new Allday(options.week, vlayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -7973,12 +8425,16 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, domutil.find('.' + config.classname('timegrid-layout'), weekView.container));
+    timeGridView = new TimeGrid(options.week, vlayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
+
+    weekView.on('afterRender', function() {
+        vlayout.refresh();
+    });
 
     weekView.handlers = {
         click: {
@@ -8012,10 +8468,15 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         });
     };
 
-    return weekView;
+    return {
+        view: weekView,
+        refresh: function() {
+            vlayout.refresh();
+        }
+    };
 };
 
-},{"../common/domutil":30,"../config":35,"../handler/allday/click":54,"../handler/allday/creation":56,"../handler/allday/move":58,"../handler/allday/resize":60,"../handler/time/click":63,"../handler/time/creation":65,"../handler/time/move":67,"../handler/time/resize":69,"../view/template/factory/weekView.hbs":75,"../view/week/allday":84,"../view/week/dayname":85,"../view/week/timeGrid":87,"../view/week/week":88}],54:[function(require,module,exports){
+},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":55,"../handler/allday/creation":57,"../handler/allday/move":59,"../handler/allday/resize":61,"../handler/time/click":64,"../handler/time/creation":66,"../handler/time/move":68,"../handler/time/resize":70,"../view/template/factory/weekView.hbs":76,"../view/week/allday":85,"../view/week/dayname":86,"../view/week/timeGrid":88,"../view/week/week":89}],55:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Click handle module for allday events
@@ -8107,7 +8568,7 @@ module.exports = AlldayClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":35,"./move":58}],55:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36,"./move":59}],56:[function(require,module,exports){
 /**
  * @fileoverview Base mixin object for handler/allday
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -8174,7 +8635,7 @@ var alldayCore = {
 module.exports = alldayCore;
 
 
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],56:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],57:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handler module for MonthWeek view's creation actions.
@@ -8446,7 +8907,7 @@ module.exports = AlldayCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"./core":55,"./creationGuide":57}],57:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":56,"./creationGuide":58}],58:[function(require,module,exports){
 /**
  * @fileoverview Guide element for Allday.Creation
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -8579,7 +9040,7 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 module.exports = AlldayCreationGuide;
 
 
-},{"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35}],58:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],59:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Move handler for Allday view.
@@ -8852,7 +9313,7 @@ module.exports = AlldayMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../config":35,"./core":55,"./moveGuide":59}],59:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":56,"./moveGuide":60}],60:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Effect module for Allday.Move
@@ -9045,7 +9506,7 @@ module.exports = AlldayMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35}],60:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],61:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize handler module for Allday view.
@@ -9315,7 +9776,7 @@ module.exports = AlldayResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"./core":55,"./resizeGuide":61}],61:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":56,"./resizeGuide":62}],62:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize Guide module.
@@ -9460,7 +9921,7 @@ module.exports = AlldayResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35}],62:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],63:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Drag handler for calendar.
@@ -9478,11 +9939,9 @@ var domevent = require('../common/domevent');
  * @param {object} options - options for drag handler
  * @param {number} [options.distance=10] - distance in pixels after mouse must move before dragging should start
  * @param {function} [options.exclude] - filter function for don't fire drag events that specific conditions.
- * @param {LayoutView} layoutView Layout view instance.
+ * @param {HTMLElement} container element to watching drag interaction.
  */
-function Drag(options, layoutView) {
-    var container = layoutView.container;
-
+function Drag(options, container) {
     domevent.on(container, 'mousedown', this._onMouseDown, this);
 
     this.options = util.extend({
@@ -9562,7 +10021,7 @@ Drag.prototype._toggleDragEvent = function(toBind) {
 
     domutil[method + 'TextSelection'](container);
     domutil[method + 'ImageDrag'](container);
-    domevent[domMethod](global, {
+    domevent[domMethod](global.document, {
         mousemove: this._onMouseMove,
         mouseup: this._onMouseUp
     }, this);
@@ -9701,7 +10160,7 @@ module.exports = Drag;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domevent":29,"../common/domutil":30}],63:[function(require,module,exports){
+},{"../common/domevent":29,"../common/domutil":30}],64:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Allday event click event hander module
@@ -9809,7 +10268,7 @@ module.exports = TimeClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":35}],64:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],65:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Core methods for dragging actions
@@ -9902,7 +10361,7 @@ module.exports = timeCore;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":33}],65:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":32}],66:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling creation events from drag handler and time grid view
@@ -10222,7 +10681,7 @@ module.exports = TimeCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"./core":64,"./creationGuide":66}],66:[function(require,module,exports){
+},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":65,"./creationGuide":67}],67:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Creation effect while dragging.
@@ -10477,7 +10936,7 @@ module.exports = TimeCreationGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35}],67:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],68:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling move events from drag handler and time grid view
@@ -10848,7 +11307,7 @@ module.exports = TimeMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"./core":64,"./moveGuide":68}],68:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":65,"./moveGuide":69}],69:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Move effect while dragging.
@@ -11010,7 +11469,7 @@ module.exports = TimeMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35}],69:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],70:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling resize events from drag handler and time grid view
@@ -11333,7 +11792,7 @@ module.exports = TimeResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"./core":64,"./resizeGuide":70}],70:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":65,"./resizeGuide":71}],71:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Resize effect while dragging.
@@ -11510,7 +11969,7 @@ module.exports = TimeResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35}],71:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],72:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model of event.
@@ -11732,7 +12191,7 @@ module.exports = CalEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/dirty":28,"../common/model":32}],72:[function(require,module,exports){
+},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],73:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model for views
@@ -11897,7 +12356,7 @@ module.exports = CalEventViewModel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
@@ -11978,7 +12437,7 @@ module.exports = Layout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30,"../config":35,"./view":83}],74:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":84}],75:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of week event container inside of Week view.
@@ -12085,33 +12544,16 @@ MonthWeek.prototype.resize = function(maxEventInDay) {
 
     newHeight = Math.max(newHeight, options.minHeight);
     
-    this.container.style.height = newHeight + 'px';
+    this.container.style.minHeight = newHeight + 'px';
 };
 
 module.exports = MonthWeek;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/domutil":30,"../config":35,"./template/monthweek.hbs":77,"./view":83}],75:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var HandlebarsCompiler = require('hbsfy/runtime');
-module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "scroll-y "
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "dayname-layout\"></div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "scroll-y "
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-layout\"></div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-layout\"></div>\n";
-},"useData":true});
-
-},{"hbsfy/runtime":21}],76:[function(require,module,exports){
+},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":78,"./view":84}],76:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"dup":51,"hbsfy/runtime":21}],77:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Helpers for handlebar templates.
@@ -12207,6 +12649,10 @@ module.exports = {
         return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
     },
 
+    'taskTitle-tmpl': function() {
+        return '업무';
+    },
+
     'allday-tmpl': function(model) {
         return common.stripTags(model.title);
     },
@@ -12218,7 +12664,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../config":35}],77:[function(require,module,exports){
+},{"../../common/common":26,"../../config":36}],78:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12306,7 +12752,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],78:[function(require,module,exports){
+},{"hbsfy/runtime":21}],79:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Register developed custom handlebars helper.
@@ -12324,7 +12770,7 @@ util.forEach(helper, function(helper, name) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./helper":76,"hbsfy/runtime":21}],79:[function(require,module,exports){
+},{"./helper":77,"hbsfy/runtime":21}],80:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -12341,7 +12787,7 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
     + "allday-monthweek-container\"></div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],80:[function(require,module,exports){
+},{"hbsfy/runtime":21}],81:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12363,12 +12809,16 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
     + "</div>\n</div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {};
 
-  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return "<div class=\""
+    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "dayname-leftmargin\">\n"
+    + ((stack1 = helpers.each.call(alias1,depth0,{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],81:[function(require,module,exports){
+},{"hbsfy/runtime":21}],82:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12409,7 +12859,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
   return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"useData":true});
 
-},{"hbsfy/runtime":21}],82:[function(require,module,exports){
+},{"hbsfy/runtime":21}],83:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12460,7 +12910,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "timegrid-todaymarker\">today</div>\n    </div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],83:[function(require,module,exports){
+},{"hbsfy/runtime":21}],84:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview The base class of views.
@@ -12664,7 +13114,7 @@ module.exports = View;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30}],84:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30}],85:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of allday event container inside of Week view.
@@ -12749,7 +13199,7 @@ module.exports = Allday;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":35,"../monthweek":74,"../template/week/allday.hbs":79,"../view":83}],85:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36,"../monthweek":75,"../template/week/allday.hbs":80,"../view":84}],86:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendering daynames
@@ -12831,7 +13281,7 @@ module.exports = DayName;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"../template/week/daynames.hbs":80,"../view":83}],86:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/daynames.hbs":81,"../view":84}],87:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of time.
@@ -13020,7 +13470,7 @@ module.exports = Time;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"../template/week/time.hbs":81,"../view":83}],87:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/time.hbs":82,"../view":84}],88:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendered events by times.
@@ -13358,7 +13808,7 @@ module.exports = TimeGrid;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/autoScroll":24,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":34,"../../config":35,"../template/week/timeGrid.hbs":82,"../view":83,"./time":86}],88:[function(require,module,exports){
+},{"../../common/autoScroll":24,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36,"../template/week/timeGrid.hbs":83,"../view":84,"./time":87}],89:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of days UI.
@@ -13474,4 +13924,4 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":35,"../view":83}]},{},[1]);
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../view":84}]},{},[1]);
