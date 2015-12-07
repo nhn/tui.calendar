@@ -5,7 +5,7 @@ describe('service:view/TaskView', function() {
     beforeEach(function() {
         mockInst = {
             options: {
-                minHeight: 60,
+                minHeight: 52,
                 lineHeight: 12,
                 renderStartDate: '2015-05-01',
                 renderEndDate: '2015-05-02'
@@ -18,9 +18,12 @@ describe('service:view/TaskView', function() {
             var actual = TaskView.prototype._getBaseViewModel.call(mockInst, {});
 
             var expected = {
-                events: {'2015-05-01': {}, '2015-05-02': {}},
+                events: {
+                    '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}, 
+                    '2015-05-02': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}
+                },
                 width: 50,
-                height: 64,
+                height: 56,
                 lineHeight: 12
             };
 
@@ -35,9 +38,12 @@ describe('service:view/TaskView', function() {
             var actual = TaskView.prototype._getBaseViewModel.call(mockInst, viewModel);
 
             var expected = {
-                events: {'2015-05-01': {}, '2015-05-02': { 'hello': { length: 2 } }},
+                events: {
+                    '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}, 
+                    '2015-05-02': { 'hello': { length: 2 } }
+                },
                 width: 50,
-                height: 64,
+                height: 56,
                 lineHeight: 12
             };
 
@@ -51,9 +57,9 @@ describe('service:view/TaskView', function() {
             actual = TaskView.prototype._getBaseViewModel.call(mockInst, viewModel);
 
             expected = {
-                events: {'2015-05-01': {}, '2015-05-02': { 'hello': { length: 8 } }},
+                events: {'2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}, '2015-05-02': { 'hello': { length: 8 } }},
                 width: 50,
-                height: 112,    // 'hello' 제목 12px + (아이템 수 8 * 12)px
+                height: 112,    // 'hello' 제목 12px + (아이템 수 8 * 12)px + 위아래 패딩 +4
                 lineHeight: 12
             };
 

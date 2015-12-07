@@ -11,7 +11,8 @@ var domutil = require('../../common/domutil');
 var View = require('../../view/view');
 var tmpl = require('./milestone.hbs');
 
-var PADDING = 4;    // 마일스톤 그리드 내 패딩 값 (top + height)
+var PADDING_TOP = 2,
+    PADDING_BOTTOM = 2;
 
 /**
  * @constructor
@@ -19,7 +20,7 @@ var PADDING = 4;    // 마일스톤 그리드 내 패딩 값 (top + height)
  * @param {object} options - options
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=40] - min-height of milestone view 
+ * @param {number} [options.minHeight=52] - min-height of milestone view 
  * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */
@@ -38,7 +39,7 @@ function Milestone(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 60,
+        minHeight: 52,
         lineHeight: 12
     }, options);
 }
@@ -60,8 +61,9 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         ),
         height;
 
+    // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {
-        events[datetime.format(d, 'YYYY-MM-DD')] = {};
+        events[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
     });
 
     util.extend(events, viewModel);
@@ -76,7 +78,7 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         events: events,
         width: 100 / range.length,
         minHeight: options.minHeight,
-        height: height + PADDING,
+        height: height + PADDING_TOP + PADDING_BOTTOM,
         lineHeight: options.lineHeight
     };
 };

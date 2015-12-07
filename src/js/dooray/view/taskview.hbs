@@ -1,12 +1,12 @@
 <div class="{{CSS_PREFIX}}task-left">
     <span>업무</span>
 </div>
-<div class="{{CSS_PREFIX}}task-right schedule-view clear" style="height:{{height}}px">
+<div class="{{CSS_PREFIX}}task-right schedule-view clear">
 {{#each events ~}}
-<div class="{{CSS_PREFIX}}task-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.minHeight}}px;height:{{@root.height}}px;">
+<div class="{{CSS_PREFIX}}task-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.height}}px">
 <div class="{{CSS_PREFIX}}task-day-wrap">
     {{! 출근전 }}
-    {{#if morning ~}}
+    {{#if morning.length ~}}
     <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>출근 전</strong></div>
     <ul class="{{CSS_PREFIX}}task-list">
         {{#each morning.items ~}}
@@ -19,7 +19,7 @@
     {{/if ~}}
 
     {{! 점심전 }}
-    {{#if lunch ~}}
+    {{#if lunch.length ~}}
     <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>점심 전</strong></div>
     <ul class="{{CSS_PREFIX}}task-list">
         {{#each lunch.items ~}}
@@ -32,7 +32,7 @@
     {{/if ~}}
 
     {{! 퇴근전 }}
-    {{#if evening ~}}
+    {{#if evening.length ~}}
     <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>퇴근 전</strong></div>
     <ul class="{{CSS_PREFIX}}task-list">
         {{#each evening.items ~}}

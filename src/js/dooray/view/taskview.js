@@ -11,7 +11,8 @@ var domutil = require('../../common/domutil');
 var View = require('../../view/view');
 var tmpl = require('./taskview.hbs');
 
-var PADDING = 4;    // 그리드 내 패딩 값 (top + height)
+var PADDING_TOP = 2,
+    PADDING_BOTTOM = 2;
 
 /**
  * @constructor
@@ -19,7 +20,7 @@ var PADDING = 4;    // 그리드 내 패딩 값 (top + height)
  * @param {object} options - options for TaskView
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=60] - min-height of taskview
+ * @param {number} [options.minHeight=52] - min-height of taskview
  * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */
@@ -38,7 +39,7 @@ function TaskView(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 60,
+        minHeight: 52,
         lineHeight: 12
     }, options);
 }
@@ -62,7 +63,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         mmax = Math.max;
 
     util.forEach(range, function(d) {
-        events[datetime.format(d, 'YYYY-MM-DD')] = {};
+        events[datetime.format(d, 'YYYY-MM-DD')] = {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}};
     });
 
     util.extend(events, viewModel);
@@ -83,7 +84,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
     return {
         events: events,
         width: 100 / range.length,
-        height: height + PADDING,
+        height: height + PADDING_TOP + PADDING_BOTTOM,
         lineHeight: options.lineHeight
     };
 };
@@ -96,7 +97,6 @@ TaskView.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'task'));
 
-    container.style.minHeight = this.options.minHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);
 
     util.forEach(domutil.find('li', container, true), function(el) {

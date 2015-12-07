@@ -1,14 +1,18 @@
 +prefix-classes(milestone)
+    .container
+        height: 100%
+
     .layout > div
         border-top: 1px solid #ccc
         &:first-child
             border-top: 0;
 
     .left
-        wh(60px, 100%)
+        wh(59px, 100%)
         float: left
         text-align: right
         color: #777
+        border-right: 1px solid #ccc
 
     .left span
         display: block
@@ -18,12 +22,15 @@
         position: relative
         background-color: #fff
         margin-left: 60px
+        height: 100%
+        overflow-y: scroll
 
     .day
         position: absolute
         background-color: #fff
         margin-left: -1px
         border-left: 1px solid #ccc
+        height: 100%
 
     .list
         margin: 2px
