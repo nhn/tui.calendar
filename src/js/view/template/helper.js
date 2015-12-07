@@ -92,6 +92,10 @@ module.exports = {
         return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
     },
 
+    'taskTitle-tmpl': function() {
+        return '업무';
+    },
+
     'allday-tmpl': function(model) {
         return common.stripTags(model.title);
     },
