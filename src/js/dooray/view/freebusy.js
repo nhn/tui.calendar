@@ -97,7 +97,7 @@ Freebusy.prototype._onClick = function(clickEventData) {
     var target = clickEventData.srcElement || clickEventData.target,
         isValid = domutil.closest(target, '.' + config.classname('freebusy-blocks')),
         container, containerWidth,
-        mouseX, timeX, dateX;
+        mouseX, timeX, dateX, nearMinutesX;
 
     if (!isValid) {
         return;
@@ -108,16 +108,15 @@ Freebusy.prototype._onClick = function(clickEventData) {
     mouseX = domevent.getMousePosition(clickEventData, container)[0] - PADDING_LEFT;
     timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
     dateX = new Date(timeX);
+    nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
 
     /**
      * @event Freebusy#click
      * @type {object}
-     * @property {number} hour - hour value
-     * @property {number} minutes - minutes value
+     * @property {string} time - hh:mm string
      */
     this.fire('click', {
-        hour: dateX.getUTCHours(),
-        minutes: common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2
+        time: datetime.leadingZero(dateX.getUTCHours(), 2) + ':' + datetime.leadingZero(nearMinutesX, 2)
     });
 };
 
@@ -252,8 +251,11 @@ Freebusy.prototype.clear = function() {
 
 /**
  * Select specific time
+ * @param {string} start - hh:mm formatted string value
+ * @param {string} end - hh:mm formatted string value
  */
-Freebusy.prototype.select = function() {
+Freebusy.prototype.select = function(start, end) {
+
 };
 
 util.CustomEvents.mixin(Freebusy);
