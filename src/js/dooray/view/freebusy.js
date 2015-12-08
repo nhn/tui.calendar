@@ -197,21 +197,27 @@ Freebusy.prototype._getBlockBound = function(block) {
 /**
  * Add recommends blocks
  * @param {Block[]} blocks - blocks
+ * @param {boolean} [skipRender=false] - set true then skip render after add recommends
  */
-Freebusy.prototype.addRecommends = function(blocks) {
+Freebusy.prototype.addRecommends = function(blocks, skipRender) {
     var opt = this.options;
     opt.recommends = opt.recommends.concat(blocks);
 
-    this.render();
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
  * Clear recommends blocks
+ * @param {boolean} [skipRender=false] - set true then skip render after clear recommends
  */
-Freebusy.prototype.clearRecommends = function() {
+Freebusy.prototype.clearRecommends = function(skipRender) {
     this.options.recommends = [];
 
-    this.render();
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
@@ -289,45 +295,71 @@ Freebusy.prototype.render = function() {
 /**
  * Add a single user
  * @param {User} user - user to add
+ * @param {boolean} [skipRender=false] - set true then skip render after add user
  */
-Freebusy.prototype.addUser = function(user) {
+Freebusy.prototype.addUser = function(user, skipRender) {
     this.users.add(user);
+
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
  * Add mutiple user
  * @param {User[]} users - users to add
+ * @param {boolean} [skipRender=false] - set true then skip render after add user
  */
-Freebusy.prototype.addUsers = function(users) {
+Freebusy.prototype.addUsers = function(users, skipRender) {
     util.forEach(users, function(user) {
         this.addUser(user);
     }, this);
+
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
  * Remove single user
  * @param {string} id - id to delete
+ * @param {boolean} [skipRender=false] - set true then skip render after remove user
  */
-Freebusy.prototype.removeUser = function(id) {
+Freebusy.prototype.removeUser = function(id, skipRender) {
     this.users.remove(id);
+
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
  * Remove mutiple user
  * @param {string[]} idArr - array of id to delete
+ * @param {boolean} [skipRender=false] - set true then skip render after remove user
  */
-Freebusy.prototype.removeUsers = function(idArr) {
+Freebusy.prototype.removeUsers = function(idArr, skipRender) {
     util.forEach(idArr, function(id) {
         this.removeUser(id);
     }, this);
+
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
  * Clear all users
+ * @param {boolean} [skipRender=false] - set true then skip render after clear views
  */
-Freebusy.prototype.clear = function() {
+Freebusy.prototype.clear = function(skipRender) {
     this.users.clear();
-    this.render();
+    this.clearRecommends(true);
+    this.unselect();
+
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 /**
@@ -344,11 +376,14 @@ Freebusy.prototype.select = function(start, end) {
 
 /**
  * Unselect selected time
+ * @param {boolean} [skipRender=false] - set true then skip render after unselect
  */
-Freebusy.prototype.unselect = function() {
+Freebusy.prototype.unselect = function(skipRender) {
     this.selectStart = this.selectEnd = '';
 
-    this.render();
+    if (!skipRender) {
+        this.render();
+    }
 };
 
 util.CustomEvents.mixin(Freebusy);
