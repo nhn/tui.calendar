@@ -71,12 +71,20 @@ module.exports = {
         return config.classname('dayname');
     },
 
+    'add': function(a, b) {
+        return a + b;
+    },
+
     'multiply': function(a, b) {
         return a * b;
     },
 
     'divide': function(a, b) {
         return a / b;
+    },
+
+    'subtract': function(a, b) {
+        return a - b;
     },
 
     'CSS_PREFIX': function() {

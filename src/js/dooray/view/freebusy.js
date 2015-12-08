@@ -5,7 +5,8 @@
 'use strict';
 
 var util = global.tui.util,
-    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    isValidHM = /^\d\d:\d\d$/;
 
 var config = require('../../config'),
     common = require('../../common/common'),
@@ -16,18 +17,23 @@ var config = require('../../config'),
     View = require('../../view/view'),
     tmpl = require('./freebusy.hbs');
 
-var PADDING_LEFT = 80;
-
 /**
  * @constructor
  * @extends {View}
  * @mixes CustomEvents
  * @param {object} options - options for Freebusy component
- * @param {boolean} [options.showTimeHeader=true] - set true then show time header
- * @param {User[]} [options.users] - initial users
+ *  @param {number} [options.headerHeight=20] - header height
+ *  @param {number} [options.itemHeight=20] - item height
+ *  @param {number} [options.nameWidth=100] - name area width
+ *  @param {User[]} [options.users] - initial users
+ *  @param {Block[]} [options.recommends] - recommendation time blocks
+ *  @param {string} [options.selectStart] - hh:mm formatted select start
+ *  @param {String} [options.selectEnd] - hh:mm formatted select end
  * @param {HTMLDivElement} container - container element for Freebusy component
  */
 function Freebusy(options, container) {
+    var opt;
+
     if (!(this instanceof Freebusy)) {
         return new Freebusy(options, container);
     }
@@ -41,9 +47,25 @@ function Freebusy(options, container) {
 
     View.call(this, container);
 
-    this.options = util.extend({
-        showTimeHeader: true
+    opt = this.options = util.extend({
+        headerHeight: 20,
+        itemHeight: 20,
+        nameWidth: 100,
+        users: [],
+        recommends: [],
+        selectStart: '',
+        selectEnd: ''
     }, options);
+
+    /**
+     * @type {string}
+     */
+    this.selectStart = opt.selectStart;
+
+    /**
+     * @type {string}
+     */
+    this.selectEnd = opt.selectEnd;
 
     /**
      * @type {Colleciton}
@@ -56,8 +78,8 @@ function Freebusy(options, container) {
         return user.id;
     });
 
-    if (this.options.users) {
-        this.addUsers(this.options.users);
+    if (opt.users.length) {
+        this.addUsers(opt.users);
     }
 
     domutil.disableTextSelection(container);
@@ -82,7 +104,7 @@ Freebusy.prototype._beforeDestroy = function() {
     domevent.off(container, 'click', this._onClick, this);
 
     container.innerHTML = '';
-    this.options = this.users = null;
+    this.selectStart = this.selectEnd = this.options = this.users = null;
 };
 
 /**********
@@ -94,8 +116,9 @@ Freebusy.prototype._beforeDestroy = function() {
  * @param {MouseEvent} clickEventData - click mouse event data
  */
 Freebusy.prototype._onClick = function(clickEventData) {
-    var target = clickEventData.srcElement || clickEventData.target,
-        isValid = domutil.closest(target, '.' + config.classname('freebusy-blocks')),
+    var opt = this.options,
+        target = clickEventData.srcElement || clickEventData.target,
+        isValid = domutil.closest(target, '.' + config.classname('freebusy-leftmargin')),
         container, containerWidth,
         mouseX, timeX, dateX, nearMinutesX;
 
@@ -104,8 +127,8 @@ Freebusy.prototype._onClick = function(clickEventData) {
     }
 
     container = this.container;
-    containerWidth = this.getViewBound().width - PADDING_LEFT;
-    mouseX = domevent.getMousePosition(clickEventData, container)[0] - PADDING_LEFT;
+    containerWidth = this.getViewBound().width - opt.nameWidth;
+    mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
     timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
     dateX = new Date(timeX);
     nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
@@ -172,18 +195,71 @@ Freebusy.prototype._getBlockBound = function(block) {
 };
 
 /**
+ * Add recommends blocks
+ * @param {Block[]} blocks - blocks
+ */
+Freebusy.prototype.addRecommends = function(blocks) {
+    var opt = this.options;
+    opt.recommends = opt.recommends.concat(blocks);
+
+    this.render();
+};
+
+/**
+ * Clear recommends blocks
+ */
+Freebusy.prototype.clearRecommends = function() {
+    this.options.recommends = [];
+
+    this.render();
+};
+
+/**
+ * get view block for selection state in instance
+ * @param {string} start - hh:mm formatted string for select start
+ * @param {string} end - hh:mm formatted string for select end
+ * @returns {number[]} block bound
+ */
+Freebusy.prototype._getSelectionBlock = function(start, end) {
+    var oneHour = datetime.MILLISECONDS_PER_HOUR,
+        oneMinutes = datetime.MILLISECONDS_PER_MINUTES;
+
+    if (!isValidHM.test(start) || !isValidHM.test(end)) {
+        return false;
+    }
+
+    start = start.split(':');
+    end = end.split(':');
+
+    return this._getBlockBound({
+        from: datetime.toUTC(new Date((oneHour * start[0]) + (oneMinutes * start[1]))),
+        to: datetime.toUTC(new Date((oneHour * end[0]) + (oneMinutes * end[1])))
+    });
+};
+
+/**
  * Get view model for rendering
  * @returns {object} view model for rendering
  */
 Freebusy.prototype._getViewModel = function() {
-    var viewModel = {
-            showTimeHeader: this.options.showTimeHeader,
+    var opt = this.options,
+        users = this.users,
+        userLength = users.length,
+        viewModel = {
+            headerHeight: opt.headerHeight,
+            nameWidth: opt.nameWidth,
+            itemHeight: opt.itemHeight,
+            bodyHeight: (userLength * opt.itemHeight),
+            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
+
             times: dayArr,
             timeWidth: 100 / dayArr.length,
-            freebusy: {} 
+            freebusy: {},
+            recommends: [],
+            selection: this._getSelectionBlock(this.selectStart, this.selectEnd) 
         };
 
-    this.users.each(function(user) {
+    users.each(function(user) {
         viewModel.freebusy[user.id] = {
             name: user.name,
             busy: util.map(user.freebusy, function(block) {
@@ -191,6 +267,11 @@ Freebusy.prototype._getViewModel = function() {
             }, this)
         };
     }, this);
+
+    util.forEach(opt.recommends, function(block) {
+        viewModel.recommends.push(this._getBlockBound(block));
+    }, this);
+
 
     return viewModel;
 };
@@ -255,7 +336,19 @@ Freebusy.prototype.clear = function() {
  * @param {string} end - hh:mm formatted string value
  */
 Freebusy.prototype.select = function(start, end) {
+    this.selectStart = start;
+    this.selectEnd = end;
 
+    this.render();
+};
+
+/**
+ * Unselect selected time
+ */
+Freebusy.prototype.unselect = function() {
+    this.selectStart = this.selectEnd = '';
+
+    this.render();
 };
 
 util.CustomEvents.mixin(Freebusy);

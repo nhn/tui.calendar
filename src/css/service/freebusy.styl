@@ -1,79 +1,83 @@
-headerHeight = 20px
-minHeightOfFreebusy = 20px
-itemHeight = 20px
-nameWidth = 80px
-headerBottomBorderWidth = 2px
-
-mainBorder = 1px solid #ccc
-halfTimeBorder = 1px dotted #eee
-
 +prefix-classes(freebusy)
+    // Common
     .container
         position: relative
-        min-height: minHeightOfFreebusy + headerBottomBorderWidth
-        padding-top: minHeightOfFreebusy
 
-    .timegrid
-        position: absolute
-        pos(0, 0)
-        width: 100%
-        height: 100%
-        z-index: -1
-
-    .grid-wrap
+    .leftmargin
         position: relative
-        margin-left: nameWidth
-        height: 100%
+        border-left: 1px solid #ccc
+
+    // 격자선
 
     .grid
+        position: relative
+        wh(100%, 100%)
+
+    .gridline
         position: absolute
         height: 100%
-        border-left: mainBorder
-        overflow: visible
+        border-left: 1px solid #ccc
         background-image: url(freebusy-half-dot.gif)
         background-position: 49.5% top
         background-repeat: repeat-y
         text-align: center
 
-    .grid > div
-        height: headerHeight
+    .gridline > div
         background-color: #fff
 
-    // 일정 표 영역
+    .gridline-last > div
+        margin-right: 1px
+
+    // 사용자 목록, 일정표 영역
     .chart
-        clearfix()
-        border-top: mainBorder
-        border-width: headerBottomBorderWidth
+        position: absolute
+        border-top: 1px solid #ccc
+        width: 100%
 
     .item
-        padding-left: nameWidth
-        height: itemHeight
-        border-bottom: mainBorder
-
-    .item-last
-        border: none
+        border-bottom: 1px solid #ccc
 
     .name
         position: absolute
         left: 0
-        wh(nameWidth, itemHeight)
-        line-height: itemHeight
 
-    .blocks
+    .block-container
         position: relative
-        width: 100%
-        height: itemHeight
-        float: right
-        cursor: pointer
+        height: 100%;
+        border-left: 1px solid #ccc
 
     .block
         position: absolute
         top: 0
-        height: itemHeight 
+        height: 100%
         z-index: 1
 
     .fill
-        height: itemHeight
+        height: 100%
         background-color: #aaa
-        cursor: default
+        opacity: 0.8
+
+    // 추천일정 영역
+    .recommends
+        position: absolute
+        width: 100%
+
+    .recommend-block
+        position: absolute
+        z-index: 2
+
+    .recommend-fill
+        border: 1px dashed red
+        
+    // 선택 효과 영역
+    .selection
+        position: absolute
+        width: 100%
+        z-index: 3
+
+    .select
+        position: absolute
+        background-color: blue
+        height: 100%
+        opacity: 0.5
 

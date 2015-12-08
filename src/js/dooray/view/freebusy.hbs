@@ -1,21 +1,42 @@
-<div class="{{CSS_PREFIX}}freebusy-timegrid">
-    <div class="{{CSS_PREFIX}}freebusy-grid-wrap">
-        {{#each times ~}}
-        <div class="{{CSS_PREFIX}}freebusy-grid" style="width:{{../timeWidth}}%;left:{{multiply ../timeWidth @index}}%"><div>{{this}}</div></div>
-        {{/each ~}}
+<div class="{{CSS_PREFIX}}freebusy-grid-container" style="height:{{containerHeight}}px;margin-left:{{nameWidth}}px">
+    <div class="{{CSS_PREFIX}}freebusy-grid">
+    {{#each times ~}}
+        <div class="{{CSS_PREFIX}}freebusy-gridline{{#if @last}} {{CSS_PREFIX}}freebusy-gridline-last{{/if}}"
+             style="width:{{@root.timeWidth}}%;left:{{multiply @root.timeWidth @index}}%">
+             <div style="height:{{@root.itemHeight}}px">{{this}}</div>
+        </div>
+    {{/each ~}}
     </div>
 </div>
-<div class="{{CSS_PREFIX}}freebusy-chart">
-    {{#each freebusy ~}}
-    <div class="{{CSS_PREFIX}}freebusy-item{{#if @last}} {{CSS_PREFIX}}freebusy-item-last{{/if}}">
-        <div class="{{CSS_PREFIX}}freebusy-name">{{name}}</div>
-        <div class="{{CSS_PREFIX}}freebusy-blocks">
-            {{#each busy ~}}
+<div class="{{CSS_PREFIX}}freebusy-chart" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
+{{#each freebusy ~}}
+    <div class="{{CSS_PREFIX}}freebusy-item" style="height:{{subtract @root.itemHeight 1}}px">
+        <div class="{{CSS_PREFIX}}freebusy-name" style="width:{{@root.nameWidth}}px">{{name}}</div>
+        <div class="{{CSS_PREFIX}}freebusy-block-container" style="margin-left:{{@root.nameWidth}}px">
+        {{#each busy ~}}
             <div class="{{CSS_PREFIX}}freebusy-block" style="left:{{[0]}}%;width:{{[1]}}%">
                 <div class="{{CSS_PREFIX}}freebusy-fill"></div>
             </div>
-            {{/each ~}}
+        {{/each ~}}
         </div>
     </div>
+{{/each ~}}
+</div>
+<div class="{{CSS_PREFIX}}freebusy-recommends" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
+    <div class="{{CSS_PREFIX}}freebusy-leftmargin" style="height:{{bodyHeight}}px;margin-left:{{nameWidth}}px">
+    {{#each recommends ~}}
+        <div class="{{CSS_PREFIX}}freebusy-recommend-block" style="left:{{[0]}}%;width:{{[1]}}%;height:{{subtract @root.bodyHeight 2}}px">
+            <div class="{{CSS_PREFIX}}freebusy-recommend-fill" style="height:{{subtract @root.bodyHeight 2}}px"></div>
+        </div>
     {{/each ~}}
+    </div>
+</div>
+<div class="{{CSS_PREFIX}}freebusy-selection" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
+    <div class="{{CSS_PREFIX}}freebusy-leftmargin" style="height:{{bodyHeight}}px;margin-left:{{nameWidth}}px">
+    {{#if selection ~}}
+    {{#with selection}}
+        <div class="{{CSS_PREFIX}}freebusy-select" style="left:{{[0]}}%;width:{{[1]}}%"></div>
+    {{/with}}
+    {{/if ~}}
+    </div>
 </div>

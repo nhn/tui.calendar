@@ -26,6 +26,11 @@ describe('Freebusy', function() {
         expect(actual[1]).toBeCloseTo(8.33, 1);
     });
 
+    it('_getSelectionBlock() calculate selection block bound', function() {
+        var actual = Freebusy.prototype._getSelectionBlock('00:00', '12:00');
+        expect(actual).toEqual([0, 50]);
+    });
+
     it('_getMilliseconds() get milliseconds value from sum of hour, minutes, seconds from date object.', function() {
         var date1 = new Date('2015-11-20T09:00:00+09:00');
         expect(Freebusy.prototype._getMilliseconds(date1)).toBe(32400000);
