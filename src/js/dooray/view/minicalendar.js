@@ -5,12 +5,12 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config');
-var View = require('../../view/view');
-var domutil = require('../../common/domutil');
-var domevent = require('../../common/domevent');
-var datetime = require('../../common/datetime');
-var tmpl = require('./minicalendar.hbs');
+var config = require('../../config'),
+    View = require('../../view/view'),
+    domutil = require('../../common/domutil'),
+    domevent = require('../../common/domevent'),
+    datetime = require('../../common/datetime'),
+    tmpl = require('./minicalendar.hbs');
 
 /**
  * @constructor
@@ -18,12 +18,13 @@ var tmpl = require('./minicalendar.hbs');
  * @param {object} options - options for minicalendar view
  *  @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
  *  @param {string|Date} [options.renderMonth] - month to render
- *  @param {string[]} [options.highlightDate] - dates to highlight
- *  @param {string[]} [options.daynames] - array of each days name.
+ *  @param {string[]} [options.daynames] - array of each days name
+ *  @param {number[]} [options.weekendNumber] - number of weekend
+ *  @param {string} [options.selectedDate=''] - YYYY-MM-DD formatted selected date
  * @param {HTMLDivElement} container - element to use container
  */
 function MiniCalendar(options, container) {
-    var today = datetime.start(new Date());
+    var todayStart;
 
     if (!(this instanceof MiniCalendar)) {
         return new MiniCalendar(options, container);
@@ -32,15 +33,17 @@ function MiniCalendar(options, container) {
     View.call(this, container);
     domutil.addClass(container, config.classname('minicalendar'));
     domevent.on(this.container, 'click', this._onClick, this);
+    todayStart = datetime.start(new Date());
 
     /**
      * @type {object}
      */
     options = this.options = util.extend({
         startDayOfWeek: 0,
-        renderMonth: new Date(+today),
-        highlightDate: [],
-        daynames: ['일', '월', '화', '수', '목', '금', '토']
+        renderMonth: todayStart,
+        daynames: ['일', '월', '화', '수', '목', '금', '토'],
+        weekendNumber: [0, 6],
+        selectedDate: datetime.format(todayStart, 'YYYY-MM-DD')
     }, options);
 
     // parse renderMonth options if it is an string
@@ -48,14 +51,19 @@ function MiniCalendar(options, container) {
         options.renderMonth = datetime.start(datetime.parse(options.renderMonth));
     }
 
+    // var hlData = {
+    //     'today': {'2015-12-08': true},
+    //     'selected': {'2015-12-09': true},
+    //
+    //     'focused': {'2015-06-12': true, '2015-06-13': true},
+    //     'has-schedule': {'2015-05-01': true, '2015-05-02': true}
+    // };
+
     /**
      * 일자 강조 데이터
      * @type {object}
      */
     this.hlData = {};
-    if (options.highlightDate.length) {
-        this.highlightDate(options.highlightDate);
-    }
 
     this.render();
 }
@@ -240,10 +248,11 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         return {
             d: d,
             ymd: ymd,
-            hasSchedule: hlData[ymd],
             isNotThisMonth: !dateIsInThisMonth,
-            weekend: (day === 0 || day === 6),
             selected: selected,
+
+            hasSchedule: hlData[ymd],
+            weekend: (day === 0 || day === 6),
             today: isToday
         };
     });
@@ -264,36 +273,6 @@ MiniCalendar.prototype.render = function() {
     viewModel = this._getViewModel(renderDate, startDayOfWeek);
 
     container.innerHTML = tmpl(viewModel);
-};
-
-/**
- * Cache data for highlight specific dates in calendar.
- * @param {string[]} dateStrList - the array of dates to highlight. (YYYY-MM-DD)
- * @param {boolean} [silent=false] - set true for prevent auto rendering.
- */
-MiniCalendar.prototype.highlightDate = function(dateStrList, silent) {
-    var ownData = this.hlData;
-
-    util.forEach(dateStrList, function(ymd) {
-        ownData[ymd] = true;
-    });
-
-    if (!silent) {
-        this.render();
-    }
-};
-
-/**
- * Clear cached data for highlighting specific date for represent the date has schedule.
- * @param {boolean} [silent=false] - set true for prevent auto rendering.
- */
-MiniCalendar.prototype.clearHighlightDate = function(silent) {
-    delete this.hlData;
-    this.hlData = {};
-
-    if (!silent) {
-        this.render();
-    }
 };
 
 util.CustomEvents.mixin(MiniCalendar);

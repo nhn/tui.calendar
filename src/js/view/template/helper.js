@@ -114,6 +114,8 @@ module.exports = {
 
     'time-tmpl': function(model) {
         return common.stripTags(model.title);
-    }
+    },
+
+    'minicalendar-tmpl': function(model) {}
 };
 

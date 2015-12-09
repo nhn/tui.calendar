@@ -100,7 +100,7 @@ describe('service:view/MiniCalendar', function() {
         });
     });
 
-    describe('highlight', function() {
+    xdescribe('highlight', function() {
         var inst;
 
         beforeEach(function() {
