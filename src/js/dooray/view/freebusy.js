@@ -312,7 +312,7 @@ Freebusy.prototype.addUser = function(user, skipRender) {
  */
 Freebusy.prototype.addUsers = function(users, skipRender) {
     util.forEach(users, function(user) {
-        this.addUser(user);
+        this.addUser(user, skipRender);
     }, this);
 
     if (!skipRender) {
@@ -340,7 +340,7 @@ Freebusy.prototype.removeUser = function(id, skipRender) {
  */
 Freebusy.prototype.removeUsers = function(idArr, skipRender) {
     util.forEach(idArr, function(id) {
-        this.removeUser(id);
+        this.removeUser(id, skipRender);
     }, this);
 
     if (!skipRender) {
