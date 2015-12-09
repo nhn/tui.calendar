@@ -2,7 +2,7 @@
 (function (global){
 /**
  * Dooray Calendar
- * @version 0.1.15
+ * @version 0.1.16
  */
 /* eslint vars-on-top:0, strict:0 */
 
@@ -79,6 +79,7 @@ var DoorayController = require('./src/js/dooray/controller/base');
 var TaskView = require('./src/js/dooray/view/taskview');
 var MilestoneClick = require('./src/js/dooray/handler/milestoneClick');
 var TaskClick = require('./src/js/dooray/handler/taskClick');
+var Freebusy = require('./src/js/dooray/view/freebusy');
 
 /**********
  * Calendar Factory
@@ -148,6 +149,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     TaskView: TaskView,
     MilestoneClick: MilestoneClick,
     TaskClick: TaskClick,
+    Freebusy: Freebusy,
 
     // factory class
     OriginCalendar: Calendar,
@@ -156,7 +158,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":39,"./src/js/dooray/factory/calendar":40,"./src/js/dooray/handler/milestoneClick":42,"./src/js/dooray/handler/taskClick":43,"./src/js/dooray/model/calEvent":44,"./src/js/dooray/view/minicalendar":48,"./src/js/dooray/view/taskview":50,"./src/js/factory/calendar":52,"./src/js/factory/controller":53,"./src/js/handler/allday/click":55,"./src/js/handler/allday/core":56,"./src/js/handler/allday/creation":57,"./src/js/handler/allday/creationGuide":58,"./src/js/handler/allday/move":59,"./src/js/handler/allday/moveGuide":60,"./src/js/handler/allday/resize":61,"./src/js/handler/allday/resizeGuide":62,"./src/js/handler/drag":63,"./src/js/handler/time/click":64,"./src/js/handler/time/core":65,"./src/js/handler/time/creation":66,"./src/js/handler/time/creationGuide":67,"./src/js/handler/time/move":68,"./src/js/handler/time/moveGuide":69,"./src/js/handler/time/resize":70,"./src/js/handler/time/resizeGuide":71,"./src/js/model/calEvent":72,"./src/js/model/viewModel/calEvent":73,"./src/js/view/monthweek":75,"./src/js/view/template/registerHelpers":79,"./src/js/view/view":84,"./src/js/view/week/dayname":86,"./src/js/view/week/time":87,"./src/js/view/week/timeGrid":88,"./src/js/view/week/week":89}],2:[function(require,module,exports){
+},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":39,"./src/js/dooray/factory/calendar":40,"./src/js/dooray/handler/milestoneClick":42,"./src/js/dooray/handler/taskClick":43,"./src/js/dooray/model/calEvent":44,"./src/js/dooray/view/freebusy":46,"./src/js/dooray/view/minicalendar":50,"./src/js/dooray/view/taskview":52,"./src/js/factory/calendar":54,"./src/js/factory/controller":55,"./src/js/handler/allday/click":57,"./src/js/handler/allday/core":58,"./src/js/handler/allday/creation":59,"./src/js/handler/allday/creationGuide":60,"./src/js/handler/allday/move":61,"./src/js/handler/allday/moveGuide":62,"./src/js/handler/allday/resize":63,"./src/js/handler/allday/resizeGuide":64,"./src/js/handler/drag":65,"./src/js/handler/time/click":66,"./src/js/handler/time/core":67,"./src/js/handler/time/creation":68,"./src/js/handler/time/creationGuide":69,"./src/js/handler/time/move":70,"./src/js/handler/time/moveGuide":71,"./src/js/handler/time/resize":72,"./src/js/handler/time/resizeGuide":73,"./src/js/model/calEvent":74,"./src/js/model/viewModel/calEvent":75,"./src/js/view/monthweek":77,"./src/js/view/template/registerHelpers":81,"./src/js/view/view":86,"./src/js/view/week/dayname":88,"./src/js/view/week/time":89,"./src/js/view/week/timeGrid":90,"./src/js/view/week/week":91}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -5137,7 +5139,7 @@ module.exports = VLayout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../config":36,"../handler/drag":63,"../view/view":84,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":35}],35:[function(require,module,exports){
+},{"../config":36,"../handler/drag":65,"../view/view":86,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":35}],35:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Panel class for VLayout module
@@ -5277,7 +5279,7 @@ module.exports = VPanel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../config":36,"../view/view":84,"./common":26,"./domutil":30}],36:[function(require,module,exports){
+},{"../config":36,"../view/view":86,"./common":26,"./domutil":30}],36:[function(require,module,exports){
 /* eslint-disable */
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
@@ -5609,7 +5611,7 @@ module.exports = Base;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../model/calEvent":72,"../model/viewModel/calEvent":73}],38:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../model/calEvent":74,"../model/viewModel/calEvent":75}],38:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller mixin modules for day views.
@@ -6021,7 +6023,7 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":73}],39:[function(require,module,exports){
+},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":75}],39:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Base controller for Dooray service project.
@@ -6598,7 +6600,7 @@ module.exports = ServiceCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../config":36,"../../controller/viewMixin/week":38,"../../factory/calendar":52,"../controller/base":39,"./weekView":41}],41:[function(require,module,exports){
+},{"../../common/datetime":27,"../../config":36,"../../controller/viewMixin/week":38,"../../factory/calendar":54,"../controller/base":39,"./weekView":41}],41:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for WeekView (customized for service)
@@ -6769,7 +6771,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../dooray/view/template/factory/weekView.hbs":51,"../../handler/allday/click":55,"../../handler/allday/creation":57,"../../handler/allday/move":59,"../../handler/allday/resize":61,"../../handler/time/click":64,"../../handler/time/creation":66,"../../handler/time/move":68,"../../handler/time/resize":70,"../../view/week/allday":85,"../../view/week/dayname":86,"../../view/week/timeGrid":88,"../../view/week/week":89,"../handler/milestoneClick":42,"../handler/taskClick":43,"../view/milestone":46,"../view/taskview":50}],42:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../dooray/view/template/factory/weekView.hbs":53,"../../handler/allday/click":57,"../../handler/allday/creation":59,"../../handler/allday/move":61,"../../handler/allday/resize":63,"../../handler/time/click":66,"../../handler/time/creation":68,"../../handler/time/move":70,"../../handler/time/resize":72,"../../view/week/allday":87,"../../view/week/dayname":88,"../../view/week/timeGrid":90,"../../view/week/week":91,"../handler/milestoneClick":42,"../handler/taskClick":43,"../view/milestone":48,"../view/taskview":52}],42:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -7070,7 +7072,542 @@ module.exports = DoorayEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../model/calEvent":72}],45:[function(require,module,exports){
+},{"../../model/calEvent":74}],45:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
+
+  return "<div class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-gridline"
+    + ((stack1 = helpers["if"].call(alias1,(data && data.last),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\"\n             style=\"width:"
+    + alias3(alias4(((stack1 = (data && data.root)) && stack1.timeWidth), depth0))
+    + "%;left:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.timeWidth),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+    + "%\">\n             <div style=\"height:"
+    + alias3(alias4(((stack1 = (data && data.root)) && stack1.itemHeight), depth0))
+    + "px\">"
+    + alias3(alias4(depth0, depth0))
+    + "</div>\n        </div>\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return " "
+    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-gridline-last";
+},"4":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-item\" style=\"height:"
+    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.itemHeight),1,{"name":"subtract","hash":{},"data":data}))
+    + "px\">\n        <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-name\" style=\"width:"
+    + alias4(alias5(((stack1 = (data && data.root)) && stack1.nameWidth), depth0))
+    + "px\">"
+    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
+    + "</div>\n        <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-block-container\" style=\"margin-left:"
+    + alias4(alias5(((stack1 = (data && data.root)) && stack1.nameWidth), depth0))
+    + "px\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.busy : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n    </div>\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-block\" style=\"left:"
+    + alias4(((helper = (helper = helpers["0"] || (depth0 != null ? depth0["0"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"0","hash":{},"data":data}) : helper)))
+    + "%;width:"
+    + alias4(((helper = (helper = helpers["1"] || (depth0 != null ? depth0["1"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"1","hash":{},"data":data}) : helper)))
+    + "%\">\n                <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-fill\"></div>\n            </div>\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-recommend-block\" style=\"left:"
+    + alias4(((helper = (helper = helpers["0"] || (depth0 != null ? depth0["0"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"0","hash":{},"data":data}) : helper)))
+    + "%;width:"
+    + alias4(((helper = (helper = helpers["1"] || (depth0 != null ? depth0["1"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"1","hash":{},"data":data}) : helper)))
+    + "%;height:"
+    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.bodyHeight),2,{"name":"subtract","hash":{},"data":data}))
+    + "px\">\n            <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-recommend-fill\" style=\"height:"
+    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.bodyHeight),2,{"name":"subtract","hash":{},"data":data}))
+    + "px\"></div>\n        </div>\n";
+},"9":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["with"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.selection : depth0),{"name":"with","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"10":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "        <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-select\" style=\"left:"
+    + alias4(((helper = (helper = helpers["0"] || (depth0 != null ? depth0["0"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"0","hash":{},"data":data}) : helper)))
+    + "%;width:"
+    + alias4(((helper = (helper = helpers["1"] || (depth0 != null ? depth0["1"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"1","hash":{},"data":data}) : helper)))
+    + "%\"></div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-grid-container\" style=\"height:"
+    + alias4(((helper = (helper = helpers.containerHeight || (depth0 != null ? depth0.containerHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"containerHeight","hash":{},"data":data}) : helper)))
+    + "px;margin-left:"
+    + alias4(((helper = (helper = helpers.nameWidth || (depth0 != null ? depth0.nameWidth : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nameWidth","hash":{},"data":data}) : helper)))
+    + "px\">\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-grid\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.times : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n</div>\n<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-chart\" style=\"top:"
+    + alias4(((helper = (helper = helpers.headerHeight || (depth0 != null ? depth0.headerHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"headerHeight","hash":{},"data":data}) : helper)))
+    + "px;height:"
+    + alias4(((helper = (helper = helpers.bodyHeight || (depth0 != null ? depth0.bodyHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bodyHeight","hash":{},"data":data}) : helper)))
+    + "px\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.freebusy : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-recommends\" style=\"top:"
+    + alias4(((helper = (helper = helpers.headerHeight || (depth0 != null ? depth0.headerHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"headerHeight","hash":{},"data":data}) : helper)))
+    + "px;height:"
+    + alias4(((helper = (helper = helpers.bodyHeight || (depth0 != null ? depth0.bodyHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bodyHeight","hash":{},"data":data}) : helper)))
+    + "px\">\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-leftmargin\" style=\"height:"
+    + alias4(((helper = (helper = helpers.bodyHeight || (depth0 != null ? depth0.bodyHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bodyHeight","hash":{},"data":data}) : helper)))
+    + "px;margin-left:"
+    + alias4(((helper = (helper = helpers.nameWidth || (depth0 != null ? depth0.nameWidth : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nameWidth","hash":{},"data":data}) : helper)))
+    + "px\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.recommends : depth0),{"name":"each","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n</div>\n<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-selection\" style=\"top:"
+    + alias4(((helper = (helper = helpers.headerHeight || (depth0 != null ? depth0.headerHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"headerHeight","hash":{},"data":data}) : helper)))
+    + "px;height:"
+    + alias4(((helper = (helper = helpers.bodyHeight || (depth0 != null ? depth0.bodyHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bodyHeight","hash":{},"data":data}) : helper)))
+    + "px\">\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "freebusy-leftmargin\" style=\"height:"
+    + alias4(((helper = (helper = helpers.bodyHeight || (depth0 != null ? depth0.bodyHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bodyHeight","hash":{},"data":data}) : helper)))
+    + "px;margin-left:"
+    + alias4(((helper = (helper = helpers.nameWidth || (depth0 != null ? depth0.nameWidth : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nameWidth","hash":{},"data":data}) : helper)))
+    + "px\">\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.selection : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n</div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],46:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Freebusy component
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var util = global.tui.util,
+    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    isValidHM = /^\d\d:\d\d$/;
+
+var config = require('../../config'),
+    common = require('../../common/common'),
+    datetime = require('../../common/datetime'),
+    Collection = require('../../common/collection'),
+    domutil = require('../../common/domutil'),
+    domevent = require('../../common/domevent'),
+    View = require('../../view/view'),
+    tmpl = require('./freebusy.hbs');
+
+/**
+ * @constructor
+ * @extends {View}
+ * @mixes CustomEvents
+ * @param {object} options - options for Freebusy component
+ *  @param {number} [options.headerHeight=20] - header height
+ *  @param {number} [options.itemHeight=20] - item height
+ *  @param {number} [options.nameWidth=100] - name area width
+ *  @param {User[]} [options.users] - initial users
+ *  @param {Block[]} [options.recommends] - recommendation time blocks
+ *  @param {string} [options.selectStart] - hh:mm formatted select start
+ *  @param {String} [options.selectEnd] - hh:mm formatted select end
+ * @param {HTMLDivElement} container - container element for Freebusy component
+ */
+function Freebusy(options, container) {
+    var opt;
+
+    if (!(this instanceof Freebusy)) {
+        return new Freebusy(options, container);
+    }
+
+    container = domutil.appendHTMLElement(
+        'div', 
+        container, 
+        config.classname('clear') + ' ' +
+        config.classname('freebusy-container')
+    );
+
+    View.call(this, container);
+
+    opt = this.options = util.extend({
+        headerHeight: 20,
+        itemHeight: 20,
+        nameWidth: 100,
+        users: [],
+        recommends: [],
+        selectStart: '',
+        selectEnd: ''
+    }, options);
+
+    /**
+     * @type {string}
+     */
+    this.selectStart = opt.selectStart;
+
+    /**
+     * @type {string}
+     */
+    this.selectEnd = opt.selectEnd;
+
+    /**
+     * @type {Colleciton}
+     */
+    this.users = new Collection(function(user) {
+        if (!user.id) {
+            config.throwError('Freebusy: id 가 없는 사용자를 추가할 수 없습니다.');
+        }
+
+        return user.id;
+    });
+
+    if (opt.users.length) {
+        this.addUsers(opt.users);
+    }
+
+    domutil.disableTextSelection(container);
+
+    domevent.on(container, {
+        click: this._onClick
+    }, this);
+
+    this.render();
+}
+
+util.inherit(Freebusy, View);
+
+/**
+ * Invoke before destroy
+ * @private
+ * @override
+ */
+Freebusy.prototype._beforeDestroy = function() {
+    var container = this.container;
+    domutil.enableTextSelection(container);
+    domevent.off(container, 'click', this._onClick, this);
+
+    container.innerHTML = '';
+    this.selectStart = this.selectEnd = this.options = this.users = null;
+};
+
+/**********
+ * Mouse Event Handlers
+ **********/
+
+/**
+ * @fires Freebusy#click
+ * @param {MouseEvent} clickEventData - click mouse event data
+ */
+Freebusy.prototype._onClick = function(clickEventData) {
+    var opt = this.options,
+        target = clickEventData.srcElement || clickEventData.target,
+        isValid = domutil.closest(target, '.' + config.classname('freebusy-leftmargin')),
+        container, containerWidth,
+        mouseX, timeX, dateX, nearMinutesX;
+
+    if (!isValid) {
+        return;
+    }
+
+    container = this.container;
+    containerWidth = this.getViewBound().width - opt.nameWidth;
+    mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
+    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
+    dateX = new Date(timeX);
+    nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
+
+    /**
+     * @event Freebusy#click
+     * @type {object}
+     * @property {string} time - hh:mm string
+     */
+    this.fire('click', {
+        time: datetime.leadingZero(dateX.getUTCHours(), 2) + ':' + datetime.leadingZero(nearMinutesX, 2)
+    });
+};
+
+/**********
+ * Methods
+ **********/
+
+/**
+ * Get total milliseconds from hour, minutes, seconds part of supplied date object.
+ * @private
+ * @param {Date|string} date - date
+ * @returns {number} hour + minutes + seconds millseconds value
+ */
+Freebusy.prototype._getMilliseconds = function(date) {
+    var raw = datetime.raw(util.isDate(date) ? date : new Date(date)),
+        mils = 0;
+
+    mils = datetime.millisecondsFrom('hour', raw.h) +
+        datetime.millisecondsFrom('minutes', raw.m) +
+        datetime.millisecondsFrom('seconds', raw.s);
+
+    return mils;
+};
+
+/**
+ * @typedef {object} User
+ * @property {string} id - unique id for each users
+ * @property {string} name - name of user
+ * @property {Block[]} freebusy - freebusy data
+ */
+
+/**
+ * @typedef {object} Block
+ * @property {string} from - start time string of event
+ * @property {string} to - end time string of event
+ */
+
+/**
+ * Calculate relative bound of each blocks
+ * @param {Block} block - each blocks in user data
+ * @returns {array} [0]: left, [1]: width
+ */
+Freebusy.prototype._getBlockBound = function(block) {
+    var from = this._getMilliseconds(block.from),
+        to = this._getMilliseconds(block.to),
+        left,
+        width;
+
+    left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);
+    width = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, (to - from));
+
+    return [left, width];
+};
+
+/**
+ * Add recommends blocks
+ * @param {Block[]} blocks - blocks
+ * @param {boolean} [skipRender=false] - set true then skip render after add recommends
+ */
+Freebusy.prototype.addRecommends = function(blocks, skipRender) {
+    var opt = this.options;
+    opt.recommends = opt.recommends.concat(blocks);
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * Clear recommends blocks
+ * @param {boolean} [skipRender=false] - set true then skip render after clear recommends
+ */
+Freebusy.prototype.clearRecommends = function(skipRender) {
+    this.options.recommends = [];
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * get view block for selection state in instance
+ * @param {string} start - hh:mm formatted string for select start
+ * @param {string} end - hh:mm formatted string for select end
+ * @returns {number[]} block bound
+ */
+Freebusy.prototype._getSelectionBlock = function(start, end) {
+    var oneHour = datetime.MILLISECONDS_PER_HOUR,
+        oneMinutes = datetime.MILLISECONDS_PER_MINUTES;
+
+    if (!isValidHM.test(start) || !isValidHM.test(end)) {
+        return false;
+    }
+
+    start = start.split(':');
+    end = end.split(':');
+
+    return this._getBlockBound({
+        from: datetime.toUTC(new Date((oneHour * start[0]) + (oneMinutes * start[1]))),
+        to: datetime.toUTC(new Date((oneHour * end[0]) + (oneMinutes * end[1])))
+    });
+};
+
+/**
+ * Get view model for rendering
+ * @returns {object} view model for rendering
+ */
+Freebusy.prototype._getViewModel = function() {
+    var opt = this.options,
+        users = this.users,
+        userLength = users.length,
+        viewModel = {
+            headerHeight: opt.headerHeight,
+            nameWidth: opt.nameWidth,
+            itemHeight: opt.itemHeight,
+            bodyHeight: (userLength * opt.itemHeight),
+            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
+
+            times: dayArr,
+            timeWidth: 100 / dayArr.length,
+            freebusy: {},
+            recommends: [],
+            selection: this._getSelectionBlock(this.selectStart, this.selectEnd) 
+        };
+
+    users.each(function(user) {
+        viewModel.freebusy[user.id] = {
+            name: user.name,
+            busy: util.map(user.freebusy, function(block) {
+                return this._getBlockBound(block);
+            }, this)
+        };
+    }, this);
+
+    util.forEach(opt.recommends, function(block) {
+        viewModel.recommends.push(this._getBlockBound(block));
+    }, this);
+
+
+    return viewModel;
+};
+
+/**
+ * @override
+ */
+Freebusy.prototype.render = function() {
+    var container = this.container,
+        viewModel = this._getViewModel();
+
+    container.innerHTML = tmpl(viewModel);
+};
+
+/**
+ * Add a single user
+ * @param {User} user - user to add
+ * @param {boolean} [skipRender=false] - set true then skip render after add user
+ */
+Freebusy.prototype.addUser = function(user, skipRender) {
+    this.users.add(user);
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * Add mutiple user
+ * @param {User[]} users - users to add
+ * @param {boolean} [skipRender=false] - set true then skip render after add user
+ */
+Freebusy.prototype.addUsers = function(users, skipRender) {
+    util.forEach(users, function(user) {
+        this.addUser(user, skipRender);
+    }, this);
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * Remove single user
+ * @param {string} id - id to delete
+ * @param {boolean} [skipRender=false] - set true then skip render after remove user
+ */
+Freebusy.prototype.removeUser = function(id, skipRender) {
+    this.users.remove(id);
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * Remove mutiple user
+ * @param {string[]} idArr - array of id to delete
+ * @param {boolean} [skipRender=false] - set true then skip render after remove user
+ */
+Freebusy.prototype.removeUsers = function(idArr, skipRender) {
+    util.forEach(idArr, function(id) {
+        this.removeUser(id, skipRender);
+    }, this);
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * Clear all users
+ * @param {boolean} [skipRender=false] - set true then skip render after clear views
+ */
+Freebusy.prototype.clear = function(skipRender) {
+    this.users.clear();
+    this.clearRecommends(true);
+    this.unselect();
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+/**
+ * Select specific time
+ * @param {string} start - hh:mm formatted string value
+ * @param {string} end - hh:mm formatted string value
+ */
+Freebusy.prototype.select = function(start, end) {
+    this.selectStart = start;
+    this.selectEnd = end;
+
+    this.render();
+};
+
+/**
+ * Unselect selected time
+ * @param {boolean} [skipRender=false] - set true then skip render after unselect
+ */
+Freebusy.prototype.unselect = function(skipRender) {
+    this.selectStart = this.selectEnd = '';
+
+    if (!skipRender) {
+        this.render();
+    }
+};
+
+util.CustomEvents.mixin(Freebusy);
+
+module.exports = Freebusy;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./freebusy.hbs":45}],47:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7119,7 +7656,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],46:[function(require,module,exports){
+},{"hbsfy/runtime":21}],48:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 뷰
@@ -7228,7 +7765,7 @@ module.exports = Milestone;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":84,"./milestone.hbs":45}],47:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./milestone.hbs":47}],49:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7308,7 +7845,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</tbody>\n</table>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],48:[function(require,module,exports){
+},{"hbsfy/runtime":21}],50:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Minicalendar view.
@@ -7614,7 +8151,7 @@ module.exports = MiniCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":84,"./minicalendar.hbs":47}],49:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./minicalendar.hbs":49}],51:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7701,7 +8238,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],50:[function(require,module,exports){
+},{"hbsfy/runtime":21}],52:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Task view for upper area of Week view.
@@ -7815,7 +8352,7 @@ module.exports = TaskView;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":84,"./taskview.hbs":49}],51:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./taskview.hbs":51}],53:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -7828,7 +8365,7 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
     + "vlayout-area\"></div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],52:[function(require,module,exports){
+},{"hbsfy/runtime":21}],54:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for control all other factory.
@@ -8315,7 +8852,7 @@ module.exports = Calendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../config":36,"../handler/drag":63,"../view/layout":74,"./controller":53,"./weekView":54,"hbsfy/runtime":21}],53:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../config":36,"../handler/drag":65,"../view/layout":76,"./controller":55,"./weekView":56,"hbsfy/runtime":21}],55:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller factory module.
@@ -8345,7 +8882,7 @@ module.exports = function(options) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../controller/base":37,"../controller/viewMixin/week":38}],54:[function(require,module,exports){
+},{"../controller/base":37,"../controller/viewMixin/week":38}],56:[function(require,module,exports){
 /**
  * @fileoverview Factory module for WeekView
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -8476,7 +9013,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     };
 };
 
-},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":55,"../handler/allday/creation":57,"../handler/allday/move":59,"../handler/allday/resize":61,"../handler/time/click":64,"../handler/time/creation":66,"../handler/time/move":68,"../handler/time/resize":70,"../view/template/factory/weekView.hbs":76,"../view/week/allday":85,"../view/week/dayname":86,"../view/week/timeGrid":88,"../view/week/week":89}],55:[function(require,module,exports){
+},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":57,"../handler/allday/creation":59,"../handler/allday/move":61,"../handler/allday/resize":63,"../handler/time/click":66,"../handler/time/creation":68,"../handler/time/move":70,"../handler/time/resize":72,"../view/template/factory/weekView.hbs":78,"../view/week/allday":87,"../view/week/dayname":88,"../view/week/timeGrid":90,"../view/week/week":91}],57:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Click handle module for allday events
@@ -8568,7 +9105,7 @@ module.exports = AlldayClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36,"./move":59}],56:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36,"./move":61}],58:[function(require,module,exports){
 /**
  * @fileoverview Base mixin object for handler/allday
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -8635,7 +9172,7 @@ var alldayCore = {
 module.exports = alldayCore;
 
 
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],57:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],59:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handler module for MonthWeek view's creation actions.
@@ -8907,7 +9444,7 @@ module.exports = AlldayCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":56,"./creationGuide":58}],58:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":58,"./creationGuide":60}],60:[function(require,module,exports){
 /**
  * @fileoverview Guide element for Allday.Creation
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9040,7 +9577,7 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 module.exports = AlldayCreationGuide;
 
 
-},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],59:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],61:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Move handler for Allday view.
@@ -9313,7 +9850,7 @@ module.exports = AlldayMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":56,"./moveGuide":60}],60:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":58,"./moveGuide":62}],62:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Effect module for Allday.Move
@@ -9506,7 +10043,7 @@ module.exports = AlldayMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],61:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],63:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize handler module for Allday view.
@@ -9776,7 +10313,7 @@ module.exports = AlldayResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":56,"./resizeGuide":62}],62:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":58,"./resizeGuide":64}],64:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize Guide module.
@@ -9921,7 +10458,7 @@ module.exports = AlldayResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],63:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],65:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Drag handler for calendar.
@@ -10160,7 +10697,7 @@ module.exports = Drag;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domevent":29,"../common/domutil":30}],64:[function(require,module,exports){
+},{"../common/domevent":29,"../common/domutil":30}],66:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Allday event click event hander module
@@ -10268,7 +10805,7 @@ module.exports = TimeClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],65:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],67:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Core methods for dragging actions
@@ -10361,7 +10898,7 @@ module.exports = timeCore;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":32}],66:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":32}],68:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling creation events from drag handler and time grid view
@@ -10681,7 +11218,7 @@ module.exports = TimeCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":65,"./creationGuide":67}],67:[function(require,module,exports){
+},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./creationGuide":69}],69:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Creation effect while dragging.
@@ -10936,7 +11473,7 @@ module.exports = TimeCreationGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],68:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],70:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling move events from drag handler and time grid view
@@ -11307,7 +11844,7 @@ module.exports = TimeMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":65,"./moveGuide":69}],69:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./moveGuide":71}],71:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Move effect while dragging.
@@ -11469,7 +12006,7 @@ module.exports = TimeMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],70:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],72:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling resize events from drag handler and time grid view
@@ -11792,7 +12329,7 @@ module.exports = TimeResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":65,"./resizeGuide":71}],71:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./resizeGuide":73}],73:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Resize effect while dragging.
@@ -11969,7 +12506,7 @@ module.exports = TimeResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],72:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],74:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model of event.
@@ -12191,7 +12728,7 @@ module.exports = CalEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],73:[function(require,module,exports){
+},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],75:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model for views
@@ -12356,7 +12893,7 @@ module.exports = CalEventViewModel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],74:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
@@ -12437,7 +12974,7 @@ module.exports = Layout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":84}],75:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":86}],77:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of week event container inside of Week view.
@@ -12551,9 +13088,9 @@ module.exports = MonthWeek;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":78,"./view":84}],76:[function(require,module,exports){
-arguments[4][51][0].apply(exports,arguments)
-},{"dup":51,"hbsfy/runtime":21}],77:[function(require,module,exports){
+},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":80,"./view":86}],78:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"dup":53,"hbsfy/runtime":21}],79:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Helpers for handlebar templates.
@@ -12628,8 +13165,20 @@ module.exports = {
         return config.classname('dayname');
     },
 
+    'add': function(a, b) {
+        return a + b;
+    },
+
     'multiply': function(a, b) {
         return a * b;
+    },
+
+    'divide': function(a, b) {
+        return a / b;
+    },
+
+    'subtract': function(a, b) {
+        return a - b;
     },
 
     'CSS_PREFIX': function() {
@@ -12664,7 +13213,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../config":36}],78:[function(require,module,exports){
+},{"../../common/common":26,"../../config":36}],80:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12752,7 +13301,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],79:[function(require,module,exports){
+},{"hbsfy/runtime":21}],81:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Register developed custom handlebars helper.
@@ -12770,7 +13319,7 @@ util.forEach(helper, function(helper, name) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./helper":77,"hbsfy/runtime":21}],80:[function(require,module,exports){
+},{"./helper":79,"hbsfy/runtime":21}],82:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -12787,7 +13336,7 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
     + "allday-monthweek-container\"></div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],81:[function(require,module,exports){
+},{"hbsfy/runtime":21}],83:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12818,7 +13367,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],82:[function(require,module,exports){
+},{"hbsfy/runtime":21}],84:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12859,7 +13408,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
   return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"useData":true});
 
-},{"hbsfy/runtime":21}],83:[function(require,module,exports){
+},{"hbsfy/runtime":21}],85:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12910,7 +13459,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "timegrid-todaymarker\">today</div>\n    </div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],84:[function(require,module,exports){
+},{"hbsfy/runtime":21}],86:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview The base class of views.
@@ -13114,7 +13663,7 @@ module.exports = View;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30}],85:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30}],87:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of allday event container inside of Week view.
@@ -13199,7 +13748,7 @@ module.exports = Allday;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36,"../monthweek":75,"../template/week/allday.hbs":80,"../view":84}],86:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36,"../monthweek":77,"../template/week/allday.hbs":82,"../view":86}],88:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendering daynames
@@ -13281,7 +13830,7 @@ module.exports = DayName;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/daynames.hbs":81,"../view":84}],87:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/daynames.hbs":83,"../view":86}],89:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of time.
@@ -13470,7 +14019,7 @@ module.exports = Time;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/time.hbs":82,"../view":84}],88:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/time.hbs":84,"../view":86}],90:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendered events by times.
@@ -13808,7 +14357,7 @@ module.exports = TimeGrid;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/autoScroll":24,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36,"../template/week/timeGrid.hbs":83,"../view":84,"./time":87}],89:[function(require,module,exports){
+},{"../../common/autoScroll":24,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36,"../template/week/timeGrid.hbs":85,"../view":86,"./time":89}],91:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of days UI.
@@ -13924,4 +14473,4 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../view":84}]},{},[1]);
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../view":86}]},{},[1]);
