@@ -1,0 +1,83 @@
++prefix-classes(freebusy)
+    // Common
+    .container
+        position: relative
+
+    .leftmargin
+        position: relative
+        border-left: 1px solid #ccc
+
+    // 격자선
+
+    .grid
+        position: relative
+        wh(100%, 100%)
+
+    .gridline
+        position: absolute
+        height: 100%
+        border-left: 1px solid #ccc
+        background-image: url(freebusy-half-dot.gif)
+        background-position: 49.5% top
+        background-repeat: repeat-y
+        text-align: center
+
+    .gridline > div
+        background-color: #fff
+
+    .gridline-last > div
+        margin-right: 1px
+
+    // 사용자 목록, 일정표 영역
+    .chart
+        position: absolute
+        border-top: 1px solid #ccc
+        width: 100%
+
+    .item
+        border-bottom: 1px solid #ccc
+
+    .name
+        position: absolute
+        left: 0
+
+    .block-container
+        position: relative
+        height: 100%;
+        border-left: 1px solid #ccc
+
+    .block
+        position: absolute
+        top: 0
+        height: 100%
+        z-index: 1
+
+    .fill
+        height: 100%
+        background-color: #aaa
+        opacity: 0.8
+
+    // 추천일정 영역
+    .recommends
+        position: absolute
+        width: 100%
+
+    .recommend-block
+        position: absolute
+        z-index: 2
+
+    .recommend-fill
+        border: 1px dashed red
+        
+    // 선택 효과 영역
+    .selection
+        position: absolute
+        width: 100%
+        z-index: 3
+
+    .select
+        position: absolute
+        background-color: blue
+        height: 100%
+        opacity: 0.5
+
