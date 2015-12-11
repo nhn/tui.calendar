@@ -45,24 +45,16 @@ describe('service:view/MiniCalendar', function() {
         });
     });
 
-    it('getSelectedDate() can get selected date in minicalendar', function() {
-        // click date button is 2015-01-15
-        var button = document.createElement('div');
-        button.className = '/* @echo CSS_PREFIX */minicalendar-2015-01-15';
-        spyOn(window.ne.dooray.calendar.domutil, 'find').and.returnValue(button);
-
-        // check result
-        var actual = MiniCalendar.prototype.getSelectedDate.call({});
-        expect(actual).toEqual(new Date('2015-01-15T00:00:00+09:00'));
-    });
-
     describe('_getViewModel()', function() {
         it('create mini calendar viewmodel by Date, startDayOfWeek, today', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-10-02T11:36:00+09:00');
 
+            mockInst.selectedDate = today;
+
             // September!
             var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
+
             expect(actual).toEqual({
                 title: '2015.09',
                 dayname: jasmine.any(Array),
@@ -72,66 +64,60 @@ describe('service:view/MiniCalendar', function() {
 
             // 8/30 is previous date
             expect(actual.calendar[0][0]).toEqual({
-                d: 30,
-                ymd: '2015-08-30',
-                hasSchedule: undef,
-                isNotThisMonth: true,
-                weekend: true,
-                selected: false,
-                today: false
+                date: 30,
+                cssClass: 'dooray-calendar-minicalendar-2015-08-30 dooray-calendar-minicalendar-other-month'
             });
 
-            // autoselect 9/1 because it first date of september
-            expect(actual.calendar[0][2].selected).toBe(true);
-
-            // 10/2 is next month. no autoselect
-            expect(actual.calendar[4][5].selected).toBe(false);
+            // 10/2 autoselected
+            expect(actual.calendar[4][5].cssClass).toContain('selected');
         });
 
         it('when cached hlData then apply it to highlight dates for represent the date has schedule.', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-09-02T11:36:00+09:00');
-            var hlData = {'2015-09-03': true};
+            var hlData = {'2015-09-03': {'has-schedule': true}};
             mockInst.hlData = hlData;
+            mockInst.selectedDate = today;
 
             var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
 
-            expect(actual.calendar[0][4].hasSchedule).toBe(true);
+            expect(actual.calendar[0][4].cssClass).toContain('has-schedule');
         });
     });
 
-    xdescribe('highlight', function() {
+    describe('focus feature', function() {
         var inst;
 
         beforeEach(function() {
             inst = MiniCalendar(null, document.createElement('div'));
-
             spyOn(inst, 'render');
         });
 
-        it('highlightDate() cache data for minicalendar date hightlighting', function() {
-            inst.highlightDate(['2015-05-01', '2015-05-12']);
-
-            expect(inst.hlData).toEqual({
-                '2015-05-01': true,
-                '2015-05-12': true
-            });
-
-            expect(inst.render).toHaveBeenCalled();
+        it('_addHlData() can add highlight data without exception', function() {
+            expect(function() {
+                inst._addHlData('2015-05-01', 'test');
+            }).not.toThrow();
         });
 
-        it('set "silent" option true then does not render after highlightDate invoked.', function() {
-            inst.highlightDate(['2015-05-01', '2015-05-12'], true);
+        it('_setHlDateRange() can add hightlight data by start, end date range', function() {
+            inst._setHlDateRange(new Date('2015-05-01'), new Date('2015-05-03'), 'test');
 
-            expect(inst.render).not.toHaveBeenCalled();
+            expect(inst.hlData).toEqual(jasmine.objectContaining({
+                // skip check today, selected
+                '2015-05-01': {'test': true},
+                '2015-05-02': {'test': true},
+                '2015-05-03': {'test': true}
+            }));
         });
 
-        it('clearHighlightDate() clear cached data for highlighting specific event for represent the date has schedule.', function() {
-            inst.highlightDate(['2015-05-01', '2015-05-12']);
+        it('clearFocusData() remove all "focused" highlight data.', function() {
+            inst.hlData['2015-05-02'] = {'focused': true};
+            inst.hlData['2015-05-03'] = {'focused': true};
 
-            inst.clearHighlightDate();
+            inst.clearFocusData();
 
-            expect(inst.hlData).toEqual({});
+            expect(inst.hlData['2015-05-02']).toEqual({});
+            expect(inst.hlData['2015-05-03']).toEqual({});
         });
     });
 });
