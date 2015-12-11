@@ -1,6 +1,6 @@
 /**
  * Dooray Calendar
- * @version 0.1.16
+ * @version 0.1.17
  */
 .dcal-layout {
   height: 100%;
@@ -399,101 +399,99 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.dcal-minicalendar table {
+table {
+  width: 100%;
+  height: 100%;
+  font-size: 0.9em;
   table-layout: fixed;
+  border-collapse: collapse;
 }
-.dcal-minicalendar caption {
-  text-align: center;
-  margin-bottom: 7px;
-}
-.dcal-minicalendar caption button {
-  border: none;
+caption,
+th,
+td,
+button {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
   background-color: transparent;
-  cursor: pointer;
-  width: 16px;
+  border: none;
 }
-.dcal-minicalendar th,
-.dcal-minicalendar td {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  color: #181818;
-}
-.dcal-minicalendar-title {
-  display: inline-block;
-  width: 60px;
-}
-.dcal-minicalendar-prev {
-  background-repeat: no-repeat;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAKklEQVR42q3IsQEAIAyEwDca9h/ZOrRKx+Wl8jN/wfwWNIIyZBtyiCXfuj9BAHLLHGpeAAAAAElFTkSuQmCC");
-}
-.dcal-minicalendar-next {
-  background-repeat: no-repeat;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==");
-}
-.dcal-minicalendar-prev span,
-.dcal-minicalendar-next span {
-  visibility: hidden;
-}
-.dcal-minicalendar-date {
-  display: block;
-  width: 25px;
-  height: 25px;
-  margin: 0;
-  padding: 0;
+button {
   cursor: pointer;
   outline: none;
-  border: none;
-  text-align: center;
-  background-color: transparent;
-  color: #181818;
 }
-.dcal-minicalendar-other .dcal-minicalendar-date {
-  color: #b8b8b8;
-}
-.dcal-minicalendar-label {
+button > div {
   position: relative;
   top: 0;
   left: 0;
-  display: block;
+}
+caption {
+  margin: 0 20px;
+  height: 30px;
   line-height: 25px;
+  font-size: 1.2em;
+  text-align: center;
 }
-.dcal-minicalendar-has-schedule .dcal-minicalendar-label {
-  font-weight: bold;
+caption .dcal-minicalendar-prev,
+caption .dcal-minicalendar-next,
+caption .dcal-minicalendar-title {
+  display: inline-block;
+  line-height: inherit;
 }
-.dcal-minicalendar-weekend .dcal-minicalendar-label {
+caption .dcal-minicalendar-prev,
+caption .dcal-minicalendar-next {
+  width: 16px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+caption .dcal-minicalendar-prev span,
+caption .dcal-minicalendar-next span {
+  visibility: hidden;
+}
+caption .dcal-minicalendar-prev {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAKklEQVR42q3IsQEAIAyEwDca9h/ZOrRKx+Wl8jN/wfwWNIIyZBtyiCXfuj9BAHLLHGpeAAAAAElFTkSuQmCC");
+}
+caption .dcal-minicalendar-next {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==");
+}
+caption .dcal-minicalendar-title {
+  font-size: 1.1em;
+  width: 80px;
+}
+tbody button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 100%;
+}
+.dcal-minicalendar-other-month button {
+  color: #ccc;
+}
+.dcal-minicalendar-weekend button {
   color: #f00;
 }
-.dcal-minicalendar-weekend.dcal-minicalendar-other .dcal-minicalendar-label {
+.dcal-minicalendar-weekend.dcal-minicalendar-other-month button {
   color: #fcc;
 }
-.dcal-minicalendar-focused .dcal-minicalendar-label {
-  color: #f8f8f8;
+.dcal-minicalendar-focused {
+  background-color: #eee;
 }
-.dcal-minicalendar-focused:before {
-  content: '';
-  margin: -50% 0 0 -50%;
-  display: block;
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  top: 50%;
-  left: 50%;
-  background-color: #b8b8b8;
-  border-radius: 50%;
+.dcal-minicalendar-today button {
+  background-color: #ddd;
 }
-.dcal-minicalendar-today:before {
-  background-color: #86c1b9;
+.dcal-minicalendar-selected button {
+  background-color: #dc9656;
+  color: #fff;
 }
-@media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-devicepixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx) {
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .dcal-minicalendar-prev {
     background-size: 16px 16px;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABESURBVHgB7co5DoAwEMVQsy///vcFJLpI4z6KWz+6bbJ/2Y/9GpypwZE3+5FfgD0CbgPzLzCBCYoWA6wfMIEJpI2m0QOuugMZwyotsAAAAABJRU5ErkJggg==");
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABESURBVHgB7co5DoAwEMVQsy///vcFJLpI4z6KWz+6bbJ/2Y/9GpypwZE3+5FfgD0CbgPzLzCBCYoWA6wfMIEJpI2m0QOuugMZwyotsAAAAABJRU5ErkJggg==") !important;
   }
   .dcal-minicalendar-next {
     background-size: 16px 16px;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC");
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC") !important;
   }
 }
 .dcal-task-container {
