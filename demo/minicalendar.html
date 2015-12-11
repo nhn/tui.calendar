@@ -4,17 +4,27 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Minicalendar Demo</title>
 <link rel="stylesheet" type="text/css" href="../dist/calendar.css" />
+<style type="text/css">
+#minicalendar {
+    width: 200px;
+    height: 160px;
+}
+</style>
 </head>
 <body>
 <div id="minicalendar"></div>
 <script type="text/javascript" charset="utf-8" src="./code-snippet.js"></script>
 <script type="text/javascript" charset="utf-8" src="../dist/calendar.js"></script>
 <script type="text/javascript" charset="utf-8">
-(function() {
+(function(w) {
     var minicalendar = ne.dooray.calendar.MiniCalendar({
-        highlightDate: ['2015-11-23', '2015-11-24']
+        weekendNumber: [0]
     }, document.getElementById('minicalendar'));
-})();
+
+    minicalendar.on('click', function(e) {
+        console.log(e);
+    });
+})(window);
 </script>
 </body>
 </html>
