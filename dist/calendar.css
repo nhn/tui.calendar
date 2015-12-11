@@ -477,11 +477,13 @@ tbody button {
 .dcal-minicalendar-focused {
   background-color: #eee;
 }
-.dcal-minicalendar-today button {
+.dcal-minicalendar-today {
   background-color: #ddd;
 }
-.dcal-minicalendar-selected button {
+.dcal-minicalendar-selected {
   background-color: #dc9656;
+}
+.dcal-minicalendar-selected button {
   color: #fff;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
