@@ -62,16 +62,26 @@ MonthWeek.MONTHWEEK_MODE = {
 util.inherit(MonthWeek, View);
 
 /**
+ * Get render date range
+ * @returns {Date[]} rendered date range
+ */
+MonthWeek.prototype.getRenderDateRange = function() {
+    var opt = this.options;
+
+    return datetime.range(
+        datetime.start(datetime.parse(opt.renderStartDate)),
+        datetime.end(datetime.parse(opt.renderEndDate)),
+        datetime.MILLISECONDS_PER_DAY
+    );
+};
+
+/**
  * @param {object} viewModel - viewModel from parent views.
  * @returns {object} viewModel to rendering.
  */
 MonthWeek.prototype._getBaseViewModel = function(viewModel) {
     var options = this.options,
-        range = datetime.range(
-            viewModel.renderStartDate,
-            viewModel.renderEndDate,
-            datetime.MILLISECONDS_PER_DAY
-        ),
+        range = this.getRenderDateRange(),
         matrices = options._getViewModelFunc(viewModel),
         gridWidth = 100 / range.length;
 

@@ -296,6 +296,10 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
         handlerInstance[method]('clickEvent', calendar._onClick, calendar);
     });
 
+    util.forEach(handler.dblclick, function(handlerInstance) {
+        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    });
+
     util.forEach(handler.creation, function(handlerInstance) {
         handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
     });

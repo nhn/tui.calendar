@@ -5,11 +5,12 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config');
-var domutil = require('../../common/domutil');
-var View = require('../view');
-var MonthWeek = require('../monthweek');
-var mainTmpl = require('../template/week/allday.hbs');
+var config = require('../../config'),
+    datetime = require('../../common/datetime'),
+    domutil = require('../../common/domutil'),
+    View = require('../view'),
+    MonthWeek = require('../monthweek'),
+    mainTmpl = require('../template/week/allday.hbs');
 
 /**
  * @constructor
