@@ -67,7 +67,7 @@ Allday.prototype.render = function(viewModel) {
 
     monthWeekInst = new MonthWeek(
         this.options, 
-        domutil.find('.' + config.classname('allday-monthweek-container'), container)
+        domutil.find('.' + config.classname('monthweek-container'), container)
     );
 
     this.addChild(monthWeekInst);

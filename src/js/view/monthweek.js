@@ -5,11 +5,12 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../config');
-var domutil = require('../common/domutil');
-var datetime = require('../common/datetime');
-var View = require('./view');
-var tmpl = require('./template/monthweek.hbs');
+
+var config = require('../config'),
+    domutil = require('../common/domutil'),
+    datetime = require('../common/datetime'),
+    View = require('./view'),
+    tmpl = require('./template/monthweek.hbs');
 
 /**
  * @constructor
@@ -19,6 +20,7 @@ var tmpl = require('./template/monthweek.hbs');
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {number} [options._mode=MonthWeek.MONTHWEEK_MODE.WEEK] - monthweek render mode
  * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
@@ -26,7 +28,7 @@ function MonthWeek(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        config.classname('allday-monthweek')
+        config.classname('monthweek')
     );
 
     /**
@@ -36,13 +38,26 @@ function MonthWeek(options, container) {
         containerHeight: 40,
         containerBottomGutter: 8,
         eventHeight: 18,
-        eventGutter: 2
+        eventGutter: 2,
+        _mode: MonthWeek.MONTHWEEK_MODE.WEEK,
+        _getViewModelFunc: function(viewModel) {
+            return viewModel.allday;
+        }
     }, options);
-
-    options.minHeight = options.containerHeight + options.containerBottomGutter;
 
     View.call(this, container);
 }
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+MonthWeek.MONTHWEEK_MODE = {
+    /** render monthweek view for week mode */
+    WEEK: 0,
+    /** render monthweek view for month mode */
+    MONTH: 1
+};
 
 util.inherit(MonthWeek, View);
 
@@ -58,16 +73,18 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
             datetime.MILLISECONDS_PER_DAY
         ),
         matrices = options._getViewModelFunc(viewModel),
-        widthPercent = 100 / range.length;
+        gridWidth = 100 / range.length;
 
     return {
-        width: widthPercent,
+        mode: !!options._mode,
+        width: gridWidth,
         height: options.containerHeight,
         eventBlockHeight: options.eventHeight + options.eventGutter,
         eventBlockGutter: options.eventGutter,
         eventHeight: options.eventHeight,
-        eventGrid: util.map(range, function() {
-            return widthPercent;
+        gridWidth: gridWidth,
+        dates: util.map(range, function(date) {
+            return date.getDate();
         }),
         matrices: matrices
     };
@@ -87,22 +104,23 @@ MonthWeek.prototype.render = function(viewModel) {
         }));
     }));
 
-    this.resize(maxEventInDay);
+    this._setMinHeight(maxEventInDay);
 
     this.container.innerHTML = tmpl(baseViewModel);
 };
 
 /**
- * Resize MonthWeek container and send information to parent views.
- * @override
+ * Set minimum height for container.
+ * 
+ * Need set min-height to container when wrapping container's height is smaller then monthweek container.
+ *
+ * If set height directly, vertical grids represent in each days are not cover wrapping container.
  * @param {number} maxEventInDay - how largest event block in one day?
  */
-MonthWeek.prototype.resize = function(maxEventInDay) {
-    var options = this.options,
-        newHeight = (maxEventInDay * (options.eventHeight + options.eventGutter)) + options.containerBottomGutter;
+MonthWeek.prototype._setMinHeight = function(maxEventInDay) {
+    var opt = this.options,
+        newHeight = (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
 
-    newHeight = Math.max(newHeight, options.minHeight);
-    
     this.container.style.minHeight = newHeight + 'px';
 };
 
