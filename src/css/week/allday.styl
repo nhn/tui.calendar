@@ -15,7 +15,6 @@
         padding: 3px 5px 0 0
 
     .right
-        position: relative
         height: 100%
         background-color: #fff
         margin-left: 60px
@@ -29,29 +28,8 @@
         background-position: 3px center
         cursor: col-resize
 
-// Monthweek view
-+prefix-classes(monthweek)
-    .grid
-        position: relative
-        height: 100%
-
-    .grid-line
-        position: absolute
-        height: 100%
-        margin-left: -1px
-        border-left: 1px solid #ccc
-
-    .events
-        pos(0px, 0px)
-        wh(100%, 100%)
-        position: absolute
-
 // Event blocks
 +prefix-classes(allday)
-    .monthweek,
-    .monthweek-container
-        height: 100%
-
     .event-block
         position: absolute
 
