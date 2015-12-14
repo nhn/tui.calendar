@@ -22,14 +22,13 @@ var TimeClick = require('../handler/time/click');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
-// Base Templates
-var weekViewTmpl = require('../view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
+        dayNameContainer,
+        dayNameView,
         vlayoutContainer,
         vlayout,
-        dayNameView,
         alldayView,
         timeGridView,
         alldayClickHandler,
@@ -42,18 +41,18 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
-    weekView.container.innerHTML = weekViewTmpl();
+    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, domutil.find('.' + config.classname('dayname-layout'), weekView.container));
+    dayNameView = new DayName(null, dayNameContainer);
     weekView.addChild(dayNameView);
 
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.find('.' + config.classname('vlayout-area'), weekView.container);
+    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
     vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
 
     vlayout = new VLayout({
