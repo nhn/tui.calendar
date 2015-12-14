@@ -74,11 +74,11 @@ AlldayResize.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (!~cssClass.indexOf(config.classname('allday-resize-handle'))) {
+    if (!~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
         return false;
     }
 
-    target = domutil.closest(target, '.' + config.classname('allday-monthweek'));
+    target = domutil.closest(target, '.' + config.classname('monthweek'));
 
     if (!target) {
         return false;
@@ -113,7 +113,7 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('allday-event-block'));
+    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
     modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 

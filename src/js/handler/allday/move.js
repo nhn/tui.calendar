@@ -71,11 +71,11 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
         parentView,
         matches;
 
-    if (~cssClass.indexOf(config.classname('allday-resize-handle'))) {
+    if (~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
         return false;
     }
 
-    parentView = domutil.closest(target, '.' + config.classname('allday-monthweek'));
+    parentView = domutil.closest(target, '.' + config.classname('monthweek'));
 
     if (!parentView) {
         return false;
@@ -110,7 +110,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('allday-event-block'));
+    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
     if (!eventBlockElement) {
         return;
     }

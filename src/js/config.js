@@ -26,8 +26,8 @@ var config = {
     },
 
     allday: {
-        getViewIDRegExp: /^/* @echo CSS_PREFIX */allday-monthweek[\s]/* @echo CSS_PREFIX */(\d+)/,
-        checkCondRegExp: /^/* @echo CSS_PREFIX */allday-event(-title)?$/
+        getViewIDRegExp: /^/* @echo CSS_PREFIX */monthweek[\s]/* @echo CSS_PREFIX */(\d+)/,
+        checkCondRegExp: /^/* @echo CSS_PREFIX */event(-title)?$/
     },
 
     time: {

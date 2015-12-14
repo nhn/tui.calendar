@@ -82,7 +82,6 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
         eventBlockHeight: options.eventHeight + options.eventGutter,
         eventBlockGutter: options.eventGutter,
         eventHeight: options.eventHeight,
-        gridWidth: gridWidth,
         dates: util.map(range, function(date) {
             return date.getDate();
         }),

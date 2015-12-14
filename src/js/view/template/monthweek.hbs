@@ -1,8 +1,8 @@
 <div class="{{CSS_PREFIX}}monthweek-grid ">
 {{#each dates ~}}
     <div class="{{CSS_PREFIX}}monthweek-grid-line" 
-         style="width:{{@root.gridWidth}}%;
-                left:{{multiply @root.gridWidth @index}}%;">{{#if @root.mode}}{{this}}{{/if}}</div>
+         style="width:{{@root.width}}%;
+                left:{{multiply @root.width @index}}%;">{{#if @root.mode}}{{this}}{{/if}}</div>
 {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}monthweek-events">
@@ -11,8 +11,7 @@
 {{#each this ~}} {{! column }}
 {{#if this ~}} {{! viewmodel }}
 <div data-id="{{stamp model}}" 
-     class="{{CSS_PREFIX}}monthweek-event-block{{#if renderStarts ~}} {{CSS_PREFIX}}monthweek-exceed-left{{/if ~}}
- {{#if renderEnds ~}} {{CSS_PREFIX}}monthweek-exceed-right{{/if ~}}"
+     class="{{CSS_PREFIX}}monthweek-event-block{{#if renderStarts}} {{CSS_PREFIX}}monthweek-exceed-left{{/if}}{{#if renderEnds}} {{CSS_PREFIX}}monthweek-exceed-right{{/if}}"
      style="top:{{multiply top @root.eventBlockHeight}}px;
             left:{{multiply left @root.width}}%;
             width:{{multiply width @root.width}}%;
