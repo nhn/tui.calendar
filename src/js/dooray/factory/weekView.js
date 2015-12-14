@@ -77,7 +77,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             {isSplitter: true},
             {autoHeight: true}
         ],
-        panelHeights: options.week.panelHeights
+        panelHeights: options.week.panelHeights || []
     }, vlayoutContainer);
     weekView.vlayout = vlayout;
 
