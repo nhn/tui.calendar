@@ -2,7 +2,7 @@
 (function (global){
 /**
  * Dooray Calendar
- * @version 0.1.17
+ * @version 0.1.18
  */
 /* eslint vars-on-top:0, strict:0 */
 
@@ -158,7 +158,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":39,"./src/js/dooray/factory/calendar":40,"./src/js/dooray/handler/milestoneClick":42,"./src/js/dooray/handler/taskClick":43,"./src/js/dooray/model/calEvent":44,"./src/js/dooray/view/freebusy":46,"./src/js/dooray/view/minicalendar":50,"./src/js/dooray/view/taskview":52,"./src/js/factory/calendar":54,"./src/js/factory/controller":55,"./src/js/handler/allday/click":57,"./src/js/handler/allday/core":58,"./src/js/handler/allday/creation":59,"./src/js/handler/allday/creationGuide":60,"./src/js/handler/allday/move":61,"./src/js/handler/allday/moveGuide":62,"./src/js/handler/allday/resize":63,"./src/js/handler/allday/resizeGuide":64,"./src/js/handler/drag":65,"./src/js/handler/time/click":66,"./src/js/handler/time/core":67,"./src/js/handler/time/creation":68,"./src/js/handler/time/creationGuide":69,"./src/js/handler/time/move":70,"./src/js/handler/time/moveGuide":71,"./src/js/handler/time/resize":72,"./src/js/handler/time/resizeGuide":73,"./src/js/model/calEvent":74,"./src/js/model/viewModel/calEvent":75,"./src/js/view/monthweek":77,"./src/js/view/template/registerHelpers":81,"./src/js/view/view":86,"./src/js/view/week/dayname":88,"./src/js/view/week/time":89,"./src/js/view/week/timeGrid":90,"./src/js/view/week/week":91}],2:[function(require,module,exports){
+},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":39,"./src/js/dooray/factory/calendar":40,"./src/js/dooray/handler/milestoneClick":42,"./src/js/dooray/handler/taskClick":43,"./src/js/dooray/model/calEvent":44,"./src/js/dooray/view/freebusy":46,"./src/js/dooray/view/minicalendar":50,"./src/js/dooray/view/taskview":52,"./src/js/factory/calendar":53,"./src/js/factory/controller":54,"./src/js/handler/allday/click":56,"./src/js/handler/allday/core":57,"./src/js/handler/allday/creation":58,"./src/js/handler/allday/creationGuide":59,"./src/js/handler/allday/move":61,"./src/js/handler/allday/moveGuide":62,"./src/js/handler/allday/resize":63,"./src/js/handler/allday/resizeGuide":64,"./src/js/handler/drag":65,"./src/js/handler/time/click":66,"./src/js/handler/time/core":67,"./src/js/handler/time/creation":68,"./src/js/handler/time/creationGuide":69,"./src/js/handler/time/move":71,"./src/js/handler/time/moveGuide":72,"./src/js/handler/time/resize":73,"./src/js/handler/time/resizeGuide":74,"./src/js/model/calEvent":75,"./src/js/model/viewModel/calEvent":76,"./src/js/view/monthweek":78,"./src/js/view/template/registerHelpers":81,"./src/js/view/view":86,"./src/js/view/week/dayname":88,"./src/js/view/week/time":89,"./src/js/view/week/timeGrid":90,"./src/js/view/week/week":91}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -5303,8 +5303,8 @@ var config = {
     },
 
     allday: {
-        getViewIDRegExp: /^dcal-allday-monthweek[\s]dcal-(\d+)/,
-        checkCondRegExp: /^dcal-allday-event(-title)?$/
+        getViewIDRegExp: /^dcal-monthweek[\s]dcal-(\d+)/,
+        checkCondRegExp: /^dcal-event(-title)?$/
     },
 
     time: {
@@ -5611,7 +5611,7 @@ module.exports = Base;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../model/calEvent":74,"../model/viewModel/calEvent":75}],38:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../model/calEvent":75,"../model/viewModel/calEvent":76}],38:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller mixin modules for day views.
@@ -6023,7 +6023,7 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":75}],39:[function(require,module,exports){
+},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":76}],39:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Base controller for Dooray service project.
@@ -6447,6 +6447,10 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
         handlerInstance[method]('clickEvent', calendar._onClick, calendar);
     });
 
+    util.forEach(handler.dblclick, function(handlerInstance) {
+        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    });
+
     util.forEach(handler.creation, function(handlerInstance) {
         handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
     });
@@ -6600,7 +6604,7 @@ module.exports = ServiceCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../config":36,"../../controller/viewMixin/week":38,"../../factory/calendar":54,"../controller/base":39,"./weekView":41}],41:[function(require,module,exports){
+},{"../../common/datetime":27,"../../config":36,"../../controller/viewMixin/week":38,"../../factory/calendar":53,"../controller/base":39,"./weekView":41}],41:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for WeekView (customized for service)
@@ -6625,24 +6629,24 @@ var Allday = require('../../view/week/allday');
 
 // Handlers
 var AlldayClick = require('../../handler/allday/click');
+var AlldayDblClick = require('../../handler/allday/dblclick');
 var AlldayCreation = require('../../handler/allday/creation');
 var AlldayMove = require('../../handler/allday/move');
 var AlldayResize = require('../../handler/allday/resize');
 var TimeClick = require('../../handler/time/click');
+var TimeDblClick = require('../../handler/time/dblclick');
 var TimeCreation = require('../../handler/time/creation');
 var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
 var MilestoneClick = require('../handler/milestoneClick');
 var TaskClick = require('../handler/taskClick');
 
-// Base Templates
-var weekViewTmpl = require('../../dooray/view/template/factory/weekView.hbs');
-
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
+        dayNameContainer,
+        dayNameView,
         vlayoutContainer,
         vlayout,
-        dayNameView,
         milestoneView,
         taskView,
         alldayView,
@@ -6650,27 +6654,29 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         milestoneClickHandler,
         taskClickHandler,
         alldayClickHandler,
+        alldayDblClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
         timeClickHandler,
+        timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
         timeResizeHandler,
 
     weekView = new Week(null, options.week, layoutContainer);
-    weekView.container.innerHTML = weekViewTmpl();
+    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, domutil.find('.' + config.classname('dayname-layout'), weekView.container));
+    dayNameView = new DayName(null, dayNameContainer);
     weekView.addChild(dayNameView);
 
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.find('.' + config.classname('vlayout-area'), weekView.container);
+    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
     vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
 
     vlayout = new VLayout({
@@ -6683,7 +6689,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             {isSplitter: true},
             {autoHeight: true}
         ],
-        panelHeights: options.week.panelHeights
+        panelHeights: options.week.panelHeights || []
     }, vlayoutContainer);
     weekView.vlayout = vlayout;
 
@@ -6707,6 +6713,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     alldayView = new Allday(options.week, vlayout.panels[4].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
+    alldayDblClickHandler = new AlldayDblClick(alldayView);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -6717,6 +6724,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeGridView = new TimeGrid(options.week, vlayout.panels[6].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
+    timeDblClickHandler = new TimeDblClick(timeGridView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -6732,6 +6740,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             allday: alldayClickHandler,
             time: timeClickHandler
         },
+        dblclick: {
+            allday: alldayDblClickHandler,
+            time: timeDblClickHandler
+        },
         creation: {
             allday: alldayCreationHandler,
             time: timeCreationHandler
@@ -6745,7 +6757,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             time: timeResizeHandler
         }
     };
-
 
     // add controller
     weekView.controller = baseController.Week;
@@ -6771,7 +6782,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../dooray/view/template/factory/weekView.hbs":53,"../../handler/allday/click":57,"../../handler/allday/creation":59,"../../handler/allday/move":61,"../../handler/allday/resize":63,"../../handler/time/click":66,"../../handler/time/creation":68,"../../handler/time/move":70,"../../handler/time/resize":72,"../../view/week/allday":87,"../../view/week/dayname":88,"../../view/week/timeGrid":90,"../../view/week/week":91,"../handler/milestoneClick":42,"../handler/taskClick":43,"../view/milestone":48,"../view/taskview":52}],42:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../handler/allday/click":56,"../../handler/allday/creation":58,"../../handler/allday/dblclick":60,"../../handler/allday/move":61,"../../handler/allday/resize":63,"../../handler/time/click":66,"../../handler/time/creation":68,"../../handler/time/dblclick":70,"../../handler/time/move":71,"../../handler/time/resize":73,"../../view/week/allday":87,"../../view/week/dayname":88,"../../view/week/timeGrid":90,"../../view/week/week":91,"../handler/milestoneClick":42,"../handler/taskClick":43,"../view/milestone":48,"../view/taskview":52}],42:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -7072,7 +7083,7 @@ module.exports = DoorayEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../model/calEvent":74}],45:[function(require,module,exports){
+},{"../../model/calEvent":75}],45:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -8324,19 +8335,6 @@ module.exports = TaskView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./taskview.hbs":51}],53:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var HandlebarsCompiler = require('hbsfy/runtime');
-module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "dayname-layout\"></div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "vlayout-area\"></div>\n";
-},"useData":true});
-
-},{"hbsfy/runtime":21}],54:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for control all other factory.
@@ -8823,7 +8821,7 @@ module.exports = Calendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../config":36,"../handler/drag":65,"../view/layout":76,"./controller":55,"./weekView":56,"hbsfy/runtime":21}],55:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../config":36,"../handler/drag":65,"../view/layout":77,"./controller":54,"./weekView":55,"hbsfy/runtime":21}],54:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller factory module.
@@ -8853,7 +8851,7 @@ module.exports = function(options) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../controller/base":37,"../controller/viewMixin/week":38}],56:[function(require,module,exports){
+},{"../controller/base":37,"../controller/viewMixin/week":38}],55:[function(require,module,exports){
 /**
  * @fileoverview Factory module for WeekView
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -8871,45 +8869,48 @@ var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
 // Handlers
 var AlldayClick = require('../handler/allday/click');
+var AlldayDblClick = require('../handler/allday/dblclick');
 var AlldayCreation = require('../handler/allday/creation');
 var AlldayMove = require('../handler/allday/move');
 var AlldayResize = require('../handler/allday/resize');
 var TimeClick = require('../handler/time/click');
+var TimeDblClick = require('../handler/time/dblclick');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
-// Base Templates
-var weekViewTmpl = require('../view/template/factory/weekView.hbs');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
+        dayNameContainer,
+        dayNameView,
         vlayoutContainer,
         vlayout,
-        dayNameView,
         alldayView,
         timeGridView,
         alldayClickHandler,
+        alldayDblClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
         timeClickHandler,
+        timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
         timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
-    weekView.container.innerHTML = weekViewTmpl();
+    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, domutil.find('.' + config.classname('dayname-layout'), weekView.container));
+    dayNameView = new DayName(null, dayNameContainer);
     weekView.addChild(dayNameView);
 
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.find('.' + config.classname('vlayout-area'), weekView.container);
+    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
     vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
 
     vlayout = new VLayout({
@@ -8926,6 +8927,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     alldayView = new Allday(options.week, vlayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
+    alldayDblClickHandler = new AlldayDblClick(alldayView);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -8936,6 +8938,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeGridView = new TimeGrid(options.week, vlayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
+    timeDblClickHandler = new TimeDblClick(timeGridView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -8948,6 +8951,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         click: {
             allday: alldayClickHandler,
             time: timeClickHandler
+        },
+        dblclick: {
+            allday: alldayDblClickHandler,
+            time: timeDblClickHandler
         },
         creation: {
             allday: alldayCreationHandler,
@@ -8984,7 +8991,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     };
 };
 
-},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":57,"../handler/allday/creation":59,"../handler/allday/move":61,"../handler/allday/resize":63,"../handler/time/click":66,"../handler/time/creation":68,"../handler/time/move":70,"../handler/time/resize":72,"../view/template/factory/weekView.hbs":78,"../view/week/allday":87,"../view/week/dayname":88,"../view/week/timeGrid":90,"../view/week/week":91}],57:[function(require,module,exports){
+},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":56,"../handler/allday/creation":58,"../handler/allday/dblclick":60,"../handler/allday/move":61,"../handler/allday/resize":63,"../handler/time/click":66,"../handler/time/creation":68,"../handler/time/dblclick":70,"../handler/time/move":71,"../handler/time/resize":73,"../view/week/allday":87,"../view/week/dayname":88,"../view/week/timeGrid":90,"../view/week/week":91}],56:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Click handle module for allday events
@@ -9076,7 +9083,7 @@ module.exports = AlldayClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36,"./move":61}],58:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36,"./move":61}],57:[function(require,module,exports){
 /**
  * @fileoverview Base mixin object for handler/allday
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9143,7 +9150,7 @@ var alldayCore = {
 module.exports = alldayCore;
 
 
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],59:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],58:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handler module for MonthWeek view's creation actions.
@@ -9415,7 +9422,7 @@ module.exports = AlldayCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":58,"./creationGuide":60}],60:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":57,"./creationGuide":59}],59:[function(require,module,exports){
 /**
  * @fileoverview Guide element for Allday.Creation
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9548,7 +9555,111 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 module.exports = AlldayCreationGuide;
 
 
-},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],61:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],60:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Double click handler for allday
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+var common = require('../../common/common'),
+    datetime = require('../../common/datetime'),
+    config = require('../../config'),
+    domevent = require('../../common/domevent'),
+    domutil = require('../../common/domutil');
+
+/**
+ * @constructor
+ * @implements {Handler}
+ * @mixes util.CustomEvents
+ * @param {Allday} alldayView - instance of allday view
+ */
+function AlldayDblClick(alldayView) {
+    /**
+     * @type {Allday}
+     */
+    this.alldayView = alldayView;
+
+    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
+}
+
+/**
+ * Destroy handler
+ */
+AlldayDblClick.prototype.destroy = function() {
+    if (!this.alldayView || !this.alldayView.container) {
+        return;
+    }
+
+    domevent.off(this.alldayView.container, 'dblclick', this._onDblClick, this);
+    this.alldayView = null;
+};
+
+/**
+ * Check supplied target has privilege to handle this handler
+ * @override
+ * @param {HTMLElement} target - target element from dblclick event
+ * @returns {boolean|MonthWeek} monthweek view or false
+ */
+AlldayDblClick.prototype.checkExpectedCondition = function(target) {
+    var monthweekView;
+
+    if (!domutil.hasClass(target, config.classname('monthweek-events')) && 
+        !domutil.hasClass(target, config.classname('monthweek-grid-line'))) {
+        return false;
+    }
+
+    monthweekView = this.alldayView.childs.single();
+
+    if (!monthweekView) {
+        return false;
+    }
+
+    return monthweekView;
+};
+
+/**
+ * Dblclick event hander
+ * @fires AlldayDblClick#beforeCreateEvent
+ * @param {MouseEvent} e - dblclick mouse event object
+ */
+AlldayDblClick.prototype._onDblClick = function(e) {
+    var monthweekView = this.checkExpectedCondition(e.srcElement || e.target),
+        mousePosX, viewWidth, renderDateRange, dateIndex,
+        targetDate;
+
+    if (!monthweekView) {
+        return;
+    }
+
+    mousePosX = domevent.getMousePosition(e, monthweekView.container)[0];
+    viewWidth = monthweekView.getViewBound().width;
+    renderDateRange = monthweekView.getRenderDateRange();
+    dateIndex = Math.floor(common.ratio(viewWidth, renderDateRange.length, mousePosX));
+    targetDate = renderDateRange[dateIndex];
+
+    /**
+     * @event {AlldayDblClick#beforeCreateEvent}
+     * @type {object}
+     * @property {boolean} isAllDay - whether event is fired in allday view area?
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', {
+        isAllDay: true,
+        starts: new Date(+targetDate),
+        ends: datetime.end(new Date(+targetDate))
+    });
+};
+
+util.CustomEvents.mixin(AlldayDblClick);
+
+module.exports = AlldayDblClick;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],61:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Move handler for Allday view.
@@ -9623,11 +9734,11 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
         parentView,
         matches;
 
-    if (~cssClass.indexOf(config.classname('allday-resize-handle'))) {
+    if (~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
         return false;
     }
 
-    parentView = domutil.closest(target, '.' + config.classname('allday-monthweek'));
+    parentView = domutil.closest(target, '.' + config.classname('monthweek'));
 
     if (!parentView) {
         return false;
@@ -9662,7 +9773,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('allday-event-block'));
+    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
     if (!eventBlockElement) {
         return;
     }
@@ -9821,7 +9932,7 @@ module.exports = AlldayMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":58,"./moveGuide":62}],62:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":57,"./moveGuide":62}],62:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Effect module for Allday.Move
@@ -10092,11 +10203,11 @@ AlldayResize.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (!~cssClass.indexOf(config.classname('allday-resize-handle'))) {
+    if (!~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
         return false;
     }
 
-    target = domutil.closest(target, '.' + config.classname('allday-monthweek'));
+    target = domutil.closest(target, '.' + config.classname('monthweek'));
 
     if (!target) {
         return false;
@@ -10131,7 +10242,7 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('allday-event-block'));
+    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
     modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 
@@ -10284,7 +10395,7 @@ module.exports = AlldayResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":58,"./resizeGuide":64}],64:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":57,"./resizeGuide":64}],64:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize Guide module.
@@ -11447,6 +11558,117 @@ module.exports = TimeCreationGuide;
 },{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],70:[function(require,module,exports){
 (function (global){
 /**
+ * @fileoverview Double click handler for time view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var util = global.tui.util;
+var domevent = require('../../common/domevent'),
+    domutil = require('../../common/domutil'),
+    datetime = require('../../common/datetime'),
+    common = require('../../common/common'),
+    config = require('../../config');
+
+/**
+ * @constructor
+ * @implements {Handler}
+ * @mixes util.CustomEvents
+ * @param {TimeGrid} timeGridView - timeGrid view instance
+ */
+function TimeDblClick(timeGridView) {
+    this.timeGridView = timeGridView;
+
+    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+}
+
+/**
+ * Destroy handler
+ */
+TimeDblClick.prototype.destroy = function() {
+    var timeGridView = this.timeGridView;
+
+    if (!timeGridView || !timeGridView.container) {
+        return;
+    }
+
+    domevent.off(timeGridView.container, 'dblclick', this._onDblClick, this);
+    this.timeGridView = null;
+};
+
+/**
+ * Check target element is has privilege for handle this handler
+ * @param {HTMLElement} target - The element to check
+ * @returns {(boolean|Time)} - return Time view instance when satiate condition.
+ */
+TimeDblClick.prototype.checkExpectedCondition = function(target) {
+    var cssClass = domutil.getClass(target),
+        matches;
+
+    if (!~cssClass.indexOf(config.classname('time-date'))) {
+        return false;
+    }
+
+    matches = cssClass.match(config.time.getViewIDRegExp);
+
+    if (!matches || matches.length < 2) {
+        return false;
+    }
+
+    return util.pick(this.timeGridView.childs.items, matches[1]);
+};
+
+/**
+ * Double click event hander
+ * @fires TimeDblclick#beforeCreateEvent
+ * @param {MouseEvent} e - mouse event for double click
+ */
+TimeDblClick.prototype._onDblClick = function(e) {
+    var timeView = this.checkExpectedCondition(e.srcElement || e.target),
+        targetDate, mousePosY, viewHeight, renderHourRange,
+        relativeTime, relativeHour, relativeMinutes,
+        newStart, newEnd;
+
+    if (!timeView) {
+        return;
+    }
+
+    targetDate = datetime.start(datetime.parse(timeView.options.ymd));
+    mousePosY = domevent.getMousePosition(e, timeView.container)[1];
+    viewHeight = timeView.getViewBound().height;
+    renderHourRange = util.range(timeView.options.hourStart, timeView.options.hourEnd);
+
+    relativeTime = new Date(+common.ratio(viewHeight, (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR), mousePosY));
+    relativeHour = relativeTime.getUTCHours();
+    relativeMinutes = common.nearest(relativeTime.getUTCMinutes(), [0, 60]) / 2;
+    targetDate.setHours(relativeHour, relativeMinutes);
+
+    newStart = new Date(+targetDate);
+    newEnd = new Date(Math.min((+targetDate + datetime.MILLISECONDS_PER_HOUR), +datetime.end(new Date(+targetDate))));
+
+    /**
+     * @event {TimeDblClick#beforeCreateEvent}
+     * @type {object}
+     * @property {boolean} isAllDay - whether event is fired in allday view area?
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', {
+        isAllDay: false,
+        starts: newStart,
+        ends: newEnd
+    });
+};
+
+util.CustomEvents.mixin(TimeDblClick);
+
+module.exports = TimeDblClick;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],71:[function(require,module,exports){
+(function (global){
+/**
  * @fileoverview Handling move events from drag handler and time grid view
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
@@ -11815,7 +12037,7 @@ module.exports = TimeMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./moveGuide":71}],71:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./moveGuide":72}],72:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Move effect while dragging.
@@ -11977,7 +12199,7 @@ module.exports = TimeMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],72:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],73:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling resize events from drag handler and time grid view
@@ -12300,7 +12522,7 @@ module.exports = TimeResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./resizeGuide":73}],73:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./resizeGuide":74}],74:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Resize effect while dragging.
@@ -12477,7 +12699,7 @@ module.exports = TimeResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],74:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],75:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model of event.
@@ -12699,7 +12921,7 @@ module.exports = CalEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],75:[function(require,module,exports){
+},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],76:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model for views
@@ -12864,7 +13086,7 @@ module.exports = CalEventViewModel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
@@ -12945,7 +13167,7 @@ module.exports = Layout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":86}],77:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":86}],78:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of week event container inside of Week view.
@@ -12954,11 +13176,12 @@ module.exports = Layout;
 'use strict';
 
 var util = global.tui.util;
-var config = require('../config');
-var domutil = require('../common/domutil');
-var datetime = require('../common/datetime');
-var View = require('./view');
-var tmpl = require('./template/monthweek.hbs');
+
+var config = require('../config'),
+    domutil = require('../common/domutil'),
+    datetime = require('../common/datetime'),
+    View = require('./view'),
+    tmpl = require('./template/monthweek.hbs');
 
 /**
  * @constructor
@@ -12968,6 +13191,7 @@ var tmpl = require('./template/monthweek.hbs');
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {number} [options._mode=MonthWeek.MONTHWEEK_MODE.WEEK] - monthweek render mode
  * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
@@ -12975,7 +13199,7 @@ function MonthWeek(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        config.classname('allday-monthweek')
+        config.classname('monthweek')
     );
 
     /**
@@ -12985,15 +13209,42 @@ function MonthWeek(options, container) {
         containerHeight: 40,
         containerBottomGutter: 8,
         eventHeight: 18,
-        eventGutter: 2
+        eventGutter: 2,
+        _mode: MonthWeek.MONTHWEEK_MODE.WEEK,
+        _getViewModelFunc: function(viewModel) {
+            return viewModel.allday;
+        }
     }, options);
-
-    options.minHeight = options.containerHeight + options.containerBottomGutter;
 
     View.call(this, container);
 }
 
+/**
+ * @readonly
+ * @enum {string}
+ */
+MonthWeek.MONTHWEEK_MODE = {
+    /** render monthweek view for week mode */
+    WEEK: 0,
+    /** render monthweek view for month mode */
+    MONTH: 1
+};
+
 util.inherit(MonthWeek, View);
+
+/**
+ * Get render date range
+ * @returns {Date[]} rendered date range
+ */
+MonthWeek.prototype.getRenderDateRange = function() {
+    var opt = this.options;
+
+    return datetime.range(
+        datetime.start(datetime.parse(opt.renderStartDate)),
+        datetime.end(datetime.parse(opt.renderEndDate)),
+        datetime.MILLISECONDS_PER_DAY
+    );
+};
 
 /**
  * @param {object} viewModel - viewModel from parent views.
@@ -13001,22 +13252,19 @@ util.inherit(MonthWeek, View);
  */
 MonthWeek.prototype._getBaseViewModel = function(viewModel) {
     var options = this.options,
-        range = datetime.range(
-            viewModel.renderStartDate,
-            viewModel.renderEndDate,
-            datetime.MILLISECONDS_PER_DAY
-        ),
+        range = this.getRenderDateRange(),
         matrices = options._getViewModelFunc(viewModel),
-        widthPercent = 100 / range.length;
+        gridWidth = 100 / range.length;
 
     return {
-        width: widthPercent,
+        mode: !!options._mode,
+        width: gridWidth,
         height: options.containerHeight,
         eventBlockHeight: options.eventHeight + options.eventGutter,
         eventBlockGutter: options.eventGutter,
         eventHeight: options.eventHeight,
-        eventGrid: util.map(range, function() {
-            return widthPercent;
+        dates: util.map(range, function(date) {
+            return date.getDate();
         }),
         matrices: matrices
     };
@@ -13036,22 +13284,23 @@ MonthWeek.prototype.render = function(viewModel) {
         }));
     }));
 
-    this.resize(maxEventInDay);
+    this._setMinHeight(maxEventInDay);
 
     this.container.innerHTML = tmpl(baseViewModel);
 };
 
 /**
- * Resize MonthWeek container and send information to parent views.
- * @override
+ * Set minimum height for container.
+ * 
+ * Need set min-height to container when wrapping container's height is smaller then monthweek container.
+ *
+ * If set height directly, vertical grids represent in each days are not cover wrapping container.
  * @param {number} maxEventInDay - how largest event block in one day?
  */
-MonthWeek.prototype.resize = function(maxEventInDay) {
-    var options = this.options,
-        newHeight = (maxEventInDay * (options.eventHeight + options.eventGutter)) + options.containerBottomGutter;
+MonthWeek.prototype._setMinHeight = function(maxEventInDay) {
+    var opt = this.options,
+        newHeight = (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
 
-    newHeight = Math.max(newHeight, options.minHeight);
-    
     this.container.style.minHeight = newHeight + 'px';
 };
 
@@ -13059,9 +13308,7 @@ module.exports = MonthWeek;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":80,"./view":86}],78:[function(require,module,exports){
-arguments[4][53][0].apply(exports,arguments)
-},{"dup":53,"hbsfy/runtime":21}],79:[function(require,module,exports){
+},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":80,"./view":86}],79:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Helpers for handlebar templates.
@@ -13190,52 +13437,56 @@ module.exports = {
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 
   return "<div class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-grid-line\" style=\"width:"
-    + alias3(container.lambda(depth0, depth0))
-    + "%;left:"
-    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,depth0,(data && data.index),{"name":"multiply","hash":{},"data":data}))
-    + "%;\">&nbsp;</div>\n";
-},"3":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+    + "monthweek-grid-line\" \n         style=\"width:"
+    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+    + "%;\n                left:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+    + "%;\">"
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.mode),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return container.escapeExpression(container.lambda(depth0, depth0));
 },"4":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return " \n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"5":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return " \n"
-    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return "\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"6":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\n"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"7":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
 
-  return " \n<div data-id=\""
+  return "\n<div data-id=\""
     + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-    + "\" \n    class=\""
+    + "\" \n     class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-event-block "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderStarts : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderEnds : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\"\n    style=\"top:"
+    + "monthweek-event-block"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderStarts : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderEnds : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\"\n     style=\"top:"
     + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
-    + "px;left:"
+    + "px;\n            left:"
     + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-    + "%;width:"
+    + "%;\n            width:"
     + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-    + "%;height:"
+    + "%;\n            height:"
     + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
-    + "px;margin-top:"
+    + "px;\n            margin-top:"
     + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
     + "px\">\n    <div class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-event\" style=\"height:"
+    + "monthweek-event\" style=\"height:"
     + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventHeight), depth0))
     + "px;color:"
     + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
@@ -13243,34 +13494,34 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
     + "\">\n        <span class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-event-title\">"
+    + "monthweek-event-title\">"
     + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
     + "</span>\n        <span class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-resize-handle handle-y\">&nbsp;</span>\n    </div> \n</div>\n";
-},"7":function(container,depth0,helpers,partials,data) {
+    + "monthweek-resize-handle handle-y\">&nbsp;</span>\n    </div> \n</div>\n";
+},"8":function(container,depth0,helpers,partials,data) {
     var helper;
 
   return " "
     + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-exceed-left";
-},"9":function(container,depth0,helpers,partials,data) {
+    + "monthweek-exceed-left";
+},"10":function(container,depth0,helpers,partials,data) {
     var helper;
 
   return " "
     + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-exceed-right";
+    + "monthweek-exceed-right";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-grid\">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.eventGrid : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "monthweek-grid \">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "monthweek-events\">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n";
 },"useData":true});
 
@@ -13306,7 +13557,7 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "allday-right\">\n    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "allday-monthweek-container\"></div>\n</div>\n";
+    + "monthweek-container\"></div>\n</div>\n";
 },"useData":true});
 
 },{"hbsfy/runtime":21}],83:[function(require,module,exports){
@@ -13645,11 +13896,12 @@ module.exports = View;
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config');
-var domutil = require('../../common/domutil');
-var View = require('../view');
-var MonthWeek = require('../monthweek');
-var mainTmpl = require('../template/week/allday.hbs');
+var config = require('../../config'),
+    datetime = require('../../common/datetime'),
+    domutil = require('../../common/domutil'),
+    View = require('../view'),
+    MonthWeek = require('../monthweek'),
+    mainTmpl = require('../template/week/allday.hbs');
 
 /**
  * @constructor
@@ -13707,7 +13959,7 @@ Allday.prototype.render = function(viewModel) {
 
     monthWeekInst = new MonthWeek(
         this.options, 
-        domutil.find('.' + config.classname('allday-monthweek-container'), container)
+        domutil.find('.' + config.classname('monthweek-container'), container)
     );
 
     this.addChild(monthWeekInst);
@@ -13721,7 +13973,7 @@ module.exports = Allday;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36,"../monthweek":77,"../template/week/allday.hbs":82,"../view":86}],88:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../monthweek":78,"../template/week/allday.hbs":82,"../view":86}],88:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendering daynames
