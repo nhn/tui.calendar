@@ -67,7 +67,8 @@ TimeDblClick.prototype.checkExpectedCondition = function(target) {
 TimeDblClick.prototype._onDblClick = function(e) {
     var timeView = this.checkExpectedCondition(e.srcElement || e.target),
         targetDate, mousePosY, viewHeight, renderHourRange,
-        relativeTime, relativeHour, relativeMinutes;
+        relativeTime, relativeHour, relativeMinutes,
+        newStart, newEnd;
 
     if (!timeView) {
         return;
@@ -83,6 +84,9 @@ TimeDblClick.prototype._onDblClick = function(e) {
     relativeMinutes = common.nearest(relativeTime.getUTCMinutes(), [0, 60]) / 2;
     targetDate.setHours(relativeHour, relativeMinutes);
 
+    newStart = new Date(+targetDate);
+    newEnd = new Date(Math.min((+targetDate + datetime.MILLISECONDS_PER_HOUR), +datetime.end(new Date(+targetDate))));
+
     /**
      * @event {TimeDblClick#beforeCreateEvent}
      * @type {object}
@@ -92,8 +96,8 @@ TimeDblClick.prototype._onDblClick = function(e) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: false,
-        starts: new Date(+targetDate),
-        ends: new Date(+targetDate + datetime.MILLISECONDS_PER_HOUR)
+        starts: newStart,
+        ends: newEnd
     });
 };
 
