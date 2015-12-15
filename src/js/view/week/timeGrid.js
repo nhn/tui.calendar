@@ -6,6 +6,7 @@
 
 var util = global.tui.util;
 var config = require('../../config');
+var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
@@ -47,8 +48,8 @@ function TimeGrid(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        hourStart: 0,
-        hourEnd: 24
+        hourStart: 9,
+        hourEnd: 19 
     }, options);
 
     /**
@@ -98,10 +99,14 @@ TimeGrid.prototype._getBaseViewModel = function() {
     var options = this.options,
         end = options.hourEnd,
         i = options.hourStart,
+        current = (new Date()).getHours(),
         hours = [];
 
     for (; i < end; i += 1) {
-        hours.push({hour: i});
+        hours.push({
+            hour: i, 
+            isCurrent: i === current
+        });
     }
 
     return {hours: hours};
@@ -229,7 +234,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
         }
 
         hourmarker.style.display = 'block';
-        hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
+        hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + '%';
 
         if (!util.isNull(todaymarkerLeft)) {
             todaymarker.style.display = 'block';
@@ -261,26 +266,16 @@ TimeGrid.prototype._getGridSize = function() {
  * use **Date.now()** when not supplied.
  * @returns {number} The pixel value represent current time in grids.
  */
-TimeGrid.prototype._getTopByTime = function(time) {
-    var now = util.isDate(time) ? new Date(time.getTime()) : new Date(),
-        start = datetime.start(now),
-        hourStart = this.options.hourStart,
-        gridSize = this._getGridSize(),
-        offset,
-        top;
+TimeGrid.prototype._getTopPercentByTime = function(time) {
+    var now = util.isDate(time) ? new Date(+time) : new Date(),
+        raw = datetime.raw(now),
+        opt = this.options,
+        hourLength = util.range(opt.hourStart, opt.hourEnd).length,
+        hmsMilliseconds = datetime.millisecondsFrom('hour', raw.h) +
+            datetime.millisecondsFrom('minutes', raw.m) +
+            datetime.millisecondsFrom('seconds', raw.s);
 
-    if (!gridSize) {
-        return 0;
-    }
-
-    offset = +now - +start;
-    if (hourStart) {
-        offset -= datetime.millisecondsFrom('hour', hourStart);
-    }
-
-    top = (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length));
-
-    return top;
+    return common.ratio(hourLength * datetime.MILLISECONDS_PER_HOUR, 100, hmsMilliseconds);
 };
 
 /**
@@ -291,7 +286,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function() {
     var now = new Date();
 
     return {
-        top: this._getTopByTime(),
+        top: this._getTopPercentByTime(),
         hour: now.getHours(),
         text: datetime.format(now, 'HH:mm')
     };
@@ -312,7 +307,7 @@ TimeGrid.prototype.scrollToNow = function() {
     var container = this.container;
 
     window.setTimeout(util.bind(function() {
-        var currentHourTop = this._getTopByTime(),
+        var currentHourTop = this._getTopPercentByTime(),
             viewBound = this.getViewBound();
 
         container.scrollTop = (currentHourTop - (viewBound.height / 2));

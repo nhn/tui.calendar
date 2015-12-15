@@ -8,16 +8,20 @@ describe('View/TimeGrid', function() {
     });
 
     it('_getBaseViewModel()', function() {
+        var MockDate = jasmine.createSpyObj('Date', ['getHours']);
+        spyOn(window, 'Date').and.returnValue(MockDate);
+        MockDate.getHours.and.returnValue(3);
+
         var expected = {
             hours: [
-                {hour: 3},
-                {hour: 4},
-                {hour: 5},
-                {hour: 6},
-                {hour: 7},
-                {hour: 8},
-                {hour: 9},
-                {hour: 10}
+                {hour: 3, isCurrent: true},
+                {hour: 4, isCurrent: false},
+                {hour: 5, isCurrent: false},
+                {hour: 6, isCurrent: false},
+                {hour: 7, isCurrent: false},
+                {hour: 8, isCurrent: false},
+                {hour: 9, isCurrent: false},
+                {hour: 10, isCurrent: false}
             ]
         };
         var obj = {
@@ -32,7 +36,7 @@ describe('View/TimeGrid', function() {
         expect(result).toEqual(expected);
     });
 
-    describe('_getTopByTime()', function() {
+    describe('_getTopPercentByTime()', function() {
         var originDate,
             mock;
 
@@ -48,8 +52,8 @@ describe('View/TimeGrid', function() {
         });
 
         it('calculate related CSS top pixel value by time object.', function() {
-            // 12:00:00 is middle time of one days. return 150 when grid height is 300
-            expect(proto._getTopByTime.call(mock, new Date('2015-05-05T12:00:00+09:00'))).toBe(150);
+            // 12:00:00 is middle time of one days. return 50%
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T12:00:00+09:00'))).toBe(50);
         });
 
         it('calculate properly when hourStart, hourEnd is changed.', function() {
@@ -57,12 +61,7 @@ describe('View/TimeGrid', function() {
             mock.options.hourEnd = 14;
             mock._getBaseViewModel = function() { return {hours: {length: 5}}; };
 
-            expect(proto._getTopByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(120);
-        });
-
-        it('return 0 when view rendered yet.', function() {
-            mock._getGridSize = function() {return false;};
-            expect(proto._getTopByTime.call(mock, null)).toBe(0)
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(120);
         });
     });
 });

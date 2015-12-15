@@ -1,5 +1,7 @@
 <div class="{{CSS_PREFIX}}timegrid-left">
-    {{#each hours}}<div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hour}}"><span>{{hour}}</span></div>{{/each}}
+    {{#each hours ~}}
+        <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hour}}{{#if isCurrent}} {{CSS_PREFIX}}invisible{{/if}}"><span>{{hour}}</span></div>
+    {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}timegrid-right">
     <div class="{{CSS_PREFIX}}timegrid-h-grid">{{#each hours ~}}
@@ -9,7 +11,7 @@
         <div class="{{CSS_PREFIX}}timegrid-events-container"></div>
     </div>
 </div>
-<div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{hourmarker.top}}px">
+<div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{hourmarker.top}}%">
     <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
         <div class="{{CSS_PREFIX}}timegrid-hourmarker-line"></div>
         <div class="{{CSS_PREFIX}}timegrid-hourmarker-time">{{hourmarker.text}}</div>
