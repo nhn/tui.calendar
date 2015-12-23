@@ -82,15 +82,15 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
         guideElement.style.width = widthPercent + '%';
 
         if (isExceededLeft) {
-            domutil.addClass(guideElement, config.classname('allday-exceed-left'));
+            domutil.addClass(guideElement, config.classname('monthweek-exceed-left'));
         } else {
-            domutil.removeClass(guideElement, config.classname('allday-exceed-left'));
+            domutil.removeClass(guideElement, config.classname('monthweek-exceed-left'));
         }
 
         if (isExceededRight) {
-            domutil.addClass(guideElement, config.classname('allday-exceed-right'));
+            domutil.addClass(guideElement, config.classname('monthweek-exceed-right'));
         } else {
-            domutil.removeClass(guideElement, config.classname('allday-exceed-right'));
+            domutil.removeClass(guideElement, config.classname('monthweek-exceed-right'));
         }
     });
 };
@@ -181,6 +181,8 @@ AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
 
     newLeft *= eventData.baseWidthPercent;
     newWidth *= eventData.baseWidthPercent;
+
+    console.log(eventData);
 
     this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 };
