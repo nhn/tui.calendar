@@ -280,7 +280,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
         }
 
         hourmarker.style.display = 'block';
-        hourmarker.style.top = viewModel.top + '%';
+        hourmarker.style.top = viewModel.hourmarkerTop + '%';
         todaymarker.style.display = !!viewModel.todaymarkerLeft ? 'block' : 'none';
         text.innerHTML = viewModel.hourmarkerText;
     });
