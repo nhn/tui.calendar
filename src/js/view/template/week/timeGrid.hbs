@@ -18,7 +18,7 @@
         <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
             <div class="{{CSS_PREFIX}}timegrid-hourmarker-line"></div>
             <div class="{{CSS_PREFIX}}timegrid-hourmarker-time">{{hourmarkerText}}</div>
-            <div class="{{CSS_PREFIX}}timegrid-todaymarker" style="left:{{todaymarkerLeft}}%">today</div>
+            <div class="{{CSS_PREFIX}}timegrid-todaymarker" style="left:{{todaymarkerLeft}}%;{{#unless todaymarkerLeft}}display:none{{/unless}}">today</div>
         </div>
     </div>
 </div>
