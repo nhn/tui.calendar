@@ -301,7 +301,8 @@ TimeGrid.prototype.scrollToNow = function() {
     var container = this.container;
 
     window.setTimeout(util.bind(function() {
-        var currentHourTop = this._getTopPercentByTime(),
+        var currentHourTop = this.hourmarker.getBoundingClientRect().top - 
+                this.container.getBoundingClientRect().top,
             viewBound = this.getViewBound();
 
         container.scrollTop = (currentHourTop - (viewBound.height / 2));
