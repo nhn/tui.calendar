@@ -182,8 +182,6 @@ AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
     newLeft *= eventData.baseWidthPercent;
     newWidth *= eventData.baseWidthPercent;
 
-    console.log(eventData);
-
     this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 };
 
