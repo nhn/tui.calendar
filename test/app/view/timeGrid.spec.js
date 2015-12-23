@@ -13,22 +13,16 @@ describe('View/TimeGrid', function() {
         MockDate.getHours.and.returnValue(3);
 
         var expected = {
-            hours: [
-                {hour: 3, isCurrent: true},
-                {hour: 4, isCurrent: false},
-                {hour: 5, isCurrent: false},
-                {hour: 6, isCurrent: false},
-                {hour: 7, isCurrent: false},
-                {hour: 8, isCurrent: false},
-                {hour: 9, isCurrent: false},
-                {hour: 10, isCurrent: false}
-            ]
+            hours: [3, 4, 5, 6, 7, 8, 9, 10],
+            currentHour: 3
         };
+
         var obj = {
             options: {
                 hourStart: 3,
                 hourEnd: 11
-            }
+            },
+            _getHourmarkerViewModel: jasmine.createSpy('_getHourmarkerViewModel')
         };
 
         var result = proto._getBaseViewModel.call(obj);
@@ -54,9 +48,16 @@ describe('View/TimeGrid', function() {
         it('calculate related CSS top pixel value by time object.', function() {
             // 12:00:00 is middle time of one days. return 50%
             expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T12:00:00+09:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T00:00:00+09:00'))).toBe(0);
+
+            mock.options.hourStart = 21;
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
+
+            mock.options.hourStart = 21;
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
         });
 
-        it('calculate properly when hourStart, hourEnd is changed.', function() {
+        xit('calculate properly when hourStart, hourEnd is changed.', function() {
             mock.options.hourStart = 9;
             mock.options.hourEnd = 14;
             mock._getBaseViewModel = function() { return {hours: {length: 5}}; };

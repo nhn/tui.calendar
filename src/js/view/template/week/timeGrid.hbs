@@ -1,20 +1,24 @@
 <div class="{{CSS_PREFIX}}timegrid-left">
     {{#each hours ~}}
-        <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hour}}{{#if isCurrent}} {{CSS_PREFIX}}invisible{{/if}}"><span>{{hour}}</span></div>
+        <div class="{{CSS_PREFIX}}timegrid-hour 
+            {{CSS_PREFIX}}timegrid-hour-{{this}} 
+            {{#fi @root.currentHour '===' this}}{{CSS_PREFIX}}invisible{{/fi}}"><span>{{this}}</span></div>
     {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}timegrid-right">
-    <div class="{{CSS_PREFIX}}timegrid-h-grid">{{#each hours ~}}
+    <div class="{{CSS_PREFIX}}timegrid-h-grid">
+        {{#each hours ~}}
         <div class="{{CSS_PREFIX}}timegrid-gridline"></div>
-    {{/each~}}</div>
+        {{/each ~}}
+    </div>
     <div class="{{CSS_PREFIX}}timegrid-events">
         <div class="{{CSS_PREFIX}}timegrid-events-container"></div>
     </div>
-</div>
-<div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{hourmarker.top}}%">
-    <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
-        <div class="{{CSS_PREFIX}}timegrid-hourmarker-line"></div>
-        <div class="{{CSS_PREFIX}}timegrid-hourmarker-time">{{hourmarker.text}}</div>
-        <div class="{{CSS_PREFIX}}timegrid-todaymarker">today</div>
+    <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{hourmarkerTop}}%">
+        <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line"></div>
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-time">{{hourmarkerText}}</div>
+            <div class="{{CSS_PREFIX}}timegrid-todaymarker" style="left:{{todaymarkerLeft}}%">today</div>
+        </div>
     </div>
 </div>
