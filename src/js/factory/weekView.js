@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var util = global.tui.util;
 var config = require('../config');
 var domutil = require('../common/domutil');
 var VLayout = require('../common/vlayout');
