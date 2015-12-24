@@ -5,14 +5,14 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../config');
-var common = require('../common/common');
-var datetime = require('../common/datetime');
-var Layout = require('../view/layout');
-var Drag = require('../handler/drag');
-var controllerFactory = require('./controller');
-var weekViewFactory = require('./weekView');
 var Handlebars = require('hbsfy/runtime');
+var config = require('../config'),
+    datetime = require('../common/datetime'),
+    Layout = require('../view/layout'),
+    Drag = require('../handler/drag'),
+    controllerFactory = require('./controller'),
+    weekViewFactory = require('./weekView'),
+    monthViewFactory = require('./monthView');
 
 /**
  * @typedef {object} Calendar~CalEvent
@@ -405,9 +405,14 @@ Calendar.prototype.toggleView = function(viewName, force) {
 
     if (viewName === 'week') {
         created = weekViewFactory(controller, layout.container, dragHandler, options);
-        layout.addChild(created.view);
-        this._refreshMethod = created.refresh;
+    } else if (viewName === 'month') {
+        created = monthViewFactory(controller, layout.container, dragHandler, options);
+    } else {
+        return;
     }
+
+    layout.addChild(created.view);
+    this._refreshMethod = created.refresh;
 }
 
 /**
