@@ -80,18 +80,18 @@ MonthWeek.prototype.getRenderDateRange = function() {
  * @returns {object} viewModel to rendering.
  */
 MonthWeek.prototype._getBaseViewModel = function(viewModel) {
-    var options = this.options,
+    var opt = this.options,
         range = this.getRenderDateRange(),
-        matrices = options._getViewModelFunc(viewModel),
+        matrices = opt._getViewModelFunc(viewModel),
         gridWidth = 100 / range.length;
 
     return {
-        mode: !!options._mode,
+        mode: opt._mode,
         width: gridWidth,
-        height: options.containerHeight,
-        eventBlockHeight: options.eventHeight + options.eventGutter,
-        eventBlockGutter: options.eventGutter,
-        eventHeight: options.eventHeight,
+        eventBlockHeight: opt.eventHeight + opt.eventGutter,
+        eventBlockGutter: opt.eventGutter,
+        eventHeight: opt.eventHeight,
+        marginTop: (opt._mode === MonthWeek.MONTHWEEK_MODE.MONTH) ? opt.eventHeight : 0,
         dates: util.map(range, function(date) {
             return date.getDate();
         }),
@@ -104,16 +104,25 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
  * @param {object} viewModel - viewModel from parent views.
  */
 MonthWeek.prototype.render = function(viewModel) {
-    var baseViewModel = this._getBaseViewModel(viewModel),
+    var opt = this.options,
+        baseViewModel = this._getBaseViewModel(viewModel),
         maxEventInDay = 0;
 
-    maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
-        return Math.max.apply(null, util.map(matrix, function(row) {
-            return row.length;
+    if (opt._mode === MonthWeek.MONTHWEEK_MODE.WEEK) {
+        maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
+            return Math.max.apply(null, util.map(matrix, function(row) {
+                return row.length;
+            }));
         }));
-    }));
 
-    this._setMinHeight(maxEventInDay);
+        this._setMinHeight(maxEventInDay);
+    } else {
+        //TODO: Implement view models for month mode
+        //TODO: 월뷰 컨테이너에서 %로 나눠준 높이 기준으로 계산해야 함.
+        // this.container.style.height = opt.containerHeight + 'px';
+        // maxEventInDay = Math.floor((opt.containerHeight - opt.eventHeight) / (opt.eventHeight + opt.eventGutter)) - 1;
+        // console.log(maxEventInDay);
+    }
 
     this.container.innerHTML = tmpl(baseViewModel);
 };

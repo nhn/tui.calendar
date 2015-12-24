@@ -5,7 +5,7 @@
                 left:{{multiply @root.width @index}}%;">{{#if @root.mode}}{{this}}{{/if}}</div>
 {{/each ~}}
 </div>
-<div class="{{CSS_PREFIX}}monthweek-events">
+<div class="{{CSS_PREFIX}}monthweek-events" style="margin-top:{{marginTop}}px">
 {{#each matrices ~}}
 {{#each this ~}} {{! matrix }}
 {{#each this ~}} {{! column }}
