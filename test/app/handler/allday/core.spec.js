@@ -5,7 +5,7 @@ describe('handler:AlldayCore', function() {
 
     describe('_retriveEventData()', function() {
         beforeEach(function() {
-            spyOn(window.ne.dooray.calendar.domutil, 'getSize').and.returnValue([250 + 60, 30]);
+            spyOn(window.ne.dooray.calendar.domutil, 'getSize').and.returnValue([300, 30]);
         });
 
         it('return function that return event data by mouse events.', function() {
@@ -13,30 +13,34 @@ describe('handler:AlldayCore', function() {
                 options: {
                     renderStartDate: '2015-08-10',
                     renderEndDate: '2015-08-14'
-                }
+                },
+                childs: jasmine.createSpyObj('Collection', ['single'])
             };
 
-            // Simulate mouse event action.
-            // drag start position
-            spyOn(window.ne.dooray.calendar.domevent, 'getMousePosition').and.returnValue([40 + 60, 10]);
-            result = AlldayCore._retriveEventData.call(null, mockAlldayView);
-            // drag end position
-            window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([180 + 60, 10]);
-            expect(result()).toEqual({
-                relatedView: mockAlldayView,
-                dragStartXIndex: 0,
-                datesInRange: 5,
-                xIndex: 3
-            });
+            mockAlldayView.childs.single.and.returnValue(true);
 
-            // drag start position
-            window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([60 + 60, 25]);
+            // Simulate mouse event action.
+            // drag start position (11일)
+            spyOn(window.ne.dooray.calendar.domevent, 'getMousePosition').and.returnValue([90, 10]);
             result = AlldayCore._retriveEventData.call(null, mockAlldayView);
-            // drag end position
-            window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([20 + 60, 25]);
+            // drag end position (12일)
+            window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([160, 10]);
+
             expect(result()).toEqual({
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
+                datesInRange: 5,
+                xIndex: 2
+            });
+
+            // drag start position (12일)
+            window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([121, 25]);
+            result = AlldayCore._retriveEventData.call(null, mockAlldayView);
+            // drag end position (10일)
+            window.ne.dooray.calendar.domevent.getMousePosition.and.returnValue([59, 25]);
+            expect(result()).toEqual({
+                relatedView: mockAlldayView,
+                dragStartXIndex: 2,
                 datesInRange: 5,
                 xIndex: 0
             });
