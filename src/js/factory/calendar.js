@@ -413,6 +413,7 @@ Calendar.prototype.toggleView = function(viewName, force) {
 
     layout.addChild(created.view);
     this._refreshMethod = created.refresh;
+    this.render();
 }
 
 /**

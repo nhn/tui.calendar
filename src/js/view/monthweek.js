@@ -119,7 +119,7 @@ MonthWeek.prototype.render = function(viewModel) {
     } else {
         //TODO: Implement view models for month mode
         //TODO: 월뷰 컨테이너에서 %로 나눠준 높이 기준으로 계산해야 함.
-        // this.container.style.height = opt.containerHeight + 'px';
+        this.container.style.height = opt.containerHeight + 'px';
         // maxEventInDay = Math.floor((opt.containerHeight - opt.eventHeight) / (opt.eventHeight + opt.eventGutter)) - 1;
         // console.log(maxEventInDay);
     }

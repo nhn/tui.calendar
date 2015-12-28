@@ -5,7 +5,8 @@
 'use strict';
 
 var config = require('../config'),
-    domutil = require('../common/domutil');
+    domutil = require('../common/domutil'),
+    Month = require('../view/month/month');
 
 /**
  * @param {Base} baseController - controller instance
@@ -15,10 +16,14 @@ var config = require('../config'),
  * @returns {object} view instance and refresh method
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
-    layoutContainer.innerHTML = 'MONTH VIEW!!!!';
+    var monthViewContainer,
+        monthView;
+
+    monthViewContainer = domutil.appendHTMLElement('div', layoutContainer, config.classname('month'));
+    monthView = new Month(options.month, monthViewContainer);
 
     return {
-        view: function() {},
+        view: monthView,
         refresh: function() {}
     };
 }
