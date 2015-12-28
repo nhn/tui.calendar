@@ -444,4 +444,20 @@ describe('datetime', function() {
         expect(datetime.isSameDate(d1, d2)).toBe(false);
         expect(datetime.isSameDate(d1, d3)).toBe(false);
     });
+
+    it('startDateOfMonth', function() {
+        var month = new Date('2015-11-24T09:30:00+09:00');
+        expect(datetime.startDateOfMonth(month)).toEqual(new Date('2015-11-01T00:00:00+09:00'));
+
+        month = new Date('2015-06-24T00:00:00+09:00');
+        expect(datetime.startDateOfMonth(month)).toEqual(new Date('2015-06-01T00:00:00+09:00'));
+    });
+
+    it('endDateOfMonth', function() {
+        var month = new Date('2015-11-24T09:30:00+09:00');
+        expect(datetime.endDateOfMonth(month)).toEqual(new Date('2015-11-30T23:59:59+09:00'));
+
+        var month = new Date('2015-07-15T00:00:00+09:00');
+        expect(datetime.endDateOfMonth(month)).toEqual(new Date('2015-07-31T23:59:59+09:00'));
+    });
 });

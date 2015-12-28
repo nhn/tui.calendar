@@ -399,6 +399,35 @@ datetime = {
     },
 
     /**
+     * Get start date of specific month
+     * @param {Date} date - date to get start date
+     * @returns {Date} start date of supplied month
+     */
+    startDateOfMonth: function(date) {
+        var startDate = new Date(+date);
+
+        startDate.setDate(1);
+        startDate.setHours(0, 0, 0, 0);
+
+        return startDate;
+    },
+
+    /**
+     * Get end date of specific month
+     * @param {Date} date - date to get end date
+     * @returns {Date} end date of supplied month
+     */
+    endDateOfMonth: function(date) {
+        var endDate = datetime.startDateOfMonth(date);
+
+        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1))
+        endDate.setDate(endDate.getDate() - 1);
+        endDate.setHours(23, 59, 59);
+
+        return endDate;
+    },
+
+    /**
      * Return 2-dimensional array month calendar
      *
      * dates that different month with given date are negative values
@@ -415,9 +444,8 @@ datetime = {
             cursor, week,
             calendar = [];
 
-        starts = new Date(new Date(+month).setDate(1));
-        ends = new Date(new Date(+starts).setMonth(starts.getMonth() + 1));
-        ends = new Date(new Date(+ends).setDate(ends.getDate() - 1));
+        starts = datetime.startDateOfMonth(month);
+        ends = datetime.endDateOfMonth(month);
 
         // create day number array by startDayOfWeek number
         // 4 -> [4, 5, 6, 0, 1, 2, 3]
