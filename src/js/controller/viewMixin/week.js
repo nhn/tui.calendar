@@ -17,125 +17,6 @@ var aps = Array.prototype.slice;
  */
 var Week = {
     /**********
-     * COMMON
-     **********/
-
-    /**
-     * Calculate collision group.
-     * @this Base.Week
-     * @param {array} viewModels List of viewmodels.
-     * @returns {array} Collision Group.
-     */
-    getCollisionGroup: function(viewModels) {
-        var collisionGroups = [],
-            foundPrevCollisionEvent = false,
-            previousEventList;
-
-        if (!viewModels.length) {
-            return collisionGroups;
-        }
-
-        collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
-        util.forEachArray(viewModels.slice(1), function(event, index) {
-            foundPrevCollisionEvent = false;
-            previousEventList = aps.apply(viewModels, [0, index + 1]).reverse();
-
-            util.forEachArray(previousEventList, function(previous) {
-                if (event.collidesWith(previous)) {
-                    // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
-                    // 찾아 이 일정을 추가한다
-                    foundPrevCollisionEvent = true;
-
-                    util.forEachArray(collisionGroups.slice(0).reverse(), function(group) {
-                        if (~util.inArray(util.stamp(previous.valueOf()), group)) {
-                            // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
-                            // Collision Group에 이 일정을 포함시킨다.
-                            group.push(util.stamp(event.valueOf()));
-                            return false;
-                        }
-                    });
-
-                    return false;
-                }
-            });
-
-            if (!foundPrevCollisionEvent) {
-                // 이 일정은 이전일정과 겹치지 않는 일정이므로
-                // 새 Collision Group을 구성한다.
-                collisionGroups.push([util.stamp(event.valueOf())]);
-            }
-        });
-
-        return collisionGroups;
-    },
-
-    /**
-     * Get row length by column index in 2d matrix.
-     * @this Base.Week
-     * @param {array[]} arr2d Matrix
-     * @param {number} col Column index.
-     * @return {number} Last row number in column.
-     */
-    getLastRowInColumn: function(arr2d, col) {
-        var row = arr2d.length;
-
-        while (row > 0) {
-            row -= 1;
-            if (!util.isUndefined(arr2d[row][col])) {
-                return row;
-            }
-        }
-
-        return false;
-    },
-
-    /**
-     * Calculate matrix for appointment block element placing.
-     * @this Base.Week
-     * @param {Collection} collection model collection.
-     * @param {array[]} collisionGroups Collision groups for event set.
-     * @returns {array} matrices
-     */
-    getMatrices: function(collection, collisionGroups) {
-        var result = [],
-            getLastRowInColumn = Week.getLastRowInColumn;
-
-        util.forEachArray(collisionGroups, function(group) {
-            var matrix = [[]];
-
-            util.forEachArray(group, function(eventID) {
-                var event = collection.items[eventID],
-                    col = 0,
-                    found = false,
-                    nextRow,
-                    lastRowInColumn;
-
-                while (!found) {
-                    lastRowInColumn = getLastRowInColumn(matrix, col);
-
-                    if (lastRowInColumn === false) {
-                        matrix[0].push(event);
-                        found = true;
-                    } else if (!event.collidesWith(matrix[lastRowInColumn][col])) {
-                        nextRow = lastRowInColumn + 1;
-                        if (util.isUndefined(matrix[nextRow])) {
-                            matrix[nextRow] = [];
-                        }
-                        matrix[nextRow][col] = event;
-                        found = true;
-                    }
-
-                    col += 1;
-                }
-            });
-
-            result.push(matrix);
-        });
-
-        return result;
-    },
-
-    /**********
      * TIME GRID VIEW
      **********/
 
@@ -268,12 +149,12 @@ var Week = {
                 collisionGroups,
                 matrices;
 
-            collisionGroups = this.getCollisionGroup(viewModels);
-            matrices = this.getMatrices(collection, collisionGroups);
-            this.getCollides(matrices);
+            collisionGroups = this.Core.getCollisionGroup(viewModels);
+            matrices = this.Core.getMatrices(collection, collisionGroups);
+            this.Week.getCollides(matrices);
 
             result[ymd] = matrices;
-        }, Week);
+        }, this);
 
         return result;
     },
@@ -307,8 +188,8 @@ var Week = {
         );
 
         list = viewModels.sort(array.compare.event.asc);
-        collisionGroups = Week.getCollisionGroup(list);
-        matrices = Week.getMatrices(viewModels, collisionGroups);
+        collisionGroups = this.Core.getCollisionGroup(list);
+        matrices = this.Core.getMatrices(viewModels, collisionGroups);
 
         util.forEachArray(matrices, function(matrix) {
             util.forEachArray(matrix, function(column) {

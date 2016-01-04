@@ -18,63 +18,6 @@ describe('Base.Week', function() {
         }).sort(array.compare.event.asc);
     });
         
-    describe('getLastRowInColumn()', function() {
-        var test;
-        beforeEach(function() {
-            test = [
-                [1, 1, 1],
-                [1, undefined, 3],
-                [4, undefined, undefined]
-            ];
-        });
-
-        it('return false when column not exist.', function() {
-            var result = ctrl.getLastRowInColumn(test, 4);
-            expect(result).toBe(false);
-
-        });
-
-        it('can calculate last row in column in 2d array.', function() {
-            var result = ctrl.getLastRowInColumn(test, 0);
-            expect(result).toBe(2);
-        });
-    });
-
-    describe('getMatrices()', function() {
-        var collection,
-            cg;
-
-        beforeEach(function() {
-            collection = new Collection(function(model) {
-                return util.stamp(model);
-            });
-            collection.add.apply(collection, eventList);
-            cg = ctrl.getCollisionGroup(eventList);
-        });
-
-        it('can calculate matrices accuratly.', function() {
-            var expected = [
-                [
-                    [eventList[0], eventList[1]],
-                    [eventList[2]],
-                    [eventList[3]]
-                ], [
-                    [eventList[4]]
-                ], [
-                    [eventList[5], eventList[6]]
-                ], [
-                    [eventList[7], eventList[8]],
-                    [eventList[9]]
-                ], [
-                    [eventList[10]]
-                ]
-            ];
-            var result = ctrl.getMatrices(collection, cg);
-
-            expect(result).toEqual(expected);
-        });
-    });
-
     describe('_hasCollide()', function() {
         var supplied;
 
@@ -160,6 +103,8 @@ describe('Base.Week', function() {
             });
 
             /*
+             * 실제 자료 구조와는 다름. 어떤
+             * 일정이 있다는 정도로만 참고할 것
              * matrix: {
              * '20150501': [id1],
              * '20150502': [id1, id4],

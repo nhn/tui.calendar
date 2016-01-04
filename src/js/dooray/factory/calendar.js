@@ -5,12 +5,10 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config');
-var datetime = require('../../common/datetime');
-var Calendar = require('../../factory/calendar');
-var DoorayBase = require('../controller/base');
-var Week = require('../../controller/viewMixin/week');
-var serviceWeekViewFactory = require('./weekView');
+var config = require('../../config'),
+    Calendar = require('../../factory/calendar'),
+    controllerFactory = require('../factory/controller'),
+    serviceWeekViewFactory = require('./weekView');
 
 /**
  * @typedef {object} ServiceCalendar~DoorayEvent
@@ -61,60 +59,7 @@ function ServiceCalendar(options, container) {
         return viewModel.model.category;
     };
 
-    // 컨트롤러 만들기
-    controller = options.controller = (function() {
-        var controller = new DoorayBase(options),
-            originFindByDateRange;
-
-        // 주뷰 컨트롤러 믹스인
-        controller.Week = {};
-        util.forEach(Week, function(method, methodName) {
-            controller.Week[methodName] = util.bind(method, controller);
-        });
-
-        // 일정 조회 API에 기존 캘린더에 없었던 milstone, task를 지원하도록
-        // 하기 위해 메서드를 오버라이딩한다.
-        originFindByDateRange = controller.Week.findByDateRange;
-
-        // visible이 true인 일정만 필터링 하기 위한 필터 함수
-        function filterModelIsVisible(model) {
-            return !!model.visible;
-        }
-
-        controller.Week.findByDateRange = function(starts, ends) {
-            var dateRange = util.map(datetime.range(
-                    datetime.start(starts),
-                    datetime.end(ends),
-                    datetime.MILLISECONDS_PER_DAY
-                ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
-                viewModel = originFindByDateRange(starts, ends, [filterModelIsVisible]);
-
-            util.forEach(viewModel, function(coll, key, obj) {
-                var groupedByYMD;
-
-                // 마일스톤, 업무 뷰 뷰모델 가공
-                if (key === 'task' || key === 'milestone') {
-                    groupedByYMD = coll.groupBy(dateRange, function(viewModel) {
-                        return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
-                    });
-
-                    if (key === 'task') {
-                        util.forEach(groupedByYMD, function(coll, ymd, obj) {
-                            obj[ymd] = coll.groupBy(function(viewModel) {
-                                return viewModel.model.dueDateClass;
-                            });
-                        });
-                    }
-
-                    obj[key] = groupedByYMD;
-                }
-            });
-
-            return viewModel;
-        };
-
-        return controller;
-    })();
+    controller = options.controller = controllerFactory(options);
 
     // FullCalendar 기본 모듈은 category, dueDateClass 플래그를 모름. 때문에
     // 이곳에서 이벤트 핸들러를 등록해서 일정 생성 전에 isAllDay플래그를 보고

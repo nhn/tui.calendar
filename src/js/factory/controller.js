@@ -6,8 +6,17 @@
 
 var util = global.tui.util;
 var Base = require('../controller/base'),
+    Core = require('../controller/viewMixin/core'),
     Week = require('../controller/viewMixin/week'),
     Month = require('../controller/viewMixin/month');
+
+function mixin(from, to, propertyName) {
+    var obj = to[propertyName] = {};
+
+    util.forEach(from, function(method, methodName) {
+        obj[methodName] = util.bind(method, to);
+    });
+}
 
 /**
  * @param {object} options - options for base controller
@@ -17,15 +26,9 @@ var Base = require('../controller/base'),
 module.exports = function(options) {
     var controller = new Base(options);
 
-    controller.Week = {};
-    util.forEach(Week, function(method, methodName) {
-        controller.Week[methodName] = util.bind(method, controller);
-    });
-
-    controller.Month = {};
-    util.forEach(Month, function(method, methodName) {
-        controller.Month[methodName] = util.bind(method, controller);
-    });
+    mixin(Core, controller, 'Core');
+    mixin(Week, controller, 'Week');
+    mixin(Month, controller, 'Month');
 
     return controller;
 };
