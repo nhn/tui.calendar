@@ -57,12 +57,12 @@ describe('View/TimeGrid', function() {
             expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
         });
 
-        xit('calculate properly when hourStart, hourEnd is changed.', function() {
+        it('calculate properly when hourStart, hourEnd is changed.', function() {
             mock.options.hourStart = 9;
             mock.options.hourEnd = 14;
             mock._getBaseViewModel = function() { return {hours: {length: 5}}; };
 
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(120);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(40);
         });
     });
 });
