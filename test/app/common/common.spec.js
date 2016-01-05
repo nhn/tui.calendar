@@ -64,4 +64,24 @@ describe('module:common', function() {
         expect(common.limit(-20, [0], [2])).toBe(0);
         expect(common.limit(10, [0, 15], [20])).toBe(15);
     });
+
+    it('get first element in 2d array.', function() {
+        var arr = [
+            [0, 1, 2],
+            [3, 4, 5]
+        ];
+
+        expect(common.firstIn2dArray(arr)).toBe(0);
+        expect(common.firstIn2dArray(arr)).not.toBe(3);
+    });
+
+    it('get last element in 2d array.', function() {
+        var arr = [
+            [0, 1, 2],
+            [3, 4, 5]
+        ];
+
+        expect(common.lastIn2dArray(arr)).toBe(5);
+        expect(common.lastIn2dArray(arr)).not.toBe(0);
+    });
 });

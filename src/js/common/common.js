@@ -131,6 +131,27 @@ module.exports = {
 
     stripTags: function(str) {
         return str.replace(/<([^>]+)>/ig, '');
+    },
+
+    /**
+     * Get first value in 2-dimentional array.
+     * @param {Array.<Array>} arr2d - 2-dimentional array
+     * @returns {*} first value in 2d array
+     */
+    firstIn2dArray: function(arr2d) {
+        return util.pick(arr2d, '0', '0');
+    },
+
+    /**
+     * Get last value in 2-dimentional array.
+     * @param {Array.<Array>} arr2d - 2-dimentional array
+     * @returns {*} last value in 2d array
+     */
+    lastIn2dArray: function(arr2d) {
+        var lastRow = arr2d.length - 1,
+            lastCol = arr2d[lastRow].length - 1;
+
+        return util.pick(arr2d, lastRow, lastCol);
     }
 };
 
