@@ -244,9 +244,9 @@ var Week = {
         // CUSTOMIZE VIEWMODEL FOR EACH VIEW
         util.forEach(viewModels, function(coll, key, obj) {
             if (key === 'allday') {
-                obj.allday = util.bind(Week.getViewModelForAlldayView, this)(starts, ends, coll);
+                obj.allday = this.Week.getViewModelForAlldayView(starts, ends, coll);
             } else if (key === 'time') {
-                obj.time = util.bind(Week.getViewModelForTimeView, this)(starts, ends, coll);
+                obj.time = this.Week.getViewModelForTimeView(starts, ends, coll);
             }
         }, this);
 
