@@ -1,6 +1,6 @@
 /**
  * Dooray Calendar
- * @version 0.1.18
+ * @version 0.1.19
  */
 .dcal-layout {
   height: 100%;
@@ -268,7 +268,6 @@
   z-index: 98;
 }
 .dcal-timegrid-hourmarker-wrap {
-  margin-left: 60px;
   position: relative;
 }
 .dcal-timegrid-hourmarker-line {
@@ -351,6 +350,14 @@
 .dcal-time-guide-bottom {
   position: absolute;
   bottom: 0;
+}
+.dcal-month {
+  height: 100%;
+}
+.dcal-week-in-month {
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  background-color: #fff;
 }
 .dcal-milestone-container {
   height: 100%;

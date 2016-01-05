@@ -2,7 +2,7 @@
 (function (global){
 /**
  * Dooray Calendar
- * @version 0.1.18
+ * @version 0.1.19
  */
 /* eslint vars-on-top:0, strict:0 */
 
@@ -158,7 +158,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":39,"./src/js/dooray/factory/calendar":40,"./src/js/dooray/handler/milestoneClick":42,"./src/js/dooray/handler/taskClick":43,"./src/js/dooray/model/calEvent":44,"./src/js/dooray/view/freebusy":46,"./src/js/dooray/view/minicalendar":50,"./src/js/dooray/view/taskview":52,"./src/js/factory/calendar":53,"./src/js/factory/controller":54,"./src/js/handler/allday/click":56,"./src/js/handler/allday/core":57,"./src/js/handler/allday/creation":58,"./src/js/handler/allday/creationGuide":59,"./src/js/handler/allday/move":61,"./src/js/handler/allday/moveGuide":62,"./src/js/handler/allday/resize":63,"./src/js/handler/allday/resizeGuide":64,"./src/js/handler/drag":65,"./src/js/handler/time/click":66,"./src/js/handler/time/core":67,"./src/js/handler/time/creation":68,"./src/js/handler/time/creationGuide":69,"./src/js/handler/time/move":71,"./src/js/handler/time/moveGuide":72,"./src/js/handler/time/resize":73,"./src/js/handler/time/resizeGuide":74,"./src/js/model/calEvent":75,"./src/js/model/viewModel/calEvent":76,"./src/js/view/monthweek":78,"./src/js/view/template/registerHelpers":81,"./src/js/view/view":86,"./src/js/view/week/dayname":88,"./src/js/view/week/time":89,"./src/js/view/week/timeGrid":90,"./src/js/view/week/week":91}],2:[function(require,module,exports){
+},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":41,"./src/js/dooray/factory/calendar":42,"./src/js/dooray/handler/milestoneClick":45,"./src/js/dooray/handler/taskClick":46,"./src/js/dooray/model/calEvent":47,"./src/js/dooray/view/freebusy":49,"./src/js/dooray/view/minicalendar":53,"./src/js/dooray/view/taskview":55,"./src/js/factory/calendar":56,"./src/js/factory/controller":57,"./src/js/handler/allday/click":60,"./src/js/handler/allday/core":61,"./src/js/handler/allday/creation":62,"./src/js/handler/allday/creationGuide":63,"./src/js/handler/allday/move":65,"./src/js/handler/allday/moveGuide":66,"./src/js/handler/allday/resize":67,"./src/js/handler/allday/resizeGuide":68,"./src/js/handler/drag":69,"./src/js/handler/time/click":70,"./src/js/handler/time/core":71,"./src/js/handler/time/creation":72,"./src/js/handler/time/creationGuide":73,"./src/js/handler/time/move":75,"./src/js/handler/time/moveGuide":76,"./src/js/handler/time/resize":77,"./src/js/handler/time/resizeGuide":78,"./src/js/model/calEvent":79,"./src/js/model/viewModel/calEvent":80,"./src/js/view/monthweek":83,"./src/js/view/template/registerHelpers":86,"./src/js/view/view":91,"./src/js/view/week/dayname":93,"./src/js/view/week/time":94,"./src/js/view/week/timeGrid":95,"./src/js/view/week/week":96}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -172,10 +172,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var _handlebarsBase = require('./handlebars/base');
 
+var base = _interopRequireWildcard(_handlebarsBase);
+
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
-
-var base = _interopRequireWildcard(_handlebarsBase);
 
 var _handlebarsSafeString = require('./handlebars/safe-string');
 
@@ -195,10 +195,9 @@ var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
 var _handlebarsNoConflict = require('./handlebars/no-conflict');
 
-// For compatibility and usage outside of module systems, make the Handlebars object a namespace
-
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
+// For compatibility and usage outside of module systems, make the Handlebars object a namespace
 function create() {
   var hb = new base.HandlebarsEnvironment();
 
@@ -250,7 +249,7 @@ var _logger = require('./logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var VERSION = '4.0.4';
+var VERSION = '4.0.5';
 exports.VERSION = VERSION;
 var COMPILER_REVISION = 7;
 
@@ -809,6 +808,7 @@ exports['default'] = function (Handlebars) {
     if (root.Handlebars === Handlebars) {
       root.Handlebars = $Handlebars;
     }
+    return Handlebars;
   };
 };
 
@@ -1169,10 +1169,10 @@ function extend(obj /* , ...source */) {
 
 var toString = Object.prototype.toString;
 
+exports.toString = toString;
 // Sourced from lodash
 // https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
 /* eslint-disable func-style */
-exports.toString = toString;
 var isFunction = function isFunction(value) {
   return typeof value === 'function';
 };
@@ -1192,8 +1192,8 @@ var isArray = Array.isArray || function (value) {
   return value && typeof value === 'object' ? toString.call(value) === '[object Array]' : false;
 };
 
-// Older IE versions do not directly support indexOf so we must implement our own, sadly.
 exports.isArray = isArray;
+// Older IE versions do not directly support indexOf so we must implement our own, sadly.
 
 function indexOf(array, value) {
   for (var i = 0, len = array.length; i < len; i++) {
@@ -2517,6 +2517,27 @@ module.exports = {
 
     stripTags: function(str) {
         return str.replace(/<([^>]+)>/ig, '');
+    },
+
+    /**
+     * Get first value in 2-dimentional array.
+     * @param {Array.<Array>} arr2d - 2-dimentional array
+     * @returns {*} first value in 2d array
+     */
+    firstIn2dArray: function(arr2d) {
+        return util.pick(arr2d, '0', '0');
+    },
+
+    /**
+     * Get last value in 2-dimentional array.
+     * @param {Array.<Array>} arr2d - 2-dimentional array
+     * @returns {*} last value in 2d array
+     */
+    lastIn2dArray: function(arr2d) {
+        var lastRow = arr2d.length - 1,
+            lastCol = arr2d[lastRow].length - 1;
+
+        return util.pick(arr2d, lastRow, lastCol);
     }
 };
 
@@ -2925,6 +2946,35 @@ datetime = {
     },
 
     /**
+     * Get start date of specific month
+     * @param {Date} date - date to get start date
+     * @returns {Date} start date of supplied month
+     */
+    startDateOfMonth: function(date) {
+        var startDate = new Date(+date);
+
+        startDate.setDate(1);
+        startDate.setHours(0, 0, 0, 0);
+
+        return startDate;
+    },
+
+    /**
+     * Get end date of specific month
+     * @param {Date} date - date to get end date
+     * @returns {Date} end date of supplied month
+     */
+    endDateOfMonth: function(date) {
+        var endDate = datetime.startDateOfMonth(date);
+
+        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1))
+        endDate.setDate(endDate.getDate() - 1);
+        endDate.setHours(23, 59, 59);
+
+        return endDate;
+    },
+
+    /**
      * Return 2-dimensional array month calendar
      *
      * dates that different month with given date are negative values
@@ -2941,9 +2991,8 @@ datetime = {
             cursor, week,
             calendar = [];
 
-        starts = new Date(new Date(+month).setDate(1));
-        ends = new Date(new Date(+starts).setMonth(starts.getMonth() + 1));
-        ends = new Date(new Date(+ends).setDate(ends.getDate() - 1));
+        starts = datetime.startDateOfMonth(month);
+        ends = datetime.endDateOfMonth(month);
 
         // create day number array by startDayOfWeek number
         // 4 -> [4, 5, 6, 0, 1, 2, 3]
@@ -5139,7 +5188,7 @@ module.exports = VLayout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../config":36,"../handler/drag":65,"../view/view":86,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":35}],35:[function(require,module,exports){
+},{"../config":36,"../handler/drag":69,"../view/view":91,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":35}],35:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Panel class for VLayout module
@@ -5279,7 +5328,7 @@ module.exports = VPanel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../config":36,"../view/view":86,"./common":26,"./domutil":30}],36:[function(require,module,exports){
+},{"../config":36,"../view/view":91,"./common":26,"./domutil":30}],36:[function(require,module,exports){
 /* eslint-disable */
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
@@ -5611,33 +5660,23 @@ module.exports = Base;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../model/calEvent":75,"../model/viewModel/calEvent":76}],38:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../model/calEvent":79,"../model/viewModel/calEvent":80}],38:[function(require,module,exports){
 (function (global){
 /**
- * @fileoverview Controller mixin modules for day views.
+ * @fileoverview Core methods for event block placing
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-
 var util = global.tui.util;
-var Collection = require('../../common/collection');
-var datetime = require('../../common/datetime');
-var common = require('../../common/common');
-var array = require('../../common/array');
-var CalEventViewModel = require('../../model/viewModel/calEvent');
 var aps = Array.prototype.slice;
 
-/**
- * @mixin Base.Week
- */
-var Week = {
+var Core = {
     /**********
      * COMMON
      **********/
 
     /**
      * Calculate collision group.
-     * @this Base.Week
      * @param {array} viewModels List of viewmodels.
      * @returns {array} Collision Group.
      */
@@ -5686,7 +5725,6 @@ var Week = {
 
     /**
      * Get row length by column index in 2d matrix.
-     * @this Base.Week
      * @param {array[]} arr2d Matrix
      * @param {number} col Column index.
      * @return {number} Last row number in column.
@@ -5706,14 +5744,13 @@ var Week = {
 
     /**
      * Calculate matrix for appointment block element placing.
-     * @this Base.Week
      * @param {Collection} collection model collection.
      * @param {array[]} collisionGroups Collision groups for event set.
      * @returns {array} matrices
      */
     getMatrices: function(collection, collisionGroups) {
         var result = [],
-            getLastRowInColumn = Week.getLastRowInColumn;
+            getLastRowInColumn = Core.getLastRowInColumn;
 
         util.forEachArray(collisionGroups, function(group) {
             var matrix = [[]];
@@ -5748,8 +5785,112 @@ var Week = {
         });
 
         return result;
+    }
+};
+
+module.exports = Core;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],39:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Controller mixin for Month View
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+var common = require('../../common/common'),
+    array = require('../../common/array'),
+    datetime = require('../../common/datetime'),
+    Collection = require('../../common/collection'),
+    CalEventViewModel = require('../../model/viewModel/calEvent');
+
+var Month = {
+
+    /**
+     * Default filter for Month#findByMonth method
+     * @param {Date} starts - start date
+     * @param {Date} ends - end date
+     * @returns {function} event filter function
+     */
+    _getDefaultFilter: function(starts, ends) {
+        return function(model) {
+            var ownStarts = model.getStarts(),
+                ownEnds = model.getEnds();
+
+            return (ownStarts >= starts && ownEnds <= ends) ||
+                (ownStarts < starts && ownEnds >= starts) ||
+                (ownEnds > ends && ownStarts <= ends);
+        }
     },
 
+    /**
+     * Find event and get view model for specific month
+     * @this Base
+     * @param {Date} starts - start date to find events
+     * @param {Date} ends - end date to find events
+     * @param {function} [andFilter] - additional filter to AND clause
+     * @returns {object} viewmodel data
+     */
+    findByDateRange: function(starts, ends, andFilter) {
+        var filter = Month._getDefaultFilter(starts, ends),
+            ownEvents = this.events,
+            result,
+            eventList,
+            collisionGroup,
+            matrices,
+            viewModels;
+
+        if (andFilter) {
+            filter = Collection.and.call(null, [filter].concat(andFilter));
+        }
+
+        result = ownEvents.find(filter);
+        eventList = result.toArray().sort(array.compare.event.asc);
+        collisionGroup = this.Core.getCollisionGroup(eventList);
+
+        // CONVERT TO VIEWMODEL
+        viewModels = common.createEventCollection.apply(
+            null,
+            util.map(result.items, function(event) {
+                return CalEventViewModel.create(event);
+            })
+        );
+
+        matrices = this.Core.getMatrices(viewModels, collisionGroup);
+
+        return {
+            viewModels: viewModels,
+            matrices: matrices
+       }; 
+    }
+};
+
+module.exports = Month;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":80}],40:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Controller mixin modules for day views.
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var util = global.tui.util;
+var Collection = require('../../common/collection');
+var datetime = require('../../common/datetime');
+var common = require('../../common/common');
+var array = require('../../common/array');
+var CalEventViewModel = require('../../model/viewModel/calEvent');
+var aps = Array.prototype.slice;
+
+/**
+ * @mixin Base.Week
+ */
+var Week = {
     /**********
      * TIME GRID VIEW
      **********/
@@ -5883,12 +6024,12 @@ var Week = {
                 collisionGroups,
                 matrices;
 
-            collisionGroups = this.getCollisionGroup(viewModels);
-            matrices = this.getMatrices(collection, collisionGroups);
-            this.getCollides(matrices);
+            collisionGroups = this.Core.getCollisionGroup(viewModels);
+            matrices = this.Core.getMatrices(collection, collisionGroups);
+            this.Week.getCollides(matrices);
 
             result[ymd] = matrices;
-        }, Week);
+        }, this);
 
         return result;
     },
@@ -5922,8 +6063,8 @@ var Week = {
         );
 
         list = viewModels.sort(array.compare.event.asc);
-        collisionGroups = Week.getCollisionGroup(list);
-        matrices = Week.getMatrices(viewModels, collisionGroups);
+        collisionGroups = this.Core.getCollisionGroup(list);
+        matrices = this.Core.getMatrices(viewModels, collisionGroups);
 
         util.forEachArray(matrices, function(matrix) {
             util.forEachArray(matrix, function(column) {
@@ -6023,7 +6164,7 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":76}],39:[function(require,module,exports){
+},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":80}],41:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Base controller for Dooray service project.
@@ -6147,7 +6288,7 @@ module.exports = DoorayBase;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../controller/base":37,"../model/calEvent":44}],40:[function(require,module,exports){
+},{"../../controller/base":37,"../model/calEvent":47}],42:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Calendar for service.
@@ -6156,12 +6297,10 @@ module.exports = DoorayBase;
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config');
-var datetime = require('../../common/datetime');
-var Calendar = require('../../factory/calendar');
-var DoorayBase = require('../controller/base');
-var Week = require('../../controller/viewMixin/week');
-var serviceWeekViewFactory = require('./weekView');
+var config = require('../../config'),
+    Calendar = require('../../factory/calendar'),
+    controllerFactory = require('../factory/controller'),
+    serviceWeekViewFactory = require('./weekView');
 
 /**
  * @typedef {object} ServiceCalendar~DoorayEvent
@@ -6212,60 +6351,7 @@ function ServiceCalendar(options, container) {
         return viewModel.model.category;
     };
 
-    // 컨트롤러 만들기
-    controller = options.controller = (function() {
-        var controller = new DoorayBase(options),
-            originFindByDateRange;
-
-        // 주뷰 컨트롤러 믹스인
-        controller.Week = {};
-        util.forEach(Week, function(method, methodName) {
-            controller.Week[methodName] = util.bind(method, controller);
-        });
-
-        // 일정 조회 API에 기존 캘린더에 없었던 milstone, task를 지원하도록
-        // 하기 위해 메서드를 오버라이딩한다.
-        originFindByDateRange = controller.Week.findByDateRange;
-
-        // visible이 true인 일정만 필터링 하기 위한 필터 함수
-        function filterModelIsVisible(model) {
-            return !!model.visible;
-        }
-
-        controller.Week.findByDateRange = function(starts, ends) {
-            var dateRange = util.map(datetime.range(
-                    datetime.start(starts),
-                    datetime.end(ends),
-                    datetime.MILLISECONDS_PER_DAY
-                ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
-                viewModel = originFindByDateRange(starts, ends, [filterModelIsVisible]);
-
-            util.forEach(viewModel, function(coll, key, obj) {
-                var groupedByYMD;
-
-                // 마일스톤, 업무 뷰 뷰모델 가공
-                if (key === 'task' || key === 'milestone') {
-                    groupedByYMD = coll.groupBy(dateRange, function(viewModel) {
-                        return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
-                    });
-
-                    if (key === 'task') {
-                        util.forEach(groupedByYMD, function(coll, ymd, obj) {
-                            obj[ymd] = coll.groupBy(function(viewModel) {
-                                return viewModel.model.dueDateClass;
-                            });
-                        });
-                    }
-
-                    obj[key] = groupedByYMD;
-                }
-            });
-
-            return viewModel;
-        };
-
-        return controller;
-    })();
+    controller = options.controller = controllerFactory(options);
 
     // FullCalendar 기본 모듈은 category, dueDateClass 플래그를 모름. 때문에
     // 이곳에서 이벤트 핸들러를 등록해서 일정 생성 전에 isAllDay플래그를 보고
@@ -6604,7 +6690,95 @@ module.exports = ServiceCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../config":36,"../../controller/viewMixin/week":38,"../../factory/calendar":53,"../controller/base":39,"./weekView":41}],41:[function(require,module,exports){
+},{"../../config":36,"../../factory/calendar":56,"../factory/controller":43,"./weekView":44}],43:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview 두레이 서비스를 위한 컨트롤러를 만드는 팩토리 함수 모듈
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var util = global.tui.util;
+var datetime = require('../../common/datetime'),
+    DoorayBase = require('../controller/base'),
+    Core = require('../../controller/viewMixin/core'),
+    Week = require('../../controller/viewMixin/week'),
+    Month = require('../../controller/viewMixin/month');
+
+function mixin(from, to, propertyName) {
+    var obj = to[propertyName] = {};
+
+    util.forEach(from, function(method, methodName) {
+        obj[methodName] = util.bind(method, to);
+    });
+}
+
+/**
+ * @param {object} options - options for base controller
+ * @param {function} [options.groupFunc] - function for group each models {@see Collection#groupBy}
+ * @returns {DoorayBase} The controller instance.
+ */
+module.exports = function(options) {
+    var controller = new DoorayBase(options),
+        originFindByDateRange;
+
+    mixin(Core, controller, 'Core');
+    mixin(Week, controller, 'Week');
+    mixin(Month, controller, 'Month');
+
+    // 일정 조회 API에 기존 캘린더에 없었던 milstone, task를 지원하도록
+    // 하기 위해 메서드를 오버라이딩한다.
+    originFindByDateRange = controller.Week.findByDateRange;
+
+    // visible이 true인 일정만 필터링 하기 위한 필터 함수
+    function filterModelIsVisible(model) {
+        return !!model.visible;
+    }
+
+    /**
+     * @override
+     * @memberOf {DoorayBase.Week}
+     */
+    function findByDateRange(starts, ends) {
+        var dateRange = util.map(datetime.range(
+                datetime.start(starts),
+                datetime.end(ends),
+                datetime.MILLISECONDS_PER_DAY
+            ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
+            viewModel = originFindByDateRange(starts, ends, [filterModelIsVisible]);
+
+        util.forEach(viewModel, function(coll, key, obj) {
+            var groupedByYMD;
+
+            // 마일스톤, 업무 뷰 뷰모델 가공
+            if (key === 'task' || key === 'milestone') {
+                groupedByYMD = coll.groupBy(dateRange, function(viewModel) {
+                    return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
+                });
+
+                if (key === 'task') {
+                    util.forEach(groupedByYMD, function(coll, ymd, obj) {
+                        obj[ymd] = coll.groupBy(function(viewModel) {
+                            return viewModel.model.dueDateClass;
+                        });
+                    });
+                }
+
+                obj[key] = groupedByYMD;
+            }
+        });
+
+        return viewModel;
+    };
+
+    controller.Week.findByDateRange = findByDateRange;
+
+    return controller;
+};
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/datetime":27,"../../controller/viewMixin/core":38,"../../controller/viewMixin/month":39,"../../controller/viewMixin/week":40,"../controller/base":41}],44:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for WeekView (customized for service)
@@ -6782,7 +6956,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../handler/allday/click":56,"../../handler/allday/creation":58,"../../handler/allday/dblclick":60,"../../handler/allday/move":61,"../../handler/allday/resize":63,"../../handler/time/click":66,"../../handler/time/creation":68,"../../handler/time/dblclick":70,"../../handler/time/move":71,"../../handler/time/resize":73,"../../view/week/allday":87,"../../view/week/dayname":88,"../../view/week/timeGrid":90,"../../view/week/week":91,"../handler/milestoneClick":42,"../handler/taskClick":43,"../view/milestone":48,"../view/taskview":52}],42:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../handler/allday/click":60,"../../handler/allday/creation":62,"../../handler/allday/dblclick":64,"../../handler/allday/move":65,"../../handler/allday/resize":67,"../../handler/time/click":70,"../../handler/time/creation":72,"../../handler/time/dblclick":74,"../../handler/time/move":75,"../../handler/time/resize":77,"../../view/week/allday":92,"../../view/week/dayname":93,"../../view/week/timeGrid":95,"../../view/week/week":96,"../handler/milestoneClick":45,"../handler/taskClick":46,"../view/milestone":51,"../view/taskview":55}],45:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -6878,7 +7052,7 @@ module.exports = MilestoneClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],43:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],46:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -6974,7 +7148,7 @@ module.exports = TaskClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],44:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],47:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Extend model class for Dooray Calendar project.
@@ -7083,7 +7257,7 @@ module.exports = DoorayEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../model/calEvent":75}],45:[function(require,module,exports){
+},{"../../model/calEvent":79}],48:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7222,7 +7396,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],46:[function(require,module,exports){
+},{"hbsfy/runtime":21}],49:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Freebusy component
@@ -7618,7 +7792,7 @@ module.exports = Freebusy;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./freebusy.hbs":45}],47:[function(require,module,exports){
+},{"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./freebusy.hbs":48}],50:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7667,7 +7841,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],48:[function(require,module,exports){
+},{"hbsfy/runtime":21}],51:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 뷰
@@ -7776,7 +7950,7 @@ module.exports = Milestone;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./milestone.hbs":47}],49:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./milestone.hbs":50}],52:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7823,7 +7997,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</tbody>\n</table>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],50:[function(require,module,exports){
+},{"hbsfy/runtime":21}],53:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Minicalendar view.
@@ -8133,7 +8307,7 @@ module.exports = MiniCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./minicalendar.hbs":49}],51:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./minicalendar.hbs":52}],54:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -8220,7 +8394,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],52:[function(require,module,exports){
+},{"hbsfy/runtime":21}],55:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Task view for upper area of Week view.
@@ -8334,7 +8508,7 @@ module.exports = TaskView;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":86,"./taskview.hbs":51}],53:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./taskview.hbs":54}],56:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for control all other factory.
@@ -8343,14 +8517,14 @@ module.exports = TaskView;
 'use strict';
 
 var util = global.tui.util;
-var config = require('../config');
-var common = require('../common/common');
-var datetime = require('../common/datetime');
-var Layout = require('../view/layout');
-var Drag = require('../handler/drag');
-var controllerFactory = require('./controller');
-var weekViewFactory = require('./weekView');
 var Handlebars = require('hbsfy/runtime');
+var config = require('../config'),
+    datetime = require('../common/datetime'),
+    Layout = require('../view/layout'),
+    Drag = require('../handler/drag'),
+    controllerFactory = require('./controller'),
+    weekViewFactory = require('./weekView'),
+    monthViewFactory = require('./monthView');
 
 /**
  * @typedef {object} Calendar~CalEvent
@@ -8743,9 +8917,15 @@ Calendar.prototype.toggleView = function(viewName, force) {
 
     if (viewName === 'week') {
         created = weekViewFactory(controller, layout.container, dragHandler, options);
-        layout.addChild(created.view);
-        this._refreshMethod = created.refresh;
+    } else if (viewName === 'month') {
+        created = monthViewFactory(controller, layout.container, dragHandler, options);
+    } else {
+        return;
     }
+
+    layout.addChild(created.view);
+    this._refreshMethod = created.refresh;
+    this.render();
 }
 
 /**
@@ -8821,7 +9001,7 @@ module.exports = Calendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../config":36,"../handler/drag":65,"../view/layout":77,"./controller":54,"./weekView":55,"hbsfy/runtime":21}],54:[function(require,module,exports){
+},{"../common/datetime":27,"../config":36,"../handler/drag":69,"../view/layout":81,"./controller":57,"./monthView":58,"./weekView":59,"hbsfy/runtime":21}],57:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller factory module.
@@ -8830,8 +9010,18 @@ module.exports = Calendar;
 'use strict';
 
 var util = global.tui.util;
-var Base = require('../controller/base');
-var Week = require('../controller/viewMixin/week');
+var Base = require('../controller/base'),
+    Core = require('../controller/viewMixin/core'),
+    Week = require('../controller/viewMixin/week'),
+    Month = require('../controller/viewMixin/month');
+
+function mixin(from, to, propertyName) {
+    var obj = to[propertyName] = {};
+
+    util.forEach(from, function(method, methodName) {
+        obj[methodName] = util.bind(method, to);
+    });
+}
 
 /**
  * @param {object} options - options for base controller
@@ -8841,23 +9031,60 @@ var Week = require('../controller/viewMixin/week');
 module.exports = function(options) {
     var controller = new Base(options);
 
-    controller.Week = {};
-    util.forEach(Week, function(method, methodName) {
-        controller.Week[methodName] = util.bind(method, controller);
-    });
+    mixin(Core, controller, 'Core');
+    mixin(Week, controller, 'Week');
+    mixin(Month, controller, 'Month');
 
     return controller;
 };
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../controller/base":37,"../controller/viewMixin/week":38}],55:[function(require,module,exports){
+},{"../controller/base":37,"../controller/viewMixin/core":38,"../controller/viewMixin/month":39,"../controller/viewMixin/week":40}],58:[function(require,module,exports){
+/**
+ * @fileoverview Month view factory module
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var config = require('../config'),
+    domutil = require('../common/domutil'),
+    Month = require('../view/month/month');
+
+/**
+ * @param {Base} baseController - controller instance
+ * @param {HTMLElement} layoutContainer - container element for month view
+ * @param {Drag} dragHandler - drag handler instance
+ * @param {object} options - options
+ * @returns {object} view instance and refresh method
+ */
+function createMonthView(baseController, layoutContainer, dragHandler, options) {
+    var monthViewContainer,
+        monthView;
+
+    monthViewContainer = domutil.appendHTMLElement('div', layoutContainer, config.classname('month'));
+    monthView = new Month(options.month, monthViewContainer);
+
+    monthView.controller = baseController.Month;
+
+    return {
+        view: monthView,
+        refresh: function() {}
+    };
+}
+
+module.exports = createMonthView;
+
+
+},{"../common/domutil":30,"../config":36,"../view/month/month":82}],59:[function(require,module,exports){
+(function (global){
 /**
  * @fileoverview Factory module for WeekView
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
+var util = global.tui.util;
 var config = require('../config');
 var domutil = require('../common/domutil');
 var VLayout = require('../common/vlayout');
@@ -8991,7 +9218,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     };
 };
 
-},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":56,"../handler/allday/creation":58,"../handler/allday/dblclick":60,"../handler/allday/move":61,"../handler/allday/resize":63,"../handler/time/click":66,"../handler/time/creation":68,"../handler/time/dblclick":70,"../handler/time/move":71,"../handler/time/resize":73,"../view/week/allday":87,"../view/week/dayname":88,"../view/week/timeGrid":90,"../view/week/week":91}],56:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":60,"../handler/allday/creation":62,"../handler/allday/dblclick":64,"../handler/allday/move":65,"../handler/allday/resize":67,"../handler/time/click":70,"../handler/time/creation":72,"../handler/time/dblclick":74,"../handler/time/move":75,"../handler/time/resize":77,"../view/week/allday":92,"../view/week/dayname":93,"../view/week/timeGrid":95,"../view/week/week":96}],60:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Click handle module for allday events
@@ -9083,7 +9311,7 @@ module.exports = AlldayClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36,"./move":61}],57:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36,"./move":65}],61:[function(require,module,exports){
 /**
  * @fileoverview Base mixin object for handler/allday
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9095,8 +9323,7 @@ var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 
 var mmax = Math.max,
-    mmin = Math.min,
-    CONTAINER_PADDING_LEFT = 60;
+    mmin = Math.min;
 
 /**
  * @mixin Allday.Core
@@ -9105,10 +9332,11 @@ var alldayCore = {
     /**
      * @param {Allday} alldayView - view instance of allday.
      * @param {MouseEvent} mouseEvent - mouse event object.
-     * @returns {function} function that return event data by mouse events.
+     * @returns {function|boolean} function that return event data by mouse events.
      */
     _retriveEventData: function(alldayView, mouseEvent) {
-        var container = alldayView.container,
+        var monthWeekView = alldayView.childs.single(),
+            container,
             renderStartDate,
             renderEndDate,
             datesInRange,
@@ -9116,13 +9344,18 @@ var alldayCore = {
             mousePos,
             dragStartXIndex;
 
+        if (!monthWeekView) {
+            return false;
+        }
+
+        container = monthWeekView.container;
         renderStartDate = datetime.parse(alldayView.options.renderStartDate);
         renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
         datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
-        containerWidth = domutil.getSize(container)[0] - CONTAINER_PADDING_LEFT;    // subtract container left padding.
 
+        containerWidth = domutil.getSize(container)[0];
         mousePos = domevent.getMousePosition(mouseEvent, container);
-        dragStartXIndex = common.ratio(containerWidth, datesInRange, mousePos[0] - CONTAINER_PADDING_LEFT) | 0;
+        dragStartXIndex = common.ratio(containerWidth, datesInRange, mousePos[0]) | 0;
 
         /**
          * @param {MouseEvent} mouseEvent - mouse event in drag actions.
@@ -9130,7 +9363,7 @@ var alldayCore = {
          */
         return function(mouseEvent) {
             var pos = domevent.getMousePosition(mouseEvent, container),
-                mouseX = pos[0] - CONTAINER_PADDING_LEFT,
+                mouseX = pos[0],
                 xIndex = common.ratio(containerWidth, datesInRange, mouseX) | 0;
 
             // apply limitation of creation event X index.
@@ -9150,7 +9383,7 @@ var alldayCore = {
 module.exports = alldayCore;
 
 
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],58:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],62:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handler module for MonthWeek view's creation actions.
@@ -9422,7 +9655,7 @@ module.exports = AlldayCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":57,"./creationGuide":59}],59:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":61,"./creationGuide":63}],63:[function(require,module,exports){
 /**
  * @fileoverview Guide element for Allday.Creation
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9555,7 +9788,7 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 module.exports = AlldayCreationGuide;
 
 
-},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],60:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],64:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Double click handler for allday
@@ -9659,7 +9892,7 @@ module.exports = AlldayDblClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],61:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],65:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Move handler for Allday view.
@@ -9932,7 +10165,7 @@ module.exports = AlldayMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":57,"./moveGuide":62}],62:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":61,"./moveGuide":66}],66:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Effect module for Allday.Move
@@ -10018,15 +10251,15 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
         guideElement.style.width = widthPercent + '%';
 
         if (isExceededLeft) {
-            domutil.addClass(guideElement, config.classname('allday-exceed-left'));
+            domutil.addClass(guideElement, config.classname('monthweek-exceed-left'));
         } else {
-            domutil.removeClass(guideElement, config.classname('allday-exceed-left'));
+            domutil.removeClass(guideElement, config.classname('monthweek-exceed-left'));
         }
 
         if (isExceededRight) {
-            domutil.addClass(guideElement, config.classname('allday-exceed-right'));
+            domutil.addClass(guideElement, config.classname('monthweek-exceed-right'));
         } else {
-            domutil.removeClass(guideElement, config.classname('allday-exceed-right'));
+            domutil.removeClass(guideElement, config.classname('monthweek-exceed-right'));
         }
     });
 };
@@ -10125,7 +10358,7 @@ module.exports = AlldayMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],63:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],67:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize handler module for Allday view.
@@ -10395,7 +10628,7 @@ module.exports = AlldayResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":57,"./resizeGuide":64}],64:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":61,"./resizeGuide":68}],68:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize Guide module.
@@ -10540,7 +10773,7 @@ module.exports = AlldayResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],65:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],69:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Drag handler for calendar.
@@ -10779,7 +11012,7 @@ module.exports = Drag;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domevent":29,"../common/domutil":30}],66:[function(require,module,exports){
+},{"../common/domevent":29,"../common/domutil":30}],70:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Allday event click event hander module
@@ -10887,7 +11120,7 @@ module.exports = TimeClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],67:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":36}],71:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Core methods for dragging actions
@@ -10980,7 +11213,7 @@ module.exports = timeCore;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":32}],68:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":32}],72:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling creation events from drag handler and time grid view
@@ -11300,7 +11533,7 @@ module.exports = TimeCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./creationGuide":69}],69:[function(require,module,exports){
+},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":71,"./creationGuide":73}],73:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Creation effect while dragging.
@@ -11555,7 +11788,7 @@ module.exports = TimeCreationGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],70:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],74:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Double click handler for time view
@@ -11666,7 +11899,7 @@ module.exports = TimeDblClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],71:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],75:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling move events from drag handler and time grid view
@@ -12037,7 +12270,7 @@ module.exports = TimeMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./moveGuide":72}],72:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":71,"./moveGuide":76}],76:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Move effect while dragging.
@@ -12199,7 +12432,7 @@ module.exports = TimeMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],73:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],77:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling resize events from drag handler and time grid view
@@ -12522,7 +12755,7 @@ module.exports = TimeResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":67,"./resizeGuide":74}],74:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":71,"./resizeGuide":78}],78:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Resize effect while dragging.
@@ -12699,7 +12932,7 @@ module.exports = TimeResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],75:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],79:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model of event.
@@ -12921,7 +13154,7 @@ module.exports = CalEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],76:[function(require,module,exports){
+},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],80:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model for views
@@ -13086,7 +13319,7 @@ module.exports = CalEventViewModel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],77:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
@@ -13167,7 +13400,112 @@ module.exports = Layout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":86}],78:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":91}],82:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var util = global.tui.util,
+    BORDER_BOTTOM = 1;
+
+var config = require('../../config'),
+    common = require('../../common/common'),
+    datetime = require('../../common/datetime'),
+    domutil = require('../../common/domutil'),
+    View = require('../view'),
+    MonthWeek = require('../monthweek');
+
+/**
+ * @constructor
+ * @extends {View}
+ * @param {object} options - options
+ * @param {number} [options.startDayOfWeek=0] - start day of week
+ * @param {string} [options.renderMonth='2015-12'] - render month
+ * @param {HTMLElement} container - container element
+ */
+function Month(options, container) {
+    View.call(this, container);
+
+    /**
+     * @type {string}
+     */
+    this.options = util.extend({
+        startDayOfWeek: 0,
+        renderMonth: '2015-12'
+    }, options);
+}
+
+util.inherit(Month, View);
+
+/**
+ * Get calendar array by supplied date
+ * @param {string} renderMonthStr - month to render YYYY-MM
+ * @param {number} [startDayOfWeek=0] - start day of week
+ * @returns {array.<Date[]>} calendar array
+ */
+Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
+    var date = datetime.parse(renderMonthStr + '-01'),
+        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0); 
+
+    return calendar;
+};
+
+/**
+ * Create childs view (week) and add childs
+ * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
+ */
+Month.prototype._renderChilds = function(calendar) {
+    var container = this.container,
+        containerHeight = this.getViewBound().height,
+        weekCount = calendar.length,
+        heightForOneWeek = (containerHeight / weekCount) - BORDER_BOTTOM;
+
+    container.innerHTML = '';
+    this.childs.clear();
+
+    util.forEach(calendar, function(weekArr, i) {
+        var starts = new Date(+weekArr[0]),
+            ends = new Date(+weekArr[weekArr.length - 1]),
+            monthWeek;
+
+        monthWeek = new MonthWeek({
+            containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
+            _mode: MonthWeek.MONTHWEEK_MODE.MONTH,
+            renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
+            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
+        }, domutil.appendHTMLElement('div', container, config.classname('week-in-month')));
+
+        this.addChild(monthWeek);
+    }, this);
+};
+
+/**
+ * Render month view
+ * @override
+ */
+Month.prototype.render = function() {
+    var opt = this.options,
+        calendar = this._getMonthCalendar(opt.renderMonth),
+        viewModel = this.controller.findByDateRange(
+            common.firstIn2dArray(calendar),
+            common.lastIn2dArray(calendar)
+        );
+
+    this._renderChilds(calendar);
+
+    this.childs.each(function(childView) {
+        childView.render(viewModel);
+    });
+};
+
+module.exports = Month;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../monthweek":83,"../view":91}],83:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of week event container inside of Week view.
@@ -13251,18 +13589,18 @@ MonthWeek.prototype.getRenderDateRange = function() {
  * @returns {object} viewModel to rendering.
  */
 MonthWeek.prototype._getBaseViewModel = function(viewModel) {
-    var options = this.options,
+    var opt = this.options,
         range = this.getRenderDateRange(),
-        matrices = options._getViewModelFunc(viewModel),
+        matrices = opt._getViewModelFunc(viewModel),
         gridWidth = 100 / range.length;
 
     return {
-        mode: !!options._mode,
+        mode: opt._mode,
         width: gridWidth,
-        height: options.containerHeight,
-        eventBlockHeight: options.eventHeight + options.eventGutter,
-        eventBlockGutter: options.eventGutter,
-        eventHeight: options.eventHeight,
+        eventBlockHeight: opt.eventHeight + opt.eventGutter,
+        eventBlockGutter: opt.eventGutter,
+        eventHeight: opt.eventHeight,
+        marginTop: (opt._mode === MonthWeek.MONTHWEEK_MODE.MONTH) ? opt.eventHeight : 0,
         dates: util.map(range, function(date) {
             return date.getDate();
         }),
@@ -13275,16 +13613,25 @@ MonthWeek.prototype._getBaseViewModel = function(viewModel) {
  * @param {object} viewModel - viewModel from parent views.
  */
 MonthWeek.prototype.render = function(viewModel) {
-    var baseViewModel = this._getBaseViewModel(viewModel),
+    var opt = this.options,
+        baseViewModel = this._getBaseViewModel(viewModel),
         maxEventInDay = 0;
 
-    maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
-        return Math.max.apply(null, util.map(matrix, function(row) {
-            return row.length;
+    if (opt._mode === MonthWeek.MONTHWEEK_MODE.WEEK) {
+        maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
+            return Math.max.apply(null, util.map(matrix, function(row) {
+                return row.length;
+            }));
         }));
-    }));
 
-    this._setMinHeight(maxEventInDay);
+        this._setMinHeight(maxEventInDay);
+    } else {
+        //TODO: Implement view models for month mode
+        //TODO: 월뷰 컨테이너에서 %로 나눠준 높이 기준으로 계산해야 함.
+        this.container.style.height = opt.containerHeight + 'px';
+        // maxEventInDay = Math.floor((opt.containerHeight - opt.eventHeight) / (opt.eventHeight + opt.eventGutter)) - 1;
+        // console.log(maxEventInDay);
+    }
 
     this.container.innerHTML = tmpl(baseViewModel);
 };
@@ -13308,7 +13655,7 @@ module.exports = MonthWeek;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":80,"./view":86}],79:[function(require,module,exports){
+},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":85,"./view":91}],84:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Helpers for handlebar templates.
@@ -13433,7 +13780,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../config":36}],80:[function(require,module,exports){
+},{"../../common/common":26,"../../config":36}],85:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -13520,12 +13867,14 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-events\">\n"
+    + "monthweek-events\" style=\"margin-top:"
+    + alias4(((helper = (helper = helpers.marginTop || (depth0 != null ? depth0.marginTop : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"marginTop","hash":{},"data":data}) : helper)))
+    + "px\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],81:[function(require,module,exports){
+},{"hbsfy/runtime":21}],86:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Register developed custom handlebars helper.
@@ -13543,7 +13892,7 @@ util.forEach(helper, function(helper, name) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./helper":79,"hbsfy/runtime":21}],82:[function(require,module,exports){
+},{"./helper":84,"hbsfy/runtime":21}],87:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -13560,7 +13909,7 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
     + "monthweek-container\"></div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],83:[function(require,module,exports){
+},{"hbsfy/runtime":21}],88:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -13591,7 +13940,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],84:[function(require,module,exports){
+},{"hbsfy/runtime":21}],89:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -13632,58 +13981,75 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
   return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"useData":true});
 
-},{"hbsfy/runtime":21}],85:[function(require,module,exports){
+},{"hbsfy/runtime":21}],90:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hour "
+    + "timegrid-hour \n            "
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hour-"
-    + alias4(((helper = (helper = helpers.hour || (depth0 != null ? depth0.hour : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hour","hash":{},"data":data}) : helper)))
+    + alias4(alias5(depth0, depth0))
+    + " \n            "
+    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.currentHour),"===",depth0,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\"><span>"
-    + alias4(((helper = (helper = helpers.hour || (depth0 != null ? depth0.hour : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hour","hash":{},"data":data}) : helper)))
-    + "</span></div>";
-},"3":function(container,depth0,helpers,partials,data) {
+    + alias4(alias5(depth0, depth0))
+    + "</span></div>\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "invisible";
+},"4":function(container,depth0,helpers,partials,data) {
     var helper;
 
   return "<div class=\""
     + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-gridline\"></div>\n    ";
+    + "timegrid-gridline\"></div>\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "display:none";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-left\">\n    "
+    + "timegrid-left\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hours : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\n</div>\n<div class=\""
+    + "</div>\n<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-right\">\n    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-h-grid\">"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hours : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "timegrid-h-grid\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hours : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-events\">\n        <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-events-container\"></div>\n    </div>\n</div>\n<div class=\""
+    + "timegrid-events-container\"></div>\n    </div>\n    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker\" style=\"display:none;\">\n    <div class=\""
+    + "timegrid-hourmarker\" style=\"top:"
+    + alias4(((helper = (helper = helpers.hourmarkerTop || (depth0 != null ? depth0.hourmarkerTop : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerTop","hash":{},"data":data}) : helper)))
+    + "%\">\n        <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker-wrap\">\n        <div class=\""
+    + "timegrid-hourmarker-wrap\">\n            <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker-line\"></div>\n        <div class=\""
+    + "timegrid-hourmarker-line\"></div>\n            <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker-time\">00:00</div>\n        <div class=\""
+    + "timegrid-hourmarker-time\">"
+    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
+    + "</div>\n            <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-todaymarker\">today</div>\n    </div>\n</div>\n";
+    + "timegrid-todaymarker\" style=\"left:"
+    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
+    + "%;"
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.todaymarkerLeft : depth0),{"name":"unless","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\">today</div>\n        </div>\n    </div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],86:[function(require,module,exports){
+},{"hbsfy/runtime":21}],91:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview The base class of views.
@@ -13887,7 +14253,7 @@ module.exports = View;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30}],87:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30}],92:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of allday event container inside of Week view.
@@ -13973,7 +14339,7 @@ module.exports = Allday;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../monthweek":78,"../template/week/allday.hbs":82,"../view":86}],88:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../monthweek":83,"../template/week/allday.hbs":87,"../view":91}],93:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendering daynames
@@ -14055,7 +14421,7 @@ module.exports = DayName;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/daynames.hbs":83,"../view":86}],89:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/daynames.hbs":88,"../view":91}],94:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of time.
@@ -14244,7 +14610,7 @@ module.exports = Time;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/time.hbs":84,"../view":86}],90:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/time.hbs":89,"../view":91}],95:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendered events by times.
@@ -14254,6 +14620,7 @@ module.exports = Time;
 
 var util = global.tui.util;
 var config = require('../../config');
+var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
@@ -14262,7 +14629,6 @@ var Time = require('./time');
 var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
 
-var PIXEL_RENDER_ERROR = 0.5;
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
 var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
 
@@ -14270,6 +14636,8 @@ var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
  * @constructor
  * @extends {View}
  * @param {object} options The object for view customization.
+ * @param {string} options.renderStartDate - render start date. YYYY-MM-DD
+ * @param {string} options.renderEndDate - render end date. YYYY-MM-DD
  * @param {number} [options.hourStart=0] You can change view's start hours.
  * @param {number} [options.hourEnd=0] You can change view's end hours.
  * @param {HTMLElement} container Container element.
@@ -14295,6 +14663,8 @@ function TimeGrid(options, container) {
      * @type {object}
      */
     this.options = util.extend({
+        renderStartDate: '',
+        renderEndDate: '',
         hourStart: 0,
         hourEnd: 24
     }, options);
@@ -14339,20 +14709,75 @@ TimeGrid.prototype._beforeDestroy = function() {
 };
 
 /**
+ * @param {Date} [time] - date object to convert pixel in grids.
+ * use **Date.now()** when not supplied.
+ * @returns {number} The pixel value represent current time in grids.
+ */
+TimeGrid.prototype._getTopPercentByTime = function(time) {
+    var opt = this.options,
+        raw = datetime.raw(time || new Date()),
+        hourLength = util.range(opt.hourStart, opt.hourEnd).length,
+        maxMilliseconds = hourLength * datetime.MILLISECONDS_PER_HOUR,
+        hmsMilliseconds = datetime.millisecondsFrom('hour', raw.h) +
+            datetime.millisecondsFrom('minutes', raw.m) +
+            datetime.millisecondsFrom('seconds', raw.s) +
+            raw.ms,
+        topPercent;
+
+    topPercent = common.ratio(maxMilliseconds, 100, hmsMilliseconds);
+    topPercent -= common.ratio(maxMilliseconds, 100, datetime.millisecondsFrom('hour', opt.hourStart));
+
+    return common.limit(topPercent, [0], [100]);
+};
+
+/**
+ * Get Hourmarker viewmodel.
+ * @param {Date} now - now
+ * @returns {object} ViewModel of hourmarker.
+ */
+TimeGrid.prototype._getHourmarkerViewModel = function(now) {
+    var now = now || new Date(),
+        opt = this.options,
+        dateRange = datetime.range(
+            datetime.parse(opt.renderStartDate),
+            datetime.parse(opt.renderEndDate),
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        todaymarkerLeft = null,
+        viewModel;
+
+    util.forEach(dateRange, function(date, index) {
+        if (datetime.isSameDate(now, date)) {
+            todaymarkerLeft = common.ratio(dateRange.length, 100, index);
+        }
+    });
+
+    viewModel = {
+        currentHour: now.getHours(),
+        hourmarkerTop: this._getTopPercentByTime(),
+        hourmarkerText: datetime.format(now, 'HH:mm'),
+        todaymarkerLeft: todaymarkerLeft
+    };
+
+    return viewModel;
+};
+
+/**
  * Get base viewModel.
  * @returns {object} ViewModel
  */
 TimeGrid.prototype._getBaseViewModel = function() {
-    var options = this.options,
-        end = options.hourEnd,
-        i = options.hourStart,
-        hours = [];
+    var opt = this.options,
+        now = (new Date()),
+        hourRange = util.range(opt.hourStart, opt.hourEnd),
+        viewModel;
 
-    for (; i < end; i += 1) {
-        hours.push({hour: i});
-    }
+    viewModel = util.extend({
+        hours: hourRange,
+        currentHour: now.getHours(),
+    }, this._getHourmarkerViewModel());
 
-    return {hours: hours};
+    return viewModel;
 };
 
 /**
@@ -14372,15 +14797,10 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
     // clear contents
     container.innerHTML = '';
     this.childs.clear();
-    this.todaymarkerLeft = null;
 
     // reconcilation of child views
     util.forEach(viewModels, function(events, ymd) {
         isToday = ymd === today;
-
-        if (isToday) {
-            this.todaymarkerLeft = width * this.childs.length;
-        }
 
         childOption = {
             index: i,
@@ -14434,7 +14854,6 @@ TimeGrid.prototype.render = function(viewModel) {
      * Render hourmarker
      **********/
     this.hourmarker = domutil.find('.' + config.classname('timegrid-hourmarker'), container);
-    this.refreshHourmarker();
 
     if (!this._scrolled) {
         this._scrolled = true;
@@ -14448,9 +14867,7 @@ TimeGrid.prototype.render = function(viewModel) {
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourLabels = this._hourLabels,
         hourmarker = this.hourmarker,
-
         viewModel = this._getHourmarkerViewModel(),
-        todaymarkerLeft = this.todaymarkerLeft,
         todaymarker,
         text,
         labelToVisible,
@@ -14463,7 +14880,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
     todaymarker = domutil.find('.' + config.classname('timegrid-todaymarker'), hourmarker);
     text = domutil.find('.' + config.classname('timegrid-hourmarker-time'), hourmarker);
     labelToVisible = domutil.find('.' + config.classname('invisible'), hourLabels);
-    labelToInvisible = domutil.find('.' + config.classname('timegrid-hour-') + viewModel.hour, hourLabels);
+    labelToInvisible = domutil.find('.' + config.classname('timegrid-hour-') + viewModel.currentHour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
         if (labelToVisible !== labelToInvisible) {
@@ -14477,72 +14894,10 @@ TimeGrid.prototype.refreshHourmarker = function() {
         }
 
         hourmarker.style.display = 'block';
-        hourmarker.style.top = (viewModel.top - PIXEL_RENDER_ERROR) + 'px';
-
-        if (!util.isNull(todaymarkerLeft)) {
-            todaymarker.style.display = 'block';
-            todaymarker.style.left = todaymarkerLeft + '%';
-        } else {
-            todaymarker.style.display = 'none';
-        }
-
-        text.innerHTML = viewModel.text;
+        hourmarker.style.top = viewModel.hourmarkerTop + '%';
+        todaymarker.style.display = !!viewModel.todaymarkerLeft ? 'block' : 'none';
+        text.innerHTML = viewModel.hourmarkerText;
     });
-};
-
-/**
- * Return grid size.
- * @returns {number[]} The size of grid element.
- */
-TimeGrid.prototype._getGridSize = function() {
-    var childNode = this.container.childNodes[0];
-
-    if (!childNode) {
-        return false;
-    }
-
-    return domutil.getSize(childNode);
-};
-
-/**
- * @param {Date} [time] - date object to convert pixel in grids.
- * use **Date.now()** when not supplied.
- * @returns {number} The pixel value represent current time in grids.
- */
-TimeGrid.prototype._getTopByTime = function(time) {
-    var now = util.isDate(time) ? new Date(time.getTime()) : new Date(),
-        start = datetime.start(now),
-        hourStart = this.options.hourStart,
-        gridSize = this._getGridSize(),
-        offset,
-        top;
-
-    if (!gridSize) {
-        return 0;
-    }
-
-    offset = +now - +start;
-    if (hourStart) {
-        offset -= datetime.millisecondsFrom('hour', hourStart);
-    }
-
-    top = (offset * gridSize[1]) / (datetime.millisecondsFrom('hour', this._getBaseViewModel().hours.length));
-
-    return top;
-};
-
-/**
- * Get Hourmarker viewmodel.
- * @returns {object} ViewModel of hourmarker.
- */
-TimeGrid.prototype._getHourmarkerViewModel = function() {
-    var now = new Date();
-
-    return {
-        top: this._getTopByTime(),
-        hour: now.getHours(),
-        text: datetime.format(now, 'HH:mm')
-    };
 };
 
 /**
@@ -14560,7 +14915,8 @@ TimeGrid.prototype.scrollToNow = function() {
     var container = this.container;
 
     window.setTimeout(util.bind(function() {
-        var currentHourTop = this._getTopByTime(),
+        var currentHourTop = this.hourmarker.getBoundingClientRect().top - 
+                this.container.getBoundingClientRect().top,
             viewBound = this.getViewBound();
 
         container.scrollTop = (currentHourTop - (viewBound.height / 2));
@@ -14582,7 +14938,7 @@ module.exports = TimeGrid;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/autoScroll":24,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36,"../template/week/timeGrid.hbs":85,"../view":86,"./time":89}],91:[function(require,module,exports){
+},{"../../common/autoScroll":24,"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36,"../template/week/timeGrid.hbs":90,"../view":91,"./time":94}],96:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of days UI.
@@ -14698,4 +15054,4 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../view":86}]},{},[1]);
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../view":91}]},{},[1]);
