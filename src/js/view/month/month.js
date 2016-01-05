@@ -21,9 +21,15 @@ var config = require('../../config'),
  * @param {number} [options.startDayOfWeek=0] - start day of week
  * @param {string} [options.renderMonth='2015-12'] - render month
  * @param {HTMLElement} container - container element
+ * @param {Base.Month} controller - controller instance
  */
-function Month(options, container) {
+function Month(options, container, controller) {
     View.call(this, container);
+
+    /**
+     * @type {Base.Month}
+     */
+    this.controller = controller;
 
     /**
      * @type {string}
