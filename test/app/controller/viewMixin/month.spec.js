@@ -36,6 +36,9 @@ describe('Base.Month', function() {
             });
 
             spyOn(base.Core, 'positionViewModelsForMonthView');
+
+            // test/matcher/matrices.js
+            jasmine.addMatchers(matricesMatcher());
         });
 
         it('get events instance in month', function() {
@@ -44,15 +47,11 @@ describe('Base.Month', function() {
 
             actual = controller.findByDateRange(starts, ends);
             expected = [
-                [
-                    CalEventViewModel.create(eventList[0]), 
-                    CalEventViewModel.create(eventList[1])
-                ], [
-                    CalEventViewModel.create(eventList[2])
-                ]
+                ['A', 'B'], 
+                ['C']
             ];
 
-            expect(actual.matrices[0]).toEqual(expected);
+            expect(actual.matrices[0]).toEqualMatrices(expected);
         });
     });
 });

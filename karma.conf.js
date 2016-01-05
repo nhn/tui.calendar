@@ -28,6 +28,7 @@ module.exports = function(config) {
             'index.js',
             'src/**/*.js',
             'test/prepare.js',
+            'test/matcher/*.js',
             'test/**/*.spec.js',
             'test/fixtures/**/*'
         ],
