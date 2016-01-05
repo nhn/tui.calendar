@@ -4,8 +4,11 @@
  */
 'use strict';
 var util = global.tui.util;
-var datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection');
+var common = require('../../common/common'),
+    array = require('../../common/array'),
+    datetime = require('../../common/datetime'),
+    Collection = require('../../common/collection'),
+    CalEventViewModel = require('../../model/viewModel/calEvent');
 
 var Month = {
 
@@ -29,23 +32,42 @@ var Month = {
     /**
      * Find event and get view model for specific month
      * @this Base
-     * @param {Date} month - month to find events
+     * @param {Date} starts - start date to find events
+     * @param {Date} ends - end date to find events
      * @param {function} [andFilter] - additional filter to AND clause
      * @returns {object} viewmodel data
      */
-    findByMonth: function(month, andFilter) {
-        var starts = datetime.startDateOfMonth(month),
-            ends = datetime.endDateOfMonth(month),
-            filter = Month._defaultFilter(starts, ends),
-            events;
+    findByDateRange: function(starts, ends, andFilter) {
+        var filter = Month._getDefaultFilter(starts, ends),
+            ownEvents = this.events,
+            result,
+            eventList,
+            collisionGroup,
+            matrices,
+            viewModels;
 
         if (andFilter) {
             filter = Collection.and.call(null, [filter].concat(andFilter));
         }
 
-        events = this.events.find(filter);
+        result = ownEvents.find(filter);
+        eventList = result.toArray().sort(array.compare.event.asc);
+        collisionGroup = this.Core.getCollisionGroup(eventList);
 
-        return {};
+        // CONVERT TO VIEWMODEL
+        viewModels = common.createEventCollection.apply(
+            null,
+            util.map(result.items, function(event) {
+                return CalEventViewModel.create(event);
+            })
+        );
+
+        matrices = this.Core.getMatrices(viewModels, collisionGroup);
+
+        return {
+            viewModels: viewModels,
+            matrices: matrices
+       }; 
     }
 };
 
