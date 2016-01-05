@@ -8,6 +8,7 @@ var util = global.tui.util,
     BORDER_BOTTOM = 1;
 
 var config = require('../../config'),
+    common = require('../../common/common'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../view'),
@@ -83,14 +84,16 @@ Month.prototype._renderChilds = function(calendar) {
  */
 Month.prototype.render = function() {
     var opt = this.options,
-        calendar = this._getMonthCalendar(opt.renderMonth);
+        calendar = this._getMonthCalendar(opt.renderMonth),
+        viewModel = this.controller.findByDateRange(
+            common.firstIn2dArray(calendar),
+            common.lastIn2dArray(calendar)
+        );
 
     this._renderChilds(calendar);
 
     this.childs.each(function(childView) {
-        childView.render({
-            allday: []
-        });
+        childView.render(viewModel);
     });
 };
 
