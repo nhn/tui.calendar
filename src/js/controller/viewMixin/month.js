@@ -6,7 +6,6 @@
 var util = global.tui.util;
 var common = require('../../common/common'),
     array = require('../../common/array'),
-    datetime = require('../../common/datetime'),
     Collection = require('../../common/collection'),
     CalEventViewModel = require('../../model/viewModel/calEvent');
 
@@ -63,6 +62,7 @@ var Month = {
         );
 
         matrices = this.Core.getMatrices(viewModels, collisionGroup);
+        this.Core.positionViewModelsForMonthView(starts, ends, matrices);
 
         return {
             viewModels: viewModels,

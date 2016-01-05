@@ -172,7 +172,6 @@ var Week = {
      */
     getViewModelForAlldayView: function(starts, ends, viewModels) {
         var list,
-            ymdsToRender,
             collisionGroups,
             matrices;
 
@@ -180,39 +179,23 @@ var Week = {
             return [];
         }
 
-        ymdsToRender = util.map(
-            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
-            function(date) {
-                return datetime.format(date, 'YYYYMMDD');
+        viewModels.each(function(viewModel) {
+            var ownStarts = viewModel.getStarts(),
+                ownEnds = viewModel.getEnds();
+
+            if (ownStarts < starts) {
+                viewModel.renderStarts = new Date(starts.getTime());
             }
-        );
+
+            if (ownEnds > ends) {
+                viewModel.renderEnds = new Date(ends.getTime());
+            }
+        });
 
         list = viewModels.sort(array.compare.event.asc);
         collisionGroups = this.Core.getCollisionGroup(list);
         matrices = this.Core.getMatrices(viewModels, collisionGroups);
-
-        util.forEachArray(matrices, function(matrix) {
-            util.forEachArray(matrix, function(column) {
-                util.forEachArray(column, function(viewModel, index) {
-                    var ymd, dateLength;
-
-                    if (!viewModel) {
-                        return;
-                    }
-
-                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
-                    dateLength = datetime.range(
-                        viewModel.getStarts(),
-                        viewModel.getEnds(),
-                        datetime.MILLISECONDS_PER_DAY
-                    ).length;
-
-                    viewModel.top = index;
-                    viewModel.left = util.inArray(ymd, ymdsToRender);
-                    viewModel.width = dateLength;
-                });
-            });
-        });
+        this.Core.positionViewModelsForMonthView(starts, ends, matrices);
 
         return matrices;
     },
@@ -230,8 +213,7 @@ var Week = {
      * @returns {object} events grouped by dates.
      */
     findByDateRange: function(starts, ends, andFilter) {
-        var that = this,
-            events,
+        var events,
             viewModels,
             filter;
 
@@ -262,24 +244,11 @@ var Week = {
         // CUSTOMIZE VIEWMODEL FOR EACH VIEW
         util.forEach(viewModels, function(coll, key, obj) {
             if (key === 'allday') {
-                coll.each(function(viewModel) {
-                    var ownStarts = viewModel.getStarts(),
-                        ownEnds = viewModel.getEnds();
-
-                    if (ownStarts < starts) {
-                        viewModel.renderStarts = new Date(starts.getTime());
-                    }
-
-                    if (ownEnds > ends) {
-                        viewModel.renderEnds = new Date(ends.getTime());
-                    }
-                });
-
-                obj.allday = util.bind(Week.getViewModelForAlldayView, that)(starts, ends, coll);
+                obj.allday = util.bind(Week.getViewModelForAlldayView, this)(starts, ends, coll);
             } else if (key === 'time') {
-                obj.time = util.bind(Week.getViewModelForTimeView, that)(starts, ends, coll);
+                obj.time = util.bind(Week.getViewModelForTimeView, this)(starts, ends, coll);
             }
-        });
+        }, this);
 
         return viewModels;
     }

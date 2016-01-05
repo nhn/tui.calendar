@@ -5,12 +5,9 @@
 'use strict';
 var util = global.tui.util;
 var aps = Array.prototype.slice;
+var datetime = require('../../common/datetime');
 
 var Core = {
-    /**********
-     * COMMON
-     **********/
-
     /**
      * Calculate collision group.
      * @param {array} viewModels List of viewmodels.
@@ -121,6 +118,46 @@ var Core = {
         });
 
         return result;
+    },
+
+    /**
+     * Position each view model for placing into container
+     * @param {Date} starts - start date to render
+     * @param {Date} ends - end date to render
+     * @param {array} matrices - matrices from controller
+     */
+    positionViewModelsForMonthView: function(starts, ends, matrices) {
+        var ymdListToRender;
+
+        ymdListToRender = util.map(
+            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
+            function(date) {
+                return datetime.format(date, 'YYYYMMDD');
+            }
+        );
+
+        util.forEachArray(matrices, function(matrix) {
+            util.forEachArray(matrix, function(column) {
+                util.forEachArray(column, function(viewModel, index) {
+                    var ymd, dateLength;
+
+                    if (!viewModel) {
+                        return;
+                    }
+
+                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
+                    dateLength = datetime.range(
+                        viewModel.getStarts(),
+                        viewModel.getEnds(),
+                        datetime.MILLISECONDS_PER_DAY
+                    ).length;
+
+                    viewModel.top = index;
+                    viewModel.left = util.inArray(ymd, ymdListToRender);
+                    viewModel.width = dateLength;
+                });
+            });
+        });
     }
 };
 

@@ -35,6 +35,7 @@ describe('Base.Month', function() {
                 base.addEvent(event);
             });
 
+            spyOn(base.Core, 'positionViewModelsForMonthView');
         });
 
         it('get events instance in month', function() {
