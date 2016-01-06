@@ -3,6 +3,7 @@ describe('Base.Core', function() {
         Collection = ne.dooray.calendar.Collection,
         ControllerFactory = ne.dooray.calendar.ControllerFactory,
         CalEvent = ne.dooray.calendar.CalEvent,
+        CalEventviewModel = ne.dooray.calendar.CalEventViewModel,
 
         fixture,
         eventList,
@@ -87,6 +88,68 @@ describe('Base.Core', function() {
             actual = controller.Core.getMatrices(collection, cg);
 
             expect(actual).toEqual(expected);
+        });
+    });
+
+    describe('limitRenderRange', function() {
+        var collection;
+
+        beforeEach(function() {
+            collection = new Collection(function(viewModel) {
+                return viewModel.cid();
+            });
+        });
+
+        it('fill renderStarts, renderEnds to each view model in collection.', function() {
+            // 5/1 10:20 ~ 5/1 10:40
+            collection.add(CalEventViewModel.create(eventList[0]));
+
+            var limit1 = new Date('2015-05-01T10:30:00+09:00');
+            var limit2 = new Date('2015-05-01T10:40:00+09:00');
+            var viewModel;
+
+            controller.Core.limitRenderRange(limit1, limit2, collection);
+
+            viewModel = collection.single();
+
+            expect(viewModel.renderStarts).toEqual(limit1);
+            expect(viewModel.renderEnds).toBe(null);
+        });
+    });
+
+    describe('getEventInDateRangeFilter', function() {
+        var collection;
+
+        beforeEach(function() {
+            collection = new Collection(function(viewModel) {
+                return viewModel.cid();
+            });
+        });
+
+        it('filter events properly.', function() {
+            var filter, d1, d2;
+
+            // 10:20 ~ 10:40
+            collection.add(CalEventViewModel.create(eventList[0]));
+
+            // 09:30 ~ 10:10
+            d1 = new Date('2015-05-01T09:30:00+09:00');
+            d2 = new Date('2015-05-01T10:10:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(0);
+
+
+            // 10:20 ~ 10:50
+            d1 = new Date('2015-05-01T10:20:00+09:00');
+            d2 = new Date('2015-05-01T10:50:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
+
+            // 10:41 ~ 10:50
+            d1 = new Date('2015-05-01T10:41:00+09:00');
+            d2 = new Date('2015-05-01T10:50:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(0);
         });
     });
 });

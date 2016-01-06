@@ -5,12 +5,10 @@
 'use strict';
 
 var util = global.tui.util;
-var Collection = require('../../common/collection');
-var datetime = require('../../common/datetime');
-var common = require('../../common/common');
-var array = require('../../common/array');
-var CalEventViewModel = require('../../model/viewModel/calEvent');
-var aps = Array.prototype.slice;
+var Collection = require('../../common/collection'),
+    common = require('../../common/common'),
+    array = require('../../common/array'),
+    CalEventViewModel = require('../../model/viewModel/calEvent');
 
 /**
  * @mixin Base.Week
@@ -167,35 +165,26 @@ var Week = {
      * create view model for allday view part.
      * @param {Date} starts start date.
      * @param {Date} ends end date.
-     * @param {Collection} viewModels - allday event viewModel viewModels.
+     * @param {Collection} viewModelColl - allday event viewModel viewModels.
      * @returns {object} allday viewModel.
      */
-    getViewModelForAlldayView: function(starts, ends, viewModels) {
-        var list,
+    getViewModelForAlldayView: function(starts, ends, viewModelColl) {
+        var ctrlCore = this.Core,
+            viewModels,
             collisionGroups,
             matrices;
 
-        if (!viewModels || !viewModels.length) {
+        if (!viewModelColl || !viewModelColl.length) {
             return [];
         }
 
-        viewModels.each(function(viewModel) {
-            var ownStarts = viewModel.getStarts(),
-                ownEnds = viewModel.getEnds();
+        ctrlCore.limitRenderRange(starts, ends, viewModelColl);
 
-            if (ownStarts < starts) {
-                viewModel.renderStarts = new Date(starts.getTime());
-            }
+        viewModels = viewModelColl.sort(array.compare.event.asc);
+        collisionGroups = ctrlCore.getCollisionGroup(viewModels);
 
-            if (ownEnds > ends) {
-                viewModel.renderEnds = new Date(ends.getTime());
-            }
-        });
-
-        list = viewModels.sort(array.compare.event.asc);
-        collisionGroups = this.Core.getCollisionGroup(list);
-        matrices = this.Core.getMatrices(viewModels, collisionGroups);
-        this.Core.positionViewModelsForMonthView(starts, ends, matrices);
+        matrices = ctrlCore.getMatrices(viewModelColl, collisionGroups);
+        ctrlCore.positionViewModelsForMonthView(starts, ends, matrices);
 
         return matrices;
     },
@@ -213,44 +202,38 @@ var Week = {
      * @returns {object} events grouped by dates.
      */
     findByDateRange: function(starts, ends, andFilter) {
-        var events,
-            viewModels,
-            filter;
+        var ctrlCore = this.Core,
+            ctrlWeek = this.Week,
+            filters = [],
+            modelColl,
+            viewModelColl;
 
-        filter = function(model) {
-            var ownStarts = model.getStarts(),
-                ownEnds = model.getEnds();
-
-            return (ownStarts >= starts && ownEnds <= ends) ||
-                (ownStarts < starts && ownEnds >= starts) ||
-                (ownEnds > ends && ownStarts <= ends);
-        };
+        filters.push(ctrlCore.getEventInDateRangeFilter(starts, ends));
 
         if (andFilter) {
-            filter = Collection.and.apply(null, [filter].concat(andFilter));
+            filters.push(andFilter);
         }
 
-        // QUERY EVENTS
-        events = this.events.find(filter);
+        modelColl = this.events.find(Collection.and.apply(null, filters));
 
         // CONVERT TO VIEWMODEL
-        viewModels = common.createEventCollection.apply(
+        viewModelColl = common.createEventCollection.apply(
             null,
-            util.map(events.items, function(event) {
-                return CalEventViewModel.create(event);
+            util.map(modelColl.items, function(viewModel) {
+                return CalEventViewModel.create(viewModel);
             })
         ).groupBy(['allday', 'time'], this.groupFunc);
 
         // CUSTOMIZE VIEWMODEL FOR EACH VIEW
-        util.forEach(viewModels, function(coll, key, obj) {
+        util.forEach(viewModelColl, function(coll, key, obj) {
             if (key === 'allday') {
-                obj.allday = this.Week.getViewModelForAlldayView(starts, ends, coll);
+                obj.allday = ctrlWeek.getViewModelForAlldayView(starts, ends, coll);
             } else if (key === 'time') {
-                obj.time = this.Week.getViewModelForTimeView(starts, ends, coll);
+                obj.time = ctrlWeek.getViewModelForTimeView(starts, ends, coll);
             }
-        }, this);
+        });
 
-        return viewModels;
+        return viewModelColl;
     }
 };
 

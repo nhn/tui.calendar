@@ -10,62 +10,49 @@ var common = require('../../common/common'),
     CalEventViewModel = require('../../model/viewModel/calEvent');
 
 var Month = {
-
-    /**
-     * Default filter for Month#findByMonth method
-     * @param {Date} starts - start date
-     * @param {Date} ends - end date
-     * @returns {function} event filter function
-     */
-    _getDefaultFilter: function(starts, ends) {
-        return function(model) {
-            var ownStarts = model.getStarts(),
-                ownEnds = model.getEnds();
-
-            return (ownStarts >= starts && ownEnds <= ends) ||
-                (ownStarts < starts && ownEnds >= starts) ||
-                (ownEnds > ends && ownStarts <= ends);
-        }
-    },
-
     /**
      * Find event and get view model for specific month
      * @this Base
      * @param {Date} starts - start date to find events
      * @param {Date} ends - end date to find events
      * @param {function} [andFilter] - additional filter to AND clause
-     * @returns {object} viewmodel data
+     * @returns {object} view model data
      */
     findByDateRange: function(starts, ends, andFilter) {
-        var filter = Month._getDefaultFilter(starts, ends),
-            ownEvents = this.events,
-            result,
+        var ownEvents = this.events,
+            ctrlCore = this.Core,
+            filters = [],
+            modelColl,
+            viewModelColl,
             eventList,
             collisionGroup,
-            matrices,
-            viewModels;
+            matrices;
+
+        filters.push(ctrlCore.getEventInDateRangeFilter(starts, ends));
 
         if (andFilter) {
-            filter = Collection.and.call(null, [filter].concat(andFilter));
+            filters.concat(andFilter);
         }
 
-        result = ownEvents.find(filter);
-        eventList = result.toArray().sort(array.compare.event.asc);
-        collisionGroup = this.Core.getCollisionGroup(eventList);
+        modelColl = ownEvents.find(Collection.and.apply(null, filters));
+        eventList = modelColl.toArray().sort(array.compare.event.asc);
+        collisionGroup = ctrlCore.getCollisionGroup(eventList);
 
         // CONVERT TO VIEWMODEL
-        viewModels = common.createEventCollection.apply(
+        viewModelColl = common.createEventCollection.apply(
             null,
-            util.map(result.items, function(event) {
-                return CalEventViewModel.create(event);
+            util.map(modelColl.items, function(model) {
+                var viewModel = CalEventViewModel.create(model);
+
+                return ctrlCore.limitRenderRange(starts, ends, viewModel);
             })
         );
 
-        matrices = this.Core.getMatrices(viewModels, collisionGroup);
-        this.Core.positionViewModelsForMonthView(starts, ends, matrices);
+        matrices = ctrlCore.getMatrices(viewModelColl, collisionGroup);
+        ctrlCore.positionViewModelsForMonthView(starts, ends, matrices);
 
         return {
-            viewModels: viewModels,
+            viewModelColl: viewModelColl,
             matrices: matrices
        }; 
     }

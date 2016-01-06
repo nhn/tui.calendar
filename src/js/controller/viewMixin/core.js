@@ -5,7 +5,8 @@
 'use strict';
 var util = global.tui.util;
 var aps = Array.prototype.slice;
-var datetime = require('../../common/datetime');
+var datetime = require('../../common/datetime'),
+    Collection = require('../../common/collection');
 
 var Core = {
     /**
@@ -121,6 +122,23 @@ var Core = {
     },
 
     /**
+     * Filter that get event model in supplied date ranges.
+     * @param {Date} starts - start date
+     * @param {Date} ends - end date
+     * @returns {function} event filter function
+     */
+    getEventInDateRangeFilter: function(starts, ends) {
+        return function(model) {
+            var ownStarts = model.getStarts(),
+                ownEnds = model.getEnds();
+
+            return (ownStarts >= starts && ownEnds <= ends) ||
+                (ownStarts < starts && ownEnds >= starts) ||
+                (ownEnds > ends && ownStarts <= ends);
+        }
+    },
+
+    /**
      * Position each view model for placing into container
      * @param {Date} starts - start date to render
      * @param {Date} ends - end date to render
@@ -158,6 +176,36 @@ var Core = {
                 });
             });
         });
+    },
+
+    /**
+     * Limit start, end date each view model for render properly
+     * @param {Date} starts - start date to render
+     * @param {Date} ends - end date to render
+     * @param {Collection|CalEventViewModel} viewModelCollection - event view
+     *  model collection or CalEventViewModel
+     * @returns {CalEventViewModel} return view model when third parameter is
+     *  view model
+     */
+    limitRenderRange: function(starts, ends, viewModelCollection) {
+        function limit(viewModel) {
+            if (viewModel.getStarts() < starts) {
+                viewModel.renderStarts = new Date(starts.getTime());
+            }
+
+            if (viewModel.getEnds() > ends) {
+                viewModel.renderEnds = new Date(ends.getTime());
+            }
+
+            return viewModel;
+        }
+
+        if (viewModelCollection.constructor === Collection) {
+            viewModelCollection.each(limit);
+            return;
+        }
+
+        return limit(viewModelCollection);
     }
 };
 
