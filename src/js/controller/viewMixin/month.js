@@ -3,11 +3,8 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
-var common = require('../../common/common'),
-    array = require('../../common/array'),
-    Collection = require('../../common/collection'),
-    CalEventViewModel = require('../../model/viewModel/calEvent');
+var array = require('../../common/array'),
+    Collection = require('../../common/collection');
 
 var Month = {
     /**
@@ -23,8 +20,8 @@ var Month = {
             ctrlCore = this.Core,
             filters = [],
             modelColl,
-            viewModelColl,
-            eventList,
+            group,
+            alldayViewModels,
             collisionGroup,
             matrices;
 
@@ -34,27 +31,33 @@ var Month = {
             filters.concat(andFilter);
         }
 
-        modelColl = ownEvents.find(Collection.and.apply(null, filters));
-        eventList = modelColl.toArray().sort(array.compare.event.asc);
-        collisionGroup = ctrlCore.getCollisionGroup(eventList);
+        group = ownEvents
+            .find(Collection.and.apply(null, filters))
+            .groupBy(['allday', 'time'], function(model) {
+                return (model.isAllDay ? 'allday' : 'time');
+            });
 
-        // CONVERT TO VIEWMODEL
-        viewModelColl = common.createEventCollection.apply(
-            null,
-            util.map(modelColl.items, function(model) {
-                var viewModel = CalEventViewModel.create(model);
+        modelColl = this.events.find(Collection.and.apply(null, filters));
+        modelColl = ctrlCore.convertToViewModel(modelColl);
+        group = modelColl.groupBy(['allday', 'time'], function(viewModel) {
+            return (viewModel.model.isAllDay ? 'allday' : 'time');
+        });
 
-                return ctrlCore.limitRenderRange(starts, ends, viewModel);
-            })
-        );
+        alldayViewModels = group.allday.toArray().sort(array.compare.event.asc);
+        collisionGroup = ctrlCore.getCollisionGroup(alldayViewModels);
+        matrices = ctrlCore.getMatrices(group.allday, collisionGroup);
 
-        matrices = ctrlCore.getMatrices(viewModelColl, collisionGroup);
         ctrlCore.positionViewModelsForMonthView(starts, ends, matrices);
 
         return {
-            viewModelColl: viewModelColl,
-            matrices: matrices
-       }; 
+            allday: {
+                coll: group.allday,
+                matrices: matrices
+            },
+            time: {
+                coll: group.time
+            }
+        };
     }
 };
 

@@ -6,7 +6,8 @@
 var util = global.tui.util;
 var aps = Array.prototype.slice;
 var datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection');
+    Collection = require('../../common/collection'),
+    CalEventViewModel = require('../../model/viewModel/calEvent');
 
 var Core = {
     /**
@@ -206,6 +207,25 @@ var Core = {
         }
 
         return limit(viewModelCollection);
+    },
+
+    /**
+     * Convert event model collection to view model collection.
+     * @param {Collection} modelColl - collection of event model
+     * @returns {Collection} collection of event view model
+     */
+    convertToViewModel: function(modelColl) {
+        var viewModelColl;
+        
+        viewModelColl = new Collection(function(viewModel) {
+            return viewModel.cid();
+        });
+
+        modelColl.each(function(model) {
+            viewModelColl.add(CalEventViewModel.create(model));
+        });
+
+        return viewModelColl;
     }
 };
 

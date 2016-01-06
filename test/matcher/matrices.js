@@ -33,7 +33,9 @@ var matricesMatcher = (function() {
             };
 
         if (actual.length !== expected.length) {
-            return fail('매트릭스 갯수 불일치');
+            return fail('매트릭스 갯수 불일치\n' +
+                        'actual: ' + actual + '\n' +
+                        'expected: ' + expected);
         }
 
         for (i = 0, cnt = actual.length; i < cnt; i += 1) {

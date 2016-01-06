@@ -215,14 +215,8 @@ var Week = {
         }
 
         modelColl = this.events.find(Collection.and.apply(null, filters));
-
-        // CONVERT TO VIEWMODEL
-        viewModelColl = common.createEventCollection.apply(
-            null,
-            util.map(modelColl.items, function(viewModel) {
-                return CalEventViewModel.create(viewModel);
-            })
-        ).groupBy(['allday', 'time'], this.groupFunc);
+        modelColl = ctrlCore.convertToViewModel(modelColl);
+        viewModelColl = modelColl.groupBy(['allday', 'time'], this.groupFunc);
 
         // CUSTOMIZE VIEWMODEL FOR EACH VIEW
         util.forEach(viewModelColl, function(coll, key, obj) {

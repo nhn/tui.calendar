@@ -46,12 +46,12 @@ describe('Base.Month', function() {
                 ends = new Date('2015-05-31');
 
             actual = controller.findByDateRange(starts, ends);
-            expected = [
-                ['A', 'B'], 
-                ['C']
-            ];
 
-            expect(actual.matrices[0]).toEqualMatrices(expected);
+            var expectedMatrix = [['A', 'B']];
+            expect(actual.allday.matrices[0]).toEqualMatrices(expectedMatrix);
+            expect(actual.allday.coll.length).toBe(2);
+            expect(actual.time.coll.length).toBe(1);
+            expect(actual.time.coll.single().model).toBe(eventList[2]);
         });
     });
 });
