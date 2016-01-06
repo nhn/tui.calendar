@@ -48,10 +48,10 @@ describe('Base.Month', function() {
             actual = controller.findByDateRange(starts, ends);
 
             var expectedMatrix = [['A', 'B']];
-            expect(actual.allday.matrices[0]).toEqualMatrices(expectedMatrix);
-            expect(actual.allday.coll.length).toBe(2);
-            expect(actual.time.coll.length).toBe(1);
-            expect(actual.time.coll.single().model).toBe(eventList[2]);
+            expect(actual.matrices[0]).toEqualMatrices(expectedMatrix);
+            expect(actual.group.allday.length).toBe(2);
+            expect(actual.group.time.length).toBe(1);
+            expect(actual.group.time.single().model).toBe(eventList[2]);
         });
     });
 });

@@ -206,7 +206,7 @@ var Week = {
             ctrlWeek = this.Week,
             filters = [],
             modelColl,
-            viewModelColl;
+            group;
 
         filters.push(ctrlCore.getEventInDateRangeFilter(starts, ends));
 
@@ -216,18 +216,12 @@ var Week = {
 
         modelColl = this.events.find(Collection.and.apply(null, filters));
         modelColl = ctrlCore.convertToViewModel(modelColl);
-        viewModelColl = modelColl.groupBy(['allday', 'time'], this.groupFunc);
 
-        // CUSTOMIZE VIEWMODEL FOR EACH VIEW
-        util.forEach(viewModelColl, function(coll, key, obj) {
-            if (key === 'allday') {
-                obj.allday = ctrlWeek.getViewModelForAlldayView(starts, ends, coll);
-            } else if (key === 'time') {
-                obj.time = ctrlWeek.getViewModelForTimeView(starts, ends, coll);
-            }
-        });
+        group = modelColl.groupBy(['allday', 'time'], this.groupFunc);
+        group.allday = ctrlWeek.getViewModelForAlldayView(starts, ends, group.allday);
+        group.time = ctrlWeek.getViewModelForTimeView(starts, ends, group.time);
 
-        return viewModelColl;
+        return group;
     }
 };
 

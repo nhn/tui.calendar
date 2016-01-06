@@ -16,8 +16,7 @@ var Month = {
      * @returns {object} view model data
      */
     findByDateRange: function(starts, ends, andFilter) {
-        var ownEvents = this.events,
-            ctrlCore = this.Core,
+        var ctrlCore = this.Core,
             filters = [],
             modelColl,
             group,
@@ -30,12 +29,6 @@ var Month = {
         if (andFilter) {
             filters.concat(andFilter);
         }
-
-        group = ownEvents
-            .find(Collection.and.apply(null, filters))
-            .groupBy(['allday', 'time'], function(model) {
-                return (model.isAllDay ? 'allday' : 'time');
-            });
 
         modelColl = this.events.find(Collection.and.apply(null, filters));
         modelColl = ctrlCore.convertToViewModel(modelColl);
@@ -50,13 +43,8 @@ var Month = {
         ctrlCore.positionViewModelsForMonthView(starts, ends, matrices);
 
         return {
-            allday: {
-                coll: group.allday,
-                matrices: matrices
-            },
-            time: {
-                coll: group.time
-            }
+            group: group,
+            matrices: matrices
         };
     }
 };
