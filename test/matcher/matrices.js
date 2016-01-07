@@ -3,12 +3,18 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+var undef = (function() {})();
 var matricesMatcher = (function() {
     function pickTitle(matrix) {
         var titleList = [],
             i, cnt;
 
         for (i = 0, cnt = matrix.length; i < cnt; i += 1) {
+            if (!matrix[i]) {
+                titleList.push(undef);
+                continue;
+            }
+
             titleList.push(matrix[i].valueOf().title);
         }
 
