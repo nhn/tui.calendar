@@ -35,8 +35,6 @@ describe('Base.Month', function() {
                 base.addEvent(event);
             });
 
-            spyOn(base.Core, 'positionViewModelsForMonthView');
-
             // test/matcher/matrices.js
             jasmine.addMatchers(matricesMatcher());
         });
@@ -47,11 +45,17 @@ describe('Base.Month', function() {
 
             actual = controller.findByDateRange(starts, ends);
 
-            var expectedMatrix = [['A', 'B']];
-            expect(actual.matrices[0]).toEqualMatrices(expectedMatrix);
-            expect(actual.group.allday.length).toBe(2);
-            expect(actual.group.time.length).toBe(1);
-            expect(actual.group.time.single().model).toBe(eventList[2]);
+            var expectedMatrix = [
+                ['A', 'B'],
+                ['C']
+            ];
+            expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
+
+            var expectedTops = [
+                [1, 2],
+                [3]
+            ];
+            expect(actual[0]).toEqualMatricesTop(expectedTops);
         });
     });
 });

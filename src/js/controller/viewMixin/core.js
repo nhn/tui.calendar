@@ -144,8 +144,9 @@ var Core = {
      * @param {Date} starts - start date to render
      * @param {Date} ends - end date to render
      * @param {array} matrices - matrices from controller
+     * @param {function} [iteratee] - iteratee function invoke each view models
      */
-    positionViewModelsForMonthView: function(starts, ends, matrices) {
+    positionViewModels: function(starts, ends, matrices, iteratee) {
         var ymdListToRender;
 
         ymdListToRender = util.map(
@@ -174,6 +175,10 @@ var Core = {
                     viewModel.top = index;
                     viewModel.left = util.inArray(ymd, ymdListToRender);
                     viewModel.width = dateLength;
+
+                    if (iteratee) {
+                        iteratee(viewModel);
+                    }
                 });
             });
         });

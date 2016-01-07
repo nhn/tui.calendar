@@ -184,7 +184,7 @@ var Week = {
         collisionGroups = ctrlCore.getCollisionGroup(viewModels);
 
         matrices = ctrlCore.getMatrices(viewModelColl, collisionGroups);
-        ctrlCore.positionViewModelsForMonthView(starts, ends, matrices);
+        ctrlCore.positionViewModels(starts, ends, matrices);
 
         return matrices;
     },

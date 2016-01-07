@@ -23,58 +23,74 @@ var matricesMatcher = (function() {
         };
     }
 
-    function matcher(actual, expected) {
-        var i, j, cnt, cnt2,
-            aMatrix, aLength, bMatrix, bLength,
-            aColumn, bColumn, aModel, bTitle,
-            result = {
-                message: '매트릭스 일치',
-                pass: true
-            };
+    function getMatcher(comparator) {
+        return function matcher(actual, expected) {
+            var i, j, cnt, cnt2,
+                aMatrix, aLength, bMatrix, bLength,
+                aColumn, bColumn, aViewModel, bValue,
+                result = {
+                    message: '매트릭스 일치',
+                    pass: true
+                };
 
-        if (actual.length !== expected.length) {
-            return fail('매트릭스 갯수 불일치\n' +
-                        'actual: ' + actual + '\n' +
-                        'expected: ' + expected);
-        }
-
-        for (i = 0, cnt = actual.length; i < cnt; i += 1) {
-            aMatrix = actual[i];
-            aLength = aMatrix.length;
-            bMatrix = expected[i];
-            bLength = bMatrix.length;
-
-            if (aLength !== bLength) {
-                return fail(i + ' 번째 매트릭스 다름\n' + 
-                            'actual: ' + pickTitle(aMatrix) + '\n' +
-                            'expected: ' + bMatrix);
+            if (actual.length !== expected.length) {
+                return fail('매트릭스 갯수 불일치\n' +
+                            'actual: ' + actual + '\n' +
+                            'expected: ' + expected);
             }
 
-            for (j = 0, cnt2 = aMatrix.length; j < cnt2; j += 1) {
-                aColumn = aMatrix[j];
+            for (i = 0, cnt = actual.length; i < cnt; i += 1) {
+                aMatrix = actual[i];
+                aLength = aMatrix.length;
+                bMatrix = expected[i];
+                bLength = bMatrix.length;
 
-                if (!aColumn) {
-                    continue;
+                if (aLength !== bLength) {
+                    return fail(i + ' 번째 매트릭스 다름\n' + 
+                                'actual: ' + pickTitle(aMatrix) + '\n' +
+                                'expected: ' + bMatrix);
                 }
 
-                aModel = aColumn.valueOf();
-                bTitle = bMatrix[j];
-                
-                if (aModel.title !== bTitle) {
-                    return fail('[' + i + '][' + j + '] 번째 매트릭스 다름\n' +
-                                'actual: ' + aModel.title + '\n' +
-                                'expected: ' + bTitle);
+                for (j = 0, cnt2 = aMatrix.length; j < cnt2; j += 1) {
+                    aColumn = aMatrix[j];
+
+                    if (!aColumn) {
+                        continue;
+                    }
+
+                    aViewModel = aColumn;
+                    bValue = bMatrix[j];
+
+                    if (!comparator(aViewModel, bValue)) {
+                        return fail('[' + i + '][' + j + '] 번째 매트릭스 다름\n' +
+                                    'actual: ' + aViewModel + '\n' +
+                                    'expected: ' + bValue);
+
+                    }
                 }
             }
-        }
 
-        return result;
+            return result;
+        }
+    }
+
+    function titleComparator(viewModel, title) {
+        return viewModel.model.title === title;
+    }
+
+    function topComparator(viewModel, top) {
+        return viewModel.top === top;
     }
 
     return {
-        toEqualMatrices: function(util, customEqualityTesters) {
+        toEqualMatricesTitle: function(util, customEqualityTesters) {
             return {
-                compare: matcher
+                compare: getMatcher(titleComparator) 
+            };
+        },
+        toEqualMatricesTop: function(util, customEqualityTesters) {
+            return {
+                compare: getMatcher(topComparator)
             };
         }
     };
