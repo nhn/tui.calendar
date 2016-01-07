@@ -51,6 +51,7 @@ var Month = {
      *
      * Limit starts, ends for each allday events and expand starts, ends for 
      * each time events
+     * @this Base
      * @param {Date} starts - render start date
      * @param {Date} ends - render end date
      * @param {Collection} vColl - view model collection
@@ -77,6 +78,7 @@ var Month = {
 
     /**
      * Get max top index value for allday events in specific date (YMD)
+     * @this Base
      * @param {string} ymd - yyyymmdd formatted value
      * @param {Collection} vAlldayColl - collection of allday events
      * @returns {number} max top index value in date
@@ -96,6 +98,7 @@ var Month = {
 
     /**
      * Adjust time view model's top index value
+     * @this Base
      * @param {Collection} vColl - collection of events
      */
     _adjustTimeTopIndex: function(vColl) {
