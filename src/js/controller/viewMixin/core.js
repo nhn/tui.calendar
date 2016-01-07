@@ -188,12 +188,12 @@ var Core = {
      * Limit start, end date each view model for render properly
      * @param {Date} starts - start date to render
      * @param {Date} ends - end date to render
-     * @param {Collection|CalEventViewModel} viewModelCollection - event view
+     * @param {Collection|CalEventViewModel} viewModelColl - event view
      *  model collection or CalEventViewModel
      * @returns {CalEventViewModel} return view model when third parameter is
      *  view model
      */
-    limitRenderRange: function(starts, ends, viewModelCollection) {
+    limitRenderRange: function(starts, ends, viewModelColl) {
         function limit(viewModel) {
             if (viewModel.getStarts() < starts) {
                 viewModel.renderStarts = new Date(starts.getTime());
@@ -206,12 +206,12 @@ var Core = {
             return viewModel;
         }
 
-        if (viewModelCollection.constructor === Collection) {
-            viewModelCollection.each(limit);
+        if (viewModelColl.constructor === Collection) {
+            viewModelColl.each(limit);
             return;
         }
 
-        return limit(viewModelCollection);
+        return limit(viewModelColl);
     },
 
     /**

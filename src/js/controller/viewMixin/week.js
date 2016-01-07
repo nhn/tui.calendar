@@ -6,9 +6,7 @@
 
 var util = global.tui.util;
 var Collection = require('../../common/collection'),
-    common = require('../../common/common'),
-    array = require('../../common/array'),
-    CalEventViewModel = require('../../model/viewModel/calEvent');
+    array = require('../../common/array');
 
 /**
  * @mixin Base.Week
@@ -54,7 +52,7 @@ var Week = {
 
     /**
      * Get collision information from list
-     * @this Base.Week
+     * @this Base
      * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
      * @param {number} start - event start time that want to detect collisions.
      * @param {number} end - event end time that want to detect collisions.
@@ -89,7 +87,7 @@ var Week = {
 
     /**
      * Initialize values to viewmodels for detect real collision at rendering phase.
-     * @this Base.Week
+     * @this Base
      * @param {array[]} matrices - Matrix data.
      */
     getCollides: function(matrices) {
@@ -132,6 +130,7 @@ var Week = {
     },
 
     /**
+     * create view model for time view part
      * @this Base
      * @param {Date} starts - start date.
      * @param {Date} ends - end date.
@@ -162,7 +161,8 @@ var Week = {
      **********/
 
     /**
-     * create view model for allday view part.
+     * create view model for allday view part
+     * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
      * @param {Collection} viewModelColl - allday event viewModel viewModels.
