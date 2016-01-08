@@ -129,27 +129,80 @@ describe('Base.Core', function() {
         it('filter events properly.', function() {
             var filter, d1, d2;
 
+            //                     starts ------------- ends
+            // A ownStart - ownEnd
+            // B ownStart -------- ownEnd
+            // C ownStart ------------------ ownEnd
+            // D                   ownSta -- ownEnd
+            // E                           ownS - ownE
+            // F                            ownSta --- ownEn
+            // G                             ownStart ------------------- ownEnd
+            // H                                        ownS ------------ ownEnd
+            // I                                               ownStart - ownEnd
+            // L ownStart ----------------------------------------------- ownEnd
+
             // 10:20 ~ 10:40
             collection.add(CalEventViewModel.create(eventList[0]));
 
-            // 09:30 ~ 10:10
+            // A: 09:30 ~ 10:10
             d1 = new Date('2015-05-01T09:30:00+09:00');
             d2 = new Date('2015-05-01T10:10:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(0);
 
+            // B: 09:30 ~ 10:20
+            d1 = new Date('2015-05-01T09:30:00+09:00');
+            d2 = new Date('2015-05-01T10:20:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
 
-            // 10:20 ~ 10:50
+            // C: 09:30 ~ 10:30
+            d1 = new Date('2015-05-01T09:30:00+09:00');
+            d2 = new Date('2015-05-01T10:30:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
+
+            // D: 10:20 ~ 10:30
             d1 = new Date('2015-05-01T10:20:00+09:00');
+            d2 = new Date('2015-05-01T10:30:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
+
+            // E: 10:25 ~ 10:35
+            d1 = new Date('2015-05-01T10:25:00+09:00');
+            d2 = new Date('2015-05-01T10:35:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
+
+            // F: 10:30 ~ 10:40
+            d1 = new Date('2015-05-01T10:30:00+09:00');
+            d2 = new Date('2015-05-01T10:40:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
+            
+            // G: 10:30 ~ 10:50
+            d1 = new Date('2015-05-01T10:30:00+09:00');
+            d2 = new Date('2015-05-01T10:50:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
+            
+            // H: 10:40 ~ 10:50
+            d1 = new Date('2015-05-01T10:40:00+09:00');
             d2 = new Date('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
-            // 10:41 ~ 10:50
-            d1 = new Date('2015-05-01T10:41:00+09:00');
-            d2 = new Date('2015-05-01T10:50:00+09:00');
+            // I: 10:50 ~ 10:55
+            d1 = new Date('2015-05-01T10:50:00+09:00');
+            d2 = new Date('2015-05-01T10:55:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(0);
+
+            // L: 10:10 ~ 10:50
+            d1 = new Date('2015-05-01T10:10:00+09:00');
+            d2 = new Date('2015-05-01T10:50:00+09:00');
+            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            expect(collection.find(filter).length).toBe(1);
         });
     });
 });

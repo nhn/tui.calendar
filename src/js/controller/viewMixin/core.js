@@ -3,8 +3,10 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
-var aps = Array.prototype.slice;
+var util = global.tui.util,
+    forEachArr = util.forEachArray,
+    aps = Array.prototype.slice;
+
 var datetime = require('../../common/datetime'),
     Collection = require('../../common/collection'),
     CalEventViewModel = require('../../model/viewModel/calEvent');
@@ -25,17 +27,17 @@ var Core = {
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
-        util.forEachArray(viewModels.slice(1), function(event, index) {
+        forEachArr(viewModels.slice(1), function(event, index) {
             foundPrevCollisionEvent = false;
             previousEventList = aps.apply(viewModels, [0, index + 1]).reverse();
 
-            util.forEachArray(previousEventList, function(previous) {
+            forEachArr(previousEventList, function(previous) {
                 if (event.collidesWith(previous)) {
                     // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
                     // 찾아 이 일정을 추가한다
                     foundPrevCollisionEvent = true;
 
-                    util.forEachArray(collisionGroups.slice(0).reverse(), function(group) {
+                    forEachArr(collisionGroups.slice(0).reverse(), function(group) {
                         if (~util.inArray(util.stamp(previous.valueOf()), group)) {
                             // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
                             // Collision Group에 이 일정을 포함시킨다.
@@ -87,10 +89,10 @@ var Core = {
         var result = [],
             getLastRowInColumn = Core.getLastRowInColumn;
 
-        util.forEachArray(collisionGroups, function(group) {
+        forEachArr(collisionGroups, function(group) {
             var matrix = [[]];
 
-            util.forEachArray(group, function(eventID) {
+            forEachArr(group, function(eventID) {
                 var event = collection.items[eventID],
                     col = 0,
                     found = false,
@@ -133,9 +135,17 @@ var Core = {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
 
-            return (ownStarts >= starts && ownEnds <= ends) ||
-                (ownStarts < starts && ownEnds >= starts) ||
-                (ownEnds > ends && ownStarts <= ends);
+            // (ownStarts >= starts && ownEnds <= ends) ||
+            // (ownStarts < starts && ownEnds >= starts) ||
+            // (ownEnds > ends && ownStarts <= ends)
+            //                     starts ------------- ends
+            //  ownStart -- ownEnd
+            //                                               ownStart -- ownEnd
+            //  ownStart ------------------- ownEnd
+            //                               ownStart ------------------ ownEnd
+            //                             ownS - ownE
+            //  ownStart ----------------------------------------------- ownEnd
+            return !(ownEnds < starts || ownStarts > ends);
         }
     },
 
@@ -156,9 +166,9 @@ var Core = {
             }
         );
 
-        util.forEachArray(matrices, function(matrix) {
-            util.forEachArray(matrix, function(column) {
-                util.forEachArray(column, function(viewModel, index) {
+        forEachArr(matrices, function(matrix) {
+            forEachArr(matrix, function(column) {
+                forEachArr(column, function(viewModel, index) {
                     var ymd, dateLength;
 
                     if (!viewModel) {
