@@ -135,16 +135,11 @@ var Core = {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
 
+            // shorthand condition of 
+            //
             // (ownStarts >= starts && ownEnds <= ends) ||
             // (ownStarts < starts && ownEnds >= starts) ||
             // (ownEnds > ends && ownStarts <= ends)
-            //                     starts ------------- ends
-            //  ownStart -- ownEnd
-            //                                               ownStart -- ownEnd
-            //  ownStart ------------------- ownEnd
-            //                               ownStart ------------------ ownEnd
-            //                             ownS - ownE
-            //  ownStart ----------------------------------------------- ownEnd
             return !(ownEnds < starts || ownStarts > ends);
         }
     },
