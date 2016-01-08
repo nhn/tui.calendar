@@ -8,7 +8,6 @@ var util = global.tui.util,
     BORDER_BOTTOM = 1;
 
 var config = require('../../config'),
-    common = require('../../common/common'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../view'),
@@ -74,8 +73,11 @@ Month.prototype._renderChilds = function(calendar) {
             monthWeek;
 
         monthWeek = new MonthWeek({
-            containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
             _mode: MonthWeek.MONTHWEEK_MODE.MONTH,
+            _getViewModelFunc: function(viewModel) {
+                return viewModel;
+            },
+            containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
         }, domutil.appendHTMLElement('div', container, config.classname('week-in-month')));
@@ -90,15 +92,17 @@ Month.prototype._renderChilds = function(calendar) {
  */
 Month.prototype.render = function() {
     var opt = this.options,
-        calendar = this._getMonthCalendar(opt.renderMonth),
-        viewModel = this.controller.findByDateRange(
-            common.firstIn2dArray(calendar),
-            common.lastIn2dArray(calendar)
-        );
+        controller = this.controller,
+        calendar = this._getMonthCalendar(opt.renderMonth);
 
     this._renderChilds(calendar);
 
     this.childs.each(function(childView) {
+        var viewModel = controller.findByDateRange(
+            datetime.parse(childView.options.renderStartDate),
+            datetime.parse(childView.options.renderEndDate)
+        );
+
         childView.render(viewModel);
     });
 };
