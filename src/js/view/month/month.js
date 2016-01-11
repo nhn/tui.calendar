@@ -73,8 +73,8 @@ Month.prototype._renderChilds = function(calendar) {
             monthWeek;
 
         monthWeek = new MonthWeek({
-            _mode: MonthWeek.MONTHWEEK_MODE.MONTH,
-            _getViewModelFunc: function(viewModel) {
+            mode: MonthWeek.MONTHWEEK_MODE.MONTH,
+            getViewModelFunc: function(viewModel) {
                 return viewModel;
             },
             containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),

@@ -21,7 +21,7 @@ var config = require('../../config'),
  * @param {number} [options.height=60] - minimum height of event container element.
  * @param {number} [options.eventBlockHeight=18] - height of each event block.
  * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
- * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
+ * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLElement} container Container element.
  */
 function Allday(options, container) {
@@ -43,7 +43,7 @@ function Allday(options, container) {
         containerBottomGutter: 8,
         eventHeight: 18,
         eventGutter: 2,
-        _getViewModelFunc: function(viewModel) {
+        getViewModelFunc: function(viewModel) {
             return viewModel.eventsInDateRange.allday;
         }
     }, options);

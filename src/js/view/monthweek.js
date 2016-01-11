@@ -4,7 +4,9 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = global.tui.util,
+    mmax = Math.max;
+
 var config = require('../config'),
     domutil = require('../common/domutil'),
     datetime = require('../common/datetime'),
@@ -19,8 +21,8 @@ var config = require('../config'),
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
- * @param {number} [options._mode=MonthWeek.MONTHWEEK_MODE.WEEK] - monthweek render mode
- * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
+ * @param {number} [options.mode=MonthWeek.MONTHWEEK_MODE.WEEK] - monthweek render mode
+ * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLDIVElement} container - DOM element to use container for this view.
  */
 function MonthWeek(options, container) {
@@ -38,8 +40,8 @@ function MonthWeek(options, container) {
         containerBottomGutter: 8,
         eventHeight: 18,
         eventGutter: 2,
-        _mode: MonthWeek.MONTHWEEK_MODE.WEEK,
-        _getViewModelFunc: function(viewModel) {
+        mode: MonthWeek.MONTHWEEK_MODE.WEEK,
+        getViewModelFunc: function(viewModel) {
             return viewModel.allday;
         }
     }, options);
@@ -84,7 +86,7 @@ MonthWeek.prototype._getBaseViewModel = function() {
         gridWidth = 100 / range.length;
 
     return {
-        mode: opt._mode,
+        mode: opt.mode,
         width: gridWidth,
         eventBlockHeight: opt.eventHeight + opt.eventGutter,
         eventBlockGutter: opt.eventGutter,
@@ -103,24 +105,24 @@ MonthWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
         baseViewModel = this._getBaseViewModel(),
-        matrices,
-        lengthByYMD,
         maxEventInDay;
 
-    if (opt._mode === MonthWeek.MONTHWEEK_MODE.WEEK) {
-        baseViewModel.matrices = opt._getViewModelFunc(viewModel);
+    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
+    if (opt.mode === MonthWeek.MONTHWEEK_MODE.WEEK) {
         maxEventInDay = 0;
-        maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
-            return Math.max.apply(null, util.map(matrix, function(row) {
-                return row.length;
-            }));
-        }));
+        maxEventInDay = mmax.apply(
+            null, 
+            util.map(baseViewModel.matrices, function(matrix) {
+                return Math.max.apply(null, util.map(matrix, function(row) {
+                    return row.length;
+                }));
+            })
+        );
 
         this._setMinHeight(maxEventInDay);
     } else {
         container.style.height = opt.containerHeight + 'px';
-        baseViewModel.matrices = viewModel;
     }
 
     container.innerHTML = tmpl(baseViewModel);
