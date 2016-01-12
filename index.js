@@ -31,7 +31,6 @@ var CalEventViewModel = require('./src/js/model/viewModel/calEvent');
 var View = require('./src/js/view/view');
 View.prototype.cssPrefix = config.cssPrefix;
 
-var MonthWeek = require('./src/js/view/monthweek');
 var Week = require('./src/js/view/week/week');
 var DayName = require('./src/js/view/week/dayname');
 var Weekday = require('./src/js/view/weekday');
@@ -114,7 +113,6 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     WeekdayInWeek: WeekdayInWeek,
     TimeGrid: TimeGrid,
     Time: Time,
-    MonthWeek: MonthWeek,
 
     // handler, guide
     Drag: Drag,

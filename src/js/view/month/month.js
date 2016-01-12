@@ -11,7 +11,7 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../view'),
-    MonthWeek = require('../monthweek');
+    WeekdayInMonth = require('./weekdayInMonth');
 
 /**
  * @constructor
@@ -70,19 +70,18 @@ Month.prototype._renderChilds = function(calendar) {
     util.forEach(calendar, function(weekArr, i) {
         var starts = new Date(+weekArr[0]),
             ends = new Date(+weekArr[weekArr.length - 1]),
-            monthWeek;
+            weekdayView;
 
-        monthWeek = new MonthWeek({
-            mode: MonthWeek.MONTHWEEK_MODE.MONTH,
-            getViewModelFunc: function(viewModel) {
-                return viewModel;
-            },
+        weekdayView = new WeekdayInMonth({
             containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
+            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+            getViewModelFunc: function(viewModel) {
+                return viewModel;
+            }
         }, domutil.appendHTMLElement('div', container, config.classname('week-in-month')));
 
-        this.addChild(monthWeek);
+        this.addChild(weekdayView);
     }, this);
 };
 
