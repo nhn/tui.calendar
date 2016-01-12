@@ -6,11 +6,10 @@
 
 var util = global.tui.util;
 var config = require('../../config'),
-    datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../view'),
-    MonthWeek = require('../monthweek'),
-    mainTmpl = require('../template/week/allday.hbs');
+    WeekdayInWeek = require('./weekdayInWeek'),
+    tmpl = require('../template/week/allday.hbs');
 
 /**
  * @constructor
@@ -60,18 +59,18 @@ util.inherit(Allday, View);
  */
 Allday.prototype.render = function(viewModel) {
     var container = this.container,
-        monthWeekInst;
+        weekdayView;
 
-    container.innerHTML = mainTmpl(this.options);
+    container.innerHTML = tmpl(this.options);
 
     this.childs.clear();
 
-    monthWeekInst = new MonthWeek(
+    weekdayView = new WeekdayInWeek(
         this.options, 
-        domutil.find('.' + config.classname('monthweek-container'), container)
+        domutil.find('.' + config.classname('weekday-container'), container)
     );
 
-    this.addChild(monthWeekInst);
+    this.addChild(weekdayView);
 
     this.childs.each(function(childView) {
         childView.render(viewModel);

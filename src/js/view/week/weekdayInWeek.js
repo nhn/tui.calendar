@@ -36,13 +36,13 @@ util.inherit(WeekdayInWeek, Weekday);
  * Render Weekday view
  * @override
  */
-WeekdayInWeek.prototype.render = function() {
+WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
-        viewModel = this._getBaseViewModel(),
+        baseViewModel = this.getBaseViewModel(),
         maxEventInDay = 0;
 
-    viewModel.matrices = opt.getViewModelFunc(viewModel);
+    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
     maxEventInDay = mmax.apply(
         null, 
@@ -55,7 +55,7 @@ WeekdayInWeek.prototype.render = function() {
 
     this._setMinHeight(maxEventInDay);
 
-    container.innerHTML = tmpl(viewModel);
+    container.innerHTML = tmpl(baseViewModel);
 };
 
 /**

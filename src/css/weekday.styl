@@ -1,0 +1,55 @@
++prefix-classes(weekday)
+    .container,
+    .grid,
+    .grid-line
+        height: 100%
+        min-height: inherit;
+
+    .container
+        position: relative
+
+    .grid-line
+        position: absolute
+        margin-left: -1px
+        border-left: 1px solid #ccc
+
+    .events
+        pos(0px, 0px)
+        wh(100%, 100%)
+        position: absolute
+
+    .event-block
+        position: absolute
+
+    .event
+        position: relative
+        margin: 0 3px 0 2px
+
+    .event span
+        padding-left: 3px
+        line-height: 18px
+        font-size: 0.9em
+
+    .event-title
+        display: block
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        margin-right: 10px
+
+    .exceed-left .event
+        margin-left: 0px
+
+    .exceed-right .event
+        margin-right: 0px
+
+    .exceed-right .resize-handle
+        display: none
+
+    .resize-handle
+        position: absolute
+        top: 0
+        right: 0
+        width: 6px
+        background-position: 3px center
+        cursor: col-resize
