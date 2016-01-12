@@ -4,7 +4,9 @@
  */
 'use strict';
 var util = global.tui.util;
-var Weekday = require('../weekday'),
+var config = require('../../config'),
+    domutil = require('../../common/domutil'),
+    Weekday = require('../weekday'),
     tmpl = require('./weekdayInMonth.hbs');
 
 /**
@@ -37,12 +39,25 @@ util.inherit(WeekdayInMonth, Weekday);
 WeekdayInMonth.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
-        baseViewModel = this.getBaseViewModel();
+        baseViewModel = this.getBaseViewModel(),
+        eventElements;
 
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
     container.style.height = opt.containerHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);
+
+    eventElements = domutil.find(
+        '.' + config.classname('weekday-event-title'), 
+        container, 
+        true
+    );
+
+    util.forEach(eventElements, function(el) {
+        if (el.offsetWidth < el.scrollWidth) {
+            el.setAttribute('title', domutil.getData(el, 'title'));
+        }
+    });
 };
 
 module.exports = WeekdayInMonth;

@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
 
@@ -39,6 +40,10 @@ module.exports = {
             default:
                 break;
         }
+    },
+
+    'hhmm': function(date) {
+        return datetime.format(date, 'HH:mm');
     },
 
     'common-width': function(width) {
