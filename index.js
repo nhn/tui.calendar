@@ -34,6 +34,7 @@ View.prototype.cssPrefix = config.cssPrefix;
 var MonthWeek = require('./src/js/view/monthweek');
 var Week = require('./src/js/view/week/week');
 var DayName = require('./src/js/view/week/dayname');
+var Weekday = require('./src/js/view/weekday');
 var TimeGrid = require('./src/js/view/week/timeGrid');
 var Time = require('./src/js/view/week/time');
 
@@ -108,6 +109,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     View: View,
     Week: Week,
     DayName: DayName,
+    Weekday: Weekday,
     TimeGrid: TimeGrid,
     Time: Time,
     MonthWeek: MonthWeek,
