@@ -1,6 +1,7 @@
 /*eslint-disable*/
 var path = require('path');
 var gulp = require('gulp');
+var watch = require('gulp-watch');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var cssmin = require('gulp-cssmin');
@@ -105,12 +106,15 @@ gulp.task('connect', function() {
     connect.server({
         livereload: true
     });
-    gulp.watch([
+
+    watch([
         './src/**/*',
         './index.js',
         './demo/**/*.html',
         './demo-dev/**/*.html'
-    ], ['bundle-dev']);
+    ], function() {
+        bundle('build');
+    });
 });
 
 gulp.task('bundle-dev', function() {
