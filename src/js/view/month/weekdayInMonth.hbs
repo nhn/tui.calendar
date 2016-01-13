@@ -12,9 +12,7 @@
 {{#each this ~}} {{! matrix }}
 {{#each this ~}} {{! column }}
 {{#if this ~}} {{! viewmodel }}
-{{wdCumulateCount}}
-
-{{#fi this.top '<=' @root.maxEventInDay ~}}
+    {{#fi this.top '<' @root.renderLimitIdx ~}}
     <div data-id="{{stamp model}}" 
          class="{{CSS_PREFIX}}weekday-event-block
             {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
@@ -40,19 +38,20 @@
         </div>
         {{/if}}
     </div>
-{{else ~}}
-    {{#wdNoExceeded ~}}
-    <div style="position: absolute;
-                top:{{multiply top @root.eventBlockHeight}}px;
-                left:{{multiply left @root.width}}%;
-                width:{{multiply width @root.width}}%;
-                height:{{@root.eventBlockHeight}}px;
-                margin-top:{{@root.eventBlockGutter}}px">
-        <span>+n 개 일정</span>
-    </div>
-    {{/wdNoExceeded ~}}
-{{/fi ~}}
-
+    {{else ~}}
+        {{#wdOnce}}
+        <div style="position: absolute;
+                    top:{{multiply @root.renderLimitIdx @root.eventBlockHeight}}px;
+                    left:{{multiply left @root.width}}%;
+                    width:{{multiply width @root.width}}%;
+                    height:{{@root.eventBlockHeight}}px;
+                    margin-top:{{@root.eventBlockGutter}}px"
+             class="{{CSS_PREFIX}}weekday-exceed"
+             data-ymd="{{ymd this 'starts'}}">
+            <span></span>
+        </div>
+        {{/wdOnce}}
+    {{/fi ~}}
 {{/if ~}}
 {{/each ~}}
 {{/each ~}}

@@ -3,13 +3,18 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
+var util = global.tui.util,
+    existy = util.isExisty,
+    mfloor = Math.floor;
+
 var Handlebars = require('hbsfy/runtime');
+
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     Weekday = require('../weekday'),
     tmpl = require('./weekdayInMonth.hbs');
+
 
 /**
  * @constructor
@@ -32,58 +37,70 @@ function WeekdayInMonth(options, container) {
 util.inherit(WeekdayInMonth, Weekday);
 
 /**
+ * Get limit index of event block in current view
+ * @returns {number} limit index
+ */
+WeekdayInMonth.prototype._getRenderLimitIndex = function() {
+    var opt = this.options,
+        count = mfloor(opt.containerHeight / (opt.eventHeight + opt.eventGutter));
+
+    return count - 1;    // subtraction for '+n' label block
+}
+
+/**
+ * Get handlebars custom helper method for limitation event block render count
+ * features
+ *
+ * Cumulate count on each date. render +n label only when no cumulated 
+ * count on cache object
+ * @param {object} [exceedDate] - object to be used as a cache
+ * @returns {function} custom helper function
+ */
+WeekdayInMonth.prototype._getOnceHandlebarHelper = function(exceedDate) {
+    exceedDate = exceedDate || {};
+
+    return function(options) {
+        var ymd = datetime.format(this.model.starts, 'YYYYMMDD'),
+            result;
+
+        if (!existy(exceedDate[ymd])) {
+            exceedDate[ymd] = 0;
+            result = options.fn(this);
+        }
+
+        exceedDate[ymd] += 1;
+
+        return result;
+    }
+};
+
+/**
  * @override
  * @param {object} viewModel - events view models
  */
 WeekdayInMonth.prototype.render = function(viewModel) {
-    var opt = this.options,
-        container = this.container,
-        base = this.getBaseViewModel(),
-        eventLenInEachDate = viewModel.eventLenInEachDate,
-        maxEventInDay,
-        eventElements,
-        renderedEventLenInDate = {},
-        exceededDate = {};
+    var container = this.container,
+        baseViewModel = this.getBaseViewModel(),
+        renderLimitIdx = this._getRenderLimitIndex();
 
-    maxEventInDay = Math.floor(opt.containerHeight / base.eventBlockHeight);
-    maxEventInDay -= 2;    // (month label index) + (+n label index)
+    viewModel = util.extend({
+        matrices: viewModel,
+        renderLimitIdx: renderLimitIdx
+    }, baseViewModel); 
 
-    base.maxEventInDay = maxEventInDay;
-    base.matrices = viewModel.matrices;
+    Handlebars.registerHelper('wdOnce', this._getOnceHandlebarHelper());
 
-    Handlebars.registerHelper('wdCumulateCount', function() {
-        var ymd = datetime.format(this.model.starts, 'YYYYMMDD');
+    container.innerHTML = tmpl(viewModel);
 
-        if (!renderedEventLenInDate[ymd]) {
-            renderedEventLenInDate[ymd] = 0;
-        }
-
-        console.log(renderedEventLenInDate);
-
-        renderedEventLenInDate[ymd] += 1;
-    });
-
-    Handlebars.registerHelper('wdNoExceeded', function(options) {
-        var ymd = datetime.format(this.model.starts, 'YYYYMMDD');
-
-        if (!exceededDate[ymd]) {
-            exceededDate[ymd] = true;
-            this.top = maxEventInDay + 1;
-            return options.fn(this);
-        }
-    });
-
-    container.innerHTML = tmpl(base);
-    eventElements = domutil.find(
-        '.' + config.classname('weekday-event-title'), 
-        container, 
+    var exceedElements = domutil.find(
+        '.' + config.classname('weekday-exceed'),
+        container,
         true
     );
 
-    util.forEach(eventElements, function(el) {
-        if (el.offsetWidth < el.scrollWidth) {
-            el.setAttribute('title', domutil.getData(el, 'title'));
-        }
+    util.forEach(exceedElements, function(el) {
+        var ymd = domutil.getData(el, 'ymd');
+        console.log(ymd);
     });
 };
 

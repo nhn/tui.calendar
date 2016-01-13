@@ -37,8 +37,8 @@ module.exports = {
                 return (a == b) ? options.fn(this) : options.inverse(this);
             case '===':
                 return  (a === b) ? options.fn(this) : options.inverse(this);
-            case '<=':
-                return (a <= b) ? options.fn(this) : options.inverse(this);
+            case '<':
+                return (a < b) ? options.fn(this) : options.inverse(this);
             default:
                 break;
         }
@@ -46,6 +46,12 @@ module.exports = {
 
     'hhmm': function(date) {
         return datetime.format(date, 'HH:mm');
+    },
+
+    'ymd': function(viewModel, which) {
+        var model = viewModel.valueOf();
+
+        return datetime.format(model[which], 'YYYYMMDD');
     },
 
     'common-width': function(width) {
