@@ -12,19 +12,14 @@ var config = require('../../config'),
 /**
  * @constructor
  * @extends {Weekday}
- * @param {object} options The object for view customization.
- * @param {string} options.renderStartDate - start date of allday view's render
- *  date. YYYY-MM-DD
- * @param {string} options.renderEndDate - end date of allday view's render 
- *  date. YYYY-MM-DD
- * @param {number} [options.height=60] - minimum height of event container 
- *  element.
- * @param {number} [options.eventBlockHeight=18] - height of each event block.
- * @param {number} [options.eventBlockGutter=2] - gutter height of each event 
- *  block.
- * @param {function} [options.getViewModelFunc] - function for extract partial 
- *  view model data from whole view models.
- * @param {HTMLElement} container Container element.
+ * @param {number} [options.containerHeight=40] - minimum height of event 
+ *  container element.
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to 
+ *  make create easy.
+ * @param {number} [options.eventHeight=18] - height of each event block.
+ * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {HTMLDIVElement} container - DOM element to use container for this 
+ *  view.
  */
 function WeekdayInMonth(options, container) {
     Weekday.call(this, options, container);
@@ -39,14 +34,17 @@ util.inherit(WeekdayInMonth, Weekday);
 WeekdayInMonth.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
-        baseViewModel = this.getBaseViewModel(),
+        base = this.getBaseViewModel(),
+        maxEventInDay,
         eventElements;
 
-    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
+    // maxEventInDay = (this.getviewBound().height / base.eventBlockHeight);
+    // console.log(maxEventInDay);
+
+    base.matrices = opt.getViewModelFunc(viewModel);
 
     container.style.height = opt.containerHeight + 'px';
-    container.innerHTML = tmpl(baseViewModel);
-
+    container.innerHTML = tmpl(base);
     eventElements = domutil.find(
         '.' + config.classname('weekday-event-title'), 
         container, 
