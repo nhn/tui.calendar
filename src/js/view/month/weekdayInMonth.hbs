@@ -1,6 +1,10 @@
 <div class="{{CSS_PREFIX}}weekday-grid ">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;">{{this}}</div>
+    <div class="{{CSS_PREFIX}}weekday-grid-line"
+         style="width:{{@root.width}}%;
+                left:{{multiply @root.width @index}}%;">
+        {{this}}
+    </div>
 {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}weekday-events">
@@ -8,28 +12,47 @@
 {{#each this ~}} {{! matrix }}
 {{#each this ~}} {{! column }}
 {{#if this ~}} {{! viewmodel }}
-<div data-id="{{stamp model}}" 
-     class="{{CSS_PREFIX}}weekday-event-block
-        {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
-        {{#if renderEnds}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
-     style="top:{{multiply top @root.eventBlockHeight}}px;
-            left:{{multiply left @root.width}}%;
-            width:{{multiply width @root.width}}%;
-            height:{{@root.eventBlockHeight}}px;
-            margin-top:{{@root.eventBlockGutter}}px">
-    {{#if model.isAllDay ~}}
-    <div class="{{CSS_PREFIX}}weekday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}">
-        <span class="{{CSS_PREFIX}}weekday-event-title"
-              data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
-        <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
-    </div> 
-    {{else ~}}
-    <div class="{{CSS_PREFIX}}weekday-event">
-        <span class="{{CSS_PREFIX}}weekday-event-title"
-              data-title="{{model.title}}">{{hhmm model.starts}} {{model.title}}</span>
+{{wdCumulateCount}}
+
+{{#fi this.top '<=' @root.maxEventInDay ~}}
+    <div data-id="{{stamp model}}" 
+         class="{{CSS_PREFIX}}weekday-event-block
+            {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
+            {{#if renderEnds}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
+         style="top:{{multiply top @root.eventBlockHeight}}px;
+                left:{{multiply left @root.width}}%;
+                width:{{multiply width @root.width}}%;
+                height:{{@root.eventBlockHeight}}px;
+                margin-top:{{@root.eventBlockGutter}}px">
+        {{#if model.isAllDay ~}}
+        <div class="{{CSS_PREFIX}}weekday-event" 
+             style="height:{{@root.eventHeight}}px;
+                    color:{{model.color}};
+                    background-color:{{model.bgColor}}">
+            <span class="{{CSS_PREFIX}}weekday-event-title"
+                  data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
+            <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
+        </div> 
+        {{else ~}}
+        <div class="{{CSS_PREFIX}}weekday-event">
+            <span class="{{CSS_PREFIX}}weekday-event-title"
+                  data-title="{{model.title}}">{{hhmm model.starts}} {{model.title}}</span>
+        </div>
+        {{/if}}
     </div>
-    {{/if}}
-</div>
+{{else ~}}
+    {{#wdNoExceeded ~}}
+    <div style="position: absolute;
+                top:{{multiply top @root.eventBlockHeight}}px;
+                left:{{multiply left @root.width}}%;
+                width:{{multiply width @root.width}}%;
+                height:{{@root.eventBlockHeight}}px;
+                margin-top:{{@root.eventBlockGutter}}px">
+        <span>+n 개 일정</span>
+    </div>
+    {{/wdNoExceeded ~}}
+{{/fi ~}}
+
 {{/if ~}}
 {{/each ~}}
 {{/each ~}}

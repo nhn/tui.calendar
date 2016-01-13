@@ -4,7 +4,9 @@
  */
 'use strict';
 var util = global.tui.util;
+var Handlebars = require('hbsfy/runtime');
 var config = require('../../config'),
+    datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     Weekday = require('../weekday'),
     tmpl = require('./weekdayInMonth.hbs');
@@ -24,6 +26,7 @@ var config = require('../../config'),
  */
 function WeekdayInMonth(options, container) {
     Weekday.call(this, options, container);
+    container.style.height = options.containerHeight + 'px';
 }
 
 util.inherit(WeekdayInMonth, Weekday);
@@ -36,15 +39,40 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
         base = this.getBaseViewModel(),
+        eventLenInEachDate = viewModel.eventLenInEachDate,
         maxEventInDay,
-        eventElements;
+        eventElements,
+        renderedEventLenInDate = {},
+        exceededDate = {};
 
-    // maxEventInDay = (this.getviewBound().height / base.eventBlockHeight);
-    // console.log(maxEventInDay);
+    maxEventInDay = Math.floor(opt.containerHeight / base.eventBlockHeight);
+    maxEventInDay -= 2;    // (month label index) + (+n label index)
 
-    base.matrices = opt.getViewModelFunc(viewModel);
+    base.maxEventInDay = maxEventInDay;
+    base.matrices = viewModel.matrices;
 
-    container.style.height = opt.containerHeight + 'px';
+    Handlebars.registerHelper('wdCumulateCount', function() {
+        var ymd = datetime.format(this.model.starts, 'YYYYMMDD');
+
+        if (!renderedEventLenInDate[ymd]) {
+            renderedEventLenInDate[ymd] = 0;
+        }
+
+        console.log(renderedEventLenInDate);
+
+        renderedEventLenInDate[ymd] += 1;
+    });
+
+    Handlebars.registerHelper('wdNoExceeded', function(options) {
+        var ymd = datetime.format(this.model.starts, 'YYYYMMDD');
+
+        if (!exceededDate[ymd]) {
+            exceededDate[ymd] = true;
+            this.top = maxEventInDay + 1;
+            return options.fn(this);
+        }
+    });
+
     container.innerHTML = tmpl(base);
     eventElements = domutil.find(
         '.' + config.classname('weekday-event-title'), 

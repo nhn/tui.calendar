@@ -76,9 +76,6 @@ Month.prototype._renderChilds = function(calendar) {
             containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
-            getViewModelFunc: function(viewModel) {
-                return viewModel;
-            }
         }, domutil.appendHTMLElement('div', container, config.classname('week-in-month')));
 
         this.addChild(weekdayView);

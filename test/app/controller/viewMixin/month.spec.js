@@ -54,6 +54,15 @@ describe('Base.Month', function() {
 * |          |          |<FE스크-2>|<[코드리]>|<팀스터디>|<주간보고>|          |
 * |          |          |<팀스터디>|          |<캘린더이>|          |          |
 */
+            var expectedCountByDate = {
+                '20151115': 1,
+                '20151116': 4,
+                '20151117': 6,
+                '20151118': 5,
+                '20151119': 5,
+                '20151120': 4,
+                '20151121': 1
+            };
 
             var expectedMatrix = [
                 ['[김동우] 휴가', '김태용[일본출장]', '[류진경] 오전반차', '[김성호] 연차'],
@@ -65,7 +74,6 @@ describe('Base.Month', function() {
                 [undef, undef, '[코드리뷰] 콤보차트 리펙토링'],
                 [undef, undef, '캘린더이야기']
             ];
-            expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
 
             var expectedTop = [
                 [1, 2, 3, 4],
@@ -77,7 +85,10 @@ describe('Base.Month', function() {
                 [undef, undef, 5],
                 [undef, undef, 6]
             ];
-            expect(actual[0]).toEqualMatricesTop(expectedTop);
+
+            expect(actual.countByDate).toEqual(expectedCountByDate);
+            expect(actual.matrices[0]).toEqualMatricesTitle(expectedMatrix);
+            expect(actual.matrices[0]).toEqualMatricesTop(expectedTop);
         });
     });
 });
