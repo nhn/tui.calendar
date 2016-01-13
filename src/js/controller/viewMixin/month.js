@@ -141,8 +141,7 @@ var Month = {
             filters = [],
             coll, vColl, vList,
             collisionGroup,
-            matrices,
-            countByDate;
+            matrices;
 
         filters.push(ctrlCore.getEventInDateRangeFilter(starts, ends));
 
@@ -161,15 +160,7 @@ var Month = {
         ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue); 
         ctrlMonth._adjustTimeTopIndex(vColl);
 
-        countByDate = {};
-        util.forEach(this.dateMatrix, function(arr, ymd) {
-            countByDate[ymd] = arr.length;
-        });;
-
-        return {
-            matrices: matrices,
-            countByDate: countByDate 
-        };
+        return matrices;
     }
 };
 
