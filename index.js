@@ -35,6 +35,7 @@ var Week = require('./src/js/view/week/week');
 var DayName = require('./src/js/view/week/dayname');
 var Weekday = require('./src/js/view/weekday');
 var WeekdayInWeek = require('./src/js/view/week/weekdayInWeek');
+var WeekdayInMonth = require('./src/js/view/month/weekdayInMonth');
 var TimeGrid = require('./src/js/view/week/timeGrid');
 var Time = require('./src/js/view/week/time');
 
@@ -111,6 +112,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     DayName: DayName,
     Weekday: Weekday,
     WeekdayInWeek: WeekdayInWeek,
+    WeekdayInMonth: WeekdayInMonth,
     TimeGrid: TimeGrid,
     Time: Time,
 

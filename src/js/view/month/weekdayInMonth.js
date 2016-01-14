@@ -5,7 +5,8 @@
 'use strict';
 var util = global.tui.util,
     existy = util.isExisty,
-    mfloor = Math.floor;
+    mfloor = Math.floor,
+    mmax = Math.max;
 
 var Handlebars = require('hbsfy/runtime');
 
@@ -46,7 +47,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
     var opt = this.options,
         count = mfloor(opt.containerHeight / (opt.eventHeight + opt.eventGutter));
 
-    return count - 1;    // subtraction for '+n' label block
+    return mmax(count - 1, 0);    // subtraction for '+n' label block
 }
 
 /**
