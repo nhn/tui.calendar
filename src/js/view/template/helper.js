@@ -48,12 +48,6 @@ module.exports = {
         return datetime.format(date, 'HH:mm');
     },
 
-    'ymd': function(viewModel, which) {
-        var model = viewModel.valueOf();
-
-        return datetime.format(model[which], 'YYYYMMDD');
-    },
-
     'common-width': function(width) {
         return getElSize(width, '%', 'width');
     },

@@ -70,10 +70,11 @@ Month.prototype._renderChilds = function(calendar) {
     util.forEach(calendar, function(weekArr, i) {
         var starts = new Date(+weekArr[0]),
             ends = new Date(+weekArr[weekArr.length - 1]),
+            isLastWeek = (i + 1 === weekCount),
             weekdayView;
 
         weekdayView = new WeekdayInMonth({
-            containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
+            containerHeight: heightForOneWeek + (isLastWeek ? BORDER_BOTTOM : 0),
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
         }, domutil.appendHTMLElement('div', container, config.classname('week-in-month')));

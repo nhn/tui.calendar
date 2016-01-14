@@ -10,6 +10,7 @@ var util = global.tui.util,
 var Handlebars = require('hbsfy/runtime');
 
 var config = require('../../config'),
+    common = require('../../common/common.js'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     Weekday = require('../weekday'),
@@ -90,7 +91,6 @@ WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
 
     return util.map(exceedDate, function(skipped, ymd) {
         return {
-            width: 1,
             left: util.inArray(ymd, dateRange),
             skipped: skipped,
             ymd: ymd
@@ -108,7 +108,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         renderLimitIdx = this._getRenderLimitIndex(),
         exceedDate = {},
         eventContainer,
-        contentStr;
+        contentStr = '';
 
     container.innerHTML = baseTmpl(baseViewModel);
 
@@ -123,7 +123,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
 
-    contentStr = eventTmpl(util.extend({
+    contentStr += eventTmpl(util.extend({
         matrices: viewModel,
         renderLimitIdx: renderLimitIdx
     }, baseViewModel));
@@ -134,6 +134,11 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     }, baseViewModel));
 
     eventContainer.innerHTML = contentStr;
+
+    common.setAutoEllipsis(
+        '.' + config.classname('weekday-event-title'),
+        container
+    );
 };
 
 module.exports = WeekdayInMonth;
