@@ -4,9 +4,11 @@
  */
 'use strict';
 
-var util = global.tui.util;
-var Collection = require('../common/collection');
-var aps = Array.prototype.slice;
+var util = global.tui.util,
+    aps = Array.prototype.slice;
+
+var domutil = require('../common/domutil'),
+    Collection = require('../common/collection');
 
 function eventIDGetter(event) {
     return event.cid();
@@ -152,6 +154,20 @@ module.exports = {
             lastCol = arr2d[lastRow].length - 1;
 
         return util.pick(arr2d, lastRow, lastCol);
+    },
+
+    /**
+     * Set 'title' attribute for all element that has exceeded content in 
+     * container
+     * @param {string} selector - CSS selector {@see domutil#find}
+     * @param {HTMLElement} container - container element
+     */
+    setAutoEllipsis: function(selector, container) {
+        util.forEach(domutil.find(selector, container, true), function(el) {
+            if (el.offsetWidth < el.scrollWidth) {
+                el.setAttribute('title', domutil.getData(el, 'title'));
+            }
+        });
     }
 };
 
