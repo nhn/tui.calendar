@@ -13,8 +13,9 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     Weekday = require('../weekday'),
-    tmpl = require('./weekdayInMonth.hbs');
-
+    baseTmpl = require('./weekdayInMonth.hbs'),
+    eventTmpl = require('./weekdayInMonthEvent.hbs'),
+    skipTmpl = require('./weekdayInMonthSkip.hbs');
 
 /**
  * @constructor
@@ -53,25 +54,48 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
  *
  * Cumulate count on each date. render +n label only when no cumulated 
  * count on cache object
- * @param {object} [exceedDate] - object to be used as a cache
+ * @param {object} exceedDate - object to be used as a cache
  * @returns {function} custom helper function
  */
-WeekdayInMonth.prototype._getOnceHandlebarHelper = function(exceedDate) {
-    exceedDate = exceedDate || {};
+WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
+    return function() {
+        var viewModel = this,
+            period = datetime.range(
+                viewModel.getStarts(),
+                viewModel.getEnds(),
+                datetime.MILLISECONDS_PER_DAY
+            );
+        
+        util.forEach(period, function(date) {
+            var ymd = datetime.format(date, 'YYYYMMDD');
+            if (!existy(exceedDate[ymd])) {
+                exceedDate[ymd] = 0;
+            }
 
-    return function(options) {
-        var ymd = datetime.format(this.model.starts, 'YYYYMMDD'),
-            result;
-
-        if (!existy(exceedDate[ymd])) {
-            exceedDate[ymd] = 0;
-            result = options.fn(this);
-        }
-
-        exceedDate[ymd] += 1;
-
-        return result;
+            exceedDate[ymd] += 1;
+        });
     }
+};
+
+/**
+ * Get view model for render skipped label
+ * @param {object} exceedDate - object has count of each dates exceed event block
+ *  cound.
+ * @returns {object[]} - view model for skipped label
+ */
+WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
+    var dateRange = util.map(this.getRenderDateRange(), function(date) {
+            return datetime.format(date, 'YYYYMMDD');
+        });
+
+    return util.map(exceedDate, function(skipped, ymd) {
+        return {
+            width: 1,
+            left: util.inArray(ymd, dateRange),
+            skipped: skipped,
+            ymd: ymd
+        };
+    });
 };
 
 /**
@@ -81,27 +105,35 @@ WeekdayInMonth.prototype._getOnceHandlebarHelper = function(exceedDate) {
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(),
-        renderLimitIdx = this._getRenderLimitIndex();
+        renderLimitIdx = this._getRenderLimitIndex(),
+        exceedDate = {},
+        eventContainer,
+        contentStr;
 
-    viewModel = util.extend({
-        matrices: viewModel,
-        renderLimitIdx: renderLimitIdx
-    }, baseViewModel); 
+    container.innerHTML = baseTmpl(baseViewModel);
 
-    Handlebars.registerHelper('wdOnce', this._getOnceHandlebarHelper());
-
-    container.innerHTML = tmpl(viewModel);
-
-    var exceedElements = domutil.find(
-        '.' + config.classname('weekday-exceed'),
-        container,
-        true
+    eventContainer = domutil.find(
+        '.' + config.classname('weekday-events'),
+        container
     );
 
-    util.forEach(exceedElements, function(el) {
-        var ymd = domutil.getData(el, 'ymd');
-        console.log(ymd);
-    });
+    if (!eventContainer) {
+        return;
+    }
+
+    Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
+
+    contentStr = eventTmpl(util.extend({
+        matrices: viewModel,
+        renderLimitIdx: renderLimitIdx
+    }, baseViewModel));
+    
+    contentStr += skipTmpl(util.extend({
+        renderLimitIdx: renderLimitIdx,
+        viewModelForSkip: this._getSkipLabelViewModel(exceedDate)
+    }, baseViewModel));
+
+    eventContainer.innerHTML = contentStr;
 };
 
 module.exports = WeekdayInMonth;
