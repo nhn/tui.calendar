@@ -32,7 +32,7 @@ function Weekday(options, container) {
     /**
      * @type {object}
      */
-    options = this.options = util.extend({
+    this.options = util.extend({
         containerHeight: 40,
         containerBottomGutter: 8,
         eventHeight: 18,
