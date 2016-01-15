@@ -114,7 +114,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     container.innerHTML = baseTmpl(baseViewModel);
 
     eventContainer = domutil.find(
-        '.' + config.classname('weekday-events'),
+        config.classname('.weekday-events'),
         container
     );
 
@@ -137,7 +137,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     eventContainer.innerHTML = contentStr;
 
     common.setAutoEllipsis(
-        '.' + config.classname('weekday-event-title'),
+        config.classname('.weekday-event-title'),
         container
     );
 };

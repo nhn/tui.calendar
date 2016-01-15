@@ -18,7 +18,13 @@ var config = {
     cssPrefix: '/* @echo CSS_PREFIX */',
 
     classname: function(str) {
-        return config.cssPrefix + (str + '');
+        str = str || '';
+
+        if (str.charAt(0) === '.') {
+            return '.' + config.cssPrefix + str.slice(1);
+        } 
+
+        return config.cssPrefix + str;
     },
 
     minicalendar: {
