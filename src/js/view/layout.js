@@ -28,7 +28,7 @@ function Layout(container) {
     /**
      * @type {Collection} Child view collection.
      */
-    this.childs = new Collection(function(childView) {
+    this.children = new Collection(function(childView) {
         return childView.viewName;
     });
     /*eslint-enable*/
@@ -40,11 +40,11 @@ util.inherit(Layout, View);
  * Clear child views.
  */
 Layout.prototype.clear = function() {
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.destroy();
     });
 
-    this.childs.clear();
+    this.children.clear();
     this.container.innerHTML = '';
 };
 
@@ -54,7 +54,7 @@ Layout.prototype.clear = function() {
  * @param {(string|View)} viewName - name of view or instance.
  */
 Layout.prototype.removeChild = function(viewName) {
-    this.childs.remove(viewName);
+    this.children.remove(viewName);
 };
 
 /**
@@ -66,7 +66,7 @@ Layout.prototype.toggleChildView = function(viewName) {
         prefix = ['add', 'remove'],
         flag;
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         container = childView.container;
         flag = +(childView.viewName === viewName);
         domutil[prefix[flag] + 'Class'](container, config.classname('hidden'));

@@ -172,7 +172,7 @@ TimeGrid.prototype._getBaseViewModel = function() {
  * @param {number} width The width percent of each time view.
  * @param {HTMLElement} container Container element for each time view.
  */
-TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
+TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
     var options = this.options,
         childOption,
         child,
@@ -182,7 +182,7 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
 
     // clear contents
     container.innerHTML = '';
-    this.childs.clear();
+    this.children.clear();
 
     // reconcilation of child views
     util.forEach(viewModels, function(events, ymd) {
@@ -226,9 +226,9 @@ TimeGrid.prototype.render = function(viewModel) {
     container.innerHTML = mainTmpl(baseViewModel);
 
     /**********
-     * Render childs
+     * Render children
      **********/
-    this._renderChilds(
+    this._renderChildren(
         timeViewModel,
         100 / eventLen,
         domutil.find('.' + config.classname('timegrid-events-container'), container)

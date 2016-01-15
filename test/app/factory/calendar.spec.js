@@ -79,8 +79,8 @@ describe('Calendar', function() {
     });
 
     it('_setOptionRecurseively() can modify child view\'s option recursively.', function() {
-        var weekView = inst.layout.childs.single();
-        var timeGrid = weekView.childs.single(function(childView) { return childView.viewName === 'timegrid'; });
+        var weekView = inst.layout.children.single();
+        var timeGrid = weekView.children.single(function(childView) { return childView.viewName === 'timegrid'; });
 
         inst._setOptionRecurseively(weekView, function(viewOption) {
             viewOption.hello = 'world';
@@ -97,7 +97,7 @@ describe('Calendar', function() {
         it('can change render date range for calendar.', function() {
             inst.setDate('2015-11-01', '2015-11-07');
 
-            expect(inst.layout.childs.items.week.options).toEqual({
+            expect(inst.layout.children.items.week.options).toEqual({
                 startDayOfWeek: 0,
                 renderStartDate: '2015-11-01',
                 renderEndDate: '2015-11-07'

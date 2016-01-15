@@ -71,7 +71,7 @@ Week.prototype.render = function() {
             renderEndDate: renderEndDate
         };
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.render(viewModel);
     });
 

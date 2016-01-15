@@ -16,7 +16,7 @@ describe('handler/time.creation', function() {
 
         var mock = {
             timeGridView: {
-                childs: {
+                children: {
                     items: {
                         '20': 'good'
                     }
@@ -39,7 +39,7 @@ describe('handler/time.creation', function() {
 
         var mock = {
             timeGridView: {
-                childs: {
+                children: {
                     items: {
                         '20': 'good'
                     }

@@ -14,10 +14,10 @@ describe('handler:AlldayCore', function() {
                     renderStartDate: '2015-08-10',
                     renderEndDate: '2015-08-14'
                 },
-                childs: jasmine.createSpyObj('Collection', ['single'])
+                children: jasmine.createSpyObj('Collection', ['single'])
             };
 
-            mockAlldayView.childs.single.and.returnValue(true);
+            mockAlldayView.children.single.and.returnValue(true);
 
             // Simulate mouse event action.
             // drag start position (11일)

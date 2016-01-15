@@ -41,7 +41,7 @@ function View(container) {
      * child views.
      * @type {Collection}
      */
-    this.childs = new Collection(function(view) {
+    this.children = new Collection(function(view) {
         return util.stamp(view);
     });
     /*eslint-enable*/
@@ -71,7 +71,7 @@ View.prototype.addChild = function(view, fn) {
     // add parent view
     view.parent = this;
 
-    this.childs.add(view);
+    this.children.add(view);
 };
 
 /**
@@ -80,7 +80,7 @@ View.prototype.addChild = function(view, fn) {
  * @param {function} [fn] Function for invoke before remove. parent view class is supplied first arguments.
  */
 View.prototype.removeChild = function(id, fn) {
-    var view = util.isNumber(id) ? this.childs.items[id] : id;
+    var view = util.isNumber(id) ? this.children.items[id] : id;
 
     id = util.stamp(view);
 
@@ -88,14 +88,14 @@ View.prototype.removeChild = function(id, fn) {
         fn.call(view, this);
     }
 
-    this.childs.remove(id);
+    this.children.remove(id);
 };
 
 /**
  * Render view recursively.
  */
 View.prototype.render = function() {
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.render();
     });
 };
@@ -114,7 +114,7 @@ View.prototype.recursive = function(fn, skipThis) {
         fn(this);
     }
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.recursive(fn);
     });
 };
@@ -145,10 +145,10 @@ View.prototype._beforeDestroy = function() {};
  */
 View.prototype._destroy = function() {
     this._beforeDestroy();
-    this.childs.clear();
+    this.children.clear();
     this.container.innerHTML = '';
 
-    this.id = this.parent = this.childs = this.container = null;
+    this.id = this.parent = this.children = this.container = null;
 };
 
 /*eslint-disable*/
@@ -156,7 +156,7 @@ View.prototype._destroy = function() {
  * Destroy child view recursively.
  */
 View.prototype.destroy = function(isChildView) {
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.destroy(true);
         childView._destroy();
     });

@@ -63,7 +63,7 @@ Allday.prototype.render = function(viewModel) {
 
     container.innerHTML = tmpl(this.options);
 
-    this.childs.clear();
+    this.children.clear();
 
     weekdayView = new WeekdayInWeek(
         this.options, 
@@ -72,7 +72,7 @@ Allday.prototype.render = function(viewModel) {
 
     this.addChild(weekdayView);
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.render(viewModel);
     });
 };

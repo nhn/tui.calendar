@@ -15,7 +15,7 @@ describe('handler:AlldayCreation', function() {
         var div = document.createElement('div');
         var inst = {
             alldayView: {
-                childs: {
+                children: {
                     items: {
                         '40': 'hello world'
                     }

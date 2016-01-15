@@ -85,7 +85,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.alldayView.childs.items, matches[1]);
+    return util.pick(this.alldayView.children.items, matches[1]);
 };
 
 /**

@@ -24,7 +24,7 @@ describe('handler:AlldayMove', function() {
 
             var mockInst = {
                 alldayView: {
-                    childs: {
+                    children: {
                         items: {
                             '3': 'success'
                         }

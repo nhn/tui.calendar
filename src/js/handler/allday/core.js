@@ -21,7 +21,7 @@ var alldayCore = {
      * @returns {function|boolean} function that return event data by mouse events.
      */
     _retriveEventData: function(alldayView, mouseEvent) {
-        var monthWeekView = alldayView.childs.single(),
+        var monthWeekView = alldayView.children.single(),
             container,
             renderStartDate,
             renderEndDate,

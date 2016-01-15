@@ -19,7 +19,7 @@ describe('TimeResize', function() {
 
         mockInstance = {
             timeGridView: {
-                childs: {
+                children: {
                     items: {
                         '20': 'hello'
                     }

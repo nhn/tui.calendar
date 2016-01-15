@@ -370,7 +370,7 @@ ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
         return;
     }
     
-    layout.childs.doWhenHas(viewName, function(view) {
+    layout.children.doWhenHas(viewName, function(view) {
         this._toggleViewEvent(false, view, this);
     }, this);
     layout.clear();
@@ -383,7 +383,7 @@ ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
         //TODO: month view. 
     }
 
-    layout.childs.doWhenHas(viewName, function(view) {
+    layout.children.doWhenHas(viewName, function(view) {
         this._toggleViewEvent(true, view, this);
     }, this);
 

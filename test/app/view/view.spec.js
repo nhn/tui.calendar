@@ -28,7 +28,7 @@ describe('View', function() {
 
             view.addChild(view2);
 
-            expect(view.childs.has(util.stamp(view2)));
+            expect(view.children.has(util.stamp(view2)));
         });
 
         it('Can add some process before added.', function() {
@@ -39,7 +39,7 @@ describe('View', function() {
             view.addChild(view2, spy);
 
             expect(spy).toHaveBeenCalledWith(view);
-            expect(view.childs.has(util.stamp(view2)));
+            expect(view.children.has(util.stamp(view2)));
         });
     });
 
@@ -94,7 +94,7 @@ describe('View', function() {
             expect(view2).toEqual(jasmine.objectContaining({
                 __fe_id: jasmine.any(Number),
                 id: null,
-                childs: null,
+                children: null,
                 container: null
             }));
         });
@@ -112,12 +112,12 @@ describe('View', function() {
 
         it('Can remove child view.', function() {
             view.removeChild(util.stamp(view2));
-            expect(view.childs.length).toBe(0);
+            expect(view.children.length).toBe(0);
         });
 
         it('Can remove child view by instance itself.', function() {
             view.removeChild(view2);
-            expect(view.childs.length).toBe(0);
+            expect(view.children.length).toBe(0);
         });
 
         it('Can execute some process before view removed.', function() {

@@ -381,7 +381,7 @@ Calendar.prototype.prev = function() {
  * @returns {View} current view instance
  */
 Calendar.prototype.getCurrentView = function() {
-    return util.pick(this.layout.childs.items, this.currentViewName);
+    return util.pick(this.layout.children.items, this.currentViewName);
 }
 
 /**
@@ -439,7 +439,7 @@ Calendar.prototype.refreshChildView = function(viewName) {
         return;
     }
 
-    this.layout.childs.items[viewName].render();
+    this.layout.children.items[viewName].render();
 };
 
 /**

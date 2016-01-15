@@ -55,17 +55,17 @@ Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
 };
 
 /**
- * Create childs view (week) and add childs
+ * Create children view (week) and add children
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
  */
-Month.prototype._renderChilds = function(calendar) {
+Month.prototype._renderChildren = function(calendar) {
     var container = this.container,
         containerHeight = this.getViewBound().height,
         weekCount = calendar.length,
         heightForOneWeek = (containerHeight / weekCount) - BORDER_BOTTOM;
 
     container.innerHTML = '';
-    this.childs.clear();
+    this.children.clear();
 
     util.forEach(calendar, function(weekArr, i) {
         var starts = new Date(+weekArr[0]),
@@ -92,9 +92,9 @@ Month.prototype.render = function() {
         controller = this.controller,
         calendar = this._getMonthCalendar(opt.renderMonth);
 
-    this._renderChilds(calendar);
+    this._renderChildren(calendar);
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         var viewModel = controller.findByDateRange(
             datetime.parse(childView.options.renderStartDate),
             datetime.parse(childView.options.renderEndDate)

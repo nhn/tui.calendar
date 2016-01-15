@@ -51,7 +51,7 @@ AlldayDblClick.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    monthweekView = this.alldayView.childs.single();
+    monthweekView = this.alldayView.children.single();
 
     if (!monthweekView) {
         return false;

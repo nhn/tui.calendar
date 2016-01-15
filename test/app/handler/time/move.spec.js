@@ -27,7 +27,7 @@ describe('handler/time.move', function() {
         container.appendChild(target);
 
         mockInstance.timeGridView = {
-            childs: {
+            children: {
                 items: {
                     20: 'good'
                 }

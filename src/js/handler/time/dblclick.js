@@ -56,7 +56,7 @@ TimeDblClick.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.childs.items, matches[1]);
+    return util.pick(this.timeGridView.children.items, matches[1]);
 };
 
 /**
