@@ -19,18 +19,45 @@ function getElSize(value, postfix, prefix) {
 }
 
 module.exports = {
+    /**
+     * Stamp supplied object
+     *
+     * Commonly use for rendering object's unique ID to rendered view
+     * @param {object} obj - object to stamp
+     * @returns {number} stamp value
+     */
     'stamp': function(obj) {
         return util.stamp(obj);
     },
 
+    /**
+     * Whether supplied object are equal?
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {boolean} result of operation
+     */
     'equal': function(a, b) {
         return a === b;
     },
 
+    /**
+     * OR 
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {boolean} or
+     */
     'or': function(a, b) {
         return a || b;
     },
 
+    /**
+     * Compare object by customizable oper parameter
+     * @param {*} a - a
+     * @param {string} oper - operator ex) '==', '<'
+     * @param {*} b - b
+     * @param {Handlebars} options - handlebar options
+     * @returns {boolean} result of operation
+     */
     'fi': function(a, oper, b, options) {
         switch (oper) {
             case '==':
@@ -44,10 +71,20 @@ module.exports = {
         }
     },
 
+    /**
+     * Get hhmm formatted time str
+     * @param {Date} date - date object
+     * @returns {string} formatted value
+     */
     'hhmm': function(date) {
         return datetime.format(date, 'HH:mm');
     },
 
+    /**
+     * Get `width` stylesheet string
+     * @param {number} width - width percentage
+     * @returns {string} css style part
+     */
     'common-width': function(width) {
         return getElSize(width, '%', 'width');
     },
@@ -78,22 +115,50 @@ module.exports = {
         return config.classname('dayname');
     },
 
+    /**
+     * Add supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'add': function(a, b) {
         return a + b;
     },
 
+    /**
+     * Multiply supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'multiply': function(a, b) {
         return a * b;
     },
 
+    /**
+     * Divide supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'divide': function(a, b) {
         return a / b;
     },
 
+    /**
+     * Subtract supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'subtract': function(a, b) {
         return a - b;
     },
 
+    /**
+     * Get css prefix in global configuration
+     * @returns {string} css prefix
+     */
     'CSS_PREFIX': function() {
         return config.cssPrefix;
     },
