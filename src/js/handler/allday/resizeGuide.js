@@ -116,7 +116,7 @@ AlldayResizeGuide.prototype._onDragStart = function(dragStartEventData) {
         domutil.addClass(global.document.body, config.classname('resizing-x'));
     }
 
-    eventContainer = domutil.find('.' + config.classname('monthweek-events'), alldayViewContainer);
+    eventContainer = domutil.find(config.classname('.monthweek-events'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
     eventContainer.appendChild(guideElement);
 

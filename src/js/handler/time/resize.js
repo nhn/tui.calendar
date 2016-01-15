@@ -93,7 +93,7 @@ TimeResize.prototype.checkExpectCondition = function(target) {
         return false;
     }
 
-    container = domutil.closest(target, '.' + config.classname('time-date'));
+    container = domutil.closest(target, config.classname('.time-date'));
 
     if (!container) {
         return false;
@@ -115,7 +115,7 @@ TimeResize.prototype.checkExpectCondition = function(target) {
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
+        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         getEventDataFunc,
         eventData;
 

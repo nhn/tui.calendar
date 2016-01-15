@@ -231,7 +231,7 @@ TimeGrid.prototype.render = function(viewModel) {
     this._renderChildren(
         timeViewModel,
         100 / eventLen,
-        domutil.find('.' + config.classname('timegrid-events-container'), container)
+        domutil.find(config.classname('.timegrid-events-container'), container)
     );
 
     this._hourLabels = domutil.find('ul', container);
@@ -239,7 +239,7 @@ TimeGrid.prototype.render = function(viewModel) {
     /**********
      * Render hourmarker
      **********/
-    this.hourmarker = domutil.find('.' + config.classname('timegrid-hourmarker'), container);
+    this.hourmarker = domutil.find(config.classname('.timegrid-hourmarker'), container);
 
     if (!this._scrolled) {
         this._scrolled = true;
@@ -263,10 +263,10 @@ TimeGrid.prototype.refreshHourmarker = function() {
         return;
     }
 
-    todaymarker = domutil.find('.' + config.classname('timegrid-todaymarker'), hourmarker);
-    text = domutil.find('.' + config.classname('timegrid-hourmarker-time'), hourmarker);
-    labelToVisible = domutil.find('.' + config.classname('invisible'), hourLabels);
-    labelToInvisible = domutil.find('.' + config.classname('timegrid-hour-') + viewModel.currentHour, hourLabels);
+    todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
+    text = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
+    labelToVisible = domutil.find(config.classname('.invisible'), hourLabels);
+    labelToInvisible = domutil.find(config.classname('.timegrid-hour-') + viewModel.currentHour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
         if (labelToVisible !== labelToInvisible) {

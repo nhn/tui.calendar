@@ -113,7 +113,7 @@ AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
-        eventContainer = domutil.find('.' + config.classname('monthweek-events'), alldayContainerElement);
+        eventContainer = domutil.find(config.classname('.monthweek-events'), alldayContainerElement);
 
     eventContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);

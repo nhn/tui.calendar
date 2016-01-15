@@ -54,7 +54,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
     var container,
         matches;
 
-    container = domutil.closest(target, '.' + config.classname('time-date'));
+    container = domutil.closest(target, config.classname('.time-date'));
 
     if (!container) {
         return false;
@@ -77,7 +77,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
 TimeClick.prototype._onClick = function(clickEvent) {
     var target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
+        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         eventCollection = this.baseController.events;
 
     if (!timeView || !blockElement) {

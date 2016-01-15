@@ -52,7 +52,7 @@ TaskClick.prototype.destroy = function() {
  * otherwise, return event model id that related with target element.
  */
 TaskClick.prototype.checkExpectedCondition = function(target) {
-    target = domutil.closest(target, '.' + config.classname('task-item'));
+    target = domutil.closest(target, config.classname('.task-item'));
 
     if (!target) {
         return false;

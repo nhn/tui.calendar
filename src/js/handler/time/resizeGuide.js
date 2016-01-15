@@ -115,7 +115,7 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var originElement = domutil.closest(
             dragStartEventData.target,
-            '.' + config.classname('time-date-event-block')
+            config.classname('.time-date-event-block')
         ),
         guideElement;
 

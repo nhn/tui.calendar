@@ -67,7 +67,7 @@ Allday.prototype.render = function(viewModel) {
 
     weekdayView = new WeekdayInWeek(
         this.options, 
-        domutil.find('.' + config.classname('weekday-container'), container)
+        domutil.find(config.classname('.weekday-container'), container)
     );
 
     this.addChild(weekdayView);

@@ -104,7 +104,7 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top) {
 TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     var guideElement = domutil.closest(
         dragStartEventData.target,
-        '.' + config.classname('time-date-event-block')
+        config.classname('.time-date-event-block')
     );
 
     if (!guideElement) {

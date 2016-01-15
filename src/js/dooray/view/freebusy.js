@@ -118,7 +118,7 @@ Freebusy.prototype._beforeDestroy = function() {
 Freebusy.prototype._onClick = function(clickEventData) {
     var opt = this.options,
         target = clickEventData.srcElement || clickEventData.target,
-        isValid = domutil.closest(target, '.' + config.classname('freebusy-leftmargin')),
+        isValid = domutil.closest(target, config.classname('.freebusy-leftmargin')),
         container, containerWidth,
         mouseX, timeX, dateX, nearMinutesX;
 

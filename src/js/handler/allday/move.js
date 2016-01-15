@@ -75,7 +75,7 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    parentView = domutil.closest(target, '.' + config.classname('monthweek'));
+    parentView = domutil.closest(target, config.classname('.monthweek'));
 
     if (!parentView) {
         return false;
@@ -110,7 +110,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
+    eventBlockElement = domutil.closest(target, config.classname('.monthweek-event-block'));
     if (!eventBlockElement) {
         return;
     }

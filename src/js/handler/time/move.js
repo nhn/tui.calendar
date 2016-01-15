@@ -101,7 +101,7 @@ TimeMove.prototype.checkExpectCondition = function(target) {
  * @returns {object|boolean} - return time view instance when finded.
  */
 TimeMove.prototype._getTimeView = function(target) {
-    var container = domutil.closest(target, '.' + config.classname('time-date')),
+    var container = domutil.closest(target, config.classname('.time-date')),
         matches;
 
     if (!container) {
@@ -124,7 +124,7 @@ TimeMove.prototype._getTimeView = function(target) {
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
+        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         getEventDataFunc,
         eventData;
 
