@@ -19,6 +19,8 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     var monthViewContainer,
         monthView;
 
+
+
     monthViewContainer = domutil.appendHTMLElement('div', layoutContainer, config.classname('month'));
     monthView = new Month(options.month, monthViewContainer, baseController.Month);
 
