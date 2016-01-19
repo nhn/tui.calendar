@@ -1,4 +1,5 @@
 /* eslint vars-on-top:0, strict:0 */
+require('./src/js/view/template/registerHelpers');
 
 /** @namespace ne.dooray.calendar */
 global.tui.util.defineNamespace('ne.dooray.calendar', {
