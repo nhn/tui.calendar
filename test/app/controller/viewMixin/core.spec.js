@@ -23,11 +23,27 @@ describe('Base.Core', function() {
         it('Get collision group properly.', function() {
             actual = controller.Core.getCollisionGroup(eventList);
             expected = [
-                [100, 101, 103, 102],
-                [104],
-                [105, 106],
-                [107, 108, 109],
-                [110]
+                [
+                    eventList[0].cid(), 
+                    eventList[1].cid(), 
+                    eventList[2].cid(), 
+                    eventList[3].cid()
+                ],
+                [
+                    eventList[4].cid()
+                ],
+                [
+                    eventList[5].cid(),
+                    eventList[6].cid()
+                ],
+                [
+                    eventList[7].cid(),
+                    eventList[8].cid(),
+                    eventList[9].cid()
+                ],
+                [
+                    eventList[10].cid()
+                ]
             ];
 
             expect(actual).toEqual(expected);
