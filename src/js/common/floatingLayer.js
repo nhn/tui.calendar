@@ -106,14 +106,17 @@ FloatingLayer.prototype.setPosition = function(x, y) {
 
 /**
  * Set layer size
- * @param {number} w - layer width
- * @param {number} h - layer height
+ * @param {number|string} w - layer width
+ * @param {number|string} h - layer height
  */
 FloatingLayer.prototype.setSize = function(w, h) {
     var container = this.container;
 
-    container.style.width = w + 'px';
-    container.style.height = h + 'px';
+    w = util.isNumber(w) ? w + 'px' : w;
+    h = util.isNumber(h) ? h + 'px' : h;
+
+    container.style.width = w;
+    container.style.height = h;
 };
 
 /**
