@@ -96,6 +96,13 @@ FloatingLayer.prototype.destroy = function() {
 };
 
 /**
+ * @returns {boolean} whether layer is visible?
+ */
+FloatingLayer.prototype.isVisible = function() {
+    return this.container.style.display !== 'none';
+};
+
+/**
  * Set layer position
  * @param {number} x - x coordinate of layer
  * @param {number} y - y coordinate of layer

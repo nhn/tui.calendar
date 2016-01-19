@@ -5,7 +5,10 @@
 'use strict';
 
 var util = global.tui.util;
-var View = require('../../view/view'),
+var config = require('../../config'),
+    domevent = require('../../common/domevent'),
+    domutil = require('../../common/domutil'),
+    View = require('../../view/view'),
     FloatingLayer = require('../../common/floatingLayer'),
     tmpl = require('./more.hbs');
 
@@ -25,12 +28,24 @@ function More(container) {
 
 util.inherit(More, View);
 
+More.prototype._onClick = function(clickEvent) {
+    var target = (clickEvent.target || clickEvent.srcElement),
+        moreLayer = domutil.closest(target, config.classname('.month-more'));
+
+    if (moreLayer) {
+        return;
+    }
+
+    this.hide();
+};
+
 /**
  * @override
  */
 More.prototype.destroy = function() {
     this.layer.destroy();
     this.layer = null;
+    domevent.off(document.body, 'mousedown', this._onClick, this);
     View.prototype.destroy.call(this);
 };
 
@@ -39,13 +54,18 @@ More.prototype.destroy = function() {
  * @param {object} viewModel - view model from factory/monthView
  */
 More.prototype.render = function(viewModel) {
-    var layer = this.layer;
+    var self = this,
+        layer = self.layer;
 
     layer.setSize('auto', viewModel.height);
     layer.setPosition(viewModel.left, viewModel.top);
     layer.setContent(tmpl(viewModel));
 
     layer.show();
+
+    util.debounce(function() {
+        domevent.on(document.body, 'mousedown', self._onClick, self);
+    })();
 };
 
 /**
@@ -53,6 +73,7 @@ More.prototype.render = function(viewModel) {
  */
 More.prototype.hide = function() {
     this.layer.hide();
+    domevent.off(document.body, 'mousedown', this._onClick, this);
 };
 
 module.exports = More;
