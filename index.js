@@ -1,156 +1,71 @@
 /* eslint vars-on-top:0, strict:0 */
 
-/**********
- * Common
- **********/
-require('./src/js/view/template/registerHelpers');
-var config = require('./src/js/config');
-var dirty = require('./src/js/common/dirty');
-var datetime = require('./src/js/common/datetime');
-var array = require('./src/js/common/array');
-var domevent = require('./src/js/common/domevent');
-var domutil = require('./src/js/common/domutil');
-var Collection = require('./src/js/common/collection');
-var model = require('./src/js/common/model');
-var common = require('./src/js/common/common');
-var reqAnimFrame = require('./src/js/common/reqAnimFrame');
-var AJAX = require('./src/js/common/ajax');
-var VLayout = require('./src/js/common/vlayout');
-var VPanel = require('./src/js/common/vpanel');
-
-/**********
- * Models
- **********/
-var Point = require('./src/js/common/point');
-var CalEvent = require('./src/js/model/calEvent');
-var CalEventViewModel = require('./src/js/model/viewModel/calEvent');
-
-/**********
- * Views
- **********/
-var View = require('./src/js/view/view');
-View.prototype.cssPrefix = config.cssPrefix;
-
-var Week = require('./src/js/view/week/week');
-var DayName = require('./src/js/view/week/dayname');
-var Weekday = require('./src/js/view/weekday');
-var WeekdayInWeek = require('./src/js/view/week/weekdayInWeek');
-var WeekdayInMonth = require('./src/js/view/month/weekdayInMonth');
-var TimeGrid = require('./src/js/view/week/timeGrid');
-var Time = require('./src/js/view/week/time');
-
-/**********
- * Handlers
- **********/
-var Drag = require('./src/js/handler/drag');
-var TimeCore = require('./src/js/handler/time/core');
-var TimeClick = require('./src/js/handler/time/click');
-var TimeCreation = require('./src/js/handler/time/creation');
-var TimeCreationGuide = require('./src/js/handler/time/creationGuide');
-var TimeMove = require('./src/js/handler/time/move');
-var TimeMoveGuide = require('./src/js/handler/time/moveGuide');
-var TimeResize = require('./src/js/handler/time/resize');
-var TimeResizeGuide = require('./src/js/handler/time/resizeGuide');
-
-var AlldayCore = require('./src/js/handler/allday/core');
-var AlldayClick = require('./src/js/handler/allday/click');
-var AlldayCreation = require('./src/js/handler/allday/creation');
-var AlldayCreationGuide = require('./src/js/handler/allday/creationGuide');
-var AlldayMove = require('./src/js/handler/allday/move');
-var AlldayMoveGuide = require('./src/js/handler/allday/moveGuide');
-var AlldayResize = require('./src/js/handler/allday/resize');
-var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
-
-/**********
- * Factory
- **********/
-var controllerFactory = require('./src/js/factory/controller');
-
-/**********
- * SERVICE MODULE
- **********/
-var MiniCalendar = require('./src/js/dooray/view/minicalendar');
-var DoorayEvent = require('./src/js/dooray/model/calEvent');
-var DoorayController = require('./src/js/dooray/controller/base');
-var TaskView = require('./src/js/dooray/view/taskview');
-var MilestoneClick = require('./src/js/dooray/handler/milestoneClick');
-var TaskClick = require('./src/js/dooray/handler/taskClick');
-var Freebusy = require('./src/js/dooray/view/freebusy');
-
-/**********
- * Calendar Factory
- **********/
-
-var Calendar = require('./src/js/factory/calendar');
-var ServiceCalendar = require('./src/js/dooray/factory/calendar');
-
 /** @namespace ne.dooray.calendar */
 global.tui.util.defineNamespace('ne.dooray.calendar', {
     // common
-    config: config,
-    dirty: dirty,
-    datetime: datetime,
-    array: array,
-    domevent: domevent,
-    domutil: domutil,
-    Collection: Collection,
-    model: model,
-    common: common,
-    reqAnimFrame: reqAnimFrame,
-    AJAX: AJAX,
-    Point: Point, 
-    VLayout: VLayout,
-    VPanel: VPanel,
+    config: require('./src/js/config'),
+    dirty: require('./src/js/common/dirty'),
+    datetime: require('./src/js/common/datetime'),
+    array: require('./src/js/common/array'),
+    domevent: require('./src/js/common/domevent'),
+    domutil: require('./src/js/common/domutil'),
+    Collection: require('./src/js/common/collection'),
+    model: require('./src/js/common/model'),
+    common: require('./src/js/common/common'),
+    reqAnimFrame: require('./src/js/common/reqAnimFrame'),
+    AJAX: require('./src/js/common/ajax'),
+    Point: require('./src/js/common/point'), 
+    VLayout: require('./src/js/common/vlayout'),
+    VPanel: require('./src/js/common/vpanel'),
+    FloatingLayer: require('./src/js/common/floatingLayer'),
 
     // model
-    CalEvent: CalEvent,
-    CalEventViewModel: CalEventViewModel,
+    CalEvent: require('./src/js/model/calEvent'),
+    CalEventViewModel: require('./src/js/model/viewModel/calEvent'),
 
     // view
-    View: View,
-    Week: Week,
-    DayName: DayName,
-    Weekday: Weekday,
-    WeekdayInWeek: WeekdayInWeek,
-    WeekdayInMonth: WeekdayInMonth,
-    TimeGrid: TimeGrid,
-    Time: Time,
+    View: require('./src/js/view/view'),
+    Week: require('./src/js/view/week/week'),
+    DayName: require('./src/js/view/week/dayname'),
+    Weekday: require('./src/js/view/weekday'),
+    WeekdayInWeek: require('./src/js/view/week/weekdayInWeek'),
+    WeekdayInMonth: require('./src/js/view/month/weekdayInMonth'),
+    TimeGrid: require('./src/js/view/week/timeGrid'),
+    Time: require('./src/js/view/week/time'),
 
     // handler, guide
-    Drag: Drag,
+    Drag: require('./src/js/handler/drag'),
 
-    TimeCore: TimeCore,
-    TimeClick: TimeClick,
-    TimeCreation: TimeCreation,
-    TimeCreationGuide: TimeCreationGuide,
-    TimeMove: TimeMove,
-    TimeMoveGuide: TimeMoveGuide,
-    TimeResize: TimeResize,
-    TimeResizeGuide: TimeResizeGuide,
+    TimeCore: require('./src/js/handler/time/core'),
+    TimeClick: require('./src/js/handler/time/click'),
+    TimeCreation: require('./src/js/handler/time/creation'),
+    TimeCreationGuide: require('./src/js/handler/time/creationGuide'),
+    TimeMove: require('./src/js/handler/time/move'),
+    TimeMoveGuide: require('./src/js/handler/time/moveGuide'),
+    TimeResize: require('./src/js/handler/time/resize'),
+    TimeResizeGuide: require('./src/js/handler/time/resizeGuide'),
 
-    AlldayCore: AlldayCore,
-    AlldayClick: AlldayClick,
-    AlldayCreation: AlldayCreation,
-    AlldayCreationGuide: AlldayCreationGuide,
-    AlldayMove: AlldayMove,
-    AlldayMoveGuide: AlldayMoveGuide,
-    AlldayResize: AlldayResize,
-    AlldayResizeGuide: AlldayResizeGuide,
-
-    // only for test
-    ControllerFactory: controllerFactory,
+    AlldayCore: require('./src/js/handler/allday/core'),
+    AlldayClick: require('./src/js/handler/allday/click'),
+    AlldayCreation: require('./src/js/handler/allday/creation'),
+    AlldayCreationGuide: require('./src/js/handler/allday/creationGuide'),
+    AlldayMove: require('./src/js/handler/allday/move'),
+    AlldayMoveGuide: require('./src/js/handler/allday/moveGuide'),
+    AlldayResize: require('./src/js/handler/allday/resize'),
+    AlldayResizeGuide: require('./src/js/handler/allday/resizeGuide'),
 
     // service modules
-    DoorayEvent: DoorayEvent,
-    DoorayController: DoorayController,
-    MiniCalendar: MiniCalendar,
-    TaskView: TaskView,
-    MilestoneClick: MilestoneClick,
-    TaskClick: TaskClick,
-    Freebusy: Freebusy,
+    DoorayEvent: require('./src/js/dooray/model/calEvent'),
+    DoorayController: require('./src/js/dooray/controller/base'),
+    MiniCalendar: require('./src/js/dooray/view/minicalendar'),
+    TaskView: require('./src/js/dooray/view/taskview'),
+    MilestoneClick: require('./src/js/dooray/handler/milestoneClick'),
+    TaskClick: require('./src/js/dooray/handler/taskClick'),
+    Freebusy: require('./src/js/dooray/view/freebusy'),
 
     // factory class
-    OriginCalendar: Calendar,
-    FullCalendar: ServiceCalendar
+    ControllerFactory: require('./src/js/factory/controller'),
+    OriginCalendar: require('./src/js/factory/calendar'),
+    FullCalendar: require('./src/js/dooray/factory/calendar')
 });
 
