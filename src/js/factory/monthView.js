@@ -8,10 +8,10 @@ var util = global.tui.util;
 var config = require('../config'),
     array = require('../common/array'),
     datetime = require('../common/datetime'),
-    domevent = require('../common/domevent'),
     domutil = require('../common/domutil'),
     Month = require('../view/month/month'),
     MonthClick = require('../handler/month/click'),
+    MonthCreation = require('../handler/month/creation'),
     More = require('../view/month/more');
 
 /**
@@ -25,17 +25,20 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     var monthViewContainer,
         monthView,
         clickHandler,
+        creationHandler,
         moreView;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
+
     monthView = new Month(options.month, monthViewContainer, baseController.Month);
+    moreView = new More(layoutContainer);
 
     // handlers
     clickHandler = new MonthClick(dragHandler, monthView, baseController);
+    creationHandler = new MonthCreation(dragHandler, monthView, baseController);
 
-    moreView = new More(layoutContainer);
-
+    // binding +n click event
     clickHandler.on('clickMore', function(clickMoreEvent) {
         var date = clickMoreEvent.date,
             events = util.pick(baseController.findByDateRange(
@@ -57,6 +60,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     monthView.handlers = {
         click: {
             'default': clickHandler 
+        },
+        creation: {
+            'default': creationHandler
         }
     };
 
