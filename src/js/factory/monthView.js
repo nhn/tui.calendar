@@ -41,19 +41,15 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             events = util.pick(baseController.findByDateRange(
                 datetime.start(date),
                 datetime.end(date)
-            ), clickMoreEvent.ymd),
-            pos = domevent.getMousePosition(
-                clickMoreEvent.originEvent, layoutContainer);
+            ), clickMoreEvent.ymd);
 
         if (events && events.length) {
             events = events.sort(array.compare.event.asc);
 
             moreView.render({
+                target: clickMoreEvent.target,
                 date: datetime.format(date, 'YYYY.MM.DD'),
-                events: events,
-                height: 100,
-                left: pos[0],
-                top: pos[1]
+                events: events
             });
         }
     });

@@ -65,11 +65,13 @@ MonthClick.prototype._onClick = function(clickEvent) {
          * @event MonthClick#clickMore
          * @type {object}
          * @property {string} ymd - YYYYMMDD formatted date
+         * @property {HTMLElement} target - target element
          * @property {Date} date - target date
          * @property {MouseEvent} originEvent - original event object
          */
         this.fire('clickMore', {
             ymd: ymd,
+            target: moreElement,
             date: datetime.parse(ymd),
             originEvent: clickEvent.originEvent
         });

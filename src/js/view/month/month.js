@@ -111,16 +111,18 @@ Month.prototype.render = function() {
         controller = this.controller,
         daynames = opt.daynames,
         calendar = this._getMonthCalendar(opt.renderMonth),
+        daynameViewModel,
         baseViewModel;
 
-    baseViewModel = {
-        daynames: util.map(
-            util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-            function(i) { return daynames[i]; } 
-        )
-    };
+    daynameViewModel = util.map(
+        util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
+        function(i) { return daynames[i]; } 
+    );
 
-    baseViewModel.width = this.getViewBound().width / baseViewModel.daynames.length;
+    baseViewModel = {
+        daynames: daynameViewModel,
+        width: 100 / daynameViewModel.length
+    };
 
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 
