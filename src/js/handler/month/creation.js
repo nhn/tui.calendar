@@ -34,7 +34,7 @@ function MonthCreation(dragHandler, monthView, baseController) {
     /**
      * @type {function}
      */
-    this.getDate = null;
+    this.getEventData = null;
 
     /**
      * Cache for dragging session
@@ -91,9 +91,9 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
-    this.getDate = core(this.monthView);
+    this.getEventData = core(this.monthView);
 
-    eventData = this.getDate(dragStartEvent.originEvent);
+    eventData = this.getEventData(dragStartEvent.originEvent);
 
     this._cache = {
         starts: new Date(+eventData.date)
@@ -117,11 +117,11 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
 MonthCreation.prototype._onDrag = function(dragEvent) {
     var eventData;
 
-    if (!this.getDate) {
+    if (!this.getEventData) {
         return;
     }
 
-    eventData = this.getDate(dragEvent.originEvent);
+    eventData = this.getEventData(dragEvent.originEvent);
     
     /**
      * @event {MonthCreation#month_creation_drag}
@@ -147,11 +147,11 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
-    if (!this.getDate) {
+    if (!this.getEventData) {
         return;
     }
 
-    eventData = this.getDate(dragEndEvent.originEvent);
+    eventData = this.getEventData(dragEndEvent.originEvent);
 
     cache.ends = new Date(+eventData.date);
 
