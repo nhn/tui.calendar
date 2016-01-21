@@ -3,25 +3,54 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+var util = global.tui.util,
+    mfloor = Math.floor;
+
+var common = require('../../common/common'),
+    domevent = require('../../common/domevent');
 
 /**
- * Get base event data calculator
- * @param {Drag} dragHandler - drag handler instance
+ * Get high order function that can calc date in mouse point
  * @param {Month} monthView - month view
  * @returns {function} function return event data by mouse event object
  */
-function getBaseEventData(dragHandler, monthView) {
-    var weeks = monthView.children,
-        days = weeks.single().getRenderDateRange();
+function getMousePosDate(monthView) {
+    var weekColl = monthView.children,
+        weeks = weekColl.sort(function(a, b) {
+            return util.stamp(a) - util.stamp(b);
+        }),
+        weekCount = weekColl.length,
+        days = weekColl.single().getRenderDateRange(),
+        dayCount = days.length,
+        size = monthView.getViewBound();
 
-    return function(mouseEvent) {
-        console.log(weeks.length, days.length);
+    /**
+     * Get date related with mouse event object
+     * @param {object} mouseEvent - click event data
+     * @returns {Date} date related with mouse event
+     */
+    function getDate(mouseEvent) {
+        var pos = domevent.getMousePosition(mouseEvent, monthView.container),
+            x = mfloor(common.ratio(size.width, dayCount, pos[0])),
+            y = mfloor(common.ratio(size.height, weekCount, pos[1])),
+            weekdayView, date;
 
+        weekdayView = util.pick(weeks, y);
 
+        if (!weekdayView) {
+            return;
+        }
 
-        //TODO: 마우스 이벤트를 받아 월뷰에서 마우스 
-        //위치가 어떤 날인지 계산하는 로직 개발
+        date = util.pick(weekdayView.getRenderDateRange(), x);
+
+        if (!date) {
+            return;
+        }
+
+        return date;
     };
+
+    return getDate;
 }
 
-module.exports = getBaseEventData;
+module.exports = getMousePosDate;

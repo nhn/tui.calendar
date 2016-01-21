@@ -30,9 +30,10 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     DayName: require('./src/js/view/week/dayname'),
     Weekday: require('./src/js/view/weekday'),
     WeekdayInWeek: require('./src/js/view/week/weekdayInWeek'),
-    WeekdayInMonth: require('./src/js/view/month/weekdayInMonth'),
     TimeGrid: require('./src/js/view/week/timeGrid'),
     Time: require('./src/js/view/week/time'),
+    Month: require('./src/js/view/month/month'),
+    WeekdayInMonth: require('./src/js/view/month/weekdayInMonth'),
 
     // handler, guide
     Drag: require('./src/js/handler/drag'),
@@ -54,6 +55,8 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
     AlldayMoveGuide: require('./src/js/handler/allday/moveGuide'),
     AlldayResize: require('./src/js/handler/allday/resize'),
     AlldayResizeGuide: require('./src/js/handler/allday/resizeGuide'),
+
+    MonthCore: require('./src/js/handler/month/core'),
 
     // service modules
     DoorayEvent: require('./src/js/dooray/model/calEvent'),
