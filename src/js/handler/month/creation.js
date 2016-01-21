@@ -68,8 +68,8 @@ MonthCreation.prototype._createEvent = function(eventCache) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: true,
-        starts: eventCache.dragStartDate,
-        ends: eventCache.dragEndDate
+        starts: eventCache.starts,
+        ends: eventCache.ends
     });
 };
 
@@ -80,7 +80,7 @@ MonthCreation.prototype._createEvent = function(eventCache) {
  */
 MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
-        date;
+        eventData;
 
     if (!domutil.hasClass(target, config.classname('weekday-events'))) {
         return;
@@ -93,20 +93,20 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
 
     this.getDate = core(this.monthView);
 
-    date = this.getDate(dragStartEvent.originEvent);
+    eventData = this.getDate(dragStartEvent.originEvent);
 
     this._cache = {
-        dragStartDate: date
+        starts: new Date(+eventData.date)
     };
 
     /**
      * @event {MonthCreation#month_creation_dragstart}
      * @type {object}
-     * @property {Date} dragStartDate - drag start date
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
      */
-    this.fire('month_creation_dragstart', {
-        dragStartDate: new Date(+date)
-    });
+    this.fire('month_creation_dragstart', eventData);
 };
 
 /**
@@ -115,22 +115,22 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
  * @param {object} dragEvent - drag event data
  */
 MonthCreation.prototype._onDrag = function(dragEvent) {
-    var date;
+    var eventData;
 
     if (!this.getDate) {
         return;
     }
 
-    date = this.getDate(dragEvent.originEvent);
+    eventData = this.getDate(dragEvent.originEvent);
     
     /**
      * @event {MonthCreation#month_creation_drag}
      * @type {object}
-     * @property {Date} dragStartDate - drag date
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
      */
-    this.fire('month_creation_drag', {
-        dragDate: new Date(+date)
-    });
+    this.fire('month_creation_drag', eventData);
 };
 
 /**
@@ -140,7 +140,7 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
  */
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache,
-        date;
+        eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -151,22 +151,20 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
         return;
     }
 
-    date = this.getDate(dragEndEvent.originEvent);
+    eventData = this.getDate(dragEndEvent.originEvent);
 
-    cache.dragEndDate = date;
+    cache.ends = new Date(+eventData.date);
 
     this._createEvent(cache);
 
     /**
      * @event {MonthCreation#month_creation_dragend}
      * @type {object}
-     * @property {Date} dragStartDate - drag start date
-     * @property {Date} dragEndDate - drag end date
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
      */
-    this.fire('month_creation_dragend', {
-        dragStartDate: new Date(+cache.dragStartDate),
-        dragEndDate: new Date(+date)
-    });
+    this.fire('month_creation_dragend', eventData);
 
     this.getDateByMouseEvent = null;
 
