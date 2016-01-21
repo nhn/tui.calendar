@@ -75,10 +75,12 @@ MonthCreation.prototype._createEvent = function(eventCache) {
 
 /**
  * DragStart event handler
+ * @fires {MonthCreation#month_creation_dragstart}
  * @param {object} dragStartEvent - dragStart event data
  */
 MonthCreation.prototype._onDragStart = function(dragStartEvent) {
-    var target = dragStartEvent.target;
+    var target = dragStartEvent.target,
+        date;
 
     if (!domutil.hasClass(target, config.classname('weekday-events'))) {
         return;
@@ -91,13 +93,25 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
 
     this.getDate = core(this.monthView);
 
+    date = this.getDate(dragStartEvent.originEvent);
+
     this._cache = {
-        dragStartDate: this.getDate(dragStartEvent.originEvent)
+        dragStartDate: date
     };
+
+    /**
+     * @event {MonthCreation#month_creation_dragstart}
+     * @type {object}
+     * @property {Date} dragStartDate - drag start date
+     */
+    this.fire('month_creation_dragstart', {
+        dragStartDate: new Date(+date)
+    });
 };
 
 /**
  * Drag event handler
+ * @fires {MonthCreation#month_creation_drag}
  * @param {object} dragEvent - drag event data
  */
 MonthCreation.prototype._onDrag = function(dragEvent) {
@@ -108,14 +122,26 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
     }
 
     date = this.getDate(dragEvent.originEvent);
-    //TODO: creation guide
+    
+    /**
+     * @event {MonthCreation#month_creation_drag}
+     * @type {object}
+     * @property {Date} dragStartDate - drag date
+     */
+    this.fire('month_creation_drag', {
+        dragDate: new Date(+date)
+    });
 };
 
 /**
  * DragEnd event handler
+ * @fires {MonthCreation#month_creation_dragend}
  * @param {object} dragEndEvent - drag end event data
  */
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
+    var cache = this._cache,
+        date;
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
@@ -125,9 +151,22 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
         return;
     }
 
-    this._cache.dragEndDate = this.getDate(dragEndEvent.originEvent);
+    date = this.getDate(dragEndEvent.originEvent);
 
-    this._createEvent(this._cache);
+    cache.dragEndDate = date;
+
+    this._createEvent(cache);
+
+    /**
+     * @event {MonthCreation#month_creation_dragend}
+     * @type {object}
+     * @property {Date} dragStartDate - drag start date
+     * @property {Date} dragEndDate - drag end date
+     */
+    this.fire('month_creation_dragend', {
+        dragStartDate: new Date(+cache.dragStartDate),
+        dragEndDate: new Date(+date)
+    });
 
     this.getDateByMouseEvent = null;
 
