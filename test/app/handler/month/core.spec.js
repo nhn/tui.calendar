@@ -31,15 +31,21 @@ describe('handler:MonthCore', function() {
             clientY: 20
         };
 
-        expect(func(mockMouseEvent))
-            .toEqual(new Date('2015-12-27T00:00:00+09:00'));
+        expect(func(mockMouseEvent)).toEqual({
+            x: 0,
+            y: 0,
+            date: new Date('2015-12-27T00:00:00+09:00')
+        });
 
         mockMouseEvent = {
             clientX: 58,
             clientY: 60
         };
 
-        expect(func(mockMouseEvent))
-            .toEqual(new Date('2016-01-08T00:00:00+09:00'));
+        expect(func(mockMouseEvent)).toEqual({
+            x: 5,
+            y: 1,
+            date: new Date('2016-01-08T00:00:00+09:00')
+        });
     });
 });

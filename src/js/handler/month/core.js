@@ -27,7 +27,7 @@ function getMousePosDate(monthView) {
     /**
      * Get date related with mouse event object
      * @param {object} mouseEvent - click event data
-     * @returns {Date} date related with mouse event
+     * @returns {object} data related with mouse event
      */
     function getDate(mouseEvent) {
         var pos = domevent.getMousePosition(mouseEvent, monthView.container),
@@ -47,7 +47,11 @@ function getMousePosDate(monthView) {
             return;
         }
 
-        return date;
+        return {
+            x: x,
+            y: y,
+            date: date
+        };
     };
 
     return getDate;
