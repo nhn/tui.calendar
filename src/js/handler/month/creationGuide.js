@@ -4,9 +4,7 @@
  */
 'use strict';
 var util = global.tui.util;
-var config = require('../../config'),
-    common = require('../../common/common'),
-    domutil = require('../../common/domutil'),
+var domutil = require('../../common/domutil'),
     MonthGuide = require('./guide');
 
 /**
@@ -63,9 +61,8 @@ MonthCreationGuide.prototype._onDrag = function(dragEvent) {
 
 /**
  * Drag end event handler
- * @param {object} dragEndEvent - event data from MonthCreation
  */
-MonthCreationGuide.prototype._onDragEnd = function(dragEndEvent) {
+MonthCreationGuide.prototype._onDragEnd = function() {
     this.guide.clear();
 };
 

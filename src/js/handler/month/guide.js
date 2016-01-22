@@ -5,7 +5,8 @@
 'use strict';
 var util = global.tui.util,
     mmax = Math.max,
-    mmin = Math.min;
+    mmin = Math.min,
+    mabs = Math.abs;
 
 var config = require('../../config'),
     common = require('../../common/common'),
