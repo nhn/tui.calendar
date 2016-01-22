@@ -37,6 +37,8 @@ describe('handler:MonthCore', function() {
         expect(func(mockMouseEvent)).toEqual({
             x: 0,
             y: 0,
+            sizeX: 7,
+            sizeY: 2,
             date: new Date('2015-12-27T00:00:00+09:00'),
             weekdayView: w1
         });
@@ -49,6 +51,8 @@ describe('handler:MonthCore', function() {
         expect(func(mockMouseEvent)).toEqual({
             x: 5,
             y: 1,
+            sizeX: 7,
+            sizeY: 2,
             date: new Date('2016-01-08T00:00:00+09:00'),
             weekdayView: w2
         });

@@ -50,6 +50,8 @@ function getMousePosDate(monthView) {
         return {
             x: x,
             y: y,
+            sizeX: dayCount,
+            sizeY: weekCount,
             date: date,
             weekdayView: weekdayView
         };

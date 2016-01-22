@@ -4,7 +4,10 @@
  */
 'use strict';
 var util = global.tui.util;
-var domutil = require('../../common/domutil');
+var config = require('../../config'),
+    common = require('../../common/common'),
+    domutil = require('../../common/domutil'),
+    MonthGuide = require('./guide');
 
 /**
  * @constructor
@@ -17,9 +20,9 @@ function MonthCreationGuide(monthCreation) {
     this.monthCreation = monthCreation;
 
     /**
-     * @type {HTMLElement[]}
+     * @type {MonthGuide}
      */
-    this.guideElements = [];
+    this.guide = null; 
 
     monthCreation.on({
         month_creation_dragstart: this._onDragStart,
@@ -28,11 +31,45 @@ function MonthCreationGuide(monthCreation) {
     }, this);
 }
 
-MonthCreationGuide.prototype._onDragStart = function() {};
+/**
+ * Destructor
+ */
+MonthCreationGuide.prototype.destroy = function() {
+    util.forEach(this.guideElements, function(guideElement) {
+        domutil.remove(guideElement);
+    });
 
-MonthCreationGuide.prototype._onDrag = function() {};
+    this.monthCreation.off(this);
+    this.guide = this.monthCreation = null;
+};
 
-MonthCreationGuide.prototype._onDragEnd = function() {};
+/**
+ * Drag start event handler
+ * @param {object} dragStartEvent - event data from MonthCreation
+ */
+MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
+    this.guide = new MonthGuide(this.monthCreation.monthView);
+
+    this.guide.start(dragStartEvent.x, dragStartEvent.y);
+};
+
+/**
+ * Drag event handler
+ * @param {object} dragEvent - event data from MonthCreation
+ */
+MonthCreationGuide.prototype._onDrag = function(dragEvent) {
+    this.guide.update(dragEvent.x, dragEvent.y);
+
+};
+
+/**
+ * Drag end event handler
+ * @param {object} dragEndEvent - event data from MonthCreation
+ */
+MonthCreationGuide.prototype._onDragEnd = function(dragEndEvent) {
+    this.guide.clear();
+};
+
 
 module.exports = MonthCreationGuide;
 

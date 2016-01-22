@@ -7,7 +7,8 @@ var util = global.tui.util;
 
 var config = require('../../config'),
     domutil = require('../../common/domutil'),
-    core = require('./core');
+    core = require('./core'),
+    Guide = require('./creationGuide');
 
 /**
  * @constructor
@@ -42,6 +43,11 @@ function MonthCreation(dragHandler, monthView, baseController) {
      */
     this._cache = null;
 
+    /**
+     * @type {MonthCreationGuide}
+     */
+    this.guide = new Guide(this);
+
     dragHandler.on('dragStart', this._onDragStart, this);
 }
 
@@ -50,7 +56,10 @@ function MonthCreation(dragHandler, monthView, baseController) {
  */
 MonthCreation.prototype.destroy = function() {
     this.dragHandler.off(this);
-    this.monthView = this.baseController = this.dragHandler = null;
+    this.guide.destroy();
+
+    this.guide = this.monthView = this.baseController = 
+        this.dragHandler = null;
 };
 
 /**
