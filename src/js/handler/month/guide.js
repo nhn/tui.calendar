@@ -8,7 +8,6 @@ var util = global.tui.util,
     mmin = Math.min;
 
 var config = require('../../config'),
-    array = require('../../common/array'),
     common = require('../../common/common'),
     domutil = require('../../common/domutil');
 
@@ -80,11 +79,10 @@ MonthGuide.prototype.getGuideElement = function(y) {
 };
 
 MonthGuide.prototype.start = function(x, y) {
-    var guideElement = this.getGuideElement(y),
-        eventContainer;
+    var guideEl = this.getGuideElement(y);
 
-    guideElement.style.left = common.ratio(this.days, 100, x) + '%';
-    guideElement.style.width = common.ratio(this.days, 100, 1) + '%';
+    guideEl.style.left = common.ratio(this.days, 100, x) + '%';
+    guideEl.style.width = common.ratio(this.days, 100, 1) + '%';
 
     this.startIndex = [x, y];
 };
@@ -93,44 +91,27 @@ MonthGuide.prototype.update = function(x, y) {
     var start = this.startIndex,
         guideElements = this.guideElements,
         range = util.range(mmin(start[1], y), mmax(start[1], y) + 1),
-        needUpdate = [],
         needRemove = [];
 
-    // {Plan A}
-    // util.forEach(guideElements, function(guideEl, yIndex) {
-    //     yIndex = Number(yIndex);
-    //
-    //     if (~util.inArray(yIndex, range)) {
-    //         needUpdate.push(yIndex);
-    //     } else {
-    //         needRemove.push(yIndex);
-    //     }
-    // });
-    //
-    // console.log(needUpdate, needRemove);
-    //
-    // util.forEach(needUpdate, function(y) {
-    //     var guideEl = this.getGuideElement(y);
-    //     guideEl.style.display = 'block';
-    // }, this);
-    //
-    // util.forEach(needRemove, function(y) {
-    //     domutil.remove(guideElements[y]);
-    //     delete guideElements[y];
-    // });
+    // 범위 외 가이드 엘리먼트 제거
+    util.forEach(guideElements, function(guideEl, yIndex) {
+        if (!~util.inArray(parseInt(yIndex, 10), range)) {
+            needRemove.push(yIndex);
+        }
+    });
 
-    // {Plan B}
-    // util.forEach(guideElements, function(guideEl, yIndex) {
-    //     if (~util.inArray(yIndex, range)) {
-    //     } else {
-    //         domutil.remove(guideEl);
-    //     }
-    // });
-    //     range = [startIndex[1], y].sort(array.compare.num.asc);
-    //
-    // range[1] += 1;
-    //
-    // range = util.range.apply(null, range)
+    util.forEach(needRemove, function(y) {
+        domutil.remove(guideElements[y]);
+        delete guideElements[y];
+    });
+
+    // 범위 내 가이드 엘리먼트 업데이트
+    util.forEach(range, function(yIndex) {
+        var guideEl = this.getGuideElement(yIndex);
+        guideEl.style.display = 'block';
+        //TODO: 각 가이드 엘리먼트의 left, width를 잘 조절하면 됨
+    }, this);
+
 };
 
 MonthGuide.prototype.clear = function() {

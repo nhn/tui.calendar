@@ -59,7 +59,6 @@ MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
  */
 MonthCreationGuide.prototype._onDrag = function(dragEvent) {
     this.guide.update(dragEvent.x, dragEvent.y);
-
 };
 
 /**

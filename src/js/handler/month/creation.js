@@ -131,6 +131,10 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
     }
 
     eventData = this.getEventData(dragEvent.originEvent);
+
+    if (!eventData) {
+        return;
+    }
     
     /**
      * @event {MonthCreation#month_creation_drag}
