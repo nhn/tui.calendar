@@ -21,7 +21,7 @@ var alldayCore = {
      * @returns {function|boolean} function that return event data by mouse events.
      */
     _retriveEventData: function(alldayView, mouseEvent) {
-        var monthWeekView = alldayView.children.single(),
+        var weekdayView = alldayView.children.single(),
             container,
             renderStartDate,
             renderEndDate,
@@ -30,11 +30,11 @@ var alldayCore = {
             mousePos,
             dragStartXIndex;
 
-        if (!monthWeekView) {
+        if (!weekdayView) {
             return false;
         }
 
-        container = monthWeekView.container;
+        container = weekdayView.container;
         renderStartDate = datetime.parse(alldayView.options.renderStartDate);
         renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
         datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;

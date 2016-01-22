@@ -58,7 +58,7 @@ WeekdayInWeek.prototype.render = function(viewModel) {
  * Set minimum height for container.
  * 
  * Need set min-height to container when wrapping container's height is smaller 
- * then monthweek container.
+ * then weekday container.
  *
  * If set height directly, vertical grids represent in each days are not cover 
  * wrapping container.

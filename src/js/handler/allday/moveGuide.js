@@ -82,15 +82,15 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
         guideElement.style.width = widthPercent + '%';
 
         if (isExceededLeft) {
-            domutil.addClass(guideElement, config.classname('monthweek-exceed-left'));
+            domutil.addClass(guideElement, config.classname('weekday-exceed-left'));
         } else {
-            domutil.removeClass(guideElement, config.classname('monthweek-exceed-left'));
+            domutil.removeClass(guideElement, config.classname('weekday-exceed-left'));
         }
 
         if (isExceededRight) {
-            domutil.addClass(guideElement, config.classname('monthweek-exceed-right'));
+            domutil.addClass(guideElement, config.classname('weekday-exceed-right'));
         } else {
-            domutil.removeClass(guideElement, config.classname('monthweek-exceed-right'));
+            domutil.removeClass(guideElement, config.classname('weekday-exceed-right'));
         }
     });
 };
@@ -143,7 +143,7 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         domutil.addClass(global.document.body, config.classname('dragging'));
     }
 
-    eventContainer = domutil.find(config.classname('.monthweek-events'), alldayViewContainer);
+    eventContainer = domutil.find(config.classname('.weekday-events'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
     eventContainer.appendChild(guideElement);
 

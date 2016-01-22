@@ -41,23 +41,23 @@ AlldayDblClick.prototype.destroy = function() {
  * Check supplied target has privilege to handle this handler
  * @override
  * @param {HTMLElement} target - target element from dblclick event
- * @returns {boolean|MonthWeek} monthweek view or false
+ * @returns {boolean|WeekdayInWeek} WeekdayInWeek view or false
  */
 AlldayDblClick.prototype.checkExpectedCondition = function(target) {
-    var monthweekView;
+    var weekdayView;
 
-    if (!domutil.hasClass(target, config.classname('monthweek-events')) && 
-        !domutil.hasClass(target, config.classname('monthweek-grid-line'))) {
+    if (!domutil.hasClass(target, config.classname('weekday-events')) && 
+        !domutil.hasClass(target, config.classname('weekday-grid-line'))) {
         return false;
     }
 
-    monthweekView = this.alldayView.children.single();
+    weekdayView = this.alldayView.children.single();
 
-    if (!monthweekView) {
+    if (!weekdayView) {
         return false;
     }
 
-    return monthweekView;
+    return weekdayView;
 };
 
 /**
@@ -66,17 +66,17 @@ AlldayDblClick.prototype.checkExpectedCondition = function(target) {
  * @param {MouseEvent} e - dblclick mouse event object
  */
 AlldayDblClick.prototype._onDblClick = function(e) {
-    var monthweekView = this.checkExpectedCondition(e.srcElement || e.target),
+    var weekdayView = this.checkExpectedCondition(e.srcElement || e.target),
         mousePosX, viewWidth, renderDateRange, dateIndex,
         targetDate;
 
-    if (!monthweekView) {
+    if (!weekdayView) {
         return;
     }
 
-    mousePosX = domevent.getMousePosition(e, monthweekView.container)[0];
-    viewWidth = monthweekView.getViewBound().width;
-    renderDateRange = monthweekView.getRenderDateRange();
+    mousePosX = domevent.getMousePosition(e, weekdayView.container)[0];
+    viewWidth = weekdayView.getViewBound().width;
+    renderDateRange = weekdayView.getRenderDateRange();
     dateIndex = Math.floor(common.ratio(viewWidth, renderDateRange.length, mousePosX));
     targetDate = renderDateRange[dateIndex];
 

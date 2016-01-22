@@ -14,7 +14,7 @@ var AlldayMove = require('./move');
  * @implements {Handler}
  * @mixes CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 function AlldayClick(dragHandler, alldayView, baseController) {

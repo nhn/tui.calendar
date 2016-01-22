@@ -16,7 +16,7 @@ var AlldayMoveGuide = require('./moveGuide');
  * @mixes AlldayCore
  * @mixes CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - Allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 function AlldayMove(dragHandler, alldayView, baseController) {
@@ -64,18 +64,18 @@ AlldayMove.prototype.destroy = function() {
 /**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
- * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
+ * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayMove.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         parentView,
         matches;
 
-    if (~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
+    if (~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
         return false;
     }
 
-    parentView = domutil.closest(target, config.classname('.monthweek'));
+    parentView = domutil.closest(target, config.classname('.weekday'));
 
     if (!parentView) {
         return false;
@@ -110,7 +110,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, config.classname('.monthweek-event-block'));
+    eventBlockElement = domutil.closest(target, config.classname('.weekday-event-block'));
     if (!eventBlockElement) {
         return;
     }

@@ -32,12 +32,12 @@ var config = {
     },
 
     allday: {
-        getViewIDRegExp: /^/* @echo CSS_PREFIX */monthweek[\s]/* @echo CSS_PREFIX */(\d+)/,
+        getViewIDRegExp: /^/* @echo CSS_PREFIX */weekday[\s]tui-view-(\d+)/,
         checkCondRegExp: /^/* @echo CSS_PREFIX */event(-title)?$/
     },
 
     time: {
-        getViewIDRegExp: /^/* @echo CSS_PREFIX */time-date[\s]/* @echo CSS_PREFIX */(\d+)/
+        getViewIDRegExp: /^/* @echo CSS_PREFIX */time-date[\s]tui-view-(\d+)/
     }
 };
 

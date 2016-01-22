@@ -19,7 +19,7 @@ describe('handler/time.move', function() {
     it('_getTimeView() return Time view instance by event target.', function() {
         var container = document.createElement('div');
         domutil.addClass(container, '/* @echo CSS_PREFIX */time-date');
-        domutil.addClass(container, '/* @echo CSS_PREFIX */20');
+        domutil.addClass(container, 'tui-view-20');
 
         var target = document.createElement('div');
         domutil.addClass(target, '/* @echo CSS_PREFIX */time-event');
@@ -38,7 +38,7 @@ describe('handler/time.move', function() {
 
         expect(TimeMove.prototype._getTimeView.call(mockInstance, document.createElement('div'))).toBe(false);
 
-        domutil.removeClass(container, '/* @echo CSS_PREFIX */20');
+        domutil.removeClass(container, 'tui-view-20');
         expect(TimeMove.prototype._getTimeView.call(mockInstance, target)).toBe(false);
     });
 

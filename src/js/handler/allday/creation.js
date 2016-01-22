@@ -1,5 +1,5 @@
 /**
- * @fileoverview Handler module for MonthWeek view's creation actions.
+ * @fileoverview Handler module for WeekdayInWeek view's creation actions.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -17,7 +17,7 @@ var AlldayCreationGuide = require('./creationGuide');
  * @mixes AlldayCore
  * @mixes CutomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - Allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-disable-line
@@ -67,13 +67,13 @@ AlldayCreation.prototype.destroy = function() {
 /**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
- * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
+ * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass !== config.classname('monthweek-events')) {
+    if (cssClass !== config.classname('weekday-events')) {
         return false;
     }
 
@@ -91,7 +91,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
 /**
  * Connect handler, view, controller.
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - WeekdayInWeek view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 AlldayCreation.prototype.connect = function(dragHandler, alldayView, baseController) {

@@ -18,7 +18,7 @@ describe('handler:AlldayMove', function() {
             // 1. not suitable for handler.
             expect(proto.checkExpectedCondition(mockTarget)).toBe(false);
 
-            mockTarget.className = '/* @echo CSS_PREFIX */monthweek-event';    // simulate click 'event' element block.
+            mockTarget.className = '/* @echo CSS_PREFIX */weekday-event';    // simulate click 'event' element block.
             // 2. but there is no parent element for export parent view instance.
             expect(proto.checkExpectedCondition(mockTarget)).toBe(false);
 
@@ -33,14 +33,14 @@ describe('handler:AlldayMove', function() {
             };
 
             var parentEl = document.createElement('div');
-            parentEl.className = '/* @echo CSS_PREFIX */monthweek';
+            parentEl.className = '/* @echo CSS_PREFIX */weekday';
             parentEl.appendChild(mockTarget);
 
             // 3. no instance ID information.
             expect(proto.checkExpectedCondition.call(mockInst, mockTarget)).toBe(false);
 
             // 4. good
-            parentEl.className = '/* @echo CSS_PREFIX */monthweek /* @echo CSS_PREFIX */3';
+            parentEl.className = '/* @echo CSS_PREFIX */weekday tui-view-3';
             expect(proto.checkExpectedCondition.call(mockInst, mockTarget)).toBe('success');
         });
     });

@@ -26,9 +26,9 @@ describe('handler:AlldayCreation', function() {
         expect(proto.checkExpectedCondition(div)).toBe(false);
 
         var container = document.createElement('div');
-        container.className = '/* @echo CSS_PREFIX */monthweek /* @echo CSS_PREFIX */40';
+        container.className = '/* @echo CSS_PREFIX */weekday tui-view-40';
 
-        div.className = '/* @echo CSS_PREFIX */monthweek-events';
+        div.className = '/* @echo CSS_PREFIX */weekday-events';
         expect(proto.checkExpectedCondition.call(inst, div)).toBe(false);
 
         container.appendChild(div);
