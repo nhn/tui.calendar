@@ -46,41 +46,48 @@ function MonthGuide(monthView) {
     this.guideElements = {}; 
 }
 
-MonthGuide.prototype.getGuideElement = function(y) {
+MonthGuide.prototype._createGuideElement = function() {
+    var guide = document.createElement('div');
+
+    guide.style.top = '20px';
+    guide.style.display = 'none';
+
+    domutil.addClass(guide, 
+         config.classname('allday-guide-creation-block'));
+
+    domutil.appendHTMLElement(
+        'div', 
+        guide, 
+        config.classname('allday-guide-creation')
+    );
+
+    return guide;
+};
+
+MonthGuide.prototype._getGuideElement = function(y) {
     var guideElements = this.guideElements,
-        guideEl = guideElements[y],
+        guide = guideElements[y],
         weekdayView = this.weeks[y],
         container;
 
-    if (!guideEl) {
-        guideEl = document.createElement('div');
-        guideEl.style.top = '20px';
-        guideEl.style.display = 'none';
-
-        domutil.addClass(guideEl, 
-             config.classname('allday-guide-creation-block'));
-
-        domutil.appendHTMLElement(
-            'div', 
-            guideEl, 
-            config.classname('allday-guide-creation')
-        );
+    if (!guide) {
+        guide = this._createGuideElement();
 
         container = domutil.find(
             config.classname('.weekday-events'), 
             weekdayView.container
         );
 
-        container.appendChild(guideEl);
+        container.appendChild(guide);
 
-        guideElements[y] = guideEl;
+        guideElements[y] = guide;
     }
 
-    return guideEl;
+    return guide;
 };
 
 MonthGuide.prototype.start = function(x, y) {
-    var guideEl = this.getGuideElement(y);
+    var guideEl = this._getGuideElement(y);
 
     guideEl.style.left = common.ratio(this.days, 100, x) + '%';
     guideEl.style.width = common.ratio(this.days, 100, 1) + '%';
@@ -108,7 +115,7 @@ MonthGuide.prototype.update = function(x, y) {
 
     // 범위 내 가이드 엘리먼트 업데이트
     util.forEach(range, function(yIndex) {
-        var guideEl = this.getGuideElement(yIndex);
+        var guideEl = this._getGuideElement(yIndex);
         guideEl.style.display = 'block';
         //TODO: 각 가이드 엘리먼트의 left, width를 잘 조절하면 됨
     }, this);
