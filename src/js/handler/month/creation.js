@@ -166,9 +166,10 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 
     eventData = this.getEventData(dragEndEvent.originEvent);
 
-    cache.ends = new Date(+eventData.date);
-
-    this._createEvent(cache);
+    if (eventData) {
+        cache.ends = new Date(+eventData.date);
+        this._createEvent(cache);
+    }
 
     /**
      * @event {MonthCreation#month_creation_dragend}
