@@ -185,7 +185,7 @@ MonthGuide.prototype._getOriginWeekIndicate = function(sX, sY, nX, nY) {
 
     if (nY > sY) {
         left = sX;
-        right = this.days;
+        right = this.days,
         exceedR = true;
     } else if (nY < sY) {
         left = 0;
