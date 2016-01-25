@@ -65,6 +65,16 @@ function MonthGuide(options, monthView) {
 }
 
 /**
+ * Destructor
+ */
+MonthGuide.prototype.destroy = function() {
+    this.clear();
+
+    this.options = this.view = this.weeks = this.days =
+        this.ratio = this.startIndex = this.guideElements = null;
+};
+
+/**
  * Create guide element
  * @returns {HTMLElement} guide element
  */
