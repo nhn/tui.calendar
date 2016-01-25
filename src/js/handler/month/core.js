@@ -7,6 +7,7 @@ var util = global.tui.util,
     mfloor = Math.floor;
 
 var common = require('../../common/common'),
+    domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent');
 
 /**
@@ -22,7 +23,8 @@ function getMousePosDate(monthView) {
         weekCount = weekColl.length,
         days = weekColl.single().getRenderDateRange(),
         dayCount = days.length,
-        size = monthView.getViewBound();
+        relativeContainer = util.pick(monthView.vLayout.panels[1], 'container'),
+        size = domutil.getSize(relativeContainer);
 
     /**
      * Get date related with mouse event object
@@ -30,9 +32,9 @@ function getMousePosDate(monthView) {
      * @returns {object} data related with mouse event
      */
     function getDate(mouseEvent) {
-        var pos = domevent.getMousePosition(mouseEvent, monthView.container),
-            x = mfloor(common.ratio(size.width, dayCount, pos[0])),
-            y = mfloor(common.ratio(size.height, weekCount, pos[1])),
+        var pos = domevent.getMousePosition(mouseEvent, relativeContainer),
+            x = mfloor(common.ratio(size[0], dayCount, pos[0])),
+            y = mfloor(common.ratio(size[1], weekCount, pos[1])),
             weekdayView, date;
 
         weekdayView = util.pick(weeks, y);

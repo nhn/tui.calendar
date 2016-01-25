@@ -12,6 +12,9 @@ describe('handler:MonthCore', function() {
         // 2016년 1월 달력의 첫주, 둘째주
         m = new Month(null, container);
 
+        // mock the container element
+        m.vLayout.panels[1].container = container;
+
         w1 = new WeekdayInMonth({
             renderStartDate: '2015-12-27',
             renderEndDate: '2016-01-02'
