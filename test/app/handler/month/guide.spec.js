@@ -102,5 +102,41 @@ describe('handler:month/guide', function() {
             });
         });
     });
+
+    describe('_getIndexByDate()', function() {
+        var w1 = {
+                options: {
+                    renderStartDate: '2015-12-27',
+                    renderEndDate: '2016-01-02'
+                }
+            },
+            w2 = {
+                options: {
+                    renderStartDate: '2016-01-03',
+                    renderEndDate: '2016-01-09'
+                }
+            },
+            mockInst,
+            date;
+
+        beforeEach(function() {
+            mockInst = {
+                weeks: [w1, w2]
+            };
+        });
+
+        it('should cal x, y index by date properly.', function() {
+            date = new Date('2015-12-29T09:30:00+09:00');
+            expect(proto._getIndexByDate.call(mockInst, date)).toEqual([2, 0]);
+
+            date = new Date('2016-01-06T00:00:00+09:00');
+            expect(proto._getIndexByDate.call(mockInst, date)).toEqual([3, 1]);
+        });
+
+        it('should return undef when supplied date is not render range of view.', function() {
+            date = new Date('2015-01-01T09:30:00+09:00');
+            expect(proto._getIndexByDate.call(mockInst, date)).toBeUndefined();
+        });
+    });
 });
 

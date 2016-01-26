@@ -9,25 +9,23 @@ var util = global.tui.util,
 
 var config = require('../../config'),
     common = require('../../common/common'),
-    domutil = require('../../common/domutil');
+    domutil = require('../../common/domutil'),
+    datetime = require('../../common/datetime');
 
 /**
  * @constructor
- * @param {object} options - option object
- * @param {number} [options.top] - top index
- * @param {string} [options.bgColor] - default background color
- * @param {string} [options.label] - label text inside of guide element
  * @param {Month} monthView - Month view instance
  */
-function MonthGuide(options, monthView) {
+function MonthGuide(monthView) {
     /**
      * @type {object}
      */
-    this.options = util.extend({
+    this.options = {
         top: 20,
         bgColor: '#f7ca88',
-        label: '새 일정'
-    }, options);
+        label: '새 일정',
+        handle: false,
+    };
 
     /**
      * @type {Month}
@@ -129,16 +127,60 @@ MonthGuide.prototype._getGuideElement = function(y) {
 };
 
 /**
- * Prepare guide element modification
- * @param {number} x - mouse x
- * @param {number} y - mouse y
+ * Get x, y index by supplied date
+ *
+ * when supplied date not exist in month view, return undefined.
+ * @param {Date} date - date to find index
+ * @returns {number[]} indexes
  */
-MonthGuide.prototype.start = function(x, y) {
-    var guideEl = this._getGuideElement(y),
-        ratio = this.ratio;
+MonthGuide.prototype._getIndexByDate = function(date) {
+    var weeks = this.weeks,
+        x, y,
+        toYMD = function(date) {
+            return datetime.format(date, 'YYYYMMDD');
+        };
 
-    guideEl.style.left = ratio(x) + '%';
-    guideEl.style.width = ratio(1) + '%';
+    util.forEach(weeks, function(weekday, index) {
+        var opt = weekday.options,
+            starts = datetime.parse(opt.renderStartDate),
+            ends = datetime.parse(opt.renderEndDate),
+            range;
+
+        if (starts <= date && date <= ends) {
+            y = index;
+            range = datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY);
+            x = util.inArray(toYMD(date), util.map(range, toYMD));
+            return;
+        }
+    });
+    
+    if (!util.isExisty(x) || !util.isExisty(y)) {
+        return;
+    }
+
+    return [x, y];
+};
+
+/**
+ * Prepare guide element modification
+ * @param {object} dragStartEvent - dragStart event data from *guide
+ */
+MonthGuide.prototype.start = function(dragStartEvent) {
+    var ratio = this.ratio,
+        model = dragStartEvent.model,
+        guide, sIndex, x, y;
+
+    if (model) {
+        sIndex = this._getIndexByDate(model.getStarts()) || [0, 0];
+    } else {
+        x = dragStartEvent.x;
+        y = dragStartEvent.y;
+
+        guide = this._getGuideElement(y);
+
+        guide.style.left = ratio(x) + '%';
+        guide.style.width = ratio(1) + '%';
+    }
 
     this.startIndex = [x, y];
 };
