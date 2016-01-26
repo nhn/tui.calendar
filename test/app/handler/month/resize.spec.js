@@ -19,7 +19,7 @@ describe('handler:month/resize', function() {
         });
 
         mockCache = {
-            modelID: eventInst.cid(),
+            model: eventInst,
             starts: new Date('2015-04-01T00:00:00+09:00'),
             ends: new Date('2015-05-02T23:59:59+09:00')
         };

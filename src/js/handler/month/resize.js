@@ -7,7 +7,8 @@ var util = global.tui.util;
 
 var config = require('../../config'),
     domutil = require('../../common/domutil'),
-    getMousePosData = require('./core');
+    getMousePosData = require('./core'),
+    MonthResizeGuide = require('./resizeGuide');
 
 /**
  * @constructor
@@ -41,6 +42,11 @@ function MonthResize(dragHandler, monthView, baseController) {
      */
     this._cache = null;
 
+    /**
+     * @type {MonthResizeGuide}
+     */
+    this.guide = new MonthResizeGuide(this);
+
     dragHandler.on('dragStart', this._onDragStart, this);
 }
 
@@ -62,15 +68,9 @@ MonthResize.prototype.destroy = function() {
 MonthResize.prototype._updateEvent = function(eventCache) {
     // 일정의 시작 일자를 변경할 순 없음.
     // 종료시간만 변경 가능.
-    var ctrl = this.baseController,
-        model = ctrl.events.items[eventCache.modelID],
-        newEnds;
+    var newEnds = new Date(+eventCache.ends),
+        model = eventCache.model;
 
-    if (!model) {
-        return;
-    }
-
-    newEnds = new Date(+eventCache.ends);
     newEnds.setHours(23, 59, 59);
 
     /**
@@ -94,6 +94,7 @@ MonthResize.prototype._updateEvent = function(eventCache) {
  */
 MonthResize.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
+        modelID, model,
         eventData;
 
     if (!domutil.hasClass(target, config.classname('weekday-resize-handle'))) {
@@ -106,6 +107,9 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
         return;
     }
 
+    modelID = domutil.getData(target, 'id');
+    model = this.baseController.events.items[modelID];
+
     this.dragHandler.on({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
@@ -113,9 +117,10 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
 
     this.getEventData = getMousePosData(this.monthView);
     eventData = this.getEventData(dragStartEvent.originEvent);
+    eventData.model = model;
 
     this._cache = {
-        modelID: domutil.getData(target, 'id'),
+        model: model,
         starts: new Date(+eventData.date)
     };
 
