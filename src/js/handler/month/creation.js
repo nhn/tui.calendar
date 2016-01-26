@@ -7,7 +7,7 @@ var util = global.tui.util;
 
 var config = require('../../config'),
     domutil = require('../../common/domutil'),
-    core = require('./core'),
+    getMousePosData = require('./core'),
     Guide = require('./creationGuide');
 
 /**
@@ -100,7 +100,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
-    this.getEventData = core(this.monthView);
+    this.getEventData = getMousePosData(this.monthView);
 
     eventData = this.getEventData(dragStartEvent.originEvent);
 

@@ -1,5 +1,5 @@
 describe('handler:MonthCore', function() {
-    var core = ne.dooray.calendar.MonthCore,
+    var getMousePosData = ne.dooray.calendar.MonthCore,
         Month = ne.dooray.calendar.Month,
         WeekdayInMonth = ne.dooray.calendar.WeekdayInMonth,
         m, w1, w2;
@@ -30,7 +30,7 @@ describe('handler:MonthCore', function() {
     });
 
     it('should calc date by mouse event.', function() {
-        var func = core(m);
+        var func = getMousePosData(m);
 
         var mockMouseEvent = {
             clientX: 9,
