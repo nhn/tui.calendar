@@ -3,6 +3,8 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+var util = global.tui.util;
+
 var config = require('../../config'),
     domutil = require('../../common/domutil'),
     getMousePosData = require('./core');
@@ -51,8 +53,38 @@ MonthResize.prototype.destroy = function() {
     this.dragHandler = this.monthView = this.baseController = null;
 };
 
+/**
+ * Fire event for update model
+ * @fires {MonthResize#beforeUpdateEvent}
+ * @param {object} eventCache - cache object that result of single dragging
+ *  session.
+ */
 MonthResize.prototype._updateEvent = function(eventCache) {
+    // 일정의 시작 일자를 변경할 순 없음.
+    // 종료시간만 변경 가능.
+    var ctrl = this.baseController,
+        model = ctrl.events.items[eventCache.modelID],
+        newEnds;
 
+    if (!model) {
+        return;
+    }
+
+    newEnds = new Date(+eventCache.ends);
+    newEnds.setHours(23, 59, 59);
+
+    /**
+     * @event MonthResize#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforUpdateEvent', {
+        model: model,
+        starts: new Date(+model.getStarts()),
+        ends: newEnds
+    });
 };
 
 /**
@@ -68,16 +100,22 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
         return;
     }
 
+    target = domutil.closest(target, config.classname('.weekday-event-block'));
+
+    if (!target) {
+        return;
+    }
+
     this.dragHandler.on({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
 
     this.getEventData = getMousePosData(this.monthView);
-
     eventData = this.getEventData(dragStartEvent.originEvent);
 
     this._cache = {
+        modelID: domutil.getData(target, 'id'),
         starts: new Date(+eventData.date)
     };
 
@@ -153,6 +191,8 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
 
     this.getEventData = this._cache = null;
 };
+
+util.CustomEvents.mixin(MonthResize);
 
 module.exports = MonthResize;
 
