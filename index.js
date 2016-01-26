@@ -58,6 +58,9 @@ global.tui.util.defineNamespace('ne.dooray.calendar', {
 
     MonthCore: require('./src/js/handler/month/core'),
     MonthGuide: require('./src/js/handler/month/guide'),
+    MonthClick: require('./src/js/handler/month/click'),
+    MonthCreation: require('./src/js/handler/month/creation'),
+    MonthCreationGuide: require('./src/js/handler/month/creationGuide'),
 
     // service modules
     DoorayEvent: require('./src/js/dooray/model/calEvent'),

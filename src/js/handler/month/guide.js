@@ -16,6 +16,7 @@ var config = require('../../config'),
  * @param {object} options - option object
  * @param {number} [options.top] - top index
  * @param {string} [options.bgColor] - default background color
+ * @param {string} [options.label] - label text inside of guide element
  * @param {Month} monthView - Month view instance
  */
 function MonthGuide(options, monthView) {
@@ -59,7 +60,7 @@ function MonthGuide(options, monthView) {
     this.startIndex = [0, 0];
 
     /**
-     * @type {Object.<string, HTMLElement}
+     * @type {Object.<string, HTMLElement>}
      */
     this.guideElements = {}; 
 }
