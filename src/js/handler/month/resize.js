@@ -80,7 +80,7 @@ MonthResize.prototype._updateEvent = function(eventCache) {
      * @property {date} starts - start time to update
      * @property {date} ends - end time to update
      */
-    this.fire('beforUpdateEvent', {
+    this.fire('beforeUpdateEvent', {
         model: model,
         starts: new Date(+model.getStarts()),
         ends: newEnds

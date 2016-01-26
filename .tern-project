@@ -4,8 +4,8 @@
     ],
     "loadEagerly": [
         "node_modules/tui-code-snippet/code-snippet.js",
-        "index.js",
-        "src/js/**/*"
+        "src/js/**/*",
+        "index.js"
     ],
     "dontLoad":[
         "src/js/config.js",

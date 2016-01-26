@@ -2,7 +2,7 @@
 require('./src/js/view/template/registerHelpers');
 
 /** @namespace ne.dooray.calendar */
-global.tui.util.defineNamespace('ne.dooray.calendar', {
+global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
     // common
     config: require('./src/js/config'),
     dirty: require('./src/js/common/dirty'),
