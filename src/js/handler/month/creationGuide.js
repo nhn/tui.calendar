@@ -3,9 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
-var domutil = require('../../common/domutil'),
-    MonthGuide = require('./guide');
+var MonthGuide = require('./guide');
 
 /**
  * @constructor
@@ -33,11 +31,9 @@ function MonthCreationGuide(monthCreation) {
  * Destructor
  */
 MonthCreationGuide.prototype.destroy = function() {
-    util.forEach(this.guideElements, function(guideElement) {
-        domutil.remove(guideElement);
-    });
-
     this.monthCreation.off(this);
+    this.guide.destroy();
+
     this.guide = this.monthCreation = null;
 };
 
@@ -46,8 +42,8 @@ MonthCreationGuide.prototype.destroy = function() {
  * @param {object} dragStartEvent - event data from MonthCreation
  */
 MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
-    this.guide = new MonthGuide(null, this.monthCreation.monthView);
-    this.guide.start(dragStartEvent.x, dragStartEvent.y);
+    this.guide = new MonthGuide(this.monthCreation.monthView);
+    this.guide.start(dragStartEvent);
 };
 
 /**
@@ -65,7 +61,6 @@ MonthCreationGuide.prototype._onDragEnd = function() {
     this.guide.destroy();
     this.guide = null;
 };
-
 
 module.exports = MonthCreationGuide;
 
