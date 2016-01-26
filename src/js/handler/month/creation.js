@@ -180,9 +180,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
      */
     this.fire('month_creation_dragend', eventData);
 
-    this.getDateByMouseEvent = null;
-
-    this._cache = null;
+    this.getEventData = this._cache = null;
 };
 
 util.CustomEvents.mixin(MonthCreation);

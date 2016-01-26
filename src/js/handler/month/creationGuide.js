@@ -47,7 +47,6 @@ MonthCreationGuide.prototype.destroy = function() {
  */
 MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
     this.guide = new MonthGuide(null, this.monthCreation.monthView);
-
     this.guide.start(dragStartEvent.x, dragStartEvent.y);
 };
 
