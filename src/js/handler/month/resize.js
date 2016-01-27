@@ -117,12 +117,16 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
 
     this.getEventData = getMousePosData(this.monthView);
     eventData = this.getEventData(dragStartEvent.originEvent);
+    eventData.target = target;
     eventData.model = model;
 
     this._cache = {
         model: model,
+        target: target,
         starts: new Date(+eventData.date)
     };
+
+    target.style.display = 'none';
 
     /**
      * @event {MonthCreation#month_resize_dragstart}
@@ -130,6 +134,8 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
+     * @property {HTMLElement} target - event block element
+     * @property {CalEvent} model - model instance
      */
     this.fire('month_resize_dragstart', eventData);
 };
@@ -168,6 +174,8 @@ MonthResize.prototype._onDrag = function(dragEvent) {
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache,
         eventData;
+
+    cache.target.style.display = 'block';
 
     this.dragHandler.off({
         drag: this._onDrag,

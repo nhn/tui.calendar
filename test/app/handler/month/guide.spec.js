@@ -121,7 +121,8 @@ describe('handler:month/guide', function() {
 
         beforeEach(function() {
             mockInst = {
-                weeks: [w1, w2]
+                weeks: [w1, w2],
+                days: 7
             };
         });
 
@@ -131,11 +132,20 @@ describe('handler:month/guide', function() {
 
             date = new Date('2016-01-06T00:00:00+09:00');
             expect(proto._getIndexByDate.call(mockInst, date)).toEqual([3, 1]);
-        });
 
-        it('should return undef when supplied date is not render range of view.', function() {
-            date = new Date('2015-01-01T09:30:00+09:00');
-            expect(proto._getIndexByDate.call(mockInst, date)).toBeUndefined();
+            date = new Date('2016-01-13T09:30:00+09:00');
+            expect(proto._getIndexByDate.call(mockInst, date)).toEqual([3, 2]);
+
+            date = new Date('2015-12-15T00:00:00+09:00');
+            expect(proto._getIndexByDate.call(mockInst, date)).toEqual([2, -2]);
+
+            mockInst.days = 5;
+            w1.options.renderEndDate = '2015-12-31';
+            w2.options.renderStartDate = '2016-01-01';
+            w2.options.renderEndDate = '2016-01-05';
+
+            date = new Date('2015-12-24T00:00:00+09:00');
+            expect(proto._getIndexByDate.call(mockInst, date)).toEqual([2, -1]);
         });
     });
 });

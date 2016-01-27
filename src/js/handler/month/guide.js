@@ -5,27 +5,35 @@
 'use strict';
 var util = global.tui.util,
     mmax = Math.max,
-    mmin = Math.min;
+    mmin = Math.min,
+    mabs = Math.abs,
+    mfloor = Math.floor;
 
 var config = require('../../config'),
     common = require('../../common/common'),
     domutil = require('../../common/domutil'),
-    datetime = require('../../common/datetime');
+    datetime = require('../../common/datetime'),
+    dw = require('../../common/dw'),
+    tmpl = require('./guide.hbs');
 
 /**
  * @constructor
+ * @param {object} [options] - options
+ * @param {boolean} [options.useHandle=false] - whether displaying resize handle on 
+ *  guide element?
  * @param {Month} monthView - Month view instance
  */
-function MonthGuide(monthView) {
+function MonthGuide(options, monthView) {
     /**
      * @type {object}
      */
-    this.options = {
+    this.options = util.extend({
         top: 20,
+        height: 20,
         bgColor: '#f7ca88',
         label: '새 일정',
-        handle: false,
-    };
+        useHandle: false,
+    }, options);
 
     /**
      * @type {Month}
@@ -80,23 +88,17 @@ MonthGuide.prototype.destroy = function() {
 MonthGuide.prototype._createGuideElement = function() {
     var opt = this.options,
         guide = document.createElement('div'),
-        inner = document.createElement('div');
+        viewModel = {
+            top: opt.top,
+            height: opt.height,
+            bgColor: opt.bgColor,
+            label: opt.label,
+            useHandle: opt.useHandle
+        };
 
-    guide.style.top = (opt.top + 'px');
-    guide.style.display = 'none';
-    inner.style.backgroundColor = opt.bgColor;
-    inner.innerHTML = opt.label;
+    guide.innerHTML = tmpl(viewModel);
 
-    domutil.addClass(guide, config.classname('allday-guide-creation-block'));
-    domutil.addClass(
-        inner, 
-        [config.classname('allday-guide-creation'), 
-         config.classname('weekday-event')].join(' ')
-    );
-
-    guide.appendChild(inner);
-
-    return guide;
+    return guide.firstChild;
 };
 
 /**
@@ -109,6 +111,10 @@ MonthGuide.prototype._getGuideElement = function(y) {
         guide = guideElements[y],
         weekdayView = this.weeks[y],
         container;
+
+    if (!weekdayView) {
+        return;
+    }
 
     if (!guide) {
         guide = this._createGuideElement();
@@ -135,27 +141,23 @@ MonthGuide.prototype._getGuideElement = function(y) {
  */
 MonthGuide.prototype._getIndexByDate = function(date) {
     var weeks = this.weeks,
-        x, y,
-        toYMD = function(date) {
-            return datetime.format(date, 'YYYYMMDD');
-        };
+        days = this.days,
+        monthStart = datetime.parse(weeks[0].options.renderStartDate),
+        isBefore = date < monthStart,
+        dateDW = dw(date),
+        startDW = dw(monthStart),
+        endDW = startDW.clone().addDate(isBefore ? -days : days),
+        getDayDiff = function(d1, d2) {
+            return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
+        },
+        x = getDayDiff(dateDW.d, startDW.d),
+        y = 0;
 
-    util.forEach(weeks, function(weekday, index) {
-        var opt = weekday.options,
-            starts = datetime.parse(opt.renderStartDate),
-            ends = datetime.parse(opt.renderEndDate),
-            range;
-
-        if (starts <= date && date <= ends) {
-            y = index;
-            range = datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY);
-            x = util.inArray(toYMD(date), util.map(range, toYMD));
-            return;
-        }
-    });
-    
-    if (!util.isExisty(x) || !util.isExisty(y)) {
-        return;
+    while (!dateDW.isBetween(startDW, endDW)) {
+        startDW.addDate(isBefore ? -days : days);
+        endDW = startDW.clone().addDate(days);
+        x = getDayDiff(dateDW.d, startDW.d);
+        y += (isBefore ? -1 : 1);
     }
 
     return [x, y];
@@ -167,11 +169,23 @@ MonthGuide.prototype._getIndexByDate = function(date) {
  */
 MonthGuide.prototype.start = function(dragStartEvent) {
     var ratio = this.ratio,
+        target = dragStartEvent.target,
         model = dragStartEvent.model,
         guide, sIndex, x, y;
 
-    if (model) {
+    if (target && model) {
         sIndex = this._getIndexByDate(model.getStarts()) || [0, 0];
+        x = sIndex[0];
+        y = sIndex[1];
+
+        util.extend(this.options, {
+            top: parseInt(target.style.top, 10),
+            height: parseInt(target.style.height, 10),
+            bgColor: target.children[0].style.backgroundColor,
+            label: model.title
+        });
+
+        this.update(dragStartEvent.x, dragStartEvent.y);
     } else {
         x = dragStartEvent.x;
         y = dragStartEvent.y;
@@ -201,8 +215,8 @@ MonthGuide.prototype.start = function(dragStartEvent) {
 MonthGuide.prototype._updateGuides = function(inds) {
     util.forEach(inds, function(ind) {
         var guide = ind.guide,
-            exceedLClass = config.classname('weekday-exceed-left'),
-            exceedRClass = config.classname('weekday-exceed-right');
+            exceedLClass = config.classname('month-exceed-left'),
+            exceedRClass = config.classname('month-exceed-right');
 
         guide.style.display = 'block';
         guide.style.left = ind.left + '%';
@@ -324,6 +338,11 @@ MonthGuide.prototype.update = function(nX, nY) {
     util.forEach(range, function(iY) {
         var guide = this._getGuideElement(iY),
             indicate;
+
+        if (!guide) {
+            // range 가 화면에 보이는 영역을 벗어났을 경우
+            return;
+        }
 
         if (iY === sY) {
             indicate = this._getOriginWeekIndicate(sX, sY, nX, nY);

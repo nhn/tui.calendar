@@ -42,7 +42,10 @@ MonthResizeGuide.prototype.destroy = function() {
  * @param {object} dragStartEvent - event data from MonthResize
  */
 MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
-    this.guide = new MonthGuide(this.monthResize.monthView);
+    this.guide = new MonthGuide({
+        useHandle: true
+    }, this.monthResize.monthView);
+
     this.guide.start(dragStartEvent);
 };
 

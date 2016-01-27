@@ -9,7 +9,7 @@ describe('datetime', function() {
         });
 
         it('return false when not supported type', function() {
-            expect(dt.millisecondsTo('day', 86400000)).toBe(false);
+            expect(dt.millisecondsTo('month', 86400000)).toBe(false);
         });
     });
 
@@ -19,7 +19,7 @@ describe('datetime', function() {
         });
 
         it('return false when supplied parameter is not supported', function() {
-            expect(dt.millisecondsFrom('day', 24)).toBe(false);
+            expect(dt.millisecondsFrom('month', 24)).toBe(false);
         });
     });
 

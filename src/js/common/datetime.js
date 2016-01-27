@@ -115,11 +115,12 @@ datetime = {
      * @returns {number} converted value.
      */
     _convMilliseconds: function(type, value, iteratee) {
-        var conv = [60, 60, 1000],
+        var conv = [24, 60, 60, 1000],
             index = {
-                hour: 0,
-                minutes: 1,
-                seconds: 2
+                day: 0,
+                hour: 1,
+                minutes: 2,
+                seconds: 3
             };
 
         if (!(type in index) || global.isNaN(value)) {
@@ -131,7 +132,8 @@ datetime = {
 
     /**
      * Convert milliseconds value to other type
-     * @param {type} type convert to type want to. support "hour", "minutes", "seconds" only.
+     * @param {type} type convert to type want to. support "day", "hour", 
+     *  "minutes", "seconds" only.
      * @param {value} value - value to convert.
      * @returns {number} converted value.
      */
