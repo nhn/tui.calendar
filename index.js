@@ -19,6 +19,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calen
     VLayout: require('./src/js/common/vlayout'),
     VPanel: require('./src/js/common/vpanel'),
     FloatingLayer: require('./src/js/common/floatingLayer'),
+    dw: require('./src/js/common/dw'),
 
     // model
     CalEvent: require('./src/js/model/calEvent'),
