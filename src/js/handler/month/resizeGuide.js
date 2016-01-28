@@ -47,7 +47,7 @@ MonthResizeGuide.prototype.destroy = function() {
  */
 MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
     this.guide = new MonthGuide({
-        useHandle: true
+        isResizeMode: true
     }, this.monthResize.monthView);
 
     this.guide.start(dragStartEvent);

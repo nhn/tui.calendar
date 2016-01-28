@@ -10,7 +10,7 @@ describe('handler:month/guide', function() {
     it('_getOriginWeekIndicate() should calc indicate properly.', function() {
         mockInst = {
             days: 5,
-            ratio: function(v) {
+            _getRatioValueInWeek: function(v) {
                 return common.ratio(5, 100, v);
             }
         };
@@ -49,7 +49,7 @@ describe('handler:month/guide', function() {
     it('_getCurrentWeekIndicate() should calc indicate properly.', function() {
         mockInst = {
             days: 5,
-            ratio: function(v) {
+            _getRatioValueInWeek: function(v) {
                 return common.ratio(5, 100, v);
             }
         };
@@ -86,6 +86,8 @@ describe('handler:month/guide', function() {
                 '_getOriginWeekIndicate',
                 '_getCurrentWeekIndicate',
                 '_getContainWeekIndicate',
+                '_removeGuideElements',
+                '_getExcludesInRange',
                 '_updateGuides'
             ]);
 
@@ -166,6 +168,17 @@ describe('handler:month/guide', function() {
         expect(fn.call(mockInst, 1, 4, [2, 2])).toEqual([2, 4]);
         expect(fn.call(mockInst, 2, 6, [3, 3], [4, 4])).toEqual([3, 4]);
         expect(fn.call(mockInst, 2, 9, [2, 2], [9, 9])).toEqual([2, 9]);
+    });
+
+    it('should calc excluded range in specific range.', function() {
+        var fn = proto._getExcludesInRange,
+            range = [2, 3, 4, 5],
+            supplied = [1, 5, 6, 7];
+
+        expected = [1, 6, 7];
+
+        expect(fn(range, supplied)).toEqual(expected);
+        expect(fn([4, 5, 6], [1, 2, 5, 7, 8])).toEqual([1, 2, 7, 8]);
     });
 });
 

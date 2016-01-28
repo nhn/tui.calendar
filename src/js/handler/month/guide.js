@@ -21,7 +21,7 @@ var config = require('../../config'),
  * @param {object} [options] - options
  * @param {boolean} [options.useHandle=false] - whether displaying resize handle on 
  *  guide element?
- * @param {number[]} [options.startLimit] - start limit of guide effect
+ * @param {boolean} [options.isResizeModel=false] - whether resize mode?
  * @param {Month} monthView - Month view instance
  */
 function MonthGuide(options, monthView) {
@@ -33,8 +33,7 @@ function MonthGuide(options, monthView) {
         height: 20,
         bgColor: '#f7ca88',
         label: '새 일정',
-        useHandle: false,
-        startLimit: null,
+        isResizeModel: false,
     }, options);
 
     /**
@@ -63,6 +62,8 @@ function MonthGuide(options, monthView) {
 
 
     /**
+     * start index of guide effect. (x, y) (days, weeks) effect can't lower 
+     * than this indexes.
      * @type {number[]}
      */
     this.startIndex = [0, 0];
@@ -84,21 +85,22 @@ MonthGuide.prototype.destroy = function() {
 };
 
 /**
+ * Get ratio value in week.
+ * @param {number} value - value for calc ratio in week
+ * @returns {number} percent value
+ */
+MonthGuide.prototype._getRatioValueInWeek = function(value) {
+    return common.ratio(this.days, 100, value);
+};
+
+/**
  * Create guide element
  * @returns {HTMLElement} guide element
  */
 MonthGuide.prototype._createGuideElement = function() {
-    var opt = this.options,
-        guide = document.createElement('div'),
-        viewModel = {
-            top: opt.top,
-            height: opt.height,
-            bgColor: opt.bgColor,
-            label: opt.label,
-            useHandle: opt.useHandle
-        };
+    var guide = document.createElement('div');
 
-    guide.innerHTML = tmpl(viewModel);
+    guide.innerHTML = tmpl(this.options);
 
     return guide.firstChild;
 };
@@ -106,7 +108,7 @@ MonthGuide.prototype._createGuideElement = function() {
 /**
  * Get guide element. if not exist then create one
  * @param {number} y - y index
- * @returns {HTMLElement} guide element
+ * @returns {?HTMLElement} guide element
  */
 MonthGuide.prototype._getGuideElement = function(y) {
     var guideElements = this.guideElements,
@@ -115,7 +117,7 @@ MonthGuide.prototype._getGuideElement = function(y) {
         container;
 
     if (!weekdayView) {
-        return;
+        return null;
     }
 
     if (!guide) {
@@ -135,30 +137,28 @@ MonthGuide.prototype._getGuideElement = function(y) {
 };
 
 /**
- * Get x, y index by supplied date
- *
- * when supplied date not exist in month view, return undefined.
+ * Get indexes by supplied date in month
  * @param {Date} date - date to find index
- * @returns {number[]} indexes
+ * @returns {number[]} indexes (x, y)
  */
 MonthGuide.prototype._getIndexByDate = function(date) {
     var weeks = this.weeks,
         days = this.days,
+        getIdxFromDiff = function(d1, d2) {
+            return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
+        },
         monthStart = datetime.parse(weeks[0].options.renderStartDate),
         isBefore = date < monthStart,
         dateDW = dw(date),
         startDW = dw(monthStart),
         endDW = startDW.clone().addDate(isBefore ? -days : days),
-        getDayDiff = function(d1, d2) {
-            return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
-        },
-        x = getDayDiff(dateDW.d, startDW.d),
+        x = getIdxFromDiff(dateDW.d, startDW.d),
         y = 0;
 
     while (!dateDW.isBetween(startDW, endDW)) {
         startDW.addDate(isBefore ? -days : days);
         endDW = startDW.clone().addDate(days);
-        x = getDayDiff(dateDW.d, startDW.d);
+        x = getIdxFromDiff(dateDW.d, startDW.d);
         y += (isBefore ? -1 : 1);
     }
 
@@ -192,36 +192,28 @@ MonthGuide.prototype._getLimitedIndex = function(x, y, start, end) {
  * @param {object} dragStartEvent - dragStart event data from *guide
  */
 MonthGuide.prototype.start = function(dragStartEvent) {
-    var ratio = this.ratio,
+    var opt = this.options,
         target = dragStartEvent.target,
         model = dragStartEvent.model,
-        guide, sIndex, x, y;
+        x = dragStartEvent.x,
+        y = dragStartEvent.y,
+        temp;
 
-    if (target && model) {
-        sIndex = this._getIndexByDate(model.getStarts());
-        x = sIndex[0];
-        y = sIndex[1];
+    if (opt.isResizeMode) {
+        temp = this._getIndexByDate(model.getStarts());
+        x = temp[0];
+        y = temp[1];
 
         util.extend(this.options, {
             top: parseInt(target.style.top, 10),
             height: parseInt(target.style.height, 10),
             bgColor: target.children[0].style.backgroundColor,
-            label: model.title,
-            startLimit: this._getLimitedIndex(x, y)
+            label: model.title
         });
-
-        this.update(dragStartEvent.x, dragStartEvent.y);
-    } else {
-        x = dragStartEvent.x;
-        y = dragStartEvent.y;
-
-        guide = this._getGuideElement(y);
-
-        guide.style.left = ratio(x) + '%';
-        guide.style.width = ratio(1) + '%';
     }
 
     this.startIndex = [x, y];
+    this.update(x, y);
 };
 
 /**
@@ -270,8 +262,7 @@ MonthGuide.prototype._updateGuides = function(inds) {
  * @returns {object} indicate
  */
 MonthGuide.prototype._getOriginWeekIndicate = function(sX, sY, nX, nY) {
-    var ratio = this.ratio,
-        left = mmin(sX, nX),
+    var left = mmin(sX, nX),
         right = mmax(sX, nX) + 1,
         exceedL, exceedR;
 
@@ -286,8 +277,9 @@ MonthGuide.prototype._getOriginWeekIndicate = function(sX, sY, nX, nY) {
     }
 
     return {
-        left: ratio(left),
-        width: ratio(right) - ratio(left),
+        left: this._getRatioValueInWeek(left),
+        width: this._getRatioValueInWeek(right) -
+            this._getRatioValueInWeek(left),
         exceedL: exceedL,
         exceedR: exceedR
     }
@@ -301,8 +293,7 @@ MonthGuide.prototype._getOriginWeekIndicate = function(sX, sY, nX, nY) {
  * @returns {object} indicate
  */
 MonthGuide.prototype._getCurrentWeekIndicate = function(sY, nX, nY) {
-    var ratio = this.ratio,
-        left = nX,
+    var left = nX,
         right = nX + 1,
         exceedL, exceedR;
 
@@ -315,8 +306,9 @@ MonthGuide.prototype._getCurrentWeekIndicate = function(sY, nX, nY) {
     }
 
     return {
-        left: ratio(left),
-        width: ratio(right) - ratio(left),
+        left: this._getRatioValueInWeek(left),
+        width: this._getRatioValueInWeek(right) -
+            this._getRatioValueInWeek(left),
         exceedL: exceedL,
         exceedR: exceedR
     }
@@ -329,70 +321,91 @@ MonthGuide.prototype._getCurrentWeekIndicate = function(sY, nX, nY) {
 MonthGuide.prototype._getContainWeekIndicate = function() {
     return {
         left: 0,
-        width: this.ratio(this.days),
+        width: 100,
         exceedL: true,
         exceedR: true
     };
 };
 
 /**
- * Update guide elements
- * @param {number} nX - new X index from mousemove event
- * @param {number} nY - new Y index from mousemove event
+ * Remove several guide element that supplied by parameter
+ * @param {number[]} yIndexes - y index to remove guide element
  */
-MonthGuide.prototype.update = function(nX, nY) {
-    var opt = this.options,
-        start = this.startIndex,
-        guides = this.guideElements,
-        sX = start[0], sY = start[1],
-        temp, minIndex, maxIndex, updateRange,
-        inds = {};
+MonthGuide.prototype._removeGuideElements = function(yIndexes) {
+    var guides = this.guideElements;
     
-    // nX, nY: 업데이트 해야 하는 마우스 위치에 대한 새 index
-    // sX, sY: 드래그 시작 마우스 위치 index
-    // lX, lY: 가이드 엘리먼트의 시작 위치 제한 index
-    // iY    : 반복문 내에서의 가이드 엘리먼트 ID
-    if (opt.startLimit) {
-        temp = this._getLimitedIndex(nX, nY, opt.startLimit);
-        nX = temp[1];
-        nY = temp[0];
-    }
+    util.forEach(yIndexes, function(y) {
+        domutil.remove(guides[y]);
+        delete guides[y];
+    });
+};
 
-    minIndex = mmin(sY, nY);
-    maxIndex = mmax(sY, nY);
+/**
+ * Get excluded numbers in range
+ * @param {number[]} range - the range. value must be sequencial.
+ * @param {number[]} numbers - numbers to check
+ * @returns {number[]} excluded numbers
+ */
+MonthGuide.prototype._getExcludesInRange = function(range, numbers) {
+    var min = mmin.apply(null, range),
+        max = mmax.apply(null, range),
+        excludes = [];
 
-    updateRange = util.range(minIndex, maxIndex + 1);
-
-    util.forEach(util.keys(guides), function(iY) {
-        if (iY < minIndex || iY > maxIndex) {
-            domutil.remove(guides[iY]);
-            delete guides[iY];
+    util.forEach(numbers, function(num) {
+        if (num < min || num > max) {
+            excludes.push(num);
         }
     });
 
-    util.forEach(updateRange, function(iY) {
-        var guide = this._getGuideElement(iY),
+    return excludes;
+};
+
+/**
+ * Update guide elements
+ * @param {number} x - new X index from mousemove event
+ * @param {number} y - new Y index from mousemove event
+ */
+MonthGuide.prototype.update = function(x, y) {
+    var startX = this.startIndex[0],
+        startY = this.startIndex[1],
+        renderedYIndexes = util.keys(this.guideElements),
+        updateRange = util.range(mmin(startY, y), mmax(startY, y) + 1),
+        removeRange = this._getExcludesInRange(updateRange, renderedYIndexes),
+        renderIndication = {};
+
+    this._removeGuideElements(removeRange);
+
+    util.forEach(updateRange, function(guideY) {
+        var guide = this._getGuideElement(guideY),
             indicate;
 
         if (!guide) {
-            // updateRange 가 화면에 보이는 영역을 벗어났을 경우
             return;
         }
 
-        if (iY === sY) {
-            indicate = this._getOriginWeekIndicate(sX, sY, nX, nY);
-        } else if (iY === nY) {
-            indicate = this._getCurrentWeekIndicate(sY, nX, nY);
+        if (guideY === startY) {
+            indicate = this._getOriginWeekIndicate(
+                startX, 
+                startY,
+                x,
+                y
+            );
+        } else if (guideY === y) {
+            indicate = this._getCurrentWeekIndicate(
+                startY,
+                x,
+                y
+            );
         } else {
             indicate = this._getContainWeekIndicate();
         }
 
-        inds[iY] = util.extend({
+        renderIndication[guideY] = util.extend({
             guide: guide
         }, indicate);
     }, this);
 
-    this._updateGuides(inds);
+    this._updateGuides(renderIndication);
 };
 
 /**
