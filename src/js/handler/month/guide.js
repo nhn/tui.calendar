@@ -21,6 +21,7 @@ var config = require('../../config'),
  * @param {object} [options] - options
  * @param {boolean} [options.useHandle=false] - whether displaying resize handle on 
  *  guide element?
+ * @param {number[]} [options.startLimit] - start limit of guide effect
  * @param {Month} monthView - Month view instance
  */
 function MonthGuide(options, monthView) {
@@ -33,6 +34,7 @@ function MonthGuide(options, monthView) {
         bgColor: '#f7ca88',
         label: '새 일정',
         useHandle: false,
+        startLimit: null,
     }, options);
 
     /**
@@ -164,6 +166,28 @@ MonthGuide.prototype._getIndexByDate = function(date) {
 };
 
 /**
+ * Get limited x, y indexes by supplied indexes
+ * @param {number} x - x index
+ * @param {number} y - y index
+ * @param {number[]} [start] - start indexes
+ * @param {number[]} [end] - end indexes
+ * @returns {number[]} limited indexes
+ */
+MonthGuide.prototype._getLimitedIndex = function(x, y, start, end) {
+    var toIndex = 1;
+
+    start = start || [0, 0];
+    end = end || [this.days - toIndex, this.weeks.length - toIndex];
+
+    x = mmax(x, start[0]);
+    x = mmin(x, end[0]);
+    y = mmax(y, start[1]);
+    y = mmin(y, end[1]);
+
+    return [x, y];
+};
+
+/**
  * Prepare guide element modification
  * @param {object} dragStartEvent - dragStart event data from *guide
  */
@@ -174,7 +198,7 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         guide, sIndex, x, y;
 
     if (target && model) {
-        sIndex = this._getIndexByDate(model.getStarts()) || [0, 0];
+        sIndex = this._getIndexByDate(model.getStarts());
         x = sIndex[0];
         y = sIndex[1];
 
@@ -182,7 +206,8 @@ MonthGuide.prototype.start = function(dragStartEvent) {
             top: parseInt(target.style.top, 10),
             height: parseInt(target.style.height, 10),
             bgColor: target.children[0].style.backgroundColor,
-            label: model.title
+            label: model.title,
+            startLimit: this._getLimitedIndex(x, y)
         });
 
         this.update(dragStartEvent.x, dragStartEvent.y);
@@ -316,13 +341,27 @@ MonthGuide.prototype._getContainWeekIndicate = function() {
  * @param {number} nY - new Y index from mousemove event
  */
 MonthGuide.prototype.update = function(nX, nY) {
-    var start = this.startIndex,
+    var opt = this.options,
+        start = this.startIndex,
         guides = this.guideElements,
         sX = start[0], sY = start[1],
-        minIndex = mmin(sY, nY),
-        maxIndex = mmax(sY, nY),
-        range = util.range(minIndex, maxIndex + 1),
+        temp, minIndex, maxIndex, updateRange,
         inds = {};
+    
+    // nX, nY: 업데이트 해야 하는 마우스 위치에 대한 새 index
+    // sX, sY: 드래그 시작 마우스 위치 index
+    // lX, lY: 가이드 엘리먼트의 시작 위치 제한 index
+    // iY    : 반복문 내에서의 가이드 엘리먼트 ID
+    if (opt.startLimit) {
+        temp = this._getLimitedIndex(nX, nY, opt.startLimit);
+        nX = temp[1];
+        nY = temp[0];
+    }
+
+    minIndex = mmin(sY, nY);
+    maxIndex = mmax(sY, nY);
+
+    updateRange = util.range(minIndex, maxIndex + 1);
 
     util.forEach(util.keys(guides), function(iY) {
         if (iY < minIndex || iY > maxIndex) {
@@ -330,17 +369,13 @@ MonthGuide.prototype.update = function(nX, nY) {
             delete guides[iY];
         }
     });
-    
-    // nX, nY: 업데이트 해야 하는 마우스 위치에 대한 새 index
-    // sX, sY: 드래그 시작 마우스 위치 index
-    // iY    : 반복문 내에서의 가이드 엘리먼트 ID
 
-    util.forEach(range, function(iY) {
+    util.forEach(updateRange, function(iY) {
         var guide = this._getGuideElement(iY),
             indicate;
 
         if (!guide) {
-            // range 가 화면에 보이는 영역을 벗어났을 경우
+            // updateRange 가 화면에 보이는 영역을 벗어났을 경우
             return;
         }
 

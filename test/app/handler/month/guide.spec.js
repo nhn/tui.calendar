@@ -90,6 +90,9 @@ describe('handler:month/guide', function() {
             ]);
 
             mockInst.startIndex = [1, 1];
+            mockInst.options = {
+                startLimit: null
+            };
             mockInst.guideElements = {
                 0: true,
                 1: true
@@ -147,6 +150,22 @@ describe('handler:month/guide', function() {
             date = new Date('2015-12-24T00:00:00+09:00');
             expect(proto._getIndexByDate.call(mockInst, date)).toEqual([2, -1]);
         });
+    });
+
+    it('should limit indexes by month grid and supplied parameters.', function() {
+        var fn = proto._getLimitedIndex; 
+        mockInst = {
+            weeks: [1, 2, 3, 4, 5],
+            days: 7
+        };
+
+        expect(fn.call(mockInst, -1, -1)).toEqual([0, 0]);
+        expect(fn.call(mockInst, 2, 2)).toEqual([2, 2]);
+        expect(fn.call(mockInst, 1, 1, [2, 2])).toEqual([2, 2]);
+        expect(fn.call(mockInst, 3, 3, [1, 1], [2, 2])).toEqual([2, 2]);
+        expect(fn.call(mockInst, 1, 4, [2, 2])).toEqual([2, 4]);
+        expect(fn.call(mockInst, 2, 6, [3, 3], [4, 4])).toEqual([3, 4]);
+        expect(fn.call(mockInst, 2, 9, [2, 2], [9, 9])).toEqual([2, 9]);
     });
 });
 

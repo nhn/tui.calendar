@@ -3,7 +3,11 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var MonthGuide = require('./guide');
+var util = global.tui.util;
+
+var config = require('../../config'),
+    domutil = require('../../common/domutil'),
+    MonthGuide = require('./guide');
 
 /**
  * @constructor
@@ -47,6 +51,10 @@ MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
     }, this.monthResize.monthView);
 
     this.guide.start(dragStartEvent);
+    
+    if (!util.browser.msie) {
+        domutil.addClass(global.document.body, config.classname('resizing-x'));
+    }
 };
 
 /**
@@ -63,6 +71,10 @@ MonthResizeGuide.prototype._onDrag = function(dragEvent) {
 MonthResizeGuide.prototype._onDragEnd = function() {
     this.guide.destroy();
     this.guide = null;
+
+    if (!util.browser.msie) {
+        domutil.removeClass(global.document.body, config.classname('resizing-x'));
+    }
 };
 
 module.exports = MonthResizeGuide;
