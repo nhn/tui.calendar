@@ -20,6 +20,11 @@ function MonthResizeGuide(monthResize) {
     this.monthResize = monthResize;
 
     /**
+     * @type {HTMLElement[]}
+     */
+    this.elements = null;
+
+    /**
      * @type {MonthGuide}
      */
     this.guide = null; 
@@ -42,6 +47,31 @@ MonthResizeGuide.prototype.destroy = function() {
 };
 
 /**
+ * Hide element blocks for resize effect
+ * @param {number} modelID - CalEvent model instance ID
+ */
+MonthResizeGuide.prototype._hideEventBlocks = function(modelID) {
+    this.elements = domutil.find(
+        config.classname('.weekday-event-block-' + modelID), 
+        this.monthResize.monthView.container,
+        true
+    );
+
+    util.forEach(this.elements, function(el) {
+        el.style.display = 'none';
+    });
+};
+
+/**
+ * Show element blocks
+ */
+MonthResizeGuide.prototype._showEventBlocks = function() {
+    util.forEach(this.elements, function(el) {
+        el.style.display = 'block';
+    });
+};
+
+/**
  * Drag start event handler
  * @param {object} dragStartEvent - event data from MonthResize
  */
@@ -49,6 +79,8 @@ MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
     this.guide = new MonthGuide({
         isResizeMode: true
     }, this.monthResize.monthView);
+
+    this._hideEventBlocks(dragStartEvent.model.cid());
 
     this.guide.start(dragStartEvent);
     
@@ -69,8 +101,11 @@ MonthResizeGuide.prototype._onDrag = function(dragEvent) {
  * Drag end event handler
  */
 MonthResizeGuide.prototype._onDragEnd = function() {
+    this._showEventBlocks();
+
     this.guide.destroy();
-    this.guide = null;
+    this.elements = this.guide = null;
+    
 
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('resizing-x'));

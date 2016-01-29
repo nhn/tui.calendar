@@ -126,8 +126,6 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
         starts: new Date(+eventData.date)
     };
 
-    target.style.display = 'none';
-
     /**
      * @event {MonthCreation#month_resize_dragstart}
      * @type {object}
@@ -174,8 +172,6 @@ MonthResize.prototype._onDrag = function(dragEvent) {
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache,
         eventData;
-
-    cache.target.style.display = 'block';
 
     this.dragHandler.off({
         drag: this._onDrag,
