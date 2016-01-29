@@ -5,6 +5,7 @@
     {{#fi this.top '<' @root.renderLimitIdx ~}}
     <div data-id="{{stamp model}}" 
          class="{{CSS_PREFIX}}weekday-event-block
+                {{CSS_PREFIX}}weekday-event-block-{{stamp model}}
             {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
             {{#if renderEnds}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
          style="top:{{multiply top @root.eventBlockHeight}}px;
