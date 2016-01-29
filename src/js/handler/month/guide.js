@@ -21,7 +21,7 @@ var config = require('../../config'),
  * @param {object} [options] - options
  * @param {boolean} [options.useHandle=false] - whether displaying resize handle on 
  *  guide element?
- * @param {boolean} [options.isResizeModel=false] - whether resize mode?
+ * @param {boolean} [options.isResizeMode=false] - whether resize mode?
  * @param {Month} monthView - Month view instance
  */
 function MonthGuide(options, monthView) {
@@ -33,7 +33,7 @@ function MonthGuide(options, monthView) {
         height: 20,
         bgColor: '#f7ca88',
         label: '새 일정',
-        isResizeModel: false,
+        isResizeMode: false
     }, options);
 
     /**
@@ -62,11 +62,11 @@ function MonthGuide(options, monthView) {
 
 
     /**
-     * start index of guide effect. (x, y) (days, weeks) effect can't lower 
-     * than this indexes.
+     * start coordinate of guide effect. (x, y) (days, weeks) effect can't 
+     *  start lower than this coordinate.
      * @type {number[]}
      */
-    this.startIndex = [0, 0];
+    this.startCoord = [0, 0];
 
     /**
      * @type {Object.<string, HTMLElement>}
@@ -81,7 +81,7 @@ MonthGuide.prototype.destroy = function() {
     this.clear();
 
     this.options = this.view = this.weeks = this.days =
-        this.ratio = this.startIndex = this.guideElements = null;
+        this.ratio = this.startCoord = this.guideElements = null;
 };
 
 /**
@@ -107,7 +107,7 @@ MonthGuide.prototype._createGuideElement = function() {
 
 /**
  * Get guide element. if not exist then create one
- * @param {number} y - y index
+ * @param {number} y - y coordinate
  * @returns {?HTMLElement} guide element
  */
 MonthGuide.prototype._getGuideElement = function(y) {
@@ -137,11 +137,11 @@ MonthGuide.prototype._getGuideElement = function(y) {
 };
 
 /**
- * Get indexes by supplied date in month
- * @param {Date} date - date to find index
- * @returns {number[]} indexes (x, y)
+ * Get coordinate by supplied date in month
+ * @param {Date} date - date to find coordinate
+ * @returns {number[]} coordinate (x, y)
  */
-MonthGuide.prototype._getIndexByDate = function(date) {
+MonthGuide.prototype._getCoordByDate = function(date) {
     var weeks = this.weeks,
         days = this.days,
         getIdxFromDiff = function(d1, d2) {
@@ -166,25 +166,32 @@ MonthGuide.prototype._getIndexByDate = function(date) {
 };
 
 /**
- * Get limited x, y indexes by supplied indexes
- * @param {number} x - x index
- * @param {number} y - y index
- * @param {number[]} [start] - start indexes
- * @param {number[]} [end] - end indexes
- * @returns {number[]} limited indexes
+ * Get limited coordinate by supplied coodinates
+ * @param {number[]} coord - coordinate need to limit
+ * @param {number[]} [min] - minimum limitaion of coordinate
+ * @param {number[]} [max] - maximum limitation of coordinate
+ * @returns {number[]} limited coordiate
  */
-MonthGuide.prototype._getLimitedIndex = function(x, y, start, end) {
-    var toIndex = 1;
+MonthGuide.prototype._getLimitedCoord = function(coord, min, max) {
+    var toIndex = 1,
+        x = coord[0],
+        y = coord[1],
+        result;
 
-    start = start || [0, 0];
-    end = end || [this.days - toIndex, this.weeks.length - toIndex];
+    min = min || [0, 0];
+    max = max || [this.days - toIndex, this.weeks.length - toIndex];
 
-    x = mmax(x, start[0]);
-    x = mmin(x, end[0]);
-    y = mmax(y, start[1]);
-    y = mmin(y, end[1]);
+    if (y < min[1]) {
+        result = min.slice(0);
+    } else if (y > max[1]) {
+        result = max.slice(0);
+    } else {
+        x = mmax(min[0], x);
+        x = mmin(max[0], x);
+        result = [x, y];
+    }
 
-    return [x, y];
+    return result;
 };
 
 /**
@@ -200,7 +207,7 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         temp;
 
     if (opt.isResizeMode) {
-        temp = this._getIndexByDate(model.getStarts());
+        temp = this._getCoordByDate(model.getStarts());
         x = temp[0];
         y = temp[1];
 
@@ -212,11 +219,12 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         });
     }
 
-    this.startIndex = [x, y];
+    this.startCoord = [x, y];
     this.update(x, y);
 };
 
 /**
+ * Data for update several guide elements
  * @typedef UpdateIndication
  * @type {object}
  * @property {HTMLElement} guide - guide element
@@ -227,6 +235,7 @@ MonthGuide.prototype.start = function(dragStartEvent) {
  */
 
 /**
+ * Modify HTML element that uses for guide element
  * @param {UpdateIndication[]} inds - indication of update severel guide element
  */
 MonthGuide.prototype._updateGuides = function(inds) {
@@ -255,24 +264,22 @@ MonthGuide.prototype._updateGuides = function(inds) {
 
 /**
  * Get guide element indicate for origin week
- * @param {number} sX - startX index
- * @param {number} sY - startY index
- * @param {number} nX - newX index
- * @param {number} nY - newY index
+ * @param {number[]} startCoord - drag start coordinate 
+ * @param {number[]} mouseCoord - mouse coordinate 
  * @returns {object} indicate
  */
-MonthGuide.prototype._getOriginWeekIndicate = function(sX, sY, nX, nY) {
-    var left = mmin(sX, nX),
-        right = mmax(sX, nX) + 1,
+MonthGuide.prototype._getOriginIndicate = function(startCoord, mouseCoord) {
+    var left = mmin(startCoord[0], mouseCoord[0]),
+        right = mmax(startCoord[0], mouseCoord[0]) + 1,
         exceedL, exceedR;
 
-    if (nY > sY) {
-        left = sX;
+    if (mouseCoord[1] > startCoord[1]) {
+        left = startCoord[0];
         right = this.days,
         exceedR = true;
-    } else if (nY < sY) {
+    } else if (mouseCoord[1] < startCoord[1]) {
         left = 0;
-        right = sX + 1;
+        right = startCoord[0] + 1;
         exceedL = true;
     }
 
@@ -287,20 +294,19 @@ MonthGuide.prototype._getOriginWeekIndicate = function(sX, sY, nX, nY) {
 
 /**
  * Get guide element indicate for week related with mouse position
- * @param {number} sY - startY index
- * @param {number} nX - newX index
- * @param {number} nY - newY index
+ * @param {number[]} startCoord - drag start coordinate
+ * @param {number[]} mouseCoord - mouse coordinate
  * @returns {object} indicate
  */
-MonthGuide.prototype._getCurrentWeekIndicate = function(sY, nX, nY) {
-    var left = nX,
-        right = nX + 1,
+MonthGuide.prototype._getMouseIndicate = function(startCoord, mouseCoord) {
+    var left = mouseCoord[0],
+        right = mouseCoord[0] + 1,
         exceedL, exceedR;
 
-    if (nY > sY) {
+    if (mouseCoord[1] > startCoord[1]) {
         left = 0;
         exceedL = true;
-    } else if (nY < sY) {
+    } else if (mouseCoord[1] < startCoord[1]) {
         right = this.days;
         exceedR = true;
     }
@@ -318,7 +324,7 @@ MonthGuide.prototype._getCurrentWeekIndicate = function(sY, nX, nY) {
  * Get guide element indicate for contained weeks
  * @returns {object} indicate
  */
-MonthGuide.prototype._getContainWeekIndicate = function() {
+MonthGuide.prototype._getContainIndicate = function() {
     return {
         left: 0,
         width: 100,
@@ -329,12 +335,12 @@ MonthGuide.prototype._getContainWeekIndicate = function() {
 
 /**
  * Remove several guide element that supplied by parameter
- * @param {number[]} yIndexes - y index to remove guide element
+ * @param {number[]} yCoords - array of y coordinate to remove guide element
  */
-MonthGuide.prototype._removeGuideElements = function(yIndexes) {
+MonthGuide.prototype._removeGuideElements = function(yCoords) {
     var guides = this.guideElements;
     
-    util.forEach(yIndexes, function(y) {
+    util.forEach(yCoords, function(y) {
         domutil.remove(guides[y]);
         delete guides[y];
     });
@@ -352,6 +358,7 @@ MonthGuide.prototype._getExcludesInRange = function(range, numbers) {
         excludes = [];
 
     util.forEach(numbers, function(num) {
+        num = parseInt(num, 10);
         if (num < min || num > max) {
             excludes.push(num);
         }
@@ -361,46 +368,45 @@ MonthGuide.prototype._getExcludesInRange = function(range, numbers) {
 };
 
 /**
- * Update guide elements
- * @param {number} x - new X index from mousemove event
- * @param {number} y - new Y index from mousemove event
+ * Update guide elements by coordinate in month grid from mousemove event 
+ * @param {number} x - x coordinate
+ * @param {number} y - y coordinate
  */
 MonthGuide.prototype.update = function(x, y) {
-    var startX = this.startIndex[0],
-        startY = this.startIndex[1],
-        renderedYIndexes = util.keys(this.guideElements),
-        updateRange = util.range(mmin(startY, y), mmax(startY, y) + 1),
-        removeRange = this._getExcludesInRange(updateRange, renderedYIndexes),
+    var startCoord = this.startCoord,
+        mouseCoord = [x, y],
+        limitedCoord = this.options.isResizeMode ?
+            this._getLimitedCoord(mouseCoord, startCoord) : mouseCoord,
+        renderedYIndex = util.keys(this.guideElements),
+        yCoordsToUpdate = util.range(
+            mmin(startCoord[1], limitedCoord[1]),
+            mmax(startCoord[1], limitedCoord[1]) + 1
+        ),
+        yCoordsToRemove = this._getExcludesInRange(
+            yCoordsToUpdate,
+            renderedYIndex
+        ),
         renderIndication = {};
 
-    this._removeGuideElements(removeRange);
+    this._removeGuideElements(yCoordsToRemove);
 
-    util.forEach(updateRange, function(guideY) {
-        var guide = this._getGuideElement(guideY),
+    util.forEach(yCoordsToUpdate, function(guideYCoord) {
+        var guide = this._getGuideElement(guideYCoord),
             indicate;
 
         if (!guide) {
             return;
         }
 
-        if (guideY === startY) {
-            indicate = this._getOriginWeekIndicate(
-                startX, 
-                startY,
-                x,
-                y
-            );
-        } else if (guideY === y) {
-            indicate = this._getCurrentWeekIndicate(
-                startY,
-                x,
-                y
-            );
+        if (guideYCoord === startCoord[1]) {
+            indicate = this._getOriginIndicate(startCoord, limitedCoord);
+        } else if (guideYCoord === mouseCoord[1]) {
+            indicate = this._getMouseIndicate(startCoord, mouseCoord);
         } else {
-            indicate = this._getContainWeekIndicate();
+            indicate = this._getContainIndicate();
         }
 
-        renderIndication[guideY] = util.extend({
+        renderIndication[guideYCoord] = util.extend({
             guide: guide
         }, indicate);
     }, this);
