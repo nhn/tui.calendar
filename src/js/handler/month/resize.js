@@ -156,7 +156,7 @@ MonthResize.prototype._onDrag = function(dragEvent) {
     }
     
     /**
-     * @event {MonthCreation#month_resize_drag}
+     * @event {MonthResize#month_resize_drag}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
