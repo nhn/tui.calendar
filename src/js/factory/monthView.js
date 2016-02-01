@@ -13,6 +13,7 @@ var config = require('../config'),
     MonthClick = require('../handler/month/click'),
     MonthCreation = require('../handler/month/creation'),
     MonthResize = require('../handler/month/resize'),
+    MonthMove = require('../handler/month/move'),
     More = require('../view/month/more');
 
 /**
@@ -28,6 +29,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         clickHandler,
         creationHandler,
         resizeHandler,
+        moveHandler,
         moreView;
 
     monthViewContainer = domutil.appendHTMLElement(
@@ -40,6 +42,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     clickHandler = new MonthClick(dragHandler, monthView, baseController);
     creationHandler = new MonthCreation(dragHandler, monthView, baseController);
     resizeHandler = new MonthResize(dragHandler, monthView, baseController);
+    moveHandler = new MonthMove(dragHandler, monthView, baseController);
 
     // binding +n click event
     clickHandler.on('clickMore', function(clickMoreEvent) {
@@ -69,6 +72,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         },
         resize: {
             'default': resizeHandler
+        },
+        move: {
+            'default': moveHandler
         }
     };
 
