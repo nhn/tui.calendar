@@ -1,6 +1,6 @@
-var DoorayController = window.ne.dooray.calendar.DoorayController;
 describe('service:controller/DoorayCalendar', function() {
-    var doorayBase,
+    var DoorayController = ne.dooray.calendar.DoorayController,
+        doorayBase,
         jsonFixture;
 
     beforeEach(function() {

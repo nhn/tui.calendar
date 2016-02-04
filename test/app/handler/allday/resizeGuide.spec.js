@@ -1,6 +1,6 @@
-var AlldayResizeGuide = window.ne.dooray.calendar.AlldayResizeGuide;
 describe('handler:AlldayResizeGuide', function() {
-    var inst;
+    var AlldayResizeGuide = window.ne.dooray.calendar.AlldayResizeGuide,
+        inst;
 
     beforeEach(function() {
         inst = new AlldayResizeGuide(jasmine.createSpyObj('alldayView', ['on']));

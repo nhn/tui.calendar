@@ -1,7 +1,6 @@
-var MilestoneClick = window.ne.dooray.calendar.MilestoneClick;
 describe('service:handler:MilestoneClick', function() {
-    var mockInst,
-        mockCollection;
+    var MilestoneClick = window.ne.dooray.calendar.MilestoneClick,
+        mockInst, mockCollection;
 
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정

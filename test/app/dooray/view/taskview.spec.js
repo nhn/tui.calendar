@@ -1,6 +1,6 @@
-var TaskView = window.ne.dooray.calendar.TaskView;
 describe('service:view/TaskView', function() {
-    var mockInst;
+    var TaskView = ne.dooray.calendar.TaskView,
+        mockInst;
 
     beforeEach(function() {
         mockInst = {

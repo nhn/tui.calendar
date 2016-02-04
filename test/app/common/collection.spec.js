@@ -1,9 +1,9 @@
 /*eslint-disable*/
-var Collection = ne.dooray.calendar.Collection;
-var undef = (function() {})();
 
 describe('Collection', function() {
-    var c;
+    var Collection = ne.dooray.calendar.Collection,
+        undef = (function() {})(),
+        c;
 
     beforeEach(function() {
         c = new Collection();

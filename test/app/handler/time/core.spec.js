@@ -1,7 +1,7 @@
 /*eslint-disable*/
 describe('module:Time.Creation', function() {
-    var core = ne.dooray.calendar.TimeCore;
-    var Time = ne.dooray.calendar.Time;
+    var core = ne.dooray.calendar.TimeCore,
+        Time = ne.dooray.calendar.Time;
 
     it('_calcGridYIndex()', function() {
         // 24시간이 100px일 때  50px은 12시임

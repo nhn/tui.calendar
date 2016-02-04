@@ -1,8 +1,8 @@
 /*eslint-disable*/
 describe('TimeResize', function() {
-    var domutil = ne.dooray.calendar.domutil;
-    var TimeResize = ne.dooray.calendar.TimeResize;
-    var mockInstance;
+    var domutil = ne.dooray.calendar.domutil,
+        TimeResize = ne.dooray.calendar.TimeResize,
+        mockInstance;
 
     it('checkExpectCondition()', function() {
         var target = document.createElement('div');

@@ -1,9 +1,14 @@
 /*eslint-disable*/
-var stamp = tui.util.stamp;
-var ControllerFactory = ne.dooray.calendar.ControllerFactory;
-var CalEventViewModel = ne.dooray.calendar.CalEventViewModel;
-var Collection = ne.dooray.calendar.Collection;
 describe('Base.Week', function() {
+    var util = tui.util,
+        CalEvent = ne.dooray.calendar.CalEvent,
+        array = ne.dooray.calendar.array,
+        stamp = tui.util.stamp,
+        ControllerFactory = ne.dooray.calendar.ControllerFactory,
+        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
+        Collection = ne.dooray.calendar.Collection,
+        datetime = ne.dooray.calendar.datetime;
+
     var base,
         ctrl,
         fixture,

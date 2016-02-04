@@ -1,8 +1,8 @@
 /*eslint-disable*/
-var datetime = window.ne.dooray.calendar.datetime;
-var AlldayCreation = window.ne.dooray.calendar.AlldayCreation;
 describe('handler:AlldayCreation', function() {
-    var proto;
+    var datetime = window.ne.dooray.calendar.datetime,
+        AlldayCreation = window.ne.dooray.calendar.AlldayCreation,
+        proto;
 
     beforeEach(function() {
         proto = AlldayCreation.prototype;

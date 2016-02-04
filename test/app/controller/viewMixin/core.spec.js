@@ -1,9 +1,10 @@
 describe('Base.Core', function() {
-    var array = ne.dooray.calendar.array,
+    var util = tui.util,
+        array = ne.dooray.calendar.array,
         Collection = ne.dooray.calendar.Collection,
         ControllerFactory = ne.dooray.calendar.ControllerFactory,
         CalEvent = ne.dooray.calendar.CalEvent,
-        CalEventviewModel = ne.dooray.calendar.CalEventViewModel,
+        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
 
         fixture,
         eventList,

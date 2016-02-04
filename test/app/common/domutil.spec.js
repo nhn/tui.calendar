@@ -1,8 +1,7 @@
 /*eslint-disable*/
-var domutil = ne.dooray.calendar.domutil;
 describe('module:domutil', function() {
-    var map, 
-        btn;
+    var domutil = ne.dooray.calendar.domutil,
+        map, btn;
 
     beforeEach(function() {
         loadFixtures('domutil.html');

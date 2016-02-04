@@ -1,7 +1,7 @@
 /*eslint-disable*/
-var AlldayMove = window.ne.dooray.calendar.AlldayMove;
 describe('handler:AlldayMove', function() {
-    var proto;
+    var AlldayMove = window.ne.dooray.calendar.AlldayMove,
+        proto;
 
     beforeEach(function() {
         proto = AlldayMove.prototype;

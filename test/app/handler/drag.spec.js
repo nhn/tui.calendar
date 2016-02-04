@@ -1,7 +1,7 @@
 /*eslint-disable*/
-var Drag = ne.dooray.calendar.Drag;
 describe('Handler/Drag', function() {
-    var mockInst;
+    var Drag = ne.dooray.calendar.Drag,
+        mockInst;
 
     beforeEach(function() {
         mockInst = jasmine.createSpyObj('Drag', ['invoke', 'fire', '_toggleDragEvent', '_getEventData', '_clearData']);

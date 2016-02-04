@@ -1,7 +1,6 @@
-var VPanel = ne.dooray.calendar.VPanel;
 describe('VPanel', function() {
-    var inst,
-        container;
+    var VPanel = ne.dooray.calendar.VPanel,
+        inst, container;
 
     beforeEach(function() {
         container = document.createElement('div');

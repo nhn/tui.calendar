@@ -1,9 +1,10 @@
 /*eslint-disable*/
-var Time = ne.dooray.calendar.Time;
-var CalEvent = ne.dooray.calendar.CalEvent;
-var CalEventViewModel = ne.dooray.calendar.CalEventViewModel;
-var datetime = ne.dooray.calendar.datetime;
 describe('View/Time', function() {
+    var Time = ne.dooray.calendar.Time,
+        CalEvent = ne.dooray.calendar.CalEvent,
+        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
+        datetime = ne.dooray.calendar.datetime;
+
     it('_parseDateGroup()', function() {
         var str = '20150501';
 

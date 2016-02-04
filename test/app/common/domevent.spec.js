@@ -1,6 +1,7 @@
 /*eslint-disable*/
-var domevent = ne.dooray.calendar.domevent;
 describe('module:domevent', function() {
+    var domevent = ne.dooray.calendar.domevent;
+
     beforeEach(function() {
         loadFixtures('domevent.html');
     });

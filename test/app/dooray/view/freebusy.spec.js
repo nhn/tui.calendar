@@ -1,6 +1,6 @@
-var Freebusy = ne.dooray.calendar.Freebusy;
 describe('Freebusy', function() {
-    var inst;
+    var Freebusy = ne.dooray.calendar.Freebusy,
+        inst;
 
     beforeEach(function() {
         inst = new Freebusy({}, document.createElement('div'));

@@ -1,5 +1,6 @@
-var AlldayMoveGuide = window.ne.dooray.calendar.AlldayMoveGuide;
 describe('handler:AlldayMoveGuide', function() {
+    var AlldayMoveGuide = window.ne.dooray.calendar.AlldayMoveGuide;
+
     describe('_getEventBlockDataFunc()', function() {
         var mockInst,
             mockEventData;

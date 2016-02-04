@@ -1,6 +1,6 @@
-var DoorayEvent = window.ne.dooray.calendar.DoorayEvent;
 describe('dooray:model/Event', function() {
-    var jsonFixtures;
+    var DoorayEvent = ne.dooray.calendar.DoorayEvent,
+        jsonFixtures;
 
     beforeEach(function() {
         jsonFixtures = getJSONFixture('dooray/mock_tasks.json');

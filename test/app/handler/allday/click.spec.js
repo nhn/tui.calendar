@@ -1,7 +1,6 @@
-var AlldayClick = window.ne.dooray.calendar.AlldayClick;
 describe('handler:AlldayClick', function() {
-    var mockInst,
-        mockCollection;
+    var AlldayClick = ne.dooray.calendar.AlldayClick,
+        mockInst, mockCollection;
     
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정

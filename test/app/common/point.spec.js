@@ -1,6 +1,6 @@
 /*eslint-disable*/
-var Point = ne.dooray.calendar.Point;
 describe('Point', function() {
+    var Point = ne.dooray.calendar.Point;
 
     describe('toArray()', function() {
         it('return coordinates to array.', function() {

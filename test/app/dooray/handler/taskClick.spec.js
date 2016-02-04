@@ -1,7 +1,6 @@
-var TaskClick = window.ne.dooray.calendar.TaskClick;
 describe('service:handler:TaskClick', function() {
-    var mockInst,
-        mockCollection;
+    var TaskClick = window.ne.dooray.calendar.TaskClick,
+        mockInst, mockCollection;
 
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정

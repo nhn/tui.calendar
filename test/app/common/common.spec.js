@@ -1,6 +1,7 @@
 /*eslint-disable*/
-var common = ne.dooray.calendar.common;
 describe('module:common', function() {
+    var common = ne.dooray.calendar.common;
+
     it('ratio()', function() {
         expect(common.ratio(10, 5, 2)).toBe(1);
         expect(common.ratio(20, 10, 5)).not.toBe(1);

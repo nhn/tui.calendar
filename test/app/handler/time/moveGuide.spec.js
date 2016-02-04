@@ -1,7 +1,8 @@
 /*eslint-disable*/
 describe('handler/time.move.guide', function() {
-    var Guide = ne.dooray.calendar.TimeMoveGuide;
-    var mockInstance;
+    var util = tui.util,
+        Guide = ne.dooray.calendar.TimeMoveGuide,
+        mockInstance;
 
     it('_onDrag() calculate guide element\'s top properly.', function() {
         mockInstance = jasmine.createSpyObj('TimeResizeGuide', ['_refreshGuideElement']);

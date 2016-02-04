@@ -1,7 +1,7 @@
 /*eslint-disable*/
-var CalEvent = ne.dooray.calendar.CalEvent;
 describe('model/event', function() {
-    var event;
+    var CalEvent = ne.dooray.calendar.CalEvent,
+        event;
 
     beforeEach(function() {
         event = new CalEvent();

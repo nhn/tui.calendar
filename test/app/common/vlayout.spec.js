@@ -1,12 +1,12 @@
-var VLayout = ne.dooray.calendar.VLayout;
-var VPanel = ne.dooray.calendar.VPanel;
-
-function getDiv() {
-    return document.getElementById('vlayout');
-}
-
 describe('VLayout', function() {
-    var inst;
+    var VLayout = ne.dooray.calendar.VLayout,
+        VPanel = ne.dooray.calendar.VPanel,
+        inst;
+
+    function getDiv() {
+        return document.getElementById('vlayout');
+    }
+
     
     beforeEach(function() {
         loadFixtures('vlayout.html');

@@ -1,13 +1,13 @@
-var AJAX = window.ne.dooray.calendar.AJAX;
-
-function stringify(obj) {
-    return JSON.stringify(obj);
-}
-
 describe('API', function() {
-    var ajax = new AJAX();
+    var AJAX = window.ne.dooray.calendar.AJAX,
+        ajax;
+
+    function stringify(obj) {
+        return JSON.stringify(obj);
+    }
 
     beforeEach(function() {
+        ajax = new AJAX();
         jasmine.Ajax.install();
     });
 

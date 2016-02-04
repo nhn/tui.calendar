@@ -1,8 +1,9 @@
 /*eslint-disable*/
-var util = tui.util;
-var array = ne.dooray.calendar.array;
-var CalEvent = ne.dooray.calendar.CalEvent;
 describe('common/array', function() {
+    var util = tui.util,
+        array = ne.dooray.calendar.array;
+        CalEvent = ne.dooray.calendar.CalEvent;
+
     describe('common compare methods', function() {
         describe('compare.num', function() {
             var arr;

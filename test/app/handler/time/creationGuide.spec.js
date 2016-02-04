@@ -1,8 +1,7 @@
-var TimeCreationGuide = ne.dooray.calendar.TimeCreationGuide;
-var datetime = ne.dooray.calendar.datetime;
-
 describe('handler/time.creation.guide', function() {
-    var mockTimeCreation,
+    var TimeCreationGuide = ne.dooray.calendar.TimeCreationGuide,
+        datetime = ne.dooray.calendar.datetime,
+        mockTimeCreation,
         inst;
 
     beforeEach(function() {

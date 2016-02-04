@@ -1,10 +1,10 @@
 /*eslint-disable*/
-var ControllerFactory = ne.dooray.calendar.ControllerFactory;
-var CalEvent = ne.dooray.calendar.CalEvent;
-var Collection = ne.dooray.calendar.Collection;
-var util = tui.util;
 describe('controller/base', function() {
-    var ctrl,
+    var ControllerFactory = ne.dooray.calendar.ControllerFactory,
+        CalEvent = ne.dooray.calendar.CalEvent,
+        Collection = ne.dooray.calendar.Collection,
+        util = tui.util,
+        ctrl,
         set;
 
     beforeEach(function() {

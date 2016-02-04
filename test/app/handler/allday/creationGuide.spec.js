@@ -1,7 +1,7 @@
 /*eslint-disable*/
-var AlldayCreationGuide = window.ne.dooray.calendar.AlldayCreationGuide;
 describe('handler:AlldayCreationGuide', function() {
-    var mockGuideElement,
+    var AlldayCreationGuide = window.ne.dooray.calendar.AlldayCreationGuide,
+        mockGuideElement,
         mockInst,
         proto;
 

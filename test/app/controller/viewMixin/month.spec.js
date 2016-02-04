@@ -1,5 +1,7 @@
 describe('Base.Month', function() {
-    var undef = (function() {})(),
+    var array = ne.dooray.calendar.array,
+        Collection = ne.dooray.calendar.Collection,
+        undef = (function() {})(),
         util = tui.util,
         ControllerFactory = ne.dooray.calendar.ControllerFactory,
         CalEvent = ne.dooray.calendar.CalEvent,

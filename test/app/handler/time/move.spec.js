@@ -1,8 +1,9 @@
 /*eslint-disable*/
 describe('handler/time.move', function() {
-    var domutil = ne.dooray.calendar.domutil;
-    var TimeMove = ne.dooray.calendar.TimeMove;
-    var mockInstance;
+    var util = tui.util,
+        domutil = ne.dooray.calendar.domutil,
+        TimeMove = ne.dooray.calendar.TimeMove,
+        mockInstance;
 
     it('checkExpectedCondition()', function() {
         mockInstance = jasmine.createSpyObj('TimeMove', ['_getTimeView']);

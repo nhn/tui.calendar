@@ -1,27 +1,27 @@
 /*eslint-disable*/
-var dirty = ne.dooray.calendar.dirty;
 describe('dirty mixin', function() {
-   var obj;
+    var dirty = ne.dooray.calendar.dirty,
+        obj;
 
-   function Animal(name) {
+    function Animal(name) {
        this.name = name;
-   }
-   Animal.prototype.growl = jasmine.createSpy('growl');
-   Animal.prototype.test = function() {
+    }
+    Animal.prototype.growl = jasmine.createSpy('growl');
+    Animal.prototype.test = function() {
        return this.name;
-   };
-   dirty.mixin(Animal.prototype);
-   dirty.wrap(Animal.prototype, {
+    };
+    dirty.mixin(Animal.prototype);
+    dirty.wrap(Animal.prototype, {
        growl: true,
        test: false
-   });
+    });
 
-   beforeEach(function() {
+    beforeEach(function() {
        obj = {};
        dirty.mixin(obj);
-   });
+    });
 
-   describe('mixin()', function() {
+    describe('mixin()', function() {
        var obj = {};
 
        beforeEach(function() {
@@ -37,9 +37,9 @@ describe('dirty mixin', function() {
            expect(obj._encodePropertyName).toBeUndefined();
            expect(obj._hasOwnProp).toBeUndefined();
        });
-   });
+    });
 
-   describe('wrap()', function() {
+    describe('wrap()', function() {
        beforeEach(function() {
            obj.hello = jasmine.createSpy('hello');
        });
@@ -134,9 +134,9 @@ describe('dirty mixin', function() {
            expect(bear.isDirty()).toBe(false);
        });
 
-   });
+    });
 
-   describe('set()', function() {
+    describe('set()', function() {
        it('no dirty flagging when change to same value.', function() {
            obj.hello = '123';
            obj.set('hello', '123');
@@ -179,9 +179,9 @@ describe('dirty mixin', function() {
 
            expect(animal._changed).toEqual({ leg: true });
        });
-   });
+    });
 
-   describe('isPropChagned()', function() {
+    describe('isPropChagned()', function() {
        it('check argumented property has been changed.', function() {
            var animal = new Animal('bear');
 
@@ -200,9 +200,9 @@ describe('dirty mixin', function() {
 
            expect(animal.isPropChanged('leg')).toBe(false);
        });
-   });
+    });
 
-   describe('isDirty()', function() {
+    describe('isDirty()', function() {
        it('set()으로 값 설정 후 이 메서드로 더티 여부 확인 가능', function() {
            obj.set('hello', 'world!');
            expect(obj.isDirty()).toBe(true);
@@ -221,9 +221,9 @@ describe('dirty mixin', function() {
            animal.test();
            expect(animal.isDirty()).toBe(false);
        });
-   });
+    });
 
-   describe('dirty()', function() {
+    describe('dirty()', function() {
        it('객체의 더티 플래그를 직접 수정', function() {
            obj.dirty(true);
            expect(obj._dirty).toBe(true);
@@ -241,9 +241,9 @@ describe('dirty mixin', function() {
 
            expect(animal._changed).toEqual({});
        });
-   });
+    });
 
-   describe('deleteProp()', function() {
+    describe('deleteProp()', function() {
        it('safe delete object property.', function() {
            var animal = new Animal('frog');
            animal.set('leg', 4);
@@ -263,6 +263,6 @@ describe('dirty mixin', function() {
            }).not.toThrow();
 
        });
-   });
+    });
 
 });

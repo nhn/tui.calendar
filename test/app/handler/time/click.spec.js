@@ -1,7 +1,6 @@
-var TimeClick = window.ne.dooray.calendar.TimeClick;
 describe('handler:TimeClick', function() {
-    var mockInst,
-        mockCollection;
+    var TimeClick = window.ne.dooray.calendar.TimeClick,
+        mockInst, mockCollection;
 
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정

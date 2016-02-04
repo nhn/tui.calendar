@@ -1,8 +1,8 @@
-var View = ne.dooray.calendar.View;
-var Calendar = ne.dooray.calendar.OriginCalendar;
-var ControllerFactory = ne.dooray.calendar.ControllerFactory;
-
 describe('Calendar', function() {
+    var View = ne.dooray.calendar.View,
+        Calendar = ne.dooray.calendar.OriginCalendar,
+        ControllerFactory = ne.dooray.calendar.ControllerFactory;
+
     var controller,
         inst;
 

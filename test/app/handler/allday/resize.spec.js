@@ -1,5 +1,6 @@
-var AlldayResize = window.ne.dooray.calendar.AlldayResize;
 describe('handler:AlldayResize', function() {
+    var AlldayResize = window.ne.dooray.calendar.AlldayResize;
+
     describe('_updateEvent()', function() {
         var mockEventData,
             mockEventInstance,

@@ -1,8 +1,8 @@
 /*eslint-disable*/
-var util = tui.util;
-var View = ne.dooray.calendar.View;
 describe('View', function() {
-    var view;
+    var util = tui.util,
+        View = ne.dooray.calendar.View,
+        view;
 
     beforeEach(function() {
         loadFixtures('view.html');

@@ -1,6 +1,7 @@
 /*eslint-disable*/
-var DayName = ne.dooray.calendar.DayName;
 describe('view/dayName', function() {
+    var DayName = ne.dooray.calendar.DayName;
+
     it('Create viewmodel by date ranges.', function() {
         var expected = [{
             day: 0,

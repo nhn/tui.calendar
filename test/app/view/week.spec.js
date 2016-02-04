@@ -1,8 +1,8 @@
 /*eslint-disable*/
-var View = ne.dooray.calendar.View;
-var Week = ne.dooray.calendar.Week;
 describe('View/Week', function() {
-    var view;
+    var View = ne.dooray.calendar.View,
+        Week = ne.dooray.calendar.Week,
+        view;
 
     beforeEach(function() {
         loadFixtures('view.html');

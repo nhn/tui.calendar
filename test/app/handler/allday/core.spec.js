@@ -1,7 +1,7 @@
 /*eslint-disable*/
-var AlldayCore = window.ne.dooray.calendar.AlldayCore;
 describe('handler:AlldayCore', function() {
-    var result;
+    var AlldayCore = ne.dooray.calendar.AlldayCore,
+        result;
 
     describe('_retriveEventData()', function() {
         beforeEach(function() {

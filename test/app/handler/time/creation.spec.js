@@ -1,7 +1,7 @@
 /*eslint-disable*/
 describe('handler/time.creation', function() {
-    var domutil = ne.dooray.calendar.domutil;
-    var TimeCreation = ne.dooray.calendar.TimeCreation;
+    var domutil = ne.dooray.calendar.domutil,
+        TimeCreation = ne.dooray.calendar.TimeCreation;
 
     it('checkExpectedCondition() can judge activation of time.creation handler by event target.', function() {
         var target = document.createElement('div');
