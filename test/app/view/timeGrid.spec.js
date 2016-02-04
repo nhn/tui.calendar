@@ -8,27 +8,26 @@ describe('View/TimeGrid', function() {
     });
 
     it('_getBaseViewModel()', function() {
-        expect([2, 3, 4, 5, 6]).toEqual([2, 3, 4, 5, 6]);
-        // var MockDate = jasmine.createSpyObj('Date', ['getHours']);
-        // spyOn(window, 'Date').and.returnValue(MockDate);
-        // MockDate.getHours.and.returnValue(3);
-        //
-        // var expected = {
-        //     hours: [3, 4, 5, 6, 7, 8, 9, 10],
-        //     currentHour: 3
-        // };
-        //
-        // var obj = {
-        //     options: {
-        //         hourStart: 3,
-        //         hourEnd: 11
-        //     },
-        //     _getHourmarkerViewModel: jasmine.createSpy('_getHourmarkerViewModel')
-        // };
-        //
-        // var result = proto._getBaseViewModel.call(obj);
-        //
-        // expect(result).toEqual(expected);
+        var MockDate = jasmine.createSpyObj('Date', ['getHours']);
+        spyOn(window, 'Date').and.returnValue(MockDate);
+        MockDate.getHours.and.returnValue(3);
+
+        var expected = {
+            hours: [3, 4, 5, 6, 7, 8, 9, 10],
+            currentHour: 3
+        };
+
+        var obj = {
+            options: {
+                hourStart: 3,
+                hourEnd: 11
+            },
+            _getHourmarkerViewModel: jasmine.createSpy('_getHourmarkerViewModel')
+        };
+
+        var result = proto._getBaseViewModel.call(obj);
+
+        expect(result).toEqual(expected);
     });
 
     describe('_getTopPercentByTime()', function() {
