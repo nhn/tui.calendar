@@ -63,6 +63,30 @@ MonthMove.prototype.destroy = function() {
 MonthMove.prototype._updateEvent = function() {};
 
 /**
+ * Get model id from event related target element
+ * @param {HTMLElement} target - target element related with event
+ * @returns {?number} model instance id
+ */
+MonthMove.prototype._getRelatedModelID = function(target) {
+    var modelID = false,
+        eventCSSClass = config.classname('weekday-event-title'),
+        blockCSSSelector = config.classname('.weekday-event-block'),
+        moreCSSClass = config.classname('month-more-event'),
+        fromMonthView = domutil.hasClass(target, eventCSSClass),
+        fromMoreView = domutil.hasClass(target, moreCSSClass);
+
+    if (fromMonthView || fromMoreView) {
+        if (fromMonthView) {
+            target = domutil.closest(target, blockCSSSelector);
+        }
+
+        modelID = domutil.getData(target, 'id');
+    }
+
+    return modelID;
+};
+
+/**
  * Event handler for Drag#dragStart
  * @fires {MonthMove#month_move_dragstart}
  * @param {object} dragStartEvent - drag start event data
@@ -99,7 +123,7 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         model: model,
         target: target,
-        starts: new Date(+eventData.date)
+        starts: new Date(Number(eventData.date))
     };
 
     /**

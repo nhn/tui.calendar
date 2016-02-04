@@ -6,14 +6,16 @@
     <div class="{{CSS_PREFIX}}month-more-list" style="height:{{subtract height 20}}px">
         {{#each events}}
         {{#if model.isAllDay ~}}
-        <div class="{{CSS_PREFIX}}month-more-event
+        <div data-id="{{stamp model}}"
+             class="{{CSS_PREFIX}}month-more-event
                     {{CSS_PREFIX}}month-more-allday"
              style="background-color:{{model.bgColor}};
                     color:{{model.color}}">
             {{model.title}}
         </div>
         {{else}}
-        <div class="{{CSS_PREFIX}}month-more-event">
+        <div data-id="{{stamp model}}"
+             class="{{CSS_PREFIX}}month-more-event">
             {{hhmm model.starts}} {{model.title}}
         </div>
         {{/if}}
