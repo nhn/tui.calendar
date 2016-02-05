@@ -3,7 +3,7 @@
         "browser"
     ],
     "loadEagerly": [
-        "node_modules/tui-code-snippet/code-snippet.js",
+        "bower_components/tui-code-snippet/code-snippet.js",
         "src/js/**/*",
         "index.js"
     ],
