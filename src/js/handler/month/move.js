@@ -60,27 +60,87 @@ MonthMove.prototype.destroy = function() {
     this.dragHandler = this.monthView = this.baseController = null;
 };
 
-MonthMove.prototype._updateEvent = function() {};
+/**
+ * Update target event
+ * @fires {MonthMove#beforeUpdateEvent}
+ * @param {object} eventCache - cache object that result of single dragging
+ *  session.
+ */
+MonthMove.prototype._updateEvent = function(eventCache) {
+    console.log(eventCache);
+};
 
 /**
- * Get model id from event related target element
- * @param {HTMLElement} target - target element related with event
- * @returns {?number} model instance id
+ * Get event block to clone for month guide effect
+ * @param {HTMLElement} target - target element that related with drag event
+ * @returns {HTMLElement} element to create guide effect
  */
-MonthMove.prototype._getRelatedModelID = function(target) {
-    var modelID = false,
-        eventCSSClass = config.classname('weekday-event-title'),
-        blockCSSSelector = config.classname('.weekday-event-block'),
-        moreCSSClass = config.classname('month-more-event'),
-        fromMonthView = domutil.hasClass(target, eventCSSClass),
-        fromMoreView = domutil.hasClass(target, moreCSSClass);
+MonthMove.prototype.getMonthEventBlock = function(target) {
+    var blockSelector = config.classname('.weekday-event-block'),
+        element = domutil.closest(target, blockSelector);
 
-    if (fromMonthView || fromMoreView) {
-        if (fromMonthView) {
-            target = domutil.closest(target, blockCSSSelector);
-        }
+    if (!element) {
+        element = target;
+    }
 
+    return element;
+};
+
+/**
+ * Check event start from month view
+ * @param {HTMLElement} target - element to check
+ * @returns {boolean} whether event start from month view?
+ */
+MonthMove.prototype.isMonthEventBlock = function(target) {
+    var titleClassName = config.classname('weekday-event-title');
+
+    if (!domutil.hasClass(target, titleClassName)) {
+        return false;
+    }
+
+    target = this.getMonthEventBlock(target);
+
+    if (!target) {
+        return false;
+    }
+
+    return true;
+};
+
+/**
+ * Check event start from more layer
+ * @param {HTMLElement} target - element to check
+ * @returns {boolean} whether event start from more layer?
+ */
+MonthMove.prototype.isMoreLayerEventBlock = function(target) {
+    var className = config.classname('month-more-event');
+
+    return domutil.hasClass(target, className);
+};
+
+/**
+ * Check handler has permission to handle fired event
+ * @fires {MonthMove#month_move_start_from_morelayer}
+ * @param {HTMLElement} target - target element of fired event
+ * @returns {(string|null)} model instance ID related with event. if handle
+ *  has not permission to handle the event then return null.
+ */
+MonthMove.prototype.hasPermissionToHandle = function(target) {
+    var modelID = null,
+        selector;
+
+    if (this.isMonthEventBlock(target)) {
+        selector = config.classname('.weekday-event-block');
+        modelID = domutil.getData(domutil.closest(target, selector), 'id');
+    }
+
+    if (this.isMoreLayerEventBlock(target)) {
         modelID = domutil.getData(target, 'id');
+        /**
+         * Fire for notificate that the drag event start at more layer view.
+         * @event {MonthMove#month_move_start_from_morelayer}
+         */
+        this.fire('month_move_start_from_morelayer');
     }
 
     return modelID;
@@ -93,20 +153,14 @@ MonthMove.prototype._getRelatedModelID = function(target) {
  */
 MonthMove.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
-        modelID, model,
+        modelID = this.hasPermissionToHandle(target),
+        model,
         eventData;
 
-    if (!domutil.hasClass(target, config.classname('weekday-event-title'))) {
+    if (!modelID) {
         return;
     }
 
-    target = domutil.closest(target, config.classname('.weekday-event-block'));
-
-    if (!target) {
-        return;
-    }
-
-    modelID = domutil.getData(target, 'id');
     model = this.baseController.events.items[modelID];
 
     this.dragHandler.on({
@@ -115,9 +169,10 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
     }, this);
 
     this.getEventData = getMousePosData(this.monthView);
+
     eventData = this.getEventData(dragStartEvent.originEvent);
     eventData.originEvent = dragStartEvent.originEvent;
-    eventData.target = target;
+    eventData.target = this.getMonthEventBlock(target);
     eventData.model = model;
 
     this._cache = {
@@ -157,7 +212,7 @@ MonthMove.prototype._onDrag = function(dragEvent) {
     if (!eventData) {
         return;
     }
-    
+
     /**
      * @event {MonthMove#month_move_drag}
      * @type {object}
@@ -189,7 +244,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getEventData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new Date(+eventData.date);
+        cache.ends = new Date(Number(eventData.date));
         this._updateEvent(cache);
     }
 

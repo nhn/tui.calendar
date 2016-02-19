@@ -63,6 +63,10 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
     });
 
+    moveHandler.on('month_move_start_from_morelayer', function() {
+        moreView.hide();
+    });
+
     monthView.handlers = {
         click: {
             'default': clickHandler 

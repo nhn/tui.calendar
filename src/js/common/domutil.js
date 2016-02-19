@@ -417,7 +417,8 @@ domutil = {
             width = domutil.getStyle(el, 'width'),
             height = domutil.getStyle(el, 'height');
 
-        if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height)) &&
+        if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height) ||
+             util.isNull(width) || util.isNull(height)) &&
             'getBoundingClientRect' in el) {
             bound = el.getBoundingClientRect();
             width = bound.width || el.offsetwidth;
