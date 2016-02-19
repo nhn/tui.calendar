@@ -39,7 +39,8 @@
     "through2": "^2.0.1",
     "underscore": "^1.8.3",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   },
   "scripts": {
     "doc": "./node_modules/.bin/jsdoc -c jsdoc-conf.json"
