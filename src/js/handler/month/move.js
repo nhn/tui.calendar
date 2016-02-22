@@ -147,9 +147,7 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
     if (this.isMonthEventBlock(target)) {
         selector = config.classname('.weekday-event-block');
         modelID = domutil.getData(domutil.closest(target, selector), 'id');
-    }
-
-    if (this.isMoreLayerEventBlock(target)) {
+    } else if (this.isMoreLayerEventBlock(target)) {
         modelID = domutil.getData(target, 'id');
         /**
          * Fire for notificate that the drag event start at more layer view.
