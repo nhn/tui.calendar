@@ -1,3 +1,4 @@
+/* eslint "no-magic-numbers": 0 */
 /**
  * @fileoverview Factory module for control all other factory.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -6,7 +7,7 @@
 
 var util = global.tui.util;
 var Handlebars = require('hbsfy/runtime');
-var config = require('../config'),
+var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
     Drag = require('../handler/drag'),
@@ -32,46 +33,55 @@ var config = require('../config'),
  *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
+ *  @param {string} [options.defaultDate=] - default date to render calendar.
+ *   if not supplied, use today.
  *  @param {object} [options.template] - template option
  *   @param {function} [options.template.allday] - allday template function
  *   @param {function} [options.template.time] - time template function
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
- *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
- *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *  @param {object} [options.month] - options for month view
- *   @param {string} options.month.renderMonth - YYYY-MM render month
  *  @param {Calendar~CalEvent[]} [options.events] - array of CalEvent data for add calendar after initialize.
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
+    var opt;
+
     if (!(this instanceof Calendar)) {
         return new Calendar(options, container);
     }
 
     /**
-     * base date of view (today() will use this property)
-     * @type {Date}
-     */
-    this.baseDate = datetime.start(new Date());
-
-    /**
      * default option from service page
      * @type {object}
      */
-    this.options = this.setOptions(options);
+    this.options = opt = util.extend({
+        groupFunc: null,
+        controller: null,
+        defaultView: 'week',
+        defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
+        template: util.extend({
+            allday: null,
+            time: null
+        }, options.template),
+        week: util.extend({
+            startDayOfWeek: 0
+        }, options.week),
+        month: util.extend({}, options.month),
+        events: []
+    }, options);
 
     /**
-     * original options for reference when ui reset
-     * @type {object}
+     * Current rendered date
+     * @type {Date}
      */
-    this.originOptions = JSON.parse(JSON.stringify(this.options));
+    this.renderDate = opt.defaultDate;
 
     /**
      * base controller
      * @type {Base}
      */
-    this.controller = options.controller || controllerFactory(options);
+    this.controller = opt.controller || controllerFactory(opt);
 
     /**
      * layout view (layout manager)
@@ -83,52 +93,73 @@ function Calendar(options, container) {
      * global drag handler
      * @type {Drag}
      */
-    this.dragHandler = new Drag({
-        distance: 5
-    }, this.layout.container);
-
+    this.dragHandler = new Drag({distance: 5}, this.layout.container);
 
     /**
      * current rendered view name.
      * @type {string}
      */
-    this.currentViewName = options.defaultView || 'week';
+    this.currentViewName = opt.defaultView;
 
-    /**********
-     * SETTING
-     **********/
-    this.layout.controller = this.controller;
+    /**
+     * Refresh method. it can be ref different functions for each view modes.
+     * @type {function}
+     */
+    this.refreshMethod = null;
 
-    function refresh() {
-        this.refreshChildView();
-    }
+    this.initializeView();
+}
 
-    this.controller.on({
-        updateEvent: refresh,
-        createdEvent: refresh
-    }, this);
+/**
+ * Destructor
+ */
+Calendar.prototype.destroy = function() {
+    this.dragHandler.destroy();
+    this.controller.off();
+    this.layout.clear();
+    this.layout.destroy();
+
+
+    this.options = this.renderDate = this.controller =
+        this.layout = this.dragHandler = this.currentViewName =
+        this.refreshMethod = null;
+};
+
+/**
+ * Initialize calendar view
+ */
+Calendar.prototype.initializeView = function() {
+    var self = this,
+        controller = this.controller,
+        viewNameToRender = this.currentViewName,
+        options = this.options;
+
+    this.layout.controller = controller;
+
+    controller.on({
+        updateEvent: refreshCalendar,
+        createdEvent: refreshCalendar
+    });
 
     if (options.events && options.events.length) {
         this.createEvents(options.events, true);
     }
 
-    /**
-     * @type {Date}
-     */
-    this._currentStartDate = null;
+    this.toggleView(viewNameToRender, true);
+
+    util.forEach(options.template, function(func, name) {
+        if (func) {
+            Handlebars.registerHelper(name + '-tmpl', func);
+        }
+    });
 
     /**
-     * @type {Date}
+     * Refresh calendar's child view recursively
      */
-    this._currentEndDate = null;
-
-    /**
-     * @type {function}
-     */
-    this._refreshMethod = null;
-
-    this.initializeView();
-}
+    function refreshCalendar() {
+        self.refreshChildView();
+    }
+};
 
 /**********
  * CRUD Methods
@@ -194,7 +225,7 @@ Calendar.prototype.deleteEvent = function(id) {
  * @param {function} func - option manipulate function
  * @private
  */
-Calendar.prototype._setOptionRecurseively = function(view, func) {
+Calendar.prototype.setOptionRecurseively = function(view, func) {
     view.recursive(function(childView) {
         var opt = childView.options;
 
@@ -209,27 +240,29 @@ Calendar.prototype._setOptionRecurseively = function(view, func) {
 /**
  * @param {string|Date} date - date to show in calendar
  * @param {number} [startDayOfWeek=0] - start day of week
- * @return {array} render range
+ * @returns {array} render range
  * @private
  */
-Calendar.prototype._getWeekRenderRange = function(date, startDayOfWeek) {
-    var day, start, end;
+Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
+    var day, start, end,
+        msFrom = datetime.millisecondsFrom;
 
+    startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
     date = util.isDate(date) ? date : new Date(date);
-    startDayOfWeek = (startDayOfWeek || 0);
     day = date.getDay();
 
-    function mil(d) {
-        return datetime.MILLISECONDS_PER_DAY * d;
-    }
-
     // calculate default render range first.
-    start = new Date(+date - mil(day) + mil(startDayOfWeek));
-    end = new Date(+start + mil(6));
+    start = new Date(
+        Number(date) -
+        msFrom('day', day) +
+        msFrom('day', startDayOfWeek)
+    );
+
+    end = new Date(Number(start) + msFrom('day', 6));
 
     if (day < startDayOfWeek) {
-        start = new Date(+start - mil(7));
-        end = new Date(+end - mil(7));
+        start = new Date(Number(start) - msFrom('day', 7));
+        end = new Date(Number(end) - msFrom('day', 7));
     }
 
     return [start, end];
@@ -238,6 +271,13 @@ Calendar.prototype._getWeekRenderRange = function(date, startDayOfWeek) {
 /**********
  * General Methods
  **********/
+
+/**
+ * Render calendar.
+ */
+Calendar.prototype.render = function() {
+    this.layout.render();
+};
 
 /**
  * Delete all data and clear view.
@@ -249,92 +289,33 @@ Calendar.prototype.clear = function() {
 };
 
 /**
- * Render calendar.
- */
-Calendar.prototype.render = function() {
-    this.layout.render();
-};
-
-/**
  * Refresh calendar layout.
  */
 Calendar.prototype.refresh = function() {
-    if (this._refreshMethod) {
-        this._refreshMethod();
+    if (this.refreshMethod) {
+        this.refreshMethod();
     }
 };
 
 /**
- * Initialize current view.
+ * Refresh child views
+ * @param {string} [viewName] - the name of view to render. if not supplied then refresh all.
  */
-Calendar.prototype.initializeView = function() {
-    var currentViewName = this.currentViewName,
-        options;
-
-    this.toggleView(currentViewName, true, true);
-
-    if (this.currentViewName === 'week') {
-        options = this.options.week;
-        this.setDate(options.renderStartDate, options.renderEndDate);
-    } else {
-        //TODO: month view.
-    }
-};
-
-/**
- * Set calendar's render date range and refresh view
- * @param {string|Date} start - start date of render
- * @param {string|Date} end - end date of render
- */
-Calendar.prototype.setDate = function(start, end) {
-    var ymd = 'YYYY-MM-DD';
-    start = util.isDate(start) ? start : new Date(start);
-
-    if (this.currentViewName === 'week') {
-        if (!end) {
-            config.throwError('Calendar#setDate() Need 2 parameter (start, end) in "week" view.');
-            return;
-        }
-        end = util.isDate(end) ? end : new Date(end);
-
-        this._currentStartDate = new Date(+start);
-        this._currentEndDate = new Date(+end);
-
-        start = datetime.format(start, ymd);
-        end = datetime.format(end, ymd);
-
-        this._setOptionRecurseively(this.getCurrentView(), function(viewOption) {
-            viewOption.renderStartDate = start;
-            viewOption.renderEndDate = end;
-        });
-    } else {
-        //TODO: month view.
+Calendar.prototype.refreshChildView = function(viewName) {
+    if (!viewName) {
+        this.render();
+        return;
     }
 
-    this.refreshChildView(this.currentViewName);
-};
-
-/**
- * Move current render range to range that include supplied date
- * @param {string|Date} date - date to show
- */
-Calendar.prototype.showDate = function(date) {
-    var options = this.options;
-
-    date = util.isDate(date) ? date : new Date(date);
-
-    if (this.currentViewName === 'week') {
-        this.setDate.apply(this, this._getWeekRenderRange(date, options.startDayOfWeek));
-    } else {
-        //TODO: month view.
-    }
+    this.layout.children.items[viewName].render();
 };
 
 /**
  * Move to today.
  */
 Calendar.prototype.today = function() {
-    this.showDate(new Date());
+    this.renderDate = new Date();
+    this.move();
 };
 
 /**
@@ -346,20 +327,55 @@ Calendar.prototype.today = function() {
  * calendar.move(-1);
  */
 Calendar.prototype.move = function(offset) {
-    var start = this._currentStartDate,
-        end = this._currentEndDate,
-        diff;
+    var renderDate = dw(this.renderDate),
+        viewName = this.currentViewName,
+        view = this.getCurrentView(),
+        recursiveSet = this.setOptionRecurseively,
+        date2;
 
-    if (this.currentViewName === 'week') {
-        diff = ((end - start) + datetime.MILLISECONDS_PER_DAY) * (offset || 0);
+    offset = util.isExisty(offset) ? offset : 0;
 
-        start = new Date(+start + diff);
-        end = new Date(+end + diff);
+    if (viewName === 'month') {
+        renderDate.addMonth(offset);
 
-        this.setDate(start, end);
-    } else {
-        //TODO: month view.
+        recursiveSet(view, function(opt) {
+            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+        });
+    } else if (viewName === 'week') {
+        renderDate.addDate(offset * 7);
+        date2 = this.getWeekDayRange(renderDate.d);
+
+        recursiveSet(view, function(opt) {
+            opt.renderStartDate = datetime.format(date2[0], 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(date2[1], 'YYYY-MM-DD');
+        });
+    } else if (viewName === 'day') {
+        renderDate.addDate(offset);
+        date2 = renderDate.clone().setHours(23, 59, 59, 0);
+
+        recursiveSet(view, function(opt) {
+            opt.renderStartDate = datetime.format(renderDate.d, 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(date2.d, 'YYYY-MM-DD');
+        });
     }
+
+    this.renderDate = renderDate.d;
+
+    this.render();
+};
+
+/**
+ * Move to specific date
+ * @param {(Date|string)} date - date to move
+ */
+Calendar.prototype.setDate = function(date) {
+    if (util.isString(date)) {
+        date = datetime.parse(date);
+    }
+
+    this.renderDate = new Date(Number(date));
+
+    this.render();
 };
 
 /**
@@ -381,7 +397,13 @@ Calendar.prototype.prev = function() {
  * @returns {View} current view instance
  */
 Calendar.prototype.getCurrentView = function() {
-    return util.pick(this.layout.children.items, this.currentViewName);
+    var viewName = this.currentViewName;
+
+    if (viewName === 'day') {
+        viewName = 'week';
+    }
+
+    return util.pick(this.layout.children.items, viewName);
 };
 
 /**********
@@ -449,35 +471,35 @@ Calendar.prototype._onResizePanel = function(resizeEventData) {
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
- * @param {Calendar} calendar - 캘린더 팩토리 클래스
  */
-Calendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
-    var handler = view.handler,
+Calendar.prototype._toggleViewEvent = function(isAttach, view) {
+    var self = this,
+        handler = view.handler,
         isMonthView = view.viewName === 'month',
         method = isAttach ? 'on' : 'off';
 
-    util.forEach(handler.click, function(handlerInstance) {
-        handlerInstance[method]('clickEvent', calendar._onClick, calendar);
+    util.forEach(handler.click, function(clickHandler) {
+        clickHandler[method]('clickEvent', self._onClick, self);
     });
 
-    util.forEach(handler.dblclick, function(handlerInstance) {
-        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    util.forEach(handler.dblclick, function(dblclickHandler) {
+        dblclickHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
     });
 
-    util.forEach(handler.creation, function(handlerInstance) {
-        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    util.forEach(handler.creation, function(creationHandler) {
+        creationHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
     });
 
-    util.forEach(handler.move, function(handlerInstance) {
-        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
+    util.forEach(handler.move, function(moveHandler) {
+        moveHandler[method]('beforeUpdateEvent', self._onBeforeUpdate, self);
     });
 
-    util.forEach(handler.resize, function(handlerInstance) {
-        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
+    util.forEach(handler.resize, function(resizeHandler) {
+        resizeHandler[method]('beforeUpdateEvent', self._onBeforeUpdate, self);
     });
 
     if (!isMonthView) {
-        view.vlayout[method]('resize', calendar._onResizePanel, calendar);
+        view.vlayout[method]('resize', self._onResizePanel, self);
     }
 };
 
@@ -487,7 +509,8 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
  * @param {boolean} force - force render despite of current view and new view are equal
  */
 Calendar.prototype.toggleView = function(viewName, force) {
-    var layout = this.layout,
+    var self = this,
+        layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
         options = this.options,
@@ -500,15 +523,25 @@ Calendar.prototype.toggleView = function(viewName, force) {
     this.currentViewName = viewName;
 
     layout.children.doWhenHas(viewName, function(view) {
-        this._toggleViewEvent(false, view, this);
-    }, this);
+        self._toggleViewEvent(false, view);
+    });
 
     layout.clear();
 
-    if (viewName === 'week') {
-        created = weekViewFactory(controller, layout.container, dragHandler, options);
-    } else if (viewName === 'month') {
-        created = monthViewFactory(controller, layout.container, dragHandler, options);
+    if (viewName === 'month') {
+        created = monthViewFactory(
+            controller,
+            layout.container,
+            dragHandler,
+            options
+        );
+    } else if (viewName === 'week' || viewName === 'day') {
+        created = weekViewFactory(
+            controller,
+            layout.container,
+            dragHandler,
+            options
+        );
     } else {
         return;
     }
@@ -516,79 +549,12 @@ Calendar.prototype.toggleView = function(viewName, force) {
     layout.addChild(created.view);
 
     layout.children.doWhenHas(viewName, function(view) {
-        this._toggleViewEvent(true, view, this);
-    }, this);
-
-    this._refreshMethod = created.refresh;
-
-    this.render();
-}
-
-/**
- * Destroy calendar instance.
- */
-Calendar.prototype.destroy = function() {
-    this.dragHandler.destroy();
-    this.controller.off();
-    this.layout.clear();
-    this.layout.destroy();
-
-    this.options = this.baseDate = this.controller =
-        this.layout = this.dragHandler = null;
-}
-
-/**
- * Refresh child views
- * @param {string} [viewName] - the name of view to render. if not supplied then refresh all.
- */
-Calendar.prototype.refreshChildView = function(viewName) {
-    if (!viewName) {
-        this.render();
-        return;
-    }
-
-    this.layout.children.items[viewName].render();
-};
-
-/**
- * Create default option
- * @param {object} options - option from service page
- * @returns {object} default option. 
- */
-Calendar.prototype.setOptions = function(options) {
-    var today = this.baseDate,
-        ymd = 'YYYY-MM-DD',
-        renderRange,
-        weekOpt = options.week,
-        tmplOpt = options.template;
-
-    options = util.extend({
-        defaultView: 'week',    // 기본 주간 뷰 설정
-        week: null,
-        month: null 
-    }, options);
-
-    weekOpt = options.week = util.extend({
-        startDayOfWeek: 0
-    }, options.week);
-
-    if (!weekOpt.renderStartDate || !weekOpt.renderEndDate) {
-        renderRange = this._getWeekRenderRange(new Date(), weekOpt.startDayOfWeek);
-        weekOpt.renderStartDate = datetime.format(renderRange[0], ymd);
-        weekOpt.renderEndDate = datetime.format(renderRange[1], ymd);
-    }
-
-    if (!options.month) {
-        options.month = {
-            renderMonth: datetime.format(today, 'YYYY-MM')
-        };
-    }
-
-    util.forEach(tmplOpt, function(func, name) {
-        Handlebars.registerHelper(name + '-tmpl', func);
+        self._toggleViewEvent(true, view);
     });
 
-    return options;
+    this.refreshMethod = created.refresh;
+
+    this.move();
 };
 
 util.CustomEvents.mixin(Calendar);

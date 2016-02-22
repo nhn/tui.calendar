@@ -32,7 +32,10 @@ function MonthCreationGuide(monthCreation) {
  */
 MonthCreationGuide.prototype.destroy = function() {
     this.monthCreation.off(this);
-    this.guide.destroy();
+
+    if (this.guide) {
+        this.guide.destroy();
+    }
 
     this.guide = this.monthCreation = null;
 };

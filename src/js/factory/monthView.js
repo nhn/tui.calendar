@@ -85,7 +85,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     monthView._beforeDestroy = function() {
         moreView.destroy();
 
-        util.forEach(monthView.handlers, function(type) {
+        util.forEach(monthView.handler, function(type) {
             util.forEach(type, function(handler) {
                 handler.off();
                 handler.destroy();

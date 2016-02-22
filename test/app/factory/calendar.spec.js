@@ -65,25 +65,25 @@ describe('Calendar', function() {
         });
     });
 
-    it('_getWeekRenderRange() can calculate start, end date by supplied date', function() {
+    it('getWeekDayRange() can calculate start, end date by supplied date', function() {
         // 18(수)을 일요일 시작으로 계산하면 15(일) ~ 21(토)
-        expect(inst._getWeekRenderRange(new Date('2015-11-18'), 0)).toEqual([
+        expect(inst.getWeekDayRange(new Date('2015-11-18'), 0)).toEqual([
             new Date('2015-11-15'),
             new Date('2015-11-21')
         ]);
 
         // 17(화)를 수요일 기준으로 계산하면 한 주 빠른 11(수) ~ 17(화)
-        expect(inst._getWeekRenderRange(new Date('2015-11-17'), 3)).toEqual([
+        expect(inst.getWeekDayRange(new Date('2015-11-17'), 3)).toEqual([
             new Date('2015-11-11'),
             new Date('2015-11-17')
         ]);
     });
 
-    it('_setOptionRecurseively() can modify child view\'s option recursively.', function() {
+    it('setOptionRecurseively() can modify child view\'s option recursively.', function() {
         var weekView = inst.layout.children.single();
         var timeGrid = weekView.children.single(function(childView) { return childView.viewName === 'timegrid'; });
 
-        inst._setOptionRecurseively(weekView, function(viewOption) {
+        inst.setOptionRecurseively(weekView, function(viewOption) {
             viewOption.hello = 'world';
         });
 
@@ -96,13 +96,9 @@ describe('Calendar', function() {
         });
 
         it('can change render date range for calendar.', function() {
-            inst.setDate('2015-11-01', '2015-11-07');
+            inst.setDate('2015-11-01');
 
-            expect(inst.layout.children.items.week.options).toEqual({
-                startDayOfWeek: 0,
-                renderStartDate: '2015-11-01',
-                renderEndDate: '2015-11-07'
-            });
+            expect(inst.renderDate).toEqual(new Date('2015-11-01T00:00:00+09:00'));
         });
     });
 });

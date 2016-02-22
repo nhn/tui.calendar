@@ -38,8 +38,8 @@ DW.prototype.safe = function(obj) {
  * @returns {DW} cloned dwrap object
  */
 DW.prototype.clone = function() {
-    return new DW(new Date(+this.d));
-}
+    return new DW(new Date(Number(this.d)));
+};
 
 /**
  * Add days
@@ -52,6 +52,29 @@ DW.prototype.addDate = function(day) {
 };
 
 /**
+ * Add month
+ * @param {number} m - month to add
+ * @returns {DW} wrapper object
+ */
+DW.prototype.addMonth = function(m) {
+    this.d.setMonth(this.d.getMonth() + m);
+    return this;
+};
+
+/**
+ * Set hour, minutes, seconds, milliseconds
+ * @param {number} h - hours
+ * @param {number} m - minutes
+ * @param {number} s - seconds
+ * @param {number} ms - milliseconds
+ * @returns {DW} wrapper object
+ */
+DW.prototype.setHours = function(h, m, s, ms) {
+    this.d.setHours(h, m, s, ms);
+    return this;
+};
+
+/**
  * Whether date is between supplied dates?
  * @param {Date|DW} d1 - from date
  * @param {Date|DW} d2 - to date
@@ -60,7 +83,7 @@ DW.prototype.addDate = function(day) {
 DW.prototype.isBetween = function(d1, d2) {
     var safe = this.safe;
     return safe(d1) <= this.d && this.d <= safe(d2);
-}
+};
 
 module.exports = DW;
 

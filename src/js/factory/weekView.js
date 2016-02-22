@@ -67,6 +67,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             {autoHeight: true}
         ]
     }, vlayoutContainer);
+    weekView.vlayout = vlayout;
 
     /**********
      * 종일일정
@@ -94,7 +95,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         vlayout.refresh();
     });
 
-    weekView.handlers = {
+    weekView.handler = {
         click: {
             allday: alldayClickHandler,
             time: timeClickHandler
@@ -122,7 +123,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
-        util.forEach(weekView.handlers, function(type) {
+        util.forEach(weekView.handler, function(type) {
             util.forEach(type, function(handler) {
                 handler.off();
                 handler.destroy();
