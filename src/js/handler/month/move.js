@@ -67,7 +67,22 @@ MonthMove.prototype.destroy = function() {
  *  session.
  */
 MonthMove.prototype._updateEvent = function(eventCache) {
-    console.log(eventCache);
+    var model = eventCache.model,
+        duration = Number(model.duration()),
+        dragEndTime = Number(eventCache.ends);
+
+    /**
+     * @event MonthMove#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
+        starts: new Date(dragEndTime),
+        ends: new Date(dragEndTime + duration)
+    });
 };
 
 /**
