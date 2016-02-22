@@ -118,12 +118,12 @@ var Month = {
                         getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
                 }
 
+                maxIndexInYMD[eventYMD] = timeViewModel.top =
+                    (alldayMaxTopInYMD + 1);
+
                 if (timeViewModel.top > alldayMaxTopInYMD) {
                     return;
                 }
-
-                maxIndexInYMD[eventYMD] = timeViewModel.top =
-                    (alldayMaxTopInYMD + 1);
             });
     },
 
