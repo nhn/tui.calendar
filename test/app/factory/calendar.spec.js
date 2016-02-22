@@ -15,6 +15,7 @@ describe('Calendar', function() {
 
         controller = ControllerFactory();
         spyOn(controller, 'createEvents');
+        spyOn(Calendar.prototype, '_toggleViewEvent');
 
         inst = Calendar({ 
             defaultView: 'week',

@@ -382,7 +382,104 @@ Calendar.prototype.prev = function() {
  */
 Calendar.prototype.getCurrentView = function() {
     return util.pick(this.layout.children.items, this.currentViewName);
-}
+};
+
+/**********
+ * Custom Events
+ **********/
+
+/**
+ * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
+ * @fires Calendar#clickEvent
+ * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
+ */
+Calendar.prototype._onClick = function(clickEventData) {
+    /**
+     * @events Calendar#clickEvent
+     * @type {object}
+     * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
+     * @property {MouseEvent} jsEvent - 마우스 이벤트
+     */
+    this.fire('clickEvent', clickEventData);
+};
+
+/**
+ * @fires {Calendar#beforeCreateEvent}
+ * @param {object} createEventData - select event data from allday, time
+ */
+Calendar.prototype._onBeforeCreate = function(createEventData) {
+    /**
+     * @events Calendar#beforeCreateEvent
+     * @type {object}
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', createEventData);
+};
+
+/**
+ * @fires Calendar#beforeUpdateEvent
+ * @param {object} updateEventData - update event data
+ */
+Calendar.prototype._onBeforeUpdate = function(updateEventData) {
+    /**
+     * @event Calendar#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeUpdateEvent', updateEventData);
+};
+
+/**
+ * @fires Calendar#resizePanel
+ * @param {object} resizeEventData - resize event data object
+ */
+Calendar.prototype._onResizePanel = function(resizeEventData) {
+    /**
+     * @event Calendar#resizePanel
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     */
+    this.fire('resizePanel', resizeEventData);
+};
+
+/**
+ * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
+ * @param {boolean} isAttach - true면 이벤트 연결함.
+ * @param {Week|Month} view - 주뷰 또는 월뷰
+ * @param {Calendar} calendar - 캘린더 팩토리 클래스
+ */
+Calendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
+    var handler = view.handler,
+        isMonthView = view.viewName === 'month',
+        method = isAttach ? 'on' : 'off';
+
+    util.forEach(handler.click, function(handlerInstance) {
+        handlerInstance[method]('clickEvent', calendar._onClick, calendar);
+    });
+
+    util.forEach(handler.dblclick, function(handlerInstance) {
+        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    });
+
+    util.forEach(handler.creation, function(handlerInstance) {
+        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
+    });
+
+    util.forEach(handler.move, function(handlerInstance) {
+        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
+    });
+
+    util.forEach(handler.resize, function(handlerInstance) {
+        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
+    });
+
+    if (!isMonthView) {
+        view.vlayout[method]('resize', calendar._onResizePanel, calendar);
+    }
+};
 
 /**
  * Toggle current view
@@ -401,6 +498,11 @@ Calendar.prototype.toggleView = function(viewName, force) {
     }
 
     this.currentViewName = viewName;
+
+    layout.children.doWhenHas(viewName, function(view) {
+        this._toggleViewEvent(false, view, this);
+    }, this);
+
     layout.clear();
 
     if (viewName === 'week') {
@@ -412,7 +514,13 @@ Calendar.prototype.toggleView = function(viewName, force) {
     }
 
     layout.addChild(created.view);
+
+    layout.children.doWhenHas(viewName, function(view) {
+        this._toggleViewEvent(true, view, this);
+    }, this);
+
     this._refreshMethod = created.refresh;
+
     this.render();
 }
 

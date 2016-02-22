@@ -67,9 +67,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         moreView.hide();
     });
 
-    monthView.handlers = {
+    monthView.handler = {
         click: {
-            'default': clickHandler 
+            'default': clickHandler
         },
         creation: {
             'default': creationHandler

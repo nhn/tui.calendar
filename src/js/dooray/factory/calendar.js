@@ -158,106 +158,11 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
      * @property {CalEvent} model - model instance to delete
      */
     this.fire('beforeDeleteEvent', {
-        model: calEvent 
+        model: calEvent
     });
-    
+
     ctrl.deleteEvent(calEvent);
     this.render();
-};
-
-/**********
- * Custom Events
- **********/
-
-/**
- * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
- * @emits ServiceCalendar#clickEvent
- * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
- */
-ServiceCalendar.prototype._onClick = function(clickEventData) {
-    /**
-     * @events ServiceCalendar#clickEvent
-     * @type {object}
-     * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
-     * @property {MouseEvent} jsEvent - 마우스 이벤트
-     */
-    this.fire('clickEvent', clickEventData);
-};
-
-/**
- * @fires {ServiceCalendar#beforeCreateEvent}
- * @param {object} createEventData - select event data from allday, time
- */
-ServiceCalendar.prototype._onBeforeCreate = function(createEventData) {
-    /**
-     * @events ServiceCalendar#beforeCreateEvent
-     * @type {object}
-     * @property {Date} starts - select start date
-     * @property {Date] ends - select end date
-     */
-    this.fire('beforeCreateEvent', createEventData);
-};
-
-/**
- * @fires ServiceCalendar#beforeUpdateEvent
- * @param {object} updateEventData - update event data
- */
-ServiceCalendar.prototype._onBeforeUpdate = function(updateEventData) {
-    /**
-     * @event ServiceCalendar#beforeUpdateEvent
-     * @type {object}
-     * @property {CalEvent} model - model instance to update
-     * @property {Date} starts - select start date
-     * @property {Date] ends - select end date
-     */
-    this.fire('beforeUpdateEvent', updateEventData);
-};
-
-/**
- * @fires ServiceCalendar#resizePanel
- * @param {object} resizeEventData - resize event data object
- */
-ServiceCalendar.prototype._onResizePanel = function(resizeEventData) {
-    /**
-     * @event ServiceCalendar#resizePanel
-     * @type {object}
-     * @property {number[]} layoutData - layout data after resized
-     */
-    this.fire('resizePanel', resizeEventData);
-};
-
-/**
- * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
- * @param {boolean} isAttach - true면 이벤트 연결함.
- * @param {Week|Month} view - 주뷰 또는 월뷰
- * @param {ServiceCalendar} calendar - 캘린더 팩토리 클래스
- */
-ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
-    var handler = view.handler,
-        calendar = this,
-        method = isAttach ? 'on' : 'off';
-
-    util.forEach(handler.click, function(handlerInstance) {
-        handlerInstance[method]('clickEvent', calendar._onClick, calendar);
-    });
-
-    util.forEach(handler.dblclick, function(handlerInstance) {
-        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
-    });
-
-    util.forEach(handler.creation, function(handlerInstance) {
-        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
-    });
-
-    util.forEach(handler.move, function(handlerInstance) {
-        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
-    });
-
-    util.forEach(handler.resize, function(handlerInstance) {
-        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
-    });
-
-    view.vlayout[method]('resize', calendar._onResizePanel, calendar);
 };
 
 /**********

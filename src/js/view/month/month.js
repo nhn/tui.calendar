@@ -56,6 +56,12 @@ function Month(options, container, controller) {
 util.inherit(Month, View);
 
 /**
+ * Name of view. for managing subview at layout view
+ * @type {string}
+ */
+Month.prototype.viewName = 'month';
+
+/**
  * Get calendar array by supplied date
  * @param {string} renderMonthStr - month to render YYYY-MM
  * @param {number} [startDayOfWeek=0] - start day of week
@@ -63,7 +69,7 @@ util.inherit(Month, View);
  */
 Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
     var date = datetime.parse(renderMonthStr + '-01'),
-        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0); 
+        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0);
 
     return calendar;
 };
