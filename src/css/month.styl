@@ -11,8 +11,11 @@
         border-bottom: 1px solid #ccc
 
     .dayname-item
+        height: 100%
         border-left: 1px solid #ccc
         margin-left: -1px
+        &:first-child
+            border: none
 
     .weeks
         padding-top: 20px
@@ -22,6 +25,8 @@
         border-bottom: 1px solid #ccc
         position: relative
         background-color: #fff
+        &:last-child
+            border: none
 
     .more
         background-color: #fff
