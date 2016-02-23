@@ -3,7 +3,9 @@
     <div class="{{CSS_PREFIX}}month-dayname-item"
          style="position: absolute;
                 width: {{@root.width}}%;
-                left: {{multiply @index @root.width}}%">{{this}}</div>
+                left: {{multiply @index @root.width}}%">
+        <span class="{{holiday day}}">{{label}}</span>
+    </div>
 {{/each}}
 </div>
 <div class="{{CSS_PREFIX}}month-weeks"></div>

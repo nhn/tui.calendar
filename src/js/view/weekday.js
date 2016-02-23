@@ -74,7 +74,11 @@ Weekday.prototype.getBaseViewModel = function() {
         eventBlockHeight: (opt.eventHeight + opt.eventGutter),
         eventBlockGutter: opt.eventGutter,
         dates: util.map(range, function(date) {
-            return date.getDate();
+            return {
+                date: date.getDate(),
+                month: date.getMonth() + 1,
+                day: date.getDay()
+            };
         })
     };
 };

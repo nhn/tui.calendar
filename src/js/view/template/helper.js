@@ -103,16 +103,14 @@ module.exports = {
         return [top, left, width, height].join(';');
     },
 
-    /**
-     * Use in dayname.hbs
-     * @returns {string} css class
-     */
-    'dayname-isHolliday': function() {
-        if (this.day === 0 || this.day === 6) {
-            return config.classname('dayname') + ' ' + config.classname('holliday');
+    'holiday': function(day) {
+        var cssClass = '';
+
+        if (day === 0 || day === 6) {
+            cssClass = config.classname('holiday');
         }
 
-        return config.classname('dayname');
+        return cssClass;
     },
 
     /**

@@ -3,7 +3,7 @@
     <div class="{{CSS_PREFIX}}weekday-grid-line"
          style="width:{{@root.width}}%;
                 left:{{multiply @root.width @index}}%;">
-        {{this}}
+        <span class="{{holiday day}}">{{#fi date '==' 1}}{{month}}월{{/fi}} {{date}}일</span>
     </div>
 {{/each ~}}
 </div>

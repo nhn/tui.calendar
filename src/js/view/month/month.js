@@ -128,7 +128,10 @@ Month.prototype.render = function() {
     daynameViewModel = util.map(
         util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
         function(i) {
-            return daynames[i];
+            return {
+                day: i,
+                label: daynames[i]
+            };
         }
     );
 
