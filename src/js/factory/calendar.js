@@ -1,4 +1,3 @@
-/* eslint "no-magic-numbers": 0 */
 /**
  * @fileoverview Factory module for control all other factory.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
