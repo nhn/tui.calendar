@@ -4,7 +4,9 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = global.tui.util,
+    aps = Array.prototype.slice;
+
 var Collection = require('../../common/collection'),
     array = require('../../common/array');
 
@@ -198,23 +200,20 @@ var Week = {
      * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
-     * @param {object} [andFilter] - additional filter to AND clause
+     * @param {function[]} [andFilters] - optional filters to applying search query
      * @returns {object} events grouped by dates.
      */
-    findByDateRange: function(starts, ends, andFilter) {
+    findByDateRange: function(starts, ends, andFilters) {
         var ctrlCore = this.Core,
             ctrlWeek = this.Week,
-            filters = [],
+            filter = ctrlCore.getEventInDateRangeFilter(starts, ends),
             modelColl,
             group;
 
-        filters.push(ctrlCore.getEventInDateRangeFilter(starts, ends));
+        andFilters = andFilters || [];
+        filter = Collection.and.apply(null, [filter].concat(andFilters));
 
-        if (andFilter) {
-            filters.push(andFilter);
-        }
-
-        modelColl = this.events.find(Collection.and.apply(null, filters));
+        modelColl = this.events.find(filter);
         modelColl = ctrlCore.convertToViewModel(modelColl);
 
         group = modelColl.groupBy(['allday', 'time'], this.groupFunc);

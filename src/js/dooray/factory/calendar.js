@@ -41,6 +41,7 @@ var config = require('../../config'),
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} [options.week.panelHeights] - each panel height
  *  @param {object} [options.month] - options for month view
+ *   @param {functio} [options.eventFilter] - event filter for month view
  *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  * @param {HTMLDivElement} container = container element for calendar
  */
@@ -51,13 +52,14 @@ function ServiceCalendar(options, container) {
 
     options = util.extend({
         calendarColor: {},
-        /**
-         * 서비스에서 사용되는 모델 구분용 옵션 함수
-         * @param {CalEventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
-         * @returns {string} 구분 키 값
-         */
         groupFunc: function(viewModel) {
             return viewModel.model.category;
+        },
+        month: {
+            eventFilter: function(model) {
+                return Boolean(model.visible) &&
+                    (model.category === 'allday' || model.category === 'time');
+            }
         }
     }, options);
 

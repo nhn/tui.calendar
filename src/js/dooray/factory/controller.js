@@ -4,7 +4,9 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = global.tui.util,
+    aps = Array.prototype.slice;
+
 var datetime = require('../../common/datetime'),
     DoorayBase = require('../controller/base'),
     Core = require('../../controller/viewMixin/core'),
@@ -26,45 +28,54 @@ function mixin(from, to, propertyName) {
  */
 module.exports = function(options) {
     var controller = new DoorayBase(options),
-        originFindByDateRange;
+        originQuery;
 
     mixin(Core, controller, 'Core');
     mixin(Week, controller, 'Week');
     mixin(Month, controller, 'Month');
 
-    // 일정 조회 API에 기존 캘린더에 없었던 milstone, task를 지원하도록
-    // 하기 위해 메서드를 오버라이딩한다.
-    originFindByDateRange = controller.Week.findByDateRange;
+    /**********
+     * Override Week#findByDateRange for support events that category is 'miles
+     * tone', 'task'.
+     **********/
 
-    // visible이 true인 일정만 필터링 하기 위한 필터 함수
-    function filterModelIsVisible(model) {
-        return !!model.visible;
-    }
+    originQuery = controller.Week.findByDateRange;
 
     /**
+     * Find event and get view model for specific month
+     * @this Base
      * @override
-     * @memberOf {DoorayBase.Week}
+     * @param {Date} starts - start date to find events
+     * @param {Date} ends - end date to find events
+     * @param {function[]} [andFilters] - optional filters to applying search query
+     * @returns {object} view model data
      */
-    function findByDateRange(starts, ends) {
-        var dateRange = util.map(datetime.range(
+    function findByDateRange(starts, ends, andFilters) {
+        var dateRange = datetime.range(
                 datetime.start(starts),
                 datetime.end(ends),
                 datetime.MILLISECONDS_PER_DAY
-            ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
-            viewModel = originFindByDateRange(starts, ends, filterModelIsVisible);
+            ),
+            ymdRange = util.map(dateRange, function(d) {
+                return datetime.format(d, 'YYYY-MM-DD');
+            }),
+            viewModels;
 
-        util.forEach(viewModel, function(coll, key, obj) {
+        andFilters = andFilters || [];
+        viewModels = originQuery(starts, ends, andFilters);
+
+        util.forEach(viewModels, function(coll, key, obj) {
             var groupedByYMD;
 
             // 마일스톤, 업무 뷰 뷰모델 가공
             if (key === 'task' || key === 'milestone') {
-                groupedByYMD = coll.groupBy(dateRange, function(viewModel) {
+                groupedByYMD = coll.groupBy(ymdRange, function(viewModel) {
                     return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
                 });
 
                 if (key === 'task') {
-                    util.forEach(groupedByYMD, function(coll, ymd, obj) {
-                        obj[ymd] = coll.groupBy(function(viewModel) {
+                    util.forEach(groupedByYMD, function(tasks, ymd, _obj) {
+                        _obj[ymd] = tasks.groupBy(function(viewModel) {
                             return viewModel.model.dueDateClass;
                         });
                     });
@@ -74,8 +85,8 @@ module.exports = function(options) {
             }
         });
 
-        return viewModel;
-    };
+        return viewModels;
+    }
 
     controller.Week.findByDateRange = findByDateRange;
 

@@ -4,7 +4,8 @@
  */
 'use strict';
 var util = global.tui.util,
-    mmax = Math.max;
+    mmax = Math.max,
+    aps = Array.prototype.slice;
 
 var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
@@ -132,24 +133,21 @@ var Month = {
      * @this Base
      * @param {Date} starts - start date to find events
      * @param {Date} ends - end date to find events
-     * @param {function} [andFilter] - additional filter to AND clause
+     * @param {function[]} [andFilters] - optional filters to applying search query
      * @returns {object} view model data
      */
-    findByDateRange: function(starts, ends, andFilter) {
+    findByDateRange: function(starts, ends, andFilters) {
         var ctrlCore = this.Core,
             ctrlMonth = this.Month,
-            filters = [],
+            filter = ctrlCore.getEventInDateRangeFilter(starts, ends),
             coll, vColl, vList,
             collisionGroup,
             matrices;
 
-        filters.push(ctrlCore.getEventInDateRangeFilter(starts, ends));
+        andFilters = andFilters || [];
+        filter = Collection.and.apply(null, [filter].concat(andFilters));
 
-        if (andFilter) {
-            filters.concat(andFilter);
-        }
-
-        coll = this.events.find(Collection.and.apply(null, filters));
+        coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
         vColl = ctrlMonth._adjustRenderRange(starts, ends, vColl);
         vList = vColl.sort(array.compare.event.asc);
@@ -157,7 +155,7 @@ var Month = {
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
 
-        ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue); 
+        ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);
         ctrlMonth._adjustTimeTopIndex(vColl);
 
         return matrices;
