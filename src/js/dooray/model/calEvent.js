@@ -53,12 +53,6 @@ function DoorayEvent() {
     this.dueDateClass = '';
 
     /**
-     * 일정 노출 여부
-     * @type {boolean}
-     */
-    this.visible = true;
-
-    /**
      * 렌더링과 관계 없는 별도 데이터 저장 공간.
      * @type {object}
      */
@@ -90,7 +84,6 @@ DoorayEvent.prototype.init = function(options) {
     this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
-    this.visible = util.isExisty(options.visible) ? options.visible : true;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {

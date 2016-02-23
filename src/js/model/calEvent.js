@@ -53,6 +53,12 @@ function CalEvent() {
     this.color = '#000';
 
     /**
+     * event block visibility
+     * @type {boolean}
+     */
+    this.visible = true;
+
+    /**
      * event background color
      * @type {string}
      */
@@ -97,6 +103,7 @@ CalEvent.prototype.init = function(options) {
     this.id = options.id || '';
     this.title = options.title || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
+    this.visible = util.isExisty(options.visible) ? options.visible : true;
 
     if (options.starts) {
         this.starts = new Date(options.starts);
