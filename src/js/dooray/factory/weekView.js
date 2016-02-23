@@ -54,7 +54,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler,
+        timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -155,7 +155,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
-        util.forEach(weekView.handlers, function(type) {
+        util.forEach(weekView.handler, function(type) {
             util.forEach(type, function(handler) {
                 handler.off();
                 handler.destroy();

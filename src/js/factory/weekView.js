@@ -129,6 +129,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                 handler.destroy();
             });
         });
+
+        weekView.off();
     };
 
     return {

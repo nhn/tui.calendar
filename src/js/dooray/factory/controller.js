@@ -51,7 +51,7 @@ module.exports = function(options) {
                 datetime.end(ends),
                 datetime.MILLISECONDS_PER_DAY
             ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
-            viewModel = originFindByDateRange(starts, ends, [filterModelIsVisible]);
+            viewModel = originFindByDateRange(starts, ends, filterModelIsVisible);
 
         util.forEach(viewModel, function(coll, key, obj) {
             var groupedByYMD;

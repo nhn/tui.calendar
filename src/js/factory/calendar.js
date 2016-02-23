@@ -63,11 +63,11 @@ function Calendar(options, container) {
         template: util.extend({
             allday: null,
             time: null
-        }, options.template),
+        }, util.pick(options, 'template') || {}),
         week: util.extend({
             startDayOfWeek: 0
-        }, options.week),
-        month: util.extend({}, options.month),
+        }, util.pick(options, 'week') || {}),
+        month: util.extend({}, util.pick(options, 'month') || {}),
         events: []
     }, options);
 
@@ -81,7 +81,7 @@ function Calendar(options, container) {
      * base controller
      * @type {Base}
      */
-    this.controller = opt.controller || controllerFactory(opt);
+    this.controller = opt.controller || this.createController();
 
     /**
      * layout view (layout manager)
@@ -99,7 +99,7 @@ function Calendar(options, container) {
      * current rendered view name.
      * @type {string}
      */
-    this.currentViewName = opt.defaultView;
+    this.viewName = opt.defaultView;
 
     /**
      * Refresh method. it can be ref different functions for each view modes.
@@ -107,8 +107,33 @@ function Calendar(options, container) {
      */
     this.refreshMethod = null;
 
-    this.initializeView();
+    this.initialize();
 }
+
+/**
+ * Create controller instance
+ * @returns {Base} controller instance
+ */
+Calendar.prototype.createController = function() {
+    return controllerFactory(this.options);
+};
+
+/**
+ * Create week view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Week} week view instance
+ */
+Calendar.prototype.createWeekView = function(controller, container, dragHandler, options) {
+    return weekViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+};
 
 /**
  * Destructor
@@ -119,20 +144,19 @@ Calendar.prototype.destroy = function() {
     this.layout.clear();
     this.layout.destroy();
 
-
     this.options = this.renderDate = this.controller =
-        this.layout = this.dragHandler = this.currentViewName =
+        this.layout = this.dragHandler = this.viewName =
         this.refreshMethod = null;
 };
 
 /**
- * Initialize calendar view
+ * Initialize calendar
  */
-Calendar.prototype.initializeView = function() {
+Calendar.prototype.initialize = function() {
     var self = this,
         controller = this.controller,
-        viewNameToRender = this.currentViewName,
-        options = this.options;
+        viewName = this.viewName,
+        opt = this.options;
 
     this.layout.controller = controller;
 
@@ -141,17 +165,17 @@ Calendar.prototype.initializeView = function() {
         createdEvent: refreshCalendar
     });
 
-    if (options.events && options.events.length) {
-        this.createEvents(options.events, true);
+    if (opt.events && opt.events.length) {
+        this.createEvents(opt.events, true);
     }
 
-    this.toggleView(viewNameToRender, true);
-
-    util.forEach(options.template, function(func, name) {
+    util.forEach(opt.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
+
+    this.toggleView(viewName, true);
 
     /**
      * Refresh calendar's child view recursively
@@ -328,7 +352,7 @@ Calendar.prototype.today = function() {
  */
 Calendar.prototype.move = function(offset) {
     var renderDate = dw(this.renderDate),
-        viewName = this.currentViewName,
+        viewName = this.viewName,
         view = this.getCurrentView(),
         recursiveSet = this.setOptionRecurseively,
         date2;
@@ -360,8 +384,6 @@ Calendar.prototype.move = function(offset) {
     }
 
     this.renderDate = renderDate.d;
-
-    this.render();
 };
 
 /**
@@ -383,6 +405,7 @@ Calendar.prototype.setDate = function(date) {
  */
 Calendar.prototype.next = function() {
     this.move(1);
+    this.render();
 };
 
 /**
@@ -390,6 +413,7 @@ Calendar.prototype.next = function() {
  */
 Calendar.prototype.prev = function() {
     this.move(-1);
+    this.render();
 };
 
 /**
@@ -397,7 +421,7 @@ Calendar.prototype.prev = function() {
  * @returns {View} current view instance
  */
 Calendar.prototype.getCurrentView = function() {
-    var viewName = this.currentViewName;
+    var viewName = this.viewName;
 
     if (viewName === 'day') {
         viewName = 'week';
@@ -505,22 +529,21 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view) {
 
 /**
  * Toggle current view
- * @param {string} viewName - the name of view.
+ * @param {string} newViewName - new view name to render
  * @param {boolean} force - force render despite of current view and new view are equal
  */
-Calendar.prototype.toggleView = function(viewName, force) {
+Calendar.prototype.toggleView = function(newViewName, force) {
     var self = this,
         layout = this.layout,
         controller = this.controller,
         dragHandler = this.dragHandler,
         options = this.options,
+        viewName = this.viewName,
         created;
 
-    if (!force && this.currentViewName === viewName) {
+    if (!force && viewName === newViewName) {
         return;
     }
-
-    this.currentViewName = viewName;
 
     layout.children.doWhenHas(viewName, function(view) {
         self._toggleViewEvent(false, view);
@@ -528,33 +551,33 @@ Calendar.prototype.toggleView = function(viewName, force) {
 
     layout.clear();
 
-    if (viewName === 'month') {
+    if (newViewName === 'month') {
         created = monthViewFactory(
             controller,
             layout.container,
             dragHandler,
             options
         );
-    } else if (viewName === 'week' || viewName === 'day') {
-        created = weekViewFactory(
+    } else if (newViewName === 'week' || newViewName === 'day') {
+        created = this.createWeekView(
             controller,
             layout.container,
             dragHandler,
             options
         );
-    } else {
-        return;
     }
 
     layout.addChild(created.view);
 
-    layout.children.doWhenHas(viewName, function(view) {
+    layout.children.doWhenHas(newViewName, function(view) {
         self._toggleViewEvent(true, view);
     });
 
+    this.viewName = newViewName;
     this.refreshMethod = created.refresh;
 
     this.move();
+    this.render();
 };
 
 util.CustomEvents.mixin(Calendar);

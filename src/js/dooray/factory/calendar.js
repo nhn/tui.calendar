@@ -29,58 +29,63 @@ var config = require('../../config'),
  * @extends {Calendar}
  * @param {object} options - options for calendar
  *  @param {string} [options.cssPrefix] - CSS classname prefix
- *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
+ *  @param {function} [options.groupFunc] - function for group event models
+ *   {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
- *  @param {object} [options.calendarColor] - {@see ServiceCalendar~DoorayEvent} 의 calendarID별로 스타일을 미리 지정 가능
+ *  @param {string} [options.defaultDate=] - default date to render calendar.
+ *   if not supplied, use today.
+ *  @param {object} [options.calendarColor] - {@see ServiceCalendar~DoorayEvent}
+ *   의 calendarID별로 스타일을 미리 지정 가능
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
- *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
- *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *   @param {string} [options.week.panelHeights] - each panel height
- *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  *  @param {object} [options.month] - options for month view
- *  @param {string} options.month.renderMonth - YYYY-MM render month
+ *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  * @param {HTMLDivElement} container = container element for calendar
  */
 function ServiceCalendar(options, container) {
-    var controller;
-
     if (!(this instanceof ServiceCalendar)) {
         return new ServiceCalendar(options, container);
     }
 
-    /**
-     * 서비스에서 사용되는 모델 구분용 옵션 함수
-     * @param {CalEventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
-     * @returns {string} 구분 키 값
-     */
-    options.groupFunc = function(viewModel) {
-        return viewModel.model.category;
-    };
-
-    controller = options.controller = controllerFactory(options);
-
-    // FullCalendar 기본 모듈은 category, dueDateClass 플래그를 모름. 때문에
-    // 이곳에서 이벤트 핸들러를 등록해서 일정 생성 전에 isAllDay플래그를 보고
-    // category를 수동으로 지정해준다
-    controller.on('beforeCreateEvent', function(e) {
-        var data = e.data;
-
-        if (!data.category) {
-            data.category = data.isAllDay ? 'allday' : 'time';
+    options = util.extend({
+        calendarColor: {},
+        /**
+         * 서비스에서 사용되는 모델 구분용 옵션 함수
+         * @param {CalEventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
+         * @returns {string} 구분 키 값
+         */
+        groupFunc: function(viewModel) {
+            return viewModel.model.category;
         }
-    });
+    }, options);
 
-    /**
-     * @type {object}
-     */
-    this.calendarColor = options.calendarColor || {};
+    this.calendarColor = options.calendarColor;
 
     Calendar.call(this, options, container);
 }
 
 util.inherit(ServiceCalendar, Calendar);
+
+/**
+ * @override
+ */
+ServiceCalendar.prototype.createController = function() {
+    return controllerFactory(this.options);
+};
+
+/**
+ * @override
+ */
+ServiceCalendar.prototype.createWeekView = function(controller, container, dragHandler, options) {
+    return serviceWeekViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+};
 
 /**********
  * CRUD override
@@ -209,7 +214,7 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
         model.bgColor = ownColor.bgColor;
     });
 
-    if (!!ownColor.render) {
+    if (ownColor.render) {
         this.render();
     }
 };
@@ -255,48 +260,6 @@ ServiceCalendar.prototype.showEventsByCalendarID = function(calendarID, render) 
 ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarID, render) {
     render = util.isExisty(render) ? render : true;
     this._toggleEventsByCalendarID(calendarID, true, render);
-};
-
-/**
- * 주뷰, 월뷰 간 전환
- * @override
- * @param {string} viewName - 'week', 'month' 중 하나
- * @param {boolean} [force=false] - true 지정시 뷰 전환이 없어도 전환을 위한 동작을 수행한다
- * @param {boolean} [silent=false] - no auto render after creation when set true
- */
-ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
-    var layout = this.layout,
-        controller = this.controller,
-        dragHandler = this.dragHandler,
-        options = this.options,
-        created;
-
-    if (!force && this.currentViewName === viewName) {
-        return;
-    }
-    
-    layout.children.doWhenHas(viewName, function(view) {
-        this._toggleViewEvent(false, view, this);
-    }, this);
-    layout.clear();
-
-    if (viewName === 'week') {
-        created = serviceWeekViewFactory(controller, layout.container, dragHandler, options);
-        layout.addChild(created.view);
-        this._refreshMethod = created.refresh;
-    } else if (viewName === 'month') {
-        //TODO: month view. 
-    }
-
-    layout.children.doWhenHas(viewName, function(view) {
-        this._toggleViewEvent(true, view, this);
-    }, this);
-
-    this.currentViewName = viewName;
-
-    if (!silent) {
-        this.render();
-    }
 };
 
 module.exports = ServiceCalendar;

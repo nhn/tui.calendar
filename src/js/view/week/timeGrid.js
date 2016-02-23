@@ -62,6 +62,12 @@ function TimeGrid(options, container) {
     this.intervalID = 0;
 
     /**
+     * id for timeout. use for TimeGrid#scrollToNow
+     * @type {number}
+     */
+    this.timeoutID = 0;
+
+    /**
      * @type {boolean}
      */
     this._scrolled = false;
@@ -85,13 +91,15 @@ TimeGrid.prototype.viewName = 'timegrid';
  * @override
  */
 TimeGrid.prototype._beforeDestroy = function() {
-    window.clearInterval(this.intervalID);
+    clearTimeout(this.timeoutID);
+    clearInterval(this.intervalID);
 
     if (this._autoScroll) {
         this._autoScroll.destroy();
     }
 
-    this._autoScroll = this.hourmarker = null;
+    this._autoScroll = this.hourmarker = this.timeoutID =
+        this.intervalID = null;
 };
 
 /**
@@ -290,8 +298,8 @@ TimeGrid.prototype.refreshHourmarker = function() {
  * Attach events
  */
 TimeGrid.prototype.attachEvent = function() {
-    window.clearInterval(this.intervalID);
-    this.intervalID = window.setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
+    clearInterval(this.intervalID);
+    this.intervalID = setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
 };
 
 /**
@@ -300,7 +308,8 @@ TimeGrid.prototype.attachEvent = function() {
 TimeGrid.prototype.scrollToNow = function() {
     var container = this.container;
 
-    window.setTimeout(util.bind(function() {
+    clearTimeout(this.timeoutID);
+    this.timeoutID = setTimeout(util.bind(function() {
         var currentHourTop = this.hourmarker.getBoundingClientRect().top - 
                 this.container.getBoundingClientRect().top,
             viewBound = this.getViewBound();
