@@ -339,7 +339,9 @@ Calendar.prototype.refreshChildView = function(viewName) {
  */
 Calendar.prototype.today = function() {
     this.renderDate = new Date();
+
     this.move();
+    this.render();
 };
 
 /**
