@@ -313,10 +313,6 @@ Calendar.prototype.refresh = function() {
     }
 
     this.render();
-
-    // if (childView) {
-    //     childView.vLayout.refresh();
-    // }
 };
 
 /**
