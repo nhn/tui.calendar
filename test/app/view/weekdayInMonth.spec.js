@@ -5,10 +5,19 @@ describe('view:WeekdayInMonth', function() {
         mockInst;
 
     describe('_getRenderLimitIndex()', function() {
+        var mockGetViewBound;
+
+        beforeEach(function() {
+            mockGetViewBound = jasmine.createSpy('getViewBound');
+        });
+
         it('should 2 when containerHeight 60, event block height is 20.', function() {
+
+            mockGetViewBound.and.returnValue({height: 60});
             mockInst = {
+                getViewBound: mockGetViewBound,
                 options: {
-                    containerHeight: 60,
+                    heightPercent: 100,
                     eventHeight: 18,
                     eventGutter: 2
                 }
@@ -19,9 +28,11 @@ describe('view:WeekdayInMonth', function() {
         });
 
         it('should 0 when containerHeight is 0.', function() {
+            mockGetViewBound.and.returnValue({height: 0});
             mockInst = {
+                getViewBound: mockGetViewBound,
                 options: {
-                    containerHeight: 0,
+                    heightPercent: 100,
                     eventHeight: 18,
                     eventGutter: 2
                 }

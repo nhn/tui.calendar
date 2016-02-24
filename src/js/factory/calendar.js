@@ -7,6 +7,7 @@
 var util = global.tui.util;
 var Handlebars = require('hbsfy/runtime');
 var dw = require('../common/dw'),
+    domutil = require('../common/domutil'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
     Drag = require('../handler/drag'),
@@ -69,6 +70,11 @@ function Calendar(options, container) {
         month: util.extend({}, util.pick(options, 'month') || {}),
         events: []
     }, options);
+
+    /**
+     * @type {HTMLElement}
+     */
+    this.container = container;
 
     /**
      * Current rendered date
@@ -305,6 +311,12 @@ Calendar.prototype.refresh = function() {
     if (this.refreshMethod) {
         this.refreshMethod();
     }
+
+    this.render();
+
+    // if (childView) {
+    //     childView.vLayout.refresh();
+    // }
 };
 
 /**
@@ -511,7 +523,7 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view) {
     });
 
     if (!isMonthView) {
-        view.vlayout[method]('resize', self._onResizePanel, self);
+        view.vLayout[method]('resize', self._onResizePanel, self);
     }
 };
 

@@ -95,7 +95,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     return {
         view: monthView,
-        refresh: function() {}
+        refresh: function() {
+            monthView.vLayout.refresh();
+        }
     };
 }
 

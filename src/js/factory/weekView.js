@@ -7,7 +7,7 @@
 var util = global.tui.util;
 var config = require('../config');
 var domutil = require('../common/domutil');
-var VLayout = require('../common/vlayout');
+var VLayout = require('../common/vLayout');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views
@@ -30,8 +30,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var weekView,
         dayNameContainer,
         dayNameView,
-        vlayoutContainer,
-        vlayout,
+        vLayoutContainer,
+        vLayout,
         alldayView,
         timeGridView,
         alldayClickHandler,
@@ -57,23 +57,23 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
+    vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
+    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
                                      dayNameView.container.offsetHeight) + 'px';
 
-    vlayout = new VLayout({
+    vLayout = new VLayout({
         panels: [
             {height: 52, minHeight: 52},
             {isSplitter: true},
             {autoHeight: true}
         ]
-    }, vlayoutContainer);
-    weekView.vlayout = vlayout;
+    }, vLayoutContainer);
+    weekView.vLayout = vLayout;
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, vlayout.panels[0].container);
+    alldayView = new Allday(options.week, vLayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayDblClickHandler = new AlldayDblClick(alldayView);
@@ -84,7 +84,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, vlayout.panels[2].container);
+    timeGridView = new TimeGrid(options.week, vLayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeDblClickHandler = new TimeDblClick(timeGridView);
@@ -93,7 +93,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
     weekView.on('afterRender', function() {
-        vlayout.refresh();
+        vLayout.refresh();
     });
 
     weekView.handler = {
@@ -137,7 +137,12 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     return {
         view: weekView,
         refresh: function() {
-            vlayout.refresh();
+            var weekViewHeight = weekView.getViewBound().height,
+                daynameViewHeight = dayNameView.getViewBound().height;
+
+            vLayout.container.style.height =
+                weekViewHeight - daynameViewHeight + 'px';
+            vLayout.refresh();
         }
     };
 };
