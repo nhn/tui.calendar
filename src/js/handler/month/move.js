@@ -66,7 +66,7 @@ MonthMove.prototype.destroy = function() {
  * @param {object} eventCache - cache object that result of single dragging
  *  session.
  */
-MonthMove.prototype._updateEvent = function(eventCache) {
+MonthMove.prototype.updateEvent = function(eventCache) {
     var model = eventCache.model,
         duration = Number(model.duration()),
         dragEndTime = Number(eventCache.ends);
@@ -258,7 +258,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
 
     if (eventData) {
         cache.ends = new Date(Number(eventData.date));
-        this._updateEvent(cache);
+        this.updateEvent(cache);
     }
 
     /**
