@@ -227,7 +227,7 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, 
     util.extend(eventData, {
         targetModel: dragStart.model
     });
-    
+
     if (!skipUpdate) {
         this._updateEvent(eventData);
     }

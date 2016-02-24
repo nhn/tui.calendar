@@ -135,7 +135,7 @@ var Core = {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
 
-            // shorthand condition of 
+            // shorthand condition of
             //
             // (ownStarts >= starts && ownEnds <= ends) ||
             // (ownStarts < starts && ownEnds >= starts) ||
@@ -226,7 +226,7 @@ var Core = {
      */
     convertToViewModel: function(modelColl) {
         var viewModelColl;
-        
+
         viewModelColl = new Collection(function(viewModel) {
             return viewModel.cid();
         });

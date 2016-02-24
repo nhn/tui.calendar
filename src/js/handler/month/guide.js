@@ -19,7 +19,7 @@ var config = require('../../config'),
 /**
  * @constructor
  * @param {object} [options] - options
- * @param {boolean} [options.useHandle=false] - whether displaying resize handle on 
+ * @param {boolean} [options.useHandle=false] - whether displaying resize handle on
  *  guide element?
  * @param {boolean} [options.isResizeMode=false] - whether resize mode?
  * @param {Month} monthView - Month view instance
@@ -62,7 +62,7 @@ function MonthGuide(options, monthView) {
 
 
     /**
-     * start coordinate of guide effect. (x, y) (days, weeks) effect can't 
+     * start coordinate of guide effect. (x, y) (days, weeks) effect can't
      *  start lower than this coordinate.
      * @type {number[]}
      */
@@ -71,7 +71,7 @@ function MonthGuide(options, monthView) {
     /**
      * @type {Object.<string, HTMLElement>}
      */
-    this.guideElements = {}; 
+    this.guideElements = {};
 }
 
 /**
@@ -124,7 +124,7 @@ MonthGuide.prototype._getGuideElement = function(y) {
         guide = this._createGuideElement();
 
         container = domutil.find(
-            config.classname('.weekday-events'), 
+            config.classname('.weekday-events'),
             weekdayView.container
         );
 
@@ -247,7 +247,7 @@ MonthGuide.prototype._updateGuides = function(inds) {
         guide.style.display = 'block';
         guide.style.left = ind.left + '%';
         guide.style.width = ind.width + '%';
-        
+
         if (ind.exceedL) {
             domutil.addClass(guide, exceedLClass);
         } else {
@@ -264,8 +264,8 @@ MonthGuide.prototype._updateGuides = function(inds) {
 
 /**
  * Get guide element indicate for origin week
- * @param {number[]} startCoord - drag start coordinate 
- * @param {number[]} mouseCoord - mouse coordinate 
+ * @param {number[]} startCoord - drag start coordinate
+ * @param {number[]} mouseCoord - mouse coordinate
  * @returns {object} indicate
  */
 MonthGuide.prototype._getOriginIndicate = function(startCoord, mouseCoord) {
@@ -339,7 +339,7 @@ MonthGuide.prototype._getContainIndicate = function() {
  */
 MonthGuide.prototype._removeGuideElements = function(yCoords) {
     var guides = this.guideElements;
-    
+
     util.forEach(yCoords, function(y) {
         domutil.remove(guides[y]);
         delete guides[y];
@@ -368,7 +368,7 @@ MonthGuide.prototype._getExcludesInRange = function(range, numbers) {
 };
 
 /**
- * Update guide elements by coordinate in month grid from mousemove event 
+ * Update guide elements by coordinate in month grid from mousemove event
  * @param {number} x - x coordinate
  * @param {number} y - y coordinate
  */

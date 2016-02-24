@@ -77,13 +77,13 @@ tokenFunc = {
                 return datetime.leadingZero(num, 2);
             };
 
-        return date.getFullYear() 
+        return date.getFullYear()
             + '-' + pad(date.getMonth() + 1)
             + '-' + pad(date.getDate())
             + 'T' + pad(date.getHours())
-            + ':' + pad(date.getMinutes()) 
-            + ':' + pad(date.getSeconds()) 
-            + diff + pad(timeZoneOffset / 60) 
+            + ':' + pad(date.getMinutes())
+            + ':' + pad(date.getSeconds())
+            + diff + pad(timeZoneOffset / 60)
             + ':' + pad(timeZoneOffset % 60);
     }
 };
@@ -132,7 +132,7 @@ datetime = {
 
     /**
      * Convert milliseconds value to other type
-     * @param {type} type convert to type want to. support "day", "hour", 
+     * @param {type} type convert to type want to. support "day", "hour",
      *  "minutes", "seconds" only.
      * @param {value} value - value to convert.
      * @returns {number} converted value.

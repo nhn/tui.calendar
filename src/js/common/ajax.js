@@ -91,7 +91,7 @@ AJAX.prototype._onReadyStateChange = function(options, xhr) {
 
 /**
  * ajax 요청을 수행한다.
- * 
+ *
  * 요청 타입에 따른 추가 데이터 처리는 따로 하지 않으므로 사전에 미리 준비해야 한다
  * 예를 들어, get요청은 QueryString으로 url을 설정해야 하고, post등의 data를 사용하
  * 는 요청은 미리 stringfy된 값을 data옵션으로 전달해야 한다.

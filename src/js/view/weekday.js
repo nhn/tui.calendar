@@ -13,13 +13,13 @@ var config = require('../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {number} [options.containerHeight=40] - minimum height of event 
+ * @param {number} [options.containerHeight=40] - minimum height of event
  *  container element.
- * @param {number} [options.containerButtonGutter=8] - free space at bottom to 
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
- * @param {HTMLDIVElement} container - DOM element to use container for this 
+ * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  */
 function Weekday(options, container) {

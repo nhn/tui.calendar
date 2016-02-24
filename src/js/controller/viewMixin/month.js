@@ -50,7 +50,7 @@ var Month = {
     /**
      * Adjust render range to render properly.
      *
-     * Limit starts, ends for each allday events and expand starts, ends for 
+     * Limit starts, ends for each allday events and expand starts, ends for
      * each time events
      * @this Base
      * @param {Date} starts - render start date

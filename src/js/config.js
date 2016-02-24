@@ -22,7 +22,7 @@ var config = {
 
         if (str.charAt(0) === '.') {
             return '.' + config.cssPrefix + str.slice(1);
-        } 
+        }
 
         return config.cssPrefix + str;
     },

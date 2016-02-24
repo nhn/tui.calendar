@@ -27,7 +27,7 @@ function MonthResizeGuide(monthResize) {
     /**
      * @type {MonthGuide}
      */
-    this.guide = null; 
+    this.guide = null;
 
     monthResize.on({
         month_resize_dragstart: this._onDragStart,
@@ -52,7 +52,7 @@ MonthResizeGuide.prototype.destroy = function() {
  */
 MonthResizeGuide.prototype._hideEventBlocks = function(modelID) {
     this.elements = domutil.find(
-        config.classname('.weekday-event-block-' + modelID), 
+        config.classname('.weekday-event-block-' + modelID),
         this.monthResize.monthView.container,
         true
     );
@@ -83,7 +83,7 @@ MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
     this._hideEventBlocks(dragStartEvent.model.cid());
 
     this.guide.start(dragStartEvent);
-    
+
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('resizing-x'));
     }
@@ -105,7 +105,7 @@ MonthResizeGuide.prototype._onDragEnd = function() {
 
     this.guide.destroy();
     this.elements = this.guide = null;
-    
+
 
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('resizing-x'));

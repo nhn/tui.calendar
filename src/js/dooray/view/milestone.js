@@ -20,7 +20,7 @@ var PADDING_TOP = 2,
  * @param {object} options - options
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=52] - min-height of milestone view 
+ * @param {number} [options.minHeight=52] - min-height of milestone view
  * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */

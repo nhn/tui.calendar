@@ -18,7 +18,7 @@ var EVENT_CATEGORY = {
 
     /** 업무 */
     TASK: 'task',
-    
+
     /** 종일일정 */
     ALLDAY: 'allday',
 

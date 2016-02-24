@@ -18,7 +18,7 @@ function MonthCreationGuide(monthCreation) {
     /**
      * @type {MonthGuide}
      */
-    this.guide = null; 
+    this.guide = null;
 
     monthCreation.on({
         month_creation_dragstart: this._onDragStart,

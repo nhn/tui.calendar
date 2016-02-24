@@ -181,7 +181,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
 
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-        function(i) { return daynames[i]; } 
+        function(i) { return daynames[i]; }
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
@@ -198,7 +198,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         if (!datetime.isSameMonth(date, renderDate)) {
             cssClasses.push('other-month');
         }
-        
+
         if (~util.inArray(day, weekendNumber)) {
             cssClasses.push('weekend');
         }

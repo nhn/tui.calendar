@@ -63,7 +63,7 @@ DoorayBase.prototype.createEvent = function(data, silent) {
 /**
  * Update an event.
  * @emits DoorayBase#updateEvent
- * @param {CalEvent} calEvent - event instance to update 
+ * @param {CalEvent} calEvent - event instance to update
  * @param {object} options updated object data
  * @returns {CalEvent|boolean} updated event instance, when it fail then return false
  */

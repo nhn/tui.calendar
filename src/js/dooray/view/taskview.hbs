@@ -10,9 +10,9 @@
     <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>출근 전</strong></div>
     <ul class="{{CSS_PREFIX}}task-list">
         {{#each morning.items ~}}
-        <li data-id="{{stamp model}}" 
-        data-title="{{model.title}}" 
-        class="{{CSS_PREFIX}}task-item" 
+        <li data-id="{{stamp model}}"
+        data-title="{{model.title}}"
+        class="{{CSS_PREFIX}}task-item"
         style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{task-tmpl model}}}</li>
         {{/each ~}}
     </ul>
@@ -23,9 +23,9 @@
     <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>점심 전</strong></div>
     <ul class="{{CSS_PREFIX}}task-list">
         {{#each lunch.items ~}}
-        <li data-id="{{stamp model}}" 
-        data-title="{{model.title}}" 
-        class="{{CSS_PREFIX}}task-item" 
+        <li data-id="{{stamp model}}"
+        data-title="{{model.title}}"
+        class="{{CSS_PREFIX}}task-item"
         style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{task-tmpl model}}}</li>
         {{/each ~}}
     </ul>
@@ -36,9 +36,9 @@
     <div class="{{CSS_PREFIX}}task-duedate-class" style="line-height:{{@root.lineHeight}}px"><strong>퇴근 전</strong></div>
     <ul class="{{CSS_PREFIX}}task-list">
         {{#each evening.items ~}}
-        <li data-id="{{stamp model}}" 
-        data-title="{{model.title}}" 
-        class="{{CSS_PREFIX}}task-item" 
+        <li data-id="{{stamp model}}"
+        data-title="{{model.title}}"
+        class="{{CSS_PREFIX}}task-item"
         style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{task-tmpl model}}}</li>
         {{/each ~}}
     </ul>

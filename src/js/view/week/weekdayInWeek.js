@@ -13,13 +13,13 @@ var Weekday = require('../weekday'),
  * @constructor
  * @extends {Weekday}
  * @param {object} options - options for WeekdayInWeek view
- * @param {number} [options.containerHeight=40] - minimum height of event 
+ * @param {number} [options.containerHeight=40] - minimum height of event
  *  container element.
- * @param {number} [options.containerButtonGutter=8] - free space at bottom to 
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
- * @param {HTMLDIVElement} container - DOM element to use container for this 
+ * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  */
 function WeekdayInWeek(options, container) {
@@ -41,7 +41,7 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
     maxEventInDay = mmax.apply(
-        null, 
+        null,
         util.map(viewModel.matrices, function(matrix) {
             return Math.max.apply(null, util.map(matrix, function(row) {
                 return row.length;
@@ -56,11 +56,11 @@ WeekdayInWeek.prototype.render = function(viewModel) {
 
 /**
  * Set minimum height for container.
- * 
- * Need set min-height to container when wrapping container's height is smaller 
+ *
+ * Need set min-height to container when wrapping container's height is smaller
  * then weekday container.
  *
- * If set height directly, vertical grids represent in each days are not cover 
+ * If set height directly, vertical grids represent in each days are not cover
  * wrapping container.
  *
  * @param {number} maxEventInDay - how largest event block in one day?

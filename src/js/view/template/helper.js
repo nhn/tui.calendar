@@ -41,7 +41,7 @@ module.exports = {
     },
 
     /**
-     * OR 
+     * OR
      * @param {*} a - a
      * @param {*} b - b
      * @returns {boolean} or

@@ -62,7 +62,7 @@ FloatingLayer.PROP_KEY = '__fe_floating_layer';
 FloatingLayer.INIT_ZINDEX = 999;
 
 /**
- * Destroy floating layer instance. if there no instnace in parent container 
+ * Destroy floating layer instance. if there no instnace in parent container
  *
  * remove instance cache property in container element
  */

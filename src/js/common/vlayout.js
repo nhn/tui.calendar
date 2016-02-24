@@ -42,7 +42,7 @@ function VLayout(options, container) {
     View.call(this, container);
 
     domutil.addClass(container, config.classname('vlayout-container'));
-    
+
     /**
      * @type {object}
      */
@@ -268,7 +268,7 @@ VLayout.prototype._onDragStart = function(e) {
         splOffsetY = domevent.getMousePosition(oEvent, target)[1],
         mouseY = domevent.getMousePosition(oEvent, this.container)[1],
         guideElement = this._initializeGuideElement(target, mouseY);
-        
+
     splPanel.addClass(config.classname('splitter-focused'));
 
     this._dragData = {

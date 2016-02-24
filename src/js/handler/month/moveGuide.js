@@ -68,7 +68,7 @@ MonthMoveGuide.prototype.destroy = function() {
  */
 MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
     this.elements = domutil.find(
-        config.classname('.weekday-event-block-' + modelID), 
+        config.classname('.weekday-event-block-' + modelID),
         this.monthMove.monthView.container,
         true
     );
@@ -93,7 +93,7 @@ MonthMoveGuide.prototype._showOriginEventBlocks = function() {
 MonthMoveGuide.prototype._clearGridBgColor = function() {
     var selector = config.classname('.weekday-filled'),
         className = config.classname('weekday-filled'),
-        beforeGridElement = domutil.find(selector, 
+        beforeGridElement = domutil.find(selector,
             this.monthMove.monthView.container);
 
 
@@ -137,7 +137,7 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
         layer = new FloatingLayer(null, container);
 
     this._hideOriginEventBlocks(model.cid());
-    
+
     if (!this.gridElements) {
         this.gridElements = domutil.find(
             config.classname('.weekday-grid-line'),

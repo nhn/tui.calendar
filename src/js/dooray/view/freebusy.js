@@ -39,8 +39,8 @@ function Freebusy(options, container) {
     }
 
     container = domutil.appendHTMLElement(
-        'div', 
-        container, 
+        'div',
+        container,
         config.classname('clear') + ' ' +
         config.classname('freebusy-container')
     );
@@ -262,7 +262,7 @@ Freebusy.prototype._getViewModel = function() {
             timeWidth: 100 / dayArr.length,
             freebusy: {},
             recommends: [],
-            selection: this._getSelectionBlock(this.selectStart, this.selectEnd) 
+            selection: this._getSelectionBlock(this.selectStart, this.selectEnd)
         };
 
     users.each(function(user) {

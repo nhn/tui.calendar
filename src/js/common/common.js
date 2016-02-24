@@ -157,7 +157,7 @@ module.exports = {
     },
 
     /**
-     * Set 'title' attribute for all element that has exceeded content in 
+     * Set 'title' attribute for all element that has exceeded content in
      * container
      * @param {string} selector - CSS selector {@see domutil#find}
      * @param {HTMLElement} container - container element

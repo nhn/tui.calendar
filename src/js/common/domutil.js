@@ -102,7 +102,7 @@ domutil = {
         if (util.isString(root)) {
             root = domutil.get(root);
         }
-        
+
         root = root || window.document.body;
 
         function recurse(el, selector) {
@@ -461,9 +461,9 @@ domutil = {
         var groupedByName = new Collection(function() { return this.length; }),
             noDisabledFilter = function(el) { return !el.disabled; },
             output = {};
-            
+
         groupedByName.add.apply(
-            groupedByName, 
+            groupedByName,
             domutil.find('input', formElement, noDisabledFilter)
                 .concat(domutil.find('select', formElement, noDisabledFilter))
                 .concat(domutil.find('textarea', formElement, noDisabledFilter))
@@ -516,10 +516,10 @@ domutil = {
 
 /*eslint-disable*/
 var userSelectProperty = domutil.testProp([
-    'userSelect', 
-    'WebkitUserSelect', 
-    'OUserSelect', 
-    'MozUserSelect', 
+    'userSelect',
+    'WebkitUserSelect',
+    'OUserSelect',
+    'MozUserSelect',
     'msUserSelect'
 ]);
 var supportSelectStart = 'onselectstart' in document;

@@ -28,8 +28,8 @@ function TimeCreationGuide(timeCreation) {
      * @type {HTMLDivElement}
      */
     this.guideTimeElement = domutil.appendHTMLElement(
-        'span', 
-        this.guideElement, 
+        'span',
+        this.guideElement,
         config.classname('time-guide-creation-label')
     );
 
@@ -106,7 +106,7 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
         guideElement.style.height = height + 'px';
         guideElement.style.display = 'block';
 
-        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') + 
+        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') +
             ' ~ ' + datetime.format(new Date(end), 'HH:mm');
 
         if (!!bottomLabel) {
@@ -179,7 +179,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
 
         return [top, time];
     }
-        
+
     return getStyleData;
 };
 

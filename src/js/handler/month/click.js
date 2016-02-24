@@ -54,9 +54,9 @@ MonthClick.prototype._onClick = function(clickEvent) {
     var moreElement, ymd;
 
     moreElement = domutil.closest(
-        clickEvent.target, 
+        clickEvent.target,
         config.classname('.weekday-exceed')
-    ); 
+    );
 
     if (moreElement) {
         ymd = domutil.getData(moreElement, 'ymd');

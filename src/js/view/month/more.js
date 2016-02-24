@@ -45,7 +45,7 @@ More.prototype._onClick = function(clickEvent) {
 };
 
 /**
- * Mousedown event handler for hiding more layer when user mousedown outside of 
+ * Mousedown event handler for hiding more layer when user mousedown outside of
  * layer
  * @param {MouseEvent} mouseDownEvent - mouse event object
  */
@@ -103,7 +103,7 @@ More.prototype.render = function(viewModel) {
 
     layer.setContent(tmpl(viewModel));
     layer.setSize('auto', 100);
-    
+
     pos = this._getRenderPosition(viewModel.target);
     layer.setPosition.apply(layer, pos);
 

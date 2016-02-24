@@ -101,7 +101,7 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
  * For example, there is single event has 10 length. but render range in view is 5 then
  * rendered block must be cut out to render properly. in this case, this method return
  * how many block are cut before rendering.
- * 
+ *
  * 이벤트 데이터에서 이벤트 블록 엘리먼트 렌더링에 대한 필요 정보를 추출한다.
  *
  * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때

@@ -46,7 +46,7 @@ AlldayDblClick.prototype.destroy = function() {
 AlldayDblClick.prototype.checkExpectedCondition = function(target) {
     var weekdayView;
 
-    if (!domutil.hasClass(target, config.classname('weekday-events')) && 
+    if (!domutil.hasClass(target, config.classname('weekday-events')) &&
         !domutil.hasClass(target, config.classname('weekday-grid-line'))) {
         return false;
     }

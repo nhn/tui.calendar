@@ -48,7 +48,7 @@ TaskClick.prototype.destroy = function() {
 
 /**
  * @param {HTMLElement} target - check reponsibility to this handler module supplied element
- * @returns {boolean|string} return false when handler has no responsibility for supplied element. 
+ * @returns {boolean|string} return false when handler has no responsibility for supplied element.
  * otherwise, return event model id that related with target element.
  */
 TaskClick.prototype.checkExpectedCondition = function(target) {

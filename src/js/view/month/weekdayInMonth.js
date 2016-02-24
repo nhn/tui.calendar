@@ -23,13 +23,13 @@ var config = require('../../config'),
  * @constructor
  * @extends {Weekday}
  * @param {object} options - options for WeekdayInWeek view
- * @param {number} [options.containerHeight=40] - minimum height of event 
+ * @param {number} [options.containerHeight=40] - minimum height of event
  *  container element.
- * @param {number} [options.containerButtonGutter=8] - free space at bottom to 
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
  * @param {number} [options.eventGutter=2] - gutter height of each event block.
- * @param {HTMLDIVElement} container - DOM element to use container for this 
+ * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  */
 function WeekdayInMonth(options, container) {
@@ -54,7 +54,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
  * Get handlebars custom helper method for limitation event block render count
  * features
  *
- * Cumulate count on each date. render +n label only when no cumulated 
+ * Cumulate count on each date. render +n label only when no cumulated
  * count on cache object
  * @param {object} exceedDate - object to be used as a cache
  * @returns {function} custom helper function
@@ -67,7 +67,7 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
                 viewModel.getEnds(),
                 datetime.MILLISECONDS_PER_DAY
             );
-        
+
         util.forEach(period, function(date) {
             var ymd = datetime.format(date, 'YYYYMMDD');
             if (!existy(exceedDate[ymd])) {
@@ -128,7 +128,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         matrices: viewModel,
         renderLimitIdx: renderLimitIdx
     }, baseViewModel));
-    
+
     contentStr += skipTmpl(util.extend({
         renderLimitIdx: renderLimitIdx,
         viewModelForSkip: this._getSkipLabelViewModel(exceedDate)

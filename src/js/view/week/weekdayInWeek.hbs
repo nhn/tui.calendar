@@ -8,7 +8,7 @@
 {{#each this ~}} {{! matrix }}
 {{#each this ~}} {{! column }}
 {{#if this ~}} {{! viewmodel }}
-<div data-id="{{stamp model}}" 
+<div data-id="{{stamp model}}"
      class="{{CSS_PREFIX}}weekday-event-block
         {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
         {{#if renderEnds}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
@@ -20,7 +20,7 @@
     <div class="{{CSS_PREFIX}}weekday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}">
         <span class="{{CSS_PREFIX}}weekday-event-title">{{{allday-tmpl model}}}</span>
         <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
-    </div> 
+    </div>
 </div>
 {{/if ~}}
 {{/each ~}}
