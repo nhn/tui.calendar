@@ -23,14 +23,14 @@ function Base(options) {
      * function for group each event models.
      * @type {function}
      * @param {CalEventViewModel} viewModel - view model instance
-     * @return {string} group key
+     * @returns {string} group key
      */
     this.groupFunc = options.groupFunc || function(viewModel) {
         if (viewModel.model.isAllDay) {
             return 'allday';
         }
         return 'time';
-    }
+    };
 
     /**
      * events collection.
@@ -94,9 +94,11 @@ Base.prototype.createEvent = function(options, silent) {
  * @returns {CalEvent[]} The instance list of CalEvent that created.
  */
 Base.prototype.createEvents = function(dataList, silent) {
+    var self = this;
+
     return util.map(dataList, function(data) {
-        return this.createEvent(data, silent);
-    }, this);
+        return self.createEvent(data, silent);
+    });
 };
 
 /**
@@ -107,7 +109,8 @@ Base.prototype.createEvents = function(dataList, silent) {
  * @returns {CalEvent|boolean} updated event instance, when it fail then return false.
  */
 Base.prototype.updateEvent = function(id, options) {
-    var result = false;
+    var self = this,
+        result = false;
 
     this.events.doWhenHas(id, function(model) {
         options = options || {};
@@ -128,11 +131,11 @@ Base.prototype.updateEvent = function(id, options) {
             model.set('ends', new Date(options.ends));
         }
 
-        this._removeFromMatrix(model);
-        this._addToMatrix(model);
+        self._removeFromMatrix(model);
+        self._addToMatrix(model);
 
         result = model;
-    }, this);
+    });
 
     /**
      * @event Base#updateEvent
@@ -148,13 +151,14 @@ Base.prototype.updateEvent = function(id, options) {
  * @returns {CalEvent} deleted model instance.
  */
 Base.prototype.deleteEvent = function(id) {
-    var result = false;
+    var self = this,
+        result = false;
 
     this.events.doWhenHas(id, function(event) {
         result = event;
-        this._removeFromMatrix(event);
-        this.events.remove(event);
-    }, this);
+        self._removeFromMatrix(event);
+        self.events.remove(event);
+    });
 
     return result;
 };

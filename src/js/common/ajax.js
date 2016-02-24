@@ -1,3 +1,4 @@
+/* eslint complexity: 0 */
 /**
  * @fileoverview Module for full management of requesting AJAX from server.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -21,7 +22,7 @@ AJAX.ERROR = {
 
 /**
  * 비동기 요청을 위한 객체를 만들어 반환한다
- * @return {(XMLHttpRequest|ActiveXObject)} 비동기 통신 지원 객체
+ * @returns {(XMLHttpRequest|ActiveXObject)} 비동기 통신 지원 객체
  */
 AJAX.prototype._createXHR = function() {
     if (util.isExisty(util.pick(window, 'XMLHttpRequest'))) {
@@ -39,7 +40,7 @@ AJAX.prototype._createXHR = function() {
  * TODO: 현재는 JSON데이터만 처리중이고 필요에 따라 늘어나야 한다
  * @param {string} dataType 데이터 타입
  * @param {*} data 가공할 데이터
- * @return {*} 가공된 데이터
+ * @returns {*} 가공된 데이터
  */
 AJAX.prototype._processRawData = function(dataType, data) {
     var result = data;
@@ -130,7 +131,7 @@ AJAX.prototype.ajax = function(url, options) {
     data = util.pick(options, 'data');
     if (!options.cache) {
         separator = ~url.indexOf('?') ? '&' : '?';
-        url = url + separator + '_=' + +(new Date());
+        url = url + separator + '_=' + Number(new Date());
     }
 
     xhr = this._createXHR();

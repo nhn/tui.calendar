@@ -10,6 +10,12 @@ var Base = require('../controller/base'),
     Week = require('../controller/viewMixin/week'),
     Month = require('../controller/viewMixin/month');
 
+/**
+ * Mixin object. create object property to target and mix to that
+ * @param {object} from - source object
+ * @param {object} to - target object
+ * @param {string} propertyName - property name
+ */
 function mixin(from, to, propertyName) {
     var obj = to[propertyName] = {};
 

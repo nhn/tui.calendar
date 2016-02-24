@@ -25,6 +25,8 @@ var config = require('../../config'),
  * @param {Month} monthView - Month view instance
  */
 function MonthGuide(options, monthView) {
+    var self = this;
+
     /**
      * @type {object}
      */
@@ -57,9 +59,8 @@ function MonthGuide(options, monthView) {
      * @type {function}
      */
     this.ratio = util.bind(function(value) {
-        return common.ratio(this.days, 100, value);
-    }, this);
-
+        return common.ratio(self.days, 100, value);
+    });
 
     /**
      * start coordinate of guide effect. (x, y) (days, weeks) effect can't
@@ -275,7 +276,7 @@ MonthGuide.prototype._getOriginIndicate = function(startCoord, mouseCoord) {
 
     if (mouseCoord[1] > startCoord[1]) {
         left = startCoord[0];
-        right = this.days,
+        right = this.days;
         exceedR = true;
     } else if (mouseCoord[1] < startCoord[1]) {
         left = 0;
@@ -289,7 +290,7 @@ MonthGuide.prototype._getOriginIndicate = function(startCoord, mouseCoord) {
             this._getRatioValueInWeek(left),
         exceedL: exceedL,
         exceedR: exceedR
-    }
+    };
 };
 
 /**
@@ -317,7 +318,7 @@ MonthGuide.prototype._getMouseIndicate = function(startCoord, mouseCoord) {
             this._getRatioValueInWeek(left),
         exceedL: exceedL,
         exceedR: exceedR
-    }
+    };
 };
 
 /**
@@ -373,7 +374,8 @@ MonthGuide.prototype._getExcludesInRange = function(range, numbers) {
  * @param {number} y - y coordinate
  */
 MonthGuide.prototype.update = function(x, y) {
-    var startCoord = this.startCoord,
+    var self = this,
+        startCoord = this.startCoord,
         mouseCoord = [x, y],
         limitedCoord = this.options.isResizeMode ?
             this._getLimitedCoord(mouseCoord, startCoord) : mouseCoord,
@@ -391,7 +393,7 @@ MonthGuide.prototype.update = function(x, y) {
     this._removeGuideElements(yCoordsToRemove);
 
     util.forEach(yCoordsToUpdate, function(guideYCoord) {
-        var guide = this._getGuideElement(guideYCoord),
+        var guide = self._getGuideElement(guideYCoord),
             indicate;
 
         if (!guide) {
@@ -399,17 +401,17 @@ MonthGuide.prototype.update = function(x, y) {
         }
 
         if (guideYCoord === startCoord[1]) {
-            indicate = this._getOriginIndicate(startCoord, limitedCoord);
+            indicate = self._getOriginIndicate(startCoord, limitedCoord);
         } else if (guideYCoord === mouseCoord[1]) {
-            indicate = this._getMouseIndicate(startCoord, mouseCoord);
+            indicate = self._getMouseIndicate(startCoord, mouseCoord);
         } else {
-            indicate = this._getContainIndicate();
+            indicate = self._getContainIndicate();
         }
 
         renderIndication[guideYCoord] = util.extend({
             guide: guide
         }, indicate);
-    }, this);
+    });
 
     this._updateGuides(renderIndication);
 };

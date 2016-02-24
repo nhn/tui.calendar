@@ -4,8 +4,7 @@
  */
 'use strict';
 var util = global.tui.util,
-    mmax = Math.max,
-    aps = Array.prototype.slice;
+    mmax = Math.max;
 
 var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
@@ -68,9 +67,9 @@ var Month = {
             if (viewModel.model.isAllDay) {
                 ctrlCore.limitRenderRange(starts, ends, viewModel);
             } else {
-                eventDate = new Date(+viewModel.getStarts());
+                eventDate = new Date(Number(viewModel.getStarts()));
                 viewModel.renderStart = datetime.start(eventDate);
-                viewModel.renderEnd = datetime.end(eventDate)
+                viewModel.renderEnd = datetime.end(eventDate);
             }
         });
 

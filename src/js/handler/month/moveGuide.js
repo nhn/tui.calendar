@@ -58,7 +58,7 @@ MonthMoveGuide.prototype.destroy = function() {
         domutil.remove(this.element);
     }
 
-    this.monthMove = this.elements = this.layer
+    this.monthMove = this.elements = this.layer =
         this.gridElements = null;
 };
 
@@ -179,9 +179,8 @@ MonthMoveGuide.prototype._onDrag = function(dragEvent) {
 
 /**
  * Handler for MonthMove#dragEnd
- * @param {object} dragEndEvent - dragEnd event data object
  */
-MonthMoveGuide.prototype._onDragEnd = function(dragEndEvent) {
+MonthMoveGuide.prototype._onDragEnd = function() {
     this._showOriginEventBlocks();
 
     if (!util.browser.msie) {

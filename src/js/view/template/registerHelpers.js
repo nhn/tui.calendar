@@ -8,7 +8,7 @@ var util = global.tui.util;
 var helper = require('./helper');
 var Handlebars = require('hbsfy/runtime');
 
-util.forEach(helper, function(helper, name) {
-    Handlebars.registerHelper(name, helper);
-}, this);
+util.forEach(helper, function(h, name) {
+    Handlebars.registerHelper(name, h);
+});
 

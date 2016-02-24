@@ -10,7 +10,7 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
-var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30)
+var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 
 /**
  * Class for Time.Creation dragging effect.
@@ -109,7 +109,7 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
         timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') +
             ' ~ ' + datetime.format(new Date(end), 'HH:mm');
 
-        if (!!bottomLabel) {
+        if (bottomLabel) {
             domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
         } else {
             domutil.addClass(timeElement, config.classname('time-guide-bottom'));
@@ -137,7 +137,13 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
     // [2] start time of view
     // [3] end time of view
     // [4] height of view for one hour
-    return [viewHeight, hourLength, +todayStart, +todayEnd, viewHeight / hourLength];
+    return [
+        viewHeight,
+        hourLength,
+        Number(todayStart),
+        Number(todayEnd),
+        viewHeight / hourLength
+    ];
 };
 
 /**
@@ -167,8 +173,13 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
  * @returns {function} UI data calculator function
  */
 TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
-    var todayEnd = +datetime.end(new Date(+todayStart));
+    var todayEnd = Number(datetime.end(new Date(Number(todayStart))));
 
+    /**
+     * Get top, time value from event dat
+     * @param {object} eventData - event data object
+     * @returns {number[]} top, time
+     */
     function getStyleData(eventData) {
         var gridY = eventData.nearestGridY,
             gridTimeY = eventData.nearestGridTimeY,

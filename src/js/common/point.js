@@ -95,7 +95,7 @@ Point.prototype.clone = function() {
 /**
  * Add points.
  * @param {Point} point The point instance to add.
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype.add = function(point) {
     return this.clone()._add(Point.n(point));
@@ -104,7 +104,7 @@ Point.prototype.add = function(point) {
 /**
  * Add self points.
  * @param {Point} point The point instance to add.
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype._add = function(point) {
     this.x += point.x;
@@ -115,7 +115,7 @@ Point.prototype._add = function(point) {
 /**
  * Subtract points.
  * @param {Point} point The point instance to subtract.
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype.subtract = function(point) {
     return this.clone()._subtract(Point.n(point));
@@ -155,7 +155,7 @@ Point.prototype._divideBy = function(num) {
 /**
  * Multiply coordinates.
  * @param {number} num Thyen number to multiply
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype.multiplyBy = function(num) {
     return this.clone()._multiplyBy(num);

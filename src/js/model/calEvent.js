@@ -1,3 +1,4 @@
+/* eslint complexity: 0 */
 /**
  * @fileoverview Model of event.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>

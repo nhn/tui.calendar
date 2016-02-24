@@ -1,3 +1,4 @@
+/* eslint complexity: 0 */
 /**
  * @fileoverview Utility module for handling DOM events.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -173,7 +174,7 @@ var domevent = {
      * @param {*} [context] context object for handler method.
      */
     once: function(obj, types, fn, context) {
-        var that = this;
+        var self = this;
 
         if (util.isObject(types)) {
             util.forEachOwnProperties(types, function(handler, type) {
@@ -182,9 +183,12 @@ var domevent = {
             return;
         }
 
+        /**
+         * Handler for temporary usage for once implementation
+         */
         function onceHandler() {
             fn.apply(context || obj, arguments);
-            that._off(obj, types, onceHandler, context);
+            self._off(obj, types, onceHandler, context);
         }
 
         domevent.on(obj, types, onceHandler, context);
@@ -408,10 +412,10 @@ var domevent = {
             return mouseEvent.button;
         }
 
-        button = mouseEvent.button + '';
-        if (~primary.indexOf(button)) {
+        button = String(mouseEvent.button);
+        if (primary.indexOf(button) > -1) {
             return 0;
-        } else if (~secondary.indexOf(button)) {
+        } else if (secondary.indexOf(button) > -1) {
             return 2;
         } else if (~wheel.indexOf(button)) {
             return 1;

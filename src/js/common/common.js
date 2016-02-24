@@ -10,6 +10,11 @@ var util = global.tui.util,
 var domutil = require('../common/domutil'),
     Collection = require('../common/collection');
 
+/**
+ * Default event id getter for collection
+ * @param {CalEvent} event - event instance
+ * @returns {string} event id
+ */
 function eventIDGetter(event) {
     return event.cid();
 }
@@ -123,7 +128,7 @@ module.exports = {
      * @param {number} value - value
      * @param {array} minArr - min
      * @param {array} maxArr - max
-     * @return {number} limited value
+     * @returns {number} limited value
      */
     limit: function(value, minArr, maxArr) {
         var v = Math.max.apply(null, [value].concat(minArr));

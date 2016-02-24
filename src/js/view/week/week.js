@@ -14,8 +14,10 @@ var View = require('../view');
  * @constructor
  * @param {Base.Week} controller The controller mixin part.
  * @param {object} options View options
- * @param {string} [options.renderStartDate] Start date of render. if not supplied then use -3d from today. YYYY-MM-DD format.
- * @param {string} [options.renderEndDate] End date of render. if not supplied then use +3d from today. YYYY-MM-DD format.
+ * @param {string} [options.renderStartDate] Start date of render.
+ *  if not supplied then use -3d from today. YYYY-MM-DD format.
+ * @param {string} [options.renderEndDate] End date of render.
+ *  if not supplied then use +3d from today. YYYY-MM-DD format.
  * @param {string} [options.cssPrefix] - CSS classname prefix
  * @param {HTMLElement} container The element to use container for this view.
  * @extends {View}
@@ -94,8 +96,8 @@ Week.prototype.viewName = 'week';
  */
 Week.prototype._getRenderDateRange = function(baseDate) {
     var base = datetime.start(baseDate),
-        start = new Date(+base),
-        end = new Date(+base);
+        start = new Date(Number(base)),
+        end = new Date(Number(base));
 
     start.setDate(start.getDate() - 3);
     end.setDate(end.getDate() + 3);

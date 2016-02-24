@@ -1,11 +1,11 @@
+/* eslint no-shadow: 0 */
 /**
  * @fileoverview Controller mixin modules for day views.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
-var util = global.tui.util,
-    aps = Array.prototype.slice;
+var util = global.tui.util;
 
 var Collection = require('../../common/collection'),
     array = require('../../common/array');
@@ -140,7 +140,8 @@ var Week = {
      * @returns {object} view model for time part.
      */
     getViewModelForTimeView: function(starts, ends, time) {
-        var ymdSplitted = this.splitEventByDateRange(starts, ends, time),
+        var self = this,
+            ymdSplitted = this.splitEventByDateRange(starts, ends, time),
             result = {};
 
         util.forEach(ymdSplitted, function(collection, ymd) {
@@ -148,12 +149,12 @@ var Week = {
                 collisionGroups,
                 matrices;
 
-            collisionGroups = this.Core.getCollisionGroup(viewModels);
-            matrices = this.Core.getMatrices(collection, collisionGroups);
-            this.Week.getCollides(matrices);
+            collisionGroups = self.Core.getCollisionGroup(viewModels);
+            matrices = self.Core.getMatrices(collection, collisionGroups);
+            self.Week.getCollides(matrices);
 
             result[ymd] = matrices;
-        }, this);
+        });
 
         return result;
     },

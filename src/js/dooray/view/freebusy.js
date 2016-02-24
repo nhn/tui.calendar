@@ -248,7 +248,8 @@ Freebusy.prototype._getSelectionBlock = function(start, end) {
  * @returns {object} view model for rendering
  */
 Freebusy.prototype._getViewModel = function() {
-    var opt = this.options,
+    var self = this,
+        opt = this.options,
         users = this.users,
         userLength = users.length,
         viewModel = {
@@ -269,15 +270,14 @@ Freebusy.prototype._getViewModel = function() {
         viewModel.freebusy[user.id] = {
             name: user.name,
             busy: util.map(user.freebusy, function(block) {
-                return this._getBlockBound(block);
-            }, this)
+                return self._getBlockBound(block);
+            })
         };
-    }, this);
+    });
 
     util.forEach(opt.recommends, function(block) {
-        viewModel.recommends.push(this._getBlockBound(block));
-    }, this);
-
+        viewModel.recommends.push(self._getBlockBound(block));
+    });
 
     return viewModel;
 };
@@ -311,9 +311,11 @@ Freebusy.prototype.addUser = function(user, skipRender) {
  * @param {boolean} [skipRender=false] - set true then skip render after add user
  */
 Freebusy.prototype.addUsers = function(users, skipRender) {
+    var self = this;
+
     util.forEach(users, function(user) {
-        this.addUser(user, skipRender);
-    }, this);
+        self.addUser(user, skipRender);
+    });
 
     if (!skipRender) {
         this.render();
@@ -339,9 +341,11 @@ Freebusy.prototype.removeUser = function(id, skipRender) {
  * @param {boolean} [skipRender=false] - set true then skip render after remove user
  */
 Freebusy.prototype.removeUsers = function(idArr, skipRender) {
+    var self = this;
+
     util.forEach(idArr, function(id) {
-        this.removeUser(id, skipRender);
-    }, this);
+        self.removeUser(id, skipRender);
+    });
 
     if (!skipRender) {
         this.render();

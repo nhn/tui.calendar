@@ -48,7 +48,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
         count = mfloor(opt.containerHeight / (opt.eventHeight + opt.eventGutter));
 
     return mmax(count - 1, 0);    // subtraction for '+n' label block
-}
+};
 
 /**
  * Get handlebars custom helper method for limitation event block render count
@@ -61,7 +61,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
  */
 WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
     return function() {
-        var viewModel = this,
+        var viewModel = this, // eslint-disable-line
             period = datetime.range(
                 viewModel.getStarts(),
                 viewModel.getEnds(),
@@ -76,7 +76,7 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
 
             exceedDate[ymd] += 1;
         });
-    }
+    };
 };
 
 /**
@@ -87,8 +87,8 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
  */
 WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
     var dateRange = util.map(this.getRenderDateRange(), function(date) {
-            return datetime.format(date, 'YYYYMMDD');
-        });
+        return datetime.format(date, 'YYYYMMDD');
+    });
 
     return util.map(exceedDate, function(skipped, ymd) {
         return {

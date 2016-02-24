@@ -199,10 +199,12 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
         cursor, resizeInfo;
 
     cursor = this[backwardMethod](splPanel);
-    resizeInfo = cursor.getResizeInfoByGrowth(+resizedHeight);
+    resizeInfo = cursor.getResizeInfoByGrowth(resizedHeight);
     resizeMap.push([cursor, resizeInfo[0]]);
 
-    while (cursor = this[forwardMethod](cursor)) {
+    for (cursor = this[forwardMethod](cursor);
+         util.isExisty(cursor);
+         cursor = this[forwardMethod](cursor)) {
         if (cursor.isSplitter()) {
             continue;
         }
@@ -210,10 +212,6 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
         resizeInfo = cursor.getResizeInfoByGrowth(-resizedHeight);
         resizeMap.push([cursor, resizeInfo[0]]);
         resizedHeight -= resizeInfo[1];
-
-        if (resizedHeight < 0) {
-            break;
-        }
     }
 
     util.forEach(resizeMap, function(pair) {
@@ -229,7 +227,7 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
 VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
     var upper = 0,
         below = 0,
-        cursor = splPanel,
+        cursor,
         func = function(panel) {
             if (panel.isSplitter()) {
                 return panel.getHeight();
@@ -238,13 +236,15 @@ VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
             return panel.options.minHeight;
         };
 
-    while (cursor = this.prevPanel(cursor)) {
+    for (cursor = this.prevPanel(splPanel);
+         util.isExisty(cursor);
+         cursor = this.prevPanel(cursor)) {
         upper += func(cursor);
     }
 
-    cursor = splPanel;
-
-    while (cursor = this.nextPanel(cursor)) {
+    for (cursor = this.nextPanel(splPanel);
+         util.isExisty(cursor);
+         cursor = this.nextPanel(cursor)) {
         below += func(cursor);
     }
 
@@ -309,7 +309,11 @@ VLayout.prototype._onDragEnd = function(e) {
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
     // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
-    mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY + asideMinMax[0]], [dragData.maxY - asideMinMax[1]]);
+    mouseY = common.limit(
+        mouseY - dragData.splOffsetY,
+        [dragData.minY + asideMinMax[0]],
+        [dragData.maxY - asideMinMax[1]]
+    );
 
     this._resize(dragData.splPanel, dragData.startY, mouseY);
 
@@ -380,11 +384,12 @@ VLayout.prototype.addPanel = function(options, container) {
  * @param {HTMLElement} container - container element
  */
 VLayout.prototype.addPanels = function(options, container) {
-    var frag = document.createDocumentFragment();
+    var self = this,
+        frag = document.createDocumentFragment();
 
     util.forEach(options, function(option) {
-        this.addPanel(option, frag);
-    }, this);
+        self.addPanel(option, frag);
+    });
 
     container.appendChild(frag);
 };

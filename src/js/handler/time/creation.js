@@ -238,7 +238,8 @@ TimeCreation.prototype._createEvent = function(eventData) {
  * @param {object} dragEndEventData - event data from Drag#dragend
  */
 TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
-    var dragStart = this._dragStart;
+    var self = this,
+        dragStart = this._dragStart;
 
     this.guide.clearGuideElement();
 
@@ -248,6 +249,10 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
+    /**
+     * Function for manipulate event data before firing event
+     * @param {object} eventData - event data
+     */
     function reviseFunc(eventData) {
         var range = [
             dragStart.nearestGridTimeY,
@@ -257,7 +262,7 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
 
         eventData.createRange = range;
 
-        this._createEvent(eventData);
+        self._createEvent(eventData);
     }
 
     /**
@@ -272,7 +277,7 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {number[]} createRange - milliseconds range between drag start and end to create.
      */
-    this._onDrag(dragEndEventData, 'time_creation_dragend', util.bind(reviseFunc, this));
+    this._onDrag(dragEndEventData, 'time_creation_dragend', reviseFunc);
 
     this._dragStart = this._getEventDataFunc = null;
 };
@@ -283,14 +288,20 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
  * @param {object} clickEventData - event data from Drag#click.
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
+    var self = this;
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
 
+    /**
+     * Function for manipulate event data before firing event
+     * @param {object} eventData - event data
+     */
     function reviseFunc(eventData) {
-        this._createEvent(eventData);
+        self._createEvent(eventData);
     }
 
     /**
@@ -304,7 +315,7 @@ TimeCreation.prototype._onClick = function(clickEventData) {
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this._onDrag(clickEventData, 'time_creation_click', util.bind(reviseFunc, this));
+    this._onDrag(clickEventData, 'time_creation_click', reviseFunc);
 
     this._dragStart = this._getEventDataFunc = null;
 };

@@ -109,8 +109,8 @@ function booleanDESC(a, b) {
  * @returns {number} Result of comparison.
  */
 function numberASC(_a, _b) {
-    var a = +_a,
-        b = +_b;
+    var a = Number(_a),
+        b = Number(_b);
 
     return a - b;
 }
@@ -124,8 +124,8 @@ function numberASC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function numberDESC(_a, _b) {
-    var a = +_a,
-        b = +_b;
+    var a = Number(_a),
+        b = Number(_b);
 
     return b - a;
 }
@@ -139,8 +139,8 @@ function numberDESC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringASC(_a, _b) {
-    var a = _a + '',
-        b = _b + '';
+    var a = String(_a),
+        b = String(_b);
 
     if (a > b) {
         return 1;
@@ -160,8 +160,8 @@ function stringASC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringDESC(_a, _b) {
-    var a = _a + '',
-        b = _b + '';
+    var a = String(_a),
+        b = String(_b);
 
     if (a > b) {
         return -1;
@@ -181,8 +181,8 @@ function stringDESC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringASCIgnoreCase(_a, _b) {
-    var a = (_a + '').toLowerCase(),
-        b = (_b + '').toLowerCase();
+    var a = String(_a).toLowerCase(),
+        b = String(_b).toLowerCase();
 
     if (a > b) {
         return 1;
@@ -202,8 +202,8 @@ function stringASCIgnoreCase(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringDESCIgnoreCase(_a, _b) {
-    var a = (_a + '').toLowerCase(),
-        b = (_b + '').toLowerCase();
+    var a = String(_a).toLowerCase(),
+        b = String(_b).toLowerCase();
 
     if (a > b) {
         return -1;

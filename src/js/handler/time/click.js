@@ -66,7 +66,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.children.items, +matches[1]);
+    return util.pick(this.timeGridView.children.items, Number(matches[1]));
 };
 
 /**
@@ -75,7 +75,8 @@ TimeClick.prototype.checkExpectCondition = function(target) {
  * @emits TimeClick#clickEvent
  */
 TimeClick.prototype._onClick = function(clickEvent) {
-    var target = clickEvent.target,
+    var self = this,
+        target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
         blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         eventCollection = this.baseController.events;
@@ -91,11 +92,11 @@ TimeClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(TimeClick);

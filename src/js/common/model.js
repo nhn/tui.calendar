@@ -85,7 +85,7 @@ model = {
      * @returns {Boolean} model is valid?
      */
     isValid: function() {
-        var that = this,
+        var self = this,
             schema = this.constructor.schema,
             validators = model.validators,
             validator,
@@ -99,7 +99,7 @@ model = {
             validator = validators[validatorName];
 
             if (validator) {
-                valid = validator(that, values);
+                valid = validator(self, values);
                 return valid;
             }
         });

@@ -59,7 +59,8 @@ AlldayClick.prototype.checkExpectCondition = AlldayMove.prototype.checkExpectedC
  * @emits AlldayClick#clickEvent
  */
 AlldayClick.prototype._onClick = function(clickEvent) {
-    var target = clickEvent.target,
+    var self = this,
+        target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
         blockElement = domutil.closest(target, config.classname('.allday-event-block')),
         eventCollection = this.baseController.events;
@@ -75,11 +76,11 @@ AlldayClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(AlldayClick);

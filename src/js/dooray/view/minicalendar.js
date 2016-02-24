@@ -69,7 +69,7 @@ function MiniCalendar(options, container) {
     /**
      * @type {Date}
      */
-    this.selectedDate = new Date(+options.renderMonth);
+    this.selectedDate = new Date(Number(options.renderMonth));
 
     this.render();
 }
@@ -134,7 +134,7 @@ MiniCalendar.prototype._date = function(buttonElement) {
      * @property {Date} date - clicked date
      */
     this.fire('click', {
-        date: new Date(+this.selectedDate)
+        date: new Date(Number(this.selectedDate))
     });
 };
 
@@ -181,7 +181,9 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
 
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-        function(i) { return daynames[i]; }
+        function(i) {
+            return daynames[i];
+        }
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
@@ -234,15 +236,16 @@ MiniCalendar.prototype._addHlData = function(ymd, cssClass) {
  * @param {string} cssClass - cssClass
  */
 MiniCalendar.prototype._setHlDateRange = function(start, end, cssClass) {
-    var range = datetime.range(
+    var self = this,
+        range = datetime.range(
             datetime.start(start),
             datetime.end(end),
             datetime.MILLISECONDS_PER_DAY
         );
 
     util.forEach(range, function(date) {
-        this._addHlData(datetime.format(date, 'YYYY-MM-DD'), cssClass);
-    }, this);
+        self._addHlData(datetime.format(date, 'YYYY-MM-DD'), cssClass);
+    });
 };
 
 /**
@@ -250,7 +253,7 @@ MiniCalendar.prototype._setHlDateRange = function(start, end, cssClass) {
  */
 MiniCalendar.prototype.clearFocusData = function() {
     util.forEach(this.hlData, function(obj) {
-        delete obj['focused'];
+        delete obj.focused;
     });
 };
 
@@ -270,7 +273,7 @@ MiniCalendar.prototype.focusDateRange = function(start, end) {
  * @returns {Date} selected date
  */
 MiniCalendar.prototype.getSelectedDate = function() {
-    return new Date(+this.selectedDate);
+    return new Date(Number(this.selectedDate));
 };
 
 /**
@@ -280,7 +283,7 @@ MiniCalendar.prototype.getSelectedDate = function() {
 MiniCalendar.prototype.selectDate = function(date) {
     date = util.isDate(date) ? date : datetime.parse(date);
 
-    this.selectedDate = new Date(+date);
+    this.selectedDate = new Date(Number(date));
 
     this.render();
 };

@@ -64,7 +64,7 @@ var Core = {
      * Get row length by column index in 2d matrix.
      * @param {array[]} arr2d Matrix
      * @param {number} col Column index.
-     * @return {number} Last row number in column.
+     * @returns {number} Last row number in column.
      */
     getLastRowInColumn: function(arr2d, col) {
         var row = arr2d.length;
@@ -141,7 +141,7 @@ var Core = {
             // (ownStarts < starts && ownEnds >= starts) ||
             // (ownEnds > ends && ownStarts <= ends)
             return !(ownEnds < starts || ownStarts > ends);
-        }
+        };
     },
 
     /**
@@ -199,6 +199,11 @@ var Core = {
      *  view model
      */
     limitRenderRange: function(starts, ends, viewModelColl) {
+        /**
+         * Limit render range for view models
+         * @param {CalEventViewModel} viewModel - view model instance
+         * @returns {CalEventViewModel} view model that limited render range
+         */
         function limit(viewModel) {
             if (viewModel.getStarts() < starts) {
                 viewModel.renderStarts = new Date(starts.getTime());

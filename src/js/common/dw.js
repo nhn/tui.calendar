@@ -5,6 +5,10 @@
 'use strict';
 var ts = Object.prototype.toString;
 
+/**
+ * @constructor
+ * @param {Date} date to wrapping DW class
+ */
 function DW(date) {
     if (!(this instanceof DW)) {
         return new DW(date);

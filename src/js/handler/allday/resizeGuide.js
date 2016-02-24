@@ -87,8 +87,18 @@ AlldayResizeGuide.prototype.refreshGuideElement = function(newWidth) {
 AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         viewOptions = this.alldayResize.alldayView.options,
-        startDate = datetime.start(new Date(Math.max(model.starts.getTime(), datetime.parse(viewOptions.renderStartDate).getTime()))),
-        endDate = datetime.end(new Date(Math.min(model.ends.getTime(), datetime.parse(viewOptions.renderEndDate).getTime()))),
+        startDate = datetime.start(
+            new Date(Math.max(
+                model.starts.getTime(),
+                datetime.parse(viewOptions.renderStartDate).getTime()
+            ))
+        ),
+        endDate = datetime.end(
+            new Date(Math.min(
+                model.ends.getTime(),
+                datetime.parse(viewOptions.renderEndDate).getTime()
+            ))
+        ),
         originLength = datetime.range(startDate, endDate, datetime.MILLISECONDS_PER_DAY).length,
         baseWidthPercent = 100 / dragStartEventData.datesInRange,
         dragStartIndex = dragStartEventData.xIndex;
@@ -100,7 +110,7 @@ AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventDa
         newLength = Math.max(1, newLength);
 
         return newLength * baseWidthPercent;
-    }
+    };
 };
 
 /**

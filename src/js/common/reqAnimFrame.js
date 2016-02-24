@@ -8,6 +8,11 @@ var util = global.tui.util;
 var requestFn,
     cancelFn;
 
+/**
+ * Get name with vendor prefix
+ * @param {string} name - name to prepend prefix
+ * @returns {string} vendor prefixed name
+ */
 function getPrefixed(name) {
     return global['webkit' + name] || global['moz' + name] || global['ms' + name];
 }

@@ -89,8 +89,8 @@ AlldayDblClick.prototype._onDblClick = function(e) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: true,
-        starts: new Date(+targetDate),
-        ends: datetime.end(new Date(+targetDate))
+        starts: new Date(Number(targetDate)),
+        ends: datetime.end(new Date(Number(targetDate)))
     });
 };
 

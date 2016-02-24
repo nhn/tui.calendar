@@ -66,7 +66,8 @@ MilestoneClick.prototype.checkExpectedCondition = function(target) {
  * @param {object} clickEvent - click event object
  */
 MilestoneClick.prototype._onClick = function(clickEvent) {
-    var modelID = this.checkExpectedCondition(clickEvent.target);
+    var self = this,
+        modelID = this.checkExpectedCondition(clickEvent.target);
 
     if (!modelID) {
         return;
@@ -79,11 +80,11 @@ MilestoneClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(MilestoneClick);

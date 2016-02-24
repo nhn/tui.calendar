@@ -79,13 +79,24 @@ TimeDblClick.prototype._onDblClick = function(e) {
     viewHeight = timeView.getViewBound().height;
     renderHourRange = util.range(timeView.options.hourStart, timeView.options.hourEnd);
 
-    relativeTime = new Date(+common.ratio(viewHeight, (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR), mousePosY));
+    relativeTime = new Date(
+        Number(common.ratio(
+            viewHeight,
+            (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR),
+            mousePosY
+        ))
+    );
     relativeHour = relativeTime.getUTCHours();
     relativeMinutes = common.nearest(relativeTime.getUTCMinutes(), [0, 60]) / 2;
     targetDate.setHours(relativeHour, relativeMinutes);
 
-    newStart = new Date(+targetDate);
-    newEnd = new Date(Math.min((+targetDate + datetime.MILLISECONDS_PER_HOUR), +datetime.end(new Date(+targetDate))));
+    newStart = new Date(Number(targetDate));
+    newEnd = new Date(
+        Math.min(
+            Number(targetDate) + datetime.MILLISECONDS_PER_HOUR,
+            Number(datetime.end(new Date(Number(targetDate))))
+        )
+    );
 
     /**
      * @event {TimeDblClick#beforeCreateEvent}

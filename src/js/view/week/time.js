@@ -105,7 +105,8 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
  * @param {array} matrices The matrices for event placing.
  */
 Time.prototype._getBaseViewModel = function(ymd, matrices) {
-    var options = this.options,
+    var self = this,
+        options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
         containerHeight,
@@ -146,7 +147,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     return;
                 }
 
-                viewBound = this.getEventViewBound(viewModel, {
+                viewBound = self.getEventViewBound(viewModel, {
                     todayStart: todayStart,
                     baseMS: baseMS,
                     baseLeft: leftPercents,
@@ -156,9 +157,9 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                 });
 
                 util.extend(viewModel, viewBound);
-            }, this);
-        }, this);
-    }, this);
+            });
+        });
+    });
 };
 
 /**

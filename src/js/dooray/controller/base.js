@@ -1,3 +1,4 @@
+/* eslint complexity: 0 */
 /**
  * @fileoverview Base controller for Dooray service project.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>

@@ -163,8 +163,8 @@ var dirty = {
             fn;
 
         if (common.isObject(methodName)) {
-            common.forEachOwnProperties(methodName, function(flag, methodName) {
-                wrap(target, methodName, flag);
+            common.forEachOwnProperties(methodName, function(_flag, _name) {
+                wrap(target, _name, _flag);
             });
             return;
         }
@@ -173,17 +173,17 @@ var dirty = {
 
         if (!target._wrapper) {
             /**
-             * @param {function} fn Original method to wrap.
+             * @param {function} _fn Original method to wrap.
              * @param {boolean} flagToSet The boolean value to using dirty flagging.
              * @returns {*} The result value of original method.
              * @name _wrapper
              * @memberof dirty
              */
-            target._wrapper = function(fn, flagToSet) {
+            target._wrapper = function(_fn, flagToSet) {
                 return function() {
                     var args = Array.prototype.slice.call(arguments);
-                    var result = fn.apply(this, args);
-                    this._dirty = flagToSet;
+                    var result = _fn.apply(this, args); // eslint-disable-line
+                    this._dirty = flagToSet; // eslint-disable-line
                     return result;
                 };
             };

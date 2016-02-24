@@ -114,7 +114,7 @@ TimeMove.prototype._getTimeView = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.children.items, +matches[1]);
+    return util.pick(this.timeGridView.children.items, Number(matches[1]));
 };
 
 /**

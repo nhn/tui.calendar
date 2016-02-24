@@ -58,7 +58,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      * 수직 레이아웃 모듈 초기화
      **********/
     vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
+    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
+                                     dayNameView.container.offsetHeight) + 'px';
 
     vlayout = new VLayout({
         panels: [

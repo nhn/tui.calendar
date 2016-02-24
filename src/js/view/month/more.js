@@ -94,7 +94,8 @@ More.prototype.destroy = function() {
  * @param {object} viewModel - view model from factory/monthView
  */
 More.prototype.render = function(viewModel) {
-    var layer = this.layer,
+    var self = this,
+        layer = this.layer,
         pos;
 
     viewModel = util.extend({
@@ -109,9 +110,9 @@ More.prototype.render = function(viewModel) {
 
     layer.show();
 
-    util.debounce(function(self) {
+    util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
-    })(this);
+    })();
 };
 
 /**

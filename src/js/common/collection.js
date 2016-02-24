@@ -124,7 +124,7 @@ Collection.merge = function(collections) {    // eslint-disable-line
  * @returns {number} model unique id.
  */
 Collection.prototype.getItemID = function(item) {
-    return item._id + '';
+    return String(item._id);
 };
 
 /**
@@ -132,13 +132,14 @@ Collection.prototype.getItemID = function(item) {
  * @param {...*} item models to add this collection.
  */
 Collection.prototype.add = function(item) {
-    var id,
+    var self = this,
+        id,
         ownItems;
 
     if (arguments.length > 1) {
         forEachArr(aps.call(arguments), function(o) {
-            this.add(o);
-        }, this);
+            self.add(o);
+        });
 
         return;
     }
@@ -158,7 +159,8 @@ Collection.prototype.add = function(item) {
  * @returns {array} deleted model list.
  */
 Collection.prototype.remove = function(id) {
-    var removed = [],
+    var self = this,
+        removed = [],
         ownItems,
         itemToRemove;
 
@@ -167,9 +169,9 @@ Collection.prototype.remove = function(id) {
     }
 
     if (arguments.length > 1) {
-        removed = util.map(aps.call(arguments), function(id) {
-            return this.remove(id);
-        }, this);
+        removed = util.map(aps.call(arguments), function(_id) {
+            return self.remove(_id);
+        });
 
         return removed;
     }
@@ -287,7 +289,8 @@ Collection.prototype.find = function(filter) {
  * Group element by specific key values.
  *
  * if key parameter is function then invoke it and use returned value.
- * @param {(string|number|function|array)} key key property or getter function. if string[] supplied, create each collection before grouping.
+ * @param {(string|number|function|array)} key key property or getter function.
+ *  if string[] supplied, create each collection before grouping.
  * @param {function} [groupFunc] - function that return each group's key
  * @returns {object.<string, Collection>} grouped object
  * @example
@@ -321,13 +324,12 @@ Collection.prototype.groupBy = function(key, groupFunc) {
     var result = {},
         collection,
         baseValue,
-        isFunc = util.isFunction,
         keyIsFunc = isFunc(key),
         getItemIDFn = this.getItemID;
 
     if (util.isArray(key)) {
         util.forEachArray(key, function(k) {
-            result[k + ''] = new Collection(getItemIDFn);
+            result[String(k)] = new Collection(getItemIDFn);
         });
 
         if (!groupFunc) {

@@ -1,3 +1,4 @@
+/* eslint complexity: 0 */
 /**
  * @fileoverview Helpers for handlebar templates.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -61,9 +62,9 @@ module.exports = {
     'fi': function(a, oper, b, options) {
         switch (oper) {
             case '==':
-                return (a == b) ? options.fn(this) : options.inverse(this);
+                return (a == b) ? options.fn(this) : options.inverse(this);  // eslint-disable-line
             case '===':
-                return  (a === b) ? options.fn(this) : options.inverse(this);
+                return (a === b) ? options.fn(this) : options.inverse(this);
             case '<':
                 return (a < b) ? options.fn(this) : options.inverse(this);
             default:
@@ -167,11 +168,21 @@ module.exports = {
      **********/
 
     'milestone-tmpl': function(model) {
-        return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
+        return '<span class="' +
+            config.classname('dot') +
+            '" style="background-color:' +
+            model.bgColor +
+            '"></span> ' +
+            common.stripTags(model.title);
     },
 
     'task-tmpl': function(model) {
-        return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
+        return '<span class="' +
+            config.classname('dot') +
+            '" style="background-color:' +
+            model.bgColor +
+            '"></span> ' +
+            common.stripTags(model.title);
     },
 
     'taskTitle-tmpl': function() {
@@ -186,6 +197,6 @@ module.exports = {
         return common.stripTags(model.title);
     },
 
-    'minicalendar-tmpl': function(model) {}
+    'minicalendar-tmpl': function(model) {}  // eslint-disable-line
 };
 

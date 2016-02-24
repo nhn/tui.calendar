@@ -13,7 +13,8 @@ var Collection = require('../common/collection');
  *
  * All views create own container element inside supplied container element.
  * @constructor
- * @param {HTMLElement} container Default container element for view. you can use this element for this.container syntax.
+ * @param {HTMLElement} container Default container element for view.
+ *  you can use this element for this.container syntax.
  */
 function View(container) {
     var id = util.stamp(this);

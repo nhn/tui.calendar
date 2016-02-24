@@ -84,7 +84,8 @@ Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
  */
 Month.prototype._renderChildren = function(container, calendar) {
-    var containerHeight = domutil.getSize(container)[1],
+    var self = this,
+        containerHeight = domutil.getSize(container)[1],
         weekCount = calendar.length,
         heightForOneWeek = (containerHeight / weekCount) - BORDER_BOTTOM;
 
@@ -92,8 +93,8 @@ Month.prototype._renderChildren = function(container, calendar) {
     this.children.clear();
 
     util.forEach(calendar, function(weekArr, i) {
-        var starts = new Date(+weekArr[0]),
-            ends = new Date(+weekArr[weekArr.length - 1]),
+        var starts = new Date(Number(weekArr[0])),
+            ends = new Date(Number(weekArr[weekArr.length - 1])),
             isLastWeek = (i + 1 === weekCount),
             weekdayViewContainer,
             weekdayView;
@@ -104,11 +105,11 @@ Month.prototype._renderChildren = function(container, calendar) {
         weekdayView = new WeekdayInMonth({
             containerHeight: heightForOneWeek + (isLastWeek ? BORDER_BOTTOM : 0),
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
         }, weekdayViewContainer);
 
-        this.addChild(weekdayView);
-    }, this);
+        self.addChild(weekdayView);
+    });
 };
 
 /**

@@ -57,7 +57,7 @@ function getMousePosDate(monthView) {
             date: date,
             weekdayView: weekdayView
         };
-    };
+    }
 
     return getDate;
 }

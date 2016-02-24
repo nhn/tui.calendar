@@ -34,7 +34,7 @@ tokenFunc = {
      * @returns {string} four digit year number
      */
     'YYYY': function(date) {
-        return date.getFullYear() + '';
+        return String(date.getFullYear());
     },
 
     /**
@@ -145,8 +145,8 @@ datetime = {
             return cache[key];
         }
 
-        cache[key] = datetime._convMilliseconds(type, value, function(memo, v) {
-            return memo / v;
+        cache[key] = datetime._convMilliseconds(type, value, function(m, v) {
+            return m / v;
         });
 
         return cache[key];
@@ -166,8 +166,8 @@ datetime = {
             return cache[key];
         }
 
-        cache[key] = datetime._convMilliseconds(type, value, function(memo, v) {
-            return memo * v;
+        cache[key] = datetime._convMilliseconds(type, value, function(m, v) {
+            return m * v;
         });
 
         return cache[key];
@@ -277,8 +277,8 @@ datetime = {
         var zero = '',
             i = 0;
 
-        if ((number + '').length > length) {
-            return number + '';
+        if (String(number).length > length) {
+            return String(number);
         }
 
         for (; i < (length - 1); i += 1) {
@@ -334,7 +334,14 @@ datetime = {
             hms = [0, 0, 0];
         }
 
-        return new Date(+ymd[0], +ymd[1] + fixMonth, +ymd[2], +hms[0], +hms[1], +hms[2]);
+        return new Date(
+            Number(ymd[0]),
+            Number(ymd[1]) + fixMonth,
+            Number(ymd[2]),
+            Number(hms[0]),
+            Number(hms[1]),
+            Number(hms[2])
+        );
     },
 
     /**
@@ -406,7 +413,7 @@ datetime = {
      * @returns {Date} start date of supplied month
      */
     startDateOfMonth: function(date) {
-        var startDate = new Date(+date);
+        var startDate = new Date(Number(date));
 
         startDate.setDate(1);
         startDate.setHours(0, 0, 0, 0);
@@ -422,7 +429,7 @@ datetime = {
     endDateOfMonth: function(date) {
         var endDate = datetime.startDateOfMonth(date);
 
-        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1))
+        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1));
         endDate.setDate(endDate.getDate() - 1);
         endDate.setHours(23, 59, 59);
 
@@ -458,7 +465,7 @@ datetime = {
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
-        cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
+        cursor = new Date(new Date(Number(starts)).setDate(starts.getDate() - startIndex));
         // iteratee all dates to render
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
             var date;
@@ -468,7 +475,7 @@ datetime = {
                 week = calendar[i / 7] = [];
             }
 
-            date = new Date(+cursor);
+            date = new Date(Number(cursor));
             date = iteratee ? iteratee(date) : date;
             week.push(date);
 

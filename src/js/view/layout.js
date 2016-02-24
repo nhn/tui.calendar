@@ -68,7 +68,7 @@ Layout.prototype.toggleChildView = function(viewName) {
 
     this.children.each(function(childView) {
         container = childView.container;
-        flag = +(childView.viewName === viewName);
+        flag = Number(childView.viewName === viewName);
         domutil[prefix[flag] + 'Class'](container, config.classname('hidden'));
     });
 };
