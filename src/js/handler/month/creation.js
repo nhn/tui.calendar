@@ -6,6 +6,8 @@
 var util = global.tui.util;
 
 var config = require('../../config'),
+    datetime = require('../../common/datetime'),
+    array = require('../../common/array'),
     domutil = require('../../common/domutil'),
     getMousePosData = require('./core'),
     Guide = require('./creationGuide');
@@ -58,8 +60,8 @@ MonthCreation.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.guide.destroy();
 
-    this.guide = this.monthView = this.baseController = 
-        this.dragHandler = null;
+    this.dragHandler = this.monthView = this.baseController =
+        this.getEventData = this._cache = this.guide = null;
 };
 
 /**
@@ -68,6 +70,13 @@ MonthCreation.prototype.destroy = function() {
  * @param {object} eventCache - cache data from single dragging session
  */
 MonthCreation.prototype._createEvent = function(eventCache) {
+    var times = [
+            Number(eventCache.starts),
+            Number(eventCache.ends)
+        ].sort(array.compare.num.asc),
+        starts = new Date(times[0]),
+        ends = datetime.end(new Date(times[1]));
+
     /**
      * @event {MonthCreation#beforeCreateEvent}
      * @type {object}
@@ -77,8 +86,8 @@ MonthCreation.prototype._createEvent = function(eventCache) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: true,
-        starts: eventCache.starts,
-        ends: eventCache.ends
+        starts: starts,
+        ends: ends
     });
 };
 
@@ -105,7 +114,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     eventData = this.getEventData(dragStartEvent.originEvent);
 
     this._cache = {
-        starts: new Date(+eventData.date)
+        starts: new Date(Number(eventData.date))
     };
 
     /**
@@ -135,7 +144,7 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
     if (!eventData) {
         return;
     }
-    
+
     /**
      * @event {MonthCreation#month_creation_drag}
      * @type {object}
@@ -167,7 +176,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getEventData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new Date(+eventData.date);
+        cache.ends = new Date(Number(eventData.date));
         this._createEvent(cache);
     }
 
