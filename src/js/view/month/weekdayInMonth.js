@@ -14,6 +14,7 @@ var config = require('../../config'),
     common = require('../../common/common.js'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
+    View = require('../../view/view'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     eventTmpl = require('./weekdayInMonthEvent.hbs'),
@@ -23,8 +24,7 @@ var config = require('../../config'),
  * @constructor
  * @extends {Weekday}
  * @param {object} options - options for WeekdayInWeek view
- * @param {number} [options.containerHeight=40] - minimum height of event
- *  container element.
+ * @param {number} [options.heightPercent] - height percent of view
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.eventHeight=18] - height of each event block.
@@ -34,10 +34,26 @@ var config = require('../../config'),
  */
 function WeekdayInMonth(options, container) {
     Weekday.call(this, options, container);
-    container.style.height = options.containerHeight + 'px';
+    container.style.height = options.heightPercent + '%';
 }
 
 util.inherit(WeekdayInMonth, Weekday);
+
+/**
+ * Get event container element's bound properly by override
+ *
+ * View#getViewBound.
+ * @override
+ */
+WeekdayInMonth.prototype.getViewBound = function() {
+    var bound = View.prototype.getViewBound.call(this),
+        selector = config.classname('.weekday-events'),
+        height = domutil.getSize(domutil.find(selector, this.container))[1];
+
+    bound.height = height;
+
+    return bound;
+};
 
 /**
  * Get limit index of event block in current view
@@ -45,7 +61,8 @@ util.inherit(WeekdayInMonth, Weekday);
  */
 WeekdayInMonth.prototype._getRenderLimitIndex = function() {
     var opt = this.options,
-        count = mfloor(opt.containerHeight / (opt.eventHeight + opt.eventGutter));
+        containerHeight = this.getViewBound().height,
+        count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
 
     return mmax(count - 1, 0);    // subtraction for '+n' label block
 };
@@ -106,12 +123,14 @@ WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(),
-        renderLimitIdx = this._getRenderLimitIndex(),
+        renderLimitIdx,
         exceedDate = {},
         eventContainer,
         contentStr = '';
 
     container.innerHTML = baseTmpl(baseViewModel);
+
+    renderLimitIdx = this._getRenderLimitIndex();
 
     eventContainer = domutil.find(
         config.classname('.weekday-events'),

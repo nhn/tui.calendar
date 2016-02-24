@@ -4,8 +4,7 @@
  */
 'use strict';
 
-var util = global.tui.util,
-    BORDER_BOTTOM = 1;
+var util = global.tui.util;
 
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
@@ -85,17 +84,15 @@ Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
  */
 Month.prototype._renderChildren = function(container, calendar) {
     var self = this,
-        containerHeight = domutil.getSize(container)[1],
         weekCount = calendar.length,
-        heightForOneWeek = (containerHeight / weekCount) - BORDER_BOTTOM;
+        heightPercent = 100 / weekCount;
 
     container.innerHTML = '';
     this.children.clear();
 
-    util.forEach(calendar, function(weekArr, i) {
+    util.forEach(calendar, function(weekArr) {
         var starts = new Date(Number(weekArr[0])),
             ends = new Date(Number(weekArr[weekArr.length - 1])),
-            isLastWeek = (i + 1 === weekCount),
             weekdayViewContainer,
             weekdayView;
 
@@ -103,7 +100,7 @@ Month.prototype._renderChildren = function(container, calendar) {
             'div', container, config.classname('month-week-item'));
 
         weekdayView = new WeekdayInMonth({
-            containerHeight: heightForOneWeek + (isLastWeek ? BORDER_BOTTOM : 0),
+            heightPercent: heightPercent,
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
         }, weekdayViewContainer);
