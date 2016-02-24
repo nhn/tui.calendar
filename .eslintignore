@@ -3,5 +3,4 @@ dist/
 node_modules/
 perf/
 
-src/js/config.js
 src/js/**/*.hbs

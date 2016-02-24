@@ -56,9 +56,9 @@ function TimeCreationGuide(timeCreation) {
     this._styleFunc = null;
 
     timeCreation.on({
-        'time_creation_dragstart': this._onDragStart,
-        'time_creation_drag': this._onDrag,
-        'time_creation_click': this.clearGuideElement
+        'timeCreationDragstart': this._onDragStart,
+        'timeCreationDrag': this._onDrag,
+        'timeCreationClick': this.clearGuideElement
     }, this);
 }
 

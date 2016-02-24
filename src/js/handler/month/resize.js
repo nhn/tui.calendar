@@ -88,7 +88,7 @@ MonthResize.prototype._updateEvent = function(eventCache) {
 
 /**
  * Event handler for Drag#dragStart
- * @fires {MonthResize#month_resize_dragstart}
+ * @fires {MonthResize#monthResizeDragstart}
  * @param {object} dragStartEvent - drag start event data
  */
 MonthResize.prototype._onDragStart = function(dragStartEvent) {
@@ -126,7 +126,7 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
     };
 
     /**
-     * @event {MonthCreation#month_resize_dragstart}
+     * @event {MonthCreation#monthResizeDragstart}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
@@ -134,11 +134,11 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
      * @property {HTMLElement} target - event block element
      * @property {CalEvent} model - model instance
      */
-    this.fire('month_resize_dragstart', eventData);
+    this.fire('monthResizeDragstart', eventData);
 };
 
 /**
- * @fires {MonthResize#month_resize_drag}
+ * @fires {MonthResize#monthResizeDrag}
  * @param {object} dragEvent - drag event data
  */
 MonthResize.prototype._onDrag = function(dragEvent) {
@@ -155,17 +155,17 @@ MonthResize.prototype._onDrag = function(dragEvent) {
     }
 
     /**
-     * @event {MonthResize#month_resize_drag}
+     * @event {MonthResize#monthResizeDrag}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_resize_drag', eventData);
+    this.fire('monthResizeDrag', eventData);
 };
 
 /**
- * @fires {MonthResize#month_resize_dragend}
+ * @fires {MonthResize#monthResizeDragend}
  * @param {object} dragEndEvent - drag end event data
  */
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
@@ -189,13 +189,13 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     }
 
     /**
-     * @event {MonthResize#month_resize_dragend}
+     * @event {MonthResize#monthResizeDragend}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_resize_dragend', eventData);
+    this.fire('monthResizeDragend', eventData);
 
     this.getEventData = this._cache = null;
 };

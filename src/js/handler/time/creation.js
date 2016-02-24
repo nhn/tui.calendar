@@ -113,7 +113,7 @@ TimeCreation.prototype.checkExpectedCondition = function(target) {
 
 /**
  * Drag#dragStart event handler.
- * @emits TimeCreation#time_creation_dragstart
+ * @emits TimeCreation#timeCreationDragstart
  * @param {object} dragStartEventData - Drag#dragStart event data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -142,7 +142,7 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
     }, this);
 
     /**
-     * @event TimeCreation#time_creation_dragstart
+     * @event TimeCreation#timeCreationDragstart
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -152,12 +152,12 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this.fire(overrideEventName || 'time_creation_dragstart', eventData);
+    this.fire(overrideEventName || 'timeCreationDragstart', eventData);
 };
 
 /**
  * Drag#drag event handler
- * @emits TimeCreation#time_creation_drag
+ * @emits TimeCreation#timeCreationDrag
  * @param {object} dragEventData - event data from Drag#drag.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -177,7 +177,7 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
     }
 
     /**
-     * @event TimeCreation#time_creation_drag
+     * @event TimeCreation#timeCreationDrag
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -187,13 +187,13 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this.fire(overrideEventName || 'time_creation_drag', eventData);
+    this.fire(overrideEventName || 'timeCreationDrag', eventData);
 };
 
 /**
  * @fires TimeCreation#beforeCreateEvent
- * @param {object} eventData - event data object from TimeCreation#time_creation_dragend
- * or TimeCreation#time_creation_click
+ * @param {object} eventData - event data object from TimeCreation#timeCreationDragend
+ * or TimeCreation#timeCreationClick
  */
 TimeCreation.prototype._createEvent = function(eventData) {
     var relatedView = eventData.relatedView,
@@ -234,7 +234,7 @@ TimeCreation.prototype._createEvent = function(eventData) {
 
 /**
  * Drag#dragEnd event handler
- * @emits TimeCreation#time_creation_dragend
+ * @emits TimeCreation#timeCreationDragend
  * @param {object} dragEndEventData - event data from Drag#dragend
  */
 TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
@@ -266,7 +266,7 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     }
 
     /**
-     * @event TimeCreation#time_creation_dragend
+     * @event TimeCreation#timeCreationDragend
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -277,14 +277,14 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {number[]} createRange - milliseconds range between drag start and end to create.
      */
-    this._onDrag(dragEndEventData, 'time_creation_dragend', reviseFunc);
+    this._onDrag(dragEndEventData, 'timeCreationDragend', reviseFunc);
 
     this._dragStart = this._getEventDataFunc = null;
 };
 
 /**
  * Drag#click event handler
- * @emits TimeCreation#time_creation_click
+ * @emits TimeCreation#timeCreationClick
  * @param {object} clickEventData - event data from Drag#click.
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
@@ -305,7 +305,7 @@ TimeCreation.prototype._onClick = function(clickEventData) {
     }
 
     /**
-     * @event TimeCreation#time_creation_click
+     * @event TimeCreation#timeCreationClick
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -315,7 +315,7 @@ TimeCreation.prototype._onClick = function(clickEventData) {
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this._onDrag(clickEventData, 'time_creation_click', reviseFunc);
+    this._onDrag(clickEventData, 'timeCreationClick', reviseFunc);
 
     this._dragStart = this._getEventDataFunc = null;
 };

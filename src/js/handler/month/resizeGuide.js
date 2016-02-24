@@ -30,9 +30,9 @@ function MonthResizeGuide(monthResize) {
     this.guide = null;
 
     monthResize.on({
-        month_resize_dragstart: this._onDragStart,
-        month_resize_drag: this._onDrag,
-        month_resize_dragend: this._onDragEnd
+        monthResizeDragstart: this._onDragStart,
+        monthResizeDrag: this._onDrag,
+        monthResizeDragend: this._onDragEnd
     }, this);
 }
 

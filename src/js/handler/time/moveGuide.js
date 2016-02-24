@@ -47,10 +47,10 @@ function TimeMoveGuide(timeMove) {
     this._startTopPixel = 0;
 
     timeMove.on({
-        'time_move_dragstart': this._onDragStart,
-        'time_move_drag': this._onDrag,
-        'time_move_dragend': this._clearGuideElement,
-        'time_move_click': this._clearGuideElement
+        'timeMoveDragstart': this._onDragStart,
+        'timeMoveDrag': this._onDrag,
+        'timeMoveDragend': this._clearGuideElement,
+        'timeMoveClick': this._clearGuideElement
     }, this);
 }
 
@@ -98,7 +98,7 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top) {
 };
 
 /**
- * TimeMove#time_move_dragstart event handler
+ * TimeMove#timeMoveDragstart event handler
  * @param {object} dragStartEventData - dragstart event data
  */
 TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
@@ -122,7 +122,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
 };
 
 /**
- * TimeMove#time_move_drag event handler
+ * TimeMove#timeMoveDrag event handler
  * @param {object} dragEventData - drag event data
  */
 TimeMoveGuide.prototype._onDrag = function(dragEventData) {

@@ -37,10 +37,10 @@ function AlldayMoveGuide(alldayMove) {
     this.guideElement = null;
 
     alldayMove.on({
-        'allday_move_dragstart': this._onDragStart,
-        'allday_move_drag': this._onDrag,
-        'allday_move_dragend': this._clearGuideElement,
-        'allday_move_click': this._clearGuideElement
+        'alldayMoveDragstart': this._onDragStart,
+        'alldayMoveDrag': this._onDrag,
+        'alldayMoveDragend': this._clearGuideElement,
+        'alldayMoveClick': this._clearGuideElement
     }, this);
 }
 

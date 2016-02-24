@@ -93,7 +93,7 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
 
 /**
  * DragStart event handler method.
- * @emits AlldayMove#allday_move_dragstart
+ * @emits AlldayMove#alldayMoveDragstart
  * @param {object} dragStartEventData - Drag#dragStart event handler event data.
  */
 AlldayMove.prototype._onDragStart = function(dragStartEventData) {
@@ -137,7 +137,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event AlldayMove#allday_move_dragstart
+     * @event AlldayMove#alldayMoveDragstart
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
@@ -146,13 +146,13 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {CalEvent} model - data object of model isntance.
      * @property {HTMLDivElement} eventBlockElement - target event block element.
      */
-    this.fire('allday_move_dragstart', eventData);
+    this.fire('alldayMoveDragstart', eventData);
 };
 
 
 /**
  * Drag event handler method.
- * @emits AlldayMove#allday_move_drag
+ * @emits AlldayMove#alldayMoveDrag
  * @param {object} dragEventData - Drag#drag event handler eventdata.
  */
 AlldayMove.prototype._onDrag = function(dragEventData) {
@@ -163,14 +163,14 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
     }
 
     /**
-     * @event AlldayMove#allday_move_drag
+     * @event AlldayMove#alldayMoveDrag
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_move_drag', getEventDataFunc(dragEventData.originEvent));
+    this.fire('alldayMoveDrag', getEventDataFunc(dragEventData.originEvent));
 };
 
 /**
@@ -203,7 +203,7 @@ AlldayMove.prototype._updateEvent = function(eventData) {
 
 /**
  * DragEnd event hander method.
- * @emits AlldayMove#allday_move_dragend
+ * @emits AlldayMove#alldayMoveDragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {?boolean} skipUpdate - true then skip update event model.
@@ -233,33 +233,33 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, 
     }
 
     /**
-     * @event AlldayMove#allday_move_dragend
+     * @event AlldayMove#alldayMoveDragend
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_move_dragend', eventData);
+    this.fire(overrideEventName || 'alldayMoveDragend', eventData);
 
     this.getEventDataFunc = this._dragStart = null;
 };
 
 /**
  * Click event handler method.
- * @emits AlldayMove#allday_move_click
+ * @emits AlldayMove#alldayMoveClick
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayMove.prototype._onClick = function(clickEventData) {
     /**
-     * @event AlldayMove#allday_move_click
+     * @event AlldayMove#alldayMoveClick
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_move_click', true);
+    this._onDragEnd(clickEventData, 'alldayMoveClick', true);
 };
 
 common.mixin(AlldayCore, AlldayMove);

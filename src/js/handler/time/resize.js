@@ -109,7 +109,7 @@ TimeResize.prototype.checkExpectCondition = function(target) {
 };
 
 /**
- * @emits TimeResize#time_resize_dragstart
+ * @emits TimeResize#timeResizeDragstart
  * @param {object} dragStartEventData - event data of Drag#dragstart
  */
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
@@ -137,7 +137,7 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event TimeResize#time_resize_dragstart
+     * @event TimeResize#timeResizeDragstart
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with mouse position.
@@ -149,12 +149,12 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_resize_dragstart', eventData);
+    this.fire('timeResizeDragstart', eventData);
 };
 
 /**
  * Drag#drag event handler
- * @emits TimeResize#time_resize_drag
+ * @emits TimeResize#timeResizeDrag
  * @param {object} dragEventData - event data of Drag#drag custom event.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -177,7 +177,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
     }
 
     /**
-     * @event TimeResize#time_resize_drag
+     * @event TimeResize#timeResizeDrag
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -189,13 +189,13 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire(overrideEventName || 'time_resize_drag', eventData);
+    this.fire(overrideEventName || 'timeResizeDrag', eventData);
 };
 
 /**
  * Update model instance by dragend event results.
  * @fires TimeResize#beforeUpdateEvent
- * @param {object} eventData - event data from TimeResize#time_resize_dragend
+ * @param {object} eventData - event data from TimeResize#timeResizeDragend
  */
 TimeResize.prototype._updateEvent = function(eventData) {
     var ctrl = this.baseController,
@@ -242,7 +242,7 @@ TimeResize.prototype._updateEvent = function(eventData) {
 
 /**
  * Drag#dragEnd event handler
- * @emits TimeResize#time_resize_dragend
+ * @emits TimeResize#timeResizeDragend
  * @param {MouseEvent} dragEndEventData - Mouse event of Drag#dragEnd custom event.
  */
 TimeResize.prototype._onDragEnd = function(dragEndEventData) {
@@ -277,7 +277,7 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
     this._updateEvent(eventData);
 
     /**
-     * @event TimeResize#time_resize_dragend
+     * @event TimeResize#timeResizeDragend
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -291,13 +291,13 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number[]} range - milliseconds range between drag start and end.
      * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this.fire('time_resize_dragend', eventData);
+    this.fire('timeResizeDragend', eventData);
 
     this._getEventDataFunc = this._dragStart = null;
 };
 
 /**
- * @emits TimeResize#time_resize_click
+ * @emits TimeResize#timeResizeClick
  */
 TimeResize.prototype._onClick = function() {
     this.dragHandler.off({
@@ -307,9 +307,9 @@ TimeResize.prototype._onClick = function() {
     }, this);
 
     /**
-     * @event TimeResize#time_resize_click
+     * @event TimeResize#timeResizeClick
      */
-    this.fire('time_resize_click');
+    this.fire('timeResizeClick');
 };
 
 timeCore.mixin(TimeResize);

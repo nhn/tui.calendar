@@ -10,6 +10,13 @@ var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
 
+/**
+ * Get CSS syntax for element size
+ * @param {number} value - size value to apply element
+ * @param {string} postfix - postfix string ex) px, em, %
+ * @param {string} prefix - property name ex) width, height
+ * @returns {string} CSS syntax
+ */
 function getElSize(value, postfix, prefix) {
     prefix = prefix || '';
     if (util.isNumber(value)) {

@@ -93,7 +93,7 @@ MonthCreation.prototype._createEvent = function(eventCache) {
 
 /**
  * DragStart event handler
- * @fires {MonthCreation#month_creation_dragstart}
+ * @fires {MonthCreation#monthCreationDragstart}
  * @param {object} dragStartEvent - dragStart event data
  */
 MonthCreation.prototype._onDragStart = function(dragStartEvent) {
@@ -118,18 +118,18 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     };
 
     /**
-     * @event {MonthCreation#month_creation_dragstart}
+     * @event {MonthCreation#monthCreationDragstart}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_creation_dragstart', eventData);
+    this.fire('monthCreationDragstart', eventData);
 };
 
 /**
  * Drag event handler
- * @fires {MonthCreation#month_creation_drag}
+ * @fires {MonthCreation#monthCreationDrag}
  * @param {object} dragEvent - drag event data
  */
 MonthCreation.prototype._onDrag = function(dragEvent) {
@@ -146,18 +146,18 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
     }
 
     /**
-     * @event {MonthCreation#month_creation_drag}
+     * @event {MonthCreation#monthCreationDrag}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_creation_drag', eventData);
+    this.fire('monthCreationDrag', eventData);
 };
 
 /**
  * DragEnd event handler
- * @fires {MonthCreation#month_creation_dragend}
+ * @fires {MonthCreation#monthCreationDragend}
  * @param {object} dragEndEvent - drag end event data
  */
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
@@ -181,13 +181,13 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     }
 
     /**
-     * @event {MonthCreation#month_creation_dragend}
+     * @event {MonthCreation#monthCreationDragend}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_creation_dragend', eventData);
+    this.fire('monthCreationDragend', eventData);
 
     this.getEventData = this._cache = null;
 };

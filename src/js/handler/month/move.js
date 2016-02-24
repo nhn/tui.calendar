@@ -135,7 +135,7 @@ MonthMove.prototype.isMoreLayerEventBlock = function(target) {
 
 /**
  * Check handler has permission to handle fired event
- * @fires {MonthMove#month_move_start_from_morelayer}
+ * @fires {MonthMove#monthMoveStart_from_morelayer}
  * @param {HTMLElement} target - target element of fired event
  * @returns {(string|null)} model instance ID related with event. if handle
  *  has not permission to handle the event then return null.
@@ -151,9 +151,9 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
         modelID = domutil.getData(target, 'id');
         /**
          * Fire for notificate that the drag event start at more layer view.
-         * @event {MonthMove#month_move_start_from_morelayer}
+         * @event {MonthMove#monthMoveStart_from_morelayer}
          */
-        this.fire('month_move_start_from_morelayer');
+        this.fire('monthMoveStart_from_morelayer');
     }
 
     return modelID;
@@ -161,7 +161,7 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
 
 /**
  * Event handler for Drag#dragStart
- * @fires {MonthMove#month_move_dragstart}
+ * @fires {MonthMove#monthMoveDragstart}
  * @param {object} dragStartEvent - drag start event data
  */
 MonthMove.prototype._onDragStart = function(dragStartEvent) {
@@ -195,7 +195,7 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
     };
 
     /**
-     * @event {MonthMove#month_move_dragstart}
+     * @event {MonthMove#monthMoveDragstart}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
@@ -203,12 +203,12 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
      * @property {HTMLElement} target - event block element
      * @property {CalEvent} model - model instance
      */
-    this.fire('month_move_dragstart', eventData);
+    this.fire('monthMoveDragstart', eventData);
 };
 
 
 /**
- * @fires {MonthMove#month_move_drag}
+ * @fires {MonthMove#monthMoveDrag}
  * @param {object} dragEvent - drag event data
  */
 MonthMove.prototype._onDrag = function(dragEvent) {
@@ -227,18 +227,18 @@ MonthMove.prototype._onDrag = function(dragEvent) {
     }
 
     /**
-     * @event {MonthMove#month_move_drag}
+     * @event {MonthMove#monthMoveDrag}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_move_drag', eventData);
+    this.fire('monthMoveDrag', eventData);
 };
 
 /**
  * Event handler for Drag#dragEnd
- * @fires {MonthMove#month_move_dragend}
+ * @fires {MonthMove#monthMoveDragend}
  * @param {object} dragEndEvent - dragend event data
  */
 MonthMove.prototype._onDragEnd = function(dragEndEvent) {
@@ -262,13 +262,13 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     }
 
     /**
-     * @event {MonthResize#month_move_dragend}
+     * @event {MonthResize#monthMoveDragend}
      * @type {object}
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('month_move_dragend', eventData);
+    this.fire('monthMoveDragend', eventData);
 
     this.getEventData = this._cache = null;
 };

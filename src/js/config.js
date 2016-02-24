@@ -1,9 +1,14 @@
-/* eslint-disable */
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
+var cssPrefix = '/* @echo CSS_PREFIX */',
+    minicalendar = new RegExp(cssPrefix + 'minicalendar-(\\d{4}-\\d{2}-\\d{2})'),
+    alldayGetViewID = new RegExp('^' + cssPrefix + 'weekday[\\s]tui-view-(\\d+)'),
+    alldayCheckPermission = new RegExp('^' + cssPrefix + 'event(-title)?$'),
+    timeGetViewID = new RegExp('^' + cssPrefix + 'time-date[\\s]tui-view-(\\d+)');
 
 var config = {
     throwError: function(msg) {
@@ -15,7 +20,7 @@ var config = {
         /* @endif */
     },
 
-    cssPrefix: '/* @echo CSS_PREFIX */',
+    cssPrefix: cssPrefix,
 
     classname: function(str) {
         str = str || '';
@@ -28,16 +33,16 @@ var config = {
     },
 
     minicalendar: {
-        getDataRegExp: //* @echo CSS_PREFIX */minicalendar-(\d{4}-\d{2}-\d{2})/
+        getDataRegExp: minicalendar
     },
 
     allday: {
-        getViewIDRegExp: /^/* @echo CSS_PREFIX */weekday[\s]tui-view-(\d+)/,
-        checkCondRegExp: /^/* @echo CSS_PREFIX */event(-title)?$/
+        getViewIDRegExp: alldayGetViewID,
+        checkCondRegExp: alldayCheckPermission
     },
 
     time: {
-        getViewIDRegExp: /^/* @echo CSS_PREFIX */time-date[\s]tui-view-(\d+)/
+        getViewIDRegExp: timeGetViewID
     }
 };
 

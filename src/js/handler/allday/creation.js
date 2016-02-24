@@ -146,7 +146,7 @@ AlldayCreation.prototype._createEvent = function(eventData) {
 
 /**
  * DragStart event handler method.
- * @emits AlldayCreation#allday_creation_dragstart
+ * @emits AlldayCreation#alldayCreationDragstart
  * @param {object} dragStartEventData - Drag#dragStart event handler event data.
  */
 AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
@@ -169,19 +169,19 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
     eventData = getEventDataFunc(dragStartEventData.originEvent);
 
     /**
-     * @event AlldayCreation#allday_creation_dragstart
+     * @event AlldayCreation#alldayCreationDragstart
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_creation_dragstart', eventData);
+    this.fire('alldayCreationDragstart', eventData);
 };
 
 /**
  * Drag event handler method.
- * @emits AlldayCreation#allday_creation_drag
+ * @emits AlldayCreation#alldayCreationDrag
  * @param {object} dragEventData - Drag#drag event handler eventdata.
  */
 AlldayCreation.prototype._onDrag = function(dragEventData) {
@@ -195,19 +195,19 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
     eventData = getEventDataFunc(dragEventData.originEvent);
 
     /**
-     * @event AlldayCreation#allday_creation_drag
+     * @event AlldayCreation#alldayCreationDrag
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_creation_drag', eventData);
+    this.fire('alldayCreationDrag', eventData);
 };
 
 /**
  * DragEnd event hander method.
- * @emits AlldayCreation#allday_creation_dragend
+ * @emits AlldayCreation#alldayCreationDragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
@@ -232,33 +232,33 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
     this._createEvent(eventData);
 
     /**
-     * @event AlldayCreation#allday_creation_dragend
+     * @event AlldayCreation#alldayCreationDragend
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_creation_dragend', eventData);
+    this.fire(overrideEventName || 'alldayCreationDragend', eventData);
 
     this.getEventDataFunc = null;
 };
 
 /**
  * Click event handler method.
- * @emits AlldayCreation#allday_creation_click
+ * @emits AlldayCreation#alldayCreationClick
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayCreation.prototype._onClick = function(clickEventData) {
     /**
-     * @event AlldayCreation#allday_creation_click
+     * @event AlldayCreation#alldayCreationClick
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_creation_click');
+    this._onDragEnd(clickEventData, 'alldayCreationClick');
 };
 
 common.mixin(alldayCore, AlldayCreation);

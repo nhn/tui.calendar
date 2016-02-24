@@ -118,7 +118,7 @@ TimeMove.prototype._getTimeView = function(target) {
 };
 
 /**
- * @emits TimeMove#time_move_dragstart
+ * @emits TimeMove#timeMoveDragstart
  * @param {object} dragStartEventData - Drag#dragStart event data.
  */
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
@@ -146,7 +146,7 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event TimeMove#time_move_dragstart
+     * @event TimeMove#timeMoveDragstart
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with mouse position.
@@ -158,11 +158,11 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_move_dragstart', eventData);
+    this.fire('timeMoveDragstart', eventData);
 };
 
 /**
- * @emits TimeMove#time_move_drag
+ * @emits TimeMove#timeMoveDrag
  * @param {MouseEvent} dragEventData - mousemove event object
  * @param {string} [overrideEventName] - name of emitting event to override.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -187,7 +187,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
     }
 
     /**
-     * @event TimeMove#time_move_drag
+     * @event TimeMove#timeMoveDrag
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -200,13 +200,13 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
      * @property {Time} currentView - time view instance related with current mouse position.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire(overrideEventName || 'time_move_drag', eventData);
+    this.fire(overrideEventName || 'timeMoveDrag', eventData);
 };
 
 /**
  * Update model instance by dragend event results.
  * @fires TimeMove#beforeUpdateEvent
- * @param {object} eventData - event data from TimeMove#time_move_dragend
+ * @param {object} eventData - event data from TimeMove#timeMoveDragend
  */
 TimeMove.prototype._updateEvent = function(eventData) {
     var ctrl = this.baseController,
@@ -266,7 +266,7 @@ TimeMove.prototype._updateEvent = function(eventData) {
 };
 
 /**
- * @emits TimeMove#time_move_dragend
+ * @emits TimeMove#timeMoveDragend
  * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
@@ -303,7 +303,7 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
     this._updateEvent(eventData);
 
     /**
-     * @event TimeMove#time_move_dragend
+     * @event TimeMove#timeMoveDragend
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -318,11 +318,11 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number[]} range - milliseconds range between drag start and end.
      * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this.fire('time_move_dragend', eventData);
+    this.fire('timeMoveDragend', eventData);
 };
 
 /**
- * @emits TimeMove#time_move_click
+ * @emits TimeMove#timeMoveClick
  * @param {MouseEvent} clickEventData - click mouse event object.
  */
 TimeMove.prototype._onClick = function(clickEventData) {
@@ -345,7 +345,7 @@ TimeMove.prototype._onClick = function(clickEventData) {
     });
 
     /**
-     * @event TimeMove#time_move_click
+     * @event TimeMove#timeMoveClick
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -357,7 +357,7 @@ TimeMove.prototype._onClick = function(clickEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_move_click', eventData);
+    this.fire('timeMoveClick', eventData);
 };
 
 timeCore.mixin(TimeMove);

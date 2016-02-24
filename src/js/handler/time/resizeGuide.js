@@ -51,10 +51,10 @@ function TimeResizeGuide(timeResize) {
     this._startGridY = 0;
 
     timeResize.on({
-        'time_resize_dragstart': this._onDragStart,
-        'time_resize_drag': this._onDrag,
-        'time_resize_dragend': this._clearGuideElement,
-        'time_resize_click': this._clearGuideElement
+        'timeResizeDragstart': this._onDragStart,
+        'timeResizeDrag': this._onDrag,
+        'timeResizeDragend': this._clearGuideElement,
+        'timeResizeClick': this._clearGuideElement
     }, this);
 }
 
@@ -109,7 +109,7 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 
 
 /**
- * TimeMove#time_move_dragstart event handler
+ * TimeMove#timeMoveDragstart event handler
  * @param {object} dragStartEventData - dragstart event data
  */
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {

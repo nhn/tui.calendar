@@ -21,9 +21,9 @@ function MonthCreationGuide(monthCreation) {
     this.guide = null;
 
     monthCreation.on({
-        month_creation_dragstart: this._onDragStart,
-        month_creation_drag: this._onDrag,
-        month_creation_dragend: this._onDragEnd
+        monthCreationDragstart: this._onDragStart,
+        monthCreationDrag: this._onDrag,
+        monthCreationDragend: this._onDragEnd
     }, this);
 }
 

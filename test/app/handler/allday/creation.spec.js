@@ -55,7 +55,7 @@ describe('handler:AlldayCreation', function() {
                 options: {
                     renderStartDate: '2015-05-01',
                     renderEndDate: '2015-05-04'
-                } 
+                }
             };
         });
 
@@ -136,7 +136,7 @@ describe('handler:AlldayCreation', function() {
                 });
                 inst._onDrag({});
 
-                expect(inst.fire).toHaveBeenCalledWith('allday_creation_drag', {
+                expect(inst.fire).toHaveBeenCalledWith('alldayCreationDrag', {
                     dragStartXIndex: 3,
                     xIndex: 5
                 });
@@ -161,7 +161,7 @@ describe('handler:AlldayCreation', function() {
                 });
                 inst._onDragEnd({});
 
-                expect(inst.fire).toHaveBeenCalledWith('allday_creation_dragend', {
+                expect(inst.fire).toHaveBeenCalledWith('alldayCreationDragend', {
                     dragStartXIndex: 3,
                     xIndex: 5
                 });

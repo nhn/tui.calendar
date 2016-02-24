@@ -37,9 +37,9 @@ function MonthMoveGuide(monthMove) {
     this.gridElements = null;
 
     monthMove.on({
-        month_move_dragstart: this._onDragStart,
-        month_move_drag: this._onDrag,
-        month_move_dragend: this._onDragEnd
+        monthMoveDragstart: this._onDragStart,
+        monthMoveDrag: this._onDrag,
+        monthMoveDragend: this._onDragEnd
     }, this);
 }
 
