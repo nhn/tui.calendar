@@ -98,13 +98,14 @@ describe('handler:AlldayCreation', function() {
     });
 
     describe('event handler methods', function() {
-        var inst;
+        var mockDragHandler,
+            inst;
 
         beforeEach(function() {
-            inst = new AlldayCreation();
+            mockDragHandler = jasmine.createSpyObj('Drag', ['on', 'off']);
+            inst = new AlldayCreation(mockDragHandler);
             spyOn(inst, 'fire');
             spyOn(inst, '_retriveEventData').and.returnValue(function() {return 'good'});
-            inst.dragHandler = jasmine.createSpyObj('dragHandler', ['on', 'off']);
             spyOn(inst, '_createEvent');
         });
 

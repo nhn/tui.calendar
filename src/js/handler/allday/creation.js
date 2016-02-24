@@ -20,38 +20,36 @@ var AlldayCreationGuide = require('./creationGuide');
  * @param {Allday} [alldayView] - Allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
-function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-disable-line
+function AlldayCreation(dragHandler, alldayView, baseController) {
     /**
      * Drag handler instance.
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * allday view instance.
      * @type {Allday}
      */
-    this.alldayView = null;
+    this.alldayView = alldayView;
 
     /**
      * Base controller instance.
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {function}
      */
     this.getEventDataFunc = null;
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
-
     /**
      * @type {AlldayCreationGuide}
      */
     this.guide = new AlldayCreationGuide(this);
+
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -86,22 +84,6 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     }
 
     return util.pick(this.alldayView.children.items, matches[1]);
-};
-
-/**
- * Connect handler, view, controller.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - WeekdayInWeek view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-AlldayCreation.prototype.connect = function(dragHandler, alldayView, baseController) {
-    this.dragHandler = dragHandler;
-    this.alldayView = alldayView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
 };
 
 /**

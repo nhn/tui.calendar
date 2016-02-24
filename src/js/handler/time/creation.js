@@ -26,19 +26,19 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      * Drag handler instance.
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * TimeGrid view instance.
      * @type {TimeGrid}
      */
-    this.timeGridView = null;
+    this.timeGridView = timeGridView;
 
     /**
      * Base controller instance.
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {TimeCreationGuide}
@@ -57,9 +57,7 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -70,22 +68,6 @@ TimeCreation.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
-};
-
-/**
- * Connect handler, view, controllers for event creations.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-TimeCreation.prototype.connect = function(dragHandler, timeGridView, baseController) {
-    this.dragHandler = dragHandler;
-    this.timeGridView = timeGridView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
 };
 
 /**

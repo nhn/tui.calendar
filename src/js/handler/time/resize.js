@@ -23,17 +23,17 @@ function TimeResize(dragHandler, timeGridView, baseController) {
     /**
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * @type {TimeGrid}
      */
-    this.timeGridView = null;
+    this.timeGridView = timeGridView;
 
     /**
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {function}
@@ -50,9 +50,7 @@ function TimeResize(dragHandler, timeGridView, baseController) {
      */
     this._guide = new TimeResizeGuide(this);
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -63,22 +61,6 @@ TimeResize.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this._guide = null;
-};
-
-/**
- * Connect handler, view, controllers for event creations.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-TimeResize.prototype.connect = function(dragHandler, timeGridView, baseController) {
-    this.dragHandler = dragHandler;
-    this.timeGridView = timeGridView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
 };
 
 /**
