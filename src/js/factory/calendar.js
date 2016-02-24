@@ -152,17 +152,11 @@ Calendar.prototype.destroy = function() {
  * Initialize calendar
  */
 Calendar.prototype.initialize = function() {
-    var self = this,
-        controller = this.controller,
+    var controller = this.controller,
         viewName = this.viewName,
         opt = this.options;
 
     this.layout.controller = controller;
-
-    controller.on({
-        updateEvent: refreshCalendar,
-        createdEvent: refreshCalendar
-    });
 
     if (opt.events && opt.events.length) {
         this.createEvents(opt.events, true);
@@ -175,13 +169,6 @@ Calendar.prototype.initialize = function() {
     });
 
     this.toggleView(viewName, true);
-
-    /**
-     * Refresh calendar's child view recursively
-     */
-    function refreshCalendar() {
-        self.refreshChildView();
-    }
 };
 
 /**********
