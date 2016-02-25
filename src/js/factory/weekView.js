@@ -138,7 +138,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         view: weekView,
         refresh: function() {
             var weekViewHeight = weekView.getViewBound().height,
-                daynameViewHeight = dayNameView.getViewBound().height;
+                daynameViewHeight = domutil.getBCRect(
+                    dayNameView.container
+                ).height;
 
             vLayout.container.style.height =
                 weekViewHeight - daynameViewHeight + 'px';

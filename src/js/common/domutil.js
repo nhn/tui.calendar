@@ -434,7 +434,7 @@ domutil = {
              util.isNull(width) || util.isNull(height)) &&
             'getBoundingClientRect' in el) {
             bound = el.getBoundingClientRect();
-            width = bound.width || el.offsetwidth;
+            width = bound.width || el.offsetWidth;
             height = bound.height || el.offsetHeight;
         } else {
             width = parseFloat(width || 0);
@@ -442,6 +442,22 @@ domutil = {
         }
 
         return [width, height];
+    },
+
+    /**
+     * Fallback of getBoundingClientRect
+     * @param {HTMLElement} el - element
+     * @returns {object} rect
+     */
+    getBCRect: function(el) {
+        var rect = el.getBoundingClientRect();
+
+        rect = util.extend({
+            width: el.offsetWidth,
+            height: el.offsetHeight
+        }, rect);
+
+        return rect;
     },
 
     /**
