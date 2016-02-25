@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Freebusy</title>
-<link rel="stylesheet" type="text/css" href="../dist/calendar.css" />
+<title>Freebusy DEMO</title>
+<link rel="stylesheet" type="text/css" href="../../dist/calendar.css" />
 <style type="text/css">
 #freebusy {
-    border: 1px solid #ccc
+    width: 800px;
+    border: 1px solid #ccc;
 }
 </style>
 </head>
 <body>
 <div id="freebusy"></div>
-<script type="text/javascript" charset="utf-8" src="./code-snippet.js"></script>
-<script type="text/javascript" charset="utf-8" src="../dist/calendar.js"></script>
-<script type="text/javascript" charset="utf-8">
-(function() {
-    var fb = ne.dooray.calendar.Freebusy({
-        users: [{
-            id: '1',
-            name: '사용자1',
-            freebusy: [{
-                from: '2015-01-01T09:00:00+09:00',
-                to: '2015-01-01T09:30:00+09:00'
-            }, {
-                from: '2015-01-01T15:00:00+09:00',
-                to: '2015-01-01T16:00:00+09:00'
-            }]
-        }]
-    }, document.getElementById('freebusy'));
+<script src="../code-snippet.js"></script>
+<script src="../../dist/calendar.js"></script>
+<script>
+(function(w) {
+    var fb = ne.dooray.calendar.Freebusy(null, document.getElementById('freebusy'));
 
     fb.addUsers([{
+        id: '1',
+        name: '김민형',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T09:30:00+09:00'
+        }, {
+            from: '2015-01-01T15:00:00+09:00',
+            to: '2015-01-01T16:00:00+09:00'
+        }]
+    }, {
         id: '2',
-        name: '사용자2',
+        name: '테스트',
         freebusy: [{
             from: '2015-01-01T09:00:00+09:00',
             to: '2015-01-01T11:30:00+09:00'
@@ -44,6 +42,8 @@
         {from: '2015-01-01T16:30:00+09:00', to: '2015-01-01T17:30:00+09:00'}
     ], true);
 
+    fb.render();
+
     fb.on('click', function(e) {
         var datetime = ne.dooray.calendar.datetime,
             after30min = (function() {
@@ -53,13 +53,12 @@
                 d.setHours(+part[0], +part[1]);
 
                 return (datetime.format(new Date(+d + (datetime.MILLISECONDS_PER_MINUTES * 30)), 'HH:mm'));
-            })();
-
+        })();
         fb.select(e.time, after30min);
     });
 
-    fb.render();
-})();
+    w.fb = fb;
+})(window);
 </script>
 </body>
 </html>

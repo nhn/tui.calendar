@@ -1,35 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Fullcalendar Demo</title>
-<link rel="stylesheet" type="text/css" href="../dist/calendar.css" />
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
-<style type="text/css">
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-    }
+/* eslint no-console: 0, complexity: 0 */
+'use strict';
+(function(window, calendar) {
+    var cal, resizeThrottled,
+        idx = 5;
 
-    #calendar-container {
-        margin: 0;
-        padding: 0;
-        width: 90%;
-        height: 90%;
-    }
-</style>
-</head>
-<body>
-<div id="calendar-container"></div>
-<div><input type="button" id="delete-example" value="스크럼 일정 삭제하기" /></div>
-<script type="text/javascript" charset="utf-8" src="./code-snippet.js"></script>
-<script type="text/javascript" charset="utf-8" src="../dist/calendar.js"></script>
-<script type="text/javascript" charset="utf-8">
-(function() {
-    // 캘린더 인스턴스 생성
-    var calendar = ne.dooray.calendar.FullCalendar({
+    cal = calendar.FullCalendar({
         defaultView: 'week',
         template: {
             milestone: function(model) {
@@ -51,52 +26,62 @@
         week: {
             panelHeights: [80, 80, 120]
         }
-    }, document.getElementById('calendar-container'));
+    }, document.getElementById('calendar'));
 
-    calendar.setCalendarColor('1', { color: '#e8e8e8', bgColor: '#585858', render: false });
-    calendar.setCalendarColor('2', { color: '#282828', bgColor: '#dc9656', render: false });
-    calendar.setCalendarColor('3', { color: '#a16946', bgColor: '#ab4642', render: false });
+    cal.setCalendarColor('1', {
+        color: '#e8e8e8',
+        bgColor: '#585858',
+        render: false
+    });
+    cal.setCalendarColor('2', {
+        color: '#282828',
+        bgColor: '#dc9656',
+        render: false
+    });
+    cal.setCalendarColor('3', {
+        color: '#a16946',
+        bgColor: '#ab4642',
+        render: false
+    });
 
-    calendar.createEvents([{
-        id: "1",
+    cal.createEvents([{
+        id: '1',
         calendarID: '1',
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: '2015-11-25T09:40:00+09:00',
-        ends: '2015-11-25T10:40:00+09:00'
+        starts: '2016-02-25T09:40:00+09:00',
+        ends: '2016-02-25T10:40:00+09:00'
     }, {
-        id: "2",
+        id: '2',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
         dueDateClass: '',
-        starts: '2015-11-25T00:00:00+09:00',
-        ends: '2015-11-25T23:59:59+09:00'
+        starts: '2016-02-25T00:00:00+09:00',
+        ends: '2016-02-25T23:59:59+09:00'
     }, {
-        id: "3",
+        id: '3',
         calendarID: '3',
         title: '테스트 마일스톤1',
         category: 'milestone',
         dueDateClass: '',
         starts: '',
-        ends: '2015-11-25T23:59:59+09:00'
+        ends: '2016-02-25T23:59:59+09:00'
     }, {
-        id: "4",
+        id: '4',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2015-11-25T23:59:59+09:00'
+        ends: '2016-02-25T23:59:59+09:00'
     }], true);
 
-    calendar.render();
-
-    var idx = 5;
+    cal.render();
 
     // 일정 클릭 이벤트 핸들러
-    calendar.on({
+    cal.on({
         'clickEvent': function(e) {
             console.log('click', e);
         },
@@ -107,8 +92,8 @@
                 return;
             }
 
-            calendar.createEvents([{
-                id: idx + '',
+            cal.createEvents([{
+                id: String(idx),
                 calendarID: '',
                 title: title,
                 isAllDay: e.isAllDay,
@@ -126,7 +111,7 @@
             console.log('select', e);
         },
         'beforeUpdateEvent': function(e) {
-            calendar.updateEvent(e.model.id, {
+            cal.updateEvent(e.model.id, {
                 starts: e.starts,
                 ends: e.ends
             });
@@ -141,16 +126,43 @@
         }
     });
 
-    document.getElementById('delete-example').onclick = function() {
-        calendar.deleteEvent('1');
-    };
+    resizeThrottled = tui.util.throttle(function() {
+        cal.refresh();
+    }, 50);
 
-    window.onresize = function() {
-        calendar.refresh();
-    };
+    window.addEventListener('resize', resizeThrottled);
 
-    window.cal = calendar;
-})();
-</script>
-</body>
-</html>
+    /**********
+     * Control
+     **********/
+    function onClick(e) {
+        var action = calendar.domutil.getData(e.target, 'action');
+
+        switch (action) {
+            case 'move-prev':
+                cal.prev();
+                break;
+            case 'move-next':
+                cal.next();
+                break;
+            case 'move-today':
+                cal.today();
+                break;
+            case 'toggle-day':
+                cal.toggleView('day');
+                break;
+            case 'toggle-week':
+                cal.toggleView('week');
+                break;
+            case 'toggle-month':
+                cal.toggleView('month');
+                break;
+            default:
+                return;
+        }
+    }
+
+    calendar.domevent.on(document.querySelector('.control'), 'click', onClick);
+
+    window.cal = cal;
+})(window, ne.dooray.calendar);
