@@ -181,7 +181,7 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
  * @returns {number[]} splitter와 autoHeight를 제외한 나머지 패널의 높이 배열
  */
 ServiceCalendar.prototype.getLayoutData = function() {
-    return this.layout.vlayout.getLayoutData();
+    return this.layout.vLayout.getLayoutData();
 };
 
 /**

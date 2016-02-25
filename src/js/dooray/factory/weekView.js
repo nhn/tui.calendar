@@ -37,8 +37,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var weekView,
         dayNameContainer,
         dayNameView,
-        vlayoutContainer,
-        vlayout,
+        vLayoutContainer,
+        vLayout,
         milestoneView,
         taskView,
         alldayView,
@@ -68,11 +68,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
+    vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
+    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
                                      dayNameView.container.offsetHeight) + 'px';
 
-    vlayout = new VLayout({
+    vLayout = new VLayout({
         panels: [
             {height: 56, minHeight: 56},
             {isSplitter: true},
@@ -83,27 +83,27 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             {autoHeight: true}
         ],
         panelHeights: options.week.panelHeights || []
-    }, vlayoutContainer);
-    weekView.vlayout = vlayout;
+    }, vLayoutContainer);
+    weekView.vLayout = vLayout;
 
     /**********
      * 마일스톤
      **********/
-    milestoneView = new Milestone(options.week, vlayout.panels[0].container);
+    milestoneView = new Milestone(options.week, vLayout.panels[0].container);
     weekView.addChild(milestoneView);
     milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
     /**********
      * 업무
      **********/
-    taskView = new TaskView(options.week, vlayout.panels[2].container);
+    taskView = new TaskView(options.week, vLayout.panels[2].container);
     weekView.addChild(taskView);
     taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, vlayout.panels[4].container);
+    alldayView = new Allday(options.week, vLayout.panels[4].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayDblClickHandler = new AlldayDblClick(alldayView);
@@ -114,7 +114,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, vlayout.panels[6].container);
+    timeGridView = new TimeGrid(options.week, vLayout.panels[6].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeDblClickHandler = new TimeDblClick(timeGridView);
@@ -123,7 +123,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
     weekView.on('afterRender', function() {
-        vlayout.refresh();
+        vLayout.refresh();
     });
 
     weekView.handler = {
@@ -169,7 +169,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     return {
         view: weekView,
         refresh: function() {
-            vlayout.refresh();
+            vLayout.refresh();
         }
     };
 };
