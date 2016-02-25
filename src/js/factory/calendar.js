@@ -7,7 +7,6 @@
 var util = global.tui.util;
 var Handlebars = require('hbsfy/runtime');
 var dw = require('../common/dw'),
-    domutil = require('../common/domutil'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
     Drag = require('../handler/drag'),
