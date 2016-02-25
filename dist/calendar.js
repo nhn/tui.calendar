@@ -2,163 +2,93 @@
 (function (global){
 /**
  * Dooray Calendar
- * @version 0.1.19
+ * @version 1.0.0
  */
 /* eslint vars-on-top:0, strict:0 */
-
-/**********
- * Common
- **********/
 require('./src/js/view/template/registerHelpers');
-var config = require('./src/js/config');
-var dirty = require('./src/js/common/dirty');
-var datetime = require('./src/js/common/datetime');
-var array = require('./src/js/common/array');
-var domevent = require('./src/js/common/domevent');
-var domutil = require('./src/js/common/domutil');
-var Collection = require('./src/js/common/collection');
-var model = require('./src/js/common/model');
-var common = require('./src/js/common/common');
-var reqAnimFrame = require('./src/js/common/reqAnimFrame');
-var AJAX = require('./src/js/common/ajax');
-var VLayout = require('./src/js/common/vlayout');
-var VPanel = require('./src/js/common/vpanel');
-
-/**********
- * Models
- **********/
-var Point = require('./src/js/common/point');
-var CalEvent = require('./src/js/model/calEvent');
-var CalEventViewModel = require('./src/js/model/viewModel/calEvent');
-
-/**********
- * Views
- **********/
-var View = require('./src/js/view/view');
-View.prototype.cssPrefix = config.cssPrefix;
-
-var MonthWeek = require('./src/js/view/monthweek');
-var Week = require('./src/js/view/week/week');
-var DayName = require('./src/js/view/week/dayname');
-var TimeGrid = require('./src/js/view/week/timeGrid');
-var Time = require('./src/js/view/week/time');
-
-/**********
- * Handlers
- **********/
-var Drag = require('./src/js/handler/drag');
-var TimeCore = require('./src/js/handler/time/core');
-var TimeClick = require('./src/js/handler/time/click');
-var TimeCreation = require('./src/js/handler/time/creation');
-var TimeCreationGuide = require('./src/js/handler/time/creationGuide');
-var TimeMove = require('./src/js/handler/time/move');
-var TimeMoveGuide = require('./src/js/handler/time/moveGuide');
-var TimeResize = require('./src/js/handler/time/resize');
-var TimeResizeGuide = require('./src/js/handler/time/resizeGuide');
-
-var AlldayCore = require('./src/js/handler/allday/core');
-var AlldayClick = require('./src/js/handler/allday/click');
-var AlldayCreation = require('./src/js/handler/allday/creation');
-var AlldayCreationGuide = require('./src/js/handler/allday/creationGuide');
-var AlldayMove = require('./src/js/handler/allday/move');
-var AlldayMoveGuide = require('./src/js/handler/allday/moveGuide');
-var AlldayResize = require('./src/js/handler/allday/resize');
-var AlldayResizeGuide = require('./src/js/handler/allday/resizeGuide');
-
-/**********
- * Factory
- **********/
-var controllerFactory = require('./src/js/factory/controller');
-
-/**********
- * SERVICE MODULE
- **********/
-var MiniCalendar = require('./src/js/dooray/view/minicalendar');
-var DoorayEvent = require('./src/js/dooray/model/calEvent');
-var DoorayController = require('./src/js/dooray/controller/base');
-var TaskView = require('./src/js/dooray/view/taskview');
-var MilestoneClick = require('./src/js/dooray/handler/milestoneClick');
-var TaskClick = require('./src/js/dooray/handler/taskClick');
-var Freebusy = require('./src/js/dooray/view/freebusy');
-
-/**********
- * Calendar Factory
- **********/
-
-var Calendar = require('./src/js/factory/calendar');
-var ServiceCalendar = require('./src/js/dooray/factory/calendar');
 
 /** @namespace ne.dooray.calendar */
-global.tui.util.defineNamespace('ne.dooray.calendar', {
+global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
     // common
-    config: config,
-    dirty: dirty,
-    datetime: datetime,
-    array: array,
-    domevent: domevent,
-    domutil: domutil,
-    Collection: Collection,
-    model: model,
-    common: common,
-    reqAnimFrame: reqAnimFrame,
-    AJAX: AJAX,
-    Point: Point, 
-    VLayout: VLayout,
-    VPanel: VPanel,
+    config: require('./src/js/config'),
+    dirty: require('./src/js/common/dirty'),
+    datetime: require('./src/js/common/datetime'),
+    array: require('./src/js/common/array'),
+    domevent: require('./src/js/common/domevent'),
+    domutil: require('./src/js/common/domutil'),
+    Collection: require('./src/js/common/collection'),
+    model: require('./src/js/common/model'),
+    common: require('./src/js/common/common'),
+    reqAnimFrame: require('./src/js/common/reqAnimFrame'),
+    AJAX: require('./src/js/common/ajax'),
+    Point: require('./src/js/common/point'), 
+    VLayout: require('./src/js/common/vlayout'),
+    VPanel: require('./src/js/common/vpanel'),
+    FloatingLayer: require('./src/js/common/floatingLayer'),
+    dw: require('./src/js/common/dw'),
 
     // model
-    CalEvent: CalEvent,
-    CalEventViewModel: CalEventViewModel,
+    CalEvent: require('./src/js/model/calEvent'),
+    CalEventViewModel: require('./src/js/model/viewModel/calEvent'),
 
     // view
-    View: View,
-    Week: Week,
-    DayName: DayName,
-    TimeGrid: TimeGrid,
-    Time: Time,
-    MonthWeek: MonthWeek,
+    View: require('./src/js/view/view'),
+    Week: require('./src/js/view/week/week'),
+    DayName: require('./src/js/view/week/dayname'),
+    Weekday: require('./src/js/view/weekday'),
+    WeekdayInWeek: require('./src/js/view/week/weekdayInWeek'),
+    TimeGrid: require('./src/js/view/week/timeGrid'),
+    Time: require('./src/js/view/week/time'),
+    Month: require('./src/js/view/month/month'),
+    WeekdayInMonth: require('./src/js/view/month/weekdayInMonth'),
 
     // handler, guide
-    Drag: Drag,
+    Drag: require('./src/js/handler/drag'),
 
-    TimeCore: TimeCore,
-    TimeClick: TimeClick,
-    TimeCreation: TimeCreation,
-    TimeCreationGuide: TimeCreationGuide,
-    TimeMove: TimeMove,
-    TimeMoveGuide: TimeMoveGuide,
-    TimeResize: TimeResize,
-    TimeResizeGuide: TimeResizeGuide,
+    TimeCore: require('./src/js/handler/time/core'),
+    TimeClick: require('./src/js/handler/time/click'),
+    TimeCreation: require('./src/js/handler/time/creation'),
+    TimeCreationGuide: require('./src/js/handler/time/creationGuide'),
+    TimeMove: require('./src/js/handler/time/move'),
+    TimeMoveGuide: require('./src/js/handler/time/moveGuide'),
+    TimeResize: require('./src/js/handler/time/resize'),
+    TimeResizeGuide: require('./src/js/handler/time/resizeGuide'),
 
-    AlldayCore: AlldayCore,
-    AlldayClick: AlldayClick,
-    AlldayCreation: AlldayCreation,
-    AlldayCreationGuide: AlldayCreationGuide,
-    AlldayMove: AlldayMove,
-    AlldayMoveGuide: AlldayMoveGuide,
-    AlldayResize: AlldayResize,
-    AlldayResizeGuide: AlldayResizeGuide,
+    AlldayCore: require('./src/js/handler/allday/core'),
+    AlldayClick: require('./src/js/handler/allday/click'),
+    AlldayCreation: require('./src/js/handler/allday/creation'),
+    AlldayCreationGuide: require('./src/js/handler/allday/creationGuide'),
+    AlldayMove: require('./src/js/handler/allday/move'),
+    AlldayMoveGuide: require('./src/js/handler/allday/moveGuide'),
+    AlldayResize: require('./src/js/handler/allday/resize'),
+    AlldayResizeGuide: require('./src/js/handler/allday/resizeGuide'),
 
-    // only for test
-    ControllerFactory: controllerFactory,
+    MonthCore: require('./src/js/handler/month/core'),
+    MonthGuide: require('./src/js/handler/month/guide'),
+    MonthClick: require('./src/js/handler/month/click'),
+    MonthCreation: require('./src/js/handler/month/creation'),
+    MonthCreationGuide: require('./src/js/handler/month/creationGuide'),
+    MonthResize: require('./src/js/handler/month/resize'),
+    MonthMove: require('./src/js/handler/month/move'),
 
     // service modules
-    DoorayEvent: DoorayEvent,
-    DoorayController: DoorayController,
-    MiniCalendar: MiniCalendar,
-    TaskView: TaskView,
-    MilestoneClick: MilestoneClick,
-    TaskClick: TaskClick,
-    Freebusy: Freebusy,
+    DoorayEvent: require('./src/js/dooray/model/calEvent'),
+    DoorayController: require('./src/js/dooray/controller/base'),
+    MiniCalendar: require('./src/js/dooray/view/minicalendar'),
+    TaskView: require('./src/js/dooray/view/taskview'),
+    MilestoneClick: require('./src/js/dooray/handler/milestoneClick'),
+    TaskClick: require('./src/js/dooray/handler/taskClick'),
+    Freebusy: require('./src/js/dooray/view/freebusy'),
 
     // factory class
-    OriginCalendar: Calendar,
-    FullCalendar: ServiceCalendar
+    ControllerFactory: require('./src/js/factory/controller'),
+    OriginCalendar: require('./src/js/factory/calendar'),
+    FullCalendar: require('./src/js/dooray/factory/calendar')
 });
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/model":31,"./src/js/common/point":32,"./src/js/common/reqAnimFrame":33,"./src/js/common/vlayout":34,"./src/js/common/vpanel":35,"./src/js/config":36,"./src/js/dooray/controller/base":41,"./src/js/dooray/factory/calendar":42,"./src/js/dooray/handler/milestoneClick":45,"./src/js/dooray/handler/taskClick":46,"./src/js/dooray/model/calEvent":47,"./src/js/dooray/view/freebusy":49,"./src/js/dooray/view/minicalendar":53,"./src/js/dooray/view/taskview":55,"./src/js/factory/calendar":56,"./src/js/factory/controller":57,"./src/js/handler/allday/click":60,"./src/js/handler/allday/core":61,"./src/js/handler/allday/creation":62,"./src/js/handler/allday/creationGuide":63,"./src/js/handler/allday/move":65,"./src/js/handler/allday/moveGuide":66,"./src/js/handler/allday/resize":67,"./src/js/handler/allday/resizeGuide":68,"./src/js/handler/drag":69,"./src/js/handler/time/click":70,"./src/js/handler/time/core":71,"./src/js/handler/time/creation":72,"./src/js/handler/time/creationGuide":73,"./src/js/handler/time/move":75,"./src/js/handler/time/moveGuide":76,"./src/js/handler/time/resize":77,"./src/js/handler/time/resizeGuide":78,"./src/js/model/calEvent":79,"./src/js/model/viewModel/calEvent":80,"./src/js/view/monthweek":83,"./src/js/view/template/registerHelpers":86,"./src/js/view/view":91,"./src/js/view/week/dayname":93,"./src/js/view/week/time":94,"./src/js/view/week/timeGrid":95,"./src/js/view/week/week":96}],2:[function(require,module,exports){
+},{"./src/js/common/ajax":22,"./src/js/common/array":23,"./src/js/common/collection":25,"./src/js/common/common":26,"./src/js/common/datetime":27,"./src/js/common/dirty":28,"./src/js/common/domevent":29,"./src/js/common/domutil":30,"./src/js/common/dw":31,"./src/js/common/floatingLayer":32,"./src/js/common/model":33,"./src/js/common/point":34,"./src/js/common/reqAnimFrame":35,"./src/js/common/vlayout":37,"./src/js/common/vpanel":38,"./src/js/config":39,"./src/js/dooray/controller/base":44,"./src/js/dooray/factory/calendar":45,"./src/js/dooray/handler/milestoneClick":48,"./src/js/dooray/handler/taskClick":49,"./src/js/dooray/model/calEvent":50,"./src/js/dooray/view/freebusy":52,"./src/js/dooray/view/minicalendar":56,"./src/js/dooray/view/taskview":58,"./src/js/factory/calendar":59,"./src/js/factory/controller":60,"./src/js/handler/allday/click":63,"./src/js/handler/allday/core":64,"./src/js/handler/allday/creation":65,"./src/js/handler/allday/creationGuide":66,"./src/js/handler/allday/move":68,"./src/js/handler/allday/moveGuide":69,"./src/js/handler/allday/resize":70,"./src/js/handler/allday/resizeGuide":71,"./src/js/handler/drag":72,"./src/js/handler/month/click":73,"./src/js/handler/month/core":74,"./src/js/handler/month/creation":75,"./src/js/handler/month/creationGuide":76,"./src/js/handler/month/guide":78,"./src/js/handler/month/move":79,"./src/js/handler/month/resize":82,"./src/js/handler/time/click":84,"./src/js/handler/time/core":85,"./src/js/handler/time/creation":86,"./src/js/handler/time/creationGuide":87,"./src/js/handler/time/move":89,"./src/js/handler/time/moveGuide":90,"./src/js/handler/time/resize":91,"./src/js/handler/time/resizeGuide":92,"./src/js/model/calEvent":93,"./src/js/model/viewModel/calEvent":94,"./src/js/view/month/month":97,"./src/js/view/month/weekdayInMonth":101,"./src/js/view/template/registerHelpers":105,"./src/js/view/view":110,"./src/js/view/week/dayname":112,"./src/js/view/week/time":113,"./src/js/view/week/timeGrid":114,"./src/js/view/week/week":115,"./src/js/view/week/weekdayInWeek":117,"./src/js/view/weekday":118}],2:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1263,6 +1193,7 @@ module.exports = require("handlebars/runtime")["default"];
 
 },{"handlebars/runtime":20}],22:[function(require,module,exports){
 (function (global){
+/* eslint complexity: 0 */
 /**
  * @fileoverview Module for full management of requesting AJAX from server.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -1286,7 +1217,7 @@ AJAX.ERROR = {
 
 /**
  * 비동기 요청을 위한 객체를 만들어 반환한다
- * @return {(XMLHttpRequest|ActiveXObject)} 비동기 통신 지원 객체
+ * @returns {(XMLHttpRequest|ActiveXObject)} 비동기 통신 지원 객체
  */
 AJAX.prototype._createXHR = function() {
     if (util.isExisty(util.pick(window, 'XMLHttpRequest'))) {
@@ -1304,7 +1235,7 @@ AJAX.prototype._createXHR = function() {
  * TODO: 현재는 JSON데이터만 처리중이고 필요에 따라 늘어나야 한다
  * @param {string} dataType 데이터 타입
  * @param {*} data 가공할 데이터
- * @return {*} 가공된 데이터
+ * @returns {*} 가공된 데이터
  */
 AJAX.prototype._processRawData = function(dataType, data) {
     var result = data;
@@ -1356,7 +1287,7 @@ AJAX.prototype._onReadyStateChange = function(options, xhr) {
 
 /**
  * ajax 요청을 수행한다.
- * 
+ *
  * 요청 타입에 따른 추가 데이터 처리는 따로 하지 않으므로 사전에 미리 준비해야 한다
  * 예를 들어, get요청은 QueryString으로 url을 설정해야 하고, post등의 data를 사용하
  * 는 요청은 미리 stringfy된 값을 data옵션으로 전달해야 한다.
@@ -1395,7 +1326,7 @@ AJAX.prototype.ajax = function(url, options) {
     data = util.pick(options, 'data');
     if (!options.cache) {
         separator = ~url.indexOf('?') ? '&' : '?';
-        url = url + separator + '_=' + +(new Date());
+        url = url + separator + '_=' + Number(new Date());
     }
 
     xhr = this._createXHR();
@@ -1523,8 +1454,8 @@ function booleanDESC(a, b) {
  * @returns {number} Result of comparison.
  */
 function numberASC(_a, _b) {
-    var a = +_a,
-        b = +_b;
+    var a = Number(_a),
+        b = Number(_b);
 
     return a - b;
 }
@@ -1538,8 +1469,8 @@ function numberASC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function numberDESC(_a, _b) {
-    var a = +_a,
-        b = +_b;
+    var a = Number(_a),
+        b = Number(_b);
 
     return b - a;
 }
@@ -1553,8 +1484,8 @@ function numberDESC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringASC(_a, _b) {
-    var a = _a + '',
-        b = _b + '';
+    var a = String(_a),
+        b = String(_b);
 
     if (a > b) {
         return 1;
@@ -1574,8 +1505,8 @@ function stringASC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringDESC(_a, _b) {
-    var a = _a + '',
-        b = _b + '';
+    var a = String(_a),
+        b = String(_b);
 
     if (a > b) {
         return -1;
@@ -1595,8 +1526,8 @@ function stringDESC(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringASCIgnoreCase(_a, _b) {
-    var a = (_a + '').toLowerCase(),
-        b = (_b + '').toLowerCase();
+    var a = String(_a).toLowerCase(),
+        b = String(_b).toLowerCase();
 
     if (a > b) {
         return 1;
@@ -1616,8 +1547,8 @@ function stringASCIgnoreCase(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function stringDESCIgnoreCase(_a, _b) {
-    var a = (_a + '').toLowerCase(),
-        b = (_b + '').toLowerCase();
+    var a = String(_a).toLowerCase(),
+        b = String(_b).toLowerCase();
 
     if (a > b) {
         return -1;
@@ -1945,7 +1876,7 @@ module.exports = AutoScroll;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domevent":29,"../common/domutil":30,"../common/point":32}],25:[function(require,module,exports){
+},{"../common/domevent":29,"../common/domutil":30,"../common/point":34}],25:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Common collections.
@@ -2012,7 +1943,7 @@ Collection.and = function(filters) {
                 return false;
             }
         }
-        
+
         return true;
     };
 };
@@ -2073,7 +2004,7 @@ Collection.merge = function(collections) {    // eslint-disable-line
  * @returns {number} model unique id.
  */
 Collection.prototype.getItemID = function(item) {
-    return item._id + '';
+    return String(item._id);
 };
 
 /**
@@ -2081,13 +2012,14 @@ Collection.prototype.getItemID = function(item) {
  * @param {...*} item models to add this collection.
  */
 Collection.prototype.add = function(item) {
-    var id,
+    var self = this,
+        id,
         ownItems;
 
     if (arguments.length > 1) {
         forEachArr(aps.call(arguments), function(o) {
-            this.add(o);
-        }, this);
+            self.add(o);
+        });
 
         return;
     }
@@ -2107,7 +2039,8 @@ Collection.prototype.add = function(item) {
  * @returns {array} deleted model list.
  */
 Collection.prototype.remove = function(id) {
-    var removed = [],
+    var self = this,
+        removed = [],
         ownItems,
         itemToRemove;
 
@@ -2116,9 +2049,9 @@ Collection.prototype.remove = function(id) {
     }
 
     if (arguments.length > 1) {
-        removed = util.map(aps.call(arguments), function(id) {
-            return this.remove(id);
-        }, this);
+        removed = util.map(aps.call(arguments), function(_id) {
+            return self.remove(_id);
+        });
 
         return removed;
     }
@@ -2236,15 +2169,16 @@ Collection.prototype.find = function(filter) {
  * Group element by specific key values.
  *
  * if key parameter is function then invoke it and use returned value.
- * @param {(string|number|function|array)} key key property or getter function. if string[] supplied, create each collection before grouping.
+ * @param {(string|number|function|array)} key key property or getter function.
+ *  if string[] supplied, create each collection before grouping.
  * @param {function} [groupFunc] - function that return each group's key
  * @returns {object.<string, Collection>} grouped object
  * @example
- * 
+ *
  * // pass `string`, `number`, `boolean` type value then group by property value.
  * collection.groupBy('gender');    // group by 'gender' property value.
  * collection.groupBy(50);          // group by '50' property value.
- * 
+ *
  * // pass `function` then group by return value. each invocation `function` is called with `(item)`.
  * collection.groupBy(function(item) {
  *     if (item.score > 60) {
@@ -2270,13 +2204,12 @@ Collection.prototype.groupBy = function(key, groupFunc) {
     var result = {},
         collection,
         baseValue,
-        isFunc = util.isFunction,
         keyIsFunc = isFunc(key),
         getItemIDFn = this.getItemID;
 
     if (util.isArray(key)) {
         util.forEachArray(key, function(k) {
-            result[k + ''] = new Collection(getItemIDFn);
+            result[String(k)] = new Collection(getItemIDFn);
         });
 
         if (!groupFunc) {
@@ -2390,10 +2323,17 @@ module.exports = Collection;
  */
 'use strict';
 
-var util = global.tui.util;
-var Collection = require('../common/collection');
-var aps = Array.prototype.slice;
+var util = global.tui.util,
+    aps = Array.prototype.slice;
 
+var domutil = require('../common/domutil'),
+    Collection = require('../common/collection');
+
+/**
+ * Default event id getter for collection
+ * @param {CalEvent} event - event instance
+ * @returns {string} event id
+ */
 function eventIDGetter(event) {
     return event.cid();
 }
@@ -2507,7 +2447,7 @@ module.exports = {
      * @param {number} value - value
      * @param {array} minArr - min
      * @param {array} maxArr - max
-     * @return {number} limited value
+     * @returns {number} limited value
      */
     limit: function(value, minArr, maxArr) {
         var v = Math.max.apply(null, [value].concat(minArr));
@@ -2538,12 +2478,26 @@ module.exports = {
             lastCol = arr2d[lastRow].length - 1;
 
         return util.pick(arr2d, lastRow, lastCol);
+    },
+
+    /**
+     * Set 'title' attribute for all element that has exceeded content in
+     * container
+     * @param {string} selector - CSS selector {@see domutil#find}
+     * @param {HTMLElement} container - container element
+     */
+    setAutoEllipsis: function(selector, container) {
+        util.forEach(domutil.find(selector, container, true), function(el) {
+            if (el.offsetWidth < el.scrollWidth) {
+                el.setAttribute('title', domutil.getData(el, 'title'));
+            }
+        });
     }
 };
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25}],27:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30}],27:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview datetime utility module
@@ -2581,7 +2535,7 @@ tokenFunc = {
      * @returns {string} four digit year number
      */
     'YYYY': function(date) {
-        return date.getFullYear() + '';
+        return String(date.getFullYear());
     },
 
     /**
@@ -2624,13 +2578,13 @@ tokenFunc = {
                 return datetime.leadingZero(num, 2);
             };
 
-        return date.getFullYear() 
+        return date.getFullYear()
             + '-' + pad(date.getMonth() + 1)
             + '-' + pad(date.getDate())
             + 'T' + pad(date.getHours())
-            + ':' + pad(date.getMinutes()) 
-            + ':' + pad(date.getSeconds()) 
-            + diff + pad(timeZoneOffset / 60) 
+            + ':' + pad(date.getMinutes())
+            + ':' + pad(date.getSeconds())
+            + diff + pad(timeZoneOffset / 60)
             + ':' + pad(timeZoneOffset % 60);
     }
 };
@@ -2662,11 +2616,12 @@ datetime = {
      * @returns {number} converted value.
      */
     _convMilliseconds: function(type, value, iteratee) {
-        var conv = [60, 60, 1000],
+        var conv = [24, 60, 60, 1000],
             index = {
-                hour: 0,
-                minutes: 1,
-                seconds: 2
+                day: 0,
+                hour: 1,
+                minutes: 2,
+                seconds: 3
             };
 
         if (!(type in index) || global.isNaN(value)) {
@@ -2678,7 +2633,8 @@ datetime = {
 
     /**
      * Convert milliseconds value to other type
-     * @param {type} type convert to type want to. support "hour", "minutes", "seconds" only.
+     * @param {type} type convert to type want to. support "day", "hour",
+     *  "minutes", "seconds" only.
      * @param {value} value - value to convert.
      * @returns {number} converted value.
      */
@@ -2690,8 +2646,8 @@ datetime = {
             return cache[key];
         }
 
-        cache[key] = datetime._convMilliseconds(type, value, function(memo, v) {
-            return memo / v;
+        cache[key] = datetime._convMilliseconds(type, value, function(m, v) {
+            return m / v;
         });
 
         return cache[key];
@@ -2711,8 +2667,8 @@ datetime = {
             return cache[key];
         }
 
-        cache[key] = datetime._convMilliseconds(type, value, function(memo, v) {
-            return memo * v;
+        cache[key] = datetime._convMilliseconds(type, value, function(m, v) {
+            return m * v;
         });
 
         return cache[key];
@@ -2822,8 +2778,8 @@ datetime = {
         var zero = '',
             i = 0;
 
-        if ((number + '').length > length) {
-            return number + '';
+        if (String(number).length > length) {
+            return String(number);
         }
 
         for (; i < (length - 1); i += 1) {
@@ -2879,7 +2835,14 @@ datetime = {
             hms = [0, 0, 0];
         }
 
-        return new Date(+ymd[0], +ymd[1] + fixMonth, +ymd[2], +hms[0], +hms[1], +hms[2]);
+        return new Date(
+            Number(ymd[0]),
+            Number(ymd[1]) + fixMonth,
+            Number(ymd[2]),
+            Number(hms[0]),
+            Number(hms[1]),
+            Number(hms[2])
+        );
     },
 
     /**
@@ -2951,7 +2914,7 @@ datetime = {
      * @returns {Date} start date of supplied month
      */
     startDateOfMonth: function(date) {
-        var startDate = new Date(+date);
+        var startDate = new Date(Number(date));
 
         startDate.setDate(1);
         startDate.setHours(0, 0, 0, 0);
@@ -2967,7 +2930,7 @@ datetime = {
     endDateOfMonth: function(date) {
         var endDate = datetime.startDateOfMonth(date);
 
-        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1))
+        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1));
         endDate.setDate(endDate.getDate() - 1);
         endDate.setHours(23, 59, 59);
 
@@ -3003,7 +2966,7 @@ datetime = {
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
-        cursor = new Date(new Date(+starts).setDate(starts.getDate() - startIndex));
+        cursor = new Date(new Date(Number(starts)).setDate(starts.getDate() - startIndex));
         // iteratee all dates to render
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
             var date;
@@ -3013,7 +2976,7 @@ datetime = {
                 week = calendar[i / 7] = [];
             }
 
-            date = new Date(+cursor);
+            date = new Date(Number(cursor));
             date = iteratee ? iteratee(date) : date;
             week.push(date);
 
@@ -3196,8 +3159,8 @@ var dirty = {
             fn;
 
         if (common.isObject(methodName)) {
-            common.forEachOwnProperties(methodName, function(flag, methodName) {
-                wrap(target, methodName, flag);
+            common.forEachOwnProperties(methodName, function(_flag, _name) {
+                wrap(target, _name, _flag);
             });
             return;
         }
@@ -3206,17 +3169,17 @@ var dirty = {
 
         if (!target._wrapper) {
             /**
-             * @param {function} fn Original method to wrap.
+             * @param {function} _fn Original method to wrap.
              * @param {boolean} flagToSet The boolean value to using dirty flagging.
              * @returns {*} The result value of original method.
              * @name _wrapper
              * @memberof dirty
              */
-            target._wrapper = function(fn, flagToSet) {
+            target._wrapper = function(_fn, flagToSet) {
                 return function() {
                     var args = Array.prototype.slice.call(arguments);
-                    var result = fn.apply(this, args);
-                    this._dirty = flagToSet;
+                    var result = _fn.apply(this, args); // eslint-disable-line
+                    this._dirty = flagToSet; // eslint-disable-line
                     return result;
                 };
             };
@@ -3238,6 +3201,7 @@ module.exports = dirty;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],29:[function(require,module,exports){
 (function (global){
+/* eslint complexity: 0 */
 /**
  * @fileoverview Utility module for handling DOM events.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -3413,7 +3377,7 @@ var domevent = {
      * @param {*} [context] context object for handler method.
      */
     once: function(obj, types, fn, context) {
-        var that = this;
+        var self = this;
 
         if (util.isObject(types)) {
             util.forEachOwnProperties(types, function(handler, type) {
@@ -3422,9 +3386,12 @@ var domevent = {
             return;
         }
 
+        /**
+         * Handler for temporary usage for once implementation
+         */
         function onceHandler() {
             fn.apply(context || obj, arguments);
-            that._off(obj, types, onceHandler, context);
+            self._off(obj, types, onceHandler, context);
         }
 
         domevent.on(obj, types, onceHandler, context);
@@ -3648,10 +3615,10 @@ var domevent = {
             return mouseEvent.button;
         }
 
-        button = mouseEvent.button + '';
-        if (~primary.indexOf(button)) {
+        button = String(mouseEvent.button);
+        if (primary.indexOf(button) > -1) {
             return 0;
-        } else if (~secondary.indexOf(button)) {
+        } else if (secondary.indexOf(button) > -1) {
             return 2;
         } else if (~wheel.indexOf(button)) {
             return 1;
@@ -3665,6 +3632,7 @@ module.exports = domevent;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],30:[function(require,module,exports){
 (function (global){
+/* eslint complexity: 0, no-shadow: 0, max-nested-callbacks: 0  */
 /**
  * @fileoverview Utility modules for manipulate DOM elements.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -3680,6 +3648,11 @@ var util = global.tui.util,
 
 var CSS_AUTO_REGEX = /^auto$|^$|%/;
 
+/**
+ * Trim leading, trailing whitespace
+ * @param {string} str - string to trim
+ * @returns {string} trimmed string
+ */
 function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
@@ -3733,7 +3706,7 @@ domutil = {
      * Check supplied element is matched selector.
      * @param {HTMLElement} el - element to check
      * @param {string} selector - selector string to check
-     * @return {boolean} match?
+     * @returns {boolean} match?
      */
     _matcher: function(el, selector) {
         var cssClassSelector = /^\./,
@@ -3756,8 +3729,10 @@ domutil = {
      * 2. id selector
      * 3. nodeName selector
      * @param {string} selector selector
-     * @param {(HTMLElement|string)} [root] You can assign root element to find. if not supplied, document.body will use.
-     * @param {boolean|function} [multiple=false] - set true then return all elements that meet condition, if set function then use it filter function.
+     * @param {(HTMLElement|string)} [root] You can assign root element to find
+     *  if not supplied, document.body will use.
+     * @param {boolean|function} [multiple=false] - set true then return all
+     *  elements that meet condition, if set function then use it filter function.
      * @returns {HTMLElement} HTML element finded.
      */
     find: function(selector, root, multiple) {
@@ -3769,9 +3744,14 @@ domutil = {
         if (util.isString(root)) {
             root = domutil.get(root);
         }
-        
+
         root = root || window.document.body;
 
+        /**
+         * Function for recursive find specific node
+         * @param {HTMLElement} el - element to search
+         * @param {string} selector - selector
+         */
         function recurse(el, selector) {
             var childNodes = el.childNodes,
                 i = 0,
@@ -3833,7 +3813,7 @@ domutil = {
     /**
      * Return texts inside element.
      * @param {HTMLElement} el target element
-     * @return {string} text inside node
+     * @returns {string} text inside node
      */
     text: function(el) {
         var ret = '',
@@ -4008,7 +3988,7 @@ domutil = {
                     }
 
                     if (re.test(prop)) {
-                        prop = prop.replace(re, function () {
+                        prop = prop.replace(re, function() {
                             return arguments[2].toUpperCase();
                         });
                     }
@@ -4077,17 +4057,18 @@ domutil = {
     /**
      * Return element's size
      * @param {HTMLElement} el target element
-     * @return {number[]} width, height
+     * @returns {number[]} width, height
      */
     getSize: function(el) {
         var bound,
             width = domutil.getStyle(el, 'width'),
             height = domutil.getStyle(el, 'height');
 
-        if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height)) &&
+        if ((CSS_AUTO_REGEX.test(width) || CSS_AUTO_REGEX.test(height) ||
+             util.isNull(width) || util.isNull(height)) &&
             'getBoundingClientRect' in el) {
             bound = el.getBoundingClientRect();
-            width = bound.width || el.offsetwidth;
+            width = bound.width || el.offsetWidth;
             height = bound.height || el.offsetHeight;
         } else {
             width = parseFloat(width || 0);
@@ -4098,9 +4079,25 @@ domutil = {
     },
 
     /**
+     * Fallback of getBoundingClientRect
+     * @param {HTMLElement} el - element
+     * @returns {object} rect
+     */
+    getBCRect: function(el) {
+        var rect = el.getBoundingClientRect();
+
+        rect = util.extend({
+            width: el.offsetWidth,
+            height: el.offsetHeight
+        }, rect);
+
+        return rect;
+    },
+
+    /**
      * Check specific CSS style is available.
      * @param {array} props property name to testing
-     * @return {(string|boolean)} return true when property is available
+     * @returns {(string|boolean)} return true when property is available
      * @example
      * var props = ['transform', '-webkit-transform'];
      * domutil.testProp(props);    // 'transform'
@@ -4124,12 +4121,16 @@ domutil = {
      * @returns {object} form data
      */
     getFormData: function(formElement) {
-        var groupedByName = new Collection(function() { return this.length; }),
-            noDisabledFilter = function(el) { return !el.disabled; },
+        var groupedByName = new Collection(function() {
+                return this.length;    // eslint-disable-line
+            }),
+            noDisabledFilter = function(el) {
+                return !el.disabled;
+            },
             output = {};
-            
+
         groupedByName.add.apply(
-            groupedByName, 
+            groupedByName,
             domutil.find('input', formElement, noDisabledFilter)
                 .concat(domutil.find('select', formElement, noDisabledFilter))
                 .concat(domutil.find('textarea', formElement, noDisabledFilter))
@@ -4150,21 +4151,33 @@ domutil = {
                     result = [];
 
                 if (type === 'radio') {
-                    result = [elements.find(function(el) { return el.checked; }).toArray().pop()];
+                    result = [elements.find(function(el) {
+                        return el.checked;
+                    }).toArray().pop()];
                 } else if (type === 'checkbox') {
-                    result = elements.find(function(el) { return el.checked; }).toArray();
+                    result = elements.find(function(el) {
+                        return el.checked;
+                    }).toArray();
                 } else if (nodeName === 'select') {
-                    elements.find(function(el) { return !!el.childNodes.length; })
-                        .each(function(el) {
-                            result = result.concat(domutil.find('option', el, function(opt) {
+                    elements.find(function(el) {
+                        return !!el.childNodes.length;
+                    })
+                    .each(function(el) {
+                        result = result.concat(
+                            domutil.find('option', el, function(opt) {
                                 return opt.selected;
-                            }));
-                        });
+                            })
+                        );
+                    });
                 } else {
-                    result = elements.find(function(el) { return el.value !== ''; }).toArray();
+                    result = elements.find(function(el) {
+                        return el.value !== '';
+                    }).toArray();
                 }
 
-                result = util.map(result, function(el) { return el.value; });
+                result = util.map(result, function(el) {
+                    return el.value;
+                });
 
                 if (!result.length) {
                     result = '';
@@ -4182,10 +4195,10 @@ domutil = {
 
 /*eslint-disable*/
 var userSelectProperty = domutil.testProp([
-    'userSelect', 
-    'WebkitUserSelect', 
-    'OUserSelect', 
-    'MozUserSelect', 
+    'userSelect',
+    'WebkitUserSelect',
+    'OUserSelect',
+    'MozUserSelect',
     'msUserSelect'
 ]);
 var supportSelectStart = 'onselectstart' in document;
@@ -4245,6 +4258,278 @@ module.exports = domutil;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./collection":25,"./domevent":29}],31:[function(require,module,exports){
+/**
+ * @fileoverview Wrapper module for easy calc date object
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var ts = Object.prototype.toString;
+
+/**
+ * @constructor
+ * @param {Date} date to wrapping DW class
+ */
+function DW(date) {
+    if (!(this instanceof DW)) {
+        return new DW(date);
+    }
+
+    if (ts.call(date) !== '[object Date]') {
+        date = new Date(date);
+    }
+
+    /**
+     * @type {Date}
+     */
+    this.d = date;
+}
+
+/**
+ * Return d property when supplied object is DW. else return itself
+ * @param {*} obj - object
+ * @returns {Date} date
+ */
+DW.prototype.safe = function(obj) {
+    if (obj.constructor === DW) {
+        return obj.d;
+    }
+
+    return obj;
+};
+
+/**
+ * Clone DW object
+ * @returns {DW} cloned dwrap object
+ */
+DW.prototype.clone = function() {
+    return new DW(new Date(Number(this.d)));
+};
+
+/**
+ * Add days
+ * @param {number} day - day to add
+ * @returns {DW} wrapper object
+ */
+DW.prototype.addDate = function(day) {
+    this.d.setDate(this.d.getDate() + day);
+    return this;
+};
+
+/**
+ * Add month
+ * @param {number} m - month to add
+ * @returns {DW} wrapper object
+ */
+DW.prototype.addMonth = function(m) {
+    this.d.setMonth(this.d.getMonth() + m);
+    return this;
+};
+
+/**
+ * Set hour, minutes, seconds, milliseconds
+ * @param {number} h - hours
+ * @param {number} m - minutes
+ * @param {number} s - seconds
+ * @param {number} ms - milliseconds
+ * @returns {DW} wrapper object
+ */
+DW.prototype.setHours = function(h, m, s, ms) {
+    this.d.setHours(h, m, s, ms);
+    return this;
+};
+
+/**
+ * Whether date is between supplied dates?
+ * @param {Date|DW} d1 - from date
+ * @param {Date|DW} d2 - to date
+ * @returns {boolean} is between?
+ */
+DW.prototype.isBetween = function(d1, d2) {
+    var safe = this.safe;
+    return safe(d1) <= this.d && this.d <= safe(d2);
+};
+
+module.exports = DW;
+
+
+},{}],32:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Floating layer module
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+var config = require('../config'),
+    domutil = require('../common/domutil'),
+    View = require('../view/view');
+
+/**
+ * @constructor
+ * @extends {View}
+ * @param {object} options - options for floating layer module
+ * @param {HTMLElement} container - parent continer for floating layer
+ */
+function FloatingLayer(options, container) {
+    var sibling = container[FloatingLayer.PROP_KEY],
+        layerContainer;
+
+    if (!sibling) {
+        sibling = container[FloatingLayer.PROP_KEY] = [];
+    }
+
+    sibling.push(this);
+
+    /**
+     * @type {Collection}
+     */
+    this.sibling = sibling;
+
+    /**
+     * @type {number}
+     */
+    this.zIndex = this.getLargestZIndex() || FloatingLayer.INIT_ZINDEX;
+
+    layerContainer = document.createElement('div');
+    layerContainer.style.display = 'none';
+    layerContainer.style.position = 'absolute';
+    domutil.addClass(layerContainer, config.classname('floating-layer'));
+    container.style.position = 'relative';
+    container.appendChild(layerContainer);
+
+    View.call(this, layerContainer);
+
+    /**
+     * @type {HTMLElement}
+     */
+    this.parent = container;
+}
+
+util.inherit(FloatingLayer, View);
+
+/**
+ * @const
+ */
+FloatingLayer.PROP_KEY = '__fe_floating_layer';
+
+/**
+ * @const
+ */
+FloatingLayer.INIT_ZINDEX = 999;
+
+/**
+ * Destroy floating layer instance. if there no instnace in parent container
+ *
+ * remove instance cache property in container element
+ */
+FloatingLayer.prototype.destroy = function() {
+    var parent = this.parent,
+        sibling = this.sibling,
+        i = 0, cnt = sibling.length;
+
+    for (; i < cnt; i += 1) {
+        if (sibling[i] === this) {
+            sibling.splice(i, 1);
+            break;
+        }
+    }
+
+    if (!sibling.length) {
+        try {
+            delete parent[FloatingLayer.PROP_KEY];
+        } catch (e) {
+            parent[FloatingLayer.PROP_KEY] = null;
+        }
+
+        parent.style.position = '';
+    }
+
+    domutil.remove(this.container);
+
+    this.sibling = null;
+
+    View.prototype.destroy.call(this);
+};
+
+/**
+ * @returns {boolean} whether layer is visible?
+ */
+FloatingLayer.prototype.isVisible = function() {
+    return this.container.style.display !== 'none';
+};
+
+/**
+ * Set layer position
+ * @param {number} x - x coordinate of layer
+ * @param {number} y - y coordinate of layer
+ */
+FloatingLayer.prototype.setPosition = function(x, y) {
+    domutil.setPosition(this.container, x, y);
+};
+
+/**
+ * Set layer size
+ * @param {number|string} w - layer width
+ * @param {number|string} h - layer height
+ */
+FloatingLayer.prototype.setSize = function(w, h) {
+    var container = this.container;
+
+    w = util.isNumber(w) ? w + 'px' : w;
+    h = util.isNumber(h) ? h + 'px' : h;
+
+    container.style.width = w;
+    container.style.height = h;
+};
+
+/**
+ * Set layer content
+ * @param {string} html - html string
+ */
+FloatingLayer.prototype.setContent = function(html) {
+    this.container.innerHTML = html;
+};
+
+/**
+ * Get largest z-index from sibling layers
+ * @returns {number} largest z-index value
+ */
+FloatingLayer.prototype.getLargestZIndex = function() {
+    var zIndexes = util.map(this.sibling, function(layer) {
+        return layer.zIndex;
+    });
+
+    return Math.max.apply(null, zIndexes);
+};
+
+/**
+ * Set focus to layer
+ */
+FloatingLayer.prototype.focus = function() {
+    var zIndexForShow = this.getLargestZIndex() + 1;
+    this.container.style.zIndex = this.zIndex = zIndexForShow;
+};
+
+/**
+ * Show layer
+ */
+FloatingLayer.prototype.show = function() {
+    this.focus();
+    this.container.style.display = 'block';
+};
+
+/**
+ * Hide layer
+ */
+FloatingLayer.prototype.hide = function() {
+    this.container.style.display = 'none';
+};
+
+module.exports = FloatingLayer;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../common/domutil":30,"../config":39,"../view/view":110}],33:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Mixin module for models.
@@ -4333,7 +4618,7 @@ model = {
      * @returns {Boolean} model is valid?
      */
     isValid: function() {
-        var that = this,
+        var self = this,
             schema = this.constructor.schema,
             validators = model.validators,
             validator,
@@ -4347,7 +4632,7 @@ model = {
             validator = validators[validatorName];
 
             if (validator) {
-                valid = validator(that, values);
+                valid = validator(self, values);
                 return valid;
             }
         });
@@ -4396,7 +4681,7 @@ module.exports = model;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27}],32:[function(require,module,exports){
+},{"../common/datetime":27}],34:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview
@@ -4495,7 +4780,7 @@ Point.prototype.clone = function() {
 /**
  * Add points.
  * @param {Point} point The point instance to add.
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype.add = function(point) {
     return this.clone()._add(Point.n(point));
@@ -4504,7 +4789,7 @@ Point.prototype.add = function(point) {
 /**
  * Add self points.
  * @param {Point} point The point instance to add.
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype._add = function(point) {
     this.x += point.x;
@@ -4515,7 +4800,7 @@ Point.prototype._add = function(point) {
 /**
  * Subtract points.
  * @param {Point} point The point instance to subtract.
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype.subtract = function(point) {
     return this.clone()._subtract(Point.n(point));
@@ -4555,7 +4840,7 @@ Point.prototype._divideBy = function(num) {
 /**
  * Multiply coordinates.
  * @param {number} num Thyen number to multiply
- * @return {Point} Point calculated.
+ * @returns {Point} Point calculated.
  */
 Point.prototype.multiplyBy = function(num) {
     return this.clone()._multiplyBy(num);
@@ -4732,7 +5017,7 @@ module.exports = Point;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview RequestAnimFrame
@@ -4744,6 +5029,11 @@ var util = global.tui.util;
 var requestFn,
     cancelFn;
 
+/**
+ * Get name with vendor prefix
+ * @param {string} name - name to prepend prefix
+ * @returns {string} vendor prefixed name
+ */
 function getPrefixed(name) {
     return global['webkit' + name] || global['moz' + name] || global['ms' + name];
 }
@@ -4789,7 +5079,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],34:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Layout module that supplied split height, resize height features.
@@ -4835,7 +5125,7 @@ function VLayout(options, container) {
     View.call(this, container);
 
     domutil.addClass(container, config.classname('vlayout-container'));
-    
+
     /**
      * @type {object}
      */
@@ -4992,10 +5282,12 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
         cursor, resizeInfo;
 
     cursor = this[backwardMethod](splPanel);
-    resizeInfo = cursor.getResizeInfoByGrowth(+resizedHeight);
+    resizeInfo = cursor.getResizeInfoByGrowth(resizedHeight);
     resizeMap.push([cursor, resizeInfo[0]]);
 
-    while (cursor = this[forwardMethod](cursor)) {
+    for (cursor = this[forwardMethod](cursor);
+         util.isExisty(cursor);
+         cursor = this[forwardMethod](cursor)) {
         if (cursor.isSplitter()) {
             continue;
         }
@@ -5003,10 +5295,6 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
         resizeInfo = cursor.getResizeInfoByGrowth(-resizedHeight);
         resizeMap.push([cursor, resizeInfo[0]]);
         resizedHeight -= resizeInfo[1];
-
-        if (resizedHeight < 0) {
-            break;
-        }
     }
 
     util.forEach(resizeMap, function(pair) {
@@ -5022,7 +5310,7 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
 VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
     var upper = 0,
         below = 0,
-        cursor = splPanel,
+        cursor,
         func = function(panel) {
             if (panel.isSplitter()) {
                 return panel.getHeight();
@@ -5031,13 +5319,15 @@ VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
             return panel.options.minHeight;
         };
 
-    while (cursor = this.prevPanel(cursor)) {
+    for (cursor = this.prevPanel(splPanel);
+         util.isExisty(cursor);
+         cursor = this.prevPanel(cursor)) {
         upper += func(cursor);
     }
 
-    cursor = splPanel;
-
-    while (cursor = this.nextPanel(cursor)) {
+    for (cursor = this.nextPanel(splPanel);
+         util.isExisty(cursor);
+         cursor = this.nextPanel(cursor)) {
         below += func(cursor);
     }
 
@@ -5061,7 +5351,7 @@ VLayout.prototype._onDragStart = function(e) {
         splOffsetY = domevent.getMousePosition(oEvent, target)[1],
         mouseY = domevent.getMousePosition(oEvent, this.container)[1],
         guideElement = this._initializeGuideElement(target, mouseY);
-        
+
     splPanel.addClass(config.classname('splitter-focused'));
 
     this._dragData = {
@@ -5102,7 +5392,11 @@ VLayout.prototype._onDragEnd = function(e) {
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
     // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
-    mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY + asideMinMax[0]], [dragData.maxY - asideMinMax[1]]);
+    mouseY = common.limit(
+        mouseY - dragData.splOffsetY,
+        [dragData.minY + asideMinMax[0]],
+        [dragData.maxY - asideMinMax[1]]
+    );
 
     this._resize(dragData.splPanel, dragData.startY, mouseY);
 
@@ -5173,11 +5467,12 @@ VLayout.prototype.addPanel = function(options, container) {
  * @param {HTMLElement} container - container element
  */
 VLayout.prototype.addPanels = function(options, container) {
-    var frag = document.createDocumentFragment();
+    var self = this,
+        frag = document.createDocumentFragment();
 
     util.forEach(options, function(option) {
-        this.addPanel(option, frag);
-    }, this);
+        self.addPanel(option, frag);
+    });
 
     container.appendChild(frag);
 };
@@ -5188,7 +5483,9 @@ module.exports = VLayout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../config":36,"../handler/drag":69,"../view/view":91,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":35}],35:[function(require,module,exports){
+},{"../config":39,"../handler/drag":72,"../view/view":110,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":38}],37:[function(require,module,exports){
+arguments[4][36][0].apply(exports,arguments)
+},{"../config":39,"../handler/drag":72,"../view/view":110,"./common":26,"./domevent":29,"./domutil":30,"./vpanel":38,"dup":36}],38:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Panel class for VLayout module
@@ -5283,7 +5580,7 @@ VPanel.prototype.getHeight = function() {
  */
 VPanel.prototype.addClass = function(className) {
     domutil.addClass(this.container, className);
-}
+};
 
 /**
  * remove design class to panel element
@@ -5315,7 +5612,7 @@ VPanel.prototype._initPanel = function(options, container) {
     if (options.autoHeight) {
         domutil.setData(container, 'autoHeight', true);
     } else {
-        height = common.limit(options.height || 0, 
+        height = common.limit(options.height || 0,
             [options.minHeight],
             [options.maxHeight || options.height]
         );
@@ -5328,43 +5625,54 @@ module.exports = VPanel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../config":36,"../view/view":91,"./common":26,"./domutil":30}],36:[function(require,module,exports){
-/* eslint-disable */
+},{"../config":39,"../view/view":110,"./common":26,"./domutil":30}],39:[function(require,module,exports){
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
+var cssPrefix = 'dcal-',
+    minicalendar = new RegExp(cssPrefix + 'minicalendar-(\\d{4}-\\d{2}-\\d{2})'),
+    alldayGetViewID = new RegExp('^' + cssPrefix + 'weekday[\\s]tui-view-(\\d+)'),
+    alldayCheckPermission = new RegExp('^' + cssPrefix + 'event(-title)?$'),
+    timeGetViewID = new RegExp('^' + cssPrefix + 'time-date[\\s]tui-view-(\\d+)');
+
 var config = {
     throwError: function(msg) {
         alert(msg);
     },
 
-    cssPrefix: 'dcal-',
+    cssPrefix: cssPrefix,
 
     classname: function(str) {
-        return config.cssPrefix + (str + '');
+        str = str || '';
+
+        if (str.charAt(0) === '.') {
+            return '.' + config.cssPrefix + str.slice(1);
+        }
+
+        return config.cssPrefix + str;
     },
 
     minicalendar: {
-        getDataRegExp: /dcal-minicalendar-(\d{4}-\d{2}-\d{2})/
+        getDataRegExp: minicalendar
     },
 
     allday: {
-        getViewIDRegExp: /^dcal-monthweek[\s]dcal-(\d+)/,
-        checkCondRegExp: /^dcal-event(-title)?$/
+        getViewIDRegExp: alldayGetViewID,
+        checkCondRegExp: alldayCheckPermission
     },
 
     time: {
-        getViewIDRegExp: /^dcal-time-date[\s]dcal-(\d+)/
+        getViewIDRegExp: timeGetViewID
     }
 };
 
 module.exports = config;
 
 
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Base calendar controller
@@ -5391,14 +5699,14 @@ function Base(options) {
      * function for group each event models.
      * @type {function}
      * @param {CalEventViewModel} viewModel - view model instance
-     * @return {string} group key
+     * @returns {string} group key
      */
     this.groupFunc = options.groupFunc || function(viewModel) {
         if (viewModel.model.isAllDay) {
             return 'allday';
         }
         return 'time';
-    }
+    };
 
     /**
      * events collection.
@@ -5462,9 +5770,11 @@ Base.prototype.createEvent = function(options, silent) {
  * @returns {CalEvent[]} The instance list of CalEvent that created.
  */
 Base.prototype.createEvents = function(dataList, silent) {
+    var self = this;
+
     return util.map(dataList, function(data) {
-        return this.createEvent(data, silent);
-    }, this);
+        return self.createEvent(data, silent);
+    });
 };
 
 /**
@@ -5475,7 +5785,8 @@ Base.prototype.createEvents = function(dataList, silent) {
  * @returns {CalEvent|boolean} updated event instance, when it fail then return false.
  */
 Base.prototype.updateEvent = function(id, options) {
-    var result = false;
+    var self = this,
+        result = false;
 
     this.events.doWhenHas(id, function(model) {
         options = options || {};
@@ -5496,11 +5807,11 @@ Base.prototype.updateEvent = function(id, options) {
             model.set('ends', new Date(options.ends));
         }
 
-        this._removeFromMatrix(model);
-        this._addToMatrix(model);
+        self._removeFromMatrix(model);
+        self._addToMatrix(model);
 
         result = model;
-    }, this);
+    });
 
     /**
      * @event Base#updateEvent
@@ -5516,13 +5827,14 @@ Base.prototype.updateEvent = function(id, options) {
  * @returns {CalEvent} deleted model instance.
  */
 Base.prototype.deleteEvent = function(id) {
-    var result = false;
+    var self = this,
+        result = false;
 
     this.events.doWhenHas(id, function(event) {
         result = event;
-        this._removeFromMatrix(event);
-        this.events.remove(event);
-    }, this);
+        self._removeFromMatrix(event);
+        self.events.remove(event);
+    });
 
     return result;
 };
@@ -5660,21 +5972,22 @@ module.exports = Base;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/common":26,"../common/datetime":27,"../model/calEvent":79,"../model/viewModel/calEvent":80}],38:[function(require,module,exports){
+},{"../common/common":26,"../common/datetime":27,"../model/calEvent":93,"../model/viewModel/calEvent":94}],41:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Core methods for event block placing
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
-var aps = Array.prototype.slice;
+var util = global.tui.util,
+    forEachArr = util.forEachArray,
+    aps = Array.prototype.slice;
+
+var datetime = require('../../common/datetime'),
+    Collection = require('../../common/collection'),
+    CalEventViewModel = require('../../model/viewModel/calEvent');
 
 var Core = {
-    /**********
-     * COMMON
-     **********/
-
     /**
      * Calculate collision group.
      * @param {array} viewModels List of viewmodels.
@@ -5690,17 +6003,17 @@ var Core = {
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
-        util.forEachArray(viewModels.slice(1), function(event, index) {
+        forEachArr(viewModels.slice(1), function(event, index) {
             foundPrevCollisionEvent = false;
             previousEventList = aps.apply(viewModels, [0, index + 1]).reverse();
 
-            util.forEachArray(previousEventList, function(previous) {
+            forEachArr(previousEventList, function(previous) {
                 if (event.collidesWith(previous)) {
                     // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
                     // 찾아 이 일정을 추가한다
                     foundPrevCollisionEvent = true;
 
-                    util.forEachArray(collisionGroups.slice(0).reverse(), function(group) {
+                    forEachArr(collisionGroups.slice(0).reverse(), function(group) {
                         if (~util.inArray(util.stamp(previous.valueOf()), group)) {
                             // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
                             // Collision Group에 이 일정을 포함시킨다.
@@ -5727,7 +6040,7 @@ var Core = {
      * Get row length by column index in 2d matrix.
      * @param {array[]} arr2d Matrix
      * @param {number} col Column index.
-     * @return {number} Last row number in column.
+     * @returns {number} Last row number in column.
      */
     getLastRowInColumn: function(arr2d, col) {
         var row = arr2d.length;
@@ -5752,10 +6065,10 @@ var Core = {
         var result = [],
             getLastRowInColumn = Core.getLastRowInColumn;
 
-        util.forEachArray(collisionGroups, function(group) {
+        forEachArr(collisionGroups, function(group) {
             var matrix = [[]];
 
-            util.forEachArray(group, function(eventID) {
+            forEachArr(group, function(eventID) {
                 var event = collection.items[eventID],
                     col = 0,
                     found = false,
@@ -5785,6 +6098,125 @@ var Core = {
         });
 
         return result;
+    },
+
+    /**
+     * Filter that get event model in supplied date ranges.
+     * @param {Date} starts - start date
+     * @param {Date} ends - end date
+     * @returns {function} event filter function
+     */
+    getEventInDateRangeFilter: function(starts, ends) {
+        return function(model) {
+            var ownStarts = model.getStarts(),
+                ownEnds = model.getEnds();
+
+            // shorthand condition of
+            //
+            // (ownStarts >= starts && ownEnds <= ends) ||
+            // (ownStarts < starts && ownEnds >= starts) ||
+            // (ownEnds > ends && ownStarts <= ends)
+            return !(ownEnds < starts || ownStarts > ends);
+        };
+    },
+
+    /**
+     * Position each view model for placing into container
+     * @param {Date} starts - start date to render
+     * @param {Date} ends - end date to render
+     * @param {array} matrices - matrices from controller
+     * @param {function} [iteratee] - iteratee function invoke each view models
+     */
+    positionViewModels: function(starts, ends, matrices, iteratee) {
+        var ymdListToRender;
+
+        ymdListToRender = util.map(
+            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
+            function(date) {
+                return datetime.format(date, 'YYYYMMDD');
+            }
+        );
+
+        forEachArr(matrices, function(matrix) {
+            forEachArr(matrix, function(column) {
+                forEachArr(column, function(viewModel, index) {
+                    var ymd, dateLength;
+
+                    if (!viewModel) {
+                        return;
+                    }
+
+                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
+                    dateLength = datetime.range(
+                        viewModel.getStarts(),
+                        viewModel.getEnds(),
+                        datetime.MILLISECONDS_PER_DAY
+                    ).length;
+
+                    viewModel.top = index;
+                    viewModel.left = util.inArray(ymd, ymdListToRender);
+                    viewModel.width = dateLength;
+
+                    if (iteratee) {
+                        iteratee(viewModel);
+                    }
+                });
+            });
+        });
+    },
+
+    /**
+     * Limit start, end date each view model for render properly
+     * @param {Date} starts - start date to render
+     * @param {Date} ends - end date to render
+     * @param {Collection|CalEventViewModel} viewModelColl - event view
+     *  model collection or CalEventViewModel
+     * @returns {CalEventViewModel} return view model when third parameter is
+     *  view model
+     */
+    limitRenderRange: function(starts, ends, viewModelColl) {
+        /**
+         * Limit render range for view models
+         * @param {CalEventViewModel} viewModel - view model instance
+         * @returns {CalEventViewModel} view model that limited render range
+         */
+        function limit(viewModel) {
+            if (viewModel.getStarts() < starts) {
+                viewModel.renderStarts = new Date(starts.getTime());
+            }
+
+            if (viewModel.getEnds() > ends) {
+                viewModel.renderEnds = new Date(ends.getTime());
+            }
+
+            return viewModel;
+        }
+
+        if (viewModelColl.constructor === Collection) {
+            viewModelColl.each(limit);
+            return;
+        }
+
+        return limit(viewModelColl);
+    },
+
+    /**
+     * Convert event model collection to view model collection.
+     * @param {Collection} modelColl - collection of event model
+     * @returns {Collection} collection of event view model
+     */
+    convertToViewModel: function(modelColl) {
+        var viewModelColl;
+
+        viewModelColl = new Collection(function(viewModel) {
+            return viewModel.cid();
+        });
+
+        modelColl.each(function(model) {
+            viewModelColl.add(CalEventViewModel.create(model));
+        });
+
+        return viewModelColl;
     }
 };
 
@@ -5792,37 +6224,135 @@ module.exports = Core;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],39:[function(require,module,exports){
+},{"../../common/collection":25,"../../common/datetime":27,"../../model/viewModel/calEvent":94}],42:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller mixin for Month View
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
-var common = require('../../common/common'),
-    array = require('../../common/array'),
+var util = global.tui.util,
+    mmax = Math.max;
+
+var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection'),
-    CalEventViewModel = require('../../model/viewModel/calEvent');
+    Collection = require('../../common/collection');
 
 var Month = {
+    /**
+     * Function for group each type of events in view model collection
+     * @param {CalEventViewModel} viewModel - event view model
+     * @returns {boolean} whether model is allday event?
+     */
+    _groupByType: function(viewModel) {
+        return (viewModel.model.isAllDay ? 'allday' : 'time');
+    },
 
     /**
-     * Default filter for Month#findByMonth method
-     * @param {Date} starts - start date
-     * @param {Date} ends - end date
-     * @returns {function} event filter function
+     * Filter function for find time event
+     * @param {CalEventViewModel} viewModel - event view model
+     * @returns {boolean} whether model is time event?
      */
-    _getDefaultFilter: function(starts, ends) {
-        return function(model) {
-            var ownStarts = model.getStarts(),
-                ownEnds = model.getEnds();
+    _onlyTimeFilter: function(viewModel) {
+        return !viewModel.model.isAllDay;
+    },
 
-            return (ownStarts >= starts && ownEnds <= ends) ||
-                (ownStarts < starts && ownEnds >= starts) ||
-                (ownEnds > ends && ownStarts <= ends);
-        }
+    /**
+     * Filter function for find allday event
+     * @param {CalEventViewModel} viewModel - event view model
+     * @returns {boolean} whether model is allday event?
+     */
+    _onlyAlldayFilter: function(viewModel) {
+        return viewModel.model.isAllDay;
+    },
+
+    /**
+     * Weight top value +1 for month view render
+     * @param {CalEventViewModel} viewModel - event view model
+     */
+    _weightTopValue: function(viewModel) {
+        viewModel.top += 1;
+    },
+
+    /**
+     * Adjust render range to render properly.
+     *
+     * Limit starts, ends for each allday events and expand starts, ends for
+     * each time events
+     * @this Base
+     * @param {Date} starts - render start date
+     * @param {Date} ends - render end date
+     * @param {Collection} vColl - view model collection
+     * @returns {Collection} collection with adjusted `renderStart`, `renderEnd`
+     * property.
+     */
+    _adjustRenderRange: function(starts, ends, vColl) {
+        var ctrlCore = this.Core;
+
+        vColl.each(function(viewModel) {
+            var eventDate;
+
+            if (viewModel.model.isAllDay) {
+                ctrlCore.limitRenderRange(starts, ends, viewModel);
+            } else {
+                eventDate = new Date(Number(viewModel.getStarts()));
+                viewModel.renderStart = datetime.start(eventDate);
+                viewModel.renderEnd = datetime.end(eventDate);
+            }
+        });
+
+        return vColl;
+    },
+
+    /**
+     * Get max top index value for allday events in specific date (YMD)
+     * @this Base
+     * @param {string} ymd - yyyymmdd formatted value
+     * @param {Collection} vAlldayColl - collection of allday events
+     * @returns {number} max top index value in date
+     */
+    _getAlldayMaxTopIndexAtYMD: function(ymd, vAlldayColl) {
+        var dateMatrix = this.dateMatrix,
+            topIndexesInDate = [];
+
+        util.forEach(dateMatrix[ymd], function(cid) {
+            vAlldayColl.doWhenHas(cid, function(viewModel) {
+                topIndexesInDate.push(viewModel.top);
+            });
+        });
+
+        return mmax.apply(null, topIndexesInDate);
+    },
+
+    /**
+     * Adjust time view model's top index value
+     * @this Base
+     * @param {Collection} vColl - collection of events
+     */
+    _adjustTimeTopIndex: function(vColl) {
+        var ctrlMonth = this.Month,
+            getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD,
+            vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter),
+            maxIndexInYMD = {};
+
+        vColl
+            .find(ctrlMonth._onlyTimeFilter)
+            .each(function(timeViewModel) {
+                var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD'),
+                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
+
+                if (util.isUndefined(alldayMaxTopInYMD)) {
+                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
+                        getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
+                }
+
+                maxIndexInYMD[eventYMD] = timeViewModel.top =
+                    (alldayMaxTopInYMD + 1);
+
+                if (timeViewModel.top > alldayMaxTopInYMD) {
+                    return;
+                }
+            });
     },
 
     /**
@@ -5830,40 +6360,32 @@ var Month = {
      * @this Base
      * @param {Date} starts - start date to find events
      * @param {Date} ends - end date to find events
-     * @param {function} [andFilter] - additional filter to AND clause
-     * @returns {object} viewmodel data
+     * @param {function[]} [andFilters] - optional filters to applying search query
+     * @returns {object} view model data
      */
-    findByDateRange: function(starts, ends, andFilter) {
-        var filter = Month._getDefaultFilter(starts, ends),
-            ownEvents = this.events,
-            result,
-            eventList,
+    findByDateRange: function(starts, ends, andFilters) {
+        var ctrlCore = this.Core,
+            ctrlMonth = this.Month,
+            filter = ctrlCore.getEventInDateRangeFilter(starts, ends),
+            coll, vColl, vList,
             collisionGroup,
-            matrices,
-            viewModels;
+            matrices;
 
-        if (andFilter) {
-            filter = Collection.and.call(null, [filter].concat(andFilter));
-        }
+        andFilters = andFilters || [];
+        filter = Collection.and.apply(null, [filter].concat(andFilters));
 
-        result = ownEvents.find(filter);
-        eventList = result.toArray().sort(array.compare.event.asc);
-        collisionGroup = this.Core.getCollisionGroup(eventList);
+        coll = this.events.find(filter);
+        vColl = ctrlCore.convertToViewModel(coll);
+        vColl = ctrlMonth._adjustRenderRange(starts, ends, vColl);
+        vList = vColl.sort(array.compare.event.asc);
 
-        // CONVERT TO VIEWMODEL
-        viewModels = common.createEventCollection.apply(
-            null,
-            util.map(result.items, function(event) {
-                return CalEventViewModel.create(event);
-            })
-        );
+        collisionGroup = ctrlCore.getCollisionGroup(vList);
+        matrices = ctrlCore.getMatrices(vColl, collisionGroup);
 
-        matrices = this.Core.getMatrices(viewModels, collisionGroup);
+        ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);
+        ctrlMonth._adjustTimeTopIndex(vColl);
 
-        return {
-            viewModels: viewModels,
-            matrices: matrices
-       }; 
+        return matrices;
     }
 };
 
@@ -5871,8 +6393,9 @@ module.exports = Month;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":80}],40:[function(require,module,exports){
+},{"../../common/array":23,"../../common/collection":25,"../../common/datetime":27}],43:[function(require,module,exports){
 (function (global){
+/* eslint no-shadow: 0 */
 /**
  * @fileoverview Controller mixin modules for day views.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -5880,12 +6403,9 @@ module.exports = Month;
 'use strict';
 
 var util = global.tui.util;
-var Collection = require('../../common/collection');
-var datetime = require('../../common/datetime');
-var common = require('../../common/common');
-var array = require('../../common/array');
-var CalEventViewModel = require('../../model/viewModel/calEvent');
-var aps = Array.prototype.slice;
+
+var Collection = require('../../common/collection'),
+    array = require('../../common/array');
 
 /**
  * @mixin Base.Week
@@ -5931,7 +6451,7 @@ var Week = {
 
     /**
      * Get collision information from list
-     * @this Base.Week
+     * @this Base
      * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
      * @param {number} start - event start time that want to detect collisions.
      * @param {number} end - event end time that want to detect collisions.
@@ -5966,7 +6486,7 @@ var Week = {
 
     /**
      * Initialize values to viewmodels for detect real collision at rendering phase.
-     * @this Base.Week
+     * @this Base
      * @param {array[]} matrices - Matrix data.
      */
     getCollides: function(matrices) {
@@ -6009,6 +6529,7 @@ var Week = {
     },
 
     /**
+     * create view model for time view part
      * @this Base
      * @param {Date} starts - start date.
      * @param {Date} ends - end date.
@@ -6016,7 +6537,8 @@ var Week = {
      * @returns {object} view model for time part.
      */
     getViewModelForTimeView: function(starts, ends, time) {
-        var ymdSplitted = this.splitEventByDateRange(starts, ends, time),
+        var self = this,
+            ymdSplitted = this.splitEventByDateRange(starts, ends, time),
             result = {};
 
         util.forEach(ymdSplitted, function(collection, ymd) {
@@ -6024,12 +6546,12 @@ var Week = {
                 collisionGroups,
                 matrices;
 
-            collisionGroups = this.Core.getCollisionGroup(viewModels);
-            matrices = this.Core.getMatrices(collection, collisionGroups);
-            this.Week.getCollides(matrices);
+            collisionGroups = self.Core.getCollisionGroup(viewModels);
+            matrices = self.Core.getMatrices(collection, collisionGroups);
+            self.Week.getCollides(matrices);
 
             result[ymd] = matrices;
-        }, this);
+        });
 
         return result;
     },
@@ -6039,55 +6561,30 @@ var Week = {
      **********/
 
     /**
-     * create view model for allday view part.
+     * create view model for allday view part
+     * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
-     * @param {Collection} viewModels - allday event viewModel viewModels.
+     * @param {Collection} viewModelColl - allday event viewModel viewModels.
      * @returns {object} allday viewModel.
      */
-    getViewModelForAlldayView: function(starts, ends, viewModels) {
-        var list,
-            ymdsToRender,
+    getViewModelForAlldayView: function(starts, ends, viewModelColl) {
+        var ctrlCore = this.Core,
+            viewModels,
             collisionGroups,
             matrices;
 
-        if (!viewModels || !viewModels.length) {
+        if (!viewModelColl || !viewModelColl.length) {
             return [];
         }
 
-        ymdsToRender = util.map(
-            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
-            function(date) {
-                return datetime.format(date, 'YYYYMMDD');
-            }
-        );
+        ctrlCore.limitRenderRange(starts, ends, viewModelColl);
 
-        list = viewModels.sort(array.compare.event.asc);
-        collisionGroups = this.Core.getCollisionGroup(list);
-        matrices = this.Core.getMatrices(viewModels, collisionGroups);
+        viewModels = viewModelColl.sort(array.compare.event.asc);
+        collisionGroups = ctrlCore.getCollisionGroup(viewModels);
 
-        util.forEachArray(matrices, function(matrix) {
-            util.forEachArray(matrix, function(column) {
-                util.forEachArray(column, function(viewModel, index) {
-                    var ymd, dateLength;
-
-                    if (!viewModel) {
-                        return;
-                    }
-
-                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
-                    dateLength = datetime.range(
-                        viewModel.getStarts(),
-                        viewModel.getEnds(),
-                        datetime.MILLISECONDS_PER_DAY
-                    ).length;
-
-                    viewModel.top = index;
-                    viewModel.left = util.inArray(ymd, ymdsToRender);
-                    viewModel.width = dateLength;
-                });
-            });
-        });
+        matrices = ctrlCore.getMatrices(viewModelColl, collisionGroups);
+        ctrlCore.positionViewModels(starts, ends, matrices);
 
         return matrices;
     },
@@ -6101,62 +6598,27 @@ var Week = {
      * @this Base
      * @param {Date} starts start date.
      * @param {Date} ends end date.
-     * @param {object} [andFilter] - additional filter to AND clause
+     * @param {function[]} [andFilters] - optional filters to applying search query
      * @returns {object} events grouped by dates.
      */
-    findByDateRange: function(starts, ends, andFilter) {
-        var that = this,
-            events,
-            viewModels,
-            filter;
+    findByDateRange: function(starts, ends, andFilters) {
+        var ctrlCore = this.Core,
+            ctrlWeek = this.Week,
+            filter = ctrlCore.getEventInDateRangeFilter(starts, ends),
+            modelColl,
+            group;
 
-        filter = function(model) {
-            var ownStarts = model.getStarts(),
-                ownEnds = model.getEnds();
+        andFilters = andFilters || [];
+        filter = Collection.and.apply(null, [filter].concat(andFilters));
 
-            return (ownStarts >= starts && ownEnds <= ends) ||
-                (ownStarts < starts && ownEnds >= starts) ||
-                (ownEnds > ends && ownStarts <= ends);
-        };
+        modelColl = this.events.find(filter);
+        modelColl = ctrlCore.convertToViewModel(modelColl);
 
-        if (andFilter) {
-            filter = Collection.and.apply(null, [filter].concat(andFilter));
-        }
+        group = modelColl.groupBy(['allday', 'time'], this.groupFunc);
+        group.allday = ctrlWeek.getViewModelForAlldayView(starts, ends, group.allday);
+        group.time = ctrlWeek.getViewModelForTimeView(starts, ends, group.time);
 
-        // QUERY EVENTS
-        events = this.events.find(filter);
-
-        // CONVERT TO VIEWMODEL
-        viewModels = common.createEventCollection.apply(
-            null,
-            util.map(events.items, function(event) {
-                return CalEventViewModel.create(event);
-            })
-        ).groupBy(['allday', 'time'], this.groupFunc);
-
-        // CUSTOMIZE VIEWMODEL FOR EACH VIEW
-        util.forEach(viewModels, function(coll, key, obj) {
-            if (key === 'allday') {
-                coll.each(function(viewModel) {
-                    var ownStarts = viewModel.getStarts(),
-                        ownEnds = viewModel.getEnds();
-
-                    if (ownStarts < starts) {
-                        viewModel.renderStarts = new Date(starts.getTime());
-                    }
-
-                    if (ownEnds > ends) {
-                        viewModel.renderEnds = new Date(ends.getTime());
-                    }
-                });
-
-                obj.allday = util.bind(Week.getViewModelForAlldayView, that)(starts, ends, coll);
-            } else if (key === 'time') {
-                obj.time = util.bind(Week.getViewModelForTimeView, that)(starts, ends, coll);
-            }
-        });
-
-        return viewModels;
+        return group;
     }
 };
 
@@ -6164,8 +6626,9 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../model/viewModel/calEvent":80}],41:[function(require,module,exports){
+},{"../../common/array":23,"../../common/collection":25}],44:[function(require,module,exports){
 (function (global){
+/* eslint complexity: 0 */
 /**
  * @fileoverview Base controller for Dooray service project.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -6231,7 +6694,7 @@ DoorayBase.prototype.createEvent = function(data, silent) {
 /**
  * Update an event.
  * @emits DoorayBase#updateEvent
- * @param {CalEvent} calEvent - event instance to update 
+ * @param {CalEvent} calEvent - event instance to update
  * @param {object} options updated object data
  * @returns {CalEvent|boolean} updated event instance, when it fail then return false
  */
@@ -6288,7 +6751,7 @@ module.exports = DoorayBase;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../controller/base":37,"../model/calEvent":47}],42:[function(require,module,exports){
+},{"../../controller/base":40,"../model/calEvent":50}],45:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Calendar for service.
@@ -6321,58 +6784,65 @@ var config = require('../../config'),
  * @extends {Calendar}
  * @param {object} options - options for calendar
  *  @param {string} [options.cssPrefix] - CSS classname prefix
- *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
+ *  @param {function} [options.groupFunc] - function for group event models
+ *   {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
- *  @param {object} [options.calendarColor] - {@see ServiceCalendar~DoorayEvent} 의 calendarID별로 스타일을 미리 지정 가능
+ *  @param {string} [options.defaultDate=] - default date to render calendar.
+ *   if not supplied, use today.
+ *  @param {object} [options.calendarColor] - {@see ServiceCalendar~DoorayEvent}
+ *   의 calendarID별로 스타일을 미리 지정 가능
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
- *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
- *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *   @param {string} [options.week.panelHeights] - each panel height
- *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  *  @param {object} [options.month] - options for month view
- *  @param {string} options.month.renderMonth - YYYY-MM render month
+ *   @param {functio} [options.eventFilter] - event filter for month view
+ *  @param {ServiceCalendar~DoorayEvent[]} options.events - 기본 일정 목록
  * @param {HTMLDivElement} container = container element for calendar
  */
 function ServiceCalendar(options, container) {
-    var controller;
-
     if (!(this instanceof ServiceCalendar)) {
         return new ServiceCalendar(options, container);
     }
 
-    /**
-     * 서비스에서 사용되는 모델 구분용 옵션 함수
-     * @param {CalEventViewModel} viewModel - DoorayEvent를 래핑한 뷰 모델
-     * @returns {string} 구분 키 값
-     */
-    options.groupFunc = function(viewModel) {
-        return viewModel.model.category;
-    };
-
-    controller = options.controller = controllerFactory(options);
-
-    // FullCalendar 기본 모듈은 category, dueDateClass 플래그를 모름. 때문에
-    // 이곳에서 이벤트 핸들러를 등록해서 일정 생성 전에 isAllDay플래그를 보고
-    // category를 수동으로 지정해준다
-    controller.on('beforeCreateEvent', function(e) {
-        var data = e.data;
-
-        if (!data.category) {
-            data.category = data.isAllDay ? 'allday' : 'time';
+    options = util.extend({
+        calendarColor: {},
+        groupFunc: function(viewModel) {
+            return viewModel.model.category;
+        },
+        month: {
+            eventFilter: function(model) {
+                return Boolean(model.visible) &&
+                    (model.category === 'allday' || model.category === 'time');
+            }
         }
-    });
+    }, options);
 
-    /**
-     * @type {object}
-     */
-    this.calendarColor = options.calendarColor || {};
+    this.calendarColor = options.calendarColor;
 
     Calendar.call(this, options, container);
 }
 
 util.inherit(ServiceCalendar, Calendar);
+
+/**
+ * @override
+ */
+ServiceCalendar.prototype.createController = function() {
+    return controllerFactory(this.options);
+};
+
+/**
+ * @override
+ */
+ServiceCalendar.prototype.createWeekView = function(controller, container, dragHandler, options) {
+    return serviceWeekViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+};
 
 /**********
  * CRUD override
@@ -6450,106 +6920,11 @@ ServiceCalendar.prototype.deleteEvent = function(id) {
      * @property {CalEvent} model - model instance to delete
      */
     this.fire('beforeDeleteEvent', {
-        model: calEvent 
+        model: calEvent
     });
-    
+
     ctrl.deleteEvent(calEvent);
     this.render();
-};
-
-/**********
- * Custom Events
- **********/
-
-/**
- * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
- * @emits ServiceCalendar#clickEvent
- * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
- */
-ServiceCalendar.prototype._onClick = function(clickEventData) {
-    /**
-     * @events ServiceCalendar#clickEvent
-     * @type {object}
-     * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
-     * @property {MouseEvent} jsEvent - 마우스 이벤트
-     */
-    this.fire('clickEvent', clickEventData);
-};
-
-/**
- * @fires {ServiceCalendar#beforeCreateEvent}
- * @param {object} createEventData - select event data from allday, time
- */
-ServiceCalendar.prototype._onBeforeCreate = function(createEventData) {
-    /**
-     * @events ServiceCalendar#beforeCreateEvent
-     * @type {object}
-     * @property {Date} starts - select start date
-     * @property {Date] ends - select end date
-     */
-    this.fire('beforeCreateEvent', createEventData);
-};
-
-/**
- * @fires ServiceCalendar#beforeUpdateEvent
- * @param {object} updateEventData - update event data
- */
-ServiceCalendar.prototype._onBeforeUpdate = function(updateEventData) {
-    /**
-     * @event ServiceCalendar#beforeUpdateEvent
-     * @type {object}
-     * @property {CalEvent} model - model instance to update
-     * @property {Date} starts - select start date
-     * @property {Date] ends - select end date
-     */
-    this.fire('beforeUpdateEvent', updateEventData);
-};
-
-/**
- * @fires ServiceCalendar#resizePanel
- * @param {object} resizeEventData - resize event data object
- */
-ServiceCalendar.prototype._onResizePanel = function(resizeEventData) {
-    /**
-     * @event ServiceCalendar#resizePanel
-     * @type {object}
-     * @property {number[]} layoutData - layout data after resized
-     */
-    this.fire('resizePanel', resizeEventData);
-};
-
-/**
- * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
- * @param {boolean} isAttach - true면 이벤트 연결함.
- * @param {Week|Month} view - 주뷰 또는 월뷰
- * @param {ServiceCalendar} calendar - 캘린더 팩토리 클래스
- */
-ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) {
-    var handler = view.handler,
-        calendar = this,
-        method = isAttach ? 'on' : 'off';
-
-    util.forEach(handler.click, function(handlerInstance) {
-        handlerInstance[method]('clickEvent', calendar._onClick, calendar);
-    });
-
-    util.forEach(handler.dblclick, function(handlerInstance) {
-        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
-    });
-
-    util.forEach(handler.creation, function(handlerInstance) {
-        handlerInstance[method]('beforeCreateEvent', calendar._onBeforeCreate, calendar);
-    });
-
-    util.forEach(handler.move, function(handlerInstance) {
-        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
-    });
-
-    util.forEach(handler.resize, function(handlerInstance) {
-        handlerInstance[method]('beforeUpdateEvent', calendar._onBeforeUpdate, calendar);
-    });
-
-    view.vlayout[method]('resize', calendar._onResizePanel, calendar);
 };
 
 /**********
@@ -6561,7 +6936,7 @@ ServiceCalendar.prototype._toggleViewEvent = function(isAttach, view, calendar) 
  * @returns {number[]} splitter와 autoHeight를 제외한 나머지 패널의 높이 배열
  */
 ServiceCalendar.prototype.getLayoutData = function() {
-    return this.layout.vlayout.getLayoutData();
+    return this.layout.vLayout.getLayoutData();
 };
 
 /**
@@ -6596,7 +6971,7 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
         model.bgColor = ownColor.bgColor;
     });
 
-    if (!!ownColor.render) {
+    if (ownColor.render) {
         this.render();
     }
 };
@@ -6644,53 +7019,11 @@ ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarID, render) 
     this._toggleEventsByCalendarID(calendarID, true, render);
 };
 
-/**
- * 주뷰, 월뷰 간 전환
- * @override
- * @param {string} viewName - 'week', 'month' 중 하나
- * @param {boolean} [force=false] - true 지정시 뷰 전환이 없어도 전환을 위한 동작을 수행한다
- * @param {boolean} [silent=false] - no auto render after creation when set true
- */
-ServiceCalendar.prototype.toggleView = function(viewName, force, silent) {
-    var layout = this.layout,
-        controller = this.controller,
-        dragHandler = this.dragHandler,
-        options = this.options,
-        created;
-
-    if (!force && this.currentViewName === viewName) {
-        return;
-    }
-    
-    layout.childs.doWhenHas(viewName, function(view) {
-        this._toggleViewEvent(false, view, this);
-    }, this);
-    layout.clear();
-
-    if (viewName === 'week') {
-        created = serviceWeekViewFactory(controller, layout.container, dragHandler, options);
-        layout.addChild(created.view);
-        this._refreshMethod = created.refresh;
-    } else if (viewName === 'month') {
-        //TODO: month view. 
-    }
-
-    layout.childs.doWhenHas(viewName, function(view) {
-        this._toggleViewEvent(true, view, this);
-    }, this);
-
-    this.currentViewName = viewName;
-
-    if (!silent) {
-        this.render();
-    }
-};
-
 module.exports = ServiceCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../config":36,"../../factory/calendar":56,"../factory/controller":43,"./weekView":44}],43:[function(require,module,exports){
+},{"../../config":39,"../../factory/calendar":59,"../factory/controller":46,"./weekView":47}],46:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 두레이 서비스를 위한 컨트롤러를 만드는 팩토리 함수 모듈
@@ -6699,12 +7032,19 @@ module.exports = ServiceCalendar;
 'use strict';
 
 var util = global.tui.util;
+
 var datetime = require('../../common/datetime'),
     DoorayBase = require('../controller/base'),
     Core = require('../../controller/viewMixin/core'),
     Week = require('../../controller/viewMixin/week'),
     Month = require('../../controller/viewMixin/month');
 
+/**
+ * Mixin object. create object property to target and mix to that
+ * @param {object} from - source object
+ * @param {object} to - target object
+ * @param {string} propertyName - property name
+ */
 function mixin(from, to, propertyName) {
     var obj = to[propertyName] = {};
 
@@ -6720,45 +7060,54 @@ function mixin(from, to, propertyName) {
  */
 module.exports = function(options) {
     var controller = new DoorayBase(options),
-        originFindByDateRange;
+        originQuery;
 
     mixin(Core, controller, 'Core');
     mixin(Week, controller, 'Week');
     mixin(Month, controller, 'Month');
 
-    // 일정 조회 API에 기존 캘린더에 없었던 milstone, task를 지원하도록
-    // 하기 위해 메서드를 오버라이딩한다.
-    originFindByDateRange = controller.Week.findByDateRange;
+    /**********
+     * Override Week#findByDateRange for support events that category is 'miles
+     * tone', 'task'.
+     **********/
 
-    // visible이 true인 일정만 필터링 하기 위한 필터 함수
-    function filterModelIsVisible(model) {
-        return !!model.visible;
-    }
+    originQuery = controller.Week.findByDateRange;
 
     /**
+     * Find event and get view model for specific month
+     * @this Base
      * @override
-     * @memberOf {DoorayBase.Week}
+     * @param {Date} starts - start date to find events
+     * @param {Date} ends - end date to find events
+     * @param {function[]} [andFilters] - optional filters to applying search query
+     * @returns {object} view model data
      */
-    function findByDateRange(starts, ends) {
-        var dateRange = util.map(datetime.range(
+    function findByDateRange(starts, ends, andFilters) {
+        var dateRange = datetime.range(
                 datetime.start(starts),
                 datetime.end(ends),
                 datetime.MILLISECONDS_PER_DAY
-            ), function(d) { return datetime.format(d, 'YYYY-MM-DD'); }),
-            viewModel = originFindByDateRange(starts, ends, [filterModelIsVisible]);
+            ),
+            ymdRange = util.map(dateRange, function(d) {
+                return datetime.format(d, 'YYYY-MM-DD');
+            }),
+            viewModels;
 
-        util.forEach(viewModel, function(coll, key, obj) {
+        andFilters = andFilters || [];
+        viewModels = originQuery(starts, ends, andFilters);
+
+        util.forEach(viewModels, function(coll, key, obj) {
             var groupedByYMD;
 
             // 마일스톤, 업무 뷰 뷰모델 가공
             if (key === 'task' || key === 'milestone') {
-                groupedByYMD = coll.groupBy(dateRange, function(viewModel) {
+                groupedByYMD = coll.groupBy(ymdRange, function(viewModel) {
                     return datetime.format(viewModel.model.ends, 'YYYY-MM-DD');
                 });
 
                 if (key === 'task') {
-                    util.forEach(groupedByYMD, function(coll, ymd, obj) {
-                        obj[ymd] = coll.groupBy(function(viewModel) {
+                    util.forEach(groupedByYMD, function(tasks, ymd, _obj) {
+                        _obj[ymd] = tasks.groupBy(function(viewModel) {
                             return viewModel.model.dueDateClass;
                         });
                     });
@@ -6768,8 +7117,8 @@ module.exports = function(options) {
             }
         });
 
-        return viewModel;
-    };
+        return viewModels;
+    }
 
     controller.Week.findByDateRange = findByDateRange;
 
@@ -6778,7 +7127,7 @@ module.exports = function(options) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../controller/viewMixin/core":38,"../../controller/viewMixin/month":39,"../../controller/viewMixin/week":40,"../controller/base":41}],44:[function(require,module,exports){
+},{"../../common/datetime":27,"../../controller/viewMixin/core":41,"../../controller/viewMixin/month":42,"../../controller/viewMixin/week":43,"../controller/base":44}],47:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for WeekView (customized for service)
@@ -6819,8 +7168,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var weekView,
         dayNameContainer,
         dayNameView,
-        vlayoutContainer,
-        vlayout,
+        vLayoutContainer,
+        vLayout,
         milestoneView,
         taskView,
         alldayView,
@@ -6836,7 +7185,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler,
+        timeResizeHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -6850,10 +7199,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
+    vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
+    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
+                                     dayNameView.container.offsetHeight) + 'px';
 
-    vlayout = new VLayout({
+    vLayout = new VLayout({
         panels: [
             {height: 56, minHeight: 56},
             {isSplitter: true},
@@ -6864,27 +7214,27 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             {autoHeight: true}
         ],
         panelHeights: options.week.panelHeights || []
-    }, vlayoutContainer);
-    weekView.vlayout = vlayout;
+    }, vLayoutContainer);
+    weekView.vLayout = vLayout;
 
     /**********
      * 마일스톤
      **********/
-    milestoneView = new Milestone(options.week, vlayout.panels[0].container);
+    milestoneView = new Milestone(options.week, vLayout.panels[0].container);
     weekView.addChild(milestoneView);
     milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
     /**********
      * 업무
      **********/
-    taskView = new TaskView(options.week, vlayout.panels[2].container);
+    taskView = new TaskView(options.week, vLayout.panels[2].container);
     weekView.addChild(taskView);
     taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, vlayout.panels[4].container);
+    alldayView = new Allday(options.week, vLayout.panels[4].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayDblClickHandler = new AlldayDblClick(alldayView);
@@ -6895,7 +7245,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, vlayout.panels[6].container);
+    timeGridView = new TimeGrid(options.week, vLayout.panels[6].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeDblClickHandler = new TimeDblClick(timeGridView);
@@ -6904,7 +7254,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
     weekView.on('afterRender', function() {
-        vlayout.refresh();
+        vLayout.refresh();
     });
 
     weekView.handler = {
@@ -6937,7 +7287,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
-        util.forEach(weekView.handlers, function(type) {
+        util.forEach(weekView.handler, function(type) {
             util.forEach(type, function(handler) {
                 handler.off();
                 handler.destroy();
@@ -6950,13 +7300,20 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     return {
         view: weekView,
         refresh: function() {
-            vlayout.refresh();
+            var weekViewHeight = weekView.getViewBound().height,
+                daynameViewHeight = domutil.getBCRect(
+                    dayNameView.container
+                ).height;
+
+            vLayout.container.style.height =
+                weekViewHeight - daynameViewHeight + 'px';
+            vLayout.refresh();
         }
     };
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../common/vlayout":34,"../../config":36,"../../handler/allday/click":60,"../../handler/allday/creation":62,"../../handler/allday/dblclick":64,"../../handler/allday/move":65,"../../handler/allday/resize":67,"../../handler/time/click":70,"../../handler/time/creation":72,"../../handler/time/dblclick":74,"../../handler/time/move":75,"../../handler/time/resize":77,"../../view/week/allday":92,"../../view/week/dayname":93,"../../view/week/timeGrid":95,"../../view/week/week":96,"../handler/milestoneClick":45,"../handler/taskClick":46,"../view/milestone":51,"../view/taskview":55}],45:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/vlayout":37,"../../config":39,"../../handler/allday/click":63,"../../handler/allday/creation":65,"../../handler/allday/dblclick":67,"../../handler/allday/move":68,"../../handler/allday/resize":70,"../../handler/time/click":84,"../../handler/time/creation":86,"../../handler/time/dblclick":88,"../../handler/time/move":89,"../../handler/time/resize":91,"../../view/week/allday":111,"../../view/week/dayname":112,"../../view/week/timeGrid":114,"../../view/week/week":115,"../handler/milestoneClick":48,"../handler/taskClick":49,"../view/milestone":54,"../view/taskview":58}],48:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -7008,12 +7365,12 @@ MilestoneClick.prototype.destroy = function() {
 
 /**
  * @param {HTMLElement} target - check reponsibility to this handler module supplied element
- * @returns {boolean|string} return false when handler has no responsibility for supplied element. 
+ * @returns {boolean|string} return false when handler has no responsibility for supplied element.
  * otherwise, return event model id that related with target element.
  */
 MilestoneClick.prototype.checkExpectedCondition = function(target) {
-    target = domutil.closest(target, '.' + config.classname('milestone-item'));
-    
+    target = domutil.closest(target, config.classname('.milestone-item'));
+
     if (!target) {
         return false;
     }
@@ -7026,7 +7383,8 @@ MilestoneClick.prototype.checkExpectedCondition = function(target) {
  * @param {object} clickEvent - click event object
  */
 MilestoneClick.prototype._onClick = function(clickEvent) {
-    var modelID = this.checkExpectedCondition(clickEvent.target);
+    var self = this,
+        modelID = this.checkExpectedCondition(clickEvent.target);
 
     if (!modelID) {
         return;
@@ -7039,11 +7397,11 @@ MilestoneClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(MilestoneClick);
@@ -7052,7 +7410,7 @@ module.exports = MilestoneClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],46:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":39}],49:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
@@ -7104,11 +7462,11 @@ TaskClick.prototype.destroy = function() {
 
 /**
  * @param {HTMLElement} target - check reponsibility to this handler module supplied element
- * @returns {boolean|string} return false when handler has no responsibility for supplied element. 
+ * @returns {boolean|string} return false when handler has no responsibility for supplied element.
  * otherwise, return event model id that related with target element.
  */
 TaskClick.prototype.checkExpectedCondition = function(target) {
-    target = domutil.closest(target, '.' + config.classname('task-item'));
+    target = domutil.closest(target, config.classname('.task-item'));
 
     if (!target) {
         return false;
@@ -7122,7 +7480,8 @@ TaskClick.prototype.checkExpectedCondition = function(target) {
  * @param {object} clickEvent - click event object
  */
 TaskClick.prototype._onClick = function(clickEvent) {
-    var modelID = this.checkExpectedCondition(clickEvent.target);
+    var self = this,
+        modelID = this.checkExpectedCondition(clickEvent.target);
 
     if (!modelID) {
         return;
@@ -7135,11 +7494,11 @@ TaskClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(TaskClick);
@@ -7148,7 +7507,7 @@ module.exports = TaskClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],47:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":39}],50:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Extend model class for Dooray Calendar project.
@@ -7170,7 +7529,7 @@ var EVENT_CATEGORY = {
 
     /** 업무 */
     TASK: 'task',
-    
+
     /** 종일일정 */
     ALLDAY: 'allday',
 
@@ -7205,12 +7564,6 @@ function DoorayEvent() {
     this.dueDateClass = '';
 
     /**
-     * 일정 노출 여부
-     * @type {boolean}
-     */
-    this.visible = true;
-
-    /**
      * 렌더링과 관계 없는 별도 데이터 저장 공간.
      * @type {object}
      */
@@ -7242,11 +7595,10 @@ DoorayEvent.prototype.init = function(options) {
     this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
-    this.visible = util.isExisty(options.visible) ? options.visible : true;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
-        this.starts = new Date(+this.ends);
+        this.starts = new Date(Number(this.ends));
         this.starts.setMinutes(this.starts.getMinutes() - 30);
     }
 
@@ -7257,7 +7609,7 @@ module.exports = DoorayEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../model/calEvent":79}],48:[function(require,module,exports){
+},{"../../model/calEvent":93}],51:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7396,7 +7748,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],49:[function(require,module,exports){
+},{"hbsfy/runtime":21}],52:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Freebusy component
@@ -7439,8 +7791,8 @@ function Freebusy(options, container) {
     }
 
     container = domutil.appendHTMLElement(
-        'div', 
-        container, 
+        'div',
+        container,
         config.classname('clear') + ' ' +
         config.classname('freebusy-container')
     );
@@ -7518,7 +7870,7 @@ Freebusy.prototype._beforeDestroy = function() {
 Freebusy.prototype._onClick = function(clickEventData) {
     var opt = this.options,
         target = clickEventData.srcElement || clickEventData.target,
-        isValid = domutil.closest(target, '.' + config.classname('freebusy-leftmargin')),
+        isValid = domutil.closest(target, config.classname('.freebusy-leftmargin')),
         container, containerWidth,
         mouseX, timeX, dateX, nearMinutesX;
 
@@ -7648,7 +8000,8 @@ Freebusy.prototype._getSelectionBlock = function(start, end) {
  * @returns {object} view model for rendering
  */
 Freebusy.prototype._getViewModel = function() {
-    var opt = this.options,
+    var self = this,
+        opt = this.options,
         users = this.users,
         userLength = users.length,
         viewModel = {
@@ -7662,22 +8015,21 @@ Freebusy.prototype._getViewModel = function() {
             timeWidth: 100 / dayArr.length,
             freebusy: {},
             recommends: [],
-            selection: this._getSelectionBlock(this.selectStart, this.selectEnd) 
+            selection: this._getSelectionBlock(this.selectStart, this.selectEnd)
         };
 
     users.each(function(user) {
         viewModel.freebusy[user.id] = {
             name: user.name,
             busy: util.map(user.freebusy, function(block) {
-                return this._getBlockBound(block);
-            }, this)
+                return self._getBlockBound(block);
+            })
         };
-    }, this);
+    });
 
     util.forEach(opt.recommends, function(block) {
-        viewModel.recommends.push(this._getBlockBound(block));
-    }, this);
-
+        viewModel.recommends.push(self._getBlockBound(block));
+    });
 
     return viewModel;
 };
@@ -7711,9 +8063,11 @@ Freebusy.prototype.addUser = function(user, skipRender) {
  * @param {boolean} [skipRender=false] - set true then skip render after add user
  */
 Freebusy.prototype.addUsers = function(users, skipRender) {
+    var self = this;
+
     util.forEach(users, function(user) {
-        this.addUser(user, skipRender);
-    }, this);
+        self.addUser(user, skipRender);
+    });
 
     if (!skipRender) {
         this.render();
@@ -7739,9 +8093,11 @@ Freebusy.prototype.removeUser = function(id, skipRender) {
  * @param {boolean} [skipRender=false] - set true then skip render after remove user
  */
 Freebusy.prototype.removeUsers = function(idArr, skipRender) {
+    var self = this;
+
     util.forEach(idArr, function(id) {
-        this.removeUser(id, skipRender);
-    }, this);
+        self.removeUser(id, skipRender);
+    });
 
     if (!skipRender) {
         this.render();
@@ -7792,7 +8148,7 @@ module.exports = Freebusy;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./freebusy.hbs":48}],50:[function(require,module,exports){
+},{"../../common/collection":25,"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":39,"../../view/view":110,"./freebusy.hbs":51}],53:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7816,11 +8172,11 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
 
   return "<li data-id=\""
     + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-    + "\" \n        data-title=\""
+    + "\"\n        data-title=\""
     + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-    + "\" \n        class=\""
+    + "\"\n        class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "milestone-item\" \n        style=\"line-height:"
+    + "milestone-item\"\n        style=\"line-height:"
     + alias3(alias4(((stack1 = (data && data.root)) && stack1.lineHeight), depth0))
     + "px;color:"
     + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
@@ -7841,7 +8197,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],51:[function(require,module,exports){
+},{"hbsfy/runtime":21}],54:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview 마일스톤 뷰
@@ -7865,7 +8221,7 @@ var PADDING_TOP = 2,
  * @param {object} options - options
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=52] - min-height of milestone view 
+ * @param {number} [options.minHeight=52] - min-height of milestone view
  * @param {number} [options.lineHeight=12] - line height of milestone view
  * @param {HTMLElement} container - container element
  */
@@ -7950,7 +8306,7 @@ module.exports = Milestone;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./milestone.hbs":50}],52:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../../view/view":110,"./milestone.hbs":53}],55:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -7997,7 +8353,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</tbody>\n</table>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],53:[function(require,module,exports){
+},{"hbsfy/runtime":21}],56:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Minicalendar view.
@@ -8070,7 +8426,7 @@ function MiniCalendar(options, container) {
     /**
      * @type {Date}
      */
-    this.selectedDate = new Date(+options.renderMonth);
+    this.selectedDate = new Date(Number(options.renderMonth));
 
     this.render();
 }
@@ -8135,7 +8491,7 @@ MiniCalendar.prototype._date = function(buttonElement) {
      * @property {Date} date - clicked date
      */
     this.fire('click', {
-        date: new Date(+this.selectedDate)
+        date: new Date(Number(this.selectedDate))
     });
 };
 
@@ -8182,7 +8538,9 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
 
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-        function(i) { return daynames[i]; } 
+        function(i) {
+            return daynames[i];
+        }
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
@@ -8199,7 +8557,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         if (!datetime.isSameMonth(date, renderDate)) {
             cssClasses.push('other-month');
         }
-        
+
         if (~util.inArray(day, weekendNumber)) {
             cssClasses.push('weekend');
         }
@@ -8235,15 +8593,16 @@ MiniCalendar.prototype._addHlData = function(ymd, cssClass) {
  * @param {string} cssClass - cssClass
  */
 MiniCalendar.prototype._setHlDateRange = function(start, end, cssClass) {
-    var range = datetime.range(
+    var self = this,
+        range = datetime.range(
             datetime.start(start),
             datetime.end(end),
             datetime.MILLISECONDS_PER_DAY
         );
 
     util.forEach(range, function(date) {
-        this._addHlData(datetime.format(date, 'YYYY-MM-DD'), cssClass);
-    }, this);
+        self._addHlData(datetime.format(date, 'YYYY-MM-DD'), cssClass);
+    });
 };
 
 /**
@@ -8251,7 +8610,7 @@ MiniCalendar.prototype._setHlDateRange = function(start, end, cssClass) {
  */
 MiniCalendar.prototype.clearFocusData = function() {
     util.forEach(this.hlData, function(obj) {
-        delete obj['focused'];
+        delete obj.focused;
     });
 };
 
@@ -8271,7 +8630,7 @@ MiniCalendar.prototype.focusDateRange = function(start, end) {
  * @returns {Date} selected date
  */
 MiniCalendar.prototype.getSelectedDate = function() {
-    return new Date(+this.selectedDate);
+    return new Date(Number(this.selectedDate));
 };
 
 /**
@@ -8281,7 +8640,7 @@ MiniCalendar.prototype.getSelectedDate = function() {
 MiniCalendar.prototype.selectDate = function(date) {
     date = util.isDate(date) ? date : datetime.parse(date);
 
-    this.selectedDate = new Date(+date);
+    this.selectedDate = new Date(Number(date));
 
     this.render();
 };
@@ -8307,7 +8666,7 @@ module.exports = MiniCalendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./minicalendar.hbs":52}],54:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":39,"../../view/view":110,"./minicalendar.hbs":55}],57:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -8345,11 +8704,11 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
 
   return "<li data-id=\""
     + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-    + "\" \n        data-title=\""
+    + "\"\n        data-title=\""
     + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-    + "\" \n        class=\""
+    + "\"\n        class=\""
     + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "task-item\" \n        style=\"line-height:"
+    + "task-item\"\n        style=\"line-height:"
     + alias3(alias4(((stack1 = (data && data.root)) && stack1.lineHeight), depth0))
     + "px;color:"
     + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
@@ -8394,7 +8753,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],55:[function(require,module,exports){
+},{"hbsfy/runtime":21}],58:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Task view for upper area of Week view.
@@ -8508,7 +8867,7 @@ module.exports = TaskView;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../../view/view":91,"./taskview.hbs":54}],56:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../../view/view":110,"./taskview.hbs":57}],59:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for control all other factory.
@@ -8518,7 +8877,7 @@ module.exports = TaskView;
 
 var util = global.tui.util;
 var Handlebars = require('hbsfy/runtime');
-var config = require('../config'),
+var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
     Drag = require('../handler/drag'),
@@ -8544,46 +8903,60 @@ var config = require('../config'),
  *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
+ *  @param {string} [options.defaultDate=] - default date to render calendar.
+ *   if not supplied, use today.
  *  @param {object} [options.template] - template option
  *   @param {function} [options.template.allday] - allday template function
  *   @param {function} [options.template.time] - time template function
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
- *   @param {string} options.week.renderStartDate - YYYY-MM-DD render start date
- *   @param {string} options.week.renderEndDate - YYYY-MM-DD render end date
  *  @param {object} [options.month] - options for month view
- *   @param {string} options.month.renderMonth - YYYY-MM render month
  *  @param {Calendar~CalEvent[]} [options.events] - array of CalEvent data for add calendar after initialize.
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
+    var opt;
+
     if (!(this instanceof Calendar)) {
         return new Calendar(options, container);
     }
 
     /**
-     * base date of view (today() will use this property)
-     * @type {Date}
-     */
-    this.baseDate = datetime.start(new Date());
-
-    /**
      * default option from service page
      * @type {object}
      */
-    this.options = this.setOptions(options);
+    this.options = opt = util.extend({
+        groupFunc: null,
+        controller: null,
+        defaultView: 'week',
+        defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
+        template: util.extend({
+            allday: null,
+            time: null
+        }, util.pick(options, 'template') || {}),
+        week: util.extend({
+            startDayOfWeek: 0
+        }, util.pick(options, 'week') || {}),
+        month: util.extend({}, util.pick(options, 'month') || {}),
+        events: []
+    }, options);
 
     /**
-     * original options for reference when ui reset
-     * @type {object}
+     * @type {HTMLElement}
      */
-    this.originOptions = JSON.parse(JSON.stringify(this.options));
+    this.container = container;
+
+    /**
+     * Current rendered date
+     * @type {Date}
+     */
+    this.renderDate = opt.defaultDate;
 
     /**
      * base controller
      * @type {Base}
      */
-    this.controller = options.controller || controllerFactory(options);
+    this.controller = opt.controller || this.createController();
 
     /**
      * layout view (layout manager)
@@ -8595,52 +8968,84 @@ function Calendar(options, container) {
      * global drag handler
      * @type {Drag}
      */
-    this.dragHandler = new Drag({
-        distance: 5
-    }, this.layout.container);
-
+    this.dragHandler = new Drag({distance: 5}, this.layout.container);
 
     /**
      * current rendered view name.
      * @type {string}
      */
-    this.currentViewName = options.defaultView || 'week';
-
-    /**********
-     * SETTING
-     **********/
-    this.layout.controller = this.controller;
-
-    function refresh() {
-        this.refreshChildView();
-    }
-
-    this.controller.on({
-        updateEvent: refresh,
-        createdEvent: refresh
-    }, this);
-
-    if (options.events && options.events.length) {
-        this.createEvents(options.events, true);
-    }
+    this.viewName = opt.defaultView;
 
     /**
-     * @type {Date}
-     */
-    this._currentStartDate = null;
-
-    /**
-     * @type {Date}
-     */
-    this._currentEndDate = null;
-
-    /**
+     * Refresh method. it can be ref different functions for each view modes.
      * @type {function}
      */
-    this._refreshMethod = null;
+    this.refreshMethod = null;
 
-    this.initializeView();
+    this.initialize();
 }
+
+/**
+ * Create controller instance
+ * @returns {Base} controller instance
+ */
+Calendar.prototype.createController = function() {
+    return controllerFactory(this.options);
+};
+
+/**
+ * Create week view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Week} week view instance
+ */
+Calendar.prototype.createWeekView = function(controller, container, dragHandler, options) {
+    return weekViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+};
+
+/**
+ * Destructor
+ */
+Calendar.prototype.destroy = function() {
+    this.dragHandler.destroy();
+    this.controller.off();
+    this.layout.clear();
+    this.layout.destroy();
+
+    this.options = this.renderDate = this.controller =
+        this.layout = this.dragHandler = this.viewName =
+        this.refreshMethod = null;
+};
+
+/**
+ * Initialize calendar
+ */
+Calendar.prototype.initialize = function() {
+    var controller = this.controller,
+        viewName = this.viewName,
+        opt = this.options;
+
+    this.layout.controller = controller;
+
+    if (opt.events && opt.events.length) {
+        this.createEvents(opt.events, true);
+    }
+
+    util.forEach(opt.template, function(func, name) {
+        if (func) {
+            Handlebars.registerHelper(name + '-tmpl', func);
+        }
+    });
+
+    this.toggleView(viewName, true);
+};
 
 /**********
  * CRUD Methods
@@ -8706,7 +9111,7 @@ Calendar.prototype.deleteEvent = function(id) {
  * @param {function} func - option manipulate function
  * @private
  */
-Calendar.prototype._setOptionRecurseively = function(view, func) {
+Calendar.prototype.setOptionRecurseively = function(view, func) {
     view.recursive(function(childView) {
         var opt = childView.options;
 
@@ -8721,27 +9126,29 @@ Calendar.prototype._setOptionRecurseively = function(view, func) {
 /**
  * @param {string|Date} date - date to show in calendar
  * @param {number} [startDayOfWeek=0] - start day of week
- * @return {array} render range
+ * @returns {array} render range
  * @private
  */
-Calendar.prototype._getWeekRenderRange = function(date, startDayOfWeek) {
-    var day, start, end;
+Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
+    var day, start, end,
+        msFrom = datetime.millisecondsFrom;
 
+    startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
     date = util.isDate(date) ? date : new Date(date);
-    startDayOfWeek = (startDayOfWeek || 0);
     day = date.getDay();
 
-    function mil(d) {
-        return datetime.MILLISECONDS_PER_DAY * d;
-    }
-
     // calculate default render range first.
-    start = new Date(+date - mil(day) + mil(startDayOfWeek));
-    end = new Date(+start + mil(6));
+    start = new Date(
+        Number(date) -
+        msFrom('day', day) +
+        msFrom('day', startDayOfWeek)
+    );
+
+    end = new Date(Number(start) + msFrom('day', 6));
 
     if (day < startDayOfWeek) {
-        start = new Date(+start - mil(7));
-        end = new Date(+end - mil(7));
+        start = new Date(Number(start) - msFrom('day', 7));
+        end = new Date(Number(end) - msFrom('day', 7));
     }
 
     return [start, end];
@@ -8750,6 +9157,13 @@ Calendar.prototype._getWeekRenderRange = function(date, startDayOfWeek) {
 /**********
  * General Methods
  **********/
+
+/**
+ * Render calendar.
+ */
+Calendar.prototype.render = function() {
+    this.layout.render();
+};
 
 /**
  * Delete all data and clear view.
@@ -8761,185 +9175,15 @@ Calendar.prototype.clear = function() {
 };
 
 /**
- * Render calendar.
- */
-Calendar.prototype.render = function() {
-    this.layout.render();
-};
-
-/**
  * Refresh calendar layout.
  */
 Calendar.prototype.refresh = function() {
-    if (this._refreshMethod) {
-        this._refreshMethod();
-    }
-};
-
-/**
- * Initialize current view.
- */
-Calendar.prototype.initializeView = function() {
-    var currentViewName = this.currentViewName,
-        options;
-
-    this.toggleView(currentViewName, true, true);
-
-    if (this.currentViewName === 'week') {
-        options = this.options.week;
-        this.setDate(options.renderStartDate, options.renderEndDate);
-    } else {
-        //TODO: month view.
-    }
-};
-
-/**
- * Set calendar's render date range and refresh view
- * @param {string|Date} start - start date of render
- * @param {string|Date} end - end date of render
- */
-Calendar.prototype.setDate = function(start, end) {
-    var ymd = 'YYYY-MM-DD';
-    start = util.isDate(start) ? start : new Date(start);
-
-    if (this.currentViewName === 'week') {
-        if (!end) {
-            config.throwError('Calendar#setDate() Need 2 parameter (start, end) in "week" view.');
-            return;
-        }
-        end = util.isDate(end) ? end : new Date(end);
-
-        this._currentStartDate = new Date(+start);
-        this._currentEndDate = new Date(+end);
-
-        start = datetime.format(start, ymd);
-        end = datetime.format(end, ymd);
-
-        this._setOptionRecurseively(this.getCurrentView(), function(viewOption) {
-            viewOption.renderStartDate = start;
-            viewOption.renderEndDate = end;
-        });
-    } else {
-        //TODO: month view.
+    if (this.refreshMethod) {
+        this.refreshMethod();
     }
 
-    this.refreshChildView(this.currentViewName);
-};
-
-/**
- * Move current render range to range that include supplied date
- * @param {string|Date} date - date to show
- */
-Calendar.prototype.showDate = function(date) {
-    var options = this.options;
-
-    date = util.isDate(date) ? date : new Date(date);
-
-    if (this.currentViewName === 'week') {
-        this.setDate.apply(this, this._getWeekRenderRange(date, options.startDayOfWeek));
-    } else {
-        //TODO: month view.
-    }
-};
-
-/**
- * Move to today.
- */
-Calendar.prototype.today = function() {
-    this.showDate(new Date());
-};
-
-/**
- * Move the calendar amount of offset value
- * @param {number} offset - offset value.
- * @example
- * // move previous week when "week" view.
- * // move previous month when "month" view.
- * calendar.move(-1);
- */
-Calendar.prototype.move = function(offset) {
-    var start = this._currentStartDate,
-        end = this._currentEndDate,
-        diff;
-
-    if (this.currentViewName === 'week') {
-        diff = ((end - start) + datetime.MILLISECONDS_PER_DAY) * (offset || 0);
-
-        start = new Date(+start + diff);
-        end = new Date(+end + diff);
-
-        this.setDate(start, end);
-    } else {
-        //TODO: month view.
-    }
-};
-
-/**
- * Move the calendar forward an arvitrary amount of unit
- */
-Calendar.prototype.next = function() {
-    this.move(1);
-};
-
-/**
- * Move the calendar backward an arvitrary amount of unit
- */
-Calendar.prototype.prev = function() {
-    this.move(-1);
-};
-
-/**
- * Return current rendered view.
- * @returns {View} current view instance
- */
-Calendar.prototype.getCurrentView = function() {
-    return util.pick(this.layout.childs.items, this.currentViewName);
-}
-
-/**
- * Toggle current view
- * @param {string} viewName - the name of view.
- * @param {boolean} force - force render despite of current view and new view are equal
- */
-Calendar.prototype.toggleView = function(viewName, force) {
-    var layout = this.layout,
-        controller = this.controller,
-        dragHandler = this.dragHandler,
-        options = this.options,
-        created;
-
-    if (!force && this.currentViewName === viewName) {
-        return;
-    }
-
-    this.currentViewName = viewName;
-    layout.clear();
-
-    if (viewName === 'week') {
-        created = weekViewFactory(controller, layout.container, dragHandler, options);
-    } else if (viewName === 'month') {
-        created = monthViewFactory(controller, layout.container, dragHandler, options);
-    } else {
-        return;
-    }
-
-    layout.addChild(created.view);
-    this._refreshMethod = created.refresh;
     this.render();
-}
-
-/**
- * Destroy calendar instance.
- */
-Calendar.prototype.destroy = function() {
-    this.dragHandler.destroy();
-    this.controller.off();
-    this.layout.clear();
-    this.layout.destroy();
-
-    this.options = this.baseDate = this.controller =
-        this.layout = this.dragHandler = null;
-}
+};
 
 /**
  * Refresh child views
@@ -8951,48 +9195,255 @@ Calendar.prototype.refreshChildView = function(viewName) {
         return;
     }
 
-    this.layout.childs.items[viewName].render();
+    this.layout.children.items[viewName].render();
 };
 
 /**
- * Create default option
- * @param {object} options - option from service page
- * @returns {object} default option. 
+ * Move to today.
  */
-Calendar.prototype.setOptions = function(options) {
-    var today = this.baseDate,
-        ymd = 'YYYY-MM-DD',
-        renderRange,
-        weekOpt = options.week,
-        tmplOpt = options.template;
+Calendar.prototype.today = function() {
+    this.renderDate = new Date();
 
-    options = util.extend({
-        defaultView: 'week',    // 기본 주간 뷰 설정
-        week: null,
-        month: null 
-    }, options);
+    this.move();
+    this.render();
+};
 
-    weekOpt = options.week = util.extend({
-        startDayOfWeek: 0
-    }, options.week);
+/**
+ * Move the calendar amount of offset value
+ * @param {number} offset - offset value.
+ * @example
+ * // move previous week when "week" view.
+ * // move previous month when "month" view.
+ * calendar.move(-1);
+ */
+Calendar.prototype.move = function(offset) {
+    var renderDate = dw(this.renderDate),
+        viewName = this.viewName,
+        view = this.getCurrentView(),
+        recursiveSet = this.setOptionRecurseively,
+        date2;
 
-    if (!weekOpt.renderStartDate || !weekOpt.renderEndDate) {
-        renderRange = this._getWeekRenderRange(new Date(), weekOpt.startDayOfWeek);
-        weekOpt.renderStartDate = datetime.format(renderRange[0], ymd);
-        weekOpt.renderEndDate = datetime.format(renderRange[1], ymd);
+    offset = util.isExisty(offset) ? offset : 0;
+
+    if (viewName === 'month') {
+        renderDate.addMonth(offset);
+
+        recursiveSet(view, function(opt) {
+            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+        });
+    } else if (viewName === 'week') {
+        renderDate.addDate(offset * 7);
+        date2 = this.getWeekDayRange(renderDate.d);
+
+        recursiveSet(view, function(opt) {
+            opt.renderStartDate = datetime.format(date2[0], 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(date2[1], 'YYYY-MM-DD');
+        });
+    } else if (viewName === 'day') {
+        renderDate.addDate(offset);
+        date2 = renderDate.clone().setHours(23, 59, 59, 0);
+
+        recursiveSet(view, function(opt) {
+            opt.renderStartDate = datetime.format(renderDate.d, 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(date2.d, 'YYYY-MM-DD');
+        });
     }
 
-    if (!options.month) {
-        options.month = {
-            renderMonth: datetime.format(today, 'YYYY-MM')
-        };
+    this.renderDate = renderDate.d;
+};
+
+/**
+ * Move to specific date
+ * @param {(Date|string)} date - date to move
+ */
+Calendar.prototype.setDate = function(date) {
+    if (util.isString(date)) {
+        date = datetime.parse(date);
     }
 
-    util.forEach(tmplOpt, function(func, name) {
-        Handlebars.registerHelper(name + '-tmpl', func);
+    this.renderDate = new Date(Number(date));
+
+    this.render();
+};
+
+/**
+ * Move the calendar forward an arvitrary amount of unit
+ */
+Calendar.prototype.next = function() {
+    this.move(1);
+    this.render();
+};
+
+/**
+ * Move the calendar backward an arvitrary amount of unit
+ */
+Calendar.prototype.prev = function() {
+    this.move(-1);
+    this.render();
+};
+
+/**
+ * Return current rendered view.
+ * @returns {View} current view instance
+ */
+Calendar.prototype.getCurrentView = function() {
+    var viewName = this.viewName;
+
+    if (viewName === 'day') {
+        viewName = 'week';
+    }
+
+    return util.pick(this.layout.children.items, viewName);
+};
+
+/**********
+ * Custom Events
+ **********/
+
+/**
+ * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
+ * @fires Calendar#clickEvent
+ * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
+ */
+Calendar.prototype._onClick = function(clickEventData) {
+    /**
+     * @events Calendar#clickEvent
+     * @type {object}
+     * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
+     * @property {MouseEvent} jsEvent - 마우스 이벤트
+     */
+    this.fire('clickEvent', clickEventData);
+};
+
+/**
+ * @fires {Calendar#beforeCreateEvent}
+ * @param {object} createEventData - select event data from allday, time
+ */
+Calendar.prototype._onBeforeCreate = function(createEventData) {
+    /**
+     * @events Calendar#beforeCreateEvent
+     * @type {object}
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', createEventData);
+};
+
+/**
+ * @fires Calendar#beforeUpdateEvent
+ * @param {object} updateEventData - update event data
+ */
+Calendar.prototype._onBeforeUpdate = function(updateEventData) {
+    /**
+     * @event Calendar#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeUpdateEvent', updateEventData);
+};
+
+/**
+ * @fires Calendar#resizePanel
+ * @param {object} resizeEventData - resize event data object
+ */
+Calendar.prototype._onResizePanel = function(resizeEventData) {
+    /**
+     * @event Calendar#resizePanel
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     */
+    this.fire('resizePanel', resizeEventData);
+};
+
+/**
+ * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
+ * @param {boolean} isAttach - true면 이벤트 연결함.
+ * @param {Week|Month} view - 주뷰 또는 월뷰
+ */
+Calendar.prototype._toggleViewEvent = function(isAttach, view) {
+    var self = this,
+        handler = view.handler,
+        isMonthView = view.viewName === 'month',
+        method = isAttach ? 'on' : 'off';
+
+    util.forEach(handler.click, function(clickHandler) {
+        clickHandler[method]('clickEvent', self._onClick, self);
     });
 
-    return options;
+    util.forEach(handler.dblclick, function(dblclickHandler) {
+        dblclickHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
+    });
+
+    util.forEach(handler.creation, function(creationHandler) {
+        creationHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
+    });
+
+    util.forEach(handler.move, function(moveHandler) {
+        moveHandler[method]('beforeUpdateEvent', self._onBeforeUpdate, self);
+    });
+
+    util.forEach(handler.resize, function(resizeHandler) {
+        resizeHandler[method]('beforeUpdateEvent', self._onBeforeUpdate, self);
+    });
+
+    if (!isMonthView) {
+        view.vLayout[method]('resize', self._onResizePanel, self);
+    }
+};
+
+/**
+ * Toggle current view
+ * @param {string} newViewName - new view name to render
+ * @param {boolean} force - force render despite of current view and new view are equal
+ */
+Calendar.prototype.toggleView = function(newViewName, force) {
+    var self = this,
+        layout = this.layout,
+        controller = this.controller,
+        dragHandler = this.dragHandler,
+        options = this.options,
+        viewName = this.viewName,
+        created;
+
+    if (!force && viewName === newViewName) {
+        return;
+    }
+
+    layout.children.doWhenHas(viewName, function(view) {
+        self._toggleViewEvent(false, view);
+    });
+
+    layout.clear();
+
+    if (newViewName === 'month') {
+        created = monthViewFactory(
+            controller,
+            layout.container,
+            dragHandler,
+            options
+        );
+    } else if (newViewName === 'week' || newViewName === 'day') {
+        created = this.createWeekView(
+            controller,
+            layout.container,
+            dragHandler,
+            options
+        );
+    }
+
+    layout.addChild(created.view);
+
+    layout.children.doWhenHas(newViewName, function(view) {
+        self._toggleViewEvent(true, view);
+    });
+
+    this.viewName = newViewName;
+    this.refreshMethod = created.refresh;
+
+    this.move();
+    this.render();
 };
 
 util.CustomEvents.mixin(Calendar);
@@ -9001,7 +9452,7 @@ module.exports = Calendar;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../config":36,"../handler/drag":69,"../view/layout":81,"./controller":57,"./monthView":58,"./weekView":59,"hbsfy/runtime":21}],57:[function(require,module,exports){
+},{"../common/datetime":27,"../common/dw":31,"../handler/drag":72,"../view/layout":95,"./controller":60,"./monthView":61,"./weekView":62,"hbsfy/runtime":21}],60:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Controller factory module.
@@ -9015,6 +9466,12 @@ var Base = require('../controller/base'),
     Week = require('../controller/viewMixin/week'),
     Month = require('../controller/viewMixin/month');
 
+/**
+ * Mixin object. create object property to target and mix to that
+ * @param {object} from - source object
+ * @param {object} to - target object
+ * @param {string} propertyName - property name
+ */
 function mixin(from, to, propertyName) {
     var obj = to[propertyName] = {};
 
@@ -9040,16 +9497,25 @@ module.exports = function(options) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../controller/base":37,"../controller/viewMixin/core":38,"../controller/viewMixin/month":39,"../controller/viewMixin/week":40}],58:[function(require,module,exports){
+},{"../controller/base":40,"../controller/viewMixin/core":41,"../controller/viewMixin/month":42,"../controller/viewMixin/week":43}],61:[function(require,module,exports){
+(function (global){
 /**
  * @fileoverview Month view factory module
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
+var util = global.tui.util;
 var config = require('../config'),
+    array = require('../common/array'),
+    datetime = require('../common/datetime'),
     domutil = require('../common/domutil'),
-    Month = require('../view/month/month');
+    Month = require('../view/month/month'),
+    MonthClick = require('../handler/month/click'),
+    MonthCreation = require('../handler/month/creation'),
+    MonthResize = require('../handler/month/resize'),
+    MonthMove = require('../handler/month/move'),
+    More = require('../view/month/more');
 
 /**
  * @param {Base} baseController - controller instance
@@ -9060,23 +9526,87 @@ var config = require('../config'),
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
     var monthViewContainer,
-        monthView;
+        monthView,
+        clickHandler,
+        creationHandler,
+        resizeHandler,
+        moveHandler,
+        moreView;
 
-    monthViewContainer = domutil.appendHTMLElement('div', layoutContainer, config.classname('month'));
-    monthView = new Month(options.month, monthViewContainer);
+    monthViewContainer = domutil.appendHTMLElement(
+        'div', layoutContainer, config.classname('month'));
 
-    monthView.controller = baseController.Month;
+    monthView = new Month(options.month, monthViewContainer, baseController.Month);
+    moreView = new More(layoutContainer);
+
+    // handlers
+    clickHandler = new MonthClick(dragHandler, monthView, baseController);
+    creationHandler = new MonthCreation(dragHandler, monthView, baseController);
+    resizeHandler = new MonthResize(dragHandler, monthView, baseController);
+    moveHandler = new MonthMove(dragHandler, monthView, baseController);
+
+    // binding +n click event
+    clickHandler.on('clickMore', function(clickMoreEvent) {
+        var date = clickMoreEvent.date,
+            events = util.pick(baseController.findByDateRange(
+                datetime.start(date),
+                datetime.end(date)
+            ), clickMoreEvent.ymd);
+
+        if (events && events.length) {
+            events = events.sort(array.compare.event.asc);
+
+            moreView.render({
+                target: clickMoreEvent.target,
+                date: datetime.format(date, 'YYYY.MM.DD'),
+                events: events
+            });
+        }
+    });
+
+    moveHandler.on('monthMoveStart_from_morelayer', function() {
+        moreView.hide();
+    });
+
+    monthView.handler = {
+        click: {
+            'default': clickHandler
+        },
+        creation: {
+            'default': creationHandler
+        },
+        resize: {
+            'default': resizeHandler
+        },
+        move: {
+            'default': moveHandler
+        }
+    };
+
+    monthView._beforeDestroy = function() {
+        moreView.destroy();
+
+        util.forEach(monthView.handler, function(type) {
+            util.forEach(type, function(handler) {
+                handler.off();
+                handler.destroy();
+            });
+        });
+    };
 
     return {
         view: monthView,
-        refresh: function() {}
+        refresh: function() {
+            monthView.vLayout.refresh();
+        }
     };
 }
 
 module.exports = createMonthView;
 
 
-},{"../common/domutil":30,"../config":36,"../view/month/month":82}],59:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../common/array":23,"../common/datetime":27,"../common/domutil":30,"../config":39,"../handler/month/click":73,"../handler/month/creation":75,"../handler/month/move":79,"../handler/month/resize":82,"../view/month/month":97,"../view/month/more":99}],62:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Factory module for WeekView
@@ -9087,7 +9617,7 @@ module.exports = createMonthView;
 var util = global.tui.util;
 var config = require('../config');
 var domutil = require('../common/domutil');
-var VLayout = require('../common/vlayout');
+var VLayout = require('../common/vLayout');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views
@@ -9110,8 +9640,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var weekView,
         dayNameContainer,
         dayNameView,
-        vlayoutContainer,
-        vlayout,
+        vLayoutContainer,
+        vLayout,
         alldayView,
         timeGridView,
         alldayClickHandler,
@@ -9137,21 +9667,23 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/
-    vlayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-    vlayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
+    vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
+    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
+                                     dayNameView.container.offsetHeight) + 'px';
 
-    vlayout = new VLayout({
+    vLayout = new VLayout({
         panels: [
             {height: 52, minHeight: 52},
             {isSplitter: true},
             {autoHeight: true}
         ]
-    }, vlayoutContainer);
+    }, vLayoutContainer);
+    weekView.vLayout = vLayout;
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, vlayout.panels[0].container);
+    alldayView = new Allday(options.week, vLayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayDblClickHandler = new AlldayDblClick(alldayView);
@@ -9162,7 +9694,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, vlayout.panels[2].container);
+    timeGridView = new TimeGrid(options.week, vLayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeDblClickHandler = new TimeDblClick(timeGridView);
@@ -9171,10 +9703,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
 
     weekView.on('afterRender', function() {
-        vlayout.refresh();
+        vLayout.refresh();
     });
 
-    weekView.handlers = {
+    weekView.handler = {
         click: {
             allday: alldayClickHandler,
             time: timeClickHandler
@@ -9202,24 +9734,33 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // add destroy
     weekView._beforeDestroy = function() {
-        util.forEach(weekView.handlers, function(type) {
+        util.forEach(weekView.handler, function(type) {
             util.forEach(type, function(handler) {
                 handler.off();
                 handler.destroy();
             });
         });
+
+        weekView.off();
     };
 
     return {
         view: weekView,
         refresh: function() {
-            vlayout.refresh();
+            var weekViewHeight = weekView.getViewBound().height,
+                daynameViewHeight = domutil.getBCRect(
+                    dayNameView.container
+                ).height;
+
+            vLayout.container.style.height =
+                weekViewHeight - daynameViewHeight + 'px';
+            vLayout.refresh();
         }
     };
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domutil":30,"../common/vlayout":34,"../config":36,"../handler/allday/click":60,"../handler/allday/creation":62,"../handler/allday/dblclick":64,"../handler/allday/move":65,"../handler/allday/resize":67,"../handler/time/click":70,"../handler/time/creation":72,"../handler/time/dblclick":74,"../handler/time/move":75,"../handler/time/resize":77,"../view/week/allday":92,"../view/week/dayname":93,"../view/week/timeGrid":95,"../view/week/week":96}],60:[function(require,module,exports){
+},{"../common/domutil":30,"../common/vLayout":36,"../config":39,"../handler/allday/click":63,"../handler/allday/creation":65,"../handler/allday/dblclick":67,"../handler/allday/move":68,"../handler/allday/resize":70,"../handler/time/click":84,"../handler/time/creation":86,"../handler/time/dblclick":88,"../handler/time/move":89,"../handler/time/resize":91,"../view/week/allday":111,"../view/week/dayname":112,"../view/week/timeGrid":114,"../view/week/week":115}],63:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Click handle module for allday events
@@ -9237,7 +9778,7 @@ var AlldayMove = require('./move');
  * @implements {Handler}
  * @mixes CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 function AlldayClick(dragHandler, alldayView, baseController) {
@@ -9282,9 +9823,10 @@ AlldayClick.prototype.checkExpectCondition = AlldayMove.prototype.checkExpectedC
  * @emits AlldayClick#clickEvent
  */
 AlldayClick.prototype._onClick = function(clickEvent) {
-    var target = clickEvent.target,
+    var self = this,
+        target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('allday-event-block')),
+        blockElement = domutil.closest(target, config.classname('.allday-event-block')),
         eventCollection = this.baseController.events;
 
     if (!timeView || !blockElement) {
@@ -9298,11 +9840,11 @@ AlldayClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(AlldayClick);
@@ -9311,7 +9853,8 @@ module.exports = AlldayClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36,"./move":65}],61:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":39,"./move":68}],64:[function(require,module,exports){
+/* eslint no-shadow: 0 */
 /**
  * @fileoverview Base mixin object for handler/allday
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9335,7 +9878,7 @@ var alldayCore = {
      * @returns {function|boolean} function that return event data by mouse events.
      */
     _retriveEventData: function(alldayView, mouseEvent) {
-        var monthWeekView = alldayView.childs.single(),
+        var weekdayView = alldayView.children.single(),
             container,
             renderStartDate,
             renderEndDate,
@@ -9344,11 +9887,11 @@ var alldayCore = {
             mousePos,
             dragStartXIndex;
 
-        if (!monthWeekView) {
+        if (!weekdayView) {
             return false;
         }
 
-        container = monthWeekView.container;
+        container = weekdayView.container;
         renderStartDate = datetime.parse(alldayView.options.renderStartDate);
         renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
         datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
@@ -9383,10 +9926,10 @@ var alldayCore = {
 module.exports = alldayCore;
 
 
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],62:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30}],65:[function(require,module,exports){
 (function (global){
 /**
- * @fileoverview Handler module for MonthWeek view's creation actions.
+ * @fileoverview Handler module for WeekdayInWeek view's creation actions.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -9404,41 +9947,39 @@ var AlldayCreationGuide = require('./creationGuide');
  * @mixes AlldayCore
  * @mixes CutomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - Allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
-function AlldayCreation(dragHandler, alldayView, baseController) {    // eslint-disable-line
+function AlldayCreation(dragHandler, alldayView, baseController) {
     /**
      * Drag handler instance.
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * allday view instance.
      * @type {Allday}
      */
-    this.alldayView = null;
+    this.alldayView = alldayView;
 
     /**
      * Base controller instance.
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {function}
      */
     this.getEventDataFunc = null;
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
-
     /**
      * @type {AlldayCreationGuide}
      */
     this.guide = new AlldayCreationGuide(this);
+
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -9454,13 +9995,13 @@ AlldayCreation.prototype.destroy = function() {
 /**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
- * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
+ * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass !== config.classname('monthweek-events')) {
+    if (cssClass !== config.classname('weekday-events')) {
         return false;
     }
 
@@ -9472,23 +10013,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.alldayView.childs.items, matches[1]);
-};
-
-/**
- * Connect handler, view, controller.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-AlldayCreation.prototype.connect = function(dragHandler, alldayView, baseController) {
-    this.dragHandler = dragHandler;
-    this.alldayView = alldayView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
+    return util.pick(this.alldayView.children.items, matches[1]);
 };
 
 /**
@@ -9533,7 +10058,7 @@ AlldayCreation.prototype._createEvent = function(eventData) {
 
 /**
  * DragStart event handler method.
- * @emits AlldayCreation#allday_creation_dragstart
+ * @emits AlldayCreation#alldayCreationDragstart
  * @param {object} dragStartEventData - Drag#dragStart event handler event data.
  */
 AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
@@ -9556,19 +10081,19 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
     eventData = getEventDataFunc(dragStartEventData.originEvent);
 
     /**
-     * @event AlldayCreation#allday_creation_dragstart
+     * @event AlldayCreation#alldayCreationDragstart
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_creation_dragstart', eventData);
+    this.fire('alldayCreationDragstart', eventData);
 };
 
 /**
  * Drag event handler method.
- * @emits AlldayCreation#allday_creation_drag
+ * @emits AlldayCreation#alldayCreationDrag
  * @param {object} dragEventData - Drag#drag event handler eventdata.
  */
 AlldayCreation.prototype._onDrag = function(dragEventData) {
@@ -9582,19 +10107,19 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
     eventData = getEventDataFunc(dragEventData.originEvent);
 
     /**
-     * @event AlldayCreation#allday_creation_drag
+     * @event AlldayCreation#alldayCreationDrag
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_creation_drag', eventData);
+    this.fire('alldayCreationDrag', eventData);
 };
 
 /**
  * DragEnd event hander method.
- * @emits AlldayCreation#allday_creation_dragend
+ * @emits AlldayCreation#alldayCreationDragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
@@ -9619,33 +10144,33 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
     this._createEvent(eventData);
 
     /**
-     * @event AlldayCreation#allday_creation_dragend
+     * @event AlldayCreation#alldayCreationDragend
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_creation_dragend', eventData);
+    this.fire(overrideEventName || 'alldayCreationDragend', eventData);
 
     this.getEventDataFunc = null;
 };
 
 /**
  * Click event handler method.
- * @emits AlldayCreation#allday_creation_click
+ * @emits AlldayCreation#alldayCreationClick
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayCreation.prototype._onClick = function(clickEventData) {
     /**
-     * @event AlldayCreation#allday_creation_click
+     * @event AlldayCreation#alldayCreationClick
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_creation_click');
+    this._onDragEnd(clickEventData, 'alldayCreationClick');
 };
 
 common.mixin(alldayCore, AlldayCreation);
@@ -9655,7 +10180,7 @@ module.exports = AlldayCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":61,"./creationGuide":63}],63:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":64,"./creationGuide":66}],66:[function(require,module,exports){
 /**
  * @fileoverview Guide element for Allday.Creation
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -9691,9 +10216,9 @@ function AlldayCreationGuide(alldayCreation) {
     this.initializeGuideElement();
 
     alldayCreation.on({
-        'allday_creation_dragstart': this._onDragStart,
-        'allday_creation_drag': this._onDrag,
-        'allday_creation_click': this.clearGuideElement
+        'alldayCreationDragstart': this._onDragStart,
+        'alldayCreationDrag': this._onDrag,
+        'alldayCreationClick': this.clearGuideElement
     }, this);
 }
 
@@ -9771,7 +10296,7 @@ AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
-        eventContainer = domutil.find('.' + config.classname('monthweek-events'), alldayContainerElement);
+        eventContainer = domutil.find(config.classname('.weekday-events'), alldayContainerElement);
 
     eventContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);
@@ -9788,7 +10313,7 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 module.exports = AlldayCreationGuide;
 
 
-},{"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],64:[function(require,module,exports){
+},{"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39}],67:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Double click handler for allday
@@ -9833,23 +10358,23 @@ AlldayDblClick.prototype.destroy = function() {
  * Check supplied target has privilege to handle this handler
  * @override
  * @param {HTMLElement} target - target element from dblclick event
- * @returns {boolean|MonthWeek} monthweek view or false
+ * @returns {boolean|WeekdayInWeek} WeekdayInWeek view or false
  */
 AlldayDblClick.prototype.checkExpectedCondition = function(target) {
-    var monthweekView;
+    var weekdayView;
 
-    if (!domutil.hasClass(target, config.classname('monthweek-events')) && 
-        !domutil.hasClass(target, config.classname('monthweek-grid-line'))) {
+    if (!domutil.hasClass(target, config.classname('weekday-events')) &&
+        !domutil.hasClass(target, config.classname('weekday-grid-line'))) {
         return false;
     }
 
-    monthweekView = this.alldayView.childs.single();
+    weekdayView = this.alldayView.children.single();
 
-    if (!monthweekView) {
+    if (!weekdayView) {
         return false;
     }
 
-    return monthweekView;
+    return weekdayView;
 };
 
 /**
@@ -9858,17 +10383,17 @@ AlldayDblClick.prototype.checkExpectedCondition = function(target) {
  * @param {MouseEvent} e - dblclick mouse event object
  */
 AlldayDblClick.prototype._onDblClick = function(e) {
-    var monthweekView = this.checkExpectedCondition(e.srcElement || e.target),
+    var weekdayView = this.checkExpectedCondition(e.srcElement || e.target),
         mousePosX, viewWidth, renderDateRange, dateIndex,
         targetDate;
 
-    if (!monthweekView) {
+    if (!weekdayView) {
         return;
     }
 
-    mousePosX = domevent.getMousePosition(e, monthweekView.container)[0];
-    viewWidth = monthweekView.getViewBound().width;
-    renderDateRange = monthweekView.getRenderDateRange();
+    mousePosX = domevent.getMousePosition(e, weekdayView.container)[0];
+    viewWidth = weekdayView.getViewBound().width;
+    renderDateRange = weekdayView.getRenderDateRange();
     dateIndex = Math.floor(common.ratio(viewWidth, renderDateRange.length, mousePosX));
     targetDate = renderDateRange[dateIndex];
 
@@ -9881,8 +10406,8 @@ AlldayDblClick.prototype._onDblClick = function(e) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: true,
-        starts: new Date(+targetDate),
-        ends: datetime.end(new Date(+targetDate))
+        starts: new Date(Number(targetDate)),
+        ends: datetime.end(new Date(Number(targetDate)))
     });
 };
 
@@ -9892,7 +10417,7 @@ module.exports = AlldayDblClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],65:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":39}],68:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Move handler for Allday view.
@@ -9912,7 +10437,7 @@ var AlldayMoveGuide = require('./moveGuide');
  * @mixes AlldayCore
  * @mixes CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - Allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 function AlldayMove(dragHandler, alldayView, baseController) {
@@ -9960,18 +10485,18 @@ AlldayMove.prototype.destroy = function() {
 /**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
- * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
+ * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayMove.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         parentView,
         matches;
 
-    if (~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
+    if (~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
         return false;
     }
 
-    parentView = domutil.closest(target, '.' + config.classname('monthweek'));
+    parentView = domutil.closest(target, config.classname('.weekday'));
 
     if (!parentView) {
         return false;
@@ -9984,12 +10509,12 @@ AlldayMove.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.alldayView.childs.items, matches[1]);
+    return util.pick(this.alldayView.children.items, matches[1]);
 };
 
 /**
  * DragStart event handler method.
- * @emits AlldayMove#allday_move_dragstart
+ * @emits AlldayMove#alldayMoveDragstart
  * @param {object} dragStartEventData - Drag#dragStart event handler event data.
  */
 AlldayMove.prototype._onDragStart = function(dragStartEventData) {
@@ -10006,7 +10531,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
+    eventBlockElement = domutil.closest(target, config.classname('.weekday-event-block'));
     if (!eventBlockElement) {
         return;
     }
@@ -10033,7 +10558,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event AlldayMove#allday_move_dragstart
+     * @event AlldayMove#alldayMoveDragstart
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
@@ -10042,13 +10567,13 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {CalEvent} model - data object of model isntance.
      * @property {HTMLDivElement} eventBlockElement - target event block element.
      */
-    this.fire('allday_move_dragstart', eventData);
+    this.fire('alldayMoveDragstart', eventData);
 };
 
 
 /**
  * Drag event handler method.
- * @emits AlldayMove#allday_move_drag
+ * @emits AlldayMove#alldayMoveDrag
  * @param {object} dragEventData - Drag#drag event handler eventdata.
  */
 AlldayMove.prototype._onDrag = function(dragEventData) {
@@ -10059,14 +10584,14 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
     }
 
     /**
-     * @event AlldayMove#allday_move_drag
+     * @event AlldayMove#alldayMoveDrag
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_move_drag', getEventDataFunc(dragEventData.originEvent));
+    this.fire('alldayMoveDrag', getEventDataFunc(dragEventData.originEvent));
 };
 
 /**
@@ -10099,7 +10624,7 @@ AlldayMove.prototype._updateEvent = function(eventData) {
 
 /**
  * DragEnd event hander method.
- * @emits AlldayMove#allday_move_dragend
+ * @emits AlldayMove#alldayMoveDragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {?boolean} skipUpdate - true then skip update event model.
@@ -10123,39 +10648,39 @@ AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, 
     util.extend(eventData, {
         targetModel: dragStart.model
     });
-    
+
     if (!skipUpdate) {
         this._updateEvent(eventData);
     }
 
     /**
-     * @event AlldayMove#allday_move_dragend
+     * @event AlldayMove#alldayMoveDragend
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_move_dragend', eventData);
+    this.fire(overrideEventName || 'alldayMoveDragend', eventData);
 
     this.getEventDataFunc = this._dragStart = null;
 };
 
 /**
  * Click event handler method.
- * @emits AlldayMove#allday_move_click
+ * @emits AlldayMove#alldayMoveClick
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayMove.prototype._onClick = function(clickEventData) {
     /**
-     * @event AlldayMove#allday_move_click
+     * @event AlldayMove#alldayMoveClick
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_move_click', true);
+    this._onDragEnd(clickEventData, 'alldayMoveClick', true);
 };
 
 common.mixin(AlldayCore, AlldayMove);
@@ -10165,7 +10690,7 @@ module.exports = AlldayMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../config":36,"./core":61,"./moveGuide":66}],66:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../config":39,"./core":64,"./moveGuide":69}],69:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Effect module for Allday.Move
@@ -10206,10 +10731,10 @@ function AlldayMoveGuide(alldayMove) {
     this.guideElement = null;
 
     alldayMove.on({
-        'allday_move_dragstart': this._onDragStart,
-        'allday_move_drag': this._onDrag,
-        'allday_move_dragend': this._clearGuideElement,
-        'allday_move_click': this._clearGuideElement
+        'alldayMoveDragstart': this._onDragStart,
+        'alldayMoveDrag': this._onDrag,
+        'alldayMoveDragend': this._clearGuideElement,
+        'alldayMoveClick': this._clearGuideElement
     }, this);
 }
 
@@ -10251,15 +10776,15 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
         guideElement.style.width = widthPercent + '%';
 
         if (isExceededLeft) {
-            domutil.addClass(guideElement, config.classname('monthweek-exceed-left'));
+            domutil.addClass(guideElement, config.classname('weekday-exceed-left'));
         } else {
-            domutil.removeClass(guideElement, config.classname('monthweek-exceed-left'));
+            domutil.removeClass(guideElement, config.classname('weekday-exceed-left'));
         }
 
         if (isExceededRight) {
-            domutil.addClass(guideElement, config.classname('monthweek-exceed-right'));
+            domutil.addClass(guideElement, config.classname('weekday-exceed-right'));
         } else {
-            domutil.removeClass(guideElement, config.classname('monthweek-exceed-right'));
+            domutil.removeClass(guideElement, config.classname('weekday-exceed-right'));
         }
     });
 };
@@ -10270,7 +10795,7 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
  * For example, there is single event has 10 length. but render range in view is 5 then
  * rendered block must be cut out to render properly. in this case, this method return
  * how many block are cut before rendering.
- * 
+ *
  * 이벤트 데이터에서 이벤트 블록 엘리먼트 렌더링에 대한 필요 정보를 추출한다.
  *
  * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때
@@ -10287,8 +10812,10 @@ AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) 
         viewOptions = this.alldayMove.alldayView.options,
         renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
         renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
-        fromLeft = (new Date(originEventStarts.getTime() - renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
-        fromRight = (new Date(originEventEnds.getTime() - renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
+        fromLeft = (new Date(originEventStarts.getTime() -
+            renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
+        fromRight = (new Date(originEventEnds.getTime() -
+            renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
 
     return function(indexOffset) {
         return {
@@ -10312,7 +10839,7 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         domutil.addClass(global.document.body, config.classname('dragging'));
     }
 
-    eventContainer = domutil.find('.' + config.classname('monthweek-events'), alldayViewContainer);
+    eventContainer = domutil.find(config.classname('.weekday-events'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
     eventContainer.appendChild(guideElement);
 
@@ -10358,7 +10885,7 @@ module.exports = AlldayMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],67:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39}],70:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize handler module for Allday view.
@@ -10379,7 +10906,7 @@ var AlldayResizeGuide = require('./resizeGuide');
  * @mixes AlldayCore
  * @mixes CustomEvents
  * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {Allday} [alldayView] - MonthWeek view instance.
+ * @param {Allday} [alldayView] - Allday view instance.
  * @param {Base} [baseController] - Base controller instance.
  */
 function AlldayResize(dragHandler, alldayView, baseController) {
@@ -10430,17 +10957,17 @@ AlldayResize.prototype.destroy = function() {
 /**
  * Check dragstart target is expected conditions for this handler.
  * @param {HTMLElement} target - dragstart event handler's target element.
- * @returns {boolean|MonthWeek} return MonthWeek view instance when satiate condition.
+ * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayResize.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (!~cssClass.indexOf(config.classname('monthweek-resize-handle'))) {
+    if (!~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
         return false;
     }
 
-    target = domutil.closest(target, '.' + config.classname('monthweek'));
+    target = domutil.closest(target, config.classname('.weekday'));
 
     if (!target) {
         return false;
@@ -10453,12 +10980,12 @@ AlldayResize.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.alldayView.childs.items, matches[1]);
+    return util.pick(this.alldayView.children.items, matches[1]);
 };
 
 /**
  * DragStart event handler.
- * @emits AlldayResize#allday_resize_dragstart
+ * @emits AlldayResize#alldayResizeDragstart
  * @param {object} dragStartEventData - event data.
  */
 AlldayResize.prototype._onDragStart = function(dragStartEventData) {
@@ -10475,7 +11002,7 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, '.' + config.classname('monthweek-event-block'));
+    eventBlockElement = domutil.closest(target, config.classname('.weekday-event-block'));
     modelID = domutil.getData(eventBlockElement, 'id');
     targetModel = controller.events.items[modelID];
 
@@ -10498,7 +11025,7 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event AlldayResize#allday_resize_dragstart
+     * @event AlldayResize#alldayResizeDragstart
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
@@ -10507,12 +11034,12 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
      * @property {CalEvent} model - data object of model isntance.
      * @property {HTMLDivElement} eventBlockElement - target event block element.
      */
-    this.fire('allday_resize_dragstart', eventData);
+    this.fire('alldayResizeDragstart', eventData);
 };
 
 /**
  * Drag event handler method.
- * @emits AlldayResize#allday_resize_drag
+ * @emits AlldayResize#alldayResizeDrag
  * @param {object} dragEventData - Drag#drag event handler eventdata.
  */
 AlldayResize.prototype._onDrag = function(dragEventData) {
@@ -10523,14 +11050,14 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
     }
 
     /**
-     * @event AlldayResize#allday_resize_drag
+     * @event AlldayResize#alldayResizeDrag
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('allday_resize_drag', getEventDataFunc(dragEventData.originEvent));
+    this.fire('alldayResizeDrag', getEventDataFunc(dragEventData.originEvent));
 };
 
 /**
@@ -10562,7 +11089,7 @@ AlldayResize.prototype._updateEvent = function(eventData) {
 
 /**
  * DragEnd event hander method.
- * @emits AlldayResize#allday_resize_dragend
+ * @emits AlldayResize#alldayResizeDragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {?boolean} skipUpdate - true then skip update event model.
@@ -10592,33 +11119,33 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
     }
 
     /**
-     * @event AlldayResize#allday_resize_dragend
+     * @event AlldayResize#alldayResizeDragend
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'allday_resize_dragend', eventData);
+    this.fire(overrideEventName || 'alldayResizeDragend', eventData);
 
     this.getEventDataFunc = this._dragStart = null;
 };
 
 /**
  * Click event handler method.
- * @emits AlldayResize#allday_resize_click
+ * @emits AlldayResize#alldayResizeClick
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayResize.prototype._onClick = function(clickEventData) {
     /**
-     * @event AlldayResize#allday_resize_click
+     * @event AlldayResize#alldayResizeClick
      * @type {object}
      * @property {AlldayView} relatedView - allday view instance.
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this._onDragEnd(clickEventData, 'allday_resize_click', true);
+    this._onDragEnd(clickEventData, 'alldayResizeClick', true);
 };
 
 common.mixin(AlldayCore, AlldayResize);
@@ -10628,7 +11155,7 @@ module.exports = AlldayResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":61,"./resizeGuide":68}],68:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":64,"./resizeGuide":71}],71:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Resize Guide module.
@@ -10669,10 +11196,10 @@ function AlldayResizeGuide(alldayResize) {
     this.guideElement = null;
 
     alldayResize.on({
-        'allday_resize_dragstart': this._onDragStart,
-        'allday_resize_drag': this._onDrag,
-        'allday_resize_dragend': this._clearGuideElement,
-        'allday_resize_click': this._clearGuideElement
+        'alldayResizeDragstart': this._onDragStart,
+        'alldayResizeDrag': this._onDrag,
+        'alldayResizeDragend': this._clearGuideElement,
+        'alldayResizeClick': this._clearGuideElement
     }, this);
 }
 
@@ -10719,8 +11246,18 @@ AlldayResizeGuide.prototype.refreshGuideElement = function(newWidth) {
 AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         viewOptions = this.alldayResize.alldayView.options,
-        startDate = datetime.start(new Date(Math.max(model.starts.getTime(), datetime.parse(viewOptions.renderStartDate).getTime()))),
-        endDate = datetime.end(new Date(Math.min(model.ends.getTime(), datetime.parse(viewOptions.renderEndDate).getTime()))),
+        startDate = datetime.start(
+            new Date(Math.max(
+                model.starts.getTime(),
+                datetime.parse(viewOptions.renderStartDate).getTime()
+            ))
+        ),
+        endDate = datetime.end(
+            new Date(Math.min(
+                model.ends.getTime(),
+                datetime.parse(viewOptions.renderEndDate).getTime()
+            ))
+        ),
         originLength = datetime.range(startDate, endDate, datetime.MILLISECONDS_PER_DAY).length,
         baseWidthPercent = 100 / dragStartEventData.datesInRange,
         dragStartIndex = dragStartEventData.xIndex;
@@ -10732,7 +11269,7 @@ AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventDa
         newLength = Math.max(1, newLength);
 
         return newLength * baseWidthPercent;
-    }
+    };
 };
 
 /**
@@ -10748,7 +11285,7 @@ AlldayResizeGuide.prototype._onDragStart = function(dragStartEventData) {
         domutil.addClass(global.document.body, config.classname('resizing-x'));
     }
 
-    eventContainer = domutil.find('.' + config.classname('monthweek-events'), alldayViewContainer);
+    eventContainer = domutil.find(config.classname('.weekday-events'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
     eventContainer.appendChild(guideElement);
 
@@ -10773,7 +11310,7 @@ module.exports = AlldayResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],69:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39}],72:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Drag handler for calendar.
@@ -11012,7 +11549,1749 @@ module.exports = Drag;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/domevent":29,"../common/domutil":30}],70:[function(require,module,exports){
+},{"../common/domevent":29,"../common/domutil":30}],73:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Click handler for month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+
+var util = global.tui.util;
+var config = require('../../config'),
+    datetime = require('../../common/datetime'),
+    domutil = require('../../common/domutil');
+
+/**
+ * @constructor
+ * @implements {Handler}
+ * @mixes util.CustomEvents
+ * @param {Drag} [dragHandler] - Drag handler instance.
+ * @param {Month} [monthView] - Month view instance.
+ * @param {Base} [baseController] - Base controller instance.
+ */
+function MonthClick(dragHandler, monthView, baseController) {
+    /**
+     * @type {Drag}
+     */
+    this.dragHandler = dragHandler;
+
+    /**
+     * @type {Month}
+     */
+    this.monthView = monthView;
+
+    /**
+     * @type {Base}
+     */
+    this.baseController = baseController;
+
+    dragHandler.on({
+        'click': this._onClick
+    }, this);
+}
+
+/**
+ * Destructor
+ */
+MonthClick.prototype.destroy = function() {
+    this.dragHandler.off(this);
+    this.monthView = this.baseController = this.dragHandler = null;
+};
+
+/**
+ * @fires MonthClick#clickMore
+ * @param {object} clickEvent - click event object
+ */
+MonthClick.prototype._onClick = function(clickEvent) {
+    var moreElement, ymd;
+
+    moreElement = domutil.closest(
+        clickEvent.target,
+        config.classname('.weekday-exceed')
+    );
+
+    if (moreElement) {
+        ymd = domutil.getData(moreElement, 'ymd');
+
+        /**
+         * @event MonthClick#clickMore
+         * @type {object}
+         * @property {string} ymd - YYYYMMDD formatted date
+         * @property {HTMLElement} target - target element
+         * @property {Date} date - target date
+         * @property {MouseEvent} originEvent - original event object
+         */
+        this.fire('clickMore', {
+            ymd: ymd,
+            target: moreElement,
+            date: datetime.parse(ymd),
+            originEvent: clickEvent.originEvent
+        });
+        return;
+    }
+};
+
+util.CustomEvents.mixin(MonthClick);
+
+module.exports = MonthClick;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39}],74:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Module for calculate date by month view and mouse event object
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util,
+    mfloor = Math.floor;
+
+var common = require('../../common/common'),
+    domutil = require('../../common/domutil'),
+    domevent = require('../../common/domevent');
+
+/**
+ * Get high order function that can calc date in mouse point
+ * @param {Month} monthView - month view
+ * @returns {function} function return event data by mouse event object
+ */
+function getMousePosDate(monthView) {
+    var weekColl = monthView.children,
+        weeks = weekColl.sort(function(a, b) {
+            return util.stamp(a) - util.stamp(b);
+        }),
+        weekCount = weekColl.length,
+        days = weekColl.single().getRenderDateRange(),
+        dayCount = days.length,
+        relativeContainer = util.pick(monthView.vLayout.panels[1], 'container'),
+        size = domutil.getSize(relativeContainer);
+
+    /**
+     * Get date related with mouse event object
+     * @param {object} mouseEvent - click event data
+     * @returns {object} data related with mouse event
+     */
+    function getDate(mouseEvent) {
+        var pos = domevent.getMousePosition(mouseEvent, relativeContainer),
+            x = mfloor(common.ratio(size[0], dayCount, pos[0])),
+            y = mfloor(common.ratio(size[1], weekCount, pos[1])),
+            weekdayView, date;
+
+        weekdayView = util.pick(weeks, y);
+
+        if (!weekdayView) {
+            return;
+        }
+
+        date = util.pick(weekdayView.getRenderDateRange(), x);
+
+        if (!date) {
+            return;
+        }
+
+        return {
+            x: x,
+            y: y,
+            sizeX: dayCount,
+            sizeY: weekCount,
+            date: date,
+            weekdayView: weekdayView
+        };
+    }
+
+    return getDate;
+}
+
+module.exports = getMousePosDate;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/common":26,"../../common/domevent":29,"../../common/domutil":30}],75:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Creation handler for month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+
+var config = require('../../config'),
+    datetime = require('../../common/datetime'),
+    array = require('../../common/array'),
+    domutil = require('../../common/domutil'),
+    getMousePosData = require('./core'),
+    Guide = require('./creationGuide');
+
+/**
+ * @constructor
+ * @param {Drag} dragHandler - Drag handler instance.
+ * @param {Month} monthView - Month view instance.
+ * @param {Base} baseController - Base controller instance.
+ */
+function MonthCreation(dragHandler, monthView, baseController) {
+    /**
+     * @type {Drag}
+     */
+    this.dragHandler = dragHandler;
+
+    /**
+     * @type {Month}
+     */
+    this.monthView = monthView;
+
+    /**
+     * @type {Base}
+     */
+    this.baseController = baseController;
+
+    /**
+     * @type {function}
+     */
+    this.getEventData = null;
+
+    /**
+     * Cache for dragging session
+     * @type {object}
+     */
+    this._cache = null;
+
+    /**
+     * @type {MonthCreationGuide}
+     */
+    this.guide = new Guide(this);
+
+    dragHandler.on('dragStart', this._onDragStart, this);
+}
+
+/**
+ * Destructor
+ */
+MonthCreation.prototype.destroy = function() {
+    this.dragHandler.off(this);
+    this.guide.destroy();
+
+    this.dragHandler = this.monthView = this.baseController =
+        this.getEventData = this._cache = this.guide = null;
+};
+
+/**
+ * Fire before create event
+ * @fires {MonthCreation#beforeCreateEvent}
+ * @param {object} eventCache - cache data from single dragging session
+ */
+MonthCreation.prototype._createEvent = function(eventCache) {
+    var times = [
+            Number(eventCache.starts),
+            Number(eventCache.ends)
+        ].sort(array.compare.num.asc),
+        starts = new Date(times[0]),
+        ends = datetime.end(new Date(times[1]));
+
+    /**
+     * @event {MonthCreation#beforeCreateEvent}
+     * @type {object}
+     * @property {boolean} isAllDay - whether creating event is allday?
+     * @property {Date} starts - select start date
+     * @property {Date] ends - select end date
+     */
+    this.fire('beforeCreateEvent', {
+        isAllDay: true,
+        starts: starts,
+        ends: ends
+    });
+};
+
+/**
+ * DragStart event handler
+ * @fires {MonthCreation#monthCreationDragstart}
+ * @param {object} dragStartEvent - dragStart event data
+ */
+MonthCreation.prototype._onDragStart = function(dragStartEvent) {
+    var target = dragStartEvent.target,
+        eventData;
+
+    if (!domutil.hasClass(target, config.classname('weekday-events'))) {
+        return;
+    }
+
+    this.dragHandler.on({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    this.getEventData = getMousePosData(this.monthView);
+
+    eventData = this.getEventData(dragStartEvent.originEvent);
+
+    this._cache = {
+        starts: new Date(Number(eventData.date))
+    };
+
+    /**
+     * @event {MonthCreation#monthCreationDragstart}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthCreationDragstart', eventData);
+};
+
+/**
+ * Drag event handler
+ * @fires {MonthCreation#monthCreationDrag}
+ * @param {object} dragEvent - drag event data
+ */
+MonthCreation.prototype._onDrag = function(dragEvent) {
+    var eventData;
+
+    if (!this.getEventData) {
+        return;
+    }
+
+    eventData = this.getEventData(dragEvent.originEvent);
+
+    if (!eventData) {
+        return;
+    }
+
+    /**
+     * @event {MonthCreation#monthCreationDrag}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthCreationDrag', eventData);
+};
+
+/**
+ * DragEnd event handler
+ * @fires {MonthCreation#monthCreationDragend}
+ * @param {object} dragEndEvent - drag end event data
+ */
+MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
+    var cache = this._cache,
+        eventData;
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    if (!this.getEventData) {
+        return;
+    }
+
+    eventData = this.getEventData(dragEndEvent.originEvent);
+
+    if (eventData) {
+        cache.ends = new Date(Number(eventData.date));
+        this._createEvent(cache);
+    }
+
+    /**
+     * @event {MonthCreation#monthCreationDragend}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthCreationDragend', eventData);
+
+    this.getEventData = this._cache = null;
+};
+
+util.CustomEvents.mixin(MonthCreation);
+
+module.exports = MonthCreation;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":74,"./creationGuide":76}],76:[function(require,module,exports){
+/**
+ * @fileoverview Creation guide module for month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var MonthGuide = require('./guide');
+
+/**
+ * @constructor
+ * @param {MonthCreation} monthCreation - instance of MonthCreation
+ */
+function MonthCreationGuide(monthCreation) {
+    /**
+     * @type {MonthCreation}
+     */
+    this.monthCreation = monthCreation;
+
+    /**
+     * @type {MonthGuide}
+     */
+    this.guide = null;
+
+    monthCreation.on({
+        monthCreationDragstart: this._onDragStart,
+        monthCreationDrag: this._onDrag,
+        monthCreationDragend: this._onDragEnd
+    }, this);
+}
+
+/**
+ * Destructor
+ */
+MonthCreationGuide.prototype.destroy = function() {
+    this.monthCreation.off(this);
+
+    if (this.guide) {
+        this.guide.destroy();
+    }
+
+    this.guide = this.monthCreation = null;
+};
+
+/**
+ * Drag start event handler
+ * @param {object} dragStartEvent - event data from MonthCreation
+ */
+MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
+    this.guide = new MonthGuide(null, this.monthCreation.monthView);
+    this.guide.start(dragStartEvent);
+};
+
+/**
+ * Drag event handler
+ * @param {object} dragEvent - event data from MonthCreation
+ */
+MonthCreationGuide.prototype._onDrag = function(dragEvent) {
+    this.guide.update(dragEvent.x, dragEvent.y);
+};
+
+/**
+ * Drag end event handler
+ */
+MonthCreationGuide.prototype._onDragEnd = function() {
+    this.guide.destroy();
+    this.guide = null;
+};
+
+module.exports = MonthCreationGuide;
+
+
+},{"./guide":78}],77:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    return "display:none";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide-block\" style=\"top:"
+    + alias4(((helper = (helper = helpers.top || (depth0 != null ? depth0.top : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"top","hash":{},"data":data}) : helper)))
+    + "px;height:"
+    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
+    + "px;display:none\">\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide\" style=\"background-color:"
+    + alias4(((helper = (helper = helpers.bgColor || (depth0 != null ? depth0.bgColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bgColor","hash":{},"data":data}) : helper)))
+    + "\">\n        <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide-label\">"
+    + alias4(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"label","hash":{},"data":data}) : helper)))
+    + "</div>\n        <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide-handle handle-y\"\n             style=\""
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isResizeMode : depth0),{"name":"unless","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\">&nbsp;</div>\n    </div>\n</div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],78:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Guide element controller for creation, resize in month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util,
+    mmax = Math.max,
+    mmin = Math.min,
+    mabs = Math.abs,
+    mfloor = Math.floor;
+
+var config = require('../../config'),
+    common = require('../../common/common'),
+    domutil = require('../../common/domutil'),
+    datetime = require('../../common/datetime'),
+    dw = require('../../common/dw'),
+    tmpl = require('./guide.hbs');
+
+/**
+ * @constructor
+ * @param {object} [options] - options
+ * @param {boolean} [options.useHandle=false] - whether displaying resize handle on
+ *  guide element?
+ * @param {boolean} [options.isResizeMode=false] - whether resize mode?
+ * @param {Month} monthView - Month view instance
+ */
+function MonthGuide(options, monthView) {
+    var self = this;
+
+    /**
+     * @type {object}
+     */
+    this.options = util.extend({
+        top: 20,
+        height: 20,
+        bgColor: '#f7ca88',
+        label: '새 일정',
+        isResizeMode: false
+    }, options);
+
+    /**
+     * @type {Month}
+     */
+    this.view = monthView;
+
+    /**
+     * @type {WeekdayInMonth[]}
+     */
+    this.weeks = monthView.children.sort(function(a, b) {
+        return util.stamp(a) - util.stamp(b);
+    });
+
+    /**
+     * @type {number}
+     */
+    this.days = monthView.children.single().getRenderDateRange().length;
+
+    /**
+     * @type {function}
+     */
+    this.ratio = util.bind(function(value) {
+        return common.ratio(self.days, 100, value);
+    });
+
+    /**
+     * start coordinate of guide effect. (x, y) (days, weeks) effect can't
+     *  start lower than this coordinate.
+     * @type {number[]}
+     */
+    this.startCoord = [0, 0];
+
+    /**
+     * @type {Object.<string, HTMLElement>}
+     */
+    this.guideElements = {};
+}
+
+/**
+ * Destructor
+ */
+MonthGuide.prototype.destroy = function() {
+    this.clear();
+
+    this.options = this.view = this.weeks = this.days =
+        this.ratio = this.startCoord = this.guideElements = null;
+};
+
+/**
+ * Get ratio value in week.
+ * @param {number} value - value for calc ratio in week
+ * @returns {number} percent value
+ */
+MonthGuide.prototype._getRatioValueInWeek = function(value) {
+    return common.ratio(this.days, 100, value);
+};
+
+/**
+ * Create guide element
+ * @returns {HTMLElement} guide element
+ */
+MonthGuide.prototype._createGuideElement = function() {
+    var guide = document.createElement('div');
+
+    guide.innerHTML = tmpl(this.options);
+
+    return guide.firstChild;
+};
+
+/**
+ * Get guide element. if not exist then create one
+ * @param {number} y - y coordinate
+ * @returns {?HTMLElement} guide element
+ */
+MonthGuide.prototype._getGuideElement = function(y) {
+    var guideElements = this.guideElements,
+        guide = guideElements[y],
+        weekdayView = this.weeks[y],
+        container;
+
+    if (!weekdayView) {
+        return null;
+    }
+
+    if (!guide) {
+        guide = this._createGuideElement();
+
+        container = domutil.find(
+            config.classname('.weekday-events'),
+            weekdayView.container
+        );
+
+        container.appendChild(guide);
+
+        guideElements[y] = guide;
+    }
+
+    return guide;
+};
+
+/**
+ * Get coordinate by supplied date in month
+ * @param {Date} date - date to find coordinate
+ * @returns {number[]} coordinate (x, y)
+ */
+MonthGuide.prototype._getCoordByDate = function(date) {
+    var weeks = this.weeks,
+        days = this.days,
+        getIdxFromDiff = function(d1, d2) {
+            return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
+        },
+        monthStart = datetime.parse(weeks[0].options.renderStartDate),
+        isBefore = date < monthStart,
+        dateDW = dw(date),
+        startDW = dw(monthStart),
+        endDW = startDW.clone().addDate(isBefore ? -days : days),
+        x = getIdxFromDiff(dateDW.d, startDW.d),
+        y = 0;
+
+    while (!dateDW.isBetween(startDW, endDW)) {
+        startDW.addDate(isBefore ? -days : days);
+        endDW = startDW.clone().addDate(days);
+        x = getIdxFromDiff(dateDW.d, startDW.d);
+        y += (isBefore ? -1 : 1);
+    }
+
+    return [x, y];
+};
+
+/**
+ * Get limited coordinate by supplied coodinates
+ * @param {number[]} coord - coordinate need to limit
+ * @param {number[]} [min] - minimum limitaion of coordinate
+ * @param {number[]} [max] - maximum limitation of coordinate
+ * @returns {number[]} limited coordiate
+ */
+MonthGuide.prototype._getLimitedCoord = function(coord, min, max) {
+    var toIndex = 1,
+        x = coord[0],
+        y = coord[1],
+        result;
+
+    min = min || [0, 0];
+    max = max || [this.days - toIndex, this.weeks.length - toIndex];
+
+    if (y < min[1]) {
+        result = min.slice(0);
+    } else if (y > max[1]) {
+        result = max.slice(0);
+    } else {
+        x = mmax(min[0], x);
+        x = mmin(max[0], x);
+        result = [x, y];
+    }
+
+    return result;
+};
+
+/**
+ * Prepare guide element modification
+ * @param {object} dragStartEvent - dragStart event data from *guide
+ */
+MonthGuide.prototype.start = function(dragStartEvent) {
+    var opt = this.options,
+        target = dragStartEvent.target,
+        model = dragStartEvent.model,
+        x = dragStartEvent.x,
+        y = dragStartEvent.y,
+        temp;
+
+    if (opt.isResizeMode) {
+        temp = this._getCoordByDate(model.getStarts());
+        x = temp[0];
+        y = temp[1];
+
+        util.extend(this.options, {
+            top: parseInt(target.style.top, 10),
+            height: parseInt(target.style.height, 10),
+            bgColor: target.children[0].style.backgroundColor,
+            label: model.title
+        });
+    }
+
+    this.startCoord = [x, y];
+    this.update(x, y);
+};
+
+/**
+ * Data for update several guide elements
+ * @typedef UpdateIndication
+ * @type {object}
+ * @property {HTMLElement} guide - guide element
+ * @property {number} left - left style value
+ * @property {number} width - width style value
+ * @property {boolean} [exceedL=false] - whether event is exceeded past weeks?
+ * @property {boolean} [exceedR=false] - whether event is exceeded future weeks?
+ */
+
+/**
+ * Modify HTML element that uses for guide element
+ * @param {UpdateIndication[]} inds - indication of update severel guide element
+ */
+MonthGuide.prototype._updateGuides = function(inds) {
+    util.forEach(inds, function(ind) {
+        var guide = ind.guide,
+            exceedLClass = config.classname('month-exceed-left'),
+            exceedRClass = config.classname('month-exceed-right');
+
+        guide.style.display = 'block';
+        guide.style.left = ind.left + '%';
+        guide.style.width = ind.width + '%';
+
+        if (ind.exceedL) {
+            domutil.addClass(guide, exceedLClass);
+        } else {
+            domutil.removeClass(guide, exceedLClass);
+        }
+
+        if (ind.exceedR) {
+            domutil.addClass(guide, exceedRClass);
+        } else {
+            domutil.removeClass(guide, exceedRClass);
+        }
+    });
+};
+
+/**
+ * Get guide element indicate for origin week
+ * @param {number[]} startCoord - drag start coordinate
+ * @param {number[]} mouseCoord - mouse coordinate
+ * @returns {object} indicate
+ */
+MonthGuide.prototype._getOriginIndicate = function(startCoord, mouseCoord) {
+    var left = mmin(startCoord[0], mouseCoord[0]),
+        right = mmax(startCoord[0], mouseCoord[0]) + 1,
+        exceedL, exceedR;
+
+    if (mouseCoord[1] > startCoord[1]) {
+        left = startCoord[0];
+        right = this.days;
+        exceedR = true;
+    } else if (mouseCoord[1] < startCoord[1]) {
+        left = 0;
+        right = startCoord[0] + 1;
+        exceedL = true;
+    }
+
+    return {
+        left: this._getRatioValueInWeek(left),
+        width: this._getRatioValueInWeek(right) -
+            this._getRatioValueInWeek(left),
+        exceedL: exceedL,
+        exceedR: exceedR
+    };
+};
+
+/**
+ * Get guide element indicate for week related with mouse position
+ * @param {number[]} startCoord - drag start coordinate
+ * @param {number[]} mouseCoord - mouse coordinate
+ * @returns {object} indicate
+ */
+MonthGuide.prototype._getMouseIndicate = function(startCoord, mouseCoord) {
+    var left = mouseCoord[0],
+        right = mouseCoord[0] + 1,
+        exceedL, exceedR;
+
+    if (mouseCoord[1] > startCoord[1]) {
+        left = 0;
+        exceedL = true;
+    } else if (mouseCoord[1] < startCoord[1]) {
+        right = this.days;
+        exceedR = true;
+    }
+
+    return {
+        left: this._getRatioValueInWeek(left),
+        width: this._getRatioValueInWeek(right) -
+            this._getRatioValueInWeek(left),
+        exceedL: exceedL,
+        exceedR: exceedR
+    };
+};
+
+/**
+ * Get guide element indicate for contained weeks
+ * @returns {object} indicate
+ */
+MonthGuide.prototype._getContainIndicate = function() {
+    return {
+        left: 0,
+        width: 100,
+        exceedL: true,
+        exceedR: true
+    };
+};
+
+/**
+ * Remove several guide element that supplied by parameter
+ * @param {number[]} yCoords - array of y coordinate to remove guide element
+ */
+MonthGuide.prototype._removeGuideElements = function(yCoords) {
+    var guides = this.guideElements;
+
+    util.forEach(yCoords, function(y) {
+        domutil.remove(guides[y]);
+        delete guides[y];
+    });
+};
+
+/**
+ * Get excluded numbers in range
+ * @param {number[]} range - the range. value must be sequencial.
+ * @param {number[]} numbers - numbers to check
+ * @returns {number[]} excluded numbers
+ */
+MonthGuide.prototype._getExcludesInRange = function(range, numbers) {
+    var min = mmin.apply(null, range),
+        max = mmax.apply(null, range),
+        excludes = [];
+
+    util.forEach(numbers, function(num) {
+        num = parseInt(num, 10);
+        if (num < min || num > max) {
+            excludes.push(num);
+        }
+    });
+
+    return excludes;
+};
+
+/**
+ * Update guide elements by coordinate in month grid from mousemove event
+ * @param {number} x - x coordinate
+ * @param {number} y - y coordinate
+ */
+MonthGuide.prototype.update = function(x, y) {
+    var self = this,
+        startCoord = this.startCoord,
+        mouseCoord = [x, y],
+        limitedCoord = this.options.isResizeMode ?
+            this._getLimitedCoord(mouseCoord, startCoord) : mouseCoord,
+        renderedYIndex = util.keys(this.guideElements),
+        yCoordsToUpdate = util.range(
+            mmin(startCoord[1], limitedCoord[1]),
+            mmax(startCoord[1], limitedCoord[1]) + 1
+        ),
+        yCoordsToRemove = this._getExcludesInRange(
+            yCoordsToUpdate,
+            renderedYIndex
+        ),
+        renderIndication = {};
+
+    this._removeGuideElements(yCoordsToRemove);
+
+    util.forEach(yCoordsToUpdate, function(guideYCoord) {
+        var guide = self._getGuideElement(guideYCoord),
+            indicate;
+
+        if (!guide) {
+            return;
+        }
+
+        if (guideYCoord === startCoord[1]) {
+            indicate = self._getOriginIndicate(startCoord, limitedCoord);
+        } else if (guideYCoord === mouseCoord[1]) {
+            indicate = self._getMouseIndicate(startCoord, mouseCoord);
+        } else {
+            indicate = self._getContainIndicate();
+        }
+
+        renderIndication[guideYCoord] = util.extend({
+            guide: guide
+        }, indicate);
+    });
+
+    this._updateGuides(renderIndication);
+};
+
+/**
+ * Clear all guide elements
+ */
+MonthGuide.prototype.clear = function() {
+    util.forEach(this.guideElements, function(element) {
+        domutil.remove(element);
+    });
+
+    this.guideElements = {};
+};
+
+module.exports = MonthGuide;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/dw":31,"../../config":39,"./guide.hbs":77}],79:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Move handler for month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+
+var config = require('../../config'),
+    domutil = require('../../common/domutil'),
+    getMousePosData = require('./core'),
+    MonthMoveGuide = require('./moveGuide');
+
+/**
+ * @constructor
+ * @mixes CustomEvents
+ * @param {Drag} dragHandler - Drag handler instance.
+ * @param {Month} monthView - Month view instance.
+ * @param {Base} baseController - Base controller instance.
+ */
+function MonthMove(dragHandler, monthView, baseController) {
+    /**
+     * @type {Drag}
+     */
+    this.dragHandler = dragHandler;
+
+    /**
+     * @type {Month}
+     */
+    this.monthView = monthView;
+
+    /**
+     * @type {Base}
+     */
+    this.baseController = baseController;
+
+    /**
+     * @type {function}
+     */
+    this.getEventData = null;
+
+    /**
+     * @type {object}
+     */
+    this._cache = null;
+
+    /**
+     * @type {MonthMoveGuide}
+     */
+    this.guide = new MonthMoveGuide(this);
+
+    dragHandler.on('dragStart', this._onDragStart, this);
+}
+
+/**
+ * Destructor
+ */
+MonthMove.prototype.destroy = function() {
+    this.dragHandler.off(this);
+
+    this.dragHandler = this.monthView = this.baseController = null;
+};
+
+/**
+ * Update target event
+ * @fires {MonthMove#beforeUpdateEvent}
+ * @param {object} eventCache - cache object that result of single dragging
+ *  session.
+ */
+MonthMove.prototype.updateEvent = function(eventCache) {
+    var model = eventCache.model,
+        duration = Number(model.duration()),
+        dragEndTime = Number(eventCache.ends);
+
+    /**
+     * @event MonthMove#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
+        starts: new Date(dragEndTime),
+        ends: new Date(dragEndTime + duration)
+    });
+};
+
+/**
+ * Get event block to clone for month guide effect
+ * @param {HTMLElement} target - target element that related with drag event
+ * @returns {HTMLElement} element to create guide effect
+ */
+MonthMove.prototype.getMonthEventBlock = function(target) {
+    var blockSelector = config.classname('.weekday-event-block'),
+        element = domutil.closest(target, blockSelector);
+
+    if (!element) {
+        element = target;
+    }
+
+    return element;
+};
+
+/**
+ * Check event start from month view
+ * @param {HTMLElement} target - element to check
+ * @returns {boolean} whether event start from month view?
+ */
+MonthMove.prototype.isMonthEventBlock = function(target) {
+    var titleClassName = config.classname('weekday-event-title');
+
+    if (!domutil.hasClass(target, titleClassName)) {
+        return false;
+    }
+
+    target = this.getMonthEventBlock(target);
+
+    if (!target) {
+        return false;
+    }
+
+    return true;
+};
+
+/**
+ * Check event start from more layer
+ * @param {HTMLElement} target - element to check
+ * @returns {boolean} whether event start from more layer?
+ */
+MonthMove.prototype.isMoreLayerEventBlock = function(target) {
+    var className = config.classname('month-more-event');
+
+    return domutil.hasClass(target, className);
+};
+
+/**
+ * Check handler has permission to handle fired event
+ * @fires {MonthMove#monthMoveStart_from_morelayer}
+ * @param {HTMLElement} target - target element of fired event
+ * @returns {(string|null)} model instance ID related with event. if handle
+ *  has not permission to handle the event then return null.
+ */
+MonthMove.prototype.hasPermissionToHandle = function(target) {
+    var modelID = null,
+        selector;
+
+    if (this.isMonthEventBlock(target)) {
+        selector = config.classname('.weekday-event-block');
+        modelID = domutil.getData(domutil.closest(target, selector), 'id');
+    } else if (this.isMoreLayerEventBlock(target)) {
+        modelID = domutil.getData(target, 'id');
+        /**
+         * Fire for notificate that the drag event start at more layer view.
+         * @event {MonthMove#monthMoveStart_from_morelayer}
+         */
+        this.fire('monthMoveStart_from_morelayer');
+    }
+
+    return modelID;
+};
+
+/**
+ * Event handler for Drag#dragStart
+ * @fires {MonthMove#monthMoveDragstart}
+ * @param {object} dragStartEvent - drag start event data
+ */
+MonthMove.prototype._onDragStart = function(dragStartEvent) {
+    var target = dragStartEvent.target,
+        modelID = this.hasPermissionToHandle(target),
+        model,
+        eventData;
+
+    if (!modelID) {
+        return;
+    }
+
+    model = this.baseController.events.items[modelID];
+
+    this.dragHandler.on({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    this.getEventData = getMousePosData(this.monthView);
+
+    eventData = this.getEventData(dragStartEvent.originEvent);
+    eventData.originEvent = dragStartEvent.originEvent;
+    eventData.target = this.getMonthEventBlock(target);
+    eventData.model = model;
+
+    this._cache = {
+        model: model,
+        target: target,
+        starts: new Date(Number(eventData.date))
+    };
+
+    /**
+     * @event {MonthMove#monthMoveDragstart}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     * @property {HTMLElement} target - event block element
+     * @property {CalEvent} model - model instance
+     */
+    this.fire('monthMoveDragstart', eventData);
+};
+
+
+/**
+ * @fires {MonthMove#monthMoveDrag}
+ * @param {object} dragEvent - drag event data
+ */
+MonthMove.prototype._onDrag = function(dragEvent) {
+    var eventData;
+
+    if (!this.getEventData) {
+        return;
+    }
+
+    eventData = util.extend({
+        originEvent: dragEvent.originEvent
+    }, this.getEventData(dragEvent.originEvent));
+
+    if (!eventData) {
+        return;
+    }
+
+    /**
+     * @event {MonthMove#monthMoveDrag}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthMoveDrag', eventData);
+};
+
+/**
+ * Event handler for Drag#dragEnd
+ * @fires {MonthMove#monthMoveDragend}
+ * @param {object} dragEndEvent - dragend event data
+ */
+MonthMove.prototype._onDragEnd = function(dragEndEvent) {
+    var cache = this._cache,
+        eventData;
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    if (!this.getEventData) {
+        return;
+    }
+
+    eventData = this.getEventData(dragEndEvent.originEvent);
+
+    if (eventData) {
+        cache.ends = new Date(Number(eventData.date));
+        this.updateEvent(cache);
+    }
+
+    /**
+     * @event {MonthResize#monthMoveDragend}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthMoveDragend', eventData);
+
+    this.getEventData = this._cache = null;
+};
+
+util.CustomEvents.mixin(MonthMove);
+
+module.exports = MonthMove;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/domutil":30,"../../config":39,"./core":74,"./moveGuide":81}],80:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "            "
+    + container.escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"title","hash":{},"data":data}) : helper)))
+    + "\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+
+  return "            "
+    + alias3((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,(depth0 != null ? depth0.starts : depth0),{"name":"hhmm","hash":{},"data":data}))
+    + " "
+    + alias3(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+    + "\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide-block\" style=\"width:100%;height:100%;left:-50%;top:-50%\">\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide\" style=\"background-color:"
+    + alias4(((helper = (helper = helpers.bgColor || (depth0 != null ? depth0.bgColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bgColor","hash":{},"data":data}) : helper)))
+    + "\">\n        <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-guide-label\">\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isAllDay : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "        </div>\n    </div>\n</div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],81:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Module for modification of guide element for move in month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+
+var config = require('../../config'),
+    domutil = require('../../common/domutil'),
+    domevent = require('../../common/domevent'),
+    FloatingLayer = require('../../common/floatingLayer'),
+    tmpl = require('./moveGuide.hbs');
+
+/**
+ * @constructor
+ * @param {MonthMove} monthMove - month/move module instance
+ */
+function MonthMoveGuide(monthMove) {
+    /**
+     * @type {MonthMove}
+     */
+    this.monthMove = monthMove;
+
+    /**
+     * @type {HTMLElement[]}
+     */
+    this.elements = null;
+
+    /**
+     * @type {FloatingLayer}
+     */
+    this.layer = null;
+
+    /**
+     * @type {HTMLElement[]}
+     */
+    this.gridElements = null;
+
+    monthMove.on({
+        monthMoveDragstart: this._onDragStart,
+        monthMoveDrag: this._onDrag,
+        monthMoveDragend: this._onDragEnd
+    }, this);
+}
+
+/**
+ * Destructor
+ */
+MonthMoveGuide.prototype.destroy = function() {
+    this.monthMove.off(this);
+    this._clearGridBgColor();
+
+    if (this.layer) {
+        this.layer.destroy();
+    }
+
+    if (this.element) {
+        domutil.remove(this.element);
+    }
+
+    this.monthMove = this.elements = this.layer =
+        this.gridElements = null;
+};
+
+/**
+ * Hide element blocks for resize effect
+ * @param {number} modelID - CalEvent model instance ID
+ */
+MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
+    this.elements = domutil.find(
+        config.classname('.weekday-event-block-' + modelID),
+        this.monthMove.monthView.container,
+        true
+    );
+
+    util.forEach(this.elements, function(el) {
+        el.style.display = 'none';
+    });
+};
+
+/**
+ * Show element blocks
+ */
+MonthMoveGuide.prototype._showOriginEventBlocks = function() {
+    util.forEach(this.elements, function(el) {
+        el.style.display = 'block';
+    });
+};
+
+/**
+ * Clear background color for filled grid element.
+ */
+MonthMoveGuide.prototype._clearGridBgColor = function() {
+    var selector = config.classname('.weekday-filled'),
+        className = config.classname('weekday-filled'),
+        beforeGridElement = domutil.find(selector,
+            this.monthMove.monthView.container);
+
+
+    if (beforeGridElement) {
+        domutil.removeClass(beforeGridElement, className);
+    }
+};
+
+/**
+ * Fill background color of date grids relatied with model updates.
+ * @param {object} dragEvent - drag event data from MonthMoveGuide#_onDrag
+ */
+MonthMoveGuide.prototype._updateGridBgColor = function(dragEvent) {
+    var gridElements = this.gridElements,
+        className = config.classname('weekday-filled'),
+        targetIndex = (dragEvent.x + (dragEvent.sizeX * dragEvent.y)),
+        target = gridElements[targetIndex];
+
+    this._clearGridBgColor();
+
+    if (!target) {
+        return;
+    }
+
+    domutil.addClass(target, className);
+};
+
+/**
+ * Handler for MonthMove#dragStart
+ * @param {object} dragStartEvent - dragStart event data object
+ */
+MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
+    var monthView = this.monthMove.monthView,
+        firstWeekdayView = monthView.children.single(),
+        weekdayOptions = firstWeekdayView.options,
+        widthPercent = 100 / firstWeekdayView.getRenderDateRange().length,
+        height = weekdayOptions.eventGutter + weekdayOptions.eventHeight,
+        container = monthView.container,
+        mousePos = domevent.getMousePosition(dragStartEvent.originEvent, container),
+        model = dragStartEvent.model,
+        layer = new FloatingLayer(null, container);
+
+    this._hideOriginEventBlocks(model.cid());
+
+    if (!this.gridElements) {
+        this.gridElements = domutil.find(
+            config.classname('.weekday-grid-line'),
+            container,
+            true
+        );
+    }
+
+    this.layer = layer;
+    layer.setSize(widthPercent + '%', height);
+    layer.setPosition(mousePos[0], mousePos[1]);
+    layer.setContent(tmpl(model));
+    layer.show();
+
+    if (!util.browser.msie) {
+        domutil.addClass(global.document.body, config.classname('dragging'));
+    }
+};
+
+/**
+ * Handler for MonthMove#drag
+ * @param {object} dragEvent - drag event data object
+ */
+MonthMoveGuide.prototype._onDrag = function(dragEvent) {
+    var container = this.monthMove.monthView.container,
+        mousePos = domevent.getMousePosition(
+            dragEvent.originEvent,
+            container
+        );
+
+    this._updateGridBgColor(dragEvent);
+
+    if (!this.layer) {
+        return;
+    }
+
+    this.layer.setPosition(mousePos[0], mousePos[1]);
+};
+
+/**
+ * Handler for MonthMove#dragEnd
+ */
+MonthMoveGuide.prototype._onDragEnd = function() {
+    this._showOriginEventBlocks();
+
+    if (!util.browser.msie) {
+        domutil.removeClass(global.document.body, config.classname('dragging'));
+    }
+
+    this._clearGridBgColor();
+    this.layer.destroy();
+    this.layer = null;
+};
+
+module.exports = MonthMoveGuide;
+
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/domevent":29,"../../common/domutil":30,"../../common/floatingLayer":32,"../../config":39,"./moveGuide.hbs":80}],82:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Module for resize event in month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+
+var config = require('../../config'),
+    datetime = require('../../common/datetime'),
+    domutil = require('../../common/domutil'),
+    getMousePosData = require('./core'),
+    MonthResizeGuide = require('./resizeGuide');
+
+/**
+ * @constructor
+ * @param {Drag} dragHandler - Drag handler instance.
+ * @param {Month} monthView - Month view instance.
+ * @param {Base} baseController - Base controller instance.
+ */
+function MonthResize(dragHandler, monthView, baseController) {
+    /**
+     * @type {Drag}
+     */
+    this.dragHandler = dragHandler;
+
+    /**
+     * @type {Month}
+     */
+    this.monthView = monthView;
+
+    /**
+     * @type {Base}
+     */
+    this.baseController = baseController;
+
+    /**
+     * @type {function}
+     */
+    this.getEventData = null;
+
+    /**
+     * @type {object}
+     */
+    this._cache = null;
+
+    /**
+     * @type {MonthResizeGuide}
+     */
+    this.guide = new MonthResizeGuide(this);
+
+    dragHandler.on('dragStart', this._onDragStart, this);
+}
+
+/**
+ * Destructor
+ */
+MonthResize.prototype.destroy = function() {
+    this.dragHandler.off(this);
+
+    this.dragHandler = this.monthView = this.baseController = null;
+};
+
+/**
+ * Fire event for update model
+ * @fires {MonthResize#beforeUpdateEvent}
+ * @param {object} eventCache - cache object that result of single dragging
+ *  session.
+ */
+MonthResize.prototype._updateEvent = function(eventCache) {
+    // 일정의 시작 일자를 변경할 순 없음.
+    // 종료시간만 변경 가능.
+    var newEnds = datetime.end(new Date(Number(eventCache.ends))),
+        model = eventCache.model;
+
+    /**
+     * @event MonthResize#beforeUpdateEvent
+     * @type {object}
+     * @property {CalEvent} model - model instance to update
+     * @property {date} starts - start time to update
+     * @property {date} ends - end time to update
+     */
+    this.fire('beforeUpdateEvent', {
+        model: model,
+        starts: new Date(Number(model.getStarts())),
+        ends: newEnds
+    });
+};
+
+/**
+ * Event handler for Drag#dragStart
+ * @fires {MonthResize#monthResizeDragstart}
+ * @param {object} dragStartEvent - drag start event data
+ */
+MonthResize.prototype._onDragStart = function(dragStartEvent) {
+    var target = dragStartEvent.target,
+        modelID, model,
+        eventData;
+
+    if (!domutil.hasClass(target, config.classname('weekday-resize-handle'))) {
+        return;
+    }
+
+    target = domutil.closest(target, config.classname('.weekday-event-block'));
+
+    if (!target) {
+        return;
+    }
+
+    modelID = domutil.getData(target, 'id');
+    model = this.baseController.events.items[modelID];
+
+    this.dragHandler.on({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    this.getEventData = getMousePosData(this.monthView);
+    eventData = this.getEventData(dragStartEvent.originEvent);
+    eventData.target = target;
+    eventData.model = model;
+
+    this._cache = {
+        model: model,
+        target: target,
+        starts: new Date(Number(eventData.date))
+    };
+
+    /**
+     * @event {MonthCreation#monthResizeDragstart}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     * @property {HTMLElement} target - event block element
+     * @property {CalEvent} model - model instance
+     */
+    this.fire('monthResizeDragstart', eventData);
+};
+
+/**
+ * @fires {MonthResize#monthResizeDrag}
+ * @param {object} dragEvent - drag event data
+ */
+MonthResize.prototype._onDrag = function(dragEvent) {
+    var eventData;
+
+    if (!this.getEventData) {
+        return;
+    }
+
+    eventData = this.getEventData(dragEvent.originEvent);
+
+    if (!eventData) {
+        return;
+    }
+
+    /**
+     * @event {MonthResize#monthResizeDrag}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthResizeDrag', eventData);
+};
+
+/**
+ * @fires {MonthResize#monthResizeDragend}
+ * @param {object} dragEndEvent - drag end event data
+ */
+MonthResize.prototype._onDragEnd = function(dragEndEvent) {
+    var cache = this._cache,
+        eventData;
+
+    this.dragHandler.off({
+        drag: this._onDrag,
+        dragEnd: this._onDragEnd
+    }, this);
+
+    if (!this.getEventData) {
+        return;
+    }
+
+    eventData = this.getEventData(dragEndEvent.originEvent);
+
+    if (eventData) {
+        cache.ends = new Date(Number(eventData.date));
+        this._updateEvent(cache);
+    }
+
+    /**
+     * @event {MonthResize#monthResizeDragend}
+     * @type {object}
+     * @property {number} x - x index
+     * @property {number} y - y index
+     * @property {Date} date - drag date
+     */
+    this.fire('monthResizeDragend', eventData);
+
+    this.getEventData = this._cache = null;
+};
+
+util.CustomEvents.mixin(MonthResize);
+
+module.exports = MonthResize;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":74,"./resizeGuide":83}],83:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Module for modification of guide element in event resize
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+
+var config = require('../../config'),
+    domutil = require('../../common/domutil'),
+    MonthGuide = require('./guide');
+
+/**
+ * @constructor
+ * @param {MonthResize} monthResize - month/resize module instance
+ */
+function MonthResizeGuide(monthResize) {
+    /**
+     * @type {MonthResize}
+     */
+    this.monthResize = monthResize;
+
+    /**
+     * @type {HTMLElement[]}
+     */
+    this.elements = null;
+
+    /**
+     * @type {MonthGuide}
+     */
+    this.guide = null;
+
+    monthResize.on({
+        monthResizeDragstart: this._onDragStart,
+        monthResizeDrag: this._onDrag,
+        monthResizeDragend: this._onDragEnd
+    }, this);
+}
+
+/**
+ * Destructor
+ */
+MonthResizeGuide.prototype.destroy = function() {
+    this.monthResize.off(this);
+    this.guide.destroy();
+
+    this.guide = this.monthResize = null;
+};
+
+/**
+ * Hide element blocks for resize effect
+ * @param {number} modelID - CalEvent model instance ID
+ */
+MonthResizeGuide.prototype._hideEventBlocks = function(modelID) {
+    this.elements = domutil.find(
+        config.classname('.weekday-event-block-' + modelID),
+        this.monthResize.monthView.container,
+        true
+    );
+
+    util.forEach(this.elements, function(el) {
+        el.style.display = 'none';
+    });
+};
+
+/**
+ * Show element blocks
+ */
+MonthResizeGuide.prototype._showEventBlocks = function() {
+    util.forEach(this.elements, function(el) {
+        el.style.display = 'block';
+    });
+};
+
+/**
+ * Drag start event handler
+ * @param {object} dragStartEvent - event data from MonthResize
+ */
+MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
+    this.guide = new MonthGuide({
+        isResizeMode: true
+    }, this.monthResize.monthView);
+
+    this._hideEventBlocks(dragStartEvent.model.cid());
+
+    this.guide.start(dragStartEvent);
+
+    if (!util.browser.msie) {
+        domutil.addClass(global.document.body, config.classname('resizing-x'));
+    }
+};
+
+/**
+ * Drag event handler
+ * @param {object} dragEvent - event data from MonthCreation
+ */
+MonthResizeGuide.prototype._onDrag = function(dragEvent) {
+    this.guide.update(dragEvent.x, dragEvent.y);
+};
+
+/**
+ * Drag end event handler
+ */
+MonthResizeGuide.prototype._onDragEnd = function() {
+    this._showEventBlocks();
+
+    this.guide.destroy();
+    this.elements = this.guide = null;
+
+
+    if (!util.browser.msie) {
+        domutil.removeClass(global.document.body, config.classname('resizing-x'));
+    }
+};
+
+module.exports = MonthResizeGuide;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/domutil":30,"../../config":39,"./guide":78}],84:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Allday event click event hander module
@@ -11070,7 +13349,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
     var container,
         matches;
 
-    container = domutil.closest(target, '.' + config.classname('time-date'));
+    container = domutil.closest(target, config.classname('.time-date'));
 
     if (!container) {
         return false;
@@ -11082,7 +13361,7 @@ TimeClick.prototype.checkExpectCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.childs.items, +matches[1]);
+    return util.pick(this.timeGridView.children.items, Number(matches[1]));
 };
 
 /**
@@ -11091,9 +13370,10 @@ TimeClick.prototype.checkExpectCondition = function(target) {
  * @emits TimeClick#clickEvent
  */
 TimeClick.prototype._onClick = function(clickEvent) {
-    var target = clickEvent.target,
+    var self = this,
+        target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
+        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         eventCollection = this.baseController.events;
 
     if (!timeView || !blockElement) {
@@ -11107,11 +13387,11 @@ TimeClick.prototype._onClick = function(clickEvent) {
          * @property {CalEvent} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        this.fire('clickEvent', {
-            model:  model,
+        self.fire('clickEvent', {
+            model: model,
             jsEvent: clickEvent.originEvent
         });
-    }, this);
+    });
 };
 
 util.CustomEvents.mixin(TimeClick);
@@ -11120,7 +13400,7 @@ module.exports = TimeClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/domutil":30,"../../config":36}],71:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":39}],85:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Core methods for dragging actions
@@ -11161,10 +13441,11 @@ var timeCore = {
      * @returns {function} - Function that return event data from mouse event.
      */
     _retriveEventData: function(timeView) {
-        var container = timeView.container,
+        var self = this,
+            container = timeView.container,
             options = timeView.options,
             viewHeight = timeView.getViewBound().height,
-            viewTime = +timeView.getDate(),
+            viewTime = Number(timeView.getDate()),
             hourLength = options.hourEnd - options.hourStart,
             baseMil = datetime.millisecondsFrom('hour', hourLength);
 
@@ -11177,7 +13458,7 @@ var timeCore = {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = viewTime + datetime.millisecondsFrom('hour', gridY),
-                nearestGridY = this._calcGridYIndex(baseMil, viewHeight, mouseY),
+                nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY),
                 nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);
 
             return util.extend({
@@ -11213,7 +13494,7 @@ module.exports = timeCore;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":32}],72:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/point":34}],86:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling creation events from drag handler and time grid view
@@ -11243,19 +13524,19 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      * Drag handler instance.
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * TimeGrid view instance.
      * @type {TimeGrid}
      */
-    this.timeGridView = null;
+    this.timeGridView = timeGridView;
 
     /**
      * Base controller instance.
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {TimeCreationGuide}
@@ -11274,9 +13555,7 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -11287,22 +13566,6 @@ TimeCreation.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
-};
-
-/**
- * Connect handler, view, controllers for event creations.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-TimeCreation.prototype.connect = function(dragHandler, timeGridView, baseController) {
-    this.dragHandler = dragHandler;
-    this.timeGridView = timeGridView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
 };
 
 /**
@@ -11325,12 +13588,12 @@ TimeCreation.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.childs.items, matches[1]);
+    return util.pick(this.timeGridView.children.items, matches[1]);
 };
 
 /**
  * Drag#dragStart event handler.
- * @emits TimeCreation#time_creation_dragstart
+ * @emits TimeCreation#timeCreationDragstart
  * @param {object} dragStartEventData - Drag#dragStart event data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -11359,7 +13622,7 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
     }, this);
 
     /**
-     * @event TimeCreation#time_creation_dragstart
+     * @event TimeCreation#timeCreationDragstart
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -11369,12 +13632,12 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this.fire(overrideEventName || 'time_creation_dragstart', eventData);
+    this.fire(overrideEventName || 'timeCreationDragstart', eventData);
 };
 
 /**
  * Drag#drag event handler
- * @emits TimeCreation#time_creation_drag
+ * @emits TimeCreation#timeCreationDrag
  * @param {object} dragEventData - event data from Drag#drag.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -11394,7 +13657,7 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
     }
 
     /**
-     * @event TimeCreation#time_creation_drag
+     * @event TimeCreation#timeCreationDrag
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -11404,13 +13667,13 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this.fire(overrideEventName || 'time_creation_drag', eventData);
+    this.fire(overrideEventName || 'timeCreationDrag', eventData);
 };
 
 /**
  * @fires TimeCreation#beforeCreateEvent
- * @param {object} eventData - event data object from TimeCreation#time_creation_dragend
- * or TimeCreation#time_creation_click
+ * @param {object} eventData - event data object from TimeCreation#timeCreationDragend
+ * or TimeCreation#timeCreationClick
  */
 TimeCreation.prototype._createEvent = function(eventData) {
     var relatedView = eventData.relatedView,
@@ -11451,11 +13714,12 @@ TimeCreation.prototype._createEvent = function(eventData) {
 
 /**
  * Drag#dragEnd event handler
- * @emits TimeCreation#time_creation_dragend
+ * @emits TimeCreation#timeCreationDragend
  * @param {object} dragEndEventData - event data from Drag#dragend
  */
 TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
-    var dragStart = this._dragStart;
+    var self = this,
+        dragStart = this._dragStart;
 
     this.guide.clearGuideElement();
 
@@ -11465,6 +13729,10 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
+    /**
+     * Function for manipulate event data before firing event
+     * @param {object} eventData - event data
+     */
     function reviseFunc(eventData) {
         var range = [
             dragStart.nearestGridTimeY,
@@ -11474,11 +13742,11 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
 
         eventData.createRange = range;
 
-        this._createEvent(eventData);
+        self._createEvent(eventData);
     }
 
     /**
-     * @event TimeCreation#time_creation_dragend
+     * @event TimeCreation#timeCreationDragend
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -11489,29 +13757,35 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {number[]} createRange - milliseconds range between drag start and end to create.
      */
-    this._onDrag(dragEndEventData, 'time_creation_dragend', util.bind(reviseFunc, this));
+    this._onDrag(dragEndEventData, 'timeCreationDragend', reviseFunc);
 
     this._dragStart = this._getEventDataFunc = null;
 };
 
 /**
  * Drag#click event handler
- * @emits TimeCreation#time_creation_click
+ * @emits TimeCreation#timeCreationClick
  * @param {object} clickEventData - event data from Drag#click.
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
+    var self = this;
+
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
 
+    /**
+     * Function for manipulate event data before firing event
+     * @param {object} eventData - event data
+     */
     function reviseFunc(eventData) {
-        this._createEvent(eventData);
+        self._createEvent(eventData);
     }
 
     /**
-     * @event TimeCreation#time_creation_click
+     * @event TimeCreation#timeCreationClick
      * @type {object}
      * @property {Time} relatedView - time view instance related with mouse position.
      * @property {MouseEvent} originEvent - mouse event object.
@@ -11521,7 +13795,7 @@ TimeCreation.prototype._onClick = function(clickEventData) {
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      */
-    this._onDrag(clickEventData, 'time_creation_click', util.bind(reviseFunc, this));
+    this._onDrag(clickEventData, 'timeCreationClick', reviseFunc);
 
     this._dragStart = this._getEventDataFunc = null;
 };
@@ -11533,7 +13807,7 @@ module.exports = TimeCreation;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":71,"./creationGuide":73}],73:[function(require,module,exports){
+},{"../../common/array":23,"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":85,"./creationGuide":87}],87:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Creation effect while dragging.
@@ -11547,7 +13821,7 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
-var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30)
+var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 
 /**
  * Class for Time.Creation dragging effect.
@@ -11565,8 +13839,8 @@ function TimeCreationGuide(timeCreation) {
      * @type {HTMLDivElement}
      */
     this.guideTimeElement = domutil.appendHTMLElement(
-        'span', 
-        this.guideElement, 
+        'span',
+        this.guideElement,
         config.classname('time-guide-creation-label')
     );
 
@@ -11593,9 +13867,9 @@ function TimeCreationGuide(timeCreation) {
     this._styleFunc = null;
 
     timeCreation.on({
-        'time_creation_dragstart': this._onDragStart,
-        'time_creation_drag': this._onDrag,
-        'time_creation_click': this.clearGuideElement
+        'timeCreationDragstart': this._onDragStart,
+        'timeCreationDrag': this._onDrag,
+        'timeCreationClick': this.clearGuideElement
     }, this);
 }
 
@@ -11643,10 +13917,10 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
         guideElement.style.height = height + 'px';
         guideElement.style.display = 'block';
 
-        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') + 
+        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') +
             ' ~ ' + datetime.format(new Date(end), 'HH:mm');
 
-        if (!!bottomLabel) {
+        if (bottomLabel) {
             domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
         } else {
             domutil.addClass(timeElement, config.classname('time-guide-bottom'));
@@ -11674,7 +13948,13 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
     // [2] start time of view
     // [3] end time of view
     // [4] height of view for one hour
-    return [viewHeight, hourLength, +todayStart, +todayEnd, viewHeight / hourLength];
+    return [
+        viewHeight,
+        hourLength,
+        Number(todayStart),
+        Number(todayEnd),
+        viewHeight / hourLength
+    ];
 };
 
 /**
@@ -11704,8 +13984,13 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
  * @returns {function} UI data calculator function
  */
 TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
-    var todayEnd = +datetime.end(new Date(+todayStart));
+    var todayEnd = Number(datetime.end(new Date(Number(todayStart))));
 
+    /**
+     * Get top, time value from event dat
+     * @param {object} eventData - event data object
+     * @returns {number[]} top, time
+     */
     function getStyleData(eventData) {
         var gridY = eventData.nearestGridY,
             gridTimeY = eventData.nearestGridTimeY,
@@ -11716,7 +14001,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
 
         return [top, time];
     }
-        
+
     return getStyleData;
 };
 
@@ -11788,7 +14073,7 @@ module.exports = TimeCreationGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],74:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39}],88:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Double click handler for time view
@@ -11848,7 +14133,7 @@ TimeDblClick.prototype.checkExpectedCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.childs.items, matches[1]);
+    return util.pick(this.timeGridView.children.items, matches[1]);
 };
 
 /**
@@ -11871,13 +14156,24 @@ TimeDblClick.prototype._onDblClick = function(e) {
     viewHeight = timeView.getViewBound().height;
     renderHourRange = util.range(timeView.options.hourStart, timeView.options.hourEnd);
 
-    relativeTime = new Date(+common.ratio(viewHeight, (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR), mousePosY));
+    relativeTime = new Date(
+        Number(common.ratio(
+            viewHeight,
+            (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR),
+            mousePosY
+        ))
+    );
     relativeHour = relativeTime.getUTCHours();
     relativeMinutes = common.nearest(relativeTime.getUTCMinutes(), [0, 60]) / 2;
     targetDate.setHours(relativeHour, relativeMinutes);
 
-    newStart = new Date(+targetDate);
-    newEnd = new Date(Math.min((+targetDate + datetime.MILLISECONDS_PER_HOUR), +datetime.end(new Date(+targetDate))));
+    newStart = new Date(Number(targetDate));
+    newEnd = new Date(
+        Math.min(
+            Number(targetDate) + datetime.MILLISECONDS_PER_HOUR,
+            Number(datetime.end(new Date(Number(targetDate))))
+        )
+    );
 
     /**
      * @event {TimeDblClick#beforeCreateEvent}
@@ -11899,7 +14195,7 @@ module.exports = TimeDblClick;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":36}],75:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../common/domevent":29,"../../common/domutil":30,"../../config":39}],89:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling move events from drag handler and time grid view
@@ -11927,17 +14223,17 @@ function TimeMove(dragHandler, timeGridView, baseController) {
     /**
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * @type {TimeGrid}
      */
-    this.timeGridView = null;
+    this.timeGridView = timeGridView;
 
     /**
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {function}
@@ -11954,9 +14250,7 @@ function TimeMove(dragHandler, timeGridView, baseController) {
      */
     this._guide = new TimeMoveGuide(this);
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -11967,22 +14261,6 @@ TimeMove.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this._guide = null;
-};
-
-/**
- * Connect handler, view, controllers for event creations.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-TimeMove.prototype.connect = function(dragHandler, timeGridView, baseController) {
-    this.dragHandler = dragHandler;
-    this.timeGridView = timeGridView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
 };
 
 /**
@@ -12004,7 +14282,7 @@ TimeMove.prototype.checkExpectCondition = function(target) {
  * @returns {object|boolean} - return time view instance when finded.
  */
 TimeMove.prototype._getTimeView = function(target) {
-    var container = domutil.closest(target, '.' + config.classname('time-date')),
+    var container = domutil.closest(target, config.classname('.time-date')),
         matches;
 
     if (!container) {
@@ -12017,17 +14295,17 @@ TimeMove.prototype._getTimeView = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.childs.items, +matches[1]);
+    return util.pick(this.timeGridView.children.items, Number(matches[1]));
 };
 
 /**
- * @emits TimeMove#time_move_dragstart
+ * @emits TimeMove#timeMoveDragstart
  * @param {object} dragStartEventData - Drag#dragStart event data.
  */
 TimeMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
+        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         getEventDataFunc,
         eventData;
 
@@ -12049,7 +14327,7 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event TimeMove#time_move_dragstart
+     * @event TimeMove#timeMoveDragstart
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with mouse position.
@@ -12061,11 +14339,11 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_move_dragstart', eventData);
+    this.fire('timeMoveDragstart', eventData);
 };
 
 /**
- * @emits TimeMove#time_move_drag
+ * @emits TimeMove#timeMoveDrag
  * @param {MouseEvent} dragEventData - mousemove event object
  * @param {string} [overrideEventName] - name of emitting event to override.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -12090,7 +14368,7 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
     }
 
     /**
-     * @event TimeMove#time_move_drag
+     * @event TimeMove#timeMoveDrag
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -12103,13 +14381,13 @@ TimeMove.prototype._onDrag = function(dragEventData, overrideEventName, revise) 
      * @property {Time} currentView - time view instance related with current mouse position.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire(overrideEventName || 'time_move_drag', eventData);
+    this.fire(overrideEventName || 'timeMoveDrag', eventData);
 };
 
 /**
  * Update model instance by dragend event results.
  * @fires TimeMove#beforeUpdateEvent
- * @param {object} eventData - event data from TimeMove#time_move_dragend
+ * @param {object} eventData - event data from TimeMove#timeMoveDragend
  */
 TimeMove.prototype._updateEvent = function(eventData) {
     var ctrl = this.baseController,
@@ -12169,7 +14447,7 @@ TimeMove.prototype._updateEvent = function(eventData) {
 };
 
 /**
- * @emits TimeMove#time_move_dragend
+ * @emits TimeMove#timeMoveDragend
  * @param {MouseEvent} dragEndEventData - mouseup mouse event object.
  */
 TimeMove.prototype._onDragEnd = function(dragEndEventData) {
@@ -12206,7 +14484,7 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
     this._updateEvent(eventData);
 
     /**
-     * @event TimeMove#time_move_dragend
+     * @event TimeMove#timeMoveDragend
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -12221,11 +14499,11 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number[]} range - milliseconds range between drag start and end.
      * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this.fire('time_move_dragend', eventData);
+    this.fire('timeMoveDragend', eventData);
 };
 
 /**
- * @emits TimeMove#time_move_click
+ * @emits TimeMove#timeMoveClick
  * @param {MouseEvent} clickEventData - click mouse event object.
  */
 TimeMove.prototype._onClick = function(clickEventData) {
@@ -12248,7 +14526,7 @@ TimeMove.prototype._onClick = function(clickEventData) {
     });
 
     /**
-     * @event TimeMove#time_move_click
+     * @event TimeMove#timeMoveClick
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -12260,7 +14538,7 @@ TimeMove.prototype._onClick = function(clickEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_move_click', eventData);
+    this.fire('timeMoveClick', eventData);
 };
 
 timeCore.mixin(TimeMove);
@@ -12270,7 +14548,7 @@ module.exports = TimeMove;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":71,"./moveGuide":76}],76:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":85,"./moveGuide":90}],90:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Move effect while dragging.
@@ -12321,10 +14599,10 @@ function TimeMoveGuide(timeMove) {
     this._startTopPixel = 0;
 
     timeMove.on({
-        'time_move_dragstart': this._onDragStart,
-        'time_move_drag': this._onDrag,
-        'time_move_dragend': this._clearGuideElement,
-        'time_move_click': this._clearGuideElement
+        'timeMoveDragstart': this._onDragStart,
+        'timeMoveDrag': this._onDrag,
+        'timeMoveDragend': this._clearGuideElement,
+        'timeMoveClick': this._clearGuideElement
     }, this);
 }
 
@@ -12372,13 +14650,13 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top) {
 };
 
 /**
- * TimeMove#time_move_dragstart event handler
+ * TimeMove#timeMoveDragstart event handler
  * @param {object} dragStartEventData - dragstart event data
  */
 TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     var guideElement = domutil.closest(
         dragStartEventData.target,
-        '.' + config.classname('time-date-event-block')
+        config.classname('.time-date-event-block')
     );
 
     if (!guideElement) {
@@ -12396,7 +14674,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
 };
 
 /**
- * TimeMove#time_move_drag event handler
+ * TimeMove#timeMoveDrag event handler
  * @param {object} dragEventData - drag event data
  */
 TimeMoveGuide.prototype._onDrag = function(dragEventData) {
@@ -12432,7 +14710,7 @@ module.exports = TimeMoveGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],77:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39}],91:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Handling resize events from drag handler and time grid view
@@ -12459,17 +14737,17 @@ function TimeResize(dragHandler, timeGridView, baseController) {
     /**
      * @type {Drag}
      */
-    this.dragHandler = null;
+    this.dragHandler = dragHandler;
 
     /**
      * @type {TimeGrid}
      */
-    this.timeGridView = null;
+    this.timeGridView = timeGridView;
 
     /**
      * @type {Base}
      */
-    this.baseController = null;
+    this.baseController = baseController;
 
     /**
      * @type {function}
@@ -12486,9 +14764,7 @@ function TimeResize(dragHandler, timeGridView, baseController) {
      */
     this._guide = new TimeResizeGuide(this);
 
-    if (arguments.length) {
-        this.connect.apply(this, arguments);
-    }
+    dragHandler.on('dragStart', this._onDragStart, this);
 }
 
 /**
@@ -12499,22 +14775,6 @@ TimeResize.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this._guide = null;
-};
-
-/**
- * Connect handler, view, controllers for event creations.
- * @param {Drag} [dragHandler] - Drag handler instance.
- * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
- * @param {Base} [baseController] - Base controller instance.
- */
-TimeResize.prototype.connect = function(dragHandler, timeGridView, baseController) {
-    this.dragHandler = dragHandler;
-    this.timeGridView = timeGridView;
-    this.baseController = baseController;
-
-    dragHandler.on({
-        dragStart: this._onDragStart
-    }, this);
 };
 
 /**
@@ -12529,7 +14789,7 @@ TimeResize.prototype.checkExpectCondition = function(target) {
         return false;
     }
 
-    container = domutil.closest(target, '.' + config.classname('time-date'));
+    container = domutil.closest(target, config.classname('.time-date'));
 
     if (!container) {
         return false;
@@ -12541,17 +14801,17 @@ TimeResize.prototype.checkExpectCondition = function(target) {
         return false;
     }
 
-    return util.pick(this.timeGridView.childs.items, +matches[1]);
+    return util.pick(this.timeGridView.children.items, Number(matches[1]));
 };
 
 /**
- * @emits TimeResize#time_resize_dragstart
+ * @emits TimeResize#timeResizeDragstart
  * @param {object} dragStartEventData - event data of Drag#dragstart
  */
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, '.' + config.classname('time-date-event-block')),
+        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         getEventDataFunc,
         eventData;
 
@@ -12573,7 +14833,7 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
     }, this);
 
     /**
-     * @event TimeResize#time_resize_dragstart
+     * @event TimeResize#timeResizeDragstart
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with mouse position.
@@ -12585,12 +14845,12 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire('time_resize_dragstart', eventData);
+    this.fire('timeResizeDragstart', eventData);
 };
 
 /**
  * Drag#drag event handler
- * @emits TimeResize#time_resize_drag
+ * @emits TimeResize#timeResizeDrag
  * @param {object} dragEventData - event data of Drag#drag custom event.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  * @param {function} [revise] - supply function for revise event data before emit.
@@ -12613,7 +14873,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
     }
 
     /**
-     * @event TimeResize#time_resize_drag
+     * @event TimeResize#timeResizeDrag
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -12625,13 +14885,13 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
      */
-    this.fire(overrideEventName || 'time_resize_drag', eventData);
+    this.fire(overrideEventName || 'timeResizeDrag', eventData);
 };
 
 /**
  * Update model instance by dragend event results.
  * @fires TimeResize#beforeUpdateEvent
- * @param {object} eventData - event data from TimeResize#time_resize_dragend
+ * @param {object} eventData - event data from TimeResize#timeResizeDragend
  */
 TimeResize.prototype._updateEvent = function(eventData) {
     var ctrl = this.baseController,
@@ -12678,7 +14938,7 @@ TimeResize.prototype._updateEvent = function(eventData) {
 
 /**
  * Drag#dragEnd event handler
- * @emits TimeResize#time_resize_dragend
+ * @emits TimeResize#timeResizeDragend
  * @param {MouseEvent} dragEndEventData - Mouse event of Drag#dragEnd custom event.
  */
 TimeResize.prototype._onDragEnd = function(dragEndEventData) {
@@ -12713,7 +14973,7 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
     this._updateEvent(eventData);
 
     /**
-     * @event TimeResize#time_resize_dragend
+     * @event TimeResize#timeResizeDragend
      * @type {object}
      * @property {HTMLElement} target - current target in mouse event object.
      * @property {Time} relatedView - time view instance related with drag start position.
@@ -12727,13 +14987,13 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number[]} range - milliseconds range between drag start and end.
      * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this.fire('time_resize_dragend', eventData);
+    this.fire('timeResizeDragend', eventData);
 
     this._getEventDataFunc = this._dragStart = null;
 };
 
 /**
- * @emits TimeResize#time_resize_click
+ * @emits TimeResize#timeResizeClick
  */
 TimeResize.prototype._onClick = function() {
     this.dragHandler.off({
@@ -12743,9 +15003,9 @@ TimeResize.prototype._onClick = function() {
     }, this);
 
     /**
-     * @event TimeResize#time_resize_click
+     * @event TimeResize#timeResizeClick
      */
-    this.fire('time_resize_click');
+    this.fire('timeResizeClick');
 };
 
 timeCore.mixin(TimeResize);
@@ -12755,7 +15015,7 @@ module.exports = TimeResize;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"./core":71,"./resizeGuide":78}],78:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"./core":85,"./resizeGuide":92}],92:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Module for Time.Resize effect while dragging.
@@ -12810,10 +15070,10 @@ function TimeResizeGuide(timeResize) {
     this._startGridY = 0;
 
     timeResize.on({
-        'time_resize_dragstart': this._onDragStart,
-        'time_resize_drag': this._onDrag,
-        'time_resize_dragend': this._clearGuideElement,
-        'time_resize_click': this._clearGuideElement
+        'timeResizeDragstart': this._onDragStart,
+        'timeResizeDrag': this._onDrag,
+        'timeResizeDragend': this._clearGuideElement,
+        'timeResizeClick': this._clearGuideElement
     }, this);
 }
 
@@ -12868,13 +15128,13 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 
 
 /**
- * TimeMove#time_move_dragstart event handler
+ * TimeMove#timeMoveDragstart event handler
  * @param {object} dragStartEventData - dragstart event data
  */
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var originElement = domutil.closest(
             dragStartEventData.target,
-            '.' + config.classname('time-date-event-block')
+            config.classname('.time-date-event-block')
         ),
         guideElement;
 
@@ -12932,8 +15192,9 @@ module.exports = TimeResizeGuide;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36}],79:[function(require,module,exports){
+},{"../../common/common":26,"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39}],93:[function(require,module,exports){
 (function (global){
+/* eslint complexity: 0 */
 /**
  * @fileoverview Model of event.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -12989,6 +15250,12 @@ function CalEvent() {
     this.color = '#000';
 
     /**
+     * event block visibility
+     * @type {boolean}
+     */
+    this.visible = true;
+
+    /**
      * event background color
      * @type {string}
      */
@@ -13033,6 +15300,7 @@ CalEvent.prototype.init = function(options) {
     this.id = options.id || '';
     this.title = options.title || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
+    this.visible = util.isExisty(options.visible) ? options.visible : true;
 
     if (options.starts) {
         this.starts = new Date(options.starts);
@@ -13154,7 +15422,7 @@ module.exports = CalEvent;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/dirty":28,"../common/model":31}],80:[function(require,module,exports){
+},{"../common/datetime":27,"../common/dirty":28,"../common/model":33}],94:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Model for views
@@ -13319,7 +15587,7 @@ module.exports = CalEventViewModel;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],81:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
@@ -13351,7 +15619,7 @@ function Layout(container) {
     /**
      * @type {Collection} Child view collection.
      */
-    this.childs = new Collection(function(childView) {
+    this.children = new Collection(function(childView) {
         return childView.viewName;
     });
     /*eslint-enable*/
@@ -13363,11 +15631,11 @@ util.inherit(Layout, View);
  * Clear child views.
  */
 Layout.prototype.clear = function() {
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.destroy();
     });
 
-    this.childs.clear();
+    this.children.clear();
     this.container.innerHTML = '';
 };
 
@@ -13377,7 +15645,7 @@ Layout.prototype.clear = function() {
  * @param {(string|View)} viewName - name of view or instance.
  */
 Layout.prototype.removeChild = function(viewName) {
-    this.childs.remove(viewName);
+    this.children.remove(viewName);
 };
 
 /**
@@ -13389,9 +15657,9 @@ Layout.prototype.toggleChildView = function(viewName) {
         prefix = ['add', 'remove'],
         flag;
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         container = childView.container;
-        flag = +(childView.viewName === viewName);
+        flag = Number(childView.viewName === viewName);
         domutil[prefix[flag] + 'Class'](container, config.classname('hidden'));
     });
 };
@@ -13400,7 +15668,36 @@ module.exports = Layout;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30,"../config":36,"./view":91}],82:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30,"../config":39,"./view":110}],96:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-dayname-item\"\n         style=\"position: absolute;\n                width: "
+    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+    + "%;\n                left: "
+    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(data && data.index),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+    + "%\">\n        <span class=\""
+    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
+    + "\">"
+    + alias4(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"label","hash":{},"data":data}) : helper)))
+    + "</span>\n    </div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-dayname\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.daynames : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-weeks\"></div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],97:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Month view
@@ -13408,37 +15705,65 @@ module.exports = Layout;
  */
 'use strict';
 
-var util = global.tui.util,
-    BORDER_BOTTOM = 1;
+var util = global.tui.util;
 
 var config = require('../../config'),
-    common = require('../../common/common'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
+    tmpl = require('./month.hbs'),
     View = require('../view'),
-    MonthWeek = require('../monthweek');
+    VLayout = require('../..//common/vlayout'),
+    WeekdayInMonth = require('./weekdayInMonth');
 
 /**
  * @constructor
  * @extends {View}
  * @param {object} options - options
+ * @param {function} [options.eventFilter] - event filter
  * @param {number} [options.startDayOfWeek=0] - start day of week
  * @param {string} [options.renderMonth='2015-12'] - render month
+ * @param {string[]} [options.daynames] - daynames to use upside of month view
  * @param {HTMLElement} container - container element
+ * @param {Base.Month} controller - controller instance
  */
-function Month(options, container) {
+function Month(options, container, controller) {
     View.call(this, container);
+
+    /**
+     * @type {Base.Month}
+     */
+    this.controller = controller;
+
+    /**
+     * @type {VLayout}
+     */
+    this.vLayout = new VLayout({
+        panels: [
+            {height: 20},
+            {autoHeight: true}
+        ]
+    }, container);
 
     /**
      * @type {string}
      */
     this.options = util.extend({
+        eventFilter: function(model) {
+            return Boolean(model.visible);
+        },
         startDayOfWeek: 0,
-        renderMonth: '2015-12'
+        renderMonth: '2015-12',
+        daynames: ['일', '월', '화', '수', '목', '금', '토']
     }, options);
 }
 
 util.inherit(Month, View);
+
+/**
+ * Name of view. for managing subview at layout view
+ * @type {string}
+ */
+Month.prototype.viewName = 'month';
 
 /**
  * Get calendar array by supplied date
@@ -13448,38 +15773,41 @@ util.inherit(Month, View);
  */
 Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
     var date = datetime.parse(renderMonthStr + '-01'),
-        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0); 
+        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0);
 
     return calendar;
 };
 
 /**
- * Create childs view (week) and add childs
+ * Create children view (week) and add children
+ * @param {HTMLElement} container - container element to render weeks
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
  */
-Month.prototype._renderChilds = function(calendar) {
-    var container = this.container,
-        containerHeight = this.getViewBound().height,
+Month.prototype._renderChildren = function(container, calendar) {
+    var self = this,
         weekCount = calendar.length,
-        heightForOneWeek = (containerHeight / weekCount) - BORDER_BOTTOM;
+        heightPercent = 100 / weekCount;
 
     container.innerHTML = '';
-    this.childs.clear();
+    this.children.clear();
 
-    util.forEach(calendar, function(weekArr, i) {
-        var starts = new Date(+weekArr[0]),
-            ends = new Date(+weekArr[weekArr.length - 1]),
-            monthWeek;
+    util.forEach(calendar, function(weekArr) {
+        var starts = new Date(Number(weekArr[0])),
+            ends = new Date(Number(weekArr[weekArr.length - 1])),
+            weekdayViewContainer,
+            weekdayView;
 
-        monthWeek = new MonthWeek({
-            containerHeight: heightForOneWeek + ((i + 1 === weekCount) ? BORDER_BOTTOM : 0),
-            _mode: MonthWeek.MONTHWEEK_MODE.MONTH,
+        weekdayViewContainer = domutil.appendHTMLElement(
+            'div', container, config.classname('month-week-item'));
+
+        weekdayView = new WeekdayInMonth({
+            heightPercent: heightPercent,
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
-        }, domutil.appendHTMLElement('div', container, config.classname('week-in-month')));
+        }, weekdayViewContainer);
 
-        this.addChild(monthWeek);
-    }, this);
+        self.addChild(weekdayView);
+    });
 };
 
 /**
@@ -13488,15 +15816,40 @@ Month.prototype._renderChilds = function(calendar) {
  */
 Month.prototype.render = function() {
     var opt = this.options,
+        vLayout = this.vLayout,
+        controller = this.controller,
+        daynames = opt.daynames,
         calendar = this._getMonthCalendar(opt.renderMonth),
-        viewModel = this.controller.findByDateRange(
-            common.firstIn2dArray(calendar),
-            common.lastIn2dArray(calendar)
+        eventFilter = opt.eventFilter,
+        daynameViewModel,
+        baseViewModel;
+
+    daynameViewModel = util.map(
+        util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
+        function(i) {
+            return {
+                day: i,
+                label: daynames[i]
+            };
+        }
+    );
+
+    baseViewModel = {
+        daynames: daynameViewModel,
+        width: 100 / daynameViewModel.length
+    };
+
+    vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
+
+    this._renderChildren(vLayout.panels[1].container, calendar);
+
+    this.children.each(function(childView) {
+        var viewModel = controller.findByDateRange(
+            datetime.parse(childView.options.renderStartDate),
+            datetime.parse(childView.options.renderEndDate),
+            eventFilter
         );
 
-    this._renderChilds(calendar);
-
-    this.childs.each(function(childView) {
         childView.render(viewModel);
     });
 };
@@ -13505,158 +15858,536 @@ module.exports = Month;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../monthweek":83,"../view":91}],83:[function(require,module,exports){
+},{"../..//common/vlayout":37,"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../view":110,"./month.hbs":96,"./weekdayInMonth":101}],98:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
+},"2":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+
+  return "<div data-id=\""
+    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+    + "\"\n             class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more-event\n                    "
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more-allday\"\n             style=\"background-color:"
+    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+    + ";\n                    color:"
+    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+    + "\">\n            "
+    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+    + "\n        </div>\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+
+  return "        <div data-id=\""
+    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+    + "\"\n             class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more-event\">\n            "
+    + alias3((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.starts : stack1),{"name":"hhmm","hash":{},"data":data}))
+    + " "
+    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+    + "\n        </div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more\">\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more-title\">\n        "
+    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
+    + "\n        <input type=\"button\" value=\"&times;\" class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more-close\" />\n    </div>\n    <div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "month-more-list\" style=\"height:"
+    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,(depth0 != null ? depth0.height : depth0),20,{"name":"subtract","hash":{},"data":data}))
+    + "px\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.events : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "    </div>\n</div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],99:[function(require,module,exports){
 (function (global){
 /**
- * @fileoverview View of week event container inside of Week view.
+ * @fileoverview Floating layer for displaying event in specific date
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
 
 var util = global.tui.util;
-
-var config = require('../config'),
-    domutil = require('../common/domutil'),
-    datetime = require('../common/datetime'),
-    View = require('./view'),
-    tmpl = require('./template/monthweek.hbs');
+var config = require('../../config'),
+    domevent = require('../../common/domevent'),
+    domutil = require('../../common/domutil'),
+    View = require('../../view/view'),
+    FloatingLayer = require('../../common/floatingLayer'),
+    tmpl = require('./more.hbs');
 
 /**
  * @constructor
  * @extends {View}
- * @param {object} options - view options.
- * @param {number} [options.containerHeight=40] - minimum height of event container element.
- * @param {number} [options.containerButtonGutter=8] - free space at bottom to make create easy.
- * @param {number} [options.eventHeight=18] - height of each event block.
- * @param {number} [options.eventGutter=2] - gutter height of each event block.
- * @param {number} [options._mode=MonthWeek.MONTHWEEK_MODE.WEEK] - monthweek render mode
- * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
- * @param {HTMLDIVElement} container - DOM element to use container for this view.
+ * @param {HTMLElement} container = container element
  */
-function MonthWeek(options, container) {
-    container = domutil.appendHTMLElement(
-        'div',
-        container,
-        config.classname('monthweek')
-    );
+function More(container) {
+    View.call(this, container);
 
     /**
-     * @type {object}
+     * @type {FloatingLayer}
      */
-    options = this.options = util.extend({
-        containerHeight: 40,
-        containerBottomGutter: 8,
-        eventHeight: 18,
-        eventGutter: 2,
-        _mode: MonthWeek.MONTHWEEK_MODE.WEEK,
-        _getViewModelFunc: function(viewModel) {
-            return viewModel.allday;
-        }
-    }, options);
+    this.layer = new FloatingLayer(null, container);
 
-    View.call(this, container);
+    domevent.on(container, 'click', this._onClick, this);
 }
 
-/**
- * @readonly
- * @enum {string}
- */
-MonthWeek.MONTHWEEK_MODE = {
-    /** render monthweek view for week mode */
-    WEEK: 0,
-    /** render monthweek view for month mode */
-    MONTH: 1
-};
-
-util.inherit(MonthWeek, View);
+util.inherit(More, View);
 
 /**
- * Get render date range
- * @returns {Date[]} rendered date range
+ * Click event handler for close button
+ * @param {MouseEvent} clickEvent - mouse event object
  */
-MonthWeek.prototype.getRenderDateRange = function() {
-    var opt = this.options;
+More.prototype._onClick = function(clickEvent) {
+    var target = (clickEvent.target || clickEvent.srcElement);
 
-    return datetime.range(
-        datetime.start(datetime.parse(opt.renderStartDate)),
-        datetime.end(datetime.parse(opt.renderEndDate)),
-        datetime.MILLISECONDS_PER_DAY
-    );
+    if (!domutil.hasClass(target, config.classname('month-more-close'))) {
+        return;
+    }
+
+    this.hide();
 };
 
 /**
- * @param {object} viewModel - viewModel from parent views.
- * @returns {object} viewModel to rendering.
+ * Mousedown event handler for hiding more layer when user mousedown outside of
+ * layer
+ * @param {MouseEvent} mouseDownEvent - mouse event object
  */
-MonthWeek.prototype._getBaseViewModel = function(viewModel) {
-    var opt = this.options,
-        range = this.getRenderDateRange(),
-        matrices = opt._getViewModelFunc(viewModel),
-        gridWidth = 100 / range.length;
+More.prototype._onMouseDown = function(mouseDownEvent) {
+    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+        moreLayer = domutil.closest(target, config.classname('.month-more'));
 
-    return {
-        mode: opt._mode,
-        width: gridWidth,
-        eventBlockHeight: opt.eventHeight + opt.eventGutter,
-        eventBlockGutter: opt.eventGutter,
-        eventHeight: opt.eventHeight,
-        marginTop: (opt._mode === MonthWeek.MONTHWEEK_MODE.MONTH) ? opt.eventHeight : 0,
-        dates: util.map(range, function(date) {
-            return date.getDate();
-        }),
-        matrices: matrices
-    };
+    if (moreLayer) {
+        return;
+    }
+
+    this.hide();
+};
+
+/**
+ * Get new position for more layer by +n element itself
+ * @param {HTMLElement} target - +n element
+ * @returns {number[]} new position of more layer
+ */
+More.prototype._getRenderPosition = function(target) {
+    var pos = domutil.getPosition(target);
+
+    // change position relative with More container element
+    pos = domevent.getMousePosition({
+        clientX: pos[0],
+        clientY: pos[1]
+    }, this.container);
+
+    return [pos[0], pos[1] - 100];
 };
 
 /**
  * @override
- * @param {object} viewModel - viewModel from parent views.
  */
-MonthWeek.prototype.render = function(viewModel) {
-    var opt = this.options,
-        baseViewModel = this._getBaseViewModel(viewModel),
-        maxEventInDay = 0;
+More.prototype.destroy = function() {
+    this.layer.destroy();
+    this.layer = null;
+    domevent.off(this.container, 'click', this._onClick, this);
+    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+    View.prototype.destroy.call(this);
+};
 
-    if (opt._mode === MonthWeek.MONTHWEEK_MODE.WEEK) {
-        maxEventInDay = Math.max.apply(null, util.map(baseViewModel.matrices, function(matrix) {
-            return Math.max.apply(null, util.map(matrix, function(row) {
-                return row.length;
-            }));
-        }));
 
-        this._setMinHeight(maxEventInDay);
-    } else {
-        //TODO: Implement view models for month mode
-        //TODO: 월뷰 컨테이너에서 %로 나눠준 높이 기준으로 계산해야 함.
-        this.container.style.height = opt.containerHeight + 'px';
-        // maxEventInDay = Math.floor((opt.containerHeight - opt.eventHeight) / (opt.eventHeight + opt.eventGutter)) - 1;
-        // console.log(maxEventInDay);
-    }
+/**
+ * @override
+ * @param {object} viewModel - view model from factory/monthView
+ */
+More.prototype.render = function(viewModel) {
+    var self = this,
+        layer = this.layer,
+        pos;
 
-    this.container.innerHTML = tmpl(baseViewModel);
+    viewModel = util.extend({
+        height: 100
+    }, viewModel);
+
+    layer.setContent(tmpl(viewModel));
+    layer.setSize('auto', 100);
+
+    pos = this._getRenderPosition(viewModel.target);
+    layer.setPosition.apply(layer, pos);
+
+    layer.show();
+
+    util.debounce(function() {
+        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
+    })();
 };
 
 /**
- * Set minimum height for container.
- * 
- * Need set min-height to container when wrapping container's height is smaller then monthweek container.
- *
- * If set height directly, vertical grids represent in each days are not cover wrapping container.
- * @param {number} maxEventInDay - how largest event block in one day?
+ * Hide layer
  */
-MonthWeek.prototype._setMinHeight = function(maxEventInDay) {
-    var opt = this.options,
-        newHeight = (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
-
-    this.container.style.minHeight = newHeight + 'px';
+More.prototype.hide = function() {
+    this.layer.hide();
+    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
 };
 
-module.exports = MonthWeek;
+module.exports = More;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/datetime":27,"../common/domutil":30,"../config":36,"./template/monthweek.hbs":85,"./view":91}],84:[function(require,module,exports){
+},{"../../common/domevent":29,"../../common/domutil":30,"../../common/floatingLayer":32,"../../config":39,"../../view/view":110,"./more.hbs":98}],100:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-grid-line\"\n         style=\"width:"
+    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+    + "%;\n                left:"
+    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+    + "%;\">\n        <span class=\""
+    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
+    + "\">"
+    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.date : depth0),"==",1,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + " "
+    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
+    + "일</span>\n    </div>\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return container.escapeExpression(((helper = (helper = helpers.month || (depth0 != null ? depth0.month : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"month","hash":{},"data":data}) : helper)))
+    + "월";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-grid \">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-events\"></div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],101:[function(require,module,exports){
 (function (global){
+/**
+ * @fileoverview Monthday in month view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util,
+    existy = util.isExisty,
+    mfloor = Math.floor,
+    mmax = Math.max;
+
+var Handlebars = require('hbsfy/runtime');
+
+var config = require('../../config'),
+    common = require('../../common/common.js'),
+    datetime = require('../../common/datetime'),
+    domutil = require('../../common/domutil'),
+    View = require('../../view/view'),
+    Weekday = require('../weekday'),
+    baseTmpl = require('./weekdayInMonth.hbs'),
+    eventTmpl = require('./weekdayInMonthEvent.hbs'),
+    skipTmpl = require('./weekdayInMonthSkip.hbs');
+
+/**
+ * @constructor
+ * @extends {Weekday}
+ * @param {object} options - options for WeekdayInWeek view
+ * @param {number} [options.heightPercent] - height percent of view
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to
+ *  make create easy.
+ * @param {number} [options.eventHeight=18] - height of each event block.
+ * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {HTMLDIVElement} container - DOM element to use container for this
+ *  view.
+ */
+function WeekdayInMonth(options, container) {
+    Weekday.call(this, options, container);
+    container.style.height = options.heightPercent + '%';
+}
+
+util.inherit(WeekdayInMonth, Weekday);
+
+/**
+ * Get event container element's bound properly by override
+ *
+ * View#getViewBound.
+ * @override
+ */
+WeekdayInMonth.prototype.getViewBound = function() {
+    var bound = View.prototype.getViewBound.call(this),
+        selector = config.classname('.weekday-events'),
+        height = domutil.getSize(domutil.find(selector, this.container))[1];
+
+    bound.height = height;
+
+    return bound;
+};
+
+/**
+ * Get limit index of event block in current view
+ * @returns {number} limit index
+ */
+WeekdayInMonth.prototype._getRenderLimitIndex = function() {
+    var opt = this.options,
+        containerHeight = this.getViewBound().height,
+        count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
+
+    return mmax(count - 1, 0);    // subtraction for '+n' label block
+};
+
+/**
+ * Get handlebars custom helper method for limitation event block render count
+ * features
+ *
+ * Cumulate count on each date. render +n label only when no cumulated
+ * count on cache object
+ * @param {object} exceedDate - object to be used as a cache
+ * @returns {function} custom helper function
+ */
+WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
+    return function() {
+        var viewModel = this, // eslint-disable-line
+            period = datetime.range(
+                viewModel.getStarts(),
+                viewModel.getEnds(),
+                datetime.MILLISECONDS_PER_DAY
+            );
+
+        util.forEach(period, function(date) {
+            var ymd = datetime.format(date, 'YYYYMMDD');
+            if (!existy(exceedDate[ymd])) {
+                exceedDate[ymd] = 0;
+            }
+
+            exceedDate[ymd] += 1;
+        });
+    };
+};
+
+/**
+ * Get view model for render skipped label
+ * @param {object} exceedDate - object has count of each dates exceed event block
+ *  cound.
+ * @returns {object[]} - view model for skipped label
+ */
+WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
+    var dateRange = util.map(this.getRenderDateRange(), function(date) {
+        return datetime.format(date, 'YYYYMMDD');
+    });
+
+    return util.map(exceedDate, function(skipped, ymd) {
+        return {
+            left: util.inArray(ymd, dateRange),
+            skipped: skipped,
+            ymd: ymd
+        };
+    });
+};
+
+/**
+ * @override
+ * @param {object} viewModel - events view models
+ */
+WeekdayInMonth.prototype.render = function(viewModel) {
+    var container = this.container,
+        baseViewModel = this.getBaseViewModel(),
+        renderLimitIdx,
+        exceedDate = {},
+        eventContainer,
+        contentStr = '';
+
+    container.innerHTML = baseTmpl(baseViewModel);
+
+    renderLimitIdx = this._getRenderLimitIndex();
+
+    eventContainer = domutil.find(
+        config.classname('.weekday-events'),
+        container
+    );
+
+    if (!eventContainer) {
+        return;
+    }
+
+    Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
+
+    contentStr += eventTmpl(util.extend({
+        matrices: viewModel,
+        renderLimitIdx: renderLimitIdx
+    }, baseViewModel));
+
+    contentStr += skipTmpl(util.extend({
+        renderLimitIdx: renderLimitIdx,
+        viewModelForSkip: this._getSkipLabelViewModel(exceedDate)
+    }, baseViewModel));
+
+    eventContainer.innerHTML = contentStr;
+
+    common.setAutoEllipsis(
+        config.classname('.weekday-event-title'),
+        container
+    );
+};
+
+module.exports = WeekdayInMonth;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../common/common.js":26,"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../../view/view":110,"../weekday":118,"./weekdayInMonth.hbs":100,"./weekdayInMonthEvent.hbs":102,"./weekdayInMonthSkip.hbs":103,"hbsfy/runtime":21}],102:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"2":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"3":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\n"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"4":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\n"
+    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.top : depth0),"<",((stack1 = (data && data.root)) && stack1.renderLimitIdx),{"name":"fi","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(14, data, 0),"data":data})) != null ? stack1 : "");
+},"5":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+
+  return "<div data-id=\""
+    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+    + "\"\n         class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event-block\n                "
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event-block-"
+    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+    + "\n            "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderStarts : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n            "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderEnds : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\"\n         style=\"top:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
+    + "px;\n                left:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+    + "%;\n                width:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+    + "%;\n                height:"
+    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
+    + "px;\n                margin-top:"
+    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
+    + "px\">\n"
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.program(12, data, 0),"data":data})) != null ? stack1 : "")
+    + "    </div>\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return " "
+    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-exceed-left";
+},"8":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return " "
+    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-exceed-right";
+},"10":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event\"\n             style=\"height:"
+    + alias4(alias5(((stack1 = (data && data.root)) && stack1.eventHeight), depth0))
+    + "px;\n                    color:"
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+    + ";\n                    background-color:"
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+    + "\">\n            <span class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event-title\"\n                  data-title=\""
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+    + "\">"
+    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+    + "</span>\n            <span class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-resize-handle handle-y\">&nbsp;</span>\n        </div>\n";
+},"12":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event\">\n            <span class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event-title\"\n                  data-title=\""
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+    + "\">"
+    + alias4((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.starts : stack1),{"name":"hhmm","hash":{},"data":data}))
+    + " "
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+    + "</span>\n        </div>\n";
+},"14":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return container.escapeExpression(((helper = (helper = helpers.wdSkipped || (depth0 != null ? depth0.wdSkipped : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"wdSkipped","hash":{},"data":data}) : helper)))
+    + "\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"useData":true});
+
+},{"hbsfy/runtime":21}],103:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda, alias5="function";
+
+  return "<div style=\"position: absolute;\n            top:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.renderLimitIdx),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
+    + "px;\n            left:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+    + "%;\n            width:"
+    + alias3(alias4(((stack1 = (data && data.root)) && stack1.width), depth0))
+    + "%;\n            height:"
+    + alias3(alias4(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
+    + "px;\n            margin-top:"
+    + alias3(alias4(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
+    + "px\"\n     class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-exceed\"\n     data-ymd=\""
+    + alias3(alias4((depth0 != null ? depth0.ymd : depth0), depth0))
+    + "\">\n    <span>+"
+    + alias3(((helper = (helper = helpers.skipped || (depth0 != null ? depth0.skipped : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"skipped","hash":{},"data":data}) : helper)))
+    + " 일정</span>\n</div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.viewModelForSkip : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"useData":true});
+
+},{"hbsfy/runtime":21}],104:[function(require,module,exports){
+(function (global){
+/* eslint complexity: 0 */
 /**
  * @fileoverview Helpers for handlebar templates.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -13664,9 +16395,17 @@ module.exports = MonthWeek;
 'use strict';
 
 var util = global.tui.util;
+var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
 
+/**
+ * Get CSS syntax for element size
+ * @param {number} value - size value to apply element
+ * @param {string} postfix - postfix string ex) px, em, %
+ * @param {string} prefix - property name ex) width, height
+ * @returns {string} CSS syntax
+ */
 function getElSize(value, postfix, prefix) {
     prefix = prefix || '';
     if (util.isNumber(value)) {
@@ -13677,29 +16416,72 @@ function getElSize(value, postfix, prefix) {
 }
 
 module.exports = {
+    /**
+     * Stamp supplied object
+     *
+     * Commonly use for rendering object's unique ID to rendered view
+     * @param {object} obj - object to stamp
+     * @returns {number} stamp value
+     */
     'stamp': function(obj) {
         return util.stamp(obj);
     },
 
+    /**
+     * Whether supplied object are equal?
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {boolean} result of operation
+     */
     'equal': function(a, b) {
         return a === b;
     },
 
+    /**
+     * OR
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {boolean} or
+     */
     'or': function(a, b) {
         return a || b;
     },
 
+    /**
+     * Compare object by customizable oper parameter
+     * @param {*} a - a
+     * @param {string} oper - operator ex) '==', '<'
+     * @param {*} b - b
+     * @param {Handlebars} options - handlebar options
+     * @returns {boolean} result of operation
+     */
     'fi': function(a, oper, b, options) {
         switch (oper) {
             case '==':
-                return (a == b) ? options.fn(this) : options.inverse(this);
+                return (a == b) ? options.fn(this) : options.inverse(this);  // eslint-disable-line
             case '===':
-                return  (a === b) ? options.fn(this) : options.inverse(this);
+                return (a === b) ? options.fn(this) : options.inverse(this);
+            case '<':
+                return (a < b) ? options.fn(this) : options.inverse(this);
             default:
                 break;
         }
     },
 
+    /**
+     * Get hhmm formatted time str
+     * @param {Date} date - date object
+     * @returns {string} formatted value
+     */
+    'hhmm': function(date) {
+        return datetime.format(date, 'HH:mm');
+    },
+
+    /**
+     * Get `width` stylesheet string
+     * @param {number} width - width percentage
+     * @returns {string} css style part
+     */
     'common-width': function(width) {
         return getElSize(width, '%', 'width');
     },
@@ -13718,34 +16500,60 @@ module.exports = {
         return [top, left, width, height].join(';');
     },
 
-    /**
-     * Use in dayname.hbs
-     * @returns {string} css class
-     */
-    'dayname-isHolliday': function() {
-        if (this.day === 0 || this.day === 6) {
-            return config.classname('dayname') + ' ' + config.classname('holliday');
+    'holiday': function(day) {
+        var cssClass = '';
+
+        if (day === 0 || day === 6) {
+            cssClass = config.classname('holiday');
         }
 
-        return config.classname('dayname');
+        return cssClass;
     },
 
+    /**
+     * Add supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'add': function(a, b) {
         return a + b;
     },
 
+    /**
+     * Multiply supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'multiply': function(a, b) {
         return a * b;
     },
 
+    /**
+     * Divide supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'divide': function(a, b) {
         return a / b;
     },
 
+    /**
+     * Subtract supplied two parameter
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {number} result of operation
+     */
     'subtract': function(a, b) {
         return a - b;
     },
 
+    /**
+     * Get css prefix in global configuration
+     * @returns {string} css prefix
+     */
     'CSS_PREFIX': function() {
         return config.cssPrefix;
     },
@@ -13756,11 +16564,21 @@ module.exports = {
      **********/
 
     'milestone-tmpl': function(model) {
-        return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
+        return '<span class="' +
+            config.classname('dot') +
+            '" style="background-color:' +
+            model.bgColor +
+            '"></span> ' +
+            common.stripTags(model.title);
     },
 
     'task-tmpl': function(model) {
-        return '<span class="' + config.classname('dot') + '" style="background-color:' + model.bgColor + '"></span> ' + common.stripTags(model.title);
+        return '<span class="' +
+            config.classname('dot') +
+            '" style="background-color:' +
+            model.bgColor +
+            '"></span> ' +
+            common.stripTags(model.title);
     },
 
     'taskTitle-tmpl': function() {
@@ -13775,106 +16593,12 @@ module.exports = {
         return common.stripTags(model.title);
     },
 
-    'minicalendar-tmpl': function(model) {}
+    'minicalendar-tmpl': function(model) {}  // eslint-disable-line
 };
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/common":26,"../../config":36}],85:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var HandlebarsCompiler = require('hbsfy/runtime');
-module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
-
-  return "<div class=\""
-    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-grid-line\" \n         style=\"width:"
-    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
-    + "%;\n                left:"
-    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
-    + "%;\">"
-    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.mode),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\n";
-},"2":function(container,depth0,helpers,partials,data) {
-    return container.escapeExpression(container.lambda(depth0, depth0));
-},"4":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"5":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return "\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"6":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return "\n"
-    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"7":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
-
-  return "\n<div data-id=\""
-    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-    + "\" \n     class=\""
-    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-event-block"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderStarts : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderEnds : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\"\n     style=\"top:"
-    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
-    + "px;\n            left:"
-    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-    + "%;\n            width:"
-    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-    + "%;\n            height:"
-    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
-    + "px;\n            margin-top:"
-    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
-    + "px\">\n    <div class=\""
-    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-event\" style=\"height:"
-    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventHeight), depth0))
-    + "px;color:"
-    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-    + ";background-color:"
-    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-    + "\">\n        <span class=\""
-    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-event-title\">"
-    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-    + "</span>\n        <span class=\""
-    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-resize-handle handle-y\">&nbsp;</span>\n    </div> \n</div>\n";
-},"8":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return " "
-    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-exceed-left";
-},"10":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return " "
-    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-exceed-right";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-grid \">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\n<div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-events\" style=\"margin-top:"
-    + alias4(((helper = (helper = helpers.marginTop || (depth0 != null ? depth0.marginTop : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"marginTop","hash":{},"data":data}) : helper)))
-    + "px\">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\n";
-},"useData":true});
-
-},{"hbsfy/runtime":21}],86:[function(require,module,exports){
+},{"../../common/common":26,"../../common/datetime":27,"../../config":39}],105:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview Register developed custom handlebars helper.
@@ -13886,13 +16610,13 @@ var util = global.tui.util;
 var helper = require('./helper');
 var Handlebars = require('hbsfy/runtime');
 
-util.forEach(helper, function(helper, name) {
-    Handlebars.registerHelper(name, helper);
-}, this);
+util.forEach(helper, function(h, name) {
+    Handlebars.registerHelper(name, h);
+});
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./helper":84,"hbsfy/runtime":21}],87:[function(require,module,exports){
+},{"./helper":104,"hbsfy/runtime":21}],106:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -13906,18 +16630,20 @@ module.exports = HandlebarsCompiler.template({"compiler":[7,">= 4.0.0"],"main":f
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "allday-right\">\n    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "monthweek-container\"></div>\n</div>\n";
+    + "weekday-container\"></div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],88:[function(require,module,exports){
+},{"hbsfy/runtime":21}],107:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<div class=\""
-    + alias4(((helper = (helper = helpers["dayname-isHolliday"] || (depth0 != null ? depth0["dayname-isHolliday"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"dayname-isHolliday","hash":{},"data":data}) : helper)))
-    + "\" style=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "dayname "
+    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
+    + "\"\n     style=\""
     + alias4((helpers["common-width"] || (depth0 && depth0["common-width"]) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),{"name":"common-width","hash":{},"data":data}))
     + ";left:"
     + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(data && data.index),(depth0 != null ? depth0.width : depth0),{"name":"multiply","hash":{},"data":data}))
@@ -13940,7 +16666,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],89:[function(require,module,exports){
+},{"hbsfy/runtime":21}],108:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -13981,7 +16707,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
   return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"useData":true});
 
-},{"hbsfy/runtime":21}],90:[function(require,module,exports){
+},{"hbsfy/runtime":21}],109:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -13989,11 +16715,11 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hour \n            "
+    + "timegrid-hour\n            "
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hour-"
     + alias4(alias5(depth0, depth0))
-    + " \n            "
+    + "\n            "
     + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.currentHour),"===",depth0,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\"><span>"
     + alias4(alias5(depth0, depth0))
@@ -14049,7 +16775,7 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "\">today</div>\n        </div>\n    </div>\n</div>\n";
 },"useData":true});
 
-},{"hbsfy/runtime":21}],91:[function(require,module,exports){
+},{"hbsfy/runtime":21}],110:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview The base class of views.
@@ -14066,7 +16792,8 @@ var Collection = require('../common/collection');
  *
  * All views create own container element inside supplied container element.
  * @constructor
- * @param {HTMLElement} container Default container element for view. you can use this element for this.container syntax.
+ * @param {HTMLElement} container Default container element for view.
+ *  you can use this element for this.container syntax.
  */
 function View(container) {
     var id = util.stamp(this);
@@ -14094,7 +16821,7 @@ function View(container) {
      * child views.
      * @type {Collection}
      */
-    this.childs = new Collection(function(view) {
+    this.children = new Collection(function(view) {
         return util.stamp(view);
     });
     /*eslint-enable*/
@@ -14124,7 +16851,7 @@ View.prototype.addChild = function(view, fn) {
     // add parent view
     view.parent = this;
 
-    this.childs.add(view);
+    this.children.add(view);
 };
 
 /**
@@ -14133,7 +16860,7 @@ View.prototype.addChild = function(view, fn) {
  * @param {function} [fn] Function for invoke before remove. parent view class is supplied first arguments.
  */
 View.prototype.removeChild = function(id, fn) {
-    var view = util.isNumber(id) ? this.childs.items[id] : id;
+    var view = util.isNumber(id) ? this.children.items[id] : id;
 
     id = util.stamp(view);
 
@@ -14141,14 +16868,14 @@ View.prototype.removeChild = function(id, fn) {
         fn.call(view, this);
     }
 
-    this.childs.remove(id);
+    this.children.remove(id);
 };
 
 /**
  * Render view recursively.
  */
 View.prototype.render = function() {
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.render();
     });
 };
@@ -14167,7 +16894,7 @@ View.prototype.recursive = function(fn, skipThis) {
         fn(this);
     }
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.recursive(fn);
     });
 };
@@ -14198,10 +16925,10 @@ View.prototype._beforeDestroy = function() {};
  */
 View.prototype._destroy = function() {
     this._beforeDestroy();
-    this.childs.clear();
+    this.children.clear();
     this.container.innerHTML = '';
 
-    this.id = this.parent = this.childs = this.container = null;
+    this.id = this.parent = this.children = this.container = null;
 };
 
 /*eslint-disable*/
@@ -14209,7 +16936,7 @@ View.prototype._destroy = function() {
  * Destroy child view recursively.
  */
 View.prototype.destroy = function(isChildView) {
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.destroy(true);
         childView._destroy();
     });
@@ -14253,7 +16980,7 @@ module.exports = View;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/collection":25,"../common/domutil":30}],92:[function(require,module,exports){
+},{"../common/collection":25,"../common/domutil":30}],111:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of allday event container inside of Week view.
@@ -14263,11 +16990,10 @@ module.exports = View;
 
 var util = global.tui.util;
 var config = require('../../config'),
-    datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../view'),
-    MonthWeek = require('../monthweek'),
-    mainTmpl = require('../template/week/allday.hbs');
+    WeekdayInWeek = require('./weekdayInWeek'),
+    tmpl = require('../template/week/allday.hbs');
 
 /**
  * @constructor
@@ -14278,7 +17004,7 @@ var config = require('../../config'),
  * @param {number} [options.height=60] - minimum height of event container element.
  * @param {number} [options.eventBlockHeight=18] - height of each event block.
  * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
- * @param {function} [options._getViewModelFunc] - function for extract partial view model data from whole view models.
+ * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLElement} container Container element.
  */
 function Allday(options, container) {
@@ -14300,7 +17026,7 @@ function Allday(options, container) {
         containerBottomGutter: 8,
         eventHeight: 18,
         eventGutter: 2,
-        _getViewModelFunc: function(viewModel) {
+        getViewModelFunc: function(viewModel) {
             return viewModel.eventsInDateRange.allday;
         }
     }, options);
@@ -14317,20 +17043,20 @@ util.inherit(Allday, View);
  */
 Allday.prototype.render = function(viewModel) {
     var container = this.container,
-        monthWeekInst;
+        weekdayView;
 
-    container.innerHTML = mainTmpl(this.options);
+    container.innerHTML = tmpl(this.options);
 
-    this.childs.clear();
+    this.children.clear();
 
-    monthWeekInst = new MonthWeek(
-        this.options, 
-        domutil.find('.' + config.classname('monthweek-container'), container)
+    weekdayView = new WeekdayInWeek(
+        this.options,
+        domutil.find(config.classname('.weekday-container'), container)
     );
 
-    this.addChild(monthWeekInst);
+    this.addChild(weekdayView);
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.render(viewModel);
     });
 };
@@ -14339,7 +17065,7 @@ module.exports = Allday;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../monthweek":83,"../template/week/allday.hbs":87,"../view":91}],93:[function(require,module,exports){
+},{"../../common/domutil":30,"../../config":39,"../template/week/allday.hbs":106,"../view":110,"./weekdayInWeek":117}],112:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendering daynames
@@ -14421,7 +17147,7 @@ module.exports = DayName;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/daynames.hbs":88,"../view":91}],94:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../template/week/daynames.hbs":107,"../view":110}],113:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of time.
@@ -14530,7 +17256,8 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
  * @param {array} matrices The matrices for event placing.
  */
 Time.prototype._getBaseViewModel = function(ymd, matrices) {
-    var options = this.options,
+    var self = this,
+        options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
         containerHeight,
@@ -14571,7 +17298,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     return;
                 }
 
-                viewBound = this.getEventViewBound(viewModel, {
+                viewBound = self.getEventViewBound(viewModel, {
                     todayStart: todayStart,
                     baseMS: baseMS,
                     baseLeft: leftPercents,
@@ -14581,9 +17308,9 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                 });
 
                 util.extend(viewModel, viewBound);
-            }, this);
-        }, this);
-    }, this);
+            });
+        });
+    });
 };
 
 /**
@@ -14610,7 +17337,7 @@ module.exports = Time;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../template/week/time.hbs":89,"../view":91}],95:[function(require,module,exports){
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../template/week/time.hbs":108,"../view":110}],114:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View for rendered events by times.
@@ -14676,6 +17403,12 @@ function TimeGrid(options, container) {
     this.intervalID = 0;
 
     /**
+     * id for timeout. use for TimeGrid#scrollToNow
+     * @type {number}
+     */
+    this.timeoutID = 0;
+
+    /**
      * @type {boolean}
      */
     this._scrolled = false;
@@ -14699,13 +17432,15 @@ TimeGrid.prototype.viewName = 'timegrid';
  * @override
  */
 TimeGrid.prototype._beforeDestroy = function() {
-    window.clearInterval(this.intervalID);
+    clearTimeout(this.timeoutID);
+    clearInterval(this.intervalID);
 
     if (this._autoScroll) {
         this._autoScroll.destroy();
     }
 
-    this._autoScroll = this.hourmarker = null;
+    this._autoScroll = this.hourmarker = this.timeoutID =
+        this.intervalID = null;
 };
 
 /**
@@ -14736,8 +17471,7 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
  * @returns {object} ViewModel of hourmarker.
  */
 TimeGrid.prototype._getHourmarkerViewModel = function(now) {
-    var now = now || new Date(),
-        opt = this.options,
+    var opt = this.options,
         dateRange = datetime.range(
             datetime.parse(opt.renderStartDate),
             datetime.parse(opt.renderEndDate),
@@ -14745,6 +17479,8 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
         ),
         todaymarkerLeft = null,
         viewModel;
+
+    now = now || new Date();
 
     util.forEach(dateRange, function(date, index) {
         if (datetime.isSameDate(now, date)) {
@@ -14774,7 +17510,7 @@ TimeGrid.prototype._getBaseViewModel = function() {
 
     viewModel = util.extend({
         hours: hourRange,
-        currentHour: now.getHours(),
+        currentHour: now.getHours()
     }, this._getHourmarkerViewModel());
 
     return viewModel;
@@ -14786,8 +17522,9 @@ TimeGrid.prototype._getBaseViewModel = function() {
  * @param {number} width The width percent of each time view.
  * @param {HTMLElement} container Container element for each time view.
  */
-TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
-    var options = this.options,
+TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
+    var self = this,
+        options = this.options,
         childOption,
         child,
         isToday,
@@ -14796,7 +17533,7 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
 
     // clear contents
     container.innerHTML = '';
-    this.childs.clear();
+    this.children.clear();
 
     // reconcilation of child views
     util.forEach(viewModels, function(events, ymd) {
@@ -14817,10 +17554,10 @@ TimeGrid.prototype._renderChilds = function(viewModels, width, container) {
         );
         child.render(ymd, events);
 
-        this.addChild(child);
+        self.addChild(child);
 
         i += 1;
-    }, this);
+    });
 };
 
 /**
@@ -14840,12 +17577,12 @@ TimeGrid.prototype.render = function(viewModel) {
     container.innerHTML = mainTmpl(baseViewModel);
 
     /**********
-     * Render childs
+     * Render children
      **********/
-    this._renderChilds(
+    this._renderChildren(
         timeViewModel,
         100 / eventLen,
-        domutil.find('.' + config.classname('timegrid-events-container'), container)
+        domutil.find(config.classname('.timegrid-events-container'), container)
     );
 
     this._hourLabels = domutil.find('ul', container);
@@ -14853,7 +17590,7 @@ TimeGrid.prototype.render = function(viewModel) {
     /**********
      * Render hourmarker
      **********/
-    this.hourmarker = domutil.find('.' + config.classname('timegrid-hourmarker'), container);
+    this.hourmarker = domutil.find(config.classname('.timegrid-hourmarker'), container);
 
     if (!this._scrolled) {
         this._scrolled = true;
@@ -14877,10 +17614,10 @@ TimeGrid.prototype.refreshHourmarker = function() {
         return;
     }
 
-    todaymarker = domutil.find('.' + config.classname('timegrid-todaymarker'), hourmarker);
-    text = domutil.find('.' + config.classname('timegrid-hourmarker-time'), hourmarker);
-    labelToVisible = domutil.find('.' + config.classname('invisible'), hourLabels);
-    labelToInvisible = domutil.find('.' + config.classname('timegrid-hour-') + viewModel.currentHour, hourLabels);
+    todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
+    text = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
+    labelToVisible = domutil.find(config.classname('.invisible'), hourLabels);
+    labelToInvisible = domutil.find(config.classname('.timegrid-hour-') + viewModel.currentHour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
         if (labelToVisible !== labelToInvisible) {
@@ -14895,7 +17632,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
 
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.hourmarkerTop + '%';
-        todaymarker.style.display = !!viewModel.todaymarkerLeft ? 'block' : 'none';
+        todaymarker.style.display = viewModel.todaymarkerLeft ? 'block' : 'none';
         text.innerHTML = viewModel.hourmarkerText;
     });
 };
@@ -14904,23 +17641,25 @@ TimeGrid.prototype.refreshHourmarker = function() {
  * Attach events
  */
 TimeGrid.prototype.attachEvent = function() {
-    window.clearInterval(this.intervalID);
-    this.intervalID = window.setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
+    clearInterval(this.intervalID);
+    this.intervalID = setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
 };
 
 /**
  * Scroll time grid to current hourmarker.
  */
 TimeGrid.prototype.scrollToNow = function() {
-    var container = this.container;
+    var self = this,
+        container = this.container;
 
-    window.setTimeout(util.bind(function() {
-        var currentHourTop = this.hourmarker.getBoundingClientRect().top - 
-                this.container.getBoundingClientRect().top,
-            viewBound = this.getViewBound();
+    clearTimeout(this.timeoutID);
+    this.timeoutID = setTimeout(util.bind(function() {
+        var currentHourTop = self.hourmarker.getBoundingClientRect().top -
+                self.container.getBoundingClientRect().top,
+            viewBound = self.getViewBound();
 
         container.scrollTop = (currentHourTop - (viewBound.height / 2));
-    }, this), INITIAL_AUTOSCROLL_DELAY);
+    }), INITIAL_AUTOSCROLL_DELAY);
 };
 
 /**********
@@ -14938,7 +17677,7 @@ module.exports = TimeGrid;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/autoScroll":24,"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":33,"../../config":36,"../template/week/timeGrid.hbs":90,"../view":91,"./time":94}],96:[function(require,module,exports){
+},{"../../common/autoScroll":24,"../../common/common":26,"../../common/datetime":27,"../../common/domutil":30,"../../common/reqAnimFrame":35,"../../config":39,"../template/week/timeGrid.hbs":109,"../view":110,"./time":113}],115:[function(require,module,exports){
 (function (global){
 /**
  * @fileoverview View of days UI.
@@ -14956,8 +17695,10 @@ var View = require('../view');
  * @constructor
  * @param {Base.Week} controller The controller mixin part.
  * @param {object} options View options
- * @param {string} [options.renderStartDate] Start date of render. if not supplied then use -3d from today. YYYY-MM-DD format.
- * @param {string} [options.renderEndDate] End date of render. if not supplied then use +3d from today. YYYY-MM-DD format.
+ * @param {string} [options.renderStartDate] Start date of render.
+ *  if not supplied then use -3d from today. YYYY-MM-DD format.
+ * @param {string} [options.renderEndDate] End date of render.
+ *  if not supplied then use +3d from today. YYYY-MM-DD format.
  * @param {string} [options.cssPrefix] - CSS classname prefix
  * @param {HTMLElement} container The element to use container for this view.
  * @extends {View}
@@ -15013,7 +17754,7 @@ Week.prototype.render = function() {
             renderEndDate: renderEndDate
         };
 
-    this.childs.each(function(childView) {
+    this.children.each(function(childView) {
         childView.render(viewModel);
     });
 
@@ -15036,8 +17777,8 @@ Week.prototype.viewName = 'week';
  */
 Week.prototype._getRenderDateRange = function(baseDate) {
     var base = datetime.start(baseDate),
-        start = new Date(+base),
-        end = new Date(+base);
+        start = new Date(Number(base)),
+        end = new Date(Number(base));
 
     start.setDate(start.getDate() - 3);
     end.setDate(end.getDate() + 3);
@@ -15054,4 +17795,265 @@ module.exports = Week;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../common/datetime":27,"../../common/domutil":30,"../../config":36,"../view":91}]},{},[1]);
+},{"../../common/datetime":27,"../../common/domutil":30,"../../config":39,"../view":110}],116:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var HandlebarsCompiler = require('hbsfy/runtime');
+module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+
+  return "<div class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-grid-line\" style=\"width:"
+    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+    + "%;left:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+    + "%;\"></div>\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"4":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"5":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\n"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"6":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+
+  return "\n<div data-id=\""
+    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+    + "\"\n     class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event-block\n        "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderStarts : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n        "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.renderEnds : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\"\n     style=\"top:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
+    + "px;\n            left:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+    + "%;\n            width:"
+    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+    + "%;\n            height:"
+    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
+    + "px;\n            margin-top:"
+    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
+    + "px\">\n    <div class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event\" style=\"height:"
+    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventHeight), depth0))
+    + "px;color:"
+    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+    + ";background-color:"
+    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+    + "\">\n        <span class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-event-title\">"
+    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+    + "</span>\n        <span class=\""
+    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-resize-handle handle-y\">&nbsp;</span>\n    </div>\n</div>\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return " "
+    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-exceed-left";
+},"9":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return " "
+    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-exceed-right";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-grid \">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "weekday-events\">\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n";
+},"useData":true});
+
+},{"hbsfy/runtime":21}],117:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Weekday view for week
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util,
+    mmax = Math.max;
+
+var Weekday = require('../weekday'),
+    tmpl = require('./weekdayInWeek.hbs');
+
+/**
+ * @constructor
+ * @extends {Weekday}
+ * @param {object} options - options for WeekdayInWeek view
+ * @param {number} [options.containerHeight=40] - minimum height of event
+ *  container element.
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to
+ *  make create easy.
+ * @param {number} [options.eventHeight=18] - height of each event block.
+ * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {HTMLDIVElement} container - DOM element to use container for this
+ *  view.
+ */
+function WeekdayInWeek(options, container) {
+    Weekday.call(this, options, container);
+}
+
+util.inherit(WeekdayInWeek, Weekday);
+
+/**
+ * Render Weekday view
+ * @override
+ */
+WeekdayInWeek.prototype.render = function(viewModel) {
+    var opt = this.options,
+        container = this.container,
+        baseViewModel = this.getBaseViewModel(),
+        maxEventInDay = 0;
+
+    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
+
+    maxEventInDay = mmax.apply(
+        null,
+        util.map(viewModel.matrices, function(matrix) {
+            return Math.max.apply(null, util.map(matrix, function(row) {
+                return row.length;
+            }));
+        })
+    );
+
+    this._setMinHeight(maxEventInDay);
+
+    container.innerHTML = tmpl(baseViewModel);
+};
+
+/**
+ * Set minimum height for container.
+ *
+ * Need set min-height to container when wrapping container's height is smaller
+ * then weekday container.
+ *
+ * If set height directly, vertical grids represent in each days are not cover
+ * wrapping container.
+ *
+ * @param {number} maxEventInDay - how largest event block in one day?
+ */
+WeekdayInWeek.prototype._setMinHeight = function(maxEventInDay) {
+    var opt = this.options,
+        newHeight = (maxEventInDay * (opt.eventHeight + opt.eventGutter)) +
+            opt.containerBottomGutter;
+
+    this.container.style.minHeight = newHeight + 'px';
+};
+
+module.exports = WeekdayInWeek;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../weekday":118,"./weekdayInWeek.hbs":116}],118:[function(require,module,exports){
+(function (global){
+/**
+ * @fileoverview Weekday view
+ * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ */
+'use strict';
+var util = global.tui.util;
+var config = require('../config'),
+    domutil = require('../common/domutil'),
+    datetime = require('../common/datetime'),
+    View = require('./view');
+
+/**
+ * @constructor
+ * @extends {View}
+ * @param {object} options - view options.
+ * @param {number} [options.containerHeight=40] - minimum height of event
+ *  container element.
+ * @param {number} [options.containerButtonGutter=8] - free space at bottom to
+ *  make create easy.
+ * @param {number} [options.eventHeight=18] - height of each event block.
+ * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {HTMLDIVElement} container - DOM element to use container for this
+ *  view.
+ */
+function Weekday(options, container) {
+    container = domutil.appendHTMLElement(
+        'div',
+        container,
+        config.classname('weekday')
+    );
+
+    /**
+     * @type {object}
+     */
+    this.options = util.extend({
+        containerHeight: 40,
+        containerBottomGutter: 8,
+        eventHeight: 18,
+        eventGutter: 2
+    }, options);
+
+    View.call(this, container);
+}
+
+util.inherit(Weekday, View);
+
+/**
+ * Get render date range
+ * @returns {Date[]} rendered date range
+ */
+Weekday.prototype.getRenderDateRange = function() {
+    var opt = this.options;
+
+    return datetime.range(
+        datetime.start(datetime.parse(opt.renderStartDate)),
+        datetime.end(datetime.parse(opt.renderEndDate)),
+        datetime.MILLISECONDS_PER_DAY
+    );
+};
+
+/**
+ * Get default view model.
+ * @param {object} viewModel - viewModel from parent views.
+ * @returns {object} viewModel to rendering.
+ */
+Weekday.prototype.getBaseViewModel = function() {
+    var opt = this.options,
+        range = this.getRenderDateRange(),
+        gridWidth = (100 / range.length);
+
+    return {
+        width: gridWidth,
+        eventHeight: opt.eventHeight,
+        eventBlockHeight: (opt.eventHeight + opt.eventGutter),
+        eventBlockGutter: opt.eventGutter,
+        dates: util.map(range, function(date) {
+            return {
+                date: date.getDate(),
+                month: date.getMonth() + 1,
+                day: date.getDay()
+            };
+        })
+    };
+};
+
+module.exports = Weekday;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../common/datetime":27,"../common/domutil":30,"../config":39,"./view":110}]},{},[1]);

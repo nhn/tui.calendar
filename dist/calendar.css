@@ -1,10 +1,9 @@
 /**
  * Dooray Calendar
- * @version 0.1.19
+ * @version 1.0.0
  */
 .dcal-layout {
   height: 100%;
-  border: 1px solid #ccc;
   background-color: #ccc;
 }
 .dcal-dragging {
@@ -42,6 +41,9 @@
   height: 7px;
   border-radius: 50%;
 }
+.dcal-holiday {
+  color: #f00;
+}
 .handle-x {
   background-position: center center;
   background-repeat: no-repeat;
@@ -62,62 +64,72 @@
     background-size: 4px 8px;
   }
 }
-.dcal-monthweek-container,
-.dcal-monthweek-grid,
-.dcal-monthweek-grid-line {
+.dcal-month-week-item .dcal-weekday {
+  border-top: 1px solid #ccc;
+}
+.dcal-weekday-container,
+.dcal-weekday-grid,
+.dcal-weekday-grid-line {
   height: 100%;
   min-height: inherit;
 }
-.dcal-monthweek-container {
+.dcal-weekday-container {
   position: relative;
 }
-.dcal-monthweek-grid-line {
+.dcal-weekday-grid-line {
   position: absolute;
   margin-left: -1px;
   border-left: 1px solid #ccc;
 }
-.dcal-monthweek-events {
+.dcal-weekday-grid-line:first-child {
+  border: none;
+}
+.dcal-weekday-events {
   top: 0px;
   left: 0px;
   width: 100%;
   height: 100%;
   position: absolute;
+  font-size: 0.9em;
 }
-.dcal-monthweek-event-block {
+.dcal-weekday-event-block {
   position: absolute;
 }
-.dcal-monthweek-event {
+.dcal-weekday-event {
   position: relative;
   margin: 0 3px 0 2px;
 }
-.dcal-monthweek-event span {
+.dcal-weekday-event span,
+.dcal-weekday-event-time span {
   padding-left: 3px;
   line-height: 18px;
-  font-size: 0.9em;
 }
-.dcal-monthweek-event-title {
+.dcal-weekday-event-title {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 10px;
 }
-.dcal-monthweek-exceed-left .dcal-monthweek-event {
+.dcal-weekday-exceed-left .dcal-weekday-event {
   margin-left: 0px;
 }
-.dcal-monthweek-exceed-right .dcal-monthweek-event {
+.dcal-weekday-exceed-right .dcal-weekday-event {
   margin-right: 0px;
 }
-.dcal-monthweek-exceed-right .dcal-monthweek-resize-handle {
+.dcal-weekday-exceed-right .dcal-weekday-resize-handle {
   display: none;
 }
-.dcal-monthweek-resize-handle {
+.dcal-weekday-resize-handle {
   position: absolute;
   top: 0;
   right: 0;
   width: 6px;
   background-position: 3px center;
   cursor: col-resize;
+}
+.dcal-weekday-filled {
+  background-color: #e8e8e8;
 }
 .dcal-week-container {
   width: 100%;
@@ -200,7 +212,9 @@
   background-color: #f7ca88;
   line-height: 18px;
   opacity: 0.9;
-  outline: 2px solid #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .dcal-allday-guide-creation:after {
   content: '\00a0';
@@ -354,10 +368,83 @@
 .dcal-month {
   height: 100%;
 }
-.dcal-week-in-month {
-  border-bottom: 1px solid #ccc;
+.dcal-month-dayname {
+  width: 100%;
+  height: 20px;
+  background-color: #fff;
+  font-size: 0.9em;
+  position: absolute;
+  z-index: 1;
+}
+.dcal-month-dayname-item {
+  height: 100%;
+  border-left: 1px solid #ccc;
+  margin-left: -1px;
+}
+.dcal-month-dayname-item:first-child {
+  border-left: none;
+}
+.dcal-month-weeks {
+  padding-top: 20px;
+  height: 100%;
+}
+.dcal-month-week-item {
   position: relative;
   background-color: #fff;
+}
+.dcal-month-more {
+  background-color: #fff;
+  height: inherit;
+  min-width: 200px;
+  border: 1px solid #ccc;
+}
+.dcal-month-more-title {
+  padding: 0 3px;
+  height: 19px;
+  border-bottom: 1px solid #ccc;
+}
+.dcal-month-more-close {
+  float: right;
+}
+.dcal-month-more-list {
+  overflow-y: scroll;
+}
+.dcal-month-more-event {
+  margin: 2px;
+  padding: 0 3px;
+  font-size: 0.9em;
+  line-height: 18px;
+}
+.dcal-month-guide-block {
+  position: absolute;
+}
+.dcal-month-guide {
+  position: relative;
+  margin: 2px 3px 0 2px;
+  padding-left: 3px;
+  background-color: #f7ca88;
+  line-height: 18px;
+  opacity: 0.9;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.dcal-month-exceed-left .dcal-month-guide {
+  margin-left: 0px;
+}
+.dcal-month-exceed-right .dcal-month-guide {
+  margin-right: 0px;
+}
+.dcal-month-exceed-right .dcal-month-guide-handle {
+  display: none;
+}
+.dcal-month-guide-handle {
+  position: absolute;
+  top: 0;
+  right: 3px;
+  width: 6px;
+  background-position: 3px center;
+  cursor: col-resize;
 }
 .dcal-milestone-container {
   height: 100%;
@@ -405,71 +492,74 @@
   white-space: nowrap;
   overflow: hidden;
 }
-table {
+.dcal-minicalendar table {
   width: 100%;
   height: 100%;
   font-size: 0.9em;
   table-layout: fixed;
   border-collapse: collapse;
 }
-caption,
-th,
-td,
-button {
+.dcal-minicalendar caption,
+.dcal-minicalendar th,
+.dcal-minicalendar td,
+.dcal-minicalendar button {
   margin: 0;
   padding: 0;
   font-size: 1em;
-  background-color: transparent;
   border: none;
 }
-button {
+.dcal-minicalendar button {
   cursor: pointer;
   outline: none;
 }
-button > div {
+.dcal-minicalendar button > div {
   position: relative;
   top: 0;
   left: 0;
 }
-caption {
+.dcal-minicalendar caption {
   margin: 0 20px;
   height: 30px;
   line-height: 25px;
   font-size: 1.2em;
   text-align: center;
 }
-caption .dcal-minicalendar-prev,
-caption .dcal-minicalendar-next,
-caption .dcal-minicalendar-title {
+.dcal-minicalendar caption .prev,
+.dcal-minicalendar caption .next,
+.dcal-minicalendar caption .title {
   display: inline-block;
   line-height: inherit;
 }
-caption .dcal-minicalendar-prev,
-caption .dcal-minicalendar-next {
+.dcal-minicalendar caption .prev,
+.dcal-minicalendar caption .next {
   width: 16px;
   background-repeat: no-repeat;
   background-position: center center;
 }
-caption .dcal-minicalendar-prev span,
-caption .dcal-minicalendar-next span {
+.dcal-minicalendar caption .prev span,
+.dcal-minicalendar caption .next span {
   visibility: hidden;
 }
-caption .dcal-minicalendar-prev {
+.dcal-minicalendar caption .prev {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAKklEQVR42q3IsQEAIAyEwDca9h/ZOrRKx+Wl8jN/wfwWNIIyZBtyiCXfuj9BAHLLHGpeAAAAAElFTkSuQmCC");
 }
-caption .dcal-minicalendar-next {
+.dcal-minicalendar caption .next {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==");
 }
-caption .dcal-minicalendar-title {
+.dcal-minicalendar caption .title {
   font-size: 1.1em;
   width: 80px;
 }
-tbody button {
+.dcal-minicalendar tbody button {
   display: block;
   width: 100%;
   height: 100%;
   text-align: center;
   line-height: 100%;
+}
+.dcal-minicalendar-date,
+.dcal-minicalendar-nav {
+  background-color: transparent;
 }
 .dcal-minicalendar-other-month button {
   color: #ccc;
