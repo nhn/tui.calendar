@@ -1,15 +1,23 @@
 /*eslint-disable*/
+var array = require('common/array');
+var Collection = require('common/collection');
+var ControllerFactory = require('factory/controller');
+var CalEvent = require('model/calEvent');
+var CalEventViewModel = require('model/viewModel/calEvent');
+var datetime = require('common/datetime');
+
 describe('controller/base', function() {
-    var ControllerFactory = ne.dooray.calendar.ControllerFactory,
-        CalEvent = ne.dooray.calendar.CalEvent,
-        Collection = ne.dooray.calendar.Collection,
-        util = tui.util,
+    var util = tui.util,
         ctrl,
         set;
 
     beforeEach(function() {
         ctrl = ControllerFactory();
-        set = getJSONFixture('event_set_string.json');
+        set = fixture.load('event_set_string.json');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     describe('_getContainDatesInEvent()', function() {

@@ -1,7 +1,8 @@
+var MonthResize = require('handler/month/resize');
+var controllerFactory = require('factory/controller');
+
 describe('handler:month/resize', function() {
-    var MonthResize = ne.dooray.calendar.MonthResize,
-        controllerFactory = ne.dooray.calendar.ControllerFactory,
-        ctrl, eventInst, mockInst, mockCache;
+    var ctrl, eventInst, mockInst, mockCache;
 
     it('should fire update event properly.', function() {
         ctrl = controllerFactory();

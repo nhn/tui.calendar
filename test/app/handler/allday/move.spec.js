@@ -1,7 +1,9 @@
 /*eslint-disable*/
+var domutil = require('common/domutil');
+var AlldayMove = require('handler/allday/move');
+
 describe('handler:AlldayMove', function() {
-    var AlldayMove = window.ne.dooray.calendar.AlldayMove,
-        proto;
+    var proto;
 
     beforeEach(function() {
         proto = AlldayMove.prototype;
@@ -63,7 +65,7 @@ describe('handler:AlldayMove', function() {
                 options: {
                     renderStartDate: '2015-04-29',
                     renderEndDate: '2015-05-03'
-                } 
+                }
             };
         });
 
@@ -97,11 +99,9 @@ describe('handler:AlldayMove', function() {
     });
 
     describe('event handlers', function() {
-        var inst,
-            domutil;
+        var inst;
 
         beforeEach(function() {
-            domutil = window.ne.dooray.calendar.domutil;
             spyOn(domutil, 'closest');
             spyOn(domutil, 'getData');
 

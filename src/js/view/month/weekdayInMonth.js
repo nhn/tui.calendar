@@ -8,7 +8,7 @@ var util = global.tui.util,
     mfloor = Math.floor,
     mmax = Math.max;
 
-var Handlebars = require('hbsfy/runtime');
+var Handlebars = require('handlebars/runtime');
 
 var config = require('../../config'),
     common = require('../../common/common.js'),

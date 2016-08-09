@@ -1,9 +1,14 @@
+var DoorayEvent = require('dooray/model/calEvent');
+
 describe('dooray:model/Event', function() {
-    var DoorayEvent = ne.dooray.calendar.DoorayEvent,
-        jsonFixtures;
+    var jsonFixtures;
 
     beforeEach(function() {
-        jsonFixtures = getJSONFixture('dooray/mock_tasks.json');
+        jsonFixtures = fixture.load('dooray/mock_tasks.json');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     it('factory function (create())', function() {

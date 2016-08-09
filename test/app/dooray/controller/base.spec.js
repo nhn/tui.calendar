@@ -1,11 +1,15 @@
+var DoorayController = require('dooray/controller/base');
 describe('service:controller/DoorayCalendar', function() {
-    var DoorayController = ne.dooray.calendar.DoorayController,
-        doorayBase,
+    var doorayBase,
         jsonFixture;
 
     beforeEach(function() {
         doorayBase = new DoorayController();
-        jsonFixture = getJSONFixture('dooray/mock_tasks.json');
+        jsonFixture = fixture.load('dooray/mock_tasks.json');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     it('createEvent() can create single DoorayEvent instance from data.', function() {

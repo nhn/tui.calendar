@@ -1,8 +1,10 @@
 /*eslint-disable*/
+var domutil = require('common/domutil');
+var datetime = require('common/datetime');
+var TimeMove = require('handler/time/move');
+
 describe('handler/time.move', function() {
     var util = tui.util,
-        domutil = ne.dooray.calendar.domutil,
-        TimeMove = ne.dooray.calendar.TimeMove,
         mockInstance;
 
     it('checkExpectedCondition()', function() {
@@ -71,9 +73,9 @@ describe('handler/time.move', function() {
                 fire: jasmine.createSpy('fire')
             };
         });
-        
+
         it('update event model by event data.', function() {
-            var oneHour = ne.dooray.calendar.datetime.millisecondsFrom('hour', 1);
+            var oneHour = datetime.millisecondsFrom('hour', 1);
             var eventData = {
                 targetModelID: 20,
                 nearestRange: [0, oneHour],
@@ -95,7 +97,7 @@ describe('handler/time.move', function() {
         });
 
         it('limit updatable start and ends.', function() {
-            var oneHour = ne.dooray.calendar.datetime.millisecondsFrom('hour', 1);
+            var oneHour = datetime.millisecondsFrom('hour', 1);
             baseControllerMock.events.items['20'].starts = new Date('2015-05-01T00:00:00+09:00');
             baseControllerMock.events.items['20'].starts = new Date('2015-05-01T00:30:00+09:00');
             baseControllerMock.events.items['20'].getStarts = function() {
@@ -120,7 +122,7 @@ describe('handler/time.move', function() {
             };
 
             TimeMove.prototype._updateEvent.call(mockInstance, eventData);
-            
+
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
                 starts: new Date('2015-05-01T00:00:00+09:00'),
@@ -128,7 +130,7 @@ describe('handler/time.move', function() {
             });
 
             baseControllerMock.updateEvent.calls.reset();
-            eventData.nearestRange = [0, ne.dooray.calendar.datetime.millisecondsFrom('hour', 25)];
+            eventData.nearestRange = [0, datetime.millisecondsFrom('hour', 25)];
             TimeMove.prototype._updateEvent.call(mockInstance, eventData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {

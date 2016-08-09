@@ -20,6 +20,6 @@
     "tests"
   ],
   "dependencies": {
-    "tui-code-snippet": "~1.0.6"
+    "tui-code-snippet": "^1.1.2"
   }
 }

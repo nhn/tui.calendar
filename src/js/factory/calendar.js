@@ -3,9 +3,8 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-
 var util = global.tui.util;
-var Handlebars = require('hbsfy/runtime');
+var Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),

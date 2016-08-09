@@ -1,6 +1,6 @@
+var TaskView = require('dooray/view/taskview');
 describe('service:view/TaskView', function() {
-    var TaskView = ne.dooray.calendar.TaskView,
-        mockInst;
+    var mockInst;
 
     beforeEach(function() {
         mockInst = {
@@ -19,7 +19,7 @@ describe('service:view/TaskView', function() {
 
             var expected = {
                 events: {
-                    '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}, 
+                    '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}},
                     '2015-05-02': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}
                 },
                 width: 50,
@@ -39,7 +39,7 @@ describe('service:view/TaskView', function() {
 
             var expected = {
                 events: {
-                    '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}}, 
+                    '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}},
                     '2015-05-02': { 'hello': { length: 2 } }
                 },
                 width: 50,

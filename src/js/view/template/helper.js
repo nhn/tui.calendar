@@ -5,7 +5,8 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = tui.util;
+var Handlebars = require('handlebars-template-loader/runtime');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
@@ -26,7 +27,7 @@ function getElSize(value, postfix, prefix) {
     return prefix + ':auto';
 }
 
-module.exports = {
+Handlebars.registerHelper({
     /**
      * Stamp supplied object
      *
@@ -205,5 +206,4 @@ module.exports = {
     },
 
     'minicalendar-tmpl': function(model) {}  // eslint-disable-line
-};
-
+});

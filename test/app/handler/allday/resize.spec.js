@@ -1,6 +1,6 @@
-describe('handler:AlldayResize', function() {
-    var AlldayResize = window.ne.dooray.calendar.AlldayResize;
+var AlldayResize = require('handler/allday/resize');
 
+describe('handler:AlldayResize', function() {
     describe('_updateEvent()', function() {
         var mockEventData,
             mockEventInstance,
@@ -19,7 +19,7 @@ describe('handler:AlldayResize', function() {
                 options: {
                     renderStartDate: '2015-04-29',
                     renderEndDate: '2015-05-03'
-                } 
+                }
             };
         });
 
@@ -51,7 +51,7 @@ describe('handler:AlldayResize', function() {
                 starts: new Date('2015-05-02T00:00:00+09:00'),
                 ends: new Date('2015-05-02T23:59:59+09:00')
             });
-            
+
         });
 
         it('update event model properly by supplied event data.', function() {

@@ -1,7 +1,8 @@
 /*eslint-disable*/
+var model = require('common/model');
+
 describe('model/model', function() {
-    var model = ne.dooray.calendar.model,
-        myObj;
+    var myObj;
 
     beforeEach(function() {
         myObj = {};

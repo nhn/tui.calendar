@@ -1,8 +1,9 @@
+var getMousePosData = require('handler/month/core');
+var Month = require('view/month/month');
+var WeekdayInMonth = require('view/month/weekdayInMonth');
+
 describe('handler:MonthCore', function() {
-    var getMousePosData = ne.dooray.calendar.MonthCore,
-        Month = ne.dooray.calendar.Month,
-        WeekdayInMonth = ne.dooray.calendar.WeekdayInMonth,
-        m, w1, w2;
+    var m, w1, w2;
 
     beforeEach(function() {
         var container = document.createElement('div');

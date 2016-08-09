@@ -1,10 +1,13 @@
+var domutil = require('common/domutil');
+var Collection = require('common/collection');
+var AlldayClick = require('handler/allday/click');
+
 describe('handler:AlldayClick', function() {
-    var AlldayClick = ne.dooray.calendar.AlldayClick,
-        mockInst, mockCollection;
-    
+    var mockInst, mockCollection;
+
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정
-        mockCollection = new ne.dooray.calendar.Collection();
+        mockCollection = new Collection();
         mockCollection.add({_id: '2', text: 'hello'});
 
         mockInst = jasmine.createSpyObj('AlldayClick', ['checkExpectCondition', 'fire']);
@@ -13,16 +16,16 @@ describe('handler:AlldayClick', function() {
         };
         mockInst.checkExpectCondition.and.returnValue(true);
 
-        spyOn(window.ne.dooray.calendar.domutil, 'closest').and.returnValue(true);
+        spyOn(domutil, 'closest').and.returnValue(true);
     });
 
     it('_onClick fire custom event "clickEvent" when target element is related with one of event instance of base controllers.', function() {
         var vMouseEvent = {originEvent: 'test'};
         // 클릭 대상 엘리먼트가 id '2'인 일정과 관계가 있을 때
-        spyOn(window.ne.dooray.calendar.domutil, 'getData').and.returnValue('2');
+        spyOn(domutil, 'getData').and.returnValue('2');
 
         // 실행하면
-        AlldayClick.prototype._onClick.call(mockInst, vMouseEvent); 
+        AlldayClick.prototype._onClick.call(mockInst, vMouseEvent);
 
         // 이벤트가 아래처럼 발생한다
         expect(mockInst.fire).toHaveBeenCalledWith('clickEvent', {

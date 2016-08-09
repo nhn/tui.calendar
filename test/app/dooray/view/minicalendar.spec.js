@@ -1,6 +1,7 @@
+var MiniCalendar = require('dooray/view/minicalendar');
+
 describe('service:view/MiniCalendar', function() {
-    var MiniCalendar = window.ne.dooray.calendar.MiniCalendar,
-        undef = (function() {})(),
+    var undef = (function() {})(),
         mockInst;
 
     beforeEach(function() {

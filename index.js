@@ -1,5 +1,6 @@
 /* eslint vars-on-top:0, strict:0 */
-require('./src/js/view/template/registerHelpers');
+require('./src/css/main.styl');
+require('./src/js/view/template/helper');
 
 /** @namespace ne.dooray.calendar */
 global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
@@ -15,7 +16,7 @@ global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calen
     common: require('./src/js/common/common'),
     reqAnimFrame: require('./src/js/common/reqAnimFrame'),
     AJAX: require('./src/js/common/ajax'),
-    Point: require('./src/js/common/point'), 
+    Point: require('./src/js/common/point'),
     VLayout: require('./src/js/common/vlayout'),
     VPanel: require('./src/js/common/vpanel'),
     FloatingLayer: require('./src/js/common/floatingLayer'),

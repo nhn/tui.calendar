@@ -1,7 +1,8 @@
 /*eslint-disable*/
+var dirty = require('common/dirty');
+
 describe('dirty mixin', function() {
-    var dirty = ne.dooray.calendar.dirty,
-        obj;
+    var obj;
 
     function Animal(name) {
        this.name = name;

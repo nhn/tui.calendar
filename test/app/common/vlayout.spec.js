@@ -1,15 +1,20 @@
+var VLayout = require('common/vlayout');
+var VPanel = require('common/vpanel');
+
 describe('VLayout', function() {
-    var VLayout = ne.dooray.calendar.VLayout,
-        VPanel = ne.dooray.calendar.VPanel,
-        inst;
+    var inst;
 
     function getDiv() {
         return document.getElementById('vlayout');
     }
 
-    
+
     beforeEach(function() {
-        loadFixtures('vlayout.html');
+        fixture.load('vlayout.html');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     it('getLayoutData() return height list for each normal panels with `autoHeight` false', function() {
@@ -112,7 +117,7 @@ describe('VLayout', function() {
         it('resize at 1 splitter between 2 panels.', function() {
             inst.addPanels([
                 {height: 100},         // 100,  100
-                {isSplitter: true},    // 
+                {isSplitter: true},    //
                 {height: 100},         // 100,  205
             ], inst.container);
             spyOn(tui.util, 'forEach');
@@ -126,9 +131,9 @@ describe('VLayout', function() {
         it('resize first splitter across to 2 splitter', function() {
             inst.addPanels([
                 {height: 100},         // 100,  100
-                {isSplitter: true},    // 
+                {isSplitter: true},    //
                 {height: 100},         // 100,  200
-                {isSplitter: true},    // 
+                {isSplitter: true},    //
                 {height: 30}           // 30 ,  230
             ], inst.container);
             spyOn(tui.util, 'forEach');
@@ -142,9 +147,9 @@ describe('VLayout', function() {
         it('두 번째 스플리터를 30만큼 위로 드래그했다고 가정', function() {
             inst.addPanels([
                 {height: 100},         // 100,  100
-                {isSplitter: true},    // 
+                {isSplitter: true},    //
                 {height: 100},         // 100,  200
-                {isSplitter: true},    // 
+                {isSplitter: true},    //
                 {height: 30}           // 30 ,  230
             ], inst.container);
             spyOn(tui.util, 'forEach');

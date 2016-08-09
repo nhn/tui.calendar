@@ -1,7 +1,8 @@
 /*eslint-disable*/
+var CalEvent = require('model/calEvent');
+
 describe('model/event', function() {
-    var CalEvent = ne.dooray.calendar.CalEvent,
-        event;
+    var event;
 
     beforeEach(function() {
         event = new CalEvent();
@@ -260,7 +261,7 @@ describe('model/event', function() {
             expect(a.collidesWith(b)).toBe(false);
             expect(b.collidesWith(a)).toBe(false);
         });
-        
+
         /**
          * type - G
          * |---|

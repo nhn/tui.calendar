@@ -1,8 +1,10 @@
 /*eslint-disable*/
+var domutil = require('common/domutil');
+var datetime = require('common/datetime');
+var TimeResize = require('handler/time/resize');
+
 describe('TimeResize', function() {
-    var domutil = ne.dooray.calendar.domutil,
-        TimeResize = ne.dooray.calendar.TimeResize,
-        mockInstance;
+    var mockInstance;
 
     it('checkExpectCondition()', function() {
         var target = document.createElement('div');
@@ -63,7 +65,7 @@ describe('TimeResize', function() {
         });
 
         it('update event model by event data.', function() {
-            var oneHour = ne.dooray.calendar.datetime.millisecondsFrom('hour', 1);
+            var oneHour = datetime.millisecondsFrom('hour', 1);
             var eventData = {
                 targetModelID: 20,
                 nearestRange: [0, oneHour],
@@ -84,7 +86,7 @@ describe('TimeResize', function() {
         });
 
         it('can\'t update event duration less than 30 minutes.', function() {
-            var oneHour = ne.dooray.calendar.datetime.millisecondsFrom('hour', 1);
+            var oneHour = datetime.millisecondsFrom('hour', 1);
             var eventData = {
                 targetModelID: 20,
                 // backward resize!
@@ -106,7 +108,7 @@ describe('TimeResize', function() {
         });
 
         it('can\' update ends exceed 23:59:59:999', function() {
-            var twoDay = ne.dooray.calendar.datetime.millisecondsFrom('hour', 48);
+            var twoDay = datetime.millisecondsFrom('hour', 48);
             var eventData = {
                 targetModelID: 20,
                 nearestRange: [0, twoDay],

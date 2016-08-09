@@ -1,11 +1,16 @@
 /*eslint-disable*/
+var View = require('view/view');
+
 describe('View', function() {
     var util = tui.util,
-        View = ne.dooray.calendar.View,
         view;
 
     beforeEach(function() {
-        loadFixtures('view.html');
+        fixture.load('view.html');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     describe('View()', function() {
@@ -106,7 +111,7 @@ describe('View', function() {
         beforeEach(function() {
             view = new View();
             view2 = new View();
-            
+
             view.addChild(view2);
         });
 
@@ -133,7 +138,7 @@ describe('View', function() {
         beforeEach(function() {
             view = new View();
             view2 = new View();
-            
+
             view.addChild(view2);
         });
 

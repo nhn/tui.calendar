@@ -1,6 +1,7 @@
+var Freebusy = require('dooray/view/freebusy');
+
 describe('Freebusy', function() {
-    var Freebusy = ne.dooray.calendar.Freebusy,
-        inst;
+    var inst;
 
     beforeEach(function() {
         inst = new Freebusy({}, document.createElement('div'));
@@ -42,11 +43,9 @@ describe('Freebusy', function() {
 
     describe('addUser()', function() {
         it('Throw error when adding a non id user object', function() {
-            spyOn(window, 'alert');
-            
-            inst.addUser({id: ''});
-
-            expect(window.alert).toHaveBeenCalled();
+            expect(function() {
+                inst.addUser({id: ''});
+            }).toThrow();
         });
 
         it('Add user data properly.', function() {
@@ -60,7 +59,7 @@ describe('Freebusy', function() {
             };
 
             inst.addUser(user1);
-            
+
             expect(inst.users.length).toBe(1);
             expect(inst.users.length).not.toBe(2);
             expect(inst.users.single()).toBe(user1);

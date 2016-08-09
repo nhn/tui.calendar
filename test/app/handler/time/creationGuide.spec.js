@@ -1,7 +1,8 @@
+var datetime = require('common/datetime');
+var TimeCreationGuide = require('handler/time/creationGuide');
+
 describe('handler/time.creation.guide', function() {
-    var TimeCreationGuide = ne.dooray.calendar.TimeCreationGuide,
-        datetime = ne.dooray.calendar.datetime,
-        mockTimeCreation,
+    var mockTimeCreation,
         inst;
 
     beforeEach(function() {
@@ -79,7 +80,7 @@ describe('handler/time.creation.guide', function() {
             expect(expected).toEqual(actual);
         });
     });
-    
+
     describe('_onDrag()', function() {
         var mockEventData,
             mockTimeView,
@@ -142,7 +143,7 @@ describe('handler/time.creation.guide', function() {
             inst._onDrag(mockEventData);
 
             expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, +startTime, +time + min30);
-            
+
         });
     });
 });

@@ -7,7 +7,7 @@
 var util = global.tui.util;
 var config = require('../config');
 var domutil = require('../common/domutil');
-var VLayout = require('../common/vLayout');
+var VLayout = require('../common/vlayout');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views

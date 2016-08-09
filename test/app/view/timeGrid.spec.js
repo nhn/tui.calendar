@@ -1,7 +1,8 @@
 /*eslint-disable*/
+var TimeGrid = require('view/week/timeGrid');
+
 describe('View/TimeGrid', function() {
-    var TimeGrid = ne.dooray.calendar.TimeGrid,
-        proto;
+    var proto;
 
     beforeEach(function() {
         proto = TimeGrid.prototype;
@@ -40,7 +41,7 @@ describe('View/TimeGrid', function() {
                 _getBaseViewModel: function() { return {hours: {length: 24}} },
                 options: {
                     hourStart: 0,
-                    hourEnd: 24 
+                    hourEnd: 24
                 }
             };
         });

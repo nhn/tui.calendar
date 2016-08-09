@@ -1,12 +1,12 @@
+var array = require('common/array');
+var Collection = require('common/collection');
+var ControllerFactory = require('factory/controller');
+var CalEvent = require('model/calEvent');
+var CalEventViewModel = require('model/viewModel/calEvent');
+
 describe('Base.Core', function() {
     var util = tui.util,
-        array = ne.dooray.calendar.array,
-        Collection = ne.dooray.calendar.Collection,
-        ControllerFactory = ne.dooray.calendar.ControllerFactory,
-        CalEvent = ne.dooray.calendar.CalEvent,
-        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
-
-        fixture,
+        mockData,
         eventList,
         controller,
         expected,
@@ -14,10 +14,14 @@ describe('Base.Core', function() {
 
     beforeEach(function() {
         controller = ControllerFactory();
-        fixture = getJSONFixture('event_set_string3.json');
-        eventList = util.map(fixture, function(data) {
+        mockData = fixture.load('event_set_string3.json');
+        eventList = util.map(mockData, function(data) {
             return CalEvent.create(data);
         }).sort(array.compare.event.asc);
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     describe('getCollisionGroup()', function() {
@@ -25,9 +29,9 @@ describe('Base.Core', function() {
             actual = controller.Core.getCollisionGroup(eventList);
             expected = [
                 [
-                    eventList[0].cid(), 
-                    eventList[1].cid(), 
-                    eventList[2].cid(), 
+                    eventList[0].cid(),
+                    eventList[1].cid(),
+                    eventList[2].cid(),
                     eventList[3].cid()
                 ],
                 [
@@ -196,13 +200,13 @@ describe('Base.Core', function() {
             d2 = new Date('2015-05-01T10:40:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
-            
+
             // G: 10:30 ~ 10:50
             d1 = new Date('2015-05-01T10:30:00+09:00');
             d2 = new Date('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
-            
+
             // H: 10:40 ~ 10:50
             d1 = new Date('2015-05-01T10:40:00+09:00');
             d2 = new Date('2015-05-01T10:50:00+09:00');

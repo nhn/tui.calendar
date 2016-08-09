@@ -1,7 +1,9 @@
 /*eslint-disable*/
+var reqAnimFrame = require('common/reqAnimFrame');
+var AlldayCreationGuide = require('handler/allday/creationGuide');
+
 describe('handler:AlldayCreationGuide', function() {
-    var AlldayCreationGuide = window.ne.dooray.calendar.AlldayCreationGuide,
-        mockGuideElement,
+    var mockGuideElement,
         mockInst,
         proto;
 
@@ -15,7 +17,7 @@ describe('handler:AlldayCreationGuide', function() {
         };
 
         proto = AlldayCreationGuide.prototype;
-        spyOn(window.ne.dooray.calendar.reqAnimFrame, 'requestAnimFrame').and.callFake(function(callback) {
+        spyOn(reqAnimFrame, 'requestAnimFrame').and.callFake(function(callback) {
             callback();
         });
     });

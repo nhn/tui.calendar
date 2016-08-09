@@ -1,12 +1,17 @@
 /*eslint-disable*/
+var View = require('view/view');
+var Week = require('view/week/week');
+
 describe('View/Week', function() {
-    var View = ne.dooray.calendar.View,
-        Week = ne.dooray.calendar.Week,
-        view;
+    var view;
 
     beforeEach(function() {
-        loadFixtures('view.html');
+        fixture.load('view.html');
         view = new Week(null, null, document.getElementById('container2'));
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     describe('render()', function() {
@@ -35,7 +40,7 @@ describe('View/Week', function() {
             var expectedStart = new Date(+d);
             expectedStart.setDate(expectedStart.getDate() - 3);
             expectedStart.setHours(0, 0, 0);
-            
+
             var expectedEnd = new Date(+d);
             expectedEnd.setDate(expectedEnd.getDate() + 3);
             expectedEnd.setHours(0, 0, 0);

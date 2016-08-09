@@ -1,8 +1,10 @@
+var Weekday = require('view/weekday');
+var WeekdayInMonth = require('view/month/weekdayInMonth');
+var CalEvent = require('model/calEvent');
+var CalEventViewModel = require('model/viewModel/calEvent');
+
 describe('view:WeekdayInMonth', function() {
-    var WeekdayInMonth = ne.dooray.calendar.WeekdayInMonth,
-        CalEvent = ne.dooray.calendar.CalEvent,
-        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
-        mockInst;
+    var mockInst;
 
     describe('_getRenderLimitIndex()', function() {
         var mockGetViewBound;
@@ -68,7 +70,7 @@ describe('view:WeekdayInMonth', function() {
         var spy;
 
         beforeEach(function() {
-            spy = spyOn(ne.dooray.calendar.Weekday.prototype, 'getRenderDateRange');
+            spy = spyOn(Weekday.prototype, 'getRenderDateRange');
         });
 
         it('should create view model by supplied skip data properly.', function() {

@@ -1,7 +1,10 @@
 /*eslint-disable*/
+var domutil = require('common/domutil');
+var domevent = require('common/domevent');
+var Drag = require('handler/drag');
+
 describe('Handler/Drag', function() {
-    var Drag = ne.dooray.calendar.Drag,
-        mockInst;
+    var mockInst;
 
     beforeEach(function() {
         mockInst = jasmine.createSpyObj('Drag', ['invoke', 'fire', '_toggleDragEvent', '_getEventData', '_clearData']);
@@ -13,7 +16,7 @@ describe('Handler/Drag', function() {
     describe('_onMouseUp', function() {
 
         it('emit "click" when not emitted drag event between mousedown and mousedown', function() {
-            spyOn(ne.dooray.calendar.domevent, 'preventDefault');
+            spyOn(domevent, 'preventDefault');
             mockInst.options = {
                 distance: 10
             };
@@ -38,7 +41,7 @@ describe('Handler/Drag', function() {
 
     describe('dragging', function() {
         beforeEach(function() {
-            spyOn(ne.dooray.calendar.domevent, 'getMouseButton').and.returnValue(0);
+            spyOn(domevent, 'getMouseButton').and.returnValue(0);
         });
 
         it('_dragStart fired only once every drag sessions.', function() {
@@ -120,7 +123,7 @@ describe('Handler/Drag', function() {
         });
 
         it('only primary mouse button can start drag events.', function() {
-            ne.dooray.calendar.domevent.getMouseButton.and.returnValue(1);
+            domevent.getMouseButton.and.returnValue(1);
 
             mockInst.options = {
                 distance: 10
@@ -135,20 +138,20 @@ describe('Handler/Drag', function() {
 
     describe('_toggleDragEvent', function() {
         beforeEach(function() {
-            spyOn(ne.dooray.calendar.domutil, 'enableTextSelection');
-            spyOn(ne.dooray.calendar.domutil, 'disableTextSelection');
-            spyOn(ne.dooray.calendar.domutil, 'enableImageDrag');
-            spyOn(ne.dooray.calendar.domutil, 'disableImageDrag');
-            spyOn(ne.dooray.calendar.domevent, 'on');
-            spyOn(ne.dooray.calendar.domevent, 'off');
+            spyOn(domutil, 'enableTextSelection');
+            spyOn(domutil, 'disableTextSelection');
+            spyOn(domutil, 'enableImageDrag');
+            spyOn(domutil, 'disableImageDrag');
+            spyOn(domevent, 'on');
+            spyOn(domevent, 'off');
         });
 
         it('toggle events for drags', function() {
             Drag.prototype._toggleDragEvent(true);
-            expect(ne.dooray.calendar.domutil.disableTextSelection).toHaveBeenCalled();
+            expect(domutil.disableTextSelection).toHaveBeenCalled();
 
             Drag.prototype._toggleDragEvent(false);
-            expect(ne.dooray.calendar.domevent.off).toHaveBeenCalled();
+            expect(domevent.off).toHaveBeenCalled();
         });
     });
 });

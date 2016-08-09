@@ -1,7 +1,7 @@
 /*eslint-disable*/
-describe('datetime', function() {
-    var dt = ne.dooray.calendar.datetime;
+var dt = require('common/datetime');
 
+describe('datetime', function() {
     describe('millisecondsTo()', function() {
         it('convert millisecond value to other types.', function() {
             expect(dt.millisecondsTo('hour', 86400000)).toBe(24);
@@ -146,7 +146,7 @@ describe('datetime', function() {
             var num = 2;
             expect(dt.leadingZero(num, 2)).toBe('02');
             expect(dt.leadingZero(num, 3)).toBe('002');
-            num = 2300; 
+            num = 2300;
 
             expect(dt.leadingZero(num, 5)).toBe('02300');
         });

@@ -1,8 +1,8 @@
 /*eslint-disable*/
-describe('module:Time.Creation', function() {
-    var core = ne.dooray.calendar.TimeCore,
-        Time = ne.dooray.calendar.Time;
+var core = require('handler/time/core');
+var Time = require('view/week/time');
 
+describe('module:Time.Creation', function() {
     it('_calcGridYIndex()', function() {
         // 24시간이 100px일 때  50px은 12시임
         expect(core._calcGridYIndex(86400000, 100, 50)).toBe(12);
@@ -26,7 +26,7 @@ describe('module:Time.Creation', function() {
 
         spyOn(time, 'getDate').and.returnValue(new Date('2015-05-05T00:00:00+09:00'));
         spyOn(time, 'getViewBound').and.returnValue({
-            height: 230 
+            height: 230
         });
 
         var func = core._retriveEventData(time);
@@ -35,7 +35,7 @@ describe('module:Time.Creation', function() {
         var vMouseEvent = {
             target: 'hello',
             clientX: 10,
-            clientY: 115 
+            clientY: 115
         };
 
         var expected = {

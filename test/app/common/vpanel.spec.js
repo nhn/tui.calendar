@@ -1,6 +1,8 @@
+var domutil = require('common/domutil');
+var VPanel = require('common/vpanel');
+
 describe('VPanel', function() {
-    var VPanel = ne.dooray.calendar.VPanel,
-        inst, container;
+    var inst, container;
 
     beforeEach(function() {
         container = document.createElement('div');
@@ -18,28 +20,27 @@ describe('VPanel', function() {
     });
 
     it('_initPanel() initialize panel container by supplied options.', function() {
-        var du = ne.dooray.calendar.domutil;
-        spyOn(du, 'addClass');
-        spyOn(du, 'setData');
+        spyOn(domutil, 'addClass');
+        spyOn(domutil, 'setData');
 
         inst._initPanel({
             className: 'good'
         }, container);
 
-        expect(du.addClass).toHaveBeenCalledWith(container, 'good');
+        expect(domutil.addClass).toHaveBeenCalledWith(container, 'good');
 
-        du.addClass.calls.reset();
-        
+        domutil.addClass.calls.reset();
+
         inst._initPanel({
             isSplitter: true
         }, container);
 
-        expect(du.addClass.calls.argsFor(0)[1]).toContain('splitter');
+        expect(domutil.addClass.calls.argsFor(0)[1]).toContain('splitter');
 
         inst._initPanel({
             autoHeight: true
         }, container);
 
-        expect(du.setData).toHaveBeenCalledWith(container, 'autoHeight', true);
+        expect(domutil.setData).toHaveBeenCalledWith(container, 'autoHeight', true);
     });
 });

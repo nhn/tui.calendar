@@ -1,6 +1,6 @@
-describe('Weekday view', function() {
-    var Weekday = ne.dooray.calendar.Weekday;
+var Weekday = require('view/weekday');
 
+describe('Weekday view', function() {
     it('can calculate own render range', function() {
         var mockInst = {
                 options: {

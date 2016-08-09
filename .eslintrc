@@ -8,7 +8,7 @@
     },
     "globals": {
         "tui": true,
-        "loadFixtures": true,
+        "fixture": true,
         "ActiveXObject": true
     },
     "rules": {

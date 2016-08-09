@@ -1,7 +1,7 @@
 /*eslint-disable*/
-describe('Point', function() {
-    var Point = ne.dooray.calendar.Point;
+var Point = require('common/point');
 
+describe('Point', function() {
     describe('toArray()', function() {
         it('return coordinates to array.', function() {
             var p1 = new Point(10, 5);

@@ -1,13 +1,15 @@
 /*eslint-disable*/
+var datetime = require('common/datetime');
+var AlldayCreation = require('handler/allday/creation');
+var AlldayCreationGuide = require('handler/allday/creationGuide');
+
 describe('handler:AlldayCreation', function() {
-    var datetime = window.ne.dooray.calendar.datetime,
-        AlldayCreation = window.ne.dooray.calendar.AlldayCreation,
-        proto;
+    var proto;
 
     beforeEach(function() {
         proto = AlldayCreation.prototype;
         // 테스트와 무관한 모듈 목 처리
-        spyOn(window.ne.dooray.calendar.AlldayCreationGuide.prototype, 'initializeGuideElement').and.returnValue();
+        spyOn(AlldayCreationGuide.prototype, 'initializeGuideElement').and.returnValue();
         spyOn(window, 'prompt');
     });
 

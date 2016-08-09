@@ -1,8 +1,8 @@
 /*eslint-disable*/
-describe('handler/time.creation', function() {
-    var domutil = ne.dooray.calendar.domutil,
-        TimeCreation = ne.dooray.calendar.TimeCreation;
+var domutil = require('common/domutil');
+var TimeCreation = require('handler/time/creation');
 
+describe('handler/time.creation', function() {
     it('checkExpectedCondition() can judge activation of time.creation handler by event target.', function() {
         var target = document.createElement('div');
 
@@ -63,7 +63,7 @@ describe('handler/time.creation', function() {
                 fire: jasmine.createSpy('fire')
             };
         });
-            
+
         it('try to create event by dragend event data.', function() {
             var eventData = {
                 relatedView: {

@@ -1,7 +1,8 @@
 /*eslint-disable*/
+var Guide = require('handler/time/moveGuide');
+
 describe('handler/time.move.guide', function() {
     var util = tui.util,
-        Guide = ne.dooray.calendar.TimeMoveGuide,
         mockInstance;
 
     it('_onDrag() calculate guide element\'s top properly.', function() {
