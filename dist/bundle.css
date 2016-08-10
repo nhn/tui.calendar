@@ -572,6 +572,9 @@
 .dooray-calendar-minicalendar-selected button {
   color: #fff;
 }
+.dooray-calendar-minicalendar-marked {
+  text-decoration: underline;
+}
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .dooray-calendar-minicalendar-prev {
     background-size: 16px 16px;

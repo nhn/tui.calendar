@@ -258,6 +258,15 @@ MiniCalendar.prototype.clearFocusData = function() {
 };
 
 /**
+ * Clear focus data
+ */
+MiniCalendar.prototype.clearMarkData = function() {
+    util.forEach(this.hlData, function(obj) {
+        delete obj.marked;
+    });
+};
+
+/**
  * Focus specific date range
  * @param {Date} start - focus start date
  * @param {Date} end - focus end date
@@ -267,6 +276,17 @@ MiniCalendar.prototype.focusDateRange = function(start, end) {
     this._setHlDateRange(start, end, 'focused');
     this.render();
 };
+
+
+MiniCalendar.prototype.markData = function(dates) {
+    var self = this;
+    this.clearMarkData();
+    util.forEach(dates, function(date) {
+        self._setHlDateRange(date.start, date.end, 'marked');
+    });
+    this.render();
+};
+
 
 /**
  * Get selected data
