@@ -42,7 +42,7 @@ function Milestone(options, container) {
         minHeight: 52,
         lineHeight: 12
     }, options);
-}
+} 
 
 util.inherit(Milestone, View);
 

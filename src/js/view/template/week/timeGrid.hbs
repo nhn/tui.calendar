@@ -2,7 +2,7 @@
     {{#each hours ~}}
         <div class="{{CSS_PREFIX}}timegrid-hour
             {{CSS_PREFIX}}timegrid-hour-{{this}}
-            {{#fi @root.currentHour '===' this}}{{CSS_PREFIX}}invisible{{/fi}}"><span>{{this}}</span></div>
+            {{#fi @root.currentHour '===' this}}{{CSS_PREFIX}}invisible{{/fi}}"><span>{{this}}시</span></div>
     {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}timegrid-right">

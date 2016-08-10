@@ -1,20 +1,17 @@
 +prefix-classes(timegrid)
     .container
-        height: 100% 
+        height: 100%
         position: relative
         overflow: hidden
         overflow-y: scroll
-        background-color: #ccc
 
     .left
         position: absolute
-        wh(60px, auto)
-        
+        wh(90px, auto)
+
     .hour
-        height: 39px
+        height: 40px
         border-right: 1px solid #ccc
-        border-bottom: 1px solid #ccc
-        background-color: #eee
         color: #777
         text-align: right
         &:last-child
@@ -26,7 +23,7 @@
 
     .right
         position: relative
-        margin-left: 60px
+        margin-left: 90px
 
     .h-grid
         background-color: #fff
@@ -48,7 +45,7 @@
         wh(100%, 100%)
         pos(0, 0)
 
-     // Hourmarker
+    // Hourmarker
     .hourmarker
         position: absolute
         width: 100%

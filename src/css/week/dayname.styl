@@ -1,32 +1,34 @@
-.{css-prefix}holliday
+.{css-prefix}holiday-sun
     color: red
+
+.{css-prefix}holiday-sat
+    color: #4e87ee
 
 .{css-prefix}dayname
     top: 0;
     position: absolute;
-    height: 40px
-    margin-left: -1px
-    border-left: 1px solid #ccc
-    background-color: #fff
-    line-height: 20px
+    height: 37px;
+    margin-left: -1px;
+    border-left: 1px solid #e7e7e7;
+    background-color: #f1f1f3;
+    line-height: 37px
+    text-align: center
 
 +prefix-classes(dayname)
     .container
-        height: 40px
-        background-color: #eee
-        border-bottom: 2px solid #ccc
-        overflow-y: scroll
+        height: 37px
+        border-bottom: 1px solid #e7e7e7
+        background-color: #f1f1f3;
 
     .leftmargin
         position: relative
-        margin-left: 60px
+        margin-left: 90px
 
     .label
-        padding-left: 7px
-        font-size: 1.2em
+        font-size: 1.1em
+        font-weight: bold
 
     .date
-        padding-left: 7px
-        font-size: 1.3em
+        font-size: 1.1em
         font-weight: bold
 

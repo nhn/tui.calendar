@@ -1,7 +1,7 @@
-<div class="{{CSS_PREFIX}}milestone-left">
+<div class="{{CSS_PREFIX}}milestone-left {{CSS_PREFIX}}left">
     <span>마일스톤</span>
 </div>
-<div class="{{CSS_PREFIX}}milestone-right {{CSS_PREFIX}}clear">
+<div class="{{CSS_PREFIX}}milestone-right {{CSS_PREFIX}}right {{CSS_PREFIX}}clear">
 {{#each events ~}}
 <div class="{{CSS_PREFIX}}milestone-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.height}}px">
     <ul class="{{CSS_PREFIX}}milestone-list">

@@ -45,10 +45,10 @@
         margin-right: 10px
 
     .exceed-left .event
-        margin-left: 0px
+        margin-left: 0
 
     .exceed-right .event
-        margin-right: 0px
+        margin-right: 0
 
     .exceed-right .resize-handle
         display: none
@@ -63,3 +63,25 @@
 
     .filled
         background-color: #e8e8e8
+
+
++prefix-classes(css-prefix)
+    .left
+        wh(90px, 100%)
+        float: left
+        border-right: 1px solid #ccc
+        box-sizing: border-box
+        text-align: right
+        padding: 10px 15px
+
+    .left span
+        display: block
+        padding: 3px 5px 0 0
+
+    .right
+        height: 100%
+        background-color: #fff
+        margin-left: 90px
+        overflow-y: scroll
+        position: relative
+
