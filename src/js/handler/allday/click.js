@@ -62,7 +62,7 @@ AlldayClick.prototype._onClick = function(clickEvent) {
     var self = this,
         target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, config.classname('.allday-event-block')),
+        blockElement = domutil.closest(target, config.classname('.weekday-event-block')),
         eventCollection = this.baseController.events;
 
     if (!timeView || !blockElement) {
