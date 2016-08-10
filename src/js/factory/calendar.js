@@ -359,6 +359,13 @@ Calendar.prototype.move = function(offset) {
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
         });
+
+        this.options.render = {
+            startDate: renderDate.d,
+            endDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth() + 1, 0)
+
+    };
+
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
         date2 = this.getWeekDayRange(renderDate.d);
@@ -367,6 +374,13 @@ Calendar.prototype.move = function(offset) {
             opt.renderStartDate = datetime.format(date2[0], 'YYYY-MM-DD');
             opt.renderEndDate = datetime.format(date2[1], 'YYYY-MM-DD');
         });
+
+        this.options.render = {
+            startDate: date2[0],
+            endDate: date2[1]
+        };
+
+
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
         date2 = renderDate.clone().setHours(23, 59, 59, 0);
@@ -375,6 +389,12 @@ Calendar.prototype.move = function(offset) {
             opt.renderStartDate = datetime.format(renderDate.d, 'YYYY-MM-DD');
             opt.renderEndDate = datetime.format(date2.d, 'YYYY-MM-DD');
         });
+
+        this.options.render = {
+            startDate: renderDate.d,
+            endDate: date2.d
+        };
+
     }
 
     this.renderDate = renderDate.d;
@@ -390,7 +410,7 @@ Calendar.prototype.setDate = function(date) {
     }
 
     this.renderDate = new Date(Number(date));
-
+    this.move(0)
     this.render();
 };
 
