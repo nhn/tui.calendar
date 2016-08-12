@@ -85,7 +85,8 @@ function Freebusy(options, container) {
     domutil.disableTextSelection(container);
 
     domevent.on(container, {
-        click: this._onClick
+        click: this._onClick,
+        mouseover: this._onMouseOver
     }, this);
 
     this.render();
@@ -143,6 +144,34 @@ Freebusy.prototype._onClick = function(clickEventData) {
     });
 };
 
+Freebusy.prototype._onMouseOver = function(clickEventData) {
+    var opt = this.options,
+      target = clickEventData.srcElement || clickEventData.target,
+      isValid = domutil.closest(target, config.classname('.freebusy-leftmargin')),
+      container, containerWidth,
+      mouseX, timeX, dateX, nearMinutesX;
+
+    if (!isValid) {
+        return;
+    }
+
+    container = this.container;
+    containerWidth = this.getViewBound().width - opt.nameWidth;
+    mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
+    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
+    dateX = new Date(timeX);
+    nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
+
+    /**
+     * @event Freebusy#click
+     * @type {object}
+     * @property {string} time - hh:mm string
+     */
+    this.fire('mouseover', {
+        time: datetime.leadingZero(dateX.getUTCHours(), 2) + ':' + datetime.leadingZero(nearMinutesX, 2)
+    });
+};
+
 /**********
  * Methods
  **********/
@@ -187,6 +216,10 @@ Freebusy.prototype._getBlockBound = function(block) {
         to = this._getMilliseconds(block.to),
         left,
         width;
+
+    if(to === 0) {
+        to = this._getMilliseconds(datetime.toUTC(new Date((datetime.MILLISECONDS_PER_HOUR * '23') + (datetime.MILLISECONDS_PER_MINUTES * '59'))));
+    }
 
     left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);
     width = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, (to - from));
