@@ -361,7 +361,7 @@ Calendar.prototype.move = function(offset) {
         });
 
         this.options.render = {
-            startDate: renderDate.d,
+            startDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth(), 1),
             endDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth() + 1, 0)
 
     };
