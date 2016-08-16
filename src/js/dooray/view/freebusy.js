@@ -86,7 +86,9 @@ function Freebusy(options, container) {
 
     domevent.on(container, {
         click: this._onSelect,
-        mousemove: this._onSelect
+        mousemove: this._onSelect,
+        mouseout: this.unselectOver,
+        mouseleave: this.unselectOver
     }, this);
 
     this.render();
@@ -406,6 +408,12 @@ Freebusy.prototype.selectOver = function(start, end) {
     this.selectOverStart = start;
     this.selectOverEnd = end;
 
+    this.render();
+};
+
+
+Freebusy.prototype.unselectOver = function () {
+    this.selectOverStart = this.selectOverEnd = '';
     this.render();
 };
 
