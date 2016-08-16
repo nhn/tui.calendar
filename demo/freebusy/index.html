@@ -52,9 +52,22 @@
 
                 d.setHours(+part[0], +part[1]);
 
-                return (datetime.format(new Date(+d + (datetime.MILLISECONDS_PER_MINUTES * 30)), 'HH:mm'));
+                return (datetime.format(new Date(+d + (datetime.MILLISECONDS_PER_MINUTES * 90)), 'HH:mm'));
         })();
         fb.select(e.time, after30min);
+    });
+
+    fb.on('mousemove', function(e) {
+        var datetime = ne.dooray.calendar.datetime,
+                after30min = (function() {
+                    var d = new Date(null),
+                            part = e.time.split(':');
+
+                    d.setHours(+part[0], +part[1]);
+
+                    return (datetime.format(new Date(+d + (datetime.MILLISECONDS_PER_MINUTES * 90)), 'HH:mm'));
+                })();
+        fb.selectOver(e.time, after30min);
     });
 
     w.fb = fb;

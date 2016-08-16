@@ -40,3 +40,13 @@
     {{/if ~}}
     </div>
 </div>
+
+<div class="{{CSS_PREFIX}}freebusy-selection-over" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
+    <div class="{{CSS_PREFIX}}freebusy-leftmargin" style="height:{{bodyHeight}}px;margin-left:{{nameWidth}}px">
+    {{#if selectionOver ~}}
+    {{#with selectionOver}}
+        <div class="{{CSS_PREFIX}}freebusy-select-over" style="left:{{[0]}}%;width:{{[1]}}%"></div>
+    {{/with}}
+    {{/if ~}}
+    </div>
+</div>

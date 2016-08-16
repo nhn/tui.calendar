@@ -720,3 +720,14 @@
   height: 100%;
   opacity: 0.5;
 }
+.dooray-calendar-freebusy-selection-over {
+  position: absolute;
+  width: 100%;
+  z-index: 4;
+}
+.dooray-calendar-freebusy-select-over {
+  position: absolute;
+  background-color: #00f;
+  height: 100%;
+  opacity: 0.2;
+}

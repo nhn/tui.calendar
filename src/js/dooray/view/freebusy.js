@@ -85,8 +85,8 @@ function Freebusy(options, container) {
     domutil.disableTextSelection(container);
 
     domevent.on(container, {
-        click: this._onClick,
-        mouseover: this._onMouseOver
+        click: this._onSelect,
+        mousemove: this._onSelect
     }, this);
 
     this.render();
@@ -105,7 +105,7 @@ Freebusy.prototype._beforeDestroy = function() {
     domevent.off(container, 'click', this._onClick, this);
 
     container.innerHTML = '';
-    this.selectStart = this.selectEnd = this.options = this.users = null;
+    this.selectStart = this.selectEnd = this.options = this.users = this.selectOverStart = this.selectOverEnd = null;
 };
 
 /**********
@@ -116,7 +116,7 @@ Freebusy.prototype._beforeDestroy = function() {
  * @fires Freebusy#click
  * @param {MouseEvent} clickEventData - click mouse event data
  */
-Freebusy.prototype._onClick = function(clickEventData) {
+Freebusy.prototype._onSelect = function(clickEventData) {
     var opt = this.options,
         target = clickEventData.srcElement || clickEventData.target,
         isValid = domutil.closest(target, config.classname('.freebusy-leftmargin')),
@@ -139,35 +139,7 @@ Freebusy.prototype._onClick = function(clickEventData) {
      * @type {object}
      * @property {string} time - hh:mm string
      */
-    this.fire('click', {
-        time: datetime.leadingZero(dateX.getUTCHours(), 2) + ':' + datetime.leadingZero(nearMinutesX, 2)
-    });
-};
-
-Freebusy.prototype._onMouseOver = function(clickEventData) {
-    var opt = this.options,
-      target = clickEventData.srcElement || clickEventData.target,
-      isValid = domutil.closest(target, config.classname('.freebusy-leftmargin')),
-      container, containerWidth,
-      mouseX, timeX, dateX, nearMinutesX;
-
-    if (!isValid) {
-        return;
-    }
-
-    container = this.container;
-    containerWidth = this.getViewBound().width - opt.nameWidth;
-    mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
-    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
-    dateX = new Date(timeX);
-    nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
-
-    /**
-     * @event Freebusy#click
-     * @type {object}
-     * @property {string} time - hh:mm string
-     */
-    this.fire('mouseover', {
+    this.fire(clickEventData.type, {
         time: datetime.leadingZero(dateX.getUTCHours(), 2) + ':' + datetime.leadingZero(nearMinutesX, 2)
     });
 };
@@ -296,7 +268,8 @@ Freebusy.prototype._getViewModel = function() {
             timeWidth: 100 / dayArr.length,
             freebusy: {},
             recommends: [],
-            selection: this._getSelectionBlock(this.selectStart, this.selectEnd)
+            selection: this._getSelectionBlock(this.selectStart, this.selectEnd),
+            selectionOver: this._getSelectionBlock(this.selectOverStart, this.selectOverEnd)
         };
 
     users.each(function(user) {
@@ -417,10 +390,23 @@ Freebusy.prototype.select = function(start, end) {
  */
 Freebusy.prototype.unselect = function(skipRender) {
     this.selectStart = this.selectEnd = '';
+    this.selectOverStart = this.selectOverEnd = '';
 
     if (!skipRender) {
         this.render();
     }
+};
+
+/**
+ * Select specific time
+ * @param {string} start - hh:mm formatted string value
+ * @param {string} end - hh:mm formatted string value
+ */
+Freebusy.prototype.selectOver = function(start, end) {
+    this.selectOverStart = start;
+    this.selectOverEnd = end;
+
+    this.render();
 };
 
 util.CustomEvents.mixin(Freebusy);
