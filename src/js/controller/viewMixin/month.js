@@ -43,6 +43,7 @@ var Month = {
      * @param {CalEventViewModel} viewModel - event view model
      */
     _weightTopValue: function(viewModel) {
+        viewModel.top = viewModel.top || 0;
         viewModel.top += 1;
     },
 
@@ -86,14 +87,17 @@ var Month = {
     _getAlldayMaxTopIndexAtYMD: function(ymd, vAlldayColl) {
         var dateMatrix = this.dateMatrix,
             topIndexesInDate = [];
-
         util.forEach(dateMatrix[ymd], function(cid) {
             vAlldayColl.doWhenHas(cid, function(viewModel) {
                 topIndexesInDate.push(viewModel.top);
             });
         });
 
-        return mmax.apply(null, topIndexesInDate);
+        if(topIndexesInDate.length > 0) {
+            return mmax.apply(null, topIndexesInDate, 0);
+        } else {
+            return 0;
+        }
     },
 
     /**
@@ -117,7 +121,6 @@ var Month = {
                     alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
                         getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
                 }
-
                 maxIndexInYMD[eventYMD] = timeViewModel.top =
                     (alldayMaxTopInYMD + 1);
 
@@ -153,10 +156,8 @@ var Month = {
 
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
-
         ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);
         ctrlMonth._adjustTimeTopIndex(vColl);
-
         return matrices;
     }
 };

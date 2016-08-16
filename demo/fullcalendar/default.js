@@ -5,7 +5,7 @@
         idx = 5;
 
     cal = calendar.FullCalendar({
-        defaultView: 'week',
+        defaultView: 'month',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -50,16 +50,32 @@
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: '2016-02-25T09:40:00+09:00',
-        ends: '2016-02-25T10:40:00+09:00'
+        starts: '2016-08-17T09:40:00+09:00',
+        ends: '2016-08-17T10:40:00+09:00'
     }, {
         id: '2',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
         dueDateClass: '',
-        starts: '2016-02-25T00:00:00+09:00',
-        ends: '2016-02-25T23:59:59+09:00'
+        starts: '2016-08-17T00:00:00+09:00',
+        ends: '2016-08-17T23:59:59+09:00'
+    }, {
+        id: '2123',
+        calendarID: '1',
+        title: '[3홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-08-18T00:00:00+09:00',
+        ends: '2016-08-18T23:59:59+09:00'
+    }, {
+        id: '1232',
+        calendarID: '2',
+        title: '[4홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-08-19T00:00:00+09:00',
+        ends: '2016-08-19T23:59:59+09:00'
     }, {
         id: '3',
         calendarID: '3',
@@ -67,7 +83,7 @@
         category: 'milestone',
         dueDateClass: '',
         starts: '',
-        ends: '2016-02-25T23:59:59+09:00'
+        ends: '2016-08-17T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -75,7 +91,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-02-25T23:59:59+09:00'
+        ends: '2016-08-17T23:59:59+09:00'
     }], true);
 
     cal.render();
@@ -161,6 +177,24 @@
                 return;
         }
     }
+
+
+    // 일정 클릭 이벤트 핸들러
+    cal.on('clickEvent', function (e) {
+        console.log('click')
+    });
+
+    cal.on('beforeCreateEvent', function (e) {
+       console.log('beforeCreateEvent', e)
+    });
+
+    cal.on('beforeUpdateEvent', function (e) {
+        console.log('beforeUpdateEvent', e)
+    });
+
+    cal.on('beforeDeleteEvent', function (e) {
+        console.log('beforeDeleteEvent', e);
+    });
 
     calendar.domevent.on(document.querySelector('.control'), 'click', onClick);
 

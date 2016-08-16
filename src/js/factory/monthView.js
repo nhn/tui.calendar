@@ -93,6 +93,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         });
     };
 
+    // add controller
+    monthView.controller = baseController.Month;
+
     return {
         view: monthView,
         refresh: function() {

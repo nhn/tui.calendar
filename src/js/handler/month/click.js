@@ -51,32 +51,38 @@ MonthClick.prototype.destroy = function() {
  * @param {object} clickEvent - click event object
  */
 MonthClick.prototype._onClick = function(clickEvent) {
-    var moreElement, ymd;
+    var self = this,
+      moreElement,
+      eventCollection = this.baseController.events,
+      blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-event-block'));
 
     moreElement = domutil.closest(
         clickEvent.target,
         config.classname('.weekday-exceed')
     );
 
-    if (moreElement) {
-        ymd = domutil.getData(moreElement, 'ymd');
 
-        /**
-         * @event MonthClick#clickMore
-         * @type {object}
-         * @property {string} ymd - YYYYMMDD formatted date
-         * @property {HTMLElement} target - target element
-         * @property {Date} date - target date
-         * @property {MouseEvent} originEvent - original event object
-         */
-        this.fire('clickMore', {
-            ymd: ymd,
-            target: moreElement,
-            date: datetime.parse(ymd),
-            originEvent: clickEvent.originEvent
-        });
+  //
+    //if (!moreElement) {
+    //    return;
+    //}
+
+    if (!blockElement) {
         return;
     }
+
+    eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
+        /**
+         * @events AlldayClick#clickEvent
+         * @type {object}
+         * @property {CalEvent} model - model instance
+         * @property {MouseEvent} jsEvent - MouseEvent object
+         */
+        self.fire('clickEvent', {
+            model: model,
+            jsEvent: clickEvent.originEvent
+        });
+    });
 };
 
 util.CustomEvents.mixin(MonthClick);

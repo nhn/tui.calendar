@@ -139,6 +139,23 @@ Calendar.prototype.createWeekView = function(controller, container, dragHandler,
 };
 
 /**
+ * Create week view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Month} month view instance
+ */
+Calendar.prototype.createMonthView = function(controller, container, dragHandler, options) {
+    return monthViewFactory(
+      controller,
+      container,
+      dragHandler,
+      options
+    );
+};
+
+/**
  * Destructor
  */
 Calendar.prototype.destroy = function() {
@@ -566,7 +583,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
     layout.clear();
 
     if (newViewName === 'month') {
-        created = monthViewFactory(
+        created = this.createMonthView(
             controller,
             layout.container,
             dragHandler,

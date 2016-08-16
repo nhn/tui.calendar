@@ -23,7 +23,10 @@
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
         </div>
         {{else ~}}
-        <div class="{{CSS_PREFIX}}weekday-event">
+        <div class="{{CSS_PREFIX}}weekday-event"
+                style="height:{{@root.eventHeight}}px;
+                color:{{model.color}};
+                background-color:{{model.bgColor}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
                   data-title="{{model.title}}">{{hhmm model.starts}} {{model.title}}</span>
         </div>
