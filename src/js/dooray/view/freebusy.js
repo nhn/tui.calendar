@@ -68,7 +68,7 @@ function Freebusy(options, container) {
     this.selectEnd = opt.selectEnd;
 
     /**
-     * @type {Colleciton}
+     * @type {Colleciton} 
      */
     this.users = new Collection(function(user) {
         if (!user.id) {
@@ -83,9 +83,9 @@ function Freebusy(options, container) {
     }
 
     domutil.disableTextSelection(container);
-
+     
     domevent.on(container, {
-        click: this._onSelect,
+        click: this._onSelect, 
         mousemove: this._onSelect,
         mouseout: this.unselectOver,
         mouseleave: this.unselectOver
@@ -104,7 +104,10 @@ util.inherit(Freebusy, View);
 Freebusy.prototype._beforeDestroy = function() {
     var container = this.container;
     domutil.enableTextSelection(container);
-    domevent.off(container, 'click', this._onClick, this);
+    domevent.off(container, 'click', this._onSelect, this);
+    domevent.off(container, 'mousemove', this.selectOver, this);
+    domevent.off(container, 'mouseout', this.unselectOver, this);
+    domevent.off(container, 'mouseleave', this.unselectOver, this);
 
     container.innerHTML = '';
     this.selectStart = this.selectEnd = this.options = this.users = this.selectOverStart = this.selectOverEnd = null;

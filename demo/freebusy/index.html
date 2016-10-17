@@ -2,18 +2,22 @@
 <html>
 <head>
 <title>Freebusy DEMO</title>
-<link rel="stylesheet" type="text/css" href="../../dist/bundle.css" />
+<link rel="stylesheet" type="text/css" href="../../dist/index.css" />
 <style type="text/css">
 #freebusy {
     width: 800px;
-    border: 1px solid #ccc;
+}
+
+* {
+    box-sizing: border-box; 
 }
 </style>
 </head>
 <body>
-<div id="freebusy"></div>
+<div id="freebusy" style="width: 100%; padding: 15px 0; background: #eee;"></div>
 <script src="../code-snippet.js"></script>
-<script src="../../dist/bundle.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="../../dist/index.js"></script>
 <script>
 (function(w) {
     var fb = ne.dooray.calendar.Freebusy(null, document.getElementById('freebusy'));
@@ -30,6 +34,49 @@
         }]
     }, {
         id: '2',
+        name: '테스트',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T11:30:00+09:00'
+        }]
+    },
+    {
+        id: '3',
+        name: '테스트',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T11:30:00+09:00'
+        }]
+    },{
+        id: '4',
+        name: '테스트',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T11:30:00+09:00'
+        }]
+    },{
+        id: '5',
+        name: '테스트',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T11:30:00+09:00'
+        }]
+    },{
+        id: '6',
+        name: '테스트',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T11:30:00+09:00'
+        }]
+    },{
+        id: '7',
+        name: '테스트',
+        freebusy: [{
+            from: '2015-01-01T09:00:00+09:00',
+            to: '2015-01-01T11:30:00+09:00'
+        }]
+    },{
+        id: '8',
         name: '테스트',
         freebusy: [{
             from: '2015-01-01T09:00:00+09:00',

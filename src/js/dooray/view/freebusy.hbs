@@ -10,7 +10,7 @@
 </div>
 <div class="{{CSS_PREFIX}}freebusy-chart" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
 {{#each freebusy ~}}
-    <div class="{{CSS_PREFIX}}freebusy-item" style="height:{{subtract @root.itemHeight 1}}px">
+    <div class="{{CSS_PREFIX}}freebusy-item" style="height:{{@root.itemHeight}}px">
         <div class="{{CSS_PREFIX}}freebusy-name" style="width:{{@root.nameWidth}}px">{{name}}</div>
         <div class="{{CSS_PREFIX}}freebusy-block-container" style="margin-left:{{@root.nameWidth}}px">
         {{#each busy ~}}
