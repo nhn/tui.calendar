@@ -2,7 +2,7 @@
   "name": "dooray-calendar",
   "main": [
     "dist/index.js",
-    "dist/index.css",
+    "dist/index.css"
   ],
   "version": "1.0.0",
   "authors": [
