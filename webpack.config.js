@@ -15,16 +15,16 @@ var stylusLoader = ExtractTextPlugin.extract('style', `css!preprocess?${context}
 
 var jsLoader = `preprocess?${context}`;
 
-var plugins = [new ExtractTextPlugin('bundle.css')];
+var plugins = [new ExtractTextPlugin('index.css')];
 
-var devtool = isProduction ? null : '#cheap-module-eval-source-map';
+var devtool = '#cheap-module-eval-source-map';
 
 module.exports = {
     entry: './index.js',
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js',
-        publicPath: '/public'
+        filename: 'index.js',
+        publicPath: '/dist'
     },
     module: {
         loaders: [{
@@ -48,6 +48,10 @@ module.exports = {
             url: stylus.url({paths: [path.join(__dirname, 'src/css/image')]})
         }
     },
-    devtool,
-    plugins
+    plugins,
+    devServer: { 
+        inline: true,
+        filename: "index.js", 
+    }
+
 };

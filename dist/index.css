@@ -645,6 +645,7 @@
 }
 .dooray-calendar-freebusy-container {
   position: relative;
+  border: 1px solid #ccc;
 }
 .dooray-calendar-freebusy-leftmargin {
   position: relative;

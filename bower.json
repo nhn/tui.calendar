@@ -1,10 +1,8 @@
 {
   "name": "dooray-calendar",
   "main": [
-    "dist/calendar.js",
-    "dist/calendar.min.js",
-    "dist/calendar.css",
-    "dist/calendar.min.css"
+    "dist/index.js",
+    "dist/index.css",
   ],
   "version": "1.0.0",
   "authors": [
