@@ -17,7 +17,7 @@ var jsLoader = `preprocess?${context}`;
 
 var plugins = [new ExtractTextPlugin('index.css')];
 
-var devtool = '#cheap-module-eval-source-map';
+var devtool = '#source-map';
 
 module.exports = {
     entry: './index.js',
@@ -48,10 +48,11 @@ module.exports = {
             url: stylus.url({paths: [path.join(__dirname, 'src/css/image')]})
         }
     },
+    devtool,
     plugins,
     devServer: { 
         inline: true,
-        filename: "index.js", 
+        filename: "index.js",
     }
 
 };
