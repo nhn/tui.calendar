@@ -1,0 +1,48 @@
+html, body {
+    background-color: #fff;
+    margin: 0;
+    padding: 0 11px;
+    height: 100%
+}
+
+#wrap {
+    height: 100%;
+    position: relative;
+}
+
+#calendar {
+    padding: 10px;
+    border: 1px solid #ccc;
+    height: auto;
+}
+.dooray-calendar-layout {
+    height: auto;
+ }
+
+.dooray-calendar-week-container {
+    height: auto;
+}
+
+.control {
+    height: 40px;
+    line-height: 40px;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.inline-block {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.float-right {
+    float: right;
+}
