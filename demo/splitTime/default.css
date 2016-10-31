@@ -1,8 +1,12 @@
 html, body {
     background-color: #fff;
     margin: 0;
-    padding: 0 11px;
+    padding: 20px 11px;
     height: 100%
+}
+
+.split {
+    width: 300px;
 }
 
 #wrap {
@@ -10,10 +14,11 @@ html, body {
     position: relative;
 }
 
-#calendar {
-    padding: 10px;
+.split {
     border: 1px solid #ccc;
     height: auto;
+    margin: 10px;
+    float: left;
 }
 .dooray-calendar-layout {
     height: auto;
