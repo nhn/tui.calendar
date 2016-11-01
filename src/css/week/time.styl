@@ -16,7 +16,7 @@
 
     .hour
         height: 40px
-        border-right: 1px solid #ccc
+        border-right: 1px solid #e8e8e8
         color: #777
         text-align: right
         &:last-child
@@ -35,7 +35,7 @@
 
     .gridline
         height: 39px
-        border-bottom: 1px solid #ccc
+        border-bottom: 1px solid #e8e8e8
         &:last-child
             border-bottom: none
 
@@ -153,7 +153,7 @@
 
     .hour
         height: 25px
-        border-right: 1px solid #ccc
+        border-right: 1px solid #f1f1f1
         color: #777
         text-align: right
         &:last-child
@@ -172,15 +172,9 @@
 
     .gridline
         height: 25px
-        border-bottom: 1px solid #ccc
+        border-bottom: 1px solid #f1f1f1
         &:last-child
             border-bottom: none
-
-    .gridline:after
-        content: ''
-        display: block
-        height: 12px
-        border-bottom: 1px dotted #eee
 
     .events
         position: absolute
@@ -188,7 +182,8 @@
         pos(0, 0)
 
     .schedule
-        border: 2px solid #ff0000
+        border: 1px solid #ff0000
         position: absolute
         width: 100%
         box-sizing: border-box
+        background: rgba(245, 215, 215, 0.3)
