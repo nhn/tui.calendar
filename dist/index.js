@@ -18603,6 +18603,7 @@
 	var config = __webpack_require__(31),
 	    controllerFactory = __webpack_require__(101),
 	    serviceWeekViewFactory = __webpack_require__(121),
+	    Drag = __webpack_require__(41),
 	    datetime = __webpack_require__(26),
 	    Layout = __webpack_require__(106);
 	
@@ -18652,6 +18653,12 @@
 	    this.layout = new Layout(container);
 	
 	    /**
+	     * global drag handler
+	     * @type {Drag}
+	     */
+	    this.dragHandler = new Drag({distance: 5}, this.layout.container);
+	
+	    /**
 	     * Refresh method. it can be ref different functions for each view modes.
 	     * @type {function}
 	     */
@@ -18696,6 +18703,7 @@
 	    this.layout.addChild(created.view);
 	    this.refreshMethod = created.refresh;
 	
+	    this._toggleViewEvent(true, created.view);
 	    this.render();
 	};
 	
@@ -18707,7 +18715,7 @@
 	};
 	
 	SplitTimeCalendar.prototype.destroy = function() {
-	    //this.dragHandler.destroy();
+	    this.dragHandler.destroy();
 	    this.controller.off();
 	    this.layout.clear();
 	    this.layout.destroy();
@@ -18726,6 +18734,7 @@
 	    var self = this,
 	      handler = view.handler,
 	      method = isAttach ? 'on' : 'off';
+	
 	
 	    util.forEach(handler.click, function(clickHandler) {
 	        clickHandler[method]('clickEvent', self._onClick, self);
@@ -18788,6 +18797,7 @@
 	        ends: event.ends
 	    };
 	    if (this.options.hourStart > parseDate.getHours()
+	      && this.options.hourStart < new Date(event.ends).getHours()
 	      && datetime.isSameDate(parseDate, startTime)) {
 	        event.starts = parseDate.setHours(this.options.hourStart);
 	    }
@@ -18890,6 +18900,22 @@
 	    }
 	};
 	
+	/**
+	 * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
+	 * @fires Calendar#clickEvent
+	 * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
+	 */
+	SplitTimeCalendar.prototype._onClick = function(clickEventData) {
+	    /**
+	     * @events Calendar#clickEvent
+	     * @type {object}
+	     * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
+	     * @property {MouseEvent} jsEvent - 마우스 이벤트
+	     */
+	    this.fire('clickEvent', clickEventData);
+	};
+	
+	
 	util.CustomEvents.mixin(SplitTimeCalendar);
 	
 	module.exports = SplitTimeCalendar;
@@ -18951,11 +18977,17 @@
 	     **********/
 	    timeGridView = new TimeGrid(options, vLayout.panels[0].container);
 	    weekView.addChild(timeGridView);
-	    //timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
+	    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
 	
 	    weekView.on('afterRender', function() {
 	        vLayout.refresh();
 	    });
+	
+	    weekView.handler = {
+	        click: {
+	            time: timeClickHandler
+	        }
+	    };
 	
 	    // add controller
 	    weekView.controller = baseController.Week;

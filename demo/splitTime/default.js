@@ -72,6 +72,10 @@
 
     cal1.render();
 
+    cal1.on('clickEvent', function (e) {
+        console.log('click', e)
+    });
+
     cal2 = calendar.SplitTimeCalendar({
         template: {
             time: function(model) {
@@ -110,6 +114,53 @@
     }], true);
 
     cal2.render();
+
+    cal3 = calendar.SplitTimeCalendar({
+        template: {
+            time: function(model) {
+                return model.title + model.origin.starts + '~' + model.origin.ends;
+            }
+        },
+        renderStartDate: currentDate + '11:00:00',
+        renderEndDate: currentDate + '12:30:00',
+        calendarColor: calendarSet
+    }, document.getElementById('calendar3'));
+
+    cal3.createEvents([{
+        id: '1',
+        calendarID: '1',
+        title: '나오면 안돼',
+        category: 'time',
+        dueDateClass: '',
+        starts: currentDate + '10:40:00',
+        ends: currentDate + '11:40:00+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: currentDate + '07:00:00',
+        ends: currentDate + '08:40:59'
+    }, {
+        id: '2123',
+        calendarID: '3',
+        title: '[3홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: currentDate + '09:00:00',
+        ends: currentDate + '15:59:59'
+    }, {
+        id: '2222',
+        calendarID: '4',
+        title: 'ㅎㅎ',
+        category: 'time',
+        dueDateClass: '',
+        starts: currentDate + '12:00:00',
+        ends: currentDate + '13:59:59'
+    }], true);
+
+    cal3.render();
 
 
     window.cal1 = cal1;

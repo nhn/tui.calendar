@@ -10,6 +10,7 @@ var Handlebars = require('handlebars-template-loader/runtime');
 var config = require('../../config'),
     controllerFactory = require('../../factory/controller'),
     serviceWeekViewFactory = require('./splitTimeView'),
+    Drag = require('../../handler/drag'),
     datetime = require('../../common/datetime'),
     Layout = require('../../view/layout');
 
@@ -59,6 +60,12 @@ function SplitTimeCalendar(options, container) {
     this.layout = new Layout(container);
 
     /**
+     * global drag handler
+     * @type {Drag}
+     */
+    this.dragHandler = new Drag({distance: 5}, this.layout.container);
+
+    /**
      * Refresh method. it can be ref different functions for each view modes.
      * @type {function}
      */
@@ -103,6 +110,7 @@ SplitTimeCalendar.prototype.initialize = function() {
     this.layout.addChild(created.view);
     this.refreshMethod = created.refresh;
 
+    this._toggleViewEvent(true, created.view);
     this.render();
 };
 
@@ -114,7 +122,7 @@ SplitTimeCalendar.prototype.render = function() {
 };
 
 SplitTimeCalendar.prototype.destroy = function() {
-    //this.dragHandler.destroy();
+    this.dragHandler.destroy();
     this.controller.off();
     this.layout.clear();
     this.layout.destroy();
@@ -133,6 +141,7 @@ SplitTimeCalendar.prototype._toggleViewEvent = function(isAttach, view) {
     var self = this,
       handler = view.handler,
       method = isAttach ? 'on' : 'off';
+
 
     util.forEach(handler.click, function(clickHandler) {
         clickHandler[method]('clickEvent', self._onClick, self);
@@ -195,6 +204,7 @@ SplitTimeCalendar.prototype.filterEvent = function(event, startTime) {
         ends: event.ends
     };
     if (this.options.hourStart > parseDate.getHours()
+      && this.options.hourStart < new Date(event.ends).getHours()
       && datetime.isSameDate(parseDate, startTime)) {
         event.starts = parseDate.setHours(this.options.hourStart);
     }
@@ -296,6 +306,22 @@ SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
         this.render();
     }
 };
+
+/**
+ * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
+ * @fires Calendar#clickEvent
+ * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
+ */
+SplitTimeCalendar.prototype._onClick = function(clickEventData) {
+    /**
+     * @events Calendar#clickEvent
+     * @type {object}
+     * @property {DoorayEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
+     * @property {MouseEvent} jsEvent - 마우스 이벤트
+     */
+    this.fire('clickEvent', clickEventData);
+};
+
 
 util.CustomEvents.mixin(SplitTimeCalendar);
 

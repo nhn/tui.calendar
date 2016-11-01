@@ -48,11 +48,17 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      **********/
     timeGridView = new TimeGrid(options, vLayout.panels[0].container);
     weekView.addChild(timeGridView);
-    //timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
+    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
 
     weekView.on('afterRender', function() {
         vLayout.refresh();
     });
+
+    weekView.handler = {
+        click: {
+            time: timeClickHandler
+        }
+    };
 
     // add controller
     weekView.controller = baseController.Week;
