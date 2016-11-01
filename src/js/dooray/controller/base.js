@@ -93,6 +93,10 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
         calEvent.set('bgColor', options.bgColor);
     }
 
+    if (options.origin) {
+        calEvent.set('origin', options.origin);
+    }
+
     this._removeFromMatrix(calEvent);
     this._addToMatrix(calEvent);
 

@@ -13,23 +13,20 @@ var VLayout = require('../../common/vlayout');
 var Week = require('../../view/week/week');
 
 // Sub views
-var TimeGrid = require('../../view/week/timeGrid');
+var TimeGrid = require('../../view/week/splitTimeGrid');
 
 // Handlers
 var TimeClick = require('../../handler/time/click');
-var TimeDblClick = require('../../handler/time/dblclick');
 var TimeCreation = require('../../handler/time/creation');
 var TimeMove = require('../../handler/time/move');
 var TimeResize = require('../../handler/time/resize');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
-        dayNameView,
         vLayoutContainer,
         vLayout,
         timeGridView,
-        timeClickHandler,
-        timeResizeHandler;
+        timeClickHandler;
 
     weekView = new Week(null, options, layoutContainer);
 
@@ -37,7 +34,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      * 수직 레이아웃 모듈 초기화
      **********/
     vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-    console.log(vLayoutContainer.style.height)
 
     vLayout = new VLayout({
         panels: [
@@ -46,8 +42,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         panelHeights: options.panelHeights || []
     }, vLayoutContainer);
     weekView.vLayout = vLayout;
-
-    console.log(options.panelHeights)
 
     /**********
      * 시간별 일정

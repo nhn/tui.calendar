@@ -121,6 +121,7 @@ CalEvent.prototype.init = function(options) {
 
     this.color = options.color || this.color;
     this.bgColor = options.bgColor || this.bgColor;
+    this.origin = options.origin || this.origin;
 };
 
 /**

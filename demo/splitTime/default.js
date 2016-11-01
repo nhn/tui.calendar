@@ -10,8 +10,7 @@
     //* - YYYY/MM/DD HH:mm:SS
     //* - YYYY-MM-DD HH:mm:SS
     //TODO: 해당부분 수정 요망.
-    var a = new Date();
-    var currentDate = a.getFullYear() + '-' + (a.getMonth() + 1) + '-' + a.getDate() + ' ';
+    var currentDate = '2016-11-12 ';
 
     var calendarSet = {
         '1': {
@@ -33,8 +32,7 @@
 
     var cal1, cal2, cal3, cal4, cal5, cal6
 
-    cal1 = calendar.SplitCalendar({
-        defaultView: 'day',
+    cal1 = calendar.SplitTimeCalendar({
         template: {
             time: function(model) {
                 console.log(model)
@@ -74,8 +72,7 @@
 
     cal1.render();
 
-    cal2 = calendar.SplitCalendar({
-        defaultView: 'day',
+    cal2 = calendar.SplitTimeCalendar({
         template: {
             time: function(model) {
                 return model.title + model.origin.starts + '~' + model.origin.ends;
@@ -92,7 +89,7 @@
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: currentDate + '11:40:00+09:00',
+        starts: currentDate + '11:40:00',
         ends: currentDate + '13:40:00+09:00'
     }, {
         id: '2',
@@ -100,20 +97,26 @@
         title: '[홍길동]연차',
         category: 'time',
         dueDateClass: '',
-        starts: currentDate + '09:00:00+09:00',
-        ends: currentDate + '15:40:59+09:00'
+        starts: currentDate + '09:00:00',
+        ends: currentDate + '15:40:59'
     }, {
         id: '2123',
         calendarID: '3',
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
-        starts: currentDate + '10:00:00+09:00',
-        ends: currentDate + '20:59:59+09:00'
+        starts: currentDate + '10:00:00',
+        ends: currentDate + '20:59:59'
     }], true);
 
     cal2.render();
 
 
-    window.cal = cal;
+    window.cal1 = cal1;
+    window.cal2 = cal2;
+    window.cal3 = cal3;
+    window.cal4 = cal4;
+    window.cal5 = cal5;
+    window.cal6 = cal6;
+
 })(window, ne.dooray.calendar);

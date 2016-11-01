@@ -13,9 +13,9 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     Layout = require('../../view/layout');
 
-function SplitCalendarView(options, container) {
-    if (!(this instanceof SplitCalendarView)) {
-        return new SplitCalendarView(options, container);
+function SplitTimeCalendar(options, container) {
+    if (!(this instanceof SplitTimeCalendar)) {
+        return new SplitTimeCalendar(options, container);
     }
     var opt;
 
@@ -68,7 +68,7 @@ function SplitCalendarView(options, container) {
 }
 
 
-SplitCalendarView.prototype.setRenderTime = function() {
+SplitTimeCalendar.prototype.setRenderTime = function() {
     var opt = this.options;
     opt.hourStart = new Date(opt.renderStartDate).getHours() - 2;
     opt.hourEnd = new Date(opt.renderEndDate).getHours() + 2;
@@ -78,7 +78,7 @@ SplitCalendarView.prototype.setRenderTime = function() {
 /**
  * Initialize calendar
  */
-SplitCalendarView.prototype.initialize = function() {
+SplitTimeCalendar.prototype.initialize = function() {
     var controller = this.controller,
       opt = this.options;
 
@@ -109,12 +109,11 @@ SplitCalendarView.prototype.initialize = function() {
 /**
  * Render calendar.
  */
-SplitCalendarView.prototype.render = function() {
+SplitTimeCalendar.prototype.render = function() {
     this.layout.render();
 };
 
-SplitCalendarView.prototype.destroy = function() {
-    console.log('?')
+SplitTimeCalendar.prototype.destroy = function() {
     //this.dragHandler.destroy();
     this.controller.off();
     this.layout.clear();
@@ -130,7 +129,7 @@ SplitCalendarView.prototype.destroy = function() {
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
  */
-SplitCalendarView.prototype._toggleViewEvent = function(isAttach, view) {
+SplitTimeCalendar.prototype._toggleViewEvent = function(isAttach, view) {
     var self = this,
       handler = view.handler,
       method = isAttach ? 'on' : 'off';
@@ -143,14 +142,14 @@ SplitCalendarView.prototype._toggleViewEvent = function(isAttach, view) {
 /**
  * @override
  */
-SplitCalendarView.prototype.createController = function() {
+SplitTimeCalendar.prototype.createController = function() {
     return controllerFactory(this.options);
 };
 
 /**
  * @override
  */
-SplitCalendarView.prototype.createView = function(controller, container, dragHandler, options) {
+SplitTimeCalendar.prototype.createView = function(controller, container, dragHandler, options) {
     return serviceWeekViewFactory(
         controller,
         container,
@@ -165,10 +164,10 @@ SplitCalendarView.prototype.createView = function(controller, container, dragHan
 
 /**
  * Create events instance and render calendar.
- * @param {SplitCalendarView~DoorayEvent[]} dataObjectList - array of {@see SplitCalendarView~DoorayEvent[]} object
+ * @param {SplitTimeCalendar~DoorayEvent[]} dataObjectList - array of {@see SplitTimeCalendar~DoorayEvent[]} object
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-SplitCalendarView.prototype.createEvents = function(dataObjectList, silent) {
+SplitTimeCalendar.prototype.createEvents = function(dataObjectList, silent) {
     var calColor = this.calendarColor,
         self = this,
         parseRenderStartTime = new Date(this.options.renderStartDate); //cache
@@ -189,7 +188,7 @@ SplitCalendarView.prototype.createEvents = function(dataObjectList, silent) {
     }
 };
 
-SplitCalendarView.prototype.filterEvent = function(event, startTime) {
+SplitTimeCalendar.prototype.filterEvent = function(event, startTime) {
     var parseDate = new Date(event.starts);
     event.origin = {
         starts: event.starts,
@@ -199,7 +198,6 @@ SplitCalendarView.prototype.filterEvent = function(event, startTime) {
       && datetime.isSameDate(parseDate, startTime)) {
         event.starts = parseDate.setHours(this.options.hourStart);
     }
-    console.log(event)
 };
 
 /**
@@ -207,7 +205,7 @@ SplitCalendarView.prototype.filterEvent = function(event, startTime) {
  * @param {string} id - ID of event instance to update data
  * @param {object} data - data object to update event
  */
-SplitCalendarView.prototype.updateEvent = function(id, data) {
+SplitTimeCalendar.prototype.updateEvent = function(id, data) {
     var ctrl = this.controller,
         ownEvents = ctrl.events,
         calEvent = ownEvents.single(function(model) {
@@ -223,10 +221,10 @@ SplitCalendarView.prototype.updateEvent = function(id, data) {
 /**
  * Delete DoorayEvent instance
  * @override
- * @fires SplitCalendarView#beforeDeleteEvent
+ * @fires SplitTimeCalendar#beforeDeleteEvent
  * @param {string} id - ID of event to delete
  */
-SplitCalendarView.prototype.deleteEvent = function(id) {
+SplitTimeCalendar.prototype.deleteEvent = function(id) {
     var ctrl = this.controller,
         ownEvents = ctrl.events,
         calEvent = ownEvents.single(function(model) {
@@ -238,7 +236,7 @@ SplitCalendarView.prototype.deleteEvent = function(id) {
     }
 
     /**
-     * @event SplitCalendarView#beforeDeleteEvent
+     * @event SplitTimeCalendar#beforeDeleteEvent
      * @type {object}
      * @property {CalEvent} model - model instance to delete
      */
@@ -258,7 +256,7 @@ SplitCalendarView.prototype.deleteEvent = function(id) {
  * 현재 화면의 각 영역에 대한 높이 값을 반환한다.
  * @returns {number[]} splitter와 autoHeight를 제외한 나머지 패널의 높이 배열
  */
-SplitCalendarView.prototype.getLayoutData = function() {
+SplitTimeCalendar.prototype.getLayoutData = function() {
     return this.layout.vLayout.getLayoutData();
 };
 
@@ -270,7 +268,7 @@ SplitCalendarView.prototype.getLayoutData = function() {
  *  @param {string} option.bgColor - bg color of event element
  *  @param {boolean} [option.render=true] - set false then does not auto render.
  */
-SplitCalendarView.prototype.setCalendarColor = function(calendarID, option) {
+SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
     var calColor = this.calendarColor,
         ownEvents = this.controller.events,
         ownColor = calColor[calendarID];
@@ -299,7 +297,7 @@ SplitCalendarView.prototype.setCalendarColor = function(calendarID, option) {
     }
 };
 
-util.CustomEvents.mixin(SplitCalendarView);
+util.CustomEvents.mixin(SplitTimeCalendar);
 
-module.exports = SplitCalendarView;
+module.exports = SplitTimeCalendar;
 

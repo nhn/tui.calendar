@@ -79,6 +79,6 @@ global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calen
     ControllerFactory: require('./src/js/factory/controller'),
     OriginCalendar: require('./src/js/factory/calendar'),
     FullCalendar: require('./src/js/dooray/factory/calendar'),
-    SplitCalendar: require('./src/js/dooray/factory/splitCalendar')
+    SplitTimeCalendar: require('./src/js/dooray/factory/SplitTimeCalendar')
 });
 
