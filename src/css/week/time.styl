@@ -5,6 +5,11 @@
         overflow: hidden
         overflow-y: scroll
 
+    .container-split
+        height: 100%
+        position: relative
+        overflow: hidden
+
     .left
         position: absolute
         wh(90px, auto)
@@ -134,3 +139,52 @@
     .guide-bottom
         position: absolute
         bottom: 0;
+
+
++prefix-classes(split-timegrid)
+    .container
+        height: 100%
+        position: relative
+        overflow: hidden
+
+    .left
+        position: absolute
+        wh(30px, auto)
+
+    .hour
+        height: 25px
+        border-right: 1px solid #ccc
+        color: #777
+        text-align: right
+        &:last-child
+            border-bottom: none
+
+    .hour span
+        line-height: 15px
+        padding-right: 5px
+
+    .right
+        position: relative
+        margin-left: 30px
+
+    .h-grid
+        background-color: #fff
+
+    .gridline
+        height: 25px
+        border-bottom: 1px solid #ccc
+        &:last-child
+            border-bottom: none
+
+    .gridline:after
+        content: ''
+        display: block
+        height: 12px
+        border-bottom: 1px dotted #eee
+
+    .events
+        position: absolute
+        wh(100%, 100%)
+        pos(0, 0)
+
+

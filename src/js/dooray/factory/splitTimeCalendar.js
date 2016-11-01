@@ -29,8 +29,6 @@ function SplitCalendarView(options, container) {
         template: util.extend({
             time: null
         }, util.pick(options, 'template') || {}),
-        hourStart: 8,
-        hourEnd: 12,
         renderStartDate: '2016-10-31 09:40:00',
         renderEndDate: '2016-10-31 12:40:00',
         events: [],
@@ -46,7 +44,7 @@ function SplitCalendarView(options, container) {
      * Current rendered date
      * @type {Date}
      */
-    this.renderDate = opt.defaultDate;
+    this.setRenderTime();
 
     /**
      * base controller
@@ -68,6 +66,14 @@ function SplitCalendarView(options, container) {
 
     this.initialize();
 }
+
+
+SplitCalendarView.prototype.setRenderTime = function() {
+    var opt = this.options;
+    opt.hourStart = new Date(opt.renderStartDate).getHours() - 2;
+    opt.hourEnd = new Date(opt.renderEndDate).getHours() + 2;
+    this.renderDate = datetime.format(new Date(opt.renderStartDate), 'YYYY-MM-DD');
+};
 
 /**
  * Initialize calendar
@@ -95,7 +101,6 @@ SplitCalendarView.prototype.initialize = function() {
       opt
     );
     this.layout.addChild(created.view);
-
     this.refreshMethod = created.refresh;
 
     this.render();
@@ -106,6 +111,18 @@ SplitCalendarView.prototype.initialize = function() {
  */
 SplitCalendarView.prototype.render = function() {
     this.layout.render();
+};
+
+SplitCalendarView.prototype.destroy = function() {
+    console.log('?')
+    //this.dragHandler.destroy();
+    this.controller.off();
+    this.layout.clear();
+    this.layout.destroy();
+
+    this.options = this.renderDate = this.controller =
+      this.layout = this.dragHandler = this.viewName =
+        this.refreshMethod = null;
 };
 
 /**
@@ -152,9 +169,12 @@ SplitCalendarView.prototype.createView = function(controller, container, dragHan
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
 SplitCalendarView.prototype.createEvents = function(dataObjectList, silent) {
-    var calColor = this.calendarColor;
+    var calColor = this.calendarColor,
+        self = this,
+        parseRenderStartTime = new Date(this.options.renderStartDate); //cache
 
     util.forEach(dataObjectList, function(obj) {
+        self.filterEvent(obj, parseRenderStartTime);
         var color = calColor[obj.calendarID];
 
         if (color) {
@@ -167,6 +187,19 @@ SplitCalendarView.prototype.createEvents = function(dataObjectList, silent) {
     if (!silent) {
         this.render();
     }
+};
+
+SplitCalendarView.prototype.filterEvent = function(event, startTime) {
+    var parseDate = new Date(event.starts);
+    event.origin = {
+        starts: event.starts,
+        ends: event.ends
+    };
+    if (this.options.hourStart > parseDate.getHours()
+      && datetime.isSameDate(parseDate, startTime)) {
+        event.starts = parseDate.setHours(this.options.hourStart);
+    }
+    console.log(event)
 };
 
 /**
@@ -226,7 +259,6 @@ SplitCalendarView.prototype.deleteEvent = function(id) {
  * @returns {number[]} splitter와 autoHeight를 제외한 나머지 패널의 높이 배열
  */
 SplitCalendarView.prototype.getLayoutData = function() {
-    console.log(this.layout.vLayout.getLayoutData())
     return this.layout.vLayout.getLayoutData();
 };
 
