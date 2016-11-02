@@ -148,7 +148,7 @@
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
-        starts: currentDate + '09:00:00',
+        starts: currentDate + '08:30:00',
         ends: currentDate + '15:59:59'
     }, {
         id: '2222',

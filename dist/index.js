@@ -18799,7 +18799,9 @@
 	    if (this.options.hourStart > parseDate.getHours()
 	      && this.options.hourStart < new Date(event.ends).getHours()
 	      && datetime.isSameDate(parseDate, startTime)) {
-	        event.starts = parseDate.setHours(this.options.hourStart);
+	        parseDate.setHours(this.options.hourStart);
+	        parseDate.setMinutes(0);
+	        event.starts = parseDate;
 	    }
 	};
 	
