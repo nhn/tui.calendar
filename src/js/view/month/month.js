@@ -38,7 +38,7 @@ function Month(options, container, controller) {
      */
     this.vLayout = new VLayout({
         panels: [
-            {height: 20},
+            {height: 37},
             {autoHeight: true}
         ]
     }, container);

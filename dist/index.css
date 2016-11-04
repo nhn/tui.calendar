@@ -426,16 +426,19 @@
 }
 .dooray-calendar-month-dayname {
   width: 100%;
-  height: 20px;
-  background-color: #fff;
-  font-size: 0.9em;
+  height: 37px;
   position: absolute;
+  font-size: 12px;
+  font-weight: bold;
   z-index: 1;
+  background: #f1f1f3;
+  border-bottom: 1px solid #e7e7e7;
 }
 .dooray-calendar-month-dayname-item {
   height: 100%;
-  border-left: 1px solid #ccc;
   margin-left: -1px;
+  line-height: 37px;
+  text-align: center;
 }
 .dooray-calendar-month-dayname-item:first-child {
   border-left: none;

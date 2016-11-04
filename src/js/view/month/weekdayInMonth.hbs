@@ -1,9 +1,9 @@
 <div class="{{CSS_PREFIX}}weekday-grid ">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line"
+    <div class="{{CSS_PREFIX}}weekday-grid-line {{#fi date '!==' 1}}{{CSS_PREFIX}}near-month-day{{/fi}}"
          style="width:{{@root.width}}%;
                 left:{{multiply @root.width @index}}%;">
-        <span class="{{holiday day}}">{{#fi date '==' 1}}{{month}}월{{/fi}} {{date}}일</span>
+        <span class="{{holiday day}}">{{date}}</span>
     </div>
 {{/each ~}}
 </div>
