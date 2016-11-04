@@ -36,6 +36,7 @@ function Time(options, container) {
         hourEnd: 24
     }, options);
 
+    this.timeTmpl = options.isSplitTimeGrid ? require('../template/week/splitTime.hbs') : require('../template/week/time.hbs');
     container.style.width = options.width + '%';
     container.style.left = (options.index * options.width) + '%';
 
@@ -177,7 +178,7 @@ Time.prototype.getDate = function() {
  */
 Time.prototype.render = function(ymd, matrices) {
     this._getBaseViewModel(ymd, matrices);
-    this.container.innerHTML = timeTmpl({
+    this.container.innerHTML = this.timeTmpl({
         matrices: matrices
     });
 };

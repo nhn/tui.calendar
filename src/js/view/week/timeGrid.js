@@ -204,7 +204,8 @@ TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
             ymd: ymd,
             isToday: isToday,
             hourStart: options.hourStart,
-            hourEnd: options.hourEnd
+            hourEnd: options.hourEnd,
+            isSplitTimeGrid: options.isSplitTimeGrid
         };
 
         child = new Time(

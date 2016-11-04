@@ -29,7 +29,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeClickHandler;
 
     weekView = new Week(null, options, layoutContainer);
-
     /**********
      * 수직 레이아웃 모듈 초기화
      **********/

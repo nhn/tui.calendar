@@ -162,6 +162,97 @@
 
     cal3.render();
 
+    cal4 = calendar.FullCalendar({
+        defaultView: 'week',
+        template: {
+            milestone: function(model) {
+                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
+            },
+            task: function(model) {
+                return '&nbsp;&nbsp;#' + model.title;
+            },
+            taskTitle: function() {
+                return '<label><input type="checkbox" /> 업무</label>';
+            },
+            allday: function(model) {
+                return model.title + ' <i class="fa fa-refresh"></i>';
+            },
+            time: function(model) {
+                return model.title + ' <i class="fa fa-refresh"></i><br />' + model.starts;
+            }
+        },
+        week: {
+            panelHeights: [80, 80, 120]
+        }
+    }, document.getElementById('calendar4'));
+
+    cal4.setCalendarColor('1', {
+        color: '#e8e8e8',
+        bgColor: '#585858',
+        render: false
+    });
+    cal4.setCalendarColor('2', {
+        color: '#282828',
+        bgColor: '#dc9656',
+        render: false
+    });
+    cal4.setCalendarColor('3', {
+        color: '#a16946',
+        bgColor: '#ab4642',
+        render: false
+    });
+
+    cal4.createEvents([{
+        id: '1',
+        calendarID: '1',
+        title: '스크럼',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-11-03T09:40:00+09:00',
+        ends: '2016-11-03T10:40:00+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-08-17T00:00:00+09:00',
+        ends: '2016-08-17T23:59:59+09:00'
+    }, {
+        id: '2123',
+        calendarID: '1',
+        title: '[3홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-08-18T00:00:00+09:00',
+        ends: '2016-08-18T23:59:59+09:00'
+    }, {
+        id: '1232',
+        calendarID: '2',
+        title: '[4홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-08-19T00:00:00+09:00',
+        ends: '2016-08-19T23:59:59+09:00'
+    }, {
+        id: '3',
+        calendarID: '3',
+        title: '테스트 마일스톤1',
+        category: 'milestone',
+        dueDateClass: '',
+        starts: '',
+        ends: '2016-08-17T23:59:59+09:00'
+    }, {
+        id: '4',
+        calendarID: '3',
+        title: '테스트 업무',
+        category: 'task',
+        dueDateClass: 'morning',
+        starts: '',
+        ends: '2016-08-17T23:59:59+09:00'
+    }], true);
+
+    cal4.render();
 
     window.cal1 = cal1;
     window.cal2 = cal2;

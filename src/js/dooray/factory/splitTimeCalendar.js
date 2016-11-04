@@ -34,7 +34,8 @@ function SplitTimeCalendar(options, container) {
         renderEndDate: '2016-10-31 12:40:00',
         events: [],
         calendarColor: {},
-        disableHourMarker: true
+        disableHourMarker: true,
+        isSplitTimeGrid: true
     }, options);
 
     this.calendarColor = opt.calendarColor;
@@ -97,7 +98,7 @@ SplitTimeCalendar.prototype.initialize = function() {
 
     util.forEach(opt.template, function(func, name) {
         if (func) {
-            Handlebars.registerHelper(name + '-tmpl', func);
+            Handlebars.registerHelper('split-' + name + '-tmpl', func);
         }
     });
 

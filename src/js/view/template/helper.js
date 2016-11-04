@@ -205,5 +205,9 @@ Handlebars.registerHelper({
         return common.stripTags(model.title);
     },
 
+    'split-time-tmpl': function(model) {
+        return common.stripTags(model.title);
+    },
+
     'minicalendar-tmpl': function(model) {}  // eslint-disable-line
 });
