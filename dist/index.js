@@ -7751,6 +7751,8 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "; border-left: 1px solid "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n            <div class=\""
