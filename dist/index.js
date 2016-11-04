@@ -7154,6 +7154,8 @@
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";background-color:"
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";  border-left: 2px solid "
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\">\n        <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\">"
@@ -8615,6 +8617,8 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";\n                    background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";\n                    border-left:2px solid "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\">\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\"\n                  data-title=\""
@@ -8635,6 +8639,8 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";\n                background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "\n                border-left:2px solid "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\">\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\"\n                  data-title=\""
@@ -14821,7 +14827,9 @@
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";color:"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "\"><span>[출근 전]</span>"
+	    + "; border-left: 2px solid "
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + " \"><span>[출근 전]</span>"
 	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</li>\n";
 	},"4":function(container,depth0,helpers,partials,data) {
@@ -14836,6 +14844,8 @@
 	    + "task-item\"\n        style=\"background-color:"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";color:"
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "; border-left: 2px solid "
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\"><span>[점심 전]</span>"
 	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
@@ -14852,6 +14862,8 @@
 	    + "task-item\"\n        style=\"background-color:"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";color:"
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "; border-left: 2px solid "
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\"><span>[퇴근 전]</span>"
 	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
@@ -17866,6 +17878,8 @@
 	    + "month-more-allday\"\n             style=\"background-color:"
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";\n                    color:"
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "\n                    border-left:2px solid "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\">\n            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
