@@ -10,19 +10,19 @@
         <li data-id="{{stamp model}}"
         data-title="{{model.title}}"
         class="{{CSS_PREFIX}}task-item"
-        style="background-color:{{model.bgColor}};color:{{model.color}}; border-left: 2px solid {{model.color}} "><span>[출근 전]</span>{{{task-tmpl model}}}</li>
+        style="background-color:{{model.bgColor}};color:{{model.color}}; border-left: 2px solid {{model.color}} "><span></span>{{{task-tmpl model}}}</li>
         {{/each ~}}
         {{#each lunch.items ~}}
         <li data-id="{{stamp model}}"
         data-title="{{model.title}}"
         class="{{CSS_PREFIX}}task-item"
-        style="background-color:{{model.bgColor}};color:{{model.color}}; border-left: 2px solid {{model.color}}"><span>[점심 전]</span>{{{task-tmpl model}}}</li>
+        style="background-color:{{model.bgColor}};color:{{model.color}}; border-left: 2px solid {{model.color}}"><span></span>{{{task-tmpl model}}}</li>
         {{/each ~}}
         {{#each evening.items ~}}
         <li data-id="{{stamp model}}"
         data-title="{{model.title}}"
         class="{{CSS_PREFIX}}task-item"
-        style="background-color:{{model.bgColor}};color:{{model.color}}; border-left: 2px solid {{model.color}}"><span>[퇴근 전]</span>{{{task-tmpl model}}}</li>
+        style="background-color:{{model.bgColor}};color:{{model.color}}; border-left: 2px solid {{model.color}}"><span></span>{{{task-tmpl model}}}</li>
         {{/each ~}}
     </ul>
 </div>
