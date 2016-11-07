@@ -5,7 +5,7 @@
         idx = 5;
 
     cal = calendar.FullCalendar({
-        defaultView: 'month',
+        defaultView: 'day',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -50,24 +50,24 @@
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: '2016-11-03T09:40:00+09:00',
-        ends: '2016-11-03T10:40:00+09:00'
+        starts: '2016-11-07T09:40:00+09:00',
+        ends: '2016-11-07T10:40:00+09:00'
     }, {
         id: '2',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
         dueDateClass: '',
-        starts: '2016-08-17T00:00:00+09:00',
-        ends: '2016-08-17T23:59:59+09:00'
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
     }, {
         id: '2123',
         calendarID: '1',
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
-        starts: '2016-08-18T00:00:00+09:00',
-        ends: '2016-08-18T23:59:59+09:00'
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
     }, {
         id: '1232',
         calendarID: '2',

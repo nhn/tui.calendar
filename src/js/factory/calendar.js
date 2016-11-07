@@ -340,6 +340,10 @@ Calendar.prototype.refreshChildView = function(viewName) {
         return;
     }
 
+    if (viewName === 'day') {
+        viewName = 'week';
+    }
+
     this.layout.children.items[viewName].render();
 };
 
@@ -576,6 +580,16 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         return;
     }
 
+    this.viewName = newViewName;
+
+    //convert day to week
+    if (viewName === 'day') {
+        viewName = 'week';
+    }
+
+    if (newViewName === 'day') {
+        newViewName = 'week';
+    }
     layout.children.doWhenHas(viewName, function(view) {
         self._toggleViewEvent(false, view);
     });
@@ -604,7 +618,6 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         self._toggleViewEvent(true, view);
     });
 
-    this.viewName = newViewName;
     this.refreshMethod = created.refresh;
 
     this.move();
