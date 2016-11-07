@@ -5,7 +5,7 @@
         idx = 5;
 
     cal = calendar.FullCalendar({
-        defaultView: 'day',
+        defaultView: 'week',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -52,6 +52,94 @@
         dueDateClass: '',
         starts: '2016-11-07T09:40:00+09:00',
         ends: '2016-11-07T10:40:00+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        starts: '2016-11-07T00:00:00+09:00',
+        ends: '2016-11-07T23:59:59+09:00'
     }, {
         id: '2',
         calendarID: '2',

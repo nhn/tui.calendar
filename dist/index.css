@@ -75,6 +75,9 @@
   position: absolute;
   margin-left: -1px;
   border-left: 1px solid #ccc;
+  padding: 2px 7px;
+  box-sizing: border-box;
+  height: 500px;
 }
 .dooray-calendar-weekday-grid-line:first-child {
   border: none;
@@ -85,7 +88,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  font-size: 0.9em;
+  font-size: 12px;
 }
 .dooray-calendar-weekday-event-block {
   position: absolute;
@@ -150,7 +153,7 @@
   width: 100%;
   height: inherit;
   display: inline-block;
-  font-size: 0.7em;
+  font-size: 10px;
 }
 .dooray-calendar-holiday-sun {
   color: #f00;
@@ -176,11 +179,11 @@
   margin-left: 90px;
 }
 .dooray-calendar-dayname-label {
-  font-size: 1.1em;
+  font-size: 12px;
   font-weight: bold;
 }
 .dooray-calendar-dayname-date {
-  font-size: 1.1em;
+  font-size: 12px;
   font-weight: bold;
 }
 .dooray-calendar-allday-container {
@@ -335,7 +338,7 @@
   left: 1px;
   margin-right: 7px;
   height: 100%;
-  font-size: 0.9em;
+  font-size: 12px;
 }
 .dooray-calendar-time-resize-handle {
   position: absolute;
@@ -450,6 +453,7 @@
 .dooray-calendar-month-week-item {
   position: relative;
   background-color: #fff;
+  overflow: hidden;
 }
 .dooray-calendar-month-more {
   background-color: #fff;
@@ -471,7 +475,7 @@
 .dooray-calendar-month-more-event {
   margin: 2px;
   padding: 0 3px;
-  font-size: 0.9em;
+  font-size: 12px;
   line-height: 18px;
 }
 .dooray-calendar-month-guide-block {
@@ -542,7 +546,7 @@
 .dooray-calendar-minicalendar table {
   width: 100%;
   height: 100%;
-  font-size: 0.9em;
+  font-size: 12px;
   table-layout: fixed;
   border-collapse: collapse;
 }
@@ -552,7 +556,7 @@
 .dooray-calendar-minicalendar button {
   margin: 0;
   padding: 0;
-  font-size: 1em;
+  font-size: 12px;
   border: none;
 }
 .dooray-calendar-minicalendar button {
@@ -568,7 +572,7 @@
   margin: 0 20px;
   height: 30px;
   line-height: 25px;
-  font-size: 1.2em;
+  font-size: 12px;
   text-align: center;
 }
 .dooray-calendar-minicalendar caption .prev,
@@ -594,7 +598,7 @@
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==");
 }
 .dooray-calendar-minicalendar caption .title {
-  font-size: 1.1em;
+  font-size: 12px;
   width: 80px;
 }
 .dooray-calendar-minicalendar tbody button {
