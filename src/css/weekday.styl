@@ -11,14 +11,16 @@
 
     .container
         position: relative
+        &>div
+            height: 100%
 
     .grid-line
-        position: absolute
-        margin-left: -1px
+        margin-left: -2px
         border-left: 1px solid #ccc
         padding: 2px 7px
         box-sizing: border-box
-        height: 500px
+        float: left
+        height: 100%
         &:first-child
             border: none
 
@@ -27,6 +29,7 @@
         wh(100%, 100%)
         position: absolute
         font-size: 12px
+        overflow-y: scroll
 
     .event-block
         position: absolute
@@ -45,10 +48,6 @@
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
-        margin-right: 10px
-
-    .exceed-left .event
-        margin-left: 0
 
     .exceed-right .event
         margin-right: 0
@@ -76,6 +75,7 @@
         box-sizing: border-box
         text-align: right
         padding: 10px 15px
+        font-size: 12px
 
     .left span
         display: block

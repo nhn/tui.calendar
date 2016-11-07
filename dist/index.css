@@ -71,13 +71,16 @@
 .dooray-calendar-weekday-container {
   position: relative;
 }
+.dooray-calendar-weekday-container>div {
+  height: 100%;
+}
 .dooray-calendar-weekday-grid-line {
-  position: absolute;
-  margin-left: -1px;
+  margin-left: -2px;
   border-left: 1px solid #ccc;
   padding: 2px 7px;
   box-sizing: border-box;
-  height: 500px;
+  float: left;
+  height: 100%;
 }
 .dooray-calendar-weekday-grid-line:first-child {
   border: none;
@@ -89,6 +92,7 @@
   height: 100%;
   position: absolute;
   font-size: 12px;
+  overflow-y: scroll;
 }
 .dooray-calendar-weekday-event-block {
   position: absolute;
@@ -107,10 +111,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: 10px;
-}
-.dooray-calendar-weekday-exceed-left .dooray-calendar-weekday-event {
-  margin-left: 0;
 }
 .dooray-calendar-weekday-exceed-right .dooray-calendar-weekday-event {
   margin-right: 0;
@@ -137,6 +137,7 @@
   box-sizing: border-box;
   text-align: right;
   padding: 10px 15px;
+  font-size: 12px;
 }
 .dooray-calendar-left span {
   display: block;
@@ -185,6 +186,9 @@
 .dooray-calendar-dayname-date {
   font-size: 12px;
   font-weight: bold;
+}
+.dooray-calendar-allday-right {
+  overflow-y: hidden;
 }
 .dooray-calendar-allday-container {
   height: 100%;
@@ -241,6 +245,7 @@
 }
 .dooray-calendar-timegrid-left {
   position: absolute;
+  font-size: 12px;
   width: 90px;
   height: auto;
 }
@@ -454,6 +459,9 @@
   position: relative;
   background-color: #fff;
   overflow: hidden;
+}
+.dooray-calendar-month-week-item>div {
+  height: 100%;
 }
 .dooray-calendar-month-more {
   background-color: #fff;
