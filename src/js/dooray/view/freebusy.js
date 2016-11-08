@@ -285,12 +285,10 @@ Freebusy.prototype._getViewModel = function() {
         };
 
     users.each(function(user) {
-        viewModel.freebusy[user.id] = {
-            name: user.name,
-            busy: util.map(user.freebusy, function(block) {
-                return self._getBlockBound(block);
-            })
-        };
+        user.busy = util.map(user.freebusy, function(block) {
+            return self._getBlockBound(block);
+        });
+        viewModel.freebusy[user.id] = user;
     });
 
     util.forEach(opt.recommends, function(block) {
