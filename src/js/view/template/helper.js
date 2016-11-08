@@ -209,5 +209,9 @@ Handlebars.registerHelper({
         return common.stripTags(model.title);
     },
 
-    'minicalendar-tmpl': function(model) {}  // eslint-disable-line
+    'minicalendar-tmpl': function(model) {},  // eslint-disable-line
+
+    'freebusy-title-tmpl': function(model) {
+        return model.name;
+    }
 });

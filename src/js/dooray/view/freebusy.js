@@ -7,6 +7,7 @@
 var util = global.tui.util,
     dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
     isValidHM = /^\d\d:\d\d$/;
+var Handlebars = require('handlebars-template-loader/runtime');
 
 var config = require('../../config'),
     common = require('../../common/common'),
@@ -57,6 +58,12 @@ function Freebusy(options, container) {
         selectEnd: ''
     }, options);
 
+    util.forEach(opt.template, function(func, name) {
+          if (func) {
+              Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
+          }
+    });
+
     /**
      * @type {string}
      */
@@ -68,7 +75,7 @@ function Freebusy(options, container) {
     this.selectEnd = opt.selectEnd;
 
     /**
-     * @type {Colleciton} 
+     * @type {Colleciton}
      */
     this.users = new Collection(function(user) {
         if (!user.id) {
@@ -83,9 +90,9 @@ function Freebusy(options, container) {
     }
 
     domutil.disableTextSelection(container);
-     
+
     domevent.on(container, {
-        click: this._onSelect, 
+        click: this._onSelect,
         mousemove: this._onSelect,
         mouseout: this.unselectOver,
         mouseleave: this.unselectOver
@@ -423,4 +430,3 @@ Freebusy.prototype.unselectOver = function () {
 util.CustomEvents.mixin(Freebusy);
 
 module.exports = Freebusy;
-

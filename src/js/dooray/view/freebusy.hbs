@@ -11,7 +11,7 @@
 <div class="{{CSS_PREFIX}}freebusy-chart" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
 {{#each freebusy ~}}
     <div class="{{CSS_PREFIX}}freebusy-item" style="height:{{@root.itemHeight}}px">
-        <div class="{{CSS_PREFIX}}freebusy-name" style="width:{{@root.nameWidth}}px">{{name}}</div>
+        <div class="{{CSS_PREFIX}}freebusy-name" style="width:{{@root.nameWidth}}px">{{{freebusy-title-tmpl this}}}</div>
         <div class="{{CSS_PREFIX}}freebusy-block-container" style="margin-left:{{@root.nameWidth}}px">
         {{#each busy ~}}
             <div class="{{CSS_PREFIX}}freebusy-block" style="left:{{[0]}}%;width:{{[1]}}%">
