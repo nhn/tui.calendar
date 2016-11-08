@@ -15384,6 +15384,7 @@
 	        viewModel = this._getViewModel();
 	
 	    container.innerHTML = tmpl(viewModel);
+	    this.fire('afterRender');
 	};
 	
 	/**
