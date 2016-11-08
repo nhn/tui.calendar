@@ -16,6 +16,7 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent'),
     View = require('../../view/view'),
+    baseTmpl = require('./freebusybase.hbs'),
     tmpl = require('./freebusy.hbs');
 
 /**
@@ -45,6 +46,8 @@ function Freebusy(options, container) {
         config.classname('clear') + ' ' +
         config.classname('freebusy-container')
     );
+
+    container.innerHTML = '<div class="base"></div><div class="controller"></div>';
 
     View.call(this, container);
 
@@ -301,12 +304,16 @@ Freebusy.prototype._getViewModel = function() {
 /**
  * @override
  */
-Freebusy.prototype.render = function() {
+Freebusy.prototype.render = function(skipBase) {
     var container = this.container,
         viewModel = this._getViewModel();
 
-    container.innerHTML = tmpl(viewModel);
-    this.fire('afterRender');
+    if(!skipBase) {
+        console.log('???')
+        container.getElementsByClassName('base')[0].innerHTML = baseTmpl(viewModel);
+        this.fire('afterRender');
+    }
+    container.getElementsByClassName('controller')[0].innerHTML = tmpl(viewModel);
 };
 
 /**
@@ -335,6 +342,7 @@ Freebusy.prototype.addUsers = function(users, skipRender) {
     });
 
     if (!skipRender) {
+        console.log('render')
         this.render();
     }
 };
@@ -392,7 +400,7 @@ Freebusy.prototype.select = function(start, end) {
     this.selectStart = start;
     this.selectEnd = end;
 
-    this.render();
+    this.render(true);
 };
 
 /**
@@ -404,7 +412,7 @@ Freebusy.prototype.unselect = function(skipRender) {
     this.selectOverStart = this.selectOverEnd = '';
 
     if (!skipRender) {
-        this.render();
+        this.render(true);
     }
 };
 
@@ -417,13 +425,13 @@ Freebusy.prototype.selectOver = function(start, end) {
     this.selectOverStart = start;
     this.selectOverEnd = end;
 
-    this.render();
+    this.render(true);
 };
 
 
 Freebusy.prototype.unselectOver = function () {
     this.selectOverStart = this.selectOverEnd = '';
-    this.render();
+    this.render(true);
 };
 
 util.CustomEvents.mixin(Freebusy);
