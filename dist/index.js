@@ -355,7 +355,11 @@
 	        return common.stripTags(model.title);
 	    },
 	
-	    'minicalendar-tmpl': function(model) {}  // eslint-disable-line
+	    'minicalendar-tmpl': function(model) {},  // eslint-disable-line
+	
+	    'freebusy-title-tmpl': function(model) {
+	        return model.name;
+	    }
 	});
 
 
@@ -15081,6 +15085,7 @@
 	var util = global.tui.util,
 	    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
 	    isValidHM = /^\d\d:\d\d$/;
+	var Handlebars = __webpack_require__(6);
 	
 	var config = __webpack_require__(31),
 	    common = __webpack_require__(27),
@@ -15131,6 +15136,12 @@
 	        selectEnd: ''
 	    }, options);
 	
+	    util.forEach(opt.template, function(func, name) {
+	          if (func) {
+	              Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
+	          }
+	    });
+	
 	    /**
 	     * @type {string}
 	     */
@@ -15142,7 +15153,7 @@
 	    this.selectEnd = opt.selectEnd;
 	
 	    /**
-	     * @type {Colleciton} 
+	     * @type {Colleciton}
 	     */
 	    this.users = new Collection(function(user) {
 	        if (!user.id) {
@@ -15157,9 +15168,9 @@
 	    }
 	
 	    domutil.disableTextSelection(container);
-	     
+	
 	    domevent.on(container, {
-	        click: this._onSelect, 
+	        click: this._onSelect,
 	        mousemove: this._onSelect,
 	        mouseout: this.unselectOver,
 	        mouseleave: this.unselectOver
@@ -15498,7 +15509,6 @@
 	
 	module.exports = Freebusy;
 	
-	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
@@ -15540,7 +15550,7 @@
 	    + "freebusy-name\" style=\"width:"
 	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.nameWidth), depth0))
 	    + "px\">"
-	    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
+	    + ((stack1 = (helpers["freebusy-title-tmpl"] || (depth0 && depth0["freebusy-title-tmpl"]) || alias2).call(alias1,depth0,{"name":"freebusy-title-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "freebusy-block-container\" style=\"margin-left:"

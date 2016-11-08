@@ -100,6 +100,7 @@
 .dooray-calendar-weekday-event {
   position: relative;
   margin: 0 3px 0 2px;
+  cursor: pointer;
 }
 .dooray-calendar-weekday-event span,
 .dooray-calendar-weekday-event-time span {
@@ -288,6 +289,7 @@
   height: 100%;
   top: 0;
   left: 0;
+  cursor: pointer;
 }
 .dooray-calendar-timegrid-hourmarker {
   position: absolute;
@@ -485,6 +487,7 @@
   padding: 0 3px;
   font-size: 12px;
   line-height: 18px;
+  cursor: pointer;
 }
 .dooray-calendar-month-guide-block {
   position: absolute;
