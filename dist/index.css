@@ -39,6 +39,9 @@
 .dooray-calendar-holiday {
   color: #f00;
 }
+.dooray-calendar-today {
+  background: rgba(218,229,249,0.3);
+}
 .handle-x {
   background-position: center center;
   background-repeat: no-repeat;
@@ -300,9 +303,9 @@
   position: relative;
 }
 .dooray-calendar-timegrid-hourmarker-line {
-  width: 100%;
-  height: 1px;
+  position: absolute;
   background-color: #f00;
+  height: 1px;
 }
 .dooray-calendar-timegrid-hourmarker-time {
   position: absolute;
@@ -536,17 +539,36 @@
   display: block;
   padding: 3px 5px 0 0;
 }
+.dooray-calendar-milestone-right {
+  overflow-y: hidden;
+}
+.dooray-calendar-milestone-day-grid-wrap {
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.dooray-calendar-milestone-day-grid {
+  border-left: 1px solid #ccc;
+  float: left;
+  margin-left: -1px;
+  height: 100%;
+}
+.dooray-calendar-milestone-day-scroll {
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
 .dooray-calendar-milestone-day {
   position: absolute;
-  background-color: #fff;
   margin-left: -1px;
-  border-left: 1px solid #ccc;
   height: 100%;
 }
 .dooray-calendar-milestone-list {
-  margin: 2px;
-  padding: 0;
+  margin: 0;
+  padding: 0 2px;
   overflow: hidden;
+  min-height: 100%;
 }
 .dooray-calendar-milestone-item {
   font-size: 11px;
@@ -667,23 +689,41 @@
   display: block;
   padding: 3px 5px 0 0;
 }
+.dooray-calendar-task-right {
+  overflow-y: hidden;
+}
+.dooray-calendar-task-day-grid-wrap {
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.dooray-calendar-task-day-grid {
+  border-left: 1px solid #ccc;
+  float: left;
+  margin-left: -1px;
+  height: 100%;
+}
+.dooray-calendar-task-day-scroll {
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
 .dooray-calendar-task-day {
   position: absolute;
-  background-color: #fff;
   margin-left: -1px;
-  border-left: 1px solid #ccc;
   height: 100%;
 }
 .dooray-calendar-task-day-wrap {
-  margin: 2px;
   padding: 0;
   overflow: hidden;
+  min-height: 100%;
 }
 .dooray-calendar-task-duedate-class strong {
   font-weight: normal;
 }
 .dooray-calendar-task-list {
-  margin: 0;
+  margin: 2px;
   padding: 0;
   list-style: none;
 }
@@ -701,20 +741,20 @@
 }
 .dooray-calendar-splitter {
   height: 3px;
-  background-color: #ddd;
+  background-color: #e8e8e8;
   cursor: row-resize;
 }
 .dooray-calendar-splitter-focused {
-  height: 5px;
-  background-color: #ffa9a9;
+  height: 3px;
+  background-color: #ddd;
   border: none;
 }
 .dooray-calendar-splitter-guide {
   position: absolute;
   width: 100%;
-  height: 5px;
+  height: 3px;
   border: none;
-  background-color: #ff4545;
+  background-color: #e8e8e8;
 }
 .dooray-calendar-freebusy-container {
   position: relative;
@@ -740,6 +780,7 @@
 }
 .dooray-calendar-freebusy-gridline > div {
   background-color: #fff;
+  color: #666;
 }
 .dooray-calendar-freebusy-gridline-last > div {
   margin-right: 1px;
@@ -801,9 +842,8 @@
 }
 .dooray-calendar-freebusy-select-over {
   position: absolute;
-  background-color: #00f;
+  background-color: rgba(245,215,215,0.3);
   height: 100%;
-  opacity: 0.2;
 }
 
 /*# sourceMappingURL=index.css.map*/
