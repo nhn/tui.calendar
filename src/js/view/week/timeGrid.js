@@ -228,11 +228,15 @@ TimeGrid.prototype.render = function(viewModel) {
     var timeViewModel = viewModel.eventsInDateRange.time,
         container = this.container,
         baseViewModel = this._getBaseViewModel(),
-        eventLen = util.keys(timeViewModel).length;
+        eventLen = util.keys(timeViewModel).length,
+        width;
 
     if (!eventLen) {
         return;
     }
+
+    width = 100 / eventLen;
+    baseViewModel.width = width;
 
     container.innerHTML = mainTmpl(baseViewModel);
 
@@ -241,7 +245,7 @@ TimeGrid.prototype.render = function(viewModel) {
      **********/
     this._renderChildren(
         timeViewModel,
-        100 / eventLen,
+        width,
         domutil.find(config.classname('.timegrid-events-container'), container)
     );
 
@@ -275,7 +279,6 @@ TimeGrid.prototype.refreshHourmarker = function() {
     }
 
     todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
-    text = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
     labelToVisible = domutil.find(config.classname('.invisible'), hourLabels);
     labelToInvisible = domutil.find(config.classname('.timegrid-hour-') + viewModel.currentHour, hourLabels);
 
@@ -293,7 +296,6 @@ TimeGrid.prototype.refreshHourmarker = function() {
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.hourmarkerTop + '%';
         todaymarker.style.display = viewModel.todaymarkerLeft ? 'block' : 'none';
-        text.innerHTML = viewModel.hourmarkerText;
     });
 };
 
@@ -334,4 +336,3 @@ TimeGrid.prototype.onTick = function() {
 };
 
 module.exports = TimeGrid;
-
