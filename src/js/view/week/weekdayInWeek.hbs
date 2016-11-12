@@ -1,6 +1,6 @@
 <div class="{{CSS_PREFIX}}weekday-grid ">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line {{#if isToday}} {{CSS_PREFIX}}weekday-date-today{{/if}}" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;"></div>
+    <div class="{{CSS_PREFIX}}weekday-grid-line {{#if isToday}} {{CSS_PREFIX}}today{{/if}}" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;"></div>
 {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}weekday-events">

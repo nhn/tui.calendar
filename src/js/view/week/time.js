@@ -41,7 +41,7 @@ function Time(options, container) {
     container.style.left = (options.index * options.width) + '%';
 
     if (this.options.isToday) {
-        domutil.addClass(this.container, config.classname('time-date-today'));
+        domutil.addClass(this.container, config.classname('today'));
     }
 }
 
@@ -184,4 +184,3 @@ Time.prototype.render = function(ymd, matrices) {
 };
 
 module.exports = Time;
-

@@ -115,8 +115,12 @@ Handlebars.registerHelper({
     'holiday': function(day) {
         var cssClass = '';
 
-        if (day === 0 || day === 6) {
-            cssClass = config.classname('holiday');
+        if (day === 0) {
+            cssClass = config.classname('holiday-sun');
+        }
+
+        if (day === 6) {
+            cssClass = config.classname('holiday-sat');
         }
 
         return cssClass;

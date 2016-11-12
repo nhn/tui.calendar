@@ -162,4 +162,3 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 };
 
 module.exports = WeekdayInMonth;
-

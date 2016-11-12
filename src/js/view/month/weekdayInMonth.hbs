@@ -1,6 +1,7 @@
 <div class="{{CSS_PREFIX}}weekday-grid ">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line {{#fi date '!==' 1}}{{CSS_PREFIX}}near-month-day{{/fi}}"
+    <div class="{{CSS_PREFIX}}weekday-grid-line {{#fi date '!==' 1}}{{CSS_PREFIX}}near-month-day{{/fi}}
+    {{#if isToday}} {{CSS_PREFIX}}today{{/if}}"
          style="width:{{@root.width}}%;
                 left:{{multiply @root.width @index}}%;">
         <span class="{{holiday day}}">{{date}}</span>
