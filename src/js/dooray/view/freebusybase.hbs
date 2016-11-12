@@ -3,7 +3,7 @@
     {{#each times ~}}
         <div class="{{CSS_PREFIX}}freebusy-gridline{{#if @last}} {{CSS_PREFIX}}freebusy-gridline-last{{/if}}"
              style="width:{{@root.timeWidth}}%;left:{{multiply @root.timeWidth @index}}%">
-             <div style="height:{{@root.itemHeight}}px">{{this}}</div>
+             <div style="height:{{@root.itemHeight}}px; line-height:{{@root.itemHeight}}px">{{this}}</div>
         </div>
     {{/each ~}}
     </div>

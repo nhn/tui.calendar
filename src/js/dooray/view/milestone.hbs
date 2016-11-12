@@ -2,16 +2,23 @@
     <span>마일스톤</span>
 </div>
 <div class="{{CSS_PREFIX}}milestone-right {{CSS_PREFIX}}right {{CSS_PREFIX}}clear">
-{{#each events ~}}
-<div class="{{CSS_PREFIX}}milestone-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.height}}px">
-    <ul class="{{CSS_PREFIX}}milestone-list">
-    {{#each items ~}}
-        <li data-id="{{stamp model}}"
-        data-title="{{model.title}}"
-        class="{{CSS_PREFIX}}milestone-item"
-        style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{milestone-tmpl model}}}</li>
-    {{/each ~}}
-    </ul>
-</div>
-{{/each ~}}
+  <div class="{{CSS_PREFIX}}task-day-grid-wrap">
+  {{#each events ~}}
+  <div class="{{CSS_PREFIX}}task-day-grid" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.height}}px"></div>
+  {{/each ~}}
+  </div>
+  <div class="{{CSS_PREFIX}}milestone-day-scroll">
+  {{#each events ~}}
+  <div class="{{CSS_PREFIX}}milestone-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;min-height:{{@root.height}}px">
+      <ul class="{{CSS_PREFIX}}milestone-list {{#if isToday}} {{CSS_PREFIX}}milestone-date-today{{/if}}">
+      {{#each items ~}}
+          <li data-id="{{stamp model}}"
+          data-title="{{model.title}}"
+          class="{{CSS_PREFIX}}milestone-item"
+          style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{milestone-tmpl model}}}</li>
+      {{/each ~}}
+      </ul>
+  </div>
+  {{/each ~}}
+  </div>
 </div>

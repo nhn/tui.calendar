@@ -60,14 +60,21 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
             datetime.MILLISECONDS_PER_DAY
         ),
         height = 0,
-        mmax = Math.max;
+        mmax = Math.max,
+        today = datetime.format(new Date(), 'YYYY-MM-DD');
 
     util.forEach(range, function(d) {
-        events[datetime.format(d, 'YYYY-MM-DD')] = {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}};
+        var date = datetime.format(d, 'YYYY-MM-DD');
+        events[date] = {morning: {length: 0},
+                        lunch: {length: 0},
+                        evening: {length: 0}
+                      };
     });
-
     util.extend(events, viewModel);
 
+    util.forEach(events, function(event, key) {
+        event.isToday = (key === today)
+    });
     // (출근전, 점심전, 퇴근전 항목 수 * 12px) + (각 항목의 아이템 수 * 12px)
     height = mmax.apply(null, util.map(events, function(g) {
         var subcount = util.keys(g).length;

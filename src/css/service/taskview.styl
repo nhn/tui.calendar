@@ -9,23 +9,44 @@
         display: block;
         padding: 3px 5px 0 0
 
+    .right
+        overflow-y: hidden;
+
+    .day-grid-wrap
+        overflow-y: scroll
+        width: 100%
+        height: 100%
+        position: absolute
+
+    .day-grid
+        border-left: 1px solid #ccc
+        float: left
+        margin-left: -1px
+        height: 100%
+
+    .day-scroll
+        height: 100%
+        overflow-y: scroll
+        position: relative
+
     .day
         position: absolute
-        background-color: #fff
         margin-left: -1px
-        border-left: 1px solid #ccc
         height: 100%
 
     .day-wrap
-        margin: 2px
         padding: 0
         overflow: hidden
+
+    .date-today
+        background: rgba(218, 229, 249, .3)
+        min-height: 100%
 
     .duedate-class strong
         font-weight: normal
 
     .list
-        margin: 0
+        margin: 2px
         padding: 0
         list-style: none
 

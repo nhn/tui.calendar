@@ -66,7 +66,8 @@ Weekday.prototype.getRenderDateRange = function() {
 Weekday.prototype.getBaseViewModel = function() {
     var opt = this.options,
         range = this.getRenderDateRange(),
-        gridWidth = (100 / range.length);
+        gridWidth = (100 / range.length),
+        today = datetime.format(new Date(), 'YYYYMMDD');
 
     return {
         width: gridWidth,
@@ -77,11 +78,11 @@ Weekday.prototype.getBaseViewModel = function() {
             return {
                 date: date.getDate(),
                 month: date.getMonth() + 1,
-                day: date.getDay()
+                day: date.getDay(),
+                isToday: datetime.format(date, 'YYYYMMDD') === today
             };
         })
     };
 };
 
 module.exports = Weekday;
-

@@ -59,7 +59,8 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
             datetime.end(datetime.parse(options.renderEndDate)),
             datetime.MILLISECONDS_PER_DAY
         ),
-        height;
+        height,
+        today = datetime.format(new Date(), 'YYYY-MM-DD');
 
     // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {
@@ -67,6 +68,10 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
     });
 
     util.extend(events, viewModel);
+
+    util.forEach(events, function(event, key) {
+          event.isToday = (key === today)
+    });
 
     height = Math.max.apply(null, util.map(events, function(coll) {
         return coll.length;
