@@ -21,7 +21,6 @@ var config = require('../../config'),
  *  @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
  *  @param {string|Date} [options.renderMonth] - month to render
  *  @param {string[]} [options.daynames] - array of each days name
- *  @param {number[]} [options.weekendNumber] - number of weekend
  *  @param {string} [options.selectedDate=''] - YYYY-MM-DD formatted selected date
  * @param {HTMLDivElement} container - element to use container
  */
@@ -48,7 +47,6 @@ function MiniCalendar(options, container) {
         startDayOfWeek: 0,
         renderMonth: todayStart,
         daynames: ['일', '월', '화', '수', '목', '금', '토'],
-        weekendNumber: [0, 6],
         selectedDate: todayYMD
     }, options);
 
@@ -170,7 +168,6 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
 MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
     var opt = this.options,
         daynames = opt.daynames,
-        weekendNumber = opt.weekendNumber,
         hlData = this.hlData,
         selectedDate = this.selectedDate,
         classPrefix = config.classname('minicalendar-'),
@@ -182,7 +179,19 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
         function(i) {
-            return daynames[i];
+            var cssClasses = [];
+
+            if (i === 0) {
+                cssClasses.push('holiday-sun');
+            }
+
+            if (i === 6) {
+                cssClasses.push('holiday-sat');
+            }
+            return {
+                name: daynames[i],
+                cssClass: classPrefix + cssClasses.join(' ' + classPrefix)
+            }
         }
     );
 
@@ -201,8 +210,12 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
             cssClasses.push('other-month');
         }
 
-        if (~util.inArray(day, weekendNumber)) {
-            cssClasses.push('weekend');
+        if (day === 0) {
+            cssClasses.push('holiday-sun');
+        }
+
+        if (day === 6) {
+            cssClasses.push('holiday-sat');
         }
 
         return {
@@ -326,4 +339,3 @@ MiniCalendar.prototype.render = function() {
 util.CustomEvents.mixin(MiniCalendar);
 
 module.exports = MiniCalendar;
-

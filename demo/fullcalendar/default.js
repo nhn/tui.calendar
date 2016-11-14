@@ -11,7 +11,7 @@
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
             },
             milestoneTitle: function() {
-                return '마일스톤낄럽';
+                return '마일스톤-a';
             },
             task: function(model) {
                 return '&nbsp;&nbsp;#' + model.title;

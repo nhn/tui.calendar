@@ -27,35 +27,9 @@
     caption
         margin: 0 20px
         height: 30px
-        line-height: 25px
-        font-size: 12px
+        line-height: 30px
+        font-size: 17px
         text-align: center
-
-        .prev,
-        .next,
-        .title
-            display: inline-block
-            line-height: inherit
-
-        .prev,
-        .next
-            width: 16px
-            background-repeat: no-repeat
-            background-position: center center
-
-        .prev span,
-        .next span
-            visibility: hidden
-
-        .prev
-            background-image: url(minicalendar-prev.png)
-
-        .next
-            background-image: url(minicalendar-next.png)
-
-        .title
-            font-size: 12px
-            width: 80px
 
     // 일자표기영역
     tbody
@@ -70,17 +44,33 @@
     .nav
         background-color: transparent
 
+    button.nav
+        font-size: 17px
+
+    .title
+        color: #333
+        font-weight: 600
+        margin: 0 10px
+
     .other-month
         button
             color: #ccc
 
-    .weekend
+    .holiday-sun
+        color: red
         button
             color: red
+        &.other-month
+            button
+                color: #ffcccc
 
-    .weekend.other-month
+    .holiday-sat
+        color: #4e87ee
         button
-            color: #ffcccc
+            color: #4e87ee
+        &.other-month
+            button
+                color: #bcd1f7
 
     .focused
         background-color: #eee
