@@ -270,29 +270,16 @@ TimeGrid.prototype.refreshHourmarker = function() {
         hourmarker = this.hourmarker,
         viewModel = this._getHourmarkerViewModel(),
         todaymarker,
-        text,
-        labelToVisible,
-        labelToInvisible;
+        text;
 
     if (!hourmarker || !viewModel) {
         return;
     }
 
     todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
-    labelToVisible = domutil.find(config.classname('.invisible'), hourLabels);
-    labelToInvisible = domutil.find(config.classname('.timegrid-hour-') + viewModel.currentHour, hourLabels);
 
     reqAnimFrame.requestAnimFrame(function() {
-        if (labelToVisible !== labelToInvisible) {
-            if (labelToVisible) {
-                domutil.removeClass(labelToVisible, config.classname('invisible'));
-            }
-
-            if (labelToInvisible) {
-                domutil.addClass(labelToInvisible, config.classname('invisible'));
-            }
-        }
-
+        
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.hourmarkerTop + '%';
         todaymarker.style.display = viewModel.todaymarkerLeft ? 'block' : 'none';
