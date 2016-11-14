@@ -188,6 +188,10 @@ Handlebars.registerHelper({
             common.stripTags(model.title);
     },
 
+    'milestoneTitle-tmpl': function() {
+        return '마일스톤';
+    },
+
     'task-tmpl': function(model) {
         return '<span class="' +
             config.classname('dot') +
