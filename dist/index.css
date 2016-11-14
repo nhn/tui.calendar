@@ -71,6 +71,11 @@
   height: 100%;
   min-height: inherit;
 }
+.dooray-calendar-weekday-grid {
+  position: absolute;
+  width: 100%;
+  overflow-y: scroll;
+}
 .dooray-calendar-weekday-container {
   position: relative;
 }
@@ -78,15 +83,12 @@
   height: 100%;
 }
 .dooray-calendar-weekday-grid-line {
-  margin-left: -2px;
+  margin-left: -1px;
   border-left: 1px solid #ccc;
-  padding: 2px 7px;
-  box-sizing: border-box;
+  padding: 2px 0;
+  box-sizing: content-box;
   float: left;
   height: 100%;
-}
-.dooray-calendar-weekday-grid-line:first-child {
-  border: none;
 }
 .dooray-calendar-weekday-events {
   top: 0px;
@@ -534,6 +536,7 @@
 }
 .dooray-calendar-milestone-left {
   color: #777;
+  background-color: #f7f7f7;
 }
 .dooray-calendar-milestone-left span {
   display: block;
@@ -541,6 +544,7 @@
 }
 .dooray-calendar-milestone-right {
   overflow-y: hidden;
+  background-color: #f7f7f7;
 }
 .dooray-calendar-milestone-day-grid-wrap {
   overflow-y: scroll;
@@ -604,35 +608,9 @@
 .dooray-calendar-minicalendar caption {
   margin: 0 20px;
   height: 30px;
-  line-height: 25px;
-  font-size: 12px;
+  line-height: 30px;
+  font-size: 17px;
   text-align: center;
-}
-.dooray-calendar-minicalendar caption .prev,
-.dooray-calendar-minicalendar caption .next,
-.dooray-calendar-minicalendar caption .title {
-  display: inline-block;
-  line-height: inherit;
-}
-.dooray-calendar-minicalendar caption .prev,
-.dooray-calendar-minicalendar caption .next {
-  width: 16px;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-.dooray-calendar-minicalendar caption .prev span,
-.dooray-calendar-minicalendar caption .next span {
-  visibility: hidden;
-}
-.dooray-calendar-minicalendar caption .prev {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAKklEQVR42q3IsQEAIAyEwDca9h/ZOrRKx+Wl8jN/wfwWNIIyZBtyiCXfuj9BAHLLHGpeAAAAAElFTkSuQmCC");
-}
-.dooray-calendar-minicalendar caption .next {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAFVBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgQVzdrAAAABnRSTlMAMGBwn+9mPEl4AAAAK0lEQVR4AWMgGzChC7AxoQuwMaILsDKiCgBF0AWY0ASY0cxgQbMFyKciAAA/yAByPG7VXQAAAABJRU5ErkJggg==");
-}
-.dooray-calendar-minicalendar caption .title {
-  font-size: 12px;
-  width: 80px;
 }
 .dooray-calendar-minicalendar tbody button {
   display: block;
@@ -645,14 +623,34 @@
 .dooray-calendar-minicalendar-nav {
   background-color: transparent;
 }
+button.dooray-calendar-minicalendar-nav {
+  font-size: 17px;
+}
+.dooray-calendar-minicalendar-title {
+  color: #333;
+  font-weight: 600;
+  margin: 0 10px;
+}
 .dooray-calendar-minicalendar-other-month button {
   color: #ccc;
 }
-.dooray-calendar-minicalendar-weekend button {
+.dooray-calendar-minicalendar-holiday-sun {
   color: #f00;
 }
-.dooray-calendar-minicalendar-weekend.dooray-calendar-minicalendar-other-month button {
+.dooray-calendar-minicalendar-holiday-sun button {
+  color: #f00;
+}
+.dooray-calendar-minicalendar-holiday-sun.dooray-calendar-minicalendar-other-month button {
   color: #fcc;
+}
+.dooray-calendar-minicalendar-holiday-sat {
+  color: #4e87ee;
+}
+.dooray-calendar-minicalendar-holiday-sat button {
+  color: #4e87ee;
+}
+.dooray-calendar-minicalendar-holiday-sat.dooray-calendar-minicalendar-other-month button {
+  color: #bcd1f7;
 }
 .dooray-calendar-minicalendar-focused {
   background-color: #eee;
@@ -684,6 +682,7 @@
 }
 .dooray-calendar-task-left {
   color: #777;
+  background-color: #f7f7f7;
 }
 .dooray-calendar-task-left span {
   display: block;
@@ -691,6 +690,7 @@
 }
 .dooray-calendar-task-right {
   overflow-y: hidden;
+  background-color: #f7f7f7;
 }
 .dooray-calendar-task-day-grid-wrap {
   overflow-y: scroll;
