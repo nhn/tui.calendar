@@ -40,6 +40,6 @@
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
   "scripts": {
     "postinstall": "bower install",
-    "start": "node_modules/.bin/webpack-dev-server --progress --inline"
+    "start": "node_modules/.bin/webpack-dev-server --progress --inline --hot"
   }
 }
