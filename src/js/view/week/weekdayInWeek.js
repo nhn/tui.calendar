@@ -38,6 +38,8 @@ WeekdayInWeek.prototype.render = function(viewModel) {
         baseViewModel = this.getBaseViewModel(),
         maxEventInDay = 0;
 
+
+    today = datetime.format(new Date(), 'YYYYMMDD'),
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
     maxEventInDay = mmax.apply(
@@ -50,7 +52,6 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     );
 
     this._setMinHeight(maxEventInDay);
-
     container.innerHTML = tmpl(baseViewModel);
 };
 
@@ -74,4 +75,3 @@ WeekdayInWeek.prototype._setMinHeight = function(maxEventInDay) {
 };
 
 module.exports = WeekdayInWeek;
-

@@ -7069,6 +7069,8 @@
 	        baseViewModel = this.getBaseViewModel(),
 	        maxEventInDay = 0;
 	
+	
+	    today = datetime.format(new Date(), 'YYYYMMDD'),
 	    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 	
 	    maxEventInDay = mmax.apply(
@@ -7081,7 +7083,6 @@
 	    );
 	
 	    this._setMinHeight(maxEventInDay);
-	
 	    container.innerHTML = tmpl(baseViewModel);
 	};
 	
@@ -7105,7 +7106,6 @@
 	};
 	
 	module.exports = WeekdayInWeek;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -15446,7 +15446,6 @@
 	        viewModel = this._getViewModel();
 	
 	    if(!skipBase) {
-	        console.log('???')
 	        container.getElementsByClassName('base')[0].innerHTML = baseTmpl(viewModel);
 	        this.fire('afterRender');
 	    }
@@ -15479,7 +15478,6 @@
 	    });
 	
 	    if (!skipRender) {
-	        console.log('render')
 	        this.render();
 	    }
 	};
@@ -18561,7 +18559,6 @@
 	            time: timeResizeHandler
 	        }
 	    };
-	    console.log(options.isDoorayView)
 	    if (options.isDoorayView) {
 	        weekView.handler.click.milestone = milestoneClickHandler;
 	        weekView.handler.click.task = taskClickHandler;

@@ -160,7 +160,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             time: timeResizeHandler
         }
     };
-    console.log(options.isDoorayView)
     if (options.isDoorayView) {
         weekView.handler.click.milestone = milestoneClickHandler;
         weekView.handler.click.task = taskClickHandler;

@@ -309,7 +309,6 @@ Freebusy.prototype.render = function(skipBase) {
         viewModel = this._getViewModel();
 
     if(!skipBase) {
-        console.log('???')
         container.getElementsByClassName('base')[0].innerHTML = baseTmpl(viewModel);
         this.fire('afterRender');
     }
@@ -342,7 +341,6 @@ Freebusy.prototype.addUsers = function(users, skipRender) {
     });
 
     if (!skipRender) {
-        console.log('render')
         this.render();
     }
 };
