@@ -144,8 +144,8 @@ Month.prototype.render = function() {
 
     this.children.each(function(childView) {
         var viewModel = controller.findByDateRange(
-            datetime.parse(childView.options.renderStartDate),
-            datetime.parse(childView.options.renderEndDate),
+            datetime.start(datetime.parse(childView.options.renderStartDate)),
+            datetime.end(datetime.parse(childView.options.renderEndDate)),
             eventFilter
         );
 
