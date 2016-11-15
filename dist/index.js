@@ -8293,8 +8293,8 @@
 	
 	    this.children.each(function(childView) {
 	        var viewModel = controller.findByDateRange(
-	            datetime.parse(childView.options.renderStartDate),
-	            datetime.parse(childView.options.renderEndDate),
+	            datetime.start(datetime.parse(childView.options.renderStartDate)),
+	            datetime.end(datetime.parse(childView.options.renderEndDate)),
 	            eventFilter
 	        );
 	
@@ -8999,7 +8999,7 @@
 	    var cssClass = domutil.getClass(target),
 	        matches;
 	
-	    if (cssClass === config.classname('time-date-event-block')) {
+	    if (cssClass === config.classname('time-date-event-block-wrap')) {
 	        target = target.parentNode;
 	        cssClass = domutil.getClass(target);
 	    }
@@ -9226,7 +9226,6 @@
 	util.CustomEvents.mixin(TimeCreation);
 	
 	module.exports = TimeCreation;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
