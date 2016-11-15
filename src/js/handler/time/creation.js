@@ -79,7 +79,7 @@ TimeCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass === config.classname('time-date-event-block')) {
+    if (cssClass === config.classname('time-date-event-block-wrap')) {
         target = target.parentNode;
         cssClass = domutil.getClass(target);
     }
@@ -306,4 +306,3 @@ timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);
 
 module.exports = TimeCreation;
-
