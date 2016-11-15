@@ -7581,7 +7581,8 @@
 	        ymd: '',
 	        isToday: false,
 	        hourStart: 0,
-	        hourEnd: 24
+	        hourEnd: 24,
+	        defaultMarginBottom: 2
 	    }, options);
 	
 	    this.timeTmpl = options.isSplitTimeGrid ? __webpack_require__(55) : __webpack_require__(54);
@@ -7639,12 +7640,11 @@
 	    if (!viewModel.hasCollide) {
 	        width = null;
 	    }
-	
 	    return {
 	        top: top,
 	        left: options.baseLeft[options.columnIndex],
 	        width: width,
-	        height: height
+	        height: height - this.options.defaultMarginBottom
 	    };
 	};
 	
@@ -7775,9 +7775,13 @@
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-resize-handle handle-x\">&nbsp;</div>\n        </div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {};
 	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	  return "<div class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-event-block-wrap\">\n"
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
@@ -16530,6 +16534,7 @@
 	        groupFunc: null,
 	        controller: null,
 	        defaultView: 'week',
+	        isDoorayView: true,
 	        defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
 	        template: util.extend({
 	            allday: null,
@@ -17097,10 +17102,22 @@
 	    this.render();
 	};
 	
+	/**
+	 * Toggle current view
+	 * @param {string} newViewName - new view name to render
+	 * @param {boolean} force - force render despite of current view and new view are equal
+	 */
+	Calendar.prototype.toggleDoorayView = function(isUse) {
+	    var viewName = this.viewName,
+	        options = this.options;
+	
+	    options.isDoorayView = isUse;
+	    this.toggleView(viewName, true)
+	};
+	
 	util.CustomEvents.mixin(Calendar);
 	
 	module.exports = Calendar;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -18456,38 +18473,50 @@
 	    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
 	                                     dayNameView.container.offsetHeight) + 'px';
 	
+	    var panels = [
+	         {height: 100, minHeight: 100},
+	         {isSplitter: true},
+	         {autoHeight: true}
+	    ];
+	
+	    if (options.isDoorayView) {
+	      panels = [
+	          {height: 56, minHeight: 56},
+	          {isSplitter: true},
+	          {height: 56, minHeight: 56},
+	          {isSplitter: true},
+	          {height: 68, minHeight: 68},
+	          {isSplitter: true},
+	          {autoHeight: true}
+	      ];
+	    }
+	
 	    vLayout = new VLayout({
-	        panels: [
-	            {height: 56, minHeight: 56},
-	            {isSplitter: true},
-	            {height: 56, minHeight: 56},
-	            {isSplitter: true},
-	            {height: 68, minHeight: 68},
-	            {isSplitter: true},
-	            {autoHeight: true}
-	        ],
+	        panels: panels,
 	        panelHeights: options.week.panelHeights || []
 	    }, vLayoutContainer);
+	
 	    weekView.vLayout = vLayout;
 	
-	    /**********
-	     * 마일스톤
-	     **********/
-	    milestoneView = new Milestone(options.week, vLayout.panels[0].container);
-	    weekView.addChild(milestoneView);
-	    milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
+	    if (options.isDoorayView) {
+	        /**********
+	         * 마일스톤
+	         **********/
+	        milestoneView = new Milestone(options.week, vLayout.panels[0].container);
+	        weekView.addChild(milestoneView);
+	        milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 	
-	    /**********
-	     * 업무
-	     **********/
-	    taskView = new TaskView(options.week, vLayout.panels[2].container);
-	    weekView.addChild(taskView);
-	    taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
-	
+	        /**********
+	         * 업무
+	         **********/
+	        taskView = new TaskView(options.week, vLayout.panels[2].container);
+	        weekView.addChild(taskView);
+	        taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
+	    }
 	    /**********
 	     * 종일일정
 	     **********/
-	    alldayView = new Allday(options.week, vLayout.panels[4].container);
+	    alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
 	    weekView.addChild(alldayView);
 	    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
 	    alldayDblClickHandler = new AlldayDblClick(alldayView);
@@ -18498,7 +18527,7 @@
 	    /**********
 	     * 시간별 일정
 	     **********/
-	    timeGridView = new TimeGrid(options.week, vLayout.panels[6].container);
+	    timeGridView = new TimeGrid(options.week, vLayout.panels[panels.length - 1].container);
 	    weekView.addChild(timeGridView);
 	    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
 	    timeDblClickHandler = new TimeDblClick(timeGridView);
@@ -18512,8 +18541,6 @@
 	
 	    weekView.handler = {
 	        click: {
-	            milestone: milestoneClickHandler,
-	            task: taskClickHandler,
 	            allday: alldayClickHandler,
 	            time: timeClickHandler
 	        },
@@ -18534,6 +18561,11 @@
 	            time: timeResizeHandler
 	        }
 	    };
+	    console.log(options.isDoorayView)
+	    if (options.isDoorayView) {
+	        weekView.handler.click.milestone = milestoneClickHandler;
+	        weekView.handler.click.task = taskClickHandler;
+	    }
 	
 	    // add controller
 	    weekView.controller = baseController.Week;

@@ -341,6 +341,11 @@
 .dooray-calendar-time-date:last-child .dooray-calendar-time-guide-creation {
   left: 0px;
 }
+.dooray-calendar-time-date-event-block-wrap {
+  position: relative;
+  margin-right: 8px;
+  height: 100%;
+}
 .dooray-calendar-time-date-event-block {
   position: absolute;
   right: 0px;
@@ -348,9 +353,10 @@
 .dooray-calendar-time-event {
   position: relative;
   left: 1px;
-  margin-right: 7px;
   height: 100%;
   font-size: 12px;
+  margin-right: 2px;
+  overflow: hidden;
 }
 .dooray-calendar-time-resize-handle {
   position: absolute;

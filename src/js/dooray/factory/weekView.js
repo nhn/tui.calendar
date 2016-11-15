@@ -72,38 +72,50 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
                                      dayNameView.container.offsetHeight) + 'px';
 
+    var panels = [
+         {height: 100, minHeight: 100},
+         {isSplitter: true},
+         {autoHeight: true}
+    ];
+
+    if (options.isDoorayView) {
+      panels = [
+          {height: 56, minHeight: 56},
+          {isSplitter: true},
+          {height: 56, minHeight: 56},
+          {isSplitter: true},
+          {height: 68, minHeight: 68},
+          {isSplitter: true},
+          {autoHeight: true}
+      ];
+    }
+
     vLayout = new VLayout({
-        panels: [
-            {height: 56, minHeight: 56},
-            {isSplitter: true},
-            {height: 56, minHeight: 56},
-            {isSplitter: true},
-            {height: 68, minHeight: 68},
-            {isSplitter: true},
-            {autoHeight: true}
-        ],
+        panels: panels,
         panelHeights: options.week.panelHeights || []
     }, vLayoutContainer);
+
     weekView.vLayout = vLayout;
 
-    /**********
-     * 마일스톤
-     **********/
-    milestoneView = new Milestone(options.week, vLayout.panels[0].container);
-    weekView.addChild(milestoneView);
-    milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
+    if (options.isDoorayView) {
+        /**********
+         * 마일스톤
+         **********/
+        milestoneView = new Milestone(options.week, vLayout.panels[0].container);
+        weekView.addChild(milestoneView);
+        milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
-    /**********
-     * 업무
-     **********/
-    taskView = new TaskView(options.week, vLayout.panels[2].container);
-    weekView.addChild(taskView);
-    taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
-
+        /**********
+         * 업무
+         **********/
+        taskView = new TaskView(options.week, vLayout.panels[2].container);
+        weekView.addChild(taskView);
+        taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
+    }
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, vLayout.panels[4].container);
+    alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayDblClickHandler = new AlldayDblClick(alldayView);
@@ -114,7 +126,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, vLayout.panels[6].container);
+    timeGridView = new TimeGrid(options.week, vLayout.panels[panels.length - 1].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeDblClickHandler = new TimeDblClick(timeGridView);
@@ -128,8 +140,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     weekView.handler = {
         click: {
-            milestone: milestoneClickHandler,
-            task: taskClickHandler,
             allday: alldayClickHandler,
             time: timeClickHandler
         },
@@ -150,6 +160,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             time: timeResizeHandler
         }
     };
+    console.log(options.isDoorayView)
+    if (options.isDoorayView) {
+        weekView.handler.click.milestone = milestoneClickHandler;
+        weekView.handler.click.task = taskClickHandler;
+    }
 
     // add controller
     weekView.controller = baseController.Week;

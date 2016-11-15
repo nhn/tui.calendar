@@ -57,6 +57,7 @@ function Calendar(options, container) {
         groupFunc: null,
         controller: null,
         defaultView: 'week',
+        isDoorayView: true,
         defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
         template: util.extend({
             allday: null,
@@ -624,7 +625,19 @@ Calendar.prototype.toggleView = function(newViewName, force) {
     this.render();
 };
 
+/**
+ * Toggle current view
+ * @param {string} newViewName - new view name to render
+ * @param {boolean} force - force render despite of current view and new view are equal
+ */
+Calendar.prototype.toggleDoorayView = function(isUse) {
+    var viewName = this.viewName,
+        options = this.options;
+
+    options.isDoorayView = isUse;
+    this.toggleView(viewName, true)
+};
+
 util.CustomEvents.mixin(Calendar);
 
 module.exports = Calendar;
-
