@@ -33,7 +33,8 @@ function Time(options, container) {
         ymd: '',
         isToday: false,
         hourStart: 0,
-        hourEnd: 24
+        hourEnd: 24,
+        defaultMarginBottom: 2
     }, options);
 
     this.timeTmpl = options.isSplitTimeGrid ? require('../template/week/splitTime.hbs') : require('../template/week/time.hbs');
@@ -91,12 +92,11 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
     if (!viewModel.hasCollide) {
         width = null;
     }
-
     return {
         top: top,
         left: options.baseLeft[options.columnIndex],
         width: width,
-        height: height
+        height: height - this.options.defaultMarginBottom
     };
 };
 

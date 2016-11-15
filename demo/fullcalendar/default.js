@@ -53,32 +53,32 @@
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: '2016-11-07T09:40:00+09:00',
-        ends: '2016-11-07T10:40:00+09:00'
+        starts: '2016-11-14T09:30:00+09:00',
+        ends: '2016-11-14T10:30:00+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-11-14T10:30:00+09:00',
+        ends: '2016-11-14T12:00:59+09:00'
+    }, {
+        id: '2',
+        calendarID: '2',
+        title: '[홍길동]연차',
+        category: 'time',
+        dueDateClass: '',
+        starts: '2016-11-14T10:30:00+09:00',
+        ends: '2016-11-14T12:00:59+09:00'
     }, {
         id: '2',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
         dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
+        starts: '2016-11-14T10:30:00+09:00',
+        ends: '2016-11-14T12:00:59+09:00'
     }, {
         id: '2',
         calendarID: '2',
