@@ -7070,7 +7070,6 @@
 	        maxEventInDay = 0;
 	
 	
-	    today = datetime.format(new Date(), 'YYYYMMDD'),
 	    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 	
 	    maxEventInDay = mmax.apply(
