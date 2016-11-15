@@ -332,6 +332,7 @@
   height: 100%;
   margin-left: -1px;
   border-right: 1px solid #ccc;
+  box-sizing: content-box;
 }
 .dooray-calendar-time-date:last-child {
   border-right: none;
