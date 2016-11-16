@@ -121,6 +121,7 @@ CalEvent.prototype.init = function(options) {
 
     this.color = options.color || this.color;
     this.bgColor = options.bgColor || this.bgColor;
+    this.borderColor = options.borderColor || this.borderColor;
     this.origin = options.origin || this.origin;
 };
 
@@ -179,6 +180,10 @@ CalEvent.prototype.equals = function(event) {
         return false;
     }
 
+    if (this.borderColor !== event.borderColor) {
+        return false;
+    }
+
     return true;
 };
 
@@ -224,4 +229,3 @@ model.mixin(CalEvent.prototype);
 dirty.mixin(CalEvent.prototype);
 
 module.exports = CalEvent;
-

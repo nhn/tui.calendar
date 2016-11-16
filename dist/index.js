@@ -6414,6 +6414,7 @@
 	
 	    this.color = options.color || this.color;
 	    this.bgColor = options.bgColor || this.bgColor;
+	    this.borderColor = options.borderColor || this.borderColor;
 	    this.origin = options.origin || this.origin;
 	};
 	
@@ -6472,6 +6473,10 @@
 	        return false;
 	    }
 	
+	    if (this.borderColor !== event.borderColor) {
+	        return false;
+	    }
+	
 	    return true;
 	};
 	
@@ -6517,7 +6522,6 @@
 	dirty.mixin(CalEvent.prototype);
 	
 	module.exports = CalEvent;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -7175,7 +7179,7 @@
 	    + ";background-color:"
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";  border-left: 2px solid "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\">\n        <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\">"
@@ -7767,7 +7771,7 @@
 	    + ";background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + "; border-left: 2px solid "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n            <div class=\""
@@ -8631,7 +8635,7 @@
 	    + ";\n                    background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";\n                    border-left:2px solid "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\">\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\"\n                  data-title=\""
@@ -8653,7 +8657,7 @@
 	    + ";\n                background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";\n                border-left:2px solid "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\">\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\"\n                  data-title=\""
@@ -13963,6 +13967,10 @@
 	        calEvent.set('bgColor', options.bgColor);
 	    }
 	
+	    if (options.borderColor) {
+	        calEvent.set('borderColor', options.borderColor);
+	    }
+	
 	    if (options.origin) {
 	        calEvent.set('origin', options.origin);
 	    }
@@ -13992,7 +14000,6 @@
 	
 	
 	module.exports = DoorayBase;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -14883,7 +14890,7 @@
 	    + ";color:"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "; border-left: 2px solid "
-	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + " \"><span></span>"
 	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</li>\n";
@@ -14901,7 +14908,7 @@
 	    + ";color:"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "; border-left: 2px solid "
-	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\"><span></span>"
 	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</li>\n";
@@ -17973,7 +17980,7 @@
 	    + ";\n                    color:"
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";\n                    border-left:2px solid "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\">\n            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\n        </div>\n";
@@ -18036,6 +18043,7 @@
 	 * @property {string} ends - 일정 종료 시간
 	 * @property {string} [color] - 일정 텍스트색
 	 * @property {string} [bgColor] - 일정 배경색
+	 * @property {string} [borderColor] - 일정 border색
 	 */
 	
 	/**
@@ -18122,6 +18130,7 @@
 	        if (color) {
 	            obj.color = color.color;
 	            obj.bgColor = color.bgColor;
+	            obj.borderColor = color.borderColor;
 	        }
 	    });
 	
@@ -18219,6 +18228,7 @@
 	    ownColor = calColor[calendarID] = util.extend({
 	        color: '#000',
 	        bgColor: '#a1b56c',
+	        borderColor: '#a1b56c',
 	        render: true
 	    }, option);
 	
@@ -18229,6 +18239,7 @@
 	
 	        model.color = ownColor.color;
 	        model.bgColor = ownColor.bgColor;
+	        model.borderColor = ownColor.borderColor;
 	    });
 	
 	    if (ownColor.render) {
@@ -18280,7 +18291,6 @@
 	};
 	
 	module.exports = ServiceCalendar;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -18989,6 +18999,7 @@
 	        if (color) {
 	            obj.color = color.color;
 	            obj.bgColor = color.bgColor;
+	            obj.borderColor = color.borderColor;
 	        }
 	    });
 	
@@ -19079,6 +19090,7 @@
 	 * @param {object} option - color data object
 	 *  @param {string} option.color - text color of event element
 	 *  @param {string} option.bgColor - bg color of event element
+	 *  @param {string} option.borderColor - border color of event element
 	 *  @param {boolean} [option.render=true] - set false then does not auto render.
 	 */
 	SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
@@ -19093,6 +19105,7 @@
 	    ownColor = calColor[calendarID] = util.extend({
 	        color: '#000',
 	        bgColor: '#a1b56c',
+	        borderColor: '#a1b56c',
 	        render: true
 	    }, option);
 	
@@ -19129,7 +19142,6 @@
 	util.CustomEvents.mixin(SplitTimeCalendar);
 	
 	module.exports = SplitTimeCalendar;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 

@@ -93,6 +93,10 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
         calEvent.set('bgColor', options.bgColor);
     }
 
+    if (options.borderColor) {
+        calEvent.set('borderColor', options.borderColor);
+    }
+
     if (options.origin) {
         calEvent.set('origin', options.origin);
     }
@@ -122,4 +126,3 @@ DoorayBase.prototype.deleteEvent = function(calEvent) {
 
 
 module.exports = DoorayBase;
-

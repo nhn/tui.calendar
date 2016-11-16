@@ -21,6 +21,7 @@ var config = require('../../config'),
  * @property {string} ends - 일정 종료 시간
  * @property {string} [color] - 일정 텍스트색
  * @property {string} [bgColor] - 일정 배경색
+ * @property {string} [borderColor] - 일정 border색
  */
 
 /**
@@ -107,6 +108,7 @@ ServiceCalendar.prototype.createEvents = function(dataObjectList, silent) {
         if (color) {
             obj.color = color.color;
             obj.bgColor = color.bgColor;
+            obj.borderColor = color.borderColor;
         }
     });
 
@@ -204,6 +206,7 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
     ownColor = calColor[calendarID] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
+        borderColor: '#a1b56c',
         render: true
     }, option);
 
@@ -214,6 +217,7 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
 
         model.color = ownColor.color;
         model.bgColor = ownColor.bgColor;
+        model.borderColor = ownColor.borderColor;
     });
 
     if (ownColor.render) {
@@ -265,4 +269,3 @@ ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarID, render) 
 };
 
 module.exports = ServiceCalendar;
-

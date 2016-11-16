@@ -189,6 +189,7 @@ SplitTimeCalendar.prototype.createEvents = function(dataObjectList, silent) {
         if (color) {
             obj.color = color.color;
             obj.bgColor = color.bgColor;
+            obj.borderColor = color.borderColor;
         }
     });
 
@@ -279,6 +280,7 @@ SplitTimeCalendar.prototype.getLayoutData = function() {
  * @param {object} option - color data object
  *  @param {string} option.color - text color of event element
  *  @param {string} option.bgColor - bg color of event element
+ *  @param {string} option.borderColor - border color of event element
  *  @param {boolean} [option.render=true] - set false then does not auto render.
  */
 SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
@@ -293,6 +295,7 @@ SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
     ownColor = calColor[calendarID] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
+        borderColor: '#a1b56c',
         render: true
     }, option);
 
@@ -329,4 +332,3 @@ SplitTimeCalendar.prototype._onClick = function(clickEventData) {
 util.CustomEvents.mixin(SplitTimeCalendar);
 
 module.exports = SplitTimeCalendar;
-

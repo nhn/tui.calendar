@@ -18,7 +18,7 @@
              style="height:{{@root.eventHeight}}px;
                     color:{{model.color}};
                     background-color:{{model.bgColor}};
-                    border-left:2px solid {{model.color}}">
+                    border-left:2px solid {{model.borderColor}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
                   data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
@@ -28,7 +28,7 @@
                 style="height:{{@root.eventHeight}}px;
                 color:{{model.color}};
                 background-color:{{model.bgColor}};
-                border-left:2px solid {{model.color}}">
+                border-left:2px solid {{model.borderColor}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
                   data-title="{{model.title}}">{{hhmm model.starts}} {{model.title}}</span>
         </div>
