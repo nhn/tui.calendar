@@ -122,7 +122,8 @@ AlldayCreation.prototype._createEvent = function(eventData) {
     this.fire('beforeCreateEvent', {
         isAllDay: true,
         starts: starts,
-        ends: ends
+        ends: ends,
+        guide: this.guide
     });
 };
 
@@ -201,7 +202,7 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
         return;
     }
 
-    this.guide.clearGuideElement();
+    //this.guide.clearGuideElement();
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -247,4 +248,3 @@ common.mixin(alldayCore, AlldayCreation);
 util.CustomEvents.mixin(AlldayCreation);
 
 module.exports = AlldayCreation;
-

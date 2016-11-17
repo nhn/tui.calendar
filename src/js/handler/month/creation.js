@@ -87,7 +87,8 @@ MonthCreation.prototype._createEvent = function(eventCache) {
     this.fire('beforeCreateEvent', {
         isAllDay: true,
         starts: starts,
-        ends: ends
+        ends: ends,
+        guide: this.guide
     });
 };
 
@@ -195,4 +196,3 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 util.CustomEvents.mixin(MonthCreation);
 
 module.exports = MonthCreation;
-

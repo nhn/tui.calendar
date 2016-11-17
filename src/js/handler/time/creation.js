@@ -210,7 +210,8 @@ TimeCreation.prototype._createEvent = function(eventData) {
     this.fire('beforeCreateEvent', {
         isAllDay: false,
         starts: new Date(starts),
-        ends: new Date(ends)
+        ends: new Date(ends),
+        guide: this.guide
     });
 };
 
@@ -223,7 +224,8 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     var self = this,
         dragStart = this._dragStart;
 
-    this.guide.clearGuideElement();
+    //client에 위임
+    //this.guide.clearGuideElement();
 
     this.dragHandler.off({
         drag: this._onDrag,

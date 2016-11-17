@@ -306,6 +306,7 @@ SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
 
         model.color = ownColor.color;
         model.bgColor = ownColor.bgColor;
+        model.borderColor = ownColor.borderColor;
     });
 
     if (ownColor.render) {

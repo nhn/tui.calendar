@@ -9134,7 +9134,8 @@
 	    this.fire('beforeCreateEvent', {
 	        isAllDay: false,
 	        starts: new Date(starts),
-	        ends: new Date(ends)
+	        ends: new Date(ends),
+	        guide: this.guide
 	    });
 	};
 	
@@ -9147,7 +9148,8 @@
 	    var self = this,
 	        dragStart = this._dragStart;
 	
-	    this.guide.clearGuideElement();
+	    //client에 위임
+	    //this.guide.clearGuideElement();
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
@@ -11286,7 +11288,8 @@
 	    this.fire('beforeCreateEvent', {
 	        isAllDay: true,
 	        starts: starts,
-	        ends: ends
+	        ends: ends,
+	        guide: this.guide
 	    });
 	};
 	
@@ -11365,7 +11368,7 @@
 	        return;
 	    }
 	
-	    this.guide.clearGuideElement();
+	    //this.guide.clearGuideElement();
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
@@ -11411,7 +11414,6 @@
 	util.CustomEvents.mixin(AlldayCreation);
 	
 	module.exports = AlldayCreation;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -12715,7 +12717,8 @@
 	    this.fire('beforeCreateEvent', {
 	        isAllDay: true,
 	        starts: starts,
-	        ends: ends
+	        ends: ends,
+	        guide: this.guide
 	    });
 	};
 	
@@ -12823,7 +12826,6 @@
 	util.CustomEvents.mixin(MonthCreation);
 	
 	module.exports = MonthCreation;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -17580,7 +17582,6 @@
 	
 	module.exports = AlldayDblClick;
 	
-	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
@@ -17704,7 +17705,6 @@
 	util.CustomEvents.mixin(TimeDblClick);
 	
 	module.exports = TimeDblClick;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -19116,6 +19116,7 @@
 	
 	        model.color = ownColor.color;
 	        model.bgColor = ownColor.bgColor;
+	        model.borderColor = ownColor.borderColor;
 	    });
 	
 	    if (ownColor.render) {

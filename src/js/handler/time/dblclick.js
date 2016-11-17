@@ -115,4 +115,3 @@ TimeDblClick.prototype._onDblClick = function(e) {
 util.CustomEvents.mixin(TimeDblClick);
 
 module.exports = TimeDblClick;
-

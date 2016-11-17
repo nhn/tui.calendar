@@ -97,4 +97,3 @@ AlldayDblClick.prototype._onDblClick = function(e) {
 util.CustomEvents.mixin(AlldayDblClick);
 
 module.exports = AlldayDblClick;
-
