@@ -85,6 +85,12 @@ MonthGuide.prototype.destroy = function() {
         this.ratio = this.startCoord = this.guideElements = null;
 };
 
+
+
+MonthGuide.prototype.clearGuideElement = function(){
+    this.destroy();
+};
+
 /**
  * Get ratio value in week.
  * @param {number} value - value for calc ratio in week

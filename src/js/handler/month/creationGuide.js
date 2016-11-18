@@ -61,7 +61,7 @@ MonthCreationGuide.prototype._onDrag = function(dragEvent) {
  * Drag end event handler
  */
 MonthCreationGuide.prototype._onDragEnd = function() {
-    this.guide.destroy();
+    //this.guide.destroy();
     this.guide = null;
 };
 

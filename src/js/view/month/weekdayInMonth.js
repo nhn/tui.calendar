@@ -197,7 +197,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
 WeekdayInMonth.prototype._beforeDestroy = function() {
     Handlebars.unregisterHelper('wdSkipped');
-    domevent.off(this.container, 'click');
+    domevent.off(this.container, 'click', this.openMore, this);
 
 };
 module.exports = WeekdayInMonth;
