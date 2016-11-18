@@ -8424,14 +8424,15 @@
 	};
 	
 	WeekdayInMonth.prototype.makeMoreViewModel = function(exceedElement){
-	    var model = {};
+	    var model = {},
+	        ymd = datetime.parse(domutil.getData(exceedElement, 'ymd'));
 	    model.target = exceedElement;
-	    model.date = domutil.getData(exceedElement, 'ymd');
+	    model.date = datetime.format(ymd, 'YYYY.MM.DD');
 	    model.width = exceedElement.offsetWidth;
 	    model.height = this.container.offsetHeight - exceedElement.offsetHeight;
 	    model.events = this.parent.controller.findByDateRange(
-	      datetime.start(datetime.parse(model.date)),
-	      datetime.end(datetime.parse(model.date))
+	      datetime.start(ymd),
+	      datetime.end(ymd)
 	    )[0][0];
 	    return model;
 	};
@@ -8545,7 +8546,7 @@
 	
 	WeekdayInMonth.prototype._beforeDestroy = function() {
 	    Handlebars.unregisterHelper('wdSkipped');
-	    domevent.off(this.container, 'click');
+	    domevent.off(this.container, 'click', this.openMore, this);
 	
 	};
 	module.exports = WeekdayInMonth;
@@ -12387,6 +12388,12 @@
 	        this.ratio = this.startCoord = this.guideElements = null;
 	};
 	
+	
+	
+	MonthGuide.prototype.clearGuideElement = function(){
+	    this.destroy();
+	};
+	
 	/**
 	 * Get ratio value in week.
 	 * @param {number} value - value for calc ratio in week
@@ -13135,7 +13142,7 @@
 	 * Drag end event handler
 	 */
 	MonthCreationGuide.prototype._onDragEnd = function() {
-	    this.guide.destroy();
+	    //this.guide.destroy();
 	    this.guide = null;
 	};
 	
