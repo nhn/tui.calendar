@@ -490,6 +490,9 @@
 }
 .dooray-calendar-month-more-close {
   float: right;
+  outline: 0;
+  background: none;
+  border: 0;
 }
 .dooray-calendar-month-more-list {
   overflow-y: scroll;

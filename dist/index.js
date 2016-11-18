@@ -86,44 +86,44 @@
 	    // handler, guide
 	    Drag: __webpack_require__(41),
 	
-	    TimeCore: __webpack_require__(64),
-	    TimeClick: __webpack_require__(65),
-	    TimeCreation: __webpack_require__(66),
-	    TimeCreationGuide: __webpack_require__(67),
-	    TimeMove: __webpack_require__(68),
-	    TimeMoveGuide: __webpack_require__(69),
-	    TimeResize: __webpack_require__(70),
-	    TimeResizeGuide: __webpack_require__(71),
+	    TimeCore: __webpack_require__(66),
+	    TimeClick: __webpack_require__(67),
+	    TimeCreation: __webpack_require__(68),
+	    TimeCreationGuide: __webpack_require__(69),
+	    TimeMove: __webpack_require__(70),
+	    TimeMoveGuide: __webpack_require__(71),
+	    TimeResize: __webpack_require__(72),
+	    TimeResizeGuide: __webpack_require__(73),
 	
-	    AlldayCore: __webpack_require__(72),
-	    AlldayClick: __webpack_require__(73),
-	    AlldayCreation: __webpack_require__(76),
-	    AlldayCreationGuide: __webpack_require__(77),
-	    AlldayMove: __webpack_require__(74),
-	    AlldayMoveGuide: __webpack_require__(75),
-	    AlldayResize: __webpack_require__(78),
-	    AlldayResizeGuide: __webpack_require__(79),
+	    AlldayCore: __webpack_require__(74),
+	    AlldayClick: __webpack_require__(75),
+	    AlldayCreation: __webpack_require__(78),
+	    AlldayCreationGuide: __webpack_require__(79),
+	    AlldayMove: __webpack_require__(76),
+	    AlldayMoveGuide: __webpack_require__(77),
+	    AlldayResize: __webpack_require__(80),
+	    AlldayResizeGuide: __webpack_require__(81),
 	
-	    MonthCore: __webpack_require__(80),
-	    MonthGuide: __webpack_require__(81),
-	    MonthClick: __webpack_require__(83),
-	    MonthCreation: __webpack_require__(84),
-	    MonthCreationGuide: __webpack_require__(85),
-	    MonthResize: __webpack_require__(86),
-	    MonthMove: __webpack_require__(88),
+	    MonthCore: __webpack_require__(82),
+	    MonthGuide: __webpack_require__(83),
+	    MonthClick: __webpack_require__(85),
+	    MonthCreation: __webpack_require__(86),
+	    MonthCreationGuide: __webpack_require__(87),
+	    MonthResize: __webpack_require__(88),
+	    MonthMove: __webpack_require__(90),
 	
 	    // service modules
-	    DoorayEvent: __webpack_require__(91),
-	    DoorayController: __webpack_require__(92),
-	    MiniCalendar: __webpack_require__(94),
-	    TaskView: __webpack_require__(96),
-	    MilestoneClick: __webpack_require__(98),
-	    TaskClick: __webpack_require__(99),
-	    Freebusy: __webpack_require__(100),
+	    DoorayEvent: __webpack_require__(93),
+	    DoorayController: __webpack_require__(94),
+	    MiniCalendar: __webpack_require__(96),
+	    TaskView: __webpack_require__(98),
+	    MilestoneClick: __webpack_require__(100),
+	    TaskClick: __webpack_require__(101),
+	    Freebusy: __webpack_require__(102),
 	
 	    // factory class
-	    ControllerFactory: __webpack_require__(103),
-	    OriginCalendar: __webpack_require__(107),
+	    ControllerFactory: __webpack_require__(105),
+	    OriginCalendar: __webpack_require__(109),
 	    FullCalendar: __webpack_require__(117),
 	    SplitTimeCalendar: __webpack_require__(122)
 	});
@@ -8363,10 +8363,12 @@
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(28),
 	    View = __webpack_require__(39),
+	    More = __webpack_require__(61),
 	    Weekday = __webpack_require__(49),
-	    baseTmpl = __webpack_require__(61),
-	    eventTmpl = __webpack_require__(62),
-	    skipTmpl = __webpack_require__(63);
+	    baseTmpl = __webpack_require__(63),
+	    eventTmpl = __webpack_require__(64),
+	    skipTmpl = __webpack_require__(65),
+	    domevent = __webpack_require__(29);
 	
 	/**
 	 * @constructor
@@ -8383,6 +8385,12 @@
 	function WeekdayInMonth(options, container) {
 	    Weekday.call(this, options, container);
 	    container.style.height = options.heightPercent + '%';
+	
+	    var moreContainer = domutil.appendHTMLElement(
+	      'div', container, config.classname('month-week-more'));
+	
+	    this.more = new More(moreContainer);
+	    domevent.on(container, 'click', this.openMore, this);
 	}
 	
 	util.inherit(WeekdayInMonth, Weekday);
@@ -8404,6 +8412,31 @@
 	};
 	
 	/**
+	 * Render Click Open More
+	 * @param e
+	 */
+	WeekdayInMonth.prototype.openMore = function(e) {
+	    var exceedElement = domutil.closest(e.target, config.classname('.weekday-exceed'));
+	    if(exceedElement) {
+	        var model = this.makeMoreViewModel(exceedElement);
+	        this.more.render(model)
+	    }
+	};
+	
+	WeekdayInMonth.prototype.makeMoreViewModel = function(exceedElement){
+	    var model = {};
+	    model.target = exceedElement;
+	    model.date = domutil.getData(exceedElement, 'ymd');
+	    model.width = exceedElement.offsetWidth;
+	    model.height = this.container.offsetHeight - exceedElement.offsetHeight;
+	    model.events = this.parent.controller.findByDateRange(
+	      datetime.start(datetime.parse(model.date)),
+	      datetime.end(datetime.parse(model.date))
+	    )[0][0];
+	    return model;
+	};
+	
+	/**
 	 * Get limit index of event block in current view
 	 * @returns {number} limit index
 	 */
@@ -8419,7 +8452,7 @@
 	 * Get handlebars custom helper method for limitation event block render count
 	 * features
 	 *
-	 * Cumulate count on each date. render +n label only when no cumulated
+	 * Calculate count on each date. render +n label only when no cumulated
 	 * count on cache object
 	 * @param {object} exceedDate - object to be used as a cache
 	 * @returns {function} custom helper function
@@ -8447,7 +8480,7 @@
 	/**
 	 * Get view model for render skipped label
 	 * @param {object} exceedDate - object has count of each dates exceed event block
-	 *  cound.
+	 *  count.
 	 * @returns {object[]} - view model for skipped label
 	 */
 	WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
@@ -8509,12 +8542,218 @@
 	    );
 	};
 	
+	
+	WeekdayInMonth.prototype._beforeDestroy = function() {
+	    Handlebars.unregisterHelper('wdSkipped');
+	    domevent.off(this.container, 'click');
+	
+	};
 	module.exports = WeekdayInMonth;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * @fileoverview Floating layer for displaying event in specific date
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = global.tui.util;
+	var config = __webpack_require__(31),
+	    domevent = __webpack_require__(29),
+	    domutil = __webpack_require__(28),
+	    View = __webpack_require__(39),
+	    FloatingLayer = __webpack_require__(42),
+	    tmpl = __webpack_require__(62);
+	
+	/**
+	 * @constructor
+	 * @extends {View}
+	 * @param {HTMLElement} container = container element
+	 */
+	function More(container) {
+	    View.call(this, container);
+	
+	    /**
+	     * @type {FloatingLayer}
+	     */
+	    this.layer = new FloatingLayer(null, container);
+	
+	    domevent.on(container, 'click', this._onClick, this);
+	}
+	
+	util.inherit(More, View);
+	
+	/**
+	 * Click event handler for close button
+	 * @param {MouseEvent} clickEvent - mouse event object
+	 */
+	More.prototype._onClick = function(clickEvent) {
+	    var target = (clickEvent.target || clickEvent.srcElement);
+	
+	    if (!domutil.hasClass(target, config.classname('month-more-close'))) {
+	        return;
+	    }
+	
+	    this.hide();
+	};
+	
+	/**
+	 * Mousedown event handler for hiding more layer when user mousedown outside of
+	 * layer
+	 * @param {MouseEvent} mouseDownEvent - mouse event object
+	 */
+	More.prototype._onMouseDown = function(mouseDownEvent) {
+	    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+	        moreLayer = domutil.closest(target, config.classname('.month-more'));
+	
+	    if (moreLayer) {
+	        return;
+	    }
+	
+	    this.hide();
+	};
+	
+	/**
+	 * Get new position for more layer by +n element itself
+	 * @param {HTMLElement} target - +n element
+	 * @returns {number[]} new position of more layer
+	 */
+	More.prototype._getRenderPosition = function(target, height) {
+	    var pos = domutil.getPosition(target);
+	
+	    // change position relative with More container element
+	    pos = domevent.getMousePosition({
+	        clientX: pos[0],
+	        clientY: pos[1]
+	    }, this.container);
+	
+	    return [pos[0], pos[1] - height + 20];
+	};
+	
+	/**
+	 * @override
+	 */
+	More.prototype.destroy = function() {
+	    this.layer.destroy();
+	    this.layer = null;
+	    domevent.off(this.container, 'click', this._onClick, this);
+	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+	    View.prototype.destroy.call(this);
+	};
+	
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - view model from factory/monthView
+	 */
+	More.prototype.render = function(viewModel) {
+	    var self = this,
+	        layer = this.layer,
+	        pos;
+	
+	    viewModel = util.extend({
+	        width: 'auto',
+	        height: 100
+	    }, viewModel);
+	
+	    layer.setContent(tmpl(viewModel));
+	    layer.setSize(viewModel.width, viewModel.height);
+	
+	    pos = this._getRenderPosition(viewModel.target, viewModel.height);
+	    layer.setPosition.apply(layer, pos);
+	
+	    layer.show();
+	
+	    util.debounce(function() {
+	        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
+	    })();
+	};
+	
+	/**
+	 * Hide layer
+	 */
+	More.prototype.hide = function() {
+	    this.layer.hide();
+	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+	};
+	
+	module.exports = More;
+	
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(7);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
+	},"2":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+	
+	  return "<div data-id=\""
+	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+	    + "\"\n             class=\""
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-event\n                    "
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-allday\"\n             style=\"background-color:"
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";\n                    color:"
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + ";\n                    border-left:2px solid "
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + "\">\n            "
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+	    + "\n        </div>\n";
+	},"4":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
+	
+	  return "        <div data-id=\""
+	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+	    + "\"\n             class=\""
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-event\"\n              style=\"background-color:"
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";\n                                 color:"
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + ";\n                                 border-left:2px solid "
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + "\">\n            "
+	    + alias3((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.starts : stack1),{"name":"hhmm","hash":{},"data":data}))
+	    + " "
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+	    + "\n        </div>\n";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more\">\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-title\">\n        "
+	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
+	    + "\n        <input type=\"button\" value=\"&times;\" class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-close\" />\n    </div>\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-list\" style=\"height:"
+	    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,(depth0 != null ? depth0.height : depth0),20,{"name":"subtract","hash":{},"data":data}))
+	    + "px\">\n"
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.events : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "    </div>\n</div>\n";
+	},"useData":true});
+
+/***/ },
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8560,7 +8799,7 @@
 	},"useData":true});
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8679,7 +8918,7 @@
 	},"useData":true});
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8710,7 +8949,7 @@
 	},"useData":true});
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8807,7 +9046,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8919,7 +9158,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 66 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8933,8 +9172,8 @@
 	var array = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
-	var TimeCreationGuide = __webpack_require__(67);
-	var timeCore = __webpack_require__(64);
+	var TimeCreationGuide = __webpack_require__(69);
+	var timeCore = __webpack_require__(66);
 	
 	/**
 	 * @constructor
@@ -9236,7 +9475,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9505,7 +9744,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9518,8 +9757,8 @@
 	var config = __webpack_require__(31);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
-	var timeCore = __webpack_require__(64);
-	var TimeMoveGuide = __webpack_require__(69);
+	var timeCore = __webpack_require__(66);
+	var TimeMoveGuide = __webpack_require__(71);
 	
 	/**
 	 * @constructor
@@ -9861,7 +10100,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10026,7 +10265,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 70 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10038,8 +10277,8 @@
 	var config = __webpack_require__(31);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
-	var timeCore = __webpack_require__(64);
-	var TimeResizeGuide = __webpack_require__(71);
+	var timeCore = __webpack_require__(66);
+	var TimeResizeGuide = __webpack_require__(73);
 	
 	/**
 	 * @constructor
@@ -10334,7 +10573,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 71 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10514,7 +10753,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 72 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-shadow: 0 */
@@ -10591,7 +10830,7 @@
 
 
 /***/ },
-/* 73 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10603,7 +10842,7 @@
 	var util = global.tui.util;
 	var config = __webpack_require__(31);
 	var domutil = __webpack_require__(28);
-	var AlldayMove = __webpack_require__(74);
+	var AlldayMove = __webpack_require__(76);
 	
 	/**
 	 * @constructor
@@ -10687,7 +10926,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 74 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10699,8 +10938,8 @@
 	var config = __webpack_require__(31);
 	var common = __webpack_require__(27);
 	var domutil = __webpack_require__(28);
-	var AlldayCore = __webpack_require__(72);
-	var AlldayMoveGuide = __webpack_require__(75);
+	var AlldayCore = __webpack_require__(74);
+	var AlldayMoveGuide = __webpack_require__(77);
 	
 	/**
 	 * @constructor
@@ -10963,7 +11202,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 75 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11161,7 +11400,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11174,8 +11413,8 @@
 	var datetime = __webpack_require__(26);
 	var common = __webpack_require__(27);
 	var domutil = __webpack_require__(28);
-	var alldayCore = __webpack_require__(72);
-	var AlldayCreationGuide = __webpack_require__(77);
+	var alldayCore = __webpack_require__(74);
+	var AlldayCreationGuide = __webpack_require__(79);
 	
 	/**
 	 * @constructor
@@ -11418,7 +11657,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 77 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11555,7 +11794,7 @@
 
 
 /***/ },
-/* 78 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11568,8 +11807,8 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
 	var common = __webpack_require__(27);
-	var AlldayCore = __webpack_require__(72);
-	var AlldayResizeGuide = __webpack_require__(79);
+	var AlldayCore = __webpack_require__(74);
+	var AlldayResizeGuide = __webpack_require__(81);
 	
 	/**
 	 * @constructor
@@ -11828,7 +12067,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 79 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11986,7 +12225,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 80 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12058,7 +12297,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 81 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12077,7 +12316,7 @@
 	    domutil = __webpack_require__(28),
 	    datetime = __webpack_require__(26),
 	    dw = __webpack_require__(43),
-	    tmpl = __webpack_require__(82);
+	    tmpl = __webpack_require__(84);
 	
 	/**
 	 * @constructor
@@ -12496,7 +12735,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 82 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -12527,7 +12766,7 @@
 	},"useData":true});
 
 /***/ },
-/* 83 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12625,7 +12864,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 84 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12639,8 +12878,8 @@
 	    datetime = __webpack_require__(26),
 	    array = __webpack_require__(33),
 	    domutil = __webpack_require__(28),
-	    getMousePosData = __webpack_require__(80),
-	    Guide = __webpack_require__(85);
+	    getMousePosData = __webpack_require__(82),
+	    Guide = __webpack_require__(87);
 	
 	/**
 	 * @constructor
@@ -12718,7 +12957,7 @@
 	        isAllDay: true,
 	        starts: starts,
 	        ends: ends,
-	        guide: this.guide
+	        guide: this.guide.guide
 	    });
 	};
 	
@@ -12830,7 +13069,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 85 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12838,7 +13077,7 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var MonthGuide = __webpack_require__(81);
+	var MonthGuide = __webpack_require__(83);
 	
 	/**
 	 * @constructor
@@ -12905,7 +13144,7 @@
 
 
 /***/ },
-/* 86 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12918,8 +13157,8 @@
 	var config = __webpack_require__(31),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(28),
-	    getMousePosData = __webpack_require__(80),
-	    MonthResizeGuide = __webpack_require__(87);
+	    getMousePosData = __webpack_require__(82),
+	    MonthResizeGuide = __webpack_require__(89);
 	
 	/**
 	 * @constructor
@@ -13118,7 +13357,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 87 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13130,7 +13369,7 @@
 	
 	var config = __webpack_require__(31),
 	    domutil = __webpack_require__(28),
-	    MonthGuide = __webpack_require__(81);
+	    MonthGuide = __webpack_require__(83);
 	
 	/**
 	 * @constructor
@@ -13241,7 +13480,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 88 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13253,8 +13492,8 @@
 	
 	var config = __webpack_require__(31),
 	    domutil = __webpack_require__(28),
-	    getMousePosData = __webpack_require__(80),
-	    MonthMoveGuide = __webpack_require__(89);
+	    getMousePosData = __webpack_require__(82),
+	    MonthMoveGuide = __webpack_require__(91);
 	
 	/**
 	 * @constructor
@@ -13527,7 +13766,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 89 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13541,7 +13780,7 @@
 	    domutil = __webpack_require__(28),
 	    domevent = __webpack_require__(29),
 	    FloatingLayer = __webpack_require__(42),
-	    tmpl = __webpack_require__(90);
+	    tmpl = __webpack_require__(92);
 	
 	/**
 	 * @constructor
@@ -13731,7 +13970,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 90 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -13766,7 +14005,7 @@
 	},"useData":true});
 
 /***/ },
-/* 91 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13871,7 +14110,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 92 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
@@ -13882,8 +14121,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var Base = __webpack_require__(93);
-	var DoorayEvent = __webpack_require__(91);
+	var Base = __webpack_require__(95);
+	var DoorayEvent = __webpack_require__(93);
 	
 	/**
 	 * @constructor
@@ -14006,7 +14245,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 93 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14309,7 +14548,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 94 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14326,7 +14565,7 @@
 	    domutil = __webpack_require__(28),
 	    domevent = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
-	    tmpl = __webpack_require__(95);
+	    tmpl = __webpack_require__(97);
 	
 	/**
 	 * @constructor
@@ -14657,7 +14896,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 95 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -14710,7 +14949,7 @@
 	},"useData":true});
 
 /***/ },
-/* 96 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14724,7 +14963,7 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
 	var View = __webpack_require__(39);
-	var tmpl = __webpack_require__(97);
+	var tmpl = __webpack_require__(99);
 	
 	var PADDING_TOP = 2,
 	    PADDING_BOTTOM = 2;
@@ -14834,7 +15073,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 97 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -14939,7 +15178,7 @@
 	},"useData":true});
 
 /***/ },
-/* 98 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15039,7 +15278,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 99 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15139,7 +15378,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 100 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15160,8 +15399,8 @@
 	    domutil = __webpack_require__(28),
 	    domevent = __webpack_require__(29),
 	    View = __webpack_require__(39),
-	    baseTmpl = __webpack_require__(101),
-	    tmpl = __webpack_require__(102);
+	    baseTmpl = __webpack_require__(103),
+	    tmpl = __webpack_require__(104);
 	
 	/**
 	 * @constructor
@@ -15262,6 +15501,12 @@
 	    domevent.off(container, 'mousemove', this.selectOver, this);
 	    domevent.off(container, 'mouseout', this.unselectOver, this);
 	    domevent.off(container, 'mouseleave', this.unselectOver, this);
+	
+	    util.forEach(this.options.template, function(func, name) {
+	        if (func) {
+	            Handlebars.unregisterHelper('freebusy-' + name + '-tmpl');
+	        }
+	    });
 	
 	    container.innerHTML = '';
 	    this.selectStart = this.selectEnd = this.options = this.users = this.selectOverStart = this.selectOverEnd = null;
@@ -15583,7 +15828,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 101 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15668,7 +15913,7 @@
 	},"useData":true});
 
 /***/ },
-/* 102 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15765,7 +16010,7 @@
 	},"useData":true});
 
 /***/ },
-/* 103 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15775,10 +16020,10 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var Base = __webpack_require__(93),
-	    Core = __webpack_require__(104),
-	    Week = __webpack_require__(105),
-	    Month = __webpack_require__(106);
+	var Base = __webpack_require__(95),
+	    Core = __webpack_require__(106),
+	    Week = __webpack_require__(107),
+	    Month = __webpack_require__(108);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -15813,7 +16058,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 104 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16068,7 +16313,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 105 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint no-shadow: 0 */
@@ -16304,7 +16549,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 106 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16477,7 +16722,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 107 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16489,11 +16734,11 @@
 	var Handlebars = __webpack_require__(6);
 	var dw = __webpack_require__(43),
 	    datetime = __webpack_require__(26),
-	    Layout = __webpack_require__(108),
+	    Layout = __webpack_require__(110),
 	    Drag = __webpack_require__(41),
-	    controllerFactory = __webpack_require__(103),
-	    weekViewFactory = __webpack_require__(109),
-	    monthViewFactory = __webpack_require__(114);
+	    controllerFactory = __webpack_require__(105),
+	    weekViewFactory = __webpack_require__(111),
+	    monthViewFactory = __webpack_require__(116);
 	
 	/**
 	 * @typedef {object} Calendar~CalEvent
@@ -16647,9 +16892,16 @@
 	    this.layout.clear();
 	    this.layout.destroy();
 	
+	    util.forEach(this.options.template, function(func, name) {
+	        if (func) {
+	            Handlebars.unregisterHelper(name + '-tmpl');
+	        }
+	    });
+	
 	    this.options = this.renderDate = this.controller =
 	        this.layout = this.dragHandler = this.viewName =
 	        this.refreshMethod = null;
+	
 	};
 	
 	/**
@@ -17127,7 +17379,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 108 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17211,7 +17463,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 109 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17229,18 +17481,18 @@
 	// Sub views
 	var DayName = __webpack_require__(47);
 	var TimeGrid = __webpack_require__(52);
-	var Allday = __webpack_require__(110);
+	var Allday = __webpack_require__(112);
 	// Handlers
-	var AlldayClick = __webpack_require__(73);
-	var AlldayDblClick = __webpack_require__(112);
-	var AlldayCreation = __webpack_require__(76);
-	var AlldayMove = __webpack_require__(74);
-	var AlldayResize = __webpack_require__(78);
-	var TimeClick = __webpack_require__(65);
-	var TimeDblClick = __webpack_require__(113);
-	var TimeCreation = __webpack_require__(66);
-	var TimeMove = __webpack_require__(68);
-	var TimeResize = __webpack_require__(70);
+	var AlldayClick = __webpack_require__(75);
+	var AlldayDblClick = __webpack_require__(114);
+	var AlldayCreation = __webpack_require__(78);
+	var AlldayMove = __webpack_require__(76);
+	var AlldayResize = __webpack_require__(80);
+	var TimeClick = __webpack_require__(67);
+	var TimeDblClick = __webpack_require__(115);
+	var TimeCreation = __webpack_require__(68);
+	var TimeMove = __webpack_require__(70);
+	var TimeResize = __webpack_require__(72);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -17368,7 +17620,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 110 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17382,7 +17634,7 @@
 	    domutil = __webpack_require__(28),
 	    View = __webpack_require__(39),
 	    WeekdayInWeek = __webpack_require__(50),
-	    tmpl = __webpack_require__(111);
+	    tmpl = __webpack_require__(113);
 	
 	/**
 	 * @constructor
@@ -17456,7 +17708,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 111 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -17479,7 +17731,7 @@
 	},"useData":true});
 
 /***/ },
-/* 112 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17585,7 +17837,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 113 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17709,7 +17961,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 114 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17724,11 +17976,11 @@
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(28),
 	    Month = __webpack_require__(58),
-	    MonthClick = __webpack_require__(83),
-	    MonthCreation = __webpack_require__(84),
-	    MonthResize = __webpack_require__(86),
-	    MonthMove = __webpack_require__(88),
-	    More = __webpack_require__(115);
+	    MonthClick = __webpack_require__(85),
+	    MonthCreation = __webpack_require__(86),
+	    MonthResize = __webpack_require__(88),
+	    MonthMove = __webpack_require__(90),
+	    More = __webpack_require__(61);
 	
 	/**
 	 * @param {Base} baseController - controller instance
@@ -17824,199 +18076,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 115 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview Floating layer for displaying event in specific date
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = global.tui.util;
-	var config = __webpack_require__(31),
-	    domevent = __webpack_require__(29),
-	    domutil = __webpack_require__(28),
-	    View = __webpack_require__(39),
-	    FloatingLayer = __webpack_require__(42),
-	    tmpl = __webpack_require__(116);
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {HTMLElement} container = container element
-	 */
-	function More(container) {
-	    View.call(this, container);
-	
-	    /**
-	     * @type {FloatingLayer}
-	     */
-	    this.layer = new FloatingLayer(null, container);
-	
-	    domevent.on(container, 'click', this._onClick, this);
-	}
-	
-	util.inherit(More, View);
-	
-	/**
-	 * Click event handler for close button
-	 * @param {MouseEvent} clickEvent - mouse event object
-	 */
-	More.prototype._onClick = function(clickEvent) {
-	    var target = (clickEvent.target || clickEvent.srcElement);
-	
-	    if (!domutil.hasClass(target, config.classname('month-more-close'))) {
-	        return;
-	    }
-	
-	    this.hide();
-	};
-	
-	/**
-	 * Mousedown event handler for hiding more layer when user mousedown outside of
-	 * layer
-	 * @param {MouseEvent} mouseDownEvent - mouse event object
-	 */
-	More.prototype._onMouseDown = function(mouseDownEvent) {
-	    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
-	        moreLayer = domutil.closest(target, config.classname('.month-more'));
-	
-	    if (moreLayer) {
-	        return;
-	    }
-	
-	    this.hide();
-	};
-	
-	/**
-	 * Get new position for more layer by +n element itself
-	 * @param {HTMLElement} target - +n element
-	 * @returns {number[]} new position of more layer
-	 */
-	More.prototype._getRenderPosition = function(target) {
-	    var pos = domutil.getPosition(target);
-	
-	    // change position relative with More container element
-	    pos = domevent.getMousePosition({
-	        clientX: pos[0],
-	        clientY: pos[1]
-	    }, this.container);
-	
-	    return [pos[0], pos[1] - 100];
-	};
-	
-	/**
-	 * @override
-	 */
-	More.prototype.destroy = function() {
-	    this.layer.destroy();
-	    this.layer = null;
-	    domevent.off(this.container, 'click', this._onClick, this);
-	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
-	    View.prototype.destroy.call(this);
-	};
-	
-	
-	/**
-	 * @override
-	 * @param {object} viewModel - view model from factory/monthView
-	 */
-	More.prototype.render = function(viewModel) {
-	    var self = this,
-	        layer = this.layer,
-	        pos;
-	
-	    viewModel = util.extend({
-	        height: 100
-	    }, viewModel);
-	
-	    layer.setContent(tmpl(viewModel));
-	    layer.setSize('auto', 100);
-	
-	    pos = this._getRenderPosition(viewModel.target);
-	    layer.setPosition.apply(layer, pos);
-	
-	    layer.show();
-	
-	    util.debounce(function() {
-	        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
-	    })();
-	};
-	
-	/**
-	 * Hide layer
-	 */
-	More.prototype.hide = function() {
-	    this.layer.hide();
-	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
-	};
-	
-	module.exports = More;
-	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 116 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(7);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
-	},"2":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
-	
-	  return "<div data-id=\""
-	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n             class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-event\n                    "
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-allday\"\n             style=\"background-color:"
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + ";\n                    color:"
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + ";\n                    border-left:2px solid "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\">\n            "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\n        </div>\n";
-	},"4":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
-	
-	  return "        <div data-id=\""
-	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n             class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-event\">\n            "
-	    + alias3((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.starts : stack1),{"name":"hhmm","hash":{},"data":data}))
-	    + " "
-	    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\n        </div>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more\">\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-title\">\n        "
-	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-	    + "\n        <input type=\"button\" value=\"&times;\" class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-close\" />\n    </div>\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-list\" style=\"height:"
-	    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,(depth0 != null ? depth0.height : depth0),20,{"name":"subtract","hash":{},"data":data}))
-	    + "px\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.events : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "    </div>\n</div>\n";
-	},"useData":true});
-
-/***/ },
 /* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -18028,7 +18087,7 @@
 	
 	var util = global.tui.util;
 	var config = __webpack_require__(31),
-	    Calendar = __webpack_require__(107),
+	    Calendar = __webpack_require__(109),
 	    controllerFactory = __webpack_require__(118),
 	    serviceWeekViewFactory = __webpack_require__(119);
 	
@@ -18307,10 +18366,10 @@
 	var util = global.tui.util;
 	
 	var datetime = __webpack_require__(26),
-	    DoorayBase = __webpack_require__(92),
-	    Core = __webpack_require__(104),
-	    Week = __webpack_require__(105),
-	    Month = __webpack_require__(106);
+	    DoorayBase = __webpack_require__(94),
+	    Core = __webpack_require__(106),
+	    Week = __webpack_require__(107),
+	    Month = __webpack_require__(108);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -18422,23 +18481,23 @@
 	// Sub views
 	var DayName = __webpack_require__(47);
 	var Milestone = __webpack_require__(120);
-	var TaskView = __webpack_require__(96);
+	var TaskView = __webpack_require__(98);
 	var TimeGrid = __webpack_require__(52);
-	var Allday = __webpack_require__(110);
+	var Allday = __webpack_require__(112);
 	
 	// Handlers
-	var AlldayClick = __webpack_require__(73);
-	var AlldayDblClick = __webpack_require__(112);
-	var AlldayCreation = __webpack_require__(76);
-	var AlldayMove = __webpack_require__(74);
-	var AlldayResize = __webpack_require__(78);
-	var TimeClick = __webpack_require__(65);
-	var TimeDblClick = __webpack_require__(113);
-	var TimeCreation = __webpack_require__(66);
-	var TimeMove = __webpack_require__(68);
-	var TimeResize = __webpack_require__(70);
-	var MilestoneClick = __webpack_require__(98);
-	var TaskClick = __webpack_require__(99);
+	var AlldayClick = __webpack_require__(75);
+	var AlldayDblClick = __webpack_require__(114);
+	var AlldayCreation = __webpack_require__(78);
+	var AlldayMove = __webpack_require__(76);
+	var AlldayResize = __webpack_require__(80);
+	var TimeClick = __webpack_require__(67);
+	var TimeDblClick = __webpack_require__(115);
+	var TimeCreation = __webpack_require__(68);
+	var TimeMove = __webpack_require__(70);
+	var TimeResize = __webpack_require__(72);
+	var MilestoneClick = __webpack_require__(100);
+	var TaskClick = __webpack_require__(101);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -18818,11 +18877,11 @@
 	var Handlebars = __webpack_require__(6);
 	
 	var config = __webpack_require__(31),
-	    controllerFactory = __webpack_require__(103),
+	    controllerFactory = __webpack_require__(105),
 	    serviceWeekViewFactory = __webpack_require__(123),
 	    Drag = __webpack_require__(41),
 	    datetime = __webpack_require__(26),
-	    Layout = __webpack_require__(108);
+	    Layout = __webpack_require__(110);
 	
 	function SplitTimeCalendar(options, container) {
 	    if (!(this instanceof SplitTimeCalendar)) {
@@ -18937,6 +18996,12 @@
 	    this.controller.off();
 	    this.layout.clear();
 	    this.layout.destroy();
+	
+	    util.forEach(this.options.template, function(func, name) {
+	        if (func) {
+	            Handlebars.unregisterHelper('split-' + name + '-tmpl');
+	        }
+	    });
 	
 	    this.options = this.renderDate = this.controller =
 	      this.layout = this.dragHandler = this.viewName =
@@ -19168,10 +19233,10 @@
 	var TimeGrid = __webpack_require__(124);
 	
 	// Handlers
-	var TimeClick = __webpack_require__(65);
-	var TimeCreation = __webpack_require__(66);
-	var TimeMove = __webpack_require__(68);
-	var TimeResize = __webpack_require__(70);
+	var TimeClick = __webpack_require__(67);
+	var TimeCreation = __webpack_require__(68);
+	var TimeMove = __webpack_require__(70);
+	var TimeResize = __webpack_require__(72);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
