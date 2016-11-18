@@ -76,14 +76,15 @@ WeekdayInMonth.prototype.openMore = function(e) {
 };
 
 WeekdayInMonth.prototype.makeMoreViewModel = function(exceedElement){
-    var model = {};
+    var model = {},
+        ymd = datetime.parse(domutil.getData(exceedElement, 'ymd'));
     model.target = exceedElement;
-    model.date = domutil.getData(exceedElement, 'ymd');
+    model.date = datetime.format(ymd, 'YYYY.MM.DD');
     model.width = exceedElement.offsetWidth;
     model.height = this.container.offsetHeight - exceedElement.offsetHeight;
     model.events = this.parent.controller.findByDateRange(
-      datetime.start(datetime.parse(model.date)),
-      datetime.end(datetime.parse(model.date))
+      datetime.start(ymd),
+      datetime.end(ymd)
     )[0][0];
     return model;
 };
