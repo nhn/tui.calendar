@@ -161,4 +161,9 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     );
 };
 
+
+WeekdayInMonth.prototype._beforeDestroy = function() {
+    Handlebars.unregisterHelper('wdSkipped');
+
+};
 module.exports = WeekdayInMonth;

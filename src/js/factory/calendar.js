@@ -165,9 +165,16 @@ Calendar.prototype.destroy = function() {
     this.layout.clear();
     this.layout.destroy();
 
+    util.forEach(this.options.template, function(func, name) {
+        if (func) {
+            Handlebars.unregisterHelper(name + '-tmpl');
+        }
+    });
+
     this.options = this.renderDate = this.controller =
         this.layout = this.dragHandler = this.viewName =
         this.refreshMethod = null;
+
 };
 
 /**

@@ -119,6 +119,12 @@ Freebusy.prototype._beforeDestroy = function() {
     domevent.off(container, 'mouseout', this.unselectOver, this);
     domevent.off(container, 'mouseleave', this.unselectOver, this);
 
+    util.forEach(this.options.template, function(func, name) {
+        if (func) {
+            Handlebars.unregisterHelper('freebusy-' + name + '-tmpl');
+        }
+    });
+
     container.innerHTML = '';
     this.selectStart = this.selectEnd = this.options = this.users = this.selectOverStart = this.selectOverEnd = null;
 };

@@ -88,7 +88,7 @@ MonthCreation.prototype._createEvent = function(eventCache) {
         isAllDay: true,
         starts: starts,
         ends: ends,
-        guide: this.guide
+        guide: this.guide.guide
     });
 };
 
