@@ -16,7 +16,10 @@
         </div>
         {{else}}
         <div data-id="{{stamp model}}"
-             class="{{CSS_PREFIX}}month-more-event">
+             class="{{CSS_PREFIX}}month-more-event"
+              style="background-color:{{model.bgColor}};
+                                 color:{{model.color}};
+                                 border-left:2px solid {{model.borderColor}}">
             {{hhmm model.starts}} {{model.title}}
         </div>
         {{/if}}

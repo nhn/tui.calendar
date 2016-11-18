@@ -65,7 +65,7 @@ More.prototype._onMouseDown = function(mouseDownEvent) {
  * @param {HTMLElement} target - +n element
  * @returns {number[]} new position of more layer
  */
-More.prototype._getRenderPosition = function(target) {
+More.prototype._getRenderPosition = function(target, height) {
     var pos = domutil.getPosition(target);
 
     // change position relative with More container element
@@ -74,7 +74,7 @@ More.prototype._getRenderPosition = function(target) {
         clientY: pos[1]
     }, this.container);
 
-    return [pos[0], pos[1] - 100];
+    return [pos[0], pos[1] - height + 20];
 };
 
 /**
@@ -99,13 +99,14 @@ More.prototype.render = function(viewModel) {
         pos;
 
     viewModel = util.extend({
+        width: 'auto',
         height: 100
     }, viewModel);
 
     layer.setContent(tmpl(viewModel));
-    layer.setSize('auto', 100);
+    layer.setSize(viewModel.width, viewModel.height);
 
-    pos = this._getRenderPosition(viewModel.target);
+    pos = this._getRenderPosition(viewModel.target, viewModel.height);
     layer.setPosition.apply(layer, pos);
 
     layer.show();

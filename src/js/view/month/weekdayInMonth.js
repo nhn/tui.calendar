@@ -15,10 +15,12 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../../view/view'),
+    More = require('./more'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     eventTmpl = require('./weekdayInMonthEvent.hbs'),
-    skipTmpl = require('./weekdayInMonthSkip.hbs');
+    skipTmpl = require('./weekdayInMonthSkip.hbs'),
+    domevent = require('../../common/domevent');
 
 /**
  * @constructor
@@ -35,6 +37,12 @@ var config = require('../../config'),
 function WeekdayInMonth(options, container) {
     Weekday.call(this, options, container);
     container.style.height = options.heightPercent + '%';
+
+    var moreContainer = domutil.appendHTMLElement(
+      'div', container, config.classname('month-week-more'));
+
+    this.more = new More(moreContainer);
+    domevent.on(container, 'click', this.openMore, this);
 }
 
 util.inherit(WeekdayInMonth, Weekday);
@@ -56,6 +64,31 @@ WeekdayInMonth.prototype.getViewBound = function() {
 };
 
 /**
+ * Render Click Open More
+ * @param e
+ */
+WeekdayInMonth.prototype.openMore = function(e) {
+    var exceedElement = domutil.closest(e.target, config.classname('.weekday-exceed'));
+    if(exceedElement) {
+        var model = this.makeMoreViewModel(exceedElement);
+        this.more.render(model)
+    }
+};
+
+WeekdayInMonth.prototype.makeMoreViewModel = function(exceedElement){
+    var model = {};
+    model.target = exceedElement;
+    model.date = domutil.getData(exceedElement, 'ymd');
+    model.width = exceedElement.offsetWidth;
+    model.height = this.container.offsetHeight - exceedElement.offsetHeight;
+    model.events = this.parent.controller.findByDateRange(
+      datetime.start(datetime.parse(model.date)),
+      datetime.end(datetime.parse(model.date))
+    )[0][0];
+    return model;
+};
+
+/**
  * Get limit index of event block in current view
  * @returns {number} limit index
  */
@@ -71,7 +104,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
  * Get handlebars custom helper method for limitation event block render count
  * features
  *
- * Cumulate count on each date. render +n label only when no cumulated
+ * Calculate count on each date. render +n label only when no cumulated
  * count on cache object
  * @param {object} exceedDate - object to be used as a cache
  * @returns {function} custom helper function
@@ -99,7 +132,7 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
 /**
  * Get view model for render skipped label
  * @param {object} exceedDate - object has count of each dates exceed event block
- *  cound.
+ *  count.
  * @returns {object[]} - view model for skipped label
  */
 WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
@@ -164,6 +197,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
 WeekdayInMonth.prototype._beforeDestroy = function() {
     Handlebars.unregisterHelper('wdSkipped');
+    domevent.off(this.container, 'click');
 
 };
 module.exports = WeekdayInMonth;

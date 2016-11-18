@@ -5,7 +5,7 @@
         idx = 5;
 
     cal = calendar.FullCalendar({
-        defaultView: 'week',
+        defaultView: 'month',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -78,7 +78,7 @@
         category: 'allday',
         dueDateClass: '',
         starts: '2016-11-14T10:30:00+09:00',
-        ends: '2016-11-14T12:00:59+09:00'
+        ends: '2016-11-16T12:00:59+09:00'
     }, {
         id: '2',
         calendarID: '2',
@@ -126,7 +126,7 @@
         category: 'allday',
         dueDateClass: '',
         starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
+        ends: '2016-11-09T23:59:59+09:00'
     }, {
         id: '2',
         calendarID: '2',
