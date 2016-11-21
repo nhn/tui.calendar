@@ -82,16 +82,16 @@
     }, {
         id: '2',
         calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
+        title: '월간뷰에 나오면 안되는 테스트',
+        category: 'task',
         dueDateClass: '',
         starts: '2016-11-07T00:00:00+09:00',
         ends: '2016-11-07T23:59:59+09:00'
     }, {
         id: '2',
         calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
+        title: '월간뷰에 나오면 안되는 마일스톤',
+        category: 'milestone',
         dueDateClass: '',
         starts: '2016-11-07T00:00:00+09:00',
         ends: '2016-11-07T23:59:59+09:00'

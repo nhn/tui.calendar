@@ -54,35 +54,38 @@ MonthClick.prototype._onClick = function(clickEvent) {
     var self = this,
       moreElement,
       eventCollection = this.baseController.events,
-      blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-event-block'));
+      blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-event-block')) || domutil.closest(clickEvent.target, config.classname('.month-more-event'));
 
     moreElement = domutil.closest(
         clickEvent.target,
         config.classname('.weekday-exceed')
     );
 
-
-  //
-    //if (!moreElement) {
-    //    return;
-    //}
-
-    if (!blockElement) {
-        return;
+    if (moreElement) {
+        self.fire('clickMore', {
+            date: datetime.parse(domutil.getData(moreElement, 'ymd')),
+            target: moreElement,
+            ymd: domutil.getData(moreElement, 'ymd')
+        });
     }
 
-    eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
-        /**
-         * @events AlldayClick#clickEvent
-         * @type {object}
-         * @property {CalEvent} model - model instance
-         * @property {MouseEvent} jsEvent - MouseEvent object
-         */
-        self.fire('clickEvent', {
-            model: model,
-            jsEvent: clickEvent.originEvent
+    if (blockElement) {
+        eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
+            /**
+             * @events AlldayClick#clickEvent
+             * @type {object}
+             * @property {CalEvent} model - model instance
+             * @property {MouseEvent} jsEvent - MouseEvent object
+             */
+            self.fire('clickEvent', {
+                model: model,
+                jsEvent: clickEvent.originEvent
+            });
         });
-    });
+    }
+
+
+
 };
 
 util.CustomEvents.mixin(MonthClick);

@@ -47,10 +47,14 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     // binding +n click event
     clickHandler.on('clickMore', function(clickMoreEvent) {
         var date = clickMoreEvent.date,
-            events = util.pick(baseController.findByDateRange(
-                datetime.start(date),
-                datetime.end(date)
-            ), clickMoreEvent.ymd);
+          events = util.pick(baseController.findByDateRange(
+            datetime.start(date),
+            datetime.end(date)
+          ), clickMoreEvent.ymd);
+
+        events.items = util.filter(events.items, function(item){
+            return options.month.eventFilter(item.model)
+        });
 
         if (events && events.length) {
             events = events.sort(array.compare.event.asc);
@@ -58,7 +62,8 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             moreView.render({
                 target: clickMoreEvent.target,
                 date: datetime.format(date, 'YYYY.MM.DD'),
-                events: events
+                events: events,
+                width: clickMoreEvent.target.offsetWidth
             });
         }
     });

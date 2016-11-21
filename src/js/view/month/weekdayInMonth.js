@@ -15,7 +15,6 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../../view/view'),
-    More = require('./more'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     eventTmpl = require('./weekdayInMonthEvent.hbs'),
@@ -37,12 +36,6 @@ var config = require('../../config'),
 function WeekdayInMonth(options, container) {
     Weekday.call(this, options, container);
     container.style.height = options.heightPercent + '%';
-
-    var moreContainer = domutil.appendHTMLElement(
-      'div', container, config.classname('month-week-more'));
-
-    this.more = new More(moreContainer);
-    domevent.on(container, 'click', this.openMore, this);
 }
 
 util.inherit(WeekdayInMonth, Weekday);
@@ -61,32 +54,6 @@ WeekdayInMonth.prototype.getViewBound = function() {
     bound.height = height;
 
     return bound;
-};
-
-/**
- * Render Click Open More
- * @param e
- */
-WeekdayInMonth.prototype.openMore = function(e) {
-    var exceedElement = domutil.closest(e.target, config.classname('.weekday-exceed'));
-    if(exceedElement) {
-        var model = this.makeMoreViewModel(exceedElement);
-        this.more.render(model)
-    }
-};
-
-WeekdayInMonth.prototype.makeMoreViewModel = function(exceedElement){
-    var model = {},
-        ymd = datetime.parse(domutil.getData(exceedElement, 'ymd'));
-    model.target = exceedElement;
-    model.date = datetime.format(ymd, 'YYYY.MM.DD');
-    model.width = exceedElement.offsetWidth;
-    model.height = this.container.offsetHeight - exceedElement.offsetHeight;
-    model.events = this.parent.controller.findByDateRange(
-      datetime.start(ymd),
-      datetime.end(ymd)
-    )[0][0];
-    return model;
 };
 
 /**
@@ -198,7 +165,6 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
 WeekdayInMonth.prototype._beforeDestroy = function() {
     Handlebars.unregisterHelper('wdSkipped');
-    domevent.off(this.container, 'click', this.openMore, this);
 
 };
 module.exports = WeekdayInMonth;
