@@ -577,13 +577,13 @@ var prevSelectStyle = '';
  */
 domutil.disableTextSelection = (function() {
     if (supportSelectStart) {
-        return function() {
-            domevent.on(window, 'selectstart', domevent.preventDefault);
+        return function(dom) {
+            domevent.on(dom, 'selectstart', domevent.preventDefault);
         };
     }
 
-    return function() {
-        var style = document.documentElement.style;
+    return function(dom) {
+        var style = dom.style;
         prevSelectStyle = style[userSelectProperty];
         style[userSelectProperty] = 'none';
     };
@@ -620,4 +620,3 @@ domutil.enableImageDrag = function() {
 };
 
 module.exports = domutil;
-
