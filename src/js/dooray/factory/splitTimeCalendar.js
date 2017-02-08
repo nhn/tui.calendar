@@ -35,9 +35,11 @@ function SplitTimeCalendar(options, container) {
         events: [],
         calendarColor: {},
         disableHourMarker: true,
-        isSplitTimeGrid: true
+        showTimeRange: 2
     }, options);
 
+    //Time Template에서 분기처리
+    this.options.isSplitTimeGrid = true;
     this.calendarColor = opt.calendarColor;
 
     this.container = container;
@@ -77,9 +79,9 @@ function SplitTimeCalendar(options, container) {
 
 
 SplitTimeCalendar.prototype.setRenderTime = function() {
-    var opt = this.options;
-    opt.hourStart = new Date(opt.renderStartDate).getHours() - 2;
-    opt.hourEnd = new Date(opt.renderEndDate).getHours() + 2;
+    var opt = this.options, baseHour = new Date(opt.renderStartDate).getHours();
+    opt.hourStart = baseHour - opt.showTimeRange;
+    opt.hourEnd = baseHour + opt.showTimeRange;
     this.renderDate = datetime.format(new Date(opt.renderStartDate), 'YYYY-MM-DD');
 };
 
