@@ -4,8 +4,11 @@
     var cal, resizeThrottled,
         idx = 5;
 
+    var baseDate = new Date(),
+      formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
+
     cal = calendar.FullCalendar({
-        defaultView: 'month',
+        defaultView: 'week',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -53,128 +56,24 @@
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
-        starts: '2016-11-14T09:30:00+09:00',
-        ends: '2016-11-14T10:30:00+09:00'
+        starts: formattedDate + 'T09:30:00+09:00',
+        ends: formattedDate + 'T10:30:00+09:00'
     }, {
         id: '2',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'time',
         dueDateClass: '',
-        starts: '2016-11-14T10:30:00+09:00',
-        ends: '2016-11-14T12:00:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'time',
-        dueDateClass: '',
-        starts: '2016-11-14T10:30:00+09:00',
-        ends: '2016-11-14T12:00:59+09:00'
+        starts: formattedDate + 'T17:30:00+09:00',
+        ends: formattedDate + 'T17:45:00+09:00'
     }, {
         id: '2',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
         dueDateClass: '',
-        starts: '2016-11-14T10:30:00+09:00',
-        ends: '2016-11-16T12:00:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '월간뷰에 나오면 안되는 테스트',
-        category: 'task',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '월간뷰에 나오면 안되는 마일스톤',
-        category: 'milestone',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-09T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '2123',
-        calendarID: '1',
-        title: '[3홍길동]연차',
-        category: 'time',
-        dueDateClass: '',
-        starts: '2016-11-07T00:00:00+09:00',
-        ends: '2016-11-07T23:59:59+09:00'
-    }, {
-        id: '1232',
-        calendarID: '2',
-        title: '[4홍길동]연차',
-        category: 'time',
-        dueDateClass: '',
-        starts: '2016-08-19T00:00:00+09:00',
-        ends: '2016-08-19T23:59:59+09:00'
-    }, {
-        id: '3',
-        calendarID: '3',
-        title: '테스트 마일스톤1',
-        category: 'milestone',
-        dueDateClass: '',
-        starts: '',
-        ends: '2016-08-17T23:59:59+09:00'
+        starts: formattedDate + 'T00:00:00+09:00',
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -182,39 +81,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
-    }, {
-        id: '4',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
-    }, {
-        id: '4',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
-    }, {
-        id: '4',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
-    }, {
-        id: '4',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     },{
         id: '4',
         calendarID: '3',
@@ -222,7 +89,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -230,7 +97,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -238,7 +105,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -246,7 +113,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -254,7 +121,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -262,7 +129,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }, {
         id: '4',
         calendarID: '3',
@@ -270,7 +137,7 @@
         category: 'task',
         dueDateClass: 'morning',
         starts: '',
-        ends: '2016-11-12T23:59:59+09:00'
+        ends: formattedDate + 'T23:59:59+09:00'
     }], true);
 
     cal.render();

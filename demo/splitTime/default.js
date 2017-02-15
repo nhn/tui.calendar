@@ -82,7 +82,7 @@
                 return model.title + model.origin.starts + '~' + model.origin.ends;
             }
         },
-        renderStartDate: currentDate + '11:00:00',
+        renderStartDate: currentDate + '11:30:00',
         renderEndDate: currentDate + '14:00:00',
         showTimeRange: 3,
         calendarColor: calendarSet

@@ -34,7 +34,8 @@ function Time(options, container) {
         isToday: false,
         hourStart: 0,
         hourEnd: 24,
-        defaultMarginBottom: 2
+        defaultMarginBottom: 2,
+        minHeight: 17.5
     }, options);
 
     this.timeTmpl = options.isSplitTimeGrid ? require('../template/week/splitTime.hbs') : require('../template/week/time.hbs');
@@ -92,6 +93,9 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
     if (!viewModel.hasCollide) {
         width = null;
     }
+
+    height = height < this.options.minHeight ? this.options.minHeight : height;
+
     return {
         top: top,
         left: options.baseLeft[options.columnIndex],

@@ -5,6 +5,10 @@ html, body {
     height: 100%
 }
 
+div {
+    box-sizing: border-box
+}
+
 #wrap {
     height: 100%;
     position: relative;
