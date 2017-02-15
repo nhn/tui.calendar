@@ -256,15 +256,23 @@
   height: auto;
 }
 .dooray-calendar-timegrid-hour {
-  height: 40px;
+  height: 39px;
+  position: relative;
   border-right: 1px solid #e8e8e8;
   color: #777;
   text-align: right;
+  box-sizing: border-box;
+}
+.dooray-calendar-timegrid-hour:first-child span {
+  display: none;
 }
 .dooray-calendar-timegrid-hour:last-child {
   border-bottom: none;
 }
 .dooray-calendar-timegrid-hour span {
+  position: absolute;
+  top: -11px;
+  right: 5px;
   line-height: 25px;
   padding-right: 5px;
 }
@@ -278,6 +286,7 @@
 .dooray-calendar-timegrid-gridline {
   height: 39px;
   border-bottom: 1px solid #e8e8e8;
+  box-sizing: border-box;
 }
 .dooray-calendar-timegrid-gridline:last-child {
   border-bottom: none;

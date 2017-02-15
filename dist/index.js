@@ -7584,7 +7584,8 @@
 	        isToday: false,
 	        hourStart: 0,
 	        hourEnd: 24,
-	        defaultMarginBottom: 2
+	        defaultMarginBottom: 2,
+	        minHeight: 17.5
 	    }, options);
 	
 	    this.timeTmpl = options.isSplitTimeGrid ? __webpack_require__(55) : __webpack_require__(54);
@@ -7642,6 +7643,9 @@
 	    if (!viewModel.hasCollide) {
 	        width = null;
 	    }
+	
+	    height = height < this.options.minHeight ? this.options.minHeight : height;
+	
 	    return {
 	        top: top,
 	        left: options.baseLeft[options.columnIndex],
@@ -9585,7 +9589,7 @@
 	 * @returns {boolean|object} - return object when satiate condition.
 	 */
 	TimeMove.prototype.checkExpectCondition = function(target) {
-	    if (domutil.getClass(target) !== config.classname('time-event')) {
+	    if (!domutil.closest(target, config.classname('.time-event'))) {
 	        return false;
 	    }
 	
