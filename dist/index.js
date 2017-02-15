@@ -7585,7 +7585,7 @@
 	        hourStart: 0,
 	        hourEnd: 24,
 	        defaultMarginBottom: 2,
-	        minHeight: 17.5
+	        minHeight: 19.5
 	    }, options);
 	
 	    this.timeTmpl = options.isSplitTimeGrid ? __webpack_require__(55) : __webpack_require__(54);

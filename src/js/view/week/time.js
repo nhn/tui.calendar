@@ -35,7 +35,7 @@ function Time(options, container) {
         hourStart: 0,
         hourEnd: 24,
         defaultMarginBottom: 2,
-        minHeight: 17.5
+        minHeight: 19.5
     }, options);
 
     this.timeTmpl = options.isSplitTimeGrid ? require('../template/week/splitTime.hbs') : require('../template/week/time.hbs');
