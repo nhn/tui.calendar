@@ -70,7 +70,7 @@ TimeMove.prototype.destroy = function() {
  * @returns {boolean|object} - return object when satiate condition.
  */
 TimeMove.prototype.checkExpectCondition = function(target) {
-    if (domutil.getClass(target) !== config.classname('time-event')) {
+    if (!domutil.closest(target, config.classname('.time-event'))) {
         return false;
     }
 
