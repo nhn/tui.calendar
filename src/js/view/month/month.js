@@ -52,7 +52,7 @@ function Month(options, container, controller) {
         },
         startDayOfWeek: 0,
         renderMonth: '2015-12',
-        daynames: ['일', '월', '화', '수', '목', '금', '토']
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     }, options);
 }
 

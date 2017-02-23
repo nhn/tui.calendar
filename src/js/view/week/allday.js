@@ -35,7 +35,7 @@ function Allday(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        title: '종일일정',
+        title: 'All-day',
         renderStartDate: '',
         renderEndDate: '',
         containerHeight: 60,

@@ -25,7 +25,7 @@ function DayName(options, container) {
     );
 
     this.options = util.extend({
-        daynames: ['일', '월', '화', '수', '목', '금', '토']
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     }, options);
 
     View.call(this, container);

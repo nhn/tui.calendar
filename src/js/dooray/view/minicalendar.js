@@ -46,7 +46,7 @@ function MiniCalendar(options, container) {
     options = this.options = util.extend({
         startDayOfWeek: 0,
         renderMonth: todayStart,
-        daynames: ['일', '월', '화', '수', '목', '금', '토'],
+        daynames: ['S', 'M', 'T', 'W', 'TH', 'F', 'S'],
         selectedDate: todayYMD
     }, options);
 
