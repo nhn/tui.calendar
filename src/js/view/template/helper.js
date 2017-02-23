@@ -205,6 +205,10 @@ Handlebars.registerHelper({
         return '업무';
     },
 
+    'alldayTitle-tmpl': function() {
+        return '종일일정'
+    },
+
     'allday-tmpl': function(model) {
         return common.stripTags(model.title);
     },
