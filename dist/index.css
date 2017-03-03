@@ -360,6 +360,9 @@
   position: absolute;
   right: 0px;
 }
+.dooray-calendar-time-date-event-block-pending {
+  opacity: 0.7;
+}
 .dooray-calendar-time-event {
   position: relative;
   left: 1px;
