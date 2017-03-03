@@ -84,6 +84,7 @@ DoorayEvent.prototype.init = function(options) {
     this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
+    this.isPending = options.isPending;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
