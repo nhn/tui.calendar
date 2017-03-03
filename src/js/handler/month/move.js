@@ -7,6 +7,7 @@ var util = global.tui.util;
 
 var config = require('../../config'),
     domutil = require('../../common/domutil'),
+    datetime = require('../../common/datetime'),
     getMousePosData = require('./core'),
     MonthMoveGuide = require('./moveGuide');
 
@@ -67,9 +68,13 @@ MonthMove.prototype.destroy = function() {
  *  session.
  */
 MonthMove.prototype.updateEvent = function(eventCache) {
-    var model = eventCache.model,
-        duration = Number(model.duration()),
-        dragEndTime = Number(eventCache.ends);
+    var model = eventCache.model;
+    var duration = Number(model.duration());
+    var startDateRaw = datetime.raw(model.starts);
+    var dragEndTime = Number(eventCache.ends);
+    var newStartDate = new Date(dragEndTime);
+
+    newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
 
     /**
      * @event MonthMove#beforeUpdateEvent
@@ -80,8 +85,8 @@ MonthMove.prototype.updateEvent = function(eventCache) {
      */
     this.fire('beforeUpdateEvent', {
         model: model,
-        starts: new Date(dragEndTime),
-        ends: new Date(dragEndTime + duration)
+        starts: newStartDate,
+        ends: new Date(newStartDate.getTime() + duration)
     });
 };
 
