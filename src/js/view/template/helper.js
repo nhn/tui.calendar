@@ -206,7 +206,7 @@ Handlebars.registerHelper({
     },
 
     'alldayTitle-tmpl': function() {
-        return '종일일정'
+        return '종일일정';
     },
 
     'allday-tmpl': function(model) {

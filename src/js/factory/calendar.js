@@ -174,7 +174,6 @@ Calendar.prototype.destroy = function() {
     this.options = this.renderDate = this.controller =
         this.layout = this.dragHandler = this.viewName =
         this.refreshMethod = null;
-
 };
 
 /**
@@ -384,17 +383,16 @@ Calendar.prototype.move = function(offset) {
 
     if (viewName === 'month') {
         renderDate.addMonth(offset);
+        date2 = datetime.arr2dCalendar(this.renderDate);
 
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
         });
 
         this.options.render = {
-            startDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth(), 1),
-            endDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth() + 1, 0)
-
-    };
-
+            startDate: date2[0][0],
+            endDate: date2[date2.length - 1][6]
+        };
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
         date2 = this.getWeekDayRange(renderDate.d);
@@ -408,8 +406,6 @@ Calendar.prototype.move = function(offset) {
             startDate: date2[0],
             endDate: date2[1]
         };
-
-
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
         date2 = renderDate.clone().setHours(23, 59, 59, 0);
@@ -423,7 +419,6 @@ Calendar.prototype.move = function(offset) {
             startDate: renderDate.d,
             endDate: date2.d
         };
-
     }
 
     this.renderDate = renderDate.d;
@@ -439,7 +434,7 @@ Calendar.prototype.setDate = function(date) {
     }
 
     this.renderDate = new Date(Number(date));
-    this.move(0)
+    this.move(0);
     this.render();
 };
 
@@ -642,7 +637,7 @@ Calendar.prototype.toggleDoorayView = function(isUse) {
         options = this.options;
 
     options.isDoorayView = isUse;
-    this.toggleView(viewName, true)
+    this.toggleView(viewName, true);
 };
 
 util.CustomEvents.mixin(Calendar);

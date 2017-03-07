@@ -96,35 +96,9 @@ MonthMove.prototype.updateEvent = function(eventCache) {
  * @returns {HTMLElement} element to create guide effect
  */
 MonthMove.prototype.getMonthEventBlock = function(target) {
-    var blockSelector = config.classname('.weekday-event-block'),
-        element = domutil.closest(target, blockSelector);
+    var blockSelector = config.classname('.weekday-event-block');
 
-    if (!element) {
-        element = target;
-    }
-
-    return element;
-};
-
-/**
- * Check event start from month view
- * @param {HTMLElement} target - element to check
- * @returns {boolean} whether event start from month view?
- */
-MonthMove.prototype.isMonthEventBlock = function(target) {
-    var titleClassName = config.classname('weekday-event-title');
-
-    if (!domutil.hasClass(target, titleClassName)) {
-        return false;
-    }
-
-    target = this.getMonthEventBlock(target);
-
-    if (!target) {
-        return false;
-    }
-
-    return true;
+    return domutil.closest(target, blockSelector);
 };
 
 /**
@@ -146,12 +120,11 @@ MonthMove.prototype.isMoreLayerEventBlock = function(target) {
  *  has not permission to handle the event then return null.
  */
 MonthMove.prototype.hasPermissionToHandle = function(target) {
-    var modelID = null,
-        selector;
+    var modelID = null;
+    var blockElement = this.getMonthEventBlock(target);
 
-    if (this.isMonthEventBlock(target)) {
-        selector = config.classname('.weekday-event-block');
-        modelID = domutil.getData(domutil.closest(target, selector), 'id');
+    if (blockElement) {
+        modelID = domutil.getData(blockElement, 'id');
     } else if (this.isMoreLayerEventBlock(target)) {
         modelID = domutil.getData(target, 'id');
         /**
