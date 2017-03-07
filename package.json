@@ -35,12 +35,14 @@
     "stylus": "^0.53.0",
     "stylus-loader": "^2.1.2",
     "underscore": "^1.8.3",
-    "webpack": "^1.13.1"
+    "webpack": "1.14.0",
+    "webpack-dev-server": "1.16.3"
   },
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
   "scripts": {
     "postinstall": "bower install",
     "start": "node_modules/.bin/webpack-dev-server --progress --inline --hot",
-    "build": "webpack"
+    "build": "webpack",
+    "test": "karma start"
   }
 }

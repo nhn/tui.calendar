@@ -30,7 +30,7 @@
                 background-color:{{model.bgColor}};
                 border-left:2px solid {{model.borderColor}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
-                  data-title="{{model.title}}">{{hhmm model.starts}} {{model.title}}</span>
+                  data-title="{{model.title}}">{{{time-tmpl model}}}</span>
         </div>
         {{/if}}
     </div>
