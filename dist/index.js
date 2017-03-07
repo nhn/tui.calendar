@@ -352,7 +352,7 @@
 	    },
 	
 	    'alldayTitle-tmpl': function() {
-	        return '종일일정'
+	        return '종일일정';
 	    },
 	
 	    'allday-tmpl': function(model) {
@@ -8701,9 +8701,7 @@
 	    + "weekday-event-title\"\n                  data-title=\""
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\">"
-	    + alias4((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.starts : stack1),{"name":"hhmm","hash":{},"data":data}))
-	    + " "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n        </div>\n";
 	},"14":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -13300,6 +13298,7 @@
 	
 	var config = __webpack_require__(31),
 	    domutil = __webpack_require__(28),
+	    datetime = __webpack_require__(26),
 	    getMousePosData = __webpack_require__(80),
 	    MonthMoveGuide = __webpack_require__(89);
 	
@@ -13360,9 +13359,13 @@
 	 *  session.
 	 */
 	MonthMove.prototype.updateEvent = function(eventCache) {
-	    var model = eventCache.model,
-	        duration = Number(model.duration()),
-	        dragEndTime = Number(eventCache.ends);
+	    var model = eventCache.model;
+	    var duration = Number(model.duration());
+	    var startDateRaw = datetime.raw(model.starts);
+	    var dragEndTime = Number(eventCache.ends);
+	    var newStartDate = new Date(dragEndTime);
+	
+	    newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
 	
 	    /**
 	     * @event MonthMove#beforeUpdateEvent
@@ -13373,8 +13376,8 @@
 	     */
 	    this.fire('beforeUpdateEvent', {
 	        model: model,
-	        starts: new Date(dragEndTime),
-	        ends: new Date(dragEndTime + duration)
+	        starts: newStartDate,
+	        ends: new Date(newStartDate.getTime() + duration)
 	    });
 	};
 	
@@ -13384,35 +13387,9 @@
 	 * @returns {HTMLElement} element to create guide effect
 	 */
 	MonthMove.prototype.getMonthEventBlock = function(target) {
-	    var blockSelector = config.classname('.weekday-event-block'),
-	        element = domutil.closest(target, blockSelector);
+	    var blockSelector = config.classname('.weekday-event-block');
 	
-	    if (!element) {
-	        element = target;
-	    }
-	
-	    return element;
-	};
-	
-	/**
-	 * Check event start from month view
-	 * @param {HTMLElement} target - element to check
-	 * @returns {boolean} whether event start from month view?
-	 */
-	MonthMove.prototype.isMonthEventBlock = function(target) {
-	    var titleClassName = config.classname('weekday-event-title');
-	
-	    if (!domutil.hasClass(target, titleClassName)) {
-	        return false;
-	    }
-	
-	    target = this.getMonthEventBlock(target);
-	
-	    if (!target) {
-	        return false;
-	    }
-	
-	    return true;
+	    return domutil.closest(target, blockSelector);
 	};
 	
 	/**
@@ -13434,12 +13411,11 @@
 	 *  has not permission to handle the event then return null.
 	 */
 	MonthMove.prototype.hasPermissionToHandle = function(target) {
-	    var modelID = null,
-	        selector;
+	    var modelID = null;
+	    var blockElement = this.getMonthEventBlock(target);
 	
-	    if (this.isMonthEventBlock(target)) {
-	        selector = config.classname('.weekday-event-block');
-	        modelID = domutil.getData(domutil.closest(target, selector), 'id');
+	    if (blockElement) {
+	        modelID = domutil.getData(blockElement, 'id');
 	    } else if (this.isMoreLayerEventBlock(target)) {
 	        modelID = domutil.getData(target, 'id');
 	        /**
@@ -16710,7 +16686,6 @@
 	    this.options = this.renderDate = this.controller =
 	        this.layout = this.dragHandler = this.viewName =
 	        this.refreshMethod = null;
-	
 	};
 	
 	/**
@@ -16920,17 +16895,16 @@
 	
 	    if (viewName === 'month') {
 	        renderDate.addMonth(offset);
+	        date2 = datetime.arr2dCalendar(this.renderDate);
 	
 	        recursiveSet(view, function(opt) {
 	            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
 	        });
 	
 	        this.options.render = {
-	            startDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth(), 1),
-	            endDate: new Date(renderDate.d.getFullYear(), renderDate.d.getMonth() + 1, 0)
-	
-	    };
-	
+	            startDate: date2[0][0],
+	            endDate: date2[date2.length - 1][6]
+	        };
 	    } else if (viewName === 'week') {
 	        renderDate.addDate(offset * 7);
 	        date2 = this.getWeekDayRange(renderDate.d);
@@ -16944,8 +16918,6 @@
 	            startDate: date2[0],
 	            endDate: date2[1]
 	        };
-	
-	
 	    } else if (viewName === 'day') {
 	        renderDate.addDate(offset);
 	        date2 = renderDate.clone().setHours(23, 59, 59, 0);
@@ -16959,7 +16931,6 @@
 	            startDate: renderDate.d,
 	            endDate: date2.d
 	        };
-	
 	    }
 	
 	    this.renderDate = renderDate.d;
@@ -16975,7 +16946,7 @@
 	    }
 	
 	    this.renderDate = new Date(Number(date));
-	    this.move(0)
+	    this.move(0);
 	    this.render();
 	};
 	
@@ -17178,7 +17149,7 @@
 	        options = this.options;
 	
 	    options.isDoorayView = isUse;
-	    this.toggleView(viewName, true)
+	    this.toggleView(viewName, true);
 	};
 	
 	util.CustomEvents.mixin(Calendar);
