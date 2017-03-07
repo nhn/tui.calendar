@@ -7441,6 +7441,7 @@
 	            width: width,
 	            ymd: ymd,
 	            isToday: isToday,
+	            isPending: options.isPending,
 	            hourStart: options.hourStart,
 	            hourEnd: options.hourEnd,
 	            isSplitTimeGrid: options.isSplitTimeGrid
@@ -7602,12 +7603,12 @@
 	        width: 0,
 	        ymd: '',
 	        isToday: false,
+	        pending: false,
 	        hourStart: 0,
 	        hourEnd: 24,
 	        defaultMarginBottom: 2,
 	        minHeight: 19.5
 	    }, options);
-	
 	    this.timeTmpl = options.isSplitTimeGrid ? __webpack_require__(55) : __webpack_require__(54);
 	    container.style.width = options.width + '%';
 	    container.style.left = (options.index * options.width) + '%';
@@ -7783,7 +7784,9 @@
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-date-event-block\" data-id=\""
+	    + "time-date-event-block "
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isPending : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\" data-id=\""
 	    + alias4((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
 	    + "\" style=\""
 	    + alias4((helpers["time-eventBlock"] || (depth0 && depth0["time-eventBlock"]) || alias2).call(alias1,depth0,{"name":"time-eventBlock","hash":{},"data":data}))
@@ -7800,6 +7803,12 @@
 	    + "</div>\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-resize-handle handle-x\">&nbsp;</div>\n        </div>\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-event-block-pending";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : {};
 	
@@ -13893,6 +13902,7 @@
 	    this.calendarID = options.calendarID;
 	    this.category = options.category;
 	    this.dueDateClass = options.dueDateClass;
+	    this.isPending = options.isPending;
 	
 	    if (options.category === EVENT_CATEGORY.MILESTONE ||
 	        options.category === EVENT_CATEGORY.TASK) {

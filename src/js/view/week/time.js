@@ -32,12 +32,12 @@ function Time(options, container) {
         width: 0,
         ymd: '',
         isToday: false,
+        pending: false,
         hourStart: 0,
         hourEnd: 24,
         defaultMarginBottom: 2,
         minHeight: 19.5
     }, options);
-
     this.timeTmpl = options.isSplitTimeGrid ? require('../template/week/splitTime.hbs') : require('../template/week/time.hbs');
     container.style.width = options.width + '%';
     container.style.left = (options.index * options.width) + '%';
