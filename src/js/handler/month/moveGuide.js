@@ -149,7 +149,7 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
     this.layer = layer;
     layer.setSize(widthPercent + '%', height);
     layer.setPosition(mousePos[0], mousePos[1]);
-    layer.setContent(tmpl(model));
+    layer.setContent(tmpl({model: model}));
     layer.show();
 
     if (!util.browser.msie) {
