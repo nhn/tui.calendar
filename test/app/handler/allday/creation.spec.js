@@ -75,7 +75,8 @@ describe('handler:AlldayCreation', function() {
             expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: true,
                 starts: new Date('2015-05-02T00:00:00+09:00'),
-                ends: new Date('2015-05-03T23:59:59+09:00')
+                ends: new Date('2015-05-03T23:59:59+09:00'),
+                guide: inst.guide
             });
         });
 
@@ -94,7 +95,8 @@ describe('handler:AlldayCreation', function() {
             expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: true,
                 starts: new Date('2015-05-02T00:00:00+09:00'),
-                ends: new Date('2015-05-04T23:59:59+09:00')
+                ends: new Date('2015-05-04T23:59:59+09:00'),
+                guide: inst.guide
             });
         });
     });
