@@ -5,10 +5,10 @@
         idx = 5;
 
     var baseDate = new Date(),
-      formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
+        formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
 
     cal = calendar.FullCalendar({
-        defaultView: 'week',
+        defaultView: 'month',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -26,7 +26,7 @@
                 return model.title + ' <i class="fa fa-refresh"></i>';
             },
             time: function(model) {
-                return model.title + ' <i class="fa fa-refresh"></i><br />' + model.starts;
+                return model.title + ' <i class="fa fa-refresh"></i>' + model.starts;
             }
         },
         week: {
@@ -67,7 +67,7 @@
         starts: formattedDate + 'T17:30:00+09:00',
         ends: formattedDate + 'T17:45:00+09:00'
     }, {
-        id: '2',
+        id: '3',
         calendarID: '2',
         title: '[홍길동]연차',
         category: 'allday',
@@ -83,7 +83,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     },{
-        id: '4',
+        id: '5',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
@@ -91,7 +91,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     }, {
-        id: '4',
+        id: '6',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
@@ -99,7 +99,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     }, {
-        id: '4',
+        id: '7',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
@@ -107,7 +107,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     }, {
-        id: '4',
+        id: '8',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
@@ -115,7 +115,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     }, {
-        id: '4',
+        id: '9',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
@@ -123,7 +123,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     }, {
-        id: '4',
+        id: '10',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
@@ -131,7 +131,7 @@
         starts: '',
         ends: formattedDate + 'T23:59:59+09:00'
     }, {
-        id: '4',
+        id: '11',
         calendarID: '3',
         title: '테스트 업무',
         category: 'task',
