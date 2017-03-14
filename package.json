@@ -21,6 +21,7 @@
     "karma-jasmine-jquery": "^0.1.1",
     "karma-json-fixtures-preprocessor": "0.0.6",
     "karma-junit-reporter": "^0.3.8",
+    "karma-phantomjs-launcher": "^1.0.2",
     "karma-preprocess-preprocessor": "^0.1.1",
     "karma-source-map-support": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",

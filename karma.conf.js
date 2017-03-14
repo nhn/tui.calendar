@@ -19,6 +19,7 @@ module.exports = function(config) {
             'karma-webpack',
             'karma-sourcemap-loader',
             'karma-chrome-launcher',
+            'karma-phantomjs-launcher',
             'karma-spec-reporter',
             'karma-coverage',
             'istanbul-instrumenter-loader'
@@ -78,7 +79,7 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         singleRun: false,
         concurrency: Infinity
     });
