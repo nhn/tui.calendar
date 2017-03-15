@@ -2,6 +2,7 @@
 /* eslint strict: 0, no-process-env: 0 */
 
 var path = require('path');
+var webpack = require('webpack');
 var stylus = require('stylus');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var isProduction = process.env.NODE_ENV === 'production';
@@ -10,12 +11,17 @@ var context = JSON.stringify({
     CSS_PREFIX: 'dooray-calendar-',
     BUNDLE_TYPE: (isProduction ? 'Release' : 'Debug')
 });
+var bannerText = 'bundle created at "' + (new Date()).toString() + '"';
 
 var stylusLoader = ExtractTextPlugin.extract('style', `css!preprocess?${context}!stylus`);
 
 var jsLoader = `preprocess?${context}`;
+var OUTPUT_NAME = isProduction ? 'index.min' : 'index';
 
-var plugins = [new ExtractTextPlugin('index.css')];
+var plugins = [
+    new ExtractTextPlugin(OUTPUT_NAME + '.css'),
+    new webpack.BannerPlugin(bannerText, {entryOnly: true})
+];
 
 var devtool = '#source-map';
 
@@ -23,7 +29,7 @@ module.exports = {
     entry: './index.js',
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'index.js',
+        filename: OUTPUT_NAME + '.js',
         publicPath: '/dist'
     },
     module: {
@@ -50,9 +56,8 @@ module.exports = {
     },
     devtool,
     plugins,
-    devServer: { 
+    devServer: {
         inline: true,
-        filename: "index.js",
+        filename: 'index.js'
     }
-
 };

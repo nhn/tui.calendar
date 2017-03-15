@@ -1,3 +1,4 @@
+/*! bundle created at "Wed Mar 15 2017 10:48:36 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -18895,8 +18896,8 @@
 	
 	SplitTimeCalendar.prototype.setRenderTime = function() {
 	    var opt = this.options, baseHour = new Date(opt.renderStartDate).getHours();
-	    opt.hourStart = baseHour - opt.showTimeRange;
-	    opt.hourEnd = baseHour + opt.showTimeRange;
+	    opt.hourStart = Math.max(baseHour - opt.showTimeRange, 0);
+	    opt.hourEnd = Math.min(baseHour + opt.showTimeRange, 24);
 	    this.renderDate = datetime.format(new Date(opt.renderStartDate), 'YYYY-MM-DD');
 	};
 	
