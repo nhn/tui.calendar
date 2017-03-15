@@ -80,52 +80,52 @@
 	    WeekdayInWeek: __webpack_require__(50),
 	    TimeGrid: __webpack_require__(52),
 	    Time: __webpack_require__(53),
-	    Month: __webpack_require__(58),
-	    WeekdayInMonth: __webpack_require__(60),
+	    Month: __webpack_require__(57),
+	    WeekdayInMonth: __webpack_require__(59),
 	
 	    // handler, guide
 	    Drag: __webpack_require__(41),
 	
-	    TimeCore: __webpack_require__(64),
-	    TimeClick: __webpack_require__(65),
-	    TimeCreation: __webpack_require__(66),
-	    TimeCreationGuide: __webpack_require__(67),
-	    TimeMove: __webpack_require__(68),
-	    TimeMoveGuide: __webpack_require__(69),
-	    TimeResize: __webpack_require__(70),
-	    TimeResizeGuide: __webpack_require__(71),
+	    TimeCore: __webpack_require__(63),
+	    TimeClick: __webpack_require__(64),
+	    TimeCreation: __webpack_require__(65),
+	    TimeCreationGuide: __webpack_require__(66),
+	    TimeMove: __webpack_require__(67),
+	    TimeMoveGuide: __webpack_require__(68),
+	    TimeResize: __webpack_require__(69),
+	    TimeResizeGuide: __webpack_require__(70),
 	
-	    AlldayCore: __webpack_require__(72),
-	    AlldayClick: __webpack_require__(73),
-	    AlldayCreation: __webpack_require__(76),
-	    AlldayCreationGuide: __webpack_require__(77),
-	    AlldayMove: __webpack_require__(74),
-	    AlldayMoveGuide: __webpack_require__(75),
-	    AlldayResize: __webpack_require__(78),
-	    AlldayResizeGuide: __webpack_require__(79),
+	    AlldayCore: __webpack_require__(71),
+	    AlldayClick: __webpack_require__(72),
+	    AlldayCreation: __webpack_require__(75),
+	    AlldayCreationGuide: __webpack_require__(76),
+	    AlldayMove: __webpack_require__(73),
+	    AlldayMoveGuide: __webpack_require__(74),
+	    AlldayResize: __webpack_require__(77),
+	    AlldayResizeGuide: __webpack_require__(78),
 	
-	    MonthCore: __webpack_require__(80),
-	    MonthGuide: __webpack_require__(81),
-	    MonthClick: __webpack_require__(83),
-	    MonthCreation: __webpack_require__(84),
-	    MonthCreationGuide: __webpack_require__(85),
-	    MonthResize: __webpack_require__(86),
-	    MonthMove: __webpack_require__(88),
+	    MonthCore: __webpack_require__(79),
+	    MonthGuide: __webpack_require__(80),
+	    MonthClick: __webpack_require__(82),
+	    MonthCreation: __webpack_require__(83),
+	    MonthCreationGuide: __webpack_require__(84),
+	    MonthResize: __webpack_require__(85),
+	    MonthMove: __webpack_require__(87),
 	
 	    // service modules
-	    DoorayEvent: __webpack_require__(91),
-	    DoorayController: __webpack_require__(92),
-	    MiniCalendar: __webpack_require__(94),
-	    TaskView: __webpack_require__(96),
-	    MilestoneClick: __webpack_require__(98),
-	    TaskClick: __webpack_require__(99),
-	    Freebusy: __webpack_require__(100),
+	    DoorayEvent: __webpack_require__(90),
+	    DoorayController: __webpack_require__(91),
+	    MiniCalendar: __webpack_require__(93),
+	    TaskView: __webpack_require__(95),
+	    MilestoneClick: __webpack_require__(97),
+	    TaskClick: __webpack_require__(98),
+	    Freebusy: __webpack_require__(99),
 	
 	    // factory class
-	    ControllerFactory: __webpack_require__(103),
-	    OriginCalendar: __webpack_require__(107),
-	    FullCalendar: __webpack_require__(117),
-	    SplitTimeCalendar: __webpack_require__(122)
+	    ControllerFactory: __webpack_require__(102),
+	    OriginCalendar: __webpack_require__(106),
+	    FullCalendar: __webpack_require__(116),
+	    SplitTimeCalendar: __webpack_require__(121)
 	});
 	
 	
@@ -7250,8 +7250,8 @@
 	var reqAnimFrame = __webpack_require__(35);
 	var View = __webpack_require__(39);
 	var Time = __webpack_require__(53);
-	var AutoScroll = __webpack_require__(56);
-	var mainTmpl = __webpack_require__(57);
+	var AutoScroll = __webpack_require__(55);
+	var mainTmpl = __webpack_require__(56);
 	
 	var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
 	var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
@@ -7581,6 +7581,8 @@
 	var domutil = __webpack_require__(28);
 	var View = __webpack_require__(39);
 	var timeTmpl = __webpack_require__(54);
+	var splitTimeTmpl = __webpack_require__(54);
+	
 	var forEachArr = util.forEachArray;
 	
 	/**
@@ -7609,7 +7611,8 @@
 	        defaultMarginBottom: 2,
 	        minHeight: 19.5
 	    }, options);
-	    this.timeTmpl = options.isSplitTimeGrid ? __webpack_require__(55) : __webpack_require__(54);
+	
+	    this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
 	    container.style.width = options.width + '%';
 	    container.style.left = (options.index * options.width) + '%';
 	
@@ -7665,13 +7668,11 @@
 	        width = null;
 	    }
 	
-	    height = height < this.options.minHeight ? this.options.minHeight : height;
-	
 	    return {
 	        top: top,
 	        left: options.baseLeft[options.columnIndex],
 	        width: width,
-	        height: height - this.options.defaultMarginBottom
+	        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom
 	    };
 	};
 	
@@ -7821,51 +7822,6 @@
 
 /***/ },
 /* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(7);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"2":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"3":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"4":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-date-event-block\" data-id=\""
-	    + alias4((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\" style=\""
-	    + alias4((helpers["time-eventBlock"] || (depth0 && depth0["time-eventBlock"]) || alias2).call(alias1,depth0,{"name":"time-eventBlock","hash":{},"data":data}))
-	    + "\">\n            <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-event\" style=\"color:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + ";background-color:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + "; border-left: 2px solid "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "\">"
-	    + ((stack1 = (helpers["split-time-tmpl"] || (depth0 && depth0["split-time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"split-time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</div>\n            <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-resize-handle handle-x\">&nbsp;</div>\n        </div>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"useData":true});
-
-/***/ },
-/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8115,7 +8071,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 57 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8180,7 +8136,7 @@
 	},"useData":true});
 
 /***/ },
-/* 58 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8194,10 +8150,10 @@
 	var config = __webpack_require__(31),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(28),
-	    tmpl = __webpack_require__(59),
+	    tmpl = __webpack_require__(58),
 	    View = __webpack_require__(39),
 	    VLayout = __webpack_require__(38),
-	    WeekdayInMonth = __webpack_require__(60);
+	    WeekdayInMonth = __webpack_require__(59);
 	
 	/**
 	 * @constructor
@@ -8344,7 +8300,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 59 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8375,7 +8331,7 @@
 	},"useData":true});
 
 /***/ },
-/* 60 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8396,9 +8352,9 @@
 	    domutil = __webpack_require__(28),
 	    View = __webpack_require__(39),
 	    Weekday = __webpack_require__(49),
-	    baseTmpl = __webpack_require__(61),
-	    eventTmpl = __webpack_require__(62),
-	    skipTmpl = __webpack_require__(63),
+	    baseTmpl = __webpack_require__(60),
+	    eventTmpl = __webpack_require__(61),
+	    skipTmpl = __webpack_require__(62),
 	    domevent = __webpack_require__(29);
 	
 	/**
@@ -8552,7 +8508,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 61 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8598,7 +8554,7 @@
 	},"useData":true});
 
 /***/ },
-/* 62 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8715,7 +8671,7 @@
 	},"useData":true});
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -8746,7 +8702,7 @@
 	},"useData":true});
 
 /***/ },
-/* 64 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8843,7 +8799,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8955,7 +8911,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 66 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -8969,8 +8925,8 @@
 	var array = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
-	var TimeCreationGuide = __webpack_require__(67);
-	var timeCore = __webpack_require__(64);
+	var TimeCreationGuide = __webpack_require__(66);
+	var timeCore = __webpack_require__(63);
 	
 	/**
 	 * @constructor
@@ -9272,7 +9228,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 67 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9541,7 +9497,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 68 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9554,8 +9510,8 @@
 	var config = __webpack_require__(31);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
-	var timeCore = __webpack_require__(64);
-	var TimeMoveGuide = __webpack_require__(69);
+	var timeCore = __webpack_require__(63);
+	var TimeMoveGuide = __webpack_require__(68);
 	
 	/**
 	 * @constructor
@@ -9897,7 +9853,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 69 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10062,7 +10018,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 70 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10074,8 +10030,8 @@
 	var config = __webpack_require__(31);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
-	var timeCore = __webpack_require__(64);
-	var TimeResizeGuide = __webpack_require__(71);
+	var timeCore = __webpack_require__(63);
+	var TimeResizeGuide = __webpack_require__(70);
 	
 	/**
 	 * @constructor
@@ -10370,7 +10326,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 71 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10550,7 +10506,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 72 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-shadow: 0 */
@@ -10627,7 +10583,7 @@
 
 
 /***/ },
-/* 73 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10639,7 +10595,7 @@
 	var util = global.tui.util;
 	var config = __webpack_require__(31);
 	var domutil = __webpack_require__(28);
-	var AlldayMove = __webpack_require__(74);
+	var AlldayMove = __webpack_require__(73);
 	
 	/**
 	 * @constructor
@@ -10723,7 +10679,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 74 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10735,8 +10691,8 @@
 	var config = __webpack_require__(31);
 	var common = __webpack_require__(27);
 	var domutil = __webpack_require__(28);
-	var AlldayCore = __webpack_require__(72);
-	var AlldayMoveGuide = __webpack_require__(75);
+	var AlldayCore = __webpack_require__(71);
+	var AlldayMoveGuide = __webpack_require__(74);
 	
 	/**
 	 * @constructor
@@ -10999,7 +10955,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 75 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11197,7 +11153,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11210,8 +11166,8 @@
 	var datetime = __webpack_require__(26);
 	var common = __webpack_require__(27);
 	var domutil = __webpack_require__(28);
-	var alldayCore = __webpack_require__(72);
-	var AlldayCreationGuide = __webpack_require__(77);
+	var alldayCore = __webpack_require__(71);
+	var AlldayCreationGuide = __webpack_require__(76);
 	
 	/**
 	 * @constructor
@@ -11454,7 +11410,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 77 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11591,7 +11547,7 @@
 
 
 /***/ },
-/* 78 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11604,8 +11560,8 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
 	var common = __webpack_require__(27);
-	var AlldayCore = __webpack_require__(72);
-	var AlldayResizeGuide = __webpack_require__(79);
+	var AlldayCore = __webpack_require__(71);
+	var AlldayResizeGuide = __webpack_require__(78);
 	
 	/**
 	 * @constructor
@@ -11864,7 +11820,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 79 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12022,7 +11978,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 80 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12094,7 +12050,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 81 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12113,7 +12069,7 @@
 	    domutil = __webpack_require__(28),
 	    datetime = __webpack_require__(26),
 	    dw = __webpack_require__(43),
-	    tmpl = __webpack_require__(82);
+	    tmpl = __webpack_require__(81);
 	
 	/**
 	 * @constructor
@@ -12538,7 +12494,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 82 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -12569,7 +12525,7 @@
 	},"useData":true});
 
 /***/ },
-/* 83 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12670,7 +12626,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 84 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12684,8 +12640,8 @@
 	    datetime = __webpack_require__(26),
 	    array = __webpack_require__(33),
 	    domutil = __webpack_require__(28),
-	    getMousePosData = __webpack_require__(80),
-	    Guide = __webpack_require__(85);
+	    getMousePosData = __webpack_require__(79),
+	    Guide = __webpack_require__(84);
 	
 	/**
 	 * @constructor
@@ -12875,7 +12831,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 85 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12883,7 +12839,7 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var MonthGuide = __webpack_require__(81);
+	var MonthGuide = __webpack_require__(80);
 	
 	/**
 	 * @constructor
@@ -12950,7 +12906,7 @@
 
 
 /***/ },
-/* 86 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12963,8 +12919,8 @@
 	var config = __webpack_require__(31),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(28),
-	    getMousePosData = __webpack_require__(80),
-	    MonthResizeGuide = __webpack_require__(87);
+	    getMousePosData = __webpack_require__(79),
+	    MonthResizeGuide = __webpack_require__(86);
 	
 	/**
 	 * @constructor
@@ -13163,7 +13119,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 87 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13175,7 +13131,7 @@
 	
 	var config = __webpack_require__(31),
 	    domutil = __webpack_require__(28),
-	    MonthGuide = __webpack_require__(81);
+	    MonthGuide = __webpack_require__(80);
 	
 	/**
 	 * @constructor
@@ -13286,7 +13242,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 88 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13299,8 +13255,8 @@
 	var config = __webpack_require__(31),
 	    domutil = __webpack_require__(28),
 	    datetime = __webpack_require__(26),
-	    getMousePosData = __webpack_require__(80),
-	    MonthMoveGuide = __webpack_require__(89);
+	    getMousePosData = __webpack_require__(79),
+	    MonthMoveGuide = __webpack_require__(88);
 	
 	/**
 	 * @constructor
@@ -13550,7 +13506,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 89 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13564,7 +13520,7 @@
 	    domutil = __webpack_require__(28),
 	    domevent = __webpack_require__(29),
 	    FloatingLayer = __webpack_require__(42),
-	    tmpl = __webpack_require__(90);
+	    tmpl = __webpack_require__(89);
 	
 	/**
 	 * @constructor
@@ -13704,7 +13660,7 @@
 	    this.layer = layer;
 	    layer.setSize(widthPercent + '%', height);
 	    layer.setPosition(mousePos[0], mousePos[1]);
-	    layer.setContent(tmpl(model));
+	    layer.setContent(tmpl({model: model}));
 	    layer.show();
 	
 	    if (!util.browser.msie) {
@@ -13754,42 +13710,44 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 90 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper;
+	    var stack1;
 	
 	  return "            "
-	    + container.escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"title","hash":{},"data":data}) : helper)))
+	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n";
 	},"3":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+	    var stack1;
 	
 	  return "            "
-	    + alias3((helpers.hhmm || (depth0 && depth0.hhmm) || alias2).call(alias1,(depth0 != null ? depth0.starts : depth0),{"name":"hhmm","hash":{},"data":data}))
-	    + " "
-	    + alias3(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide-block\" style=\"width:100%;height:100%;left:-50%;top:-50%\">\n    <div class=\""
+	    + "month-guide\"\n     style=\"top: -50%;\n            left: -50%;\n            color:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + ";\n            background-color:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";\n            border-left:2px solid "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + "\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide\" style=\"background-color:"
-	    + alias4(((helper = (helper = helpers.bgColor || (depth0 != null ? depth0.bgColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bgColor","hash":{},"data":data}) : helper)))
-	    + "\">\n        <div class=\""
+	    + "month-move-guide "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide-label\">\n"
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isAllDay : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+	    + "weekday-event-title\">\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
 	    + "        </div>\n    </div>\n</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 91 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13895,7 +13853,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 92 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
@@ -13906,8 +13864,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var Base = __webpack_require__(93);
-	var DoorayEvent = __webpack_require__(91);
+	var Base = __webpack_require__(92);
+	var DoorayEvent = __webpack_require__(90);
 	
 	/**
 	 * @constructor
@@ -14030,7 +13988,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 93 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14333,7 +14291,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 94 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14350,7 +14308,23 @@
 	    domutil = __webpack_require__(28),
 	    domevent = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
-	    tmpl = __webpack_require__(95);
+	    tmpl = __webpack_require__(94);
+	
+	/**
+	 * Returns the CSS class name for the given index
+	 * @param {number} dayIdx - day index
+	 * @returns {string}
+	 */
+	function getDayClassName(dayIdx) {
+	    switch (dayIdx) {
+	        case 0:
+	            return 'holiday-sun';
+	        case 6:
+	            return 'holiday-sat';
+	        default:
+	            return '';
+	    }
+	}
 	
 	/**
 	 * @constructor
@@ -14517,25 +14491,17 @@
 	    viewModel.dayname = util.map(
 	        util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
 	        function(i) {
-	            var cssClasses = [];
-	
-	            if (i === 0) {
-	                cssClasses.push('holiday-sun');
-	            }
-	
-	            if (i === 6) {
-	                cssClasses.push('holiday-sat');
-	            }
 	            return {
 	                name: daynames[i],
-	                cssClass: classPrefix + cssClasses.join(' ' + classPrefix)
-	            }
+	                cssClass: classPrefix + getDayClassName(i)
+	            };
 	        }
 	    );
 	
 	    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
 	        var ymd = datetime.format(date, 'YYYY-MM-DD'),
 	            day = date.getDay(),
+	            dayClassName = getDayClassName(day),
 	            cssClasses = util.keys(hlData[ymd] ? hlData[ymd] : {});
 	
 	        cssClasses.push(ymd);
@@ -14548,12 +14514,8 @@
 	            cssClasses.push('other-month');
 	        }
 	
-	        if (day === 0) {
-	            cssClasses.push('holiday-sun');
-	        }
-	
-	        if (day === 6) {
-	            cssClasses.push('holiday-sat');
+	        if (dayClassName) {
+	            cssClasses.push(dayClassName);
 	        }
 	
 	        return {
@@ -14681,7 +14643,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 95 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -14734,7 +14696,7 @@
 	},"useData":true});
 
 /***/ },
-/* 96 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14748,7 +14710,7 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
 	var View = __webpack_require__(39);
-	var tmpl = __webpack_require__(97);
+	var tmpl = __webpack_require__(96);
 	
 	var PADDING_TOP = 2,
 	    PADDING_BOTTOM = 2;
@@ -14804,28 +14766,29 @@
 	
 	    util.forEach(range, function(d) {
 	        var date = datetime.format(d, 'YYYY-MM-DD');
-	        events[date] = {morning: {length: 0},
-	                        lunch: {length: 0},
-	                        evening: {length: 0}
-	                      };
+	        events[date] = {
+	            morning: {length: 0},
+	            lunch: {length: 0},
+	            evening: {length: 0}
+	        };
 	    });
 	    util.extend(events, viewModel);
 	
-	    util.forEach(events, function(event, key) {
-	        event.isToday = (key === today)
-	    });
 	    // (출근전, 점심전, 퇴근전 항목 수 * 12px) + (각 항목의 아이템 수 * 12px)
 	    height = mmax.apply(null, util.map(events, function(g) {
 	        var subcount = util.keys(g).length;
 	
 	        util.forEach(g, function(coll) {
-	            subcount += coll.length;
+	            subcount += (coll.length || 0);
 	        });
-	
 	        return subcount;
 	    })) * options.lineHeight;
 	
 	    height = mmax(options.minHeight, height);
+	
+	    util.forEach(events, function(event, key) {
+	        event.isToday = (key === today);
+	    });
 	
 	    return {
 	        events: events,
@@ -14858,7 +14821,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 97 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -14963,7 +14926,7 @@
 	},"useData":true});
 
 /***/ },
-/* 98 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15063,7 +15026,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 99 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15163,7 +15126,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 100 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15184,8 +15147,8 @@
 	    domutil = __webpack_require__(28),
 	    domevent = __webpack_require__(29),
 	    View = __webpack_require__(39),
-	    baseTmpl = __webpack_require__(101),
-	    tmpl = __webpack_require__(102);
+	    baseTmpl = __webpack_require__(100),
+	    tmpl = __webpack_require__(101);
 	
 	/**
 	 * @constructor
@@ -15230,9 +15193,9 @@
 	    }, options);
 	
 	    util.forEach(opt.template, function(func, name) {
-	          if (func) {
-	              Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
-	          }
+	        if (func) {
+	            Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
+	        }
 	    });
 	
 	    /**
@@ -15613,7 +15576,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 101 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15698,7 +15661,7 @@
 	},"useData":true});
 
 /***/ },
-/* 102 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15795,7 +15758,7 @@
 	},"useData":true});
 
 /***/ },
-/* 103 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15805,10 +15768,10 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var Base = __webpack_require__(93),
-	    Core = __webpack_require__(104),
-	    Week = __webpack_require__(105),
-	    Month = __webpack_require__(106);
+	var Base = __webpack_require__(92),
+	    Core = __webpack_require__(103),
+	    Week = __webpack_require__(104),
+	    Month = __webpack_require__(105);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -15843,7 +15806,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 104 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16098,7 +16061,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 105 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint no-shadow: 0 */
@@ -16334,7 +16297,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 106 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16507,7 +16470,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 107 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16519,11 +16482,11 @@
 	var Handlebars = __webpack_require__(6);
 	var dw = __webpack_require__(43),
 	    datetime = __webpack_require__(26),
-	    Layout = __webpack_require__(108),
+	    Layout = __webpack_require__(107),
 	    Drag = __webpack_require__(41),
-	    controllerFactory = __webpack_require__(103),
-	    weekViewFactory = __webpack_require__(109),
-	    monthViewFactory = __webpack_require__(114);
+	    controllerFactory = __webpack_require__(102),
+	    weekViewFactory = __webpack_require__(108),
+	    monthViewFactory = __webpack_require__(113);
 	
 	/**
 	 * @typedef {object} Calendar~CalEvent
@@ -16895,7 +16858,7 @@
 	
 	    if (viewName === 'month') {
 	        renderDate.addMonth(offset);
-	        date2 = datetime.arr2dCalendar(this.renderDate);
+	        date2 = datetime.arr2dCalendar(new Date(this.renderDate));
 	
 	        recursiveSet(view, function(opt) {
 	            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -17159,7 +17122,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 108 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17243,7 +17206,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 109 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17261,18 +17224,18 @@
 	// Sub views
 	var DayName = __webpack_require__(47);
 	var TimeGrid = __webpack_require__(52);
-	var Allday = __webpack_require__(110);
+	var Allday = __webpack_require__(109);
 	// Handlers
-	var AlldayClick = __webpack_require__(73);
-	var AlldayDblClick = __webpack_require__(112);
-	var AlldayCreation = __webpack_require__(76);
-	var AlldayMove = __webpack_require__(74);
-	var AlldayResize = __webpack_require__(78);
-	var TimeClick = __webpack_require__(65);
-	var TimeDblClick = __webpack_require__(113);
-	var TimeCreation = __webpack_require__(66);
-	var TimeMove = __webpack_require__(68);
-	var TimeResize = __webpack_require__(70);
+	var AlldayClick = __webpack_require__(72);
+	var AlldayDblClick = __webpack_require__(111);
+	var AlldayCreation = __webpack_require__(75);
+	var AlldayMove = __webpack_require__(73);
+	var AlldayResize = __webpack_require__(77);
+	var TimeClick = __webpack_require__(64);
+	var TimeDblClick = __webpack_require__(112);
+	var TimeCreation = __webpack_require__(65);
+	var TimeMove = __webpack_require__(67);
+	var TimeResize = __webpack_require__(69);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -17400,7 +17363,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 110 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17414,7 +17377,7 @@
 	    domutil = __webpack_require__(28),
 	    View = __webpack_require__(39),
 	    WeekdayInWeek = __webpack_require__(50),
-	    tmpl = __webpack_require__(111);
+	    tmpl = __webpack_require__(110);
 	
 	/**
 	 * @constructor
@@ -17488,7 +17451,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 111 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -17511,7 +17474,7 @@
 	},"useData":true});
 
 /***/ },
-/* 112 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17617,7 +17580,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 113 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17741,7 +17704,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 114 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17755,12 +17718,12 @@
 	    array = __webpack_require__(33),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(28),
-	    Month = __webpack_require__(58),
-	    MonthClick = __webpack_require__(83),
-	    MonthCreation = __webpack_require__(84),
-	    MonthResize = __webpack_require__(86),
-	    MonthMove = __webpack_require__(88),
-	    More = __webpack_require__(115);
+	    Month = __webpack_require__(57),
+	    MonthClick = __webpack_require__(82),
+	    MonthCreation = __webpack_require__(83),
+	    MonthResize = __webpack_require__(85),
+	    MonthMove = __webpack_require__(87),
+	    More = __webpack_require__(114);
 	
 	/**
 	 * @param {Base} baseController - controller instance
@@ -17861,7 +17824,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 115 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17876,7 +17839,7 @@
 	    domutil = __webpack_require__(28),
 	    View = __webpack_require__(39),
 	    FloatingLayer = __webpack_require__(42),
-	    tmpl = __webpack_require__(116);
+	    tmpl = __webpack_require__(115);
 	
 	/**
 	 * @constructor
@@ -17996,7 +17959,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 116 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -18059,7 +18022,7 @@
 	},"useData":true});
 
 /***/ },
-/* 117 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18070,9 +18033,9 @@
 	
 	var util = global.tui.util;
 	var config = __webpack_require__(31),
-	    Calendar = __webpack_require__(107),
-	    controllerFactory = __webpack_require__(118),
-	    serviceWeekViewFactory = __webpack_require__(119);
+	    Calendar = __webpack_require__(106),
+	    controllerFactory = __webpack_require__(117),
+	    serviceWeekViewFactory = __webpack_require__(118);
 	
 	/**
 	 * @typedef {object} ServiceCalendar~DoorayEvent
@@ -18337,7 +18300,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 118 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18349,10 +18312,10 @@
 	var util = global.tui.util;
 	
 	var datetime = __webpack_require__(26),
-	    DoorayBase = __webpack_require__(92),
-	    Core = __webpack_require__(104),
-	    Week = __webpack_require__(105),
-	    Month = __webpack_require__(106);
+	    DoorayBase = __webpack_require__(91),
+	    Core = __webpack_require__(103),
+	    Week = __webpack_require__(104),
+	    Month = __webpack_require__(105);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -18444,7 +18407,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 119 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18463,24 +18426,24 @@
 	
 	// Sub views
 	var DayName = __webpack_require__(47);
-	var Milestone = __webpack_require__(120);
-	var TaskView = __webpack_require__(96);
+	var Milestone = __webpack_require__(119);
+	var TaskView = __webpack_require__(95);
 	var TimeGrid = __webpack_require__(52);
-	var Allday = __webpack_require__(110);
+	var Allday = __webpack_require__(109);
 	
 	// Handlers
-	var AlldayClick = __webpack_require__(73);
-	var AlldayDblClick = __webpack_require__(112);
-	var AlldayCreation = __webpack_require__(76);
-	var AlldayMove = __webpack_require__(74);
-	var AlldayResize = __webpack_require__(78);
-	var TimeClick = __webpack_require__(65);
-	var TimeDblClick = __webpack_require__(113);
-	var TimeCreation = __webpack_require__(66);
-	var TimeMove = __webpack_require__(68);
-	var TimeResize = __webpack_require__(70);
-	var MilestoneClick = __webpack_require__(98);
-	var TaskClick = __webpack_require__(99);
+	var AlldayClick = __webpack_require__(72);
+	var AlldayDblClick = __webpack_require__(111);
+	var AlldayCreation = __webpack_require__(75);
+	var AlldayMove = __webpack_require__(73);
+	var AlldayResize = __webpack_require__(77);
+	var TimeClick = __webpack_require__(64);
+	var TimeDblClick = __webpack_require__(112);
+	var TimeCreation = __webpack_require__(65);
+	var TimeMove = __webpack_require__(67);
+	var TimeResize = __webpack_require__(69);
+	var MilestoneClick = __webpack_require__(97);
+	var TaskClick = __webpack_require__(98);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -18647,7 +18610,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 120 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18661,7 +18624,7 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(28);
 	var View = __webpack_require__(39);
-	var tmpl = __webpack_require__(121);
+	var tmpl = __webpack_require__(120);
 	
 	var PADDING_TOP = 2,
 	    PADDING_BOTTOM = 2;
@@ -18694,7 +18657,7 @@
 	        minHeight: 52,
 	        lineHeight: 12
 	    }, options);
-	} 
+	}
 	
 	util.inherit(Milestone, View);
 	
@@ -18722,7 +18685,7 @@
 	    util.extend(events, viewModel);
 	
 	    util.forEach(events, function(event, key) {
-	          event.isToday = (key === today)
+	        event.isToday = (key === today);
 	    });
 	
 	    height = Math.max.apply(null, util.map(events, function(coll) {
@@ -18764,7 +18727,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 121 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -18847,7 +18810,7 @@
 	},"useData":true});
 
 /***/ },
-/* 122 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18860,11 +18823,11 @@
 	var Handlebars = __webpack_require__(6);
 	
 	var config = __webpack_require__(31),
-	    controllerFactory = __webpack_require__(103),
-	    serviceWeekViewFactory = __webpack_require__(123),
+	    controllerFactory = __webpack_require__(102),
+	    serviceWeekViewFactory = __webpack_require__(122),
 	    Drag = __webpack_require__(41),
 	    datetime = __webpack_require__(26),
-	    Layout = __webpack_require__(108);
+	    Layout = __webpack_require__(107);
 	
 	function SplitTimeCalendar(options, container) {
 	    if (!(this instanceof SplitTimeCalendar)) {
@@ -18932,8 +18895,8 @@
 	
 	SplitTimeCalendar.prototype.setRenderTime = function() {
 	    var opt = this.options, baseHour = new Date(opt.renderStartDate).getHours();
-	    opt.hourStart = Math.max(baseHour - opt.showTimeRange, 0);
-	    opt.hourEnd = Math.min(baseHour + opt.showTimeRange, 24);
+	    opt.hourStart = baseHour - opt.showTimeRange;
+	    opt.hourEnd = baseHour + opt.showTimeRange;
 	    this.renderDate = datetime.format(new Date(opt.renderStartDate), 'YYYY-MM-DD');
 	};
 	
@@ -19197,7 +19160,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 123 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19215,13 +19178,13 @@
 	var Week = __webpack_require__(46);
 	
 	// Sub views
-	var TimeGrid = __webpack_require__(124);
+	var TimeGrid = __webpack_require__(123);
 	
 	// Handlers
-	var TimeClick = __webpack_require__(65);
-	var TimeCreation = __webpack_require__(66);
-	var TimeMove = __webpack_require__(68);
-	var TimeResize = __webpack_require__(70);
+	var TimeClick = __webpack_require__(64);
+	var TimeCreation = __webpack_require__(65);
+	var TimeMove = __webpack_require__(67);
+	var TimeResize = __webpack_require__(69);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -19287,7 +19250,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 124 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19304,7 +19267,7 @@
 	var View = __webpack_require__(39);
 	var Time = __webpack_require__(53);
 	var TimeGrid = __webpack_require__(52);
-	var mainTmpl = __webpack_require__(125);
+	var mainTmpl = __webpack_require__(124);
 	
 	
 	/**
@@ -19490,7 +19453,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 125 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);

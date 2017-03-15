@@ -523,12 +523,15 @@
   position: relative;
   margin: 2px 3px 0 2px;
   padding-left: 3px;
-  background-color: #f7ca88;
   line-height: 18px;
   opacity: 0.9;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.dooray-calendar-month-move-guide {
+  font-size: 12px;
+  line-height: 18px;
 }
 .dooray-calendar-month-exceed-left .dooray-calendar-month-guide {
   margin-left: 0px;
