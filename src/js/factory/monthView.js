@@ -16,6 +16,13 @@ var config = require('../config'),
     MonthMove = require('../handler/month/move'),
     More = require('../view/month/more');
 
+function findGridTarget(moreTarget, day) {
+    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
+    var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
+
+    return weekGridEls[day];
+}
+
 /**
  * @param {Base} baseController - controller instance
  * @param {HTMLElement} layoutContainer - container element for month view
@@ -47,20 +54,22 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     // binding +n click event
     clickHandler.on('clickMore', function(clickMoreEvent) {
         var date = clickMoreEvent.date,
-          events = util.pick(baseController.findByDateRange(
-            datetime.start(date),
-            datetime.end(date)
-          ), clickMoreEvent.ymd);
+            target = clickMoreEvent.target,
+            events = util.pick(baseController.findByDateRange(
+                datetime.start(date),
+                datetime.end(date)
+            ), clickMoreEvent.ymd);
 
-        events.items = util.filter(events.items, function(item){
-            return options.month.eventFilter(item.model)
+        events.items = util.filter(events.items, function(item) {
+            return options.month.eventFilter(item.model);
         });
 
         if (events && events.length) {
             events = events.sort(array.compare.event.asc);
 
             moreView.render({
-                target: clickMoreEvent.target,
+                target: target,
+                gridTarget: findGridTarget(target, date.getDay()),
                 date: datetime.format(date, 'YYYY.MM.DD'),
                 events: events,
                 width: clickMoreEvent.target.offsetWidth

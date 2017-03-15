@@ -50,95 +50,80 @@
         render: false
     });
 
-    cal.createEvents([{
-        id: '1',
-        calendarID: '1',
-        title: '스크럼',
-        category: 'time',
-        dueDateClass: '',
-        starts: formattedDate + 'T09:30:00+09:00',
-        ends: formattedDate + 'T10:30:00+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'time',
-        dueDateClass: '',
-        starts: formattedDate + 'T17:30:00+09:00',
-        ends: formattedDate + 'T17:45:00+09:00'
-    }, {
-        id: '3',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: formattedDate + 'T00:00:00+09:00',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '4',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    },{
-        id: '5',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '6',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '7',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '8',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '9',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '10',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }, {
-        id: '11',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: formattedDate + 'T23:59:59+09:00'
-    }], true);
+    cal.createEvents([
+        {
+            id: '1',
+            calendarID: '1',
+            title: '스크럼',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T09:30:00+09:00',
+            ends: formattedDate + 'T10:30:00+09:00'
+        },
+        {
+            id: '2',
+            calendarID: '2',
+            title: '[추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T17:30:00+09:00',
+            ends: formattedDate + 'T17:45:00+09:00'
+        },
+        {
+            id: '3',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '4',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '5',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '6',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '7',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '8',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        }
+    ]);
 
     cal.render();
 

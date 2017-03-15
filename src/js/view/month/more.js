@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var OUT_PADDING = 5;
 var util = global.tui.util;
 var config = require('../../config'),
     domevent = require('../../common/domevent'),
@@ -65,16 +66,13 @@ More.prototype._onMouseDown = function(mouseDownEvent) {
  * @param {HTMLElement} target - +n element
  * @returns {number[]} new position of more layer
  */
-More.prototype._getRenderPosition = function(target, height) {
-    var pos = domutil.getPosition(target);
-
-    // change position relative with More container element
-    pos = domevent.getMousePosition({
-        clientX: pos[0],
-        clientY: pos[1]
+More.prototype._getRenderPosition = function(target, weekItem) {
+    var pos = domevent.getMousePosition({
+        clientX: domutil.getPosition(target)[0],
+        clientY: domutil.getPosition(weekItem)[1]
     }, this.container);
 
-    return [pos[0], pos[1] - height + 20];
+    return [pos[0] - OUT_PADDING, pos[1] - OUT_PADDING];
 };
 
 /**
@@ -94,21 +92,17 @@ More.prototype.destroy = function() {
  * @param {object} viewModel - view model from factory/monthView
  */
 More.prototype.render = function(viewModel) {
-    var self = this,
-        layer = this.layer,
-        pos;
-
-    viewModel = util.extend({
-        width: 'auto',
-        height: 100
-    }, viewModel);
+    var target = viewModel.target;
+    var weekItem = domutil.closest(target, config.classname('.month-week-item'));
+    var layer = this.layer;
+    var self = this;
+    var pos = this._getRenderPosition(target, weekItem);
+    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
+    var width = viewModel.width + (OUT_PADDING * 2);
 
     layer.setContent(tmpl(viewModel));
-    layer.setSize(viewModel.width, viewModel.height);
-
-    pos = this._getRenderPosition(viewModel.target, viewModel.height);
-    layer.setPosition.apply(layer, pos);
-
+    layer.setPosition(pos[0], pos[1]);
+    layer.setSize(width, height);
     layer.show();
 
     util.debounce(function() {
