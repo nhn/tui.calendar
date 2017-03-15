@@ -1,9 +1,9 @@
-<div class="{{CSS_PREFIX}}month-more">
+<div class="{{CSS_PREFIX}}month-more" style="width:100%">
     <div class="{{CSS_PREFIX}}month-more-title">
         {{date}}
         <input type="button" value="&times;" class="{{CSS_PREFIX}}month-more-close" />
     </div>
-    <div class="{{CSS_PREFIX}}month-more-list" style="height:{{subtract height 20}}px">
+    <div class="{{CSS_PREFIX}}month-more-list">
         {{#each events}}
         {{#if model.isAllDay ~}}
         <div data-id="{{stamp model}}"

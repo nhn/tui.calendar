@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Mar 15 2017 10:48:36 GMT+0900 (KST)" */
+/*! bundle created at "Wed Mar 15 2017 17:33:20 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -493,8 +493,10 @@
 .dooray-calendar-month-more {
   background-color: #fff;
   height: inherit;
+  padding: 5px;
   min-width: 200px;
-  border: 1px solid #ccc;
+  min-height: 150px;
+  border: 1px solid #777;
 }
 .dooray-calendar-month-more-title {
   padding: 0 3px;
@@ -508,6 +510,7 @@
   border: 0;
 }
 .dooray-calendar-month-more-list {
+  height: calc(100% - 20px);
   overflow-y: scroll;
 }
 .dooray-calendar-month-more-event {

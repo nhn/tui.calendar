@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Mar 15 2017 10:48:36 GMT+0900 (KST)" */
+/*! bundle created at "Wed Mar 15 2017 17:33:20 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -8502,8 +8502,8 @@
 	
 	WeekdayInMonth.prototype._beforeDestroy = function() {
 	    Handlebars.unregisterHelper('wdSkipped');
-	
 	};
+	
 	module.exports = WeekdayInMonth;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
@@ -17726,6 +17726,13 @@
 	    MonthMove = __webpack_require__(87),
 	    More = __webpack_require__(114);
 	
+	function findGridTarget(moreTarget, day) {
+	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
+	    var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
+	
+	    return weekGridEls[day];
+	}
+	
 	/**
 	 * @param {Base} baseController - controller instance
 	 * @param {HTMLElement} layoutContainer - container element for month view
@@ -17757,20 +17764,22 @@
 	    // binding +n click event
 	    clickHandler.on('clickMore', function(clickMoreEvent) {
 	        var date = clickMoreEvent.date,
-	          events = util.pick(baseController.findByDateRange(
-	            datetime.start(date),
-	            datetime.end(date)
-	          ), clickMoreEvent.ymd);
+	            target = clickMoreEvent.target,
+	            events = util.pick(baseController.findByDateRange(
+	                datetime.start(date),
+	                datetime.end(date)
+	            ), clickMoreEvent.ymd);
 	
-	        events.items = util.filter(events.items, function(item){
-	            return options.month.eventFilter(item.model)
+	        events.items = util.filter(events.items, function(item) {
+	            return options.month.eventFilter(item.model);
 	        });
 	
 	        if (events && events.length) {
 	            events = events.sort(array.compare.event.asc);
 	
 	            moreView.render({
-	                target: clickMoreEvent.target,
+	                target: target,
+	                gridTarget: findGridTarget(target, date.getDay()),
 	                date: datetime.format(date, 'YYYY.MM.DD'),
 	                events: events,
 	                width: clickMoreEvent.target.offsetWidth
@@ -17834,6 +17843,7 @@
 	 */
 	'use strict';
 	
+	var OUT_PADDING = 5;
 	var util = global.tui.util;
 	var config = __webpack_require__(31),
 	    domevent = __webpack_require__(29),
@@ -17895,16 +17905,13 @@
 	 * @param {HTMLElement} target - +n element
 	 * @returns {number[]} new position of more layer
 	 */
-	More.prototype._getRenderPosition = function(target, height) {
-	    var pos = domutil.getPosition(target);
-	
-	    // change position relative with More container element
-	    pos = domevent.getMousePosition({
-	        clientX: pos[0],
-	        clientY: pos[1]
+	More.prototype._getRenderPosition = function(target, weekItem) {
+	    var pos = domevent.getMousePosition({
+	        clientX: domutil.getPosition(target)[0],
+	        clientY: domutil.getPosition(weekItem)[1]
 	    }, this.container);
 	
-	    return [pos[0], pos[1] - height + 20];
+	    return [pos[0] - OUT_PADDING, pos[1] - OUT_PADDING];
 	};
 	
 	/**
@@ -17924,21 +17931,17 @@
 	 * @param {object} viewModel - view model from factory/monthView
 	 */
 	More.prototype.render = function(viewModel) {
-	    var self = this,
-	        layer = this.layer,
-	        pos;
-	
-	    viewModel = util.extend({
-	        width: 'auto',
-	        height: 100
-	    }, viewModel);
+	    var target = viewModel.target;
+	    var weekItem = domutil.closest(target, config.classname('.month-week-item'));
+	    var layer = this.layer;
+	    var self = this;
+	    var pos = this._getRenderPosition(target, weekItem);
+	    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
+	    var width = viewModel.width + (OUT_PADDING * 2);
 	
 	    layer.setContent(tmpl(viewModel));
-	    layer.setSize(viewModel.width, viewModel.height);
-	
-	    pos = this._getRenderPosition(viewModel.target, viewModel.height);
-	    layer.setPosition.apply(layer, pos);
-	
+	    layer.setPosition(pos[0], pos[1]);
+	    layer.setSize(width, height);
 	    layer.show();
 	
 	    util.debounce(function() {
@@ -18007,7 +18010,7 @@
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more\">\n    <div class=\""
+	    + "month-more\" style=\"width:100%\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-title\">\n        "
 	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
@@ -18015,9 +18018,7 @@
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-close\" />\n    </div>\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-list\" style=\"height:"
-	    + alias4((helpers.subtract || (depth0 && depth0.subtract) || alias2).call(alias1,(depth0 != null ? depth0.height : depth0),20,{"name":"subtract","hash":{},"data":data}))
-	    + "px\">\n"
+	    + "month-more-list\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.events : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "    </div>\n</div>\n";
 	},"useData":true});
