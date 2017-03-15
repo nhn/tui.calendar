@@ -62,9 +62,9 @@ function Freebusy(options, container) {
     }, options);
 
     util.forEach(opt.template, function(func, name) {
-          if (func) {
-              Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
-          }
+        if (func) {
+            Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
+        }
     });
 
     /**

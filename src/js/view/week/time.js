@@ -10,6 +10,8 @@ var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
+var splitTimeTmpl = require('../template/week/time.hbs');
+
 var forEachArr = util.forEachArray;
 
 /**
@@ -38,7 +40,8 @@ function Time(options, container) {
         defaultMarginBottom: 2,
         minHeight: 19.5
     }, options);
-    this.timeTmpl = options.isSplitTimeGrid ? require('../template/week/splitTime.hbs') : require('../template/week/time.hbs');
+
+    this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
     container.style.width = options.width + '%';
     container.style.left = (options.index * options.width) + '%';
 
@@ -94,13 +97,11 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
         width = null;
     }
 
-    height = height < this.options.minHeight ? this.options.minHeight : height;
-
     return {
         top: top,
         left: options.baseLeft[options.columnIndex],
         width: width,
-        height: height - this.options.defaultMarginBottom
+        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom
     };
 };
 

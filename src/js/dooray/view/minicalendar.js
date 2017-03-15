@@ -15,6 +15,22 @@ var config = require('../../config'),
     tmpl = require('./minicalendar.hbs');
 
 /**
+ * Returns the CSS class name for the given index
+ * @param {number} dayIdx - day index
+ * @returns {string}
+ */
+function getDayClassName(dayIdx) {
+    switch (dayIdx) {
+        case 0:
+            return 'holiday-sun';
+        case 6:
+            return 'holiday-sat';
+        default:
+            return '';
+    }
+}
+
+/**
  * @constructor
  * @extends {View}
  * @param {object} options - options for minicalendar view
@@ -179,25 +195,17 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
         function(i) {
-            var cssClasses = [];
-
-            if (i === 0) {
-                cssClasses.push('holiday-sun');
-            }
-
-            if (i === 6) {
-                cssClasses.push('holiday-sat');
-            }
             return {
                 name: daynames[i],
-                cssClass: classPrefix + cssClasses.join(' ' + classPrefix)
-            }
+                cssClass: classPrefix + getDayClassName(i)
+            };
         }
     );
 
     viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
         var ymd = datetime.format(date, 'YYYY-MM-DD'),
             day = date.getDay(),
+            dayClassName = getDayClassName(day),
             cssClasses = util.keys(hlData[ymd] ? hlData[ymd] : {});
 
         cssClasses.push(ymd);
@@ -210,12 +218,8 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
             cssClasses.push('other-month');
         }
 
-        if (day === 0) {
-            cssClasses.push('holiday-sun');
-        }
-
-        if (day === 6) {
-            cssClasses.push('holiday-sat');
+        if (dayClassName) {
+            cssClasses.push(dayClassName);
         }
 
         return {

@@ -42,7 +42,7 @@ function Milestone(options, container) {
         minHeight: 52,
         lineHeight: 12
     }, options);
-} 
+}
 
 util.inherit(Milestone, View);
 
@@ -70,7 +70,7 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
     util.extend(events, viewModel);
 
     util.forEach(events, function(event, key) {
-          event.isToday = (key === today)
+        event.isToday = (key === today);
     });
 
     height = Math.max.apply(null, util.map(events, function(coll) {

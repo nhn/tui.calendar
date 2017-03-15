@@ -16,10 +16,15 @@ describe('View/Time', function() {
             starts: '2015-05-01T09:00:00+09:00',
             ends: '2015-05-01T10:00:00+09:00'
         });
-
+        var mock = {
+            options: {
+                minHeight: 0,
+                defaultMarginBottom: 0
+            }
+        };
         var viewModel = CalEventViewModel.create(event);
 
-        var result = Time.prototype.getEventViewBound(viewModel, {
+        var result = Time.prototype.getEventViewBound.call(mock, viewModel, {
             todayStart: new Date('2015-05-01T00:00:00+09:00'),
             baseMS: datetime.millisecondsFrom('hour', 24),
             baseHeight: 230,

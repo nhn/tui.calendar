@@ -33,7 +33,7 @@ describe('handler/time.creation', function() {
         domutil.addClass(target, 'tui-view-20');
 
         var gutter = document.createElement('div');
-        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-event-block');
+        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-event-block-wrap');
 
         target.appendChild(gutter);
 
@@ -83,7 +83,8 @@ describe('handler/time.creation', function() {
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
                 starts: new Date('2015-05-05T01:00:00+09:00'),
-                ends: new Date('2015-05-05T01:30:00+09:00')
+                ends: new Date('2015-05-05T01:30:00+09:00'),
+                guide: mock.guide
             });
         });
 
@@ -102,7 +103,8 @@ describe('handler/time.creation', function() {
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
                 starts: new Date('2015-05-05T01:30:00+09:00'),
-                ends: new Date('2015-05-05T02:00:00+09:00')
+                ends: new Date('2015-05-05T02:00:00+09:00'),
+                guide: mock.guide
             });
 
         });

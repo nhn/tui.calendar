@@ -50,11 +50,12 @@ describe('service:view/MiniCalendar', function() {
         it('create mini calendar viewmodel by Date, startDayOfWeek, today', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-10-02T11:36:00+09:00');
+            var actual;
 
             mockInst.selectedDate = today;
 
             // September!
-            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
+            actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
 
             expect(actual).toEqual({
                 title: '2015.09',
@@ -64,23 +65,27 @@ describe('service:view/MiniCalendar', function() {
             });
 
             // 8/30 is previous date
-            expect(actual.calendar[0][0]).toEqual({
-                date: 30,
-                cssClass: 'dooray-calendar-minicalendar-2015-08-30 dooray-calendar-minicalendar-other-month'
-            });
+            expect(actual.calendar[0][0].date).toBe(30);
+            expect(actual.calendar[0][0].cssClass)
+                .toContain('dooray-calendar-minicalendar-2015-08-30 dooray-calendar-minicalendar-other-month');
 
             // 10/2 autoselected
             expect(actual.calendar[4][5].cssClass).toContain('selected');
+
+            expect(actual.calendar[0][0].cssClass).toContain('dooray-calendar-minicalendar-holiday-sun');
+            expect(actual.calendar[0][6].cssClass).toContain('dooray-calendar-minicalendar-holiday-sat');
         });
 
         it('when cached hlData then apply it to highlight dates for represent the date has schedule.', function() {
             var renderMonth = new Date('2015-09-01T00:00:00+09:00');
             var today = new Date('2015-09-02T11:36:00+09:00');
             var hlData = {'2015-09-03': {'has-schedule': true}};
+            var actual;
+
             mockInst.hlData = hlData;
             mockInst.selectedDate = today;
 
-            var actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
+            actual = MiniCalendar.prototype._getViewModel.call(mockInst, renderMonth, 0);
 
             expect(actual.calendar[0][4].cssClass).toContain('has-schedule');
         });
