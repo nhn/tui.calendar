@@ -121,7 +121,13 @@ MonthMove.prototype.isMoreLayerEventBlock = function(target) {
  */
 MonthMove.prototype.hasPermissionToHandle = function(target) {
     var modelID = null;
-    var blockElement = this.getMonthEventBlock(target);
+    var blockElement;
+
+    if (domutil.hasClass(target, config.classname('weekday-resize-handle'))) {
+        return null;
+    }
+
+    blockElement = this.getMonthEventBlock(target);
 
     if (blockElement) {
         modelID = domutil.getData(blockElement, 'id');
