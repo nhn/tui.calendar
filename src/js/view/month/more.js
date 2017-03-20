@@ -64,6 +64,7 @@ More.prototype._onMouseDown = function(mouseDownEvent) {
 /**
  * Get new position for more layer by +n element itself
  * @param {HTMLElement} target - +n element
+ * @param {HTMLElement} weekItem - weekItem container element
  * @returns {number[]} new position of more layer
  */
 More.prototype._getRenderPosition = function(target, weekItem) {
@@ -85,7 +86,6 @@ More.prototype.destroy = function() {
     domevent.off(document.body, 'mousedown', this._onMouseDown, this);
     View.prototype.destroy.call(this);
 };
-
 
 /**
  * @override
@@ -119,4 +119,3 @@ More.prototype.hide = function() {
 };
 
 module.exports = More;
-

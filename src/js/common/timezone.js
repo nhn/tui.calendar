@@ -54,7 +54,6 @@ function TZDate(date) {
         time = date;
     }
 
-    this._correctionTime = 
     this._date = new Date(time - correctionTime);
 }
 
