@@ -12,7 +12,8 @@ var config = require('../../config'),
     serviceWeekViewFactory = require('./splitTimeView'),
     Drag = require('../../handler/drag'),
     datetime = require('../../common/datetime'),
-    Layout = require('../../view/layout');
+    Layout = require('../../view/layout'),
+    TZDate = require('../../common/timezone').Date;
 
 function SplitTimeCalendar(options, container) {
     if (!(this instanceof SplitTimeCalendar)) {
@@ -26,7 +27,7 @@ function SplitTimeCalendar(options, container) {
      */
     this.options = opt = util.extend({
         controller: null,
-        defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
+        defaultDate: datetime.format(new TZDate(), 'YYYY-MM-DD'),
         template: util.extend({
             time: null
         }, util.pick(options, 'template') || {}),
@@ -79,10 +80,10 @@ function SplitTimeCalendar(options, container) {
 
 
 SplitTimeCalendar.prototype.setRenderTime = function() {
-    var opt = this.options, baseHour = new Date(opt.renderStartDate).getHours();
+    var opt = this.options, baseHour = new TZDate(opt.renderStartDate).getHours();
     opt.hourStart = Math.max(baseHour - opt.showTimeRange, 0);
     opt.hourEnd = Math.min(baseHour + opt.showTimeRange, 24);
-    this.renderDate = datetime.format(new Date(opt.renderStartDate), 'YYYY-MM-DD');
+    this.renderDate = datetime.format(new TZDate(opt.renderStartDate), 'YYYY-MM-DD');
 };
 
 /**
@@ -188,7 +189,7 @@ SplitTimeCalendar.prototype.createView = function(controller, container, dragHan
 SplitTimeCalendar.prototype.createEvents = function(dataObjectList, silent) {
     var calColor = this.calendarColor,
         self = this,
-        parseRenderStartTime = new Date(this.options.renderStartDate); //cache
+        parseRenderStartTime = new TZDate(this.options.renderStartDate); //cache
 
     util.forEach(dataObjectList, function(obj) {
         self.filterEvent(obj, parseRenderStartTime);
@@ -208,13 +209,13 @@ SplitTimeCalendar.prototype.createEvents = function(dataObjectList, silent) {
 };
 
 SplitTimeCalendar.prototype.filterEvent = function(event, startTime) {
-    var parseDate = new Date(event.starts);
+    var parseDate = new TZDate(event.starts);
     event.origin = {
         starts: event.starts,
         ends: event.ends
     };
     if (this.options.hourStart > parseDate.getHours()
-      && this.options.hourStart < new Date(event.ends).getHours()
+      && this.options.hourStart < new TZDate(event.ends).getHours()
       && datetime.isSameDate(parseDate, startTime)) {
         parseDate.setHours(this.options.hourStart);
         parseDate.setMinutes(0);

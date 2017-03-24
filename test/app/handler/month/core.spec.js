@@ -1,6 +1,7 @@
 var getMousePosData = require('handler/month/core');
 var Month = require('view/month/month');
 var WeekdayInMonth = require('view/month/weekdayInMonth');
+var TZDate = require('common/timezone').Date;
 
 describe('handler:MonthCore', function() {
     var m, w1, w2;
@@ -19,12 +20,12 @@ describe('handler:MonthCore', function() {
         w1 = new WeekdayInMonth({
             renderStartDate: '2015-12-27',
             renderEndDate: '2016-01-02'
-        }, document.createElement('div'))
+        }, document.createElement('div'));
 
         w2 = new WeekdayInMonth({
             renderStartDate: '2016-01-03',
             renderEndDate: '2016-01-09'
-        }, document.createElement('div'))
+        }, document.createElement('div'));
 
         m.addChild(w1);
         m.addChild(w2);
@@ -43,7 +44,7 @@ describe('handler:MonthCore', function() {
             y: 0,
             sizeX: 7,
             sizeY: 2,
-            date: new Date('2015-12-27T00:00:00+09:00'),
+            date: new TZDate('2015-12-27T00:00:00+09:00'),
             weekdayView: w1
         });
 
@@ -57,7 +58,7 @@ describe('handler:MonthCore', function() {
             y: 1,
             sizeX: 7,
             sizeY: 2,
-            date: new Date('2016-01-08T00:00:00+09:00'),
+            date: new TZDate('2016-01-08T00:00:00+09:00'),
             weekdayView: w2
         });
     });

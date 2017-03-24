@@ -1,5 +1,6 @@
 /*eslint-disable*/
 var CalEvent = require('model/calEvent');
+var TZDate = require('common/timezone').Date;
 
 describe('model/event', function() {
     var event;
@@ -15,11 +16,11 @@ describe('model/event', function() {
     describe('init()', function() {
         var oldDate;
         beforeEach(function() {
-            oldDate = window.Date;
+            jasmine.clock().mockDate(new Date('2015/05/01 00:00:00'));
+        });
 
-            spyOn(window, 'Date').and.callFake(function() {
-                return new oldDate('2015/05/01 00:00:00');
-            });
+        afterEach(function() {
+            jasmine.clock().uninstall();
         });
 
         it('initialize event with default values when data is not supplied.', function() {
@@ -41,8 +42,8 @@ describe('model/event', function() {
                 id: '123',
                 title: 'Go home',
                 isAllDay: false,
-                starts: new Date('2015-05-01T00:00:00+09:00'),
-                ends: new Date('2015-05-02T00:00:00+09:00'),
+                starts: new TZDate('2015-05-01T00:00:00+09:00'),
+                ends: new TZDate('2015-05-02T00:00:00+09:00'),
                 color: '#000',
                 bgColor: '#a1b56c'
             };
@@ -75,10 +76,10 @@ describe('model/event', function() {
             event2.title = 'dance';
             event.isAllDay = true;
             event2.isAllDay = true;
-            event.starts = new Date('2015/05/01');
-            event2.starts = new Date('2015/05/01');
-            event.ends = new Date('2015/05/02');
-            event2.ends = new Date('2015/05/02');
+            event.starts = new TZDate('2015/05/01');
+            event2.starts = new TZDate('2015/05/01');
+            event.ends = new TZDate('2015/05/02');
+            event2.ends = new TZDate('2015/05/02');
 
             expect(event.equals(event2)).toBe(true);
         });
@@ -104,15 +105,15 @@ describe('model/event', function() {
             event2.title = 'dance';
             event.isAllDay = true;
             event2.isAllDay = true;
-            event.starts = new Date('2015/05/01');
-            event2.starts = new Date('2015/04/01');
+            event.starts = new TZDate('2015/05/01');
+            event2.starts = new TZDate('2015/04/01');
 
             expect(event.equals(event2)).toBe(false);
 
-            event2.starts = new Date('2015/05/01');
+            event2.starts = new TZDate('2015/05/01');
 
-            event.ends = new Date('2015/06/01');
-            event2.ends = new Date('2015/07/01');
+            event.ends = new TZDate('2015/06/01');
+            event2.ends = new TZDate('2015/07/01');
 
             expect(event.equals(event2)).toBe(false);
         });
@@ -120,17 +121,17 @@ describe('model/event', function() {
 
     describe('duration()', function() {
         beforeEach(function() {
-            event.starts = new Date('2015-09-25T05:00:00+09:00');
-            event.ends = new Date('2015-09-26T05:00:00+09:00');
+            event.starts = new TZDate('2015-09-25T05:00:00+09:00');
+            event.ends = new TZDate('2015-09-26T05:00:00+09:00');
         });
 
         it('can calculate duration between starts and ends.', function() {
-            expect(event.duration()).toEqual(new Date('1970-01-02T00:00:00Z'));
+            expect(+event.duration()).toBe(+new TZDate('1970-01-02T00:00:00Z'));
         });
 
         it('return 24 hours when event is all day event.', function() {
             event.isAllDay = true;
-            expect(event.duration()).toEqual(new Date('1970-01-03T08:59:59+09:00'));
+            expect(+event.duration()).toBe(+new TZDate('1970-01-03T08:59:59+09:00'));
         });
     });
 
@@ -148,8 +149,8 @@ describe('model/event', function() {
             var compare = new CalEvent();
             compare.title = 'hunting',
             compare.isAllDay = true;
-            compare.starts = new Date('2015/05/02');
-            compare.ends = new Date('2015/05/02');
+            compare.starts = new TZDate('2015/05/02');
+            compare.ends = new TZDate('2015/05/02');
 
             expect(event.equals(compare)).toBe(true);
         });

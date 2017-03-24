@@ -9,6 +9,7 @@ var config = require('../../config');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
+var TZDate = require('../../common/timezone').Date;
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var View = require('../view');
 var Time = require('./time');
@@ -109,7 +110,7 @@ TimeGrid.prototype._beforeDestroy = function() {
  */
 TimeGrid.prototype._getTopPercentByTime = function(time) {
     var opt = this.options,
-        raw = datetime.raw(time || new Date()),
+        raw = datetime.raw(time || new TZDate()),
         hourLength = util.range(opt.hourStart, opt.hourEnd).length,
         maxMilliseconds = hourLength * datetime.MILLISECONDS_PER_HOUR,
         hmsMilliseconds = datetime.millisecondsFrom('hour', raw.h) +
@@ -139,7 +140,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
         todaymarkerLeft = null,
         viewModel;
 
-    now = now || new Date();
+    now = now || new TZDate();
 
     util.forEach(dateRange, function(date, index) {
         if (datetime.isSameDate(now, date)) {
@@ -163,7 +164,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
  */
 TimeGrid.prototype._getBaseViewModel = function() {
     var opt = this.options,
-        now = (new Date()),
+        now = (new TZDate()),
         hourRange = util.range(opt.hourStart, opt.hourEnd),
         viewModel;
 
@@ -187,7 +188,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
         childOption,
         child,
         isToday,
-        today = datetime.format(new Date(), 'YYYYMMDD'),
+        today = datetime.format(new TZDate(), 'YYYYMMDD'),
         i = 0;
 
     // clear contents

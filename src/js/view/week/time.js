@@ -8,6 +8,7 @@ var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
 var splitTimeTmpl = require('../template/week/time.hbs');
@@ -62,7 +63,7 @@ Time.prototype._parseDateGroup = function(str) {
         m = parseInt(str.substr(4, 2), 10),
         d = parseInt(str.substr(6, 2), 10);
 
-    return new Date(y, m - 1, d);
+    return new TZDate(y, m - 1, d);
 };
 
 /**

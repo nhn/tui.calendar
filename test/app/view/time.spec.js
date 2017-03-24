@@ -3,12 +3,15 @@ var datetime = require('common/datetime');
 var CalEvent = require('model/calEvent');
 var CalEventViewModel = require('model/viewModel/calEvent');
 var Time = require('view/week/time');
+var TZDate = require('common/timezone').Date;
 
 describe('View/Time', function() {
     it('_parseDateGroup()', function() {
         var str = '20150501';
+        var actual = Time.prototype._parseDateGroup(str).getTime();
+        var expected = (new Date('2015-05-01T00:00:00+09:00')).getTime();
 
-        expect(Time.prototype._parseDateGroup(str)).toEqual(new Date('2015-05-01T00:00:00+09:00'));
+        expect(actual).toEqual(expected);
     });
 
     it('getEventViewBound()', function() {

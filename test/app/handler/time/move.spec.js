@@ -2,6 +2,7 @@
 var domutil = require('common/domutil');
 var datetime = require('common/datetime');
 var TimeMove = require('handler/time/move');
+var TZDate = require('common/timezone').Date;
 
 describe('handler/time.move', function() {
     var util = tui.util,
@@ -54,15 +55,15 @@ describe('handler/time.move', function() {
                 items: {
                     '20': {
                         getStarts: function() {
-                            return new Date('2015-05-01T09:30:00+09:00');
+                            return new TZDate(2015, 4, 1, 9, 30);
                         },
                         getEnds: function() {
-                            return new Date('2015-05-01T10:30:00+09:00');
+                            return new TZDate(2015, 4, 1, 10, 30);
                         },
-                        starts: new Date('2015-05-01T09:30:00+09:00'),
-                        ends: new Date('2015-05-01T10:30:00+09:00'),
+                        starts: new TZDate(2015, 4, 1, 9, 30),
+                        ends: new TZDate(2015, 4, 1, 10, 30),
                         duration: function() {
-                            return new Date('1970-01-01T10:00:00+09:00');
+                            return new TZDate(datetime.millisecondsFrom('hour', 1));
                         }
                     }
                 }
@@ -80,44 +81,43 @@ describe('handler/time.move', function() {
                 targetModelID: 20,
                 nearestRange: [0, oneHour],
                 relatedView: {
-                    getDate: function() { return new Date('2015-05-01T00:00:00+09:00'); }
+                    getDate: function() { return new TZDate(2015, 4, 1); }
                 },
                 currentView: {
-                    getDate: function() { return new Date('2015-05-01T00:00:00+09:00'); }
+                    getDate: function() { return new TZDate(2015, 4, 1); }
                 }
             };
-
             TimeMove.prototype._updateEvent.call(mockInstance, eventData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
-                starts: new Date('2015-05-01T10:00:00+09:00'),
-                ends: new Date('2015-05-01T11:00:00+09:00')
+                starts: new TZDate(2015, 4, 1, 10),
+                ends: new TZDate(2015, 4, 1, 11)
             });
         });
 
         it('limit updatable start and ends.', function() {
             var oneHour = datetime.millisecondsFrom('hour', 1);
-            baseControllerMock.events.items['20'].starts = new Date('2015-05-01T00:00:00+09:00');
-            baseControllerMock.events.items['20'].starts = new Date('2015-05-01T00:30:00+09:00');
+            baseControllerMock.events.items['20'].starts = new TZDate(2015, 4, 1);
+            baseControllerMock.events.items['20'].starts = new TZDate(2015, 4, 1, 0, 30);
             baseControllerMock.events.items['20'].getStarts = function() {
-                return new Date('2015-05-01T00:00:00+09:00')
+                return new TZDate(2015, 4, 1)
             };
             baseControllerMock.events.items['20'].getEnds = function() {
-                return new Date('2015-05-01T00:30:00+09:00')
+                return new TZDate(2015, 4, 1, 0, 30)
             };
             baseControllerMock.events.items['20'].duration = function() {
-                return new Date((new Date('2015-05-01T00:30:00+09:00').getTime()) - (new Date('2015-05-01T00:00:00+09:00').getTime()));
+                return new TZDate(30 * 60 * 1000);
             };
 
             var eventData = {
                 targetModelID: 20,
                 nearestRange: [oneHour, 0],
                 relatedView: {
-                    getDate: function() { return new Date('2015-05-01T00:00:00+09:00'); }
+                    getDate: function() { return new TZDate(2015, 4, 1); }
                 },
                 currentView: {
-                    getDate: function() { return new Date('2015-05-01T00:00:00+09:00'); }
+                    getDate: function() { return new TZDate(2015, 4, 1); }
                 }
             };
 
@@ -125,8 +125,8 @@ describe('handler/time.move', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
-                starts: new Date('2015-05-01T00:00:00+09:00'),
-                ends: new Date('2015-05-01T00:30:00+09:00')
+                starts: new TZDate(2015, 4, 1),
+                ends: new TZDate(2015, 4, 1, 0, 30)
             });
 
             baseControllerMock.updateEvent.calls.reset();
@@ -135,8 +135,8 @@ describe('handler/time.move', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
-                starts: new Date('2015-05-01T23:29:59+09:00'),
-                ends: new Date('2015-05-01T23:59:59+09:00')
+                starts: new TZDate(2015, 4, 1, 23, 29, 59),
+                ends: new TZDate(2015, 4, 1, 23, 59, 59)
             });
         });
     });

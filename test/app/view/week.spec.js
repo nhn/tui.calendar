@@ -1,11 +1,14 @@
 /*eslint-disable*/
 var View = require('view/view');
 var Week = require('view/week/week');
+var TZDate = require('common/timezone').Date;
+var timezoneMatchers = require('../../matcher/timezone');
 
 describe('View/Week', function() {
     var view;
 
     beforeEach(function() {
+        jasmine.addMatchers(timezoneMatchers);
         fixture.load('view.html');
         view = new Week(null, null, document.getElementById('container2'));
     });
@@ -27,21 +30,21 @@ describe('View/Week', function() {
 
             expect(child.render).toHaveBeenCalledWith({
                 eventsInDateRange: 'helloWorld',
-                renderStartDate: jasmine.any(Date),
-                renderEndDate: jasmine.any(Date)
+                renderStartDate: jasmine.any(TZDate),
+                renderEndDate: jasmine.any(TZDate)
             });
         });
     });
 
     describe('_getRenderDateRange()', function() {
         it('Calculate render dates from supplied date.', function() {
-            var d = new Date('2015-05-02T12:30:00+09:00');
+            var d = new TZDate('2015-05-02T12:30:00+09:00');
 
-            var expectedStart = new Date(+d);
+            var expectedStart = new TZDate(+d);
             expectedStart.setDate(expectedStart.getDate() - 3);
             expectedStart.setHours(0, 0, 0);
 
-            var expectedEnd = new Date(+d);
+            var expectedEnd = new TZDate(+d);
             expectedEnd.setDate(expectedEnd.getDate() + 3);
             expectedEnd.setHours(0, 0, 0);
 
@@ -52,7 +55,8 @@ describe('View/Week', function() {
 
             var result = view._getRenderDateRange(d);
 
-            expect(result).toEqual(expected);
+            expect(result.start).toEqualTZDate(expected.start);
+            expect(result.end).toEqualTZDate(expected.end);
         });
     });
 });

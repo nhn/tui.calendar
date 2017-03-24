@@ -5,6 +5,7 @@ var ControllerFactory = require('factory/controller');
 var CalEvent = require('model/calEvent');
 var CalEventViewModel = require('model/viewModel/calEvent');
 var datetime = require('common/datetime');
+var TZDate = require('common/timezone').Date;
 
 describe('controller/base', function() {
     var util = tui.util,
@@ -25,9 +26,9 @@ describe('controller/base', function() {
 
         it('calculate contain dates for specific events.', function() {
             var expected = [
-                new Date('2015/05/01'),
-                new Date('2015/05/02'),
-                new Date('2015/05/03')
+                new TZDate('2015/05/01'),
+                new TZDate('2015/05/02'),
+                new TZDate('2015/05/03')
             ];
 
             event = CalEvent.create({
@@ -42,9 +43,9 @@ describe('controller/base', function() {
 
         it('can calculate non all day event.', function() {
             var expected = [
-                new Date('2015/05/01'),
-                new Date('2015/05/02'),
-                new Date('2015/05/03')
+                new TZDate('2015/05/01'),
+                new TZDate('2015/05/02'),
+                new TZDate('2015/05/03')
             ];
 
             event = CalEvent.create({
@@ -145,8 +146,8 @@ describe('controller/base', function() {
                 '20150502': ['hunting', 'A']
             };
 
-            var starts = new Date('2015/04/30'),
-                ends = new Date('2015/05/02');
+            var starts = new TZDate('2015/04/30'),
+                ends = new TZDate('2015/05/02');
 
             var result = ctrl.findByDateRange(starts, ends);
 
@@ -159,8 +160,8 @@ describe('controller/base', function() {
                 '20150503': ['A', 'meeting', 'physical training']
             };
 
-            var starts = new Date('2015/05/02'),
-                ends = new Date('2015/05/03');
+            var starts = new TZDate('2015/05/02'),
+                ends = new TZDate('2015/05/03');
 
             var result = ctrl.findByDateRange(starts, ends);
 
@@ -191,8 +192,8 @@ describe('controller/base', function() {
             expect(ctrl.events.single()).toEqual(jasmine.objectContaining({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: new Date('2015/05/02'),
-                ends: new Date('2015/05/02')
+                starts: new TZDate('2015/05/02'),
+                ends: new TZDate('2015/05/02')
             }));
 
             expect(ctrl.dateMatrix).toEqual({
@@ -264,8 +265,8 @@ describe('controller/base', function() {
 
         it('split event by ymd.', function() {
             var result = ctrl.splitEventByDateRange(
-                new Date('2015-05-01T00:00:00+09:00'),
-                new Date('2015-05-03T23:59:59+09:00'),
+                new TZDate('2015-05-01T00:00:00+09:00'),
+                new TZDate('2015-05-03T23:59:59+09:00'),
                 collection
             );
 

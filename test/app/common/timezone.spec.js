@@ -1,10 +1,14 @@
 var tz = require('common/timezone');
 
-fdescribe('module:timezone', function() {
-    it('Constructor can get Date instance and time and nothing', function() {
+describe('module:timezone TZDate', function() {
+    afterEach(function() {
+        tz.restoreTimezone();
+    });
+
+    it('constructor can get Date instance and time and nothing', function() {
         var d1, d2, d3;
 
-        jasmine.clock().install();
+        jasmine.clock().mockDate();
 
         d1 = new tz.Date();
         d2 = new tz.Date(new Date());
@@ -16,54 +20,138 @@ fdescribe('module:timezone', function() {
         jasmine.clock().uninstall();
     });
 
-    it('If timezone is default, all getter methods returns same value as the original date', function() {
-        var date = new Date();
-        var tzdate = new tz.Date(date);
+    it('constructor can get TZDate', function() {
+        var d1, d2;
 
-        expect(date.getFullYear()).toBe(tzdate.getFullYear());
-        expect(date.getMonth()).toBe(tzdate.getMonth());
-        expect(date.getDate()).toBe(tzdate.getDate());
-        expect(date.getDay()).toBe(tzdate.getDay());
-        expect(date.getHours()).toBe(tzdate.getHours());
-        expect(date.getMinutes()).toBe(tzdate.getMinutes());
-        expect(date.getHours()).toBe(tzdate.getHours());
-        expect(date.getMilliseconds()).toBe(tzdate.getMilliseconds());
+        d1 = new tz.Date();
+        d2 = new tz.Date(d1);
+
+        expect(d1.getTime()).toBe(d2.getTime());
     });
 
-    it('with +01:30 timezone', function() {
-        var tzdate;
 
-        tz.setTimezone(-90);
-        tzdate = new tz.Date(Date.UTC(2017, 0, 1));
+    describe('constructor has same API as the native Date', function() {
+        var offsetMin = 30;
+        var offsetMS = offsetMin * 60 * 1000;
 
-        expect(tzdate.getFullYear()).toBe(2017);
-        expect(tzdate.getMonth()).toBe(0);
-        expect(tzdate.getDate()).toBe(1);
-        expect(tzdate.getDay()).toBe(0);
-        expect(tzdate.getHours()).toBe(1);
-        expect(tzdate.getMinutes()).toBe(30);
-        expect(tzdate.getSeconds()).toBe(0);
-        expect(tzdate.getMilliseconds()).toBe(0);
+        beforeEach(function() {
+            tz.setTimezone(30);
+            jasmine.clock().mockDate();
+        });
 
-        tz.restoreTimezone();
+        afterEach(function() {
+            tz.restoreTimezone();
+            jasmine.clock().uninstall();
+        });
+
+        it('with date-string', function() {
+            var utcTime = Date.parse('2015-01-01T09:30');
+            var localTime = (new tz.Date('2015-01-01T09:30')).getTime();
+
+            expect(utcTime).toBe(localTime);
+        });
+
+        it('with year, month', function() {
+            var utcTime = Date.UTC(2015, 0);
+            var localTime = (new tz.Date(2015, 0)).getTime();
+
+            expect(utcTime + offsetMS).toBe(localTime);
+        });
+
+        it('with year, month, date', function() {
+            var utcTime = Date.UTC(2015, 0, 1);
+            var localTime = (new tz.Date(2015, 0, 1)).getTime();
+
+            expect(utcTime + offsetMS).toBe(localTime);
+        });
+
+        it('with year, month, date, hours', function() {
+            var utcTime = Date.UTC(2015, 0, 1, 9);
+            var localTime = (new tz.Date(2015, 0, 1, 9)).getTime();
+
+            expect(utcTime + offsetMS).toBe(localTime);
+        });
+
+        it('with year, month, date, hours, minutes', function() {
+            var utcTime = Date.UTC(2015, 0, 1, 9, 30);
+            var localTime = (new tz.Date(2015, 0, 1, 9, 30)).getTime();
+
+            expect(utcTime + offsetMS).toBe(localTime);
+        });
+
+        it('with year, month, date, hours, minutes, seconds', function() {
+            var utcTime = Date.UTC(2015, 0, 1, 9, 30, 20);
+            var localTime = (new tz.Date(2015, 0, 1, 9, 30, 20)).getTime();
+
+            expect(utcTime + offsetMS).toBe(localTime);
+        });
+
+        it('with year, month, date, hours, minutes, seconds, milliseconds', function() {
+            var utcTime = Date.UTC(2015, 0, 1, 9, 30, 20, 500);
+            var localTime = (new tz.Date(2015, 0, 1, 9, 30, 20, 500)).getTime();
+
+            expect(utcTime + offsetMS).toBe(localTime);
+        });
     });
 
-    it('with -01:30 timezone', function() {
-        var tzdate;
+    it('should be usable as a number type', function() {
+        var d1, d2;
 
-        tz.setTimezone(90);
-        tzdate = new tz.Date(Date.UTC(2017, 0, 1));
+        tz.setTimezone(0);
 
-        expect(tzdate.getFullYear()).toBe(2016);
-        expect(tzdate.getMonth()).toBe(11);
-        expect(tzdate.getDay()).toBe(6);
-        expect(tzdate.getDate()).toBe(31);
-        expect(tzdate.getHours()).toBe(22);
-        expect(tzdate.getMinutes()).toBe(30);
-        expect(tzdate.getSeconds()).toBe(0);
-        expect(tzdate.getMilliseconds()).toBe(0);
+        d1 = new tz.Date(Date.UTC(2017, 0, 1, 9, 30, 0));
+        d2 = new tz.Date(Date.UTC(2017, 0, 1, 9, 30, 1));
 
-        tz.restoreTimezone();
+        expect(Number(d1)).toBe(d1.getTime());
+        expect(d2 - d1).toBe(1000);
+    });
+
+    describe('getters: ', function() {
+        it('if timezone is default, all getter methods returns same value as the original date', function() {
+            var date = new Date();
+            var tzdate = new tz.Date(date);
+
+            expect(date.getFullYear()).toBe(tzdate.getFullYear());
+            expect(date.getMonth()).toBe(tzdate.getMonth());
+            expect(date.getDate()).toBe(tzdate.getDate());
+            expect(date.getDay()).toBe(tzdate.getDay());
+            expect(date.getHours()).toBe(tzdate.getHours());
+            expect(date.getMinutes()).toBe(tzdate.getMinutes());
+            expect(date.getHours()).toBe(tzdate.getHours());
+            expect(date.getMilliseconds()).toBe(tzdate.getMilliseconds());
+        });
+
+        it('with +01:30(-90) timezone', function() {
+            var tzdate;
+
+            tz.setTimezone(-90);
+            tzdate = new tz.Date(Date.UTC(2017, 0, 1));
+
+            expect(tzdate.getFullYear()).toBe(2017);
+            expect(tzdate.getMonth()).toBe(0);
+            expect(tzdate.getDate()).toBe(1);
+            expect(tzdate.getDay()).toBe(0);
+            expect(tzdate.getHours()).toBe(1);
+            expect(tzdate.getMinutes()).toBe(30);
+            expect(tzdate.getSeconds()).toBe(0);
+            expect(tzdate.getMilliseconds()).toBe(0);
+        });
+
+        it('with -01:30(90) timezone', function() {
+            var tzdate;
+
+            tz.setTimezone(90);
+            tzdate = new tz.Date(Date.UTC(2017, 0, 1));
+
+            expect(tzdate.getFullYear()).toBe(2016);
+            expect(tzdate.getMonth()).toBe(11);
+            expect(tzdate.getDay()).toBe(6);
+            expect(tzdate.getDate()).toBe(31);
+            expect(tzdate.getHours()).toBe(22);
+            expect(tzdate.getMinutes()).toBe(30);
+            expect(tzdate.getSeconds()).toBe(0);
+            expect(tzdate.getMilliseconds()).toBe(0);
+        });
     });
 
     it('Setters should not affected by the timezone', function() {

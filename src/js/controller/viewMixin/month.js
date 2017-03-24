@@ -8,7 +8,8 @@ var util = global.tui.util,
 
 var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection');
+    Collection = require('../../common/collection'),
+    TZDate = require('../../common/timezone').Date;
 
 var Month = {
     /**
@@ -68,7 +69,7 @@ var Month = {
             if (viewModel.model.isAllDay) {
                 ctrlCore.limitRenderRange(starts, ends, viewModel);
             } else {
-                eventDate = new Date(Number(viewModel.getStarts()));
+                eventDate = new TZDate(Number(viewModel.getStarts()));
                 viewModel.renderStart = datetime.start(eventDate);
                 viewModel.renderEnd = datetime.end(eventDate);
             }

@@ -1,4 +1,5 @@
 var Freebusy = require('dooray/view/freebusy');
+var TZDate = require('common/timezone').Date;
 
 describe('Freebusy', function() {
     var inst;

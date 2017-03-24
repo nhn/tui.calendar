@@ -1,6 +1,7 @@
 /*eslint-disable*/
 var domutil = require('common/domutil');
 var TimeCreation = require('handler/time/creation');
+var TZDate = require('common/timezone').Date;
 
 describe('handler/time.creation', function() {
     it('checkExpectedCondition() can judge activation of time.creation handler by event target.', function() {
@@ -68,22 +69,22 @@ describe('handler/time.creation', function() {
             var eventData = {
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-05T00:00:00+09:00');
+                        return new TZDate(2015, 4, 5);
                     }
                 },
                 createRange: [
-                    (new Date('2015-05-05T01:00:00+09:00').getTime()),
-                    (new Date('2015-05-05T01:30:00+09:00').getTime())
+                    (new TZDate(2015, 4, 5, 1).getTime()),
+                    (new TZDate(2015, 4, 5, 1, 30).getTime())
                 ],
-                nearestGridTimeY: (new Date('2015-05-05T01:30:00+09:00').getTime())
+                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime())
             };
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
 
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
-                starts: new Date('2015-05-05T01:00:00+09:00'),
-                ends: new Date('2015-05-05T01:30:00+09:00'),
+                starts: new TZDate(2015, 4, 5, 1),
+                ends: new TZDate(2015, 4, 5, 1, 30),
                 guide: mock.guide
             });
         });
@@ -92,18 +93,18 @@ describe('handler/time.creation', function() {
             var eventData = {
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-05T00:00:00+09:00');
+                        return new TZDate(2015, 4, 5);
                     }
                 },
-                nearestGridTimeY: (new Date('2015-05-05T01:30:00+09:00').getTime())
+                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime())
             };
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
 
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
-                starts: new Date('2015-05-05T01:30:00+09:00'),
-                ends: new Date('2015-05-05T02:00:00+09:00'),
+                starts: new TZDate(2015, 4, 5, 1, 30),
+                ends: new TZDate(2015, 4, 5, 2),
                 guide: mock.guide
             });
 

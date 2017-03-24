@@ -8,6 +8,7 @@ var util = global.tui.util;
 var config = require('../../config');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 
 /**
@@ -31,7 +32,7 @@ function Week(controller, options, container) {
 
     domutil.addClass(container, config.classname('week-container'));
 
-    range = this._getRenderDateRange(new Date());
+    range = this._getRenderDateRange(new TZDate());
 
     /**
      * @type {object} Options for view.
@@ -96,8 +97,8 @@ Week.prototype.viewName = 'week';
  */
 Week.prototype._getRenderDateRange = function(baseDate) {
     var base = datetime.start(baseDate),
-        start = new Date(Number(base)),
-        end = new Date(Number(base));
+        start = new TZDate(Number(base)),
+        end = new TZDate(Number(base));
 
     start.setDate(start.getDate() - 3);
     end.setDate(end.getDate() + 3);

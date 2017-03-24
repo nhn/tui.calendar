@@ -10,6 +10,7 @@ var domutil = require('../../common/domutil');
 var common = require('../../common/common');
 var AlldayCore = require('./core');
 var AlldayResizeGuide = require('./resizeGuide');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -179,10 +180,10 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
 AlldayResize.prototype._updateEvent = function(eventData) {
     var model = eventData.targetModel,
         dateOffset = eventData.xIndex - eventData.dragStartXIndex,
-        newEnds = new Date(model.ends.getTime());
+        newEnds = new TZDate(model.ends.getTime());
 
-    newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
-    newEnds = new Date(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
+    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
+    newEnds = new TZDate(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
 
     /**
      * @event AlldayResize#beforeUpdateEvent

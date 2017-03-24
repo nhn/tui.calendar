@@ -6,6 +6,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../common/timezone').Date;
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
@@ -37,13 +38,13 @@ function CalEvent() {
 
     /**
      * event starts
-     * @type {Date}
+     * @type {TZDate}
      */
     this.starts = null;
 
     /**
      * event ends
-     * @type {Date}
+     * @type {TZDate}
      */
     this.ends = null;
 
@@ -107,15 +108,15 @@ CalEvent.prototype.init = function(options) {
     this.visible = util.isExisty(options.visible) ? options.visible : true;
 
     if (options.starts) {
-        this.starts = new Date(options.starts);
+        this.starts = new TZDate(options.starts);
     } else {
-        this.starts = new Date();
+        this.starts = new TZDate();
     }
 
     if (options.ends) {
-        this.ends = new Date(options.ends);
+        this.ends = new TZDate(options.ends);
     } else {
-        this.ends = new Date(this.starts.getTime());
+        this.ends = new TZDate(this.starts.getTime());
         this.ends.setMinutes(this.ends.getMinutes() + 30);
     }
 
@@ -197,9 +198,9 @@ CalEvent.prototype.duration = function() {
         duration;
 
     if (this.isAllDay) {
-        duration = new Date(datetime.end(ends) - datetime.start(starts));
+        duration = new TZDate(datetime.end(ends) - datetime.start(starts));
     } else {
-        duration = new Date(ends - starts);
+        duration = new TZDate(ends - starts);
     }
 
     return duration;

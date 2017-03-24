@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../../common/timezone').Date;
 var CalEvent = require('../../model/calEvent');
 
 /**
@@ -88,7 +89,7 @@ DoorayEvent.prototype.init = function(options) {
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
-        this.starts = new Date(Number(this.ends));
+        this.starts = new TZDate(this.ends);
         this.starts.setMinutes(this.starts.getMinutes() - 30);
     }
 

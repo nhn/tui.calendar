@@ -10,6 +10,7 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
+var TZDate = require('../../common/timezone').Date;
 var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 
 /**
@@ -106,8 +107,8 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
         guideElement.style.height = height + 'px';
         guideElement.style.display = 'block';
 
-        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') +
-            ' ~ ' + datetime.format(new Date(end), 'HH:mm');
+        timeElement.innerHTML = datetime.format(new TZDate(start), 'HH:mm') +
+            ' ~ ' + datetime.format(new TZDate(end), 'HH:mm');
 
         if (bottomLabel) {
             domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
@@ -173,7 +174,7 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
  * @returns {function} UI data calculator function
  */
 TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
-    var todayEnd = Number(datetime.end(new Date(Number(todayStart))));
+    var todayEnd = Number(datetime.end(new TZDate(Number(todayStart))));
 
     /**
      * Get top, time value from event dat

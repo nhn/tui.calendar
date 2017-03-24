@@ -10,6 +10,7 @@ var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../../view/view');
 var tmpl = require('./taskview.hbs');
+var TZDate = require('../../common/timezone').Date;
 
 var PADDING_TOP = 2,
     PADDING_BOTTOM = 2;
@@ -61,7 +62,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         ),
         height = 0,
         mmax = Math.max,
-        today = datetime.format(new Date(), 'YYYY-MM-DD');
+        today = datetime.format(new TZDate(), 'YYYY-MM-DD');
 
     util.forEach(range, function(d) {
         var date = datetime.format(d, 'YYYY-MM-DD');

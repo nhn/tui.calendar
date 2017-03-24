@@ -11,7 +11,8 @@ var dw = require('../common/dw'),
     Drag = require('../handler/drag'),
     controllerFactory = require('./controller'),
     weekViewFactory = require('./weekView'),
-    monthViewFactory = require('./monthView');
+    monthViewFactory = require('./monthView'),
+    TZDate = require('../common/timezone').Date;
 
 /**
  * @typedef {object} Calendar~CalEvent
@@ -58,7 +59,7 @@ function Calendar(options, container) {
         controller: null,
         defaultView: 'week',
         isDoorayView: true,
-        defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
+        defaultDate: datetime.format(new TZDate(), 'YYYY-MM-DD'),
         template: util.extend({
             allday: null,
             time: null
@@ -286,21 +287,21 @@ Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
         msFrom = datetime.millisecondsFrom;
 
     startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
-    date = util.isDate(date) ? date : new Date(date);
+    date = util.isDate(date) ? date : new TZDate(date);
     day = date.getDay();
 
     // calculate default render range first.
-    start = new Date(
+    start = new TZDate(
         Number(date) -
         msFrom('day', day) +
         msFrom('day', startDayOfWeek)
     );
 
-    end = new Date(Number(start) + msFrom('day', 6));
+    end = new TZDate(Number(start) + msFrom('day', 6));
 
     if (day < startDayOfWeek) {
-        start = new Date(Number(start) - msFrom('day', 7));
-        end = new Date(Number(end) - msFrom('day', 7));
+        start = new TZDate(Number(start) - msFrom('day', 7));
+        end = new TZDate(Number(end) - msFrom('day', 7));
     }
 
     return [start, end];
@@ -358,7 +359,7 @@ Calendar.prototype.refreshChildView = function(viewName) {
  * Move to today.
  */
 Calendar.prototype.today = function() {
-    this.renderDate = new Date();
+    this.renderDate = new TZDate();
 
     this.move();
     this.render();
@@ -383,7 +384,7 @@ Calendar.prototype.move = function(offset) {
 
     if (viewName === 'month') {
         renderDate.addMonth(offset);
-        date2 = datetime.arr2dCalendar(new Date(this.renderDate));
+        date2 = datetime.arr2dCalendar(new TZDate(this.renderDate));
 
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -433,7 +434,7 @@ Calendar.prototype.setDate = function(date) {
         date = datetime.parse(date);
     }
 
-    this.renderDate = new Date(Number(date));
+    this.renderDate = new TZDate(Number(date));
     this.move(0);
     this.render();
 };

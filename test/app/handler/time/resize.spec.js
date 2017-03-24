@@ -2,6 +2,7 @@
 var domutil = require('common/domutil');
 var datetime = require('common/datetime');
 var TimeResize = require('handler/time/resize');
+var TZDate = require('common/timezone').Date;
 
 describe('TimeResize', function() {
     var mockInstance;
@@ -44,15 +45,15 @@ describe('TimeResize', function() {
                 items: {
                     '20': {
                         getStarts: function() {
-                            return new Date('2015-05-01T09:30:00+09:00');
+                            return new TZDate(2015, 4, 1, 9, 30);
                         },
                         getEnds: function() {
-                            return new Date('2015-05-01T10:30:00+09:00');
+                            return new TZDate(2015, 4, 1, 10, 30);
                         },
-                        starts: new Date('2015-05-01T09:30:00+09:00'),
-                        ends: new Date('2015-05-01T10:30:00+09:00'),
+                        starts: new TZDate(2015, 4, 1, 9, 30),
+                        ends: new TZDate(2015, 4, 1, 10, 30),
                         duration: function() {
-                            return new Date(new Date('2015-05-01T10:30:00+09:00') - new Date('2015-05-01T09:30:00+09:00'));
+                            return new TZDate(datetime.millisecondsFrom('hour', 1));
                         }
                     }
                 }
@@ -71,17 +72,16 @@ describe('TimeResize', function() {
                 nearestRange: [0, oneHour],
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-01T00:00:00+09:00');
+                        return new TZDate(2015, 4, 1);
                     }
                 }
             };
-
             TimeResize.prototype._updateEvent.call(mockInstance, eventData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
-                starts: new Date('2015-05-01T09:30:00+09:00'),
-                ends: new Date('2015-05-01T11:00:00+09:00')
+                starts: new TZDate(2015, 4, 1, 9, 30),
+                ends: new TZDate(2015, 4, 1, 11)
             });
         });
 
@@ -93,17 +93,16 @@ describe('TimeResize', function() {
                 nearestRange: [oneHour, 0],
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-01T00:00:00+09:00');
+                        return new TZDate(2015, 4, 1);
                     }
                 }
             };
-
             TimeResize.prototype._updateEvent.call(mockInstance, eventData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
-                starts: new Date('2015-05-01T09:30:00+09:00'),
-                ends: new Date('2015-05-01T10:00:00+09:00')
+                starts: new TZDate(2015, 4, 1, 9, 30),
+                ends: new TZDate(2015, 4, 1, 10)
             });
         });
 
@@ -114,17 +113,16 @@ describe('TimeResize', function() {
                 nearestRange: [0, twoDay],
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-01T00:00:00+09:00');
+                        return new TZDate(2015, 4, 1);
                     }
                 }
             };
-
             TimeResize.prototype._updateEvent.call(mockInstance, eventData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: baseControllerMock.events.items[20],
-                starts: new Date('2015-05-01T09:30:00+09:00'),
-                ends: new Date('2015-05-01T23:59:59+09:00')
+                starts: new TZDate(2015, 4, 1, 9, 30),
+                ends: new TZDate(2015, 4, 1, 23, 59, 59)
             });
         });
 

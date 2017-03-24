@@ -9,7 +9,8 @@ var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     getMousePosData = require('./core'),
-    MonthResizeGuide = require('./resizeGuide');
+    MonthResizeGuide = require('./resizeGuide'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -69,7 +70,7 @@ MonthResize.prototype.destroy = function() {
 MonthResize.prototype._updateEvent = function(eventCache) {
     // 일정의 시작 일자를 변경할 순 없음.
     // 종료시간만 변경 가능.
-    var newEnds = datetime.end(new Date(Number(eventCache.ends))),
+    var newEnds = datetime.end(new TZDate(Number(eventCache.ends))),
         model = eventCache.model;
 
     /**
@@ -81,7 +82,7 @@ MonthResize.prototype._updateEvent = function(eventCache) {
      */
     this.fire('beforeUpdateEvent', {
         model: model,
-        starts: new Date(Number(model.getStarts())),
+        starts: new TZDate(Number(model.getStarts())),
         ends: newEnds
     });
 };
@@ -122,7 +123,7 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         model: model,
         target: target,
-        starts: new Date(Number(eventData.date))
+        starts: new TZDate(Number(eventData.date))
     };
 
     /**
@@ -184,7 +185,7 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getEventData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new Date(Number(eventData.date));
+        cache.ends = new TZDate(Number(eventData.date));
         this._updateEvent(cache);
     }
 

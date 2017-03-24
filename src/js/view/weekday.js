@@ -7,6 +7,7 @@ var util = global.tui.util;
 var config = require('../config'),
     domutil = require('../common/domutil'),
     datetime = require('../common/datetime'),
+    TZDate = require('../common/timezone').Date,
     View = require('./view');
 
 /**
@@ -67,7 +68,7 @@ Weekday.prototype.getBaseViewModel = function() {
     var opt = this.options,
         range = this.getRenderDateRange(),
         gridWidth = (100 / range.length),
-        today = datetime.format(new Date(), 'YYYYMMDD');
+        today = datetime.format(new TZDate(), 'YYYYMMDD');
 
     return {
         width: gridWidth,

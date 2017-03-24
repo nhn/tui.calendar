@@ -9,6 +9,7 @@ var domevent = require('../../common/domevent'),
     domutil = require('../../common/domutil'),
     datetime = require('../../common/datetime'),
     common = require('../../common/common'),
+    TZDate = require('../../common/timezone').Date,
     config = require('../../config');
 
 /**
@@ -79,7 +80,7 @@ TimeDblClick.prototype._onDblClick = function(e) {
     viewHeight = timeView.getViewBound().height;
     renderHourRange = util.range(timeView.options.hourStart, timeView.options.hourEnd);
 
-    relativeTime = new Date(
+    relativeTime = new TZDate(
         Number(common.ratio(
             viewHeight,
             (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR),
@@ -90,11 +91,11 @@ TimeDblClick.prototype._onDblClick = function(e) {
     relativeMinutes = common.nearest(relativeTime.getUTCMinutes(), [0, 60]) / 2;
     targetDate.setHours(relativeHour, relativeMinutes);
 
-    newStart = new Date(Number(targetDate));
-    newEnd = new Date(
+    newStart = new TZDate(Number(targetDate));
+    newEnd = new TZDate(
         Math.min(
             Number(targetDate) + datetime.MILLISECONDS_PER_HOUR,
-            Number(datetime.end(new Date(Number(targetDate))))
+            Number(datetime.end(new TZDate(Number(targetDate))))
         )
     );
 

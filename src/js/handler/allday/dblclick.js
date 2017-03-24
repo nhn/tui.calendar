@@ -8,7 +8,8 @@ var common = require('../../common/common'),
     datetime = require('../../common/datetime'),
     config = require('../../config'),
     domevent = require('../../common/domevent'),
-    domutil = require('../../common/domutil');
+    domutil = require('../../common/domutil'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -89,8 +90,8 @@ AlldayDblClick.prototype._onDblClick = function(e) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: true,
-        starts: new Date(Number(targetDate)),
-        ends: datetime.end(new Date(Number(targetDate)))
+        starts: new TZDate(Number(targetDate)),
+        ends: datetime.end(new TZDate(Number(targetDate)))
     });
 };
 
