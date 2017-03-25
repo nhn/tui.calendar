@@ -1,14 +1,17 @@
 var tz = require('common/timezone');
 
 describe('module:timezone TZDate', function() {
-    afterEach(function() {
-        tz.restoreTimezone();
+    beforeEach(function() {
+        jasmine.clock().mockDate();
     });
 
-    it('constructor can get Date instance and time and nothing', function() {
-        var d1, d2, d3;
+    afterEach(function() {
+        tz.restoreOffset();
+        jasmine.clock().uninstall();
+    });
 
-        jasmine.clock().mockDate();
+    it('constructor can get Date instance or timestamp or nothing', function() {
+        var d1, d2, d3;
 
         d1 = new tz.Date();
         d2 = new tz.Date(new Date());
@@ -17,7 +20,12 @@ describe('module:timezone TZDate', function() {
         expect(d1.getTime()).toBe(d2.getTime());
         expect(d2.getTime()).toBe(d3.getTime());
 
-        jasmine.clock().uninstall();
+    });
+
+    it('constructor can get null and should treat it as a number 0', function() {
+        var date = new tz.Date(null);
+
+        expect(date.getTime()).toBe(0);
     });
 
     it('constructor can get TZDate', function() {
@@ -26,22 +34,16 @@ describe('module:timezone TZDate', function() {
         d1 = new tz.Date();
         d2 = new tz.Date(d1);
 
+        expect(d1).not.toBe(d2);
         expect(d1.getTime()).toBe(d2.getTime());
     });
-
 
     describe('constructor has same API as the native Date', function() {
         var offsetMin = 30;
         var offsetMS = offsetMin * 60 * 1000;
 
         beforeEach(function() {
-            tz.setTimezone(30);
-            jasmine.clock().mockDate();
-        });
-
-        afterEach(function() {
-            tz.restoreTimezone();
-            jasmine.clock().uninstall();
+            tz.setOffset(30);
         });
 
         it('with date-string', function() {
@@ -97,7 +99,7 @@ describe('module:timezone TZDate', function() {
     it('should be usable as a number type', function() {
         var d1, d2;
 
-        tz.setTimezone(0);
+        tz.setOffset(0);
 
         d1 = new tz.Date(Date.UTC(2017, 0, 1, 9, 30, 0));
         d2 = new tz.Date(Date.UTC(2017, 0, 1, 9, 30, 1));
@@ -107,7 +109,7 @@ describe('module:timezone TZDate', function() {
     });
 
     describe('getters: ', function() {
-        it('if timezone is default, all getter methods returns same value as the original date', function() {
+        it('if offset is default, getters should return same value as the original date', function() {
             var date = new Date();
             var tzdate = new tz.Date(date);
 
@@ -117,14 +119,13 @@ describe('module:timezone TZDate', function() {
             expect(date.getDay()).toBe(tzdate.getDay());
             expect(date.getHours()).toBe(tzdate.getHours());
             expect(date.getMinutes()).toBe(tzdate.getMinutes());
-            expect(date.getHours()).toBe(tzdate.getHours());
             expect(date.getMilliseconds()).toBe(tzdate.getMilliseconds());
         });
 
-        it('with +01:30(-90) timezone', function() {
+        it('with +01:30(-90) offset', function() {
             var tzdate;
 
-            tz.setTimezone(-90);
+            tz.setOffset(-90);
             tzdate = new tz.Date(Date.UTC(2017, 0, 1));
 
             expect(tzdate.getFullYear()).toBe(2017);
@@ -137,10 +138,10 @@ describe('module:timezone TZDate', function() {
             expect(tzdate.getMilliseconds()).toBe(0);
         });
 
-        it('with -01:30(90) timezone', function() {
+        it('with -01:30(90) offset', function() {
             var tzdate;
 
-            tz.setTimezone(90);
+            tz.setOffset(90);
             tzdate = new tz.Date(Date.UTC(2017, 0, 1));
 
             expect(tzdate.getFullYear()).toBe(2016);
@@ -157,7 +158,7 @@ describe('module:timezone TZDate', function() {
     it('Setters should not affected by the timezone', function() {
         var tzdate;
 
-        tz.setTimezone(90);
+        tz.setOffset(90);
         tzdate = new tz.Date(Date.UTC(2017, 0, 1));
 
         tzdate.setMilliseconds(10);
@@ -185,7 +186,7 @@ describe('module:timezone TZDate', function() {
     it('getTime() should not be affected by the timezone', function() {
         var time, date, tzdate;
 
-        tz.setTimezone(120);
+        tz.setOffset(120);
         time = Date.UTC(2017, 0, 1);
 
         date = new Date(time);
@@ -197,7 +198,7 @@ describe('module:timezone TZDate', function() {
     it('setTime() should not be affected by the timezone', function() {
         var time, tzdate;
 
-        tz.setTimezone(120);
+        tz.setOffset(120);
         time = Date.UTC(2017, 0, 1);
 
         tzdate = new tz.Date(Date.now());

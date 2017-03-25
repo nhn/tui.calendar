@@ -8,8 +8,7 @@ var Freebusy = require('./src/js/dooray/view/freebusy');
 var OriginCalendar = require('./src/js/factory/calendar');
 var FullCalendar = require('./src/js/dooray/factory/calendar');
 var SplitTimeCalendar = require('./src/js/dooray/factory/SplitTimeCalendar');
-
-var datetime = require('./src/js/common/datetime');
+var timezone = require('./src/js/common/timezone');
 
 /** @namespace ne.dooray.calendar */
 global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
@@ -24,11 +23,11 @@ global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calen
     SplitTimeCalendar: SplitTimeCalendar,
 
     /**
-     * Set timezone
-     * @param {string} offsetString - offset string (+09:00)
+     * Set timezone offset
+     * @param {number} offset - offset (min)
      */
-    setTimezone: function(offsetString) {
-        datetime.setTimezone(offsetString);
+    setTimezoneOffset: function(offset) {
+        timezone.setOffset(offset);
     }
 });
 

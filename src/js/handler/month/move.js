@@ -227,8 +227,8 @@ MonthMove.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - dragend event data
  */
 MonthMove.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        eventData;
+    var cache = this._cache;
+    var eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,

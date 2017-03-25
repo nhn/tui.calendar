@@ -5,13 +5,9 @@
 'use strict';
 
 var TZDate = require('./timezone').Date;
-var util = global.tui.util,
-    opt = Object.prototype.toString;
-
+var util = global.tui.util;
 var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
-
-var datetime,
-    tokenFunc;
+var datetime, tokenFunc;
 
 var memo = {
     millisecondsTo: {},
@@ -431,7 +427,7 @@ datetime = {
     endDateOfMonth: function(date) {
         var endDate = datetime.startDateOfMonth(date);
 
-        endDate = new TZDate(endDate.setMonth(endDate.getMonth() + 1));
+        endDate.setMonth(endDate.getMonth() + 1);
         endDate.setDate(endDate.getDate() - 1);
         endDate.setHours(23, 59, 59);
 
@@ -467,7 +463,7 @@ datetime = {
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
-        cursor = new TZDate(new TZDate(Number(starts)).setDate(starts.getDate() - startIndex));
+        cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
         // iteratee all dates to render
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
             var date;
@@ -477,12 +473,12 @@ datetime = {
                 week = calendar[i / 7] = [];
             }
 
-            date = new TZDate(Number(cursor));
+            date = new TZDate(cursor);
             date = iteratee ? iteratee(date) : date;
             week.push(date);
 
             // add date
-            cursor = new TZDate(cursor.setDate(cursor.getDate() + 1));
+            cursor.setDate(cursor.getDate() + 1);
         });
 
         return calendar;
