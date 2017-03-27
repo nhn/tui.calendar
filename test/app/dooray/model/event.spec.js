@@ -31,8 +31,8 @@ describe('dooray:model/Event', function() {
             category: 'allday',
             dueDateClass: '',
             isAllDay: true,
-            starts: new TZDate('2015-10-26T00:00:00+09:00'),
-            ends: new TZDate('2015-10-26T23:59:59+09:00')
+            starts: new TZDate(2015, 9, 26),
+            ends: new TZDate(2015, 9, 26, 23, 59, 59)
         }));
 
         e = DoorayEvent.create(jsonFixtures[2]);

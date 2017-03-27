@@ -1,6 +1,7 @@
 var array = require('common/array');
 var ControllerFactory = require('factory/controller');
 var CalEvent = require('model/calEvent');
+var TZDate = require('common/timezone').Date;
 var matricesMatcher = require('../../../matcher/matrices');
 
 describe('Base.Month', function() {
@@ -39,8 +40,8 @@ describe('Base.Month', function() {
         });
 
         it('get events instance in month', function() {
-            var starts = new Date('2015-11-01'),
-                ends = new Date('2015-11-30');
+            var starts = new TZDate(2015, 10, 1),
+                ends = new TZDate(2015, 10, 30);
 
             actual = controller.findByDateRange(starts, ends);
 /**

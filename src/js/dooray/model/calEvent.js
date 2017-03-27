@@ -79,9 +79,9 @@ DoorayEvent.create = function(data) {
 DoorayEvent.prototype.init = function(options) {
     options = options || {};
 
+    options.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     CalEvent.prototype.init.call(this, options);
 
-    this.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;

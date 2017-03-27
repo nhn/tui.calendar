@@ -1,11 +1,10 @@
 /* eslint no-console: 0, complexity: 0 */
 'use strict';
 (function(window, calendar) {
-    var cal, resizeThrottled,
-        idx = 5;
+    var cal, resizeThrottled, idx = 20;
+    var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
 
-    var baseDate = new Date(),
-        formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
+    calendar.setTimezoneOffset(0);
 
     cal = calendar.FullCalendar({
         defaultView: 'month',
@@ -117,11 +116,11 @@
         {
             id: '8',
             calendarID: '2',
-            title: '[추가 추가 일정]',
-            category: 'time',
+            title: '[종일일정입니다!]',
+            category: 'allday',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
         },
         {
             id: '9',
@@ -140,7 +139,25 @@
             dueDateClass: '',
             starts: formattedDate + 'T00:00:00+09:00',
             ends: formattedDate + 'T00:00:00+09:00'
-        }
+        },
+        {
+            id: '11',
+            calendarID: '2',
+            title: '[종일일정입니다2!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '12',
+            calendarID: '2',
+            title: '[종일일정입니다3!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
     ]);
 
     cal.render();

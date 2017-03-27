@@ -159,6 +159,7 @@ var Month = {
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
         ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);
         ctrlMonth._adjustTimeTopIndex(vColl);
+
         return matrices;
     }
 };

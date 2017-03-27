@@ -150,7 +150,9 @@ describe('model/event', function() {
             compare.title = 'hunting',
             compare.isAllDay = true;
             compare.starts = new TZDate('2015/05/02');
+            compare.starts.setHours(0, 0, 0);
             compare.ends = new TZDate('2015/05/02');
+            compare.ends.setHours(23, 59, 59);
 
             expect(event.equals(compare)).toBe(true);
         });
