@@ -42,7 +42,7 @@ describe('dooray:model/Event', function() {
             category: 'milestone',
             dueDateClass: '',
             isAllDay: false,
-            starts: new TZDate('2015-10-26T23:29:59+09:00'),
+            starts: new TZDate('2015-10-26T23:59:59+09:00'),
             ends: new TZDate('2015-10-26T23:59:59+09:00')
         }));
 
@@ -53,7 +53,7 @@ describe('dooray:model/Event', function() {
             category: 'task',
             dueDateClass: 'morning',
             isAllDay: false,
-            starts: new TZDate('2015-10-26T23:29:59+09:00'),
+            starts: new TZDate('2015-10-26T23:59:59+09:00'),
             ends: new TZDate('2015-10-26T23:59:59+09:00')
         }));
     });
@@ -67,7 +67,7 @@ describe('dooray:model/Event', function() {
             category: 'task',
             dueDateClass: 'morning',
             isAllDay: false,
-            starts: new TZDate('2015-10-26T23:29:59+09:00'),
+            starts: new TZDate('2015-10-26T23:59:59+09:00'),
             ends: new TZDate('2015-10-26T23:59:59+09:00'),
             raw: raw
         });

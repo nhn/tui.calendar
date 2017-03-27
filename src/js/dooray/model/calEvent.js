@@ -90,7 +90,6 @@ DoorayEvent.prototype.init = function(options) {
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
         this.starts = new TZDate(this.ends);
-        this.starts.setMinutes(this.starts.getMinutes() - 30);
     }
 
     this.raw = options.raw || null;
