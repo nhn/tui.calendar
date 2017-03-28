@@ -56,6 +56,7 @@
 	var FullCalendar = __webpack_require__(111);
 	var SplitTimeCalendar = __webpack_require__(121);
 	var timezone = __webpack_require__(27);
+	var datetime = __webpack_require__(26);
 	
 	/** @namespace ne.dooray.calendar */
 	global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
@@ -68,6 +69,9 @@
 	    OriginCalendar: OriginCalendar,
 	    FullCalendar: FullCalendar,
 	    SplitTimeCalendar: SplitTimeCalendar,
+	
+	    datetime: datetime,
+	    TZDate: timezone.Date,
 	
 	    /**
 	     * Set timezone offset
@@ -5361,7 +5365,7 @@
 	    containerWidth = this.getViewBound().width - opt.nameWidth;
 	    mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
 	    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
-	    dateX = new TZDate(timeX);
+	    dateX = new Date(timeX);
 	    nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
 	
 	    /**

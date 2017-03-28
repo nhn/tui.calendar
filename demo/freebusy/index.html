@@ -92,28 +92,30 @@
     fb.render();
 
     fb.on('click', function(e) {
-        var datetime = ne.dooray.calendar.datetime,
-            after30min = (function() {
-                var d = new Date(null),
-                    part = e.time.split(':');
+        var datetime = ne.dooray.calendar.datetime;
+        var TZDate = ne.dooray.calendar.TZDate;
+        var after30min = (function() {
+            var d = new TZDate(null),
+                part = e.time.split(':');
 
-                d.setHours(+part[0], +part[1]);
+            d.setHours(+part[0], +part[1]);
 
-                return (datetime.format(new Date(+d + (datetime.MILLISECONDS_PER_MINUTES * 90)), 'HH:mm'));
+            return (datetime.format(new TZDate(+d + (datetime.MILLISECONDS_PER_MINUTES * 90)), 'HH:mm'));
         })();
         fb.select(e.time, after30min);
     });
 
     fb.on('mousemove', function(e) {
-        var datetime = ne.dooray.calendar.datetime,
-                after30min = (function() {
-                    var d = new Date(null),
-                            part = e.time.split(':');
+        var datetime = ne.dooray.calendar.datetime;
+        var TZDate = ne.dooray.calendar.TZDate;
+        var after30min = (function() {
+            var d = new TZDate(null);
+            var part = e.time.split(':');
 
-                    d.setHours(+part[0], +part[1]);
+            d.setHours(+part[0], +part[1]);
 
-                    return (datetime.format(new Date(+d + (datetime.MILLISECONDS_PER_MINUTES * 90)), 'HH:mm'));
-                })();
+            return (datetime.format(new TZDate(+d + (datetime.MILLISECONDS_PER_MINUTES * 90)), 'HH:mm'));
+        })();
         fb.selectOver(e.time, after30min);
     });
 

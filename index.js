@@ -9,6 +9,7 @@ var OriginCalendar = require('./src/js/factory/calendar');
 var FullCalendar = require('./src/js/dooray/factory/calendar');
 var SplitTimeCalendar = require('./src/js/dooray/factory/SplitTimeCalendar');
 var timezone = require('./src/js/common/timezone');
+var datetime = require('./src/js/common/datetime');
 
 /** @namespace ne.dooray.calendar */
 global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
@@ -21,6 +22,9 @@ global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calen
     OriginCalendar: OriginCalendar,
     FullCalendar: FullCalendar,
     SplitTimeCalendar: SplitTimeCalendar,
+
+    datetime: datetime,
+    TZDate: timezone.Date,
 
     /**
      * Set timezone offset

@@ -153,7 +153,7 @@ Freebusy.prototype._onSelect = function(clickEventData) {
     containerWidth = this.getViewBound().width - opt.nameWidth;
     mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
     timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
-    dateX = new TZDate(timeX);
+    dateX = new Date(timeX);
     nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
 
     /**
