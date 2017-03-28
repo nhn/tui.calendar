@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Mar 27 2017 21:11:16 GMT+0900 (KST)" */
+/*! bundle created at "Tue Mar 28 2017 12:17:18 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -1589,28 +1589,6 @@
 	        return datetime.leadingZero(hour, 2) + ':' +
 	            datetime.leadingZero(minutes, 2);
 	    }
-	
-	    /**
-	     * format to local date
-	     * @param {TZDate} date date object
-	     * @returns {string} 1988-09-25T09:00:00+09:00
-	     */
-	    // 'LOCAL': function(date) {
-	    //     var timezoneOffset = -date.getTimezoneOffset(),
-	    //         diff = timezoneOffset >= 0 ? '+' : '-',
-	    //         pad = function(num) {
-	    //             return datetime.leadingZero(num, 2);
-	    //         };
-	
-	    //     return date.getFullYear()
-	    //         + '-' + pad(date.getMonth() + 1)
-	    //         + '-' + pad(date.getDate())
-	    //         + 'T' + pad(date.getHours())
-	    //         + ':' + pad(date.getMinutes())
-	    //         + ':' + pad(date.getSeconds())
-	    //         + diff + pad(timezoneOffset / 60)
-	    //         + ':' + pad(timezoneOffset % 60);
-	    // }
 	};
 	
 	datetime = {
@@ -5441,8 +5419,8 @@
 	        left,
 	        width;
 	
-	    if(to === 0) {
-	        to = this._getMilliseconds(datetime.toUTC(new Date((datetime.MILLISECONDS_PER_HOUR * '23') + (datetime.MILLISECONDS_PER_MINUTES * '59'))));
+	    if (to === 0) {
+	        to = this._getMilliseconds(new TZDate(0, 0, 0, 23, 59));
 	    }
 	
 	    left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);

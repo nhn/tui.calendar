@@ -211,8 +211,8 @@ Freebusy.prototype._getBlockBound = function(block) {
         left,
         width;
 
-    if(to === 0) {
-        to = this._getMilliseconds(datetime.toUTC(new Date((datetime.MILLISECONDS_PER_HOUR * '23') + (datetime.MILLISECONDS_PER_MINUTES * '59'))));
+    if (to === 0) {
+        to = this._getMilliseconds(new TZDate(0, 0, 0, 23, 59));
     }
 
     left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);

@@ -173,6 +173,7 @@
             if (!title) {
                 return;
             }
+            console.log(e);
 
             cal.createEvents([{
                 id: String(idx),
