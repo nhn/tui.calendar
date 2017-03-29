@@ -33,7 +33,7 @@ var config = require('../config'),
  * @param {HTMLElement} container - container element
  */
 function VLayout(options, container) {
-    var opt;
+    var opt, tempHeights;
 
     if (!(this instanceof VLayout)) {
         return new VLayout(options, container);
@@ -79,9 +79,10 @@ function VLayout(options, container) {
 
     if (opt.panels.length) {
         if (opt.panelHeights.length) {
+            tempHeights = opt.panelHeights.slice();
             util.forEach(opt.panels, function(panelOpt) {
                 if (!panelOpt.isSplitter && !panelOpt.autoHeight) {
-                    panelOpt.height = opt.panelHeights.shift();
+                    panelOpt.height = tempHeights.shift();
                 }
             });
         }

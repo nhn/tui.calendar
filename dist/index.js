@@ -1,4 +1,4 @@
-/*! bundle created at "Tue Mar 28 2017 12:17:18 GMT+0900 (KST)" */
+/*! bundle created at "Wed Mar 29 2017 19:30:45 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -8591,7 +8591,7 @@
 	 * @param {HTMLElement} container - container element
 	 */
 	function VLayout(options, container) {
-	    var opt;
+	    var opt, tempHeights;
 	
 	    if (!(this instanceof VLayout)) {
 	        return new VLayout(options, container);
@@ -8637,9 +8637,10 @@
 	
 	    if (opt.panels.length) {
 	        if (opt.panelHeights.length) {
+	            tempHeights = opt.panelHeights.slice();
 	            util.forEach(opt.panels, function(panelOpt) {
 	                if (!panelOpt.isSplitter && !panelOpt.autoHeight) {
-	                    panelOpt.height = opt.panelHeights.shift();
+	                    panelOpt.height = tempHeights.shift();
 	                }
 	            });
 	        }
