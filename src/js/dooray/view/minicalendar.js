@@ -149,7 +149,7 @@ MiniCalendar.prototype._date = function(buttonElement) {
      * @property {Date} date - clicked date
      */
     this.fire('click', {
-        date: new TZDate(Number(this.selectedDate))
+        date: new Date(Number(this.selectedDate))
     });
 };
 
