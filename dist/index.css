@@ -609,12 +609,15 @@
   white-space: nowrap;
   overflow: hidden;
 }
+.dooray-calendar-minicalendar {
+  padding: 19px 9px 18px;
+}
 .dooray-calendar-minicalendar table {
   width: 100%;
-  height: 100%;
-  font-size: 12px;
+  font-size: 11px;
   table-layout: fixed;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 2px;
 }
 .dooray-calendar-minicalendar caption,
 .dooray-calendar-minicalendar th,
@@ -622,79 +625,91 @@
 .dooray-calendar-minicalendar button {
   margin: 0;
   padding: 0;
-  font-size: 12px;
+  font-size: 11px;
   border: none;
+}
+.dooray-calendar-minicalendar th,
+.dooray-calendar-minicalendar td {
+  height: 20px;
+  margin: 1px 0;
+  text-align: center;
 }
 .dooray-calendar-minicalendar button {
   cursor: pointer;
+  width: 20px;
   outline: none;
+  color: #000;
 }
 .dooray-calendar-minicalendar button > div {
   position: relative;
-  top: 0;
-  left: 0;
+  line-height: 20px;
+  width: 15px;
+  margin: 0 auto;
 }
 .dooray-calendar-minicalendar caption {
-  margin: 0 20px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 17px;
+  position: relative;
+  margin-bottom: 16px;
+  height: 15px;
+  line-height: 15px;
   text-align: center;
 }
 .dooray-calendar-minicalendar tbody button {
   display: block;
-  width: 100%;
+  width: 20px;
+  margin: 0 auto;
   height: 100%;
   text-align: center;
-  line-height: 100%;
 }
 .dooray-calendar-minicalendar-date,
 .dooray-calendar-minicalendar-nav {
   background-color: transparent;
 }
 button.dooray-calendar-minicalendar-nav {
-  font-size: 17px;
+  position: absolute;
+  font-size: 9px;
+  width: 15px;
+  line-height: 15px;
+  top: -2px;
+}
+button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-prev {
+  left: 5px;
+}
+button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
+  right: 5px;
 }
 .dooray-calendar-minicalendar-title {
   color: #333;
-  font-weight: 600;
-  margin: 0 10px;
+  font-weight: bold;
+  font-size: 13px;
 }
 .dooray-calendar-minicalendar-other-month button {
-  color: #ccc;
+  color: #ccc !important;
 }
 .dooray-calendar-minicalendar-holiday-sun {
-  color: #f00;
+  color: #f44336;
 }
 .dooray-calendar-minicalendar-holiday-sun button {
-  color: #f00;
-}
-.dooray-calendar-minicalendar-holiday-sun.dooray-calendar-minicalendar-other-month button {
-  color: #fcc;
+  color: #f44336;
 }
 .dooray-calendar-minicalendar-holiday-sat {
-  color: #4e87ee;
+  color: #3692f2;
 }
 .dooray-calendar-minicalendar-holiday-sat button {
-  color: #4e87ee;
-}
-.dooray-calendar-minicalendar-holiday-sat.dooray-calendar-minicalendar-other-month button {
-  color: #bcd1f7;
+  color: #3692f2;
 }
 .dooray-calendar-minicalendar-focused {
   background-color: #eee;
 }
-.dooray-calendar-minicalendar-today {
-  background-color: #ddd;
-}
 .dooray-calendar-minicalendar-selected {
-  background-color: #dc9656;
+  background-color: rgba(19,93,230,0.1);
 }
-.dooray-calendar-minicalendar-selected button {
+.dooray-calendar-minicalendar-marked div {
+  border-bottom: 1px solid #777;
+}
+.dooray-calendar-minicalendar-today button {
+  background-color: #222;
+  border-radius: 50%;
   color: #fff;
-}
-.dooray-calendar-minicalendar-marked {
-  text-decoration: underline;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .dooray-calendar-minicalendar-prev {

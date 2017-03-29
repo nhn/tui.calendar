@@ -1,43 +1,56 @@
 .{css-prefix}minicalendar
+    padding: 19px 9px 18px
+
     table
         width: 100%
-        height: 100%
-        font-size: 12px
+        font-size: 11px
         table-layout: fixed
-        border-collapse: collapse
+        border-collapse: separate
+        border-spacing: 0 2px 
 
     caption,
     th,
     td,
     button
         mpzero()
-        font-size: 12px
+        font-size: 11px
         border: none
+
+    th,
+    td
+        height: 20px
+        margin: 1px 0
+        text-align: center
 
     button
         cursor: pointer
+        width: 20px
         outline: none
+        color: #000
 
     // Disable IE button shifting during click
     button > div
         position: relative
-        pos(0, 0)
+        line-height: 20px
+        width: 15px
+        margin: 0 auto
 
     // 헤더영역
     caption
-        margin: 0 20px
-        height: 30px
-        line-height: 30px
-        font-size: 17px
+        position: relative
+        margin-bottom: 16px
+        height: 15px
+        line-height: 15px
         text-align: center
 
     // 일자표기영역
     tbody
         button
             display: block
-            wh(100%, 100%)
+            width: 20px
+            margin: 0 auto
+            height: 100%
             text-align: center
-            line-height: 100%
 
 +prefix-classes(minicalendar)
     .date,
@@ -45,46 +58,51 @@
         background-color: transparent
 
     button.nav
-        font-size: 17px
+        position: absolute
+        font-size: 9px
+        width: 15px
+        line-height: 15px
+        top: -2px
+
+        &.prev
+            left: 5px
+        &.next
+            right: 5px
 
     .title
         color: #333
-        font-weight: 600
-        margin: 0 10px
+        font-weight: bold
+        font-size: 13px
 
     .other-month
         button
-            color: #ccc
+            color: #ccc !important
 
     .holiday-sun
-        color: red
+        color: #f44336
         button
-            color: red
-        &.other-month
-            button
-                color: #ffcccc
+            color: #f44336
 
     .holiday-sat
-        color: #4e87ee
+        color: #3692f2
         button
-            color: #4e87ee
-        &.other-month
-            button
-                color: #bcd1f7
+            color: #3692f2
 
     .focused
         background-color: #eee
 
-    .today
-        background-color: #ddd
-
     .selected
-        background-color: #dc9656
-        button
-            color: #fff
+        background-color: rgba(19, 93, 230, 0.1);
 
     .marked
-        text-decoration: underline
+        div
+            border-bottom: 1px solid #777
+
+    .today
+        button
+            background-color: #222
+            border-radius: 50%;
+            color: #fff;
 
 // For Retina Display
 @media
