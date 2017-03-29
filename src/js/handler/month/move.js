@@ -9,7 +9,8 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     datetime = require('../../common/datetime'),
     getMousePosData = require('./core'),
-    MonthMoveGuide = require('./moveGuide');
+    MonthMoveGuide = require('./moveGuide'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -69,10 +70,10 @@ MonthMove.prototype.destroy = function() {
  */
 MonthMove.prototype.updateEvent = function(eventCache) {
     var model = eventCache.model;
-    var duration = Number(model.duration());
+    var duration = model.duration().getTime();
     var startDateRaw = datetime.raw(model.starts);
     var dragEndTime = Number(eventCache.ends);
-    var newStartDate = new Date(dragEndTime);
+    var newStartDate = new TZDate(dragEndTime);
 
     newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
 
@@ -86,7 +87,7 @@ MonthMove.prototype.updateEvent = function(eventCache) {
     this.fire('beforeUpdateEvent', {
         model: model,
         starts: newStartDate,
-        ends: new Date(newStartDate.getTime() + duration)
+        ends: new TZDate(newStartDate.getTime() + duration)
     });
 };
 
@@ -175,7 +176,7 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         model: model,
         target: target,
-        starts: new Date(Number(eventData.date))
+        starts: new TZDate(Number(eventData.date))
     };
 
     /**
@@ -226,8 +227,8 @@ MonthMove.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - dragend event data
  */
 MonthMove.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        eventData;
+    var cache = this._cache;
+    var eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -241,7 +242,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getEventData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new Date(Number(eventData.date));
+        cache.ends = new TZDate(Number(eventData.date));
         this.updateEvent(cache);
     }
 

@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var TZDate = require('../common/timezone').Date;
 var util = global.tui.util,
     spaceRx = /^\s*|\s*$/g,
     model;
@@ -54,15 +55,14 @@ model = {
          * @returns {boolean} is valid date range?
          */
         dateRange: function(instance, fields) {
-            var starts,
-                ends;
+            var starts, ends;
 
             if (!util.isExisty(instance) || fields.length !== 2) {
                 return true;
             }
 
-            starts = new Date(instance[fields[0]]);
-            ends = new Date(instance[fields[1]]);
+            starts = new TZDate(instance[fields[0]]);
+            ends = new TZDate(instance[fields[1]]);
 
             if (!datetime.isValid(starts) || !datetime.isValid(ends)) {
                 return false;

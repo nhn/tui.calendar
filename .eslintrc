@@ -188,7 +188,7 @@
         "padded-blocks": [2, "never"],
         "quote-props": 0,
         "quotes": [2, "single"],
-        "require-jsdoc": 1,
+        "require-jsdoc": 0,
         "semi-spacing": [2, {"before": false, "after": true}],
         "semi": 2,
         "sort-vars": 0,

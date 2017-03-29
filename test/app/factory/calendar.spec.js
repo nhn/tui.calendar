@@ -2,6 +2,7 @@ var View = require('view/view');
 var Calendar = require('factory/calendar');
 var ControllerFactory = require('factory/controller');
 var TimeGrid = require('view/week/timeGrid');
+var TZDate = require('common/timezone').Date;
 
 describe('Calendar', function() {
     var controller,
@@ -69,15 +70,15 @@ describe('Calendar', function() {
 
     it('getWeekDayRange() can calculate start, end date by supplied date', function() {
         // 18(수)을 일요일 시작으로 계산하면 15(일) ~ 21(토)
-        expect(inst.getWeekDayRange(new Date('2015-11-18'), 0)).toEqual([
-            new Date('2015-11-15'),
-            new Date('2015-11-21')
+        expect(inst.getWeekDayRange(new TZDate('2015-11-18'), 0)).toEqual([
+            new TZDate('2015-11-15'),
+            new TZDate('2015-11-21')
         ]);
 
         // 17(화)를 수요일 기준으로 계산하면 한 주 빠른 11(수) ~ 17(화)
-        expect(inst.getWeekDayRange(new Date('2015-11-17'), 3)).toEqual([
-            new Date('2015-11-11'),
-            new Date('2015-11-17')
+        expect(inst.getWeekDayRange(new TZDate('2015-11-17'), 3)).toEqual([
+            new TZDate('2015-11-11'),
+            new TZDate('2015-11-17')
         ]);
     });
 
@@ -102,7 +103,7 @@ describe('Calendar', function() {
         it('can change render date range for calendar.', function() {
             inst.setDate('2015-11-01');
 
-            expect(inst.renderDate).toEqual(new Date('2015-11-01T00:00:00+09:00'));
+            expect(inst.renderDate).toEqual(new TZDate('2015-11-01T00:00:00+09:00'));
         });
     });
 });

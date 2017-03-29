@@ -8,6 +8,7 @@ var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
 var TimeMoveGuide = require('./moveGuide');
 
@@ -211,11 +212,11 @@ TimeMove.prototype._updateEvent = function(eventData) {
     }
 
     timeDiff -= datetime.millisecondsFrom('minutes', 30);
-    baseDate = new Date(relatedView.getDate());
+    baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    newStarts = new Date(model.getStarts().getTime() + timeDiff);
-    newEnds = new Date(model.getEnds().getTime() + timeDiff);
+    newStarts = new TZDate(model.getStarts().getTime() + timeDiff);
+    newEnds = new TZDate(model.getEnds().getTime() + timeDiff);
     eventDuration = model.duration();
 
     if (currentView) {
@@ -223,15 +224,15 @@ TimeMove.prototype._updateEvent = function(eventData) {
     }
 
     if (newStarts < dateStart) {
-        newStarts = new Date(dateStart.getTime());
-        newEnds = new Date(newStarts.getTime() + eventDuration.getTime());
+        newStarts = new TZDate(dateStart.getTime());
+        newEnds = new TZDate(newStarts.getTime() + eventDuration.getTime());
     } else if (newEnds > dateEnd) {
-        newEnds = new Date(dateEnd.getTime());
-        newStarts = new Date(newEnds.getTime() - eventDuration.getTime());
+        newEnds = new TZDate(dateEnd.getTime());
+        newStarts = new TZDate(newEnds.getTime() - eventDuration.getTime());
     }
 
-    newStarts = new Date(newStarts.getTime() + dateDiff);
-    newEnds = new Date(newEnds.getTime() + dateDiff);
+    newStarts = new TZDate(newStarts.getTime() + dateDiff);
+    newEnds = new TZDate(newEnds.getTime() + dateDiff);
 
     /**
      * @event TimeMove#beforeUpdateEvent

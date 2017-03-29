@@ -10,6 +10,7 @@ var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var alldayCore = require('./core');
 var AlldayCreationGuide = require('./creationGuide');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -109,7 +110,7 @@ AlldayCreation.prototype._createEvent = function(eventData) {
         startXIndex = startXIndex - xIndex;
     }
 
-    starts = new Date(dateRange[startXIndex].getTime());
+    starts = new TZDate(dateRange[startXIndex].getTime());
     ends = datetime.end(dateRange[xIndex]);
 
     /**

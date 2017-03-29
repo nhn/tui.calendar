@@ -4,13 +4,10 @@
  */
 'use strict';
 
-var util = global.tui.util,
-    opt = Object.prototype.toString;
-
+var TZDate = require('./timezone').Date;
+var util = global.tui.util;
 var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
-
-var datetime,
-    tokenFunc;
+var datetime, tokenFunc;
 
 var memo = {
     millisecondsTo: {},
@@ -19,7 +16,7 @@ var memo = {
 
 tokenFunc = {
     /**
-     * @param {Date} date date object.
+     * @param {TZDate} date date object.
      * @returns {string} YYYYMMDD
      */
     'YYYYMMDD': function(date) {
@@ -30,7 +27,7 @@ tokenFunc = {
         ].join('');
     },
     /**
-     * @param {Date} date date object
+     * @param {TZDate} date date object
      * @returns {string} four digit year number
      */
     'YYYY': function(date) {
@@ -38,7 +35,7 @@ tokenFunc = {
     },
 
     /**
-     * @param {Date} date date object
+     * @param {TZDate} date date object
      * @returns {string} two digit month number
      */
     'MM': function(date) {
@@ -46,7 +43,7 @@ tokenFunc = {
     },
 
     /**
-     * @param {Date} date date object
+     * @param {TZDate} date date object
      * @returns {string} two digit date number
      */
     'DD': function(date) {
@@ -54,7 +51,7 @@ tokenFunc = {
     },
 
     /**
-     * @param {Date} date date object
+     * @param {TZDate} date date object
      * @returns {string} HH:mm
      */
     'HH:mm': function(date) {
@@ -63,28 +60,6 @@ tokenFunc = {
 
         return datetime.leadingZero(hour, 2) + ':' +
             datetime.leadingZero(minutes, 2);
-    },
-
-    /**
-     * format to local date
-     * @param {Date} date date object
-     * @returns {string} 1988-09-25T09:00:00+09:00
-     */
-    'LOCAL': function(date) {
-        var timeZoneOffset = -date.getTimezoneOffset(),
-            diff = timeZoneOffset >= 0 ? '+' : '-',
-            pad = function(num) {
-                return datetime.leadingZero(num, 2);
-            };
-
-        return date.getFullYear()
-            + '-' + pad(date.getMonth() + 1)
-            + '-' + pad(date.getDate())
-            + 'T' + pad(date.getHours())
-            + ':' + pad(date.getMinutes())
-            + ':' + pad(date.getSeconds())
-            + diff + pad(timeZoneOffset / 60)
-            + ':' + pad(timeZoneOffset % 60);
     }
 };
 
@@ -175,18 +150,19 @@ datetime = {
 
     /**
      * Make date array from supplied paramters.
-     * @param {Date} start Start date.
-     * @param {Date} end End date.
+     * @param {TZDate} start Start date.
+     * @param {TZDate} end End date.
      * @param {number} step The number of milliseconds to use increment.
      * @returns {array} Date array.
      */
     range: function(start, end, step) {
-        var cursor = new Date(start.getTime()),
-            result = [];
+        var cursor = start.getTime();
+        var endTime = end.getTime();
+        var result = [];
 
-        while (cursor <= end) {
-            result.push(cursor);
-            cursor = new Date(cursor.getTime() + step);
+        while (cursor <= endTime) {
+            result.push(new TZDate(cursor));
+            cursor = cursor + step;
         }
 
         return result;
@@ -194,11 +170,11 @@ datetime = {
 
     /**
      * Clone supplied date.
-     * @param {Date} date date object to clone.
-     * @returns {Date} Cloned date object
+     * @param {TZDate} date date object to clone.
+     * @returns {TZDate} Cloned date object
      */
     clone: function(date) {
-        return new Date(date.getTime());
+        return new TZDate(date.getTime());
     },
 
     /**
@@ -207,8 +183,8 @@ datetime = {
      * when first date is latest then seconds then return -1.
      *
      * return +1 reverse, and return 0 is same.
-     * @param {Date} d1 Date object to compare.
-     * @param {Date} d2 Date object to compare.
+     * @param {TZDate} d1 Date object to compare.
+     * @param {TZDate} d2 Date object to compare.
      * @returns {number} result of compare
      */
     compare: function(d1, d2) {
@@ -224,8 +200,8 @@ datetime = {
     },
 
     /**
-     * @param {Date} d1 - date one
-     * @param {Date} d2 - date two
+     * @param {TZDate} d1 - date one
+     * @param {TZDate} d2 - date two
      * @returns {boolean} is two date are same year, month?
      */
     isSameMonth: function(d1, d2) {
@@ -234,8 +210,8 @@ datetime = {
     },
 
     /**
-     * @param {Date} d1 - date one
-     * @param {Date} d2 - date two
+     * @param {TZDate} d1 - date one
+     * @param {TZDate} d2 - date two
      * @returns {boolean} is two date are same year, month, date?
      */
     isSameDate: function(d1, d2) {
@@ -249,7 +225,7 @@ datetime = {
      * @returns {boolean} return true when parameter is valid date object.
      */
     isValid: function(d) {
-        if (opt.call(d) === '[object Date]') {
+        if (d instanceof TZDate) {
             return !window.isNaN(d.getTime());
         }
         return false;
@@ -257,14 +233,14 @@ datetime = {
 
     /**
      * convert non local date to UTC date.
-     * @param {Date} d Date to convert UTC.
-     * @returns {Date} The UTC Date.
+     * @param {TZDate} d Date to convert UTC.
+     * @returns {TZDate} The UTC Date.
      */
     toUTC: function(d) {
         var l = d.getTime(),
             offset = datetime.millisecondsFrom('minutes', new Date().getTimezoneOffset());
 
-        return new Date(l + offset);
+        return new TZDate(l + offset);
     },
 
     /**
@@ -334,7 +310,7 @@ datetime = {
             hms = [0, 0, 0];
         }
 
-        return new Date(
+        return new TZDate(
             Number(ymd[0]),
             Number(ymd[1]) + fixMonth,
             Number(ymd[2]),
@@ -346,7 +322,7 @@ datetime = {
 
     /**
      * Return date object from Date.
-     * @param {Date} date date
+     * @param {TZDate} date date
      * @returns {object} Date object.
      */
     raw: function(date) {
@@ -363,11 +339,11 @@ datetime = {
 
     /**
      * Return 00:00:00 supplied date.
-     * @param {Date} date date.
-     * @returns {Date} start date.
+     * @param {TZDate} date date.
+     * @returns {TZDate} start date.
      */
     start: function(date) {
-        var d = new Date(date.getTime());
+        var d = new TZDate(date.getTime());
         d.setHours(0, 0, 0, 0);
 
         return d;
@@ -375,11 +351,11 @@ datetime = {
 
     /**
      * Return 23:59:59 supplied date.
-     * @param {Date} date date.
-     * @returns {Date} end date.
+     * @param {TZDate} date date.
+     * @returns {TZDate} end date.
      */
     end: function(date) {
-        var d = new Date(date.getTime());
+        var d = new TZDate(date.getTime());
         d.setHours(23, 59, 59, 0);
 
         return d;
@@ -394,7 +370,7 @@ datetime = {
      * - MM => 01 ~ 12
      * - DD => 01 ~ 31
      * - YYYYMMDD => 19880925
-     * @param {Date} date String want to formatted.
+     * @param {TZDate} date String want to formatted.
      * @param {string} format format str.
      * @returns {string}  Formatted date string.
      */
@@ -409,11 +385,11 @@ datetime = {
 
     /**
      * Get start date of specific month
-     * @param {Date} date - date to get start date
-     * @returns {Date} start date of supplied month
+     * @param {TZDate} date - date to get start date
+     * @returns {TZDate} start date of supplied month
      */
     startDateOfMonth: function(date) {
-        var startDate = new Date(Number(date));
+        var startDate = new TZDate(Number(date));
 
         startDate.setDate(1);
         startDate.setHours(0, 0, 0, 0);
@@ -423,13 +399,13 @@ datetime = {
 
     /**
      * Get end date of specific month
-     * @param {Date} date - date to get end date
-     * @returns {Date} end date of supplied month
+     * @param {TZDate} date - date to get end date
+     * @returns {TZDate} end date of supplied month
      */
     endDateOfMonth: function(date) {
         var endDate = datetime.startDateOfMonth(date);
 
-        endDate = new Date(endDate.setMonth(endDate.getMonth() + 1));
+        endDate.setMonth(endDate.getMonth() + 1);
         endDate.setDate(endDate.getDate() - 1);
         endDate.setHours(23, 59, 59);
 
@@ -440,7 +416,7 @@ datetime = {
      * Return 2-dimensional array month calendar
      *
      * dates that different month with given date are negative values
-     * @param {Date} month - date want to calculate month calendar
+     * @param {TZDate} month - date want to calculate month calendar
      * @param {number} [startDayOfWeek=0] - start day of week
      * @param {function} [iteratee] - iteratee for customizing calendar object
      * @returns {Array.<string[]>} calendar 2d array
@@ -465,7 +441,7 @@ datetime = {
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
-        cursor = new Date(new Date(Number(starts)).setDate(starts.getDate() - startIndex));
+        cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
         // iteratee all dates to render
         util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
             var date;
@@ -475,12 +451,12 @@ datetime = {
                 week = calendar[i / 7] = [];
             }
 
-            date = new Date(Number(cursor));
+            date = new TZDate(cursor);
             date = iteratee ? iteratee(date) : date;
             week.push(date);
 
             // add date
-            cursor = new Date(cursor.setDate(cursor.getDate() + 1));
+            cursor.setDate(cursor.getDate() + 1);
         });
 
         return calendar;

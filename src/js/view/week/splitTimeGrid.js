@@ -6,14 +6,11 @@
 
 var util = global.tui.util;
 var config = require('../../config');
-var common = require('../../common/common');
 var domutil = require('../../common/domutil');
-var datetime = require('../../common/datetime');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
-var Time = require('./time');
 var TimeGrid = require('./timeGrid');
 var mainTmpl = require('../template/week/splitTimeGrid.hbs');
-
 
 /**
  * @constructor
@@ -146,7 +143,7 @@ SplitTimeGrid.prototype.viewName = 'split-timegrid';
 // */
 SplitTimeGrid.prototype._getBaseViewModel = function(model) {
     var opt = this.options,
-        now = (new Date()),
+        now = (new TZDate()),
         hourRange = util.range(opt.hourStart, opt.hourEnd),
         viewModel;
 
@@ -189,8 +186,6 @@ SplitTimeGrid.prototype._renderScheduleDate = function(starts, ends) {
         scheduleHeight: this._getTopPercentByTime(ends) - this._getTopPercentByTime(starts)
     }
 };
-
-
 
 module.exports = SplitTimeGrid;
 

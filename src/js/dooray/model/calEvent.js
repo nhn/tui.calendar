@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../../common/timezone').Date;
 var CalEvent = require('../../model/calEvent');
 
 /**
@@ -78,9 +79,9 @@ DoorayEvent.create = function(data) {
 DoorayEvent.prototype.init = function(options) {
     options = options || {};
 
+    options.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     CalEvent.prototype.init.call(this, options);
 
-    this.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     this.calendarID = options.calendarID;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
@@ -88,8 +89,7 @@ DoorayEvent.prototype.init = function(options) {
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
-        this.starts = new Date(Number(this.ends));
-        this.starts.setMinutes(this.starts.getMinutes() - 30);
+        this.starts = new TZDate(this.ends);
     }
 
     this.raw = options.raw || null;

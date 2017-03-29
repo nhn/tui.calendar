@@ -10,7 +10,8 @@ var config = require('../../config'),
     array = require('../../common/array'),
     domutil = require('../../common/domutil'),
     getMousePosData = require('./core'),
-    Guide = require('./creationGuide');
+    Guide = require('./creationGuide'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -74,8 +75,8 @@ MonthCreation.prototype._createEvent = function(eventCache) {
             Number(eventCache.starts),
             Number(eventCache.ends)
         ].sort(array.compare.num.asc),
-        starts = new Date(times[0]),
-        ends = datetime.end(new Date(times[1]));
+        starts = new TZDate(times[0]),
+        ends = datetime.end(new TZDate(times[1]));
 
     /**
      * @event {MonthCreation#beforeCreateEvent}
@@ -115,7 +116,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     eventData = this.getEventData(dragStartEvent.originEvent);
 
     this._cache = {
-        starts: new Date(Number(eventData.date))
+        starts: new TZDate(Number(eventData.date))
     };
 
     /**
@@ -177,7 +178,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getEventData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new Date(Number(eventData.date));
+        cache.ends = new TZDate(Number(eventData.date));
         this._createEvent(cache);
     }
 

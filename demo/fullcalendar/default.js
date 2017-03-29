@@ -1,11 +1,10 @@
 /* eslint no-console: 0, complexity: 0 */
 'use strict';
 (function(window, calendar) {
-    var cal, resizeThrottled,
-        idx = 5;
+    var cal, resizeThrottled, idx = 20;
+    var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
 
-    var baseDate = new Date(),
-        formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
+    calendar.setTimezoneOffset(0);
 
     cal = calendar.FullCalendar({
         defaultView: 'month',
@@ -117,12 +116,48 @@
         {
             id: '8',
             calendarID: '2',
-            title: '[추가 추가 일정]',
-            category: 'time',
+            title: '[종일일정입니다!]',
+            category: 'allday',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
-        }
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '9',
+            calendarID: '2',
+            title: '[추가 추가 일정]',
+            category: 'milestone',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '10',
+            calendarID: '2',
+            title: '[추가 추가 일정2]',
+            category: 'milestone',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '11',
+            calendarID: '2',
+            title: '[종일일정입니다2!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '12',
+            calendarID: '2',
+            title: '[종일일정입니다3!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
     ]);
 
     cal.render();
@@ -138,6 +173,7 @@
             if (!title) {
                 return;
             }
+            console.log(e);
 
             cal.createEvents([{
                 id: String(idx),
@@ -183,7 +219,7 @@
      * Control
      **********/
     function onClick(e) {
-        var action = calendar.domutil.getData(e.target, 'action');
+        var action = e.target.dataset.action;
 
         switch (action) {
             case 'move-prev':
@@ -211,23 +247,23 @@
 
 
     // 일정 클릭 이벤트 핸들러
-    cal.on('clickEvent', function (e) {
-        console.log('click')
+    cal.on('clickEvent', function() {
+        console.log('click');
     });
 
-    cal.on('beforeCreateEvent', function (e) {
-       console.log('beforeCreateEvent', e)
+    cal.on('beforeCreateEvent', function(e) {
+        console.log('beforeCreateEvent', e);
     });
 
-    cal.on('beforeUpdateEvent', function (e) {
-        console.log('beforeUpdateEvent', e)
+    cal.on('beforeUpdateEvent', function(e) {
+        console.log('beforeUpdateEvent', e);
     });
 
-    cal.on('beforeDeleteEvent', function (e) {
+    cal.on('beforeDeleteEvent', function(e) {
         console.log('beforeDeleteEvent', e);
     });
 
-    calendar.domevent.on(document.querySelector('.control'), 'click', onClick);
+    document.querySelector('.control').addEventListener('click', onClick);
 
     window.cal = cal;
 })(window, ne.dooray.calendar);

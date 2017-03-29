@@ -8,6 +8,7 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
+var TZDate = require('../../common/timezone').Date;
 
 
 /**
@@ -88,13 +89,13 @@ AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventDa
     var model = dragStartEventData.model,
         viewOptions = this.alldayResize.alldayView.options,
         startDate = datetime.start(
-            new Date(Math.max(
+            new TZDate(Math.max(
                 model.starts.getTime(),
                 datetime.parse(viewOptions.renderStartDate).getTime()
             ))
         ),
         endDate = datetime.end(
-            new Date(Math.min(
+            new TZDate(Math.min(
                 model.ends.getTime(),
                 datetime.parse(viewOptions.renderEndDate).getTime()
             ))

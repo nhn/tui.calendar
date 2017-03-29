@@ -79,12 +79,12 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function() {
  */
 WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
     return function() {
-        var viewModel = this, // eslint-disable-line
-            period = datetime.range(
-                viewModel.getStarts(),
-                viewModel.getEnds(),
-                datetime.MILLISECONDS_PER_DAY
-            );
+        var viewModel = this; // eslint-disable-line
+        var period = datetime.range(
+            viewModel.getStarts(),
+            viewModel.getEnds(),
+            datetime.MILLISECONDS_PER_DAY
+        );
 
         util.forEach(period, function(date) {
             var ymd = datetime.format(date, 'YYYYMMDD');

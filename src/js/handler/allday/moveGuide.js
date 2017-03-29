@@ -8,6 +8,7 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * Class for Allday.Move dragging effect.
@@ -118,9 +119,9 @@ AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) 
         viewOptions = this.alldayMove.alldayView.options,
         renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
         renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
-        fromLeft = (new Date(originEventStarts.getTime() -
+        fromLeft = (new TZDate(originEventStarts.getTime() -
             renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
-        fromRight = (new Date(originEventEnds.getTime() -
+        fromRight = (new TZDate(originEventEnds.getTime() -
             renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
 
     return function(indexOffset) {

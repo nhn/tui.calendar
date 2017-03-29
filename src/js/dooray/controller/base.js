@@ -8,6 +8,7 @@
 var util = global.tui.util;
 var Base = require('../../controller/base');
 var DoorayEvent = require('../model/calEvent');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -78,11 +79,11 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
     }
 
     if (options.starts) {
-        calEvent.set('starts', new Date(options.starts));
+        calEvent.set('starts', new TZDate(options.starts));
     }
 
     if (options.ends) {
-        calEvent.set('ends', new Date(options.ends));
+        calEvent.set('ends', new TZDate(options.ends));
     }
 
     if (options.color) {

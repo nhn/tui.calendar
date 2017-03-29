@@ -6,6 +6,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../common/timezone').Date;
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
@@ -37,13 +38,13 @@ function CalEvent() {
 
     /**
      * event starts
-     * @type {Date}
+     * @type {TZDate}
      */
     this.starts = null;
 
     /**
      * event ends
-     * @type {Date}
+     * @type {TZDate}
      */
     this.ends = null;
 
@@ -99,30 +100,47 @@ CalEvent.create = function(data) {
  * @param {object} options options.
  */
 CalEvent.prototype.init = function(options) {
-    options = options || {};
+    options = util.extend({}, options);
 
     this.id = options.id || '';
     this.title = options.title || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
     this.visible = util.isExisty(options.visible) ? options.visible : true;
 
-    if (options.starts) {
-        this.starts = new Date(options.starts);
-    } else {
-        this.starts = new Date();
-    }
-
-    if (options.ends) {
-        this.ends = new Date(options.ends);
-    } else {
-        this.ends = new Date(this.starts.getTime());
-        this.ends.setMinutes(this.ends.getMinutes() + 30);
-    }
-
     this.color = options.color || this.color;
     this.bgColor = options.bgColor || this.bgColor;
     this.borderColor = options.borderColor || this.borderColor;
     this.origin = options.origin || this.origin;
+
+    if (this.isAllDay) {
+        this.setAllDayPeriod(options.starts, options.ends);
+    } else {
+        this.setTimePeriod(options.starts, options.ends);
+    }
+};
+
+CalEvent.prototype.setAllDayPeriod = function(starts, ends) {
+    // 종일일정인 경우 문자열의 날짜정보만 사용한다.
+    if (util.isString(starts)) {
+        starts = starts.substring(0, 10);
+    }
+    if (util.isString(ends)) {
+        ends = ends.substring(0, 10);
+    }
+
+    this.starts = new TZDate(starts || Date.now());
+    this.starts.setHours(0, 0, 0);
+    this.ends = new TZDate(ends || this.starts);
+    this.ends.setHours(23, 59, 59);
+};
+
+CalEvent.prototype.setTimePeriod = function(starts, ends) {
+    this.starts = new TZDate(starts || Date.now());
+    this.ends = new TZDate(ends || this.starts);
+
+    if (!ends) {
+        this.ends.setMinutes(this.ends.getMinutes() + 30);
+    }
 };
 
 /**
@@ -197,9 +215,9 @@ CalEvent.prototype.duration = function() {
         duration;
 
     if (this.isAllDay) {
-        duration = new Date(datetime.end(ends) - datetime.start(starts));
+        duration = new TZDate(datetime.end(ends) - datetime.start(starts));
     } else {
-        duration = new Date(ends - starts);
+        duration = new TZDate(ends - starts);
     }
 
     return duration;

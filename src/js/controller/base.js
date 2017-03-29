@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../common/timezone').Date;
 var CalEvent = require('../model/calEvent');
 var CalEventViewModel = require('../model/viewModel/calEvent');
 var datetime = require('../common/datetime');
@@ -124,11 +125,11 @@ Base.prototype.updateEvent = function(id, options) {
         }
 
         if (options.starts) {
-            model.set('starts', new Date(options.starts));
+            model.set('starts', new TZDate(options.starts));
         }
 
         if (options.ends) {
-            model.set('ends', new Date(options.ends));
+            model.set('ends', new TZDate(options.ends));
         }
 
         self._removeFromMatrix(model);

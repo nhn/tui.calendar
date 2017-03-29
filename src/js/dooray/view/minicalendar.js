@@ -12,7 +12,8 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent'),
     datetime = require('../../common/datetime'),
-    tmpl = require('./minicalendar.hbs');
+    tmpl = require('./minicalendar.hbs'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * Returns the CSS class name for the given index
@@ -53,7 +54,7 @@ function MiniCalendar(options, container) {
     domutil.addClass(container, config.classname('minicalendar'));
     domevent.on(this.container, 'click', this._onClick, this);
 
-    todayStart = datetime.start(new Date());
+    todayStart = datetime.start(new TZDate());
     todayYMD = datetime.format(todayStart, 'YYYY-MM-DD');
 
     /**
@@ -83,7 +84,7 @@ function MiniCalendar(options, container) {
     /**
      * @type {Date}
      */
-    this.selectedDate = new Date(Number(options.renderMonth));
+    this.selectedDate = new TZDate(Number(options.renderMonth));
 
     this.render();
 }
@@ -148,7 +149,7 @@ MiniCalendar.prototype._date = function(buttonElement) {
      * @property {Date} date - clicked date
      */
     this.fire('click', {
-        date: new Date(Number(this.selectedDate))
+        date: new TZDate(Number(this.selectedDate))
     });
 };
 
@@ -310,7 +311,7 @@ MiniCalendar.prototype.markData = function(dates) {
  * @returns {Date} selected date
  */
 MiniCalendar.prototype.getSelectedDate = function() {
-    return new Date(Number(this.selectedDate));
+    return new TZDate(Number(this.selectedDate));
 };
 
 /**
@@ -320,7 +321,7 @@ MiniCalendar.prototype.getSelectedDate = function() {
 MiniCalendar.prototype.selectDate = function(date) {
     date = util.isDate(date) ? date : datetime.parse(date);
 
-    this.selectedDate = new Date(Number(date));
+    this.selectedDate = new TZDate(Number(date));
 
     this.render();
 };

@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var ts = Object.prototype.toString;
+var TZDate = require('../common/timezone').Date;
 
 /**
  * @constructor
@@ -14,8 +14,8 @@ function DW(date) {
         return new DW(date);
     }
 
-    if (ts.call(date) !== '[object Date]') {
-        date = new Date(date);
+    if (!(date instanceof TZDate)) {
+        date = new TZDate(date);
     }
 
     /**
@@ -42,7 +42,7 @@ DW.prototype.safe = function(obj) {
  * @returns {DW} cloned dwrap object
  */
 DW.prototype.clone = function() {
-    return new DW(new Date(Number(this.d)));
+    return new DW(new TZDate(Number(this.d)));
 };
 
 /**

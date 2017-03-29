@@ -9,6 +9,7 @@ var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var AlldayCore = require('./core');
 var AlldayMoveGuide = require('./moveGuide');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -181,11 +182,11 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
 AlldayMove.prototype._updateEvent = function(eventData) {
     var model = eventData.targetModel,
         dateOffset = eventData.xIndex - eventData.dragStartXIndex,
-        newStarts = new Date(model.starts.getTime()),
-        newEnds = new Date(model.ends.getTime());
+        newStarts = new TZDate(model.starts.getTime()),
+        newEnds = new TZDate(model.ends.getTime());
 
-    newStarts = new Date(newStarts.setDate(newStarts.getDate() + dateOffset));
-    newEnds = new Date(newEnds.setDate(newEnds.getDate() + dateOffset));
+    newStarts = new TZDate(newStarts.setDate(newStarts.getDate() + dateOffset));
+    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
 
     /**
      * @event AlldayMove#beforeUpdateEvent

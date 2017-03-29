@@ -9,6 +9,7 @@ var util = global.tui.util;
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
+    TZDate = require('../../common/timezone').Date,
     tmpl = require('./month.hbs'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
@@ -91,8 +92,8 @@ Month.prototype._renderChildren = function(container, calendar) {
     this.children.clear();
 
     util.forEach(calendar, function(weekArr) {
-        var starts = new Date(Number(weekArr[0])),
-            ends = new Date(Number(weekArr[weekArr.length - 1])),
+        var starts = new TZDate(Number(weekArr[0])),
+            ends = new TZDate(Number(weekArr[weekArr.length - 1])),
             weekdayViewContainer,
             weekdayView;
 

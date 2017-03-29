@@ -50,8 +50,8 @@ describe('view:WeekdayInMonth', function() {
             var viewModel = CalEventViewModel.create(CalEvent.create({
                     title: 'A',
                     isAllDay: true,
-                    starts: '2015-05-01T00:00:00+09:00',
-                    ends: '2015-05-03T23:59:59+09:00'
+                    starts: '2015-05-01T00:00:00',
+                    ends: '2015-05-03T23:59:59'
                 })),
                 cache = {},
                 helper = WeekdayInMonth.prototype._getSkipHelper(cache);

@@ -17,7 +17,8 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     View = require('../../view/view'),
     baseTmpl = require('./freebusybase.hbs'),
-    tmpl = require('./freebusy.hbs');
+    tmpl = require('./freebusy.hbs'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -176,7 +177,7 @@ Freebusy.prototype._onSelect = function(clickEventData) {
  * @returns {number} hour + minutes + seconds millseconds value
  */
 Freebusy.prototype._getMilliseconds = function(date) {
-    var raw = datetime.raw(util.isDate(date) ? date : new Date(date)),
+    var raw = datetime.raw(new TZDate(date)),
         mils = 0;
 
     mils = datetime.millisecondsFrom('hour', raw.h) +
@@ -210,8 +211,8 @@ Freebusy.prototype._getBlockBound = function(block) {
         left,
         width;
 
-    if(to === 0) {
-        to = this._getMilliseconds(datetime.toUTC(new Date((datetime.MILLISECONDS_PER_HOUR * '23') + (datetime.MILLISECONDS_PER_MINUTES * '59'))));
+    if (to === 0) {
+        to = this._getMilliseconds(new TZDate(0, 0, 0, 23, 59));
     }
 
     left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);
@@ -264,8 +265,8 @@ Freebusy.prototype._getSelectionBlock = function(start, end) {
     end = end.split(':');
 
     return this._getBlockBound({
-        from: datetime.toUTC(new Date((oneHour * start[0]) + (oneMinutes * start[1]))),
-        to: datetime.toUTC(new Date((oneHour * end[0]) + (oneMinutes * end[1])))
+        from: datetime.toUTC(new TZDate((oneHour * start[0]) + (oneMinutes * start[1]))),
+        to: datetime.toUTC(new TZDate((oneHour * end[0]) + (oneMinutes * end[1])))
     });
 };
 

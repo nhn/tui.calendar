@@ -9,9 +9,7 @@ describe('View/TimeGrid', function() {
     });
 
     it('_getBaseViewModel()', function() {
-        var MockDate = jasmine.createSpyObj('Date', ['getHours']);
-        spyOn(window, 'Date').and.returnValue(MockDate);
-        MockDate.getHours.and.returnValue(3);
+        jasmine.clock().mockDate(new Date(2015, 0, 1, 3));
 
         var expected = {
             hours: [3, 4, 5, 6, 7, 8, 9, 10],
@@ -29,6 +27,8 @@ describe('View/TimeGrid', function() {
         var result = proto._getBaseViewModel.call(obj);
 
         expect(result).toEqual(expected);
+
+        jasmine.clock().uninstall();
     });
 
     describe('_getTopPercentByTime()', function() {

@@ -10,6 +10,7 @@ var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var TimeCreationGuide = require('./creationGuide');
+var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
 
 /**
@@ -194,7 +195,7 @@ TimeCreation.prototype._createEvent = function(eventData) {
         ];
     }
 
-    baseDate = new Date(relatedView.getDate());
+    baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
     starts = Math.max(dateStart.getTime(), createRange[0]);
@@ -209,8 +210,8 @@ TimeCreation.prototype._createEvent = function(eventData) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: false,
-        starts: new Date(starts),
-        ends: new Date(ends),
+        starts: new TZDate(starts),
+        ends: new TZDate(ends),
         guide: this.guide
     });
 };

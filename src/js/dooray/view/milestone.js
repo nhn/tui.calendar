@@ -8,6 +8,7 @@ var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../../view/view');
 var tmpl = require('./milestone.hbs');
 
@@ -60,7 +61,7 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
             datetime.MILLISECONDS_PER_DAY
         ),
         height,
-        today = datetime.format(new Date(), 'YYYY-MM-DD');
+        today = datetime.format(new TZDate(), 'YYYY-MM-DD');
 
     // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {

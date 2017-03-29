@@ -3,6 +3,7 @@ var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
 var CalEvent = require('model/calEvent');
 var CalEventViewModel = require('model/viewModel/calEvent');
+var TZDate = require('common/timezone').Date;
 
 describe('Base.Core', function() {
     var util = tui.util,
@@ -125,8 +126,8 @@ describe('Base.Core', function() {
             // 5/1 10:20 ~ 5/1 10:40
             collection.add(CalEventViewModel.create(eventList[0]));
 
-            var limit1 = new Date('2015-05-01T10:30:00+09:00');
-            var limit2 = new Date('2015-05-01T10:40:00+09:00');
+            var limit1 = new TZDate('2015-05-01T10:30:00+09:00');
+            var limit2 = new TZDate('2015-05-01T10:40:00+09:00');
             var viewModel;
 
             controller.Core.limitRenderRange(limit1, limit2, collection);
@@ -166,62 +167,62 @@ describe('Base.Core', function() {
             collection.add(CalEventViewModel.create(eventList[0]));
 
             // A: 09:30 ~ 10:10
-            d1 = new Date('2015-05-01T09:30:00+09:00');
-            d2 = new Date('2015-05-01T10:10:00+09:00');
+            d1 = new TZDate('2015-05-01T09:30:00+09:00');
+            d2 = new TZDate('2015-05-01T10:10:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(0);
 
             // B: 09:30 ~ 10:20
-            d1 = new Date('2015-05-01T09:30:00+09:00');
-            d2 = new Date('2015-05-01T10:20:00+09:00');
+            d1 = new TZDate('2015-05-01T09:30:00+09:00');
+            d2 = new TZDate('2015-05-01T10:20:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // C: 09:30 ~ 10:30
-            d1 = new Date('2015-05-01T09:30:00+09:00');
-            d2 = new Date('2015-05-01T10:30:00+09:00');
+            d1 = new TZDate('2015-05-01T09:30:00+09:00');
+            d2 = new TZDate('2015-05-01T10:30:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // D: 10:20 ~ 10:30
-            d1 = new Date('2015-05-01T10:20:00+09:00');
-            d2 = new Date('2015-05-01T10:30:00+09:00');
+            d1 = new TZDate('2015-05-01T10:20:00+09:00');
+            d2 = new TZDate('2015-05-01T10:30:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // E: 10:25 ~ 10:35
-            d1 = new Date('2015-05-01T10:25:00+09:00');
-            d2 = new Date('2015-05-01T10:35:00+09:00');
+            d1 = new TZDate('2015-05-01T10:25:00+09:00');
+            d2 = new TZDate('2015-05-01T10:35:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // F: 10:30 ~ 10:40
-            d1 = new Date('2015-05-01T10:30:00+09:00');
-            d2 = new Date('2015-05-01T10:40:00+09:00');
+            d1 = new TZDate('2015-05-01T10:30:00+09:00');
+            d2 = new TZDate('2015-05-01T10:40:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // G: 10:30 ~ 10:50
-            d1 = new Date('2015-05-01T10:30:00+09:00');
-            d2 = new Date('2015-05-01T10:50:00+09:00');
+            d1 = new TZDate('2015-05-01T10:30:00+09:00');
+            d2 = new TZDate('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // H: 10:40 ~ 10:50
-            d1 = new Date('2015-05-01T10:40:00+09:00');
-            d2 = new Date('2015-05-01T10:50:00+09:00');
+            d1 = new TZDate('2015-05-01T10:40:00+09:00');
+            d2 = new TZDate('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // I: 10:50 ~ 10:55
-            d1 = new Date('2015-05-01T10:50:00+09:00');
-            d2 = new Date('2015-05-01T10:55:00+09:00');
+            d1 = new TZDate('2015-05-01T10:50:00+09:00');
+            d2 = new TZDate('2015-05-01T10:55:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(0);
 
             // L: 10:10 ~ 10:50
-            d1 = new Date('2015-05-01T10:10:00+09:00');
-            d2 = new Date('2015-05-01T10:50:00+09:00');
+            d1 = new TZDate('2015-05-01T10:10:00+09:00');
+            d2 = new TZDate('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getEventInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
         });
