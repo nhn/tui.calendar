@@ -378,51 +378,54 @@ Calendar.prototype.move = function(offset) {
         viewName = this.viewName,
         view = this.getCurrentView(),
         recursiveSet = this.setOptionRecurseively,
-        date2;
+        startDate, endDate, tempDate;
 
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
         renderDate.addMonth(offset);
-        date2 = datetime.arr2dCalendar(new TZDate(this.renderDate));
+        tempDate = datetime.arr2dCalendar(new TZDate(this.renderDate));
 
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
         });
 
-        this.options.render = {
-            startDate: date2[0][0],
-            endDate: date2[date2.length - 1][6]
-        };
+        startDate = tempDate[0][0];
+        endDate = tempDate[tempDate.length - 1][6];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        date2 = this.getWeekDayRange(renderDate.d);
+        tempDate = this.getWeekDayRange(renderDate.d);
+        startDate = tempDate[0];
+        endDate = tempDate[1];
 
         recursiveSet(view, function(opt) {
-            opt.renderStartDate = datetime.format(date2[0], 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(date2[1], 'YYYY-MM-DD');
+            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
         });
-
-        this.options.render = {
-            startDate: date2[0],
-            endDate: date2[1]
-        };
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
-        date2 = renderDate.clone().setHours(23, 59, 59, 0);
+        startDate = endDate = renderDate.d;
 
         recursiveSet(view, function(opt) {
-            opt.renderStartDate = datetime.format(renderDate.d, 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(date2.d, 'YYYY-MM-DD');
+            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
         });
-
-        this.options.render = {
-            startDate: renderDate.d,
-            endDate: date2.d
-        };
     }
 
     this.renderDate = renderDate.d;
+    this._setRenderRange(startDate, endDate);
+};
+
+/**
+ * Set renderRange
+ * @param {TZDate} start - start date
+ * @param {TZDate} end - end date
+ */
+Calendar.prototype._setRenderRange = function(start, end) {
+    this.renderRange = {
+        start: new Date(start.getTime()),
+        end: new Date(end.getTime())
+    };
 };
 
 /**
