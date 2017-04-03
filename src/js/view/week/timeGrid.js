@@ -137,7 +137,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
             datetime.parse(opt.renderEndDate),
             datetime.MILLISECONDS_PER_DAY
         ),
-        todaymarkerLeft = null,
+        todaymarkerLeft = -1,
         viewModel;
 
     now = now || new TZDate();
@@ -164,7 +164,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
  */
 TimeGrid.prototype._getBaseViewModel = function() {
     var opt = this.options,
-        now = (new TZDate()),
+        now = new TZDate(),
         hourRange = util.range(opt.hourStart, opt.hourEnd),
         viewModel;
 
@@ -239,6 +239,7 @@ TimeGrid.prototype.render = function(viewModel) {
 
     width = 100 / eventLen;
     baseViewModel.width = width;
+    baseViewModel.isToday = baseViewModel.todaymarkerLeft >= 0;
 
     container.innerHTML = mainTmpl(baseViewModel);
 
@@ -268,11 +269,9 @@ TimeGrid.prototype.render = function(viewModel) {
  * Refresh hourmarker element.
  */
 TimeGrid.prototype.refreshHourmarker = function() {
-    var hourLabels = this._hourLabels,
-        hourmarker = this.hourmarker,
+    var hourmarker = this.hourmarker,
         viewModel = this._getHourmarkerViewModel(),
-        todaymarker,
-        text;
+        todaymarker;
 
     if (!hourmarker || !viewModel) {
         return;
@@ -281,10 +280,9 @@ TimeGrid.prototype.refreshHourmarker = function() {
     todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
 
     reqAnimFrame.requestAnimFrame(function() {
-        
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.hourmarkerTop + '%';
-        todaymarker.style.display = viewModel.todaymarkerLeft ? 'block' : 'none';
+        todaymarker.style.display = (viewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
     });
 };
 
