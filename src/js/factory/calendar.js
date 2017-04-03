@@ -413,18 +413,9 @@ Calendar.prototype.move = function(offset) {
     }
 
     this.renderDate = renderDate.d;
-    this._setRenderRange(startDate, endDate);
-};
-
-/**
- * Set renderRange
- * @param {TZDate} start - start date
- * @param {TZDate} end - end date
- */
-Calendar.prototype._setRenderRange = function(start, end) {
     this.renderRange = {
-        start: new Date(start.getTime()),
-        end: new Date(end.getTime())
+        start: startDate,
+        end: endDate
     };
 };
 
