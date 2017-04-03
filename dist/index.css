@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Apr 03 2017 16:02:39 GMT+0900 (KST)" */
+/*! bundle created at "Mon Apr 03 2017 17:57:59 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -65,6 +65,12 @@
 }
 .dooray-calendar-month-week-item .dooray-calendar-weekday {
   border-top: 1px solid #ccc;
+}
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-weekday-grid {
+  overflow-y: hidden;
+}
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-weekday-events {
+  overflow-y: hidden;
 }
 .dooray-calendar-weekday-container,
 .dooray-calendar-weekday-grid,

@@ -18,8 +18,7 @@ var config = require('../../config'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     eventTmpl = require('./weekdayInMonthEvent.hbs'),
-    skipTmpl = require('./weekdayInMonthSkip.hbs'),
-    domevent = require('../../common/domevent');
+    skipTmpl = require('./weekdayInMonthSkip.hbs');
 
 /**
  * @constructor

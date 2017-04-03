@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Apr 03 2017 16:02:39 GMT+0900 (KST)" */
+/*! bundle created at "Mon Apr 03 2017 17:57:59 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6258,18 +6258,9 @@
 	    }
 	
 	    this.renderDate = renderDate.d;
-	    this._setRenderRange(startDate, endDate);
-	};
-	
-	/**
-	 * Set renderRange
-	 * @param {TZDate} start - start date
-	 * @param {TZDate} end - end date
-	 */
-	Calendar.prototype._setRenderRange = function(start, end) {
 	    this.renderRange = {
-	        start: new Date(start.getTime()),
-	        end: new Date(end.getTime())
+	        start: startDate,
+	        end: endDate
 	    };
 	};
 	
@@ -14915,8 +14906,7 @@
 	    Weekday = __webpack_require__(69),
 	    baseTmpl = __webpack_require__(94),
 	    eventTmpl = __webpack_require__(95),
-	    skipTmpl = __webpack_require__(96),
-	    domevent = __webpack_require__(30);
+	    skipTmpl = __webpack_require__(96);
 	
 	/**
 	 * @constructor
