@@ -4661,7 +4661,7 @@
 	    options = this.options = util.extend({
 	        startDayOfWeek: 0,
 	        renderMonth: todayStart,
-	        daynames: ['S', 'M', 'T', 'W', 'TH', 'F', 'S'],
+	        daynames: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
 	        selectedDate: todayYMD
 	    }, options);
 	
