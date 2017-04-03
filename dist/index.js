@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Mar 29 2017 20:11:16 GMT+0900 (KST)" */
+/*! bundle created at "Mon Apr 03 2017 16:02:39 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5904,7 +5904,7 @@
 	        controller: null,
 	        defaultView: 'week',
 	        isDoorayView: true,
-	        defaultDate: datetime.format(new TZDate(), 'YYYY-MM-DD'),
+	        defaultDate: new TZDate(),
 	        template: util.extend({
 	            allday: null,
 	            time: null
@@ -6229,7 +6229,7 @@
 	
 	    if (viewName === 'month') {
 	        renderDate.addMonth(offset);
-	        tempDate = datetime.arr2dCalendar(new TZDate(this.renderDate));
+	        tempDate = datetime.arr2dCalendar(this.renderDate);
 	
 	        recursiveSet(view, function(opt) {
 	            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -9494,7 +9494,7 @@
 	            datetime.parse(opt.renderEndDate),
 	            datetime.MILLISECONDS_PER_DAY
 	        ),
-	        todaymarkerLeft = null,
+	        todaymarkerLeft = -1,
 	        viewModel;
 	
 	    now = now || new TZDate();
@@ -9521,7 +9521,7 @@
 	 */
 	TimeGrid.prototype._getBaseViewModel = function() {
 	    var opt = this.options,
-	        now = (new TZDate()),
+	        now = new TZDate(),
 	        hourRange = util.range(opt.hourStart, opt.hourEnd),
 	        viewModel;
 	
@@ -9596,6 +9596,7 @@
 	
 	    width = 100 / eventLen;
 	    baseViewModel.width = width;
+	    baseViewModel.isToday = baseViewModel.todaymarkerLeft >= 0;
 	
 	    container.innerHTML = mainTmpl(baseViewModel);
 	
@@ -9625,11 +9626,9 @@
 	 * Refresh hourmarker element.
 	 */
 	TimeGrid.prototype.refreshHourmarker = function() {
-	    var hourLabels = this._hourLabels,
-	        hourmarker = this.hourmarker,
+	    var hourmarker = this.hourmarker,
 	        viewModel = this._getHourmarkerViewModel(),
-	        todaymarker,
-	        text;
+	        todaymarker;
 	
 	    if (!hourmarker || !viewModel) {
 	        return;
@@ -9638,10 +9637,9 @@
 	    todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
 	
 	    reqAnimFrame.requestAnimFrame(function() {
-	        
 	        hourmarker.style.display = 'block';
 	        hourmarker.style.top = viewModel.hourmarkerTop + '%';
-	        todaymarker.style.display = viewModel.todaymarkerLeft ? 'block' : 'none';
+	        todaymarker.style.display = (viewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
 	    });
 	};
 	
@@ -10648,7 +10646,7 @@
 	    + "timegrid-hourmarker-line\" style=\"left:"
 	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
 	    + "%;"
-	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.todaymarkerLeft : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + ";width:"
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%\"></div>\n            <div class=\""
@@ -10656,7 +10654,7 @@
 	    + "timegrid-todaymarker\" style=\"left:"
 	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
 	    + "%;"
-	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.todaymarkerLeft : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">today</div>\n        </div>\n    </div>\n</div>\n";
 	},"useData":true});
 

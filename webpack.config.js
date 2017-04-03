@@ -57,6 +57,7 @@ module.exports = {
     devtool,
     plugins,
     devServer: {
+        host: '0.0.0.0',
         inline: true,
         filename: 'index.js'
     }

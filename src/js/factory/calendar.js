@@ -59,7 +59,7 @@ function Calendar(options, container) {
         controller: null,
         defaultView: 'week',
         isDoorayView: true,
-        defaultDate: datetime.format(new TZDate(), 'YYYY-MM-DD'),
+        defaultDate: new TZDate(),
         template: util.extend({
             allday: null,
             time: null
@@ -384,7 +384,7 @@ Calendar.prototype.move = function(offset) {
 
     if (viewName === 'month') {
         renderDate.addMonth(offset);
-        tempDate = datetime.arr2dCalendar(new TZDate(this.renderDate));
+        tempDate = datetime.arr2dCalendar(this.renderDate);
 
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
