@@ -5,7 +5,7 @@
         {{#if this ~}}
         <div class="{{CSS_PREFIX}}time-date-event-block {{#if model.isPending}} {{CSS_PREFIX}}time-date-event-block-pending{{/if}}" data-id="{{stamp model}}" style="{{time-eventBlock this}}">
             <div class="{{CSS_PREFIX}}time-event" style="color:{{model.color}};background-color:{{model.bgColor}}; border-left: 2px solid {{model.borderColor}}">{{{time-tmpl model}}}</div>
-            <div class="{{CSS_PREFIX}}time-resize-handle handle-x">&nbsp;</div>
+            {{#unless cropped}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x">&nbsp;</div>{{/unless}}
         </div>
         {{/if ~}}
         {{/each}}

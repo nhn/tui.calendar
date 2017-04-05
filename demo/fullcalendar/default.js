@@ -4,10 +4,10 @@
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
 
-    calendar.setTimezoneOffset(0);
+    // calendar.setTimezoneOffset(540);
 
     cal = calendar.FullCalendar({
-        defaultView: 'month',
+        defaultView: 'week',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -56,17 +56,17 @@
             title: '스크럼',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T09:30:00+09:00',
-            ends: formattedDate + 'T10:30:00+09:00'
+            starts: '2017-04-05T22:30:00+09:00',
+            ends: '2017-04-06T02:30:00+09:00'
         },
         {
             id: '2',
-            calendarID: '2',
-            title: '[추가 일정]',
+            calendarID: '1',
+            title: '2차 QA',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T17:30:00+09:00',
-            ends: formattedDate + 'T17:45:00+09:00'
+            starts: '2017-04-06T17:30:00+09:00',
+            ends: '2017-04-07T17:31:00+09:00'
         },
         {
             id: '3',
@@ -157,7 +157,7 @@
             dueDateClass: '',
             starts: formattedDate + 'T00:00:00+09:00',
             ends: formattedDate + 'T00:00:00+09:00'
-        },
+        }
     ]);
 
     cal.render();
