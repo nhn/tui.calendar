@@ -5,10 +5,11 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config'),
-    Calendar = require('../../factory/calendar'),
-    controllerFactory = require('../factory/controller'),
-    serviceWeekViewFactory = require('./weekView');
+var config = require('../../config');
+var Calendar = require('../../factory/calendar');
+var datetime = require('../../common/datetime');
+var controllerFactory = require('../factory/controller');
+var serviceWeekViewFactory = require('./weekView');
 
 /**
  * @typedef {object} ServiceCalendar~DoorayEvent
@@ -54,7 +55,12 @@ function ServiceCalendar(options, container) {
     options = util.extend({
         calendarColor: {},
         groupFunc: function(viewModel) {
-            return viewModel.model.category;
+            var model = viewModel.model;
+
+            if (model.category === 'time' && (model.ends - model.starts > datetime.MILLISECONDS_PER_DAY)) {
+                return 'allday';
+            }
+            return model.category;
         },
         month: {
             eventFilter: function(model) {

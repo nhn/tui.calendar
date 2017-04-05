@@ -128,9 +128,9 @@ CalEvent.prototype.setAllDayPeriod = function(starts, ends) {
         ends = ends.substring(0, 10);
     }
 
-    this.starts = new TZDate(starts || Date.now());
+    this.starts = datetime.parse(starts);
     this.starts.setHours(0, 0, 0);
-    this.ends = new TZDate(ends || this.starts);
+    this.ends = ends ? datetime.parse(ends) : new TZDate(this.starts);
     this.ends.setHours(23, 59, 59);
 };
 

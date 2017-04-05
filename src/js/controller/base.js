@@ -169,8 +169,8 @@ Base.prototype.deleteEvent = function(id) {
  * @param {CalEvent} event - instance of event.
  */
 Base.prototype._addToMatrix = function(event) {
-    var ownMatrix = this.dateMatrix,
-        containDates = this._getContainDatesInEvent(event);
+    var ownMatrix = this.dateMatrix;
+    var containDates = this._getContainDatesInEvent(event);
 
     util.forEach(containDates, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),

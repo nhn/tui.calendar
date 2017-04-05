@@ -79,12 +79,10 @@ Time.prototype._parseDateGroup = function(str) {
  * @returns {object} bound object for supplied view model.
  */
 Time.prototype.getEventViewBound = function(viewModel, options) {
-    var baseMS = options.baseMS,
-        baseHeight = options.baseHeight,
-        offsetStart,
-        width,
-        height,
-        top;
+    var baseMS = options.baseMS;
+    var baseHeight = options.baseHeight;
+    var cropped = false;
+    var offsetStart, width, height, top;
 
     offsetStart = viewModel.valueOf().starts - options.todayStart;
 
@@ -98,11 +96,17 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
         width = null;
     }
 
+    if (height + top > baseHeight) {
+        height = baseHeight - top;
+        cropped = true;
+    }
+
     return {
         top: top,
         left: options.baseLeft[options.columnIndex],
         width: width,
-        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom
+        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
+        cropped: cropped
     };
 };
 

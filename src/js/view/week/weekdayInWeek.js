@@ -38,7 +38,6 @@ WeekdayInWeek.prototype.render = function(viewModel) {
         baseViewModel = this.getBaseViewModel(),
         maxEventInDay = 0;
 
-
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
     maxEventInDay = mmax.apply(
