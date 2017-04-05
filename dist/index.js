@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Apr 03 2017 17:57:59 GMT+0900 (KST)" */
+/*! bundle created at "Tue Apr 04 2017 17:45:05 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -4105,9 +4105,9 @@
 	        ends = ends.substring(0, 10);
 	    }
 	
-	    this.starts = new TZDate(starts || Date.now());
+	    this.starts = datetime.parse(starts);
 	    this.starts.setHours(0, 0, 0);
-	    this.ends = new TZDate(ends || this.starts);
+	    this.ends = ends ? datetime.parse(ends) : new TZDate(this.starts);
 	    this.ends.setHours(23, 59, 59);
 	};
 	
@@ -7134,8 +7134,8 @@
 	 * @param {CalEvent} event - instance of event.
 	 */
 	Base.prototype._addToMatrix = function(event) {
-	    var ownMatrix = this.dateMatrix,
-	        containDates = this._getContainDatesInEvent(event);
+	    var ownMatrix = this.dateMatrix;
+	    var containDates = this._getContainDatesInEvent(event);
 	
 	    util.forEach(containDates, function(date) {
 	        var ymd = datetime.format(date, 'YYYYMMDD'),
@@ -9824,12 +9824,10 @@
 	 * @returns {object} bound object for supplied view model.
 	 */
 	Time.prototype.getEventViewBound = function(viewModel, options) {
-	    var baseMS = options.baseMS,
-	        baseHeight = options.baseHeight,
-	        offsetStart,
-	        width,
-	        height,
-	        top;
+	    var baseMS = options.baseMS;
+	    var baseHeight = options.baseHeight;
+	    var cropped = false;
+	    var offsetStart, width, height, top;
 	
 	    offsetStart = viewModel.valueOf().starts - options.todayStart;
 	
@@ -9843,11 +9841,17 @@
 	        width = null;
 	    }
 	
+	    if (height + top > baseHeight) {
+	        height = baseHeight - top;
+	        cropped = true;
+	    }
+	
 	    return {
 	        top: top,
 	        left: options.baseLeft[options.columnIndex],
 	        width: width,
-	        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom
+	        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
+	        cropped: cropped
 	    };
 	};
 	
@@ -9976,15 +9980,21 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</div>\n            <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-resize-handle handle-x\">&nbsp;</div>\n        </div>\n";
+	    + "</div>\n            "
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\n        </div>\n";
 	},"5":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return " "
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-date-event-block-pending";
+	},"7":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<div class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-resize-handle handle-x\">&nbsp;</div>";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : {};
 	
@@ -10780,7 +10790,6 @@
 	        container = this.container,
 	        baseViewModel = this.getBaseViewModel(),
 	        maxEventInDay = 0;
-	
 	
 	    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 	
@@ -17410,10 +17419,11 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    Calendar = __webpack_require__(43),
-	    controllerFactory = __webpack_require__(112),
-	    serviceWeekViewFactory = __webpack_require__(114);
+	var config = __webpack_require__(32);
+	var Calendar = __webpack_require__(43);
+	var datetime = __webpack_require__(26);
+	var controllerFactory = __webpack_require__(112);
+	var serviceWeekViewFactory = __webpack_require__(114);
 	
 	/**
 	 * @typedef {object} ServiceCalendar~DoorayEvent
@@ -17459,7 +17469,12 @@
 	    options = util.extend({
 	        calendarColor: {},
 	        groupFunc: function(viewModel) {
-	            return viewModel.model.category;
+	            var model = viewModel.model;
+	
+	            if (model.category === 'time' && (model.ends - model.starts > datetime.MILLISECONDS_PER_DAY)) {
+	                return 'allday';
+	            }
+	            return model.category;
 	        },
 	        month: {
 	            eventFilter: function(model) {
