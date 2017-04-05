@@ -254,8 +254,8 @@ Freebusy.prototype.clearRecommends = function(skipRender) {
  * @returns {number[]} block bound
  */
 Freebusy.prototype._getSelectionBlock = function(start, end) {
-    var oneHour = datetime.MILLISECONDS_PER_HOUR,
-        oneMinutes = datetime.MILLISECONDS_PER_MINUTES;
+    var startDate = new TZDate(0);
+    var endDate = new TZDate(0);
 
     if (!isValidHM.test(start) || !isValidHM.test(end)) {
         return false;
@@ -264,9 +264,12 @@ Freebusy.prototype._getSelectionBlock = function(start, end) {
     start = start.split(':');
     end = end.split(':');
 
+    startDate.setHours(start[0], start[1]);
+    endDate.setHours(end[0], end[1]);
+
     return this._getBlockBound({
-        from: datetime.toUTC(new TZDate((oneHour * start[0]) + (oneMinutes * start[1]))),
-        to: datetime.toUTC(new TZDate((oneHour * end[0]) + (oneMinutes * end[1])))
+        from: startDate,
+        to: endDate
     });
 };
 
