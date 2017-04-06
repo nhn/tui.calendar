@@ -6,7 +6,7 @@
         font-size: 11px
         table-layout: fixed
         border-collapse: separate
-        border-spacing: 0 2px 
+        border-spacing: 0 2px
 
     caption,
     th,
@@ -103,16 +103,3 @@
             background-color: #222
             border-radius: 50%
             color: #fff
-
-// For Retina Display
-@media
-(-webkit-min-device-pixel-ratio: 2),
-(min-resolution: 192dpi)
-    +prefix-classes(minicalendar)
-        .prev
-            background-size: 16px 16px
-            background-image: url(minicalendar-prev@2x.png) !important
-
-        .next
-            background-size: 16px 16px
-            background-image: url(minicalendar-next@2x.png) !important
