@@ -11,7 +11,7 @@ var domutil = require('../../common/domutil');
 var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
-var splitTimeTmpl = require('../template/week/time.hbs');
+var splitTimeTmpl = require('../template/week/splitTime.hbs');
 
 var forEachArr = util.forEachArray;
 

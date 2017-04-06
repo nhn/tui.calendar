@@ -45,10 +45,6 @@ function SplitTimeCalendar(options, container) {
 
     this.container = container;
 
-    /**
-     * Current rendered date
-     * @type {Date}
-     */
     this.setRenderTime();
 
     /**
@@ -78,7 +74,6 @@ function SplitTimeCalendar(options, container) {
     this.initialize();
 }
 
-
 SplitTimeCalendar.prototype.setRenderTime = function() {
     var opt = this.options, baseHour = new TZDate(opt.renderStartDate).getHours();
     opt.hourStart = Math.max(baseHour - opt.showTimeRange, 0);
@@ -91,7 +86,7 @@ SplitTimeCalendar.prototype.setRenderTime = function() {
  */
 SplitTimeCalendar.prototype.initialize = function() {
     var controller = this.controller,
-      opt = this.options;
+        opt = this.options;
 
     this.layout.controller = controller;
 
