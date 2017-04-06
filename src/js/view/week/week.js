@@ -62,8 +62,8 @@ util.inherit(Week, View);
  */
 Week.prototype.render = function() {
     var options = this.options,
-        renderStartDate = datetime.parse(options.renderStartDate),
-        renderEndDate = datetime.parse(options.renderEndDate),
+        renderStartDate = new TZDate(options.renderStartDate),
+        renderEndDate = new TZDate(options.renderEndDate),
         eventsInDateRange = this.controller.findByDateRange(
             datetime.start(renderStartDate),
             datetime.end(renderEndDate)

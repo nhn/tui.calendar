@@ -11,15 +11,8 @@ var VLayout = require('../../common/vlayout');
 
 // Parent views
 var Week = require('../../view/week/week');
-
-// Sub views
 var TimeGrid = require('../../view/week/splitTimeGrid');
-
-// Handlers
 var TimeClick = require('../../handler/time/click');
-var TimeCreation = require('../../handler/time/creation');
-var TimeMove = require('../../handler/time/move');
-var TimeResize = require('../../handler/time/resize');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
     var weekView,
