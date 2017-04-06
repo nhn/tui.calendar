@@ -717,16 +717,6 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   border-radius: 50%;
   color: #fff;
 }
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .dooray-calendar-minicalendar-prev {
-    background-size: 16px 16px;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABESURBVHgB7co5DoAwEMVQsy///vcFJLpI4z6KWz+6bbJ/2Y/9GpypwZE3+5FfgD0CbgPzLzCBCYoWA6wfMIEJpI2m0QOuugMZwyotsAAAAABJRU5ErkJggg==") !important;
-  }
-  .dooray-calendar-minicalendar-next {
-    background-size: 16px 16px;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAJFBMVEUAAAAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBiiMmCyAAAAC3RSTlMAEDBQYICPn7/P7zznF8oAAABDSURBVHja7dCpEQAgAAPB8D/pv18EGs4znM2q6L0CgUHCJEzCdifgdgUkTMK7SmACmPEIaBfsGyT4IesW7aJdRb9TC7ZeAxm35nCDAAAAAElFTkSuQmCC") !important;
-  }
-}
 .dooray-calendar-task-container {
   height: 100%;
 }
