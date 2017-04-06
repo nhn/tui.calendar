@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Apr 05 2017 18:36:16 GMT+0900 (KST)" */
+/*! bundle created at "Thu Apr 06 2017 10:55:14 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -713,7 +713,7 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   border-bottom: 1px solid #777;
 }
 .dooray-calendar-minicalendar-today button {
-  background-color: #222;
+  background-color: #f00;
   border-radius: 50%;
   color: #fff;
 }
