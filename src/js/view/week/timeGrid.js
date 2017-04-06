@@ -19,6 +19,34 @@ var mainTmpl = require('../template/week/timeGrid.hbs');
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
 var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
 
+
+/**
+ * start~end 까지의 시간 레이블 목록을 반환한다.
+ * 현재 시간과 가까운 레이블의 경우 hidden:true로 설정한다.
+ * @param {number} start - 시작시간
+ * @param {number} end - 끝시간
+ * @returns {Array.<Object>}
+ */
+function getHoursLabels(start, end) {
+    var now = new TZDate();
+    var nowMinutes = now.getMinutes();
+    var nowHours = now.getHours();
+    var hoursRange = util.range(start, end);
+    var nowAroundHours = null;
+
+    if (nowMinutes < 20) {
+        nowAroundHours = nowHours;
+    } else if (nowMinutes > 40) {
+        nowAroundHours = nowHours + 1;
+    }
+
+    return hoursRange.map(function(hours) {
+        return {
+            hours: hours,
+            hidden: nowAroundHours === hours
+        };
+    });
+}
 /**
  * @constructor
  * @extends {View}
@@ -149,7 +177,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
     });
 
     viewModel = {
-        currentHour: now.getHours(),
+        currentHours: now.getHours(),
         hourmarkerTop: this._getTopPercentByTime(),
         hourmarkerText: datetime.format(now, 'HH:mm'),
         todaymarkerLeft: todaymarkerLeft
@@ -158,19 +186,15 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
     return viewModel;
 };
 
+
 /**
  * Get base viewModel.
  * @returns {object} ViewModel
  */
 TimeGrid.prototype._getBaseViewModel = function() {
-    var opt = this.options,
-        now = new TZDate(),
-        hourRange = util.range(opt.hourStart, opt.hourEnd),
-        viewModel;
-
-    viewModel = util.extend({
-        hours: hourRange,
-        currentHour: now.getHours()
+    var opt = this.options;
+    var viewModel = util.extend({
+        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd)
     }, this._getHourmarkerViewModel());
 
     return viewModel;
@@ -239,7 +263,7 @@ TimeGrid.prototype.render = function(viewModel) {
 
     width = 100 / eventLen;
     baseViewModel.width = width;
-    baseViewModel.isToday = baseViewModel.todaymarkerLeft >= 0;
+    baseViewModel.showTodayMarker = baseViewModel.todaymarkerLeft >= 0;
 
     container.innerHTML = mainTmpl(baseViewModel);
 
