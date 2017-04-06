@@ -9121,6 +9121,19 @@
 	var View = __webpack_require__(38);
 	
 	/**
+	 * FullCalendar 에서는 날짜 정보만 사용(YYYY-MM-DD) 하고,
+	 * SplitTimeCalendar 에서는 타임존 정보까지 포함된 문자열을 사용하기 때문에 분기처리함.
+	 * @param {String} dateString - date string
+	 * @returns {TZDate}
+	 */
+	function parseRangeDateString(dateString) {
+	    if (dateString.length === 10) {
+	        return datetime.parse(dateString);
+	    }
+	    return new TZDate(dateString);
+	}
+	
+	/**
 	 * @constructor
 	 * @param {Base.Week} controller The controller mixin part.
 	 * @param {object} options View options
@@ -9170,18 +9183,20 @@
 	 * @override
 	 */
 	Week.prototype.render = function() {
-	    var options = this.options,
-	        renderStartDate = new TZDate(options.renderStartDate),
-	        renderEndDate = new TZDate(options.renderEndDate),
-	        eventsInDateRange = this.controller.findByDateRange(
-	            datetime.start(renderStartDate),
-	            datetime.end(renderEndDate)
-	        ),
-	        viewModel = {
-	            eventsInDateRange: eventsInDateRange,
-	            renderStartDate: renderStartDate,
-	            renderEndDate: renderEndDate
-	        };
+	    var options = this.options;
+	    var renderStartDate, renderEndDate, eventsInDateRange, viewModel;
+	
+	    renderStartDate = parseRangeDateString(options.renderStartDate);
+	    renderEndDate = parseRangeDateString(options.renderEndDate);
+	    eventsInDateRange = this.controller.findByDateRange(
+	        datetime.start(renderStartDate),
+	        datetime.end(renderEndDate)
+	    );
+	    viewModel = {
+	        eventsInDateRange: eventsInDateRange,
+	        renderStartDate: renderStartDate,
+	        renderEndDate: renderEndDate
+	    };
 	
 	    this.children.each(function(childView) {
 	        childView.render(viewModel);
