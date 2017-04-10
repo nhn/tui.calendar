@@ -14,14 +14,13 @@
         position: absolute
         font-size: 12px
         background-color: #fafafa
-        wh(64px, auto)
+        wh(77px, auto)
 
     .hour
         height: 37px
         position: relative
-        border-right: 1px solid #eee
+        border-right: 1px solid #ddd
         color: #555
-        text-align: center
         box-sizing: border-box
         &:first-child span
             display: none
@@ -29,15 +28,16 @@
             border-bottom: none
 
     .hour span
-        position: absolute;
+        position: absolute
         top: -11px
         left: 0
-        right: 0
+        right: 7px
+        text-align: right
         line-height: 25px
 
     .right
         position: relative
-        margin-left: 64px
+        margin-left: 77px
 
     .h-grid
         background-color: #fff
@@ -72,27 +72,27 @@
 
     .hourmarker-line
         position: absolute
-        background-color: #f00
+        background-color: #135de6
         height: 1px
         left: 0
         right: 0
 
     .hourmarker-time
         position: absolute
-        width: 60px
+        width: 52px
         left: -60px
-        top: -6px;
-        line-height: 12px;
-        font-size: 11px;
-        text-align: center
-        color: #f00;
+        top: -6px
+        line-height: 12px
+        font-size: 11px
+        text-align: right
+        color: #135de6
 
     // Todaymarker
     .todaymarker
         position: absolute
         text-indent: -9999px
         wh(9px, 9px)
-        background-color: red
+        background-color: #135de6
         margin: -4px 0 0 -5px
         border-radius: 50%
         z-index: 99
@@ -102,7 +102,7 @@
         position: absolute
         height: 100%
         margin-left: -1px
-        border-right: 1px solid #eee
+        border-right: 1px solid #ddd
         box-sizing: content-box
         &:last-child
             border-right: none

@@ -41,7 +41,7 @@ function Milestone(options, container) {
         renderStartDate: '',
         renderEndDate: '',
         minHeight: 52,
-        lineHeight: 12
+        lineHeight: 18
     }, options);
 }
 

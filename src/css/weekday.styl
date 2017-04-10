@@ -27,7 +27,7 @@
 
     .grid-line
         margin-left: -1px
-        border-left: 1px solid #ccc
+        border-left: 1px solid #ddd
         padding: 2px 0
         box-sizing: content-box
         float: left
@@ -78,21 +78,21 @@
 
 +prefix-classes(css-prefix)
     .left
-        wh(64px, 100%)
+        wh(77px, 100%)
+        flex()
+        flex-justify-content(flex-end)
+        flex-align-items(center)
         float: left
-        border-right: 1px solid #ccc
+        border-right: 1px solid #ddd
+        padding-right: 5px
         box-sizing: border-box
-        text-align: right
-        padding: 10px 15px
-        font-size: 12px
-
-    .left span
-        display: block
-        padding: 3px 5px 0 0
+        font-size: 11px
+        line-height: 18px
+        color: #222
 
     .right
         height: 100%
         background-color: #fff
-        margin-left: 64px
+        margin-left: 77px 
         overflow-y: scroll
         position: relative

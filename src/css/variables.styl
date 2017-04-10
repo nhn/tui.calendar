@@ -38,6 +38,19 @@ vendor(prop, args)
     -moz-{prop} args
     {prop} args
 
+flex()
+    display: -ms-flexbox
+    display: -webkit-flex
+    display: flex
+
+flex-justify-content(val)
+    -webkit-justify-content: val
+    justify-content: val
+
+flex-align-items(val)
+    -webkit-align-items: val
+    align-items: val
+
 clearfix()
     zoom: 1;
     &:after
