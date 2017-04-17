@@ -3,7 +3,7 @@ html, body {
     margin: 0;
     padding: 0 11px;
     height: 100%;
-    font-family: 'NanumBarunGothicOTF'
+    font-family: "Nanum Gothic", "Meiryo", "Noto Sans JP", sans-serif, Lucida Sans Unicode;
 }
 
 div {

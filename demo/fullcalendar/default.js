@@ -7,13 +7,13 @@
     // calendar.setTimezoneOffset(540);
 
     cal = calendar.FullCalendar({
-        defaultView: 'week',
+        defaultView: 'month',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
             },
             milestoneTitle: function() {
-                return '마일스톤-a';
+                return '마일스톤';
             },
             task: function(model) {
                 return '&nbsp;&nbsp;#' + model.title;

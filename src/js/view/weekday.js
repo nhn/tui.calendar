@@ -65,10 +65,10 @@ Weekday.prototype.getRenderDateRange = function() {
  * @returns {object} viewModel to rendering.
  */
 Weekday.prototype.getBaseViewModel = function() {
-    var opt = this.options,
-        range = this.getRenderDateRange(),
-        gridWidth = (100 / range.length),
-        today = datetime.format(new TZDate(), 'YYYYMMDD');
+    var opt = this.options;
+    var range = this.getRenderDateRange();
+    var gridWidth = (100 / range.length);
+    var today = datetime.format(new TZDate(), 'YYYYMMDD');
 
     return {
         width: gridWidth,

@@ -8,6 +8,19 @@
         .{css-prefix}weekday-events
             overflow-y: hidden
 
+        .{css-prefix}today
+            background: none;
+
+            > span
+                background: #135de6
+                border-radius: 50%
+                color: #fff
+                font-weight: bold
+            
+        .{css-prefix}holiday-sun,
+        .{css-prefix}holiday-sat
+            background: #fafafa
+
 +prefix-classes(weekday)
     .container,
     .grid,
@@ -26,16 +39,21 @@
             height: 100%
 
     .grid-line
-        margin-left: -1px
+        position: absolute
         border-left: 1px solid #ddd
-        padding: 2px 0
-        box-sizing: content-box
-        float: left
-        height: 100%
+        margin-left: -1px
+        padding: 3px
+        text-align: right
+        font-size: 16px
 
+        >span
+            display: inline-block
+            wh(27px, 27px)
+            line-height: 27px
+            text-align: center
     .events
-        pos(0px, 0px)
-        wh(100%, 100%)
+        pos(14px, 0)
+        wh(100%, calc(100% - 14px))
         position: absolute
         font-size: 12px
         overflow-y: scroll
