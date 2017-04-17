@@ -74,6 +74,9 @@
         &.event-time
             border-left-width: 0
 
+            .event-title
+                padding-left: 9px
+
     .event-bullet
         position: absolute
         padding: 0
@@ -87,7 +90,7 @@
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
-        padding-left: 10px
+        padding-left: 6px
         line-height: 18px
 
     .exceed-left .event
@@ -99,6 +102,16 @@
 
     .exceed-right .resize-handle
         display: none
+
+    .exceed
+        text-align: right
+        bottom: 12px
+        padding: 0 10px
+        line-height: 14px
+        color: #000
+
+        > span
+            cursor: pointer
 
     .resize-handle
         position: absolute
