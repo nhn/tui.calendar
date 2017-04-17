@@ -26,14 +26,13 @@
         cursor: pointer
         width: 20px
         outline: none
+        border-radius: 0
         color: #000
 
     // Disable IE button shifting during click
     button > div
         position: relative
         line-height: 20px
-        width: 15px
-        margin: 0 auto
 
     // 헤더영역
     caption
@@ -89,10 +88,18 @@
             color: #3692f2
 
     .focused
-        background-color: #eee
-
-    .selected
         background-color: rgba(19, 93, 230, 0.1);
+
+
+    .single-focused
+        .focused
+            background: none
+
+            button
+                background-color: rgba(19, 93, 230, 0.1);
+
+    // .selected
+    // currently not using selected feature
 
     .marked
         div
@@ -100,6 +107,7 @@
 
     .today
         button
-            background-color: #135de6
-            border-radius: 50%
-            color: #fff
+          > div
+              background-color: #135de6
+              border-radius: 50%
+              color: #fff
