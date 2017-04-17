@@ -46,7 +46,7 @@
         text-align: right
         font-size: 16px
 
-        >span
+        > span
             display: inline-block
             wh(27px, 27px)
             line-height: 27px
@@ -63,19 +63,33 @@
 
     .event
         position: relative
-        margin: 0 3px 0 2px
+        margin: 0 10px
         cursor: pointer
+        border-left-style: solid
+        border-left-width: 3px
 
-    .event span,
-    .event-time span
-        padding-left: 3px
-        line-height: 18px
+        &.event-time
+            border-left-width: 0
+
+    .event-bullet
+        position: absolute
+        padding: 0
+        wh(6px, 6px)
+        top: 6px 
+        left: 0
+        border-radius: 50%
 
     .event-title
         display: block
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
+        padding-left: 10px
+        line-height: 18px
+
+    .exceed-left .event
+        margin-left: 0
+        border-left-width: 0
 
     .exceed-right .event
         margin-right: 0
