@@ -355,7 +355,7 @@ VLayout.prototype.refresh = function() {
 
     remainHeight = (this.getViewBound().height - usedHeight) / panelToFillHeight.length;
 
-    if(this.getViewBound().height === 0) {
+    if (this.getViewBound().height === 0) {
         remainHeight = '';
     }
     util.forEach(panelToFillHeight, function(panel) {
@@ -401,4 +401,3 @@ VLayout.prototype.addPanels = function(options, container) {
 util.CustomEvents.mixin(VLayout);
 
 module.exports = VLayout;
-

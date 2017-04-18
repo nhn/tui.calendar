@@ -173,8 +173,8 @@ var Core = {
 
                     ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
                     dateLength = datetime.range(
-                        viewModel.getStarts(),
-                        viewModel.getEnds(),
+                        datetime.start(viewModel.getStarts()),
+                        datetime.end(viewModel.getEnds()),
                         datetime.MILLISECONDS_PER_DAY
                     ).length;
 

@@ -18,18 +18,15 @@
              style="height:{{@root.eventHeight}}px;
                     color:{{model.color}};
                     background-color:{{model.bgColor}};
-                    border-left:2px solid {{model.borderColor}}">
+                    border-color:{{model.borderColor}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
                   data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
         </div>
         {{else ~}}
-        <div class="{{CSS_PREFIX}}weekday-event"
-                style="height:{{@root.eventHeight}}px;
-                color:{{model.color}};
-                background-color:{{model.bgColor}};
-                border-left:2px solid {{model.borderColor}}">
-            <span class="{{CSS_PREFIX}}weekday-event-title"
+        <div class="{{CSS_PREFIX}}weekday-event {{CSS_PREFIX}}weekday-event-time" style="height:{{@root.eventHeight}}px;">
+            <span class="{{CSS_PREFIX}}weekday-event-bullet" style="background:{{model.color}}"></span>
+            <span class="{{CSS_PREFIX}}weekday-event-title" style="color:#000"
                   data-title="{{model.title}}">{{{time-tmpl model}}}</span>
         </div>
         {{/if}}

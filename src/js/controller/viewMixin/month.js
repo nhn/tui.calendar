@@ -8,8 +8,7 @@ var util = global.tui.util,
 
 var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection'),
-    TZDate = require('../../common/timezone').Date;
+    Collection = require('../../common/collection');
 
 var Month = {
     /**
@@ -57,25 +56,16 @@ var Month = {
      * @param {Date} starts - render start date
      * @param {Date} ends - render end date
      * @param {Collection} vColl - view model collection
-     * @returns {Collection} collection with adjusted `renderStart`, `renderEnd`
      * property.
      */
     _adjustRenderRange: function(starts, ends, vColl) {
         var ctrlCore = this.Core;
 
         vColl.each(function(viewModel) {
-            var eventDate;
-
             if (viewModel.model.isAllDay) {
                 ctrlCore.limitRenderRange(starts, ends, viewModel);
-            } else {
-                eventDate = new TZDate(Number(viewModel.getStarts()));
-                viewModel.renderStart = datetime.start(eventDate);
-                viewModel.renderEnd = datetime.end(eventDate);
             }
         });
-
-        return vColl;
     },
 
     /**
@@ -94,11 +84,10 @@ var Month = {
             });
         });
 
-        if(topIndexesInDate.length > 0) {
-            return mmax.apply(null, topIndexesInDate, 0);
-        } else {
-            return 0;
+        if (topIndexesInDate.length > 0) {
+            return mmax.apply(null, topIndexesInDate);
         }
+        return 0;
     },
 
     /**
@@ -132,6 +121,25 @@ var Month = {
     },
 
     /**
+     * Convert multi-date time event to all-day event
+     * @this Base
+     * @param {Collection} vColl - view model collection
+     * property.
+     */
+    _convertMultiDateToAllDay: function(vColl) {
+        vColl.each(function(viewModel) {
+            var model = viewModel.model;
+            var startDate = datetime.format(model.getStarts(), 'YYYY-MM-DD');
+            var endDate = datetime.format(model.getEnds(), 'YYYY-MM-DD');
+
+            if (!model.isAllDay && (startDate !== endDate)) {
+                model.isAllDay = true;
+                model.setAllDayPeriod(startDate, endDate);
+            }
+        });
+    },
+
+    /**
      * Find event and get view model for specific month
      * @this Base
      * @param {Date} starts - start date to find events
@@ -152,7 +160,8 @@ var Month = {
 
         coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
-        vColl = ctrlMonth._adjustRenderRange(starts, ends, vColl);
+        ctrlMonth._adjustRenderRange(starts, ends, vColl);
+        ctrlMonth._convertMultiDateToAllDay(vColl);
         vList = vColl.sort(array.compare.event.asc);
 
         collisionGroup = ctrlCore.getCollisionGroup(vList);

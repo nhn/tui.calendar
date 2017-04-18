@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Apr 06 2017 23:41:59 GMT+0900 (KST)" */
+/*! bundle created at "Mon Apr 17 2017 09:43:10 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -72,6 +72,22 @@
 .dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-weekday-events {
   overflow-y: hidden;
 }
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-today {
+  background: none;
+}
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-today > span {
+  background: #135de6;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: bold;
+}
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-holiday-sun,
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-holiday-sat {
+  background: #fafafa;
+}
+.dooray-calendar-month-week-item .dooray-calendar-weekday .dooray-calendar-extra-date {
+  color: #999;
+}
 .dooray-calendar-weekday-container,
 .dooray-calendar-weekday-grid,
 .dooray-calendar-weekday-grid-line {
@@ -90,18 +106,25 @@
   height: 100%;
 }
 .dooray-calendar-weekday-grid-line {
+  position: absolute;
+  border-left: 1px solid #ddd;
   margin-left: -1px;
-  border-left: 1px solid #ccc;
-  padding: 2px 0;
-  box-sizing: content-box;
-  float: left;
-  height: 100%;
+  padding: 3px;
+  text-align: right;
+  font-size: 16px;
+}
+.dooray-calendar-weekday-grid-line > span {
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  line-height: 27px;
+  text-align: center;
 }
 .dooray-calendar-weekday-events {
-  top: 0px;
-  left: 0px;
+  top: 14px;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 14px);
   position: absolute;
   font-size: 12px;
   overflow-y: scroll;
@@ -111,25 +134,53 @@
 }
 .dooray-calendar-weekday-event {
   position: relative;
-  margin: 0 3px 0 2px;
+  margin: 0 10px;
   cursor: pointer;
+  border-left-style: solid;
+  border-left-width: 3px;
 }
-.dooray-calendar-weekday-event span,
-.dooray-calendar-weekday-event-time span {
-  padding-left: 3px;
-  line-height: 18px;
+.dooray-calendar-weekday-event.dooray-calendar-weekday-event-time {
+  border-left-width: 0;
+}
+.dooray-calendar-weekday-event.dooray-calendar-weekday-event-time .dooray-calendar-weekday-event-title {
+  padding-left: 9px;
+}
+.dooray-calendar-weekday-event-bullet {
+  position: absolute;
+  padding: 0;
+  width: 6px;
+  height: 6px;
+  top: 6px;
+  left: 0;
+  border-radius: 50%;
 }
 .dooray-calendar-weekday-event-title {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-left: 6px;
+  line-height: 18px;
+}
+.dooray-calendar-weekday-exceed-left .dooray-calendar-weekday-event {
+  margin-left: 0;
+  border-left-width: 0;
 }
 .dooray-calendar-weekday-exceed-right .dooray-calendar-weekday-event {
   margin-right: 0;
 }
 .dooray-calendar-weekday-exceed-right .dooray-calendar-weekday-resize-handle {
   display: none;
+}
+.dooray-calendar-weekday-exceed {
+  text-align: right;
+  bottom: 12px;
+  padding: 0 10px;
+  line-height: 14px;
+  color: #000;
+}
+.dooray-calendar-weekday-exceed > span {
+  cursor: pointer;
 }
 .dooray-calendar-weekday-resize-handle {
   position: absolute;
@@ -143,23 +194,27 @@
   background-color: #e8e8e8;
 }
 .dooray-calendar-left {
-  width: 90px;
+  width: 77px;
   height: 100%;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  align-items: center;
   float: left;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
+  padding-right: 5px;
   box-sizing: border-box;
-  text-align: right;
-  padding: 10px 15px;
-  font-size: 12px;
-}
-.dooray-calendar-left span {
-  display: block;
-  padding: 3px 5px 0 0;
+  font-size: 11px;
+  line-height: 18px;
+  color: #222;
 }
 .dooray-calendar-right {
   height: 100%;
   background-color: #fff;
-  margin-left: 90px;
+  margin-left: 77px;
   overflow-y: scroll;
   position: relative;
 }
@@ -168,37 +223,44 @@
   height: inherit;
   display: inline-block;
   font-size: 10px;
+  border-top: 1px solid #ddd;
 }
-.dooray-calendar-holiday-sun {
-  color: #f00;
+.dooray-calendar-week-container .dooray-calendar-today {
+  background: none;
 }
+.dooray-calendar-holiday-sun,
 .dooray-calendar-holiday-sat {
-  color: #4e87ee;
+  color: #999;
 }
 .dooray-calendar-dayname {
   top: 0;
   position: absolute;
-  height: 37px;
+  height: 36px;
   margin-left: -1px;
-  line-height: 37px;
+  line-height: 36px;
   text-align: center;
+  font-size: 13px;
+}
+.dooray-calendar-dayname.dooray-calendar-today {
+  font-weight: bold;
+}
+.dooray-calendar-dayname.dooray-calendar-today .dooray-calendar-dayname-date {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  background-color: #135de6;
+  color: #fff;
+  border-radius: 50%;
 }
 .dooray-calendar-dayname-container {
-  height: 37px;
+  height: 36px;
   border-bottom: 1px solid #e7e7e7;
-  background-color: #f1f1f3;
+  background-color: #fff;
 }
 .dooray-calendar-dayname-leftmargin {
   position: relative;
-  margin-left: 90px;
-}
-.dooray-calendar-dayname-label {
-  font-size: 12px;
-  font-weight: bold;
-}
-.dooray-calendar-dayname-date {
-  font-size: 12px;
-  font-weight: bold;
+  margin-left: 77px;
 }
 .dooray-calendar-allday-right {
   overflow-y: hidden;
@@ -207,11 +269,7 @@
   height: 100%;
 }
 .dooray-calendar-allday-left {
-  color: #777;
-}
-.dooray-calendar-allday-left span {
-  display: block;
-  padding: 3px 5px 0 0;
+  background-color: #fafafa;
 }
 .dooray-calendar-allday-guide-creation-block {
   position: absolute;
@@ -259,15 +317,15 @@
 .dooray-calendar-timegrid-left {
   position: absolute;
   font-size: 12px;
-  width: 90px;
+  background-color: #fafafa;
+  width: 77px;
   height: auto;
 }
 .dooray-calendar-timegrid-hour {
-  height: 39px;
+  height: 37px;
   position: relative;
-  border-right: 1px solid #e8e8e8;
-  color: #777;
-  text-align: right;
+  border-right: 1px solid #ddd;
+  color: #555;
   box-sizing: border-box;
 }
 .dooray-calendar-timegrid-hour:first-child span {
@@ -279,20 +337,21 @@
 .dooray-calendar-timegrid-hour span {
   position: absolute;
   top: -11px;
-  right: 5px;
+  left: 0;
+  right: 7px;
+  text-align: right;
   line-height: 25px;
-  padding-right: 5px;
 }
 .dooray-calendar-timegrid-right {
   position: relative;
-  margin-left: 90px;
+  margin-left: 77px;
 }
 .dooray-calendar-timegrid-h-grid {
   background-color: #fff;
 }
 .dooray-calendar-timegrid-gridline {
-  height: 39px;
-  border-bottom: 1px solid #e8e8e8;
+  height: 37px;
+  border-bottom: 1px solid #eee;
   box-sizing: border-box;
 }
 .dooray-calendar-timegrid-gridline:last-child {
@@ -301,8 +360,8 @@
 .dooray-calendar-timegrid-gridline:after {
   content: '';
   display: block;
-  height: 19px;
-  border-bottom: 1px dotted #eee;
+  height: 18px;
+  border-bottom: 1px dotted #f9f9f9;
 }
 .dooray-calendar-timegrid-events {
   position: absolute;
@@ -322,24 +381,28 @@
 }
 .dooray-calendar-timegrid-hourmarker-line {
   position: absolute;
-  background-color: #f00;
+  background-color: #135de6;
   height: 1px;
+  left: 0;
+  right: 0;
 }
 .dooray-calendar-timegrid-hourmarker-time {
   position: absolute;
-  width: 55px;
+  width: 52px;
   left: -60px;
+  top: -6px;
+  line-height: 12px;
+  font-size: 11px;
   text-align: right;
-  line-height: 0.1em;
-  color: #f00;
+  color: #135de6;
 }
 .dooray-calendar-timegrid-todaymarker {
   position: absolute;
   text-indent: -9999px;
-  width: 5px;
-  height: 5px;
-  background-color: #f00;
-  margin: -3px 0 0 -3px;
+  width: 9px;
+  height: 9px;
+  background-color: #135de6;
+  margin: -4px 0 0 -5px;
   border-radius: 50%;
   z-index: 99;
 }
@@ -347,7 +410,7 @@
   position: absolute;
   height: 100%;
   margin-left: -1px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
   box-sizing: content-box;
 }
 .dooray-calendar-time-date:last-child {
@@ -377,10 +440,12 @@
   font-size: 12px;
   margin-right: 2px;
   overflow: hidden;
+  border-left-width: 3px;
+  border-left-style: solid;
 }
 .dooray-calendar-time-resize-handle {
   position: absolute;
-  right: 7px;
+  right: 0px;
   bottom: 0px;
   left: 0px;
   text-align: center;
@@ -467,22 +532,16 @@
 }
 .dooray-calendar-month-dayname {
   width: 100%;
-  height: 37px;
+  height: 38px;
   position: absolute;
-  font-size: 12px;
-  font-weight: bold;
-  z-index: 1;
-  background: #f1f1f3;
-  border-bottom: 1px solid #e7e7e7;
+  font-size: 13px;
+  border-top: 1px solid #ddd;
 }
 .dooray-calendar-month-dayname-item {
   height: 100%;
-  margin-left: -1px;
-  line-height: 37px;
-  text-align: center;
-}
-.dooray-calendar-month-dayname-item:first-child {
-  border-left: none;
+  padding-right: 6px;
+  line-height: 38px;
+  text-align: right;
 }
 .dooray-calendar-month-weeks {
   padding-top: 20px;
@@ -569,17 +628,8 @@
 .dooray-calendar-milestone-layout > div:first-child {
   border-top: 0;
 }
-.dooray-calendar-milestone-left {
-  color: #777;
-  background-color: #f7f7f7;
-}
-.dooray-calendar-milestone-left span {
-  display: block;
-  padding: 3px 5px 0 0;
-}
 .dooray-calendar-milestone-right {
   overflow-y: hidden;
-  background-color: #f7f7f7;
 }
 .dooray-calendar-milestone-day-grid-wrap {
   overflow-y: scroll;
@@ -644,13 +694,12 @@
   cursor: pointer;
   width: 20px;
   outline: none;
+  border-radius: 0;
   color: #000;
 }
 .dooray-calendar-minicalendar button > div {
   position: relative;
   line-height: 20px;
-  width: 15px;
-  margin: 0 auto;
 }
 .dooray-calendar-minicalendar caption {
   position: relative;
@@ -663,7 +712,7 @@
   display: block;
   width: 20px;
   margin: 0 auto;
-  height: 100%;
+  height: 20px;
   text-align: center;
 }
 .dooray-calendar-minicalendar-date,
@@ -704,15 +753,18 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   color: #3692f2;
 }
 .dooray-calendar-minicalendar-focused {
-  background-color: #eee;
-}
-.dooray-calendar-minicalendar-selected {
   background-color: rgba(19,93,230,0.1);
 }
-.dooray-calendar-minicalendar-marked div {
+.dooray-calendar-minicalendar-single-focused .dooray-calendar-minicalendar-focused {
+  background: none;
+}
+.dooray-calendar-minicalendar-single-focused .dooray-calendar-minicalendar-focused button {
+  background-color: rgba(19,93,230,0.1);
+}
+.dooray-calendar-minicalendar-marked button {
   border-bottom: 1px solid #777;
 }
-.dooray-calendar-minicalendar-today button {
+.dooray-calendar-minicalendar-today button > div {
   background-color: #135de6;
   border-radius: 50%;
   color: #fff;
@@ -720,17 +772,8 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
 .dooray-calendar-task-container {
   height: 100%;
 }
-.dooray-calendar-task-left {
-  color: #777;
-  background-color: #f7f7f7;
-}
-.dooray-calendar-task-left span {
-  display: block;
-  padding: 3px 5px 0 0;
-}
 .dooray-calendar-task-right {
   overflow-y: hidden;
-  background-color: #f7f7f7;
 }
 .dooray-calendar-task-day-grid-wrap {
   overflow-y: scroll;
@@ -739,10 +782,11 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   position: absolute;
 }
 .dooray-calendar-task-day-grid {
-  border-left: 1px solid #ccc;
+  border-left: 1px solid #ddd;
   float: left;
   margin-left: -1px;
   height: 100%;
+  box-sizing: content-box;
 }
 .dooray-calendar-task-day-scroll {
   height: 100%;
@@ -774,15 +818,22 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   line-height: 18px;
   height: 18px;
   margin-top: 2px;
-  padding-left: 3px;
+  padding-left: 6px;
+  border-left-width: 3px;
+  border-left-style: solid;
 }
 .dooray-calendar-vlayout-container {
   position: relative;
 }
 .dooray-calendar-splitter {
+  clear: left;
   height: 3px;
-  background-color: #e8e8e8;
+  border: 1px solid #ddd;
+  border-width: 1px 0;
   cursor: row-resize;
+}
+.dooray-calendar-splitter:hover {
+  border-color: #999;
 }
 .dooray-calendar-splitter-focused {
   height: 3px;
@@ -885,5 +936,5 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   background-color: rgba(245,215,215,0.3);
   height: 100%;
 }
-
+/*# sourceMappingURL=src/css/main.css.map */
 /*# sourceMappingURL=index.css.map*/

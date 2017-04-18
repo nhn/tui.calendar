@@ -7,6 +7,7 @@
 var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
+var TZDate = require('../../common/timezone').Date;
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var daynameTmpl = require('../template/week/daynames.hbs');
@@ -53,6 +54,7 @@ DayName.prototype._getBaseViewModel = function(start, end) {
         return {
             day: day,
             dayName: daynames[day],
+            isToday: datetime.isSameDate(d, new TZDate()),
             date: d.getDate(),
             width: 100 / arr.length
         };
@@ -75,4 +77,3 @@ DayName.prototype.render = function(viewModel) {
 };
 
 module.exports = DayName;
-

@@ -54,7 +54,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler;
+        timeResizeHandler,
+        panels;
 
     weekView = new Week(null, options.week, layoutContainer);
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -72,22 +73,22 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
                                      dayNameView.container.offsetHeight) + 'px';
 
-    var panels = [
+    panels = [
          {height: 100, minHeight: 100},
          {isSplitter: true},
          {autoHeight: true}
     ];
 
     if (options.isDoorayView) {
-      panels = [
-          {height: 56, minHeight: 56},
-          {isSplitter: true},
-          {height: 56, minHeight: 56},
-          {isSplitter: true},
-          {height: 68, minHeight: 68},
-          {isSplitter: true},
-          {autoHeight: true}
-      ];
+        panels = [
+            {height: 56, minHeight: 56},
+            {isSplitter: true},
+            {height: 56, minHeight: 56},
+            {isSplitter: true},
+            {height: 68, minHeight: 68},
+            {isSplitter: true},
+            {autoHeight: true}
+        ];
     }
 
     vLayout = new VLayout({

@@ -13,14 +13,14 @@
     .left
         position: absolute
         font-size: 12px
-        wh(90px, auto)
+        background-color: #fafafa
+        wh(77px, auto)
 
     .hour
-        height: 39px
+        height: 37px
         position: relative
-        border-right: 1px solid #e8e8e8
-        color: #777
-        text-align: right
+        border-right: 1px solid #ddd
+        color: #555
         box-sizing: border-box
         &:first-child span
             display: none
@@ -28,22 +28,23 @@
             border-bottom: none
 
     .hour span
-        position: absolute;
-        top: -11px;
-        right: 5px;
+        position: absolute
+        top: -11px
+        left: 0
+        right: 7px
+        text-align: right
         line-height: 25px
-        padding-right: 5px
 
     .right
         position: relative
-        margin-left: 90px
+        margin-left: 77px
 
     .h-grid
         background-color: #fff
 
     .gridline
-        height: 39px
-        border-bottom: 1px solid #e8e8e8
+        height: 37px
+        border-bottom: 1px solid #eee
         box-sizing: border-box
         &:last-child
             border-bottom: none
@@ -51,8 +52,8 @@
     .gridline:after
         content: ''
         display: block
-        height: 19px
-        border-bottom: 1px dotted #eee
+        height: 18px
+        border-bottom: 1px dotted #f9f9f9
 
     .events
         position: absolute
@@ -71,24 +72,28 @@
 
     .hourmarker-line
         position: absolute
-        background-color: red
+        background-color: #135de6
         height: 1px
+        left: 0
+        right: 0
 
     .hourmarker-time
         position: absolute
-        width: 55px
+        width: 52px
         left: -60px
+        top: -6px
+        line-height: 12px
+        font-size: 11px
         text-align: right
-        line-height: 0.1em
-        color: red
+        color: #135de6
 
     // Todaymarker
     .todaymarker
         position: absolute
         text-indent: -9999px
-        wh(5px, 5px)
-        background-color: red
-        margin: -3px 0 0 -3px
+        wh(9px, 9px)
+        background-color: #135de6
+        margin: -4px 0 0 -5px
         border-radius: 50%
         z-index: 99
 
@@ -97,7 +102,7 @@
         position: absolute
         height: 100%
         margin-left: -1px
-        border-right: 1px solid #ccc
+        border-right: 1px solid #ddd
         box-sizing: content-box
         &:last-child
             border-right: none
@@ -126,10 +131,12 @@
         font-size: 12px
         margin-right: 2px
         overflow: hidden
+        border-left-width: 3px
+        border-left-style: solid
 
     .resize-handle
         position: absolute
-        right: 7px
+        right: 0px
         bottom: 0px
         left: 0px
         text-align: center

@@ -86,6 +86,9 @@ function MiniCalendar(options, container) {
      */
     this.selectedDate = new TZDate(Number(options.renderMonth));
 
+    // focused 된 범위가 1일인지 여부 (1일인 경우 스타일을 다르게 표시하기 위함)
+    this.singleFocused = false;
+
     this.render();
 }
 
@@ -190,7 +193,8 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         classPrefix = config.classname('minicalendar-'),
         viewModel = {
             title: datetime.format(renderDate, 'YYYY.MM'),
-            startDayOfWeek: startDayOfWeek
+            startDayOfWeek: startDayOfWeek,
+            tableClass: this.singleFocused ? (classPrefix + 'single-focused') : ''
         };
 
     viewModel.dayname = util.map(
@@ -273,6 +277,8 @@ MiniCalendar.prototype.clearFocusData = function() {
     util.forEach(this.hlData, function(obj) {
         delete obj.focused;
     });
+    this.singleFocused = false;
+    this.render();
 };
 
 /**
@@ -292,6 +298,8 @@ MiniCalendar.prototype.clearMarkData = function() {
 MiniCalendar.prototype.focusDateRange = function(start, end) {
     this.clearFocusData();
     this._setHlDateRange(start, end, 'focused');
+    this.singleFocused = datetime.isSameDate(new TZDate(start), new TZDate(end));
+
     this.render();
 };
 
