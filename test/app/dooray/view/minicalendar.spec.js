@@ -61,6 +61,7 @@ describe('service:view/MiniCalendar', function() {
                 title: '2015.09',
                 dayname: jasmine.any(Array),
                 startDayOfWeek: 0,
+                tableClass: '',
                 calendar: jasmine.any(Array)
             });
 
