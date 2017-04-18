@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Apr 17 2017 09:43:10 GMT+0900 (KST)" */
+/*! bundle created at "Tue Apr 18 2017 18:33:19 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -189,6 +189,7 @@
   width: 6px;
   background-position: 3px center;
   cursor: col-resize;
+  line-height: 18px;
 }
 .dooray-calendar-weekday-filled {
   background-color: #e8e8e8;
@@ -423,7 +424,7 @@
 }
 .dooray-calendar-time-date-event-block-wrap {
   position: relative;
-  margin-right: 8px;
+  margin-right: 10px;
   height: 100%;
 }
 .dooray-calendar-time-date-event-block {
@@ -438,7 +439,6 @@
   left: 1px;
   height: 100%;
   font-size: 12px;
-  margin-right: 2px;
   overflow: hidden;
   border-left-width: 3px;
   border-left-style: solid;
@@ -587,10 +587,11 @@
 }
 .dooray-calendar-month-guide-block {
   position: absolute;
+  margin-top: 2px;
 }
 .dooray-calendar-month-guide {
   position: relative;
-  margin: 2px 3px 0 2px;
+  margin: 0 10px;
   padding-left: 3px;
   line-height: 18px;
   opacity: 0.9;

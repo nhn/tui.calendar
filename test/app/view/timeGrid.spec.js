@@ -12,8 +12,16 @@ describe('View/TimeGrid', function() {
         jasmine.clock().mockDate(new Date(2015, 0, 1, 3));
 
         var expected = {
-            hours: [3, 4, 5, 6, 7, 8, 9, 10],
-            currentHour: 3
+            hoursLabels: [
+                {hours: 3, hidden: true},
+                {hours: 4, hidden: false},
+                {hours: 5, hidden: false},
+                {hours: 6, hidden: false},
+                {hours: 7, hidden: false},
+                {hours: 8, hidden: false},
+                {hours: 9, hidden: false},
+                {hours: 10, hidden: false}
+            ]
         };
 
         var obj = {

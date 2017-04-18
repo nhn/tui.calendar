@@ -85,9 +85,7 @@ MonthGuide.prototype.destroy = function() {
         this.ratio = this.startCoord = this.guideElements = null;
 };
 
-
-
-MonthGuide.prototype.clearGuideElement = function(){
+MonthGuide.prototype.clearGuideElement = function() {
     this.destroy();
 };
 
@@ -221,7 +219,8 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         util.extend(this.options, {
             top: parseInt(target.style.top, 10),
             height: parseInt(target.style.height, 10),
-            bgColor: target.children[0].style.backgroundColor,
+            bgColor: model.bgColor,
+            borderColor: model.borderColor,
             label: model.title
         });
     }

@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Apr 17 2017 09:43:10 GMT+0900 (KST)" */
+/*! bundle created at "Tue Apr 18 2017 18:33:19 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -15923,9 +15923,7 @@
 	        this.ratio = this.startCoord = this.guideElements = null;
 	};
 	
-	
-	
-	MonthGuide.prototype.clearGuideElement = function(){
+	MonthGuide.prototype.clearGuideElement = function() {
 	    this.destroy();
 	};
 	
@@ -16059,7 +16057,8 @@
 	        util.extend(this.options, {
 	            top: parseInt(target.style.top, 10),
 	            height: parseInt(target.style.height, 10),
-	            bgColor: target.children[0].style.backgroundColor,
+	            bgColor: model.bgColor,
+	            borderColor: model.borderColor,
 	            label: model.title
 	        });
 	    }
@@ -16294,15 +16293,17 @@
 	    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
 	    + "px;display:none\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide\" style=\"background-color:"
+	    + "weekday-event\" style=\"border-color:"
+	    + alias4(((helper = (helper = helpers.borderColor || (depth0 != null ? depth0.borderColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"borderColor","hash":{},"data":data}) : helper)))
+	    + ";background-color:"
 	    + alias4(((helper = (helper = helpers.bgColor || (depth0 != null ? depth0.bgColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bgColor","hash":{},"data":data}) : helper)))
 	    + "\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide-label\">"
+	    + "weekday-event-title\">"
 	    + alias4(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"label","hash":{},"data":data}) : helper)))
 	    + "</div>\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide-handle handle-y\"\n             style=\""
+	    + "weekday-resize-handle Chandle-y\"\n             style="
 	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isResizeMode : depth0),{"name":"unless","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">&nbsp;</div>\n    </div>\n</div>\n";
 	},"useData":true});
