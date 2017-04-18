@@ -7623,8 +7623,8 @@
 	
 	                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
 	                    dateLength = datetime.range(
-	                        viewModel.getStarts(),
-	                        viewModel.getEnds(),
+	                        datetime.start(viewModel.getStarts()),
+	                        datetime.end(viewModel.getEnds()),
 	                        datetime.MILLISECONDS_PER_DAY
 	                    ).length;
 	
@@ -8241,8 +8241,7 @@
 	
 	var array = __webpack_require__(52),
 	    datetime = __webpack_require__(26),
-	    Collection = __webpack_require__(31),
-	    TZDate = __webpack_require__(27).Date;
+	    Collection = __webpack_require__(31);
 	
 	var Month = {
 	    /**
@@ -8290,25 +8289,16 @@
 	     * @param {Date} starts - render start date
 	     * @param {Date} ends - render end date
 	     * @param {Collection} vColl - view model collection
-	     * @returns {Collection} collection with adjusted `renderStart`, `renderEnd`
 	     * property.
 	     */
 	    _adjustRenderRange: function(starts, ends, vColl) {
 	        var ctrlCore = this.Core;
 	
 	        vColl.each(function(viewModel) {
-	            var eventDate;
-	
 	            if (viewModel.model.isAllDay) {
 	                ctrlCore.limitRenderRange(starts, ends, viewModel);
-	            } else {
-	                eventDate = new TZDate(Number(viewModel.getStarts()));
-	                viewModel.renderStart = datetime.start(eventDate);
-	                viewModel.renderEnd = datetime.end(eventDate);
 	            }
 	        });
-	
-	        return vColl;
 	    },
 	
 	    /**
@@ -8327,11 +8317,10 @@
 	            });
 	        });
 	
-	        if(topIndexesInDate.length > 0) {
-	            return mmax.apply(null, topIndexesInDate, 0);
-	        } else {
-	            return 0;
+	        if (topIndexesInDate.length > 0) {
+	            return mmax.apply(null, topIndexesInDate);
 	        }
+	        return 0;
 	    },
 	
 	    /**
@@ -8365,6 +8354,25 @@
 	    },
 	
 	    /**
+	     * Convert multi-date time event to all-day event
+	     * @this Base
+	     * @param {Collection} vColl - view model collection
+	     * property.
+	     */
+	    _convertMultiDateToAllDay: function(vColl) {
+	        vColl.each(function(viewModel) {
+	            var model = viewModel.model;
+	            var startDate = datetime.format(model.getStarts(), 'YYYY-MM-DD');
+	            var endDate = datetime.format(model.getEnds(), 'YYYY-MM-DD');
+	
+	            if (!model.isAllDay && (startDate !== endDate)) {
+	                model.isAllDay = true;
+	                model.setAllDayPeriod(startDate, endDate);
+	            }
+	        });
+	    },
+	
+	    /**
 	     * Find event and get view model for specific month
 	     * @this Base
 	     * @param {Date} starts - start date to find events
@@ -8385,7 +8393,8 @@
 	
 	        coll = this.events.find(filter);
 	        vColl = ctrlCore.convertToViewModel(coll);
-	        vColl = ctrlMonth._adjustRenderRange(starts, ends, vColl);
+	        ctrlMonth._adjustRenderRange(starts, ends, vColl);
+	        ctrlMonth._convertMultiDateToAllDay(vColl);
 	        vList = vColl.sort(array.compare.event.asc);
 	
 	        collisionGroup = ctrlCore.getCollisionGroup(vList);
