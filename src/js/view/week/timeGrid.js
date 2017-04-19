@@ -19,7 +19,6 @@ var mainTmpl = require('../template/week/timeGrid.hbs');
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
 var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
 
-
 /**
  * start~end 까지의 시간 레이블 목록을 반환한다.
  * 현재 시간과 가까운 레이블의 경우 hidden:true로 설정한다.
@@ -263,7 +262,7 @@ TimeGrid.prototype.render = function(viewModel) {
 
     width = 100 / eventLen;
     baseViewModel.width = width;
-    baseViewModel.showTodayMarker = baseViewModel.todaymarkerLeft >= 0;
+    baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
 
     container.innerHTML = mainTmpl(baseViewModel);
 
