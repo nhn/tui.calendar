@@ -87,28 +87,27 @@ var Month = {
      * @param {Collection} vColl - collection of events
      */
     _adjustTimeTopIndex: function(vColl) {
-        var ctrlMonth = this.Month,
-            getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD,
-            vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter),
-            maxIndexInYMD = {};
+        var ctrlMonth = this.Month;
+        var getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD;
+        var vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter);
+        var sortedTimeEvents = vColl.find(ctrlMonth._onlyTimeFilter).sort(array.compare.event.asc);
+        var maxIndexInYMD = {};
 
-        vColl
-            .find(ctrlMonth._onlyTimeFilter)
-            .each(function(timeViewModel) {
-                var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD'),
-                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
+        sortedTimeEvents.forEach(function(timeViewModel) {
+            var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD');
+            var alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
 
-                if (util.isUndefined(alldayMaxTopInYMD)) {
-                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
-                        getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
-                }
-                maxIndexInYMD[eventYMD] = timeViewModel.top =
-                    (alldayMaxTopInYMD + 1);
+            if (util.isUndefined(alldayMaxTopInYMD)) {
+                alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
+                    getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
+            }
+            maxIndexInYMD[eventYMD] = timeViewModel.top =
+                (alldayMaxTopInYMD + 1);
 
-                if (timeViewModel.top > alldayMaxTopInYMD) {
-                    return;
-                }
-            });
+            if (timeViewModel.top > alldayMaxTopInYMD) {
+                return;
+            }
+        });
     },
 
     /**
@@ -156,6 +155,7 @@ var Month = {
         ctrlMonth._adjustRenderRange(starts, ends, vColl);
         ctrlMonth._addMultiDateInfo(vColl);
         vList = vColl.sort(array.compare.event.asc);
+
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
         ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);

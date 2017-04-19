@@ -1,12 +1,17 @@
 .{css-prefix}month-week-item
     .{css-prefix}weekday
-        border-top: 1px solid #ccc
+        border-top: 1px solid #ddd
 
         .{css-prefix}weekday-grid
             overflow-y: hidden
 
         .{css-prefix}weekday-events
+            top: 14px
+            height: calc(100% - 14px)
             overflow-y: hidden
+
+        .{css-prefix}weekday-event
+            margin: 0 10px
 
         .{css-prefix}today
             background: none;
@@ -55,8 +60,8 @@
             line-height: 27px
             text-align: center
     .events
-        pos(14px, 0)
-        wh(100%, calc(100% - 14px))
+        pos(0, 0)
+        wh(100%, 100%)
         position: absolute
         font-size: 12px
         overflow-y: scroll
@@ -66,7 +71,7 @@
 
     .event
         position: relative
-        margin: 0 10px
+        margin: 0 10px 0 0
         cursor: pointer
         border-left-style: solid
         border-left-width: 3px
