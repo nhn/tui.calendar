@@ -12,21 +12,12 @@ var array = require('../../common/array'),
 
 var Month = {
     /**
-     * Function for group each type of events in view model collection
-     * @param {CalEventViewModel} viewModel - event view model
-     * @returns {boolean} whether model is allday event?
-     */
-    _groupByType: function(viewModel) {
-        return (viewModel.model.isAllDay ? 'allday' : 'time');
-    },
-
-    /**
      * Filter function for find time event
      * @param {CalEventViewModel} viewModel - event view model
      * @returns {boolean} whether model is time event?
      */
     _onlyTimeFilter: function(viewModel) {
-        return !viewModel.model.isAllDay && !viewModel.isMultiDates;
+        return !viewModel.model.isAllDay && !viewModel.hasMultiDates;
     },
 
     /**
@@ -35,7 +26,7 @@ var Month = {
      * @returns {boolean} whether model is allday event?
      */
     _onlyAlldayFilter: function(viewModel) {
-        return viewModel.model.isAllDay || viewModel.isMultiDates;
+        return viewModel.model.isAllDay || viewModel.hasMultiDates;
     },
 
     /**
@@ -126,15 +117,15 @@ var Month = {
      * @param {Collection} vColl - view model collection
      * property.
      */
-    _setMultiDateInfo: function(vColl) {
+    _addMultiDateInfo: function(vColl) {
         vColl.each(function(viewModel) {
             var model = viewModel.model;
             var starts = model.getStarts();
             var ends = model.getEnds();
 
-            viewModel.isMultiDates = !datetime.isSameDate(starts, ends);
+            viewModel.hasMultiDates = !datetime.isSameDate(starts, ends);
 
-            if (!model.isAllDay && viewModel.isMultiDates) {
+            if (!model.isAllDay && viewModel.hasMultiDates) {
                 viewModel.renderStarts = datetime.start(starts);
                 viewModel.renderEnds = datetime.end(ends);
             }
@@ -163,7 +154,7 @@ var Month = {
         coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
         ctrlMonth._adjustRenderRange(starts, ends, vColl);
-        ctrlMonth._setMultiDateInfo(vColl);
+        ctrlMonth._addMultiDateInfo(vColl);
         vList = vColl.sort(array.compare.event.asc);
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);

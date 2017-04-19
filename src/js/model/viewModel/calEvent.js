@@ -5,7 +5,6 @@
 'use strict';
 
 var util = global.tui.util;
-var TZDate = require('../../common/timezone').Date;
 
 /**
  * CalEvent ViewModel
@@ -64,7 +63,7 @@ function CalEventViewModel(event) {
     /**
      * whether the event includes multiple dates
      */
-    this.isMultiDates = false;
+    this.hasMultiDates = false;
 
     /**
      * represent render start date used at rendering.

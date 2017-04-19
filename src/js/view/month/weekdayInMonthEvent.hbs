@@ -13,7 +13,7 @@
                 width:{{multiply width @root.width}}%;
                 height:{{@root.eventBlockHeight}}px;
                 margin-top:{{@root.eventBlockGutter}}px">
-        {{#fi model.isAllDay '||' isMultiDates}}
+        {{#fi model.isAllDay '||' hasMultiDates}}
         <div class="{{CSS_PREFIX}}weekday-event"
              style="height:{{@root.eventHeight}}px;
                     color:{{model.color}};
