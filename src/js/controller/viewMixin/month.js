@@ -26,7 +26,7 @@ var Month = {
      * @returns {boolean} whether model is time event?
      */
     _onlyTimeFilter: function(viewModel) {
-        return !viewModel.model.isAllDay;
+        return !viewModel.model.isAllDay && !viewModel.isMultiDates;
     },
 
     /**
@@ -35,7 +35,7 @@ var Month = {
      * @returns {boolean} whether model is allday event?
      */
     _onlyAlldayFilter: function(viewModel) {
-        return viewModel.model.isAllDay;
+        return viewModel.model.isAllDay || viewModel.isMultiDates;
     },
 
     /**
@@ -126,15 +126,17 @@ var Month = {
      * @param {Collection} vColl - view model collection
      * property.
      */
-    _convertMultiDateToAllDay: function(vColl) {
+    _setMultiDateInfo: function(vColl) {
         vColl.each(function(viewModel) {
             var model = viewModel.model;
-            var startDate = datetime.format(model.getStarts(), 'YYYY-MM-DD');
-            var endDate = datetime.format(model.getEnds(), 'YYYY-MM-DD');
+            var starts = model.getStarts();
+            var ends = model.getEnds();
 
-            if (!model.isAllDay && (startDate !== endDate)) {
-                model.isAllDay = true;
-                model.setAllDayPeriod(startDate, endDate);
+            viewModel.isMultiDates = !datetime.isSameDate(starts, ends);
+
+            if (!model.isAllDay && viewModel.isMultiDates) {
+                viewModel.renderStarts = datetime.start(starts);
+                viewModel.renderEnds = datetime.end(ends);
             }
         });
     },
@@ -161,9 +163,8 @@ var Month = {
         coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
         ctrlMonth._adjustRenderRange(starts, ends, vColl);
-        ctrlMonth._convertMultiDateToAllDay(vColl);
+        ctrlMonth._setMultiDateInfo(vColl);
         vList = vColl.sort(array.compare.event.asc);
-
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
         ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);

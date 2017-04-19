@@ -6,14 +6,14 @@
     <div data-id="{{stamp model}}"
          class="{{CSS_PREFIX}}weekday-event-block
                 {{CSS_PREFIX}}weekday-event-block-{{stamp model}}
-            {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
-            {{#if renderEnds}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
+            {{#if exceedLeft}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
+            {{#if exceedRight}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
          style="top:{{multiply top @root.eventBlockHeight}}px;
                 left:{{multiply left @root.width}}%;
                 width:{{multiply width @root.width}}%;
                 height:{{@root.eventBlockHeight}}px;
                 margin-top:{{@root.eventBlockGutter}}px">
-        {{#if model.isAllDay ~}}
+        {{#fi model.isAllDay '||' isMultiDates}}
         <div class="{{CSS_PREFIX}}weekday-event"
              style="height:{{@root.eventHeight}}px;
                     color:{{model.color}};
@@ -29,7 +29,7 @@
             <span class="{{CSS_PREFIX}}weekday-event-title" style="color:#000"
                   data-title="{{model.title}}">{{{time-tmpl model}}}</span>
         </div>
-        {{/if}}
+        {{/fi}}
     </div>
     {{else ~}}
         {{wdSkipped}}

@@ -226,15 +226,12 @@ function stringDESCIgnoreCase(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function eventASC(a, b) {
-    var durationA,
-        durationB,
-        allDayCompare,
-        startsCompare;
+    var durationA, durationB;
+    var allDayCompare, startsCompare;
+    var modelA = a.valueOf();
+    var modelB = b.valueOf();
 
-    a = a.valueOf();
-    b = b.valueOf();
-
-    allDayCompare = booleanASC(a.isAllDay, b.isAllDay);
+    allDayCompare = booleanASC(modelA.isAllDay, modelB.isAllDay);
 
     if (allDayCompare) {
         return allDayCompare;
@@ -255,7 +252,7 @@ function eventASC(a, b) {
         return -1;
     }
 
-    return util.stamp(a) - util.stamp(b);
+    return util.stamp(modelA) - util.stamp(modelB);
 }
 
 

@@ -60,7 +60,7 @@ Handlebars.registerHelper({
     },
 
     /**
-     * Compare object by customizable oper parameter
+     * Compare object or apply logical operation by customizable oper parameter
      * @param {*} a - a
      * @param {string} oper - operator ex) '==', '<'
      * @param {*} b - b
@@ -75,6 +75,8 @@ Handlebars.registerHelper({
                 return (a === b) ? options.fn(this) : options.inverse(this);
             case '<':
                 return (a < b) ? options.fn(this) : options.inverse(this);
+            case '||':
+                return (a || b) ? options.fn(this) : options.inverse(this);
             default:
                 break;
         }

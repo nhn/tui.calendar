@@ -207,10 +207,12 @@ var Core = {
          */
         function limit(viewModel) {
             if (viewModel.getStarts() < starts) {
+                viewModel.exceedLeft = true;
                 viewModel.renderStarts = new TZDate(starts.getTime());
             }
 
             if (viewModel.getEnds() > ends) {
+                viewModel.exceedRight = true;
                 viewModel.renderEnds = new TZDate(ends.getTime());
             }
 
