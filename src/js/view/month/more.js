@@ -37,8 +37,9 @@ util.inherit(More, View);
  */
 More.prototype._onClick = function(clickEvent) {
     var target = (clickEvent.target || clickEvent.srcElement);
+    var className = config.classname('month-more-close');
 
-    if (!domutil.hasClass(target, config.classname('month-more-close'))) {
+    if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return;
     }
 
