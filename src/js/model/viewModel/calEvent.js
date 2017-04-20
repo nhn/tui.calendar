@@ -61,20 +61,37 @@ function CalEventViewModel(event) {
     this.hidden = false;
 
     /**
+     * whether the event includes multiple dates
+     */
+    this.hasMultiDates = false;
+
+    /**
      * represent render start date used at rendering.
      *
      * if set null then use model's 'starts' property.
-     * @type {Date}
+     * @type {TZDate}
      */
     this.renderStarts = null;
+
+    /**
+     * whether the actual start-date is before the render-start-date
+     * @type {boolean}
+     */
+    this.exceedLeft = false;
 
     /**
      * represent render end date used at rendering.
      *
      * if set null then use model's 'ends' property.
-     * @type {Date}
+     * @type {TZDate}
      */
     this.renderEnds = null;
+
+    /**
+     * whether the actual end-date is after the render-end-date
+     * @type {boolean}
+     */
+    this.exceedRight = false;
 }
 
 /**********
@@ -154,7 +171,17 @@ CalEventViewModel.prototype.duration = function() {
  * @returns {boolean} CalEvent#collidesWith result.
  */
 CalEventViewModel.prototype.collidesWith = function(viewModel) {
-    return this.model.collidesWith(viewModel.valueOf());
+    var ownStarts = this.getStarts(),
+        ownEnds = this.getEnds(),
+        starts = viewModel.getStarts(),
+        ends = viewModel.getEnds();
+
+    if ((starts > ownStarts && starts < ownEnds) ||
+        (ends > ownStarts && ends < ownEnds) ||
+        (starts <= ownStarts && ends >= ownEnds)) {
+        return true;
+    }
+    return false;
 };
 
 module.exports = CalEventViewModel;

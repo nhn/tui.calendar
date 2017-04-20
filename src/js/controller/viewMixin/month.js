@@ -12,21 +12,12 @@ var array = require('../../common/array'),
 
 var Month = {
     /**
-     * Function for group each type of events in view model collection
-     * @param {CalEventViewModel} viewModel - event view model
-     * @returns {boolean} whether model is allday event?
-     */
-    _groupByType: function(viewModel) {
-        return (viewModel.model.isAllDay ? 'allday' : 'time');
-    },
-
-    /**
      * Filter function for find time event
      * @param {CalEventViewModel} viewModel - event view model
      * @returns {boolean} whether model is time event?
      */
     _onlyTimeFilter: function(viewModel) {
-        return !viewModel.model.isAllDay;
+        return !viewModel.model.isAllDay && !viewModel.hasMultiDates;
     },
 
     /**
@@ -35,7 +26,7 @@ var Month = {
      * @returns {boolean} whether model is allday event?
      */
     _onlyAlldayFilter: function(viewModel) {
-        return viewModel.model.isAllDay;
+        return viewModel.model.isAllDay || viewModel.hasMultiDates;
     },
 
     /**
@@ -62,7 +53,7 @@ var Month = {
         var ctrlCore = this.Core;
 
         vColl.each(function(viewModel) {
-            if (viewModel.model.isAllDay) {
+            if (viewModel.model.isAllDay || viewModel.hasMultiDates) {
                 ctrlCore.limitRenderRange(starts, ends, viewModel);
             }
         });
@@ -96,28 +87,27 @@ var Month = {
      * @param {Collection} vColl - collection of events
      */
     _adjustTimeTopIndex: function(vColl) {
-        var ctrlMonth = this.Month,
-            getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD,
-            vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter),
-            maxIndexInYMD = {};
+        var ctrlMonth = this.Month;
+        var getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD;
+        var vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter);
+        var sortedTimeEvents = vColl.find(ctrlMonth._onlyTimeFilter).sort(array.compare.event.asc);
+        var maxIndexInYMD = {};
 
-        vColl
-            .find(ctrlMonth._onlyTimeFilter)
-            .each(function(timeViewModel) {
-                var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD'),
-                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
+        sortedTimeEvents.forEach(function(timeViewModel) {
+            var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD');
+            var alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
 
-                if (util.isUndefined(alldayMaxTopInYMD)) {
-                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
-                        getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
-                }
-                maxIndexInYMD[eventYMD] = timeViewModel.top =
-                    (alldayMaxTopInYMD + 1);
+            if (util.isUndefined(alldayMaxTopInYMD)) {
+                alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
+                    getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
+            }
+            maxIndexInYMD[eventYMD] = timeViewModel.top =
+                (alldayMaxTopInYMD + 1);
 
-                if (timeViewModel.top > alldayMaxTopInYMD) {
-                    return;
-                }
-            });
+            if (timeViewModel.top > alldayMaxTopInYMD) {
+                return;
+            }
+        });
     },
 
     /**
@@ -126,15 +116,17 @@ var Month = {
      * @param {Collection} vColl - view model collection
      * property.
      */
-    _convertMultiDateToAllDay: function(vColl) {
+    _addMultiDatesInfo: function(vColl) {
         vColl.each(function(viewModel) {
             var model = viewModel.model;
-            var startDate = datetime.format(model.getStarts(), 'YYYY-MM-DD');
-            var endDate = datetime.format(model.getEnds(), 'YYYY-MM-DD');
+            var starts = model.getStarts();
+            var ends = model.getEnds();
 
-            if (!model.isAllDay && (startDate !== endDate)) {
-                model.isAllDay = true;
-                model.setAllDayPeriod(startDate, endDate);
+            viewModel.hasMultiDates = !datetime.isSameDate(starts, ends);
+
+            if (!model.isAllDay && viewModel.hasMultiDates) {
+                viewModel.renderStarts = datetime.start(starts);
+                viewModel.renderEnds = datetime.end(ends);
             }
         });
     },
@@ -160,8 +152,8 @@ var Month = {
 
         coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
+        ctrlMonth._addMultiDatesInfo(vColl);
         ctrlMonth._adjustRenderRange(starts, ends, vColl);
-        ctrlMonth._convertMultiDateToAllDay(vColl);
         vList = vColl.sort(array.compare.event.asc);
 
         collisionGroup = ctrlCore.getCollisionGroup(vList);

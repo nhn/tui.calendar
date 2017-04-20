@@ -7,8 +7,9 @@
 
 var util = global.tui.util;
 
-var Collection = require('../../common/collection'),
-    array = require('../../common/array');
+var Collection = require('../../common/collection');
+var array = require('../../common/array');
+var datetime = require('../../common/datetime');
 
 /**
  * @mixin Base.Week
@@ -164,6 +165,20 @@ var Week = {
      **********/
 
     /**
+     * Set hasMultiDates flag to true and set date ranges for rendering
+     * @this Base
+     * @param {Collection} vColl - view model collection
+     */
+    _addMultiDatesInfo: function(vColl) {
+        vColl.each(function(viewModel) {
+            var model = viewModel.model;
+            viewModel.hasMultiDates = true;
+            viewModel.renderStarts = datetime.start(model.getStarts());
+            viewModel.renderEnds = datetime.end(model.getEnds());
+        });
+    },
+
+    /**
      * create view model for allday view part
      * @this Base
      * @param {Date} starts start date.
@@ -173,6 +188,7 @@ var Week = {
      */
     getViewModelForAlldayView: function(starts, ends, viewModelColl) {
         var ctrlCore = this.Core,
+            ctrlWeek = this.Week,
             viewModels,
             collisionGroups,
             matrices;
@@ -181,6 +197,7 @@ var Week = {
             return [];
         }
 
+        ctrlWeek._addMultiDatesInfo(viewModelColl);
         ctrlCore.limitRenderRange(starts, ends, viewModelColl);
 
         viewModels = viewModelColl.sort(array.compare.event.asc);
