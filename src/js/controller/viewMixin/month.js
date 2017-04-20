@@ -53,7 +53,7 @@ var Month = {
         var ctrlCore = this.Core;
 
         vColl.each(function(viewModel) {
-            if (viewModel.model.isAllDay) {
+            if (viewModel.model.isAllDay || viewModel.hasMultiDates) {
                 ctrlCore.limitRenderRange(starts, ends, viewModel);
             }
         });
@@ -116,7 +116,7 @@ var Month = {
      * @param {Collection} vColl - view model collection
      * property.
      */
-    _addMultiDateInfo: function(vColl) {
+    _addMultiDatesInfo: function(vColl) {
         vColl.each(function(viewModel) {
             var model = viewModel.model;
             var starts = model.getStarts();
@@ -152,8 +152,8 @@ var Month = {
 
         coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
+        ctrlMonth._addMultiDatesInfo(vColl);
         ctrlMonth._adjustRenderRange(starts, ends, vColl);
-        ctrlMonth._addMultiDateInfo(vColl);
         vList = vColl.sort(array.compare.event.asc);
 
         collisionGroup = ctrlCore.getCollisionGroup(vList);

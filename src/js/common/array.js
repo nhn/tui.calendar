@@ -231,7 +231,7 @@ function eventASC(a, b) {
     var modelA = a.valueOf();
     var modelB = b.valueOf();
 
-    allDayCompare = booleanASC(modelA.isAllDay, modelB.isAllDay);
+    allDayCompare = booleanASC(modelA.isAllDay || a.hasMultiDates, modelB.isAllDay || b.hasMultiDates);
 
     if (allDayCompare) {
         return allDayCompare;
