@@ -23,6 +23,21 @@ function findGridTarget(moreTarget, day) {
     return weekGridEls[day];
 }
 
+function getViewModelForMoreLayer(date, target, events) {
+    events.each(function(event) {
+        var model = event.model;
+        event.hasMultiDates = !datetime.isSameDate(model.starts, model.ends);
+    });
+
+    return {
+        target: target,
+        gridTarget: findGridTarget(target, date.getDay()),
+        date: datetime.format(date, 'YYYY.MM.DD'),
+        events: events.sort(array.compare.event.asc),
+        width: target.offsetWidth
+    };
+}
+
 /**
  * @param {Base} baseController - controller instance
  * @param {HTMLElement} layoutContainer - container element for month view
@@ -65,15 +80,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         });
 
         if (events && events.length) {
-            events = events.sort(array.compare.event.asc);
-
-            moreView.render({
-                target: target,
-                gridTarget: findGridTarget(target, date.getDay()),
-                date: datetime.format(date, 'YYYY.MM.DD'),
-                events: events,
-                width: clickMoreEvent.target.offsetWidth
-            });
+            moreView.render(getViewModelForMoreLayer(date, target, events));
         }
     });
 
