@@ -128,6 +128,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         eventContainer,
         contentStr = '';
 
+    setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
     container.innerHTML = baseTmpl(baseViewModel);
 
     renderLimitIdx = this._getRenderLimitIndex();
@@ -165,5 +166,18 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 WeekdayInMonth.prototype._beforeDestroy = function() {
     Handlebars.unregisterHelper('wdSkipped');
 };
+
+/**
+ * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
+ * @param {Array} dates - 날짜정보 배열
+ * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+ */
+function setIsOtherMonthFlag(dates, renderMonthStr) {
+    var renderMonth = Number(renderMonthStr.substring(5));
+
+    util.forEach(dates, function(dateObj) {
+        dateObj.isOtherMonth = dateObj.month !== renderMonth;
+    });
+}
 
 module.exports = WeekdayInMonth;

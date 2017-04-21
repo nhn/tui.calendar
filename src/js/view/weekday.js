@@ -69,7 +69,6 @@ Weekday.prototype.getBaseViewModel = function() {
     var range = this.getRenderDateRange();
     var gridWidth = (100 / range.length);
     var today = datetime.format(new TZDate(), 'YYYYMMDD');
-    var thisMonth = today.substring(0, 6);
 
     return {
         width: gridWidth,
@@ -81,7 +80,6 @@ Weekday.prototype.getBaseViewModel = function() {
                 date: date.getDate(),
                 month: date.getMonth() + 1,
                 day: date.getDay(),
-                isExtraDate: datetime.format(date, 'YYYYMM') !== thisMonth,
                 isToday: datetime.format(date, 'YYYYMMDD') === today
             };
         })

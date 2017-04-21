@@ -24,19 +24,22 @@ var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
  * 현재 시간과 가까운 레이블의 경우 hidden:true로 설정한다.
  * @param {number} start - 시작시간
  * @param {number} end - 끝시간
+ * @param {boolean} hasHourMarker - 현재 시간이 표시되는지 여부
  * @returns {Array.<Object>}
  */
-function getHoursLabels(start, end) {
+function getHoursLabels(start, end, hasHourMarker) {
     var now = new TZDate();
     var nowMinutes = now.getMinutes();
     var nowHours = now.getHours();
     var hoursRange = util.range(start, end);
     var nowAroundHours = null;
 
-    if (nowMinutes < 20) {
-        nowAroundHours = nowHours;
-    } else if (nowMinutes > 40) {
-        nowAroundHours = nowHours + 1;
+    if (hasHourMarker) {
+        if (nowMinutes < 20) {
+            nowAroundHours = nowHours;
+        } else if (nowMinutes > 40) {
+            nowAroundHours = nowHours + 1;
+        }
     }
 
     return hoursRange.map(function(hours) {
@@ -192,9 +195,8 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
  */
 TimeGrid.prototype._getBaseViewModel = function() {
     var opt = this.options;
-    var viewModel = util.extend({
-        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd)
-    }, this._getHourmarkerViewModel());
+    var viewModel = this._getHourmarkerViewModel();
+    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 
     return viewModel;
 };

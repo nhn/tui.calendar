@@ -84,9 +84,10 @@ Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
  */
 Month.prototype._renderChildren = function(container, calendar) {
-    var self = this,
-        weekCount = calendar.length,
-        heightPercent = 100 / weekCount;
+    var self = this;
+    var weekCount = calendar.length;
+    var heightPercent = 100 / weekCount;
+    var renderMonth = this.options.renderMonth;
 
     container.innerHTML = '';
     this.children.clear();
@@ -101,6 +102,7 @@ Month.prototype._renderChildren = function(container, calendar) {
             'div', container, config.classname('month-week-item'));
 
         weekdayView = new WeekdayInMonth({
+            renderMonth: renderMonth,
             heightPercent: heightPercent,
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
