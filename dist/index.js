@@ -1,4 +1,4 @@
-/*! bundle created at "Fri Apr 21 2017 12:43:31 GMT+0900 (KST)" */
+/*! bundle created at "Fri Apr 21 2017 17:47:16 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -15121,11 +15121,11 @@
 	 * @returns {number} limit index
 	 */
 	WeekdayInMonth.prototype._getRenderLimitIndex = function() {
-	    var opt = this.options,
-	        containerHeight = this.getViewBound().height,
-	        count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
+	    var opt = this.options;
+	    var containerHeight = this.getViewBound().height - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
+	    var count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
 	
-	    return mmax(count - 1, 0);    // subtraction for '+n' label block
+	    return mmax(count - 1, 0); // subtraction for '+n' label block
 	};
 	
 	/**
