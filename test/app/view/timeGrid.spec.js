@@ -12,6 +12,7 @@ describe('View/TimeGrid', function() {
         jasmine.clock().mockDate(new Date(2015, 0, 1, 3));
 
         var expected = {
+            todaymarkerLeft: 1,
             hoursLabels: [
                 {hours: 3, hidden: true},
                 {hours: 4, hidden: false},
@@ -29,7 +30,9 @@ describe('View/TimeGrid', function() {
                 hourStart: 3,
                 hourEnd: 11
             },
-            _getHourmarkerViewModel: jasmine.createSpy('_getHourmarkerViewModel')
+            _getHourmarkerViewModel: function() {
+                return {todaymarkerLeft: 1};
+            }
         };
 
         var result = proto._getBaseViewModel.call(obj);

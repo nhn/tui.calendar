@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Apr 20 2017 17:24:10 GMT+0900 (KST)" */
+/*! bundle created at "Fri Apr 21 2017 12:43:31 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -9453,19 +9453,22 @@
 	 * 현재 시간과 가까운 레이블의 경우 hidden:true로 설정한다.
 	 * @param {number} start - 시작시간
 	 * @param {number} end - 끝시간
+	 * @param {boolean} hasHourMarker - 현재 시간이 표시되는지 여부
 	 * @returns {Array.<Object>}
 	 */
-	function getHoursLabels(start, end) {
+	function getHoursLabels(start, end, hasHourMarker) {
 	    var now = new TZDate();
 	    var nowMinutes = now.getMinutes();
 	    var nowHours = now.getHours();
 	    var hoursRange = util.range(start, end);
 	    var nowAroundHours = null;
 	
-	    if (nowMinutes < 20) {
-	        nowAroundHours = nowHours;
-	    } else if (nowMinutes > 40) {
-	        nowAroundHours = nowHours + 1;
+	    if (hasHourMarker) {
+	        if (nowMinutes < 20) {
+	            nowAroundHours = nowHours;
+	        } else if (nowMinutes > 40) {
+	            nowAroundHours = nowHours + 1;
+	        }
 	    }
 	
 	    return hoursRange.map(function(hours) {
@@ -9621,9 +9624,8 @@
 	 */
 	TimeGrid.prototype._getBaseViewModel = function() {
 	    var opt = this.options;
-	    var viewModel = util.extend({
-	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd)
-	    }, this._getHourmarkerViewModel());
+	    var viewModel = this._getHourmarkerViewModel();
+	    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 	
 	    return viewModel;
 	};
@@ -11057,7 +11059,6 @@
 	    var range = this.getRenderDateRange();
 	    var gridWidth = (100 / range.length);
 	    var today = datetime.format(new TZDate(), 'YYYYMMDD');
-	    var thisMonth = today.substring(0, 6);
 	
 	    return {
 	        width: gridWidth,
@@ -11069,7 +11070,6 @@
 	                date: date.getDate(),
 	                month: date.getMonth() + 1,
 	                day: date.getDay(),
-	                isExtraDate: datetime.format(date, 'YYYYMM') !== thisMonth,
 	                isToday: datetime.format(date, 'YYYYMMDD') === today
 	            };
 	        })
@@ -14947,9 +14947,10 @@
 	 * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
 	 */
 	Month.prototype._renderChildren = function(container, calendar) {
-	    var self = this,
-	        weekCount = calendar.length,
-	        heightPercent = 100 / weekCount;
+	    var self = this;
+	    var weekCount = calendar.length;
+	    var heightPercent = 100 / weekCount;
+	    var renderMonth = this.options.renderMonth;
 	
 	    container.innerHTML = '';
 	    this.children.clear();
@@ -14964,6 +14965,7 @@
 	            'div', container, config.classname('month-week-item'));
 	
 	        weekdayView = new WeekdayInMonth({
+	            renderMonth: renderMonth,
 	            heightPercent: heightPercent,
 	            renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
 	            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
@@ -15187,6 +15189,7 @@
 	        eventContainer,
 	        contentStr = '';
 	
+	    setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
 	    container.innerHTML = baseTmpl(baseViewModel);
 	
 	    renderLimitIdx = this._getRenderLimitIndex();
@@ -15225,6 +15228,19 @@
 	    Handlebars.unregisterHelper('wdSkipped');
 	};
 	
+	/**
+	 * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
+	 * @param {Array} dates - 날짜정보 배열
+	 * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+	 */
+	function setIsOtherMonthFlag(dates, renderMonthStr) {
+	    var renderMonth = Number(renderMonthStr.substring(5));
+	
+	    util.forEach(dates, function(dateObj) {
+	        dateObj.isOtherMonth = dateObj.month !== renderMonth;
+	    });
+	}
+	
 	module.exports = WeekdayInMonth;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
@@ -15246,7 +15262,7 @@
 	    + "\n    "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + " "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isExtraDate : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isOtherMonth : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n         style=\"width:"
 	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
 	    + "%; left:"
@@ -15268,8 +15284,7 @@
 	},"6":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "extra-date";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
