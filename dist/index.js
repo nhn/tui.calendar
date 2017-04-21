@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Apr 19 2017 20:14:49 GMT+0900 (KST)" */
+/*! bundle created at "Thu Apr 20 2017 17:24:10 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -14750,6 +14750,21 @@
 	    return weekGridEls[day];
 	}
 	
+	function getViewModelForMoreLayer(date, target, events) {
+	    events.each(function(event) {
+	        var model = event.model;
+	        event.hasMultiDates = !datetime.isSameDate(model.starts, model.ends);
+	    });
+	
+	    return {
+	        target: target,
+	        gridTarget: findGridTarget(target, date.getDay()),
+	        date: datetime.format(date, 'YYYY.MM.DD'),
+	        events: events.sort(array.compare.event.asc),
+	        width: target.offsetWidth
+	    };
+	}
+	
 	/**
 	 * @param {Base} baseController - controller instance
 	 * @param {HTMLElement} layoutContainer - container element for month view
@@ -14792,15 +14807,7 @@
 	        });
 	
 	        if (events && events.length) {
-	            events = events.sort(array.compare.event.asc);
-	
-	            moreView.render({
-	                target: target,
-	                gridTarget: findGridTarget(target, date.getDay()),
-	                date: datetime.format(date, 'YYYY.MM.DD'),
-	                events: events,
-	                width: clickMoreEvent.target.offsetWidth
-	            });
+	            moreView.render(getViewModelForMoreLayer(date, target, events));
 	        }
 	    });
 	
@@ -17514,7 +17521,7 @@
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
 	

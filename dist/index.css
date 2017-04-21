@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Apr 19 2017 20:14:49 GMT+0900 (KST)" */
+/*! bundle created at "Thu Apr 20 2017 17:24:10 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -753,7 +753,7 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   font-size: 13px;
 }
 .dooray-calendar-minicalendar-other-month button {
-  color: #ccc !important;
+  color: #bbb;
 }
 .dooray-calendar-minicalendar-holiday-sun {
   color: #f44336;
@@ -761,11 +761,8 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
 .dooray-calendar-minicalendar-holiday-sun button {
   color: #f44336;
 }
-.dooray-calendar-minicalendar-holiday-sat {
-  color: #3692f2;
-}
-.dooray-calendar-minicalendar-holiday-sat button {
-  color: #3692f2;
+.dooray-calendar-minicalendar-holiday-sun.dooray-calendar-minicalendar-other-month button {
+  color: #f3acac;
 }
 .dooray-calendar-minicalendar-focused {
   background-color: rgba(19,93,230,0.1);
