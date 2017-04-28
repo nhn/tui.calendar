@@ -1,4 +1,4 @@
-/*! bundle created at "Fri Apr 21 2017 17:47:16 GMT+0900 (KST)" */
+/*! bundle created at "Fri Apr 28 2017 15:33:41 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -598,6 +598,10 @@
   font-size: 12px;
   line-height: 18px;
   cursor: pointer;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .dooray-calendar-month-guide-block {
   position: absolute;
