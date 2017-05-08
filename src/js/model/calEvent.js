@@ -122,15 +122,15 @@ CalEvent.prototype.init = function(options) {
 CalEvent.prototype.setAllDayPeriod = function(starts, ends) {
     // 종일일정인 경우 문자열의 날짜정보만 사용한다.
     if (util.isString(starts)) {
-        starts = starts.substring(0, 10);
+        starts = datetime.parse(starts.substring(0, 10));
     }
     if (util.isString(ends)) {
-        ends = ends.substring(0, 10);
+        ends = datetime.parse(ends.substring(0, 10));
     }
 
-    this.starts = datetime.parse(starts);
+    this.starts = starts;
     this.starts.setHours(0, 0, 0);
-    this.ends = ends ? datetime.parse(ends) : new TZDate(this.starts);
+    this.ends = ends || new TZDate(this.starts);
     this.ends.setHours(23, 59, 59);
 };
 

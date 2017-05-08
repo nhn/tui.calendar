@@ -11,6 +11,7 @@ var config = require('../config'),
     domutil = require('../common/domutil'),
     Month = require('../view/month/month'),
     MonthClick = require('../handler/month/click'),
+    MonthDblClick = require('../handler/month/dblclick'),
     MonthCreation = require('../handler/month/creation'),
     MonthResize = require('../handler/month/resize'),
     MonthMove = require('../handler/month/move'),
@@ -46,13 +47,8 @@ function getViewModelForMoreLayer(date, target, events) {
  * @returns {object} view instance and refresh method
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
-    var monthViewContainer,
-        monthView,
-        clickHandler,
-        creationHandler,
-        resizeHandler,
-        moveHandler,
-        moreView;
+    var monthViewContainer, monthView, moreView;
+    var clickHandler, dblclickHandler, creationHandler, resizeHandler, moveHandler;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -62,6 +58,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // handlers
     clickHandler = new MonthClick(dragHandler, monthView, baseController);
+    dblclickHandler = new MonthDblClick(monthView, baseController);
     creationHandler = new MonthCreation(dragHandler, monthView, baseController);
     resizeHandler = new MonthResize(dragHandler, monthView, baseController);
     moveHandler = new MonthMove(dragHandler, monthView, baseController);
@@ -91,6 +88,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     monthView.handler = {
         click: {
             'default': clickHandler
+        },
+        dblclick: {
+            'default': dblclickHandler
         },
         creation: {
             'default': creationHandler
