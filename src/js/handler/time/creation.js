@@ -59,6 +59,12 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
+    /**
+     * To prevent dblclick and dragend event from occuring together
+     * @type {boolean}
+     */
+    this._blockDblClick = false;
+
     dragHandler.on('dragStart', this._onDragStart, this);
     domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 }
@@ -132,6 +138,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    this._blockDblClick = true;
 
     /**
      * @event TimeCreation#timeCreationDragstart
@@ -240,6 +248,10 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
+    setTimeout(function() {
+        self._blockDblClick = false;
+    }, 0);
+
     /**
      * Function for manipulate event data before firing event
      * @param {object} eventData - event data
@@ -316,18 +328,22 @@ TimeCreation.prototype._onClick = function(clickEventData) {
  * @param {MouseEvent} e - Native MouseEvent
  */
 TimeCreation.prototype._onDblClick = function(e) {
-    var target = e.target;
-    var result = this.checkExpectedCondition(target);
-    var getEventDataFunc, eventData;
+    var condResult, getEventDataFunc, eventData;
 
-    if (!result) {
+    if (this._blockDblClick) {
         return;
     }
 
-    getEventDataFunc = this._retriveEventData(result);
+    condResult = this.checkExpectedCondition(e.target);
+    if (!condResult) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(condResult);
     eventData = getEventDataFunc(e);
 
     this.fire('timeCreationDblClick', eventData);
+
 
     this._createEvent(eventData);
 };

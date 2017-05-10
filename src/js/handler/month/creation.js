@@ -48,6 +48,12 @@ function MonthCreation(dragHandler, monthView, baseController) {
     this._cache = null;
 
     /**
+     * To prevent dblclick and dragend event from occuring together
+     * @type {boolean}
+     */
+    this._blockDblClick = false;
+
+    /**
      * @type {MonthCreationGuide}
      */
     this.guide = new Guide(this);
@@ -116,6 +122,8 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
+    this._blockDblClick = true;
+
     this.getEventData = getMousePosData(this.monthView);
 
     eventData = this.getEventData(dragStartEvent.originEvent);
@@ -168,13 +176,18 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - drag end event data
  */
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        eventData;
+    var cache = this._cache;
+    var self = this;
+    var eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
+
+    setTimeout(function() {
+        self._blockDblClick = false;
+    }, 0);
 
     if (!this.getEventData) {
         return;
@@ -207,7 +220,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 MonthCreation.prototype._onDblClick = function(e) {
     var eventData, targetDate;
 
-    if (!isElementWeekdayEvent(e.target)) {
+    if (this._blockDblClick || !isElementWeekdayEvent(e.target)) {
         return;
     }
 

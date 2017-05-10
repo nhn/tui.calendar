@@ -47,6 +47,12 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
     this.getEventDataFunc = null;
 
     /**
+     * To prevent dblclick and dragend event from occuring together
+     * @type {boolean}
+     */
+    this._blockDblClick = false;
+
+    /**
      * @type {AlldayCreationGuide}
      */
     this.guide = new AlldayCreationGuide(this);
@@ -157,6 +163,8 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
         click: this._onClick
     }, this);
 
+    this._blockDblClick = true;
+
     getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
     eventData = getEventDataFunc(dragStartEventData.originEvent);
 
@@ -204,8 +212,9 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
 AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-    var getEventDataFunc = this.getEventDataFunc,
-        eventData;
+    var getEventDataFunc = this.getEventDataFunc;
+    var self = this;
+    var eventData;
 
     if (!getEventDataFunc) {
         return;
@@ -216,6 +225,10 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    setTimeout(function() {
+        self._blockDblClick = false;
+    }, 0);
 
     eventData = getEventDataFunc(dragEndEventData.originEvent);
 
@@ -256,11 +269,9 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
  * @param {MouseEvent} e - Native MouseEvent
  */
 AlldayCreation.prototype._onDblClick = function(e) {
-    var target = e.target;
-    var result = this.checkExpectedCondition(target);
     var getEventDataFunc, eventData;
 
-    if (!result) {
+    if (this._blockDblClick || !this.checkExpectedCondition(e.target)) {
         return;
     }
 
