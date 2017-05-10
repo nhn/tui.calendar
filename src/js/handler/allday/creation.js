@@ -59,10 +59,16 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
  * Destroy method
  */
 AlldayCreation.prototype.destroy = function() {
+    var alldayView = this.alldayView;
+
     this.guide.destroy();
     this.dragHandler.off(this);
-    this.dragHandler = this.alldayView = this.baseController =
-        this.getEventDataFunc = null;
+
+    if (alldayView && alldayView.container) {
+        domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
+    }
+
+    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
 };
 
 /**

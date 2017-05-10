@@ -67,8 +67,15 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
+    var timeGridView = this.timeGridView;
+
     this.guide.destroy();
     this.dragHandler.off(this);
+
+    if (timeGridView && timeGridView.container) {
+        domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+    }
+
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
 };

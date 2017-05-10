@@ -33,12 +33,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayView,
         timeGridView,
         alldayClickHandler,
-        alldayDblClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
         timeClickHandler,
-        timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
         timeResizeHandler;
