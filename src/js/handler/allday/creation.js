@@ -8,6 +8,7 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var alldayCore = require('./core');
 var AlldayCreationGuide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
@@ -50,6 +51,7 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
      */
     this.guide = new AlldayCreationGuide(this);
 
+    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
     dragHandler.on('dragStart', this._onDragStart, this);
 }
 
@@ -203,8 +205,6 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
         return;
     }
 
-    //this.guide.clearGuideElement();
-
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
@@ -243,6 +243,27 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
      * @property {number} xIndex - index number of mouse positions.
      */
     this._onDragEnd(clickEventData, 'alldayCreationClick');
+};
+
+/**
+ * Dblclick event handler
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+AlldayCreation.prototype._onDblClick = function(e) {
+    var target = e.target;
+    var result = this.checkExpectedCondition(target);
+    var getEventDataFunc, eventData;
+
+    if (!result) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(this.alldayView, e);
+    eventData = getEventDataFunc(e);
+
+    this.fire('alldayCreationDblClick', eventData);
+
+    this._createEvent(eventData);
 };
 
 common.mixin(alldayCore, AlldayCreation);

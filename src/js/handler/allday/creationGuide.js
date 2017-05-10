@@ -33,9 +33,10 @@ function AlldayCreationGuide(alldayCreation) {
     this.initializeGuideElement();
 
     alldayCreation.on({
-        'alldayCreationDragstart': this._onDragStart,
-        'alldayCreationDrag': this._onDrag,
-        'alldayCreationClick': this.clearGuideElement
+        alldayCreationDragstart: this._createGuideElement,
+        alldayCreationDrag: this._refreshGuideElement,
+        alldayCreationClick: this.clearGuideElement,
+        alldayCreationDblClick: this._createGuideElement
     }, this);
 }
 
@@ -109,7 +110,7 @@ AlldayCreationGuide.prototype.clearGuideElement = function() {
  * DragStart event handler.
  * @param {object} dragStartEventData - event data object of Allday.Creation.
  */
-AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,

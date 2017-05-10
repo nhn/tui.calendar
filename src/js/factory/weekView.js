@@ -16,12 +16,10 @@ var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
 // Handlers
 var AlldayClick = require('../handler/allday/click');
-var AlldayDblClick = require('../handler/allday/dblclick');
 var AlldayCreation = require('../handler/allday/creation');
 var AlldayMove = require('../handler/allday/move');
 var AlldayResize = require('../handler/allday/resize');
 var TimeClick = require('../handler/time/click');
-var TimeDblClick = require('../handler/time/dblclick');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
@@ -76,7 +74,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     alldayView = new Allday(options.week, vLayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
-    alldayDblClickHandler = new AlldayDblClick(alldayView);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -87,7 +84,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeGridView = new TimeGrid(options.week, vLayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
-    timeDblClickHandler = new TimeDblClick(timeGridView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -100,10 +96,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         click: {
             allday: alldayClickHandler,
             time: timeClickHandler
-        },
-        dblclick: {
-            allday: alldayDblClickHandler,
-            time: timeDblClickHandler
         },
         creation: {
             allday: alldayCreationHandler,

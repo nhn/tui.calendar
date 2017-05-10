@@ -539,10 +539,6 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view) {
         clickHandler[method]('clickEvent', self._onClick, self);
     });
 
-    util.forEach(handler.dblclick, function(dblclickHandler) {
-        dblclickHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
-    });
-
     util.forEach(handler.creation, function(creationHandler) {
         creationHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
     });

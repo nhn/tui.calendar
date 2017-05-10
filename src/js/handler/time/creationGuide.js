@@ -57,9 +57,10 @@ function TimeCreationGuide(timeCreation) {
     this._styleFunc = null;
 
     timeCreation.on({
-        'timeCreationDragstart': this._onDragStart,
-        'timeCreationDrag': this._onDrag,
-        'timeCreationClick': this.clearGuideElement
+        timeCreationDragstart: this._createGuideElement,
+        timeCreationDrag: this._onDrag,
+        timeCreationClick: this.clearGuideElement,
+        timeCreationDblClick: this._createGuideElement
     }, this);
 }
 
@@ -199,7 +200,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
  * DragStart event handler
  * @param {object} dragStartEventData - dragStart event data.
  */
-TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var relatedView = dragStartEventData.relatedView,
         unitData, styleFunc, styleData, result;
 

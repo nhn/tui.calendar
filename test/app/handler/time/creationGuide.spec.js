@@ -82,8 +82,7 @@ describe('handler/time.creation.guide', function() {
     });
 
     describe('_onDrag()', function() {
-        var mockEventData,
-            mockTimeView,
+        var mockTimeView,
             startTime,
             min30;
 
@@ -112,7 +111,7 @@ describe('handler/time.creation.guide', function() {
                 relatedView: mockTimeView
             };
 
-            inst._onDragStart(mockEventData);
+            inst._createGuideElement(mockEventData);
 
             spyOn(inst, '_refreshGuideElement');
         });

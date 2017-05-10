@@ -9,6 +9,7 @@ var config = require('../../config');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var TimeCreationGuide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
@@ -59,6 +60,7 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
     this._dragStart = null;
 
     dragHandler.on('dragStart', this._onDragStart, this);
+    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 }
 
 /**
@@ -225,9 +227,6 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     var self = this,
         dragStart = this._dragStart;
 
-    //client에 위임
-    //this.guide.clearGuideElement();
-
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
@@ -304,6 +303,28 @@ TimeCreation.prototype._onClick = function(clickEventData) {
 
     this._dragStart = this._getEventDataFunc = null;
 };
+
+/**
+ * Dblclick event handler
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+TimeCreation.prototype._onDblClick = function(e) {
+    var target = e.target;
+    var result = this.checkExpectedCondition(target);
+    var getEventDataFunc, eventData;
+
+    if (!result) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(result);
+    eventData = getEventDataFunc(e);
+
+    this.fire('timeCreationDblClick', eventData);
+
+    this._createEvent(eventData);
+};
+
 
 timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);
