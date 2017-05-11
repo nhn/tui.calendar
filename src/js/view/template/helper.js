@@ -114,6 +114,15 @@ Handlebars.registerHelper({
         return [top, left, width, height].join(';');
     },
 
+    'month-eventBlock': function(viewModel, blockHeight, blockWidth, paddingTop) {
+        var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
+        var left = getElSize(viewModel.left * blockWidth, '%', 'left');
+        var width = getElSize(viewModel.width * blockWidth, '%', 'width');
+        var height = getElSize(viewModel.height, 'px', 'height');
+
+        return [top, left, width, height].join(';');
+    },
+
     'holiday': function(day) {
         var cssClass = '';
 
