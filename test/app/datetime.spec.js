@@ -221,7 +221,7 @@ describe('datetime', function() {
     describe('arr2dCalendar()', function() {
         it('iteratee를 제공하면 각 일자 요소를 조작할 수 있다.', function() {
             var month = new TZDate('2014-10-01T00:00:00+09:00');
-            var actual = dt.arr2dCalendar(month, 0, function(date) {
+            var actual = dt.arr2dCalendar(month, 0, false, function(date) {
                 return { customize: true, date: date };
             });
 
