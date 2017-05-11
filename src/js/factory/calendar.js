@@ -384,7 +384,7 @@ Calendar.prototype.move = function(offset) {
 
     if (viewName === 'month') {
         renderDate.addMonth(offset);
-        tempDate = datetime.arr2dCalendar(this.renderDate);
+        tempDate = datetime.arr2dCalendar(this.renderDate, 0, true);
 
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');

@@ -207,7 +207,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         }
     );
 
-    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
+    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, true, function(date) {
         var ymd = datetime.format(date, 'YYYY-MM-DD'),
             day = date.getDay(),
             dayClassName = getDayClassName(day),

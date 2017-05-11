@@ -418,14 +418,15 @@ datetime = {
      * dates that different month with given date are negative values
      * @param {TZDate} month - date want to calculate month calendar
      * @param {number} [startDayOfWeek=0] - start day of week
+     * @param {boolean} [isAlways6Week] - whether the number of weeks are always 6
      * @param {function} [iteratee] - iteratee for customizing calendar object
      * @returns {Array.<string[]>} calendar 2d array
      */
-    arr2dCalendar: function(month, startDayOfWeek, iteratee) {
+    arr2dCalendar: function(month, startDayOfWeek, isAlways6Week, iteratee) {
         var weekArr,
             starts, ends,
             startIndex, endIndex,
-            afterDates,
+            totalDate, afterDates,
             cursor, week,
             calendar = [];
 
@@ -441,9 +442,10 @@ datetime = {
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
+        totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
         cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
         // iteratee all dates to render
-        util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
+        util.forEachArray(util.range(totalDate), function(i) {
             var date;
 
             if (!(i % 7)) {

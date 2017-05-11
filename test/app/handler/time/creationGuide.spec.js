@@ -116,7 +116,7 @@ describe('handler/time.creation.guide', function() {
             spyOn(inst, '_refreshGuideElement');
         });
 
-        it('calculate style properly when user dragging to before start time', function() {
+        it('calculate style properly when user dragging to before start time', function(done) {
             // 사용자가 1시로 드래그함
             var time = new Date('2015-11-17T01:00:00+09:00');
             var mockEventData = {
@@ -127,10 +127,13 @@ describe('handler/time.creation.guide', function() {
 
             inst._onDrag(mockEventData);
 
-            expect(inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, +time, (+startTime + min30), true);
+            setTimeout(function() {
+                expect(inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, +time, (+startTime + min30), true);
+                done();
+            }, 10);
         });
 
-        it('calculate style properly2', function() {
+        it('calculate style properly2', function(done) {
             // 사용자가 6시로 드래그함
             var time = new Date('2015-11-17T06:00:00+09:00');
             var mockEventData = {
@@ -141,8 +144,10 @@ describe('handler/time.creation.guide', function() {
 
             inst._onDrag(mockEventData);
 
-            expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, +startTime, +time + min30);
-
+            setTimeout(function() {
+                expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, +startTime, +time + min30);
+                done();
+            }, 10);
         });
     });
 });

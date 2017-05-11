@@ -73,7 +73,7 @@ Month.prototype.viewName = 'month';
  */
 Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
     var date = datetime.parse(renderMonthStr + '-01'),
-        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0);
+        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0, true);
 
     return calendar;
 };
