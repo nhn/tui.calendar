@@ -46,7 +46,13 @@ MonthCreationGuide.prototype.destroy = function() {
  * @param {object} dragStartEvent - event data from MonthCreation
  */
 MonthCreationGuide.prototype._createGuideElement = function(dragStartEvent) {
-    this.guide = new MonthGuide(null, this.monthCreation.monthView);
+    var options = {
+        isCreationMode: true,
+        height: '100%',
+        top: 0
+    };
+       
+    this.guide = new MonthGuide(options, this.monthCreation.monthView);
     this.guide.start(dragStartEvent);
 };
 

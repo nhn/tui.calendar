@@ -21,7 +21,6 @@
     .week-item
         position: relative
         background-color: #fff
-        overflow: hidden
         &>div
             height: 100%
 
@@ -65,7 +64,16 @@
 
     .guide-block
         position: absolute
-        margin-top: 2px
+
+    .creation-guide
+        top: 0
+        bottom: -1px
+        left: -1px
+        right: 0
+        position: absolute
+        z-index: 20
+        background-color: rgba(19, 93, 230, 0.1)
+        border: 1px solid #135de6
 
     .guide
         position: relative
