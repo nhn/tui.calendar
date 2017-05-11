@@ -25,8 +25,7 @@ describe('view:WeekdayInMonth', function() {
                 }
             };
 
-            expect(WeekdayInMonth.prototype._getRenderLimitIndex
-                   .call(mockInst)).toBe(2);
+            expect(WeekdayInMonth.prototype._getRenderLimitIndex.call(mockInst)).toBe(1);
         });
 
         it('should 0 when containerHeight is 0.', function() {

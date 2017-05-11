@@ -9,6 +9,7 @@ var config = require('../../config');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var TimeCreationGuide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
@@ -58,15 +59,29 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
+    /**
+     * To prevent dblclick and dragend event from occuring together
+     * @type {boolean}
+     */
+    this._blockDblClick = false;
+
     dragHandler.on('dragStart', this._onDragStart, this);
+    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 }
 
 /**
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
+    var timeGridView = this.timeGridView;
+
     this.guide.destroy();
     this.dragHandler.off(this);
+
+    if (timeGridView && timeGridView.container) {
+        domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+    }
+
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
 };
@@ -123,6 +138,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    this._blockDblClick = true;
 
     /**
      * @event TimeCreation#timeCreationDragstart
@@ -225,14 +242,15 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     var self = this,
         dragStart = this._dragStart;
 
-    //client에 위임
-    //this.guide.clearGuideElement();
-
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    setTimeout(function() {
+        self._blockDblClick = false;
+    }, 0);
 
     /**
      * Function for manipulate event data before firing event
@@ -304,6 +322,32 @@ TimeCreation.prototype._onClick = function(clickEventData) {
 
     this._dragStart = this._getEventDataFunc = null;
 };
+
+/**
+ * Dblclick event handler
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+TimeCreation.prototype._onDblClick = function(e) {
+    var condResult, getEventDataFunc, eventData;
+
+    if (this._blockDblClick) {
+        return;
+    }
+
+    condResult = this.checkExpectedCondition(e.target);
+    if (!condResult) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(condResult);
+    eventData = getEventDataFunc(e);
+
+    this.fire('timeCreationDblClick', eventData);
+
+
+    this._createEvent(eventData);
+};
+
 
 timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);

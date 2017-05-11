@@ -108,7 +108,8 @@ describe('handler:AlldayCreation', function() {
 
         beforeEach(function() {
             mockDragHandler = jasmine.createSpyObj('Drag', ['on', 'off']);
-            inst = new AlldayCreation(mockDragHandler);
+            mockAlldayView = {container: {}};
+            inst = new AlldayCreation(mockDragHandler, mockAlldayView);
             spyOn(inst, 'fire');
             spyOn(inst, '_retriveEventData').and.returnValue(function() {return 'good'});
             spyOn(inst, '_createEvent');

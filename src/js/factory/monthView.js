@@ -46,13 +46,8 @@ function getViewModelForMoreLayer(date, target, events) {
  * @returns {object} view instance and refresh method
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
-    var monthViewContainer,
-        monthView,
-        clickHandler,
-        creationHandler,
-        resizeHandler,
-        moveHandler,
-        moreView;
+    var monthViewContainer, monthView, moreView;
+    var clickHandler, creationHandler, resizeHandler, moveHandler;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));

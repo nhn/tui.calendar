@@ -5,13 +5,14 @@
 'use strict';
 var util = global.tui.util;
 
-var config = require('../../config'),
-    datetime = require('../../common/datetime'),
-    array = require('../../common/array'),
-    domutil = require('../../common/domutil'),
-    getMousePosData = require('./core'),
-    Guide = require('./creationGuide'),
-    TZDate = require('../../common/timezone').Date;
+var config = require('../../config');
+var datetime = require('../../common/datetime');
+var array = require('../../common/array');
+var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
+var getMousePosData = require('./core');
+var Guide = require('./creationGuide');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -47,10 +48,17 @@ function MonthCreation(dragHandler, monthView, baseController) {
     this._cache = null;
 
     /**
+     * To prevent dblclick and dragend event from occuring together
+     * @type {boolean}
+     */
+    this._blockDblClick = false;
+
+    /**
      * @type {MonthCreationGuide}
      */
     this.guide = new Guide(this);
 
+    domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
     dragHandler.on('dragStart', this._onDragStart, this);
 }
 
@@ -61,6 +69,10 @@ MonthCreation.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.guide.destroy();
 
+    if (this.monthView && this.monthView.container) {
+        domevent.off(this.monthView.container, 'dblclick', this._onDblClick, this);
+    }
+
     this.dragHandler = this.monthView = this.baseController =
         this.getEventData = this._cache = this.guide = null;
 };
@@ -68,12 +80,12 @@ MonthCreation.prototype.destroy = function() {
 /**
  * Fire before create event
  * @fires {MonthCreation#beforeCreateEvent}
- * @param {object} eventCache - cache data from single dragging session
+ * @param {object} dateRange - cache data from single dragging session
  */
-MonthCreation.prototype._createEvent = function(eventCache) {
+MonthCreation.prototype._createEvent = function(dateRange) {
     var times = [
-            Number(eventCache.starts),
-            Number(eventCache.ends)
+            Number(dateRange.starts),
+            Number(dateRange.ends)
         ].sort(array.compare.num.asc),
         starts = new TZDate(times[0]),
         ends = datetime.end(new TZDate(times[1]));
@@ -99,10 +111,9 @@ MonthCreation.prototype._createEvent = function(eventCache) {
  * @param {object} dragStartEvent - dragStart event data
  */
 MonthCreation.prototype._onDragStart = function(dragStartEvent) {
-    var target = dragStartEvent.target,
-        eventData;
+    var eventData;
 
-    if (!domutil.hasClass(target, config.classname('weekday-events'))) {
+    if (!isElementWeekdayEvent(dragStartEvent.target)) {
         return;
     }
 
@@ -110,6 +121,8 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
+
+    this._blockDblClick = true;
 
     this.getEventData = getMousePosData(this.monthView);
 
@@ -163,13 +176,18 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - drag end event data
  */
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        eventData;
+    var cache = this._cache;
+    var self = this;
+    var eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
+
+    setTimeout(function() {
+        self._blockDblClick = false;
+    }, 0);
 
     if (!this.getEventData) {
         return;
@@ -193,6 +211,38 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 
     this.getEventData = this._cache = null;
 };
+
+/**
+ * DragStart event handler
+ * @fires {MonthCreation#monthCreationDragstart}
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+MonthCreation.prototype._onDblClick = function(e) {
+    var eventData, targetDate;
+
+    if (this._blockDblClick || !isElementWeekdayEvent(e.target)) {
+        return;
+    }
+
+    eventData = getMousePosData(this.monthView)(e);
+    targetDate = eventData.date;
+
+    this.fire('monthCreationDblClick', eventData);
+
+    this._createEvent({
+        starts: targetDate,
+        ends: datetime.end(targetDate)
+    });
+};
+
+/**
+ * Returns whether the given element is Weekday-Event.
+ * @param {HTMLElement} el - target element
+ * @returns {boolean}
+ */
+function isElementWeekdayEvent(el) {
+    return domutil.hasClass(el, config.classname('weekday-events'));
+}
 
 util.CustomEvents.mixin(MonthCreation);
 

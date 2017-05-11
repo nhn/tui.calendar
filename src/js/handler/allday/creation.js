@@ -8,6 +8,7 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var alldayCore = require('./core');
 var AlldayCreationGuide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
@@ -46,10 +47,17 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
     this.getEventDataFunc = null;
 
     /**
+     * To prevent dblclick and dragend event from occuring together
+     * @type {boolean}
+     */
+    this._blockDblClick = false;
+
+    /**
      * @type {AlldayCreationGuide}
      */
     this.guide = new AlldayCreationGuide(this);
 
+    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
     dragHandler.on('dragStart', this._onDragStart, this);
 }
 
@@ -57,10 +65,16 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
  * Destroy method
  */
 AlldayCreation.prototype.destroy = function() {
+    var alldayView = this.alldayView;
+
     this.guide.destroy();
     this.dragHandler.off(this);
-    this.dragHandler = this.alldayView = this.baseController =
-        this.getEventDataFunc = null;
+
+    if (alldayView && alldayView.container) {
+        domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
+    }
+
+    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
 };
 
 /**
@@ -149,6 +163,8 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
         click: this._onClick
     }, this);
 
+    this._blockDblClick = true;
+
     getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
     eventData = getEventDataFunc(dragStartEventData.originEvent);
 
@@ -196,20 +212,23 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
 AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-    var getEventDataFunc = this.getEventDataFunc,
-        eventData;
+    var getEventDataFunc = this.getEventDataFunc;
+    var self = this;
+    var eventData;
 
     if (!getEventDataFunc) {
         return;
     }
-
-    //this.guide.clearGuideElement();
 
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
+
+    setTimeout(function() {
+        self._blockDblClick = false;
+    }, 0);
 
     eventData = getEventDataFunc(dragEndEventData.originEvent);
 
@@ -243,6 +262,25 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
      * @property {number} xIndex - index number of mouse positions.
      */
     this._onDragEnd(clickEventData, 'alldayCreationClick');
+};
+
+/**
+ * Dblclick event handler
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+AlldayCreation.prototype._onDblClick = function(e) {
+    var getEventDataFunc, eventData;
+
+    if (this._blockDblClick || !this.checkExpectedCondition(e.target)) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(this.alldayView, e);
+    eventData = getEventDataFunc(e);
+
+    this.fire('alldayCreationDblClick', eventData);
+
+    this._createEvent(eventData);
 };
 
 common.mixin(alldayCore, AlldayCreation);

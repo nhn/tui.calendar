@@ -43,7 +43,7 @@
     "scripts": {
         "postinstall": "bower install",
         "start": "webpack-dev-server --progress --inline --hot",
-        "build": "webpack",
+        "watch": "webpack --watch",
         "release": "NODE_ENV=production webpack -p",
         "test": "karma start"
     }

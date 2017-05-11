@@ -33,9 +33,10 @@ function AlldayCreationGuide(alldayCreation) {
     this.initializeGuideElement();
 
     alldayCreation.on({
-        'alldayCreationDragstart': this._onDragStart,
-        'alldayCreationDrag': this._onDrag,
-        'alldayCreationClick': this.clearGuideElement
+        alldayCreationDragstart: this._createGuideElement,
+        alldayCreationDrag: this._onDrag,
+        alldayCreationClick: this.clearGuideElement,
+        alldayCreationDblClick: this._createGuideElement
     }, this);
 }
 
@@ -64,10 +65,19 @@ AlldayCreationGuide.prototype.initializeGuideElement = function() {
 };
 
 /**
- * Refresh guide element.
+ * Drag event handler
  * @param {object} eventData - event data from Allday.Creation handler.
  */
-AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
+AlldayCreationGuide.prototype._onDrag = function(eventData) {
+    this._refreshGuideElement(eventData, true);
+};
+
+/**
+ * Refresh guide element.
+ * @param {object} eventData - event data from Allday.Creation handler.
+ * @param {boolean} defer - If set to true, set style in the next frame
+ */
+AlldayCreationGuide.prototype._refreshGuideElement = function(eventData, defer) {
     var guideElement = this.guideElement,
         baseWidthPercent = (100 / eventData.datesInRange),
         dragStartXIndex = eventData.dragStartXIndex,
@@ -85,11 +95,17 @@ AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
     leftPercent = baseWidthPercent * dragStartXIndex;
     widthPercent = baseWidthPercent * (length + 1);
 
-    reqAnimFrame.requestAnimFrame(function() {
+    function setStyle() {
         guideElement.style.display = 'block';
         guideElement.style.left = leftPercent + '%';
         guideElement.style.width = widthPercent + '%';
-    });
+    }
+
+    if (defer) {
+        reqAnimFrame.requestAnimFrame(setStyle);
+    } else {
+        setStyle();
+    }
 };
 
 /**
@@ -106,10 +122,10 @@ AlldayCreationGuide.prototype.clearGuideElement = function() {
 };
 
 /**
- * DragStart event handler.
+ * Create guide element
  * @param {object} dragStartEventData - event data object of Allday.Creation.
  */
-AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
