@@ -20,6 +20,8 @@ var config = require('../../config'),
     eventTmpl = require('./weekdayInMonthEvent.hbs'),
     skipTmpl = require('./weekdayInMonthSkip.hbs');
 
+var EVENT_PADDING_TOP = 14;
+
 /**
  * @constructor
  * @extends {Weekday}
@@ -61,7 +63,7 @@ WeekdayInMonth.prototype.getViewBound = function() {
  */
 WeekdayInMonth.prototype._getRenderLimitIndex = function() {
     var opt = this.options;
-    var containerHeight = this.getViewBound().height - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
+    var containerHeight = this.getViewBound().height - EVENT_PADDING_TOP - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
     var count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
 
     return mmax(count - 1, 0); // subtraction for '+n' label block
@@ -129,6 +131,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         contentStr = '';
 
     setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+    console.log(container);
     container.innerHTML = baseTmpl(baseViewModel);
 
     renderLimitIdx = this._getRenderLimitIndex();
@@ -146,6 +149,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     contentStr += eventTmpl(util.extend({
         matrices: viewModel,
+        eventPaddingTop: EVENT_PADDING_TOP,
         renderLimitIdx: renderLimitIdx
     }, baseViewModel));
 
@@ -161,7 +165,6 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         container
     );
 };
-
 
 WeekdayInMonth.prototype._beforeDestroy = function() {
     Handlebars.unregisterHelper('wdSkipped');

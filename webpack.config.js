@@ -13,7 +13,7 @@ var context = JSON.stringify({
 });
 var bannerText = 'bundle created at "' + (new Date()).toString() + '"';
 
-var stylusLoader = ExtractTextPlugin.extract('style', `css?sourceMap!preprocess?${context}!stylus?sourceMap`);
+var stylusLoader = ExtractTextPlugin.extract('style', `preprocess?${context}!css?sourceMap!stylus?sourceMap!`);
 
 var jsLoader = `preprocess?${context}`;
 var OUTPUT_NAME = isProduction ? 'index.min' : 'index';

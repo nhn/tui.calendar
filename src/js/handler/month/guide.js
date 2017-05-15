@@ -31,11 +31,12 @@ function MonthGuide(options, monthView) {
      * @type {object}
      */
     this.options = util.extend({
-        top: 20,
-        height: 20,
+        top: 0,
+        height: '20px',
         bgColor: '#f7ca88',
         label: '새 일정',
-        isResizeMode: false
+        isResizeMode: false,
+        isCreationMode: false
     }, options);
 
     /**
@@ -217,8 +218,8 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         y = temp[1];
 
         util.extend(this.options, {
-            top: parseInt(target.style.top, 10),
-            height: parseInt(target.style.height, 10),
+            top: parseInt(target.style.top, 10) + 'px',
+            height: parseInt(target.style.height, 10) + 'px',
             bgColor: model.bgColor,
             borderColor: model.borderColor,
             label: model.title

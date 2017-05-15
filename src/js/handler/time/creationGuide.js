@@ -108,7 +108,7 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
     guideElement.style.display = 'block';
 
     timeElement.innerHTML = datetime.format(new TZDate(start), 'HH:mm') +
-        ' ~ ' + datetime.format(new TZDate(end), 'HH:mm');
+        ' - ' + datetime.format(new TZDate(end), 'HH:mm');
 
     if (bottomLabel) {
         domutil.removeClass(timeElement, config.classname('time-guide-bottom'));

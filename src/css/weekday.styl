@@ -1,14 +1,9 @@
 .{css-prefix}month-week-item
-    .{css-prefix}weekday
-        border-top: 1px solid #ddd
-
     .{css-prefix}weekday-grid
         overflow-y: hidden
 
     .{css-prefix}weekday-events
-        top: 14px
-        height: calc(100% - 14px)
-        overflow-y: hidden
+        overflow-y: visible
 
     .{css-prefix}weekday-event
         margin: 0 10px
@@ -32,7 +27,6 @@
         &.{css-prefix}holiday-sun
             color: #f3acac
 
-
 +prefix-classes(weekday)
     .container,
     .grid,
@@ -44,6 +38,9 @@
         position: absolute
         width: 100%
         overflow-y: scroll
+
+    .border
+        border-top: 1px solid #ddd
 
     .container
         position: relative

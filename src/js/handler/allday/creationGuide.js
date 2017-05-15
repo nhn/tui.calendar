@@ -7,8 +7,6 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
-var CREATE_NEW_LABEL = '새 일정';
-
 /**
  * Class for Allday.Creation dragging effect.
  * @constructor
@@ -46,22 +44,14 @@ function AlldayCreationGuide(alldayCreation) {
 AlldayCreationGuide.prototype.destroy = function() {
     this.clearGuideElement();
     this.alldayCreation.off(this);
-    this.alldayCreation = this.eventContainer =
-        this.guideElement = null;
+    this.alldayCreation = this.eventContainer = this.guideElement = null;
 };
 
 /**
  * initialize guide element's default style.
  */
 AlldayCreationGuide.prototype.initializeGuideElement = function() {
-    var guideElement = this.guideElement,
-        spanElement;
-
-    domutil.addClass(guideElement, config.classname('allday-guide-creation-block'));
-    domutil.appendHTMLElement('div', guideElement, config.classname('allday-guide-creation'));
-
-    spanElement = domutil.appendHTMLElement('span', guideElement);
-    spanElement.innerHTML = CREATE_NEW_LABEL;
+    domutil.addClass(this.guideElement, config.classname('allday-guide-creation-block'));
 };
 
 /**
