@@ -1,4 +1,4 @@
-/*! bundle created at "Fri Apr 28 2017 15:33:41 GMT+0900 (KST)" */
+/*! bundle created at "Mon May 15 2017 16:55:38 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -53,8 +53,8 @@
 	var MiniCalendar = __webpack_require__(37);
 	var Freebusy = __webpack_require__(40);
 	var OriginCalendar = __webpack_require__(43);
-	var FullCalendar = __webpack_require__(112);
-	var SplitTimeCalendar = __webpack_require__(122);
+	var FullCalendar = __webpack_require__(110);
+	var SplitTimeCalendar = __webpack_require__(120);
 	var timezone = __webpack_require__(27);
 	var datetime = __webpack_require__(26);
 	
@@ -210,6 +210,15 @@
 	            left = getElSize(eventViewModel.left, '%', 'left'),
 	            width = getElSize(eventViewModel.width, '%', 'width'),
 	            height = getElSize(eventViewModel.height, 'px', 'height');
+	
+	        return [top, left, width, height].join(';');
+	    },
+	
+	    'month-eventBlock': function(viewModel, blockHeight, blockWidth, paddingTop) {
+	        var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
+	        var left = getElSize(viewModel.left * blockWidth, '%', 'left');
+	        var width = getElSize(viewModel.width * blockWidth, '%', 'width');
+	        var height = getElSize(viewModel.height, 'px', 'height');
 	
 	        return [top, left, width, height].join(';');
 	    },
@@ -1952,14 +1961,15 @@
 	     * dates that different month with given date are negative values
 	     * @param {TZDate} month - date want to calculate month calendar
 	     * @param {number} [startDayOfWeek=0] - start day of week
+	     * @param {boolean} [isAlways6Week] - whether the number of weeks are always 6
 	     * @param {function} [iteratee] - iteratee for customizing calendar object
 	     * @returns {Array.<string[]>} calendar 2d array
 	     */
-	    arr2dCalendar: function(month, startDayOfWeek, iteratee) {
+	    arr2dCalendar: function(month, startDayOfWeek, isAlways6Week, iteratee) {
 	        var weekArr,
 	            starts, ends,
 	            startIndex, endIndex,
-	            afterDates,
+	            totalDate, afterDates,
 	            cursor, week,
 	            calendar = [];
 	
@@ -1975,9 +1985,10 @@
 	        // free dates after last date of this month
 	        afterDates = 7 - (endIndex + 1);
 	
+	        totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
 	        cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
 	        // iteratee all dates to render
-	        util.forEachArray(util.range(startIndex + ends.getDate() + afterDates), function(i) {
+	        util.forEachArray(util.range(totalDate), function(i) {
 	            var date;
 	
 	            if (!(i % 7)) {
@@ -4101,15 +4112,15 @@
 	CalEvent.prototype.setAllDayPeriod = function(starts, ends) {
 	    // 종일일정인 경우 문자열의 날짜정보만 사용한다.
 	    if (util.isString(starts)) {
-	        starts = starts.substring(0, 10);
+	        starts = datetime.parse(starts.substring(0, 10));
 	    }
 	    if (util.isString(ends)) {
-	        ends = ends.substring(0, 10);
+	        ends = datetime.parse(ends.substring(0, 10));
 	    }
 	
-	    this.starts = datetime.parse(starts);
+	    this.starts = starts;
 	    this.starts.setHours(0, 0, 0);
-	    this.ends = ends ? datetime.parse(ends) : new TZDate(this.starts);
+	    this.ends = ends || new TZDate(this.starts);
 	    this.ends.setHours(23, 59, 59);
 	};
 	
@@ -4807,7 +4818,7 @@
 	        }
 	    );
 	
-	    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
+	    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, true, function(date) {
 	        var ymd = datetime.format(date, 'YYYY-MM-DD'),
 	            day = date.getDay(),
 	            dayClassName = getDayClassName(day),
@@ -5871,7 +5882,7 @@
 	    Drag = __webpack_require__(46),
 	    controllerFactory = __webpack_require__(47),
 	    weekViewFactory = __webpack_require__(54),
-	    monthViewFactory = __webpack_require__(91),
+	    monthViewFactory = __webpack_require__(89),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -6244,7 +6255,7 @@
 	
 	    if (viewName === 'month') {
 	        renderDate.addMonth(offset);
-	        tempDate = datetime.arr2dCalendar(this.renderDate);
+	        tempDate = datetime.arr2dCalendar(this.renderDate, 0, true);
 	
 	        recursiveSet(view, function(opt) {
 	            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -6397,10 +6408,6 @@
 	
 	    util.forEach(handler.click, function(clickHandler) {
 	        clickHandler[method]('clickEvent', self._onClick, self);
-	    });
-	
-	    util.forEach(handler.dblclick, function(dblclickHandler) {
-	        dblclickHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
 	    });
 	
 	    util.forEach(handler.creation, function(creationHandler) {
@@ -8470,15 +8477,13 @@
 	var Allday = __webpack_require__(68);
 	// Handlers
 	var AlldayClick = __webpack_require__(73);
-	var AlldayDblClick = __webpack_require__(77);
-	var AlldayCreation = __webpack_require__(78);
+	var AlldayCreation = __webpack_require__(77);
 	var AlldayMove = __webpack_require__(74);
-	var AlldayResize = __webpack_require__(80);
-	var TimeClick = __webpack_require__(82);
-	var TimeDblClick = __webpack_require__(83);
-	var TimeCreation = __webpack_require__(84);
-	var TimeMove = __webpack_require__(87);
-	var TimeResize = __webpack_require__(89);
+	var AlldayResize = __webpack_require__(79);
+	var TimeClick = __webpack_require__(81);
+	var TimeCreation = __webpack_require__(82);
+	var TimeMove = __webpack_require__(85);
+	var TimeResize = __webpack_require__(87);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -8489,12 +8494,10 @@
 	        alldayView,
 	        timeGridView,
 	        alldayClickHandler,
-	        alldayDblClickHandler,
 	        alldayCreationHandler,
 	        alldayMoveHandler,
 	        alldayResizeHandler,
 	        timeClickHandler,
-	        timeDblClickHandler,
 	        timeCreationHandler,
 	        timeMoveHandler,
 	        timeResizeHandler;
@@ -8530,7 +8533,6 @@
 	    alldayView = new Allday(options.week, vLayout.panels[0].container);
 	    weekView.addChild(alldayView);
 	    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
-	    alldayDblClickHandler = new AlldayDblClick(alldayView);
 	    alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
 	    alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
 	    alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -8541,7 +8543,6 @@
 	    timeGridView = new TimeGrid(options.week, vLayout.panels[2].container);
 	    weekView.addChild(timeGridView);
 	    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
-	    timeDblClickHandler = new TimeDblClick(timeGridView);
 	    timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
 	    timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
 	    timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -8554,10 +8555,6 @@
 	        click: {
 	            allday: alldayClickHandler,
 	            time: timeClickHandler
-	        },
-	        dblclick: {
-	            allday: alldayDblClickHandler,
-	            time: timeDblClickHandler
 	        },
 	        creation: {
 	            allday: alldayCreationHandler,
@@ -11858,113 +11855,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview Double click handler for allday
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	var util = global.tui.util;
-	var common = __webpack_require__(28),
-	    datetime = __webpack_require__(26),
-	    config = __webpack_require__(32),
-	    domevent = __webpack_require__(30),
-	    domutil = __webpack_require__(29),
-	    TZDate = __webpack_require__(27).Date;
-	
-	/**
-	 * @constructor
-	 * @implements {Handler}
-	 * @mixes util.CustomEvents
-	 * @param {Allday} alldayView - instance of allday view
-	 */
-	function AlldayDblClick(alldayView) {
-	    /**
-	     * @type {Allday}
-	     */
-	    this.alldayView = alldayView;
-	
-	    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
-	}
-	
-	/**
-	 * Destroy handler
-	 */
-	AlldayDblClick.prototype.destroy = function() {
-	    if (!this.alldayView || !this.alldayView.container) {
-	        return;
-	    }
-	
-	    domevent.off(this.alldayView.container, 'dblclick', this._onDblClick, this);
-	    this.alldayView = null;
-	};
-	
-	/**
-	 * Check supplied target has privilege to handle this handler
-	 * @override
-	 * @param {HTMLElement} target - target element from dblclick event
-	 * @returns {boolean|WeekdayInWeek} WeekdayInWeek view or false
-	 */
-	AlldayDblClick.prototype.checkExpectedCondition = function(target) {
-	    var weekdayView;
-	
-	    if (!domutil.hasClass(target, config.classname('weekday-events')) &&
-	        !domutil.hasClass(target, config.classname('weekday-grid-line'))) {
-	        return false;
-	    }
-	
-	    weekdayView = this.alldayView.children.single();
-	
-	    if (!weekdayView) {
-	        return false;
-	    }
-	
-	    return weekdayView;
-	};
-	
-	/**
-	 * Dblclick event hander
-	 * @fires AlldayDblClick#beforeCreateEvent
-	 * @param {MouseEvent} e - dblclick mouse event object
-	 */
-	AlldayDblClick.prototype._onDblClick = function(e) {
-	    var weekdayView = this.checkExpectedCondition(e.srcElement || e.target),
-	        mousePosX, viewWidth, renderDateRange, dateIndex,
-	        targetDate;
-	
-	    if (!weekdayView) {
-	        return;
-	    }
-	
-	    mousePosX = domevent.getMousePosition(e, weekdayView.container)[0];
-	    viewWidth = weekdayView.getViewBound().width;
-	    renderDateRange = weekdayView.getRenderDateRange();
-	    dateIndex = Math.floor(common.ratio(viewWidth, renderDateRange.length, mousePosX));
-	    targetDate = renderDateRange[dateIndex];
-	
-	    /**
-	     * @event {AlldayDblClick#beforeCreateEvent}
-	     * @type {object}
-	     * @property {boolean} isAllDay - whether event is fired in allday view area?
-	     * @property {Date} starts - select start date
-	     * @property {Date] ends - select end date
-	     */
-	    this.fire('beforeCreateEvent', {
-	        isAllDay: true,
-	        starts: new TZDate(Number(targetDate)),
-	        ends: datetime.end(new TZDate(Number(targetDate)))
-	    });
-	};
-	
-	util.CustomEvents.mixin(AlldayDblClick);
-	
-	module.exports = AlldayDblClick;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * @fileoverview Handler module for WeekdayInWeek view's creation actions.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
@@ -11974,8 +11864,9 @@
 	var datetime = __webpack_require__(26);
 	var common = __webpack_require__(28);
 	var domutil = __webpack_require__(29);
+	var domevent = __webpack_require__(30);
 	var alldayCore = __webpack_require__(75);
-	var AlldayCreationGuide = __webpack_require__(79);
+	var AlldayCreationGuide = __webpack_require__(78);
 	var TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -12012,10 +11903,17 @@
 	    this.getEventDataFunc = null;
 	
 	    /**
+	     * To prevent dblclick and dragend event from occuring together
+	     * @type {boolean}
+	     */
+	    this._blockDblClick = false;
+	
+	    /**
 	     * @type {AlldayCreationGuide}
 	     */
 	    this.guide = new AlldayCreationGuide(this);
 	
+	    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
 	    dragHandler.on('dragStart', this._onDragStart, this);
 	}
 	
@@ -12023,10 +11921,16 @@
 	 * Destroy method
 	 */
 	AlldayCreation.prototype.destroy = function() {
+	    var alldayView = this.alldayView;
+	
 	    this.guide.destroy();
 	    this.dragHandler.off(this);
-	    this.dragHandler = this.alldayView = this.baseController =
-	        this.getEventDataFunc = null;
+	
+	    if (alldayView && alldayView.container) {
+	        domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
+	    }
+	
+	    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
 	};
 	
 	/**
@@ -12115,6 +12019,8 @@
 	        click: this._onClick
 	    }, this);
 	
+	    this._blockDblClick = true;
+	
 	    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
 	    eventData = getEventDataFunc(dragStartEventData.originEvent);
 	
@@ -12162,20 +12068,23 @@
 	 * @param {string} [overrideEventName] - override emitted event name when supplied.
 	 */
 	AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-	    var getEventDataFunc = this.getEventDataFunc,
-	        eventData;
+	    var getEventDataFunc = this.getEventDataFunc;
+	    var self = this;
+	    var eventData;
 	
 	    if (!getEventDataFunc) {
 	        return;
 	    }
-	
-	    //this.guide.clearGuideElement();
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
 	        dragEnd: this._onDragEnd,
 	        click: this._onClick
 	    }, this);
+	
+	    setTimeout(function() {
+	        self._blockDblClick = false;
+	    }, 0);
 	
 	    eventData = getEventDataFunc(dragEndEventData.originEvent);
 	
@@ -12211,6 +12120,25 @@
 	    this._onDragEnd(clickEventData, 'alldayCreationClick');
 	};
 	
+	/**
+	 * Dblclick event handler
+	 * @param {MouseEvent} e - Native MouseEvent
+	 */
+	AlldayCreation.prototype._onDblClick = function(e) {
+	    var getEventDataFunc, eventData;
+	
+	    if (this._blockDblClick || !this.checkExpectedCondition(e.target)) {
+	        return;
+	    }
+	
+	    getEventDataFunc = this._retriveEventData(this.alldayView, e);
+	    eventData = getEventDataFunc(e);
+	
+	    this.fire('alldayCreationDblClick', eventData);
+	
+	    this._createEvent(eventData);
+	};
+	
 	common.mixin(alldayCore, AlldayCreation);
 	util.CustomEvents.mixin(AlldayCreation);
 	
@@ -12219,7 +12147,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 79 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12230,8 +12158,6 @@
 	var config = __webpack_require__(32);
 	var domutil = __webpack_require__(29);
 	var reqAnimFrame = __webpack_require__(61);
-	
-	var CREATE_NEW_LABEL = '새 일정';
 	
 	/**
 	 * Class for Allday.Creation dragging effect.
@@ -12257,9 +12183,10 @@
 	    this.initializeGuideElement();
 	
 	    alldayCreation.on({
-	        'alldayCreationDragstart': this._onDragStart,
-	        'alldayCreationDrag': this._onDrag,
-	        'alldayCreationClick': this.clearGuideElement
+	        alldayCreationDragstart: this._createGuideElement,
+	        alldayCreationDrag: this._onDrag,
+	        alldayCreationClick: this.clearGuideElement,
+	        alldayCreationDblClick: this._createGuideElement
 	    }, this);
 	}
 	
@@ -12269,29 +12196,30 @@
 	AlldayCreationGuide.prototype.destroy = function() {
 	    this.clearGuideElement();
 	    this.alldayCreation.off(this);
-	    this.alldayCreation = this.eventContainer =
-	        this.guideElement = null;
+	    this.alldayCreation = this.eventContainer = this.guideElement = null;
 	};
 	
 	/**
 	 * initialize guide element's default style.
 	 */
 	AlldayCreationGuide.prototype.initializeGuideElement = function() {
-	    var guideElement = this.guideElement,
-	        spanElement;
+	    domutil.addClass(this.guideElement, config.classname('allday-guide-creation-block'));
+	};
 	
-	    domutil.addClass(guideElement, config.classname('allday-guide-creation-block'));
-	    domutil.appendHTMLElement('div', guideElement, config.classname('allday-guide-creation'));
-	
-	    spanElement = domutil.appendHTMLElement('span', guideElement);
-	    spanElement.innerHTML = CREATE_NEW_LABEL;
+	/**
+	 * Drag event handler
+	 * @param {object} eventData - event data from Allday.Creation handler.
+	 */
+	AlldayCreationGuide.prototype._onDrag = function(eventData) {
+	    this._refreshGuideElement(eventData, true);
 	};
 	
 	/**
 	 * Refresh guide element.
 	 * @param {object} eventData - event data from Allday.Creation handler.
+	 * @param {boolean} defer - If set to true, set style in the next frame
 	 */
-	AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
+	AlldayCreationGuide.prototype._refreshGuideElement = function(eventData, defer) {
 	    var guideElement = this.guideElement,
 	        baseWidthPercent = (100 / eventData.datesInRange),
 	        dragStartXIndex = eventData.dragStartXIndex,
@@ -12309,11 +12237,17 @@
 	    leftPercent = baseWidthPercent * dragStartXIndex;
 	    widthPercent = baseWidthPercent * (length + 1);
 	
-	    reqAnimFrame.requestAnimFrame(function() {
+	    function setStyle() {
 	        guideElement.style.display = 'block';
 	        guideElement.style.left = leftPercent + '%';
 	        guideElement.style.width = widthPercent + '%';
-	    });
+	    }
+	
+	    if (defer) {
+	        reqAnimFrame.requestAnimFrame(setStyle);
+	    } else {
+	        setStyle();
+	    }
 	};
 	
 	/**
@@ -12330,10 +12264,10 @@
 	};
 	
 	/**
-	 * DragStart event handler.
+	 * Create guide element
 	 * @param {object} dragStartEventData - event data object of Allday.Creation.
 	 */
-	AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+	AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
 	    var alldayCreation = this.alldayCreation,
 	        alldayView = alldayCreation.alldayView,
 	        alldayContainerElement = alldayView.container,
@@ -12356,7 +12290,7 @@
 
 
 /***/ },
-/* 80 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12370,7 +12304,7 @@
 	var domutil = __webpack_require__(29);
 	var common = __webpack_require__(28);
 	var AlldayCore = __webpack_require__(75);
-	var AlldayResizeGuide = __webpack_require__(81);
+	var AlldayResizeGuide = __webpack_require__(80);
 	var TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -12630,7 +12564,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 81 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12789,7 +12723,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 82 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12901,132 +12835,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview Double click handler for time view
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = global.tui.util;
-	var domevent = __webpack_require__(30),
-	    domutil = __webpack_require__(29),
-	    datetime = __webpack_require__(26),
-	    common = __webpack_require__(28),
-	    TZDate = __webpack_require__(27).Date,
-	    config = __webpack_require__(32);
-	
-	/**
-	 * @constructor
-	 * @implements {Handler}
-	 * @mixes util.CustomEvents
-	 * @param {TimeGrid} timeGridView - timeGrid view instance
-	 */
-	function TimeDblClick(timeGridView) {
-	    this.timeGridView = timeGridView;
-	
-	    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
-	}
-	
-	/**
-	 * Destroy handler
-	 */
-	TimeDblClick.prototype.destroy = function() {
-	    var timeGridView = this.timeGridView;
-	
-	    if (!timeGridView || !timeGridView.container) {
-	        return;
-	    }
-	
-	    domevent.off(timeGridView.container, 'dblclick', this._onDblClick, this);
-	    this.timeGridView = null;
-	};
-	
-	/**
-	 * Check target element is has privilege for handle this handler
-	 * @param {HTMLElement} target - The element to check
-	 * @returns {(boolean|Time)} - return Time view instance when satiate condition.
-	 */
-	TimeDblClick.prototype.checkExpectedCondition = function(target) {
-	    var cssClass = domutil.getClass(target),
-	        matches;
-	
-	    if (!~cssClass.indexOf(config.classname('time-date'))) {
-	        return false;
-	    }
-	
-	    matches = cssClass.match(config.time.getViewIDRegExp);
-	
-	    if (!matches || matches.length < 2) {
-	        return false;
-	    }
-	
-	    return util.pick(this.timeGridView.children.items, matches[1]);
-	};
-	
-	/**
-	 * Double click event hander
-	 * @fires TimeDblclick#beforeCreateEvent
-	 * @param {MouseEvent} e - mouse event for double click
-	 */
-	TimeDblClick.prototype._onDblClick = function(e) {
-	    var timeView = this.checkExpectedCondition(e.srcElement || e.target),
-	        targetDate, mousePosY, viewHeight, renderHourRange,
-	        relativeTime, relativeHour, relativeMinutes,
-	        newStart, newEnd;
-	
-	    if (!timeView) {
-	        return;
-	    }
-	
-	    targetDate = datetime.start(datetime.parse(timeView.options.ymd));
-	    mousePosY = domevent.getMousePosition(e, timeView.container)[1];
-	    viewHeight = timeView.getViewBound().height;
-	    renderHourRange = util.range(timeView.options.hourStart, timeView.options.hourEnd);
-	
-	    relativeTime = new TZDate(
-	        Number(common.ratio(
-	            viewHeight,
-	            (renderHourRange.length * datetime.MILLISECONDS_PER_HOUR),
-	            mousePosY
-	        ))
-	    );
-	    relativeHour = relativeTime.getUTCHours();
-	    relativeMinutes = common.nearest(relativeTime.getUTCMinutes(), [0, 60]) / 2;
-	    targetDate.setHours(relativeHour, relativeMinutes);
-	
-	    newStart = new TZDate(Number(targetDate));
-	    newEnd = new TZDate(
-	        Math.min(
-	            Number(targetDate) + datetime.MILLISECONDS_PER_HOUR,
-	            Number(datetime.end(new TZDate(Number(targetDate))))
-	        )
-	    );
-	
-	    /**
-	     * @event {TimeDblClick#beforeCreateEvent}
-	     * @type {object}
-	     * @property {boolean} isAllDay - whether event is fired in allday view area?
-	     * @property {Date} starts - select start date
-	     * @property {Date] ends - select end date
-	     */
-	    this.fire('beforeCreateEvent', {
-	        isAllDay: false,
-	        starts: newStart,
-	        ends: newEnd
-	    });
-	};
-	
-	util.CustomEvents.mixin(TimeDblClick);
-	
-	module.exports = TimeDblClick;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 84 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13040,9 +12849,10 @@
 	var array = __webpack_require__(52);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
-	var TimeCreationGuide = __webpack_require__(85);
+	var domevent = __webpack_require__(30);
+	var TimeCreationGuide = __webpack_require__(83);
 	var TZDate = __webpack_require__(27).Date;
-	var timeCore = __webpack_require__(86);
+	var timeCore = __webpack_require__(84);
 	
 	/**
 	 * @constructor
@@ -13089,15 +12899,29 @@
 	     */
 	    this._dragStart = null;
 	
+	    /**
+	     * To prevent dblclick and dragend event from occuring together
+	     * @type {boolean}
+	     */
+	    this._blockDblClick = false;
+	
 	    dragHandler.on('dragStart', this._onDragStart, this);
+	    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 	}
 	
 	/**
 	 * Destroy method
 	 */
 	TimeCreation.prototype.destroy = function() {
+	    var timeGridView = this.timeGridView;
+	
 	    this.guide.destroy();
 	    this.dragHandler.off(this);
+	
+	    if (timeGridView && timeGridView.container) {
+	        domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+	    }
+	
 	    this.dragHandler = this.timeGridView = this.baseController =
 	        this._getEventDataFunc = this._dragStart = this.guide = null;
 	};
@@ -13154,6 +12978,8 @@
 	        dragEnd: this._onDragEnd,
 	        click: this._onClick
 	    }, this);
+	
+	    this._blockDblClick = true;
 	
 	    /**
 	     * @event TimeCreation#timeCreationDragstart
@@ -13256,14 +13082,15 @@
 	    var self = this,
 	        dragStart = this._dragStart;
 	
-	    //client에 위임
-	    //this.guide.clearGuideElement();
-	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
 	        dragEnd: this._onDragEnd,
 	        click: this._onClick
 	    }, this);
+	
+	    setTimeout(function() {
+	        self._blockDblClick = false;
+	    }, 0);
 	
 	    /**
 	     * Function for manipulate event data before firing event
@@ -13336,6 +13163,32 @@
 	    this._dragStart = this._getEventDataFunc = null;
 	};
 	
+	/**
+	 * Dblclick event handler
+	 * @param {MouseEvent} e - Native MouseEvent
+	 */
+	TimeCreation.prototype._onDblClick = function(e) {
+	    var condResult, getEventDataFunc, eventData;
+	
+	    if (this._blockDblClick) {
+	        return;
+	    }
+	
+	    condResult = this.checkExpectedCondition(e.target);
+	    if (!condResult) {
+	        return;
+	    }
+	
+	    getEventDataFunc = this._retriveEventData(condResult);
+	    eventData = getEventDataFunc(e);
+	
+	    this.fire('timeCreationDblClick', eventData);
+	
+	
+	    this._createEvent(eventData);
+	};
+	
+	
 	timeCore.mixin(TimeCreation);
 	util.CustomEvents.mixin(TimeCreation);
 	
@@ -13344,7 +13197,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 85 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13406,9 +13259,10 @@
 	    this._styleFunc = null;
 	
 	    timeCreation.on({
-	        'timeCreationDragstart': this._onDragStart,
-	        'timeCreationDrag': this._onDrag,
-	        'timeCreationClick': this.clearGuideElement
+	        timeCreationDragstart: this._createGuideElement,
+	        timeCreationDrag: this._onDrag,
+	        timeCreationClick: this.clearGuideElement,
+	        timeCreationDblClick: this._createGuideElement
 	    }, this);
 	}
 	
@@ -13448,23 +13302,21 @@
 	 * @param {boolean} bottomLabel - is label need to render bottom of guide element?
 	 */
 	TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
-	    var guideElement = this.guideElement,
-	        timeElement = this.guideTimeElement;
+	    var guideElement = this.guideElement;
+	    var timeElement = this.guideTimeElement;
 	
-	    reqAnimFrame.requestAnimFrame(function() {
-	        guideElement.style.top = top + 'px';
-	        guideElement.style.height = height + 'px';
-	        guideElement.style.display = 'block';
+	    guideElement.style.top = top + 'px';
+	    guideElement.style.height = height + 'px';
+	    guideElement.style.display = 'block';
 	
-	        timeElement.innerHTML = datetime.format(new TZDate(start), 'HH:mm') +
-	            ' ~ ' + datetime.format(new TZDate(end), 'HH:mm');
+	    timeElement.innerHTML = datetime.format(new TZDate(start), 'HH:mm') +
+	        ' - ' + datetime.format(new TZDate(end), 'HH:mm');
 	
-	        if (bottomLabel) {
-	            domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
-	        } else {
-	            domutil.addClass(timeElement, config.classname('time-guide-bottom'));
-	        }
-	    });
+	    if (bottomLabel) {
+	        domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
+	    } else {
+	        domutil.addClass(timeElement, config.classname('time-guide-bottom'));
+	    }
 	};
 	
 	/**
@@ -13548,7 +13400,7 @@
 	 * DragStart event handler
 	 * @param {object} dragStartEventData - dragStart event data.
 	 */
-	TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+	TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
 	    var relatedView = dragStartEventData.relatedView,
 	        unitData, styleFunc, styleData, result;
 	
@@ -13576,6 +13428,7 @@
 	    var styleFunc = this._styleFunc,
 	        unitData = this._styleUnit,
 	        startStyle = this._styleStart,
+	        refreshGuideElement = this._refreshGuideElement.bind(this),
 	        heightOfHalfHour,
 	        endStyle,
 	        result;
@@ -13594,8 +13447,6 @@
 	            startStyle[1],
 	            (endStyle[1] + MIN30)
 	        );
-	
-	        this._refreshGuideElement.apply(this, result);
 	    } else {
 	        result = this._limitStyleData(
 	            endStyle[0],
@@ -13603,9 +13454,12 @@
 	            endStyle[1],
 	            (startStyle[1] + MIN30)
 	        );
-	
-	        this._refreshGuideElement.apply(this, result.concat([true]));
+	        result.push(true);
 	    }
+	
+	    reqAnimFrame.requestAnimFrame(function() {
+	        refreshGuideElement.apply(null, result);
+	    });
 	};
 	
 	module.exports = TimeCreationGuide;
@@ -13614,7 +13468,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 86 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13711,7 +13565,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 87 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13725,8 +13579,8 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
 	var TZDate = __webpack_require__(27).Date;
-	var timeCore = __webpack_require__(86);
-	var TimeMoveGuide = __webpack_require__(88);
+	var timeCore = __webpack_require__(84);
+	var TimeMoveGuide = __webpack_require__(86);
 	
 	/**
 	 * @constructor
@@ -14068,7 +13922,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 88 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14233,7 +14087,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 89 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14246,8 +14100,8 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
 	var TZDate = __webpack_require__(27).Date;
-	var timeCore = __webpack_require__(86);
-	var TimeResizeGuide = __webpack_require__(90);
+	var timeCore = __webpack_require__(84);
+	var TimeResizeGuide = __webpack_require__(88);
 	
 	/**
 	 * @constructor
@@ -14542,7 +14396,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 90 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14722,7 +14576,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 91 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14736,12 +14590,12 @@
 	    array = __webpack_require__(52),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(29),
-	    Month = __webpack_require__(92),
-	    MonthClick = __webpack_require__(98),
-	    MonthCreation = __webpack_require__(99),
-	    MonthResize = __webpack_require__(104),
-	    MonthMove = __webpack_require__(106),
-	    More = __webpack_require__(110);
+	    Month = __webpack_require__(90),
+	    MonthClick = __webpack_require__(96),
+	    MonthCreation = __webpack_require__(97),
+	    MonthResize = __webpack_require__(102),
+	    MonthMove = __webpack_require__(104),
+	    More = __webpack_require__(108);
 	
 	function findGridTarget(moreTarget, day) {
 	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
@@ -14773,13 +14627,8 @@
 	 * @returns {object} view instance and refresh method
 	 */
 	function createMonthView(baseController, layoutContainer, dragHandler, options) {
-	    var monthViewContainer,
-	        monthView,
-	        clickHandler,
-	        creationHandler,
-	        resizeHandler,
-	        moveHandler,
-	        moreView;
+	    var monthViewContainer, monthView, moreView;
+	    var clickHandler, creationHandler, resizeHandler, moveHandler;
 	
 	    monthViewContainer = domutil.appendHTMLElement(
 	        'div', layoutContainer, config.classname('month'));
@@ -14858,7 +14707,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 92 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14873,10 +14722,10 @@
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(29),
 	    TZDate = __webpack_require__(27).Date,
-	    tmpl = __webpack_require__(93),
+	    tmpl = __webpack_require__(91),
 	    View = __webpack_require__(38),
 	    VLayout = __webpack_require__(55),
-	    WeekdayInMonth = __webpack_require__(94);
+	    WeekdayInMonth = __webpack_require__(92);
 	
 	/**
 	 * @constructor
@@ -14936,7 +14785,7 @@
 	 */
 	Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
 	    var date = datetime.parse(renderMonthStr + '-01'),
-	        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0);
+	        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0, true);
 	
 	    return calendar;
 	};
@@ -15025,7 +14874,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 93 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15056,7 +14905,7 @@
 	},"useData":true});
 
 /***/ },
-/* 94 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15077,9 +14926,11 @@
 	    domutil = __webpack_require__(29),
 	    View = __webpack_require__(38),
 	    Weekday = __webpack_require__(70),
-	    baseTmpl = __webpack_require__(95),
-	    eventTmpl = __webpack_require__(96),
-	    skipTmpl = __webpack_require__(97);
+	    baseTmpl = __webpack_require__(93),
+	    eventTmpl = __webpack_require__(94),
+	    skipTmpl = __webpack_require__(95);
+	
+	var EVENT_PADDING_TOP = 14;
 	
 	/**
 	 * @constructor
@@ -15122,7 +14973,7 @@
 	 */
 	WeekdayInMonth.prototype._getRenderLimitIndex = function() {
 	    var opt = this.options;
-	    var containerHeight = this.getViewBound().height - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
+	    var containerHeight = this.getViewBound().height - EVENT_PADDING_TOP - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
 	    var count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
 	
 	    return mmax(count - 1, 0); // subtraction for '+n' label block
@@ -15190,6 +15041,7 @@
 	        contentStr = '';
 	
 	    setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+	    console.log(container);
 	    container.innerHTML = baseTmpl(baseViewModel);
 	
 	    renderLimitIdx = this._getRenderLimitIndex();
@@ -15207,6 +15059,7 @@
 	
 	    contentStr += eventTmpl(util.extend({
 	        matrices: viewModel,
+	        eventPaddingTop: EVENT_PADDING_TOP,
 	        renderLimitIdx: renderLimitIdx
 	    }, baseViewModel));
 	
@@ -15222,7 +15075,6 @@
 	        container
 	    );
 	};
-	
 	
 	WeekdayInMonth.prototype._beforeDestroy = function() {
 	    Handlebars.unregisterHelper('wdSkipped');
@@ -15246,7 +15098,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 95 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15291,6 +15143,8 @@
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-border\"></div>\n<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-grid\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n<div class=\""
@@ -15299,7 +15153,7 @@
 	},"useData":true});
 
 /***/ },
-/* 96 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15323,7 +15177,7 @@
 	  return "\n"
 	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.top : depth0),"<",((stack1 = (data && data.root)) && stack1.renderLimitIdx),{"name":"fi","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(14, data, 0),"data":data})) != null ? stack1 : "");
 	},"5":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function";
 	
 	  return "<div data-id=\""
 	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
@@ -15337,16 +15191,10 @@
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n            "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\"\n         style=\"top:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
-	    + "px;\n                left:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-	    + "%;\n                width:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-	    + "%;\n                height:"
-	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
-	    + "px;\n                margin-top:"
-	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
+	    + "\"\n         style=\""
+	    + alias3((helpers["month-eventBlock"] || (depth0 && depth0["month-eventBlock"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.eventBlockHeight),((stack1 = (data && data.root)) && stack1.width),14,{"name":"month-eventBlock","hash":{},"data":data}))
+	    + ";\n                margin-top:"
+	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
 	    + "px\">\n"
 	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(10, data, 0),"inverse":container.program(12, data, 0),"data":data})) != null ? stack1 : "")
 	    + "    </div>\n";
@@ -15416,7 +15264,7 @@
 	},"useData":true});
 
 /***/ },
-/* 97 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15441,7 +15289,7 @@
 	},"useData":true});
 
 /***/ },
-/* 98 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15542,7 +15390,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 99 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15552,13 +15400,14 @@
 	'use strict';
 	var util = global.tui.util;
 	
-	var config = __webpack_require__(32),
-	    datetime = __webpack_require__(26),
-	    array = __webpack_require__(52),
-	    domutil = __webpack_require__(29),
-	    getMousePosData = __webpack_require__(100),
-	    Guide = __webpack_require__(101),
-	    TZDate = __webpack_require__(27).Date;
+	var config = __webpack_require__(32);
+	var datetime = __webpack_require__(26);
+	var array = __webpack_require__(52);
+	var domutil = __webpack_require__(29);
+	var domevent = __webpack_require__(30);
+	var getMousePosData = __webpack_require__(98);
+	var Guide = __webpack_require__(99);
+	var TZDate = __webpack_require__(27).Date;
 	
 	/**
 	 * @constructor
@@ -15594,10 +15443,17 @@
 	    this._cache = null;
 	
 	    /**
+	     * To prevent dblclick and dragend event from occuring together
+	     * @type {boolean}
+	     */
+	    this._blockDblClick = false;
+	
+	    /**
 	     * @type {MonthCreationGuide}
 	     */
 	    this.guide = new Guide(this);
 	
+	    domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
 	    dragHandler.on('dragStart', this._onDragStart, this);
 	}
 	
@@ -15608,6 +15464,10 @@
 	    this.dragHandler.off(this);
 	    this.guide.destroy();
 	
+	    if (this.monthView && this.monthView.container) {
+	        domevent.off(this.monthView.container, 'dblclick', this._onDblClick, this);
+	    }
+	
 	    this.dragHandler = this.monthView = this.baseController =
 	        this.getEventData = this._cache = this.guide = null;
 	};
@@ -15615,12 +15475,12 @@
 	/**
 	 * Fire before create event
 	 * @fires {MonthCreation#beforeCreateEvent}
-	 * @param {object} eventCache - cache data from single dragging session
+	 * @param {object} dateRange - cache data from single dragging session
 	 */
-	MonthCreation.prototype._createEvent = function(eventCache) {
+	MonthCreation.prototype._createEvent = function(dateRange) {
 	    var times = [
-	            Number(eventCache.starts),
-	            Number(eventCache.ends)
+	            Number(dateRange.starts),
+	            Number(dateRange.ends)
 	        ].sort(array.compare.num.asc),
 	        starts = new TZDate(times[0]),
 	        ends = datetime.end(new TZDate(times[1]));
@@ -15646,10 +15506,9 @@
 	 * @param {object} dragStartEvent - dragStart event data
 	 */
 	MonthCreation.prototype._onDragStart = function(dragStartEvent) {
-	    var target = dragStartEvent.target,
-	        eventData;
+	    var eventData;
 	
-	    if (!domutil.hasClass(target, config.classname('weekday-events'))) {
+	    if (!isElementWeekdayEvent(dragStartEvent.target)) {
 	        return;
 	    }
 	
@@ -15657,6 +15516,8 @@
 	        drag: this._onDrag,
 	        dragEnd: this._onDragEnd
 	    }, this);
+	
+	    this._blockDblClick = true;
 	
 	    this.getEventData = getMousePosData(this.monthView);
 	
@@ -15710,13 +15571,18 @@
 	 * @param {object} dragEndEvent - drag end event data
 	 */
 	MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
-	    var cache = this._cache,
-	        eventData;
+	    var cache = this._cache;
+	    var self = this;
+	    var eventData;
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
 	        dragEnd: this._onDragEnd
 	    }, this);
+	
+	    setTimeout(function() {
+	        self._blockDblClick = false;
+	    }, 0);
 	
 	    if (!this.getEventData) {
 	        return;
@@ -15741,6 +15607,38 @@
 	    this.getEventData = this._cache = null;
 	};
 	
+	/**
+	 * DragStart event handler
+	 * @fires {MonthCreation#monthCreationDragstart}
+	 * @param {MouseEvent} e - Native MouseEvent
+	 */
+	MonthCreation.prototype._onDblClick = function(e) {
+	    var eventData, targetDate;
+	
+	    if (this._blockDblClick || !isElementWeekdayEvent(e.target)) {
+	        return;
+	    }
+	
+	    eventData = getMousePosData(this.monthView)(e);
+	    targetDate = eventData.date;
+	
+	    this.fire('monthCreationDblClick', eventData);
+	
+	    this._createEvent({
+	        starts: targetDate,
+	        ends: datetime.end(targetDate)
+	    });
+	};
+	
+	/**
+	 * Returns whether the given element is Weekday-Event.
+	 * @param {HTMLElement} el - target element
+	 * @returns {boolean}
+	 */
+	function isElementWeekdayEvent(el) {
+	    return domutil.hasClass(el, config.classname('weekday-events'));
+	}
+	
 	util.CustomEvents.mixin(MonthCreation);
 	
 	module.exports = MonthCreation;
@@ -15748,7 +15646,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 100 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15820,7 +15718,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 101 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15828,7 +15726,7 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var MonthGuide = __webpack_require__(102);
+	var MonthGuide = __webpack_require__(100);
 	
 	/**
 	 * @constructor
@@ -15846,9 +15744,10 @@
 	    this.guide = null;
 	
 	    monthCreation.on({
-	        monthCreationDragstart: this._onDragStart,
+	        monthCreationDragstart: this._createGuideElement,
 	        monthCreationDrag: this._onDrag,
-	        monthCreationDragend: this._onDragEnd
+	        monthCreationDragend: this._onDragEnd,
+	        monthCreationDblClick: this._createGuideElement
 	    }, this);
 	}
 	
@@ -15869,8 +15768,14 @@
 	 * Drag start event handler
 	 * @param {object} dragStartEvent - event data from MonthCreation
 	 */
-	MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
-	    this.guide = new MonthGuide(null, this.monthCreation.monthView);
+	MonthCreationGuide.prototype._createGuideElement = function(dragStartEvent) {
+	    var options = {
+	        isCreationMode: true,
+	        height: '100%',
+	        top: 0
+	    };
+	       
+	    this.guide = new MonthGuide(options, this.monthCreation.monthView);
 	    this.guide.start(dragStartEvent);
 	};
 	
@@ -15886,7 +15791,7 @@
 	 * Drag end event handler
 	 */
 	MonthCreationGuide.prototype._onDragEnd = function() {
-	    //this.guide.destroy();
+	    // Do nothing. 사용자가 직접 destroy 호출
 	    this.guide = null;
 	};
 	
@@ -15895,7 +15800,7 @@
 
 
 /***/ },
-/* 102 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15914,7 +15819,7 @@
 	    domutil = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
 	    dw = __webpack_require__(44),
-	    tmpl = __webpack_require__(103);
+	    tmpl = __webpack_require__(101);
 	
 	/**
 	 * @constructor
@@ -15931,11 +15836,12 @@
 	     * @type {object}
 	     */
 	    this.options = util.extend({
-	        top: 20,
-	        height: 20,
+	        top: 0,
+	        height: '20px',
 	        bgColor: '#f7ca88',
 	        label: '새 일정',
-	        isResizeMode: false
+	        isResizeMode: false,
+	        isCreationMode: false
 	    }, options);
 	
 	    /**
@@ -16117,8 +16023,8 @@
 	        y = temp[1];
 	
 	        util.extend(this.options, {
-	            top: parseInt(target.style.top, 10),
-	            height: parseInt(target.style.height, 10),
+	            top: parseInt(target.style.top, 10) + 'px',
+	            height: parseInt(target.style.height, 10) + 'px',
 	            bgColor: model.bgColor,
 	            borderColor: model.borderColor,
 	            label: model.title
@@ -16338,22 +16244,20 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 103 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    return "display:none";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<div class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-creation-guide\"></div>\n";
+	},"3":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide-block\" style=\"top:"
-	    + alias4(((helper = (helper = helpers.top || (depth0 != null ? depth0.top : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"top","hash":{},"data":data}) : helper)))
-	    + "px;height:"
-	    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
-	    + "px;display:none\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event\" style=\"border-color:"
 	    + alias4(((helper = (helper = helpers.borderColor || (depth0 != null ? depth0.borderColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"borderColor","hash":{},"data":data}) : helper)))
@@ -16366,12 +16270,26 @@
 	    + "</div>\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-resize-handle Chandle-y\"\n             style="
-	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isResizeMode : depth0),{"name":"unless","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\">&nbsp;</div>\n    </div>\n</div>\n";
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isResizeMode : depth0),{"name":"unless","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\">&nbsp;</div>\n    </div>\n";
+	},"4":function(container,depth0,helpers,partials,data) {
+	    return "display:none";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-guide-block\" style=\"top:"
+	    + alias4(((helper = (helper = helpers.top || (depth0 != null ? depth0.top : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"top","hash":{},"data":data}) : helper)))
+	    + ";height:"
+	    + alias4(((helper = (helper = helpers.height || (depth0 != null ? depth0.height : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"height","hash":{},"data":data}) : helper)))
+	    + ";display:none\">\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isCreationMode : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 104 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16384,8 +16302,8 @@
 	var config = __webpack_require__(32),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(29),
-	    getMousePosData = __webpack_require__(100),
-	    MonthResizeGuide = __webpack_require__(105),
+	    getMousePosData = __webpack_require__(98),
+	    MonthResizeGuide = __webpack_require__(103),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -16585,7 +16503,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 105 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16597,7 +16515,7 @@
 	
 	var config = __webpack_require__(32),
 	    domutil = __webpack_require__(29),
-	    MonthGuide = __webpack_require__(102);
+	    MonthGuide = __webpack_require__(100);
 	
 	/**
 	 * @constructor
@@ -16708,7 +16626,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 106 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16721,8 +16639,8 @@
 	var config = __webpack_require__(32),
 	    domutil = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
-	    getMousePosData = __webpack_require__(100),
-	    MonthMoveGuide = __webpack_require__(107),
+	    getMousePosData = __webpack_require__(98),
+	    MonthMoveGuide = __webpack_require__(105),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -16979,7 +16897,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 107 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16992,8 +16910,8 @@
 	var config = __webpack_require__(32),
 	    domutil = __webpack_require__(29),
 	    domevent = __webpack_require__(30),
-	    FloatingLayer = __webpack_require__(108),
-	    tmpl = __webpack_require__(109);
+	    FloatingLayer = __webpack_require__(106),
+	    tmpl = __webpack_require__(107);
 	
 	/**
 	 * @constructor
@@ -17183,7 +17101,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 108 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17363,7 +17281,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 109 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -17400,7 +17318,7 @@
 	},"useData":true});
 
 /***/ },
-/* 110 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17415,8 +17333,8 @@
 	    domevent = __webpack_require__(30),
 	    domutil = __webpack_require__(29),
 	    View = __webpack_require__(38),
-	    FloatingLayer = __webpack_require__(108),
-	    tmpl = __webpack_require__(111);
+	    FloatingLayer = __webpack_require__(106),
+	    tmpl = __webpack_require__(109);
 	
 	/**
 	 * @constructor
@@ -17529,7 +17447,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 111 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -17594,7 +17512,7 @@
 	},"useData":true});
 
 /***/ },
-/* 112 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17607,8 +17525,8 @@
 	var config = __webpack_require__(32);
 	var Calendar = __webpack_require__(43);
 	var datetime = __webpack_require__(26);
-	var controllerFactory = __webpack_require__(113);
-	var serviceWeekViewFactory = __webpack_require__(115);
+	var controllerFactory = __webpack_require__(111);
+	var serviceWeekViewFactory = __webpack_require__(113);
 	
 	/**
 	 * @typedef {object} ServiceCalendar~DoorayEvent
@@ -17878,7 +17796,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 113 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17890,7 +17808,7 @@
 	var util = global.tui.util;
 	
 	var datetime = __webpack_require__(26),
-	    DoorayBase = __webpack_require__(114),
+	    DoorayBase = __webpack_require__(112),
 	    Core = __webpack_require__(50),
 	    Week = __webpack_require__(51),
 	    Month = __webpack_require__(53);
@@ -17985,7 +17903,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 114 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
@@ -18121,7 +18039,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 115 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18140,24 +18058,22 @@
 	
 	// Sub views
 	var DayName = __webpack_require__(58);
-	var Milestone = __webpack_require__(116);
-	var TaskView = __webpack_require__(118);
+	var Milestone = __webpack_require__(114);
+	var TaskView = __webpack_require__(116);
 	var TimeGrid = __webpack_require__(60);
 	var Allday = __webpack_require__(68);
 	
 	// Handlers
 	var AlldayClick = __webpack_require__(73);
-	var AlldayDblClick = __webpack_require__(77);
-	var AlldayCreation = __webpack_require__(78);
+	var AlldayCreation = __webpack_require__(77);
 	var AlldayMove = __webpack_require__(74);
-	var AlldayResize = __webpack_require__(80);
-	var TimeClick = __webpack_require__(82);
-	var TimeDblClick = __webpack_require__(83);
-	var TimeCreation = __webpack_require__(84);
-	var TimeMove = __webpack_require__(87);
-	var TimeResize = __webpack_require__(89);
-	var MilestoneClick = __webpack_require__(120);
-	var TaskClick = __webpack_require__(121);
+	var AlldayResize = __webpack_require__(79);
+	var TimeClick = __webpack_require__(81);
+	var TimeCreation = __webpack_require__(82);
+	var TimeMove = __webpack_require__(85);
+	var TimeResize = __webpack_require__(87);
+	var MilestoneClick = __webpack_require__(118);
+	var TaskClick = __webpack_require__(119);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -18172,12 +18088,10 @@
 	        milestoneClickHandler,
 	        taskClickHandler,
 	        alldayClickHandler,
-	        alldayDblClickHandler,
 	        alldayCreationHandler,
 	        alldayMoveHandler,
 	        alldayResizeHandler,
 	        timeClickHandler,
-	        timeDblClickHandler,
 	        timeCreationHandler,
 	        timeMoveHandler,
 	        timeResizeHandler,
@@ -18245,7 +18159,6 @@
 	    alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
 	    weekView.addChild(alldayView);
 	    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
-	    alldayDblClickHandler = new AlldayDblClick(alldayView);
 	    alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
 	    alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
 	    alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -18256,7 +18169,6 @@
 	    timeGridView = new TimeGrid(options.week, vLayout.panels[panels.length - 1].container);
 	    weekView.addChild(timeGridView);
 	    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
-	    timeDblClickHandler = new TimeDblClick(timeGridView);
 	    timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
 	    timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
 	    timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -18269,10 +18181,6 @@
 	        click: {
 	            allday: alldayClickHandler,
 	            time: timeClickHandler
-	        },
-	        dblclick: {
-	            allday: alldayDblClickHandler,
-	            time: timeDblClickHandler
 	        },
 	        creation: {
 	            allday: alldayCreationHandler,
@@ -18325,7 +18233,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 116 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18340,7 +18248,7 @@
 	var domutil = __webpack_require__(29);
 	var TZDate = __webpack_require__(27).Date;
 	var View = __webpack_require__(38);
-	var tmpl = __webpack_require__(117);
+	var tmpl = __webpack_require__(115);
 	
 	var PADDING_TOP = 2,
 	    PADDING_BOTTOM = 2;
@@ -18443,7 +18351,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 117 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -18526,7 +18434,7 @@
 	},"useData":true});
 
 /***/ },
-/* 118 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18540,7 +18448,7 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
 	var View = __webpack_require__(38);
-	var tmpl = __webpack_require__(119);
+	var tmpl = __webpack_require__(117);
 	var TZDate = __webpack_require__(27).Date;
 	
 	var PADDING_TOP = 2,
@@ -18652,7 +18560,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 119 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -18757,7 +18665,7 @@
 	},"useData":true});
 
 /***/ },
-/* 120 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18857,7 +18765,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 121 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18957,7 +18865,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 122 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18971,7 +18879,7 @@
 	
 	var config = __webpack_require__(32),
 	    controllerFactory = __webpack_require__(47),
-	    serviceWeekViewFactory = __webpack_require__(123),
+	    serviceWeekViewFactory = __webpack_require__(121),
 	    Drag = __webpack_require__(46),
 	    datetime = __webpack_require__(26),
 	    Layout = __webpack_require__(45),
@@ -19303,7 +19211,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 123 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19319,8 +19227,8 @@
 	
 	// Parent views
 	var Week = __webpack_require__(57);
-	var TimeGrid = __webpack_require__(124);
-	var TimeClick = __webpack_require__(82);
+	var TimeGrid = __webpack_require__(122);
+	var TimeClick = __webpack_require__(81);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -19386,7 +19294,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 124 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19401,7 +19309,7 @@
 	var TZDate = __webpack_require__(27).Date;
 	var View = __webpack_require__(38);
 	var TimeGrid = __webpack_require__(60);
-	var mainTmpl = __webpack_require__(125);
+	var mainTmpl = __webpack_require__(123);
 	
 	/**
 	 * @constructor
@@ -19584,7 +19492,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 125 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
