@@ -12,9 +12,6 @@ var View = require('../../view/view');
 var tmpl = require('./taskview.hbs');
 var TZDate = require('../../common/timezone').Date;
 
-var PADDING_TOP = 2,
-    PADDING_BOTTOM = 2;
-
 /**
  * @constructor
  * @extends {View}
@@ -40,7 +37,6 @@ function TaskView(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 52,
         lineHeight: 12
     }, options);
 }
@@ -84,8 +80,6 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         return subcount;
     })) * options.lineHeight;
 
-    height = mmax(options.minHeight, height);
-
     util.forEach(events, function(event, key) {
         event.isToday = (key === today);
     });
@@ -93,7 +87,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
     return {
         events: events,
         width: 100 / range.length,
-        height: height + PADDING_TOP + PADDING_BOTTOM,
+        height: height,
         lineHeight: options.lineHeight
     };
 };
@@ -113,6 +107,8 @@ TaskView.prototype.render = function(viewModel) {
             el.setAttribute('title', domutil.getData(el, 'title'));
         }
     });
+
+    this.fire('afterRender', baseViewModel);
 };
 
 module.exports = TaskView;

@@ -30,6 +30,7 @@ function VPanel(options, container) {
     this.options = util.extend({
         index: 0,
         minHeight: 0,
+        maxHeight: null,
         height: null,
         isSplitter: false,
         autoHeight: false,
@@ -40,6 +41,8 @@ function VPanel(options, container) {
      * @type {number}
      */
     this.index = this.options.index;
+
+    this.isHeightForcedSet = false;
 
     this._initPanel(this.options, container);
 }
@@ -58,9 +61,23 @@ VPanel.prototype.isSplitter = function() {
  * set height of html element
  * @param {HTMLElement} [container] - container element
  * @param {number} newHeight - height
+ * @param {boolean} force - whether ignore max-length
  */
-VPanel.prototype.setHeight = function(container, newHeight) {
+VPanel.prototype.setHeight = function(container, newHeight, force) {
+    var maxHeight = this.options.maxHeight;
     container = container || this.container;
+
+    // 한번 force 호출이 일어난 이후에는 force 호출만 허용한다
+    if (!force && this.isHeightForcedSet) {
+        return;
+    }
+
+    if (force) {
+        this.isHeightForcedSet = true;
+    } else if (maxHeight) {
+        newHeight = Math.min(newHeight, maxHeight);
+    }
+
     container.style.height = newHeight + 'px';
 };
 

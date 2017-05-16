@@ -42,34 +42,30 @@ WeekdayInWeek.prototype.render = function(viewModel) {
 
     maxEventInDay = mmax.apply(
         null,
-        util.map(viewModel.matrices, function(matrix) {
+        util.map(baseViewModel.matrices, function(matrix) {
             return Math.max.apply(null, util.map(matrix, function(row) {
                 return row.length;
             }));
         })
     );
 
-    this._setMinHeight(maxEventInDay);
+    baseViewModel.minHeight = this._getMinHeight(maxEventInDay);
+
     container.innerHTML = tmpl(baseViewModel);
+
+    this.fire('afterRender', baseViewModel);
 };
 
 /**
- * Set minimum height for container.
- *
- * Need set min-height to container when wrapping container's height is smaller
- * then weekday container.
- *
- * If set height directly, vertical grids represent in each days are not cover
- * wrapping container.
- *
- * @param {number} maxEventInDay - how largest event block in one day?
+ * returns minimum height for container.
+ * @param {number} maxEventInDay - max event blocks in one day
+ * @returns {number}
  */
-WeekdayInWeek.prototype._setMinHeight = function(maxEventInDay) {
-    var opt = this.options,
-        newHeight = (maxEventInDay * (opt.eventHeight + opt.eventGutter)) +
-            opt.containerBottomGutter;
+WeekdayInWeek.prototype._getMinHeight = function(maxEventInDay) {
+    var opt = this.options;
 
-    this.container.style.minHeight = newHeight + 'px';
+    return (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
 };
+
 
 module.exports = WeekdayInWeek;

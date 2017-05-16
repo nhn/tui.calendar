@@ -197,5 +197,7 @@ View.prototype.cssprefix = function(className) {
     return this.cssPrefix + (className || '');
 };
 
+util.CustomEvents.mixin(View);
+
 module.exports = View;
 

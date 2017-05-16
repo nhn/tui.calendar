@@ -38,14 +38,18 @@ function Allday(options, container) {
         title: 'All-day',
         renderStartDate: '',
         renderEndDate: '',
-        containerHeight: 60,
-        containerBottomGutter: 8,
+        containerBottomGutter: 20,
         eventHeight: 18,
         eventGutter: 2,
         getViewModelFunc: function(viewModel) {
             return viewModel.eventsInDateRange.allday;
         }
     }, options);
+
+    /**
+     * height of content
+     */
+    this.contentHeight = 0;
 
     View.call(this, container);
 }
@@ -58,8 +62,9 @@ util.inherit(Allday, View);
  * @param {object} viewModel - viewModel from parent views.
  */
 Allday.prototype.render = function(viewModel) {
-    var container = this.container,
-        weekdayView;
+    var container = this.container;
+    var weekdayView;
+    var self = this;
 
     container.innerHTML = tmpl(this.options);
 
@@ -69,12 +74,17 @@ Allday.prototype.render = function(viewModel) {
         this.options,
         domutil.find(config.classname('.weekday-container'), container)
     );
+    weekdayView.on('afterRender', function(weekdayViewModel) {
+        self.contentHeight = weekdayViewModel.minHeight;
+    });
 
     this.addChild(weekdayView);
 
     this.children.each(function(childView) {
         childView.render(viewModel);
     });
+
+    this.fire('afterRender', viewModel);
 };
 
 module.exports = Allday;
