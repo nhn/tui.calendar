@@ -216,7 +216,7 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
     }
 
     util.forEach(resizeMap, function(pair) {
-        pair[0].setHeight(null, pair[1]);
+        pair[0].setHeight(null, pair[1], true);
     });
 };
 
@@ -397,7 +397,5 @@ VLayout.prototype.addPanels = function(options, container) {
 
     container.appendChild(frag);
 };
-
-util.CustomEvents.mixin(VLayout);
 
 module.exports = VLayout;

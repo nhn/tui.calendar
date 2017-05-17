@@ -442,6 +442,4 @@ Freebusy.prototype.unselectOver = function () {
     this.render(true);
 };
 
-util.CustomEvents.mixin(Freebusy);
-
 module.exports = Freebusy;

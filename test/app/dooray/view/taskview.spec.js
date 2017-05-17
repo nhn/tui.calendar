@@ -5,7 +5,6 @@ describe('service:view/TaskView', function() {
     beforeEach(function() {
         mockInst = {
             options: {
-                minHeight: 52,
                 lineHeight: 12,
                 renderStartDate: '2015-05-01',
                 renderEndDate: '2015-05-02'
@@ -22,7 +21,7 @@ describe('service:view/TaskView', function() {
                     '2015-05-02': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}, isToday: false}
                 },
                 width: 50,
-                height: 56,
+                height: 0,
                 lineHeight: 12
             };
 
@@ -40,7 +39,7 @@ describe('service:view/TaskView', function() {
                     '2015-05-02': {hello: {length: 2}, isToday: false}
                 },
                 width: 50,
-                height: 56,
+                height: 24,
                 lineHeight: 12
             };
 
@@ -65,7 +64,7 @@ describe('service:view/TaskView', function() {
                     }
                 },
                 width: 50,
-                height: 112,    // 'hello' 제목 12px + (아이템 수 8 * 12)px + 위아래 패딩 +4
+                height: 96,    // (아이템 수 8 * 12)px
                 lineHeight: 12
             };
 

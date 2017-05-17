@@ -77,11 +77,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     if (options.isDoorayView) {
         panels = [
-            {height: 56, minHeight: 56},
+            {minHeight: 20, maxHeight: 80},
             {isSplitter: true},
-            {height: 56, minHeight: 56},
+            {minHeight: 40, maxHeight: 120},
             {isSplitter: true},
-            {height: 68, minHeight: 68},
+            {minHeight: 20, maxHeight: 80},
             {isSplitter: true},
             {autoHeight: true}
         ];
@@ -99,6 +99,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
          * 마일스톤
          **********/
         milestoneView = new Milestone(options.week, vLayout.panels[0].container);
+        milestoneView.on('afterRender', function(viewModel) {
+            vLayout.panels[0].setHeight(null, viewModel.height);
+        });
         weekView.addChild(milestoneView);
         milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 
@@ -106,6 +109,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
          * 업무
          **********/
         taskView = new TaskView(options.week, vLayout.panels[2].container);
+        taskView.on('afterRender', function(viewModel) {
+            vLayout.panels[2].setHeight(null, viewModel.height);
+        });
         weekView.addChild(taskView);
         taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
     }
@@ -113,6 +119,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      * 종일일정
      **********/
     alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
+    alldayView.on('afterRender', function() {
+        vLayout.panels[panels.length - 3].setHeight(null, alldayView.contentHeight);
+    });
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);

@@ -12,9 +12,6 @@ var TZDate = require('../../common/timezone').Date;
 var View = require('../../view/view');
 var tmpl = require('./milestone.hbs');
 
-var PADDING_TOP = 2,
-    PADDING_BOTTOM = 2;
-
 /**
  * @constructor
  * @extends {View}
@@ -40,8 +37,7 @@ function Milestone(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        minHeight: 52,
-        lineHeight: 18
+        lineHeight: 20
     }, options);
 }
 
@@ -78,13 +74,10 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         return coll.length;
     })) * options.lineHeight;
 
-    height = Math.max(options.minHeight, height);
-
     return {
         events: events,
         width: 100 / range.length,
-        minHeight: options.minHeight,
-        height: height + PADDING_TOP + PADDING_BOTTOM,
+        height: height,
         lineHeight: options.lineHeight
     };
 };
@@ -105,6 +98,8 @@ Milestone.prototype.render = function(viewModel) {
             el.setAttribute('title', domutil.getData(el, 'title'));
         }
     });
+
+    this.fire('afterRender', baseViewModel);
 };
 
 module.exports = Milestone;

@@ -349,6 +349,4 @@ MiniCalendar.prototype.render = function() {
     container.innerHTML = tmpl(viewModel);
 };
 
-util.CustomEvents.mixin(MiniCalendar);
-
 module.exports = MiniCalendar;
