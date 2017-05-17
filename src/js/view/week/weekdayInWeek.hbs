@@ -1,8 +1,9 @@
-<div class="{{CSS_PREFIX}}weekday-grid ">
+<div class="{{CSS_PREFIX}}weekday-grid">
 {{#each dates ~}}
     <div class="{{CSS_PREFIX}}weekday-grid-line {{#if isToday}} {{CSS_PREFIX}}today{{/if}}" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;"></div>
 {{/each ~}}
 </div>
+<div class="{{CSS_PREFIX}}weekday-creation"></div>
 <div class="{{CSS_PREFIX}}weekday-events">
     <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->
     <div class="{{CSS_PREFIX}}weekday-events-height-span" style="height:{{contentHeight}}px"></div>
