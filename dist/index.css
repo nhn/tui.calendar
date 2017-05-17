@@ -1,4 +1,4 @@
-/*! bundle created at "Mon May 15 2017 16:55:38 GMT+0900 (KST)" */
+/*! bundle created at "Wed May 17 2017 10:01:03 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -134,6 +134,10 @@
   position: absolute;
   font-size: 12px;
   overflow-y: scroll;
+}
+.dooray-calendar-weekday-events-height-span {
+  width: 1px;
+  margin-left: -1px;
 }
 .dooray-calendar-weekday-event-block {
   position: absolute;

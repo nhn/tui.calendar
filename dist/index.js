@@ -1,4 +1,4 @@
-/*! bundle created at "Mon May 15 2017 16:55:38 GMT+0900 (KST)" */
+/*! bundle created at "Wed May 17 2017 10:01:03 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -4960,8 +4960,6 @@
 	    container.innerHTML = tmpl(viewModel);
 	};
 	
-	util.CustomEvents.mixin(MiniCalendar);
-	
 	module.exports = MiniCalendar;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
@@ -5168,6 +5166,8 @@
 	View.prototype.cssprefix = function(className) {
 	    return this.cssPrefix + (className || '');
 	};
+	
+	util.CustomEvents.mixin(View);
 	
 	module.exports = View;
 	
@@ -5676,8 +5676,6 @@
 	    this.selectOverStart = this.selectOverEnd = '';
 	    this.render(true);
 	};
-	
-	util.CustomEvents.mixin(Freebusy);
 	
 	module.exports = Freebusy;
 	
@@ -8824,7 +8822,7 @@
 	    }
 	
 	    util.forEach(resizeMap, function(pair) {
-	        pair[0].setHeight(null, pair[1]);
+	        pair[0].setHeight(null, pair[1], true);
 	    });
 	};
 	
@@ -9006,8 +9004,6 @@
 	    container.appendChild(frag);
 	};
 	
-	util.CustomEvents.mixin(VLayout);
-	
 	module.exports = VLayout;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
@@ -9048,6 +9044,7 @@
 	    this.options = util.extend({
 	        index: 0,
 	        minHeight: 0,
+	        maxHeight: null,
 	        height: null,
 	        isSplitter: false,
 	        autoHeight: false,
@@ -9058,6 +9055,8 @@
 	     * @type {number}
 	     */
 	    this.index = this.options.index;
+	
+	    this.isHeightForcedSet = false;
 	
 	    this._initPanel(this.options, container);
 	}
@@ -9076,9 +9075,25 @@
 	 * set height of html element
 	 * @param {HTMLElement} [container] - container element
 	 * @param {number} newHeight - height
+	 * @param {boolean} force - whether ignore max-length
 	 */
-	VPanel.prototype.setHeight = function(container, newHeight) {
+	VPanel.prototype.setHeight = function(container, newHeight, force) {
+	    var maxHeight = this.options.maxHeight;
+	    var minHeight = this.options.minHeight;
 	    container = container || this.container;
+	
+	    // 한번 force 호출이 일어난 이후에는 force 호출만 허용한다
+	    if (!force && this.isHeightForcedSet) {
+	        return;
+	    }
+	
+	    if (force) {
+	        this.isHeightForcedSet = true;
+	    } else if (maxHeight) {
+	        newHeight = Math.min(newHeight, maxHeight);
+	    }
+	    newHeight = Math.max(minHeight, newHeight);
+	
 	    container.style.height = newHeight + 'px';
 	};
 	
@@ -10855,14 +10870,18 @@
 	        title: 'All-day',
 	        renderStartDate: '',
 	        renderEndDate: '',
-	        containerHeight: 60,
-	        containerBottomGutter: 8,
+	        containerBottomGutter: 20,
 	        eventHeight: 18,
 	        eventGutter: 2,
 	        getViewModelFunc: function(viewModel) {
 	            return viewModel.eventsInDateRange.allday;
 	        }
 	    }, options);
+	
+	    /**
+	     * height of content
+	     */
+	    this.contentHeight = 0;
 	
 	    View.call(this, container);
 	}
@@ -10875,8 +10894,9 @@
 	 * @param {object} viewModel - viewModel from parent views.
 	 */
 	Allday.prototype.render = function(viewModel) {
-	    var container = this.container,
-	        weekdayView;
+	    var container = this.container;
+	    var weekdayView;
+	    var self = this;
 	
 	    container.innerHTML = tmpl(this.options);
 	
@@ -10886,12 +10906,17 @@
 	        this.options,
 	        domutil.find(config.classname('.weekday-container'), container)
 	    );
+	    weekdayView.on('afterRender', function(weekdayViewModel) {
+	        self.contentHeight = weekdayViewModel.minHeight;
+	    });
 	
 	    this.addChild(weekdayView);
 	
 	    this.children.each(function(childView) {
 	        childView.render(viewModel);
 	    });
+	
+	    this.fire('afterRender', viewModel);
 	};
 	
 	module.exports = Allday;
@@ -10947,35 +10972,31 @@
 	
 	    maxEventInDay = mmax.apply(
 	        null,
-	        util.map(viewModel.matrices, function(matrix) {
+	        util.map(baseViewModel.matrices, function(matrix) {
 	            return Math.max.apply(null, util.map(matrix, function(row) {
 	                return row.length;
 	            }));
 	        })
 	    );
 	
-	    this._setMinHeight(maxEventInDay);
+	    baseViewModel.minHeight = this._getMinHeight(maxEventInDay);
+	
 	    container.innerHTML = tmpl(baseViewModel);
+	
+	    this.fire('afterRender', baseViewModel);
 	};
 	
 	/**
-	 * Set minimum height for container.
-	 *
-	 * Need set min-height to container when wrapping container's height is smaller
-	 * then weekday container.
-	 *
-	 * If set height directly, vertical grids represent in each days are not cover
-	 * wrapping container.
-	 *
-	 * @param {number} maxEventInDay - how largest event block in one day?
+	 * returns minimum height for container.
+	 * @param {number} maxEventInDay - max event blocks in one day
+	 * @returns {number}
 	 */
-	WeekdayInWeek.prototype._setMinHeight = function(maxEventInDay) {
-	    var opt = this.options,
-	        newHeight = (maxEventInDay * (opt.eventHeight + opt.eventGutter)) +
-	            opt.containerBottomGutter;
+	WeekdayInWeek.prototype._getMinHeight = function(maxEventInDay) {
+	    var opt = this.options;
 	
-	    this.container.style.minHeight = newHeight + 'px';
+	    return (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
 	};
+	
 	
 	module.exports = WeekdayInWeek;
 	
@@ -11107,35 +11128,35 @@
 	},"5":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return "\n"
+	  return "\n    "
 	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},depth0,{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"6":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return "\n"
+	  return "\n    "
 	    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"7":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
 	
-	  return "\n<div data-id=\""
+	  return "\n    <div data-id=\""
 	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n     class=\""
+	    + "\"\n        class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-event-block\n        "
+	    + "weekday-event-block\n            "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\n        "
+	    + "\n            "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\"\n     style=\"top:"
+	    + "\"\n        style=\"top:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
-	    + "px;\n            left:"
+	    + "px;\n                left:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-	    + "%;\n            width:"
+	    + "%;\n                width:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-	    + "%;\n            height:"
+	    + "%;\n                height:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
-	    + "px;\n            margin-top:"
+	    + "px;\n                margin-top:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
-	    + "px\">\n    <div class=\""
+	    + "px\">\n        <div class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event\" style=\"height:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventHeight), depth0))
@@ -11145,13 +11166,13 @@
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + "; border-color:"
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\">\n        <span class=\""
+	    + "\">\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\">"
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</span>\n        <span class=\""
+	    + "</span>\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle handle-y\">&nbsp;</span>\n    </div>\n</div>\n";
+	    + "weekday-resize-handle handle-y\">&nbsp;</span>\n        </div>\n    </div>\n";
 	},"8":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -11173,7 +11194,11 @@
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-events\">\n"
+	    + "weekday-events\">\n    <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-events-height-span\" style=\"height:"
+	    + alias4(((helper = (helper = helpers.contentHeight || (depth0 != null ? depth0.contentHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"contentHeight","hash":{},"data":data}) : helper)))
+	    + "px\"></div>\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
@@ -12271,7 +12296,7 @@
 	    var alldayCreation = this.alldayCreation,
 	        alldayView = alldayCreation.alldayView,
 	        alldayContainerElement = alldayView.container,
-	        eventContainer = domutil.find(config.classname('.weekday-events'), alldayContainerElement);
+	        eventContainer = domutil.find(config.classname('.weekday'), alldayContainerElement);
 	
 	    eventContainer.appendChild(this.guideElement);
 	    this._refreshGuideElement(dragStartEventData);
@@ -15041,7 +15066,6 @@
 	        contentStr = '';
 	
 	    setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
-	    console.log(container);
 	    container.innerHTML = baseTmpl(baseViewModel);
 	
 	    renderLimitIdx = this._getRenderLimitIndex();
@@ -18121,11 +18145,11 @@
 	
 	    if (options.isDoorayView) {
 	        panels = [
-	            {height: 56, minHeight: 56},
+	            {minHeight: 20, maxHeight: 80},
 	            {isSplitter: true},
-	            {height: 56, minHeight: 56},
+	            {minHeight: 40, maxHeight: 120},
 	            {isSplitter: true},
-	            {height: 68, minHeight: 68},
+	            {minHeight: 20, maxHeight: 80},
 	            {isSplitter: true},
 	            {autoHeight: true}
 	        ];
@@ -18143,6 +18167,9 @@
 	         * 마일스톤
 	         **********/
 	        milestoneView = new Milestone(options.week, vLayout.panels[0].container);
+	        milestoneView.on('afterRender', function(viewModel) {
+	            vLayout.panels[0].setHeight(null, viewModel.height);
+	        });
 	        weekView.addChild(milestoneView);
 	        milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
 	
@@ -18150,6 +18177,9 @@
 	         * 업무
 	         **********/
 	        taskView = new TaskView(options.week, vLayout.panels[2].container);
+	        taskView.on('afterRender', function(viewModel) {
+	            vLayout.panels[2].setHeight(null, viewModel.height);
+	        });
 	        weekView.addChild(taskView);
 	        taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
 	    }
@@ -18157,6 +18187,9 @@
 	     * 종일일정
 	     **********/
 	    alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
+	    alldayView.on('afterRender', function() {
+	        vLayout.panels[panels.length - 3].setHeight(null, alldayView.contentHeight);
+	    });
 	    weekView.addChild(alldayView);
 	    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
 	    alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -18250,9 +18283,6 @@
 	var View = __webpack_require__(38);
 	var tmpl = __webpack_require__(115);
 	
-	var PADDING_TOP = 2,
-	    PADDING_BOTTOM = 2;
-	
 	/**
 	 * @constructor
 	 * @extends {View}
@@ -18278,8 +18308,7 @@
 	    this.options = util.extend({
 	        renderStartDate: '',
 	        renderEndDate: '',
-	        minHeight: 52,
-	        lineHeight: 18
+	        lineHeight: 20
 	    }, options);
 	}
 	
@@ -18316,13 +18345,10 @@
 	        return coll.length;
 	    })) * options.lineHeight;
 	
-	    height = Math.max(options.minHeight, height);
-	
 	    return {
 	        events: events,
 	        width: 100 / range.length,
-	        minHeight: options.minHeight,
-	        height: height + PADDING_TOP + PADDING_BOTTOM,
+	        height: height,
 	        lineHeight: options.lineHeight
 	    };
 	};
@@ -18343,6 +18369,8 @@
 	            el.setAttribute('title', domutil.getData(el, 'title'));
 	        }
 	    });
+	
+	    this.fire('afterRender', baseViewModel);
 	};
 	
 	module.exports = Milestone;
@@ -18356,29 +18384,25 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day-grid\" style=\"width:"
-	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
 	    + "%;left:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
-	    + "%;min-height:"
-	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.height), depth0))
-	    + "px\"></div>\n";
+	    + "%\"></div>\n";
 	},"3":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "milestone-day\" style=\"width:"
-	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
 	    + "%;left:"
 	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
-	    + "%;min-height:"
-	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.height), depth0))
-	    + "px\">\n      <ul class=\""
+	    + "%\">\n      <ul class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "milestone-list "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
@@ -18451,9 +18475,6 @@
 	var tmpl = __webpack_require__(117);
 	var TZDate = __webpack_require__(27).Date;
 	
-	var PADDING_TOP = 2,
-	    PADDING_BOTTOM = 2;
-	
 	/**
 	 * @constructor
 	 * @extends {View}
@@ -18479,8 +18500,7 @@
 	    this.options = util.extend({
 	        renderStartDate: '',
 	        renderEndDate: '',
-	        minHeight: 52,
-	        lineHeight: 12
+	        lineHeight: 20
 	    }, options);
 	}
 	
@@ -18513,17 +18533,14 @@
 	    });
 	    util.extend(events, viewModel);
 	
-	    // (출근전, 점심전, 퇴근전 항목 수 * 12px) + (각 항목의 아이템 수 * 12px)
 	    height = mmax.apply(null, util.map(events, function(g) {
-	        var subcount = util.keys(g).length;
+	        var subcount = 0;
 	
 	        util.forEach(g, function(coll) {
 	            subcount += (coll.length || 0);
 	        });
 	        return subcount;
 	    })) * options.lineHeight;
-	
-	    height = mmax(options.minHeight, height);
 	
 	    util.forEach(events, function(event, key) {
 	        event.isToday = (key === today);
@@ -18532,7 +18549,7 @@
 	    return {
 	        events: events,
 	        width: 100 / range.length,
-	        height: height + PADDING_TOP + PADDING_BOTTOM,
+	        height: height,
 	        lineHeight: options.lineHeight
 	    };
 	};
@@ -18552,6 +18569,8 @@
 	            el.setAttribute('title', domutil.getData(el, 'title'));
 	        }
 	    });
+	
+	    this.fire('afterRender', baseViewModel);
 	};
 	
 	module.exports = TaskView;
@@ -18565,29 +18584,25 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day-grid\" style=\"width:"
-	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
 	    + "%;left:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
-	    + "%;min-height:"
-	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.height), depth0))
-	    + "px\"></div>\n";
+	    + "%\"></div>\n";
 	},"3":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day\" style=\"width:"
-	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
 	    + "%;left:"
 	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
-	    + "%;min-height:"
-	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.height), depth0))
-	    + "px\">\n    <div class=\""
+	    + "%\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day-wrap "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
