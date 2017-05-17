@@ -37,7 +37,7 @@ function TaskView(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        lineHeight: 12
+        lineHeight: 20
     }, options);
 }
 
@@ -70,9 +70,8 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
     });
     util.extend(events, viewModel);
 
-    // (출근전, 점심전, 퇴근전 항목 수 * 12px) + (각 항목의 아이템 수 * 12px)
     height = mmax.apply(null, util.map(events, function(g) {
-        var subcount = util.keys(g).length;
+        var subcount = 0;
 
         util.forEach(g, function(coll) {
             subcount += (coll.length || 0);

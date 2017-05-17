@@ -37,7 +37,7 @@ function Milestone(options, container) {
     this.options = util.extend({
         renderStartDate: '',
         renderEndDate: '',
-        lineHeight: 18
+        lineHeight: 20
     }, options);
 }
 

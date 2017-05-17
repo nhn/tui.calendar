@@ -65,6 +65,7 @@ VPanel.prototype.isSplitter = function() {
  */
 VPanel.prototype.setHeight = function(container, newHeight, force) {
     var maxHeight = this.options.maxHeight;
+    var minHeight = this.options.minHeight;
     container = container || this.container;
 
     // 한번 force 호출이 일어난 이후에는 force 호출만 허용한다
@@ -77,6 +78,7 @@ VPanel.prototype.setHeight = function(container, newHeight, force) {
     } else if (maxHeight) {
         newHeight = Math.min(newHeight, maxHeight);
     }
+    newHeight = Math.max(minHeight, newHeight);
 
     container.style.height = newHeight + 'px';
 };

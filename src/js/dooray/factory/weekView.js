@@ -79,7 +79,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         panels = [
             {minHeight: 20, maxHeight: 80},
             {isSplitter: true},
-            {minHeight: 20, maxHeight: 120},
+            {minHeight: 40, maxHeight: 120},
             {isSplitter: true},
             {minHeight: 20, maxHeight: 80},
             {isSplitter: true},
