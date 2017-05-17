@@ -1,4 +1,4 @@
-/*! bundle created at "Wed May 17 2017 10:01:03 GMT+0900 (KST)" */
+/*! bundle created at "Wed May 17 2017 12:58:50 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -438,10 +438,11 @@
   right: 0px;
   bottom: 0px;
   left: 0px;
+  height: 5px;
   text-align: center;
   color: #fff;
   cursor: row-resize;
-  background-position: center 7px;
+  background-position: center top;
 }
 .dooray-calendar-time-guide-creation {
   position: absolute;
@@ -458,18 +459,17 @@
   z-index: 97;
 }
 .dooray-calendar-time-guide-creation-label {
-  padding-left: 1px;
   color: #fff;
   cursor: default;
-}
-.dooray-calendar-time-guide-bottom {
-  position: absolute;
-  bottom: 6px;
-  left: 6px;
-  line-height: 14px;
+  line-height: 16px;
   color: #135de6;
   font-size: 12px;
   font-weight: bold;
+  padding-left: 3px;
+}
+.dooray-calendar-time-guide-bottom {
+  position: absolute;
+  bottom: 0px;
 }
 .dooray-calendar-split-timegrid-container {
   height: 100%;
@@ -670,7 +670,7 @@
 }
 .dooray-calendar-milestone-list {
   margin: 0;
-  padding: 0 2px;
+  padding: 0;
   overflow: hidden;
   min-height: 100%;
 }
@@ -819,8 +819,8 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   font-weight: normal;
 }
 .dooray-calendar-task-list {
-  margin: 2px;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 .dooray-calendar-task-item {
@@ -829,7 +829,7 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   overflow: hidden;
   line-height: 18px;
   height: 18px;
-  margin-top: 2px;
+  margin-bottom: 2px;
   padding-left: 6px;
   border-left-width: 3px;
   border-left-style: solid;

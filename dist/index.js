@@ -1,4 +1,4 @@
-/*! bundle created at "Wed May 17 2017 10:01:03 GMT+0900 (KST)" */
+/*! bundle created at "Wed May 17 2017 12:58:50 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -11154,7 +11154,7 @@
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
 	    + "%;\n                height:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
-	    + "px;\n                margin-top:"
+	    + "px;\n                margin-bottom:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
 	    + "px\">\n        <div class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
