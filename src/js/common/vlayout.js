@@ -341,9 +341,14 @@ VLayout.prototype._onDragEnd = function(e) {
  * refresh each panels
  */
 VLayout.prototype.refresh = function() {
-    var panelToFillHeight = [],
-        usedHeight = 0,
-        remainHeight;
+    var panelToFillHeight = [];
+    var layoutHeight = this.getViewBound().height;
+    var usedHeight = 0;
+    var remainHeight;
+
+    if (!layoutHeight) {
+        return;
+    }
 
     util.forEach(this.panels, function(panel) {
         if (panel.options.autoHeight) {
@@ -353,11 +358,8 @@ VLayout.prototype.refresh = function() {
         }
     });
 
-    remainHeight = (this.getViewBound().height - usedHeight) / panelToFillHeight.length;
+    remainHeight = (layoutHeight - usedHeight) / panelToFillHeight.length;
 
-    if (this.getViewBound().height === 0) {
-        remainHeight = '';
-    }
     util.forEach(panelToFillHeight, function(panel) {
         panel.setHeight(null, remainHeight);
     });
