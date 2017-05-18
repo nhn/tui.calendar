@@ -1,4 +1,4 @@
-/*! bundle created at "Wed May 17 2017 12:58:50 GMT+0900 (KST)" */
+/*! bundle created at "Thu May 18 2017 09:50:10 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -11190,9 +11190,11 @@
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-grid \">\n"
+	    + "weekday-grid\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-creation\"></div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-events\">\n    <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -12296,7 +12298,7 @@
 	    var alldayCreation = this.alldayCreation,
 	        alldayView = alldayCreation.alldayView,
 	        alldayContainerElement = alldayView.container,
-	        eventContainer = domutil.find(config.classname('.weekday'), alldayContainerElement);
+	        eventContainer = domutil.find(config.classname('.weekday-creation'), alldayContainerElement);
 	
 	    eventContainer.appendChild(this.guideElement);
 	    this._refreshGuideElement(dragStartEventData);
@@ -17168,7 +17170,6 @@
 	    layerContainer.style.display = 'none';
 	    layerContainer.style.position = 'absolute';
 	    domutil.addClass(layerContainer, config.classname('floating-layer'));
-	    container.style.position = 'relative';
 	    container.appendChild(layerContainer);
 	
 	    View.call(this, layerContainer);
