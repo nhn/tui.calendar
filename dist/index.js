@@ -1,4 +1,4 @@
-/*! bundle created at "Thu May 18 2017 09:50:10 GMT+0900 (KST)" */
+/*! bundle created at "Thu May 18 2017 15:32:47 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -8947,9 +8947,14 @@
 	 * refresh each panels
 	 */
 	VLayout.prototype.refresh = function() {
-	    var panelToFillHeight = [],
-	        usedHeight = 0,
-	        remainHeight;
+	    var panelToFillHeight = [];
+	    var layoutHeight = this.getViewBound().height;
+	    var usedHeight = 0;
+	    var remainHeight;
+	
+	    if (!layoutHeight) {
+	        return;
+	    }
 	
 	    util.forEach(this.panels, function(panel) {
 	        if (panel.options.autoHeight) {
@@ -8959,11 +8964,8 @@
 	        }
 	    });
 	
-	    remainHeight = (this.getViewBound().height - usedHeight) / panelToFillHeight.length;
+	    remainHeight = (layoutHeight - usedHeight) / panelToFillHeight.length;
 	
-	    if (this.getViewBound().height === 0) {
-	        remainHeight = '';
-	    }
 	    util.forEach(panelToFillHeight, function(panel) {
 	        panel.setHeight(null, remainHeight);
 	    });
