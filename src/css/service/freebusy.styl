@@ -1,5 +1,4 @@
 +prefix-classes(freebusy)
-
     // Common
     .container
         position: relative
@@ -10,7 +9,6 @@
         border-left: 1px solid #f1f1f1
 
     // 격자선
-
     .grid
         position: relative
         wh(100%, 100%)
@@ -51,14 +49,14 @@
 
     .block
         position: absolute
-        top: 0
-        height: 100%
+        top: -1px 
+        bottom: -1px
         z-index: 1
 
     .fill
         height: 100%
-        background-color: #aaa
-        opacity: 0.8
+        background: rgba(19, 93, 230, 0.2)
+        border: 1px solid #b4c3de
 
     // 추천일정 영역
     .recommends
@@ -80,9 +78,9 @@
 
     .select
         position: absolute
-        background-color: blue
+        background: rgba(19, 93, 230, 0.5)
         height: 100%
-        opacity: 0.5
+        border: 1px solid #789de1
 
     // 선택 효과 영역
     .selection-over
