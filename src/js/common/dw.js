@@ -58,10 +58,11 @@ DW.prototype.addDate = function(day) {
 /**
  * Add month
  * @param {number} m - month to add
+ * @param {number} [d] - day to set
  * @returns {DW} wrapper object
  */
-DW.prototype.addMonth = function(m) {
-    this.d.setMonth(this.d.getMonth() + m);
+DW.prototype.addMonth = function(m, d) {
+    this.d.setMonth(this.d.getMonth() + m, d);
     return this;
 };
 
@@ -90,4 +91,3 @@ DW.prototype.isBetween = function(d1, d2) {
 };
 
 module.exports = DW;
-

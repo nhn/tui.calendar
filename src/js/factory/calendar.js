@@ -383,7 +383,8 @@ Calendar.prototype.move = function(offset) {
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        renderDate.addMonth(offset);
+        // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
+        renderDate.addMonth(offset, 1);
         tempDate = datetime.arr2dCalendar(this.renderDate, 0, true);
 
         recursiveSet(view, function(opt) {
