@@ -60,7 +60,7 @@ function VLayout(options, container) {
      * @type {Drag}
      */
     this._drag = new Drag({
-        distance: 0,
+        distance: 10,
         exclude: function(target) {
             return !domutil.hasClass(target, config.classname('splitter'));
         }

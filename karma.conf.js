@@ -32,7 +32,7 @@ module.exports = function(config) {
         ],
         files: [
             'node_modules/underscore/underscore.js',
-            'bower_components/tui-code-snippet/code-snippet.js',
+            'bower_components/tui-code-snippet/dist/code-snippet.js',
             'test/fixtures/**/*',
             'test/index.js'
         ],
