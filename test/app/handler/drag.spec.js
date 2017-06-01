@@ -16,6 +16,7 @@ describe('Handler/Drag', function() {
     describe('_onMouseUp', function() {
 
         it('emit "click" when not emitted drag event between mousedown and mousedown', function() {
+            var i, length;
             spyOn(domevent, 'preventDefault');
             mockInst.options = {
                 distance: 10
@@ -29,7 +30,10 @@ describe('Handler/Drag', function() {
             });
 
             // alternative to mockInst._isMoved = true;
-            Drag.prototype._onMouseMove.call(mockInst, 'hello');
+            length = mockInst.options.distance + 1;
+            for (i = 0; i < length; i += 1) {
+                Drag.prototype._onMouseMove.call(mockInst, 'hello');
+            }
 
             Drag.prototype._onMouseUp.call(mockInst, 'hello');
             expect(mockInst.fire).toHaveBeenCalledWith('dragEnd', {
@@ -155,4 +159,3 @@ describe('Handler/Drag', function() {
         });
     });
 });
-
