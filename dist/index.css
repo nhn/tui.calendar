@@ -1,4 +1,4 @@
-/*! bundle created at "Thu May 18 2017 15:32:47 GMT+0900 (KST)" */
+/*! bundle created at "Fri Jun 02 2017 10:20:06 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -789,6 +789,12 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   border-radius: 50%;
   color: #fff;
 }
+.dooray-calendar-minicalendar-prev:before {
+  content: '<';
+}
+.dooray-calendar-minicalendar-next:before {
+  content: '>';
+}
 .dooray-calendar-task-container {
   height: 100%;
 }
@@ -837,6 +843,7 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   overflow: hidden;
   line-height: 18px;
   height: 18px;
+  margin-right: 10px;
   margin-bottom: 2px;
   padding-left: 6px;
   border-left-width: 3px;
