@@ -9,7 +9,6 @@ var config = require('../../config');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
-var domevent = require('../../common/domevent');
 var TimeCreationGuide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
@@ -59,28 +58,16 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
-    /**
-     * To prevent dblclick and dragend event from occuring together
-     * @type {boolean}
-     */
-    this._blockDblClick = false;
-
     dragHandler.on('dragStart', this._onDragStart, this);
-    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+    dragHandler.on('click', this._onClick, this);
 }
 
 /**
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
-    var timeGridView = this.timeGridView;
-
     this.guide.destroy();
     this.dragHandler.off(this);
-
-    if (timeGridView && timeGridView.container) {
-        domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
-    }
 
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
@@ -135,11 +122,8 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
 
     this.dragHandler.on({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
-
-    this._blockDblClick = true;
 
     /**
      * @event TimeCreation#timeCreationDragstart
@@ -244,13 +228,8 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
 
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
-
-    setTimeout(function() {
-        self._blockDblClick = false;
-    }, 0);
 
     /**
      * Function for manipulate event data before firing event
@@ -291,61 +270,26 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
  * @param {object} clickEventData - event data from Drag#click.
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
-    var self = this;
+    var condResult, getEventDataFunc, eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
 
-    /**
-     * Function for manipulate event data before firing event
-     * @param {object} eventData - event data
-     */
-    function reviseFunc(eventData) {
-        self._createEvent(eventData);
-    }
-
-    /**
-     * @event TimeCreation#timeCreationClick
-     * @type {object}
-     * @property {Time} relatedView - time view instance related with mouse position.
-     * @property {MouseEvent} originEvent - mouse event object.
-     * @property {number} mouseY - mouse Y px mouse event.
-     * @property {number} gridY - grid Y index value related with mouseY value.
-     * @property {number} timeY - milliseconds value of mouseY points.
-     * @property {number} nearestGridY - nearest grid index related with mouseY value.
-     * @property {number} nearestGridTimeY - time value for nearestGridY.
-     */
-    this._onDrag(clickEventData, 'timeCreationClick', reviseFunc);
-
-    this._dragStart = this._getEventDataFunc = null;
-};
-
-/**
- * Dblclick event handler
- * @param {MouseEvent} e - Native MouseEvent
- */
-TimeCreation.prototype._onDblClick = function(e) {
-    var condResult, getEventDataFunc, eventData;
-
-    if (this._blockDblClick) {
-        return;
-    }
-
-    condResult = this.checkExpectedCondition(e.target);
+    condResult = this.checkExpectedCondition(clickEventData.target);
     if (!condResult) {
         return;
     }
 
     getEventDataFunc = this._retriveEventData(condResult);
-    eventData = getEventDataFunc(e);
+    eventData = getEventDataFunc(clickEventData.originEvent);
 
-    this.fire('timeCreationDblClick', eventData);
-
+    this.fire('timeCreationClick', eventData);
 
     this._createEvent(eventData);
+
+    this._dragStart = this._getEventDataFunc = null;
 };
 
 
