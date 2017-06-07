@@ -59,8 +59,7 @@ function TimeCreationGuide(timeCreation) {
     timeCreation.on({
         timeCreationDragstart: this._createGuideElement,
         timeCreationDrag: this._onDrag,
-        timeCreationClick: this.clearGuideElement,
-        timeCreationDblClick: this._createGuideElement
+        timeCreationClick: this._createGuideElement
     }, this);
 }
 
@@ -261,4 +260,3 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
 };
 
 module.exports = TimeCreationGuide;
-

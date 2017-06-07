@@ -24,7 +24,7 @@ function MonthCreationGuide(monthCreation) {
         monthCreationDragstart: this._createGuideElement,
         monthCreationDrag: this._onDrag,
         monthCreationDragend: this._onDragEnd,
-        monthCreationDblClick: this._createGuideElement
+        monthCreationClick: this._createGuideElement
     }, this);
 }
 
@@ -51,7 +51,7 @@ MonthCreationGuide.prototype._createGuideElement = function(dragStartEvent) {
         height: '100%',
         top: 0
     };
-       
+
     this.guide = new MonthGuide(options, this.monthCreation.monthView);
     this.guide.start(dragStartEvent);
 };
@@ -73,4 +73,3 @@ MonthCreationGuide.prototype._onDragEnd = function() {
 };
 
 module.exports = MonthCreationGuide;
-

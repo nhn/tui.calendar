@@ -9,7 +9,6 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var array = require('../../common/array');
 var domutil = require('../../common/domutil');
-var domevent = require('../../common/domevent');
 var getMousePosData = require('./core');
 var Guide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
@@ -48,18 +47,12 @@ function MonthCreation(dragHandler, monthView, baseController) {
     this._cache = null;
 
     /**
-     * To prevent dblclick and dragend event from occuring together
-     * @type {boolean}
-     */
-    this._blockDblClick = false;
-
-    /**
      * @type {MonthCreationGuide}
      */
     this.guide = new Guide(this);
 
-    domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
     dragHandler.on('dragStart', this._onDragStart, this);
+    dragHandler.on('click', this._onClick, this);
 }
 
 /**
@@ -68,10 +61,6 @@ function MonthCreation(dragHandler, monthView, baseController) {
 MonthCreation.prototype.destroy = function() {
     this.dragHandler.off(this);
     this.guide.destroy();
-
-    if (this.monthView && this.monthView.container) {
-        domevent.off(this.monthView.container, 'dblclick', this._onDblClick, this);
-    }
 
     this.dragHandler = this.monthView = this.baseController =
         this.getEventData = this._cache = this.guide = null;
@@ -121,8 +110,6 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
-
-    this._blockDblClick = true;
 
     this.getEventData = getMousePosData(this.monthView);
 
@@ -177,17 +164,12 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
  */
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache;
-    var self = this;
     var eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
-
-    setTimeout(function() {
-        self._blockDblClick = false;
-    }, 0);
 
     if (!this.getEventData) {
         return;
@@ -217,17 +199,17 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
  * @fires {MonthCreation#monthCreationDragstart}
  * @param {MouseEvent} e - Native MouseEvent
  */
-MonthCreation.prototype._onDblClick = function(e) {
+MonthCreation.prototype._onClick = function(e) {
     var eventData, targetDate;
 
-    if (this._blockDblClick || !isElementWeekdayEvent(e.target)) {
+    if (!isElementWeekdayEvent(e.target)) {
         return;
     }
 
-    eventData = getMousePosData(this.monthView)(e);
+    eventData = getMousePosData(this.monthView)(e.originEvent);
     targetDate = eventData.date;
 
-    this.fire('monthCreationDblClick', eventData);
+    this.fire('monthCreationClick', eventData);
 
     this._createEvent({
         starts: targetDate,
