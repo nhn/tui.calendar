@@ -1,4 +1,4 @@
-/*! bundle created at "Fri Jun 02 2017 10:20:06 GMT+0900 (KST)" */
+/*! bundle created at "Thu Jun 08 2017 16:12:48 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -4713,6 +4713,11 @@
 	    // focused 된 범위가 1일인지 여부 (1일인 경우 스타일을 다르게 표시하기 위함)
 	    this.singleFocused = false;
 	
+	    // default is week.
+	    this.viewName = 'week';
+	
+	    this.currentDate = null;
+	
 	    this.render();
 	}
 	
@@ -4815,6 +4820,8 @@
 	        hlData = this.hlData,
 	        selectedDate = this.selectedDate,
 	        classPrefix = config.classname('minicalendar-'),
+	        viewName = this.viewName,
+	        currentDate = this.currentDate ? this.currentDate : new Date(),
 	        viewModel = {
 	            title: datetime.format(renderDate, 'YYYY.MM'),
 	            startDayOfWeek: startDayOfWeek,
@@ -4836,6 +4843,12 @@
 	            day = date.getDay(),
 	            dayClassName = getDayClassName(day),
 	            cssClasses = util.keys(hlData[ymd] ? hlData[ymd] : {});
+	
+	        if (viewName === 'month' && !datetime.isSameMonth(currentDate, renderDate)) {
+	            cssClasses = util.filter(cssClasses, function(value) {
+	                return value !== 'focused';
+	            });
+	        }
 	
 	        cssClasses.push(ymd);
 	
@@ -4918,11 +4931,15 @@
 	 * Focus specific date range
 	 * @param {Date} start - focus start date
 	 * @param {Date} end - focus end date
+	 * @param {Date} currentDate - current date
+	 * @param {string} viewName - type of view(day, week, month);
 	 */
-	MiniCalendar.prototype.focusDateRange = function(start, end) {
+	MiniCalendar.prototype.focusDateRange = function(start, end, currentDate, viewName) {
 	    this.clearFocusData();
 	    this._setHlDateRange(start, end, 'focused');
 	    this.singleFocused = datetime.isSameDate(new TZDate(start), new TZDate(end));
+	    this.viewName = viewName;
+	    this.currentDate = currentDate;
 	
 	    this.render();
 	};
@@ -12889,7 +12906,6 @@
 	var array = __webpack_require__(52);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
 	var TimeCreationGuide = __webpack_require__(83);
 	var TZDate = __webpack_require__(27).Date;
 	var timeCore = __webpack_require__(84);
@@ -12939,28 +12955,16 @@
 	     */
 	    this._dragStart = null;
 	
-	    /**
-	     * To prevent dblclick and dragend event from occuring together
-	     * @type {boolean}
-	     */
-	    this._blockDblClick = false;
-	
 	    dragHandler.on('dragStart', this._onDragStart, this);
-	    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+	    dragHandler.on('click', this._onClick, this);
 	}
 	
 	/**
 	 * Destroy method
 	 */
 	TimeCreation.prototype.destroy = function() {
-	    var timeGridView = this.timeGridView;
-	
 	    this.guide.destroy();
 	    this.dragHandler.off(this);
-	
-	    if (timeGridView && timeGridView.container) {
-	        domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
-	    }
 	
 	    this.dragHandler = this.timeGridView = this.baseController =
 	        this._getEventDataFunc = this._dragStart = this.guide = null;
@@ -13015,11 +13019,8 @@
 	
 	    this.dragHandler.on({
 	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
+	        dragEnd: this._onDragEnd
 	    }, this);
-	
-	    this._blockDblClick = true;
 	
 	    /**
 	     * @event TimeCreation#timeCreationDragstart
@@ -13124,13 +13125,8 @@
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
+	        dragEnd: this._onDragEnd
 	    }, this);
-	
-	    setTimeout(function() {
-	        self._blockDblClick = false;
-	    }, 0);
 	
 	    /**
 	     * Function for manipulate event data before firing event
@@ -13171,61 +13167,26 @@
 	 * @param {object} clickEventData - event data from Drag#click.
 	 */
 	TimeCreation.prototype._onClick = function(clickEventData) {
-	    var self = this;
+	    var condResult, getEventDataFunc, eventData;
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
+	        dragEnd: this._onDragEnd
 	    }, this);
 	
-	    /**
-	     * Function for manipulate event data before firing event
-	     * @param {object} eventData - event data
-	     */
-	    function reviseFunc(eventData) {
-	        self._createEvent(eventData);
-	    }
-	
-	    /**
-	     * @event TimeCreation#timeCreationClick
-	     * @type {object}
-	     * @property {Time} relatedView - time view instance related with mouse position.
-	     * @property {MouseEvent} originEvent - mouse event object.
-	     * @property {number} mouseY - mouse Y px mouse event.
-	     * @property {number} gridY - grid Y index value related with mouseY value.
-	     * @property {number} timeY - milliseconds value of mouseY points.
-	     * @property {number} nearestGridY - nearest grid index related with mouseY value.
-	     * @property {number} nearestGridTimeY - time value for nearestGridY.
-	     */
-	    this._onDrag(clickEventData, 'timeCreationClick', reviseFunc);
-	
-	    this._dragStart = this._getEventDataFunc = null;
-	};
-	
-	/**
-	 * Dblclick event handler
-	 * @param {MouseEvent} e - Native MouseEvent
-	 */
-	TimeCreation.prototype._onDblClick = function(e) {
-	    var condResult, getEventDataFunc, eventData;
-	
-	    if (this._blockDblClick) {
-	        return;
-	    }
-	
-	    condResult = this.checkExpectedCondition(e.target);
+	    condResult = this.checkExpectedCondition(clickEventData.target);
 	    if (!condResult) {
 	        return;
 	    }
 	
 	    getEventDataFunc = this._retriveEventData(condResult);
-	    eventData = getEventDataFunc(e);
+	    eventData = getEventDataFunc(clickEventData.originEvent);
 	
-	    this.fire('timeCreationDblClick', eventData);
-	
+	    this.fire('timeCreationClick', eventData);
 	
 	    this._createEvent(eventData);
+	
+	    this._dragStart = this._getEventDataFunc = null;
 	};
 	
 	
@@ -13301,8 +13262,7 @@
 	    timeCreation.on({
 	        timeCreationDragstart: this._createGuideElement,
 	        timeCreationDrag: this._onDrag,
-	        timeCreationClick: this.clearGuideElement,
-	        timeCreationDblClick: this._createGuideElement
+	        timeCreationClick: this._createGuideElement
 	    }, this);
 	}
 	
@@ -13503,7 +13463,6 @@
 	};
 	
 	module.exports = TimeCreationGuide;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -15443,7 +15402,6 @@
 	var datetime = __webpack_require__(26);
 	var array = __webpack_require__(52);
 	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
 	var getMousePosData = __webpack_require__(98);
 	var Guide = __webpack_require__(99);
 	var TZDate = __webpack_require__(27).Date;
@@ -15482,18 +15440,12 @@
 	    this._cache = null;
 	
 	    /**
-	     * To prevent dblclick and dragend event from occuring together
-	     * @type {boolean}
-	     */
-	    this._blockDblClick = false;
-	
-	    /**
 	     * @type {MonthCreationGuide}
 	     */
 	    this.guide = new Guide(this);
 	
-	    domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
 	    dragHandler.on('dragStart', this._onDragStart, this);
+	    dragHandler.on('click', this._onClick, this);
 	}
 	
 	/**
@@ -15502,10 +15454,6 @@
 	MonthCreation.prototype.destroy = function() {
 	    this.dragHandler.off(this);
 	    this.guide.destroy();
-	
-	    if (this.monthView && this.monthView.container) {
-	        domevent.off(this.monthView.container, 'dblclick', this._onDblClick, this);
-	    }
 	
 	    this.dragHandler = this.monthView = this.baseController =
 	        this.getEventData = this._cache = this.guide = null;
@@ -15555,8 +15503,6 @@
 	        drag: this._onDrag,
 	        dragEnd: this._onDragEnd
 	    }, this);
-	
-	    this._blockDblClick = true;
 	
 	    this.getEventData = getMousePosData(this.monthView);
 	
@@ -15611,17 +15557,12 @@
 	 */
 	MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 	    var cache = this._cache;
-	    var self = this;
 	    var eventData;
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
 	        dragEnd: this._onDragEnd
 	    }, this);
-	
-	    setTimeout(function() {
-	        self._blockDblClick = false;
-	    }, 0);
 	
 	    if (!this.getEventData) {
 	        return;
@@ -15651,17 +15592,17 @@
 	 * @fires {MonthCreation#monthCreationDragstart}
 	 * @param {MouseEvent} e - Native MouseEvent
 	 */
-	MonthCreation.prototype._onDblClick = function(e) {
+	MonthCreation.prototype._onClick = function(e) {
 	    var eventData, targetDate;
 	
-	    if (this._blockDblClick || !isElementWeekdayEvent(e.target)) {
+	    if (!isElementWeekdayEvent(e.target)) {
 	        return;
 	    }
 	
-	    eventData = getMousePosData(this.monthView)(e);
+	    eventData = getMousePosData(this.monthView)(e.originEvent);
 	    targetDate = eventData.date;
 	
-	    this.fire('monthCreationDblClick', eventData);
+	    this.fire('monthCreationClick', eventData);
 	
 	    this._createEvent({
 	        starts: targetDate,
@@ -15786,7 +15727,7 @@
 	        monthCreationDragstart: this._createGuideElement,
 	        monthCreationDrag: this._onDrag,
 	        monthCreationDragend: this._onDragEnd,
-	        monthCreationDblClick: this._createGuideElement
+	        monthCreationClick: this._createGuideElement
 	    }, this);
 	}
 	
@@ -15813,7 +15754,7 @@
 	        height: '100%',
 	        top: 0
 	    };
-	       
+	
 	    this.guide = new MonthGuide(options, this.monthCreation.monthView);
 	    this.guide.start(dragStartEvent);
 	};
@@ -15835,7 +15776,6 @@
 	};
 	
 	module.exports = MonthCreationGuide;
-	
 
 
 /***/ },
