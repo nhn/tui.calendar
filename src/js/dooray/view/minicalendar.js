@@ -89,6 +89,11 @@ function MiniCalendar(options, container) {
     // focused 된 범위가 1일인지 여부 (1일인 경우 스타일을 다르게 표시하기 위함)
     this.singleFocused = false;
 
+    // default is week.
+    this.viewName = 'week';
+
+    this.currentDate = null;
+
     this.render();
 }
 
@@ -191,6 +196,8 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         hlData = this.hlData,
         selectedDate = this.selectedDate,
         classPrefix = config.classname('minicalendar-'),
+        viewName = this.viewName,
+        currentDate = this.currentDate ? this.currentDate : new Date(),
         viewModel = {
             title: datetime.format(renderDate, 'YYYY.MM'),
             startDayOfWeek: startDayOfWeek,
@@ -212,6 +219,12 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
             day = date.getDay(),
             dayClassName = getDayClassName(day),
             cssClasses = util.keys(hlData[ymd] ? hlData[ymd] : {});
+
+        if (viewName === 'month' && !datetime.isSameMonth(currentDate, renderDate)) {
+            cssClasses = util.filter(cssClasses, function(value) {
+                return value !== 'focused';
+            });
+        }
 
         cssClasses.push(ymd);
 
@@ -294,11 +307,15 @@ MiniCalendar.prototype.clearMarkData = function() {
  * Focus specific date range
  * @param {Date} start - focus start date
  * @param {Date} end - focus end date
+ * @param {Date} currentDate - current date
+ * @param {string} viewName - type of view(day, week, month);
  */
-MiniCalendar.prototype.focusDateRange = function(start, end) {
+MiniCalendar.prototype.focusDateRange = function(start, end, currentDate, viewName) {
     this.clearFocusData();
     this._setHlDateRange(start, end, 'focused');
     this.singleFocused = datetime.isSameDate(new TZDate(start), new TZDate(end));
+    this.viewName = viewName;
+    this.currentDate = currentDate;
 
     this.render();
 };
