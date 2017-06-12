@@ -171,6 +171,7 @@
             var title = prompt('Name of event to create:');
 
             if (!title) {
+                e.guide.clearGuideElement();
                 return;
             }
             console.log(e);
