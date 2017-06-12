@@ -33,8 +33,7 @@ function AlldayCreationGuide(alldayCreation) {
     alldayCreation.on({
         alldayCreationDragstart: this._createGuideElement,
         alldayCreationDrag: this._onDrag,
-        alldayCreationClick: this.clearGuideElement,
-        alldayCreationDblClick: this._createGuideElement
+        alldayCreationClick: this._createGuideElement
     }, this);
 }
 
@@ -134,4 +133,3 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 };
 
 module.exports = AlldayCreationGuide;
-
