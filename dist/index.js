@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Jun 08 2017 16:12:48 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jun 12 2017 21:48:23 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -11921,7 +11921,6 @@
 	var datetime = __webpack_require__(26);
 	var common = __webpack_require__(28);
 	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
 	var alldayCore = __webpack_require__(75);
 	var AlldayCreationGuide = __webpack_require__(78);
 	var TZDate = __webpack_require__(27).Date;
@@ -11960,32 +11959,20 @@
 	    this.getEventDataFunc = null;
 	
 	    /**
-	     * To prevent dblclick and dragend event from occuring together
-	     * @type {boolean}
-	     */
-	    this._blockDblClick = false;
-	
-	    /**
 	     * @type {AlldayCreationGuide}
 	     */
 	    this.guide = new AlldayCreationGuide(this);
 	
-	    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
 	    dragHandler.on('dragStart', this._onDragStart, this);
+	    dragHandler.on('click', this._onClick, this);
 	}
 	
 	/**
 	 * Destroy method
 	 */
 	AlldayCreation.prototype.destroy = function() {
-	    var alldayView = this.alldayView;
-	
 	    this.guide.destroy();
 	    this.dragHandler.off(this);
-	
-	    if (alldayView && alldayView.container) {
-	        domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
-	    }
 	
 	    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
 	};
@@ -12072,11 +12059,8 @@
 	
 	    this.dragHandler.on({
 	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
+	        dragEnd: this._onDragEnd
 	    }, this);
-	
-	    this._blockDblClick = true;
 	
 	    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
 	    eventData = getEventDataFunc(dragStartEventData.originEvent);
@@ -12126,7 +12110,6 @@
 	 */
 	AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
 	    var getEventDataFunc = this.getEventDataFunc;
-	    var self = this;
 	    var eventData;
 	
 	    if (!getEventDataFunc) {
@@ -12135,13 +12118,8 @@
 	
 	    this.dragHandler.off({
 	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
+	        dragEnd: this._onDragEnd
 	    }, this);
-	
-	    setTimeout(function() {
-	        self._blockDblClick = false;
-	    }, 0);
 	
 	    eventData = getEventDataFunc(dragEndEventData.originEvent);
 	
@@ -12166,32 +12144,16 @@
 	 * @param {object} clickEventData - Drag#Click event handler data.
 	 */
 	AlldayCreation.prototype._onClick = function(clickEventData) {
-	    /**
-	     * @event AlldayCreation#alldayCreationClick
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this._onDragEnd(clickEventData, 'alldayCreationClick');
-	};
-	
-	/**
-	 * Dblclick event handler
-	 * @param {MouseEvent} e - Native MouseEvent
-	 */
-	AlldayCreation.prototype._onDblClick = function(e) {
 	    var getEventDataFunc, eventData;
 	
-	    if (this._blockDblClick || !this.checkExpectedCondition(e.target)) {
+	    if (!this.checkExpectedCondition(clickEventData.target)) {
 	        return;
 	    }
 	
-	    getEventDataFunc = this._retriveEventData(this.alldayView, e);
-	    eventData = getEventDataFunc(e);
+	    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData.originEvent);
+	    eventData = getEventDataFunc(clickEventData.originEvent);
 	
-	    this.fire('alldayCreationDblClick', eventData);
+	    this.fire('alldayCreationClick', eventData);
 	
 	    this._createEvent(eventData);
 	};
@@ -12242,8 +12204,7 @@
 	    alldayCreation.on({
 	        alldayCreationDragstart: this._createGuideElement,
 	        alldayCreationDrag: this._onDrag,
-	        alldayCreationClick: this.clearGuideElement,
-	        alldayCreationDblClick: this._createGuideElement
+	        alldayCreationClick: this._createGuideElement
 	    }, this);
 	}
 	
@@ -12343,7 +12304,6 @@
 	};
 	
 	module.exports = AlldayCreationGuide;
-	
 
 
 /***/ },

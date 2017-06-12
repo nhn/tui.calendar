@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Jun 08 2017 16:12:48 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jun 12 2017 21:48:23 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -728,7 +728,7 @@
   position: relative;
   margin-bottom: 16px;
   height: 15px;
-  line-height: 15px;
+  line-height: 23px;
   text-align: center;
 }
 .dooray-calendar-minicalendar tbody button {
