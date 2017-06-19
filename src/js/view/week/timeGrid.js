@@ -336,7 +336,7 @@ TimeGrid.prototype.scrollToNow = function() {
                 self.container.getBoundingClientRect().top,
             viewBound = self.getViewBound();
 
-        container.scrollTop = (currentHourTop - (viewBound.height / 2));
+        container.scrollTop = (currentHourTop - (viewBound.height / 4));
     }), INITIAL_AUTOSCROLL_DELAY);
 };
 
