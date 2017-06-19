@@ -102,6 +102,10 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
         calEvent.set('origin', options.origin);
     }
 
+    if (options.boxShadow) {
+        calEvent.set('boxShadow', options.boxShadow);
+    }
+
     this._removeFromMatrix(calEvent);
     this._addToMatrix(calEvent);
 

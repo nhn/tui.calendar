@@ -20,7 +20,7 @@
                 width:{{multiply width @root.width}}%;
                 height:{{@root.eventBlockHeight}}px;
                 margin-bottom:{{@root.eventBlockGutter}}px">
-        <div class="{{CSS_PREFIX}}weekday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}; border-color:{{model.borderColor}}">
+        <div class="{{CSS_PREFIX}}weekday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}; border-color:{{model.borderColor}}; box-shadow:{{model.boxShadow}};">
             <span class="{{CSS_PREFIX}}weekday-event-title">{{{allday-tmpl model}}}</span>
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
         </div>
