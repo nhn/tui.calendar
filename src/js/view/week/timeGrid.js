@@ -326,6 +326,10 @@ TimeGrid.prototype.scrollToNow = function() {
     var self = this,
         container = this.container;
 
+    if (!self.hourmarker) {
+        return;
+    }
+
     clearTimeout(this.timeoutID);
     this.timeoutID = setTimeout(util.bind(function() {
         var currentHourTop = self.hourmarker.getBoundingClientRect().top -
