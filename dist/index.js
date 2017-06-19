@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jun 12 2017 21:48:23 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jun 19 2017 20:01:41 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6006,6 +6006,12 @@
 	    this.viewName = opt.defaultView;
 	
 	    /**
+	     * previous rendered view name
+	     * @type {string}
+	     */
+	    this.prevViewName = this.viewName;
+	
+	    /**
 	     * Refresh method. it can be ref different functions for each view modes.
 	     * @type {function}
 	     */
@@ -6072,7 +6078,7 @@
 	    });
 	
 	    this.options = this.renderDate = this.controller =
-	        this.layout = this.dragHandler = this.viewName =
+	        this.layout = this.dragHandler = this.viewName = this.prevViewName =
 	        this.refreshMethod = null;
 	};
 	
@@ -6282,8 +6288,7 @@
 	    offset = util.isExisty(offset) ? offset : 0;
 	
 	    if (viewName === 'month') {
-	        // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
-	        renderDate.addMonth(offset, 1);
+	        renderDate.addMonth(offset);
 	        tempDate = datetime.arr2dCalendar(this.renderDate, 0, true);
 	
 	        recursiveSet(view, function(opt) {
@@ -6304,7 +6309,13 @@
 	        });
 	    } else if (viewName === 'day') {
 	        renderDate.addDate(offset);
-	        startDate = endDate = renderDate.d;
+	        if (this.prevViewName === 'week') {
+	            // move to monday
+	            tempDate = this.getWeekDayRange(renderDate.d, 1);
+	            renderDate.d = startDate = endDate = tempDate[0];
+	        } else {
+	            startDate = endDate = renderDate.d;
+	        }
 	
 	        recursiveSet(view, function(opt) {
 	            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
@@ -6474,7 +6485,7 @@
 	        return;
 	    }
 	
-	    this.viewName = newViewName;
+	    this._setViewName(newViewName);
 	
 	    //convert day to week
 	    if (viewName === 'day') {
@@ -6519,9 +6530,8 @@
 	};
 	
 	/**
-	 * Toggle current view
-	 * @param {string} newViewName - new view name to render
-	 * @param {boolean} force - force render despite of current view and new view are equal
+	 * Toggle dooray current view
+	 * @param {string} isUse - new view name to render
 	 */
 	Calendar.prototype.toggleDoorayView = function(isUse) {
 	    var viewName = this.viewName,
@@ -6529,6 +6539,16 @@
 	
 	    options.isDoorayView = isUse;
 	    this.toggleView(viewName, true);
+	};
+	
+	/**
+	 * Set current view name
+	 * @param {string} viewName - new view name to render
+	 *
+	 */
+	Calendar.prototype._setViewName = function(viewName) {
+	    this.prevViewName = this.viewName;
+	    this.viewName = viewName;
 	};
 	
 	util.CustomEvents.mixin(Calendar);
@@ -6599,13 +6619,18 @@
 	};
 	
 	/**
-	 * Add month
+	 * Add month. If month value is changed, date set to 1.
 	 * @param {number} m - month to add
-	 * @param {number} [d] - day to set
 	 * @returns {DW} wrapper object
 	 */
-	DW.prototype.addMonth = function(m, d) {
-	    this.d.setMonth(this.d.getMonth() + m, d);
+	DW.prototype.addMonth = function(m) {
+	    var prevMonth = this.d.getMonth();
+	    this.d.setMonth(prevMonth + m);
+	
+	    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
+	    if (this.d.getMonth() !== prevMonth) {
+	        this.d.setMonth(prevMonth + m, 1);
+	    }
 	    return this;
 	};
 	
@@ -9797,13 +9822,17 @@
 	    var self = this,
 	        container = this.container;
 	
+	    if (!self.hourmarker) {
+	        return;
+	    }
+	
 	    clearTimeout(this.timeoutID);
 	    this.timeoutID = setTimeout(util.bind(function() {
 	        var currentHourTop = self.hourmarker.getBoundingClientRect().top -
 	                self.container.getBoundingClientRect().top,
 	            viewBound = self.getViewBound();
 	
-	        container.scrollTop = (currentHourTop - (viewBound.height / 2));
+	        container.scrollTop = (currentHourTop - (viewBound.height / 4));
 	    }), INITIAL_AUTOSCROLL_DELAY);
 	};
 	
@@ -10126,7 +10155,9 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + "; border-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\">"
+	    + "; box-shadow:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.boxShadow : stack1), depth0))
+	    + ";\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n            "
 	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
@@ -11196,7 +11227,9 @@
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + "; border-color:"
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\">\n            <span class=\""
+	    + "; box-shadow:"
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.boxShadow : stack1), depth0))
+	    + ";\">\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\">"
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
@@ -15181,7 +15214,9 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + ";\n                    border-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\">\n            <span class=\""
+	    + ";\n                    box-shadow:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.boxShadow : stack1), depth0))
+	    + ";\">\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event-title\"\n                  data-title=\""
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
@@ -17946,6 +17981,10 @@
 	
 	    if (options.origin) {
 	        calEvent.set('origin', options.origin);
+	    }
+	
+	    if (options.boxShadow) {
+	        calEvent.set('boxShadow', options.boxShadow);
 	    }
 	
 	    this._removeFromMatrix(calEvent);
