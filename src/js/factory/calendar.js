@@ -107,6 +107,12 @@ function Calendar(options, container) {
     this.viewName = opt.defaultView;
 
     /**
+     * previous rendered view name
+     * @type {string}
+     */
+    this.prevViewName = this.viewName;
+
+    /**
      * Refresh method. it can be ref different functions for each view modes.
      * @type {function}
      */
@@ -173,7 +179,7 @@ Calendar.prototype.destroy = function() {
     });
 
     this.options = this.renderDate = this.controller =
-        this.layout = this.dragHandler = this.viewName =
+        this.layout = this.dragHandler = this.viewName = this.prevViewName =
         this.refreshMethod = null;
 };
 
@@ -383,8 +389,7 @@ Calendar.prototype.move = function(offset) {
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
-        renderDate.addMonth(offset, 1);
+        renderDate.addMonth(offset);
         tempDate = datetime.arr2dCalendar(this.renderDate, 0, true);
 
         recursiveSet(view, function(opt) {
@@ -405,7 +410,13 @@ Calendar.prototype.move = function(offset) {
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
-        startDate = endDate = renderDate.d;
+        if (this.prevViewName === 'week') {
+            // move to monday
+            tempDate = this.getWeekDayRange(renderDate.d, 1);
+            renderDate.d = startDate = endDate = tempDate[0];
+        } else {
+            startDate = endDate = renderDate.d;
+        }
 
         recursiveSet(view, function(opt) {
             opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
@@ -575,7 +586,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         return;
     }
 
-    this.viewName = newViewName;
+    this._setViewName(newViewName);
 
     //convert day to week
     if (viewName === 'day') {
@@ -620,9 +631,8 @@ Calendar.prototype.toggleView = function(newViewName, force) {
 };
 
 /**
- * Toggle current view
- * @param {string} newViewName - new view name to render
- * @param {boolean} force - force render despite of current view and new view are equal
+ * Toggle dooray current view
+ * @param {string} isUse - new view name to render
  */
 Calendar.prototype.toggleDoorayView = function(isUse) {
     var viewName = this.viewName,
@@ -630,6 +640,16 @@ Calendar.prototype.toggleDoorayView = function(isUse) {
 
     options.isDoorayView = isUse;
     this.toggleView(viewName, true);
+};
+
+/**
+ * Set current view name
+ * @param {string} viewName - new view name to render
+ *
+ */
+Calendar.prototype._setViewName = function(viewName) {
+    this.prevViewName = this.viewName;
+    this.viewName = viewName;
 };
 
 util.CustomEvents.mixin(Calendar);

@@ -56,13 +56,18 @@ DW.prototype.addDate = function(day) {
 };
 
 /**
- * Add month
+ * Add month. If month value is changed, date set to 1.
  * @param {number} m - month to add
- * @param {number} [d] - day to set
  * @returns {DW} wrapper object
  */
-DW.prototype.addMonth = function(m, d) {
-    this.d.setMonth(this.d.getMonth() + m, d);
+DW.prototype.addMonth = function(m) {
+    var prevMonth = this.d.getMonth();
+    this.d.setMonth(prevMonth + m);
+
+    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
+    if (this.d.getMonth() !== prevMonth) {
+        this.d.setMonth(prevMonth + m, 1);
+    }
     return this;
 };
 
