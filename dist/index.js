@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jun 19 2017 20:01:41 GMT+0900 (KST)" */
+/*! bundle created at "Tue Jun 20 2017 10:17:05 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6309,7 +6309,7 @@
 	        });
 	    } else if (viewName === 'day') {
 	        renderDate.addDate(offset);
-	        if (this.prevViewName === 'week') {
+	        if (offset && this.prevViewName === 'week') {
 	            // move to monday
 	            tempDate = this.getWeekDayRange(renderDate.d, 1);
 	            renderDate.d = startDate = endDate = tempDate[0];
