@@ -3,7 +3,8 @@
     {{#each times ~}}
         <div class="{{CSS_PREFIX}}freebusy-gridline{{#if @last}} {{CSS_PREFIX}}freebusy-gridline-last{{/if}}"
              style="width:{{@root.timeWidth}}%;left:{{multiply @root.timeWidth @index}}%">
-             <div style="height:{{@root.itemHeight}}px; line-height:{{@root.itemHeight}}px">{{this}}</div>
+             <div class="{{CSS_PREFIX}}freebusy-gridline-header" style="height:{{@root.itemHeight}}px; line-height:{{@root.itemHeight}}px">{{this}}</div>
+             <div class="{{CSS_PREFIX}}freebusy-gridline-inner" style="top:{{@root.itemHeight}}px"></div>
         </div>
     {{/each ~}}
     </div>
@@ -11,7 +12,7 @@
 <div class="{{CSS_PREFIX}}freebusy-chart" style="top:{{headerHeight}}px;height:{{bodyHeight}}px">
 {{#each freebusy ~}}
     <div class="{{CSS_PREFIX}}freebusy-item" style="height:{{@root.itemHeight}}px">
-        <div class="{{CSS_PREFIX}}freebusy-name" style="width:{{@root.nameWidth}}px">{{{freebusy-title-tmpl this}}}</div>
+        <div class="{{CSS_PREFIX}}freebusy-name" style="width:{{@root.nameWidth}}px; line-height:{{@root.itemHeight}}px">{{{freebusy-title-tmpl this}}}</div>
         <div class="{{CSS_PREFIX}}freebusy-block-container" style="margin-left:{{@root.nameWidth}}px">
         {{#each busy ~}}
             <div class="{{CSS_PREFIX}}freebusy-block" style="left:{{[0]}}%;width:{{[1]}}%">
