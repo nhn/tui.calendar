@@ -217,10 +217,6 @@ Freebusy.prototype._getBlockBound = function(block) {
     var to = this._getMilliseconds(block.to);
     var left, width;
 
-    if (to === 0) {
-        to = MS_RANGE_END;
-    }
-
     left = common.ratio(MS_WHOLE_RANGE, 100, from);
     width = common.ratio(MS_WHOLE_RANGE, 100, (to - from));
 
