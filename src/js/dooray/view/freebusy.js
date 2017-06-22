@@ -4,21 +4,29 @@
  */
 'use strict';
 
-var util = global.tui.util,
-    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-    isValidHM = /^\d\d:\d\d$/;
+var util = global.tui.util;
+var isValidHM = /^\d\d:\d\d$/;
 var Handlebars = require('handlebars-template-loader/runtime');
 
-var config = require('../../config'),
-    common = require('../../common/common'),
-    datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection'),
-    domutil = require('../../common/domutil'),
-    domevent = require('../../common/domevent'),
-    View = require('../../view/view'),
-    baseTmpl = require('./freebusybase.hbs'),
-    tmpl = require('./freebusy.hbs'),
-    TZDate = require('../../common/timezone').Date;
+var config = require('../../config');
+var common = require('../../common/common');
+var datetime = require('../../common/datetime');
+var Collection = require('../../common/collection');
+var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
+var View = require('../../view/view');
+var baseTmpl = require('./freebusybase.hbs');
+var tmpl = require('./freebusy.hbs');
+var TZDate = require('../../common/timezone').Date;
+
+var dayArr = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+var MS_WHOLE_RANGE = datetime.millisecondsFrom('hour', 12); // 8:00 부터 19:00 까지의 시간 (ms)
+var MS_RANGE_START = datetime.millisecondsFrom('hour', 8);
+var MS_RANGE_END = datetime.millisecondsFrom('hour', 20);
+
+var CLS_CONTAINER = config.classname('freebusy-container');
+var CLS_BASE = config.classname('freebusy-base');
+var CLS_CONTROLLER = config.classname('freebusy-controller');
 
 /**
  * @constructor
@@ -44,18 +52,17 @@ function Freebusy(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        config.classname('clear') + ' ' +
-        config.classname('freebusy-container')
+        config.classname('clear') + ' ' + CLS_CONTAINER
     );
-
-    container.innerHTML = '<div class="base"></div><div class="controller"></div>';
+    domutil.appendHTMLElement('div', container, CLS_BASE);
+    domutil.appendHTMLElement('div', container, CLS_CONTROLLER);
 
     View.call(this, container);
 
     opt = this.options = util.extend({
-        headerHeight: 20,
-        itemHeight: 20,
-        nameWidth: 100,
+        headerHeight: 28,
+        itemHeight: 29,
+        nameWidth: 104,
         users: [],
         recommends: [],
         selectStart: '',
@@ -152,7 +159,7 @@ Freebusy.prototype._onSelect = function(clickEventData) {
     container = this.container;
     containerWidth = this.getViewBound().width - opt.nameWidth;
     mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
-    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
+    timeX = common.ratio(containerWidth, MS_WHOLE_RANGE, mouseX) + MS_RANGE_START;
     dateX = new Date(timeX);
     nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
 
@@ -177,14 +184,14 @@ Freebusy.prototype._onSelect = function(clickEventData) {
  * @returns {number} hour + minutes + seconds millseconds value
  */
 Freebusy.prototype._getMilliseconds = function(date) {
-    var raw = datetime.raw(new TZDate(date)),
-        mils = 0;
-
-    mils = datetime.millisecondsFrom('hour', raw.h) +
+    var raw = datetime.raw(new TZDate(date));
+    var mils = datetime.millisecondsFrom('hour', raw.h) +
         datetime.millisecondsFrom('minutes', raw.m) +
         datetime.millisecondsFrom('seconds', raw.s);
 
-    return mils;
+    mils = common.limit(mils, [MS_RANGE_START], [MS_RANGE_END]);
+
+    return mils - MS_RANGE_START;
 };
 
 /**
@@ -206,17 +213,12 @@ Freebusy.prototype._getMilliseconds = function(date) {
  * @returns {array} [0]: left, [1]: width
  */
 Freebusy.prototype._getBlockBound = function(block) {
-    var from = this._getMilliseconds(block.from),
-        to = this._getMilliseconds(block.to),
-        left,
-        width;
+    var from = this._getMilliseconds(block.from);
+    var to = this._getMilliseconds(block.to);
+    var left, width;
 
-    if (to === 0) {
-        to = this._getMilliseconds(new TZDate(0, 0, 0, 23, 59));
-    }
-
-    left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);
-    width = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, (to - from));
+    left = common.ratio(MS_WHOLE_RANGE, 100, from);
+    width = common.ratio(MS_WHOLE_RANGE, 100, (to - from));
 
     return [left, width];
 };
@@ -315,14 +317,18 @@ Freebusy.prototype._getViewModel = function() {
  * @override
  */
 Freebusy.prototype.render = function(skipBase) {
-    var container = this.container,
-        viewModel = this._getViewModel();
+    var container = this.container;
+    var viewModel = this._getViewModel();
+    var baseEl = container.getElementsByClassName(CLS_BASE)[0];
+    var controllerEl = container.getElementsByClassName(CLS_CONTROLLER)[0];
 
-    if(!skipBase) {
-        container.getElementsByClassName('base')[0].innerHTML = baseTmpl(viewModel);
+    if (!skipBase) {
+        baseEl.innerHTML = baseTmpl(viewModel);
         this.fire('afterRender');
     }
-    container.getElementsByClassName('controller')[0].innerHTML = tmpl(viewModel);
+    controllerEl.style.height = viewModel.bodyHeight + 'px';
+    controllerEl.style.top = (viewModel.itemHeight - 1) + 'px';
+    controllerEl.innerHTML = tmpl(viewModel);
 };
 
 /**

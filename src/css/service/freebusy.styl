@@ -1,16 +1,21 @@
 +prefix-classes(freebusy)
-
     // Common
     .container
         position: relative
-        border: 1px solid #f1f1f1
+        border: 1px solid #ddd
+
+    .controller
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
 
     .leftmargin
         position: relative
-        border-left: 1px solid #f1f1f1
+        height: 100%
+        border-left: 1px solid #ddd
 
     // 격자선
-
     .grid
         position: relative
         wh(100%, 100%)
@@ -18,13 +23,17 @@
     .gridline
         position: absolute
         height: 100%
-        border-left: 1px solid #f1f1f1
-        background-image: url(freebusy-half-dot.gif)
-        background-position: 49.5% top
-        background-repeat: repeat-y
+        border-left: 1px solid #ddd
         text-align: center
 
-    .gridline > div
+    .gridline-inner
+        position: absolute
+        bottom: 0
+        background-color: #f9f9f9;
+        width: 1px;
+        left: 50%;
+
+    .header
         background-color: #fff
         color: #666
 
@@ -34,11 +43,11 @@
     // 사용자 목록, 일정표 영역
     .chart
         position: absolute
-        border-top: 1px solid #f1f1f1
+        border-top: 1px solid #ddd
         width: 100%
 
     .item
-        border-bottom: 1px solid #f1f1f1
+        border-bottom: 1px solid #ddd
 
     .name
         position: absolute
@@ -47,50 +56,56 @@
     .block-container
         position: relative
         height: 100%;
-        border-left: 1px solid #f1f1f1
+        border-left: 1px solid #ddd
 
     .block
         position: absolute
-        top: 0
-        height: 100%
+        top: -1px 
+        bottom: -1px
         z-index: 1
 
     .fill
         height: 100%
-        background-color: #aaa
-        opacity: 0.8
+        background: rgba(19, 93, 230, 0.2)
+        border: 1px solid #b4c3de
 
     // 추천일정 영역
     .recommends
         position: absolute
         width: 100%
+        top: 0
+        bottom: -1px
 
     .recommend-block
         position: absolute
+        height: 100%
+        border: 2px dashed #135de6
         z-index: 2
 
-    .recommend-fill
-        border: 1px dashed red
-        
     // 선택 효과 영역
     .selection
         position: absolute
         width: 100%
+        top: 0
+        bottom: -1px
         z-index: 3
 
     .select
         position: absolute
-        background-color: blue
+        background: rgba(19, 93, 230, 0.5)
         height: 100%
-        opacity: 0.5
+        border: 1px solid #789de1
 
     // 선택 효과 영역
     .selection-over
         position: absolute
         width: 100%
+        top: 0
+        bottom: -1px
         z-index: 4
 
     .select-over
         position: absolute
-        background-color: rgba(245, 215, 215, 0.3)
+        border: 1px solid #135de6
         height: 100%
+        opacity: 0.5
