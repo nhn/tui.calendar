@@ -59,7 +59,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, dayNameContainer);
+    dayNameView = new DayName(options.week, dayNameContainer);
     weekView.addChild(dayNameView);
 
     /**********
