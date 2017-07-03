@@ -64,12 +64,14 @@ function Calendar(options, container) {
             allday: null,
             time: null
         }, util.pick(options, 'template') || {}),
-        week: util.extend({
-            startDayOfWeek: 0
-        }, util.pick(options, 'week') || {}),
+        week: util.extend({}, util.pick(options, 'week') || {}),
         month: util.extend({}, util.pick(options, 'month') || {}),
         events: []
     }, options);
+
+    this.options.week = util.extend({
+        startDayOfWeek: 0
+    }, util.pick(this.options, 'week') || {});
 
     /**
      * @type {HTMLElement}

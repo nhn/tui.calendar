@@ -3,7 +3,15 @@
 (function(window, calendar) {
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
-
+    var daynames = [
+        '일',
+        '월',
+        '화',
+        '수',
+        '목',
+        '금',
+        '토'
+    ];
     // calendar.setTimezoneOffset(540);
 
     cal = calendar.FullCalendar({
@@ -28,7 +36,11 @@
                 return model.title + ' <i class="fa fa-refresh"></i>' + model.starts;
             }
         },
+        month: {
+            daynames: daynames
+        },
         week: {
+            daynames: daynames,
             panelHeights: [80, 80, 120]
         }
     }, document.getElementById('calendar'));
