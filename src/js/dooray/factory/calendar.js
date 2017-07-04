@@ -61,14 +61,15 @@ function ServiceCalendar(options, container) {
                 return 'allday';
             }
             return model.category;
-        },
-        month: {
-            eventFilter: function(model) {
-                return Boolean(model.visible) &&
-                    (model.category === 'allday' || model.category === 'time');
-            }
         }
     }, options);
+
+    options.month = util.extend({
+        eventFilter: function(model) {
+            return Boolean(model.visible) &&
+                (model.category === 'allday' || model.category === 'time');
+        }
+    }, util.pick(options, 'month') || {});
 
     this.calendarColor = options.calendarColor;
 
