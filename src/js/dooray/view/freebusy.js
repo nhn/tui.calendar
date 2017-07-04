@@ -40,6 +40,7 @@ var CLS_CONTROLLER = config.classname('freebusy-controller');
  *  @param {Block[]} [options.recommends] - recommendation time blocks
  *  @param {string} [options.selectStart] - hh:mm formatted select start
  *  @param {String} [options.selectEnd] - hh:mm formatted select end
+ *  @param {Array} [options.times] - time range
  * @param {HTMLDivElement} container - container element for Freebusy component
  */
 function Freebusy(options, container) {
@@ -66,8 +67,11 @@ function Freebusy(options, container) {
         users: [],
         recommends: [],
         selectStart: '',
-        selectEnd: ''
+        selectEnd: '',
+        times: dayArr
     }, options);
+
+    this._calculateTimeRange();
 
     util.forEach(opt.template, function(func, name) {
         if (func) {
@@ -217,6 +221,11 @@ Freebusy.prototype._getBlockBound = function(block) {
     var to = this._getMilliseconds(block.to);
     var left, width;
 
+    // right edge case
+    if (to < from) {
+        to = MS_WHOLE_RANGE;
+    }
+
     left = common.ratio(MS_WHOLE_RANGE, 100, from);
     width = common.ratio(MS_WHOLE_RANGE, 100, (to - from));
 
@@ -291,8 +300,8 @@ Freebusy.prototype._getViewModel = function() {
             bodyHeight: (userLength * opt.itemHeight),
             containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
 
-            times: dayArr,
-            timeWidth: 100 / dayArr.length,
+            times: opt.times,
+            timeWidth: 100 / opt.times.length,
             freebusy: {},
             recommends: [],
             selection: this._getSelectionBlock(this.selectStart, this.selectEnd),
@@ -443,9 +452,29 @@ Freebusy.prototype.selectOver = function(start, end) {
 };
 
 
-Freebusy.prototype.unselectOver = function () {
+Freebusy.prototype.unselectOver = function() {
     this.selectOverStart = this.selectOverEnd = '';
     this.render(true);
+};
+
+Freebusy.prototype._calculateTimeRange = function() {
+    var times = this.options.times;
+    MS_WHOLE_RANGE = datetime.millisecondsFrom('hour', times.length);
+    MS_RANGE_START = datetime.millisecondsFrom('hour', times[0]);
+    MS_RANGE_END = datetime.millisecondsFrom('hour', times[times.length - 1] + 1);
+};
+
+/**
+ * Set time ranges
+ * @param {Array} times - time ranges
+ * @example
+ * var times = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+ * fb.setTimeRange(times);
+ */
+Freebusy.prototype.setTimeRange = function(times) {
+    this.options.times = times;
+    this._calculateTimeRange();
+    this.render();
 };
 
 module.exports = Freebusy;
