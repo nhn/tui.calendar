@@ -70,11 +70,16 @@
     .hourmarker-wrap
         position: relative
 
-    .hourmarker-line
+    .hourmarker-line-left
+        position: absolute
+        background-color: rgba(19, 93, 230, 0.3)
+        height: 1px
+        left: 0
+
+    .hourmarker-line-right
         position: absolute
         background-color: #135de6
         height: 1px
-        left: 0
         right: 0
 
     .hourmarker-time
@@ -83,7 +88,8 @@
         left: -60px
         top: -6px
         line-height: 12px
-        font-size: 11px
+        font-size: 13px
+        font-weight: bold
         text-align: right
         color: #135de6
 
