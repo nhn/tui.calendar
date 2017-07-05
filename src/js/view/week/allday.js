@@ -38,7 +38,7 @@ function Allday(options, container) {
         title: 'All-day',
         renderStartDate: '',
         renderEndDate: '',
-        containerBottomGutter: 20,
+        containerBottomGutter: 18,
         eventHeight: 18,
         eventGutter: 2,
         getViewModelFunc: function(viewModel) {
@@ -75,6 +75,7 @@ Allday.prototype.render = function(viewModel) {
         domutil.find(config.classname('.weekday-container'), container)
     );
     weekdayView.on('afterRender', function(weekdayViewModel) {
+        console.log('minHeight', weekdayViewModel.minHeight)
         self.contentHeight = weekdayViewModel.minHeight;
     });
 
