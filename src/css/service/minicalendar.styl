@@ -1,12 +1,12 @@
 .{css-prefix}minicalendar
-    padding: 19px 9px 18px
+    padding: 10px 11px 10px
 
     table
         width: 100%
         font-size: 11px
         table-layout: fixed
         border-collapse: separate
-        border-spacing: 0 2px
+        border-spacing: 0 4px
 
     caption,
     th,
@@ -18,13 +18,13 @@
 
     th,
     td
-        height: 20px
+        height: 17px
         margin: 1px 0
         text-align: center
 
     button
         cursor: pointer
-        width: 20px
+        width: 17px
         outline: none
         border-radius: 0
         color: #000
@@ -32,12 +32,19 @@
     // Disable IE button shifting during click
     button > div
         position: relative
-        line-height: 20px
+        height: 17px
+
+        > span
+            display: block
+            line-height: 17px
+            height: 17px
+            width: 12px
+            margin: 0 auto
 
     // 헤더영역
     caption
         position: relative
-        margin-bottom: 16px
+        margin-bottom: 9px
         height: 15px
         line-height: 23px 
         text-align: center
@@ -46,9 +53,9 @@
     tbody
         button
             display: block
-            width: 20px
+            width: 17px
             margin: 0 auto
-            height: 20px
+            height: 17px
             text-align: center
 
 +prefix-classes(minicalendar)
@@ -101,7 +108,7 @@
     // currently not using selected feature
 
     .marked
-        button
+        span
             border-bottom: 1px solid #777
 
     .today
