@@ -12,6 +12,9 @@ var View = require('../../view/view');
 var tmpl = require('./taskview.hbs');
 var TZDate = require('../../common/timezone').Date;
 
+// height + gutter (defined in CSS)
+var ITEM_HEIGHT = 20;
+
 /**
  * @constructor
  * @extends {View}
@@ -36,8 +39,7 @@ function TaskView(options, container) {
      */
     this.options = util.extend({
         renderStartDate: '',
-        renderEndDate: '',
-        lineHeight: 20
+        renderEndDate: ''
     }, options);
 }
 
@@ -77,7 +79,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
             subcount += (coll.length || 0);
         });
         return subcount;
-    })) * options.lineHeight;
+    })) * ITEM_HEIGHT;
 
     util.forEach(events, function(event, key) {
         event.isToday = (key === today);
@@ -86,8 +88,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
     return {
         events: events,
         width: 100 / range.length,
-        height: height,
-        lineHeight: options.lineHeight
+        height: height
     };
 };
 

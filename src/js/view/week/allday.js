@@ -41,6 +41,7 @@ function Allday(options, container) {
         containerBottomGutter: 18,
         eventHeight: 18,
         eventGutter: 2,
+        eventContainerTop: 1,
         getViewModelFunc: function(viewModel) {
             return viewModel.eventsInDateRange.allday;
         }
@@ -63,6 +64,7 @@ util.inherit(Allday, View);
  */
 Allday.prototype.render = function(viewModel) {
     var container = this.container;
+    var eventContainerTop = this.options.eventContainerTop;
     var weekdayView;
     var self = this;
 
@@ -75,8 +77,7 @@ Allday.prototype.render = function(viewModel) {
         domutil.find(config.classname('.weekday-container'), container)
     );
     weekdayView.on('afterRender', function(weekdayViewModel) {
-        console.log('minHeight', weekdayViewModel.minHeight)
-        self.contentHeight = weekdayViewModel.minHeight;
+        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop
     });
 
     this.addChild(weekdayView);

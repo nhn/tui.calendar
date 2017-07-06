@@ -12,6 +12,12 @@ var TZDate = require('../../common/timezone').Date;
 var View = require('../../view/view');
 var tmpl = require('./milestone.hbs');
 
+// item height + gutter (defined in css)
+var ITEM_HEIGHT = 17;
+
+// list padding-top (defined in css)
+var LIST_PADDING_TOP = 1;
+
 /**
  * @constructor
  * @extends {View}
@@ -36,8 +42,7 @@ function Milestone(options, container) {
      */
     this.options = util.extend({
         renderStartDate: '',
-        renderEndDate: '',
-        lineHeight: 20
+        renderEndDate: ''
     }, options);
 }
 
@@ -70,15 +75,14 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         event.isToday = (key === today);
     });
 
-    height = Math.max.apply(null, util.map(events, function(coll) {
+    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(events, function(coll) {
         return coll.length;
-    })) * options.lineHeight;
+    })) * ITEM_HEIGHT;
 
     return {
         events: events,
         width: 100 / range.length,
-        height: height,
-        lineHeight: options.lineHeight
+        height: height
     };
 };
 

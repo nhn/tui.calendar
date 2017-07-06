@@ -13,9 +13,11 @@
       <ul class="{{CSS_PREFIX}}milestone-list {{#if isToday}} {{CSS_PREFIX}}today{{/if}}">
       {{#each items ~}}
           <li data-id="{{stamp model}}"
-          data-title="{{model.title}}"
-          class="{{CSS_PREFIX}}milestone-item"
-          style="line-height:{{@root.lineHeight}}px;color:{{model.color}}">{{{milestone-tmpl model}}}</li>
+            data-title="{{model.title}}"
+            class="{{CSS_PREFIX}}milestone-item"
+            style="color:{{model.color}}">
+            {{{milestone-tmpl model}}}
+          </li>
       {{/each ~}}
       </ul>
   </div>
