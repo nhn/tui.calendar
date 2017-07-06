@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Jun 29 2017 23:11:20 GMT+0900 (KST)" */
+/*! bundle created at "Thu Jul 06 2017 16:10:00 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -152,7 +152,7 @@
 }
 .dooray-calendar-weekday-event {
   position: relative;
-  margin: 0 10px 0 0;
+  margin: 0 10px 0 1px;
   cursor: pointer;
   border-left-style: solid;
   border-left-width: 3px;
@@ -177,8 +177,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 6px;
   line-height: 18px;
+  padding-left: 3px;
+  font-weight: bold;
 }
 .dooray-calendar-weekday-exceed-left .dooray-calendar-weekday-event {
   margin-left: 0;
@@ -378,11 +379,16 @@
 .dooray-calendar-timegrid-hourmarker-wrap {
   position: relative;
 }
-.dooray-calendar-timegrid-hourmarker-line {
+.dooray-calendar-timegrid-hourmarker-line-left {
+  position: absolute;
+  background-color: rgba(19,93,230,0.3);
+  height: 1px;
+  left: 0;
+}
+.dooray-calendar-timegrid-hourmarker-line-right {
   position: absolute;
   background-color: #135de6;
   height: 1px;
-  left: 0;
   right: 0;
 }
 .dooray-calendar-timegrid-hourmarker-time {
@@ -391,7 +397,8 @@
   left: -60px;
   top: -6px;
   line-height: 12px;
-  font-size: 11px;
+  font-size: 13px;
+  font-weight: bold;
   text-align: right;
   color: #135de6;
 }
@@ -440,6 +447,8 @@
   overflow: hidden;
   border-left-width: 3px;
   border-left-style: solid;
+  font-weight: bold;
+  padding: 1px 0 1px 3px;
 }
 .dooray-calendar-time-resize-handle {
   position: absolute;
@@ -678,25 +687,27 @@
 }
 .dooray-calendar-milestone-list {
   margin: 0;
-  padding: 0 2px;
+  padding: 1px 5px 0;
   overflow: hidden;
   min-height: 100%;
 }
 .dooray-calendar-milestone-item {
   font-size: 11px;
   list-style: none;
+  line-height: 16px;
+  margin-bottom: 1px;
   white-space: nowrap;
   overflow: hidden;
 }
 .dooray-calendar-minicalendar {
-  padding: 19px 9px 18px;
+  padding: 10px 11px 10px;
 }
 .dooray-calendar-minicalendar table {
   width: 100%;
   font-size: 11px;
   table-layout: fixed;
   border-collapse: separate;
-  border-spacing: 0 2px;
+  border-spacing: 0 4px;
 }
 .dooray-calendar-minicalendar caption,
 .dooray-calendar-minicalendar th,
@@ -709,33 +720,40 @@
 }
 .dooray-calendar-minicalendar th,
 .dooray-calendar-minicalendar td {
-  height: 20px;
+  height: 17px;
   margin: 1px 0;
   text-align: center;
 }
 .dooray-calendar-minicalendar button {
   cursor: pointer;
-  width: 20px;
+  width: 17px;
   outline: none;
   border-radius: 0;
   color: #000;
 }
 .dooray-calendar-minicalendar button > div {
   position: relative;
-  line-height: 20px;
+  height: 17px;
+}
+.dooray-calendar-minicalendar button > div > span {
+  display: block;
+  line-height: 17px;
+  height: 17px;
+  width: 12px;
+  margin: 0 auto;
 }
 .dooray-calendar-minicalendar caption {
   position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 9px;
   height: 15px;
   line-height: 23px;
   text-align: center;
 }
 .dooray-calendar-minicalendar tbody button {
   display: block;
-  width: 20px;
+  width: 17px;
   margin: 0 auto;
-  height: 20px;
+  height: 17px;
   text-align: center;
 }
 .dooray-calendar-minicalendar-date,
@@ -781,7 +799,7 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
 .dooray-calendar-minicalendar-single-focused .dooray-calendar-minicalendar-focused button {
   background-color: rgba(19,93,230,0.1);
 }
-.dooray-calendar-minicalendar-marked button {
+.dooray-calendar-minicalendar-marked span {
   border-bottom: 1px solid #777;
 }
 .dooray-calendar-minicalendar-today button > div {
@@ -833,7 +851,7 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   font-weight: normal;
 }
 .dooray-calendar-task-list {
-  padding: 0;
+  padding: 1px 10px 1px 2px;
   margin: 0;
   list-style: none;
 }
@@ -843,11 +861,14 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
   overflow: hidden;
   line-height: 18px;
   height: 18px;
-  margin-right: 10px;
   margin-bottom: 2px;
-  padding-left: 6px;
+  padding-left: 3px;
+  font-weight: bold;
   border-left-width: 3px;
   border-left-style: solid;
+}
+.dooray-calendar-task-item:last-child {
+  margin-bottom: 0;
 }
 .dooray-calendar-vlayout-container {
   position: relative;

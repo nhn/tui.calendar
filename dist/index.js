@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Jun 29 2017 23:11:20 GMT+0900 (KST)" */
+/*! bundle created at "Thu Jul 06 2017 16:10:00 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5305,6 +5305,7 @@
 	 *  @param {Block[]} [options.recommends] - recommendation time blocks
 	 *  @param {string} [options.selectStart] - hh:mm formatted select start
 	 *  @param {String} [options.selectEnd] - hh:mm formatted select end
+	 *  @param {Array} [options.times] - time range
 	 * @param {HTMLDivElement} container - container element for Freebusy component
 	 */
 	function Freebusy(options, container) {
@@ -5331,8 +5332,11 @@
 	        users: [],
 	        recommends: [],
 	        selectStart: '',
-	        selectEnd: ''
+	        selectEnd: '',
+	        times: dayArr
 	    }, options);
+	
+	    this._calculateTimeRange();
 	
 	    util.forEach(opt.template, function(func, name) {
 	        if (func) {
@@ -5482,6 +5486,11 @@
 	    var to = this._getMilliseconds(block.to);
 	    var left, width;
 	
+	    // right edge case
+	    if (to < from) {
+	        to = MS_WHOLE_RANGE;
+	    }
+	
 	    left = common.ratio(MS_WHOLE_RANGE, 100, from);
 	    width = common.ratio(MS_WHOLE_RANGE, 100, (to - from));
 	
@@ -5556,8 +5565,8 @@
 	            bodyHeight: (userLength * opt.itemHeight),
 	            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
 	
-	            times: dayArr,
-	            timeWidth: 100 / dayArr.length,
+	            times: opt.times,
+	            timeWidth: 100 / opt.times.length,
 	            freebusy: {},
 	            recommends: [],
 	            selection: this._getSelectionBlock(this.selectStart, this.selectEnd),
@@ -5708,9 +5717,29 @@
 	};
 	
 	
-	Freebusy.prototype.unselectOver = function () {
+	Freebusy.prototype.unselectOver = function() {
 	    this.selectOverStart = this.selectOverEnd = '';
 	    this.render(true);
+	};
+	
+	Freebusy.prototype._calculateTimeRange = function() {
+	    var times = this.options.times;
+	    MS_WHOLE_RANGE = datetime.millisecondsFrom('hour', times.length);
+	    MS_RANGE_START = datetime.millisecondsFrom('hour', times[0]);
+	    MS_RANGE_END = datetime.millisecondsFrom('hour', times[times.length - 1] + 1);
+	};
+	
+	/**
+	 * Set time ranges
+	 * @param {Array} times - time ranges
+	 * @example
+	 * var times = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+	 * fb.setTimeRange(times);
+	 */
+	Freebusy.prototype.setTimeRange = function(times) {
+	    this.options.times = times;
+	    this._calculateTimeRange();
+	    this.render();
 	};
 	
 	module.exports = Freebusy;
@@ -5953,12 +5982,14 @@
 	            allday: null,
 	            time: null
 	        }, util.pick(options, 'template') || {}),
-	        week: util.extend({
-	            startDayOfWeek: 0
-	        }, util.pick(options, 'week') || {}),
+	        week: util.extend({}, util.pick(options, 'week') || {}),
 	        month: util.extend({}, util.pick(options, 'month') || {}),
 	        events: []
 	    }, options);
+	
+	    this.options.week = util.extend({
+	        startDayOfWeek: 0
+	    }, util.pick(this.options, 'week') || {});
 	
 	    /**
 	     * @type {HTMLElement}
@@ -10850,11 +10881,17 @@
 	    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
 	    + "</div>\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hourmarker-line\"></div>\n            <div class=\""
+	    + "timegrid-hourmarker-line-left\" style=\"width:"
+	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
+	    + "%;\"></div>\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-todaymarker\" style=\"left:"
 	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
-	    + "%;\">today</div>\n        </div>\n    </div>\n";
+	    + "%;\">today</div>\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker-line-right\" style=\"left:"
+	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
+	    + "%;\"></div>\n        </div>\n    </div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -10921,9 +10958,10 @@
 	        title: 'All-day',
 	        renderStartDate: '',
 	        renderEndDate: '',
-	        containerBottomGutter: 20,
+	        containerBottomGutter: 18,
 	        eventHeight: 18,
 	        eventGutter: 2,
+	        eventContainerTop: 1,
 	        getViewModelFunc: function(viewModel) {
 	            return viewModel.eventsInDateRange.allday;
 	        }
@@ -10946,6 +10984,7 @@
 	 */
 	Allday.prototype.render = function(viewModel) {
 	    var container = this.container;
+	    var eventContainerTop = this.options.eventContainerTop;
 	    var weekdayView;
 	    var self = this;
 	
@@ -10958,7 +10997,7 @@
 	        domutil.find(config.classname('.weekday-container'), container)
 	    );
 	    weekdayView.on('afterRender', function(weekdayViewModel) {
-	        self.contentHeight = weekdayViewModel.minHeight;
+	        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop
 	    });
 	
 	    this.addChild(weekdayView);
@@ -11031,6 +11070,7 @@
 	    );
 	
 	    baseViewModel.minHeight = this._getMinHeight(maxEventInDay);
+	    baseViewModel.eventContainerTop = this.options.eventContainerTop;
 	
 	    container.innerHTML = tmpl(baseViewModel);
 	
@@ -11045,7 +11085,11 @@
 	WeekdayInWeek.prototype._getMinHeight = function(maxEventInDay) {
 	    var opt = this.options;
 	
-	    return (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
+	    return (
+	        (maxEventInDay * opt.eventHeight) + 
+	        ((maxEventInDay - 1) * opt.eventGutter) + 
+	        opt.containerBottomGutter
+	    );
 	};
 	
 	
@@ -11203,11 +11247,7 @@
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
 	    + "%;\n                width:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
-	    + "%;\n                height:"
-	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockHeight), depth0))
-	    + "px;\n                margin-bottom:"
-	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
-	    + "px\">\n        <div class=\""
+	    + "%\">\n        <div class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event\" style=\"height:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.eventHeight), depth0))
@@ -11249,7 +11289,9 @@
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-creation\"></div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-events\">\n    <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->\n    <div class=\""
+	    + "weekday-events\" style=\"top:"
+	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.eventContainerTop), depth0))
+	    + "px\">\n    <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-events-height-span\" style=\"height:"
 	    + alias4(((helper = (helper = helpers.contentHeight || (depth0 != null ? depth0.contentHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"contentHeight","hash":{},"data":data}) : helper)))
@@ -15230,7 +15272,7 @@
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\"></span>\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-event-title\" style=\"color:#000\"\n                  data-title=\""
+	    + "weekday-event-title\" style=\"color:#333\"\n                  data-title=\""
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
@@ -17541,14 +17583,15 @@
 	                return 'allday';
 	            }
 	            return model.category;
-	        },
-	        month: {
-	            eventFilter: function(model) {
-	                return Boolean(model.visible) &&
-	                    (model.category === 'allday' || model.category === 'time');
-	            }
 	        }
 	    }, options);
+	
+	    options.month = util.extend({
+	        eventFilter: function(model) {
+	            return Boolean(model.visible) &&
+	                (model.category === 'allday' || model.category === 'time');
+	        }
+	    }, util.pick(options, 'month') || {});
 	
 	    this.calendarColor = options.calendarColor;
 	
@@ -18226,6 +18269,12 @@
 	var View = __webpack_require__(38);
 	var tmpl = __webpack_require__(115);
 	
+	// item height + gutter (defined in css)
+	var ITEM_HEIGHT = 17;
+	
+	// list padding-top (defined in css)
+	var LIST_PADDING_TOP = 1;
+	
 	/**
 	 * @constructor
 	 * @extends {View}
@@ -18250,8 +18299,7 @@
 	     */
 	    this.options = util.extend({
 	        renderStartDate: '',
-	        renderEndDate: '',
-	        lineHeight: 20
+	        renderEndDate: ''
 	    }, options);
 	}
 	
@@ -18284,15 +18332,14 @@
 	        event.isToday = (key === today);
 	    });
 	
-	    height = Math.max.apply(null, util.map(events, function(coll) {
+	    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(events, function(coll) {
 	        return coll.length;
-	    })) * options.lineHeight;
+	    })) * ITEM_HEIGHT;
 	
 	    return {
 	        events: events,
 	        width: 100 / range.length,
-	        height: height,
-	        lineHeight: options.lineHeight
+	        height: height
 	    };
 	};
 	
@@ -18363,17 +18410,15 @@
 	
 	  return "<li data-id=\""
 	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n          data-title=\""
+	    + "\"\n            data-title=\""
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\"\n          class=\""
+	    + "\"\n            class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-item\"\n          style=\"line-height:"
-	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.lineHeight), depth0))
-	    + "px;color:"
+	    + "milestone-item\"\n            style=\"color:"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "\">"
+	    + "\">\n            "
 	    + ((stack1 = (helpers["milestone-tmpl"] || (depth0 && depth0["milestone-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"milestone-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</li>\n";
+	    + "\n          </li>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -18418,6 +18463,9 @@
 	var tmpl = __webpack_require__(117);
 	var TZDate = __webpack_require__(27).Date;
 	
+	// height + gutter (defined in CSS)
+	var ITEM_HEIGHT = 20;
+	
 	/**
 	 * @constructor
 	 * @extends {View}
@@ -18442,8 +18490,7 @@
 	     */
 	    this.options = util.extend({
 	        renderStartDate: '',
-	        renderEndDate: '',
-	        lineHeight: 20
+	        renderEndDate: ''
 	    }, options);
 	}
 	
@@ -18483,7 +18530,7 @@
 	            subcount += (coll.length || 0);
 	        });
 	        return subcount;
-	    })) * options.lineHeight;
+	    })) * ITEM_HEIGHT;
 	
 	    util.forEach(events, function(event, key) {
 	        event.isToday = (key === today);
@@ -18492,8 +18539,7 @@
 	    return {
 	        events: events,
 	        width: 100 / range.length,
-	        height: height,
-	        lineHeight: options.lineHeight
+	        height: height
 	    };
 	};
 	
