@@ -4,7 +4,7 @@
 {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}weekday-creation"></div>
-<div class="{{CSS_PREFIX}}weekday-events">
+<div class="{{CSS_PREFIX}}weekday-events" style="top:{{@root.eventContainerTop}}px">
     <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->
     <div class="{{CSS_PREFIX}}weekday-events-height-span" style="height:{{contentHeight}}px"></div>
     {{#each matrices ~}}
@@ -17,9 +17,7 @@
             {{#if exceedRight}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
         style="top:{{multiply top @root.eventBlockHeight}}px;
                 left:{{multiply left @root.width}}%;
-                width:{{multiply width @root.width}}%;
-                height:{{@root.eventBlockHeight}}px;
-                margin-bottom:{{@root.eventBlockGutter}}px">
+                width:{{multiply width @root.width}}%">
         <div class="{{CSS_PREFIX}}weekday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}; border-color:{{model.borderColor}}; box-shadow:{{model.boxShadow}};">
             <span class="{{CSS_PREFIX}}weekday-event-title">{{{allday-tmpl model}}}</span>
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>

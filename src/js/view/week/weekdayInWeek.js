@@ -50,6 +50,7 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     );
 
     baseViewModel.minHeight = this._getMinHeight(maxEventInDay);
+    baseViewModel.eventContainerTop = this.options.eventContainerTop;
 
     container.innerHTML = tmpl(baseViewModel);
 
@@ -64,7 +65,11 @@ WeekdayInWeek.prototype.render = function(viewModel) {
 WeekdayInWeek.prototype._getMinHeight = function(maxEventInDay) {
     var opt = this.options;
 
-    return (maxEventInDay * (opt.eventHeight + opt.eventGutter)) + opt.containerBottomGutter;
+    return (
+        (maxEventInDay * opt.eventHeight) + 
+        ((maxEventInDay - 1) * opt.eventGutter) + 
+        opt.containerBottomGutter
+    );
 };
 
 
