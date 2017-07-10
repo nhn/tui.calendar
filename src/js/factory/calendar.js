@@ -443,6 +443,7 @@ Calendar.prototype.setDate = function(date) {
     }
 
     this.renderDate = new TZDate(Number(date));
+    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
     this.move(0);
     this.render();
 };
