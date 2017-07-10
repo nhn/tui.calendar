@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Jul 06 2017 16:10:00 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jul 10 2017 18:59:48 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6361,6 +6361,7 @@
 	    }
 	
 	    this.renderDate = new TZDate(Number(date));
+	    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
 	    this.move(0);
 	    this.render();
 	};
