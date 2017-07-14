@@ -180,7 +180,11 @@
             console.log('click', e);
         },
         'beforeCreateEvent': function(e) {
-            var title = prompt('Name of event to create:');
+            var message = 'start: ' + new Date(e.starts) + 
+                            '\nend: ' + new Date(e.ends) +
+                            '\nallday: ' + e.isAllDay +
+                            '\nName of event to create:';
+            var title = prompt(message);
 
             if (!title) {
                 e.guide.clearGuideElement();

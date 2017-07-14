@@ -72,13 +72,6 @@ MonthCreation.prototype.destroy = function() {
  * @param {object} dateRange - cache data from single dragging session
  */
 MonthCreation.prototype._createEvent = function(dateRange) {
-    var times = [
-            Number(dateRange.starts),
-            Number(dateRange.ends)
-        ].sort(array.compare.num.asc),
-        starts = new TZDate(times[0]),
-        ends = datetime.end(new TZDate(times[1]));
-
     /**
      * @event {MonthCreation#beforeCreateEvent}
      * @type {object}
@@ -87,9 +80,9 @@ MonthCreation.prototype._createEvent = function(dateRange) {
      * @property {Date] ends - select end date
      */
     this.fire('beforeCreateEvent', {
-        isAllDay: true,
-        starts: starts,
-        ends: ends,
+        isAllDay: dateRange.isAllDay,
+        starts: dateRange.starts,
+        ends: dateRange.ends,
         guide: this.guide.guide
     });
 };
@@ -165,6 +158,7 @@ MonthCreation.prototype._onDrag = function(dragEvent) {
 MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache;
     var eventData;
+    var times;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -179,6 +173,16 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 
     if (eventData) {
         cache.ends = new TZDate(Number(eventData.date));
+        cache.isAllDay = true;
+
+        times = [
+            Number(cache.starts),
+            Number(cache.ends)
+        ].sort(array.compare.num.asc);
+
+        cache.starts = new TZDate(times[0]);
+        cache.ends = datetime.end(new TZDate(times[1]));
+
         this._createEvent(cache);
     }
 
@@ -200,20 +204,35 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
  * @param {MouseEvent} e - Native MouseEvent
  */
 MonthCreation.prototype._onClick = function(e) {
-    var eventData, targetDate;
+    var eventData, now, starts, ends, hours, minutes;
 
     if (!isElementWeekdayEvent(e.target)) {
         return;
     }
 
     eventData = getMousePosData(this.monthView)(e.originEvent);
-    targetDate = eventData.date;
 
     this.fire('monthCreationClick', eventData);
 
+    now = new TZDate();
+    starts = new TZDate(Number(eventData.date));
+    ends = new TZDate(Number(eventData.date));
+
+    hours = now.getHours();
+    minutes = now.getMinutes();
+    if (minutes <= 30) {
+        minutes = 30;
+    } else {
+        hours += 1;
+        minutes = 0;
+    }
+    starts.setHours(hours, minutes, 0, 0);
+    ends.setHours(hours + 1, minutes, 0, 0);
+
     this._createEvent({
-        starts: targetDate,
-        ends: datetime.end(targetDate)
+        starts: starts,
+        ends: ends,
+        isAllDay: false
     });
 };
 
