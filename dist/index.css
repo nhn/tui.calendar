@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jul 10 2017 18:59:48 GMT+0900 (KST)" */
+/*! bundle created at "Fri Jul 14 2017 19:19:37 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -960,8 +960,8 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
 }
 .dooray-calendar-freebusy-fill {
   height: 100%;
-  background: rgba(19,93,230,0.2);
-  border: 1px solid #b4c3de;
+  background: rgba(85,85,85,0.1);
+  border: 1px solid #ccc;
 }
 .dooray-calendar-freebusy-recommends {
   position: absolute;
