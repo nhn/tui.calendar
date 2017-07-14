@@ -217,8 +217,8 @@ Freebusy.prototype._getMilliseconds = function(date) {
  * @returns {array} [0]: left, [1]: width
  */
 Freebusy.prototype._getBlockBound = function(block) {
-    var from = this._getMilliseconds(block.from);
-    var to = this._getMilliseconds(block.to);
+    var from = block.fromMilliseconds || this._getMilliseconds(block.from);
+    var to = block.toMilliseconds || this._getMilliseconds(block.to);
     var left, width;
 
     // right edge case
@@ -309,9 +309,12 @@ Freebusy.prototype._getViewModel = function() {
         };
 
     users.each(function(user) {
-        user.busy = util.map(user.freebusy, function(block) {
-            return self._getBlockBound(block);
-        });
+        user.busy = util.filter(
+            util.map(user.freebusy, function(block) {
+                return self._getBlockBound(block);
+            }), function(busy) {
+                return busy[1]; // filter width 0
+            });
         viewModel.freebusy[user.id] = user;
     });
 
@@ -347,6 +350,7 @@ Freebusy.prototype.render = function(skipBase) {
  */
 Freebusy.prototype.addUser = function(user, skipRender) {
     this.users.add(user);
+    this._arrangeFreebusy(user);
 
     if (!skipRender) {
         this.render();
@@ -475,6 +479,35 @@ Freebusy.prototype.setTimeRange = function(times) {
     this.options.times = times;
     this._calculateTimeRange();
     this.render();
+};
+
+/**
+ * Arrange freebusy time collision
+ * @param {User} user - user object
+ */
+Freebusy.prototype._arrangeFreebusy = function(user) {
+    var self = this;
+    user.freebusy.forEach(function(schedule) {
+        schedule.fromMilliseconds = self._getMilliseconds(schedule.from);
+        schedule.toMilliseconds = self._getMilliseconds(schedule.to);
+    });
+
+    user.freebusy.sort(function(schedule1, schedule2) {
+        var diff = schedule1.fromMilliseconds - schedule2.fromMilliseconds;
+        if (diff === 0) {
+            diff = schedule1.toMilliseconds - schedule2.toMilliseconds;
+        }
+        return diff;
+    });
+
+    user.freebusy.forEach(function(schedule, index, array) {
+        var toMilliseconds = schedule.toMilliseconds;
+        array.slice(index + 1).forEach(function(target) {
+            if (toMilliseconds > target.fromMilliseconds) {
+                target.fromMilliseconds = Math.min(toMilliseconds, target.toMilliseconds);
+            }
+        });
+    });
 };
 
 module.exports = Freebusy;

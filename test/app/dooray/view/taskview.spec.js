@@ -21,8 +21,7 @@ describe('service:view/TaskView', function() {
                     '2015-05-02': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}, isToday: false}
                 },
                 width: 50,
-                height: 0,
-                lineHeight: 12
+                height: 0
             };
 
             expect(actual).toEqual(expected);
@@ -39,8 +38,7 @@ describe('service:view/TaskView', function() {
                     '2015-05-02': {hello: {length: 2}, isToday: false}
                 },
                 width: 50,
-                height: 24,
-                lineHeight: 12
+                height: 40
             };
 
             expect(actual).toEqual(expected);
@@ -64,8 +62,7 @@ describe('service:view/TaskView', function() {
                     }
                 },
                 width: 50,
-                height: 96,    // (아이템 수 8 * 12)px
-                lineHeight: 12
+                height: 160    // (아이템 수 8 * 12)px
             };
 
             expect(actual).toEqual(expected);

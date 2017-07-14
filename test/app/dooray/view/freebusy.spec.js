@@ -66,4 +66,100 @@ describe('Freebusy', function() {
             expect(inst.users.single()).toBe(user1);
         });
     });
+
+    describe('arrangeFreebusy', function() {
+        it('Sort freebusy by from', function() {
+            var freebusy = [{
+                from: '2017-07-14T20:00:00+09:00',
+                to: '2017-07-14T21:00:00+09:00'
+            }, {
+                from: '2017-07-14T17:00:00+09:00',
+                to: '2017-07-14T18:00:00+09:00'
+            }, {
+                from: '2017-07-14T09:30:00+09:00',
+                to: '2017-07-14T11:30:00+09:00'
+            }];
+            var user = {
+                freebusy: freebusy
+            };
+
+            inst._arrangeFreebusy(user);
+
+            expect(user.freebusy[0]).toEqual(jasmine.objectContaining({
+                from: '2017-07-14T09:30:00+09:00',
+                to: '2017-07-14T11:30:00+09:00'
+            }));
+            expect(user.freebusy[1]).toEqual(jasmine.objectContaining({
+                from: '2017-07-14T17:00:00+09:00',
+                to: '2017-07-14T18:00:00+09:00'
+            }));
+            expect(user.freebusy[2]).toEqual(jasmine.objectContaining({
+                from: '2017-07-14T20:00:00+09:00',
+                to: '2017-07-14T21:00:00+09:00'
+            }));
+        });
+
+        it('Rearrange time collision freebusy with 2 schedules', function() {
+            var freebusy = [{
+                from: '2017-07-14T17:00:00+09:00',
+                to: '2017-07-14T21:00:00+09:00',
+                fromMilliseconds: inst._getMilliseconds('2017-07-14T17:00:00+09:00'),
+                toMilliseconds: inst._getMilliseconds('2017-07-14T21:00:00+09:00')
+            }, {
+                from: '2017-07-14T15:00:00+09:00',
+                to: '2017-07-14T18:00:00+09:00',
+                fromMilliseconds: inst._getMilliseconds('2017-07-14T15:00:00+09:00'),
+                toMilliseconds: inst._getMilliseconds('2017-07-14T18:00:00+09:00')
+            }];
+            var user = {
+                freebusy: freebusy
+            };
+
+            inst._arrangeFreebusy(user);
+
+            expect(user.freebusy[1].fromMilliseconds).toBe(inst._getMilliseconds('2017-07-14T18:00:00+09:00'));
+        });
+
+        it('Rearrange time collision freebusy with containing schedule', function() {
+            var freebusy = [{
+                from: '2017-07-14T09:00:00+09:00',
+                to: '2017-07-14T18:00:00+09:00',
+                fromMilliseconds: inst._getMilliseconds('2017-07-14T09:00:00+09:00'),
+                toMilliseconds: inst._getMilliseconds('2017-07-14T18:00:00+09:00')
+            }, {
+                from: '2017-07-14T11:00:00+09:00',
+                to: '2017-07-14T13:00:00+09:00',
+                fromMilliseconds: inst._getMilliseconds('2017-07-14T11:00:00+09:00'),
+                toMilliseconds: inst._getMilliseconds('2017-07-14T13:00:00+09:00')
+            }];
+            var user = {
+                freebusy: freebusy
+            };
+
+            inst._arrangeFreebusy(user);
+
+            expect(user.freebusy[1].toMilliseconds).toBe(user.freebusy[1].fromMilliseconds);
+        });
+
+        it('Rearrange time collision freebusy with same from', function() {
+            var freebusy = [{
+                from: '2017-07-14T09:00:00+09:00',
+                to: '2017-07-14T11:30:00+09:00',
+                fromMilliseconds: inst._getMilliseconds('2017-07-14T09:00:00+09:00'),
+                toMilliseconds: inst._getMilliseconds('2017-07-14T11:30:00+09:00')
+            }, {
+                from: '2017-07-14T09:00:00+09:00',
+                to: '2017-07-14T09:30:00+09:00',
+                fromMilliseconds: inst._getMilliseconds('2017-07-14T09:00:00+09:00'),
+                toMilliseconds: inst._getMilliseconds('2017-07-14T09:30:00+09:00')
+            }];
+            var user = {
+                freebusy: freebusy
+            };
+
+            inst._arrangeFreebusy(user);
+
+            expect(user.freebusy[1].toMilliseconds).toBe(user.freebusy[1].toMilliseconds);
+        });
+    });
 });
