@@ -1,4 +1,4 @@
-/*! bundle created at "Fri Jul 14 2017 19:19:37 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jul 17 2017 12:09:07 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6071,6 +6071,11 @@
 	     */
 	    this.refreshMethod = null;
 	
+	    /**
+	     * SCroll to now. It can be called for 'week', 'day' view modes.
+	     */
+	    this.scrollToNow = null;
+	
 	    this.initialize();
 	}
 	
@@ -6109,10 +6114,10 @@
 	 */
 	Calendar.prototype.createMonthView = function(controller, container, dragHandler, options) {
 	    return monthViewFactory(
-	      controller,
-	      container,
-	      dragHandler,
-	      options
+	        controller,
+	        container,
+	        dragHandler,
+	        options
 	    );
 	};
 	
@@ -6133,7 +6138,7 @@
 	
 	    this.options = this.renderDate = this.controller =
 	        this.layout = this.dragHandler = this.viewName = this.prevViewName =
-	        this.refreshMethod = null;
+	        this.refreshMethod = this.scrollToNow = null;
 	};
 	
 	/**
@@ -6284,6 +6289,15 @@
 	    this.controller.dateMatrix = {};
 	    this.controller.events.clear();
 	    this.render();
+	};
+	
+	/**
+	 * Scroll to now.
+	 */
+	Calendar.prototype.scrollToNow = function() {
+	    if (this.scrollToNow) {
+	        this.scrollToNow();
+	    }
 	};
 	
 	/**
@@ -6579,6 +6593,7 @@
 	    });
 	
 	    this.refreshMethod = created.refresh;
+	    this.scrollToNow = created.scrollToNow;
 	
 	    this.move();
 	    this.render();
@@ -9731,7 +9746,7 @@
 	
 	    viewModel = {
 	        currentHours: now.getHours(),
-	        hourmarkerTop: this._getTopPercentByTime(),
+	        hourmarkerTop: this._getTopPercentByTime(now),
 	        hourmarkerText: datetime.format(now, 'HH:mm'),
 	        todaymarkerLeft: todaymarkerLeft
 	    };
@@ -9746,7 +9761,7 @@
 	 */
 	TimeGrid.prototype._getBaseViewModel = function() {
 	    var opt = this.options;
-	    var viewModel = this._getHourmarkerViewModel();
+	    var viewModel = this._getHourmarkerViewModel(new TZDate());
 	    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 	
 	    return viewModel;
@@ -9846,7 +9861,7 @@
 	 */
 	TimeGrid.prototype.refreshHourmarker = function() {
 	    var hourmarker = this.hourmarker,
-	        viewModel = this._getHourmarkerViewModel(),
+	        viewModel = this._getHourmarkerViewModel(new TZDate()),
 	        todaymarker;
 	
 	    if (!hourmarker || !viewModel) {
@@ -9883,11 +9898,10 @@
 	
 	    clearTimeout(this.timeoutID);
 	    this.timeoutID = setTimeout(util.bind(function() {
-	        var currentHourTop = self.hourmarker.getBoundingClientRect().top -
-	                self.container.getBoundingClientRect().top,
+	        var offsetTop = self.hourmarker.offsetTop,
 	            viewBound = self.getViewBound();
 	
-	        container.scrollTop = (currentHourTop - (viewBound.height / 4));
+	        container.scrollTop = offsetTop - (viewBound.height / 4);
 	    }), INITIAL_AUTOSCROLL_DELAY);
 	};
 	
@@ -18298,7 +18312,8 @@
 	            vLayout.container.style.height =
 	                weekViewHeight - daynameViewHeight + 'px';
 	            vLayout.refresh();
-	        }
+	        },
+	        scrollToNow: timeGridView.scrollToNow.bind(timeGridView)
 	    };
 	};
 	
