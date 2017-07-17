@@ -191,6 +191,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             vLayout.container.style.height =
                 weekViewHeight - daynameViewHeight + 'px';
             vLayout.refresh();
-        }
+        },
+        scrollToNow: timeGridView.scrollToNow.bind(timeGridView)
     };
 };

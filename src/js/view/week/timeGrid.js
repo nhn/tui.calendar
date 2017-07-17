@@ -180,7 +180,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
 
     viewModel = {
         currentHours: now.getHours(),
-        hourmarkerTop: this._getTopPercentByTime(),
+        hourmarkerTop: this._getTopPercentByTime(now),
         hourmarkerText: datetime.format(now, 'HH:mm'),
         todaymarkerLeft: todaymarkerLeft
     };
@@ -195,7 +195,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
  */
 TimeGrid.prototype._getBaseViewModel = function() {
     var opt = this.options;
-    var viewModel = this._getHourmarkerViewModel();
+    var viewModel = this._getHourmarkerViewModel(new TZDate());
     viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 
     return viewModel;
@@ -295,7 +295,7 @@ TimeGrid.prototype.render = function(viewModel) {
  */
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarker = this.hourmarker,
-        viewModel = this._getHourmarkerViewModel(),
+        viewModel = this._getHourmarkerViewModel(new TZDate()),
         todaymarker;
 
     if (!hourmarker || !viewModel) {
@@ -332,11 +332,10 @@ TimeGrid.prototype.scrollToNow = function() {
 
     clearTimeout(this.timeoutID);
     this.timeoutID = setTimeout(util.bind(function() {
-        var currentHourTop = self.hourmarker.getBoundingClientRect().top -
-                self.container.getBoundingClientRect().top,
+        var offsetTop = self.hourmarker.offsetTop,
             viewBound = self.getViewBound();
 
-        container.scrollTop = (currentHourTop - (viewBound.height / 4));
+        container.scrollTop = offsetTop - (viewBound.height / 4);
     }), INITIAL_AUTOSCROLL_DELAY);
 };
 
