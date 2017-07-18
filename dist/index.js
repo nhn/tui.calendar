@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jul 17 2017 12:09:07 GMT+0900 (KST)" */
+/*! bundle created at "Tue Jul 18 2017 17:29:32 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6695,10 +6695,12 @@
 	 */
 	DW.prototype.addMonth = function(m) {
 	    var prevMonth = this.d.getMonth();
+	    var prevYear = this.d.getFullYear();
 	    this.d.setMonth(prevMonth + m);
 	
 	    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
-	    if (this.d.getMonth() !== prevMonth) {
+	    // Don't do it on different year(Because december + 1month is ok)
+	    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
 	        this.d.setMonth(prevMonth + m, 1);
 	    }
 	    return this;
