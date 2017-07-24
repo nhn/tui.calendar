@@ -1,4 +1,4 @@
-/*! bundle created at "Tue Jul 18 2017 17:29:32 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jul 24 2017 23:06:56 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5524,7 +5524,7 @@
 	};
 	
 	/**
-	 * get view block for selection state in instance
+	 * get view block for selection state in instance, but return null if width is zero
 	 * @param {string} start - hh:mm formatted string for select start
 	 * @param {string} end - hh:mm formatted string for select end
 	 * @returns {number[]} block bound
@@ -5532,6 +5532,7 @@
 	Freebusy.prototype._getSelectionBlock = function(start, end) {
 	    var startDate = new TZDate(0);
 	    var endDate = new TZDate(0);
+	    var bound;
 	
 	    if (!isValidHM.test(start) || !isValidHM.test(end)) {
 	        return false;
@@ -5543,10 +5544,16 @@
 	    startDate.setHours(start[0], start[1]);
 	    endDate.setHours(end[0], end[1]);
 	
-	    return this._getBlockBound({
+	    bound = this._getBlockBound({
 	        from: startDate,
 	        to: endDate
 	    });
+	
+	    if (bound[1] === 0) {
+	        return null;
+	    }
+	
+	    return bound;
 	};
 	
 	/**
@@ -5569,8 +5576,8 @@
 	            timeWidth: 100 / opt.times.length,
 	            freebusy: {},
 	            recommends: [],
-	            selection: this._getSelectionBlock(this.selectStart, this.selectEnd),
-	            selectionOver: this._getSelectionBlock(this.selectOverStart, this.selectOverEnd)
+	            selection: userLength ? this._getSelectionBlock(this.selectStart, this.selectEnd) : null,
+	            selectionOver: userLength ? this._getSelectionBlock(this.selectOverStart, this.selectOverEnd) : null
 	        };
 	
 	    users.each(function(user) {
@@ -6074,7 +6081,7 @@
 	    /**
 	     * SCroll to now. It can be called for 'week', 'day' view modes.
 	     */
-	    this.scrollToNow = null;
+	    this.scrollToNowMethod = null;
 	
 	    this.initialize();
 	}
@@ -6138,7 +6145,7 @@
 	
 	    this.options = this.renderDate = this.controller =
 	        this.layout = this.dragHandler = this.viewName = this.prevViewName =
-	        this.refreshMethod = this.scrollToNow = null;
+	        this.refreshMethod = this.scrollToNowMethod = null;
 	};
 	
 	/**
@@ -6295,8 +6302,8 @@
 	 * Scroll to now.
 	 */
 	Calendar.prototype.scrollToNow = function() {
-	    if (this.scrollToNow) {
-	        this.scrollToNow();
+	    if (this.scrollToNowMethod) {
+	        this.scrollToNowMethod();
 	    }
 	};
 	
@@ -6593,7 +6600,7 @@
 	    });
 	
 	    this.refreshMethod = created.refresh;
-	    this.scrollToNow = created.scrollToNow;
+	    this.scrollToNowMethod = created.scrollToNow;
 	
 	    this.move();
 	    this.render();
