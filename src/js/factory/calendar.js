@@ -123,7 +123,7 @@ function Calendar(options, container) {
     /**
      * SCroll to now. It can be called for 'week', 'day' view modes.
      */
-    this.scrollToNow = null;
+    this.scrollToNowMethod = null;
 
     this.initialize();
 }
@@ -187,7 +187,7 @@ Calendar.prototype.destroy = function() {
 
     this.options = this.renderDate = this.controller =
         this.layout = this.dragHandler = this.viewName = this.prevViewName =
-        this.refreshMethod = this.scrollToNow = null;
+        this.refreshMethod = this.scrollToNowMethod = null;
 };
 
 /**
@@ -344,8 +344,8 @@ Calendar.prototype.clear = function() {
  * Scroll to now.
  */
 Calendar.prototype.scrollToNow = function() {
-    if (this.scrollToNow) {
-        this.scrollToNow();
+    if (this.scrollToNowMethod) {
+        this.scrollToNowMethod();
     }
 };
 
@@ -642,7 +642,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
     });
 
     this.refreshMethod = created.refresh;
-    this.scrollToNow = created.scrollToNow;
+    this.scrollToNowMethod = created.scrollToNow;
 
     this.move();
     this.render();

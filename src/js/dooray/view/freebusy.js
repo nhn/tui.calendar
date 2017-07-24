@@ -259,7 +259,7 @@ Freebusy.prototype.clearRecommends = function(skipRender) {
 };
 
 /**
- * get view block for selection state in instance
+ * get view block for selection state in instance, but return null if width is zero
  * @param {string} start - hh:mm formatted string for select start
  * @param {string} end - hh:mm formatted string for select end
  * @returns {number[]} block bound
@@ -267,6 +267,7 @@ Freebusy.prototype.clearRecommends = function(skipRender) {
 Freebusy.prototype._getSelectionBlock = function(start, end) {
     var startDate = new TZDate(0);
     var endDate = new TZDate(0);
+    var bound;
 
     if (!isValidHM.test(start) || !isValidHM.test(end)) {
         return false;
@@ -278,10 +279,16 @@ Freebusy.prototype._getSelectionBlock = function(start, end) {
     startDate.setHours(start[0], start[1]);
     endDate.setHours(end[0], end[1]);
 
-    return this._getBlockBound({
+    bound = this._getBlockBound({
         from: startDate,
         to: endDate
     });
+
+    if (bound[1] === 0) {
+        return null;
+    }
+
+    return bound;
 };
 
 /**
@@ -304,8 +311,8 @@ Freebusy.prototype._getViewModel = function() {
             timeWidth: 100 / opt.times.length,
             freebusy: {},
             recommends: [],
-            selection: this._getSelectionBlock(this.selectStart, this.selectEnd),
-            selectionOver: this._getSelectionBlock(this.selectOverStart, this.selectOverEnd)
+            selection: userLength ? this._getSelectionBlock(this.selectStart, this.selectEnd) : null,
+            selectionOver: userLength ? this._getSelectionBlock(this.selectOverStart, this.selectOverEnd) : null
         };
 
     users.each(function(user) {
