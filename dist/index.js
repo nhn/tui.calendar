@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jul 24 2017 23:06:56 GMT+0900 (KST)" */
+/*! bundle created at "Wed Jul 26 2017 10:28:14 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -2722,6 +2722,22 @@
 	
 	        el.style.left = x + 'px';
 	        el.style.top = y + 'px';
+	    },
+	
+	    /**
+	     * Set position CSS style with left, top, right, bottom
+	     * @param {HTMLElement} el target element
+	     * @param {object} ltrb object of left, top, right, bottom
+	     * @param {number} [ltrb.left] left pixel value.
+	     * @param {number} [ltrb.top] top pixel value.
+	     * @param {number} [ltrb.right] right pixel value.
+	     * @param {number} [ltrb.bottom] bottom pixel value.
+	     */
+	    setLTRB: function (el, ltrb) {
+	        var props = ['left', 'top', 'right', 'bottom'];
+	        props.forEach(function(prop) {
+	            el.style[prop] = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop] + 'px';
+	        });
 	    },
 	
 	    /**
@@ -5774,11 +5790,17 @@
 	
 	    user.freebusy.forEach(function(schedule, index, array) {
 	        var toMilliseconds = schedule.toMilliseconds;
+	        var fromMilliseconds = schedule.fromMilliseconds;
 	        array.slice(index + 1).forEach(function(target) {
 	            if (toMilliseconds > target.fromMilliseconds) {
-	                target.fromMilliseconds = Math.min(toMilliseconds, target.toMilliseconds);
+	                schedule.toMilliseconds = target.toMilliseconds;
+	                target.willBeDeleted = true;
 	            }
 	        });
+	    });
+	
+	    user.freebusy = user.freebusy.filter(function (schedule) {
+	       return !schedule.willBeDeleted;
 	    });
 	};
 	
@@ -17299,6 +17321,18 @@
 	};
 	
 	/**
+	 * Set layer left, top, right, bottom position
+	 * @param {object} ltrb object of left, top, right, bottom
+	 * @param {number} [ltrb.left] left pixel value.
+	 * @param {number} [ltrb.top] top pixel value.
+	 * @param {number} [ltrb.right] right pixel value.
+	 * @param {number} [ltrb.bottom] bottom pixel value.
+	 */
+	FloatingLayer.prototype.setLTRB = function (ltrb) {
+	    domutil.setLTRB(this.container, ltrb);
+	}
+	
+	/**
 	 * Set layer size
 	 * @param {number|string} w - layer width
 	 * @param {number|string} h - layer height
@@ -17506,8 +17540,17 @@
 	    var width = viewModel.width + (OUT_PADDING * 2);
 	
 	    layer.setContent(tmpl(viewModel));
-	    layer.setPosition(pos[0], pos[1]);
-	    layer.setSize(width, height);
+	    if (weekItem.parentElement.lastElementChild === weekItem) {
+	        layer.setLTRB({
+	            left: pos[0],
+	            bottom: 0
+	        });
+	        layer.setSize(width, '');
+	    } else {
+	        layer.setPosition(pos[0], pos[1]);
+	        layer.setSize(width, height);
+	    }
+	    
 	    layer.show();
 	
 	    util.debounce(function() {
