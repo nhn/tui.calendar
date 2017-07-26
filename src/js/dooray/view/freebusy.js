@@ -509,11 +509,17 @@ Freebusy.prototype._arrangeFreebusy = function(user) {
 
     user.freebusy.forEach(function(schedule, index, array) {
         var toMilliseconds = schedule.toMilliseconds;
+        var fromMilliseconds = schedule.fromMilliseconds;
         array.slice(index + 1).forEach(function(target) {
             if (toMilliseconds > target.fromMilliseconds) {
-                target.fromMilliseconds = Math.min(toMilliseconds, target.toMilliseconds);
+                schedule.toMilliseconds = target.toMilliseconds;
+                target.willBeDeleted = true;
             }
         });
+    });
+
+    user.freebusy = user.freebusy.filter(function (schedule) {
+       return !schedule.willBeDeleted;
     });
 };
 
