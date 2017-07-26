@@ -102,8 +102,17 @@ More.prototype.render = function(viewModel) {
     var width = viewModel.width + (OUT_PADDING * 2);
 
     layer.setContent(tmpl(viewModel));
-    layer.setPosition(pos[0], pos[1]);
-    layer.setSize(width, height);
+    if (weekItem.parentElement.lastElementChild === weekItem) {
+        layer.setLTRB({
+            left: pos[0],
+            bottom: 0
+        });
+        layer.setSize(width, '');
+    } else {
+        layer.setPosition(pos[0], pos[1]);
+        layer.setSize(width, height);
+    }
+    
     layer.show();
 
     util.debounce(function() {

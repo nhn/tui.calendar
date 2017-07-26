@@ -384,6 +384,22 @@ domutil = {
     },
 
     /**
+     * Set position CSS style with left, top, right, bottom
+     * @param {HTMLElement} el target element
+     * @param {object} ltrb object of left, top, right, bottom
+     * @param {number} [ltrb.left] left pixel value.
+     * @param {number} [ltrb.top] top pixel value.
+     * @param {number} [ltrb.right] right pixel value.
+     * @param {number} [ltrb.bottom] bottom pixel value.
+     */
+    setLTRB: function (el, ltrb) {
+        var props = ['left', 'top', 'right', 'bottom'];
+        props.forEach(function(prop) {
+            el.style[prop] = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop] + 'px';
+        });
+    },
+
+    /**
      * Get position from HTML element.
      * @param {HTMLElement} el target element
      * @param {boolean} [clear=false] clear cache before calculating position.

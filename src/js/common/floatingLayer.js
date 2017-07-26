@@ -111,6 +111,18 @@ FloatingLayer.prototype.setPosition = function(x, y) {
 };
 
 /**
+ * Set layer left, top, right, bottom position
+ * @param {object} ltrb object of left, top, right, bottom
+ * @param {number} [ltrb.left] left pixel value.
+ * @param {number} [ltrb.top] top pixel value.
+ * @param {number} [ltrb.right] right pixel value.
+ * @param {number} [ltrb.bottom] bottom pixel value.
+ */
+FloatingLayer.prototype.setLTRB = function (ltrb) {
+    domutil.setLTRB(this.container, ltrb);
+}
+
+/**
  * Set layer size
  * @param {number|string} w - layer width
  * @param {number|string} h - layer height
