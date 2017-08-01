@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Jul 26 2017 10:28:14 GMT+0900 (KST)" */
+/*! bundle created at "Tue Aug 01 2017 09:14:32 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6363,6 +6363,7 @@
 	Calendar.prototype.today = function() {
 	    this.renderDate = new TZDate();
 	
+	    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
 	    this.move();
 	    this.render();
 	};
