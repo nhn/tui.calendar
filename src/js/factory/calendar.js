@@ -383,6 +383,7 @@ Calendar.prototype.refreshChildView = function(viewName) {
 Calendar.prototype.today = function() {
     this.renderDate = new TZDate();
 
+    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
     this.move();
     this.render();
 };
