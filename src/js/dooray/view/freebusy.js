@@ -316,12 +316,6 @@ Freebusy.prototype._getViewModel = function() {
         };
 
     users.each(function(user) {
-        user.busy = util.filter(
-            util.map(user.freebusy, function(block) {
-                return self._getBlockBound(block);
-            }), function(busy) {
-                return busy[1]; // filter width 0
-            });
         viewModel.freebusy[user.id] = user;
     });
 
@@ -373,7 +367,7 @@ Freebusy.prototype.addUsers = function(users, skipRender) {
     var self = this;
 
     util.forEach(users, function(user) {
-        self.addUser(user, skipRender);
+        self.addUser(user, true);
     });
 
     if (!skipRender) {
@@ -418,7 +412,7 @@ Freebusy.prototype.removeUsers = function(idArr, skipRender) {
 Freebusy.prototype.clear = function(skipRender) {
     this.users.clear();
     this.clearRecommends(true);
-    this.unselect();
+    this.unselect(true);
 
     if (!skipRender) {
         this.render();
@@ -434,7 +428,9 @@ Freebusy.prototype.select = function(start, end) {
     this.selectStart = start;
     this.selectEnd = end;
 
-    this.render(true);
+    if (this.users.length) {
+        this.render(true);
+    }
 };
 
 /**
@@ -483,9 +479,25 @@ Freebusy.prototype._calculateTimeRange = function() {
  * fb.setTimeRange(times);
  */
 Freebusy.prototype.setTimeRange = function(times) {
+    var self = this;
+
     this.options.times = times;
     this._calculateTimeRange();
+
+    // Update fromMilliseconds, toMilliseconds
+    this.users.each(function (user) {
+        self._arrangeFreebusy.call(self, user);
+    });
+
     this.render();
+};
+
+Freebusy.prototype._cacheFreebusyMilliseconds = function(user) {
+    var self = this;
+    user.freebusy.forEach(function (schedule) {
+        schedule.fromMilliseconds = self._getMilliseconds(schedule.from);
+        schedule.toMilliseconds = self._getMilliseconds(schedule.to);
+    });
 };
 
 /**
@@ -494,10 +506,10 @@ Freebusy.prototype.setTimeRange = function(times) {
  */
 Freebusy.prototype._arrangeFreebusy = function(user) {
     var self = this;
-    user.freebusy.forEach(function(schedule) {
-        schedule.fromMilliseconds = self._getMilliseconds(schedule.from);
-        schedule.toMilliseconds = self._getMilliseconds(schedule.to);
-    });
+    var freebusy;
+    var previousSchedule;
+
+    this._cacheFreebusyMilliseconds(user);
 
     user.freebusy.sort(function(schedule1, schedule2) {
         var diff = schedule1.fromMilliseconds - schedule2.fromMilliseconds;
@@ -507,19 +519,39 @@ Freebusy.prototype._arrangeFreebusy = function(user) {
         return diff;
     });
 
+    // Adjust overlapped block
     user.freebusy.forEach(function(schedule, index, array) {
-        var toMilliseconds = schedule.toMilliseconds;
-        var fromMilliseconds = schedule.fromMilliseconds;
         array.slice(index + 1).forEach(function(target) {
-            if (toMilliseconds > target.fromMilliseconds) {
-                schedule.toMilliseconds = target.toMilliseconds;
-                target.willBeDeleted = true;
+            if (schedule.toMilliseconds > target.fromMilliseconds) {
+                target.fromMilliseconds = Math.min(schedule.toMilliseconds, target.toMilliseconds);
             }
         });
     });
 
-    user.freebusy = user.freebusy.filter(function (schedule) {
-       return !schedule.willBeDeleted;
+    // Remove from === to
+    freebusy = util.filter(user.freebusy, function (schedule, index, array) {
+        return schedule.fromMilliseconds !== schedule.toMilliseconds
+    });
+
+    // Merge consecutive blocks
+    freebusy = util.filter(freebusy, function(schedule, index, array) {
+        if (!previousSchedule && index > 0) {
+            previousSchedule = array[index - 1];
+        }
+
+        if (previousSchedule && previousSchedule.toMilliseconds === schedule.fromMilliseconds) {
+            previousSchedule.toMilliseconds = schedule.toMilliseconds;
+            return false;
+        }
+
+        previousSchedule = null;
+
+        return true;
+    });
+
+    // Prepare rendering block data
+    user.busy = util.map(freebusy, function (block) {
+        return self._getBlockBound(block);
     });
 };
 
