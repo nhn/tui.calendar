@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Aug 03 2017 11:52:47 GMT+0900 (KST)" */
+/*! bundle created at "Fri Aug 11 2017 13:32:20 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -17809,15 +17809,16 @@
 	
 	/**
 	 * @override
-	 * @param {string} id - ID of event instance to update data
+	 * @param {string|DoorayEvent} idOrEvent - ID of event instance or event instance to update data
 	 * @param {object} data - data object to update event
 	 */
-	ServiceCalendar.prototype.updateEvent = function(id, data) {
+	ServiceCalendar.prototype.updateEvent = function(idOrEvent, data) {
 	    var ctrl = this.controller,
 	        ownEvents = ctrl.events,
-	        calEvent = ownEvents.single(function(model) {
-	            return model.id === id;
-	        });
+	        calEvent = typeof idOrEvent === 'string' ?
+	            ownEvents.single(function(model) {
+	                return model.id === idOrEvent;
+	            }) : idOrEvent;
 	
 	    if (calEvent) {
 	        ctrl.updateEvent(calEvent, data);
@@ -17829,14 +17830,15 @@
 	 * Delete DoorayEvent instance
 	 * @override
 	 * @fires ServiceCalendar#beforeDeleteEvent
-	 * @param {string} id - ID of event to delete
+	 * @param {string|DoorayEvent} idOrEvent - ID of event or event instance  to delete
 	 */
-	ServiceCalendar.prototype.deleteEvent = function(id) {
+	ServiceCalendar.prototype.deleteEvent = function(idOrEvent) {
 	    var ctrl = this.controller,
 	        ownEvents = ctrl.events,
-	        calEvent = ownEvents.single(function(model) {
-	            return model.id === id;
-	        });
+	        calEvent = typeof idOrEvent === 'string' ?
+	            ownEvents.single(function(model) {
+	                return model.id === idOrEvent;
+	            }) : idOrEvent;
 	
 	    if (!calEvent) {
 	        return;
