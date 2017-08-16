@@ -8,7 +8,7 @@ var util = global.tui.util;
 var Handlebars = require('handlebars-template-loader/runtime');
 
 var config = require('../../config'),
-    controllerFactory = require('../../factory/controller'),
+    controllerFactory = require('./controller'),
     serviceWeekViewFactory = require('./splitTimeView'),
     Drag = require('../../handler/drag'),
     datetime = require('../../common/datetime'),
