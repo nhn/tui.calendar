@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Aug 16 2017 15:27:14 GMT+0900 (KST)" */
+/*! bundle created at "Thu Aug 17 2017 15:20:37 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5581,12 +5581,13 @@
 	        opt = this.options,
 	        users = this.users,
 	        userLength = users.length,
+	        noFlexScrollBarPadding = 1,
 	        viewModel = {
 	            headerHeight: opt.headerHeight,
 	            nameWidth: opt.nameWidth,
 	            itemHeight: opt.itemHeight,
 	            bodyHeight: (userLength * opt.itemHeight),
-	            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
+	            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight + noFlexScrollBarPadding,
 	
 	            times: opt.times,
 	            timeWidth: 100 / opt.times.length,
@@ -5766,8 +5767,8 @@
 	    this._calculateTimeRange();
 	
 	    // Update fromMilliseconds, toMilliseconds
-	    this.users.each(function (user) {
-	        self._arrangeFreebusy.call(self, user);
+	    this.users.each(function(user) {
+	        self._arrangeFreebusy(user);
 	    });
 	
 	    this.render();
@@ -5775,7 +5776,7 @@
 	
 	Freebusy.prototype._cacheFreebusyMilliseconds = function(user) {
 	    var self = this;
-	    user.freebusy.forEach(function (schedule) {
+	    user.freebusy.forEach(function(schedule) {
 	        schedule.fromMilliseconds = self._getMilliseconds(schedule.from);
 	        schedule.toMilliseconds = self._getMilliseconds(schedule.to);
 	    });
@@ -5810,8 +5811,8 @@
 	    });
 	
 	    // Remove from === to
-	    freebusy = util.filter(user.freebusy, function (schedule, index, array) {
-	        return schedule.fromMilliseconds !== schedule.toMilliseconds
+	    freebusy = util.filter(user.freebusy, function(schedule) {
+	        return schedule.fromMilliseconds !== schedule.toMilliseconds;
 	    });
 	
 	    // Merge consecutive blocks
@@ -5831,7 +5832,7 @@
 	    });
 	
 	    // Prepare rendering block data
-	    user.busy = util.map(freebusy, function (block) {
+	    user.busy = util.map(freebusy, function(block) {
 	        return self._getBlockBound(block);
 	    });
 	};
