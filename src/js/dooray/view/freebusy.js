@@ -300,12 +300,13 @@ Freebusy.prototype._getViewModel = function() {
         opt = this.options,
         users = this.users,
         userLength = users.length,
+        noFlexScrollBarPadding = 1,
         viewModel = {
             headerHeight: opt.headerHeight,
             nameWidth: opt.nameWidth,
             itemHeight: opt.itemHeight,
             bodyHeight: (userLength * opt.itemHeight),
-            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
+            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight + noFlexScrollBarPadding,
 
             times: opt.times,
             timeWidth: 100 / opt.times.length,
@@ -485,8 +486,8 @@ Freebusy.prototype.setTimeRange = function(times) {
     this._calculateTimeRange();
 
     // Update fromMilliseconds, toMilliseconds
-    this.users.each(function (user) {
-        self._arrangeFreebusy.call(self, user);
+    this.users.each(function(user) {
+        self._arrangeFreebusy(user);
     });
 
     this.render();
@@ -494,7 +495,7 @@ Freebusy.prototype.setTimeRange = function(times) {
 
 Freebusy.prototype._cacheFreebusyMilliseconds = function(user) {
     var self = this;
-    user.freebusy.forEach(function (schedule) {
+    user.freebusy.forEach(function(schedule) {
         schedule.fromMilliseconds = self._getMilliseconds(schedule.from);
         schedule.toMilliseconds = self._getMilliseconds(schedule.to);
     });
@@ -529,8 +530,8 @@ Freebusy.prototype._arrangeFreebusy = function(user) {
     });
 
     // Remove from === to
-    freebusy = util.filter(user.freebusy, function (schedule, index, array) {
-        return schedule.fromMilliseconds !== schedule.toMilliseconds
+    freebusy = util.filter(user.freebusy, function(schedule) {
+        return schedule.fromMilliseconds !== schedule.toMilliseconds;
     });
 
     // Merge consecutive blocks
@@ -550,7 +551,7 @@ Freebusy.prototype._arrangeFreebusy = function(user) {
     });
 
     // Prepare rendering block data
-    user.busy = util.map(freebusy, function (block) {
+    user.busy = util.map(freebusy, function(block) {
         return self._getBlockBound(block);
     });
 };
