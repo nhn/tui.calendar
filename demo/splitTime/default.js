@@ -46,7 +46,7 @@
 
     cal1.createEvents([{
         id: '1',
-        calendarID: '1',
+        calendarId: '1',
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
@@ -54,7 +54,7 @@
         ends: currentDate + '10:40:00'
     }, {
         id: '2',
-        calendarID: '2',
+        calendarId: '2',
         title: '[홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -62,7 +62,7 @@
         ends: currentDate + '20:40:59+09:00'
     }, {
         id: '2123',
-        calendarID: '3',
+        calendarId: '3',
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -90,7 +90,7 @@
 
     cal2.createEvents([{
         id: '1',
-        calendarID: '1',
+        calendarId: '1',
         title: '스크럼',
         category: 'time',
         dueDateClass: '',
@@ -98,7 +98,7 @@
         ends: currentDate + '13:40:00+09:00'
     }, {
         id: '2',
-        calendarID: '2',
+        calendarId: '2',
         title: '[홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -106,7 +106,7 @@
         ends: currentDate + '15:40:59'
     }, {
         id: '2123',
-        calendarID: '3',
+        calendarId: '3',
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -130,7 +130,7 @@
 
     cal3.createEvents([{
         id: '1',
-        calendarID: '1',
+        calendarId: '1',
         title: '나오면 안돼',
         category: 'time',
         dueDateClass: '',
@@ -138,7 +138,7 @@
         ends: currentDate + '11:40:00+09:00'
     }, {
         id: '2',
-        calendarID: '2',
+        calendarId: '2',
         title: '[홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -146,7 +146,7 @@
         ends: currentDate + '08:40:59'
     }, {
         id: '2123',
-        calendarID: '3',
+        calendarId: '3',
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -154,7 +154,7 @@
         ends: currentDate + '15:59:59'
     }, {
         id: '2222',
-        calendarID: '4',
+        calendarId: '4',
         title: 'ㅎㅎ',
         category: 'time',
         dueDateClass: '',
@@ -177,7 +177,7 @@
 
     cal4.createEvents([{
         id: '1',
-        calendarID: '1',
+        calendarId: '1',
         title: '나오면 안돼',
         category: 'time',
         dueDateClass: '',
@@ -185,7 +185,7 @@
         ends: currentDate + '02:30:00+09:00'
     }, {
         id: '2',
-        calendarID: '2',
+        calendarId: '2',
         title: '[홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -193,7 +193,7 @@
         ends: currentDate + '02:30:00+09:00'
     }, {
         id: '2123',
-        calendarID: '3',
+        calendarId: '3',
         title: '[3홍길동]연차',
         category: 'time',
         dueDateClass: '',
@@ -201,7 +201,7 @@
         ends: currentDate + '15:59:59'
     }, {
         id: '2222',
-        calendarID: '4',
+        calendarId: '4',
         title: 'ㅎㅎ',
         category: 'time',
         dueDateClass: '',

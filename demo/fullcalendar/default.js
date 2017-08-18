@@ -64,7 +64,7 @@
     cal.createEvents([
         {
             id: '1',
-            calendarID: '1',
+            calendarId: '1',
             title: '스크럼',
             category: 'time',
             dueDateClass: '',
@@ -73,7 +73,7 @@
         },
         {
             id: '2',
-            calendarID: '1',
+            calendarId: '1',
             title: '2차 QA',
             category: 'time',
             dueDateClass: '',
@@ -82,7 +82,7 @@
         },
         {
             id: '3',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정]',
             category: 'time',
             dueDateClass: '',
@@ -91,7 +91,7 @@
         },
         {
             id: '4',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정]',
             category: 'time',
             dueDateClass: '',
@@ -100,7 +100,7 @@
         },
         {
             id: '5',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정]',
             category: 'time',
             dueDateClass: '',
@@ -109,7 +109,7 @@
         },
         {
             id: '6',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정]',
             category: 'time',
             dueDateClass: '',
@@ -118,7 +118,7 @@
         },
         {
             id: '7',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정]',
             category: 'time',
             dueDateClass: '',
@@ -127,7 +127,7 @@
         },
         {
             id: '8',
-            calendarID: '2',
+            calendarId: '2',
             title: '[종일일정입니다!]',
             category: 'allday',
             dueDateClass: '',
@@ -136,7 +136,7 @@
         },
         {
             id: '9',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정]',
             category: 'milestone',
             dueDateClass: '',
@@ -145,7 +145,7 @@
         },
         {
             id: '10',
-            calendarID: '2',
+            calendarId: '2',
             title: '[추가 추가 일정2]',
             category: 'milestone',
             dueDateClass: '',
@@ -154,7 +154,7 @@
         },
         {
             id: '11',
-            calendarID: '2',
+            calendarId: '2',
             title: '[종일일정입니다2!]',
             category: 'allday',
             dueDateClass: '',
@@ -163,7 +163,7 @@
         },
         {
             id: '12',
-            calendarID: '2',
+            calendarId: '2',
             title: '[종일일정입니다3!]',
             category: 'allday',
             dueDateClass: '',
@@ -194,7 +194,7 @@
 
             cal.createEvents([{
                 id: String(idx),
-                calendarID: '',
+                calendarId: '',
                 title: title,
                 isAllDay: e.isAllDay,
                 starts: e.starts,

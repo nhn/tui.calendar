@@ -188,7 +188,7 @@ SplitTimeCalendar.prototype.createEvents = function(dataObjectList, silent) {
 
     util.forEach(dataObjectList, function(obj) {
         self.filterEvent(obj, parseRenderStartTime);
-        var color = calColor[obj.calendarID];
+        var color = calColor[obj.calendarId];
 
         if (color) {
             obj.color = color.color;
@@ -279,24 +279,24 @@ SplitTimeCalendar.prototype.getLayoutData = function() {
 };
 
 /**
- * 같은 calendarID를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
- * @param {string} calendarID - calendarID value
+ * 같은 calendarId를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
+ * @param {string} calendarId - calendarId value
  * @param {object} option - color data object
  *  @param {string} option.color - text color of event element
  *  @param {string} option.bgColor - bg color of event element
  *  @param {string} option.borderColor - border color of event element
  *  @param {boolean} [option.render=true] - set false then does not auto render.
  */
-SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
+SplitTimeCalendar.prototype.setCalendarColor = function(calendarId, option) {
     var calColor = this.calendarColor,
         ownEvents = this.controller.events,
-        ownColor = calColor[calendarID];
+        ownColor = calColor[calendarId];
 
     if (!util.isObject(option)) {
         config.throwError('Calendar#changeCalendarColor(): color 는 {color: \'\', bgColor: \'\'} 형태여야 합니다.');
     }
 
-    ownColor = calColor[calendarID] = util.extend({
+    ownColor = calColor[calendarId] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
         borderColor: '#a1b56c',
@@ -304,7 +304,7 @@ SplitTimeCalendar.prototype.setCalendarColor = function(calendarID, option) {
     }, option);
 
     ownEvents.each(function(model) {
-        if (model.calendarID !== calendarID) {
+        if (model.calendarId !== calendarId) {
             return;
         }
 
