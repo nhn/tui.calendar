@@ -1,4 +1,4 @@
-/*! bundle created at "Fri Aug 18 2017 16:29:27 GMT+0900 (KST)" */
+/*! bundle created at "Thu Aug 24 2017 16:43:24 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -10095,7 +10095,7 @@
 	        hourStart: 0,
 	        hourEnd: 24,
 	        defaultMarginBottom: 2,
-	        minHeight: 19.5
+	        minHeight: 13.5
 	    }, options);
 	
 	    this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
