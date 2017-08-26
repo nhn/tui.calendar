@@ -39,7 +39,7 @@ function Time(options, container) {
         hourStart: 0,
         hourEnd: 24,
         defaultMarginBottom: 2,
-        minHeight: 13.5
+        minHeight: 16.5
     }, options);
 
     this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
