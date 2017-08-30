@@ -17,7 +17,6 @@ var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
 
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
-var INITIAL_AUTOSCROLL_DELAY = util.browser.msie ? 100 : 50;
 
 /**
  * start~end 까지의 시간 레이블 목록을 반환한다.
@@ -93,12 +92,6 @@ function TimeGrid(options, container) {
     this.intervalID = 0;
 
     /**
-     * id for timeout. use for TimeGrid#scrollToNow
-     * @type {number}
-     */
-    this.timeoutID = 0;
-
-    /**
      * @type {boolean}
      */
     this._scrolled = false;
@@ -122,15 +115,13 @@ TimeGrid.prototype.viewName = 'timegrid';
  * @override
  */
 TimeGrid.prototype._beforeDestroy = function() {
-    clearTimeout(this.timeoutID);
     clearInterval(this.intervalID);
 
     if (this._autoScroll) {
         this._autoScroll.destroy();
     }
 
-    this._autoScroll = this.hourmarker = this.timeoutID =
-        this.intervalID = null;
+    this._autoScroll = this.hourmarker = this.intervalID = null;
 };
 
 /**
@@ -325,18 +316,35 @@ TimeGrid.prototype.attachEvent = function() {
 TimeGrid.prototype.scrollToNow = function() {
     var self = this,
         container = this.container;
+    var offsetTop,
+        viewBound,
+        scrollTop,
+        scrollAmount,
+        scrollBy,
+        scrollFn;
 
     if (!self.hourmarker) {
         return;
     }
 
-    clearTimeout(this.timeoutID);
-    this.timeoutID = setTimeout(util.bind(function() {
-        var offsetTop = self.hourmarker.offsetTop,
-            viewBound = self.getViewBound();
+    offsetTop = this.hourmarker.offsetTop;
+    viewBound = this.getViewBound();
+    scrollTop = offsetTop;
+    scrollAmount = viewBound.height / 4;
+    scrollBy = 10;
 
-        container.scrollTop = offsetTop - (viewBound.height / 4);
-    }), INITIAL_AUTOSCROLL_DELAY);
+    scrollFn = function() {
+        if (scrollTop > offsetTop - scrollAmount) {
+            scrollTop -= scrollBy;
+            container.scrollTop = scrollTop;
+
+            reqAnimFrame.requestAnimFrame(scrollFn);
+        } else {
+            container.scrollTop = offsetTop - scrollAmount;
+        }
+    };
+
+    reqAnimFrame.requestAnimFrame(scrollFn);
 };
 
 /**********
