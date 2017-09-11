@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Aug 30 2017 15:12:37 GMT+0900 (KST)" */
+/*! bundle created at "Mon Sep 11 2017 12:33:37 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -4956,6 +4956,7 @@
 	    this.singleFocused = datetime.isSameDate(new TZDate(start), new TZDate(end));
 	    this.viewName = viewName;
 	    this.currentDate = currentDate;
+	    this.options.renderMonth = datetime.start(currentDate);
 	
 	    this.render();
 	};
