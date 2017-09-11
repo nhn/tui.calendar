@@ -16,7 +16,8 @@ var Time = require('./time');
 var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
 
-var HOURMARKER_REFRESH_INTERVAL = 1000 * 10;
+var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
+var SIXTY_SECONDS = 60;
 
 /**
  * start~end 까지의 시간 레이블 목록을 반환한다.
@@ -92,6 +93,12 @@ function TimeGrid(options, container) {
     this.intervalID = 0;
 
     /**
+     * timer id for hourmarker initial state
+     * @type {number}
+     */
+    this.timerID = 0;
+
+    /**
      * @type {boolean}
      */
     this._scrolled = false;
@@ -116,12 +123,13 @@ TimeGrid.prototype.viewName = 'timegrid';
  */
 TimeGrid.prototype._beforeDestroy = function() {
     clearInterval(this.intervalID);
+    clearTimeout(this.timerID);
 
     if (this._autoScroll) {
         this._autoScroll.destroy();
     }
 
-    this._autoScroll = this.hourmarker = this.intervalID = null;
+    this._autoScroll = this.hourmarker = this.intervalID = this.timerID = null;
 };
 
 /**
@@ -287,18 +295,21 @@ TimeGrid.prototype.render = function(viewModel) {
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarker = this.hourmarker,
         viewModel = this._getHourmarkerViewModel(new TZDate()),
-        todaymarker;
+        todaymarker,
+        hourmarkerText;
 
     if (!hourmarker || !viewModel) {
         return;
     }
 
     todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
+    hourmarkerText = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
 
     reqAnimFrame.requestAnimFrame(function() {
         hourmarker.style.display = 'block';
         hourmarker.style.top = viewModel.hourmarkerTop + '%';
         todaymarker.style.display = (viewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
+        hourmarkerText.innerHTML = viewModel.hourmarkerText;
     });
 };
 
@@ -307,7 +318,10 @@ TimeGrid.prototype.refreshHourmarker = function() {
  */
 TimeGrid.prototype.attachEvent = function() {
     clearInterval(this.intervalID);
-    this.intervalID = setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
+    clearTimeout(this.timerID);
+    this.intervalID = this.timerID = null;
+
+    this.timerID = setTimeout(util.bind(this.onTick, this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
 };
 
 /**
@@ -355,6 +369,14 @@ TimeGrid.prototype.scrollToNow = function() {
  * Interval tick handler
  */
 TimeGrid.prototype.onTick = function() {
+    if (this.timerID) {
+        clearTimeout(this.timerID);
+        this.timerID = null;
+    }
+
+    if (!this.intervalID) {
+        this.intervalID = setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
+    }
     this.refreshHourmarker();
 };
 
