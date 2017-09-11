@@ -316,6 +316,7 @@ MiniCalendar.prototype.focusDateRange = function(start, end, currentDate, viewNa
     this.singleFocused = datetime.isSameDate(new TZDate(start), new TZDate(end));
     this.viewName = viewName;
     this.currentDate = currentDate;
+    this.options.renderMonth = datetime.start(currentDate);
 
     this.render();
 };
