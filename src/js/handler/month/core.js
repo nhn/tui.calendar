@@ -55,7 +55,8 @@ function getMousePosDate(monthView) {
             sizeX: dayCount,
             sizeY: weekCount,
             date: date,
-            weekdayView: weekdayView
+            weekdayView: weekdayView,
+            triggerEvent: mouseEvent.type
         };
     }
 

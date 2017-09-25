@@ -61,7 +61,8 @@ var alldayCore = {
                 relatedView: alldayView,
                 dragStartXIndex: dragStartXIndex,
                 datesInRange: datesInRange,
-                xIndex: xIndex
+                xIndex: xIndex,
+                triggerEvent: mouseEvent.type
             };
         };
     }
