@@ -9,9 +9,12 @@ var config = require('../../config');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var TimeCreationGuide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
+
+var CLICK_DELAY = 300;
 
 /**
  * @constructor
@@ -58,16 +61,28 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
+    /**
+     * @type {boolean}
+     */
+    this._requestOnClick = false;
+
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
+    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 }
 
 /**
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
+    var timeGridView = this.timeGridView;
+
     this.guide.destroy();
     this.dragHandler.off(this);
+
+    if (timeGridView && timeGridView.container) {
+        domevent.off(timeGridView.container, 'dblclick', this._onDblClick, this);
+    }
 
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
@@ -213,7 +228,8 @@ TimeCreation.prototype._createEvent = function(eventData) {
         isAllDay: false,
         starts: new TZDate(starts),
         ends: new TZDate(ends),
-        guide: this.guide
+        guide: this.guide,
+        triggerEvent: eventData.triggerEvent
     });
 };
 
@@ -270,6 +286,7 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
  * @param {object} clickEventData - event data from Drag#click.
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
+    var self = this;
     var condResult, getEventDataFunc, eventData;
 
     this.dragHandler.off({
@@ -285,11 +302,37 @@ TimeCreation.prototype._onClick = function(clickEventData) {
     getEventDataFunc = this._retriveEventData(condResult);
     eventData = getEventDataFunc(clickEventData.originEvent);
 
+    this._requestOnClick = true;
+    setTimeout(function() {
+        if (self._requestOnClick) {
+            self.fire('timeCreationClick', eventData);
+            self._createEvent(eventData);
+        }
+        self._requestOnClick = false;
+    }, CLICK_DELAY);
+    this._dragStart = this._getEventDataFunc = null;
+};
+
+/**
+ * Dblclick event handler
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+TimeCreation.prototype._onDblClick = function(e) {
+    var condResult, getEventDataFunc, eventData;
+
+    condResult = this.checkExpectedCondition(e.target);
+    if (!condResult) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(condResult);
+    eventData = getEventDataFunc(e);
+
     this.fire('timeCreationClick', eventData);
 
     this._createEvent(eventData);
 
-    this._dragStart = this._getEventDataFunc = null;
+    this._requestOnClick = false;
 };
 
 
