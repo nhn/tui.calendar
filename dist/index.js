@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Sep 11 2017 15:28:05 GMT+0900 (KST)" */
+/*! bundle created at "Mon Sep 25 2017 17:18:06 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -11907,7 +11907,8 @@
 	                relatedView: alldayView,
 	                dragStartXIndex: dragStartXIndex,
 	                datesInRange: datesInRange,
-	                xIndex: xIndex
+	                xIndex: xIndex,
+	                triggerEvent: mouseEvent.type
 	            };
 	        };
 	    }
@@ -12130,9 +12131,12 @@
 	var datetime = __webpack_require__(26);
 	var common = __webpack_require__(28);
 	var domutil = __webpack_require__(29);
+	var domevent = __webpack_require__(30);
 	var alldayCore = __webpack_require__(75);
 	var AlldayCreationGuide = __webpack_require__(78);
 	var TZDate = __webpack_require__(27).Date;
+	
+	var CLICK_DELAY = 300;
 	
 	/**
 	 * @constructor
@@ -12172,8 +12176,14 @@
 	     */
 	    this.guide = new AlldayCreationGuide(this);
 	
+	    /**
+	     * @type {boolean}
+	     */
+	    this._requestOnClick = false;
+	
 	    dragHandler.on('dragStart', this._onDragStart, this);
 	    dragHandler.on('click', this._onClick, this);
+	    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
 	}
 	
 	/**
@@ -12182,6 +12192,10 @@
 	AlldayCreation.prototype.destroy = function() {
 	    this.guide.destroy();
 	    this.dragHandler.off(this);
+	
+	    if (this.alldayView && this.alldayView.container) {
+	        domevent.off(this.alldayView.container, 'dblclick', this._onDblClick, this);
+	    }
 	
 	    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
 	};
@@ -12247,7 +12261,8 @@
 	        isAllDay: true,
 	        starts: starts,
 	        ends: ends,
-	        guide: this.guide
+	        guide: this.guide,
+	        triggerEvent: eventData.triggerEvent
 	    });
 	};
 	
@@ -12353,6 +12368,7 @@
 	 * @param {object} clickEventData - Drag#Click event handler data.
 	 */
 	AlldayCreation.prototype._onClick = function(clickEventData) {
+	    var self = this;
 	    var getEventDataFunc, eventData;
 	
 	    if (!this.checkExpectedCondition(clickEventData.target)) {
@@ -12362,9 +12378,36 @@
 	    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData.originEvent);
 	    eventData = getEventDataFunc(clickEventData.originEvent);
 	
+	    this._requestOnClick = true;
+	    setTimeout(function() {
+	        if (self._requestOnClick) {
+	            self.fire('alldayCreationClick', eventData);
+	            self._createEvent(eventData);
+	        }
+	        self._requestOnClick = false;
+	    }, CLICK_DELAY);
+	};
+	
+	/**
+	 * Dblclick event handler method.
+	 * @emits AlldayCreation#alldayCreationClick
+	 * @param {object} clickEventData - Drag#Click event handler data.
+	 */
+	AlldayCreation.prototype._onDblClick = function(clickEventData) {
+	    var getEventDataFunc, eventData;
+	
+	    if (!this.checkExpectedCondition(clickEventData.target)) {
+	        return;
+	    }
+	
+	    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData);
+	    eventData = getEventDataFunc(clickEventData);
+	
 	    this.fire('alldayCreationClick', eventData);
 	
 	    this._createEvent(eventData);
+	
+	    this._requestOnClick = false;
 	};
 	
 	common.mixin(alldayCore, AlldayCreation);
@@ -13075,9 +13118,12 @@
 	var array = __webpack_require__(52);
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
+	var domevent = __webpack_require__(30);
 	var TimeCreationGuide = __webpack_require__(83);
 	var TZDate = __webpack_require__(27).Date;
 	var timeCore = __webpack_require__(84);
+	
+	var CLICK_DELAY = 300;
 	
 	/**
 	 * @constructor
@@ -13124,16 +13170,28 @@
 	     */
 	    this._dragStart = null;
 	
+	    /**
+	     * @type {boolean}
+	     */
+	    this._requestOnClick = false;
+	
 	    dragHandler.on('dragStart', this._onDragStart, this);
 	    dragHandler.on('click', this._onClick, this);
+	    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 	}
 	
 	/**
 	 * Destroy method
 	 */
 	TimeCreation.prototype.destroy = function() {
+	    var timeGridView = this.timeGridView;
+	
 	    this.guide.destroy();
 	    this.dragHandler.off(this);
+	
+	    if (timeGridView && timeGridView.container) {
+	        domevent.off(timeGridView.container, 'dblclick', this._onDblClick, this);
+	    }
 	
 	    this.dragHandler = this.timeGridView = this.baseController =
 	        this._getEventDataFunc = this._dragStart = this.guide = null;
@@ -13279,7 +13337,8 @@
 	        isAllDay: false,
 	        starts: new TZDate(starts),
 	        ends: new TZDate(ends),
-	        guide: this.guide
+	        guide: this.guide,
+	        triggerEvent: eventData.triggerEvent
 	    });
 	};
 	
@@ -13336,6 +13395,7 @@
 	 * @param {object} clickEventData - event data from Drag#click.
 	 */
 	TimeCreation.prototype._onClick = function(clickEventData) {
+	    var self = this;
 	    var condResult, getEventDataFunc, eventData;
 	
 	    this.dragHandler.off({
@@ -13351,11 +13411,37 @@
 	    getEventDataFunc = this._retriveEventData(condResult);
 	    eventData = getEventDataFunc(clickEventData.originEvent);
 	
+	    this._requestOnClick = true;
+	    setTimeout(function() {
+	        if (self._requestOnClick) {
+	            self.fire('timeCreationClick', eventData);
+	            self._createEvent(eventData);
+	        }
+	        self._requestOnClick = false;
+	    }, CLICK_DELAY);
+	    this._dragStart = this._getEventDataFunc = null;
+	};
+	
+	/**
+	 * Dblclick event handler
+	 * @param {MouseEvent} e - Native MouseEvent
+	 */
+	TimeCreation.prototype._onDblClick = function(e) {
+	    var condResult, getEventDataFunc, eventData;
+	
+	    condResult = this.checkExpectedCondition(e.target);
+	    if (!condResult) {
+	        return;
+	    }
+	
+	    getEventDataFunc = this._retriveEventData(condResult);
+	    eventData = getEventDataFunc(e);
+	
 	    this.fire('timeCreationClick', eventData);
 	
 	    this._createEvent(eventData);
 	
-	    this._dragStart = this._getEventDataFunc = null;
+	    this._requestOnClick = false;
 	};
 	
 	
@@ -13706,7 +13792,8 @@
 	                gridY: gridY,
 	                timeY: timeY,
 	                nearestGridY: nearestGridY,
-	                nearestGridTimeY: nearestGridTimeY
+	                nearestGridTimeY: nearestGridTimeY,
+	                triggerEvent: mouseEvent.type
 	            }, extend);
 	        }, this);
 	    },
@@ -15573,9 +15660,12 @@
 	var datetime = __webpack_require__(26);
 	var array = __webpack_require__(52);
 	var domutil = __webpack_require__(29);
+	var domevent = __webpack_require__(30);
 	var getMousePosData = __webpack_require__(98);
 	var Guide = __webpack_require__(99);
 	var TZDate = __webpack_require__(27).Date;
+	
+	var CLICK_DELAY = 300;
 	
 	/**
 	 * @constructor
@@ -15615,8 +15705,14 @@
 	     */
 	    this.guide = new Guide(this);
 	
+	    /**
+	     * @type {boolean}
+	     */
+	    this._requestOnClick = false;
+	
 	    dragHandler.on('dragStart', this._onDragStart, this);
 	    dragHandler.on('click', this._onClick, this);
+	    domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
 	}
 	
 	/**
@@ -15626,6 +15722,10 @@
 	    this.dragHandler.off(this);
 	    this.guide.destroy();
 	
+	    if (this.monthView && this.monthView.container) {
+	        domevent.off(this.monthView.container, 'dblclick', this._onDblClick, this);
+	    }
+	
 	    this.dragHandler = this.monthView = this.baseController =
 	        this.getEventData = this._cache = this.guide = null;
 	};
@@ -15633,9 +15733,9 @@
 	/**
 	 * Fire before create event
 	 * @fires {MonthCreation#beforeCreateEvent}
-	 * @param {object} dateRange - cache data from single dragging session
+	 * @param {object} eventData - cache data from single dragging session
 	 */
-	MonthCreation.prototype._createEvent = function(dateRange) {
+	MonthCreation.prototype._createEvent = function(eventData) {
 	    /**
 	     * @event {MonthCreation#beforeCreateEvent}
 	     * @type {object}
@@ -15644,10 +15744,11 @@
 	     * @property {Date] ends - select end date
 	     */
 	    this.fire('beforeCreateEvent', {
-	        isAllDay: dateRange.isAllDay,
-	        starts: dateRange.starts,
-	        ends: dateRange.ends,
-	        guide: this.guide.guide
+	        isAllDay: eventData.isAllDay,
+	        starts: eventData.starts,
+	        ends: eventData.ends,
+	        guide: this.guide.guide,
+	        triggerEvent: eventData.triggerEvent
 	    });
 	};
 	
@@ -15763,12 +15864,41 @@
 	};
 	
 	/**
-	 * DragStart event handler
+	 * Dblclick event handler
+	 * @fires {MonthCreation#monthCreationDragstart}
+	 * @param {MouseEvent} e - Native MouseEvent
+	 */
+	MonthCreation.prototype._onDblClick = function(e) {
+	    var eventData, range;
+	
+	    if (!isElementWeekdayEvent(e.target)) {
+	        return;
+	    }
+	
+	    eventData = getMousePosData(this.monthView)(e);
+	
+	    this.fire('monthCreationClick', eventData);
+	
+	    range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+	
+	    this._createEvent({
+	        starts: range.starts,
+	        ends: range.ends,
+	        isAllDay: false,
+	        triggerEvent: eventData.triggerEvent
+	    });
+	
+	    this._requestOnClick = false;
+	};
+	
+	/**
+	 * Click event handler
 	 * @fires {MonthCreation#monthCreationDragstart}
 	 * @param {MouseEvent} e - Native MouseEvent
 	 */
 	MonthCreation.prototype._onClick = function(e) {
-	    var eventData, now, starts, ends, hours, minutes;
+	    var self = this;
+	    var eventData, range;
 	
 	    if (!isElementWeekdayEvent(e.target)) {
 	        return;
@@ -15776,14 +15906,34 @@
 	
 	    eventData = getMousePosData(this.monthView)(e.originEvent);
 	
-	    this.fire('monthCreationClick', eventData);
+	    this._requestOnClick = true;
+	    setTimeout(function() {
+	        if (self._requestOnClick) {
+	            self.fire('monthCreationClick', eventData);
 	
-	    now = new TZDate();
-	    starts = new TZDate(Number(eventData.date));
-	    ends = new TZDate(Number(eventData.date));
+	            range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 	
-	    hours = now.getHours();
-	    minutes = now.getMinutes();
+	            self._createEvent({
+	                starts: range.starts,
+	                ends: range.ends,
+	                isAllDay: false,
+	                triggerEvent: eventData.triggerEvent
+	            });
+	        }
+	        self._requestOnClick = false;
+	    }, CLICK_DELAY);
+	};
+	
+	/**
+	 * Adjust time to half hour or hour o'clock
+	 * @param {TZDate} starts - start time
+	 * @param {TZDate} ends - end time
+	 * @returns {Object} starts and ends
+	 */
+	function adjustStartAndEndTime(starts, ends) {
+	    var now = new TZDate();
+	    var hours = now.getHours();
+	    var minutes = now.getMinutes();
 	    if (minutes <= 30) {
 	        minutes = 30;
 	    } else {
@@ -15793,12 +15943,11 @@
 	    starts.setHours(hours, minutes, 0, 0);
 	    ends.setHours(hours + 1, minutes, 0, 0);
 	
-	    this._createEvent({
+	    return {
 	        starts: starts,
-	        ends: ends,
-	        isAllDay: false
-	    });
-	};
+	        ends: ends
+	    };
+	}
 	
 	/**
 	 * Returns whether the given element is Weekday-Event.
@@ -15876,7 +16025,8 @@
 	            sizeX: dayCount,
 	            sizeY: weekCount,
 	            date: date,
-	            weekdayView: weekdayView
+	            weekdayView: weekdayView,
+	            triggerEvent: mouseEvent.type
 	        };
 	    }
 	
