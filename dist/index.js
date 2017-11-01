@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Sep 25 2017 17:18:06 GMT+0900 (KST)" */
+/*! bundle created at "Wed Nov 01 2017 17:05:15 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -6441,13 +6441,7 @@
 	        });
 	    } else if (viewName === 'day') {
 	        renderDate.addDate(offset);
-	        if (!offset && this.prevViewName === 'week') {
-	            // move to monday
-	            tempDate = this.getWeekDayRange(renderDate.d, 1);
-	            renderDate.d = startDate = endDate = tempDate[0];
-	        } else {
-	            startDate = endDate = renderDate.d;
-	        }
+	        startDate = endDate = renderDate.d;
 	
 	        recursiveSet(view, function(opt) {
 	            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
