@@ -427,13 +427,7 @@ Calendar.prototype.move = function(offset) {
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
-        if (!offset && this.prevViewName === 'week') {
-            // move to monday
-            tempDate = this.getWeekDayRange(renderDate.d, 1);
-            renderDate.d = startDate = endDate = tempDate[0];
-        } else {
-            startDate = endDate = renderDate.d;
-        }
+        startDate = endDate = renderDate.d;
 
         recursiveSet(view, function(opt) {
             opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
