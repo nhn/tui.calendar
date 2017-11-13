@@ -290,6 +290,17 @@ Base.prototype.findByDateRange = function(starts, ends) {
     return result;
 };
 
+Base.prototype.clearEvents = function() {
+    this.dateMatrix = {};
+    this.events.clear();
+    /**
+     * for inner view when clear events
+     * @event Base#clearEvents
+     * @type {CalEvent}
+     */
+    this.fire('clearEvents', event);
+};
+
 // mixin
 util.CustomEvents.mixin(Base);
 

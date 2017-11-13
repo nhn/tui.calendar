@@ -79,6 +79,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
     });
 
+    // binding clear events
+    baseController.on('clearEvents', function() {
+        moreView.hide();
+    });
+
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();
     });

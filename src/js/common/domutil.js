@@ -392,7 +392,7 @@ domutil = {
      * @param {number} [ltrb.right] right pixel value.
      * @param {number} [ltrb.bottom] bottom pixel value.
      */
-    setLTRB: function (el, ltrb) {
+    setLTRB: function(el, ltrb) {
         var props = ['left', 'top', 'right', 'bottom'];
         props.forEach(function(prop) {
             el.style[prop] = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop] + 'px';
