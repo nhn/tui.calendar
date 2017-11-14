@@ -1,4 +1,4 @@
-/*! bundle created at "Tue Nov 14 2017 18:37:20 GMT+0900 (KST)" */
+/*! bundle created at "Tue Nov 14 2017 20:01:54 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -14887,7 +14887,7 @@
 	 */
 	function createMonthView(baseController, layoutContainer, dragHandler, options) {
 	    var monthViewContainer, monthView, moreView;
-	    var clickHandler, creationHandler, resizeHandler, moveHandler;
+	    var clickHandler, creationHandler, resizeHandler, moveHandler, clearEventsHandler;
 	
 	    monthViewContainer = domutil.appendHTMLElement(
 	        'div', layoutContainer, config.classname('month'));
@@ -14900,6 +14900,12 @@
 	    creationHandler = new MonthCreation(dragHandler, monthView, baseController);
 	    resizeHandler = new MonthResize(dragHandler, monthView, baseController);
 	    moveHandler = new MonthMove(dragHandler, monthView, baseController);
+	
+	    clearEventsHandler = function() {
+	        if (moreView) {
+	            moreView.hide();
+	        }
+	    };
 	
 	    // binding +n click event
 	    clickHandler.on('clickMore', function(clickMoreEvent) {
@@ -14920,9 +14926,7 @@
 	    });
 	
 	    // binding clear events
-	    baseController.on('clearEvents', function() {
-	        moreView.hide();
-	    });
+	    baseController.on('clearEvents', clearEventsHandler);
 	
 	    moveHandler.on('monthMoveStart_from_morelayer', function() {
 	        moreView.hide();
@@ -14945,6 +14949,7 @@
 	
 	    monthView._beforeDestroy = function() {
 	        moreView.destroy();
+	        baseController.off('clearEvents', clearEventsHandler);
 	
 	        util.forEach(monthView.handler, function(type) {
 	            util.forEach(type, function(handler) {
