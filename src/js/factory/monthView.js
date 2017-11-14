@@ -47,7 +47,7 @@ function getViewModelForMoreLayer(date, target, events) {
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
     var monthViewContainer, monthView, moreView;
-    var clickHandler, creationHandler, resizeHandler, moveHandler;
+    var clickHandler, creationHandler, resizeHandler, moveHandler, clearEventsHandler;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -60,6 +60,12 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     creationHandler = new MonthCreation(dragHandler, monthView, baseController);
     resizeHandler = new MonthResize(dragHandler, monthView, baseController);
     moveHandler = new MonthMove(dragHandler, monthView, baseController);
+
+    clearEventsHandler = function() {
+        if (moreView) {
+            moreView.hide();
+        }
+    };
 
     // binding +n click event
     clickHandler.on('clickMore', function(clickMoreEvent) {
@@ -80,9 +86,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     });
 
     // binding clear events
-    baseController.on('clearEvents', function() {
-        moreView.hide();
-    });
+    baseController.on('clearEvents', clearEventsHandler);
 
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();
@@ -105,6 +109,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     monthView._beforeDestroy = function() {
         moreView.destroy();
+        baseController.off('clearEvents', clearEventsHandler);
 
         util.forEach(monthView.handler, function(type) {
             util.forEach(type, function(handler) {
