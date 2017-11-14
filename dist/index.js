@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Nov 01 2017 17:05:15 GMT+0900 (KST)" */
+/*! bundle created at "Tue Nov 14 2017 18:37:20 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -2733,7 +2733,7 @@
 	     * @param {number} [ltrb.right] right pixel value.
 	     * @param {number} [ltrb.bottom] bottom pixel value.
 	     */
-	    setLTRB: function (el, ltrb) {
+	    setLTRB: function(el, ltrb) {
 	        var props = ['left', 'top', 'right', 'bottom'];
 	        props.forEach(function(prop) {
 	            el.style[prop] = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop] + 'px';
@@ -6349,8 +6349,7 @@
 	 * Delete all data and clear view.
 	 */
 	Calendar.prototype.clear = function() {
-	    this.controller.dateMatrix = {};
-	    this.controller.events.clear();
+	    this.controller.clearEvents();
 	    this.render();
 	};
 	
@@ -7456,6 +7455,17 @@
 	    });
 	
 	    return result;
+	};
+	
+	Base.prototype.clearEvents = function() {
+	    this.dateMatrix = {};
+	    this.events.clear();
+	    /**
+	     * for inner view when clear events
+	     * @event Base#clearEvents
+	     * @type {CalEvent}
+	     */
+	    this.fire('clearEvents', event);
 	};
 	
 	// mixin
@@ -14909,6 +14919,11 @@
 	        }
 	    });
 	
+	    // binding clear events
+	    baseController.on('clearEvents', function() {
+	        moreView.hide();
+	    });
+	
 	    moveHandler.on('monthMoveStart_from_morelayer', function() {
 	        moreView.hide();
 	    });
@@ -17537,9 +17552,9 @@
 	 * @param {number} [ltrb.right] right pixel value.
 	 * @param {number} [ltrb.bottom] bottom pixel value.
 	 */
-	FloatingLayer.prototype.setLTRB = function (ltrb) {
+	FloatingLayer.prototype.setLTRB = function(ltrb) {
 	    domutil.setLTRB(this.container, ltrb);
-	}
+	};
 	
 	/**
 	 * Set layer size
