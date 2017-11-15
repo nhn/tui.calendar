@@ -321,7 +321,11 @@ Freebusy.prototype._getViewModel = function() {
     });
 
     util.forEach(opt.recommends, function(block) {
-        viewModel.recommends.push(self._getBlockBound(block));
+        var bound = self._getBlockBound(block);
+        // Don't display recommends if check out of time range
+        if (bound[1]) {
+            viewModel.recommends.push(bound);
+        }
     });
 
     return viewModel;
