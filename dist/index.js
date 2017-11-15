@@ -1,4 +1,4 @@
-/*! bundle created at "Tue Nov 14 2017 20:01:54 GMT+0900 (KST)" */
+/*! bundle created at "Wed Nov 15 2017 17:22:16 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5603,7 +5603,11 @@
 	    });
 	
 	    util.forEach(opt.recommends, function(block) {
-	        viewModel.recommends.push(self._getBlockBound(block));
+	        var bound = self._getBlockBound(block);
+	        // Don't display recommends if check out of time range
+	        if (bound[1]) {
+	            viewModel.recommends.push(bound);
+	        }
 	    });
 	
 	    return viewModel;
