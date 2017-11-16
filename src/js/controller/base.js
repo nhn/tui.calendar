@@ -298,7 +298,7 @@ Base.prototype.clearEvents = function() {
      * @event Base#clearEvents
      * @type {CalEvent}
      */
-    this.fire('clearEvents', event);
+    this.fire('clearEvents');
 };
 
 // mixin
