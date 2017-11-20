@@ -109,16 +109,20 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
         timeView = this.checkExpectCondition(target),
         blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
         getEventDataFunc,
-        eventData;
+        eventData,
+        ctrl = this.baseController,
+        targetModelID;
 
     if (!timeView || !blockElement) {
         return;
     }
 
+    targetModelID = domutil.getData(blockElement, 'id');
     getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
     eventData = this._dragStart = getEventDataFunc(
         dragStartEventData.originEvent, {
-            targetModelID: domutil.getData(blockElement, 'id')
+            targetModelID: targetModelID,
+            model: ctrl.events.items[targetModelID]
         }
     );
 
@@ -140,6 +144,7 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move event.
+     * @property {CalEvent} model - model instance
      */
     this.fire('timeMoveDragstart', eventData);
 };

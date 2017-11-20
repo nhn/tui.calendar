@@ -184,7 +184,7 @@ SplitTimeGrid.prototype._renderScheduleDate = function(starts, ends) {
     return {
         scheduleTop: this._getTopPercentByTime(starts),
         scheduleHeight: this._getTopPercentByTime(ends) - this._getTopPercentByTime(starts)
-    }
+    };
 };
 
 module.exports = SplitTimeGrid;
