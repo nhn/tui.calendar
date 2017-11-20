@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Nov 20 2017 22:45:32 GMT+0900 (KST)" */
+/*! bundle created at "Tue Nov 21 2017 01:41:37 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -53,8 +53,8 @@
 	var MiniCalendar = __webpack_require__(37);
 	var Freebusy = __webpack_require__(40);
 	var OriginCalendar = __webpack_require__(43);
-	var FullCalendar = __webpack_require__(110);
-	var SplitTimeCalendar = __webpack_require__(120);
+	var FullCalendar = __webpack_require__(111);
+	var SplitTimeCalendar = __webpack_require__(121);
 	var timezone = __webpack_require__(27);
 	var datetime = __webpack_require__(26);
 	
@@ -6036,7 +6036,7 @@
 	    Drag = __webpack_require__(46),
 	    controllerFactory = __webpack_require__(47),
 	    weekViewFactory = __webpack_require__(54),
-	    monthViewFactory = __webpack_require__(89),
+	    monthViewFactory = __webpack_require__(91),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -8685,7 +8685,7 @@
 	var TimeClick = __webpack_require__(81);
 	var TimeCreation = __webpack_require__(82);
 	var TimeMove = __webpack_require__(85);
-	var TimeResize = __webpack_require__(87);
+	var TimeResize = __webpack_require__(89);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -13953,16 +13953,20 @@
 	        timeView = this.checkExpectCondition(target),
 	        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
 	        getEventDataFunc,
-	        eventData;
+	        eventData,
+	        ctrl = this.baseController,
+	        targetModelID;
 	
 	    if (!timeView || !blockElement) {
 	        return;
 	    }
 	
+	    targetModelID = domutil.getData(blockElement, 'id');
 	    getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
 	    eventData = this._dragStart = getEventDataFunc(
 	        dragStartEventData.originEvent, {
-	            targetModelID: domutil.getData(blockElement, 'id')
+	            targetModelID: targetModelID,
+	            model: ctrl.events.items[targetModelID]
 	        }
 	    );
 	
@@ -13984,6 +13988,7 @@
 	     * @property {number} nearestGridY - nearest grid index related with mouseY value.
 	     * @property {number} nearestGridTimeY - time value for nearestGridY.
 	     * @property {string} targetModelID - The model unique id emitted move event.
+	     * @property {CalEvent} model - model instance
 	     */
 	    this.fire('timeMoveDragstart', eventData);
 	};
@@ -14210,6 +14215,10 @@
 	var domutil = __webpack_require__(29);
 	var reqAnimFrame = __webpack_require__(61);
 	var ratio = __webpack_require__(28).ratio;
+	var FloatingLayer = __webpack_require__(87);
+	var tmpl = __webpack_require__(88);
+	var TZDate = __webpack_require__(27).Date;
+	var DoorayEvent = __webpack_require__(34);
 	
 	/**
 	 * Class for Time.Move effect.
@@ -14217,6 +14226,21 @@
 	 * @param {TimeMove} timeMove - The instance of TimeMove.
 	 */
 	function TimeMoveGuide(timeMove) {
+	    /**
+	     * @type {FloatingLayer}
+	     */
+	    this._guideLayer = null;
+	
+	    /**
+	     * @Type {CalEvent}
+	     */
+	    this._model = null;
+	
+	    /**
+	     * @type {object}
+	     */
+	    this._lastDrag = null;
+	
 	    /**
 	     * @type {HTMLElement}
 	     */
@@ -14261,7 +14285,10 @@
 	TimeMoveGuide.prototype.destroy = function() {
 	    this._clearGuideElement();
 	    this.timeMove.off(this);
-	    this.guideElement = this.timeMove = this._container =
+	    if (this._guideLayer) {
+	        this._guideLayer.destroy();
+	    }
+	    this.guideElement = this.timeMove = this._container = this._guideLayer = this._lastDrag =
 	        this._getTopFunc = this._startGridY = this._startTopPixel = null;
 	};
 	
@@ -14269,32 +14296,31 @@
 	 * Clear guide element.
 	 */
 	TimeMoveGuide.prototype._clearGuideElement = function() {
-	    var guideElement = this.guideElement;
-	
 	    if (!util.browser.msie) {
 	        domutil.removeClass(global.document.body, config.classname('dragging'));
 	    }
+	    if (this._guideLayer) {
+	        this._guideLayer.destroy();
+	    }
 	
-	    domutil.remove(guideElement);
-	
-	    this.guideElement = this._getTopFunc =
+	    this.guideElement = this._getTopFunc = this._guideLayer = this._model = this._lastDrag =
 	        this._startGridY = this._startTopPixel = null;
 	};
 	
 	/**
 	 * Refresh guide element
 	 * @param {string} top - guide element's style top.
+	 * @param {CalEvent} model - updated model
 	 */
-	TimeMoveGuide.prototype._refreshGuideElement = function(top) {
-	    var guideElement = this.guideElement;
-	
-	    if (!guideElement) {
-	        return;
-	    }
+	TimeMoveGuide.prototype._refreshGuideElement = function(top, model) {
+	    var self = this;
 	
 	    reqAnimFrame.requestAnimFrame(function() {
-	        guideElement.style.top = top + 'px';
-	        guideElement.style.display = 'block';
+	        if (!self._guideLayer) {
+	            return;
+	        }
+	        self._guideLayer.setPosition(0, top);
+	        self._guideLayer.setContent(tmpl({model: model}));
 	    });
 	};
 	
@@ -14312,14 +14338,15 @@
 	        return;
 	    }
 	
-	    guideElement = guideElement.cloneNode(true);
-	    domutil.addClass(guideElement, config.classname('time-guide-move'));
-	
 	    this._startTopPixel = parseFloat(guideElement.style.top);
 	    this._startGridY = dragStartEventData.nearestGridY;
 	    this.guideElement = guideElement;
 	    this._container = dragStartEventData.relatedView.container;
-	    this._container.appendChild(guideElement);
+	
+	    this._model = util.extend(DoorayEvent.create(dragStartEventData.model), dragStartEventData.model);
+	    this._lastDrag = dragStartEventData;
+	
+	    this._resetGuideLayer();
 	};
 	
 	/**
@@ -14334,6 +14361,7 @@
 	        hourLength = viewOptions.hourEnd - viewOptions.hourStart,
 	        gridYOffset = dragEventData.nearestGridY - this._startGridY,
 	        gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
+	        timeDiff = dragEventData.nearestGridTimeY - this._lastDrag.nearestGridTimeY,
 	        bottomLimit,
 	        top;
 	
@@ -14343,7 +14371,7 @@
 	
 	    if (this._container !== timeView.container) {
 	        this._container = timeView.container;
-	        this._container.appendChild(this.guideElement);
+	        this._resetGuideLayer();
 	    }
 	
 	    top = this._startTopPixel + gridYOffsetPixel;
@@ -14352,16 +14380,266 @@
 	    top = Math.max(top, 0);
 	    top = Math.min(top, bottomLimit);
 	
-	    this._refreshGuideElement(top);
+	    // update time
+	    this._model.starts = new TZDate(this._model.getStarts().getTime() + timeDiff);
+	    this._model.ends = new TZDate(this._model.getEnds().getTime() + timeDiff);
+	    this._lastDrag = dragEventData;
+	
+	    this._refreshGuideElement(top, this._model);
+	};
+	
+	TimeMoveGuide.prototype._resetGuideLayer = function() {
+	    if (this._guideLayer) {
+	        this._guideLayer.destroy();
+	        this._guideLayer = null;
+	    }
+	    this._guideLayer = new FloatingLayer(null, this._container);
+	    this._guideLayer.setSize(this._container.getBoundingClientRect().width, this.guideElement.style.height);
+	    this._guideLayer.setPosition(0, this.guideElement.style.top);
+	    this._guideLayer.setContent(tmpl({model: this._model}));
+	    this._guideLayer.show();
 	};
 	
 	module.exports = TimeMoveGuide;
-	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * @fileoverview Floating layer module
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	var util = global.tui.util;
+	var config = __webpack_require__(32),
+	    domutil = __webpack_require__(29),
+	    View = __webpack_require__(38);
+	
+	/**
+	 * @constructor
+	 * @extends {View}
+	 * @param {object} options - options for floating layer module
+	 * @param {HTMLElement} container - parent continer for floating layer
+	 */
+	function FloatingLayer(options, container) {
+	    var sibling = container[FloatingLayer.PROP_KEY],
+	        layerContainer;
+	
+	    if (!sibling) {
+	        sibling = container[FloatingLayer.PROP_KEY] = [];
+	    }
+	
+	    sibling.push(this);
+	
+	    /**
+	     * @type {Collection}
+	     */
+	    this.sibling = sibling;
+	
+	    /**
+	     * @type {number}
+	     */
+	    this.zIndex = this.getLargestZIndex() || FloatingLayer.INIT_ZINDEX;
+	
+	    layerContainer = document.createElement('div');
+	    layerContainer.style.display = 'none';
+	    layerContainer.style.position = 'absolute';
+	    domutil.addClass(layerContainer, config.classname('floating-layer'));
+	    container.appendChild(layerContainer);
+	
+	    View.call(this, layerContainer);
+	
+	    /**
+	     * @type {HTMLElement}
+	     */
+	    this.parent = container;
+	}
+	
+	util.inherit(FloatingLayer, View);
+	
+	/**
+	 * @const
+	 */
+	FloatingLayer.PROP_KEY = '__fe_floating_layer';
+	
+	/**
+	 * @const
+	 */
+	FloatingLayer.INIT_ZINDEX = 999;
+	
+	/**
+	 * Destroy floating layer instance. if there no instnace in parent container
+	 *
+	 * remove instance cache property in container element
+	 */
+	FloatingLayer.prototype.destroy = function() {
+	    var parent = this.parent,
+	        sibling = this.sibling,
+	        i = 0, cnt = sibling.length;
+	
+	    for (; i < cnt; i += 1) {
+	        if (sibling[i] === this) {
+	            sibling.splice(i, 1);
+	            break;
+	        }
+	    }
+	
+	    if (!sibling.length) {
+	        try {
+	            delete parent[FloatingLayer.PROP_KEY];
+	        } catch (e) {
+	            parent[FloatingLayer.PROP_KEY] = null;
+	        }
+	
+	        parent.style.position = '';
+	    }
+	
+	    domutil.remove(this.container);
+	
+	    this.sibling = null;
+	
+	    View.prototype.destroy.call(this);
+	};
+	
+	/**
+	 * @returns {boolean} whether layer is visible?
+	 */
+	FloatingLayer.prototype.isVisible = function() {
+	    return this.container.style.display !== 'none';
+	};
+	
+	/**
+	 * Set layer position
+	 * @param {number} x - x coordinate of layer
+	 * @param {number} y - y coordinate of layer
+	 */
+	FloatingLayer.prototype.setPosition = function(x, y) {
+	    domutil.setPosition(this.container, x, y);
+	};
+	
+	/**
+	 * Set layer left, top, right, bottom position
+	 * @param {object} ltrb object of left, top, right, bottom
+	 * @param {number} [ltrb.left] left pixel value.
+	 * @param {number} [ltrb.top] top pixel value.
+	 * @param {number} [ltrb.right] right pixel value.
+	 * @param {number} [ltrb.bottom] bottom pixel value.
+	 */
+	FloatingLayer.prototype.setLTRB = function(ltrb) {
+	    domutil.setLTRB(this.container, ltrb);
+	};
+	
+	/**
+	 * Set layer size
+	 * @param {number|string} w - layer width
+	 * @param {number|string} h - layer height
+	 */
+	FloatingLayer.prototype.setSize = function(w, h) {
+	    var container = this.container;
+	
+	    w = util.isNumber(w) ? w + 'px' : w;
+	    h = util.isNumber(h) ? h + 'px' : h;
+	
+	    container.style.width = w;
+	    container.style.height = h;
+	};
+	
+	/**
+	 * Set layer content
+	 * @param {string} html - html string
+	 */
+	FloatingLayer.prototype.setContent = function(html) {
+	    this.container.innerHTML = html;
+	};
+	
+	/**
+	 * Get largest z-index from sibling layers
+	 * @returns {number} largest z-index value
+	 */
+	FloatingLayer.prototype.getLargestZIndex = function() {
+	    var zIndexes = util.map(this.sibling, function(layer) {
+	        return layer.zIndex;
+	    });
+	
+	    return Math.max.apply(null, zIndexes);
+	};
+	
+	/**
+	 * Set focus to layer
+	 */
+	FloatingLayer.prototype.focus = function() {
+	    var zIndexForShow = this.getLargestZIndex() + 1;
+	    this.container.style.zIndex = this.zIndex = zIndexForShow;
+	};
+	
+	/**
+	 * Show layer
+	 */
+	FloatingLayer.prototype.show = function() {
+	    this.focus();
+	    this.container.style.display = 'block';
+	};
+	
+	/**
+	 * Hide layer
+	 */
+	FloatingLayer.prototype.hide = function() {
+	    this.container.style.display = 'none';
+	};
+	
+	module.exports = FloatingLayer;
+	
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(7);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-event-block-pending";
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<div class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-resize-handle handle-x\">&nbsp;</div>";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-event-block "
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isPending : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\" data-id=\""
+	    + alias4((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+	    + "\" style=\"width: 100%; height: 100%;\">\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-event\" style=\"color:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + ";background-color:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "; border-color:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + "; box-shadow:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.boxShadow : stack1), depth0))
+	    + ";\">"
+	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</div>\n    "
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\n</div>\n";
+	},"useData":true});
+
+/***/ },
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14375,7 +14653,7 @@
 	var domutil = __webpack_require__(29);
 	var TZDate = __webpack_require__(27).Date;
 	var timeCore = __webpack_require__(84);
-	var TimeResizeGuide = __webpack_require__(88);
+	var TimeResizeGuide = __webpack_require__(90);
 	
 	/**
 	 * @constructor
@@ -14670,7 +14948,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 88 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14850,7 +15128,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 89 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14864,12 +15142,12 @@
 	    array = __webpack_require__(52),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(29),
-	    Month = __webpack_require__(90),
-	    MonthClick = __webpack_require__(96),
-	    MonthCreation = __webpack_require__(97),
-	    MonthResize = __webpack_require__(102),
-	    MonthMove = __webpack_require__(104),
-	    More = __webpack_require__(108);
+	    Month = __webpack_require__(92),
+	    MonthClick = __webpack_require__(98),
+	    MonthCreation = __webpack_require__(99),
+	    MonthResize = __webpack_require__(104),
+	    MonthMove = __webpack_require__(106),
+	    More = __webpack_require__(109);
 	
 	function findGridTarget(moreTarget, day) {
 	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
@@ -14991,7 +15269,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 90 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15006,10 +15284,10 @@
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(29),
 	    TZDate = __webpack_require__(27).Date,
-	    tmpl = __webpack_require__(91),
+	    tmpl = __webpack_require__(93),
 	    View = __webpack_require__(38),
 	    VLayout = __webpack_require__(55),
-	    WeekdayInMonth = __webpack_require__(92);
+	    WeekdayInMonth = __webpack_require__(94);
 	
 	/**
 	 * @constructor
@@ -15158,7 +15436,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 91 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15189,7 +15467,7 @@
 	},"useData":true});
 
 /***/ },
-/* 92 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15210,9 +15488,9 @@
 	    domutil = __webpack_require__(29),
 	    View = __webpack_require__(38),
 	    Weekday = __webpack_require__(70),
-	    baseTmpl = __webpack_require__(93),
-	    eventTmpl = __webpack_require__(94),
-	    skipTmpl = __webpack_require__(95);
+	    baseTmpl = __webpack_require__(95),
+	    eventTmpl = __webpack_require__(96),
+	    skipTmpl = __webpack_require__(97);
 	
 	var EVENT_PADDING_TOP = 14;
 	
@@ -15381,7 +15659,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 93 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15436,7 +15714,7 @@
 	},"useData":true});
 
 /***/ },
-/* 94 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15553,7 +15831,7 @@
 	},"useData":true});
 
 /***/ },
-/* 95 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -15578,7 +15856,7 @@
 	},"useData":true});
 
 /***/ },
-/* 96 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15679,7 +15957,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 97 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15694,8 +15972,8 @@
 	var array = __webpack_require__(52);
 	var domutil = __webpack_require__(29);
 	var domevent = __webpack_require__(30);
-	var getMousePosData = __webpack_require__(98);
-	var Guide = __webpack_require__(99);
+	var getMousePosData = __webpack_require__(100);
+	var Guide = __webpack_require__(101);
 	var TZDate = __webpack_require__(27).Date;
 	
 	var CLICK_DELAY = 300;
@@ -15998,7 +16276,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 98 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16071,7 +16349,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 99 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16079,7 +16357,7 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var MonthGuide = __webpack_require__(100);
+	var MonthGuide = __webpack_require__(102);
 	
 	/**
 	 * @constructor
@@ -16152,7 +16430,7 @@
 
 
 /***/ },
-/* 100 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16171,7 +16449,7 @@
 	    domutil = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
 	    dw = __webpack_require__(44),
-	    tmpl = __webpack_require__(101);
+	    tmpl = __webpack_require__(103);
 	
 	/**
 	 * @constructor
@@ -16596,7 +16874,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 101 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -16641,7 +16919,7 @@
 	},"useData":true});
 
 /***/ },
-/* 102 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16654,8 +16932,8 @@
 	var config = __webpack_require__(32),
 	    datetime = __webpack_require__(26),
 	    domutil = __webpack_require__(29),
-	    getMousePosData = __webpack_require__(98),
-	    MonthResizeGuide = __webpack_require__(103),
+	    getMousePosData = __webpack_require__(100),
+	    MonthResizeGuide = __webpack_require__(105),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -16855,7 +17133,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 103 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16867,7 +17145,7 @@
 	
 	var config = __webpack_require__(32),
 	    domutil = __webpack_require__(29),
-	    MonthGuide = __webpack_require__(100);
+	    MonthGuide = __webpack_require__(102);
 	
 	/**
 	 * @constructor
@@ -16978,7 +17256,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 104 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16991,8 +17269,8 @@
 	var config = __webpack_require__(32),
 	    domutil = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
-	    getMousePosData = __webpack_require__(98),
-	    MonthMoveGuide = __webpack_require__(105),
+	    getMousePosData = __webpack_require__(100),
+	    MonthMoveGuide = __webpack_require__(107),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -17249,7 +17527,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 105 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17262,8 +17540,8 @@
 	var config = __webpack_require__(32),
 	    domutil = __webpack_require__(29),
 	    domevent = __webpack_require__(30),
-	    FloatingLayer = __webpack_require__(106),
-	    tmpl = __webpack_require__(107);
+	    FloatingLayer = __webpack_require__(87),
+	    tmpl = __webpack_require__(108);
 	
 	/**
 	 * @constructor
@@ -17453,198 +17731,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview Floating layer module
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
-	    View = __webpack_require__(38);
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {object} options - options for floating layer module
-	 * @param {HTMLElement} container - parent continer for floating layer
-	 */
-	function FloatingLayer(options, container) {
-	    var sibling = container[FloatingLayer.PROP_KEY],
-	        layerContainer;
-	
-	    if (!sibling) {
-	        sibling = container[FloatingLayer.PROP_KEY] = [];
-	    }
-	
-	    sibling.push(this);
-	
-	    /**
-	     * @type {Collection}
-	     */
-	    this.sibling = sibling;
-	
-	    /**
-	     * @type {number}
-	     */
-	    this.zIndex = this.getLargestZIndex() || FloatingLayer.INIT_ZINDEX;
-	
-	    layerContainer = document.createElement('div');
-	    layerContainer.style.display = 'none';
-	    layerContainer.style.position = 'absolute';
-	    domutil.addClass(layerContainer, config.classname('floating-layer'));
-	    container.appendChild(layerContainer);
-	
-	    View.call(this, layerContainer);
-	
-	    /**
-	     * @type {HTMLElement}
-	     */
-	    this.parent = container;
-	}
-	
-	util.inherit(FloatingLayer, View);
-	
-	/**
-	 * @const
-	 */
-	FloatingLayer.PROP_KEY = '__fe_floating_layer';
-	
-	/**
-	 * @const
-	 */
-	FloatingLayer.INIT_ZINDEX = 999;
-	
-	/**
-	 * Destroy floating layer instance. if there no instnace in parent container
-	 *
-	 * remove instance cache property in container element
-	 */
-	FloatingLayer.prototype.destroy = function() {
-	    var parent = this.parent,
-	        sibling = this.sibling,
-	        i = 0, cnt = sibling.length;
-	
-	    for (; i < cnt; i += 1) {
-	        if (sibling[i] === this) {
-	            sibling.splice(i, 1);
-	            break;
-	        }
-	    }
-	
-	    if (!sibling.length) {
-	        try {
-	            delete parent[FloatingLayer.PROP_KEY];
-	        } catch (e) {
-	            parent[FloatingLayer.PROP_KEY] = null;
-	        }
-	
-	        parent.style.position = '';
-	    }
-	
-	    domutil.remove(this.container);
-	
-	    this.sibling = null;
-	
-	    View.prototype.destroy.call(this);
-	};
-	
-	/**
-	 * @returns {boolean} whether layer is visible?
-	 */
-	FloatingLayer.prototype.isVisible = function() {
-	    return this.container.style.display !== 'none';
-	};
-	
-	/**
-	 * Set layer position
-	 * @param {number} x - x coordinate of layer
-	 * @param {number} y - y coordinate of layer
-	 */
-	FloatingLayer.prototype.setPosition = function(x, y) {
-	    domutil.setPosition(this.container, x, y);
-	};
-	
-	/**
-	 * Set layer left, top, right, bottom position
-	 * @param {object} ltrb object of left, top, right, bottom
-	 * @param {number} [ltrb.left] left pixel value.
-	 * @param {number} [ltrb.top] top pixel value.
-	 * @param {number} [ltrb.right] right pixel value.
-	 * @param {number} [ltrb.bottom] bottom pixel value.
-	 */
-	FloatingLayer.prototype.setLTRB = function(ltrb) {
-	    domutil.setLTRB(this.container, ltrb);
-	};
-	
-	/**
-	 * Set layer size
-	 * @param {number|string} w - layer width
-	 * @param {number|string} h - layer height
-	 */
-	FloatingLayer.prototype.setSize = function(w, h) {
-	    var container = this.container;
-	
-	    w = util.isNumber(w) ? w + 'px' : w;
-	    h = util.isNumber(h) ? h + 'px' : h;
-	
-	    container.style.width = w;
-	    container.style.height = h;
-	};
-	
-	/**
-	 * Set layer content
-	 * @param {string} html - html string
-	 */
-	FloatingLayer.prototype.setContent = function(html) {
-	    this.container.innerHTML = html;
-	};
-	
-	/**
-	 * Get largest z-index from sibling layers
-	 * @returns {number} largest z-index value
-	 */
-	FloatingLayer.prototype.getLargestZIndex = function() {
-	    var zIndexes = util.map(this.sibling, function(layer) {
-	        return layer.zIndex;
-	    });
-	
-	    return Math.max.apply(null, zIndexes);
-	};
-	
-	/**
-	 * Set focus to layer
-	 */
-	FloatingLayer.prototype.focus = function() {
-	    var zIndexForShow = this.getLargestZIndex() + 1;
-	    this.container.style.zIndex = this.zIndex = zIndexForShow;
-	};
-	
-	/**
-	 * Show layer
-	 */
-	FloatingLayer.prototype.show = function() {
-	    this.focus();
-	    this.container.style.display = 'block';
-	};
-	
-	/**
-	 * Hide layer
-	 */
-	FloatingLayer.prototype.hide = function() {
-	    this.container.style.display = 'none';
-	};
-	
-	module.exports = FloatingLayer;
-	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -17681,7 +17768,7 @@
 	},"useData":true});
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17696,8 +17783,8 @@
 	    domevent = __webpack_require__(30),
 	    domutil = __webpack_require__(29),
 	    View = __webpack_require__(38),
-	    FloatingLayer = __webpack_require__(106),
-	    tmpl = __webpack_require__(109);
+	    FloatingLayer = __webpack_require__(87),
+	    tmpl = __webpack_require__(110);
 	
 	/**
 	 * @constructor
@@ -17819,7 +17906,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -17884,7 +17971,7 @@
 	},"useData":true});
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17897,8 +17984,8 @@
 	var config = __webpack_require__(32);
 	var Calendar = __webpack_require__(43);
 	var datetime = __webpack_require__(26);
-	var controllerFactory = __webpack_require__(111);
-	var serviceWeekViewFactory = __webpack_require__(113);
+	var controllerFactory = __webpack_require__(112);
+	var serviceWeekViewFactory = __webpack_require__(114);
 	
 	/**
 	 * @typedef {object} ServiceCalendar~DoorayEvent
@@ -18173,7 +18260,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18185,7 +18272,7 @@
 	var util = global.tui.util;
 	
 	var datetime = __webpack_require__(26),
-	    DoorayBase = __webpack_require__(112),
+	    DoorayBase = __webpack_require__(113),
 	    Core = __webpack_require__(50),
 	    Week = __webpack_require__(51),
 	    Month = __webpack_require__(53);
@@ -18280,7 +18367,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
@@ -18420,7 +18507,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18439,8 +18526,8 @@
 	
 	// Sub views
 	var DayName = __webpack_require__(58);
-	var Milestone = __webpack_require__(114);
-	var TaskView = __webpack_require__(116);
+	var Milestone = __webpack_require__(115);
+	var TaskView = __webpack_require__(117);
 	var TimeGrid = __webpack_require__(60);
 	var Allday = __webpack_require__(68);
 	
@@ -18452,9 +18539,9 @@
 	var TimeClick = __webpack_require__(81);
 	var TimeCreation = __webpack_require__(82);
 	var TimeMove = __webpack_require__(85);
-	var TimeResize = __webpack_require__(87);
-	var MilestoneClick = __webpack_require__(118);
-	var TaskClick = __webpack_require__(119);
+	var TimeResize = __webpack_require__(89);
+	var MilestoneClick = __webpack_require__(119);
+	var TaskClick = __webpack_require__(120);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView,
@@ -18624,7 +18711,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18639,7 +18726,7 @@
 	var domutil = __webpack_require__(29);
 	var TZDate = __webpack_require__(27).Date;
 	var View = __webpack_require__(38);
-	var tmpl = __webpack_require__(115);
+	var tmpl = __webpack_require__(116);
 	
 	// item height + gutter (defined in css)
 	var ITEM_HEIGHT = 17;
@@ -18741,7 +18828,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 115 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -18818,7 +18905,7 @@
 	},"useData":true});
 
 /***/ },
-/* 116 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18832,7 +18919,7 @@
 	var datetime = __webpack_require__(26);
 	var domutil = __webpack_require__(29);
 	var View = __webpack_require__(38);
-	var tmpl = __webpack_require__(117);
+	var tmpl = __webpack_require__(118);
 	var TZDate = __webpack_require__(27).Date;
 	
 	// height + gutter (defined in CSS)
@@ -18940,7 +19027,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 117 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -19041,7 +19128,7 @@
 	},"useData":true});
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19141,7 +19228,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19241,7 +19328,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19254,8 +19341,8 @@
 	var Handlebars = __webpack_require__(6);
 	
 	var config = __webpack_require__(32),
-	    controllerFactory = __webpack_require__(111),
-	    serviceWeekViewFactory = __webpack_require__(121),
+	    controllerFactory = __webpack_require__(112),
+	    serviceWeekViewFactory = __webpack_require__(122),
 	    Drag = __webpack_require__(46),
 	    datetime = __webpack_require__(26),
 	    Layout = __webpack_require__(45),
@@ -19587,7 +19674,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19603,7 +19690,7 @@
 	
 	// Parent views
 	var Week = __webpack_require__(57);
-	var TimeGrid = __webpack_require__(122);
+	var TimeGrid = __webpack_require__(123);
 	var TimeClick = __webpack_require__(81);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
@@ -19670,7 +19757,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 122 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -19685,7 +19772,7 @@
 	var TZDate = __webpack_require__(27).Date;
 	var View = __webpack_require__(38);
 	var TimeGrid = __webpack_require__(60);
-	var mainTmpl = __webpack_require__(123);
+	var mainTmpl = __webpack_require__(124);
 	
 	/**
 	 * @constructor
@@ -19859,7 +19946,7 @@
 	    return {
 	        scheduleTop: this._getTopPercentByTime(starts),
 	        scheduleHeight: this._getTopPercentByTime(ends) - this._getTopPercentByTime(starts)
-	    }
+	    };
 	};
 	
 	module.exports = SplitTimeGrid;
@@ -19868,7 +19955,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 123 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
