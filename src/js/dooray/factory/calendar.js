@@ -18,6 +18,7 @@ var serviceWeekViewFactory = require('./weekView');
  * @property {string} title - 이벤트 제목
  * @property {string} category - 이벤트 타입
  * @property {string} dueDateClass - 업무 일정 분류 (category가 'task'일 때 유효)
+ * @property {string} customStyle - 커스텀 클래스 추가
  * @property {string} starts - 일정 시작 시간
  * @property {string} ends - 일정 종료 시간
  * @property {string} [color] - 일정 텍스트색

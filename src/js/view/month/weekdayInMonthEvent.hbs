@@ -16,13 +16,13 @@
                     color:{{model.color}};
                     background-color:{{model.bgColor}};
                     border-color:{{model.borderColor}};
-                    box-shadow:{{model.boxShadow}};">
+                    box-shadow:{{model.boxShadow}}; {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
                   data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
         </div>
         {{else ~}}
-        <div class="{{CSS_PREFIX}}weekday-event {{CSS_PREFIX}}weekday-event-time" style="height:{{@root.eventHeight}}px;">
+        <div class="{{CSS_PREFIX}}weekday-event {{CSS_PREFIX}}weekday-event-time" style="height:{{@root.eventHeight}}px; {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-event-bullet" style="background:{{model.color}}"></span>
             <span class="{{CSS_PREFIX}}weekday-event-title" style="color:#333"
                   data-title="{{model.title}}">{{{time-tmpl model}}}</span>

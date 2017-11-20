@@ -54,6 +54,12 @@ function DoorayEvent() {
     this.dueDateClass = '';
 
     /**
+     * 커스텀 스타일
+     * @type {string}
+     */
+    this.customStyle = '';
+
+    /**
      * 렌더링과 관계 없는 별도 데이터 저장 공간.
      * @type {object}
      */
@@ -85,6 +91,7 @@ DoorayEvent.prototype.init = function(options) {
     this.calendarId = options.calendarId;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
+    this.customStyle = options.customStyle;
     this.isPending = options.isPending;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
