@@ -1,4 +1,4 @@
-/*! bundle created at "Tue Nov 21 2017 01:41:37 GMT+0900 (KST)" */
+/*! bundle created at "Wed Nov 22 2017 16:48:28 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -908,7 +908,6 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
 .dooray-calendar-freebusy-leftmargin {
   position: relative;
   height: 100%;
-  border-left: 1px solid #ddd;
 }
 .dooray-calendar-freebusy-grid {
   position: relative;
@@ -950,7 +949,6 @@ button.dooray-calendar-minicalendar-nav.dooray-calendar-minicalendar-next {
 .dooray-calendar-freebusy-block-container {
   position: relative;
   height: 100%;
-  border-left: 1px solid #ddd;
 }
 .dooray-calendar-freebusy-block {
   position: absolute;

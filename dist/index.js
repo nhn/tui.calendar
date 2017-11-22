@@ -1,4 +1,4 @@
-/*! bundle created at "Tue Nov 21 2017 01:41:37 GMT+0900 (KST)" */
+/*! bundle created at "Wed Nov 22 2017 16:48:28 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5893,7 +5893,9 @@
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "freebusy-item\" style=\"height:"
+	    + "freebusy-item "
+	    + alias4(alias5((depth0 != null ? depth0.customClass : depth0), depth0))
+	    + "\" style=\"height:"
 	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.itemHeight), depth0))
 	    + "px\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
