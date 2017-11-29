@@ -97,8 +97,37 @@ TimeMoveGuide.prototype._clearGuideElement = function() {
         this._guideLayer.destroy();
     }
 
+    this._showOriginEventBlocks();
+
     this.guideElement = this._getTopFunc = this._guideLayer = this._model = this._lastDrag =
         this._startGridY = this._startTopPixel = null;
+};
+
+/**
+ * Dim element blocks
+ * @param {number} modelID - CalEvent model instance ID
+ */
+TimeMoveGuide.prototype._hideOriginEventBlocks = function() {
+    var className = config.classname('time-date-event-block-dragging-dim');
+    if (this.guideElement) {
+        domutil.addClass(this.guideElement, className);
+    }
+};
+
+/**
+ * Show element blocks
+ */
+TimeMoveGuide.prototype._showOriginEventBlocks = function() {
+    var className = config.classname('time-date-event-block-dragging-dim');
+    if (this.guideElement) {
+        domutil.removeClass(this.guideElement, className);
+    }
+};
+
+TimeMoveGuide.prototype._getHighlightColorModel = function(model) {
+    return {
+        bgColor: model.color
+    };
 };
 
 /**
@@ -137,10 +166,15 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     this.guideElement = guideElement;
     this._container = dragStartEventData.relatedView.container;
 
-    this._model = util.extend(DoorayEvent.create(dragStartEventData.model), dragStartEventData.model);
+    this._model = util.extend(
+        DoorayEvent.create(dragStartEventData.model),
+        dragStartEventData.model,
+        this._getHighlightColorModel(dragStartEventData.model)
+    );
     this._lastDrag = dragStartEventData;
 
     this._resetGuideLayer();
+    this._hideOriginEventBlocks();
 };
 
 /**
