@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Nov 22 2017 16:48:28 GMT+0900 (KST)" */
+/*! bundle created at "Wed Nov 29 2017 22:33:13 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -14305,8 +14305,37 @@
 	        this._guideLayer.destroy();
 	    }
 	
+	    this._showOriginEventBlocks();
+	
 	    this.guideElement = this._getTopFunc = this._guideLayer = this._model = this._lastDrag =
 	        this._startGridY = this._startTopPixel = null;
+	};
+	
+	/**
+	 * Dim element blocks
+	 * @param {number} modelID - CalEvent model instance ID
+	 */
+	TimeMoveGuide.prototype._hideOriginEventBlocks = function() {
+	    var className = config.classname('time-date-event-block-dragging-dim');
+	    if (this.guideElement) {
+	        domutil.addClass(this.guideElement, className);
+	    }
+	};
+	
+	/**
+	 * Show element blocks
+	 */
+	TimeMoveGuide.prototype._showOriginEventBlocks = function() {
+	    var className = config.classname('time-date-event-block-dragging-dim');
+	    if (this.guideElement) {
+	        domutil.removeClass(this.guideElement, className);
+	    }
+	};
+	
+	TimeMoveGuide.prototype._getHighlightColorModel = function(model) {
+	    return {
+	        bgColor: model.color
+	    };
 	};
 	
 	/**
@@ -14345,10 +14374,15 @@
 	    this.guideElement = guideElement;
 	    this._container = dragStartEventData.relatedView.container;
 	
-	    this._model = util.extend(DoorayEvent.create(dragStartEventData.model), dragStartEventData.model);
+	    this._model = util.extend(
+	        DoorayEvent.create(dragStartEventData.model),
+	        dragStartEventData.model,
+	        this._getHighlightColorModel(dragStartEventData.model)
+	    );
 	    this._lastDrag = dragStartEventData;
 	
 	    this._resetGuideLayer();
+	    this._hideOriginEventBlocks();
 	};
 	
 	/**
@@ -14605,12 +14639,6 @@
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-date-event-block-pending";
-	},"3":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
 	  return "<div class=\""
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-resize-handle handle-x\">&nbsp;</div>";
@@ -14619,24 +14647,20 @@
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-date-event-block "
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isPending : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\" data-id=\""
+	    + "time-date-event-block\" data-id=\""
 	    + alias4((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
 	    + "\" style=\"width: 100%; height: 100%;\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-event\" style=\"color:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + ";background-color:"
+	    + "time-event "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-event-block-dragging-highlight\" style=\"background-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
 	    + "; border-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "; box-shadow:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.boxShadow : stack1), depth0))
 	    + ";\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n    "
-	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n</div>\n";
 	},"useData":true});
 
@@ -17543,7 +17567,8 @@
 	    domutil = __webpack_require__(29),
 	    domevent = __webpack_require__(30),
 	    FloatingLayer = __webpack_require__(87),
-	    tmpl = __webpack_require__(108);
+	    tmpl = __webpack_require__(108),
+	    DoorayEvent = __webpack_require__(34);
 	
 	/**
 	 * @constructor
@@ -17601,6 +17626,8 @@
 	 * @param {number} modelID - CalEvent model instance ID
 	 */
 	MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
+	    var className = config.classname('weekday-event-block-dragging-dim');
+	
 	    this.elements = domutil.find(
 	        config.classname('.weekday-event-block-' + modelID),
 	        this.monthMove.monthView.container,
@@ -17608,7 +17635,7 @@
 	    );
 	
 	    util.forEach(this.elements, function(el) {
-	        el.style.display = 'none';
+	        domutil.addClass(el, className);
 	    });
 	};
 	
@@ -17616,9 +17643,17 @@
 	 * Show element blocks
 	 */
 	MonthMoveGuide.prototype._showOriginEventBlocks = function() {
+	    var className = config.classname('weekday-event-block-dragging-dim');
+	
 	    util.forEach(this.elements, function(el) {
-	        el.style.display = 'block';
+	        domutil.removeClass(el, className);
 	    });
+	};
+	
+	MonthMoveGuide.prototype._getHighlightColorModel = function(model) {
+	    return {
+	        bgColor: model.color
+	    };
 	};
 	
 	/**
@@ -17683,7 +17718,13 @@
 	    this.layer = layer;
 	    layer.setSize(widthPercent + '%', height);
 	    layer.setPosition(mousePos[0], mousePos[1]);
-	    layer.setContent(tmpl({model: model}));
+	    layer.setContent(tmpl({
+	        model: util.extend(
+	            DoorayEvent.create(model),
+	            model,
+	            this._getHighlightColorModel(model)
+	        )
+	    }));
 	    layer.show();
 	
 	    if (!util.browser.msie) {
@@ -17740,32 +17781,50 @@
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
+	  return "            border-left:3px solid "
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + ";\n            ";
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "    <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-event-bullet "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-event-bullet-dragging-highlight\"></span>\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
 	  return "            "
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n";
-	},"3":function(container,depth0,helpers,partials,data) {
+	},"7":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "            "
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-guide\"\n     style=\"top: -50%;\n            left: -50%;\n            color:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + ";\n            background-color:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + ";\n            border-left:3px solid "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\">\n    <div class=\""
+	    + "month-guide "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-guide-dragging-highlight\"\n     style=\"top: -50%;\n            left: -50%;\n            width: 100%;\n            background-color:"
+	    + alias4(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n"
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"unless","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-move-guide "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-event-title\">\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+	    + "weekday-event-title "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-event-title-dragging-highlight\">\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
 	    + "        </div>\n    </div>\n</div>\n";
 	},"useData":true});
 
