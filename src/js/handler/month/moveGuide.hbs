@@ -1,10 +1,15 @@
-<div class="{{CSS_PREFIX}}month-guide"
+<div class="{{CSS_PREFIX}}month-guide {{CSS_PREFIX}}month-guide-dragging-highlight"
      style="top: -50%;
             left: -50%;
-            color:{{model.color}};
+            width: 100%;
             background-color:{{model.bgColor}};
-            border-left:3px solid {{model.borderColor}}">
-    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-event-title">
+            {{#if model.isAllDay}}
+            border-left:3px solid {{model.borderColor}};
+            {{/if}}">
+    {{#unless model.isAllDay}}
+    <span class="{{CSS_PREFIX}}weekday-event-bullet {{CSS_PREFIX}}weekday-event-bullet-dragging-highlight"></span>
+    {{/unless}}
+    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-event-title {{CSS_PREFIX}}weekday-event-title-dragging-highlight">
         {{#if model.isAllDay}}
             {{{allday-tmpl model}}}
         {{else}}

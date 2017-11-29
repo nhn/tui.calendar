@@ -211,7 +211,7 @@
             console.log('select', e);
         },
         'beforeUpdateEvent': function(e) {
-            cal.updateEvent(e.model.id, {
+            cal.updateEvent(e.model.id, e.model.calendarId, {
                 starts: e.starts,
                 ends: e.ends
             });
