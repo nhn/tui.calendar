@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Nov 30 2017 11:46:53 GMT+0900 (KST)" */
+/*! bundle created at "Thu Nov 30 2017 14:37:15 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -18641,6 +18641,9 @@
 	 * @returns {CalEvent|boolean} updated event instance, when it fail then return false
 	 */
 	DoorayBase.prototype.updateEvent = function(calEvent, options) {
+	    var starts = options.starts || calEvent.starts;
+	    var ends = options.ends || calEvent.ends;
+	
 	    if (options.title) {
 	        calEvent.set('title', options.title);
 	    }
@@ -18649,12 +18652,12 @@
 	        calEvent.set('isAllDay', options.isAllDay);
 	    }
 	
-	    if (options.starts) {
-	        calEvent.set('starts', new TZDate(options.starts));
-	    }
-	
-	    if (options.ends) {
-	        calEvent.set('ends', new TZDate(options.ends));
+	    if (options.starts || options.ends) {
+	        if (calEvent.isAllDay) {
+	            calEvent.setAllDayPeriod(starts, ends);
+	        } else {
+	            calEvent.setTimePeriod(starts, ends);
+	        }
 	    }
 	
 	    if (options.color) {
