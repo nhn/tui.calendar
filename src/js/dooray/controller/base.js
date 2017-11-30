@@ -70,6 +70,9 @@ DoorayBase.prototype.createEvent = function(data, silent) {
  * @returns {CalEvent|boolean} updated event instance, when it fail then return false
  */
 DoorayBase.prototype.updateEvent = function(calEvent, options) {
+    var starts = options.starts || calEvent.starts;
+    var ends = options.ends || calEvent.ends;
+
     if (options.title) {
         calEvent.set('title', options.title);
     }
@@ -78,12 +81,12 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
         calEvent.set('isAllDay', options.isAllDay);
     }
 
-    if (options.starts) {
-        calEvent.set('starts', new TZDate(options.starts));
-    }
-
-    if (options.ends) {
-        calEvent.set('ends', new TZDate(options.ends));
+    if (options.starts || options.ends) {
+        if (calEvent.isAllDay) {
+            calEvent.setAllDayPeriod(starts, ends);
+        } else {
+            calEvent.setTimePeriod(starts, ends);
+        }
     }
 
     if (options.color) {
