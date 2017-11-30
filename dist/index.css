@@ -1,4 +1,4 @@
-/*! bundle created at "Wed Nov 29 2017 22:33:13 GMT+0900 (KST)" */
+/*! bundle created at "Thu Nov 30 2017 11:46:53 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -175,7 +175,7 @@
   left: 0;
   border-radius: 50%;
 }
-.dooray-calendar-weekday-event-bullet-dragging-highlight {
+.dooray-calendar-weekday-event-bullet-focused {
   left: 10px;
   background: #fff;
 }
@@ -188,7 +188,7 @@
   padding-left: 3px;
   font-weight: bold;
 }
-.dooray-calendar-weekday-event-title-dragging-highlight {
+.dooray-calendar-weekday-event-title-focused {
   padding-left: 16px;
 }
 .dooray-calendar-weekday-exceed-left .dooray-calendar-weekday-event {
@@ -311,7 +311,7 @@
   background-color: rgba(19,93,230,0.1);
 }
 .dooray-calendar-allday-guide-move {
-  opacity: 0.6;
+  box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
 .dooray-calendar-timegrid-container {
   height: 100%;
@@ -452,8 +452,7 @@
 .dooray-calendar-time-date-event-block-dragging-dim {
   opacity: 0.4;
 }
-.dooray-calendar-time-date-event-block-dragging-highlight {
-  color: #fff;
+.dooray-calendar-time-date-event-block-focused {
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
 .dooray-calendar-time-event {
@@ -637,8 +636,7 @@
   background-color: rgba(19,93,230,0.1);
   border: 1px solid #135de6;
 }
-.dooray-calendar-month-guide-dragging-highlight {
-  color: #fff;
+.dooray-calendar-month-guide-focused {
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
 .dooray-calendar-month-guide {
