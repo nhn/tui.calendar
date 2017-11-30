@@ -12,6 +12,7 @@
         '금',
         '토'
     ];
+    var lastClickEventModel;
     // calendar.setTimezoneOffset(540);
 
     cal = calendar.FullCalendar({
@@ -177,10 +178,16 @@
     // 일정 클릭 이벤트 핸들러
     cal.on({
         'clickEvent': function(e) {
+            var model = e.model;
             console.log('click', e);
+            if (lastClickEventModel) {
+                cal.updateEvent(lastClickEventModel.id, lastClickEventModel.calendarId, {isFocused: false});
+            }
+            cal.updateEvent(model.id, model.calendarId, {isFocused: true});
+            lastClickEventModel = model;
         },
         'beforeCreateEvent': function(e) {
-            var message = 'start: ' + new Date(e.starts) + 
+            var message = 'start: ' + new Date(e.starts) +
                             '\nend: ' + new Date(e.ends) +
                             '\nallday: ' + e.isAllDay +
                             '\nName of event to create:';
@@ -223,6 +230,12 @@
         },
         'resizePanel': function(e) {
             console.log('resizePanel', e);
+        },
+        'dragStartEvent': function(e) {
+            console.log('dragStartEvent', e);
+        },
+        'dragEndEvent': function(e) {
+            console.log('dragEndEvent', e);
         }
     });
 

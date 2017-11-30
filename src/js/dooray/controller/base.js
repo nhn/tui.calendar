@@ -102,8 +102,12 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
         calEvent.set('origin', options.origin);
     }
 
-    if (options.boxShadow) {
-        calEvent.set('boxShadow', options.boxShadow);
+    if (!util.isUndefined(options.isPending)) {
+        calEvent.set('isPending', options.isPending);
+    }
+
+    if (!util.isUndefined(options.isFocused)) {
+        calEvent.set('isFocused', options.isFocused);
     }
 
     this._removeFromMatrix(calEvent);

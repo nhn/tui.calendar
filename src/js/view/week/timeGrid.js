@@ -229,6 +229,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
             ymd: ymd,
             isToday: isToday,
             isPending: options.isPending,
+            isFocused: options.isFocused,
             hourStart: options.hourStart,
             hourEnd: options.hourEnd,
             isSplitTimeGrid: options.isSplitTimeGrid

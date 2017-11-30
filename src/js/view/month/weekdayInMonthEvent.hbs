@@ -11,20 +11,38 @@
          style="{{month-eventBlock this @root.eventBlockHeight @root.width 14}};
                 margin-top:{{@root.eventBlockGutter}}px">
         {{#fi model.isAllDay '||' hasMultiDates}}
-        <div class="{{CSS_PREFIX}}weekday-event"
+        <div class="{{CSS_PREFIX}}weekday-event {{#if model.isFocused}}{{CSS_PREFIX}}weekday-event-focused {{/if}}"
              style="height:{{@root.eventHeight}}px;
-                    color:{{model.color}};
-                    background-color:{{model.bgColor}};
-                    border-color:{{model.borderColor}};
-                    box-shadow:{{model.boxShadow}}; {{model.customStyle}}">
+                {{#if model.isFocused}}
+                    color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};
+                {{else}}
+                    color:{{model.color}}; background-color:{{model.bgColor}}; border-color:{{model.borderColor}};
+                {{/if}}
+                    {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-event-title"
                   data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
             <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
         </div>
         {{else ~}}
         <div class="{{CSS_PREFIX}}weekday-event {{CSS_PREFIX}}weekday-event-time" style="height:{{@root.eventHeight}}px; {{model.customStyle}}">
-            <span class="{{CSS_PREFIX}}weekday-event-bullet" style="background:{{model.color}}"></span>
-            <span class="{{CSS_PREFIX}}weekday-event-title" style="color:#333"
+            <span class="{{CSS_PREFIX}}weekday-event-bullet"
+                  style="
+                    {{#if model.isFocused}}
+                        background: #ffffff
+                    {{else}}
+                        background:{{model.color}}
+                    {{/if}}
+                    "
+            ></span>
+            <span class="{{CSS_PREFIX}}weekday-event-title"
+                  style="
+                    {{#if model.isFocused}}
+                        color: #ffffff;
+                        background-color: {{model.color}}
+                    {{else}}
+                        color:#333;
+                    {{/if}}
+                    "
                   data-title="{{model.title}}">{{{time-tmpl model}}}</span>
         </div>
         {{/fi}}

@@ -93,6 +93,7 @@ DoorayEvent.prototype.init = function(options) {
     this.dueDateClass = options.dueDateClass;
     this.customStyle = options.customStyle;
     this.isPending = options.isPending;
+    this.isFocused = options.isFocused;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
