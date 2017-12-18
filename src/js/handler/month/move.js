@@ -103,14 +103,14 @@ MonthMove.prototype.getMonthEventBlock = function(target) {
 };
 
 /**
- * Check event start from more layer
+ * Get event block from more layer
  * @param {HTMLElement} target - element to check
- * @returns {boolean} whether event start from more layer?
+ * @returns {HTMLElement} event element
  */
-MonthMove.prototype.isMoreLayerEventBlock = function(target) {
-    var className = config.classname('month-more-event');
+MonthMove.prototype.getMoreLayerEventBlock = function(target) {
+    var className = config.classname('.month-more-event');
 
-    return domutil.hasClass(target, className);
+    return domutil.closest(target, className);
 };
 
 /**
@@ -132,13 +132,17 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
 
     if (blockElement) {
         modelID = domutil.getData(blockElement, 'id');
-    } else if (this.isMoreLayerEventBlock(target)) {
-        modelID = domutil.getData(target, 'id');
-        /**
-         * Fire for notificate that the drag event start at more layer view.
-         * @event {MonthMove#monthMoveStart_from_morelayer}
-         */
-        this.fire('monthMoveStart_from_morelayer');
+    } else {
+        blockElement = this.getMoreLayerEventBlock(target);
+
+        if (blockElement) {
+            modelID = domutil.getData(blockElement, 'id');
+            /**
+             * Fire for notificate that the drag event start at more layer view.
+             * @event {MonthMove#monthMoveStart_from_morelayer}
+             */
+            this.fire('monthMoveStart_from_morelayer');
+        }
     }
 
     return modelID;
