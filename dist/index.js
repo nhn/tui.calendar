@@ -1,4 +1,4 @@
-/*! bundle created at "Thu Nov 30 2017 14:37:15 GMT+0900 (KST)" */
+/*! bundle created at "Mon Dec 18 2017 16:37:04 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -17528,14 +17528,14 @@
 	};
 	
 	/**
-	 * Check event start from more layer
+	 * Get event block from more layer
 	 * @param {HTMLElement} target - element to check
-	 * @returns {boolean} whether event start from more layer?
+	 * @returns {HTMLElement} event element
 	 */
-	MonthMove.prototype.isMoreLayerEventBlock = function(target) {
-	    var className = config.classname('month-more-event');
+	MonthMove.prototype.getMoreLayerEventBlock = function(target) {
+	    var className = config.classname('.month-more-event');
 	
-	    return domutil.hasClass(target, className);
+	    return domutil.closest(target, className);
 	};
 	
 	/**
@@ -17557,13 +17557,17 @@
 	
 	    if (blockElement) {
 	        modelID = domutil.getData(blockElement, 'id');
-	    } else if (this.isMoreLayerEventBlock(target)) {
-	        modelID = domutil.getData(target, 'id');
-	        /**
-	         * Fire for notificate that the drag event start at more layer view.
-	         * @event {MonthMove#monthMoveStart_from_morelayer}
-	         */
-	        this.fire('monthMoveStart_from_morelayer');
+	    } else {
+	        blockElement = this.getMoreLayerEventBlock(target);
+	
+	        if (blockElement) {
+	            modelID = domutil.getData(blockElement, 'id');
+	            /**
+	             * Fire for notificate that the drag event start at more layer view.
+	             * @event {MonthMove#monthMoveStart_from_morelayer}
+	             */
+	            this.fire('monthMoveStart_from_morelayer');
+	        }
 	    }
 	
 	    return modelID;
@@ -18579,7 +18583,6 @@
 	var util = global.tui.util;
 	var Base = __webpack_require__(48);
 	var DoorayEvent = __webpack_require__(33);
-	var TZDate = __webpack_require__(27).Date;
 	
 	/**
 	 * @constructor
