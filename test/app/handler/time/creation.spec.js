@@ -76,7 +76,10 @@ describe('handler/time.creation', function() {
                     (new TZDate(2015, 4, 5, 1).getTime()),
                     (new TZDate(2015, 4, 5, 1, 30).getTime())
                 ],
-                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime())
+                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime()),
+                triggerEvent: {
+                    type: 'dragend'
+                }
             };
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
@@ -85,7 +88,10 @@ describe('handler/time.creation', function() {
                 isAllDay: false,
                 starts: new TZDate(2015, 4, 5, 1),
                 ends: new TZDate(2015, 4, 5, 1, 30),
-                guide: mock.guide
+                guide: mock.guide,
+                triggerEvent: {
+                    type: 'dragend'
+                }
             });
         });
 
@@ -96,7 +102,10 @@ describe('handler/time.creation', function() {
                         return new TZDate(2015, 4, 5);
                     }
                 },
-                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime())
+                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime()),
+                triggerEvent: {
+                    type: 'click'
+                }
             };
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
@@ -105,7 +114,10 @@ describe('handler/time.creation', function() {
                 isAllDay: false,
                 starts: new TZDate(2015, 4, 5, 1, 30),
                 ends: new TZDate(2015, 4, 5, 2),
-                guide: mock.guide
+                guide: mock.guide,
+                triggerEvent: {
+                    type: 'click'
+                }
             });
 
         });

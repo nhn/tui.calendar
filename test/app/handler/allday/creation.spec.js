@@ -68,7 +68,8 @@ describe('handler:AlldayCreation', function() {
             mockEventData = {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
-                xIndex: 2
+                xIndex: 2,
+                triggerEvent: {}
             };
 
             proto._createEvent.call(inst, mockEventData);
@@ -77,7 +78,8 @@ describe('handler:AlldayCreation', function() {
                 isAllDay: true,
                 starts: new TZDate('2015-05-02T00:00:00+09:00'),
                 ends: new TZDate('2015-05-03T23:59:59+09:00'),
-                guide: inst.guide
+                guide: inst.guide,
+                triggerEvent: {}
             });
         });
 
@@ -88,7 +90,8 @@ describe('handler:AlldayCreation', function() {
             mockEventData = {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 3,
-                xIndex: 1
+                xIndex: 1,
+                triggerEvent: {}
             };
 
             proto._createEvent.call(inst, mockEventData);
@@ -97,7 +100,8 @@ describe('handler:AlldayCreation', function() {
                 isAllDay: true,
                 starts: new TZDate('2015-05-02T00:00:00+09:00'),
                 ends: new TZDate('2015-05-04T23:59:59+09:00'),
-                guide: inst.guide
+                guide: inst.guide,
+                triggerEvent: {}
             });
         });
     });

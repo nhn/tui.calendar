@@ -18,6 +18,9 @@ describe('handler:AlldayCore', function() {
                 },
                 children: jasmine.createSpyObj('Collection', ['single'])
             };
+            var mouseEvent = {
+                type: 'dragStart'
+            };
 
             mockAlldayView.children.single.and.returnValue(true);
 
@@ -28,11 +31,12 @@ describe('handler:AlldayCore', function() {
             // drag end position (12일)
             domevent.getMousePosition.and.returnValue([160, 10]);
 
-            expect(result()).toEqual({
+            expect(result(mouseEvent)).toEqual({
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
                 datesInRange: 5,
-                xIndex: 2
+                xIndex: 2,
+                triggerEvent: mouseEvent.type
             });
 
             // drag start position (12일)
@@ -40,11 +44,12 @@ describe('handler:AlldayCore', function() {
             result = AlldayCore._retriveEventData.call(null, mockAlldayView);
             // drag end position (10일)
             domevent.getMousePosition.and.returnValue([59, 25]);
-            expect(result()).toEqual({
+            expect(result(mouseEvent)).toEqual({
                 relatedView: mockAlldayView,
                 dragStartXIndex: 2,
                 datesInRange: 5,
-                xIndex: 0
+                xIndex: 0,
+                triggerEvent: mouseEvent.type
             });
         });
     });

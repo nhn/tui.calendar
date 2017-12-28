@@ -36,7 +36,8 @@ describe('handler:MonthCore', function() {
 
         var mockMouseEvent = {
             clientX: 9,
-            clientY: 20
+            clientY: 20,
+            type: 'click'
         };
 
         expect(func(mockMouseEvent)).toEqual({
@@ -45,12 +46,14 @@ describe('handler:MonthCore', function() {
             sizeX: 7,
             sizeY: 2,
             date: new TZDate('2015-12-27T00:00:00+09:00'),
-            weekdayView: w1
+            weekdayView: w1,
+            triggerEvent: 'click'
         });
 
         mockMouseEvent = {
             clientX: 58,
-            clientY: 60
+            clientY: 60,
+            type: 'click'
         };
 
         expect(func(mockMouseEvent)).toEqual({
@@ -59,7 +62,8 @@ describe('handler:MonthCore', function() {
             sizeX: 7,
             sizeY: 2,
             date: new TZDate('2016-01-08T00:00:00+09:00'),
-            weekdayView: w2
+            weekdayView: w2,
+            triggerEvent: 'click'
         });
     });
 });
