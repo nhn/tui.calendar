@@ -121,7 +121,7 @@ Month.prototype.render = function() {
         vLayout = this.vLayout,
         controller = this.controller,
         daynames = opt.daynames,
-        calendar = this._getMonthCalendar(opt.renderMonth),
+        calendar = this._getMonthCalendar(opt.renderMonth, opt.startDayOfWeek),
         eventFilter = opt.eventFilter,
         daynameViewModel,
         baseViewModel;
