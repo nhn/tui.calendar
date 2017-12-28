@@ -406,7 +406,7 @@ Calendar.prototype.move = function(offset) {
 
     if (viewName === 'month') {
         renderDate.addMonth(offset);
-        tempDate = datetime.arr2dCalendar(this.renderDate, util.pick(this.options, 'month.startDayOfWeek') || 0, true);
+        tempDate = datetime.arr2dCalendar(this.renderDate, util.pick(this.options, 'month', 'startDayOfWeek') || 0, true);
 
         recursiveSet(view, function(opt) {
             opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -416,7 +416,7 @@ Calendar.prototype.move = function(offset) {
         endDate = tempDate[tempDate.length - 1][6];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        tempDate = this.getWeekDayRange(renderDate.d, util.pick(this.options, 'week.startDayOfWeek') || 0);
+        tempDate = this.getWeekDayRange(renderDate.d, util.pick(this.options, 'week', 'startDayOfWeek') || 0);
         startDate = tempDate[0];
         endDate = tempDate[1];
 
