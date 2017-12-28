@@ -35,7 +35,8 @@ describe('module:Time.Creation', function() {
         var vMouseEvent = {
             target: 'hello',
             clientX: 10,
-            clientY: 115
+            clientY: 115,
+            type: 'click'
         };
 
         var expected = {
@@ -46,7 +47,8 @@ describe('module:Time.Creation', function() {
             gridY: 12,
             timeY: (new Date('2015-05-05T12:00:00+09:00').getTime()),
             nearestGridY: 12,
-            nearestGridTimeY: (new Date('2015-05-05T12:00:00+09:00').getTime())
+            nearestGridTimeY: (new Date('2015-05-05T12:00:00+09:00').getTime()),
+            triggerEvent: 'click'
         };
 
         expect(func(vMouseEvent)).toEqual(expected);
