@@ -10,7 +10,7 @@ var datetime = require('../../common/datetime');
 var array = require('../../common/array');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
-var getMousePosData = require('./core');
+var getMousePosDate = require('./core');
 var Guide = require('./creationGuide');
 var TZDate = require('../../common/timezone').Date;
 
@@ -118,7 +118,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
-    this.getEventData = getMousePosData(this.monthView);
+    this.getEventData = getMousePosDate(this.monthView);
 
     eventData = this.getEventData(dragStartEvent.originEvent);
 
@@ -224,7 +224,7 @@ MonthCreation.prototype._onDblClick = function(e) {
         return;
     }
 
-    eventData = getMousePosData(this.monthView)(e);
+    eventData = getMousePosDate(this.monthView)(e);
 
     this.fire('monthCreationClick', eventData);
 
@@ -253,7 +253,7 @@ MonthCreation.prototype._onClick = function(e) {
         return;
     }
 
-    eventData = getMousePosData(this.monthView)(e.originEvent);
+    eventData = getMousePosDate(this.monthView)(e.originEvent);
 
     this._requestOnClick = true;
     setTimeout(function() {

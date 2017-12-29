@@ -53,8 +53,18 @@ function Month(options, container, controller) {
         },
         startDayOfWeek: 0,
         renderMonth: '2015-12',
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        narrowWeekend: false
     }, options);
+
+    /**
+     * horizontal grid information
+     * @type {Object}
+     */
+    this.grids = datetime.getGridLeftAndWidth(
+        this.options.daynames.length,
+        this.options.narrowWeekend,
+        this.options.startDayOfWeek);
 }
 
 util.inherit(Month, View);
@@ -88,6 +98,8 @@ Month.prototype._renderChildren = function(container, calendar) {
     var weekCount = calendar.length;
     var heightPercent = 100 / weekCount;
     var renderMonth = this.options.renderMonth;
+    var narrowWeekend = this.options.narrowWeekend;
+    var startDayOfWeek = this.options.startDayOfWeek;
 
     container.innerHTML = '';
     this.children.clear();
@@ -105,7 +117,9 @@ Month.prototype._renderChildren = function(container, calendar) {
             renderMonth: renderMonth,
             heightPercent: heightPercent,
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
+            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+            narrowWeekend: narrowWeekend,
+            startDayOfWeek: startDayOfWeek
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -123,22 +137,24 @@ Month.prototype.render = function() {
         daynames = opt.daynames,
         calendar = this._getMonthCalendar(opt.renderMonth, opt.startDayOfWeek),
         eventFilter = opt.eventFilter,
+        grids = this.grids,
         daynameViewModel,
         baseViewModel;
 
     daynameViewModel = util.map(
         util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-        function(i) {
+        function(day, index) {
             return {
-                day: i,
-                label: daynames[i]
+                day: day,
+                label: daynames[day],
+                width: grids[index].width,
+                left: grids[index].left
             };
         }
     );
 
     baseViewModel = {
-        daynames: daynameViewModel,
-        width: 100 / daynameViewModel.length
+        daynames: daynameViewModel
     };
 
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);

@@ -8,7 +8,7 @@
                 {{CSS_PREFIX}}weekday-event-block-{{stamp model}}
             {{#if exceedLeft}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
             {{#if exceedRight}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
-         style="{{month-eventBlock this @root.eventBlockHeight @root.width 14}};
+         style="{{month-eventBlock this @root.dates @root.eventBlockHeight 14}};
                 margin-top:{{@root.eventBlockGutter}}px">
         {{#fi model.isAllDay '||' hasMultiDates}}
         <div class="{{CSS_PREFIX}}weekday-event {{#if model.isFocused}}{{CSS_PREFIX}}weekday-event-focused {{/if}}"

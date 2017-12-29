@@ -27,6 +27,24 @@ function getElSize(value, postfix, prefix) {
     return prefix + ':auto';
 }
 
+/**
+ * Get element width based on narrowWeekend
+ * @param {object} viewModel - view model
+ * @param {Array} dates - dates information
+ * @returns {number} element width
+ */
+function getElWidth(viewModel, dates) {
+    var width = 0;
+    var i = 0;
+    var left;
+    for (; i < viewModel.width; i += 1) {
+        left = viewModel.left + i;
+        width += dates[left].width;
+    }
+
+    return width;
+}
+
 Handlebars.registerHelper({
     /**
      * Stamp supplied object
@@ -114,10 +132,10 @@ Handlebars.registerHelper({
         return [top, left, width, height].join(';');
     },
 
-    'month-eventBlock': function(viewModel, blockHeight, blockWidth, paddingTop) {
+    'month-eventBlock': function(viewModel, dates, blockHeight, paddingTop) {
         var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
-        var left = getElSize(viewModel.left * blockWidth, '%', 'left');
-        var width = getElSize(viewModel.width * blockWidth, '%', 'width');
+        var left = getElSize(dates[viewModel.left].left, '%', 'left');
+        var width = getElSize(getElWidth(viewModel, dates), '%', 'width');
         var height = getElSize(viewModel.height, 'px', 'height');
 
         return [top, left, width, height].join(';');

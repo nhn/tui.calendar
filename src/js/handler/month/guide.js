@@ -74,6 +74,12 @@ function MonthGuide(options, monthView) {
      * @type {Object.<string, HTMLElement>}
      */
     this.guideElements = {};
+
+    /**
+     * horizontal grid information
+     * @type {Object}
+     */
+    this.grids = monthView.grids;
 }
 
 /**
@@ -96,7 +102,8 @@ MonthGuide.prototype.clearGuideElement = function() {
  * @returns {number} percent value
  */
 MonthGuide.prototype._getRatioValueInWeek = function(value) {
-    return common.ratio(this.days, 100, value);
+    var grid = this.grids[value] || {left: 100};
+    return grid.left;
 };
 
 /**

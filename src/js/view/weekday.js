@@ -37,8 +37,19 @@ function Weekday(options, container) {
         containerHeight: 40,
         containerBottomGutter: 8,
         eventHeight: 18,
-        eventGutter: 2
+        eventGutter: 2,
+        narrowWeekend: false,
+        startDayOfWeek: 0
     }, options);
+
+    /**
+     * horizontal grid information
+     * @type {Object}
+     */
+    this.grids = datetime.getGridLeftAndWidth(
+        this.getRenderDateRange().length,
+        this.options.narrowWeekend,
+        this.options.startDayOfWeek);
 
     View.call(this, container);
 }
@@ -67,20 +78,22 @@ Weekday.prototype.getRenderDateRange = function() {
 Weekday.prototype.getBaseViewModel = function() {
     var opt = this.options;
     var range = this.getRenderDateRange();
-    var gridWidth = (100 / range.length);
     var today = datetime.format(new TZDate(), 'YYYYMMDD');
+    var grids = this.grids;
 
     return {
-        width: gridWidth,
         eventHeight: opt.eventHeight,
         eventBlockHeight: (opt.eventHeight + opt.eventGutter),
         eventBlockGutter: opt.eventGutter,
-        dates: util.map(range, function(date) {
+        dates: util.map(range, function(date, index) {
+            var day = date.getDay();
             return {
                 date: date.getDate(),
                 month: date.getMonth() + 1,
-                day: date.getDay(),
-                isToday: datetime.format(date, 'YYYYMMDD') === today
+                day: day,
+                isToday: datetime.format(date, 'YYYYMMDD') === today,
+                width: grids[index].width,
+                left: grids[index].left
             };
         })
     };

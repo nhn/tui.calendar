@@ -462,6 +462,46 @@ datetime = {
         });
 
         return calendar;
+    },
+
+    /**
+     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek
+     * @param {number} days - day length of week
+     * @param {boolean} narrowWeekend - narrow weekend
+     * @param {number} startDayOfWeek - start day of week
+     * @returns {Array} day, left, width
+     */
+    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek) {
+        var uniformWidth = 100 / days;
+        var wideWidth = 100 / (days - 1);
+        var accumulatedWidth = 0;
+        var dates = util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7);
+
+        return util.map(dates, function(day) {
+            var model;
+            var width = narrowWeekend ? wideWidth : uniformWidth;
+            if (narrowWeekend && datetime.isWeekend(day)) {
+                width = wideWidth / 2;
+            }
+
+            model = {
+                day: day,
+                width: width,
+                left: accumulatedWidth
+            };
+
+            accumulatedWidth += width;
+            return model;
+        });
+    },
+
+    /**
+     * Get that day is weekend
+     * @param {number} day number
+     * @returns {boolean} true if weekend or false
+     */
+    isWeekend: function(day) {
+        return day === 0 || day === 6;
     }
 };
 

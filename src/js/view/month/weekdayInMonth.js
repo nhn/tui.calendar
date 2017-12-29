@@ -102,16 +102,21 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
  * Get view model for render skipped label
  * @param {object} exceedDate - object has count of each dates exceed event block
  *  count.
+ * @param {object} baseViewModel - view model of base view
  * @returns {object[]} - view model for skipped label
  */
-WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
+WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewModel) {
     var dateRange = util.map(this.getRenderDateRange(), function(date) {
         return datetime.format(date, 'YYYYMMDD');
     });
+    var dates = baseViewModel.dates;
 
     return util.map(exceedDate, function(skipped, ymd) {
+        var index = util.inArray(ymd, dateRange);
+
         return {
-            left: util.inArray(ymd, dateRange),
+            left: dates[index].left,
+            width: dates[index].width,
             skipped: skipped,
             ymd: ymd
         };
@@ -154,7 +159,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     contentStr += skipTmpl(util.extend({
         renderLimitIdx: renderLimitIdx,
-        viewModelForSkip: this._getSkipLabelViewModel(exceedDate)
+        viewModelForSkip: this._getSkipLabelViewModel(exceedDate, baseViewModel)
     }, baseViewModel));
 
     eventContainer.innerHTML = contentStr;
