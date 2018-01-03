@@ -135,7 +135,9 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         eventContainer,
         contentStr = '';
 
-    setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+    if (!this.options.visibleWeeksCount) {
+        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+    }
     container.innerHTML = baseTmpl(baseViewModel);
 
     renderLimitIdx = this._getRenderLimitIndex();

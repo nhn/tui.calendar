@@ -3,7 +3,8 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
+var util = global.tui.util,
+    mmin = Math.min;
 var Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
@@ -400,17 +401,40 @@ Calendar.prototype.move = function(offset) {
         viewName = this.viewName,
         view = this.getCurrentView(),
         recursiveSet = this.setOptionRecurseively,
-        startDate, endDate, tempDate;
+        startDate, endDate, tempDate, startDayOfWeek, visibleWeeksCount, datetimeOptions;
 
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        renderDate.addMonth(offset);
-        tempDate = datetime.arr2dCalendar(this.renderDate, util.pick(this.options, 'month', 'startDayOfWeek') || 0, true);
+        startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
+        visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
 
-        recursiveSet(view, function(opt) {
-            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
-        });
+        if (visibleWeeksCount) {
+            datetimeOptions = {
+                startDayOfWeek: startDayOfWeek,
+                isAlways6Week: false,
+                visibleWeeksCount: visibleWeeksCount
+            };
+
+            renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
+            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+
+            recursiveSet(view, function(opt) {
+                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
+            });
+        } else {
+            datetimeOptions = {
+                startDayOfWeek: startDayOfWeek,
+                isAlways6Week: true
+            };
+
+            renderDate.addMonth(offset);
+            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+
+            recursiveSet(view, function(opt) {
+                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+            });
+        }
 
         startDate = tempDate[0][0];
         endDate = tempDate[tempDate.length - 1][6];

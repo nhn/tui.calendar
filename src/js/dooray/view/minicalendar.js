@@ -202,6 +202,10 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
             title: datetime.format(renderDate, 'YYYY.MM'),
             startDayOfWeek: startDayOfWeek,
             tableClass: this.singleFocused ? (classPrefix + 'single-focused') : ''
+        },
+        datetimeOptions = {
+            startDayOfWeek: startDayOfWeek,
+            isAlways6Week: true
         };
 
     viewModel.dayname = util.map(
@@ -214,7 +218,7 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
         }
     );
 
-    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, true, function(date) {
+    viewModel.calendar = datetime.arr2dCalendar(renderDate, datetimeOptions, function(date) {
         var ymd = datetime.format(date, 'YYYY-MM-DD'),
             day = date.getDay(),
             dayClassName = getDayClassName(day),

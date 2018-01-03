@@ -4,7 +4,8 @@
  */
 'use strict';
 
-var TZDate = require('./timezone').Date;
+var TZDate = require('./timezone').Date,
+    dw = require('../common/dw');
 var util = global.tui.util;
 var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 var datetime, tokenFunc;
@@ -417,21 +418,33 @@ datetime = {
      *
      * dates that different month with given date are negative values
      * @param {TZDate} month - date want to calculate month calendar
-     * @param {number} [startDayOfWeek=0] - start day of week
-     * @param {boolean} [isAlways6Week] - whether the number of weeks are always 6
+     * @param {object} options - options
+     * @param {number} [options.startDayOfWeek=0] - start day of week
+     * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
+     * @param {number} options.visibleWeeksCount visible weeks count
      * @param {function} [iteratee] - iteratee for customizing calendar object
      * @returns {Array.<string[]>} calendar 2d array
      */
-    arr2dCalendar: function(month, startDayOfWeek, isAlways6Week, iteratee) {
+    arr2dCalendar: function(month, options, iteratee) {
         var weekArr,
             starts, ends,
             startIndex, endIndex,
             totalDate, afterDates,
             cursor, week,
-            calendar = [];
+            calendar = [],
+            startDayOfWeek = options.startDayOfWeek,
+            isAlways6Week = options.isAlways6Week,
+            visibleWeeksCount = options.visibleWeeksCount;
 
-        starts = datetime.startDateOfMonth(month);
-        ends = datetime.endDateOfMonth(month);
+        if (visibleWeeksCount) {
+            starts = new TZDate(month);
+            ends = dw(new TZDate(month));
+            ends.addDate(7 * (visibleWeeksCount - 1));
+            ends = ends.d;
+        } else {
+            starts = datetime.startDateOfMonth(month);
+            ends = datetime.endDateOfMonth(month);
+        }
 
         // create day number array by startDayOfWeek number
         // 4 -> [4, 5, 6, 0, 1, 2, 3]
@@ -442,7 +455,11 @@ datetime = {
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
-        totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
+        if (visibleWeeksCount) {
+            totalDate = 7 * visibleWeeksCount;
+        } else {
+            totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
+        }
         cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
         // iteratee all dates to render
         util.forEachArray(util.range(totalDate), function(i) {

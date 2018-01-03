@@ -4,7 +4,8 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = global.tui.util,
+    mmin = Math.min;
 
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
@@ -13,7 +14,8 @@ var config = require('../../config'),
     tmpl = require('./month.hbs'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
-    WeekdayInMonth = require('./weekdayInMonth');
+    WeekdayInMonth = require('./weekdayInMonth'),
+    dw = require('../../common/dw');
 
 /**
  * @constructor
@@ -52,9 +54,10 @@ function Month(options, container, controller) {
             return Boolean(model.visible);
         },
         startDayOfWeek: 0,
-        renderMonth: '2015-12',
+        renderMonth: '2018-01',
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        narrowWeekend: false
+        narrowWeekend: false,
+        visibleWeeksCount: null
     }, options);
 
     /**
@@ -78,12 +81,28 @@ Month.prototype.viewName = 'month';
 /**
  * Get calendar array by supplied date
  * @param {string} renderMonthStr - month to render YYYY-MM
- * @param {number} [startDayOfWeek=0] - start day of week
  * @returns {array.<Date[]>} calendar array
  */
-Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
-    var date = datetime.parse(renderMonthStr + '-01'),
-        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0, true);
+Month.prototype._getMonthCalendar = function(renderMonthStr) {
+    var date = dw(renderMonthStr).d;
+    var startDayOfWeek = this.options.startDayOfWeek || 0;
+    var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
+    var datetimeOptions, calendar;
+
+    if (this.options.visibleWeeksCount) {
+        datetimeOptions = {
+            startDayOfWeek: startDayOfWeek,
+            isAlways6Week: false,
+            visibleWeeksCount: visibleWeeksCount
+        };
+    } else {
+        datetimeOptions = {
+            startDayOfWeek: startDayOfWeek,
+            isAlways6Week: true
+        };
+    }
+
+    calendar = datetime.arr2dCalendar(date, datetimeOptions);
 
     return calendar;
 };
@@ -100,6 +119,7 @@ Month.prototype._renderChildren = function(container, calendar) {
     var renderMonth = this.options.renderMonth;
     var narrowWeekend = this.options.narrowWeekend;
     var startDayOfWeek = this.options.startDayOfWeek;
+    var visibleWeeksCount = this.options.visibleWeeksCount;
 
     container.innerHTML = '';
     this.children.clear();
@@ -119,7 +139,8 @@ Month.prototype._renderChildren = function(container, calendar) {
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
             narrowWeekend: narrowWeekend,
-            startDayOfWeek: startDayOfWeek
+            startDayOfWeek: startDayOfWeek,
+            visibleWeeksCount: visibleWeeksCount
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -135,7 +156,7 @@ Month.prototype.render = function() {
         vLayout = this.vLayout,
         controller = this.controller,
         daynames = opt.daynames,
-        calendar = this._getMonthCalendar(opt.renderMonth, opt.startDayOfWeek),
+        calendar = this._getMonthCalendar(opt.renderMonth),
         eventFilter = opt.eventFilter,
         grids = this.grids,
         daynameViewModel,
