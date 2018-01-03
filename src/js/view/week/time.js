@@ -44,7 +44,7 @@ function Time(options, container) {
 
     this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
     container.style.width = options.width + '%';
-    container.style.left = (options.index * options.width) + '%';
+    container.style.left = options.left + '%';
 
     if (this.options.isToday) {
         domutil.addClass(this.container, config.classname('today'));

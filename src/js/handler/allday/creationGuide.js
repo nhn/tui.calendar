@@ -62,27 +62,36 @@ AlldayCreationGuide.prototype._onDrag = function(eventData) {
 };
 
 /**
+ * Get element width based on narrowWeekend
+ * @param {number} dragStartIndex - grid start index
+ * @param {number} dragEndIndex - grid end index
+ * @param {Array} grids - dates information
+ * @returns {number} element width
+ */
+AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndIndex, grids) {
+    var width = 0;
+    var i = dragStartIndex;
+    for (; i <= dragEndIndex; i += 1) {
+        width += grids[i].width;
+    }
+
+    return width;
+};
+
+/**
  * Refresh guide element.
  * @param {object} eventData - event data from Allday.Creation handler.
  * @param {boolean} defer - If set to true, set style in the next frame
  */
 AlldayCreationGuide.prototype._refreshGuideElement = function(eventData, defer) {
     var guideElement = this.guideElement,
-        baseWidthPercent = (100 / eventData.datesInRange),
-        dragStartXIndex = eventData.dragStartXIndex,
-        xIndex = eventData.xIndex,
-        length = xIndex - dragStartXIndex,
+        dragStartXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.dragStartXIndex : eventData.xIndex,
+        dragEndXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.xIndex : eventData.dragStartXIndex,
         leftPercent,
         widthPercent;
 
-    // when revert dragging.
-    if (length < 0) {
-        dragStartXIndex = xIndex;
-        length = Math.abs(length);
-    }
-
-    leftPercent = baseWidthPercent * dragStartXIndex;
-    widthPercent = baseWidthPercent * (length + 1);
+    leftPercent = eventData.grids[dragStartXIndex].left;
+    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, eventData.grids);
 
     function setStyle() {
         guideElement.style.display = 'block';

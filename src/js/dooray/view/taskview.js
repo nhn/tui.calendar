@@ -60,7 +60,10 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         ),
         height = 0,
         mmax = Math.max,
-        today = datetime.format(new TZDate(), 'YYYY-MM-DD');
+        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
+        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'task'),
+        grids = viewModel.grids,
+        i = 0;
 
     util.forEach(range, function(d) {
         var date = datetime.format(d, 'YYYY-MM-DD');
@@ -70,7 +73,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
             evening: {length: 0}
         };
     });
-    util.extend(events, viewModel);
+    util.extend(events, viewModelEvents);
 
     height = mmax.apply(null, util.map(events, function(g) {
         var subcount = 0;
@@ -83,11 +86,13 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
 
     util.forEach(events, function(event, key) {
         event.isToday = (key === today);
+        event.left = grids[i].left;
+        event.width = grids[i].width;
+        i += 1;
     });
 
     return {
         events: events,
-        width: 100 / range.length,
         height: height
     };
 };
@@ -98,7 +103,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
  */
 TaskView.prototype.render = function(viewModel) {
     var container = this.container,
-        baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'task'));
+        baseViewModel = this._getBaseViewModel(viewModel);
 
     container.innerHTML = tmpl(baseViewModel);
 

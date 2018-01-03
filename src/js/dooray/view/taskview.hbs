@@ -5,13 +5,13 @@
 <div class="{{CSS_PREFIX}}task-right {{CSS_PREFIX}}right schedule-view clear">
     <div class="{{CSS_PREFIX}}task-day-grid-wrap">
     {{#each events ~}}
-    <div class="{{CSS_PREFIX}}task-day-grid" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%"></div>
+    <div class="{{CSS_PREFIX}}task-day-grid" style="width:{{width}}%;left:{{left}}%"></div>
     {{/each ~}}
     </div>
 
     <div class="{{CSS_PREFIX}}task-day-scroll">
     {{#each events ~}}
-    <div class="{{CSS_PREFIX}}task-day" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%">
+    <div class="{{CSS_PREFIX}}task-day" style="width:{{width}}%;left:{{left}}%">
     <div class="{{CSS_PREFIX}}task-day-wrap {{#if isToday}} {{CSS_PREFIX}}today{{/if}}">
         <ul class="{{CSS_PREFIX}}task-list">
             {{#each morning.items ~}}

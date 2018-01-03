@@ -62,17 +62,23 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
             datetime.MILLISECONDS_PER_DAY
         ),
         height,
-        today = datetime.format(new TZDate(), 'YYYY-MM-DD');
+        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
+        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'milestone'),
+        grids = viewModel.grids,
+        i = 0;
 
     // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {
         events[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
     });
 
-    util.extend(events, viewModel);
+    util.extend(events, viewModelEvents);
 
     util.forEach(events, function(event, key) {
         event.isToday = (key === today);
+        event.left = grids[i].left;
+        event.width = grids[i].width;
+        i += 1;
     });
 
     height = LIST_PADDING_TOP + Math.max.apply(null, util.map(events, function(coll) {
@@ -81,7 +87,6 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
 
     return {
         events: events,
-        width: 100 / range.length,
         height: height
     };
 };
@@ -92,7 +97,7 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
  */
 Milestone.prototype.render = function(viewModel) {
     var container = this.container,
-        baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'milestone'));
+        baseViewModel = this._getBaseViewModel(viewModel);
 
     container.style.minHeight = this.options.minHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);

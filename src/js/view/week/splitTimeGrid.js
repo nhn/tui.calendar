@@ -162,6 +162,7 @@ SplitTimeGrid.prototype.render = function(viewModel) {
     var timeViewModel = viewModel.eventsInDateRange.time,
         container = this.container,
         baseViewModel = this._getBaseViewModel(viewModel),
+        grids = viewModel.grids,
         eventLen = util.keys(timeViewModel).length;
 
     if (!eventLen) {
@@ -175,7 +176,7 @@ SplitTimeGrid.prototype.render = function(viewModel) {
      **********/
     this._renderChildren(
         timeViewModel,
-        100 / eventLen,
+        grids,
         domutil.find(config.classname('.split-timegrid-events-container'), container)
     );
 };

@@ -66,8 +66,8 @@ WeekdayInWeek.prototype._getMinHeight = function(maxEventInDay) {
     var opt = this.options;
 
     return (
-        (maxEventInDay * opt.eventHeight) + 
-        ((maxEventInDay - 1) * opt.eventGutter) + 
+        (maxEventInDay * opt.eventHeight) +
+        ((maxEventInDay - 1) * opt.eventGutter) +
         opt.containerBottomGutter
     );
 };

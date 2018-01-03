@@ -52,7 +52,9 @@ function Week(controller, options, container) {
      */
     this.options = util.extend({
         renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
-        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD')
+        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
+        narrowWeekend: false,
+        startDayOfWeek: 0
     }, options);
 
     /**
@@ -75,7 +77,7 @@ util.inherit(Week, View);
  */
 Week.prototype.render = function() {
     var options = this.options;
-    var renderStartDate, renderEndDate, eventsInDateRange, viewModel;
+    var renderStartDate, renderEndDate, eventsInDateRange, viewModel, grids;
 
     renderStartDate = parseRangeDateString(options.renderStartDate);
     renderEndDate = parseRangeDateString(options.renderEndDate);
@@ -83,10 +85,20 @@ Week.prototype.render = function() {
         datetime.start(renderStartDate),
         datetime.end(renderEndDate)
     );
+    grids = datetime.getGridLeftAndWidth(
+        datetime.range(
+            datetime.start(renderStartDate),
+            datetime.end(renderEndDate),
+            datetime.MILLISECONDS_PER_DAY
+        ).length,
+        options.narrowWeekend,
+        options.startDayOfWeek);
+
     viewModel = {
         eventsInDateRange: eventsInDateRange,
         renderStartDate: renderStartDate,
-        renderEndDate: renderEndDate
+        renderEndDate: renderEndDate,
+        grids: grids
     };
 
     this.children.each(function(childView) {

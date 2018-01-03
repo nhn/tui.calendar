@@ -466,21 +466,23 @@ datetime = {
 
     /**
      * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek
+     * 
      * @param {number} days - day length of week
      * @param {boolean} narrowWeekend - narrow weekend
      * @param {number} startDayOfWeek - start day of week
      * @returns {Array} day, left, width
      */
     getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek) {
+        var limitDaysToApplyNarrowWeekend = 5;
         var uniformWidth = 100 / days;
-        var wideWidth = 100 / (days - 1);
+        var wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
         var accumulatedWidth = 0;
-        var dates = util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7);
+        var dates = util.range(startDayOfWeek, days).concat(util.range(days)).slice(0, days);
 
         return util.map(dates, function(day) {
             var model;
             var width = narrowWeekend ? wideWidth : uniformWidth;
-            if (narrowWeekend && datetime.isWeekend(day)) {
+            if (days > limitDaysToApplyNarrowWeekend && narrowWeekend && datetime.isWeekend(day)) {
                 width = wideWidth / 2;
             }
 

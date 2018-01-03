@@ -77,7 +77,7 @@ Allday.prototype.render = function(viewModel) {
         domutil.find(config.classname('.weekday-container'), container)
     );
     weekdayView.on('afterRender', function(weekdayViewModel) {
-        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop
+        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop;
     });
 
     this.addChild(weekdayView);

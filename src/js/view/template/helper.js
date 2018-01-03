@@ -28,18 +28,28 @@ function getElSize(value, postfix, prefix) {
 }
 
 /**
+ * Get element left based on narrowWeekend
+ * @param {object} viewModel - view model
+ * @param {Array} grids - dates information
+ * @returns {number} element left
+ */
+function getElLeft(viewModel, grids) {
+    return grids[viewModel.left].left;
+}
+
+/**
  * Get element width based on narrowWeekend
  * @param {object} viewModel - view model
- * @param {Array} dates - dates information
+ * @param {Array} grids - dates information
  * @returns {number} element width
  */
-function getElWidth(viewModel, dates) {
+function getElWidth(viewModel, grids) {
     var width = 0;
     var i = 0;
     var left;
     for (; i < viewModel.width; i += 1) {
         left = viewModel.left + i;
-        width += dates[left].width;
+        width += grids[left].width;
     }
 
     return width;
@@ -119,6 +129,26 @@ Handlebars.registerHelper({
     },
 
     /**
+     * Get element left based on narrowWeekend
+     * @param {object} viewModel - view model
+     * @param {Array} grids - dates information
+     * @returns {number} element left
+     */
+    'grid-left': function(viewModel, grids) {
+        return getElLeft(viewModel, grids);
+    },
+
+    /**
+     * Get element width based on narrowWeekend
+     * @param {object} viewModel - view model
+     * @param {Array} grids - dates information
+     * @returns {number} element width
+     */
+    'grid-width': function(viewModel, grids) {
+        return getElWidth(viewModel, grids);
+    },
+
+    /**
      * Use in time.hbs
      * @param {CalEventViewModel} eventViewModel viewModel
      * @returns {string} element size css class
@@ -132,10 +162,10 @@ Handlebars.registerHelper({
         return [top, left, width, height].join(';');
     },
 
-    'month-eventBlock': function(viewModel, dates, blockHeight, paddingTop) {
+    'month-eventBlock': function(viewModel, grids, blockHeight, paddingTop) {
         var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
-        var left = getElSize(dates[viewModel.left].left, '%', 'left');
-        var width = getElSize(getElWidth(viewModel, dates), '%', 'width');
+        var left = getElSize(grids[viewModel.left].left, '%', 'left');
+        var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
         var height = getElSize(viewModel.height, 'px', 'height');
 
         return [top, left, width, height].join(';');

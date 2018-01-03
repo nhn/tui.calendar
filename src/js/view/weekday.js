@@ -42,15 +42,6 @@ function Weekday(options, container) {
         startDayOfWeek: 0
     }, options);
 
-    /**
-     * horizontal grid information
-     * @type {Object}
-     */
-    this.grids = datetime.getGridLeftAndWidth(
-        this.getRenderDateRange().length,
-        this.options.narrowWeekend,
-        this.options.startDayOfWeek);
-
     View.call(this, container);
 }
 
@@ -72,16 +63,20 @@ Weekday.prototype.getRenderDateRange = function() {
 
 /**
  * Get default view model.
- * @param {object} viewModel - viewModel from parent views.
  * @returns {object} viewModel to rendering.
  */
 Weekday.prototype.getBaseViewModel = function() {
     var opt = this.options;
     var range = this.getRenderDateRange();
     var today = datetime.format(new TZDate(), 'YYYYMMDD');
-    var grids = this.grids;
+    var gridWidth = (100 / range.length);
+    var grids = datetime.getGridLeftAndWidth(
+        this.getRenderDateRange().length,
+        this.options.narrowWeekend,
+        this.options.startDayOfWeek);
 
     return {
+        width: gridWidth,
         eventHeight: opt.eventHeight,
         eventBlockHeight: (opt.eventHeight + opt.eventGutter),
         eventBlockGutter: opt.eventGutter,

@@ -155,11 +155,31 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
 };
 
 /**
+ * @returns {object} grid information(width, left, day)
+ */
+TimeGrid.prototype._getGrids = function() {
+    var opt = this.options,
+        dateRange = datetime.range(
+            datetime.parse(opt.renderStartDate),
+            datetime.parse(opt.renderEndDate),
+            datetime.MILLISECONDS_PER_DAY
+        ),
+        grids = datetime.getGridLeftAndWidth(
+            dateRange.length,
+            this.options.narrowWeekend,
+            this.options.startDayOfWeek
+        );
+
+    return grids;
+};
+
+/**
  * Get Hourmarker viewmodel.
  * @param {Date} now - now
+ * @param {object} grids grid information(width, left, day)
  * @returns {object} ViewModel of hourmarker.
  */
-TimeGrid.prototype._getHourmarkerViewModel = function(now) {
+TimeGrid.prototype._getHourmarkerViewModel = function(now, grids) {
     var opt = this.options,
         dateRange = datetime.range(
             datetime.parse(opt.renderStartDate),
@@ -173,7 +193,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
 
     util.forEach(dateRange, function(date, index) {
         if (datetime.isSameDate(now, date)) {
-            todaymarkerLeft = common.ratio(dateRange.length, 100, index);
+            todaymarkerLeft = grids[index].left;
         }
     });
 
@@ -187,14 +207,14 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now) {
     return viewModel;
 };
 
-
 /**
  * Get base viewModel.
+ * @param {object} grids grid information(width, left, day)
  * @returns {object} ViewModel
  */
-TimeGrid.prototype._getBaseViewModel = function() {
+TimeGrid.prototype._getBaseViewModel = function(grids) {
     var opt = this.options;
-    var viewModel = this._getHourmarkerViewModel(new TZDate());
+    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids);
     viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 
     return viewModel;
@@ -203,10 +223,10 @@ TimeGrid.prototype._getBaseViewModel = function() {
 /**
  * Reconcilation child views and render.
  * @param {object} viewModels Viewmodel
- * @param {number} width The width percent of each time view.
+ * @param {object} grids grid information(width, left, day)
  * @param {HTMLElement} container Container element for each time view.
  */
-TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
+TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
     var self = this,
         options = this.options,
         childOption,
@@ -225,7 +245,8 @@ TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
 
         childOption = {
             index: i,
-            width: width,
+            left: grids[i].left,
+            width: grids[i].width,
             ymd: ymd,
             isToday: isToday,
             isPending: options.isPending,
@@ -254,16 +275,14 @@ TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
 TimeGrid.prototype.render = function(viewModel) {
     var timeViewModel = viewModel.eventsInDateRange.time,
         container = this.container,
-        baseViewModel = this._getBaseViewModel(),
-        eventLen = util.keys(timeViewModel).length,
-        width;
+        grids = viewModel.grids,
+        baseViewModel = this._getBaseViewModel(grids),
+        eventLen = util.keys(timeViewModel).length;
 
     if (!eventLen) {
         return;
     }
 
-    width = 100 / eventLen;
-    baseViewModel.width = width;
     baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
 
     container.innerHTML = mainTmpl(baseViewModel);
@@ -273,7 +292,7 @@ TimeGrid.prototype.render = function(viewModel) {
      **********/
     this._renderChildren(
         timeViewModel,
-        width,
+        grids,
         domutil.find(config.classname('.timegrid-events-container'), container)
     );
 
@@ -295,7 +314,7 @@ TimeGrid.prototype.render = function(viewModel) {
  */
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarker = this.hourmarker,
-        viewModel = this._getHourmarkerViewModel(new TZDate()),
+        viewModel = this._getHourmarkerViewModel(new TZDate(), this._getGrids()),
         todaymarker,
         hourmarkerText;
 
