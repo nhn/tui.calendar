@@ -7,29 +7,27 @@
 .{css-prefix}dayname
     top: 0;
     position: absolute;
-    height: 36px;
+    height: 42px;
     margin-left: -1px
-    line-height: 36px
-    text-align: center
+    line-height: 42px
+    text-align: left
     font-size: 13px
+    padding-left: 5px
+
+    .{css-prefix}dayname-date
+        font-size: 26px
+        line-height: 42px
 
     &.{css-prefix}today
         font-weight: bold
-
-        .{css-prefix}dayname-date
-            display: inline-block
-            width: 25px
-            height: 25px
-            line-height: 25px
-            background-color: #135de6
-            color: #fff
-            border-radius: 50%
+        color: #135de6
 
 +prefix-classes(dayname)
     .container
-        height: 36px
+        height: 42px
         border-bottom: 1px solid #ddd
         background-color: #fff;
+        padding-right: 15px // for vertical scrollbar
 
     .leftmargin
         position: relative
