@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jan 08 2018 10:45:53 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jan 08 2018 15:32:58 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -267,28 +267,26 @@
 .dooray-calendar-dayname {
   top: 0;
   position: absolute;
-  height: 36px;
+  height: 42px;
   margin-left: -1px;
-  line-height: 36px;
-  text-align: center;
+  line-height: 42px;
+  text-align: left;
   font-size: 13px;
+  padding-left: 5px;
+}
+.dooray-calendar-dayname .dooray-calendar-dayname-date {
+  font-size: 26px;
+  line-height: 42px;
 }
 .dooray-calendar-dayname.dooray-calendar-today {
   font-weight: bold;
-}
-.dooray-calendar-dayname.dooray-calendar-today .dooray-calendar-dayname-date {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  line-height: 25px;
-  background-color: #135de6;
-  color: #fff;
-  border-radius: 50%;
+  color: #135de6;
 }
 .dooray-calendar-dayname-container {
-  height: 36px;
+  height: 42px;
   border-bottom: 1px solid #ddd;
   background-color: #fff;
+  padding-right: 15px;
 }
 .dooray-calendar-dayname-leftmargin {
   position: relative;
@@ -332,7 +330,7 @@
   height: auto;
 }
 .dooray-calendar-timegrid-hour {
-  height: 37px;
+  height: 48px;
   position: relative;
   border-right: 1px solid #ddd;
   color: #555;
@@ -360,7 +358,7 @@
   background-color: #fff;
 }
 .dooray-calendar-timegrid-gridline {
-  height: 37px;
+  height: 48px;
   border-bottom: 1px solid #eee;
   box-sizing: border-box;
 }
@@ -370,7 +368,7 @@
 .dooray-calendar-timegrid-gridline:after {
   content: '';
   display: block;
-  height: 18px;
+  height: 24px;
   border-bottom: 1px dotted #f9f9f9;
 }
 .dooray-calendar-timegrid-events {
@@ -560,15 +558,15 @@
 }
 .dooray-calendar-month-dayname {
   width: 100%;
-  height: 38px;
+  height: 42px;
   position: absolute;
   font-size: 13px;
   border-top: 1px solid #ddd;
 }
 .dooray-calendar-month-dayname-item {
   height: 100%;
-  padding-right: 6px;
-  line-height: 38px;
+  padding-right: 11px;
+  line-height: 42px;
   text-align: right;
 }
 .dooray-calendar-month-weeks {

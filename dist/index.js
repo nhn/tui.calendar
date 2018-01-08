@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jan 08 2018 10:45:53 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jan 08 2018 15:32:58 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -9774,11 +9774,11 @@
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "dayname-date\">"
 	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-	    + "</span> (<span class=\""
+	    + "</span> <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "dayname-label\">"
 	    + alias4(((helper = (helper = helpers.dayName || (depth0 != null ? depth0.dayName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"dayName","hash":{},"data":data}) : helper)))
-	    + "</span>)\n</div>\n";
+	    + "</span>\n</div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -15650,7 +15650,7 @@
 	     */
 	    this.vLayout = new VLayout({
 	        panels: [
-	            {height: 37},
+	            {height: 42},
 	            {autoHeight: true}
 	        ]
 	    }, container);
