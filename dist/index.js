@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Dec 18 2017 16:37:04 GMT+0900 (KST)" */
+/*! bundle created at "Mon Jan 08 2018 10:45:53 GMT+0900 (KST)" */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -49,10 +49,10 @@
 	__webpack_require__(1);
 	__webpack_require__(5);
 	
-	var DoorayEvent = __webpack_require__(33);
-	var MiniCalendar = __webpack_require__(37);
-	var Freebusy = __webpack_require__(40);
-	var OriginCalendar = __webpack_require__(43);
+	var DoorayEvent = __webpack_require__(34);
+	var MiniCalendar = __webpack_require__(38);
+	var Freebusy = __webpack_require__(41);
+	var OriginCalendar = __webpack_require__(44);
 	var FullCalendar = __webpack_require__(111);
 	var SplitTimeCalendar = __webpack_require__(121);
 	var timezone = __webpack_require__(27);
@@ -108,8 +108,8 @@
 	var util = tui.util;
 	var Handlebars = __webpack_require__(6);
 	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(28);
-	var config = __webpack_require__(32);
+	var common = __webpack_require__(29);
+	var config = __webpack_require__(33);
 	
 	/**
 	 * Get CSS syntax for element size
@@ -125,6 +125,34 @@
 	    }
 	
 	    return prefix + ':auto';
+	}
+	
+	/**
+	 * Get element left based on narrowWeekend
+	 * @param {object} viewModel - view model
+	 * @param {Array} grids - dates information
+	 * @returns {number} element left
+	 */
+	function getElLeft(viewModel, grids) {
+	    return grids[viewModel.left].left;
+	}
+	
+	/**
+	 * Get element width based on narrowWeekend
+	 * @param {object} viewModel - view model
+	 * @param {Array} grids - dates information
+	 * @returns {number} element width
+	 */
+	function getElWidth(viewModel, grids) {
+	    var width = 0;
+	    var i = 0;
+	    var left;
+	    for (; i < viewModel.width; i += 1) {
+	        left = viewModel.left + i;
+	        width += grids[left].width;
+	    }
+	
+	    return width;
 	}
 	
 	Handlebars.registerHelper({
@@ -201,6 +229,26 @@
 	    },
 	
 	    /**
+	     * Get element left based on narrowWeekend
+	     * @param {object} viewModel - view model
+	     * @param {Array} grids - dates information
+	     * @returns {number} element left
+	     */
+	    'grid-left': function(viewModel, grids) {
+	        return getElLeft(viewModel, grids);
+	    },
+	
+	    /**
+	     * Get element width based on narrowWeekend
+	     * @param {object} viewModel - view model
+	     * @param {Array} grids - dates information
+	     * @returns {number} element width
+	     */
+	    'grid-width': function(viewModel, grids) {
+	        return getElWidth(viewModel, grids);
+	    },
+	
+	    /**
 	     * Use in time.hbs
 	     * @param {CalEventViewModel} eventViewModel viewModel
 	     * @returns {string} element size css class
@@ -214,10 +262,10 @@
 	        return [top, left, width, height].join(';');
 	    },
 	
-	    'month-eventBlock': function(viewModel, blockHeight, blockWidth, paddingTop) {
+	    'month-eventBlock': function(viewModel, grids, blockHeight, paddingTop) {
 	        var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
-	        var left = getElSize(viewModel.left * blockWidth, '%', 'left');
-	        var width = getElSize(viewModel.width * blockWidth, '%', 'width');
+	        var left = getElSize(grids[viewModel.left].left, '%', 'left');
+	        var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
 	        var height = getElSize(viewModel.height, 'px', 'height');
 	
 	        return [top, left, width, height].join(';');
@@ -453,7 +501,7 @@
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var VERSION = '4.0.10';
+	var VERSION = '4.0.11';
 	exports.VERSION = VERSION;
 	var COMPILER_REVISION = 7;
 	
@@ -534,7 +582,7 @@
 	exports.log = log;
 	exports.createFrame = _utils.createFrame;
 	exports.logger = _logger2['default'];
-	//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL2Jhc2UuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7cUJBQTRDLFNBQVM7O3lCQUMvQixhQUFhOzs7O3VCQUNFLFdBQVc7OzBCQUNSLGNBQWM7O3NCQUNuQyxVQUFVOzs7O0FBRXRCLElBQU0sT0FBTyxHQUFHLFFBQVEsQ0FBQzs7QUFDekIsSUFBTSxpQkFBaUIsR0FBRyxDQUFDLENBQUM7OztBQUU1QixJQUFNLGdCQUFnQixHQUFHO0FBQzlCLEdBQUMsRUFBRSxhQUFhO0FBQ2hCLEdBQUMsRUFBRSxlQUFlO0FBQ2xCLEdBQUMsRUFBRSxlQUFlO0FBQ2xCLEdBQUMsRUFBRSxVQUFVO0FBQ2IsR0FBQyxFQUFFLGtCQUFrQjtBQUNyQixHQUFDLEVBQUUsaUJBQWlCO0FBQ3BCLEdBQUMsRUFBRSxVQUFVO0NBQ2QsQ0FBQzs7O0FBRUYsSUFBTSxVQUFVLEdBQUcsaUJBQWlCLENBQUM7O0FBRTlCLFNBQVMscUJBQXFCLENBQUMsT0FBTyxFQUFFLFFBQVEsRUFBRSxVQUFVLEVBQUU7QUFDbkUsTUFBSSxDQUFDLE9BQU8sR0FBRyxPQUFPLElBQUksRUFBRSxDQUFDO0FBQzdCLE1BQUksQ0FBQyxRQUFRLEdBQUcsUUFBUSxJQUFJLEVBQUUsQ0FBQztBQUMvQixNQUFJLENBQUMsVUFBVSxHQUFHLFVBQVUsSUFBSSxFQUFFLENBQUM7O0FBRW5DLGtDQUF1QixJQUFJLENBQUMsQ0FBQztBQUM3Qix3Q0FBMEIsSUFBSSxDQUFDLENBQUM7Q0FDakM7O0FBRUQscUJBQXFCLENBQUMsU0FBUyxHQUFHO0FBQ2hDLGFBQVcsRUFBRSxxQkFBcUI7O0FBRWxDLFFBQU0scUJBQVE7QUFDZCxLQUFHLEVBQUUsb0JBQU8sR0FBRzs7QUFFZixnQkFBYyxFQUFFLHdCQUFTLElBQUksRUFBRSxFQUFFLEVBQUU7QUFDakMsUUFBSSxnQkFBUyxJQUFJLENBQUMsSUFBSSxDQUFDLEtBQUssVUFBVSxFQUFFO0FBQ3RDLFVBQUksRUFBRSxFQUFFO0FBQUUsY0FBTSwyQkFBYyx5Q0FBeUMsQ0FBQyxDQUFDO09BQUU7QUFDM0Usb0JBQU8sSUFBSSxDQUFDLE9BQU8sRUFBRSxJQUFJLENBQUMsQ0FBQztLQUM1QixNQUFNO0FBQ0wsVUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsR0FBRyxFQUFFLENBQUM7S0FDekI7R0FDRjtBQUNELGtCQUFnQixFQUFFLDBCQUFTLElBQUksRUFBRTtBQUMvQixXQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLENBQUM7R0FDM0I7O0FBRUQsaUJBQWUsRUFBRSx5QkFBUyxJQUFJLEVBQUUsT0FBTyxFQUFFO0FBQ3ZDLFFBQUksZ0JBQVMsSUFBSSxDQUFDLElBQUksQ0FBQyxLQUFLLFVBQVUsRUFBRTtBQUN0QyxvQkFBTyxJQUFJLENBQUMsUUFBUSxFQUFFLElBQUksQ0FBQyxDQUFDO0tBQzdCLE1BQU07QUFDTCxVQUFJLE9BQU8sT0FBTyxLQUFLLFdBQVcsRUFBRTtBQUNsQyxjQUFNLHlFQUEwRCxJQUFJLG9CQUFpQixDQUFDO09BQ3ZGO0FBQ0QsVUFBSSxDQUFDLFFBQVEsQ0FBQyxJQUFJLENBQUMsR0FBRyxPQUFPLENBQUM7S0FDL0I7R0FDRjtBQUNELG1CQUFpQixFQUFFLDJCQUFTLElBQUksRUFBRTtBQUNoQyxXQUFPLElBQUksQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFDLENBQUM7R0FDNUI7O0FBRUQsbUJBQWlCLEVBQUUsMkJBQVMsSUFBSSxFQUFFLEVBQUUsRUFBRTtBQUNwQyxRQUFJLGdCQUFTLElBQUksQ0FBQyxJQUFJLENBQUMsS0FBSyxVQUFVLEVBQUU7QUFDdEMsVUFBSSxFQUFFLEVBQUU7QUFBRSxjQUFNLDJCQUFjLDRDQUE0QyxDQUFDLENBQUM7T0FBRTtBQUM5RSxvQkFBTyxJQUFJLENBQUMsVUFBVSxFQUFFLElBQUksQ0FBQyxDQUFDO0tBQy9CLE1BQU07QUFDTCxVQUFJLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQyxHQUFHLEVBQUUsQ0FBQztLQUM1QjtHQUNGO0FBQ0QscUJBQW1CLEVBQUUsNkJBQVMsSUFBSSxFQUFFO0FBQ2xDLFdBQU8sSUFBSSxDQUFDLFVBQVUsQ0FBQyxJQUFJLENBQUMsQ0FBQztHQUM5QjtDQUNGLENBQUM7O0FBRUssSUFBSSxHQUFHLEdBQUcsb0JBQU8sR0FBRyxDQUFDOzs7UUFFcEIsV0FBVztRQUFFLE1BQU0iLCJmaWxlIjoiYmFzZS5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7Y3JlYXRlRnJhbWUsIGV4dGVuZCwgdG9TdHJpbmd9IGZyb20gJy4vdXRpbHMnO1xuaW1wb3J0IEV4Y2VwdGlvbiBmcm9tICcuL2V4Y2VwdGlvbic7XG5pbXBvcnQge3JlZ2lzdGVyRGVmYXVsdEhlbHBlcnN9IGZyb20gJy4vaGVscGVycyc7XG5pbXBvcnQge3JlZ2lzdGVyRGVmYXVsdERlY29yYXRvcnN9IGZyb20gJy4vZGVjb3JhdG9ycyc7XG5pbXBvcnQgbG9nZ2VyIGZyb20gJy4vbG9nZ2VyJztcblxuZXhwb3J0IGNvbnN0IFZFUlNJT04gPSAnNC4wLjEwJztcbmV4cG9ydCBjb25zdCBDT01QSUxFUl9SRVZJU0lPTiA9IDc7XG5cbmV4cG9ydCBjb25zdCBSRVZJU0lPTl9DSEFOR0VTID0ge1xuICAxOiAnPD0gMS4wLnJjLjInLCAvLyAxLjAucmMuMiBpcyBhY3R1YWxseSByZXYyIGJ1dCBkb2Vzbid0IHJlcG9ydCBpdFxuICAyOiAnPT0gMS4wLjAtcmMuMycsXG4gIDM6ICc9PSAxLjAuMC1yYy40JyxcbiAgNDogJz09IDEueC54JyxcbiAgNTogJz09IDIuMC4wLWFscGhhLngnLFxuICA2OiAnPj0gMi4wLjAtYmV0YS4xJyxcbiAgNzogJz49IDQuMC4wJ1xufTtcblxuY29uc3Qgb2JqZWN0VHlwZSA9ICdbb2JqZWN0IE9iamVjdF0nO1xuXG5leHBvcnQgZnVuY3Rpb24gSGFuZGxlYmFyc0Vudmlyb25tZW50KGhlbHBlcnMsIHBhcnRpYWxzLCBkZWNvcmF0b3JzKSB7XG4gIHRoaXMuaGVscGVycyA9IGhlbHBlcnMgfHwge307XG4gIHRoaXMucGFydGlhbHMgPSBwYXJ0aWFscyB8fCB7fTtcbiAgdGhpcy5kZWNvcmF0b3JzID0gZGVjb3JhdG9ycyB8fCB7fTtcblxuICByZWdpc3RlckRlZmF1bHRIZWxwZXJzKHRoaXMpO1xuICByZWdpc3RlckRlZmF1bHREZWNvcmF0b3JzKHRoaXMpO1xufVxuXG5IYW5kbGViYXJzRW52aXJvbm1lbnQucHJvdG90eXBlID0ge1xuICBjb25zdHJ1Y3RvcjogSGFuZGxlYmFyc0Vudmlyb25tZW50LFxuXG4gIGxvZ2dlcjogbG9nZ2VyLFxuICBsb2c6IGxvZ2dlci5sb2csXG5cbiAgcmVnaXN0ZXJIZWxwZXI6IGZ1bmN0aW9uKG5hbWUsIGZuKSB7XG4gICAgaWYgKHRvU3RyaW5nLmNhbGwobmFtZSkgPT09IG9iamVjdFR5cGUpIHtcbiAgICAgIGlmIChmbikgeyB0aHJvdyBuZXcgRXhjZXB0aW9uKCdBcmcgbm90IHN1cHBvcnRlZCB3aXRoIG11bHRpcGxlIGhlbHBlcnMnKTsgfVxuICAgICAgZXh0ZW5kKHRoaXMuaGVscGVycywgbmFtZSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoaXMuaGVscGVyc1tuYW1lXSA9IGZuO1xuICAgIH1cbiAgfSxcbiAgdW5yZWdpc3RlckhlbHBlcjogZnVuY3Rpb24obmFtZSkge1xuICAgIGRlbGV0ZSB0aGlzLmhlbHBlcnNbbmFtZV07XG4gIH0sXG5cbiAgcmVnaXN0ZXJQYXJ0aWFsOiBmdW5jdGlvbihuYW1lLCBwYXJ0aWFsKSB7XG4gICAgaWYgKHRvU3RyaW5nLmNhbGwobmFtZSkgPT09IG9iamVjdFR5cGUpIHtcbiAgICAgIGV4dGVuZCh0aGlzLnBhcnRpYWxzLCBuYW1lKTtcbiAgICB9IGVsc2Uge1xuICAgICAgaWYgKHR5cGVvZiBwYXJ0aWFsID09PSAndW5kZWZpbmVkJykge1xuICAgICAgICB0aHJvdyBuZXcgRXhjZXB0aW9uKGBBdHRlbXB0aW5nIHRvIHJlZ2lzdGVyIGEgcGFydGlhbCBjYWxsZWQgXCIke25hbWV9XCIgYXMgdW5kZWZpbmVkYCk7XG4gICAgICB9XG4gICAgICB0aGlzLnBhcnRpYWxzW25hbWVdID0gcGFydGlhbDtcbiAgICB9XG4gIH0sXG4gIHVucmVnaXN0ZXJQYXJ0aWFsOiBmdW5jdGlvbihuYW1lKSB7XG4gICAgZGVsZXRlIHRoaXMucGFydGlhbHNbbmFtZV07XG4gIH0sXG5cbiAgcmVnaXN0ZXJEZWNvcmF0b3I6IGZ1bmN0aW9uKG5hbWUsIGZuKSB7XG4gICAgaWYgKHRvU3RyaW5nLmNhbGwobmFtZSkgPT09IG9iamVjdFR5cGUpIHtcbiAgICAgIGlmIChmbikgeyB0aHJvdyBuZXcgRXhjZXB0aW9uKCdBcmcgbm90IHN1cHBvcnRlZCB3aXRoIG11bHRpcGxlIGRlY29yYXRvcnMnKTsgfVxuICAgICAgZXh0ZW5kKHRoaXMuZGVjb3JhdG9ycywgbmFtZSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoaXMuZGVjb3JhdG9yc1tuYW1lXSA9IGZuO1xuICAgIH1cbiAgfSxcbiAgdW5yZWdpc3RlckRlY29yYXRvcjogZnVuY3Rpb24obmFtZSkge1xuICAgIGRlbGV0ZSB0aGlzLmRlY29yYXRvcnNbbmFtZV07XG4gIH1cbn07XG5cbmV4cG9ydCBsZXQgbG9nID0gbG9nZ2VyLmxvZztcblxuZXhwb3J0IHtjcmVhdGVGcmFtZSwgbG9nZ2VyfTtcbiJdfQ==
+	//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL2Jhc2UuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7cUJBQTRDLFNBQVM7O3lCQUMvQixhQUFhOzs7O3VCQUNFLFdBQVc7OzBCQUNSLGNBQWM7O3NCQUNuQyxVQUFVOzs7O0FBRXRCLElBQU0sT0FBTyxHQUFHLFFBQVEsQ0FBQzs7QUFDekIsSUFBTSxpQkFBaUIsR0FBRyxDQUFDLENBQUM7OztBQUU1QixJQUFNLGdCQUFnQixHQUFHO0FBQzlCLEdBQUMsRUFBRSxhQUFhO0FBQ2hCLEdBQUMsRUFBRSxlQUFlO0FBQ2xCLEdBQUMsRUFBRSxlQUFlO0FBQ2xCLEdBQUMsRUFBRSxVQUFVO0FBQ2IsR0FBQyxFQUFFLGtCQUFrQjtBQUNyQixHQUFDLEVBQUUsaUJBQWlCO0FBQ3BCLEdBQUMsRUFBRSxVQUFVO0NBQ2QsQ0FBQzs7O0FBRUYsSUFBTSxVQUFVLEdBQUcsaUJBQWlCLENBQUM7O0FBRTlCLFNBQVMscUJBQXFCLENBQUMsT0FBTyxFQUFFLFFBQVEsRUFBRSxVQUFVLEVBQUU7QUFDbkUsTUFBSSxDQUFDLE9BQU8sR0FBRyxPQUFPLElBQUksRUFBRSxDQUFDO0FBQzdCLE1BQUksQ0FBQyxRQUFRLEdBQUcsUUFBUSxJQUFJLEVBQUUsQ0FBQztBQUMvQixNQUFJLENBQUMsVUFBVSxHQUFHLFVBQVUsSUFBSSxFQUFFLENBQUM7O0FBRW5DLGtDQUF1QixJQUFJLENBQUMsQ0FBQztBQUM3Qix3Q0FBMEIsSUFBSSxDQUFDLENBQUM7Q0FDakM7O0FBRUQscUJBQXFCLENBQUMsU0FBUyxHQUFHO0FBQ2hDLGFBQVcsRUFBRSxxQkFBcUI7O0FBRWxDLFFBQU0scUJBQVE7QUFDZCxLQUFHLEVBQUUsb0JBQU8sR0FBRzs7QUFFZixnQkFBYyxFQUFFLHdCQUFTLElBQUksRUFBRSxFQUFFLEVBQUU7QUFDakMsUUFBSSxnQkFBUyxJQUFJLENBQUMsSUFBSSxDQUFDLEtBQUssVUFBVSxFQUFFO0FBQ3RDLFVBQUksRUFBRSxFQUFFO0FBQUUsY0FBTSwyQkFBYyx5Q0FBeUMsQ0FBQyxDQUFDO09BQUU7QUFDM0Usb0JBQU8sSUFBSSxDQUFDLE9BQU8sRUFBRSxJQUFJLENBQUMsQ0FBQztLQUM1QixNQUFNO0FBQ0wsVUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsR0FBRyxFQUFFLENBQUM7S0FDekI7R0FDRjtBQUNELGtCQUFnQixFQUFFLDBCQUFTLElBQUksRUFBRTtBQUMvQixXQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLENBQUM7R0FDM0I7O0FBRUQsaUJBQWUsRUFBRSx5QkFBUyxJQUFJLEVBQUUsT0FBTyxFQUFFO0FBQ3ZDLFFBQUksZ0JBQVMsSUFBSSxDQUFDLElBQUksQ0FBQyxLQUFLLFVBQVUsRUFBRTtBQUN0QyxvQkFBTyxJQUFJLENBQUMsUUFBUSxFQUFFLElBQUksQ0FBQyxDQUFDO0tBQzdCLE1BQU07QUFDTCxVQUFJLE9BQU8sT0FBTyxLQUFLLFdBQVcsRUFBRTtBQUNsQyxjQUFNLHlFQUEwRCxJQUFJLG9CQUFpQixDQUFDO09BQ3ZGO0FBQ0QsVUFBSSxDQUFDLFFBQVEsQ0FBQyxJQUFJLENBQUMsR0FBRyxPQUFPLENBQUM7S0FDL0I7R0FDRjtBQUNELG1CQUFpQixFQUFFLDJCQUFTLElBQUksRUFBRTtBQUNoQyxXQUFPLElBQUksQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFDLENBQUM7R0FDNUI7O0FBRUQsbUJBQWlCLEVBQUUsMkJBQVMsSUFBSSxFQUFFLEVBQUUsRUFBRTtBQUNwQyxRQUFJLGdCQUFTLElBQUksQ0FBQyxJQUFJLENBQUMsS0FBSyxVQUFVLEVBQUU7QUFDdEMsVUFBSSxFQUFFLEVBQUU7QUFBRSxjQUFNLDJCQUFjLDRDQUE0QyxDQUFDLENBQUM7T0FBRTtBQUM5RSxvQkFBTyxJQUFJLENBQUMsVUFBVSxFQUFFLElBQUksQ0FBQyxDQUFDO0tBQy9CLE1BQU07QUFDTCxVQUFJLENBQUMsVUFBVSxDQUFDLElBQUksQ0FBQyxHQUFHLEVBQUUsQ0FBQztLQUM1QjtHQUNGO0FBQ0QscUJBQW1CLEVBQUUsNkJBQVMsSUFBSSxFQUFFO0FBQ2xDLFdBQU8sSUFBSSxDQUFDLFVBQVUsQ0FBQyxJQUFJLENBQUMsQ0FBQztHQUM5QjtDQUNGLENBQUM7O0FBRUssSUFBSSxHQUFHLEdBQUcsb0JBQU8sR0FBRyxDQUFDOzs7UUFFcEIsV0FBVztRQUFFLE1BQU0iLCJmaWxlIjoiYmFzZS5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7Y3JlYXRlRnJhbWUsIGV4dGVuZCwgdG9TdHJpbmd9IGZyb20gJy4vdXRpbHMnO1xuaW1wb3J0IEV4Y2VwdGlvbiBmcm9tICcuL2V4Y2VwdGlvbic7XG5pbXBvcnQge3JlZ2lzdGVyRGVmYXVsdEhlbHBlcnN9IGZyb20gJy4vaGVscGVycyc7XG5pbXBvcnQge3JlZ2lzdGVyRGVmYXVsdERlY29yYXRvcnN9IGZyb20gJy4vZGVjb3JhdG9ycyc7XG5pbXBvcnQgbG9nZ2VyIGZyb20gJy4vbG9nZ2VyJztcblxuZXhwb3J0IGNvbnN0IFZFUlNJT04gPSAnNC4wLjExJztcbmV4cG9ydCBjb25zdCBDT01QSUxFUl9SRVZJU0lPTiA9IDc7XG5cbmV4cG9ydCBjb25zdCBSRVZJU0lPTl9DSEFOR0VTID0ge1xuICAxOiAnPD0gMS4wLnJjLjInLCAvLyAxLjAucmMuMiBpcyBhY3R1YWxseSByZXYyIGJ1dCBkb2Vzbid0IHJlcG9ydCBpdFxuICAyOiAnPT0gMS4wLjAtcmMuMycsXG4gIDM6ICc9PSAxLjAuMC1yYy40JyxcbiAgNDogJz09IDEueC54JyxcbiAgNTogJz09IDIuMC4wLWFscGhhLngnLFxuICA2OiAnPj0gMi4wLjAtYmV0YS4xJyxcbiAgNzogJz49IDQuMC4wJ1xufTtcblxuY29uc3Qgb2JqZWN0VHlwZSA9ICdbb2JqZWN0IE9iamVjdF0nO1xuXG5leHBvcnQgZnVuY3Rpb24gSGFuZGxlYmFyc0Vudmlyb25tZW50KGhlbHBlcnMsIHBhcnRpYWxzLCBkZWNvcmF0b3JzKSB7XG4gIHRoaXMuaGVscGVycyA9IGhlbHBlcnMgfHwge307XG4gIHRoaXMucGFydGlhbHMgPSBwYXJ0aWFscyB8fCB7fTtcbiAgdGhpcy5kZWNvcmF0b3JzID0gZGVjb3JhdG9ycyB8fCB7fTtcblxuICByZWdpc3RlckRlZmF1bHRIZWxwZXJzKHRoaXMpO1xuICByZWdpc3RlckRlZmF1bHREZWNvcmF0b3JzKHRoaXMpO1xufVxuXG5IYW5kbGViYXJzRW52aXJvbm1lbnQucHJvdG90eXBlID0ge1xuICBjb25zdHJ1Y3RvcjogSGFuZGxlYmFyc0Vudmlyb25tZW50LFxuXG4gIGxvZ2dlcjogbG9nZ2VyLFxuICBsb2c6IGxvZ2dlci5sb2csXG5cbiAgcmVnaXN0ZXJIZWxwZXI6IGZ1bmN0aW9uKG5hbWUsIGZuKSB7XG4gICAgaWYgKHRvU3RyaW5nLmNhbGwobmFtZSkgPT09IG9iamVjdFR5cGUpIHtcbiAgICAgIGlmIChmbikgeyB0aHJvdyBuZXcgRXhjZXB0aW9uKCdBcmcgbm90IHN1cHBvcnRlZCB3aXRoIG11bHRpcGxlIGhlbHBlcnMnKTsgfVxuICAgICAgZXh0ZW5kKHRoaXMuaGVscGVycywgbmFtZSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoaXMuaGVscGVyc1tuYW1lXSA9IGZuO1xuICAgIH1cbiAgfSxcbiAgdW5yZWdpc3RlckhlbHBlcjogZnVuY3Rpb24obmFtZSkge1xuICAgIGRlbGV0ZSB0aGlzLmhlbHBlcnNbbmFtZV07XG4gIH0sXG5cbiAgcmVnaXN0ZXJQYXJ0aWFsOiBmdW5jdGlvbihuYW1lLCBwYXJ0aWFsKSB7XG4gICAgaWYgKHRvU3RyaW5nLmNhbGwobmFtZSkgPT09IG9iamVjdFR5cGUpIHtcbiAgICAgIGV4dGVuZCh0aGlzLnBhcnRpYWxzLCBuYW1lKTtcbiAgICB9IGVsc2Uge1xuICAgICAgaWYgKHR5cGVvZiBwYXJ0aWFsID09PSAndW5kZWZpbmVkJykge1xuICAgICAgICB0aHJvdyBuZXcgRXhjZXB0aW9uKGBBdHRlbXB0aW5nIHRvIHJlZ2lzdGVyIGEgcGFydGlhbCBjYWxsZWQgXCIke25hbWV9XCIgYXMgdW5kZWZpbmVkYCk7XG4gICAgICB9XG4gICAgICB0aGlzLnBhcnRpYWxzW25hbWVdID0gcGFydGlhbDtcbiAgICB9XG4gIH0sXG4gIHVucmVnaXN0ZXJQYXJ0aWFsOiBmdW5jdGlvbihuYW1lKSB7XG4gICAgZGVsZXRlIHRoaXMucGFydGlhbHNbbmFtZV07XG4gIH0sXG5cbiAgcmVnaXN0ZXJEZWNvcmF0b3I6IGZ1bmN0aW9uKG5hbWUsIGZuKSB7XG4gICAgaWYgKHRvU3RyaW5nLmNhbGwobmFtZSkgPT09IG9iamVjdFR5cGUpIHtcbiAgICAgIGlmIChmbikgeyB0aHJvdyBuZXcgRXhjZXB0aW9uKCdBcmcgbm90IHN1cHBvcnRlZCB3aXRoIG11bHRpcGxlIGRlY29yYXRvcnMnKTsgfVxuICAgICAgZXh0ZW5kKHRoaXMuZGVjb3JhdG9ycywgbmFtZSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoaXMuZGVjb3JhdG9yc1tuYW1lXSA9IGZuO1xuICAgIH1cbiAgfSxcbiAgdW5yZWdpc3RlckRlY29yYXRvcjogZnVuY3Rpb24obmFtZSkge1xuICAgIGRlbGV0ZSB0aGlzLmRlY29yYXRvcnNbbmFtZV07XG4gIH1cbn07XG5cbmV4cG9ydCBsZXQgbG9nID0gbG9nZ2VyLmxvZztcblxuZXhwb3J0IHtjcmVhdGVGcmFtZSwgbG9nZ2VyfTtcbiJdfQ==
 
 
 /***/ },
@@ -1560,7 +1608,8 @@
 	 */
 	'use strict';
 	
-	var TZDate = __webpack_require__(27).Date;
+	var TZDate = __webpack_require__(27).Date,
+	    dw = __webpack_require__(28);
 	var util = global.tui.util;
 	var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 	var datetime, tokenFunc;
@@ -1973,21 +2022,33 @@
 	     *
 	     * dates that different month with given date are negative values
 	     * @param {TZDate} month - date want to calculate month calendar
-	     * @param {number} [startDayOfWeek=0] - start day of week
-	     * @param {boolean} [isAlways6Week] - whether the number of weeks are always 6
+	     * @param {object} options - options
+	     * @param {number} [options.startDayOfWeek=0] - start day of week
+	     * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
+	     * @param {number} options.visibleWeeksCount visible weeks count
 	     * @param {function} [iteratee] - iteratee for customizing calendar object
 	     * @returns {Array.<string[]>} calendar 2d array
 	     */
-	    arr2dCalendar: function(month, startDayOfWeek, isAlways6Week, iteratee) {
+	    arr2dCalendar: function(month, options, iteratee) {
 	        var weekArr,
 	            starts, ends,
 	            startIndex, endIndex,
 	            totalDate, afterDates,
 	            cursor, week,
-	            calendar = [];
+	            calendar = [],
+	            startDayOfWeek = options.startDayOfWeek,
+	            isAlways6Week = options.isAlways6Week,
+	            visibleWeeksCount = options.visibleWeeksCount;
 	
-	        starts = datetime.startDateOfMonth(month);
-	        ends = datetime.endDateOfMonth(month);
+	        if (visibleWeeksCount) {
+	            starts = new TZDate(month);
+	            ends = dw(new TZDate(month));
+	            ends.addDate(7 * (visibleWeeksCount - 1));
+	            ends = ends.d;
+	        } else {
+	            starts = datetime.startDateOfMonth(month);
+	            ends = datetime.endDateOfMonth(month);
+	        }
 	
 	        // create day number array by startDayOfWeek number
 	        // 4 -> [4, 5, 6, 0, 1, 2, 3]
@@ -1998,7 +2059,11 @@
 	        // free dates after last date of this month
 	        afterDates = 7 - (endIndex + 1);
 	
-	        totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
+	        if (visibleWeeksCount) {
+	            totalDate = 7 * visibleWeeksCount;
+	        } else {
+	            totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
+	        }
 	        cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
 	        // iteratee all dates to render
 	        util.forEachArray(util.range(totalDate), function(i) {
@@ -2018,6 +2083,48 @@
 	        });
 	
 	        return calendar;
+	    },
+	
+	    /**
+	     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek
+	     * 
+	     * @param {number} days - day length of week
+	     * @param {boolean} narrowWeekend - narrow weekend
+	     * @param {number} startDayOfWeek - start day of week
+	     * @returns {Array} day, left, width
+	     */
+	    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek) {
+	        var limitDaysToApplyNarrowWeekend = 5;
+	        var uniformWidth = 100 / days;
+	        var wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
+	        var accumulatedWidth = 0;
+	        var dates = util.range(startDayOfWeek, days).concat(util.range(days)).slice(0, days);
+	
+	        return util.map(dates, function(day) {
+	            var model;
+	            var width = narrowWeekend ? wideWidth : uniformWidth;
+	            if (days > limitDaysToApplyNarrowWeekend && narrowWeekend && datetime.isWeekend(day)) {
+	                width = wideWidth / 2;
+	            }
+	
+	            model = {
+	                day: day,
+	                width: width,
+	                left: accumulatedWidth
+	            };
+	
+	            accumulatedWidth += width;
+	            return model;
+	        });
+	    },
+	
+	    /**
+	     * Get that day is weekend
+	     * @param {number} day number
+	     * @returns {boolean} true if weekend or false
+	     */
+	    isWeekend: function(day) {
+	        return day === 0 || day === 6;
 	    }
 	};
 	
@@ -2154,6 +2261,112 @@
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * @fileoverview Wrapper module for easy calc date object
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	var TZDate = __webpack_require__(27).Date;
+	
+	/**
+	 * @constructor
+	 * @param {Date} date to wrapping DW class
+	 */
+	function DW(date) {
+	    if (!(this instanceof DW)) {
+	        return new DW(date);
+	    }
+	
+	    if (!(date instanceof TZDate)) {
+	        date = new TZDate(date);
+	    }
+	
+	    /**
+	     * @type {Date}
+	     */
+	    this.d = date;
+	}
+	
+	/**
+	 * Return d property when supplied object is DW. else return itself
+	 * @param {*} obj - object
+	 * @returns {Date} date
+	 */
+	DW.prototype.safe = function(obj) {
+	    if (obj.constructor === DW) {
+	        return obj.d;
+	    }
+	
+	    return obj;
+	};
+	
+	/**
+	 * Clone DW object
+	 * @returns {DW} cloned dwrap object
+	 */
+	DW.prototype.clone = function() {
+	    return new DW(new TZDate(Number(this.d)));
+	};
+	
+	/**
+	 * Add days
+	 * @param {number} day - day to add
+	 * @returns {DW} wrapper object
+	 */
+	DW.prototype.addDate = function(day) {
+	    this.d.setDate(this.d.getDate() + day);
+	    return this;
+	};
+	
+	/**
+	 * Add month. If month value is changed, date set to 1.
+	 * @param {number} m - month to add
+	 * @returns {DW} wrapper object
+	 */
+	DW.prototype.addMonth = function(m) {
+	    var prevMonth = this.d.getMonth();
+	    var prevYear = this.d.getFullYear();
+	    this.d.setMonth(prevMonth + m);
+	
+	    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
+	    // Don't do it on different year(Because december + 1month is ok)
+	    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
+	        this.d.setMonth(prevMonth + m, 1);
+	    }
+	    return this;
+	};
+	
+	/**
+	 * Set hour, minutes, seconds, milliseconds
+	 * @param {number} h - hours
+	 * @param {number} m - minutes
+	 * @param {number} s - seconds
+	 * @param {number} ms - milliseconds
+	 * @returns {DW} wrapper object
+	 */
+	DW.prototype.setHours = function(h, m, s, ms) {
+	    this.d.setHours(h, m, s, ms);
+	    return this;
+	};
+	
+	/**
+	 * Whether date is between supplied dates?
+	 * @param {Date|DW} d1 - from date
+	 * @param {Date|DW} d2 - to date
+	 * @returns {boolean} is between?
+	 */
+	DW.prototype.isBetween = function(d1, d2) {
+	    var safe = this.safe;
+	    return safe(d1) <= this.d && this.d <= safe(d2);
+	};
+	
+	module.exports = DW;
+
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * @fileoverview common/general utilities.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
@@ -2163,8 +2376,8 @@
 	var util = global.tui.util,
 	    aps = Array.prototype.slice;
 	
-	var domutil = __webpack_require__(29),
-	    Collection = __webpack_require__(31);
+	var domutil = __webpack_require__(30),
+	    Collection = __webpack_require__(32);
 	
 	/**
 	 * Default event id getter for collection
@@ -2336,7 +2549,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0, no-shadow: 0, max-nested-callbacks: 0  */
@@ -2346,8 +2559,8 @@
 	 */
 	'use strict';
 	
-	var domevent = __webpack_require__(30);
-	var Collection = __webpack_require__(31);
+	var domevent = __webpack_require__(31);
+	var Collection = __webpack_require__(32);
 	
 	var util = global.tui.util,
 	    posKey = '_pos',
@@ -2981,7 +3194,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
@@ -3415,7 +3628,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -3857,7 +4070,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	/**
@@ -3908,7 +4121,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -3919,7 +4132,7 @@
 	
 	var util = global.tui.util;
 	var TZDate = __webpack_require__(27).Date;
-	var CalEvent = __webpack_require__(34);
+	var CalEvent = __webpack_require__(35);
 	
 	/**
 	 * 일정 카테고리
@@ -4022,7 +4235,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
@@ -4035,8 +4248,8 @@
 	var util = global.tui.util;
 	var TZDate = __webpack_require__(27).Date;
 	var datetime = __webpack_require__(26);
-	var dirty = __webpack_require__(35);
-	var model = __webpack_require__(36);
+	var dirty = __webpack_require__(36);
+	var model = __webpack_require__(37);
 	
 	/**
 	 * The model of calendar events.
@@ -4278,7 +4491,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -4488,7 +4701,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -4643,7 +4856,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -4655,12 +4868,12 @@
 	var util = global.tui.util,
 	    parseDateRx = /(\d{4}-\d{2}-\d{2})/;
 	
-	var config = __webpack_require__(32),
-	    View = __webpack_require__(38),
-	    domutil = __webpack_require__(29),
-	    domevent = __webpack_require__(30),
+	var config = __webpack_require__(33),
+	    View = __webpack_require__(39),
+	    domutil = __webpack_require__(30),
+	    domevent = __webpack_require__(31),
 	    datetime = __webpack_require__(26),
-	    tmpl = __webpack_require__(39),
+	    tmpl = __webpack_require__(40),
 	    TZDate = __webpack_require__(27).Date;
 	
 	/**
@@ -4850,6 +5063,10 @@
 	            title: datetime.format(renderDate, 'YYYY.MM'),
 	            startDayOfWeek: startDayOfWeek,
 	            tableClass: this.singleFocused ? (classPrefix + 'single-focused') : ''
+	        },
+	        datetimeOptions = {
+	            startDayOfWeek: startDayOfWeek,
+	            isAlways6Week: true
 	        };
 	
 	    viewModel.dayname = util.map(
@@ -4862,7 +5079,7 @@
 	        }
 	    );
 	
-	    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, true, function(date) {
+	    viewModel.calendar = datetime.arr2dCalendar(renderDate, datetimeOptions, function(date) {
 	        var ymd = datetime.format(date, 'YYYY-MM-DD'),
 	            day = date.getDay(),
 	            dayClassName = getDayClassName(day),
@@ -5020,7 +5237,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5030,8 +5247,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var domutil = __webpack_require__(29);
-	var Collection = __webpack_require__(31);
+	var domutil = __webpack_require__(30);
+	var Collection = __webpack_require__(32);
 	
 	/**
 	 * Base class of views.
@@ -5230,7 +5447,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -5285,7 +5502,7 @@
 	},"useData":true});
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5298,15 +5515,15 @@
 	var isValidHM = /^\d\d:\d\d$/;
 	var Handlebars = __webpack_require__(6);
 	
-	var config = __webpack_require__(32);
-	var common = __webpack_require__(28);
+	var config = __webpack_require__(33);
+	var common = __webpack_require__(29);
 	var datetime = __webpack_require__(26);
-	var Collection = __webpack_require__(31);
-	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
-	var View = __webpack_require__(38);
-	var baseTmpl = __webpack_require__(41);
-	var tmpl = __webpack_require__(42);
+	var Collection = __webpack_require__(32);
+	var domutil = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
+	var View = __webpack_require__(39);
+	var baseTmpl = __webpack_require__(42);
+	var tmpl = __webpack_require__(43);
 	var TZDate = __webpack_require__(27).Date;
 	
 	var dayArr = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
@@ -5855,7 +6072,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -5950,7 +6167,7 @@
 	},"useData":true});
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -6023,7 +6240,7 @@
 	},"useData":true});
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6031,9 +6248,10 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
+	var util = global.tui.util,
+	    mmin = Math.min;
 	var Handlebars = __webpack_require__(6);
-	var dw = __webpack_require__(44),
+	var dw = __webpack_require__(28),
 	    datetime = __webpack_require__(26),
 	    Layout = __webpack_require__(45),
 	    Drag = __webpack_require__(46),
@@ -6428,23 +6646,46 @@
 	        viewName = this.viewName,
 	        view = this.getCurrentView(),
 	        recursiveSet = this.setOptionRecurseively,
-	        startDate, endDate, tempDate;
+	        startDate, endDate, tempDate, startDayOfWeek, visibleWeeksCount, datetimeOptions;
 	
 	    offset = util.isExisty(offset) ? offset : 0;
 	
 	    if (viewName === 'month') {
-	        renderDate.addMonth(offset);
-	        tempDate = datetime.arr2dCalendar(this.renderDate, 0, true);
+	        startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
+	        visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
 	
-	        recursiveSet(view, function(opt) {
-	            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
-	        });
+	        if (visibleWeeksCount) {
+	            datetimeOptions = {
+	                startDayOfWeek: startDayOfWeek,
+	                isAlways6Week: false,
+	                visibleWeeksCount: visibleWeeksCount
+	            };
+	
+	            renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
+	            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+	
+	            recursiveSet(view, function(opt) {
+	                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
+	            });
+	        } else {
+	            datetimeOptions = {
+	                startDayOfWeek: startDayOfWeek,
+	                isAlways6Week: true
+	            };
+	
+	            renderDate.addMonth(offset);
+	            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+	
+	            recursiveSet(view, function(opt) {
+	                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+	            });
+	        }
 	
 	        startDate = tempDate[0][0];
 	        endDate = tempDate[tempDate.length - 1][6];
 	    } else if (viewName === 'week') {
 	        renderDate.addDate(offset * 7);
-	        tempDate = this.getWeekDayRange(renderDate.d);
+	        tempDate = this.getWeekDayRange(renderDate.d, util.pick(this.options, 'week', 'startDayOfWeek') || 0);
 	        startDate = tempDate[0];
 	        endDate = tempDate[1];
 	
@@ -6699,112 +6940,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Wrapper module for easy calc date object
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	var TZDate = __webpack_require__(27).Date;
-	
-	/**
-	 * @constructor
-	 * @param {Date} date to wrapping DW class
-	 */
-	function DW(date) {
-	    if (!(this instanceof DW)) {
-	        return new DW(date);
-	    }
-	
-	    if (!(date instanceof TZDate)) {
-	        date = new TZDate(date);
-	    }
-	
-	    /**
-	     * @type {Date}
-	     */
-	    this.d = date;
-	}
-	
-	/**
-	 * Return d property when supplied object is DW. else return itself
-	 * @param {*} obj - object
-	 * @returns {Date} date
-	 */
-	DW.prototype.safe = function(obj) {
-	    if (obj.constructor === DW) {
-	        return obj.d;
-	    }
-	
-	    return obj;
-	};
-	
-	/**
-	 * Clone DW object
-	 * @returns {DW} cloned dwrap object
-	 */
-	DW.prototype.clone = function() {
-	    return new DW(new TZDate(Number(this.d)));
-	};
-	
-	/**
-	 * Add days
-	 * @param {number} day - day to add
-	 * @returns {DW} wrapper object
-	 */
-	DW.prototype.addDate = function(day) {
-	    this.d.setDate(this.d.getDate() + day);
-	    return this;
-	};
-	
-	/**
-	 * Add month. If month value is changed, date set to 1.
-	 * @param {number} m - month to add
-	 * @returns {DW} wrapper object
-	 */
-	DW.prototype.addMonth = function(m) {
-	    var prevMonth = this.d.getMonth();
-	    var prevYear = this.d.getFullYear();
-	    this.d.setMonth(prevMonth + m);
-	
-	    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
-	    // Don't do it on different year(Because december + 1month is ok)
-	    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
-	        this.d.setMonth(prevMonth + m, 1);
-	    }
-	    return this;
-	};
-	
-	/**
-	 * Set hour, minutes, seconds, milliseconds
-	 * @param {number} h - hours
-	 * @param {number} m - minutes
-	 * @param {number} s - seconds
-	 * @param {number} ms - milliseconds
-	 * @returns {DW} wrapper object
-	 */
-	DW.prototype.setHours = function(h, m, s, ms) {
-	    this.d.setHours(h, m, s, ms);
-	    return this;
-	};
-	
-	/**
-	 * Whether date is between supplied dates?
-	 * @param {Date|DW} d1 - from date
-	 * @param {Date|DW} d2 - to date
-	 * @returns {boolean} is between?
-	 */
-	DW.prototype.isBetween = function(d1, d2) {
-	    var safe = this.safe;
-	    return safe(d1) <= this.d && this.d <= safe(d2);
-	};
-	
-	module.exports = DW;
-
-
-/***/ },
 /* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -6815,10 +6950,10 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
-	var Collection = __webpack_require__(31);
-	var View = __webpack_require__(38);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
+	var Collection = __webpack_require__(32);
+	var View = __webpack_require__(39);
 	
 	/**
 	 * Layout view for toggle each child view. It will controlled via navigation UI.
@@ -6899,8 +7034,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
+	var domutil = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
 	
 	/**
 	 * @constructor
@@ -7187,10 +7322,10 @@
 	
 	var util = global.tui.util;
 	var TZDate = __webpack_require__(27).Date;
-	var CalEvent = __webpack_require__(34);
+	var CalEvent = __webpack_require__(35);
 	var CalEventViewModel = __webpack_require__(49);
 	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(28);
+	var common = __webpack_require__(29);
 	
 	/**
 	 * @constructor
@@ -7700,7 +7835,7 @@
 	
 	var datetime = __webpack_require__(26);
 	var TZDate = __webpack_require__(27).Date;
-	var Collection = __webpack_require__(31);
+	var Collection = __webpack_require__(32);
 	var CalEventViewModel = __webpack_require__(49);
 	
 	var Core = {
@@ -7956,7 +8091,7 @@
 	
 	var util = global.tui.util;
 	
-	var Collection = __webpack_require__(31);
+	var Collection = __webpack_require__(32);
 	var array = __webpack_require__(52);
 	var datetime = __webpack_require__(26);
 	
@@ -8498,7 +8633,7 @@
 	
 	var array = __webpack_require__(52),
 	    datetime = __webpack_require__(26),
-	    Collection = __webpack_require__(31);
+	    Collection = __webpack_require__(32);
 	
 	var Month = {
 	    /**
@@ -8671,8 +8806,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var VLayout = __webpack_require__(55);
 	// Parent views
 	var Week = __webpack_require__(57);
@@ -8819,11 +8954,11 @@
 	var util = global.tui.util,
 	    mAbs = Math.abs;
 	
-	var config = __webpack_require__(32),
-	    common = __webpack_require__(28),
-	    domutil = __webpack_require__(29),
-	    domevent = __webpack_require__(30),
-	    View = __webpack_require__(38),
+	var config = __webpack_require__(33),
+	    common = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
+	    domevent = __webpack_require__(31),
+	    View = __webpack_require__(39),
 	    VPanel = __webpack_require__(56),
 	    Drag = __webpack_require__(46);
 	
@@ -9227,10 +9362,10 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    common = __webpack_require__(28),
-	    domutil = __webpack_require__(29),
-	    View = __webpack_require__(38);
+	var config = __webpack_require__(33),
+	    common = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
+	    View = __webpack_require__(39);
 	
 	/**
 	 * @constructor
@@ -9390,11 +9525,11 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var datetime = __webpack_require__(26);
 	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(38);
+	var View = __webpack_require__(39);
 	
 	/**
 	 * FullCalendar 에서는 날짜 정보만 사용(YYYY-MM-DD) 하고,
@@ -9437,7 +9572,9 @@
 	     */
 	    this.options = util.extend({
 	        renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
-	        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD')
+	        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
+	        narrowWeekend: false,
+	        startDayOfWeek: 0
 	    }, options);
 	
 	    /**
@@ -9460,7 +9597,7 @@
 	 */
 	Week.prototype.render = function() {
 	    var options = this.options;
-	    var renderStartDate, renderEndDate, eventsInDateRange, viewModel;
+	    var renderStartDate, renderEndDate, eventsInDateRange, viewModel, grids;
 	
 	    renderStartDate = parseRangeDateString(options.renderStartDate);
 	    renderEndDate = parseRangeDateString(options.renderEndDate);
@@ -9468,10 +9605,20 @@
 	        datetime.start(renderStartDate),
 	        datetime.end(renderEndDate)
 	    );
+	    grids = datetime.getGridLeftAndWidth(
+	        datetime.range(
+	            datetime.start(renderStartDate),
+	            datetime.end(renderEndDate),
+	            datetime.MILLISECONDS_PER_DAY
+	        ).length,
+	        options.narrowWeekend,
+	        options.startDayOfWeek);
+	
 	    viewModel = {
 	        eventsInDateRange: eventsInDateRange,
 	        renderStartDate: renderStartDate,
-	        renderEndDate: renderEndDate
+	        renderEndDate: renderEndDate,
+	        grids: grids
 	    };
 	
 	    this.children.each(function(childView) {
@@ -9527,11 +9674,11 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
 	var TZDate = __webpack_require__(27).Date;
-	var domutil = __webpack_require__(29);
-	var View = __webpack_require__(38);
+	var domutil = __webpack_require__(30);
+	var View = __webpack_require__(39);
 	var daynameTmpl = __webpack_require__(59);
 	
 	/**
@@ -9560,9 +9707,10 @@
 	 * Get default viewmodels.
 	 * @param {Date} start The date of start render
 	 * @param {Date} end The end of end render
+	 * @param {object} grids grid data(width, left, day)
 	 * @returns {array} viewmodel.
 	 */
-	DayName.prototype._getBaseViewModel = function(start, end) {
+	DayName.prototype._getBaseViewModel = function(start, end, grids) {
 	    var daynames = this.options.daynames,
 	        viewModel;
 	
@@ -9570,7 +9718,7 @@
 	        datetime.start(start),
 	        datetime.start(end),
 	        datetime.MILLISECONDS_PER_DAY
-	    ), function(d, i, arr) {
+	    ), function(d, i) {
 	        var day = d.getDay();
 	
 	        return {
@@ -9578,7 +9726,8 @@
 	            dayName: daynames[day],
 	            isToday: datetime.isSameDate(d, new TZDate()),
 	            date: d.getDate(),
-	            width: 100 / arr.length
+	            left: grids[i].left,
+	            width: grids[i].width
 	        };
 	    });
 	
@@ -9592,7 +9741,8 @@
 	DayName.prototype.render = function(viewModel) {
 	    var _viewModel = this._getBaseViewModel(
 	        viewModel.renderStartDate,
-	        viewModel.renderEndDate
+	        viewModel.renderEndDate,
+	        viewModel.grids
 	    );
 	
 	    this.container.innerHTML = daynameTmpl(_viewModel);
@@ -9619,7 +9769,7 @@
 	    + "\"\n     style=\""
 	    + alias4((helpers["common-width"] || (depth0 && depth0["common-width"]) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),{"name":"common-width","hash":{},"data":data}))
 	    + ";left:"
-	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(data && data.index),(depth0 != null ? depth0.width : depth0),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\">\n    <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "dayname-date\">"
@@ -9655,13 +9805,13 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var common = __webpack_require__(28);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var common = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var datetime = __webpack_require__(26);
 	var TZDate = __webpack_require__(27).Date;
 	var reqAnimFrame = __webpack_require__(61);
-	var View = __webpack_require__(38);
+	var View = __webpack_require__(39);
 	var Time = __webpack_require__(62);
 	var AutoScroll = __webpack_require__(65);
 	var mainTmpl = __webpack_require__(67);
@@ -9805,11 +9955,31 @@
 	};
 	
 	/**
+	 * @returns {object} grid information(width, left, day)
+	 */
+	TimeGrid.prototype._getGrids = function() {
+	    var opt = this.options,
+	        dateRange = datetime.range(
+	            datetime.parse(opt.renderStartDate),
+	            datetime.parse(opt.renderEndDate),
+	            datetime.MILLISECONDS_PER_DAY
+	        ),
+	        grids = datetime.getGridLeftAndWidth(
+	            dateRange.length,
+	            this.options.narrowWeekend,
+	            this.options.startDayOfWeek
+	        );
+	
+	    return grids;
+	};
+	
+	/**
 	 * Get Hourmarker viewmodel.
 	 * @param {Date} now - now
+	 * @param {object} grids grid information(width, left, day)
 	 * @returns {object} ViewModel of hourmarker.
 	 */
-	TimeGrid.prototype._getHourmarkerViewModel = function(now) {
+	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids) {
 	    var opt = this.options,
 	        dateRange = datetime.range(
 	            datetime.parse(opt.renderStartDate),
@@ -9823,7 +9993,7 @@
 	
 	    util.forEach(dateRange, function(date, index) {
 	        if (datetime.isSameDate(now, date)) {
-	            todaymarkerLeft = common.ratio(dateRange.length, 100, index);
+	            todaymarkerLeft = grids[index].left;
 	        }
 	    });
 	
@@ -9837,14 +10007,14 @@
 	    return viewModel;
 	};
 	
-	
 	/**
 	 * Get base viewModel.
+	 * @param {object} grids grid information(width, left, day)
 	 * @returns {object} ViewModel
 	 */
-	TimeGrid.prototype._getBaseViewModel = function() {
+	TimeGrid.prototype._getBaseViewModel = function(grids) {
 	    var opt = this.options;
-	    var viewModel = this._getHourmarkerViewModel(new TZDate());
+	    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids);
 	    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 	
 	    return viewModel;
@@ -9853,10 +10023,10 @@
 	/**
 	 * Reconcilation child views and render.
 	 * @param {object} viewModels Viewmodel
-	 * @param {number} width The width percent of each time view.
+	 * @param {object} grids grid information(width, left, day)
 	 * @param {HTMLElement} container Container element for each time view.
 	 */
-	TimeGrid.prototype._renderChildren = function(viewModels, width, container) {
+	TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
 	    var self = this,
 	        options = this.options,
 	        childOption,
@@ -9875,7 +10045,8 @@
 	
 	        childOption = {
 	            index: i,
-	            width: width,
+	            left: grids[i].left,
+	            width: grids[i].width,
 	            ymd: ymd,
 	            isToday: isToday,
 	            isPending: options.isPending,
@@ -9904,16 +10075,14 @@
 	TimeGrid.prototype.render = function(viewModel) {
 	    var timeViewModel = viewModel.eventsInDateRange.time,
 	        container = this.container,
-	        baseViewModel = this._getBaseViewModel(),
-	        eventLen = util.keys(timeViewModel).length,
-	        width;
+	        grids = viewModel.grids,
+	        baseViewModel = this._getBaseViewModel(grids),
+	        eventLen = util.keys(timeViewModel).length;
 	
 	    if (!eventLen) {
 	        return;
 	    }
 	
-	    width = 100 / eventLen;
-	    baseViewModel.width = width;
 	    baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
 	
 	    container.innerHTML = mainTmpl(baseViewModel);
@@ -9923,7 +10092,7 @@
 	     **********/
 	    this._renderChildren(
 	        timeViewModel,
-	        width,
+	        grids,
 	        domutil.find(config.classname('.timegrid-events-container'), container)
 	    );
 	
@@ -9945,7 +10114,7 @@
 	 */
 	TimeGrid.prototype.refreshHourmarker = function() {
 	    var hourmarker = this.hourmarker,
-	        viewModel = this._getHourmarkerViewModel(new TZDate()),
+	        viewModel = this._getHourmarkerViewModel(new TZDate(), this._getGrids()),
 	        todaymarker,
 	        hourmarkerText;
 	
@@ -10111,11 +10280,11 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(38);
+	var View = __webpack_require__(39);
 	var timeTmpl = __webpack_require__(63);
 	var splitTimeTmpl = __webpack_require__(64);
 	
@@ -10150,7 +10319,7 @@
 	
 	    this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
 	    container.style.width = options.width + '%';
-	    container.style.left = (options.index * options.width) + '%';
+	    container.style.left = options.left + '%';
 	
 	    if (this.options.isToday) {
 	        domutil.addClass(this.container, config.classname('today'));
@@ -10445,8 +10614,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var domevent = __webpack_require__(30);
-	var domutil = __webpack_require__(29);
+	var domevent = __webpack_require__(31);
+	var domutil = __webpack_require__(30);
 	var Point = __webpack_require__(66);
 	
 	var SCROLL_INTERVAL = 30;
@@ -11109,9 +11278,9 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
-	    View = __webpack_require__(38),
+	var config = __webpack_require__(33),
+	    domutil = __webpack_require__(30),
+	    View = __webpack_require__(39),
 	    WeekdayInWeek = __webpack_require__(69),
 	    tmpl = __webpack_require__(72);
 	
@@ -11181,7 +11350,7 @@
 	        domutil.find(config.classname('.weekday-container'), container)
 	    );
 	    weekdayView.on('afterRender', function(weekdayViewModel) {
-	        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop
+	        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop;
 	    });
 	
 	    this.addChild(weekdayView);
@@ -11270,8 +11439,8 @@
 	    var opt = this.options;
 	
 	    return (
-	        (maxEventInDay * opt.eventHeight) + 
-	        ((maxEventInDay - 1) * opt.eventGutter) + 
+	        (maxEventInDay * opt.eventHeight) +
+	        ((maxEventInDay - 1) * opt.eventGutter) +
 	        opt.containerBottomGutter
 	    );
 	};
@@ -11291,11 +11460,11 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
+	var config = __webpack_require__(33),
+	    domutil = __webpack_require__(30),
 	    datetime = __webpack_require__(26),
 	    TZDate = __webpack_require__(27).Date,
-	    View = __webpack_require__(38);
+	    View = __webpack_require__(39);
 	
 	/**
 	 * @constructor
@@ -11324,7 +11493,9 @@
 	        containerHeight: 40,
 	        containerBottomGutter: 8,
 	        eventHeight: 18,
-	        eventGutter: 2
+	        eventGutter: 2,
+	        narrowWeekend: false,
+	        startDayOfWeek: 0
 	    }, options);
 	
 	    View.call(this, container);
@@ -11348,26 +11519,32 @@
 	
 	/**
 	 * Get default view model.
-	 * @param {object} viewModel - viewModel from parent views.
 	 * @returns {object} viewModel to rendering.
 	 */
 	Weekday.prototype.getBaseViewModel = function() {
 	    var opt = this.options;
 	    var range = this.getRenderDateRange();
-	    var gridWidth = (100 / range.length);
 	    var today = datetime.format(new TZDate(), 'YYYYMMDD');
+	    var gridWidth = (100 / range.length);
+	    var grids = datetime.getGridLeftAndWidth(
+	        this.getRenderDateRange().length,
+	        this.options.narrowWeekend,
+	        this.options.startDayOfWeek);
 	
 	    return {
 	        width: gridWidth,
 	        eventHeight: opt.eventHeight,
 	        eventBlockHeight: (opt.eventHeight + opt.eventGutter),
 	        eventBlockGutter: opt.eventGutter,
-	        dates: util.map(range, function(date) {
+	        dates: util.map(range, function(date, index) {
+	            var day = date.getDay();
 	            return {
 	                date: date.getDate(),
 	                month: date.getMonth() + 1,
-	                day: date.getDay(),
-	                isToday: datetime.format(date, 'YYYYMMDD') === today
+	                day: day,
+	                isToday: datetime.format(date, 'YYYYMMDD') === today,
+	                width: grids[index].width,
+	                left: grids[index].left
 	            };
 	        })
 	    };
@@ -11383,16 +11560,16 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-grid-line "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\" style=\"width:"
-	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;left:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%;\"></div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -11428,9 +11605,9 @@
 	    + "\"\n        style=\"top:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.eventBlockHeight),{"name":"multiply","hash":{},"data":data}))
 	    + "px;\n                left:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+	    + alias3((helpers["grid-left"] || (depth0 && depth0["grid-left"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),{"name":"grid-left","hash":{},"data":data}))
 	    + "%;\n                width:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+	    + alias3((helpers["grid-width"] || (depth0 && depth0["grid-width"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),{"name":"grid-width","hash":{},"data":data}))
 	    + "%\">\n        <div class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-event "
@@ -11539,8 +11716,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var AlldayMove = __webpack_require__(74);
 	
 	/**
@@ -11634,9 +11811,9 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var common = __webpack_require__(28);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var common = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var AlldayCore = __webpack_require__(75);
 	var AlldayMoveGuide = __webpack_require__(76);
 	var TZDate = __webpack_require__(27).Date;
@@ -11911,10 +12088,10 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
+	var domutil = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
 	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(28);
+	var common = __webpack_require__(29);
 	
 	var mmax = Math.max,
 	    mmin = Math.min;
@@ -11936,7 +12113,8 @@
 	            datesInRange,
 	            containerWidth,
 	            mousePos,
-	            dragStartXIndex;
+	            dragStartXIndex,
+	            grids;
 	
 	        if (!weekdayView) {
 	            return false;
@@ -11947,9 +12125,15 @@
 	        renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
 	        datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
 	
+	        grids = datetime.getGridLeftAndWidth(
+	            datesInRange,
+	            alldayView.options.narrowWeekend,
+	            alldayView.options.startDayOfWeek
+	        );
+	
 	        containerWidth = domutil.getSize(container)[0];
 	        mousePos = domevent.getMousePosition(mouseEvent, container);
-	        dragStartXIndex = common.ratio(containerWidth, datesInRange, mousePos[0]) | 0;
+	        dragStartXIndex = getX(grids, common.ratio(containerWidth, 100, mousePos[0]));
 	
 	        /**
 	         * @param {MouseEvent} mouseEvent - mouse event in drag actions.
@@ -11958,7 +12142,7 @@
 	        return function(mouseEvent) {
 	            var pos = domevent.getMousePosition(mouseEvent, container),
 	                mouseX = pos[0],
-	                xIndex = common.ratio(containerWidth, datesInRange, mouseX) | 0;
+	                xIndex = getX(grids, common.ratio(containerWidth, 100, mouseX));
 	
 	            // apply limitation of creation event X index.
 	            xIndex = mmax(xIndex, 0);
@@ -11969,11 +12153,26 @@
 	                dragStartXIndex: dragStartXIndex,
 	                datesInRange: datesInRange,
 	                xIndex: xIndex,
-	                triggerEvent: mouseEvent.type
+	                triggerEvent: mouseEvent.type,
+	                grids: grids
 	            };
 	        };
 	    }
 	};
+	
+	function getX(grids, left) {
+	    var i = 0;
+	    var length = grids.length;
+	    var grid;
+	    for (; i < length; i += 1) {
+	        grid = grids[i];
+	        if (grid.left <= left && left <= (grid.left + grid.width)) {
+	            return i;
+	        }
+	    }
+	
+	    return i;
+	}
 	
 	module.exports = alldayCore;
 	
@@ -11989,9 +12188,9 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var reqAnimFrame = __webpack_require__(61);
 	var TZDate = __webpack_require__(27).Date;
 	
@@ -12249,11 +12448,11 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(28);
-	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
+	var common = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
 	var alldayCore = __webpack_require__(75);
 	var AlldayCreationGuide = __webpack_require__(78);
 	var TZDate = __webpack_require__(27).Date;
@@ -12548,8 +12747,8 @@
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var reqAnimFrame = __webpack_require__(61);
 	
 	/**
@@ -12607,27 +12806,36 @@
 	};
 	
 	/**
+	 * Get element width based on narrowWeekend
+	 * @param {number} dragStartIndex - grid start index
+	 * @param {number} dragEndIndex - grid end index
+	 * @param {Array} grids - dates information
+	 * @returns {number} element width
+	 */
+	AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndIndex, grids) {
+	    var width = 0;
+	    var i = dragStartIndex;
+	    for (; i <= dragEndIndex; i += 1) {
+	        width += grids[i].width;
+	    }
+	
+	    return width;
+	};
+	
+	/**
 	 * Refresh guide element.
 	 * @param {object} eventData - event data from Allday.Creation handler.
 	 * @param {boolean} defer - If set to true, set style in the next frame
 	 */
 	AlldayCreationGuide.prototype._refreshGuideElement = function(eventData, defer) {
 	    var guideElement = this.guideElement,
-	        baseWidthPercent = (100 / eventData.datesInRange),
-	        dragStartXIndex = eventData.dragStartXIndex,
-	        xIndex = eventData.xIndex,
-	        length = xIndex - dragStartXIndex,
+	        dragStartXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.dragStartXIndex : eventData.xIndex,
+	        dragEndXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.xIndex : eventData.dragStartXIndex,
 	        leftPercent,
 	        widthPercent;
 	
-	    // when revert dragging.
-	    if (length < 0) {
-	        dragStartXIndex = xIndex;
-	        length = Math.abs(length);
-	    }
-	
-	    leftPercent = baseWidthPercent * dragStartXIndex;
-	    widthPercent = baseWidthPercent * (length + 1);
+	    leftPercent = eventData.grids[dragStartXIndex].left;
+	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, eventData.grids);
 	
 	    function setStyle() {
 	        guideElement.style.display = 'block';
@@ -12690,10 +12898,10 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
-	var common = __webpack_require__(28);
+	var domutil = __webpack_require__(30);
+	var common = __webpack_require__(29);
 	var AlldayCore = __webpack_require__(75);
 	var AlldayResizeGuide = __webpack_require__(80);
 	var TZDate = __webpack_require__(27).Date;
@@ -12964,8 +13172,8 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var datetime = __webpack_require__(26);
 	var reqAnimFrame = __webpack_require__(61);
 	var TZDate = __webpack_require__(27).Date;
@@ -13124,8 +13332,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	
 	/**
 	 * @constructor
@@ -13236,11 +13444,11 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var array = __webpack_require__(52);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
+	var domutil = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
 	var TimeCreationGuide = __webpack_require__(83);
 	var TZDate = __webpack_require__(27).Date;
 	var timeCore = __webpack_require__(84);
@@ -13584,12 +13792,12 @@
 	 */
 	'use strict';
 	
-	var common = __webpack_require__(28);
+	var common = __webpack_require__(29);
 	var datetime = __webpack_require__(26);
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var reqAnimFrame = __webpack_require__(61);
-	var ratio = __webpack_require__(28).ratio;
+	var ratio = __webpack_require__(29).ratio;
 	var TZDate = __webpack_require__(27).Date;
 	var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 	
@@ -13854,9 +14062,9 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var common = __webpack_require__(28);
+	var common = __webpack_require__(29);
 	var datetime = __webpack_require__(26);
-	var domevent = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
 	var Point = __webpack_require__(66);
 	
 	/**
@@ -13952,9 +14160,9 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var TZDate = __webpack_require__(27).Date;
 	var timeCore = __webpack_require__(84);
 	var TimeMoveGuide = __webpack_require__(86);
@@ -14314,14 +14522,14 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var reqAnimFrame = __webpack_require__(61);
-	var ratio = __webpack_require__(28).ratio;
+	var ratio = __webpack_require__(29).ratio;
 	var FloatingLayer = __webpack_require__(87);
 	var tmpl = __webpack_require__(88);
 	var TZDate = __webpack_require__(27).Date;
-	var DoorayEvent = __webpack_require__(34);
+	var DoorayEvent = __webpack_require__(35);
 	
 	/**
 	 * Class for Time.Move effect.
@@ -14551,9 +14759,9 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
-	    View = __webpack_require__(38);
+	var config = __webpack_require__(33),
+	    domutil = __webpack_require__(30),
+	    View = __webpack_require__(39);
 	
 	/**
 	 * @constructor
@@ -14775,9 +14983,9 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var TZDate = __webpack_require__(27).Date;
 	var timeCore = __webpack_require__(84);
 	var TimeResizeGuide = __webpack_require__(90);
@@ -15084,10 +15292,10 @@
 	 */
 	'use strict';
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var reqAnimFrame = __webpack_require__(61);
-	var ratio = __webpack_require__(28).ratio;
+	var ratio = __webpack_require__(29).ratio;
 	
 	/**
 	 * Class for Time.Resize effect.
@@ -15265,10 +15473,10 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
+	var config = __webpack_require__(33),
 	    array = __webpack_require__(52),
 	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
 	    Month = __webpack_require__(92),
 	    MonthClick = __webpack_require__(98),
 	    MonthCreation = __webpack_require__(99),
@@ -15405,16 +15613,18 @@
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
+	var util = global.tui.util,
+	    mmin = Math.min;
 	
-	var config = __webpack_require__(32),
+	var config = __webpack_require__(33),
 	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
 	    TZDate = __webpack_require__(27).Date,
 	    tmpl = __webpack_require__(93),
-	    View = __webpack_require__(38),
+	    View = __webpack_require__(39),
 	    VLayout = __webpack_require__(55),
-	    WeekdayInMonth = __webpack_require__(94);
+	    WeekdayInMonth = __webpack_require__(94),
+	    dw = __webpack_require__(28);
 	
 	/**
 	 * @constructor
@@ -15453,9 +15663,20 @@
 	            return Boolean(model.visible);
 	        },
 	        startDayOfWeek: 0,
-	        renderMonth: '2015-12',
-	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+	        renderMonth: '2018-01',
+	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	        narrowWeekend: false,
+	        visibleWeeksCount: null
 	    }, options);
+	
+	    /**
+	     * horizontal grid information
+	     * @type {Object}
+	     */
+	    this.grids = datetime.getGridLeftAndWidth(
+	        this.options.daynames.length,
+	        this.options.narrowWeekend,
+	        this.options.startDayOfWeek);
 	}
 	
 	util.inherit(Month, View);
@@ -15469,12 +15690,28 @@
 	/**
 	 * Get calendar array by supplied date
 	 * @param {string} renderMonthStr - month to render YYYY-MM
-	 * @param {number} [startDayOfWeek=0] - start day of week
 	 * @returns {array.<Date[]>} calendar array
 	 */
-	Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
-	    var date = datetime.parse(renderMonthStr + '-01'),
-	        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0, true);
+	Month.prototype._getMonthCalendar = function(renderMonthStr) {
+	    var date = dw(renderMonthStr).d;
+	    var startDayOfWeek = this.options.startDayOfWeek || 0;
+	    var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
+	    var datetimeOptions, calendar;
+	
+	    if (this.options.visibleWeeksCount) {
+	        datetimeOptions = {
+	            startDayOfWeek: startDayOfWeek,
+	            isAlways6Week: false,
+	            visibleWeeksCount: visibleWeeksCount
+	        };
+	    } else {
+	        datetimeOptions = {
+	            startDayOfWeek: startDayOfWeek,
+	            isAlways6Week: true
+	        };
+	    }
+	
+	    calendar = datetime.arr2dCalendar(date, datetimeOptions);
 	
 	    return calendar;
 	};
@@ -15489,6 +15726,9 @@
 	    var weekCount = calendar.length;
 	    var heightPercent = 100 / weekCount;
 	    var renderMonth = this.options.renderMonth;
+	    var narrowWeekend = this.options.narrowWeekend;
+	    var startDayOfWeek = this.options.startDayOfWeek;
+	    var visibleWeeksCount = this.options.visibleWeeksCount;
 	
 	    container.innerHTML = '';
 	    this.children.clear();
@@ -15506,7 +15746,10 @@
 	            renderMonth: renderMonth,
 	            heightPercent: heightPercent,
 	            renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-	            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
+	            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+	            narrowWeekend: narrowWeekend,
+	            startDayOfWeek: startDayOfWeek,
+	            visibleWeeksCount: visibleWeeksCount
 	        }, weekdayViewContainer);
 	
 	        self.addChild(weekdayView);
@@ -15524,22 +15767,24 @@
 	        daynames = opt.daynames,
 	        calendar = this._getMonthCalendar(opt.renderMonth),
 	        eventFilter = opt.eventFilter,
+	        grids = this.grids,
 	        daynameViewModel,
 	        baseViewModel;
 	
 	    daynameViewModel = util.map(
 	        util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-	        function(i) {
+	        function(day, index) {
 	            return {
-	                day: i,
-	                label: daynames[i]
+	                day: day,
+	                label: daynames[day],
+	                width: grids[index].width,
+	                left: grids[index].left
 	            };
 	        }
 	    );
 	
 	    baseViewModel = {
-	        daynames: daynameViewModel,
-	        width: 100 / daynameViewModel.length
+	        daynames: daynameViewModel
 	    };
 	
 	    vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
@@ -15568,14 +15813,14 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-dayname-item\"\n         style=\"position: absolute;\n                width: "
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;\n                left: "
-	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(data && data.index),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\">\n        <span class=\""
 	    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
 	    + "\">"
@@ -15609,11 +15854,11 @@
 	
 	var Handlebars = __webpack_require__(7);
 	
-	var config = __webpack_require__(32),
-	    common = __webpack_require__(28),
+	var config = __webpack_require__(33),
+	    common = __webpack_require__(29),
 	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(29),
-	    View = __webpack_require__(38),
+	    domutil = __webpack_require__(30),
+	    View = __webpack_require__(39),
 	    Weekday = __webpack_require__(70),
 	    baseTmpl = __webpack_require__(95),
 	    eventTmpl = __webpack_require__(96),
@@ -15701,16 +15946,21 @@
 	 * Get view model for render skipped label
 	 * @param {object} exceedDate - object has count of each dates exceed event block
 	 *  count.
+	 * @param {object} baseViewModel - view model of base view
 	 * @returns {object[]} - view model for skipped label
 	 */
-	WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
+	WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewModel) {
 	    var dateRange = util.map(this.getRenderDateRange(), function(date) {
 	        return datetime.format(date, 'YYYYMMDD');
 	    });
+	    var dates = baseViewModel.dates;
 	
 	    return util.map(exceedDate, function(skipped, ymd) {
+	        var index = util.inArray(ymd, dateRange);
+	
 	        return {
-	            left: util.inArray(ymd, dateRange),
+	            left: dates[index].left,
+	            width: dates[index].width,
 	            skipped: skipped,
 	            ymd: ymd
 	        };
@@ -15729,7 +15979,9 @@
 	        eventContainer,
 	        contentStr = '';
 	
-	    setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+	    if (!this.options.visibleWeeksCount) {
+	        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+	    }
 	    container.innerHTML = baseTmpl(baseViewModel);
 	
 	    renderLimitIdx = this._getRenderLimitIndex();
@@ -15753,7 +16005,7 @@
 	
 	    contentStr += skipTmpl(util.extend({
 	        renderLimitIdx: renderLimitIdx,
-	        viewModelForSkip: this._getSkipLabelViewModel(exceedDate)
+	        viewModelForSkip: this._getSkipLabelViewModel(exceedDate, baseViewModel)
 	    }, baseViewModel));
 	
 	    eventContainer.innerHTML = contentStr;
@@ -15804,9 +16056,9 @@
 	    + " "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isOtherMonth : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n         style=\"width:"
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%; left:"
-	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%;\">\n        <span>"
 	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
 	    + "</span>\n    </div>\n";
@@ -15880,7 +16132,7 @@
 	    + "\n            "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n         style=\""
-	    + alias3((helpers["month-eventBlock"] || (depth0 && depth0["month-eventBlock"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.eventBlockHeight),((stack1 = (data && data.root)) && stack1.width),14,{"name":"month-eventBlock","hash":{},"data":data}))
+	    + alias3((helpers["month-eventBlock"] || (depth0 && depth0["month-eventBlock"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),((stack1 = (data && data.root)) && stack1.eventBlockHeight),14,{"name":"month-eventBlock","hash":{},"data":data}))
 	    + ";\n                margin-top:"
 	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.eventBlockGutter), depth0))
 	    + "px\">\n"
@@ -16000,18 +16252,18 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda, alias5="function";
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div style=\"position: absolute;\n            left:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),((stack1 = (data && data.root)) && stack1.width),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%;\n            width:"
-	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%\"\n     class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-exceed\"\n     data-ymd=\""
-	    + alias3(alias4((depth0 != null ? depth0.ymd : depth0), depth0))
+	    + alias4(container.lambda((depth0 != null ? depth0.ymd : depth0), depth0))
 	    + "\">\n    <span>+"
-	    + alias3(((helper = (helper = helpers.skipped || (depth0 != null ? depth0.skipped : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"skipped","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.skipped || (depth0 != null ? depth0.skipped : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"skipped","hash":{},"data":data}) : helper)))
 	    + "</span>\n</div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
@@ -16030,9 +16282,9 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
+	var config = __webpack_require__(33),
 	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(29);
+	    domutil = __webpack_require__(30);
 	
 	/**
 	 * @constructor
@@ -16131,12 +16383,12 @@
 	'use strict';
 	var util = global.tui.util;
 	
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
 	var array = __webpack_require__(52);
-	var domutil = __webpack_require__(29);
-	var domevent = __webpack_require__(30);
-	var getMousePosData = __webpack_require__(100);
+	var domutil = __webpack_require__(30);
+	var domevent = __webpack_require__(31);
+	var getMousePosDate = __webpack_require__(100);
 	var Guide = __webpack_require__(101);
 	var TZDate = __webpack_require__(27).Date;
 	
@@ -16244,7 +16496,7 @@
 	        dragEnd: this._onDragEnd
 	    }, this);
 	
-	    this.getEventData = getMousePosData(this.monthView);
+	    this.getEventData = getMousePosDate(this.monthView);
 	
 	    eventData = this.getEventData(dragStartEvent.originEvent);
 	
@@ -16350,7 +16602,7 @@
 	        return;
 	    }
 	
-	    eventData = getMousePosData(this.monthView)(e);
+	    eventData = getMousePosDate(this.monthView)(e);
 	
 	    this.fire('monthCreationClick', eventData);
 	
@@ -16379,7 +16631,7 @@
 	        return;
 	    }
 	
-	    eventData = getMousePosData(this.monthView)(e.originEvent);
+	    eventData = getMousePosDate(this.monthView)(e.originEvent);
 	
 	    this._requestOnClick = true;
 	    setTimeout(function() {
@@ -16451,9 +16703,9 @@
 	var util = global.tui.util,
 	    mfloor = Math.floor;
 	
-	var common = __webpack_require__(28),
-	    domutil = __webpack_require__(29),
-	    domevent = __webpack_require__(30);
+	var common = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
+	    domevent = __webpack_require__(31);
 	
 	/**
 	 * Get high order function that can calc date in mouse point
@@ -16469,7 +16721,22 @@
 	        days = weekColl.single().getRenderDateRange(),
 	        dayCount = days.length,
 	        relativeContainer = util.pick(monthView.vLayout.panels[1], 'container'),
-	        size = domutil.getSize(relativeContainer);
+	        size = domutil.getSize(relativeContainer),
+	        grids = monthView.grids;
+	
+	    function getX(left) {
+	        var i = 0;
+	        var length = grids.length;
+	        var grid;
+	        for (; i < length; i += 1) {
+	            grid = grids[i];
+	            if (grid.left <= left && left <= (grid.left + grid.width)) {
+	                return i;
+	            }
+	        }
+	
+	        return i;
+	    }
 	
 	    /**
 	     * Get date related with mouse event object
@@ -16478,7 +16745,7 @@
 	     */
 	    function getDate(mouseEvent) {
 	        var pos = domevent.getMousePosition(mouseEvent, relativeContainer),
-	            x = mfloor(common.ratio(size[0], dayCount, pos[0])),
+	            x = getX(common.ratio(size[0], 100, pos[0])),
 	            y = mfloor(common.ratio(size[1], weekCount, pos[1])),
 	            weekdayView, date;
 	
@@ -16608,11 +16875,11 @@
 	    mabs = Math.abs,
 	    mfloor = Math.floor;
 	
-	var config = __webpack_require__(32),
-	    common = __webpack_require__(28),
-	    domutil = __webpack_require__(29),
+	var config = __webpack_require__(33),
+	    common = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
 	    datetime = __webpack_require__(26),
-	    dw = __webpack_require__(44),
+	    dw = __webpack_require__(28),
 	    tmpl = __webpack_require__(103);
 	
 	/**
@@ -16673,6 +16940,12 @@
 	     * @type {Object.<string, HTMLElement>}
 	     */
 	    this.guideElements = {};
+	
+	    /**
+	     * horizontal grid information
+	     * @type {Object}
+	     */
+	    this.grids = monthView.grids;
 	}
 	
 	/**
@@ -16695,7 +16968,8 @@
 	 * @returns {number} percent value
 	 */
 	MonthGuide.prototype._getRatioValueInWeek = function(value) {
-	    return common.ratio(this.days, 100, value);
+	    var grid = this.grids[value] || {left: 100};
+	    return grid.left;
 	};
 	
 	/**
@@ -17093,9 +17367,9 @@
 	'use strict';
 	var util = global.tui.util;
 	
-	var config = __webpack_require__(32),
+	var config = __webpack_require__(33),
 	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(29),
+	    domutil = __webpack_require__(30),
 	    getMousePosData = __webpack_require__(100),
 	    MonthResizeGuide = __webpack_require__(105),
 	    TZDate = __webpack_require__(27).Date;
@@ -17307,8 +17581,8 @@
 	'use strict';
 	var util = global.tui.util;
 	
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
+	var config = __webpack_require__(33),
+	    domutil = __webpack_require__(30),
 	    MonthGuide = __webpack_require__(102);
 	
 	/**
@@ -17430,8 +17704,8 @@
 	'use strict';
 	var util = global.tui.util;
 	
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
+	var config = __webpack_require__(33),
+	    domutil = __webpack_require__(30),
 	    datetime = __webpack_require__(26),
 	    getMousePosData = __webpack_require__(100),
 	    MonthMoveGuide = __webpack_require__(107),
@@ -17705,12 +17979,12 @@
 	'use strict';
 	var util = global.tui.util;
 	
-	var config = __webpack_require__(32),
-	    domutil = __webpack_require__(29),
-	    domevent = __webpack_require__(30),
+	var config = __webpack_require__(33),
+	    domutil = __webpack_require__(30),
+	    domevent = __webpack_require__(31),
 	    FloatingLayer = __webpack_require__(87),
 	    tmpl = __webpack_require__(108),
-	    DoorayEvent = __webpack_require__(34);
+	    DoorayEvent = __webpack_require__(35);
 	
 	/**
 	 * @constructor
@@ -17982,10 +18256,10 @@
 	
 	var OUT_PADDING = 5;
 	var util = global.tui.util;
-	var config = __webpack_require__(32),
-	    domevent = __webpack_require__(30),
-	    domutil = __webpack_require__(29),
-	    View = __webpack_require__(38),
+	var config = __webpack_require__(33),
+	    domevent = __webpack_require__(31),
+	    domutil = __webpack_require__(30),
+	    View = __webpack_require__(39),
 	    FloatingLayer = __webpack_require__(87),
 	    tmpl = __webpack_require__(110);
 	
@@ -18184,8 +18458,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var Calendar = __webpack_require__(43);
+	var config = __webpack_require__(33);
+	var Calendar = __webpack_require__(44);
 	var datetime = __webpack_require__(26);
 	var controllerFactory = __webpack_require__(112);
 	var serviceWeekViewFactory = __webpack_require__(114);
@@ -18582,7 +18856,7 @@
 	
 	var util = global.tui.util;
 	var Base = __webpack_require__(48);
-	var DoorayEvent = __webpack_require__(33);
+	var DoorayEvent = __webpack_require__(34);
 	
 	/**
 	 * @constructor
@@ -18726,8 +19000,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var VLayout = __webpack_require__(55);
 	
 	// Parent views
@@ -18930,11 +19204,11 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
+	var domutil = __webpack_require__(30);
 	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(38);
+	var View = __webpack_require__(39);
 	var tmpl = __webpack_require__(116);
 	
 	// item height + gutter (defined in css)
@@ -18987,17 +19261,23 @@
 	            datetime.MILLISECONDS_PER_DAY
 	        ),
 	        height,
-	        today = datetime.format(new TZDate(), 'YYYY-MM-DD');
+	        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
+	        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'milestone'),
+	        grids = viewModel.grids,
+	        i = 0;
 	
 	    // 일정이 없는 경우라도 빈 객체를 생성
 	    util.forEach(range, function(d) {
 	        events[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
 	    });
 	
-	    util.extend(events, viewModel);
+	    util.extend(events, viewModelEvents);
 	
 	    util.forEach(events, function(event, key) {
 	        event.isToday = (key === today);
+	        event.left = grids[i].left;
+	        event.width = grids[i].width;
+	        i += 1;
 	    });
 	
 	    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(events, function(coll) {
@@ -19006,7 +19286,6 @@
 	
 	    return {
 	        events: events,
-	        width: 100 / range.length,
 	        height: height
 	    };
 	};
@@ -19017,7 +19296,7 @@
 	 */
 	Milestone.prototype.render = function(viewModel) {
 	    var container = this.container,
-	        baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'milestone'));
+	        baseViewModel = this._getBaseViewModel(viewModel);
 	
 	    container.style.minHeight = this.options.minHeight + 'px';
 	    container.innerHTML = tmpl(baseViewModel);
@@ -19042,14 +19321,14 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression;
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day-grid\" style=\"width:"
-	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;left:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\"></div>\n";
 	},"3":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -19057,9 +19336,9 @@
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "milestone-day\" style=\"width:"
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;left:"
-	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\">\n      <ul class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "milestone-list "
@@ -19124,10 +19403,10 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
+	var config = __webpack_require__(33);
 	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(29);
-	var View = __webpack_require__(38);
+	var domutil = __webpack_require__(30);
+	var View = __webpack_require__(39);
 	var tmpl = __webpack_require__(118);
 	var TZDate = __webpack_require__(27).Date;
 	
@@ -19179,7 +19458,10 @@
 	        ),
 	        height = 0,
 	        mmax = Math.max,
-	        today = datetime.format(new TZDate(), 'YYYY-MM-DD');
+	        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
+	        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'task'),
+	        grids = viewModel.grids,
+	        i = 0;
 	
 	    util.forEach(range, function(d) {
 	        var date = datetime.format(d, 'YYYY-MM-DD');
@@ -19189,7 +19471,7 @@
 	            evening: {length: 0}
 	        };
 	    });
-	    util.extend(events, viewModel);
+	    util.extend(events, viewModelEvents);
 	
 	    height = mmax.apply(null, util.map(events, function(g) {
 	        var subcount = 0;
@@ -19202,11 +19484,13 @@
 	
 	    util.forEach(events, function(event, key) {
 	        event.isToday = (key === today);
+	        event.left = grids[i].left;
+	        event.width = grids[i].width;
+	        i += 1;
 	    });
 	
 	    return {
 	        events: events,
-	        width: 100 / range.length,
 	        height: height
 	    };
 	};
@@ -19217,7 +19501,7 @@
 	 */
 	TaskView.prototype.render = function(viewModel) {
 	    var container = this.container,
-	        baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'task'));
+	        baseViewModel = this._getBaseViewModel(viewModel);
 	
 	    container.innerHTML = tmpl(baseViewModel);
 	
@@ -19241,14 +19525,14 @@
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression;
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day-grid\" style=\"width:"
-	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;left:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\"></div>\n";
 	},"3":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -19256,9 +19540,9 @@
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day\" style=\"width:"
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.width), depth0))
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;left:"
-	    + alias4((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.width),(data && data.index),{"name":"multiply","hash":{},"data":data}))
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-day-wrap "
@@ -19347,8 +19631,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	
 	/**
 	 * 마일스톤 클릭 이벤트 핸들러 모듈
@@ -19447,8 +19731,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	
 	/**
 	 * 마일스톤 클릭 이벤트 핸들러 모듈
@@ -19549,7 +19833,7 @@
 	var util = global.tui.util;
 	var Handlebars = __webpack_require__(6);
 	
-	var config = __webpack_require__(32),
+	var config = __webpack_require__(33),
 	    controllerFactory = __webpack_require__(112),
 	    serviceWeekViewFactory = __webpack_require__(122),
 	    Drag = __webpack_require__(46),
@@ -19893,8 +20177,8 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var VLayout = __webpack_require__(55);
 	
 	// Parent views
@@ -19976,10 +20260,10 @@
 	'use strict';
 	
 	var util = global.tui.util;
-	var config = __webpack_require__(32);
-	var domutil = __webpack_require__(29);
+	var config = __webpack_require__(33);
+	var domutil = __webpack_require__(30);
 	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(38);
+	var View = __webpack_require__(39);
 	var TimeGrid = __webpack_require__(60);
 	var mainTmpl = __webpack_require__(124);
 	
@@ -20133,6 +20417,7 @@
 	    var timeViewModel = viewModel.eventsInDateRange.time,
 	        container = this.container,
 	        baseViewModel = this._getBaseViewModel(viewModel),
+	        grids = viewModel.grids,
 	        eventLen = util.keys(timeViewModel).length;
 	
 	    if (!eventLen) {
@@ -20146,7 +20431,7 @@
 	     **********/
 	    this._renderChildren(
 	        timeViewModel,
-	        100 / eventLen,
+	        grids,
 	        domutil.find(config.classname('.split-timegrid-events-container'), container)
 	    );
 	};
