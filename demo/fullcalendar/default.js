@@ -186,6 +186,9 @@
             cal.updateEvent(model.id, model.calendarId, {isFocused: true});
             lastClickEventModel = model;
         },
+        'clickDayname': function(date) {
+            console.log('clickDayname', date);
+        },
         'beforeCreateEvent': function(e) {
             var message = 'start: ' + new Date(e.starts) +
                             '\nend: ' + new Date(e.ends) +
