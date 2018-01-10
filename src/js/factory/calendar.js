@@ -530,6 +530,20 @@ Calendar.prototype._onClick = function(clickEventData) {
 };
 
 /**
+ * dayname 클릭 이벤트 핸들러
+ * @fires Calendar#clickDayname
+ * @param {object} clickEventData - 'clickDayname' 핸들러의 이벤트 데이터
+ */
+Calendar.prototype._onClickDayname = function(clickEventData) {
+    /**
+     * @events Calendar#clickDayname
+     * @type {object}
+     * @property {string} date - 'YYYY-MM-DD'형식의 날짜
+     */
+    this.fire('clickDayname', clickEventData);
+};
+
+/**
  * @fires {Calendar#beforeCreateEvent}
  * @param {object} createEventData - select event data from allday, time
  */
@@ -584,6 +598,10 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view) {
 
     util.forEach(handler.click, function(clickHandler) {
         clickHandler[method]('clickEvent', self._onClick, self);
+    });
+
+    util.forEach(handler.dayname, function(clickHandler) {
+        clickHandler[method]('clickDayname', self._onClickDayname, self);
     });
 
     util.forEach(handler.creation, function(creationHandler) {

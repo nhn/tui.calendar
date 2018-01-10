@@ -19,6 +19,7 @@ var AlldayClick = require('../handler/allday/click');
 var AlldayCreation = require('../handler/allday/creation');
 var AlldayMove = require('../handler/allday/move');
 var AlldayResize = require('../handler/allday/resize');
+var DayNameClick = require('../handler/time/clickDayname');
 var TimeClick = require('../handler/time/click');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
@@ -39,7 +40,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         timeClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler;
+        timeResizeHandler,
+        daynameClickHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -48,6 +50,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
      * 일자표기 (상단 일월화수...)
      **********/
     dayNameView = new DayName(options.week, dayNameContainer);
+    daynameClickHandler = new DayNameClick(dragHandler, dayNameView, baseController);
     weekView.addChild(dayNameView);
 
     /**********
@@ -94,6 +97,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         click: {
             allday: alldayClickHandler,
             time: timeClickHandler
+        },
+        dayname: {
+            date: daynameClickHandler
         },
         creation: {
             allday: alldayCreationHandler,
