@@ -1,4 +1,4 @@
-/*! bundle created at "Mon Jan 08 2018 15:32:58 GMT+0900 (KST)" */
+/*! bundle created at "Wed Jan 10 2018 16:33:18 GMT+0900 (KST)" */
 .dooray-calendar-layout {
   height: 100%;
 }
@@ -273,6 +273,9 @@
   text-align: left;
   font-size: 13px;
   padding-left: 5px;
+}
+.dooray-calendar-dayname .dooray-calendar-dayname-date-area {
+  cursor: pointer;
 }
 .dooray-calendar-dayname .dooray-calendar-dayname-date {
   font-size: 26px;
