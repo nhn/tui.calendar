@@ -1,25 +1,16 @@
 .{css-prefix}holiday-sun
-    color: #f44336
-
-.{css-prefix}holiday-sat
-    color: #000
+    color: #f2acac
 
 .{css-prefix}dayname
-    top: 0;
     position: absolute;
-    height: 42px;
     margin-left: -1px
-    line-height: 42px
-    text-align: left
     font-size: 13px
     padding-left: 5px
-
-    .{css-prefix}dayname-date-area
-        cursor: pointer
+    border-left: 1px solid #ddd;
 
     .{css-prefix}dayname-date
         font-size: 26px
-        line-height: 42px
+        line-height: 41px
 
     &.{css-prefix}today
         font-weight: bold
@@ -29,8 +20,7 @@
     .container
         height: 42px
         border-bottom: 1px solid #ddd
-        background-color: #fff;
-        padding-right: 15px // for vertical scrollbar
+        overflow-y: scroll
 
     .leftmargin
         position: relative
