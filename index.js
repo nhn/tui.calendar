@@ -3,7 +3,6 @@ require('./src/css/main.styl');
 require('./src/js/view/template/helper');
 
 var DoorayEvent = require('./src/js/dooray/model/calEvent');
-var MiniCalendar = require('./src/js/dooray/view/minicalendar');
 var OriginCalendar = require('./src/js/factory/calendar');
 var FullCalendar = require('./src/js/dooray/factory/calendar');
 var SplitTimeCalendar = require('./src/js/dooray/factory/SplitTimeCalendar');
@@ -14,7 +13,6 @@ var datetime = require('./src/js/common/datetime');
 global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calendar */{
     // service modules
     DoorayEvent: DoorayEvent,
-    MiniCalendar: MiniCalendar,
 
     // factory class
     OriginCalendar: OriginCalendar,

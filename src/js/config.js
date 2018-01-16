@@ -5,7 +5,6 @@
 'use strict';
 
 var cssPrefix = '/* @echo CSS_PREFIX */',
-    minicalendar = new RegExp(cssPrefix + 'minicalendar-(\\d{4}-\\d{2}-\\d{2})'),
     alldayGetViewID = new RegExp('^' + cssPrefix + 'weekday[\\s]tui-view-(\\d+)'),
     alldayCheckPermission = new RegExp('^' + cssPrefix + 'event(-title)?$'),
     timeGetViewID = new RegExp('^' + cssPrefix + 'time-date[\\s]tui-view-(\\d+)');
@@ -30,10 +29,6 @@ var config = {
         }
 
         return config.cssPrefix + str;
-    },
-
-    minicalendar: {
-        getDataRegExp: minicalendar
     },
 
     allday: {
