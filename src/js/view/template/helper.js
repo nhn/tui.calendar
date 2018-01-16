@@ -274,9 +274,5 @@ Handlebars.registerHelper({
 
     'time-tmpl': function(model) {
         return common.stripTags(model.title);
-    },
-
-    'split-time-tmpl': function(model) {
-        return common.stripTags(model.title);
     }
 });

@@ -11,7 +11,6 @@ var domutil = require('../../common/domutil');
 var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
-var splitTimeTmpl = require('../template/week/splitTime.hbs');
 
 var forEachArr = util.forEachArray;
 
@@ -42,7 +41,7 @@ function Time(options, container) {
         minHeight: 18.5
     }, options);
 
-    this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
+    this.timeTmpl = timeTmpl;
     container.style.width = options.width + '%';
     container.style.left = options.left + '%';
 

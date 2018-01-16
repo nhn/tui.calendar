@@ -5,7 +5,6 @@ require('./src/js/view/template/helper');
 var DoorayEvent = require('./src/js/dooray/model/calEvent');
 var OriginCalendar = require('./src/js/factory/calendar');
 var FullCalendar = require('./src/js/dooray/factory/calendar');
-var SplitTimeCalendar = require('./src/js/dooray/factory/SplitTimeCalendar');
 var timezone = require('./src/js/common/timezone');
 var datetime = require('./src/js/common/datetime');
 
@@ -17,7 +16,6 @@ global.tui.util.defineNamespace('ne.dooray.calendar', /** @lends ne.dooray.calen
     // factory class
     OriginCalendar: OriginCalendar,
     FullCalendar: FullCalendar,
-    SplitTimeCalendar: SplitTimeCalendar,
 
     datetime: datetime,
     TZDate: timezone.Date,
