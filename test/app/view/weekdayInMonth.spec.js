@@ -1,7 +1,8 @@
 var Weekday = require('view/weekday');
 var WeekdayInMonth = require('view/month/weekdayInMonth');
 var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var CalEventViewModel = require('model/viewModel/calEventViewModel');
+var datetime = require('common/datetime');
 
 describe('view:WeekdayInMonth', function() {
     var mockInst;
@@ -78,7 +79,11 @@ describe('view:WeekdayInMonth', function() {
                 '20150502': 2,
                 '20150503': 4,
                 '20150504': 4
-            }
+            };
+            var grids = datetime.getGridLeftAndWidth(7, false, 0);
+            var viewModel = {
+                dates: grids
+            };
 
             spy.and.returnValue([
                 new Date('2015-05-01T00:00:00+09:00'),
@@ -89,24 +94,28 @@ describe('view:WeekdayInMonth', function() {
                 new Date('2015-05-06T00:00:00+09:00')
             ]);
 
-            expect(WeekdayInMonth.prototype._getSkipLabelViewModel(skipData))
+            expect(WeekdayInMonth.prototype._getSkipLabelViewModel(skipData, viewModel))
                 .toEqual([
                     {
-                        left: 0,
+                        left: grids[0].left,
                         skipped: 1,
-                        ymd: '20150501'
+                        ymd: '20150501',
+                        width: jasmine.any(Number)
                     }, {
-                        left: 1,
+                        left: grids[1].left,
                         skipped: 2,
-                        ymd: '20150502'
+                        ymd: '20150502',
+                        width: jasmine.any(Number)
                     }, {
-                        left: 2,
+                        left: grids[2].left,
                         skipped: 4,
-                        ymd: '20150503'
+                        ymd: '20150503',
+                        width: jasmine.any(Number)
                     }, {
-                        left: 3,
+                        left: grids[3].left,
                         skipped: 4,
-                        ymd: '20150504'
+                        ymd: '20150504',
+                        width: jasmine.any(Number)
                     }
                 ]);
         });

@@ -2,6 +2,8 @@
 var domutil = require('common/domutil');
 var domevent = require('common/domevent');
 var AlldayCore = require('handler/allday/core');
+var datetime = require('common/datetime');
+
 describe('handler:AlldayCore', function() {
     var result;
 
@@ -21,6 +23,7 @@ describe('handler:AlldayCore', function() {
             var mouseEvent = {
                 type: 'dragStart'
             };
+            var grids = datetime.getGridLeftAndWidth(5, false, 0);
 
             mockAlldayView.children.single.and.returnValue(true);
 
@@ -36,7 +39,8 @@ describe('handler:AlldayCore', function() {
                 dragStartXIndex: 1,
                 datesInRange: 5,
                 xIndex: 2,
-                triggerEvent: mouseEvent.type
+                triggerEvent: mouseEvent.type,
+                grids: grids
             });
 
             // drag start position (12일)
@@ -49,7 +53,8 @@ describe('handler:AlldayCore', function() {
                 dragStartXIndex: 2,
                 datesInRange: 5,
                 xIndex: 0,
-                triggerEvent: mouseEvent.type
+                triggerEvent: mouseEvent.type,
+                grids: grids
             });
         });
     });

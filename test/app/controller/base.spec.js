@@ -3,7 +3,7 @@ var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
 var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var CalEventViewModel = require('model/viewModel/calEventViewModel');
 var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
 
@@ -182,7 +182,7 @@ describe('controller/base', function() {
             });
             id = util.stamp(model);
 
-            ctrl.updateEvent(id, {
+            ctrl.updateEvent(model, {
                 title: 'Go to work',
                 isAllDay: false,
                 starts: '2015/05/02',
@@ -217,8 +217,8 @@ describe('controller/base', function() {
             id = util.stamp(event);
         });
 
-        it('delete an event by modelID.', function() {
-            expect(ctrl.deleteEvent(id)).toEqual(event);
+        it('delete an event by model.', function() {
+            expect(ctrl.deleteEvent(event)).toEqual(event);
             expect(ctrl.events.length).toBe(0);
             expect(ctrl.dateMatrix).toEqual({
                 '20150501': []

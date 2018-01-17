@@ -10,7 +10,7 @@ var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var TZDate = require('../../common/timezone').Date;
 var View = require('../../view/view');
-var tmpl = require('./milestone.hbs');
+var tmpl = require('../template/week//milestone.hbs');
 
 // item height + gutter (defined in css)
 var ITEM_HEIGHT = 17;

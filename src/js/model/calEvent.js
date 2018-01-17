@@ -12,6 +12,25 @@ var dirty = require('../common/dirty');
 var model = require('../common/model');
 
 /**
+ * 일정 카테고리
+ * @readonly
+ * @enum {string}
+ */
+var EVENT_CATEGORY = {
+    /** 마일스톤 */
+    MILESTONE: 'milestone',
+
+    /** 업무 */
+    TASK: 'task',
+
+    /** 종일일정 */
+    ALLDAY: 'allday',
+
+    /** 시간별 일정 */
+    TIME: 'time'
+};
+
+/**
  * The model of calendar events.
  * @constructor
  * @mixes dirty
@@ -66,6 +85,54 @@ function CalEvent() {
      */
     this.bgColor = '#a1b56c';
 
+    /**
+     * event left border color
+     * @type {string}
+     */
+    this.borderColor = '#000';
+
+    /**
+     * 캘린더 ID
+     * @type {string}
+     */
+    this.calendarId = '';
+
+    /**
+     * 일정 카테고리 (마일스톤, 업무, 종일일정, 시간별일정)
+     * @type {string}
+     */
+    this.category = '';
+
+    /**
+     * 업무 일정의 경우 구분 (출근전, 점심전, 퇴근전)
+     * @type {string}
+     */
+    this.dueDateClass = '';
+
+    /**
+     * 커스텀 스타일
+     * @type {string}
+     */
+    this.customStyle = '';
+
+    /**
+     * in progress flag to do something
+     * @type {boolean}
+     */
+    this.isPending = false;
+
+    /**
+     * focused event flag
+     * @type {boolean}
+     */
+    this.isFocused = false;
+
+    /**
+     * 렌더링과 관계 없는 별도 데이터 저장 공간.
+     * @type {object}
+     */
+    this.raw = null;
+
     // initialize model id
     util.stamp(this);
 }
@@ -101,6 +168,9 @@ CalEvent.create = function(data) {
  */
 CalEvent.prototype.init = function(options) {
     options = util.extend({}, options);
+    if (options.category === EVENT_CATEGORY.ALLDAY) {
+        options.isAllDay = true;
+    }
 
     this.id = options.id || '';
     this.title = options.title || '';
@@ -110,13 +180,25 @@ CalEvent.prototype.init = function(options) {
     this.color = options.color || this.color;
     this.bgColor = options.bgColor || this.bgColor;
     this.borderColor = options.borderColor || this.borderColor;
-    this.origin = options.origin || this.origin;
+    this.calendarId = options.calendarId || '';
+    this.category = options.category || '';
+    this.dueDateClass = options.dueDateClass || '';
+    this.customStyle = options.customStyle || '';
+    this.isPending = options.isPending || false;
+    this.isFocused = options.isFocused || false;
 
     if (this.isAllDay) {
         this.setAllDayPeriod(options.starts, options.ends);
     } else {
         this.setTimePeriod(options.starts, options.ends);
     }
+
+    if (options.category === EVENT_CATEGORY.MILESTONE ||
+        options.category === EVENT_CATEGORY.TASK) {
+        this.starts = new TZDate(this.ends);
+    }
+
+    this.raw = options.raw || null;
 };
 
 CalEvent.prototype.setAllDayPeriod = function(starts, ends) {

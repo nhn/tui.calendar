@@ -9,7 +9,7 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../../view/view');
-var tmpl = require('./taskview.hbs');
+var tmpl = require('../template/week//taskview.hbs');
 var TZDate = require('../../common/timezone').Date;
 
 // height + gutter (defined in CSS)

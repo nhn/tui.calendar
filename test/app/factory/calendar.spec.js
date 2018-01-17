@@ -45,24 +45,29 @@ describe('Calendar', function() {
         it('updateEvent() can update CalEvent model', function() {
             var calEvent = jasmine.createSpyObj('CalEvent', ['set', 'cid', 'dirty']);
             var id = tui.util.stamp(calEvent);
+            var calendarId = calEvent.calendarId;
+            calEvent.id = id;
             calEvent.cid.and.returnValue(id);
             controller.events.add(calEvent);
+            spyOn(controller, 'updateEvent');
 
-            inst.updateEvent(id, {'hello': 'world'});
+            inst.updateEvent(id, calendarId, {'hello': 'world'});
 
-            expect(calEvent.set).toHaveBeenCalledWith('hello', 'world');
+            expect(controller.updateEvent).toHaveBeenCalledWith(calEvent, {'hello': 'world'});
             expect(inst.render).toHaveBeenCalled();
         });
 
         it('deleteEvent() can delete CalEvent model in collection.', function() {
             var calEvent = jasmine.createSpyObj('CalEvent', ['set', 'cid', 'dirty']);
             var id = tui.util.stamp(calEvent);
+            var calendarId = calEvent.calendarId;
+            calEvent.id = id;
             calEvent.cid.and.returnValue(id);
             controller.events.add(calEvent);
 
             expect(controller.events.length).toBe(1);
 
-            inst.deleteEvent(id);
+            inst.deleteEvent(id, calendarId);
 
             expect(controller.events.length).toBe(0);
         });

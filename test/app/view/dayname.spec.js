@@ -1,5 +1,6 @@
 /*eslint-disable*/
 var DayName = require('view/week/dayname');
+var datetime = require('common/datetime');
 
 describe('view/dayName', function() {
     beforeEach(function() {
@@ -16,14 +17,19 @@ describe('view/dayName', function() {
             dayName: '일',
             date: 26,
             width: 50,
-            isToday: true
+            isToday: true,
+            left: 0,
+            renderDate: '2015-07-26'
         }, {
             day: 1,
             dayName: '월',
             date: 27,
             width: 50,
-            isToday: false
+            isToday: false,
+            left: 50,
+            renderDate: '2015-07-27'
         }];
+        var grids = datetime.getGridLeftAndWidth(2, 0, false);
 
         var result = DayName.prototype._getBaseViewModel.call(
             {
@@ -32,7 +38,8 @@ describe('view/dayName', function() {
                 }
             },
             new Date('2015-07-26'),
-            new Date('2015-07-27')
+            new Date('2015-07-27'),
+            grids
         );
 
         expect(result).toEqual(expected);

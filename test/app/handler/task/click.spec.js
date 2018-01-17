@@ -1,7 +1,7 @@
 var Collection = require('common/collection');
-var MilestoneClick = require('dooray/handler/milestoneClick');
+var TaskClick = require('handler/task/click');
 
-describe('service:handler:MilestoneClick', function() {
+describe('service:handler:TaskClick', function() {
     var mockInst, mockCollection;
 
     beforeEach(function() {
@@ -21,7 +21,7 @@ describe('service:handler:MilestoneClick', function() {
         mockInst.checkExpectedCondition.and.returnValue(2);
 
         // 실행하면
-        MilestoneClick.prototype._onClick.call(mockInst, vMouseEvent);
+        TaskClick.prototype._onClick.call(mockInst, vMouseEvent);
 
         // 이벤트가 아래처럼 발생한다
         expect(mockInst.fire).toHaveBeenCalledWith('clickEvent', {
@@ -33,12 +33,12 @@ describe('service:handler:MilestoneClick', function() {
         });
     });
 
-    it('MilestoneClick doesn\'t fire custom event "milestone_click" when no target or target is not related with events.', function() {
-        // 엘리먼트가 MilestoneClick과 관계가 없다
+    it('TaskClick doesn\'t fire custom event "task_click" when no target or target is not related with events.', function() {
+        // 엘리먼트가 TaskClick과 관계가 없다
         mockInst.checkExpectedCondition.and.returnValue(false);
 
         // 실행하면
-        MilestoneClick.prototype._onClick.call(mockInst, {});
+        TaskClick.prototype._onClick.call(mockInst, {});
 
         // 무반응
         expect(mockInst.fire).not.toHaveBeenCalled();

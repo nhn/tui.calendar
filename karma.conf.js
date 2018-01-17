@@ -32,7 +32,7 @@ module.exports = function(config) {
         ],
         files: [
             'node_modules/underscore/underscore.js',
-            'bower_components/tui-code-snippet/dist/code-snippet.js',
+            'bower_components/tui-code-snippet/dist/tui-code-snippet.js',
             'test/fixtures/**/*',
             'test/index.js'
         ],
@@ -77,7 +77,7 @@ module.exports = function(config) {
         },
         port: 9876,
         colors: true,
-        logLevel: config.LOG_INFO,
+        // logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['PhantomJS'],
         singleRun: false,

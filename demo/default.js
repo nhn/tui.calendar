@@ -16,7 +16,8 @@
     // calendar.setTimezoneOffset(540);
 
     cal = calendar.FullCalendar({
-        defaultView: 'month',
+        defaultView: 'day',
+        isDoorayView: true,
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';

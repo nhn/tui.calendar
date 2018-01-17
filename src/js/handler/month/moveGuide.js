@@ -10,7 +10,7 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     FloatingLayer = require('../../common/floatingLayer'),
     tmpl = require('./moveGuide.hbs'),
-    DoorayEvent = require('../../model/calEvent');
+    CalEvent = require('../../model/calEvent');
 
 /**
  * @constructor
@@ -162,7 +162,7 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
     layer.setPosition(mousePos[0], mousePos[1]);
     layer.setContent(tmpl({
         model: util.extend(
-            DoorayEvent.create(model),
+            CalEvent.create(model),
             model,
             this._getHighlightColorModel(model)
         )

@@ -3,7 +3,7 @@ var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
 var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var CalEventViewModel = require('model/viewModel/calEventViewModel');
 var datetime = require('common/datetime');
 
 describe('Base.Week', function() {

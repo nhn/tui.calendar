@@ -12,7 +12,7 @@ var ratio = require('../../common/common').ratio;
 var FloatingLayer = require('../../common/floatingLayer');
 var tmpl = require('../../view/template/week/timeMoveGuide.hbs');
 var TZDate = require('../../common/timezone').Date;
-var DoorayEvent = require('../../model/calEvent');
+var CalEvent = require('../../model/calEvent');
 
 /**
  * Class for Time.Move effect.
@@ -167,7 +167,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     this._container = dragStartEventData.relatedView.container;
 
     this._model = util.extend(
-        DoorayEvent.create(dragStartEventData.model),
+        CalEvent.create(dragStartEventData.model),
         dragStartEventData.model,
         this._getHighlightColorModel(dragStartEventData.model)
     );

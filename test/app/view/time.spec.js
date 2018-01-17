@@ -1,7 +1,7 @@
 /*eslint-disable*/
 var datetime = require('common/datetime');
 var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var CalEventViewModel = require('model/viewModel/calEventViewModel');
 var Time = require('view/week/time');
 var TZDate = require('common/timezone').Date;
 
