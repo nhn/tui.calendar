@@ -1,7 +1,7 @@
 {
   "source": {
     "include": [
-      "src",
+      "src/js/factory/calendar.js",
       "README.md"
     ],
     "exclude": [],
