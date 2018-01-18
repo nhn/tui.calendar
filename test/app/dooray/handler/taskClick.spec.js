@@ -1,10 +1,12 @@
+var Collection = require('common/collection');
+var TaskClick = require('dooray/handler/taskClick');
+
 describe('service:handler:TaskClick', function() {
-    var TaskClick = window.ne.dooray.calendar.TaskClick,
-        mockInst, mockCollection;
+    var mockInst, mockCollection;
 
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정
-        mockCollection = new ne.dooray.calendar.Collection();
+        mockCollection = new Collection();
         mockCollection.add({_id: '2', text: 'hello'});
 
         mockInst = jasmine.createSpyObj('MilstoneClick', ['checkExpectedCondition', 'fire']);

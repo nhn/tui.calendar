@@ -1,6 +1,7 @@
+var FloatingLayer = require('common/floatingLayer');
+
 describe('FloatingLayer', function() {
-    var FloatingLayer = ne.dooray.calendar.FloatingLayer,
-        container;
+    var container;
 
     beforeEach(function() {
         container = document.createElement('div');

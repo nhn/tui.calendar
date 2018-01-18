@@ -51,7 +51,10 @@ MonthClick.prototype.destroy = function() {
  * @param {object} clickEvent - click event object
  */
 MonthClick.prototype._onClick = function(clickEvent) {
-    var moreElement, ymd;
+    var self = this,
+      moreElement,
+      eventCollection = this.baseController.events,
+      blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-event-block')) || domutil.closest(clickEvent.target, config.classname('.month-more-event'));
 
     moreElement = domutil.closest(
         clickEvent.target,
@@ -59,24 +62,30 @@ MonthClick.prototype._onClick = function(clickEvent) {
     );
 
     if (moreElement) {
-        ymd = domutil.getData(moreElement, 'ymd');
-
-        /**
-         * @event MonthClick#clickMore
-         * @type {object}
-         * @property {string} ymd - YYYYMMDD formatted date
-         * @property {HTMLElement} target - target element
-         * @property {Date} date - target date
-         * @property {MouseEvent} originEvent - original event object
-         */
-        this.fire('clickMore', {
-            ymd: ymd,
+        self.fire('clickMore', {
+            date: datetime.parse(domutil.getData(moreElement, 'ymd')),
             target: moreElement,
-            date: datetime.parse(ymd),
-            originEvent: clickEvent.originEvent
+            ymd: domutil.getData(moreElement, 'ymd')
         });
-        return;
     }
+
+    if (blockElement) {
+        eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
+            /**
+             * @events AlldayClick#clickEvent
+             * @type {object}
+             * @property {CalEvent} model - model instance
+             * @property {MouseEvent} jsEvent - MouseEvent object
+             */
+            self.fire('clickEvent', {
+                model: model,
+                jsEvent: clickEvent.originEvent
+            });
+        });
+    }
+
+
+
 };
 
 util.CustomEvents.mixin(MonthClick);

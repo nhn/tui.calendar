@@ -3,16 +3,17 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-
-var util = global.tui.util;
-var Handlebars = require('hbsfy/runtime');
+var util = global.tui.util,
+    mmin = Math.min;
+var Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
     Drag = require('../handler/drag'),
     controllerFactory = require('./controller'),
     weekViewFactory = require('./weekView'),
-    monthViewFactory = require('./monthView');
+    monthViewFactory = require('./monthView'),
+    TZDate = require('../common/timezone').Date;
 
 /**
  * @typedef {object} Calendar~CalEvent
@@ -58,17 +59,20 @@ function Calendar(options, container) {
         groupFunc: null,
         controller: null,
         defaultView: 'week',
-        defaultDate: datetime.format(new Date(), 'YYYY-MM-DD'),
+        isDoorayView: true,
+        defaultDate: new TZDate(),
         template: util.extend({
             allday: null,
             time: null
         }, util.pick(options, 'template') || {}),
-        week: util.extend({
-            startDayOfWeek: 0
-        }, util.pick(options, 'week') || {}),
+        week: util.extend({}, util.pick(options, 'week') || {}),
         month: util.extend({}, util.pick(options, 'month') || {}),
         events: []
     }, options);
+
+    this.options.week = util.extend({
+        startDayOfWeek: 0
+    }, util.pick(this.options, 'week') || {});
 
     /**
      * @type {HTMLElement}
@@ -97,7 +101,7 @@ function Calendar(options, container) {
      * global drag handler
      * @type {Drag}
      */
-    this.dragHandler = new Drag({distance: 5}, this.layout.container);
+    this.dragHandler = new Drag({distance: 10}, this.layout.container);
 
     /**
      * current rendered view name.
@@ -106,10 +110,21 @@ function Calendar(options, container) {
     this.viewName = opt.defaultView;
 
     /**
+     * previous rendered view name
+     * @type {string}
+     */
+    this.prevViewName = this.viewName;
+
+    /**
      * Refresh method. it can be ref different functions for each view modes.
      * @type {function}
      */
     this.refreshMethod = null;
+
+    /**
+     * SCroll to now. It can be called for 'week', 'day' view modes.
+     */
+    this.scrollToNowMethod = null;
 
     this.initialize();
 }
@@ -140,6 +155,23 @@ Calendar.prototype.createWeekView = function(controller, container, dragHandler,
 };
 
 /**
+ * Create week view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Month} month view instance
+ */
+Calendar.prototype.createMonthView = function(controller, container, dragHandler, options) {
+    return monthViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+};
+
+/**
  * Destructor
  */
 Calendar.prototype.destroy = function() {
@@ -148,9 +180,15 @@ Calendar.prototype.destroy = function() {
     this.layout.clear();
     this.layout.destroy();
 
+    util.forEach(this.options.template, function(func, name) {
+        if (func) {
+            Handlebars.unregisterHelper(name + '-tmpl');
+        }
+    });
+
     this.options = this.renderDate = this.controller =
-        this.layout = this.dragHandler = this.viewName =
-        this.refreshMethod = null;
+        this.layout = this.dragHandler = this.viewName = this.prevViewName =
+        this.refreshMethod = this.scrollToNowMethod = null;
 };
 
 /**
@@ -263,21 +301,21 @@ Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
         msFrom = datetime.millisecondsFrom;
 
     startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
-    date = util.isDate(date) ? date : new Date(date);
+    date = util.isDate(date) ? date : new TZDate(date);
     day = date.getDay();
 
     // calculate default render range first.
-    start = new Date(
+    start = new TZDate(
         Number(date) -
         msFrom('day', day) +
         msFrom('day', startDayOfWeek)
     );
 
-    end = new Date(Number(start) + msFrom('day', 6));
+    end = new TZDate(Number(start) + msFrom('day', 6));
 
     if (day < startDayOfWeek) {
-        start = new Date(Number(start) - msFrom('day', 7));
-        end = new Date(Number(end) - msFrom('day', 7));
+        start = new TZDate(Number(start) - msFrom('day', 7));
+        end = new TZDate(Number(end) - msFrom('day', 7));
     }
 
     return [start, end];
@@ -298,9 +336,17 @@ Calendar.prototype.render = function() {
  * Delete all data and clear view.
  */
 Calendar.prototype.clear = function() {
-    this.controller.dateMatrix = {};
-    this.controller.events.clear();
+    this.controller.clearEvents();
     this.render();
+};
+
+/**
+ * Scroll to now.
+ */
+Calendar.prototype.scrollToNow = function() {
+    if (this.scrollToNowMethod) {
+        this.scrollToNowMethod();
+    }
 };
 
 /**
@@ -324,6 +370,10 @@ Calendar.prototype.refreshChildView = function(viewName) {
         return;
     }
 
+    if (viewName === 'day') {
+        viewName = 'week';
+    }
+
     this.layout.children.items[viewName].render();
 };
 
@@ -331,8 +381,9 @@ Calendar.prototype.refreshChildView = function(viewName) {
  * Move to today.
  */
 Calendar.prototype.today = function() {
-    this.renderDate = new Date();
+    this.renderDate = new TZDate();
 
+    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
     this.move();
     this.render();
 };
@@ -350,35 +401,68 @@ Calendar.prototype.move = function(offset) {
         viewName = this.viewName,
         view = this.getCurrentView(),
         recursiveSet = this.setOptionRecurseively,
-        date2;
+        startDate, endDate, tempDate, startDayOfWeek, visibleWeeksCount, datetimeOptions;
 
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        renderDate.addMonth(offset);
+        startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
+        visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
 
-        recursiveSet(view, function(opt) {
-            opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
-        });
+        if (visibleWeeksCount) {
+            datetimeOptions = {
+                startDayOfWeek: startDayOfWeek,
+                isAlways6Week: false,
+                visibleWeeksCount: visibleWeeksCount
+            };
+
+            renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
+            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+
+            recursiveSet(view, function(opt) {
+                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
+            });
+        } else {
+            datetimeOptions = {
+                startDayOfWeek: startDayOfWeek,
+                isAlways6Week: true
+            };
+
+            renderDate.addMonth(offset);
+            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+
+            recursiveSet(view, function(opt) {
+                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+            });
+        }
+
+        startDate = tempDate[0][0];
+        endDate = tempDate[tempDate.length - 1][6];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        date2 = this.getWeekDayRange(renderDate.d);
+        tempDate = this.getWeekDayRange(renderDate.d, util.pick(this.options, 'week', 'startDayOfWeek') || 0);
+        startDate = tempDate[0];
+        endDate = tempDate[1];
 
         recursiveSet(view, function(opt) {
-            opt.renderStartDate = datetime.format(date2[0], 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(date2[1], 'YYYY-MM-DD');
+            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
-        date2 = renderDate.clone().setHours(23, 59, 59, 0);
+        startDate = endDate = renderDate.d;
 
         recursiveSet(view, function(opt) {
-            opt.renderStartDate = datetime.format(renderDate.d, 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(date2.d, 'YYYY-MM-DD');
+            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
+            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
         });
     }
 
     this.renderDate = renderDate.d;
+    this.renderRange = {
+        start: startDate,
+        end: endDate
+    };
 };
 
 /**
@@ -390,8 +474,9 @@ Calendar.prototype.setDate = function(date) {
         date = datetime.parse(date);
     }
 
-    this.renderDate = new Date(Number(date));
-
+    this.renderDate = new TZDate(Number(date));
+    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
+    this.move(0);
     this.render();
 };
 
@@ -442,6 +527,20 @@ Calendar.prototype._onClick = function(clickEventData) {
      * @property {MouseEvent} jsEvent - 마우스 이벤트
      */
     this.fire('clickEvent', clickEventData);
+};
+
+/**
+ * dayname 클릭 이벤트 핸들러
+ * @fires Calendar#clickDayname
+ * @param {object} clickEventData - 'clickDayname' 핸들러의 이벤트 데이터
+ */
+Calendar.prototype._onClickDayname = function(clickEventData) {
+    /**
+     * @events Calendar#clickDayname
+     * @type {object}
+     * @property {string} date - 'YYYY-MM-DD'형식의 날짜
+     */
+    this.fire('clickDayname', clickEventData);
 };
 
 /**
@@ -501,8 +600,8 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view) {
         clickHandler[method]('clickEvent', self._onClick, self);
     });
 
-    util.forEach(handler.dblclick, function(dblclickHandler) {
-        dblclickHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
+    util.forEach(handler.dayname, function(clickHandler) {
+        clickHandler[method]('clickDayname', self._onClickDayname, self);
     });
 
     util.forEach(handler.creation, function(creationHandler) {
@@ -540,6 +639,16 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         return;
     }
 
+    this._setViewName(newViewName);
+
+    //convert day to week
+    if (viewName === 'day') {
+        viewName = 'week';
+    }
+
+    if (newViewName === 'day') {
+        newViewName = 'week';
+    }
     layout.children.doWhenHas(viewName, function(view) {
         self._toggleViewEvent(false, view);
     });
@@ -547,7 +656,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
     layout.clear();
 
     if (newViewName === 'month') {
-        created = monthViewFactory(
+        created = this.createMonthView(
             controller,
             layout.container,
             dragHandler,
@@ -568,14 +677,35 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         self._toggleViewEvent(true, view);
     });
 
-    this.viewName = newViewName;
     this.refreshMethod = created.refresh;
+    this.scrollToNowMethod = created.scrollToNow;
 
     this.move();
     this.render();
 };
 
+/**
+ * Toggle dooray current view
+ * @param {string} isUse - new view name to render
+ */
+Calendar.prototype.toggleDoorayView = function(isUse) {
+    var viewName = this.viewName,
+        options = this.options;
+
+    options.isDoorayView = isUse;
+    this.toggleView(viewName, true);
+};
+
+/**
+ * Set current view name
+ * @param {string} viewName - new view name to render
+ *
+ */
+Calendar.prototype._setViewName = function(viewName) {
+    this.prevViewName = this.viewName;
+    this.viewName = viewName;
+};
+
 util.CustomEvents.mixin(Calendar);
 
 module.exports = Calendar;
-

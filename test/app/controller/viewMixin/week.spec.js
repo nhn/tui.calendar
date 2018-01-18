@@ -1,28 +1,33 @@
 /*eslint-disable*/
+var array = require('common/array');
+var Collection = require('common/collection');
+var ControllerFactory = require('factory/controller');
+var CalEvent = require('model/calEvent');
+var CalEventViewModel = require('model/viewModel/calEvent');
+var datetime = require('common/datetime');
+
 describe('Base.Week', function() {
     var util = tui.util,
-        CalEvent = ne.dooray.calendar.CalEvent,
-        array = ne.dooray.calendar.array,
-        stamp = tui.util.stamp,
-        ControllerFactory = ne.dooray.calendar.ControllerFactory,
-        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
-        Collection = ne.dooray.calendar.Collection,
-        datetime = ne.dooray.calendar.datetime;
+        stamp = tui.util.stamp;
 
     var base,
         ctrl,
-        fixture,
+        mockData,
         eventList;
 
     beforeEach(function() {
         base = ControllerFactory(['Week']);
         ctrl = base.Week;
-        fixture = getJSONFixture('event_set_string3.json');
-        eventList = util.map(fixture, function(data) {
+        mockData = fixture.load('event_set_string3.json');
+        eventList = util.map(mockData, function(data) {
             return CalEvent.create(data);
         }).sort(array.compare.event.asc);
     });
-        
+
+    afterEach(function() {
+        fixture.cleanup();
+    });
+
     describe('_hasCollide()', function() {
         var supplied;
 
@@ -98,12 +103,12 @@ describe('Base.Week', function() {
     describe('findByDateRange', function() {
         var eventList,
             idList;
- 
+
         beforeEach(function() {
             eventList = [];
             idList = [];
 
-            util.forEach(fixture, function(data) {
+            util.forEach(mockData, function(data) {
                 base.createEvent(data);
             });
 

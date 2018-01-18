@@ -1,8 +1,8 @@
 /*eslint-disable*/
+var Collection = require('common/collection');
 
 describe('Collection', function() {
-    var Collection = ne.dooray.calendar.Collection,
-        undef = (function() {})(),
+    var undef = (function() {})(),
         c;
 
     beforeEach(function() {
@@ -196,7 +196,7 @@ describe('Collection', function() {
             expect(filtered.getItemID === cust).toBe(true);
         });
     });
-    
+
     describe('Collection.and()', function() {
         var item1,
             item2,
@@ -297,11 +297,11 @@ describe('Collection', function() {
             var or = Collection.or(filter1, filter3);
             var and = Collection.and(filter2, or);
             // _id === 1 && ( value === 20 || value === 50 )
-            
+
             var result = c.find(and);
 
             expect(c.find(function(model) {
-                return model._id === 1 && 
+                return model._id === 1 &&
                     (model.value === 20 || model.value === 50);
             })).toEqual(result);
         });

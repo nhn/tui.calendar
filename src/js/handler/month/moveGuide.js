@@ -9,7 +9,8 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent'),
     FloatingLayer = require('../../common/floatingLayer'),
-    tmpl = require('./moveGuide.hbs');
+    tmpl = require('./moveGuide.hbs'),
+    DoorayEvent = require('../../model/calEvent');
 
 /**
  * @constructor
@@ -67,6 +68,8 @@ MonthMoveGuide.prototype.destroy = function() {
  * @param {number} modelID - CalEvent model instance ID
  */
 MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
+    var className = config.classname('weekday-event-block-dragging-dim');
+
     this.elements = domutil.find(
         config.classname('.weekday-event-block-' + modelID),
         this.monthMove.monthView.container,
@@ -74,7 +77,7 @@ MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
     );
 
     util.forEach(this.elements, function(el) {
-        el.style.display = 'none';
+        domutil.addClass(el, className);
     });
 };
 
@@ -82,9 +85,17 @@ MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
  * Show element blocks
  */
 MonthMoveGuide.prototype._showOriginEventBlocks = function() {
+    var className = config.classname('weekday-event-block-dragging-dim');
+
     util.forEach(this.elements, function(el) {
-        el.style.display = 'block';
+        domutil.removeClass(el, className);
     });
+};
+
+MonthMoveGuide.prototype._getHighlightColorModel = function(model) {
+    return {
+        bgColor: model.color
+    };
 };
 
 /**
@@ -149,7 +160,13 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
     this.layer = layer;
     layer.setSize(widthPercent + '%', height);
     layer.setPosition(mousePos[0], mousePos[1]);
-    layer.setContent(tmpl(model));
+    layer.setContent(tmpl({
+        model: util.extend(
+            DoorayEvent.create(model),
+            model,
+            this._getHighlightColorModel(model)
+        )
+    }));
     layer.show();
 
     if (!util.browser.msie) {

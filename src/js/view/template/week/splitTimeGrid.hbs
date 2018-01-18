@@ -1,0 +1,18 @@
+<div class="{{CSS_PREFIX}}split-timegrid-left">
+    {{#each hours ~}}
+        <div class="{{CSS_PREFIX}}split-timegrid-hour
+            {{CSS_PREFIX}}split-timegrid-hour-{{this}}"><span>{{this}}</span></div>
+    {{/each ~}}
+</div>
+<div class="{{CSS_PREFIX}}split-timegrid-right">
+    <div class="{{CSS_PREFIX}}split-timegrid-h-grid">
+        {{#each hours ~}}
+        <div class="{{CSS_PREFIX}}split-timegrid-gridline"></div>
+        {{/each ~}}
+    </div>
+    <div class="{{CSS_PREFIX}}split-timegrid-events">
+        <div class="{{CSS_PREFIX}}split-timegrid-events-container"></div>
+    </div>
+    <div class="{{CSS_PREFIX}}split-timegrid-schedule" style="top:{{scheduleTop}}%; height:{{scheduleHeight}}%">
+    </div>
+</div>

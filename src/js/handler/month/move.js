@@ -7,8 +7,10 @@ var util = global.tui.util;
 
 var config = require('../../config'),
     domutil = require('../../common/domutil'),
+    datetime = require('../../common/datetime'),
     getMousePosData = require('./core'),
-    MonthMoveGuide = require('./moveGuide');
+    MonthMoveGuide = require('./moveGuide'),
+    TZDate = require('../../common/timezone').Date;
 
 /**
  * @constructor
@@ -67,9 +69,13 @@ MonthMove.prototype.destroy = function() {
  *  session.
  */
 MonthMove.prototype.updateEvent = function(eventCache) {
-    var model = eventCache.model,
-        duration = Number(model.duration()),
-        dragEndTime = Number(eventCache.ends);
+    var model = eventCache.model;
+    var duration = model.duration().getTime();
+    var startDateRaw = datetime.raw(model.starts);
+    var dragEndTime = Number(eventCache.ends);
+    var newStartDate = new TZDate(dragEndTime);
+
+    newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
 
     /**
      * @event MonthMove#beforeUpdateEvent
@@ -80,8 +86,8 @@ MonthMove.prototype.updateEvent = function(eventCache) {
      */
     this.fire('beforeUpdateEvent', {
         model: model,
-        starts: new Date(dragEndTime),
-        ends: new Date(dragEndTime + duration)
+        starts: newStartDate,
+        ends: new TZDate(newStartDate.getTime() + duration)
     });
 };
 
@@ -91,46 +97,20 @@ MonthMove.prototype.updateEvent = function(eventCache) {
  * @returns {HTMLElement} element to create guide effect
  */
 MonthMove.prototype.getMonthEventBlock = function(target) {
-    var blockSelector = config.classname('.weekday-event-block'),
-        element = domutil.closest(target, blockSelector);
+    var blockSelector = config.classname('.weekday-event-block');
 
-    if (!element) {
-        element = target;
-    }
-
-    return element;
+    return domutil.closest(target, blockSelector);
 };
 
 /**
- * Check event start from month view
+ * Get event block from more layer
  * @param {HTMLElement} target - element to check
- * @returns {boolean} whether event start from month view?
+ * @returns {HTMLElement} event element
  */
-MonthMove.prototype.isMonthEventBlock = function(target) {
-    var titleClassName = config.classname('weekday-event-title');
+MonthMove.prototype.getMoreLayerEventBlock = function(target) {
+    var className = config.classname('.month-more-event');
 
-    if (!domutil.hasClass(target, titleClassName)) {
-        return false;
-    }
-
-    target = this.getMonthEventBlock(target);
-
-    if (!target) {
-        return false;
-    }
-
-    return true;
-};
-
-/**
- * Check event start from more layer
- * @param {HTMLElement} target - element to check
- * @returns {boolean} whether event start from more layer?
- */
-MonthMove.prototype.isMoreLayerEventBlock = function(target) {
-    var className = config.classname('month-more-event');
-
-    return domutil.hasClass(target, className);
+    return domutil.closest(target, className);
 };
 
 /**
@@ -141,19 +121,28 @@ MonthMove.prototype.isMoreLayerEventBlock = function(target) {
  *  has not permission to handle the event then return null.
  */
 MonthMove.prototype.hasPermissionToHandle = function(target) {
-    var modelID = null,
-        selector;
+    var modelID = null;
+    var blockElement;
 
-    if (this.isMonthEventBlock(target)) {
-        selector = config.classname('.weekday-event-block');
-        modelID = domutil.getData(domutil.closest(target, selector), 'id');
-    } else if (this.isMoreLayerEventBlock(target)) {
-        modelID = domutil.getData(target, 'id');
-        /**
-         * Fire for notificate that the drag event start at more layer view.
-         * @event {MonthMove#monthMoveStart_from_morelayer}
-         */
-        this.fire('monthMoveStart_from_morelayer');
+    if (domutil.hasClass(target, config.classname('weekday-resize-handle'))) {
+        return null;
+    }
+
+    blockElement = this.getMonthEventBlock(target);
+
+    if (blockElement) {
+        modelID = domutil.getData(blockElement, 'id');
+    } else {
+        blockElement = this.getMoreLayerEventBlock(target);
+
+        if (blockElement) {
+            modelID = domutil.getData(blockElement, 'id');
+            /**
+             * Fire for notificate that the drag event start at more layer view.
+             * @event {MonthMove#monthMoveStart_from_morelayer}
+             */
+            this.fire('monthMoveStart_from_morelayer');
+        }
     }
 
     return modelID;
@@ -191,7 +180,7 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         model: model,
         target: target,
-        starts: new Date(Number(eventData.date))
+        starts: new TZDate(Number(eventData.date))
     };
 
     /**
@@ -242,8 +231,8 @@ MonthMove.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - dragend event data
  */
 MonthMove.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        eventData;
+    var cache = this._cache;
+    var eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -257,7 +246,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getEventData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new Date(Number(eventData.date));
+        cache.ends = new TZDate(Number(eventData.date));
         this.updateEvent(cache);
     }
 

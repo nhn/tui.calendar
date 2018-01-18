@@ -8,8 +8,12 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var alldayCore = require('./core');
 var AlldayCreationGuide = require('./creationGuide');
+var TZDate = require('../../common/timezone').Date;
+
+var CLICK_DELAY = 300;
 
 /**
  * @constructor
@@ -49,7 +53,14 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
      */
     this.guide = new AlldayCreationGuide(this);
 
+    /**
+     * @type {boolean}
+     */
+    this._requestOnClick = false;
+
     dragHandler.on('dragStart', this._onDragStart, this);
+    dragHandler.on('click', this._onClick, this);
+    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
 }
 
 /**
@@ -58,8 +69,12 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
 AlldayCreation.prototype.destroy = function() {
     this.guide.destroy();
     this.dragHandler.off(this);
-    this.dragHandler = this.alldayView = this.baseController =
-        this.getEventDataFunc = null;
+
+    if (this.alldayView && this.alldayView.container) {
+        domevent.off(this.alldayView.container, 'dblclick', this._onDblClick, this);
+    }
+
+    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
 };
 
 /**
@@ -109,7 +124,7 @@ AlldayCreation.prototype._createEvent = function(eventData) {
         startXIndex = startXIndex - xIndex;
     }
 
-    starts = new Date(dateRange[startXIndex].getTime());
+    starts = new TZDate(dateRange[startXIndex].getTime());
     ends = datetime.end(dateRange[xIndex]);
 
     /**
@@ -122,7 +137,9 @@ AlldayCreation.prototype._createEvent = function(eventData) {
     this.fire('beforeCreateEvent', {
         isAllDay: true,
         starts: starts,
-        ends: ends
+        ends: ends,
+        guide: this.guide,
+        triggerEvent: eventData.triggerEvent
     });
 };
 
@@ -143,8 +160,7 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
 
     this.dragHandler.on({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
 
     getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
@@ -194,19 +210,16 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
 AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-    var getEventDataFunc = this.getEventDataFunc,
-        eventData;
+    var getEventDataFunc = this.getEventDataFunc;
+    var eventData;
 
     if (!getEventDataFunc) {
         return;
     }
 
-    this.guide.clearGuideElement();
-
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
 
     eventData = getEventDataFunc(dragEndEventData.originEvent);
@@ -232,19 +245,49 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayCreation.prototype._onClick = function(clickEventData) {
-    /**
-     * @event AlldayCreation#alldayCreationClick
-     * @type {object}
-     * @property {AlldayView} relatedView - allday view instance.
-     * @property {number} datesInRange - date count of this view.
-     * @property {number} dragStartXIndex - index number of dragstart grid index.
-     * @property {number} xIndex - index number of mouse positions.
-     */
-    this._onDragEnd(clickEventData, 'alldayCreationClick');
+    var self = this;
+    var getEventDataFunc, eventData;
+
+    if (!this.checkExpectedCondition(clickEventData.target)) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData.originEvent);
+    eventData = getEventDataFunc(clickEventData.originEvent);
+
+    this._requestOnClick = true;
+    setTimeout(function() {
+        if (self._requestOnClick) {
+            self.fire('alldayCreationClick', eventData);
+            self._createEvent(eventData);
+        }
+        self._requestOnClick = false;
+    }, CLICK_DELAY);
+};
+
+/**
+ * Dblclick event handler method.
+ * @emits AlldayCreation#alldayCreationClick
+ * @param {object} clickEventData - Drag#Click event handler data.
+ */
+AlldayCreation.prototype._onDblClick = function(clickEventData) {
+    var getEventDataFunc, eventData;
+
+    if (!this.checkExpectedCondition(clickEventData.target)) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData);
+    eventData = getEventDataFunc(clickEventData);
+
+    this.fire('alldayCreationClick', eventData);
+
+    this._createEvent(eventData);
+
+    this._requestOnClick = false;
 };
 
 common.mixin(alldayCore, AlldayCreation);
 util.CustomEvents.mixin(AlldayCreation);
 
 module.exports = AlldayCreation;
-

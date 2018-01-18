@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../../common/timezone').Date;
 var CalEvent = require('../../model/calEvent');
 
 /**
@@ -38,7 +39,7 @@ function DoorayEvent() {
      * 캘린더 ID
      * @type {string}
      */
-    this.calendarID = '';
+    this.calendarId = '';
 
     /**
      * 일정 카테고리 (마일스톤, 업무, 종일일정, 시간별일정)
@@ -51,6 +52,12 @@ function DoorayEvent() {
      * @type {string}
      */
     this.dueDateClass = '';
+
+    /**
+     * 커스텀 스타일
+     * @type {string}
+     */
+    this.customStyle = '';
 
     /**
      * 렌더링과 관계 없는 별도 데이터 저장 공간.
@@ -78,17 +85,19 @@ DoorayEvent.create = function(data) {
 DoorayEvent.prototype.init = function(options) {
     options = options || {};
 
+    options.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
     CalEvent.prototype.init.call(this, options);
 
-    this.isAllDay = options.category === EVENT_CATEGORY.ALLDAY;
-    this.calendarID = options.calendarID;
+    this.calendarId = options.calendarId;
     this.category = options.category;
     this.dueDateClass = options.dueDateClass;
+    this.customStyle = options.customStyle;
+    this.isPending = options.isPending;
+    this.isFocused = options.isFocused;
 
     if (options.category === EVENT_CATEGORY.MILESTONE ||
         options.category === EVENT_CATEGORY.TASK) {
-        this.starts = new Date(Number(this.ends));
-        this.starts.setMinutes(this.starts.getMinutes() - 30);
+        this.starts = new TZDate(this.ends);
     }
 
     this.raw = options.raw || null;

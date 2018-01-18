@@ -8,7 +8,21 @@ var util = global.tui.util;
 var config = require('../../config');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
+
+/**
+ * FullCalendar 에서는 날짜 정보만 사용(YYYY-MM-DD) 하고,
+ * SplitTimeCalendar 에서는 타임존 정보까지 포함된 문자열을 사용하기 때문에 분기처리함.
+ * @param {String} dateString - date string
+ * @returns {TZDate}
+ */
+function parseRangeDateString(dateString) {
+    if (dateString.length === 10) {
+        return datetime.parse(dateString);
+    }
+    return new TZDate(dateString);
+}
 
 /**
  * @constructor
@@ -31,14 +45,16 @@ function Week(controller, options, container) {
 
     domutil.addClass(container, config.classname('week-container'));
 
-    range = this._getRenderDateRange(new Date());
+    range = this._getRenderDateRange(new TZDate());
 
     /**
      * @type {object} Options for view.
      */
     this.options = util.extend({
         renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
-        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD')
+        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
+        narrowWeekend: false,
+        startDayOfWeek: 0
     }, options);
 
     /**
@@ -60,18 +76,30 @@ util.inherit(Week, View);
  * @override
  */
 Week.prototype.render = function() {
-    var options = this.options,
-        renderStartDate = datetime.parse(options.renderStartDate),
-        renderEndDate = datetime.parse(options.renderEndDate),
-        eventsInDateRange = this.controller.findByDateRange(
+    var options = this.options;
+    var renderStartDate, renderEndDate, eventsInDateRange, viewModel, grids;
+
+    renderStartDate = parseRangeDateString(options.renderStartDate);
+    renderEndDate = parseRangeDateString(options.renderEndDate);
+    eventsInDateRange = this.controller.findByDateRange(
+        datetime.start(renderStartDate),
+        datetime.end(renderEndDate)
+    );
+    grids = datetime.getGridLeftAndWidth(
+        datetime.range(
             datetime.start(renderStartDate),
-            datetime.end(renderEndDate)
-        ),
-        viewModel = {
-            eventsInDateRange: eventsInDateRange,
-            renderStartDate: renderStartDate,
-            renderEndDate: renderEndDate
-        };
+            datetime.end(renderEndDate),
+            datetime.MILLISECONDS_PER_DAY
+        ).length,
+        options.narrowWeekend,
+        options.startDayOfWeek);
+
+    viewModel = {
+        eventsInDateRange: eventsInDateRange,
+        renderStartDate: renderStartDate,
+        renderEndDate: renderEndDate,
+        grids: grids
+    };
 
     this.children.each(function(childView) {
         childView.render(viewModel);
@@ -96,8 +124,8 @@ Week.prototype.viewName = 'week';
  */
 Week.prototype._getRenderDateRange = function(baseDate) {
     var base = datetime.start(baseDate),
-        start = new Date(Number(base)),
-        end = new Date(Number(base));
+        start = new TZDate(Number(base)),
+        end = new TZDate(Number(base));
 
     start.setDate(start.getDate() - 3);
     end.setDate(end.getDate() + 3);

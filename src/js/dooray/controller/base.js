@@ -69,6 +69,9 @@ DoorayBase.prototype.createEvent = function(data, silent) {
  * @returns {CalEvent|boolean} updated event instance, when it fail then return false
  */
 DoorayBase.prototype.updateEvent = function(calEvent, options) {
+    var starts = options.starts || calEvent.starts;
+    var ends = options.ends || calEvent.ends;
+
     if (options.title) {
         calEvent.set('title', options.title);
     }
@@ -77,12 +80,12 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
         calEvent.set('isAllDay', options.isAllDay);
     }
 
-    if (options.starts) {
-        calEvent.set('starts', new Date(options.starts));
-    }
-
-    if (options.ends) {
-        calEvent.set('ends', new Date(options.ends));
+    if (options.starts || options.ends) {
+        if (calEvent.isAllDay) {
+            calEvent.setAllDayPeriod(starts, ends);
+        } else {
+            calEvent.setTimePeriod(starts, ends);
+        }
     }
 
     if (options.color) {
@@ -91,6 +94,22 @@ DoorayBase.prototype.updateEvent = function(calEvent, options) {
 
     if (options.bgColor) {
         calEvent.set('bgColor', options.bgColor);
+    }
+
+    if (options.borderColor) {
+        calEvent.set('borderColor', options.borderColor);
+    }
+
+    if (options.origin) {
+        calEvent.set('origin', options.origin);
+    }
+
+    if (!util.isUndefined(options.isPending)) {
+        calEvent.set('isPending', options.isPending);
+    }
+
+    if (!util.isUndefined(options.isFocused)) {
+        calEvent.set('isFocused', options.isFocused);
     }
 
     this._removeFromMatrix(calEvent);
@@ -118,4 +137,3 @@ DoorayBase.prototype.deleteEvent = function(calEvent) {
 
 
 module.exports = DoorayBase;
-

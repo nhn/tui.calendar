@@ -12,7 +12,24 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent'),
     datetime = require('../../common/datetime'),
-    tmpl = require('./minicalendar.hbs');
+    tmpl = require('./minicalendar.hbs'),
+    TZDate = require('../../common/timezone').Date;
+
+/**
+ * Returns the CSS class name for the given index
+ * @param {number} dayIdx - day index
+ * @returns {string}
+ */
+function getDayClassName(dayIdx) {
+    switch (dayIdx) {
+        case 0:
+            return 'holiday-sun';
+        case 6:
+            return 'holiday-sat';
+        default:
+            return '';
+    }
+}
 
 /**
  * @constructor
@@ -21,7 +38,6 @@ var config = require('../../config'),
  *  @param {number} [options.startDayOfWeek=0] - start day of week. default 0 (sunday)
  *  @param {string|Date} [options.renderMonth] - month to render
  *  @param {string[]} [options.daynames] - array of each days name
- *  @param {number[]} [options.weekendNumber] - number of weekend
  *  @param {string} [options.selectedDate=''] - YYYY-MM-DD formatted selected date
  * @param {HTMLDivElement} container - element to use container
  */
@@ -38,7 +54,7 @@ function MiniCalendar(options, container) {
     domutil.addClass(container, config.classname('minicalendar'));
     domevent.on(this.container, 'click', this._onClick, this);
 
-    todayStart = datetime.start(new Date());
+    todayStart = datetime.start(new TZDate());
     todayYMD = datetime.format(todayStart, 'YYYY-MM-DD');
 
     /**
@@ -47,8 +63,7 @@ function MiniCalendar(options, container) {
     options = this.options = util.extend({
         startDayOfWeek: 0,
         renderMonth: todayStart,
-        daynames: ['일', '월', '화', '수', '목', '금', '토'],
-        weekendNumber: [0, 6],
+        daynames: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
         selectedDate: todayYMD
     }, options);
 
@@ -69,7 +84,15 @@ function MiniCalendar(options, container) {
     /**
      * @type {Date}
      */
-    this.selectedDate = new Date(Number(options.renderMonth));
+    this.selectedDate = new TZDate(Number(options.renderMonth));
+
+    // focused 된 범위가 1일인지 여부 (1일인 경우 스타일을 다르게 표시하기 위함)
+    this.singleFocused = false;
+
+    // default is week.
+    this.viewName = 'week';
+
+    this.currentDate = null;
 
     this.render();
 }
@@ -170,26 +193,42 @@ MiniCalendar.prototype._onClick = function(clickEvent) {
 MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
     var opt = this.options,
         daynames = opt.daynames,
-        weekendNumber = opt.weekendNumber,
         hlData = this.hlData,
         selectedDate = this.selectedDate,
         classPrefix = config.classname('minicalendar-'),
+        viewName = this.viewName,
+        currentDate = this.currentDate ? this.currentDate : new Date(),
         viewModel = {
             title: datetime.format(renderDate, 'YYYY.MM'),
-            startDayOfWeek: startDayOfWeek
+            startDayOfWeek: startDayOfWeek,
+            tableClass: this.singleFocused ? (classPrefix + 'single-focused') : ''
+        },
+        datetimeOptions = {
+            startDayOfWeek: startDayOfWeek,
+            isAlways6Week: true
         };
 
     viewModel.dayname = util.map(
         util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
         function(i) {
-            return daynames[i];
+            return {
+                name: daynames[i],
+                cssClass: classPrefix + getDayClassName(i)
+            };
         }
     );
 
-    viewModel.calendar = datetime.arr2dCalendar(renderDate, startDayOfWeek, function(date) {
+    viewModel.calendar = datetime.arr2dCalendar(renderDate, datetimeOptions, function(date) {
         var ymd = datetime.format(date, 'YYYY-MM-DD'),
             day = date.getDay(),
+            dayClassName = getDayClassName(day),
             cssClasses = util.keys(hlData[ymd] ? hlData[ymd] : {});
+
+        if (viewName === 'month' && !datetime.isSameMonth(currentDate, renderDate)) {
+            cssClasses = util.filter(cssClasses, function(value) {
+                return value !== 'focused';
+            });
+        }
 
         cssClasses.push(ymd);
 
@@ -201,8 +240,8 @@ MiniCalendar.prototype._getViewModel = function(renderDate, startDayOfWeek) {
             cssClasses.push('other-month');
         }
 
-        if (~util.inArray(day, weekendNumber)) {
-            cssClasses.push('weekend');
+        if (dayClassName) {
+            cssClasses.push(dayClassName);
         }
 
         return {
@@ -255,25 +294,54 @@ MiniCalendar.prototype.clearFocusData = function() {
     util.forEach(this.hlData, function(obj) {
         delete obj.focused;
     });
+    this.singleFocused = false;
+    this.render();
+};
+
+/**
+ * Clear focus data
+ */
+MiniCalendar.prototype.clearMarkData = function() {
+    util.forEach(this.hlData, function(obj) {
+        delete obj.marked;
+    });
 };
 
 /**
  * Focus specific date range
  * @param {Date} start - focus start date
  * @param {Date} end - focus end date
+ * @param {Date} currentDate - current date
+ * @param {string} viewName - type of view(day, week, month);
  */
-MiniCalendar.prototype.focusDateRange = function(start, end) {
+MiniCalendar.prototype.focusDateRange = function(start, end, currentDate, viewName) {
     this.clearFocusData();
     this._setHlDateRange(start, end, 'focused');
+    this.singleFocused = datetime.isSameDate(new TZDate(start), new TZDate(end));
+    this.viewName = viewName;
+    this.currentDate = currentDate;
+    this.options.renderMonth = datetime.start(currentDate);
+
     this.render();
 };
+
+
+MiniCalendar.prototype.markData = function(dates) {
+    var self = this;
+    this.clearMarkData();
+    util.forEach(dates, function(date) {
+        self._setHlDateRange(date.start, date.end, 'marked');
+    });
+    this.render();
+};
+
 
 /**
  * Get selected data
  * @returns {Date} selected date
  */
 MiniCalendar.prototype.getSelectedDate = function() {
-    return new Date(Number(this.selectedDate));
+    return new TZDate(Number(this.selectedDate));
 };
 
 /**
@@ -283,7 +351,7 @@ MiniCalendar.prototype.getSelectedDate = function() {
 MiniCalendar.prototype.selectDate = function(date) {
     date = util.isDate(date) ? date : datetime.parse(date);
 
-    this.selectedDate = new Date(Number(date));
+    this.selectedDate = new TZDate(Number(date));
 
     this.render();
 };
@@ -303,7 +371,4 @@ MiniCalendar.prototype.render = function() {
     container.innerHTML = tmpl(viewModel);
 };
 
-util.CustomEvents.mixin(MiniCalendar);
-
 module.exports = MiniCalendar;
-

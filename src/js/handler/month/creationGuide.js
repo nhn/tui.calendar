@@ -21,9 +21,10 @@ function MonthCreationGuide(monthCreation) {
     this.guide = null;
 
     monthCreation.on({
-        monthCreationDragstart: this._onDragStart,
+        monthCreationDragstart: this._createGuideElement,
         monthCreationDrag: this._onDrag,
-        monthCreationDragend: this._onDragEnd
+        monthCreationDragend: this._onDragEnd,
+        monthCreationClick: this._createGuideElement
     }, this);
 }
 
@@ -44,8 +45,14 @@ MonthCreationGuide.prototype.destroy = function() {
  * Drag start event handler
  * @param {object} dragStartEvent - event data from MonthCreation
  */
-MonthCreationGuide.prototype._onDragStart = function(dragStartEvent) {
-    this.guide = new MonthGuide(null, this.monthCreation.monthView);
+MonthCreationGuide.prototype._createGuideElement = function(dragStartEvent) {
+    var options = {
+        isCreationMode: true,
+        height: '100%',
+        top: 0
+    };
+
+    this.guide = new MonthGuide(options, this.monthCreation.monthView);
     this.guide.start(dragStartEvent);
 };
 
@@ -61,9 +68,8 @@ MonthCreationGuide.prototype._onDrag = function(dragEvent) {
  * Drag end event handler
  */
 MonthCreationGuide.prototype._onDragEnd = function() {
-    this.guide.destroy();
+    // Do nothing. 사용자가 직접 destroy 호출
     this.guide = null;
 };
 
 module.exports = MonthCreationGuide;
-

@@ -1,7 +1,9 @@
 /*eslint-disable*/
+var model = require('common/model');
+var TZDate = require('common/timezone').Date;
+
 describe('model/model', function() {
-    var model = ne.dooray.calendar.model,
-        myObj;
+    var myObj;
 
     beforeEach(function() {
         myObj = {};
@@ -35,7 +37,7 @@ describe('model/model', function() {
                 // this will valid (null will convert to 1970-01-01 00:00:00)
                 myObj = {
                     starts: null,
-                    ends: new Date('2015-05-01')
+                    ends: new TZDate('2015-05-01')
                 };
 
                 expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(true);
@@ -50,8 +52,8 @@ describe('model/model', function() {
 
             it('return true only starts and ends range are valid.', function() {
                 myObj = {
-                    starts: new Date('2015-05-03'),
-                    ends: new Date('2015-05-02')
+                    starts: new TZDate('2015-05-03'),
+                    ends: new TZDate('2015-05-02')
                 };
 
                 expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(false);

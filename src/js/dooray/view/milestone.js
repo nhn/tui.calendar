@@ -8,11 +8,15 @@ var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../../view/view');
 var tmpl = require('./milestone.hbs');
 
-var PADDING_TOP = 2,
-    PADDING_BOTTOM = 2;
+// item height + gutter (defined in css)
+var ITEM_HEIGHT = 17;
+
+// list padding-top (defined in css)
+var LIST_PADDING_TOP = 1;
 
 /**
  * @constructor
@@ -38,9 +42,7 @@ function Milestone(options, container) {
      */
     this.options = util.extend({
         renderStartDate: '',
-        renderEndDate: '',
-        minHeight: 52,
-        lineHeight: 12
+        renderEndDate: ''
     }, options);
 }
 
@@ -59,27 +61,33 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
             datetime.end(datetime.parse(options.renderEndDate)),
             datetime.MILLISECONDS_PER_DAY
         ),
-        height;
+        height,
+        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
+        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'milestone'),
+        grids = viewModel.grids,
+        i = 0;
 
     // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {
         events[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
     });
 
-    util.extend(events, viewModel);
+    util.extend(events, viewModelEvents);
 
-    height = Math.max.apply(null, util.map(events, function(coll) {
+    util.forEach(events, function(event, key) {
+        event.isToday = (key === today);
+        event.left = grids[i].left;
+        event.width = grids[i].width;
+        i += 1;
+    });
+
+    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(events, function(coll) {
         return coll.length;
-    })) * options.lineHeight;
-
-    height = Math.max(options.minHeight, height);
+    })) * ITEM_HEIGHT;
 
     return {
         events: events,
-        width: 100 / range.length,
-        minHeight: options.minHeight,
-        height: height + PADDING_TOP + PADDING_BOTTOM,
-        lineHeight: options.lineHeight
+        height: height
     };
 };
 
@@ -89,7 +97,7 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
  */
 Milestone.prototype.render = function(viewModel) {
     var container = this.container,
-        baseViewModel = this._getBaseViewModel(util.pick(viewModel.eventsInDateRange, 'milestone'));
+        baseViewModel = this._getBaseViewModel(viewModel);
 
     container.style.minHeight = this.options.minHeight + 'px';
     container.innerHTML = tmpl(baseViewModel);
@@ -99,6 +107,8 @@ Milestone.prototype.render = function(viewModel) {
             el.setAttribute('title', domutil.getData(el, 'title'));
         }
     });
+
+    this.fire('afterRender', baseViewModel);
 };
 
 module.exports = Milestone;

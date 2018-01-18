@@ -1,7 +1,11 @@
-<div class="{{CSS_PREFIX}}month-guide-block" style="top:{{top}}px;height:{{height}}px;display:none">
-    <div class="{{CSS_PREFIX}}month-guide" style="background-color:{{bgColor}}">
-        <div class="{{CSS_PREFIX}}month-guide-label">{{label}}</div>
-        <div class="{{CSS_PREFIX}}month-guide-handle handle-y"
-             style="{{#unless isResizeMode}}display:none{{/unless}}">&nbsp;</div>
+<div class="{{CSS_PREFIX}}month-guide-block" style="top:{{top}};height:{{height}};display:none">
+    {{#if isCreationMode ~}}
+    <div class="{{CSS_PREFIX}}month-creation-guide"></div>
+    {{else ~}}
+    <div class="{{CSS_PREFIX}}weekday-event" style="border-color:{{borderColor}};background-color:{{bgColor}}">
+        <div class="{{CSS_PREFIX}}weekday-event-title">{{label}}</div>
+        <div class="{{CSS_PREFIX}}weekday-resize-handle Chandle-y"
+             style={{#unless isResizeMode}}display:none{{/unless}}">&nbsp;</div>
     </div>
+    {{/if}}
 </div>

@@ -65,7 +65,8 @@ var timeCore = {
                 gridY: gridY,
                 timeY: timeY,
                 nearestGridY: nearestGridY,
-                nearestGridTimeY: nearestGridTimeY
+                nearestGridTimeY: nearestGridTimeY,
+                triggerEvent: mouseEvent.type
             }, extend);
         }, this);
     },

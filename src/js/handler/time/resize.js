@@ -7,6 +7,7 @@ var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
 var TimeResizeGuide = require('./resizeGuide');
 
@@ -196,16 +197,16 @@ TimeResize.prototype._updateEvent = function(eventData) {
 
     timeDiff -= datetime.millisecondsFrom('minutes', 30);
 
-    baseDate = new Date(relatedView.getDate());
+    baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
-    newEnds = new Date(model.getEnds().getTime() + timeDiff);
+    newEnds = new TZDate(model.getEnds().getTime() + timeDiff);
 
     if (newEnds > dateEnd) {
-        newEnds = new Date(dateEnd.getTime());
+        newEnds = new TZDate(dateEnd.getTime());
     }
 
     if (newEnds.getTime() - model.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new Date(model.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
+        newEnds = new TZDate(model.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
     }
 
     /**

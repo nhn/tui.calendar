@@ -1,7 +1,9 @@
+var common = require('common/common');
+var domutil = require('common/domutil');
+var MonthGuide = require('handler/month/guide');
+
 describe('handler:month/guide', function() {
     var undef = (function() {})(),
-        common = ne.dooray.calendar.common,
-        MonthGuide = ne.dooray.calendar.MonthGuide,
         proto = MonthGuide.prototype,
         mockInst,
         expected,
@@ -59,7 +61,7 @@ describe('handler:month/guide', function() {
             left: 0,
             width: 40,
             exceedL: true,
-            exceedR: undef 
+            exceedR: undef
         };
         actual = proto._getMouseIndicate.call(mockInst, [0, 2], [1, 4]);
         expect(actual).toEqual(expected);
@@ -69,7 +71,7 @@ describe('handler:month/guide', function() {
             left: 40,
             width: 20,
             exceedL: undef,
-            exceedR: undef 
+            exceedR: undef
         };
         actual = proto._getMouseIndicate.call(mockInst, [3, 4], [2, 4]);
         expect(actual).toEqual(expected);
@@ -79,7 +81,7 @@ describe('handler:month/guide', function() {
             left: 0,
             width: 60,
             exceedL: true,
-            exceedR: undef 
+            exceedR: undef
         };
         actual = proto._getMouseIndicate.call(mockInst, [3, 2], [2, 3]);
         expect(actual).toEqual(expected);
@@ -87,7 +89,7 @@ describe('handler:month/guide', function() {
 
     describe('update()', function() {
         beforeEach(function() {
-            spyOn(ne.dooray.calendar.domutil, 'remove');
+            spyOn(domutil, 'remove');
         });
 
         it('should delete unnecessary guide element before start guide effect.', function() {
@@ -177,7 +179,7 @@ describe('handler:month/guide', function() {
     });
 
     it('should limit dragging indexes by month grid and supplied parameters.', function() {
-        var fn = proto._getLimitedCoord; 
+        var fn = proto._getLimitedCoord;
         mockInst = {
             weeks: [1, 2, 3, 4, 5],
             days: 7

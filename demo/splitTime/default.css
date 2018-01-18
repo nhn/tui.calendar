@@ -1,0 +1,53 @@
+html, body {
+    background-color: #fff;
+    margin: 0;
+    padding: 20px 11px;
+    height: 100%
+}
+
+.split {
+    width: 300px;
+}
+
+#wrap {
+    height: 100%;
+    position: relative;
+}
+
+.split {
+    border: 1px solid #ccc;
+    height: auto;
+    margin: 10px;
+    float: left;
+}
+.dooray-calendar-layout {
+    height: auto;
+ }
+
+.dooray-calendar-week-container {
+    height: auto;
+}
+
+.control {
+    height: 40px;
+    line-height: 40px;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.inline-block {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.float-right {
+    float: right;
+}

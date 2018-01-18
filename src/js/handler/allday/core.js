@@ -29,7 +29,8 @@ var alldayCore = {
             datesInRange,
             containerWidth,
             mousePos,
-            dragStartXIndex;
+            dragStartXIndex,
+            grids;
 
         if (!weekdayView) {
             return false;
@@ -40,9 +41,15 @@ var alldayCore = {
         renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
         datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
 
+        grids = datetime.getGridLeftAndWidth(
+            datesInRange,
+            alldayView.options.narrowWeekend,
+            alldayView.options.startDayOfWeek
+        );
+
         containerWidth = domutil.getSize(container)[0];
         mousePos = domevent.getMousePosition(mouseEvent, container);
-        dragStartXIndex = common.ratio(containerWidth, datesInRange, mousePos[0]) | 0;
+        dragStartXIndex = getX(grids, common.ratio(containerWidth, 100, mousePos[0]));
 
         /**
          * @param {MouseEvent} mouseEvent - mouse event in drag actions.
@@ -51,7 +58,7 @@ var alldayCore = {
         return function(mouseEvent) {
             var pos = domevent.getMousePosition(mouseEvent, container),
                 mouseX = pos[0],
-                xIndex = common.ratio(containerWidth, datesInRange, mouseX) | 0;
+                xIndex = getX(grids, common.ratio(containerWidth, 100, mouseX));
 
             // apply limitation of creation event X index.
             xIndex = mmax(xIndex, 0);
@@ -61,11 +68,27 @@ var alldayCore = {
                 relatedView: alldayView,
                 dragStartXIndex: dragStartXIndex,
                 datesInRange: datesInRange,
-                xIndex: xIndex
+                xIndex: xIndex,
+                triggerEvent: mouseEvent.type,
+                grids: grids
             };
         };
     }
 };
+
+function getX(grids, left) {
+    var i = 0;
+    var length = grids.length;
+    var grid;
+    for (; i < length; i += 1) {
+        grid = grids[i];
+        if (grid.left <= left && left <= (grid.left + grid.width)) {
+            return i;
+        }
+    }
+
+    return i;
+}
 
 module.exports = alldayCore;
 

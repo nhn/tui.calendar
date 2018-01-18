@@ -1,13 +1,18 @@
 /*eslint-disable*/
+var domutil = require('common/domutil');
+
 describe('module:domutil', function() {
-    var domutil = ne.dooray.calendar.domutil,
-        map, btn;
+    var map, btn;
 
     beforeEach(function() {
-        loadFixtures('domutil.html');
+        fixture.load('domutil.html');
 
         map = domutil.get('map');
         btn = domutil.get('btn');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     it('can remove element with safely.', function() {
@@ -180,7 +185,7 @@ describe('module:domutil', function() {
 
         it('세 번째 인자에 함수를 전달하면 필터로 사용한다.', function() {
             var inputs = domutil.find('input', document.getElementById('find-test'), function(el) {
-                return el.checked; 
+                return el.checked;
             });
             expect(inputs.length).toBe(2);
             expect(inputs).toEqual([
@@ -257,7 +262,7 @@ describe('module:domutil', function() {
             var actual = domutil.getFormData(document.getElementById('testform1'));
             expect(actual['type3']).toBe('');
         });
-        
+
         it('disabled인 엘리먼트는 뺌', function() {
             var actual = domutil.getFormData(document.getElementById('testform1'));
             expect(actual['type2']).not.toBeDefined();

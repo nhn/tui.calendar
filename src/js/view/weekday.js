@@ -7,6 +7,7 @@ var util = global.tui.util;
 var config = require('../config'),
     domutil = require('../common/domutil'),
     datetime = require('../common/datetime'),
+    TZDate = require('../common/timezone').Date,
     View = require('./view');
 
 /**
@@ -36,7 +37,9 @@ function Weekday(options, container) {
         containerHeight: 40,
         containerBottomGutter: 8,
         eventHeight: 18,
-        eventGutter: 2
+        eventGutter: 2,
+        narrowWeekend: false,
+        startDayOfWeek: 0
     }, options);
 
     View.call(this, container);
@@ -60,28 +63,35 @@ Weekday.prototype.getRenderDateRange = function() {
 
 /**
  * Get default view model.
- * @param {object} viewModel - viewModel from parent views.
  * @returns {object} viewModel to rendering.
  */
 Weekday.prototype.getBaseViewModel = function() {
-    var opt = this.options,
-        range = this.getRenderDateRange(),
-        gridWidth = (100 / range.length);
+    var opt = this.options;
+    var range = this.getRenderDateRange();
+    var today = datetime.format(new TZDate(), 'YYYYMMDD');
+    var gridWidth = (100 / range.length);
+    var grids = datetime.getGridLeftAndWidth(
+        this.getRenderDateRange().length,
+        this.options.narrowWeekend,
+        this.options.startDayOfWeek);
 
     return {
         width: gridWidth,
         eventHeight: opt.eventHeight,
         eventBlockHeight: (opt.eventHeight + opt.eventGutter),
         eventBlockGutter: opt.eventGutter,
-        dates: util.map(range, function(date) {
+        dates: util.map(range, function(date, index) {
+            var day = date.getDay();
             return {
                 date: date.getDate(),
                 month: date.getMonth() + 1,
-                day: date.getDay()
+                day: day,
+                isToday: datetime.format(date, 'YYYYMMDD') === today,
+                width: grids[index].width,
+                left: grids[index].left
             };
         })
     };
 };
 
 module.exports = Weekday;
-

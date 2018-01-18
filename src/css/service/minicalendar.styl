@@ -1,108 +1,127 @@
 .{css-prefix}minicalendar
+    padding: 10px 11px 10px
+
     table
         width: 100%
-        height: 100%
-        font-size: 0.9em
+        font-size: 11px
         table-layout: fixed
-        border-collapse: collapse
+        border-collapse: separate
+        border-spacing: 0 4px
 
     caption,
     th,
     td,
     button
         mpzero()
-        font-size: 1em
+        font-size: 11px
         border: none
+
+    th,
+    td
+        height: 17px
+        margin: 1px 0
+        text-align: center
 
     button
         cursor: pointer
+        width: 17px
         outline: none
+        border-radius: 0
+        color: #000
 
     // Disable IE button shifting during click
     button > div
         position: relative
-        pos(0, 0)
+        height: 17px
+
+        > span
+            display: block
+            line-height: 17px
+            height: 17px
+            width: 12px
+            margin: 0 auto
 
     // 헤더영역
     caption
-        margin: 0 20px
-        height: 30px
-        line-height: 25px
-        font-size: 1.2em
-        text-align: center 
-
-        .prev,
-        .next,
-        .title
-            display: inline-block
-            line-height: inherit
-
-        .prev,
-        .next
-            width: 16px
-            background-repeat: no-repeat
-            background-position: center center 
-
-        .prev span,
-        .next span
-            visibility: hidden
-
-        .prev
-            background-image: url(minicalendar-prev.png)
-
-        .next
-            background-image: url(minicalendar-next.png)
-
-        .title
-            font-size: 1.1em
-            width: 80px
+        position: relative
+        margin-bottom: 9px
+        height: 15px
+        line-height: 23px 
+        text-align: center
 
     // 일자표기영역
     tbody
         button
             display: block
-            wh(100%, 100%)
+            width: 17px
+            margin: 0 auto
+            height: 17px
             text-align: center
-            line-height: 100%
 
 +prefix-classes(minicalendar)
     .date,
     .nav
         background-color: transparent
 
+    button.nav
+        position: absolute
+        font-size: 9px
+        width: 15px
+        line-height: 15px
+        top: -2px
+
+        &.prev
+            left: 5px
+        &.next
+            right: 5px
+
+    .title
+        color: #333
+        font-weight: bold
+        font-size: 13px
+
     .other-month
         button
-            color: #ccc
+            color: #bbb
 
-    .weekend
-        button
-            color: red
+    .holiday-sun
+        color: #f44336
 
-    .weekend.other-month
         button
-            color: #ffcccc
+            color: #f44336
+
+        &.other-month button
+            color: #f3acac
 
     .focused
-        background-color: #eee
+        background-color: rgba(19, 93, 230, 0.1);
+
+
+    .single-focused
+        .focused
+            background: none
+
+            button
+                background-color: rgba(19, 93, 230, 0.1);
+
+    // .selected
+    // currently not using selected feature
+
+    .marked
+        span
+            border-bottom: 1px solid #777
 
     .today
-        background-color: #ddd
-
-    .selected
-        background-color: #dc9656
         button
-            color: #fff
+          > div
+              background-color: #135de6
+              border-radius: 50%
+              color: #fff
 
+    .prev
+        &:before
+            content: '<'
 
-// For Retina Display
-@media 
-(-webkit-min-device-pixel-ratio: 2), 
-(min-resolution: 192dpi)
-    +prefix-classes(minicalendar)
-        .prev
-            background-size: 16px 16px
-            background-image: url(minicalendar-prev@2x.png) !important
-
-        .next
-            background-size: 16px 16px
-            background-image: url(minicalendar-next@2x.png) !important
+    .next
+        &:before
+            content: '>'

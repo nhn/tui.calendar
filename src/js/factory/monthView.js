@@ -16,6 +16,28 @@ var config = require('../config'),
     MonthMove = require('../handler/month/move'),
     More = require('../view/month/more');
 
+function findGridTarget(moreTarget, day) {
+    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
+    var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
+
+    return weekGridEls[day];
+}
+
+function getViewModelForMoreLayer(date, target, events) {
+    events.each(function(event) {
+        var model = event.model;
+        event.hasMultiDates = !datetime.isSameDate(model.starts, model.ends);
+    });
+
+    return {
+        target: target,
+        gridTarget: findGridTarget(target, date.getDay()),
+        date: datetime.format(date, 'YYYY.MM.DD'),
+        events: events.sort(array.compare.event.asc),
+        width: target.offsetWidth
+    };
+}
+
 /**
  * @param {Base} baseController - controller instance
  * @param {HTMLElement} layoutContainer - container element for month view
@@ -24,13 +46,8 @@ var config = require('../config'),
  * @returns {object} view instance and refresh method
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
-    var monthViewContainer,
-        monthView,
-        clickHandler,
-        creationHandler,
-        resizeHandler,
-        moveHandler,
-        moreView;
+    var monthViewContainer, monthView, moreView;
+    var clickHandler, creationHandler, resizeHandler, moveHandler, clearEventsHandler;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -44,24 +61,32 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     resizeHandler = new MonthResize(dragHandler, monthView, baseController);
     moveHandler = new MonthMove(dragHandler, monthView, baseController);
 
+    clearEventsHandler = function() {
+        if (moreView) {
+            moreView.hide();
+        }
+    };
+
     // binding +n click event
     clickHandler.on('clickMore', function(clickMoreEvent) {
         var date = clickMoreEvent.date,
+            target = clickMoreEvent.target,
             events = util.pick(baseController.findByDateRange(
                 datetime.start(date),
                 datetime.end(date)
             ), clickMoreEvent.ymd);
 
-        if (events && events.length) {
-            events = events.sort(array.compare.event.asc);
+        events.items = util.filter(events.items, function(item) {
+            return options.month.eventFilter(item.model);
+        });
 
-            moreView.render({
-                target: clickMoreEvent.target,
-                date: datetime.format(date, 'YYYY.MM.DD'),
-                events: events
-            });
+        if (events && events.length) {
+            moreView.render(getViewModelForMoreLayer(date, target, events));
         }
     });
+
+    // binding clear events
+    baseController.on('clearEvents', clearEventsHandler);
 
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();
@@ -84,6 +109,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     monthView._beforeDestroy = function() {
         moreView.destroy();
+        baseController.off('clearEvents', clearEventsHandler);
 
         util.forEach(monthView.handler, function(type) {
             util.forEach(type, function(handler) {
@@ -92,6 +118,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             });
         });
     };
+
+    // add controller
+    monthView.controller = baseController.Month;
 
     return {
         view: monthView,

@@ -31,11 +31,12 @@ function MonthGuide(options, monthView) {
      * @type {object}
      */
     this.options = util.extend({
-        top: 20,
-        height: 20,
+        top: 0,
+        height: '20px',
         bgColor: '#f7ca88',
         label: '새 일정',
-        isResizeMode: false
+        isResizeMode: false,
+        isCreationMode: false
     }, options);
 
     /**
@@ -73,6 +74,12 @@ function MonthGuide(options, monthView) {
      * @type {Object.<string, HTMLElement>}
      */
     this.guideElements = {};
+
+    /**
+     * horizontal grid information
+     * @type {Object}
+     */
+    this.grids = monthView.grids;
 }
 
 /**
@@ -85,13 +92,18 @@ MonthGuide.prototype.destroy = function() {
         this.ratio = this.startCoord = this.guideElements = null;
 };
 
+MonthGuide.prototype.clearGuideElement = function() {
+    this.destroy();
+};
+
 /**
  * Get ratio value in week.
  * @param {number} value - value for calc ratio in week
  * @returns {number} percent value
  */
 MonthGuide.prototype._getRatioValueInWeek = function(value) {
-    return common.ratio(this.days, 100, value);
+    var grid = this.grids[value] || {left: 100};
+    return grid.left;
 };
 
 /**
@@ -213,9 +225,10 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         y = temp[1];
 
         util.extend(this.options, {
-            top: parseInt(target.style.top, 10),
-            height: parseInt(target.style.height, 10),
-            bgColor: target.children[0].style.backgroundColor,
+            top: parseInt(target.style.top, 10) + 'px',
+            height: parseInt(target.style.height, 10) + 'px',
+            bgColor: model.bgColor,
+            borderColor: model.borderColor,
             label: model.title
         });
     }

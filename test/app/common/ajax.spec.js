@@ -1,6 +1,7 @@
+var AJAX = require('common/ajax');
+
 describe('API', function() {
-    var AJAX = window.ne.dooray.calendar.AJAX,
-        ajax;
+    var ajax;
 
     function stringify(obj) {
         return JSON.stringify(obj);
@@ -125,7 +126,7 @@ describe('API', function() {
             var url1 = jasmine.Ajax.requests.mostRecent().url;
 
             ajax.ajax('/ajax.test', {
-                cache: true 
+                cache: true
             });
 
             var url2 = jasmine.Ajax.requests.mostRecent().url;
@@ -135,7 +136,7 @@ describe('API', function() {
 
         it('timestamp to disable cache attach safely to url', function() {
             ajax.ajax('/ajax.test?myname=hong', {
-                cache: false 
+                cache: false
             });
 
             var url = jasmine.Ajax.requests.mostRecent().url;

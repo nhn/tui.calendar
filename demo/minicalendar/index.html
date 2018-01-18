@@ -2,27 +2,36 @@
 <html>
 <head>
 <title>MiniCalendar DEMO</title>
-<link rel="stylesheet" type="text/css" href="../../dist/calendar.css" />
+<link rel="stylesheet" type="text/css" href="../../dist/index.css" />
 <style type="text/css">
-#minicalendar {
-    width: 200px;
-    height: 160px;
+#wrapper {
+    font-family: 'NanumBarunGothicOTF';
+    width: 205px;
+    border:1px solid #ccc;
 }
 </style>
 </head>
 <body>
-<div id="minicalendar"></div>
+    <div id="wrapper">
+        <div id="minicalendar"></div>
+    </div>
 <script src="../code-snippet.js"></script>
-<script src="../../dist/calendar.js"></script>
+<script src="../../dist/index.js"></script>
 <script>
 (function(w) {
     var minicalendar = ne.dooray.calendar.MiniCalendar({
-        weekendNumber: [0]
     }, document.getElementById('minicalendar'));
 
     minicalendar.on('click', function(e) {
         console.log(e);
     });
+
+    minicalendar.markData([
+        {
+            start: new Date(2017, 2, 5),
+            end: new Date(2017, 2, 13)
+        }
+    ]);
 
     minicalendar.focusDateRange(
         new Date('2015-12-14'),

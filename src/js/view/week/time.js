@@ -8,8 +8,11 @@ var util = global.tui.util;
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
+var splitTimeTmpl = require('../template/week/splitTime.hbs');
+
 var forEachArr = util.forEachArray;
 
 /**
@@ -32,15 +35,19 @@ function Time(options, container) {
         width: 0,
         ymd: '',
         isToday: false,
+        pending: false,
         hourStart: 0,
-        hourEnd: 24
+        hourEnd: 24,
+        defaultMarginBottom: 2,
+        minHeight: 18.5
     }, options);
 
+    this.timeTmpl = options.isSplitTimeGrid ? splitTimeTmpl : timeTmpl;
     container.style.width = options.width + '%';
-    container.style.left = (options.index * options.width) + '%';
+    container.style.left = options.left + '%';
 
     if (this.options.isToday) {
-        domutil.addClass(this.container, config.classname('time-date-today'));
+        domutil.addClass(this.container, config.classname('today'));
     }
 }
 
@@ -56,7 +63,7 @@ Time.prototype._parseDateGroup = function(str) {
         m = parseInt(str.substr(4, 2), 10),
         d = parseInt(str.substr(6, 2), 10);
 
-    return new Date(y, m - 1, d);
+    return new TZDate(y, m - 1, d);
 };
 
 /**
@@ -72,12 +79,10 @@ Time.prototype._parseDateGroup = function(str) {
  * @returns {object} bound object for supplied view model.
  */
 Time.prototype.getEventViewBound = function(viewModel, options) {
-    var baseMS = options.baseMS,
-        baseHeight = options.baseHeight,
-        offsetStart,
-        width,
-        height,
-        top;
+    var baseMS = options.baseMS;
+    var baseHeight = options.baseHeight;
+    var cropped = false;
+    var offsetStart, width, height, top;
 
     offsetStart = viewModel.valueOf().starts - options.todayStart;
 
@@ -91,11 +96,17 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
         width = null;
     }
 
+    if (height + top > baseHeight) {
+        height = baseHeight - top;
+        cropped = true;
+    }
+
     return {
         top: top,
         left: options.baseLeft[options.columnIndex],
         width: width,
-        height: height
+        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
+        cropped: cropped
     };
 };
 
@@ -177,10 +188,9 @@ Time.prototype.getDate = function() {
  */
 Time.prototype.render = function(ymd, matrices) {
     this._getBaseViewModel(ymd, matrices);
-    this.container.innerHTML = timeTmpl({
+    this.container.innerHTML = this.timeTmpl({
         matrices: matrices
     });
 };
 
 module.exports = Time;
-

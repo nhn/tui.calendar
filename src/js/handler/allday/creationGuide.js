@@ -7,8 +7,6 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 
-var CREATE_NEW_LABEL = '새 일정';
-
 /**
  * Class for Allday.Creation dragging effect.
  * @constructor
@@ -33,9 +31,9 @@ function AlldayCreationGuide(alldayCreation) {
     this.initializeGuideElement();
 
     alldayCreation.on({
-        'alldayCreationDragstart': this._onDragStart,
-        'alldayCreationDrag': this._onDrag,
-        'alldayCreationClick': this.clearGuideElement
+        alldayCreationDragstart: this._createGuideElement,
+        alldayCreationDrag: this._onDrag,
+        alldayCreationClick: this._createGuideElement
     }, this);
 }
 
@@ -45,51 +43,67 @@ function AlldayCreationGuide(alldayCreation) {
 AlldayCreationGuide.prototype.destroy = function() {
     this.clearGuideElement();
     this.alldayCreation.off(this);
-    this.alldayCreation = this.eventContainer =
-        this.guideElement = null;
+    this.alldayCreation = this.eventContainer = this.guideElement = null;
 };
 
 /**
  * initialize guide element's default style.
  */
 AlldayCreationGuide.prototype.initializeGuideElement = function() {
-    var guideElement = this.guideElement,
-        spanElement;
+    domutil.addClass(this.guideElement, config.classname('allday-guide-creation-block'));
+};
 
-    domutil.addClass(guideElement, config.classname('allday-guide-creation-block'));
-    domutil.appendHTMLElement('div', guideElement, config.classname('allday-guide-creation'));
+/**
+ * Drag event handler
+ * @param {object} eventData - event data from Allday.Creation handler.
+ */
+AlldayCreationGuide.prototype._onDrag = function(eventData) {
+    this._refreshGuideElement(eventData, true);
+};
 
-    spanElement = domutil.appendHTMLElement('span', guideElement);
-    spanElement.innerHTML = CREATE_NEW_LABEL;
+/**
+ * Get element width based on narrowWeekend
+ * @param {number} dragStartIndex - grid start index
+ * @param {number} dragEndIndex - grid end index
+ * @param {Array} grids - dates information
+ * @returns {number} element width
+ */
+AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndIndex, grids) {
+    var width = 0;
+    var i = dragStartIndex;
+    for (; i <= dragEndIndex; i += 1) {
+        width += grids[i].width;
+    }
+
+    return width;
 };
 
 /**
  * Refresh guide element.
  * @param {object} eventData - event data from Allday.Creation handler.
+ * @param {boolean} defer - If set to true, set style in the next frame
  */
-AlldayCreationGuide.prototype._refreshGuideElement = function(eventData) {
+AlldayCreationGuide.prototype._refreshGuideElement = function(eventData, defer) {
     var guideElement = this.guideElement,
-        baseWidthPercent = (100 / eventData.datesInRange),
-        dragStartXIndex = eventData.dragStartXIndex,
-        xIndex = eventData.xIndex,
-        length = xIndex - dragStartXIndex,
+        dragStartXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.dragStartXIndex : eventData.xIndex,
+        dragEndXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.xIndex : eventData.dragStartXIndex,
         leftPercent,
         widthPercent;
 
-    // when revert dragging.
-    if (length < 0) {
-        dragStartXIndex = xIndex;
-        length = Math.abs(length);
-    }
+    leftPercent = eventData.grids[dragStartXIndex].left;
+    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, eventData.grids);
 
-    leftPercent = baseWidthPercent * dragStartXIndex;
-    widthPercent = baseWidthPercent * (length + 1);
-
-    reqAnimFrame.requestAnimFrame(function() {
+    function setStyle() {
         guideElement.style.display = 'block';
         guideElement.style.left = leftPercent + '%';
         guideElement.style.width = widthPercent + '%';
-    });
+    }
+
+    if (defer) {
+        reqAnimFrame.requestAnimFrame(setStyle);
+    } else {
+        setStyle();
+    }
 };
 
 /**
@@ -106,14 +120,14 @@ AlldayCreationGuide.prototype.clearGuideElement = function() {
 };
 
 /**
- * DragStart event handler.
+ * Create guide element
  * @param {object} dragStartEventData - event data object of Allday.Creation.
  */
-AlldayCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
-        eventContainer = domutil.find(config.classname('.weekday-events'), alldayContainerElement);
+        eventContainer = domutil.find(config.classname('.weekday-creation'), alldayContainerElement);
 
     eventContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);
@@ -128,4 +142,3 @@ AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
 };
 
 module.exports = AlldayCreationGuide;
-

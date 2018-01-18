@@ -1,34 +1,31 @@
-describe('Base.Month', function() {
-    var array = ne.dooray.calendar.array,
-        Collection = ne.dooray.calendar.Collection,
-        undef = (function() {})(),
-        util = tui.util,
-        ControllerFactory = ne.dooray.calendar.ControllerFactory,
-        CalEvent = ne.dooray.calendar.CalEvent,
-        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
+var array = require('common/array');
+var ControllerFactory = require('factory/controller');
+var CalEvent = require('model/calEvent');
+var TZDate = require('common/timezone').Date;
+var matricesMatcher = require('../../../matcher/matrices');
 
+describe('Base.Month', function() {
+    var undef = (function() {})(),
+        util = tui.util,
         base,
         controller,
-        collection,
-        fixture,
+        mockData,
         eventList,
-        expected,
         actual;
 
     beforeEach(function() {
-        base = ControllerFactory(); 
+        base = ControllerFactory();
         controller = base.Month;
 
-        fixture = getJSONFixture('event_set_month.json');
+        mockData = fixture.load('event_set_month.json');
         // mock event list
-        eventList = util.map(fixture, function(data) {
+        eventList = util.map(mockData, function(data) {
             return CalEvent.create(data);
         }).sort(array.compare.event.asc);
+    });
 
-        // mock controller events collection
-        collection = new Collection(function(model) {
-            return util.stamp(model);
-        });
+    afterEach(function() {
+        fixture.cleanup();
     });
 
     describe('findByDateRange()', function() {
@@ -43,8 +40,8 @@ describe('Base.Month', function() {
         });
 
         it('get events instance in month', function() {
-            var starts = new Date('2015-11-01'),
-                ends = new Date('2015-11-30');
+            var starts = new TZDate(2015, 10, 1),
+                ends = new TZDate(2015, 10, 30);
 
             actual = controller.findByDateRange(starts, ends);
 /**

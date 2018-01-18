@@ -1,123 +1,86 @@
-/*eslint-disable*/
-var istanbul = require('browserify-istanbul');
-var hbsfy = require('hbsfy');
-var preprocessify = require('preprocessify');
-var CONTEXT = {
-    BUNDLE_TYPE: 'Release',
-    CSS_PREFIX: 'dooray-calendar-'
-};
+/* eslint-env es6 */
+/* eslint strict: 0, no-process-env: 0 */
+
+var path = require('path');
+
+var context = JSON.stringify({
+    CSS_PREFIX: 'dooray-calendar-',
+    BUNDLE_TYPE: 'Debug'
+});
 
 module.exports = function(config) {
-    var webdriverConfig = {
-        hostname: 'fe.nhnent.com',
-        port: 4444,
-        remoteHost: true
-    };
-
     config.set({
+        plugins: [
+            'karma-fixture',
+            'karma-html2js-preprocessor',
+            'karma-json-fixtures-preprocessor',
+            'karma-jasmine',
+            'karma-jasmine-ajax',
+            'karma-webpack',
+            'karma-sourcemap-loader',
+            'karma-chrome-launcher',
+            'karma-phantomjs-launcher',
+            'karma-spec-reporter',
+            'karma-coverage',
+            'istanbul-instrumenter-loader'
+        ],
         basePath: '',
         frameworks: [
-            'jasmine-jquery',
-            'browserify',
+            'fixture',
             'jasmine-ajax',
             'jasmine'
         ],
         files: [
             'node_modules/underscore/underscore.js',
-            'bower_components/tui-code-snippet/code-snippet.js',
-            'index.js',
-            'src/**/*.js',
-            'test/prepare.js',
-            'test/matcher/*.js',
-            'test/**/*.spec.js',
-            'test/fixtures/**/*'
+            'bower_components/tui-code-snippet/dist/code-snippet.js',
+            'test/fixtures/**/*',
+            'test/index.js'
         ],
         exclude: [],
         preprocessors: {
-            'test/**/*.js': ['preprocess'],
-            'index.js': ['browserify'],
-            'src/**/*.js': ['browserify']
+            'src/**/*.js': ['webpack', 'sourcemap'],
+            'test/index.js': ['webpack', 'sourcemap'],
+            'test/fixtures/**/*.html': ['html2js'],
+            'test/fixtures/**/*.json': ['json_fixtures']
         },
-        browserify: {
-            debug: true,
-            bundleDelay: 1000,
-            transform:[hbsfy, preprocessify(CONTEXT), istanbul({
-                ignore: [
-                    '**/*.hbs',
-                    'index.js', 
-                    '**/test/**',
-                    '**/template/**'
-                ]
-            })]
+        jsonFixturesPreprocessor: {
+            variableName: '__json__'
         },
-        preprocessPreprocessor: {
-            context: CONTEXT
+        webpack: {
+            devtool: '#inline-source-map',
+            module: {
+                preLoaders: [{
+                    test: /\.js$/,
+                    include: path.resolve('src/js/'),
+                    loader: 'istanbul-instrumenter'
+                }],
+                loaders: [{
+                    test: /\.hbs$/,
+                    loader: 'handlebars-template'
+                }, {
+                    test: /\.js$/,
+                    loader: `preprocess?${context}`,
+                    exclude: /node_modules|bower_components/
+                }]
+            },
+            resolve: {
+                root: path.resolve('./src/js')
+            }
         },
-        reporters: [
-            'dots',
-            'coverage',
-            'junit'
-        ],
-        coverageReporter: {
-            dir: 'report/',
-            reporters: [{
-                type: 'cobertura',
-                subdir: 'cobertura',
-                file: 'cobertura.xml'
-            }]
+        webpackMiddleware: {
+            noInfo: true
         },
-        junitReporter: {
-            outputDir: 'report/junit',
-            suite: ''
+        reporters: ['spec', 'coverage'],
+        specReporter: {
+            suppressSkipped: true,
+            suppressPassed: true
         },
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
-        autoWatch: false,
-        browsers: [
-            'IE9',
-            'IE10',
-            'IE11',
-            'Edge',
-            'Chrome-WebDriver',
-            'Firefox-WebDriver'
-        ],
-        customLaunchers: {
-            'IE9': {
-                base: 'WebDriver',
-                config: webdriverConfig,
-                browserName: 'internet explorer',
-                version: 9
-            },
-            'IE10': {
-                base: 'WebDriver',
-                config: webdriverConfig,
-                browserName: 'internet explorer',
-                version: 10
-            },
-            'IE11': {
-                base: 'WebDriver',
-                config: webdriverConfig,
-                browserName: 'internet explorer',
-                version: 11
-            },
-            'Edge': {
-                base: 'WebDriver',
-                config: webdriverConfig,
-                browserName: 'MicrosoftEdge'
-            },
-            'Chrome-WebDriver': {
-                base: 'WebDriver',
-                config: webdriverConfig,
-                browserName: 'chrome'
-            },
-            'Firefox-WebDriver': {
-                base: 'WebDriver',
-                config: webdriverConfig,
-                browserName: 'firefox'
-            }
-        },
-        singleRun: true,
-        browserNoActivityTimeout: 30000
+        autoWatch: true,
+        browsers: ['PhantomJS'],
+        singleRun: false,
+        concurrency: Infinity
     });
 };

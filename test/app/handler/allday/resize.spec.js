@@ -1,6 +1,7 @@
-describe('handler:AlldayResize', function() {
-    var AlldayResize = window.ne.dooray.calendar.AlldayResize;
+var AlldayResize = require('handler/allday/resize');
+var TZDate = require('common/timezone').Date;
 
+describe('handler:AlldayResize', function() {
     describe('_updateEvent()', function() {
         var mockEventData,
             mockEventInstance,
@@ -19,7 +20,7 @@ describe('handler:AlldayResize', function() {
                 options: {
                     renderStartDate: '2015-04-29',
                     renderEndDate: '2015-05-03'
-                } 
+                }
             };
         });
 
@@ -27,11 +28,11 @@ describe('handler:AlldayResize', function() {
             // 하루짜리 일정
             mockEventInstance = {
                 cid: function() { return '30'; },
-                starts: new Date('2015-05-02T00:00:00+09:00'),
+                starts: new TZDate('2015-05-02T00:00:00+09:00'),
                 getStarts: function() {
                     return mockEventInstance.starts;
                 },
-                ends: new Date('2015-05-03T23:59:59+09:00')
+                ends: new TZDate('2015-05-03T23:59:59+09:00')
             };
 
             // 이벤트 데이터 Mock
@@ -48,21 +49,21 @@ describe('handler:AlldayResize', function() {
             // 종료일자는 시작일자보다 앞설 수 없다.
             expect(inst.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: mockEventInstance,
-                starts: new Date('2015-05-02T00:00:00+09:00'),
-                ends: new Date('2015-05-02T23:59:59+09:00')
+                starts: new TZDate('2015-05-02T00:00:00+09:00'),
+                ends: new TZDate('2015-05-02T23:59:59+09:00')
             });
-            
+
         });
 
         it('update event model properly by supplied event data.', function() {
             // 하루짜리 일정
             mockEventInstance = {
                 cid: function() { return '30'; },
-                starts: new Date('2015-04-30T00:00:00+09:00'),
+                starts: new TZDate('2015-04-30T00:00:00+09:00'),
                 getStarts: function() {
                     return mockEventInstance.starts;
                 },
-                ends: new Date('2015-04-30T23:59:59+09:00')
+                ends: new TZDate('2015-04-30T23:59:59+09:00')
             };
 
             // 이벤트 데이터 Mock
@@ -80,7 +81,7 @@ describe('handler:AlldayResize', function() {
             expect(inst.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: mockEventInstance,
                 starts: mockEventInstance.getStarts(),
-                ends: new Date('2015-05-01T23:59:59+09:00')
+                ends: new TZDate('2015-05-01T23:59:59+09:00')
             });
         });
     });

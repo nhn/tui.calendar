@@ -1,7 +1,8 @@
+var datetime = require('common/datetime');
+var TimeCreationGuide = require('handler/time/creationGuide');
+
 describe('handler/time.creation.guide', function() {
-    var TimeCreationGuide = ne.dooray.calendar.TimeCreationGuide,
-        datetime = ne.dooray.calendar.datetime,
-        mockTimeCreation,
+    var mockTimeCreation,
         inst;
 
     beforeEach(function() {
@@ -79,10 +80,9 @@ describe('handler/time.creation.guide', function() {
             expect(expected).toEqual(actual);
         });
     });
-    
+
     describe('_onDrag()', function() {
-        var mockEventData,
-            mockTimeView,
+        var mockTimeView,
             startTime,
             min30;
 
@@ -111,12 +111,12 @@ describe('handler/time.creation.guide', function() {
                 relatedView: mockTimeView
             };
 
-            inst._onDragStart(mockEventData);
+            inst._createGuideElement(mockEventData);
 
             spyOn(inst, '_refreshGuideElement');
         });
 
-        it('calculate style properly when user dragging to before start time', function() {
+        it('calculate style properly when user dragging to before start time', function(done) {
             // 사용자가 1시로 드래그함
             var time = new Date('2015-11-17T01:00:00+09:00');
             var mockEventData = {
@@ -127,10 +127,13 @@ describe('handler/time.creation.guide', function() {
 
             inst._onDrag(mockEventData);
 
-            expect(inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, +time, (+startTime + min30), true);
+            setTimeout(function() {
+                expect(inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, +time, (+startTime + min30), true);
+                done();
+            }, 10);
         });
 
-        it('calculate style properly2', function() {
+        it('calculate style properly2', function(done) {
             // 사용자가 6시로 드래그함
             var time = new Date('2015-11-17T06:00:00+09:00');
             var mockEventData = {
@@ -141,8 +144,10 @@ describe('handler/time.creation.guide', function() {
 
             inst._onDrag(mockEventData);
 
-            expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, +startTime, +time + min30);
-            
+            setTimeout(function() {
+                expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, +startTime, +time + min30);
+                done();
+            }, 10);
         });
     });
 });

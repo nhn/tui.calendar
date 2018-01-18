@@ -1,3 +1,4 @@
 rules:
   no-plusplus: 0
   no-magic-numbers: 0
+  strict: 0

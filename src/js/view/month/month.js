@@ -4,15 +4,18 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = global.tui.util,
+    mmin = Math.min;
 
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
+    TZDate = require('../../common/timezone').Date,
     tmpl = require('./month.hbs'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
-    WeekdayInMonth = require('./weekdayInMonth');
+    WeekdayInMonth = require('./weekdayInMonth'),
+    dw = require('../../common/dw');
 
 /**
  * @constructor
@@ -38,7 +41,7 @@ function Month(options, container, controller) {
      */
     this.vLayout = new VLayout({
         panels: [
-            {height: 20},
+            {height: 42},
             {autoHeight: true}
         ]
     }, container);
@@ -51,9 +54,20 @@ function Month(options, container, controller) {
             return Boolean(model.visible);
         },
         startDayOfWeek: 0,
-        renderMonth: '2015-12',
-        daynames: ['일', '월', '화', '수', '목', '금', '토']
+        renderMonth: '2018-01',
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        narrowWeekend: false,
+        visibleWeeksCount: null
     }, options);
+
+    /**
+     * horizontal grid information
+     * @type {Object}
+     */
+    this.grids = datetime.getGridLeftAndWidth(
+        this.options.daynames.length,
+        this.options.narrowWeekend,
+        this.options.startDayOfWeek);
 }
 
 util.inherit(Month, View);
@@ -67,12 +81,28 @@ Month.prototype.viewName = 'month';
 /**
  * Get calendar array by supplied date
  * @param {string} renderMonthStr - month to render YYYY-MM
- * @param {number} [startDayOfWeek=0] - start day of week
  * @returns {array.<Date[]>} calendar array
  */
-Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
-    var date = datetime.parse(renderMonthStr + '-01'),
-        calendar = datetime.arr2dCalendar(date, startDayOfWeek || 0);
+Month.prototype._getMonthCalendar = function(renderMonthStr) {
+    var date = dw(renderMonthStr).d;
+    var startDayOfWeek = this.options.startDayOfWeek || 0;
+    var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
+    var datetimeOptions, calendar;
+
+    if (this.options.visibleWeeksCount) {
+        datetimeOptions = {
+            startDayOfWeek: startDayOfWeek,
+            isAlways6Week: false,
+            visibleWeeksCount: visibleWeeksCount
+        };
+    } else {
+        datetimeOptions = {
+            startDayOfWeek: startDayOfWeek,
+            isAlways6Week: true
+        };
+    }
+
+    calendar = datetime.arr2dCalendar(date, datetimeOptions);
 
     return calendar;
 };
@@ -83,16 +113,20 @@ Month.prototype._getMonthCalendar = function(renderMonthStr, startDayOfWeek) {
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
  */
 Month.prototype._renderChildren = function(container, calendar) {
-    var self = this,
-        weekCount = calendar.length,
-        heightPercent = 100 / weekCount;
+    var self = this;
+    var weekCount = calendar.length;
+    var heightPercent = 100 / weekCount;
+    var renderMonth = this.options.renderMonth;
+    var narrowWeekend = this.options.narrowWeekend;
+    var startDayOfWeek = this.options.startDayOfWeek;
+    var visibleWeeksCount = this.options.visibleWeeksCount;
 
     container.innerHTML = '';
     this.children.clear();
 
     util.forEach(calendar, function(weekArr) {
-        var starts = new Date(Number(weekArr[0])),
-            ends = new Date(Number(weekArr[weekArr.length - 1])),
+        var starts = new TZDate(Number(weekArr[0])),
+            ends = new TZDate(Number(weekArr[weekArr.length - 1])),
             weekdayViewContainer,
             weekdayView;
 
@@ -100,9 +134,13 @@ Month.prototype._renderChildren = function(container, calendar) {
             'div', container, config.classname('month-week-item'));
 
         weekdayView = new WeekdayInMonth({
+            renderMonth: renderMonth,
             heightPercent: heightPercent,
             renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(ends, 'YYYY-MM-DD')
+            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+            narrowWeekend: narrowWeekend,
+            startDayOfWeek: startDayOfWeek,
+            visibleWeeksCount: visibleWeeksCount
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -120,22 +158,24 @@ Month.prototype.render = function() {
         daynames = opt.daynames,
         calendar = this._getMonthCalendar(opt.renderMonth),
         eventFilter = opt.eventFilter,
+        grids = this.grids,
         daynameViewModel,
         baseViewModel;
 
     daynameViewModel = util.map(
         util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-        function(i) {
+        function(day, index) {
             return {
-                day: i,
-                label: daynames[i]
+                day: day,
+                label: daynames[day],
+                width: grids[index].width,
+                left: grids[index].left
             };
         }
     );
 
     baseViewModel = {
-        daynames: daynameViewModel,
-        width: 100 / daynameViewModel.length
+        daynames: daynameViewModel
     };
 
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
@@ -144,8 +184,8 @@ Month.prototype.render = function() {
 
     this.children.each(function(childView) {
         var viewModel = controller.findByDateRange(
-            datetime.parse(childView.options.renderStartDate),
-            datetime.parse(childView.options.renderEndDate),
+            datetime.start(datetime.parse(childView.options.renderStartDate)),
+            datetime.end(datetime.parse(childView.options.renderEndDate)),
             eventFilter
         );
 

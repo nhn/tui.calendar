@@ -1,7 +1,7 @@
 /*eslint-disable*/
-describe('module:common', function() {
-    var common = ne.dooray.calendar.common;
+var common = require('common/common');
 
+describe('module:common', function() {
     it('ratio()', function() {
         expect(common.ratio(10, 5, 2)).toBe(1);
         expect(common.ratio(20, 10, 5)).not.toBe(1);
@@ -42,7 +42,7 @@ describe('module:common', function() {
             expect(common.pick2(obj, 'one', 'two').then(function() { return this + ' world'; })).toBe('hello world');
             expect(common.pick2(obj, 'one').then('method')).toBe('good');
             expect(common.pick2(obj, 'def').then('good')).toBeUndefined();
-        
+
             common.pick2(obj, 'one').then('test', 'number');
             expect(obj.one.test).toHaveBeenCalledWith('number');
         });

@@ -7,9 +7,10 @@ var util = global.tui.util,
     forEachArr = util.forEachArray,
     aps = Array.prototype.slice;
 
-var datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection'),
-    CalEventViewModel = require('../../model/viewModel/calEvent');
+var datetime = require('../../common/datetime');
+var TZDate = require('../../common/timezone').Date;
+var Collection = require('../../common/collection');
+var CalEventViewModel = require('../../model/viewModel/calEvent');
 
 var Core = {
     /**
@@ -172,8 +173,8 @@ var Core = {
 
                     ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
                     dateLength = datetime.range(
-                        viewModel.getStarts(),
-                        viewModel.getEnds(),
+                        datetime.start(viewModel.getStarts()),
+                        datetime.end(viewModel.getEnds()),
                         datetime.MILLISECONDS_PER_DAY
                     ).length;
 
@@ -206,11 +207,13 @@ var Core = {
          */
         function limit(viewModel) {
             if (viewModel.getStarts() < starts) {
-                viewModel.renderStarts = new Date(starts.getTime());
+                viewModel.exceedLeft = true;
+                viewModel.renderStarts = new TZDate(starts.getTime());
             }
 
             if (viewModel.getEnds() > ends) {
-                viewModel.renderEnds = new Date(ends.getTime());
+                viewModel.exceedRight = true;
+                viewModel.renderEnds = new TZDate(ends.getTime());
             }
 
             return viewModel;

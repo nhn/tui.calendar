@@ -1,7 +1,10 @@
 /*eslint-disable*/
+var domutil = require('common/domutil');
+var AlldayMove = require('handler/allday/move');
+var TZDate = require('common/timezone').Date;
+
 describe('handler:AlldayMove', function() {
-    var AlldayMove = window.ne.dooray.calendar.AlldayMove,
-        proto;
+    var proto;
 
     beforeEach(function() {
         proto = AlldayMove.prototype;
@@ -63,7 +66,7 @@ describe('handler:AlldayMove', function() {
                 options: {
                     renderStartDate: '2015-04-29',
                     renderEndDate: '2015-05-03'
-                } 
+                }
             };
         });
 
@@ -71,8 +74,8 @@ describe('handler:AlldayMove', function() {
             // 하루짜리 일정
             mockEventInstance = {
                 cid: function() { return '30'; },
-                starts: new Date('2015-04-30T00:00:00+09:00'),
-                ends: new Date('2015-04-30T23:59:59+09:00')
+                starts: new TZDate('2015-04-30T00:00:00+09:00'),
+                ends: new TZDate('2015-04-30T23:59:59+09:00')
             };
 
             // 이벤트 데이터 Mock
@@ -89,19 +92,17 @@ describe('handler:AlldayMove', function() {
             // 하루 증가함
             expect(inst.fire).toHaveBeenCalledWith('beforeUpdateEvent', {
                 model: mockEventInstance,
-                starts: new Date('2015-05-01T00:00:00+09:00'),
-                ends: new Date('2015-05-01T23:59:59+09:00')
+                starts: new TZDate('2015-05-01T00:00:00+09:00'),
+                ends: new TZDate('2015-05-01T23:59:59+09:00')
             });
 
         });
     });
 
     describe('event handlers', function() {
-        var inst,
-            domutil;
+        var inst;
 
         beforeEach(function() {
-            domutil = window.ne.dooray.calendar.domutil;
             spyOn(domutil, 'closest');
             spyOn(domutil, 'getData');
 

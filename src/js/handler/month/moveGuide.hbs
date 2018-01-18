@@ -1,10 +1,20 @@
-<div class="{{CSS_PREFIX}}month-guide-block" style="width:100%;height:100%;left:-50%;top:-50%">
-    <div class="{{CSS_PREFIX}}month-guide" style="background-color:{{bgColor}}">
-        <div class="{{CSS_PREFIX}}month-guide-label">
-        {{#if isAllDay}}
-            {{title}}
+<div class="{{CSS_PREFIX}}month-guide {{CSS_PREFIX}}month-guide-focused"
+     style="top: -50%;
+            left: -50%;
+            width: 100%;
+            color: #ffffff;
+            background-color:{{model.color}};
+            {{#if model.isAllDay}}
+            border-left:3px solid {{model.borderColor}};
+            {{/if}}">
+    {{#unless model.isAllDay}}
+    <span class="{{CSS_PREFIX}}weekday-event-bullet {{CSS_PREFIX}}weekday-event-bullet-focused"></span>
+    {{/unless}}
+    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-event-title {{CSS_PREFIX}}weekday-event-title-focused">
+        {{#if model.isAllDay}}
+            {{{allday-tmpl model}}}
         {{else}}
-            {{hhmm starts}} {{title}}
+            {{{time-tmpl model}}}
         {{/if}}
         </div>
     </div>

@@ -8,7 +8,7 @@ var util = global.tui.util,
     mfloor = Math.floor,
     mmax = Math.max;
 
-var Handlebars = require('hbsfy/runtime');
+var Handlebars = require('handlebars/runtime');
 
 var config = require('../../config'),
     common = require('../../common/common.js'),
@@ -19,6 +19,8 @@ var config = require('../../config'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     eventTmpl = require('./weekdayInMonthEvent.hbs'),
     skipTmpl = require('./weekdayInMonthSkip.hbs');
+
+var EVENT_PADDING_TOP = 14;
 
 /**
  * @constructor
@@ -60,30 +62,30 @@ WeekdayInMonth.prototype.getViewBound = function() {
  * @returns {number} limit index
  */
 WeekdayInMonth.prototype._getRenderLimitIndex = function() {
-    var opt = this.options,
-        containerHeight = this.getViewBound().height,
-        count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
+    var opt = this.options;
+    var containerHeight = this.getViewBound().height - EVENT_PADDING_TOP - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
+    var count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
 
-    return mmax(count - 1, 0);    // subtraction for '+n' label block
+    return mmax(count - 1, 0); // subtraction for '+n' label block
 };
 
 /**
  * Get handlebars custom helper method for limitation event block render count
  * features
  *
- * Cumulate count on each date. render +n label only when no cumulated
+ * Calculate count on each date. render +n label only when no cumulated
  * count on cache object
  * @param {object} exceedDate - object to be used as a cache
  * @returns {function} custom helper function
  */
 WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
     return function() {
-        var viewModel = this, // eslint-disable-line
-            period = datetime.range(
-                viewModel.getStarts(),
-                viewModel.getEnds(),
-                datetime.MILLISECONDS_PER_DAY
-            );
+        var viewModel = this; // eslint-disable-line
+        var period = datetime.range(
+            viewModel.getStarts(),
+            viewModel.getEnds(),
+            datetime.MILLISECONDS_PER_DAY
+        );
 
         util.forEach(period, function(date) {
             var ymd = datetime.format(date, 'YYYYMMDD');
@@ -99,17 +101,22 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
 /**
  * Get view model for render skipped label
  * @param {object} exceedDate - object has count of each dates exceed event block
- *  cound.
+ *  count.
+ * @param {object} baseViewModel - view model of base view
  * @returns {object[]} - view model for skipped label
  */
-WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate) {
+WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewModel) {
     var dateRange = util.map(this.getRenderDateRange(), function(date) {
         return datetime.format(date, 'YYYYMMDD');
     });
+    var dates = baseViewModel.dates;
 
     return util.map(exceedDate, function(skipped, ymd) {
+        var index = util.inArray(ymd, dateRange);
+
         return {
-            left: util.inArray(ymd, dateRange),
+            left: dates[index].left,
+            width: dates[index].width,
             skipped: skipped,
             ymd: ymd
         };
@@ -128,6 +135,9 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         eventContainer,
         contentStr = '';
 
+    if (!this.options.visibleWeeksCount) {
+        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+    }
     container.innerHTML = baseTmpl(baseViewModel);
 
     renderLimitIdx = this._getRenderLimitIndex();
@@ -145,12 +155,13 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     contentStr += eventTmpl(util.extend({
         matrices: viewModel,
+        eventPaddingTop: EVENT_PADDING_TOP,
         renderLimitIdx: renderLimitIdx
     }, baseViewModel));
 
     contentStr += skipTmpl(util.extend({
         renderLimitIdx: renderLimitIdx,
-        viewModelForSkip: this._getSkipLabelViewModel(exceedDate)
+        viewModelForSkip: this._getSkipLabelViewModel(exceedDate, baseViewModel)
     }, baseViewModel));
 
     eventContainer.innerHTML = contentStr;
@@ -161,5 +172,21 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     );
 };
 
-module.exports = WeekdayInMonth;
+WeekdayInMonth.prototype._beforeDestroy = function() {
+    Handlebars.unregisterHelper('wdSkipped');
+};
 
+/**
+ * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
+ * @param {Array} dates - 날짜정보 배열
+ * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+ */
+function setIsOtherMonthFlag(dates, renderMonthStr) {
+    var renderMonth = Number(renderMonthStr.substring(5));
+
+    util.forEach(dates, function(dateObj) {
+        dateObj.isOtherMonth = dateObj.month !== renderMonth;
+    });
+}
+
+module.exports = WeekdayInMonth;

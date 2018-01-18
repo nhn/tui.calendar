@@ -9,6 +9,7 @@ weekday = css-prefix + 'weekday-'
 // Time
 timegrid = css-prefix + 'timegrid-'
 time = css-prefix + 'time-'
+split-timegrid = css-prefix + 'split-timegrid-'
 // Month
 month = css-prefix + 'month-'
 
@@ -36,6 +37,19 @@ vendor(prop, args)
     -webkit-{prop} args
     -moz-{prop} args
     {prop} args
+
+flex()
+    display: -ms-flexbox
+    display: -webkit-flex
+    display: flex
+
+flex-justify-content(val)
+    -webkit-justify-content: val
+    justify-content: val
+
+flex-align-items(val)
+    -webkit-align-items: val
+    align-items: val
 
 clearfix()
     zoom: 1;

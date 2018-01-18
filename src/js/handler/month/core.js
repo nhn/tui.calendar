@@ -24,7 +24,22 @@ function getMousePosDate(monthView) {
         days = weekColl.single().getRenderDateRange(),
         dayCount = days.length,
         relativeContainer = util.pick(monthView.vLayout.panels[1], 'container'),
-        size = domutil.getSize(relativeContainer);
+        size = domutil.getSize(relativeContainer),
+        grids = monthView.grids;
+
+    function getX(left) {
+        var i = 0;
+        var length = grids.length;
+        var grid;
+        for (; i < length; i += 1) {
+            grid = grids[i];
+            if (grid.left <= left && left <= (grid.left + grid.width)) {
+                return i;
+            }
+        }
+
+        return i;
+    }
 
     /**
      * Get date related with mouse event object
@@ -33,7 +48,7 @@ function getMousePosDate(monthView) {
      */
     function getDate(mouseEvent) {
         var pos = domevent.getMousePosition(mouseEvent, relativeContainer),
-            x = mfloor(common.ratio(size[0], dayCount, pos[0])),
+            x = getX(common.ratio(size[0], 100, pos[0])),
             y = mfloor(common.ratio(size[1], weekCount, pos[1])),
             weekdayView, date;
 
@@ -55,7 +70,8 @@ function getMousePosDate(monthView) {
             sizeX: dayCount,
             sizeY: weekCount,
             date: date,
-            weekdayView: weekdayView
+            weekdayView: weekdayView,
+            triggerEvent: mouseEvent.type
         };
     }
 

@@ -9,6 +9,10 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
+var FloatingLayer = require('../../common/floatingLayer');
+var tmpl = require('../../view/template/week/timeMoveGuide.hbs');
+var TZDate = require('../../common/timezone').Date;
+var DoorayEvent = require('../../model/calEvent');
 
 /**
  * Class for Time.Move effect.
@@ -16,6 +20,21 @@ var ratio = require('../../common/common').ratio;
  * @param {TimeMove} timeMove - The instance of TimeMove.
  */
 function TimeMoveGuide(timeMove) {
+    /**
+     * @type {FloatingLayer}
+     */
+    this._guideLayer = null;
+
+    /**
+     * @Type {CalEvent}
+     */
+    this._model = null;
+
+    /**
+     * @type {object}
+     */
+    this._lastDrag = null;
+
     /**
      * @type {HTMLElement}
      */
@@ -60,7 +79,10 @@ function TimeMoveGuide(timeMove) {
 TimeMoveGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.timeMove.off(this);
-    this.guideElement = this.timeMove = this._container =
+    if (this._guideLayer) {
+        this._guideLayer.destroy();
+    }
+    this.guideElement = this.timeMove = this._container = this._guideLayer = this._lastDrag =
         this._getTopFunc = this._startGridY = this._startTopPixel = null;
 };
 
@@ -68,32 +90,60 @@ TimeMoveGuide.prototype.destroy = function() {
  * Clear guide element.
  */
 TimeMoveGuide.prototype._clearGuideElement = function() {
-    var guideElement = this.guideElement;
-
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('dragging'));
     }
+    if (this._guideLayer) {
+        this._guideLayer.destroy();
+    }
 
-    domutil.remove(guideElement);
+    this._showOriginEventBlocks();
 
-    this.guideElement = this._getTopFunc =
+    this.guideElement = this._getTopFunc = this._guideLayer = this._model = this._lastDrag =
         this._startGridY = this._startTopPixel = null;
+};
+
+/**
+ * Dim element blocks
+ * @param {number} modelID - CalEvent model instance ID
+ */
+TimeMoveGuide.prototype._hideOriginEventBlocks = function() {
+    var className = config.classname('time-date-event-block-dragging-dim');
+    if (this.guideElement) {
+        domutil.addClass(this.guideElement, className);
+    }
+};
+
+/**
+ * Show element blocks
+ */
+TimeMoveGuide.prototype._showOriginEventBlocks = function() {
+    var className = config.classname('time-date-event-block-dragging-dim');
+    if (this.guideElement) {
+        domutil.removeClass(this.guideElement, className);
+    }
+};
+
+TimeMoveGuide.prototype._getHighlightColorModel = function(model) {
+    return {
+        bgColor: model.color
+    };
 };
 
 /**
  * Refresh guide element
  * @param {string} top - guide element's style top.
+ * @param {CalEvent} model - updated model
  */
-TimeMoveGuide.prototype._refreshGuideElement = function(top) {
-    var guideElement = this.guideElement;
-
-    if (!guideElement) {
-        return;
-    }
+TimeMoveGuide.prototype._refreshGuideElement = function(top, model) {
+    var self = this;
 
     reqAnimFrame.requestAnimFrame(function() {
-        guideElement.style.top = top + 'px';
-        guideElement.style.display = 'block';
+        if (!self._guideLayer) {
+            return;
+        }
+        self._guideLayer.setPosition(0, top);
+        self._guideLayer.setContent(tmpl({model: model}));
     });
 };
 
@@ -111,14 +161,20 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    guideElement = guideElement.cloneNode(true);
-    domutil.addClass(guideElement, config.classname('time-guide-move'));
-
     this._startTopPixel = parseFloat(guideElement.style.top);
     this._startGridY = dragStartEventData.nearestGridY;
     this.guideElement = guideElement;
     this._container = dragStartEventData.relatedView.container;
-    this._container.appendChild(guideElement);
+
+    this._model = util.extend(
+        DoorayEvent.create(dragStartEventData.model),
+        dragStartEventData.model,
+        this._getHighlightColorModel(dragStartEventData.model)
+    );
+    this._lastDrag = dragStartEventData;
+
+    this._resetGuideLayer();
+    this._hideOriginEventBlocks();
 };
 
 /**
@@ -133,6 +189,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         hourLength = viewOptions.hourEnd - viewOptions.hourStart,
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
+        timeDiff = dragEventData.nearestGridTimeY - this._lastDrag.nearestGridTimeY,
         bottomLimit,
         top;
 
@@ -142,7 +199,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
 
     if (this._container !== timeView.container) {
         this._container = timeView.container;
-        this._container.appendChild(this.guideElement);
+        this._resetGuideLayer();
     }
 
     top = this._startTopPixel + gridYOffsetPixel;
@@ -151,8 +208,24 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.max(top, 0);
     top = Math.min(top, bottomLimit);
 
-    this._refreshGuideElement(top);
+    // update time
+    this._model.starts = new TZDate(this._model.getStarts().getTime() + timeDiff);
+    this._model.ends = new TZDate(this._model.getEnds().getTime() + timeDiff);
+    this._lastDrag = dragEventData;
+
+    this._refreshGuideElement(top, this._model);
+};
+
+TimeMoveGuide.prototype._resetGuideLayer = function() {
+    if (this._guideLayer) {
+        this._guideLayer.destroy();
+        this._guideLayer = null;
+    }
+    this._guideLayer = new FloatingLayer(null, this._container);
+    this._guideLayer.setSize(this._container.getBoundingClientRect().width, this.guideElement.style.height);
+    this._guideLayer.setPosition(0, this.guideElement.style.top);
+    this._guideLayer.setContent(tmpl({model: this._model}));
+    this._guideLayer.show();
 };
 
 module.exports = TimeMoveGuide;
-

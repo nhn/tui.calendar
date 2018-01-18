@@ -8,6 +8,7 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * Class for Allday.Move dragging effect.
@@ -36,6 +37,11 @@ function AlldayMoveGuide(alldayMove) {
      */
     this.guideElement = null;
 
+    /**
+     * @type {HTMLElement[]}
+     */
+    this.elements = null;
+
     alldayMove.on({
         'alldayMoveDragstart': this._onDragStart,
         'alldayMoveDrag': this._onDrag,
@@ -51,7 +57,7 @@ AlldayMoveGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.alldayMove.off(this);
     this.alldayMove = this.eventContainer = this._dragStartXIndex =
-        this.guideElement = null;
+        this.elements = this.guideElement = null;
 };
 
 /**
@@ -66,6 +72,58 @@ AlldayMoveGuide.prototype._clearGuideElement = function() {
 
     this._dragStartXIndex = this.getEventDataFunc = this.guideElement = null;
 };
+
+/**
+ * Dim element blocks
+ * @param {number} modelID - CalEvent model instance ID
+ */
+AlldayMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
+    var className = config.classname('weekday-event-block-dragging-dim');
+    var eventBlocks = domutil.find(
+        config.classname('.weekday-event-block'),
+        this.alldayMove.alldayView.container,
+        true
+    );
+
+    this.elements = util.filter(eventBlocks, function(event) {
+        return domutil.getData(event, 'id') === modelID;
+    });
+
+    util.forEach(this.elements, function(el) {
+        domutil.addClass(el, className);
+    });
+};
+
+/**
+ * Show element blocks
+ */
+AlldayMoveGuide.prototype._showOriginEventBlocks = function() {
+    var className = config.classname('weekday-event-block-dragging-dim');
+
+    util.forEach(this.elements, function(el) {
+        domutil.removeClass(el, className);
+    });
+};
+
+/**
+ * @param {CalEvent} model - model
+ * @param {HTMLElement} parent - parent element
+ * Highlight element blocks
+ */
+AlldayMoveGuide.prototype._highlightEventBlocks = function(model, parent) {
+    var elements = domutil.find(config.classname('.weekday-event'), parent, true);
+
+    util.forEach(elements, function(el) {
+        el.style.margin = '0';
+
+        if (!model.isFocused) {
+            el.style.backgroundColor = el.style.color;
+            el.style.borderLeftColor = el.style.color;
+            el.style.color = '#ffffff';
+        }
+    });
+};
+
 
 /**
  * Refresh guide element.
@@ -118,9 +176,9 @@ AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) 
         viewOptions = this.alldayMove.alldayView.options,
         renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
         renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
-        fromLeft = (new Date(originEventStarts.getTime() -
+        fromLeft = (new TZDate(originEventStarts.getTime() -
             renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
-        fromRight = (new Date(originEventEnds.getTime() -
+        fromRight = (new TZDate(originEventEnds.getTime() -
             renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
 
     return function(indexOffset) {
@@ -145,12 +203,16 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         domutil.addClass(global.document.body, config.classname('dragging'));
     }
 
+    this._hideOriginEventBlocks(String(dragStartEventData.model.cid()));
+
     eventContainer = domutil.find(config.classname('.weekday-events'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
     eventContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;
     this.getEventDataFunc = this._getEventBlockDataFunc(dragStartEventData);
+
+    this._highlightEventBlocks(dragStartEventData.model, guideElement);
 };
 
 /**

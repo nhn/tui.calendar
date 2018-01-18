@@ -1,14 +1,17 @@
 /*eslint-disable*/
-describe('View/Time', function() {
-    var Time = ne.dooray.calendar.Time,
-        CalEvent = ne.dooray.calendar.CalEvent,
-        CalEventViewModel = ne.dooray.calendar.CalEventViewModel,
-        datetime = ne.dooray.calendar.datetime;
+var datetime = require('common/datetime');
+var CalEvent = require('model/calEvent');
+var CalEventViewModel = require('model/viewModel/calEvent');
+var Time = require('view/week/time');
+var TZDate = require('common/timezone').Date;
 
+describe('View/Time', function() {
     it('_parseDateGroup()', function() {
         var str = '20150501';
+        var actual = Time.prototype._parseDateGroup(str).getTime();
+        var expected = (new Date('2015-05-01T00:00:00+09:00')).getTime();
 
-        expect(Time.prototype._parseDateGroup(str)).toEqual(new Date('2015-05-01T00:00:00+09:00'));
+        expect(actual).toEqual(expected);
     });
 
     it('getEventViewBound()', function() {
@@ -16,10 +19,15 @@ describe('View/Time', function() {
             starts: '2015-05-01T09:00:00+09:00',
             ends: '2015-05-01T10:00:00+09:00'
         });
-
+        var mock = {
+            options: {
+                minHeight: 0,
+                defaultMarginBottom: 0
+            }
+        };
         var viewModel = CalEventViewModel.create(event);
 
-        var result = Time.prototype.getEventViewBound(viewModel, {
+        var result = Time.prototype.getEventViewBound.call(mock, viewModel, {
             todayStart: new Date('2015-05-01T00:00:00+09:00'),
             baseMS: datetime.millisecondsFrom('hour', 24),
             baseHeight: 230,

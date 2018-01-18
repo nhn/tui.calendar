@@ -1,6 +1,7 @@
+var dw = require('common/dw');
+
 describe('dw', function() {
-    var dw = ne.dooray.calendar.dw,
-        date;
+    var date;
 
     beforeEach(function() {
         date = new Date('2015-05-01T09:30:00+09:00');

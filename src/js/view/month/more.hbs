@@ -1,24 +1,23 @@
-<div class="{{CSS_PREFIX}}month-more">
+<div class="{{CSS_PREFIX}}month-more" style="width:100%">
     <div class="{{CSS_PREFIX}}month-more-title">
         {{date}}
-        <input type="button" value="&times;" class="{{CSS_PREFIX}}month-more-close" />
+        <button type="button" class="{{CSS_PREFIX}}month-more-close"><i class="material-icons">close</i></button>
     </div>
-    <div class="{{CSS_PREFIX}}month-more-list" style="height:{{subtract height 20}}px">
+    <div class="{{CSS_PREFIX}}month-more-list">
         {{#each events}}
-        {{#if model.isAllDay ~}}
+        {{#fi model.isAllDay '||' hasMultiDates ~}}
         <div data-id="{{stamp model}}"
-             class="{{CSS_PREFIX}}month-more-event
-                    {{CSS_PREFIX}}month-more-allday"
-             style="background-color:{{model.bgColor}};
-                    color:{{model.color}}">
+             class="{{CSS_PREFIX}}month-more-event {{CSS_PREFIX}}month-more-allday"
+             style="background-color:{{model.bgColor}}; color:{{model.color}}; border-left:3px solid {{model.borderColor}}">
             {{model.title}}
         </div>
         {{else}}
         <div data-id="{{stamp model}}"
-             class="{{CSS_PREFIX}}month-more-event">
-            {{hhmm model.starts}} {{model.title}}
+             class="{{CSS_PREFIX}}month-more-event {{CSS_PREFIX}}weekday-event {{CSS_PREFIX}}weekday-event-time">
+            <span class="{{CSS_PREFIX}}weekday-event-bullet" style="background:{{model.color}}"></span>
+            <span class="{{CSS_PREFIX}}weekday-event-title" style="color:#000">{{{time-tmpl model}}}</span>
         </div>
-        {{/if}}
+        {{/fi}}
         {{/each}}
     </div>
 </div>

@@ -1,12 +1,9 @@
 {{#each viewModelForSkip}}
 <div style="position: absolute;
-            top:{{multiply @root.renderLimitIdx @root.eventBlockHeight}}px;
-            left:{{multiply left @root.width}}%;
-            width:{{@root.width}}%;
-            height:{{@root.eventBlockHeight}}px;
-            margin-top:{{@root.eventBlockGutter}}px"
+            left:{{left}}%;
+            width:{{width}}%"
      class="{{CSS_PREFIX}}weekday-exceed"
      data-ymd="{{this.ymd}}">
-    <span>+{{skipped}} 일정</span>
+    <span>+{{skipped}}</span>
 </div>
 {{/each}}

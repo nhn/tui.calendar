@@ -1,14 +1,28 @@
 /* eslint no-console: 0, complexity: 0 */
 'use strict';
 (function(window, calendar) {
-    var cal, resizeThrottled,
-        idx = 5;
+    var cal, resizeThrottled, idx = 20;
+    var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
+    var daynames = [
+        '일',
+        '월',
+        '화',
+        '수',
+        '목',
+        '금',
+        '토'
+    ];
+    var lastClickEventModel;
+    // calendar.setTimezoneOffset(540);
 
     cal = calendar.FullCalendar({
-        defaultView: 'week',
+        defaultView: 'month',
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
+            },
+            milestoneTitle: function() {
+                return '마일스톤';
             },
             task: function(model) {
                 return '&nbsp;&nbsp;#' + model.title;
@@ -20,10 +34,14 @@
                 return model.title + ' <i class="fa fa-refresh"></i>';
             },
             time: function(model) {
-                return model.title + ' <i class="fa fa-refresh"></i><br />' + model.starts;
+                return model.title + ' <i class="fa fa-refresh"></i>' + model.starts;
             }
         },
+        month: {
+            daynames: daynames
+        },
         week: {
+            daynames: daynames,
             panelHeights: [80, 80, 120]
         }
     }, document.getElementById('calendar'));
@@ -44,57 +62,149 @@
         render: false
     });
 
-    cal.createEvents([{
-        id: '1',
-        calendarID: '1',
-        title: '스크럼',
-        category: 'time',
-        dueDateClass: '',
-        starts: '2016-02-25T09:40:00+09:00',
-        ends: '2016-02-25T10:40:00+09:00'
-    }, {
-        id: '2',
-        calendarID: '2',
-        title: '[홍길동]연차',
-        category: 'allday',
-        dueDateClass: '',
-        starts: '2016-02-25T00:00:00+09:00',
-        ends: '2016-02-25T23:59:59+09:00'
-    }, {
-        id: '3',
-        calendarID: '3',
-        title: '테스트 마일스톤1',
-        category: 'milestone',
-        dueDateClass: '',
-        starts: '',
-        ends: '2016-02-25T23:59:59+09:00'
-    }, {
-        id: '4',
-        calendarID: '3',
-        title: '테스트 업무',
-        category: 'task',
-        dueDateClass: 'morning',
-        starts: '',
-        ends: '2016-02-25T23:59:59+09:00'
-    }], true);
+    cal.createEvents([
+        {
+            id: '1',
+            calendarId: '1',
+            title: '스크럼',
+            category: 'time',
+            dueDateClass: '',
+            starts: '2017-04-05T22:30:00+09:00',
+            ends: '2017-04-06T02:30:00+09:00'
+        },
+        {
+            id: '2',
+            calendarId: '1',
+            title: '2차 QA',
+            category: 'time',
+            dueDateClass: '',
+            starts: '2017-04-06T17:30:00+09:00',
+            ends: '2017-04-07T17:31:00+09:00'
+        },
+        {
+            id: '3',
+            calendarId: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '4',
+            calendarId: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '5',
+            calendarId: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '6',
+            calendarId: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '7',
+            calendarId: '2',
+            title: '[추가 추가 일정]',
+            category: 'time',
+            dueDateClass: '',
+            starts: formattedDate + 'T18:00:00+09:00',
+            ends: formattedDate + 'T18:59:59+09:00'
+        },
+        {
+            id: '8',
+            calendarId: '2',
+            title: '[종일일정입니다!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '9',
+            calendarId: '2',
+            title: '[추가 추가 일정]',
+            category: 'milestone',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '10',
+            calendarId: '2',
+            title: '[추가 추가 일정2]',
+            category: 'milestone',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '11',
+            calendarId: '2',
+            title: '[종일일정입니다2!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '12',
+            calendarId: '2',
+            title: '[종일일정입니다3!]',
+            category: 'allday',
+            dueDateClass: '',
+            starts: formattedDate + 'T00:00:00+09:00',
+            ends: formattedDate + 'T00:00:00+09:00'
+        }
+    ]);
 
     cal.render();
 
     // 일정 클릭 이벤트 핸들러
     cal.on({
         'clickEvent': function(e) {
+            var model = e.model;
             console.log('click', e);
+            if (lastClickEventModel) {
+                cal.updateEvent(lastClickEventModel.id, lastClickEventModel.calendarId, {isFocused: false});
+            }
+            cal.updateEvent(model.id, model.calendarId, {isFocused: true});
+            lastClickEventModel = model;
+        },
+        'clickDayname': function(date) {
+            console.log('clickDayname', date);
         },
         'beforeCreateEvent': function(e) {
-            var title = prompt('Name of event to create:');
+            var message = 'start: ' + new Date(e.starts) +
+                            '\nend: ' + new Date(e.ends) +
+                            '\nallday: ' + e.isAllDay +
+                            '\nName of event to create:';
+            var title = prompt(message);
 
             if (!title) {
+                e.guide.clearGuideElement();
                 return;
             }
+            console.log(e);
 
             cal.createEvents([{
                 id: String(idx),
-                calendarID: '',
+                calendarId: '',
                 title: title,
                 isAllDay: e.isAllDay,
                 starts: e.starts,
@@ -111,7 +221,7 @@
             console.log('select', e);
         },
         'beforeUpdateEvent': function(e) {
-            cal.updateEvent(e.model.id, {
+            cal.updateEvent(e.model.id, e.model.calendarId, {
                 starts: e.starts,
                 ends: e.ends
             });
@@ -123,6 +233,12 @@
         },
         'resizePanel': function(e) {
             console.log('resizePanel', e);
+        },
+        'dragStartEvent': function(e) {
+            console.log('dragStartEvent', e);
+        },
+        'dragEndEvent': function(e) {
+            console.log('dragEndEvent', e);
         }
     });
 
@@ -136,7 +252,7 @@
      * Control
      **********/
     function onClick(e) {
-        var action = calendar.domutil.getData(e.target, 'action');
+        var action = e.target.dataset.action;
 
         switch (action) {
             case 'move-prev':
@@ -162,7 +278,25 @@
         }
     }
 
-    calendar.domevent.on(document.querySelector('.control'), 'click', onClick);
+
+    // 일정 클릭 이벤트 핸들러
+    cal.on('clickEvent', function() {
+        console.log('click');
+    });
+
+    cal.on('beforeCreateEvent', function(e) {
+        console.log('beforeCreateEvent', e);
+    });
+
+    cal.on('beforeUpdateEvent', function(e) {
+        console.log('beforeUpdateEvent', e);
+    });
+
+    cal.on('beforeDeleteEvent', function(e) {
+        console.log('beforeDeleteEvent', e);
+    });
+
+    document.querySelector('.control').addEventListener('click', onClick);
 
     window.cal = cal;
 })(window, ne.dooray.calendar);

@@ -12,21 +12,12 @@ var array = require('../../common/array'),
 
 var Month = {
     /**
-     * Function for group each type of events in view model collection
-     * @param {CalEventViewModel} viewModel - event view model
-     * @returns {boolean} whether model is allday event?
-     */
-    _groupByType: function(viewModel) {
-        return (viewModel.model.isAllDay ? 'allday' : 'time');
-    },
-
-    /**
      * Filter function for find time event
      * @param {CalEventViewModel} viewModel - event view model
      * @returns {boolean} whether model is time event?
      */
     _onlyTimeFilter: function(viewModel) {
-        return !viewModel.model.isAllDay;
+        return !viewModel.model.isAllDay && !viewModel.hasMultiDates;
     },
 
     /**
@@ -35,7 +26,7 @@ var Month = {
      * @returns {boolean} whether model is allday event?
      */
     _onlyAlldayFilter: function(viewModel) {
-        return viewModel.model.isAllDay;
+        return viewModel.model.isAllDay || viewModel.hasMultiDates;
     },
 
     /**
@@ -43,6 +34,7 @@ var Month = {
      * @param {CalEventViewModel} viewModel - event view model
      */
     _weightTopValue: function(viewModel) {
+        viewModel.top = viewModel.top || 0;
         viewModel.top += 1;
     },
 
@@ -55,25 +47,16 @@ var Month = {
      * @param {Date} starts - render start date
      * @param {Date} ends - render end date
      * @param {Collection} vColl - view model collection
-     * @returns {Collection} collection with adjusted `renderStart`, `renderEnd`
      * property.
      */
     _adjustRenderRange: function(starts, ends, vColl) {
         var ctrlCore = this.Core;
 
         vColl.each(function(viewModel) {
-            var eventDate;
-
-            if (viewModel.model.isAllDay) {
+            if (viewModel.model.isAllDay || viewModel.hasMultiDates) {
                 ctrlCore.limitRenderRange(starts, ends, viewModel);
-            } else {
-                eventDate = new Date(Number(viewModel.getStarts()));
-                viewModel.renderStart = datetime.start(eventDate);
-                viewModel.renderEnd = datetime.end(eventDate);
             }
         });
-
-        return vColl;
     },
 
     /**
@@ -86,14 +69,16 @@ var Month = {
     _getAlldayMaxTopIndexAtYMD: function(ymd, vAlldayColl) {
         var dateMatrix = this.dateMatrix,
             topIndexesInDate = [];
-
         util.forEach(dateMatrix[ymd], function(cid) {
             vAlldayColl.doWhenHas(cid, function(viewModel) {
                 topIndexesInDate.push(viewModel.top);
             });
         });
 
-        return mmax.apply(null, topIndexesInDate);
+        if (topIndexesInDate.length > 0) {
+            return mmax.apply(null, topIndexesInDate);
+        }
+        return 0;
     },
 
     /**
@@ -102,29 +87,48 @@ var Month = {
      * @param {Collection} vColl - collection of events
      */
     _adjustTimeTopIndex: function(vColl) {
-        var ctrlMonth = this.Month,
-            getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD,
-            vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter),
-            maxIndexInYMD = {};
+        var ctrlMonth = this.Month;
+        var getAlldayMaxTopIndexAtYMD = ctrlMonth._getAlldayMaxTopIndexAtYMD;
+        var vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter);
+        var sortedTimeEvents = vColl.find(ctrlMonth._onlyTimeFilter).sort(array.compare.event.asc);
+        var maxIndexInYMD = {};
 
-        vColl
-            .find(ctrlMonth._onlyTimeFilter)
-            .each(function(timeViewModel) {
-                var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD'),
-                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
+        sortedTimeEvents.forEach(function(timeViewModel) {
+            var eventYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD');
+            var alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
 
-                if (util.isUndefined(alldayMaxTopInYMD)) {
-                    alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
-                        getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
-                }
+            if (util.isUndefined(alldayMaxTopInYMD)) {
+                alldayMaxTopInYMD = maxIndexInYMD[eventYMD] =
+                    getAlldayMaxTopIndexAtYMD(eventYMD, vAlldayColl);
+            }
+            maxIndexInYMD[eventYMD] = timeViewModel.top =
+                (alldayMaxTopInYMD + 1);
 
-                maxIndexInYMD[eventYMD] = timeViewModel.top =
-                    (alldayMaxTopInYMD + 1);
+            if (timeViewModel.top > alldayMaxTopInYMD) {
+                return;
+            }
+        });
+    },
 
-                if (timeViewModel.top > alldayMaxTopInYMD) {
-                    return;
-                }
-            });
+    /**
+     * Convert multi-date time event to all-day event
+     * @this Base
+     * @param {Collection} vColl - view model collection
+     * property.
+     */
+    _addMultiDatesInfo: function(vColl) {
+        vColl.each(function(viewModel) {
+            var model = viewModel.model;
+            var starts = model.getStarts();
+            var ends = model.getEnds();
+
+            viewModel.hasMultiDates = !datetime.isSameDate(starts, ends);
+
+            if (!model.isAllDay && viewModel.hasMultiDates) {
+                viewModel.renderStarts = datetime.start(starts);
+                viewModel.renderEnds = datetime.end(ends);
+            }
+        });
     },
 
     /**
@@ -148,12 +152,12 @@ var Month = {
 
         coll = this.events.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
-        vColl = ctrlMonth._adjustRenderRange(starts, ends, vColl);
+        ctrlMonth._addMultiDatesInfo(vColl);
+        ctrlMonth._adjustRenderRange(starts, ends, vColl);
         vList = vColl.sort(array.compare.event.asc);
 
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
-
         ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);
         ctrlMonth._adjustTimeTopIndex(vColl);
 

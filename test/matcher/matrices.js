@@ -4,7 +4,7 @@
  */
 'use strict';
 var undef = (function() {})();
-var matricesMatcher = (function() {
+module.exports = function() {
     function pickTitle(matrix) {
         var titleList = [],
             i, cnt;
@@ -52,7 +52,7 @@ var matricesMatcher = (function() {
                 bLength = bMatrix.length;
 
                 if (aLength !== bLength) {
-                    return fail(i + ' 번째 매트릭스 다름\n' + 
+                    return fail(i + ' 번째 매트릭스 다름\n' +
                                 'actual: ' + pickTitle(aMatrix) + '\n' +
                                 'expected: ' + bMatrix);
                 }
@@ -91,7 +91,7 @@ var matricesMatcher = (function() {
     return {
         toEqualMatricesTitle: function(util, customEqualityTesters) {
             return {
-                compare: getMatcher(titleComparator) 
+                compare: getMatcher(titleComparator)
             };
         },
         toEqualMatricesTop: function(util, customEqualityTesters) {
@@ -100,5 +100,5 @@ var matricesMatcher = (function() {
             };
         }
     };
-});
+};
 

@@ -1,54 +1,67 @@
 +prefix-classes(timegrid)
     .container
-        height: 100% 
+        height: 100%
         position: relative
         overflow: hidden
         overflow-y: scroll
-        background-color: #ccc
+
+    .container-split
+        height: 100%
+        position: relative
+        overflow: hidden
 
     .left
         position: absolute
-        wh(60px, auto)
-        
+        font-size: 12px
+        background-color: #fafafa
+        wh(77px, auto)
+
     .hour
-        height: 39px
-        border-right: 1px solid #ccc
-        border-bottom: 1px solid #ccc
-        background-color: #eee
-        color: #777
-        text-align: right
+        height: 48px
+        position: relative
+        border-right: 1px solid #ddd
+        color: #555
+        box-sizing: border-box
+        &:first-child span
+            display: none
         &:last-child
             border-bottom: none
 
     .hour span
+        position: absolute
+        top: -11px
+        left: 0
+        right: 7px
+        text-align: right
         line-height: 25px
-        padding-right: 5px
 
     .right
         position: relative
-        margin-left: 60px
+        margin-left: 77px
 
     .h-grid
         background-color: #fff
 
     .gridline
-        height: 39px
-        border-bottom: 1px solid #ccc
+        height: 48px
+        border-bottom: 1px solid #eee
+        box-sizing: border-box
         &:last-child
             border-bottom: none
 
     .gridline:after
         content: ''
         display: block
-        height: 19px
-        border-bottom: 1px dotted #eee
+        height: 24px
+        border-bottom: 1px dotted #f9f9f9
 
     .events
         position: absolute
         wh(100%, 100%)
         pos(0, 0)
+        cursor: pointer
 
-     // Hourmarker
+    // Hourmarker
     .hourmarker
         position: absolute
         width: 100%
@@ -57,25 +70,36 @@
     .hourmarker-wrap
         position: relative
 
-    .hourmarker-line
-        wh(100%, 1px)
-        background-color: red
+    .hourmarker-line-left
+        position: absolute
+        background-color: rgba(19, 93, 230, 0.3)
+        height: 1px
+        left: 0
+
+    .hourmarker-line-right
+        position: absolute
+        background-color: #135de6
+        height: 1px
+        right: 0
 
     .hourmarker-time
         position: absolute
-        width: 55px
+        width: 52px
         left: -60px
+        top: -6px
+        line-height: 12px
+        font-size: 13px
+        font-weight: bold
         text-align: right
-        line-height: 0.1em
-        color: red
+        color: #135de6
 
     // Todaymarker
     .todaymarker
         position: absolute
         text-indent: -9999px
-        wh(5px, 5px)
-        background-color: red
-        margin: -3px 0 0 -3px
+        wh(9px, 9px)
+        background-color: #135de6
+        margin: -4px 0 0 -5px
         border-radius: 50%
         z-index: 99
 
@@ -84,7 +108,8 @@
         position: absolute
         height: 100%
         margin-left: -1px
-        border-right: 1px solid #ccc
+        border-right: 1px solid #ddd
+        box-sizing: content-box
         &:last-child
             border-right: none
             margin: 0
@@ -93,34 +118,53 @@
             .guide-creation
                 left: 0px
 
+    .date-event-block-wrap
+        position: relative
+        margin-right: 10px
+        height: 100%
+
     .date-event-block
         position: absolute
         right: 0px
 
+    .date-event-block-pending
+        opacity: 0.7
+
+    .date-event-block-dragging-dim
+        opacity: 0.4
+
+    .date-event-block-focused
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2)
+
     .event
         position: relative
         left: 1px
-        margin-right: 7px
         height: 100%
-        font-size: 0.9em
+        font-size: 12px
+        overflow: hidden
+        border-left-width: 3px
+        border-left-style: solid
+        font-weight: bold
+        padding: 1px 0 1px 3px
 
     .resize-handle
         position: absolute
-        right: 7px
+        right: 0px
         bottom: 0px
         left: 0px
+        height: 5px
         text-align: center
         color: #fff
         cursor: row-resize
-        background-position: center 7px
+        background-position: center top
 
     // Guide element
     .guide-creation
         position: absolute
-        right: 2px
+        right: 10px
         left: 1px
-        background-color: #7cafc2
-        opacity: 0.8
+        border: 1px solid #135de6
+        background-color: rgba(19, 93, 230, 0.1)
 
     .guide-move,
     .guide-resize
@@ -130,10 +174,61 @@
             z-index: 97
 
     .guide-creation-label
-        padding-left: 1px
         color: #fff
         cursor: default
+        line-height: 16px
+        color: #135de6
+        font-size: 12px
+        font-weight: bold
+        padding-left: 3px
 
     .guide-bottom
         position: absolute
-        bottom: 0;
+        bottom: 0px
+
++prefix-classes(split-timegrid)
+    .container
+        height: 100%
+        position: relative
+        overflow: hidden
+
+    .left
+        position: absolute
+        wh(30px, auto)
+
+    .hour
+        height: 25px
+        border-right: 1px solid #f1f1f1
+        color: #777
+        text-align: right
+        &:last-child
+            border-bottom: none
+
+    .hour span
+        line-height: 15px
+        padding-right: 5px
+
+    .right
+        position: relative
+        margin-left: 30px
+
+    .h-grid
+        background-color: #fff
+
+    .gridline
+        height: 25px
+        border-bottom: 1px solid #f1f1f1
+        &:last-child
+            border-bottom: none
+
+    .events
+        position: absolute
+        wh(100%, 100%)
+        pos(0, 0)
+
+    .schedule
+        border: 1px solid #ff0000
+        position: absolute
+        width: 100%
+        box-sizing: border-box
+        background: rgba(245, 215, 215, 0.3)

@@ -1,12 +1,12 @@
-<table>
+<table class={{tableClass}}>
 <caption>
-<button type="button" class="{{CSS_PREFIX}}minicalendar-nav {{CSS_PREFIX}}minicalendar-prev"><span>&lt;</span></button>
+<button type="button" class="{{CSS_PREFIX}}minicalendar-nav {{CSS_PREFIX}}minicalendar-prev"></button>
 <span class="{{CSS_PREFIX}}minicalendar-title">{{title}}</span>
-<button type="button" class="{{CSS_PREFIX}}minicalendar-nav {{CSS_PREFIX}}minicalendar-next"><span>&gt;</span></button>
+<button type="button" class="{{CSS_PREFIX}}minicalendar-nav {{CSS_PREFIX}}minicalendar-next"></button>
 </caption>
 <thead><tr>
 {{#each dayname}}
-<th>{{this}}</th>
+<th class="{{cssClass}}">{{name}}</th>
 {{/each}}
 </tr></thead>
 <tbody>

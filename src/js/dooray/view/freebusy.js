@@ -4,18 +4,29 @@
  */
 'use strict';
 
-var util = global.tui.util,
-    dayArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-    isValidHM = /^\d\d:\d\d$/;
+var util = global.tui.util;
+var isValidHM = /^\d\d:\d\d$/;
+var Handlebars = require('handlebars-template-loader/runtime');
 
-var config = require('../../config'),
-    common = require('../../common/common'),
-    datetime = require('../../common/datetime'),
-    Collection = require('../../common/collection'),
-    domutil = require('../../common/domutil'),
-    domevent = require('../../common/domevent'),
-    View = require('../../view/view'),
-    tmpl = require('./freebusy.hbs');
+var config = require('../../config');
+var common = require('../../common/common');
+var datetime = require('../../common/datetime');
+var Collection = require('../../common/collection');
+var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
+var View = require('../../view/view');
+var baseTmpl = require('./freebusybase.hbs');
+var tmpl = require('./freebusy.hbs');
+var TZDate = require('../../common/timezone').Date;
+
+var dayArr = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+var MS_WHOLE_RANGE = datetime.millisecondsFrom('hour', 12); // 8:00 부터 19:00 까지의 시간 (ms)
+var MS_RANGE_START = datetime.millisecondsFrom('hour', 8);
+var MS_RANGE_END = datetime.millisecondsFrom('hour', 20);
+
+var CLS_CONTAINER = config.classname('freebusy-container');
+var CLS_BASE = config.classname('freebusy-base');
+var CLS_CONTROLLER = config.classname('freebusy-controller');
 
 /**
  * @constructor
@@ -29,6 +40,7 @@ var config = require('../../config'),
  *  @param {Block[]} [options.recommends] - recommendation time blocks
  *  @param {string} [options.selectStart] - hh:mm formatted select start
  *  @param {String} [options.selectEnd] - hh:mm formatted select end
+ *  @param {Array} [options.times] - time range
  * @param {HTMLDivElement} container - container element for Freebusy component
  */
 function Freebusy(options, container) {
@@ -41,21 +53,31 @@ function Freebusy(options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
-        config.classname('clear') + ' ' +
-        config.classname('freebusy-container')
+        config.classname('clear') + ' ' + CLS_CONTAINER
     );
+    domutil.appendHTMLElement('div', container, CLS_BASE);
+    domutil.appendHTMLElement('div', container, CLS_CONTROLLER);
 
     View.call(this, container);
 
     opt = this.options = util.extend({
-        headerHeight: 20,
-        itemHeight: 20,
-        nameWidth: 100,
+        headerHeight: 28,
+        itemHeight: 29,
+        nameWidth: 104,
         users: [],
         recommends: [],
         selectStart: '',
-        selectEnd: ''
+        selectEnd: '',
+        times: dayArr
     }, options);
+
+    this._calculateTimeRange();
+
+    util.forEach(opt.template, function(func, name) {
+        if (func) {
+            Handlebars.registerHelper('freebusy-' + name + '-tmpl', func);
+        }
+    });
 
     /**
      * @type {string}
@@ -85,7 +107,10 @@ function Freebusy(options, container) {
     domutil.disableTextSelection(container);
 
     domevent.on(container, {
-        click: this._onClick
+        click: this._onSelect,
+        mousemove: this._onSelect,
+        mouseout: this.unselectOver,
+        mouseleave: this.unselectOver
     }, this);
 
     this.render();
@@ -101,10 +126,19 @@ util.inherit(Freebusy, View);
 Freebusy.prototype._beforeDestroy = function() {
     var container = this.container;
     domutil.enableTextSelection(container);
-    domevent.off(container, 'click', this._onClick, this);
+    domevent.off(container, 'click', this._onSelect, this);
+    domevent.off(container, 'mousemove', this.selectOver, this);
+    domevent.off(container, 'mouseout', this.unselectOver, this);
+    domevent.off(container, 'mouseleave', this.unselectOver, this);
+
+    util.forEach(this.options.template, function(func, name) {
+        if (func) {
+            Handlebars.unregisterHelper('freebusy-' + name + '-tmpl');
+        }
+    });
 
     container.innerHTML = '';
-    this.selectStart = this.selectEnd = this.options = this.users = null;
+    this.selectStart = this.selectEnd = this.options = this.users = this.selectOverStart = this.selectOverEnd = null;
 };
 
 /**********
@@ -115,7 +149,7 @@ Freebusy.prototype._beforeDestroy = function() {
  * @fires Freebusy#click
  * @param {MouseEvent} clickEventData - click mouse event data
  */
-Freebusy.prototype._onClick = function(clickEventData) {
+Freebusy.prototype._onSelect = function(clickEventData) {
     var opt = this.options,
         target = clickEventData.srcElement || clickEventData.target,
         isValid = domutil.closest(target, config.classname('.freebusy-leftmargin')),
@@ -129,7 +163,7 @@ Freebusy.prototype._onClick = function(clickEventData) {
     container = this.container;
     containerWidth = this.getViewBound().width - opt.nameWidth;
     mouseX = domevent.getMousePosition(clickEventData, container)[0] - opt.nameWidth;
-    timeX = common.ratio(containerWidth, datetime.MILLISECONDS_PER_DAY, mouseX);
+    timeX = common.ratio(containerWidth, MS_WHOLE_RANGE, mouseX) + MS_RANGE_START;
     dateX = new Date(timeX);
     nearMinutesX = common.nearest(dateX.getUTCMinutes(), [0, 60]) / 2;
 
@@ -138,7 +172,7 @@ Freebusy.prototype._onClick = function(clickEventData) {
      * @type {object}
      * @property {string} time - hh:mm string
      */
-    this.fire('click', {
+    this.fire(clickEventData.type, {
         time: datetime.leadingZero(dateX.getUTCHours(), 2) + ':' + datetime.leadingZero(nearMinutesX, 2)
     });
 };
@@ -154,14 +188,14 @@ Freebusy.prototype._onClick = function(clickEventData) {
  * @returns {number} hour + minutes + seconds millseconds value
  */
 Freebusy.prototype._getMilliseconds = function(date) {
-    var raw = datetime.raw(util.isDate(date) ? date : new Date(date)),
-        mils = 0;
-
-    mils = datetime.millisecondsFrom('hour', raw.h) +
+    var raw = datetime.raw(new TZDate(date));
+    var mils = datetime.millisecondsFrom('hour', raw.h) +
         datetime.millisecondsFrom('minutes', raw.m) +
         datetime.millisecondsFrom('seconds', raw.s);
 
-    return mils;
+    mils = common.limit(mils, [MS_RANGE_START], [MS_RANGE_END]);
+
+    return mils - MS_RANGE_START;
 };
 
 /**
@@ -183,13 +217,17 @@ Freebusy.prototype._getMilliseconds = function(date) {
  * @returns {array} [0]: left, [1]: width
  */
 Freebusy.prototype._getBlockBound = function(block) {
-    var from = this._getMilliseconds(block.from),
-        to = this._getMilliseconds(block.to),
-        left,
-        width;
+    var from = block.fromMilliseconds || this._getMilliseconds(block.from);
+    var to = block.toMilliseconds || this._getMilliseconds(block.to);
+    var left, width;
 
-    left = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, from);
-    width = common.ratio(datetime.MILLISECONDS_PER_DAY, 100, (to - from));
+    // right edge case
+    if (to < from) {
+        to = MS_WHOLE_RANGE;
+    }
+
+    left = common.ratio(MS_WHOLE_RANGE, 100, from);
+    width = common.ratio(MS_WHOLE_RANGE, 100, (to - from));
 
     return [left, width];
 };
@@ -221,14 +259,15 @@ Freebusy.prototype.clearRecommends = function(skipRender) {
 };
 
 /**
- * get view block for selection state in instance
+ * get view block for selection state in instance, but return null if width is zero
  * @param {string} start - hh:mm formatted string for select start
  * @param {string} end - hh:mm formatted string for select end
  * @returns {number[]} block bound
  */
 Freebusy.prototype._getSelectionBlock = function(start, end) {
-    var oneHour = datetime.MILLISECONDS_PER_HOUR,
-        oneMinutes = datetime.MILLISECONDS_PER_MINUTES;
+    var startDate = new TZDate(0);
+    var endDate = new TZDate(0);
+    var bound;
 
     if (!isValidHM.test(start) || !isValidHM.test(end)) {
         return false;
@@ -237,10 +276,19 @@ Freebusy.prototype._getSelectionBlock = function(start, end) {
     start = start.split(':');
     end = end.split(':');
 
-    return this._getBlockBound({
-        from: datetime.toUTC(new Date((oneHour * start[0]) + (oneMinutes * start[1]))),
-        to: datetime.toUTC(new Date((oneHour * end[0]) + (oneMinutes * end[1])))
+    startDate.setHours(start[0], start[1]);
+    endDate.setHours(end[0], end[1]);
+
+    bound = this._getBlockBound({
+        from: startDate,
+        to: endDate
     });
+
+    if (bound[1] === 0) {
+        return null;
+    }
+
+    return bound;
 };
 
 /**
@@ -252,31 +300,32 @@ Freebusy.prototype._getViewModel = function() {
         opt = this.options,
         users = this.users,
         userLength = users.length,
+        noFlexScrollBarPadding = 1,
         viewModel = {
             headerHeight: opt.headerHeight,
             nameWidth: opt.nameWidth,
             itemHeight: opt.itemHeight,
             bodyHeight: (userLength * opt.itemHeight),
-            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight,
+            containerHeight: (userLength * opt.itemHeight) + opt.headerHeight + noFlexScrollBarPadding,
 
-            times: dayArr,
-            timeWidth: 100 / dayArr.length,
+            times: opt.times,
+            timeWidth: 100 / opt.times.length,
             freebusy: {},
             recommends: [],
-            selection: this._getSelectionBlock(this.selectStart, this.selectEnd)
+            selection: userLength ? this._getSelectionBlock(this.selectStart, this.selectEnd) : null,
+            selectionOver: userLength ? this._getSelectionBlock(this.selectOverStart, this.selectOverEnd) : null
         };
 
     users.each(function(user) {
-        viewModel.freebusy[user.id] = {
-            name: user.name,
-            busy: util.map(user.freebusy, function(block) {
-                return self._getBlockBound(block);
-            })
-        };
+        viewModel.freebusy[user.id] = user;
     });
 
     util.forEach(opt.recommends, function(block) {
-        viewModel.recommends.push(self._getBlockBound(block));
+        var bound = self._getBlockBound(block);
+        // Don't display recommends if check out of time range
+        if (bound[1]) {
+            viewModel.recommends.push(bound);
+        }
     });
 
     return viewModel;
@@ -285,11 +334,19 @@ Freebusy.prototype._getViewModel = function() {
 /**
  * @override
  */
-Freebusy.prototype.render = function() {
-    var container = this.container,
-        viewModel = this._getViewModel();
+Freebusy.prototype.render = function(skipBase) {
+    var container = this.container;
+    var viewModel = this._getViewModel();
+    var baseEl = container.getElementsByClassName(CLS_BASE)[0];
+    var controllerEl = container.getElementsByClassName(CLS_CONTROLLER)[0];
 
-    container.innerHTML = tmpl(viewModel);
+    if (!skipBase) {
+        baseEl.innerHTML = baseTmpl(viewModel);
+        this.fire('afterRender');
+    }
+    controllerEl.style.height = viewModel.bodyHeight + 'px';
+    controllerEl.style.top = (viewModel.itemHeight - 1) + 'px';
+    controllerEl.innerHTML = tmpl(viewModel);
 };
 
 /**
@@ -299,6 +356,7 @@ Freebusy.prototype.render = function() {
  */
 Freebusy.prototype.addUser = function(user, skipRender) {
     this.users.add(user);
+    this._arrangeFreebusy(user);
 
     if (!skipRender) {
         this.render();
@@ -314,7 +372,7 @@ Freebusy.prototype.addUsers = function(users, skipRender) {
     var self = this;
 
     util.forEach(users, function(user) {
-        self.addUser(user, skipRender);
+        self.addUser(user, true);
     });
 
     if (!skipRender) {
@@ -359,7 +417,7 @@ Freebusy.prototype.removeUsers = function(idArr, skipRender) {
 Freebusy.prototype.clear = function(skipRender) {
     this.users.clear();
     this.clearRecommends(true);
-    this.unselect();
+    this.unselect(true);
 
     if (!skipRender) {
         this.render();
@@ -375,7 +433,9 @@ Freebusy.prototype.select = function(start, end) {
     this.selectStart = start;
     this.selectEnd = end;
 
-    this.render();
+    if (this.users.length) {
+        this.render(true);
+    }
 };
 
 /**
@@ -384,13 +444,120 @@ Freebusy.prototype.select = function(start, end) {
  */
 Freebusy.prototype.unselect = function(skipRender) {
     this.selectStart = this.selectEnd = '';
+    this.selectOverStart = this.selectOverEnd = '';
 
     if (!skipRender) {
-        this.render();
+        this.render(true);
     }
 };
 
-util.CustomEvents.mixin(Freebusy);
+/**
+ * Select specific time
+ * @param {string} start - hh:mm formatted string value
+ * @param {string} end - hh:mm formatted string value
+ */
+Freebusy.prototype.selectOver = function(start, end) {
+    this.selectOverStart = start;
+    this.selectOverEnd = end;
+
+    this.render(true);
+};
+
+
+Freebusy.prototype.unselectOver = function() {
+    this.selectOverStart = this.selectOverEnd = '';
+    this.render(true);
+};
+
+Freebusy.prototype._calculateTimeRange = function() {
+    var times = this.options.times;
+    MS_WHOLE_RANGE = datetime.millisecondsFrom('hour', times.length);
+    MS_RANGE_START = datetime.millisecondsFrom('hour', times[0]);
+    MS_RANGE_END = datetime.millisecondsFrom('hour', times[times.length - 1] + 1);
+};
+
+/**
+ * Set time ranges
+ * @param {Array} times - time ranges
+ * @example
+ * var times = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+ * fb.setTimeRange(times);
+ */
+Freebusy.prototype.setTimeRange = function(times) {
+    var self = this;
+
+    this.options.times = times;
+    this._calculateTimeRange();
+
+    // Update fromMilliseconds, toMilliseconds
+    this.users.each(function(user) {
+        self._arrangeFreebusy(user);
+    });
+
+    this.render();
+};
+
+Freebusy.prototype._cacheFreebusyMilliseconds = function(user) {
+    var self = this;
+    user.freebusy.forEach(function(schedule) {
+        schedule.fromMilliseconds = self._getMilliseconds(schedule.from);
+        schedule.toMilliseconds = self._getMilliseconds(schedule.to);
+    });
+};
+
+/**
+ * Arrange freebusy time collision
+ * @param {User} user - user object
+ */
+Freebusy.prototype._arrangeFreebusy = function(user) {
+    var self = this;
+    var freebusy;
+    var previousSchedule;
+
+    this._cacheFreebusyMilliseconds(user);
+
+    user.freebusy.sort(function(schedule1, schedule2) {
+        var diff = schedule1.fromMilliseconds - schedule2.fromMilliseconds;
+        if (diff === 0) {
+            diff = schedule1.toMilliseconds - schedule2.toMilliseconds;
+        }
+        return diff;
+    });
+
+    // Adjust overlapped block
+    user.freebusy.forEach(function(schedule, index, array) {
+        array.slice(index + 1).forEach(function(target) {
+            if (schedule.toMilliseconds > target.fromMilliseconds) {
+                target.fromMilliseconds = Math.min(schedule.toMilliseconds, target.toMilliseconds);
+            }
+        });
+    });
+
+    // Remove from === to
+    freebusy = util.filter(user.freebusy, function(schedule) {
+        return schedule.fromMilliseconds !== schedule.toMilliseconds;
+    });
+
+    // Merge consecutive blocks
+    freebusy = util.filter(freebusy, function(schedule, index, array) {
+        if (!previousSchedule && index > 0) {
+            previousSchedule = array[index - 1];
+        }
+
+        if (previousSchedule && previousSchedule.toMilliseconds === schedule.fromMilliseconds) {
+            previousSchedule.toMilliseconds = schedule.toMilliseconds;
+            return false;
+        }
+
+        previousSchedule = null;
+
+        return true;
+    });
+
+    // Prepare rendering block data
+    user.busy = util.map(freebusy, function(block) {
+        return self._getBlockBound(block);
+    });
+};
 
 module.exports = Freebusy;
-

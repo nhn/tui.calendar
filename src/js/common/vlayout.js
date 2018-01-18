@@ -33,7 +33,7 @@ var config = require('../config'),
  * @param {HTMLElement} container - container element
  */
 function VLayout(options, container) {
-    var opt;
+    var opt, tempHeights;
 
     if (!(this instanceof VLayout)) {
         return new VLayout(options, container);
@@ -60,7 +60,7 @@ function VLayout(options, container) {
      * @type {Drag}
      */
     this._drag = new Drag({
-        distance: 0,
+        distance: 10,
         exclude: function(target) {
             return !domutil.hasClass(target, config.classname('splitter'));
         }
@@ -79,9 +79,10 @@ function VLayout(options, container) {
 
     if (opt.panels.length) {
         if (opt.panelHeights.length) {
+            tempHeights = opt.panelHeights.slice();
             util.forEach(opt.panels, function(panelOpt) {
                 if (!panelOpt.isSplitter && !panelOpt.autoHeight) {
-                    panelOpt.height = opt.panelHeights.shift();
+                    panelOpt.height = tempHeights.shift();
                 }
             });
         }
@@ -215,7 +216,7 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
     }
 
     util.forEach(resizeMap, function(pair) {
-        pair[0].setHeight(null, pair[1]);
+        pair[0].setHeight(null, pair[1], true);
     });
 };
 
@@ -340,9 +341,14 @@ VLayout.prototype._onDragEnd = function(e) {
  * refresh each panels
  */
 VLayout.prototype.refresh = function() {
-    var panelToFillHeight = [],
-        usedHeight = 0,
-        remainHeight;
+    var panelToFillHeight = [];
+    var layoutHeight = this.getViewBound().height;
+    var usedHeight = 0;
+    var remainHeight;
+
+    if (!layoutHeight) {
+        return;
+    }
 
     util.forEach(this.panels, function(panel) {
         if (panel.options.autoHeight) {
@@ -352,7 +358,7 @@ VLayout.prototype.refresh = function() {
         }
     });
 
-    remainHeight = (this.getViewBound().height - usedHeight) / panelToFillHeight.length;
+    remainHeight = (layoutHeight - usedHeight) / panelToFillHeight.length;
 
     util.forEach(panelToFillHeight, function(panel) {
         panel.setHeight(null, remainHeight);
@@ -394,7 +400,4 @@ VLayout.prototype.addPanels = function(options, container) {
     container.appendChild(frag);
 };
 
-util.CustomEvents.mixin(VLayout);
-
 module.exports = VLayout;
-

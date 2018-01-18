@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var CalEventViewModel = require('model/viewModel/calEvent');
+
 describe('CalEventViewModel', function() {
-var CalEventViewModel = ne.dooray.calendar.CalEventViewModel;
 });

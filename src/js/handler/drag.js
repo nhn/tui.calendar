@@ -156,12 +156,11 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
     // prevent automatic scrolling.
     domevent.preventDefault(mouseMoveEvent);
 
-    this._isMoved = true;
-
     if (this._distance < distance) {
         this._distance += 1;
         return;
     }
+    this._isMoved = true;
 
     if (!this._dragStartFired) {
         this._dragStartFired = true;
@@ -206,7 +205,6 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
     // emit "click" event when not emitted drag event between mousedown and mouseup.
     if (this._isMoved) {
         this._isMoved = false;
-
         /**
          * Drag end events.
          * @event Drag#dragEnd
@@ -232,4 +230,3 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
 util.CustomEvents.mixin(Drag);
 
 module.exports = Drag;
-

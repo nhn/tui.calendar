@@ -1,29 +1,37 @@
-<div class="{{CSS_PREFIX}}weekday-grid ">
+<div class="{{CSS_PREFIX}}weekday-grid">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line" style="width:{{@root.width}}%;left:{{multiply @root.width @index}}%;"></div>
+    <div class="{{CSS_PREFIX}}weekday-grid-line {{#if isToday}} {{CSS_PREFIX}}today{{/if}}" style="width:{{width}}%;left:{{left}}%;"></div>
 {{/each ~}}
 </div>
-<div class="{{CSS_PREFIX}}weekday-events">
-{{#each matrices ~}}
-{{#each this ~}} {{! matrix }}
-{{#each this ~}} {{! column }}
-{{#if this ~}} {{! viewmodel }}
-<div data-id="{{stamp model}}"
-     class="{{CSS_PREFIX}}weekday-event-block
-        {{#if renderStarts}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
-        {{#if renderEnds}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
-     style="top:{{multiply top @root.eventBlockHeight}}px;
-            left:{{multiply left @root.width}}%;
-            width:{{multiply width @root.width}}%;
-            height:{{@root.eventBlockHeight}}px;
-            margin-top:{{@root.eventBlockGutter}}px">
-    <div class="{{CSS_PREFIX}}weekday-event" style="height:{{@root.eventHeight}}px;color:{{model.color}};background-color:{{model.bgColor}}">
-        <span class="{{CSS_PREFIX}}weekday-event-title">{{{allday-tmpl model}}}</span>
-        <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
+<div class="{{CSS_PREFIX}}weekday-creation"></div>
+<div class="{{CSS_PREFIX}}weekday-events" style="top:{{@root.eventContainerTop}}px">
+    <!-- weekday-events 높이를 하단 패딩까지 확보하기 위한 빈 div -->
+    <div class="{{CSS_PREFIX}}weekday-events-height-span" style="height:{{contentHeight}}px"></div>
+    {{#each matrices ~}}
+    {{#each this ~}} {{! matrix }}
+    {{#each this ~}} {{! column }}
+    {{#if this ~}} {{! viewmodel }}
+    <div data-id="{{stamp model}}"
+        class="{{CSS_PREFIX}}weekday-event-block
+            {{#if exceedLeft}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
+            {{#if exceedRight}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
+        style="top:{{multiply top @root.eventBlockHeight}}px;
+                left:{{grid-left this @root.dates}}%;
+                width:{{grid-width this @root.dates}}%">
+        <div class="{{CSS_PREFIX}}weekday-event {{#if model.isFocused}}{{CSS_PREFIX}}weekday-event-focused {{/if}}"
+            style="height:{{@root.eventHeight}}px;
+                {{#if model.isFocused}}
+                    color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};
+                {{else}}
+                    color:{{model.color}}; background-color:{{model.bgColor}}; border-color:{{model.borderColor}};
+                {{/if}}
+            {{model.customStyle}}">
+            <span class="{{CSS_PREFIX}}weekday-event-title">{{{allday-tmpl model}}}</span>
+            <span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>
+        </div>
     </div>
-</div>
-{{/if ~}}
-{{/each ~}}
-{{/each ~}}
-{{/each ~}}
+    {{/if ~}}
+    {{/each ~}}
+    {{/each ~}}
+    {{/each ~}}
 </div>

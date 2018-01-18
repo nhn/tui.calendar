@@ -7,7 +7,7 @@
 var util = global.tui.util;
 var config = require('../config');
 var domutil = require('../common/domutil');
-var VLayout = require('../common/vLayout');
+var VLayout = require('../common/vlayout');
 // Parent views
 var Week = require('../view/week/week');
 // Sub views
@@ -16,12 +16,11 @@ var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
 // Handlers
 var AlldayClick = require('../handler/allday/click');
-var AlldayDblClick = require('../handler/allday/dblclick');
 var AlldayCreation = require('../handler/allday/creation');
 var AlldayMove = require('../handler/allday/move');
 var AlldayResize = require('../handler/allday/resize');
+var DayNameClick = require('../handler/time/clickDayname');
 var TimeClick = require('../handler/time/click');
-var TimeDblClick = require('../handler/time/dblclick');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
@@ -35,15 +34,14 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayView,
         timeGridView,
         alldayClickHandler,
-        alldayDblClickHandler,
         alldayCreationHandler,
         alldayMoveHandler,
         alldayResizeHandler,
         timeClickHandler,
-        timeDblClickHandler,
         timeCreationHandler,
         timeMoveHandler,
-        timeResizeHandler;
+        timeResizeHandler,
+        daynameClickHandler;
 
     weekView = new Week(null, options.week, layoutContainer);
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -51,7 +49,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(null, dayNameContainer);
+    dayNameView = new DayName(options.week, dayNameContainer);
+    daynameClickHandler = new DayNameClick(dragHandler, dayNameView, baseController);
     weekView.addChild(dayNameView);
 
     /**********
@@ -76,7 +75,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     alldayView = new Allday(options.week, vLayout.panels[0].container);
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
-    alldayDblClickHandler = new AlldayDblClick(alldayView);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
     alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
     alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
@@ -87,7 +85,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     timeGridView = new TimeGrid(options.week, vLayout.panels[2].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
-    timeDblClickHandler = new TimeDblClick(timeGridView);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
     timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
     timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
@@ -101,9 +98,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             allday: alldayClickHandler,
             time: timeClickHandler
         },
-        dblclick: {
-            allday: alldayDblClickHandler,
-            time: timeDblClickHandler
+        dayname: {
+            date: daynameClickHandler
         },
         creation: {
             allday: alldayCreationHandler,

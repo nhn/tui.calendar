@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var ts = Object.prototype.toString;
+var TZDate = require('../common/timezone').Date;
 
 /**
  * @constructor
@@ -14,8 +14,8 @@ function DW(date) {
         return new DW(date);
     }
 
-    if (ts.call(date) !== '[object Date]') {
-        date = new Date(date);
+    if (!(date instanceof TZDate)) {
+        date = new TZDate(date);
     }
 
     /**
@@ -42,7 +42,7 @@ DW.prototype.safe = function(obj) {
  * @returns {DW} cloned dwrap object
  */
 DW.prototype.clone = function() {
-    return new DW(new Date(Number(this.d)));
+    return new DW(new TZDate(Number(this.d)));
 };
 
 /**
@@ -56,12 +56,20 @@ DW.prototype.addDate = function(day) {
 };
 
 /**
- * Add month
+ * Add month. If month value is changed, date set to 1.
  * @param {number} m - month to add
  * @returns {DW} wrapper object
  */
 DW.prototype.addMonth = function(m) {
-    this.d.setMonth(this.d.getMonth() + m);
+    var prevMonth = this.d.getMonth();
+    var prevYear = this.d.getFullYear();
+    this.d.setMonth(prevMonth + m);
+
+    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
+    // Don't do it on different year(Because december + 1month is ok)
+    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
+        this.d.setMonth(prevMonth + m, 1);
+    }
     return this;
 };
 
@@ -90,4 +98,3 @@ DW.prototype.isBetween = function(d1, d2) {
 };
 
 module.exports = DW;
-

@@ -10,6 +10,7 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
+var TZDate = require('../../common/timezone').Date;
 var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 
 /**
@@ -56,9 +57,9 @@ function TimeCreationGuide(timeCreation) {
     this._styleFunc = null;
 
     timeCreation.on({
-        'timeCreationDragstart': this._onDragStart,
-        'timeCreationDrag': this._onDrag,
-        'timeCreationClick': this.clearGuideElement
+        timeCreationDragstart: this._createGuideElement,
+        timeCreationDrag: this._onDrag,
+        timeCreationClick: this._createGuideElement
     }, this);
 }
 
@@ -98,23 +99,21 @@ TimeCreationGuide.prototype.clearGuideElement = function() {
  * @param {boolean} bottomLabel - is label need to render bottom of guide element?
  */
 TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
-    var guideElement = this.guideElement,
-        timeElement = this.guideTimeElement;
+    var guideElement = this.guideElement;
+    var timeElement = this.guideTimeElement;
 
-    reqAnimFrame.requestAnimFrame(function() {
-        guideElement.style.top = top + 'px';
-        guideElement.style.height = height + 'px';
-        guideElement.style.display = 'block';
+    guideElement.style.top = top + 'px';
+    guideElement.style.height = height + 'px';
+    guideElement.style.display = 'block';
 
-        timeElement.innerHTML = datetime.format(new Date(start), 'HH:mm') +
-            ' ~ ' + datetime.format(new Date(end), 'HH:mm');
+    timeElement.innerHTML = datetime.format(new TZDate(start), 'HH:mm') +
+        ' - ' + datetime.format(new TZDate(end), 'HH:mm');
 
-        if (bottomLabel) {
-            domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
-        } else {
-            domutil.addClass(timeElement, config.classname('time-guide-bottom'));
-        }
-    });
+    if (bottomLabel) {
+        domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
+    } else {
+        domutil.addClass(timeElement, config.classname('time-guide-bottom'));
+    }
 };
 
 /**
@@ -173,7 +172,7 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
  * @returns {function} UI data calculator function
  */
 TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
-    var todayEnd = Number(datetime.end(new Date(Number(todayStart))));
+    var todayEnd = Number(datetime.end(new TZDate(Number(todayStart))));
 
     /**
      * Get top, time value from event dat
@@ -198,7 +197,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
  * DragStart event handler
  * @param {object} dragStartEventData - dragStart event data.
  */
-TimeCreationGuide.prototype._onDragStart = function(dragStartEventData) {
+TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var relatedView = dragStartEventData.relatedView,
         unitData, styleFunc, styleData, result;
 
@@ -226,6 +225,7 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
     var styleFunc = this._styleFunc,
         unitData = this._styleUnit,
         startStyle = this._styleStart,
+        refreshGuideElement = this._refreshGuideElement.bind(this),
         heightOfHalfHour,
         endStyle,
         result;
@@ -244,8 +244,6 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
             startStyle[1],
             (endStyle[1] + MIN30)
         );
-
-        this._refreshGuideElement.apply(this, result);
     } else {
         result = this._limitStyleData(
             endStyle[0],
@@ -253,10 +251,12 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
             endStyle[1],
             (startStyle[1] + MIN30)
         );
-
-        this._refreshGuideElement.apply(this, result.concat([true]));
+        result.push(true);
     }
+
+    reqAnimFrame.requestAnimFrame(function() {
+        refreshGuideElement.apply(null, result);
+    });
 };
 
 module.exports = TimeCreationGuide;
-

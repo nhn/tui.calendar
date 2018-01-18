@@ -7,38 +7,41 @@
         &:first-child
             border-top: 0;
 
-    .left
-        wh(59px, 100%)
-        float: left
-        text-align: right
-        color: #777
-        border-right: 1px solid #ccc
-
-    .left span
-        display: block
-        padding: 3px 5px 0 0
-
     .right
-        position: relative
-        background-color: #fff
-        margin-left: 60px
+        overflow-y: hidden;
+
+    .day-grid-wrap
+        overflow-y: scroll
+        width: 100%
+        height: 100%
+        position: absolute
+
+    .day-grid
+        border-left: 1px solid #ccc
+        float: left
+        margin-left: -1px
+        height: 100%
+
+    .day-scroll
         height: 100%
         overflow-y: scroll
+        position: relative
 
     .day
         position: absolute
-        background-color: #fff
         margin-left: -1px
-        border-left: 1px solid #ccc
         height: 100%
 
     .list
-        margin: 2px
-        padding: 0
+        margin: 0
+        padding: 1px 5px 0
         overflow: hidden
+        min-height: 100%
 
     .item
         font-size: 11px
         list-style: none
+        line-height: 16px
+        margin-bottom: 1px
         white-space: nowrap
         overflow hidden

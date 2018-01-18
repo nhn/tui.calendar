@@ -1,10 +1,8 @@
 {
   "name": "dooray-calendar",
   "main": [
-    "dist/calendar.js",
-    "dist/calendar.min.js",
-    "dist/calendar.css",
-    "dist/calendar.min.css"
+    "dist/index.js",
+    "dist/index.css"
   ],
   "version": "1.0.0",
   "authors": [
@@ -20,6 +18,6 @@
     "tests"
   ],
   "dependencies": {
-    "tui-code-snippet": "~1.0.6"
+    "tui-code-snippet": "^1.1.2"
   }
 }

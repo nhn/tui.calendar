@@ -1,13 +1,16 @@
 /*eslint-disable*/
+var datetime = require('common/datetime');
+var AlldayCreation = require('handler/allday/creation');
+var AlldayCreationGuide = require('handler/allday/creationGuide');
+var TZDate = require('common/timezone').Date;
+
 describe('handler:AlldayCreation', function() {
-    var datetime = window.ne.dooray.calendar.datetime,
-        AlldayCreation = window.ne.dooray.calendar.AlldayCreation,
-        proto;
+    var proto;
 
     beforeEach(function() {
         proto = AlldayCreation.prototype;
         // 테스트와 무관한 모듈 목 처리
-        spyOn(window.ne.dooray.calendar.AlldayCreationGuide.prototype, 'initializeGuideElement').and.returnValue();
+        spyOn(AlldayCreationGuide.prototype, 'initializeGuideElement').and.returnValue();
         spyOn(window, 'prompt');
     });
 
@@ -65,15 +68,18 @@ describe('handler:AlldayCreation', function() {
             mockEventData = {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
-                xIndex: 2
+                xIndex: 2,
+                triggerEvent: {}
             };
 
             proto._createEvent.call(inst, mockEventData);
 
             expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: true,
-                starts: new Date('2015-05-02T00:00:00+09:00'),
-                ends: new Date('2015-05-03T23:59:59+09:00')
+                starts: new TZDate('2015-05-02T00:00:00+09:00'),
+                ends: new TZDate('2015-05-03T23:59:59+09:00'),
+                guide: inst.guide,
+                triggerEvent: {}
             });
         });
 
@@ -84,15 +90,18 @@ describe('handler:AlldayCreation', function() {
             mockEventData = {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 3,
-                xIndex: 1
+                xIndex: 1,
+                triggerEvent: {}
             };
 
             proto._createEvent.call(inst, mockEventData);
 
             expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: true,
-                starts: new Date('2015-05-02T00:00:00+09:00'),
-                ends: new Date('2015-05-04T23:59:59+09:00')
+                starts: new TZDate('2015-05-02T00:00:00+09:00'),
+                ends: new TZDate('2015-05-04T23:59:59+09:00'),
+                guide: inst.guide,
+                triggerEvent: {}
             });
         });
     });
@@ -103,7 +112,8 @@ describe('handler:AlldayCreation', function() {
 
         beforeEach(function() {
             mockDragHandler = jasmine.createSpyObj('Drag', ['on', 'off']);
-            inst = new AlldayCreation(mockDragHandler);
+            mockAlldayView = {container: {}};
+            inst = new AlldayCreation(mockDragHandler, mockAlldayView);
             spyOn(inst, 'fire');
             spyOn(inst, '_retriveEventData').and.returnValue(function() {return 'good'});
             spyOn(inst, '_createEvent');

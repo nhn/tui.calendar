@@ -1,8 +1,9 @@
 /*eslint-disable*/
+var array = require('common/array');
+var CalEvent = require('model/calEvent');
+
 describe('common/array', function() {
-    var util = tui.util,
-        array = ne.dooray.calendar.array;
-        CalEvent = ne.dooray.calendar.CalEvent;
+    var util = tui.util;
 
     describe('common compare methods', function() {
         describe('compare.num', function() {
@@ -76,16 +77,20 @@ describe('common/array', function() {
         });
 
         describe('CalEvent', function() {
-            var fixtures,
+            var mockData,
                 events;
 
             beforeEach(function() {
-                fixtures = getJSONFixture('event_set_string2.json');
+                mockData = fixture.load('event_set_string2.json');
                 events = [];
             });
 
+            afterEach(function() {
+                fixture.cleanup();
+            });
+
             it('isAllDay ASC, starts ASC, duration DESC, id ASC', function() {
-                util.forEach(fixtures, function(data) {
+                util.forEach(mockData, function(data) {
                     events.push(CalEvent.create(data));
                 });
 

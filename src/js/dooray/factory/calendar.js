@@ -5,22 +5,25 @@
 'use strict';
 
 var util = global.tui.util;
-var config = require('../../config'),
-    Calendar = require('../../factory/calendar'),
-    controllerFactory = require('../factory/controller'),
-    serviceWeekViewFactory = require('./weekView');
+var config = require('../../config');
+var Calendar = require('../../factory/calendar');
+var datetime = require('../../common/datetime');
+var controllerFactory = require('../factory/controller');
+var serviceWeekViewFactory = require('./weekView');
 
 /**
  * @typedef {object} ServiceCalendar~DoorayEvent
  * @property {string} [id] - 일정의 uniqueID.
- * @property {string} [calendarID] - 각 일정을 캘린더별로 그룹지을 수 있는 값.
+ * @property {string} [calendarId] - 각 일정을 캘린더별로 그룹지을 수 있는 값.
  * @property {string} title - 이벤트 제목
  * @property {string} category - 이벤트 타입
  * @property {string} dueDateClass - 업무 일정 분류 (category가 'task'일 때 유효)
+ * @property {string} customStyle - 커스텀 클래스 추가
  * @property {string} starts - 일정 시작 시간
  * @property {string} ends - 일정 종료 시간
  * @property {string} [color] - 일정 텍스트색
  * @property {string} [bgColor] - 일정 배경색
+ * @property {string} [borderColor] - 일정 border색
  */
 
 /**
@@ -36,7 +39,7 @@ var config = require('../../config'),
  *  @param {string} [options.defaultDate=] - default date to render calendar.
  *   if not supplied, use today.
  *  @param {object} [options.calendarColor] - {@see ServiceCalendar~DoorayEvent}
- *   의 calendarID별로 스타일을 미리 지정 가능
+ *   의 calendarId별로 스타일을 미리 지정 가능
  *  @param {object} [options.week] - options for week view
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} [options.week.panelHeights] - each panel height
@@ -53,15 +56,21 @@ function ServiceCalendar(options, container) {
     options = util.extend({
         calendarColor: {},
         groupFunc: function(viewModel) {
-            return viewModel.model.category;
-        },
-        month: {
-            eventFilter: function(model) {
-                return Boolean(model.visible) &&
-                    (model.category === 'allday' || model.category === 'time');
+            var model = viewModel.model;
+
+            if (model.category === 'time' && (model.ends - model.starts > datetime.MILLISECONDS_PER_DAY)) {
+                return 'allday';
             }
+            return model.category;
         }
     }, options);
+
+    options.month = util.extend({
+        eventFilter: function(model) {
+            return Boolean(model.visible) &&
+                (model.category === 'allday' || model.category === 'time');
+        }
+    }, util.pick(options, 'month') || {});
 
     this.calendarColor = options.calendarColor;
 
@@ -102,11 +111,12 @@ ServiceCalendar.prototype.createEvents = function(dataObjectList, silent) {
     var calColor = this.calendarColor;
 
     util.forEach(dataObjectList, function(obj) {
-        var color = calColor[obj.calendarID];
+        var color = calColor[obj.calendarId];
 
         if (color) {
             obj.color = color.color;
             obj.bgColor = color.bgColor;
+            obj.borderColor = color.borderColor;
         }
     });
 
@@ -116,24 +126,26 @@ ServiceCalendar.prototype.createEvents = function(dataObjectList, silent) {
 /**
  * @override
  * @param {string} id - id of event instance from server API
+ * @param {string} calendarId - calendarId of event instance from server API
  * @returns {DoorayEvent} founded event instance.
  */
-ServiceCalendar.prototype.getEvent = function(id) {
+ServiceCalendar.prototype.getEvent = function(id, calendarId) {
     return this.controller.events.single(function(model) {
-        return model.id === id;
+        return model.id === id && model.calendarId === calendarId;
     });
 };
 
 /**
  * @override
  * @param {string} id - ID of event instance to update data
+ * @param {string} calendarId - calendarId of event instance to update data
  * @param {object} data - data object to update event
  */
-ServiceCalendar.prototype.updateEvent = function(id, data) {
+ServiceCalendar.prototype.updateEvent = function(id, calendarId, data) {
     var ctrl = this.controller,
         ownEvents = ctrl.events,
         calEvent = ownEvents.single(function(model) {
-            return model.id === id;
+            return model.id === id && model.calendarId === calendarId;
         });
 
     if (calEvent) {
@@ -146,13 +158,14 @@ ServiceCalendar.prototype.updateEvent = function(id, data) {
  * Delete DoorayEvent instance
  * @override
  * @fires ServiceCalendar#beforeDeleteEvent
- * @param {string} id - ID of event to delete
+ * @param {string} id - ID of event or to delete
+ * @param {string} calendarId - calendarId of event to delete
  */
-ServiceCalendar.prototype.deleteEvent = function(id) {
+ServiceCalendar.prototype.deleteEvent = function(id, calendarId) {
     var ctrl = this.controller,
         ownEvents = ctrl.events,
         calEvent = ownEvents.single(function(model) {
-            return model.id === id;
+            return model.id === id && model.calendarId === calendarId;
         });
 
     if (!calEvent) {
@@ -185,35 +198,37 @@ ServiceCalendar.prototype.getLayoutData = function() {
 };
 
 /**
- * 같은 calendarID를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
- * @param {string} calendarID - calendarID value
+ * 같은 calendarId를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
+ * @param {string} calendarId - calendarId value
  * @param {object} option - color data object
  *  @param {string} option.color - text color of event element
  *  @param {string} option.bgColor - bg color of event element
  *  @param {boolean} [option.render=true] - set false then does not auto render.
  */
-ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
+ServiceCalendar.prototype.setCalendarColor = function(calendarId, option) {
     var calColor = this.calendarColor,
         ownEvents = this.controller.events,
-        ownColor = calColor[calendarID];
+        ownColor = calColor[calendarId];
 
     if (!util.isObject(option)) {
         config.throwError('Calendar#changeCalendarColor(): color 는 {color: \'\', bgColor: \'\'} 형태여야 합니다.');
     }
 
-    ownColor = calColor[calendarID] = util.extend({
+    ownColor = calColor[calendarId] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
+        borderColor: '#a1b56c',
         render: true
     }, option);
 
     ownEvents.each(function(model) {
-        if (model.calendarID !== calendarID) {
+        if (model.calendarId !== calendarId) {
             return;
         }
 
         model.color = ownColor.color;
         model.bgColor = ownColor.bgColor;
+        model.borderColor = ownColor.borderColor;
     });
 
     if (ownColor.render) {
@@ -223,18 +238,18 @@ ServiceCalendar.prototype.setCalendarColor = function(calendarID, option) {
 
 /**
  * Toggle events visibility by calendar ID
- * @param {string} calendarID - calendar id value
+ * @param {string} calendarId - calendar id value
  * @param {boolean} toHide - set true to hide events
  * @param {boolean} render - set true then render after change visible property each models
  * @private
  */
-ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarID, toHide, render) {
+ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarId, toHide, render) {
     var ownEvents = this.controller.events;
 
-    calendarID = util.isArray(calendarID) ? calendarID : [calendarID];
+    calendarId = util.isArray(calendarId) ? calendarId : [calendarId];
 
     ownEvents.each(function(model) {
-        if (~util.inArray(model.calendarID, calendarID)) {
+        if (~util.inArray(model.calendarId, calendarId)) {
             model.set('visible', !toHide);
         }
     });
@@ -246,23 +261,22 @@ ServiceCalendar.prototype._toggleEventsByCalendarID = function(calendarID, toHid
 
 /**
  * Show events visibility by calendar ID
- * @param {string|string[]} calendarID - calendar id value
+ * @param {string|string[]} calendarId - calendar id value
  * @param {boolean} [render=true] - set false then doesn't render after change model's property.
  */
-ServiceCalendar.prototype.showEventsByCalendarID = function(calendarID, render) {
+ServiceCalendar.prototype.showEventsByCalendarID = function(calendarId, render) {
     render = util.isExisty(render) ? render : true;
-    this._toggleEventsByCalendarID(calendarID, false, render);
+    this._toggleEventsByCalendarID(calendarId, false, render);
 };
 
 /**
  * Hide events visibility by calendar ID
- * @param {string|string[]} calendarID - calendar id value
+ * @param {string|string[]} calendarId - calendar id value
  * @param {boolean} [render=true] - set false then doesn't render after change model's property.
  */
-ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarID, render) {
+ServiceCalendar.prototype.hideEventsByCalendarID = function(calendarId, render) {
     render = util.isExisty(render) ? render : true;
-    this._toggleEventsByCalendarID(calendarID, true, render);
+    this._toggleEventsByCalendarID(calendarId, true, render);
 };
 
 module.exports = ServiceCalendar;
-

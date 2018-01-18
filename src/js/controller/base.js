@@ -5,6 +5,7 @@
 'use strict';
 
 var util = global.tui.util;
+var TZDate = require('../common/timezone').Date;
 var CalEvent = require('../model/calEvent');
 var CalEventViewModel = require('../model/viewModel/calEvent');
 var datetime = require('../common/datetime');
@@ -124,11 +125,11 @@ Base.prototype.updateEvent = function(id, options) {
         }
 
         if (options.starts) {
-            model.set('starts', new Date(options.starts));
+            model.set('starts', new TZDate(options.starts));
         }
 
         if (options.ends) {
-            model.set('ends', new Date(options.ends));
+            model.set('ends', new TZDate(options.ends));
         }
 
         self._removeFromMatrix(model);
@@ -168,8 +169,8 @@ Base.prototype.deleteEvent = function(id) {
  * @param {CalEvent} event - instance of event.
  */
 Base.prototype._addToMatrix = function(event) {
-    var ownMatrix = this.dateMatrix,
-        containDates = this._getContainDatesInEvent(event);
+    var ownMatrix = this.dateMatrix;
+    var containDates = this._getContainDatesInEvent(event);
 
     util.forEach(containDates, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),
@@ -287,6 +288,17 @@ Base.prototype.findByDateRange = function(starts, ends) {
     });
 
     return result;
+};
+
+Base.prototype.clearEvents = function() {
+    this.dateMatrix = {};
+    this.events.clear();
+    /**
+     * for inner view when clear events
+     * @event Base#clearEvents
+     * @type {CalEvent}
+     */
+    this.fire('clearEvents');
 };
 
 // mixin

@@ -9,8 +9,12 @@ var config = require('../../config');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var TimeCreationGuide = require('./creationGuide');
+var TZDate = require('../../common/timezone').Date;
 var timeCore = require('./core');
+
+var CLICK_DELAY = 300;
 
 /**
  * @constructor
@@ -57,15 +61,29 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
      */
     this._dragStart = null;
 
+    /**
+     * @type {boolean}
+     */
+    this._requestOnClick = false;
+
     dragHandler.on('dragStart', this._onDragStart, this);
+    dragHandler.on('click', this._onClick, this);
+    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
 }
 
 /**
  * Destroy method
  */
 TimeCreation.prototype.destroy = function() {
+    var timeGridView = this.timeGridView;
+
     this.guide.destroy();
     this.dragHandler.off(this);
+
+    if (timeGridView && timeGridView.container) {
+        domevent.off(timeGridView.container, 'dblclick', this._onDblClick, this);
+    }
+
     this.dragHandler = this.timeGridView = this.baseController =
         this._getEventDataFunc = this._dragStart = this.guide = null;
 };
@@ -79,7 +97,7 @@ TimeCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass === config.classname('time-date-event-block')) {
+    if (cssClass === config.classname('time-date-event-block-wrap')) {
         target = target.parentNode;
         cssClass = domutil.getClass(target);
     }
@@ -119,8 +137,7 @@ TimeCreation.prototype._onDragStart = function(dragStartEventData, overrideEvent
 
     this.dragHandler.on({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
 
     /**
@@ -194,7 +211,7 @@ TimeCreation.prototype._createEvent = function(eventData) {
         ];
     }
 
-    baseDate = new Date(relatedView.getDate());
+    baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
     starts = Math.max(dateStart.getTime(), createRange[0]);
@@ -209,8 +226,10 @@ TimeCreation.prototype._createEvent = function(eventData) {
      */
     this.fire('beforeCreateEvent', {
         isAllDay: false,
-        starts: new Date(starts),
-        ends: new Date(ends)
+        starts: new TZDate(starts),
+        ends: new TZDate(ends),
+        guide: this.guide,
+        triggerEvent: eventData.triggerEvent
     });
 };
 
@@ -223,12 +242,9 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
     var self = this,
         dragStart = this._dragStart;
 
-    this.guide.clearGuideElement();
-
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
 
     /**
@@ -271,39 +287,56 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
  */
 TimeCreation.prototype._onClick = function(clickEventData) {
     var self = this;
+    var condResult, getEventDataFunc, eventData;
 
     this.dragHandler.off({
         drag: this._onDrag,
-        dragEnd: this._onDragEnd,
-        click: this._onClick
+        dragEnd: this._onDragEnd
     }, this);
 
-    /**
-     * Function for manipulate event data before firing event
-     * @param {object} eventData - event data
-     */
-    function reviseFunc(eventData) {
-        self._createEvent(eventData);
+    condResult = this.checkExpectedCondition(clickEventData.target);
+    if (!condResult) {
+        return;
     }
 
-    /**
-     * @event TimeCreation#timeCreationClick
-     * @type {object}
-     * @property {Time} relatedView - time view instance related with mouse position.
-     * @property {MouseEvent} originEvent - mouse event object.
-     * @property {number} mouseY - mouse Y px mouse event.
-     * @property {number} gridY - grid Y index value related with mouseY value.
-     * @property {number} timeY - milliseconds value of mouseY points.
-     * @property {number} nearestGridY - nearest grid index related with mouseY value.
-     * @property {number} nearestGridTimeY - time value for nearestGridY.
-     */
-    this._onDrag(clickEventData, 'timeCreationClick', reviseFunc);
+    getEventDataFunc = this._retriveEventData(condResult);
+    eventData = getEventDataFunc(clickEventData.originEvent);
 
+    this._requestOnClick = true;
+    setTimeout(function() {
+        if (self._requestOnClick) {
+            self.fire('timeCreationClick', eventData);
+            self._createEvent(eventData);
+        }
+        self._requestOnClick = false;
+    }, CLICK_DELAY);
     this._dragStart = this._getEventDataFunc = null;
 };
+
+/**
+ * Dblclick event handler
+ * @param {MouseEvent} e - Native MouseEvent
+ */
+TimeCreation.prototype._onDblClick = function(e) {
+    var condResult, getEventDataFunc, eventData;
+
+    condResult = this.checkExpectedCondition(e.target);
+    if (!condResult) {
+        return;
+    }
+
+    getEventDataFunc = this._retriveEventData(condResult);
+    eventData = getEventDataFunc(e);
+
+    this.fire('timeCreationClick', eventData);
+
+    this._createEvent(eventData);
+
+    this._requestOnClick = false;
+};
+
 
 timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);
 
 module.exports = TimeCreation;
-

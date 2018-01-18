@@ -1,7 +1,8 @@
 /*eslint-disable*/
+var Guide = require('handler/time/resizeGuide');
+
 describe('handler/time.resize.guide', function() {
     var util = tui.util,
-        Guide = ne.dooray.calendar.TimeResizeGuide,
         mockInstance;
 
     it('_onDrag() calculate guide element\'s height properly.', function() {

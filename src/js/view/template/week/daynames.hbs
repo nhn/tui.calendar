@@ -1,9 +1,11 @@
 <div class="{{CSS_PREFIX}}dayname-leftmargin">
 {{#each this}}
-<div class="{{CSS_PREFIX}}dayname {{holiday day}}"
-     style="{{common-width width}};left:{{multiply @index width}}%">
-    <div class="{{CSS_PREFIX}}dayname-label">{{dayName}}</div>
-    <div class="{{CSS_PREFIX}}dayname-date">{{date}}</div>
+<div class="{{CSS_PREFIX}}dayname {{#if isToday}}{{CSS_PREFIX}}today{{/if}} {{holiday day}}"
+     data-date="{{renderDate}}"
+     style="{{common-width width}};left:{{left}}%">
+    <span class="{{CSS_PREFIX}}dayname-date-area">
+        <span class="{{CSS_PREFIX}}dayname-date">{{date}}</span> <span class="{{CSS_PREFIX}}dayname-label">{{dayName}}</span>
+    </span>
 </div>
 {{/each}}
 </div>

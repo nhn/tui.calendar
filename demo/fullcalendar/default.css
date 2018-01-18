@@ -2,7 +2,12 @@ html, body {
     background-color: #fff;
     margin: 0;
     padding: 0 11px;
-    height: 100%
+    height: 100%;
+    font-family: "Nanum Gothic", "Meiryo", "Noto Sans JP", sans-serif, Lucida Sans Unicode;
+}
+
+div {
+    box-sizing: border-box
 }
 
 #wrap {
@@ -17,7 +22,6 @@ html, body {
     bottom: 20px;
     left: 0px;
     z-index: 1;
-    border: 1px solid #ccc;
 }
 
 .control {

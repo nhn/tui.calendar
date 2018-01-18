@@ -1,8 +1,9 @@
 /*eslint-disable*/
-describe('handler/time.creation', function() {
-    var domutil = ne.dooray.calendar.domutil,
-        TimeCreation = ne.dooray.calendar.TimeCreation;
+var domutil = require('common/domutil');
+var TimeCreation = require('handler/time/creation');
+var TZDate = require('common/timezone').Date;
 
+describe('handler/time.creation', function() {
     it('checkExpectedCondition() can judge activation of time.creation handler by event target.', function() {
         var target = document.createElement('div');
 
@@ -33,7 +34,7 @@ describe('handler/time.creation', function() {
         domutil.addClass(target, 'tui-view-20');
 
         var gutter = document.createElement('div');
-        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-event-block');
+        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-event-block-wrap');
 
         target.appendChild(gutter);
 
@@ -63,27 +64,34 @@ describe('handler/time.creation', function() {
                 fire: jasmine.createSpy('fire')
             };
         });
-            
+
         it('try to create event by dragend event data.', function() {
             var eventData = {
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-05T00:00:00+09:00');
+                        return new TZDate(2015, 4, 5);
                     }
                 },
                 createRange: [
-                    (new Date('2015-05-05T01:00:00+09:00').getTime()),
-                    (new Date('2015-05-05T01:30:00+09:00').getTime())
+                    (new TZDate(2015, 4, 5, 1).getTime()),
+                    (new TZDate(2015, 4, 5, 1, 30).getTime())
                 ],
-                nearestGridTimeY: (new Date('2015-05-05T01:30:00+09:00').getTime())
+                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime()),
+                triggerEvent: {
+                    type: 'dragend'
+                }
             };
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
 
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
-                starts: new Date('2015-05-05T01:00:00+09:00'),
-                ends: new Date('2015-05-05T01:30:00+09:00')
+                starts: new TZDate(2015, 4, 5, 1),
+                ends: new TZDate(2015, 4, 5, 1, 30),
+                guide: mock.guide,
+                triggerEvent: {
+                    type: 'dragend'
+                }
             });
         });
 
@@ -91,18 +99,25 @@ describe('handler/time.creation', function() {
             var eventData = {
                 relatedView: {
                     getDate: function() {
-                        return new Date('2015-05-05T00:00:00+09:00');
+                        return new TZDate(2015, 4, 5);
                     }
                 },
-                nearestGridTimeY: (new Date('2015-05-05T01:30:00+09:00').getTime())
+                nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime()),
+                triggerEvent: {
+                    type: 'click'
+                }
             };
 
             TimeCreation.prototype._createEvent.call(mock, eventData);
 
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
                 isAllDay: false,
-                starts: new Date('2015-05-05T01:30:00+09:00'),
-                ends: new Date('2015-05-05T02:00:00+09:00')
+                starts: new TZDate(2015, 4, 5, 1, 30),
+                ends: new TZDate(2015, 4, 5, 2),
+                guide: mock.guide,
+                triggerEvent: {
+                    type: 'click'
+                }
             });
 
         });

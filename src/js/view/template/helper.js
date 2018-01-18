@@ -5,7 +5,8 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = tui.util;
+var Handlebars = require('handlebars-template-loader/runtime');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
@@ -26,7 +27,35 @@ function getElSize(value, postfix, prefix) {
     return prefix + ':auto';
 }
 
-module.exports = {
+/**
+ * Get element left based on narrowWeekend
+ * @param {object} viewModel - view model
+ * @param {Array} grids - dates information
+ * @returns {number} element left
+ */
+function getElLeft(viewModel, grids) {
+    return grids[viewModel.left].left;
+}
+
+/**
+ * Get element width based on narrowWeekend
+ * @param {object} viewModel - view model
+ * @param {Array} grids - dates information
+ * @returns {number} element width
+ */
+function getElWidth(viewModel, grids) {
+    var width = 0;
+    var i = 0;
+    var left;
+    for (; i < viewModel.width; i += 1) {
+        left = viewModel.left + i;
+        width += grids[left].width;
+    }
+
+    return width;
+}
+
+Handlebars.registerHelper({
     /**
      * Stamp supplied object
      *
@@ -59,7 +88,7 @@ module.exports = {
     },
 
     /**
-     * Compare object by customizable oper parameter
+     * Compare object or apply logical operation by customizable oper parameter
      * @param {*} a - a
      * @param {string} oper - operator ex) '==', '<'
      * @param {*} b - b
@@ -74,6 +103,8 @@ module.exports = {
                 return (a === b) ? options.fn(this) : options.inverse(this);
             case '<':
                 return (a < b) ? options.fn(this) : options.inverse(this);
+            case '||':
+                return (a || b) ? options.fn(this) : options.inverse(this);
             default:
                 break;
         }
@@ -98,6 +129,26 @@ module.exports = {
     },
 
     /**
+     * Get element left based on narrowWeekend
+     * @param {object} viewModel - view model
+     * @param {Array} grids - dates information
+     * @returns {number} element left
+     */
+    'grid-left': function(viewModel, grids) {
+        return getElLeft(viewModel, grids);
+    },
+
+    /**
+     * Get element width based on narrowWeekend
+     * @param {object} viewModel - view model
+     * @param {Array} grids - dates information
+     * @returns {number} element width
+     */
+    'grid-width': function(viewModel, grids) {
+        return getElWidth(viewModel, grids);
+    },
+
+    /**
      * Use in time.hbs
      * @param {CalEventViewModel} eventViewModel viewModel
      * @returns {string} element size css class
@@ -111,11 +162,24 @@ module.exports = {
         return [top, left, width, height].join(';');
     },
 
+    'month-eventBlock': function(viewModel, grids, blockHeight, paddingTop) {
+        var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
+        var left = getElSize(grids[viewModel.left].left, '%', 'left');
+        var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
+        var height = getElSize(viewModel.height, 'px', 'height');
+
+        return [top, left, width, height].join(';');
+    },
+
     'holiday': function(day) {
         var cssClass = '';
 
-        if (day === 0 || day === 6) {
-            cssClass = config.classname('holiday');
+        if (day === 0) {
+            cssClass = config.classname('holiday-sun');
+        }
+
+        if (day === 6) {
+            cssClass = config.classname('holiday-sat');
         }
 
         return cssClass;
@@ -183,6 +247,10 @@ module.exports = {
             common.stripTags(model.title);
     },
 
+    'milestoneTitle-tmpl': function() {
+        return '마일스톤';
+    },
+
     'task-tmpl': function(model) {
         return '<span class="' +
             config.classname('dot') +
@@ -196,6 +264,10 @@ module.exports = {
         return '업무';
     },
 
+    'alldayTitle-tmpl': function() {
+        return '종일';
+    },
+
     'allday-tmpl': function(model) {
         return common.stripTags(model.title);
     },
@@ -204,6 +276,13 @@ module.exports = {
         return common.stripTags(model.title);
     },
 
-    'minicalendar-tmpl': function(model) {}  // eslint-disable-line
-};
+    'split-time-tmpl': function(model) {
+        return common.stripTags(model.title);
+    },
 
+    'minicalendar-tmpl': function(model) {},  // eslint-disable-line
+
+    'freebusy-title-tmpl': function(model) {
+        return model.name;
+    }
+});

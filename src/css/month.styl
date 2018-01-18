@@ -3,18 +3,16 @@
 
 +prefix-classes(month)
     .dayname
-        wh(100%, 20px)
-        background-color: #fff
-        font-size: 0.9em
+        wh(100%, 42px)
         position: absolute
-        z-index: 1
+        font-size: 13px
+        border-top: 1px solid #ddd
 
     .dayname-item
         height: 100%
-        border-left: 1px solid #ccc
-        margin-left: -1px
-        &:first-child
-            border-left: none
+        padding-right: 11px
+        line-height: 42px
+        text-align: right
 
     .weeks
         padding-top: 20px
@@ -23,43 +21,77 @@
     .week-item
         position: relative
         background-color: #fff
+        &>div
+            height: 100%
 
     .more
         background-color: #fff
         height: inherit
         min-width: 200px
-        border: 1px solid #ccc
+        min-height: 150px
+        border: 1px solid #ddd
 
     .more-title
-        padding: 0 3px
-        height: 19px
-        border-bottom: 1px solid #ccc
+        padding: 0 10px
+        height: 28px
+        line-height: 28px
+        font-weight: bold
+        font-size: 14px
+        background: #f4f4f4
+        border-bottom: 1px solid #ddd
 
     .more-close
         float: right
+        outline: 0
+        background none
+        border: 0
 
     .more-list
-        overflow-y: scroll
+        height: calc(100% - 29px)
+        padding: 10px
+        overflow-y: auto
 
     .more-event
         margin: 2px
         padding: 0 3px
-        font-size: 0.9em
+        font-size: 12px
         line-height: 18px
+        cursor: pointer
+        display: block
+        overflow: hidden
+        white-space: nowrap
+        text-overflow: ellipsis
 
     .guide-block
         position: absolute
 
+    .weekday-event
+        margin-top: 2px
+
+    .creation-guide
+        top: 0
+        bottom: -1px
+        left: -1px
+        right: 0
+        position: absolute
+        z-index: 20
+        background-color: rgba(19, 93, 230, 0.1)
+        border: 1px solid #135de6
+
+    .guide-focused
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2)
+
     .guide
         position: relative
-        margin: 2px 3px 0 2px
         padding-left: 3px
-        background-color: #f7ca88
         line-height: 18px
-        opacity: 0.9
         overflow: hidden
         white-space: nowrap
         text-overflow: ellipsis
+
+    .move-guide
+        font-size: 12px
+        line-height 18px
 
     .exceed-left .guide
         margin-left: 0px
@@ -77,4 +109,3 @@
         width: 6px
         background-position: 3px center
         cursor: col-resize
-
