@@ -1,4 +1,4 @@
-# dooray-calendar
+# TOAST UI Component: FullCalendar
 
 ## API documentation.
 

@@ -41,9 +41,12 @@ div {
 
 .inline-block {
     display: inline-block;
-    vertical-align: middle;
 }
 
 .float-right {
     float: right;
+}
+
+.calendar-options {
+    font-size: 12px;
 }

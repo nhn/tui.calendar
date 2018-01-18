@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Full Calendar DEMO</title>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="../../dist/tui-full-calendar.css" />
+<link rel="stylesheet" type="text/css" href="./css/default.css"></link>
+</head>
+<body>
+<div id="wrap">
+    <div class="control clearfix">
+        <div class="inline-block">
+            <button data-action="move-prev">이전</button>
+            <button data-action="move-today">오늘</button>
+            <button data-action="move-next">다음</button>
+        </div>
+        <div class="inline-block calendar-options">
+            <label>
+                <input type="checkbox" data-action="toggle-narrow-weekend"><span>주말 좁게</span>
+            </label>
+            <label>
+                <input type="checkbox" data-action="toggle-start-day-1"><span>월요일 시작</span>
+            </label>
+        </div>
+        <div class="float-right inline-block">
+            <button data-action="toggle-daily">일간</button>
+            <button data-action="toggle-weekly">주간</button>
+            <button data-action="toggle-monthly">월간</button>
+            <button data-action="toggle-weeks2">2주뷰</button>
+            <button data-action="toggle-weeks3">3주뷰</button>
+        </div>
+    </div>
+    <div id="calendar"></div>
+</div>
+<script type="text/javascript" src="https://cdn.rawgit.com/nhnent/tui.code-snippet/v1.2.9/dist/tui-code-snippet.js"></script>
+<script src="../dist/tui-full-calendar.js"></script>
+<script src="./js/default.js"></script>
+</body>
+</html>

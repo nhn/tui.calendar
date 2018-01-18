@@ -14,8 +14,7 @@ var config = require('../../config'),
     tmpl = require('./month.hbs'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
-    WeekdayInMonth = require('./weekdayInMonth'),
-    dw = require('../../common/dw');
+    WeekdayInMonth = require('./weekdayInMonth');
 
 /**
  * @constructor

@@ -5,7 +5,6 @@
 'use strict';
 
 var util = global.tui.util;
-var TZDate = require('../common/timezone').Date;
 var CalEvent = require('../model/calEvent');
 var CalEventViewModel = require('../model/viewModel/calEventViewModel');
 var datetime = require('../common/datetime');

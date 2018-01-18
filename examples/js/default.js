@@ -265,14 +265,33 @@
             case 'move-today':
                 cal.today();
                 break;
-            case 'toggle-day':
+            case 'toggle-daily':
                 cal.toggleView('day');
                 break;
-            case 'toggle-week':
+            case 'toggle-weekly':
                 cal.toggleView('week');
                 break;
-            case 'toggle-month':
-                cal.toggleView('month');
+            case 'toggle-monthly':
+                cal.options.month.visibleWeeksCount = 0;
+                cal.toggleView('month', true);
+                break;
+            case 'toggle-weeks2':
+                cal.options.month.visibleWeeksCount = 2;
+                cal.toggleView('month', true);
+                break;
+            case 'toggle-weeks3':
+                cal.options.month.visibleWeeksCount = 3;
+                cal.toggleView('month', true);
+                break;
+            case 'toggle-narrow-weekend':
+                cal.options.month.narrowWeekend = !cal.options.month.narrowWeekend;
+                cal.options.week.narrowWeekend = !cal.options.week.narrowWeekend;
+                cal.toggleView(cal.viewName, true);
+                break;
+            case 'toggle-start-day-1':
+                cal.options.month.startDayOfWeek = cal.options.month.startDayOfWeek ? 0 : 1;
+                cal.options.week.startDayOfWeek = cal.options.week.startDayOfWeek ? 0 : 1;
+                cal.toggleView(cal.viewName, true);
                 break;
             default:
                 return;

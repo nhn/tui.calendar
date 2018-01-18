@@ -1,23 +1,30 @@
 {
-  "name": "dooray-calendar",
-  "main": [
-    "dist/index.js",
-    "dist/index.css"
-  ],
-  "version": "1.0.0",
+  "name": "tui-full-calendar",
   "authors": [
     "NHNEnt FE Dev tean <dl_javascript@nhnent.com>"
   ],
-  "description": "dooray-calendar",
   "license": "MIT",
+  "main": [
+    "dist/tui-full-calendar.js",
+    "dist/tui-full-calendar.css"
+  ],
+  "version": "0.0.1",
+  "description": "TOAST UI Component: FullCalendar",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "src",
+    "examples",
+    "karma.*.js",
+    "package.json",
+    ".gitignore",
+    "jsdoc.conf.json",
+    "webpack.*.js"
   ],
   "dependencies": {
-    "tui-code-snippet": "^1.1.2"
+    "tui-code-snippet": "^1.2.9"
   }
 }
