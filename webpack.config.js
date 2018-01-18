@@ -5,6 +5,7 @@ var path = require('path');
 var webpack = require('webpack');
 var stylus = require('stylus');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var SafeUmdPlugin = require('safe-umd-webpack-plugin');
 var isProduction = process.env.NODE_ENV === 'production';
 
 var context = JSON.stringify({
@@ -20,7 +21,8 @@ var OUTPUT_NAME = isProduction ? 'index.min' : 'index';
 
 var plugins = [
     new ExtractTextPlugin(OUTPUT_NAME + '.css'),
-    new webpack.BannerPlugin(bannerText, {entryOnly: true})
+    new webpack.BannerPlugin(bannerText, {entryOnly: true}),
+    new SafeUmdPlugin()
 ];
 
 var devtool = '#source-map';
@@ -28,6 +30,8 @@ var devtool = '#source-map';
 module.exports = {
     entry: './index.js',
     output: {
+        library: ['tui', 'FullCalendar'],
+        libraryTarget: 'umd',
         path: path.join(__dirname, 'dist'),
         filename: OUTPUT_NAME + '.js',
         publicPath: '/dist'

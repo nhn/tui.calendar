@@ -14,7 +14,8 @@ var dw = require('../common/dw'),
     weekViewFactory = require('./weekView'),
     monthViewFactory = require('./monthView'),
     TZDate = require('../common/timezone').Date,
-    config = require('../config');
+    config = require('../config'),
+    timezone = require('../common/timezone');
 
 /**
  * @typedef {object} CalEvent
@@ -854,6 +855,14 @@ Calendar.prototype.toggleDoorayView = function(isUse) {
 Calendar.prototype._setViewName = function(viewName) {
     this.prevViewName = this.viewName;
     this.viewName = viewName;
+};
+
+/**
+ * Set timezone offset
+ * @param {number} offset - offset (min)
+ */
+Calendar.setTimezoneOffset = function(offset) {
+    timezone.setOffset(offset);
 };
 
 util.CustomEvents.mixin(Calendar);

@@ -32,6 +32,7 @@
         "preprocess-loader": "^0.2.0",
         "preprocessify": "0.0.6",
         "preprocessor-loader": "^1.0.5",
+        "safe-umd-webpack-plugin": "0.0.2",
         "style-loader": "^0.13.1",
         "stylus": "^0.53.0",
         "stylus-loader": "^2.1.2",

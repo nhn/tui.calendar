@@ -1,6 +1,6 @@
 /* eslint no-console: 0, complexity: 0 */
 'use strict';
-(function(window, calendar) {
+(function(window, FullCalendar) {
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
     var daynames = [
@@ -13,10 +13,10 @@
         '토'
     ];
     var lastClickEventModel;
-    // calendar.setTimezoneOffset(540);
+    // FullCalendar.setTimezoneOffset(540);
 
-    cal = calendar.FullCalendar({
-        defaultView: 'day',
+    cal = new FullCalendar({
+        defaultView: 'week',
         isDoorayView: true,
         template: {
             milestone: function(model) {
@@ -70,8 +70,8 @@
             title: '스크럼',
             category: 'time',
             dueDateClass: '',
-            starts: '2017-04-05T22:30:00+09:00',
-            ends: '2017-04-06T02:30:00+09:00'
+            starts: '2018-01-18T22:30:00+09:00',
+            ends: '2018-01-19T02:30:00+09:00'
         },
         {
             id: '2',
@@ -79,8 +79,8 @@
             title: '2차 QA',
             category: 'time',
             dueDateClass: '',
-            starts: '2017-04-06T17:30:00+09:00',
-            ends: '2017-04-07T17:31:00+09:00'
+            starts: '2018-01-18T17:30:00+09:00',
+            ends: '2018-01-19T17:31:00+09:00'
         },
         {
             id: '3',
@@ -300,4 +300,4 @@
     document.querySelector('.control').addEventListener('click', onClick);
 
     window.cal = cal;
-})(window, ne.dooray.calendar);
+})(window, tui.FullCalendar);

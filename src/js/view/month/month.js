@@ -80,11 +80,11 @@ Month.prototype.viewName = 'month';
 
 /**
  * Get calendar array by supplied date
- * @param {string} renderMonthStr - month to render YYYY-MM
+ * @param {string} renderMonthStr - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
  * @returns {array.<Date[]>} calendar array
  */
 Month.prototype._getMonthCalendar = function(renderMonthStr) {
-    var date = dw(renderMonthStr).d;
+    var date = datetime.parse(renderMonthStr) || datetime.parse(renderMonthStr + '-01');
     var startDayOfWeek = this.options.startDayOfWeek || 0;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
     var datetimeOptions, calendar;
