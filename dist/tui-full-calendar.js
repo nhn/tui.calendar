@@ -4058,7 +4058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var cssPrefix = 'dooray-calendar-',
+	var cssPrefix = 'tui-full-calendar-',
 	    alldayGetViewID = new RegExp('^' + cssPrefix + 'weekday[\\s]tui-view-(\\d+)'),
 	    alldayCheckPermission = new RegExp('^' + cssPrefix + 'event(-title)?$'),
 	    timeGetViewID = new RegExp('^' + cssPrefix + 'time-date[\\s]tui-view-(\\d+)');
@@ -4179,7 +4179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        controller: null,
 	        defaultView: 'week',
-	        isDoorayView: true,
+	        taskView: true,
 	        defaultDate: new TZDate(),
 	        template: util.extend({
 	            allday: null,
@@ -4936,14 +4936,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Toggle dooray current view
+	 * Toggle task view
 	 * @param {string} isUse - new view name to render
 	 */
-	Calendar.prototype.toggleDoorayView = function(isUse) {
+	Calendar.prototype.toggleTaskView = function(isUse) {
 	    var viewName = this.viewName,
 	        options = this.options;
 	
-	    options.isDoorayView = isUse;
+	    options.taskView = isUse;
 	    this.toggleView(viewName, true);
 	};
 	
@@ -7893,7 +7893,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        {autoHeight: true}
 	    ];
 	
-	    if (options.isDoorayView) {
+	    if (options.taskView) {
 	        panels = [
 	            {minHeight: 20, maxHeight: 80},
 	            {isSplitter: true},
@@ -7912,7 +7912,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    weekView.vLayout = vLayout;
 	
-	    if (options.isDoorayView) {
+	    if (options.taskView) {
 	        /**********
 	         * 마일스톤
 	         **********/
@@ -7983,7 +7983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	
-	    if (options.isDoorayView) {
+	    if (options.taskView) {
 	        weekView.handler.click.milestone = milestoneClickHandler;
 	        weekView.handler.click.task = taskClickHandler;
 	    }

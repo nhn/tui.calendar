@@ -62,7 +62,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         {autoHeight: true}
     ];
 
-    if (options.isDoorayView) {
+    if (options.taskView) {
         panels = [
             {minHeight: 20, maxHeight: 80},
             {isSplitter: true},
@@ -81,7 +81,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     weekView.vLayout = vLayout;
 
-    if (options.isDoorayView) {
+    if (options.taskView) {
         /**********
          * 마일스톤
          **********/
@@ -152,7 +152,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         }
     };
 
-    if (options.isDoorayView) {
+    if (options.taskView) {
         weekView.handler.click.milestone = milestoneClickHandler;
         weekView.handler.click.task = taskClickHandler;
     }

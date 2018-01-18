@@ -4,7 +4,7 @@
 var path = require('path');
 
 var context = JSON.stringify({
-    CSS_PREFIX: 'dooray-calendar-',
+    CSS_PREFIX: 'tui-full-calendar-',
     BUNDLE_TYPE: 'Debug'
 });
 
@@ -32,7 +32,7 @@ module.exports = function(config) {
         ],
         files: [
             'node_modules/underscore/underscore.js',
-            'bower_components/tui-code-snippet/dist/tui-code-snippet.js',
+            'node_modules/tui-code-snippet/dist/tui-code-snippet.js',
             'test/fixtures/**/*',
             'test/index.js'
         ],

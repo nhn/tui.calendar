@@ -4,36 +4,36 @@
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
-.dooray-calendar-layout {
+.tui-full-calendar-layout {
   height: 100%;
 }
-.dooray-calendar-dragging {
+.tui-full-calendar-dragging {
   cursor: move;
 }
-.dooray-calendar-resizing {
+.tui-full-calendar-resizing {
   cursor: row-resize;
 }
-.dooray-calendar-resizing-x {
+.tui-full-calendar-resizing-x {
   cursor: col-resize;
 }
-.dooray-calendar-hidden {
+.tui-full-calendar-hidden {
   display: none !important;
 }
-.dooray-calendar-invisible span {
+.tui-full-calendar-invisible span {
   visibility: hidden;
 }
-.dooray-calendar-clear {
+.tui-full-calendar-clear {
   zoom: 1;
 }
-.dooray-calendar-clear:after {
+.tui-full-calendar-clear:after {
   content: '';
   display: block;
   clear: both;
 }
-.dooray-calendar-scroll-y {
+.tui-full-calendar-scroll-y {
   overflow-y: scroll;
 }
-.dooray-calendar-dot {
+.tui-full-calendar-dot {
   display: inline-block;
   position: relative;
   top: -1px;
@@ -42,10 +42,10 @@
   height: 7px;
   border-radius: 50%;
 }
-.dooray-calendar-holiday {
+.tui-full-calendar-holiday {
   color: #f00;
 }
-.dooray-calendar-today {
+.tui-full-calendar-today {
   background: rgba(218,229,249,0.3);
 }
 .handle-x {
@@ -68,55 +68,55 @@
     background-size: 4px 8px;
   }
 }
-.dooray-calendar-month-week-item .dooray-calendar-weekday-grid {
+.tui-full-calendar-month-week-item .tui-full-calendar-weekday-grid {
   overflow-y: hidden;
 }
-.dooray-calendar-month-week-item .dooray-calendar-weekday-events {
+.tui-full-calendar-month-week-item .tui-full-calendar-weekday-events {
   overflow-y: visible;
 }
-.dooray-calendar-month-week-item .dooray-calendar-weekday-event {
+.tui-full-calendar-month-week-item .tui-full-calendar-weekday-event {
   margin: 0 10px;
 }
-.dooray-calendar-month-week-item .dooray-calendar-today {
+.tui-full-calendar-month-week-item .tui-full-calendar-today {
   background: none;
 }
-.dooray-calendar-month-week-item .dooray-calendar-today > span {
+.tui-full-calendar-month-week-item .tui-full-calendar-today > span {
   background: #135de6;
   border-radius: 50%;
   color: #fff;
   font-weight: bold;
 }
-.dooray-calendar-month-week-item .dooray-calendar-holiday-sun,
-.dooray-calendar-month-week-item .dooray-calendar-holiday-sat {
+.tui-full-calendar-month-week-item .tui-full-calendar-holiday-sun,
+.tui-full-calendar-month-week-item .tui-full-calendar-holiday-sat {
   background: #fafafa;
 }
-.dooray-calendar-month-week-item .dooray-calendar-extra-date {
+.tui-full-calendar-month-week-item .tui-full-calendar-extra-date {
   color: #bbb;
 }
-.dooray-calendar-month-week-item .dooray-calendar-extra-date.dooray-calendar-holiday-sun {
+.tui-full-calendar-month-week-item .tui-full-calendar-extra-date.tui-full-calendar-holiday-sun {
   color: #f3acac;
 }
-.dooray-calendar-weekday-container,
-.dooray-calendar-weekday-grid,
-.dooray-calendar-weekday-grid-line {
+.tui-full-calendar-weekday-container,
+.tui-full-calendar-weekday-grid,
+.tui-full-calendar-weekday-grid-line {
   height: 100%;
   min-height: inherit;
 }
-.dooray-calendar-weekday-grid {
+.tui-full-calendar-weekday-grid {
   position: absolute;
   width: 100%;
   overflow-y: scroll;
 }
-.dooray-calendar-weekday-border {
+.tui-full-calendar-weekday-border {
   border-top: 1px solid #ddd;
 }
-.dooray-calendar-weekday-container {
+.tui-full-calendar-weekday-container {
   position: relative;
 }
-.dooray-calendar-weekday-container>div {
+.tui-full-calendar-weekday-container>div {
   height: 100%;
 }
-.dooray-calendar-weekday-grid-line {
+.tui-full-calendar-weekday-grid-line {
   position: absolute;
   border-left: 1px solid #ddd;
   margin-left: -1px;
@@ -124,14 +124,14 @@
   text-align: right;
   font-size: 16px;
 }
-.dooray-calendar-weekday-grid-line > span {
+.tui-full-calendar-weekday-grid-line > span {
   display: inline-block;
   width: 27px;
   height: 27px;
   line-height: 27px;
   text-align: center;
 }
-.dooray-calendar-weekday-creation {
+.tui-full-calendar-weekday-creation {
   top: 0;
   left: 0;
   width: 100%;
@@ -139,7 +139,7 @@
   position: absolute;
   overflow-y: scroll;
 }
-.dooray-calendar-weekday-events {
+.tui-full-calendar-weekday-events {
   top: 0;
   left: 0;
   width: 100%;
@@ -148,30 +148,30 @@
   font-size: 12px;
   overflow-y: scroll;
 }
-.dooray-calendar-weekday-events-height-span {
+.tui-full-calendar-weekday-events-height-span {
   width: 1px;
   margin-left: -1px;
 }
-.dooray-calendar-weekday-event-block {
+.tui-full-calendar-weekday-event-block {
   position: absolute;
 }
-.dooray-calendar-weekday-event-block-dragging-dim {
+.tui-full-calendar-weekday-event-block-dragging-dim {
   opacity: 0.4;
 }
-.dooray-calendar-weekday-event {
+.tui-full-calendar-weekday-event {
   position: relative;
   margin: 0 10px 0 1px;
   cursor: pointer;
   border-left-style: solid;
   border-left-width: 3px;
 }
-.dooray-calendar-weekday-event.dooray-calendar-weekday-event-time {
+.tui-full-calendar-weekday-event.tui-full-calendar-weekday-event-time {
   border-left-width: 0;
 }
-.dooray-calendar-weekday-event.dooray-calendar-weekday-event-time .dooray-calendar-weekday-event-title {
+.tui-full-calendar-weekday-event.tui-full-calendar-weekday-event-time .tui-full-calendar-weekday-event-title {
   padding-left: 9px;
 }
-.dooray-calendar-weekday-event-bullet {
+.tui-full-calendar-weekday-event-bullet {
   position: absolute;
   padding: 0;
   width: 6px;
@@ -180,11 +180,11 @@
   left: 0;
   border-radius: 50%;
 }
-.dooray-calendar-weekday-event-bullet-focused {
+.tui-full-calendar-weekday-event-bullet-focused {
   left: 10px;
   background: #fff;
 }
-.dooray-calendar-weekday-event-title {
+.tui-full-calendar-weekday-event-title {
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -193,30 +193,30 @@
   padding-left: 3px;
   font-weight: bold;
 }
-.dooray-calendar-weekday-event-title-focused {
+.tui-full-calendar-weekday-event-title-focused {
   padding-left: 16px;
 }
-.dooray-calendar-weekday-exceed-left .dooray-calendar-weekday-event {
+.tui-full-calendar-weekday-exceed-left .tui-full-calendar-weekday-event {
   margin-left: 0;
   border-left-width: 0;
 }
-.dooray-calendar-weekday-exceed-right .dooray-calendar-weekday-event {
+.tui-full-calendar-weekday-exceed-right .tui-full-calendar-weekday-event {
   margin-right: 0;
 }
-.dooray-calendar-weekday-exceed-right .dooray-calendar-weekday-resize-handle {
+.tui-full-calendar-weekday-exceed-right .tui-full-calendar-weekday-resize-handle {
   display: none;
 }
-.dooray-calendar-weekday-exceed {
+.tui-full-calendar-weekday-exceed {
   text-align: right;
   bottom: 12px;
   padding: 0 10px;
   line-height: 14px;
   color: #000;
 }
-.dooray-calendar-weekday-exceed > span {
+.tui-full-calendar-weekday-exceed > span {
   cursor: pointer;
 }
-.dooray-calendar-weekday-resize-handle {
+.tui-full-calendar-weekday-resize-handle {
   position: absolute;
   top: 0;
   right: 0;
@@ -225,10 +225,10 @@
   cursor: col-resize;
   line-height: 18px;
 }
-.dooray-calendar-weekday-filled {
+.tui-full-calendar-weekday-filled {
   background-color: #e8e8e8;
 }
-.dooray-calendar-left {
+.tui-full-calendar-left {
   width: 77px;
   height: 100%;
   display: -ms-flexbox;
@@ -246,101 +246,101 @@
   line-height: 18px;
   color: #222;
 }
-.dooray-calendar-right {
+.tui-full-calendar-right {
   height: 100%;
   background-color: #fff;
   margin-left: 77px;
   overflow-y: scroll;
   position: relative;
 }
-.dooray-calendar-week-container {
+.tui-full-calendar-week-container {
   width: 100%;
   height: inherit;
   display: inline-block;
   font-size: 10px;
   border-top: 1px solid #ddd;
 }
-.dooray-calendar-week-container .dooray-calendar-today {
+.tui-full-calendar-week-container .tui-full-calendar-today {
   background: none;
 }
-.dooray-calendar-holiday-sun {
+.tui-full-calendar-holiday-sun {
   color: #f2acac;
 }
-.dooray-calendar-dayname {
+.tui-full-calendar-dayname {
   position: absolute;
   margin-left: -1px;
   font-size: 13px;
   padding-left: 5px;
   border-left: 1px solid #ddd;
 }
-.dooray-calendar-dayname .dooray-calendar-dayname-date {
+.tui-full-calendar-dayname .tui-full-calendar-dayname-date {
   font-size: 26px;
   line-height: 41px;
 }
-.dooray-calendar-dayname.dooray-calendar-today {
+.tui-full-calendar-dayname.tui-full-calendar-today {
   font-weight: bold;
   color: #135de6;
 }
-.dooray-calendar-dayname-container {
+.tui-full-calendar-dayname-container {
   height: 42px;
   border-bottom: 1px solid #ddd;
   overflow-y: scroll;
 }
-.dooray-calendar-dayname-leftmargin {
+.tui-full-calendar-dayname-leftmargin {
   position: relative;
   margin-left: 77px;
 }
-.dooray-calendar-allday-right {
+.tui-full-calendar-allday-right {
   overflow-y: hidden;
 }
-.dooray-calendar-allday-container {
+.tui-full-calendar-allday-container {
   height: 100%;
 }
-.dooray-calendar-allday-left {
+.tui-full-calendar-allday-left {
   background-color: #fafafa;
 }
-.dooray-calendar-allday-guide-creation-block {
+.tui-full-calendar-allday-guide-creation-block {
   position: absolute;
   top: 0;
   bottom: 0;
   border: 1px solid #135de6;
   background-color: rgba(19,93,230,0.1);
 }
-.dooray-calendar-allday-guide-move {
+.tui-full-calendar-allday-guide-move {
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
-.dooray-calendar-timegrid-container {
+.tui-full-calendar-timegrid-container {
   height: 100%;
   position: relative;
   overflow: hidden;
   overflow-y: scroll;
 }
-.dooray-calendar-timegrid-container-split {
+.tui-full-calendar-timegrid-container-split {
   height: 100%;
   position: relative;
   overflow: hidden;
 }
-.dooray-calendar-timegrid-left {
+.tui-full-calendar-timegrid-left {
   position: absolute;
   font-size: 12px;
   background-color: #fafafa;
   width: 77px;
   height: auto;
 }
-.dooray-calendar-timegrid-hour {
+.tui-full-calendar-timegrid-hour {
   height: 48px;
   position: relative;
   border-right: 1px solid #ddd;
   color: #555;
   box-sizing: border-box;
 }
-.dooray-calendar-timegrid-hour:first-child span {
+.tui-full-calendar-timegrid-hour:first-child span {
   display: none;
 }
-.dooray-calendar-timegrid-hour:last-child {
+.tui-full-calendar-timegrid-hour:last-child {
   border-bottom: none;
 }
-.dooray-calendar-timegrid-hour span {
+.tui-full-calendar-timegrid-hour span {
   position: absolute;
   top: -11px;
   left: 0;
@@ -348,28 +348,28 @@
   text-align: right;
   line-height: 25px;
 }
-.dooray-calendar-timegrid-right {
+.tui-full-calendar-timegrid-right {
   position: relative;
   margin-left: 77px;
 }
-.dooray-calendar-timegrid-h-grid {
+.tui-full-calendar-timegrid-h-grid {
   background-color: #fff;
 }
-.dooray-calendar-timegrid-gridline {
+.tui-full-calendar-timegrid-gridline {
   height: 48px;
   border-bottom: 1px solid #eee;
   box-sizing: border-box;
 }
-.dooray-calendar-timegrid-gridline:last-child {
+.tui-full-calendar-timegrid-gridline:last-child {
   border-bottom: none;
 }
-.dooray-calendar-timegrid-gridline:after {
+.tui-full-calendar-timegrid-gridline:after {
   content: '';
   display: block;
   height: 24px;
   border-bottom: 1px dotted #f9f9f9;
 }
-.dooray-calendar-timegrid-events {
+.tui-full-calendar-timegrid-events {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -377,27 +377,27 @@
   left: 0;
   cursor: pointer;
 }
-.dooray-calendar-timegrid-hourmarker {
+.tui-full-calendar-timegrid-hourmarker {
   position: absolute;
   width: 100%;
   z-index: 98;
 }
-.dooray-calendar-timegrid-hourmarker-wrap {
+.tui-full-calendar-timegrid-hourmarker-wrap {
   position: relative;
 }
-.dooray-calendar-timegrid-hourmarker-line-left {
+.tui-full-calendar-timegrid-hourmarker-line-left {
   position: absolute;
   background-color: rgba(19,93,230,0.3);
   height: 1px;
   left: 0;
 }
-.dooray-calendar-timegrid-hourmarker-line-right {
+.tui-full-calendar-timegrid-hourmarker-line-right {
   position: absolute;
   background-color: #135de6;
   height: 1px;
   right: 0;
 }
-.dooray-calendar-timegrid-hourmarker-time {
+.tui-full-calendar-timegrid-hourmarker-time {
   position: absolute;
   width: 52px;
   left: -60px;
@@ -408,7 +408,7 @@
   text-align: right;
   color: #135de6;
 }
-.dooray-calendar-timegrid-todaymarker {
+.tui-full-calendar-timegrid-todaymarker {
   position: absolute;
   text-indent: -9999px;
   width: 9px;
@@ -418,40 +418,40 @@
   border-radius: 50%;
   z-index: 99;
 }
-.dooray-calendar-time-date {
+.tui-full-calendar-time-date {
   position: absolute;
   height: 100%;
   margin-left: -1px;
   border-right: 1px solid #ddd;
   box-sizing: content-box;
 }
-.dooray-calendar-time-date:last-child {
+.tui-full-calendar-time-date:last-child {
   border-right: none;
   margin: 0;
 }
-.dooray-calendar-time-date:last-child .dooray-calendar-time-event,
-.dooray-calendar-time-date:last-child .dooray-calendar-time-guide-creation {
+.tui-full-calendar-time-date:last-child .tui-full-calendar-time-event,
+.tui-full-calendar-time-date:last-child .tui-full-calendar-time-guide-creation {
   left: 0px;
 }
-.dooray-calendar-time-date-event-block-wrap {
+.tui-full-calendar-time-date-event-block-wrap {
   position: relative;
   margin-right: 10px;
   height: 100%;
 }
-.dooray-calendar-time-date-event-block {
+.tui-full-calendar-time-date-event-block {
   position: absolute;
   right: 0px;
 }
-.dooray-calendar-time-date-event-block-pending {
+.tui-full-calendar-time-date-event-block-pending {
   opacity: 0.7;
 }
-.dooray-calendar-time-date-event-block-dragging-dim {
+.tui-full-calendar-time-date-event-block-dragging-dim {
   opacity: 0.4;
 }
-.dooray-calendar-time-date-event-block-focused {
+.tui-full-calendar-time-date-event-block-focused {
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
-.dooray-calendar-time-event {
+.tui-full-calendar-time-event {
   position: relative;
   left: 1px;
   height: 100%;
@@ -462,7 +462,7 @@
   font-weight: bold;
   padding: 1px 0 1px 3px;
 }
-.dooray-calendar-time-resize-handle {
+.tui-full-calendar-time-resize-handle {
   position: absolute;
   right: 0px;
   bottom: 0px;
@@ -473,21 +473,21 @@
   cursor: row-resize;
   background-position: center top;
 }
-.dooray-calendar-time-guide-creation {
+.tui-full-calendar-time-guide-creation {
   position: absolute;
   right: 10px;
   left: 1px;
   border: 1px solid #135de6;
   background-color: rgba(19,93,230,0.1);
 }
-.dooray-calendar-time-guide-move .dooray-calendar-time-event,
-.dooray-calendar-time-guide-resize .dooray-calendar-time-event,
-.dooray-calendar-time-guide-move .dooray-calendar-time-resize-handle,
-.dooray-calendar-time-guide-resize .dooray-calendar-time-resize-handle {
+.tui-full-calendar-time-guide-move .tui-full-calendar-time-event,
+.tui-full-calendar-time-guide-resize .tui-full-calendar-time-event,
+.tui-full-calendar-time-guide-move .tui-full-calendar-time-resize-handle,
+.tui-full-calendar-time-guide-resize .tui-full-calendar-time-resize-handle {
   opacity: 0.8;
   z-index: 97;
 }
-.dooray-calendar-time-guide-creation-label {
+.tui-full-calendar-time-guide-creation-label {
   color: #fff;
   cursor: default;
   line-height: 16px;
@@ -496,45 +496,45 @@
   font-weight: bold;
   padding-left: 3px;
 }
-.dooray-calendar-time-guide-bottom {
+.tui-full-calendar-time-guide-bottom {
   position: absolute;
   bottom: 0px;
 }
-.dooray-calendar-month {
+.tui-full-calendar-month {
   height: 100%;
 }
-.dooray-calendar-month-dayname {
+.tui-full-calendar-month-dayname {
   width: 100%;
   height: 42px;
   position: absolute;
   font-size: 13px;
   border-top: 1px solid #ddd;
 }
-.dooray-calendar-month-dayname-item {
+.tui-full-calendar-month-dayname-item {
   height: 100%;
   padding-right: 11px;
   line-height: 42px;
   text-align: right;
 }
-.dooray-calendar-month-weeks {
+.tui-full-calendar-month-weeks {
   padding-top: 20px;
   height: 100%;
 }
-.dooray-calendar-month-week-item {
+.tui-full-calendar-month-week-item {
   position: relative;
   background-color: #fff;
 }
-.dooray-calendar-month-week-item>div {
+.tui-full-calendar-month-week-item>div {
   height: 100%;
 }
-.dooray-calendar-month-more {
+.tui-full-calendar-month-more {
   background-color: #fff;
   height: inherit;
   min-width: 200px;
   min-height: 150px;
   border: 1px solid #ddd;
 }
-.dooray-calendar-month-more-title {
+.tui-full-calendar-month-more-title {
   padding: 0 10px;
   height: 28px;
   line-height: 28px;
@@ -543,18 +543,18 @@
   background: #f4f4f4;
   border-bottom: 1px solid #ddd;
 }
-.dooray-calendar-month-more-close {
+.tui-full-calendar-month-more-close {
   float: right;
   outline: 0;
   background: none;
   border: 0;
 }
-.dooray-calendar-month-more-list {
+.tui-full-calendar-month-more-list {
   height: calc(100% - 29px);
   padding: 10px;
   overflow-y: auto;
 }
-.dooray-calendar-month-more-event {
+.tui-full-calendar-month-more-event {
   margin: 2px;
   padding: 0 3px;
   font-size: 12px;
@@ -565,13 +565,13 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.dooray-calendar-month-guide-block {
+.tui-full-calendar-month-guide-block {
   position: absolute;
 }
-.dooray-calendar-month-weekday-event {
+.tui-full-calendar-month-weekday-event {
   margin-top: 2px;
 }
-.dooray-calendar-month-creation-guide {
+.tui-full-calendar-month-creation-guide {
   top: 0;
   bottom: -1px;
   left: -1px;
@@ -581,10 +581,10 @@
   background-color: rgba(19,93,230,0.1);
   border: 1px solid #135de6;
 }
-.dooray-calendar-month-guide-focused {
+.tui-full-calendar-month-guide-focused {
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
-.dooray-calendar-month-guide {
+.tui-full-calendar-month-guide {
   position: relative;
   padding-left: 3px;
   line-height: 18px;
@@ -592,20 +592,20 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.dooray-calendar-month-move-guide {
+.tui-full-calendar-month-move-guide {
   font-size: 12px;
   line-height: 18px;
 }
-.dooray-calendar-month-exceed-left .dooray-calendar-month-guide {
+.tui-full-calendar-month-exceed-left .tui-full-calendar-month-guide {
   margin-left: 0px;
 }
-.dooray-calendar-month-exceed-right .dooray-calendar-month-guide {
+.tui-full-calendar-month-exceed-right .tui-full-calendar-month-guide {
   margin-right: 0px;
 }
-.dooray-calendar-month-exceed-right .dooray-calendar-month-guide-handle {
+.tui-full-calendar-month-exceed-right .tui-full-calendar-month-guide-handle {
   display: none;
 }
-.dooray-calendar-month-guide-handle {
+.tui-full-calendar-month-guide-handle {
   position: absolute;
   top: 0;
   right: 3px;
@@ -613,47 +613,47 @@
   background-position: 3px center;
   cursor: col-resize;
 }
-.dooray-calendar-milestone-container {
+.tui-full-calendar-milestone-container {
   height: 100%;
 }
-.dooray-calendar-milestone-layout > div {
+.tui-full-calendar-milestone-layout > div {
   border-top: 1px solid #ccc;
 }
-.dooray-calendar-milestone-layout > div:first-child {
+.tui-full-calendar-milestone-layout > div:first-child {
   border-top: 0;
 }
-.dooray-calendar-milestone-right {
+.tui-full-calendar-milestone-right {
   overflow-y: hidden;
 }
-.dooray-calendar-milestone-day-grid-wrap {
+.tui-full-calendar-milestone-day-grid-wrap {
   overflow-y: scroll;
   width: 100%;
   height: 100%;
   position: absolute;
 }
-.dooray-calendar-milestone-day-grid {
+.tui-full-calendar-milestone-day-grid {
   border-left: 1px solid #ccc;
   float: left;
   margin-left: -1px;
   height: 100%;
 }
-.dooray-calendar-milestone-day-scroll {
+.tui-full-calendar-milestone-day-scroll {
   height: 100%;
   overflow-y: scroll;
   position: relative;
 }
-.dooray-calendar-milestone-day {
+.tui-full-calendar-milestone-day {
   position: absolute;
   margin-left: -1px;
   height: 100%;
 }
-.dooray-calendar-milestone-list {
+.tui-full-calendar-milestone-list {
   margin: 0;
   padding: 1px 5px 0;
   overflow: hidden;
   min-height: 100%;
 }
-.dooray-calendar-milestone-item {
+.tui-full-calendar-milestone-item {
   font-size: 11px;
   list-style: none;
   line-height: 16px;
@@ -661,49 +661,49 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.dooray-calendar-task-container {
+.tui-full-calendar-task-container {
   height: 100%;
 }
-.dooray-calendar-task-right {
+.tui-full-calendar-task-right {
   overflow-y: hidden;
 }
-.dooray-calendar-task-day-grid-wrap {
+.tui-full-calendar-task-day-grid-wrap {
   overflow-y: scroll;
   width: 100%;
   height: 100%;
   position: absolute;
 }
-.dooray-calendar-task-day-grid {
+.tui-full-calendar-task-day-grid {
   border-left: 1px solid #ddd;
   position: absolute;
   margin-left: -1px;
   height: 100%;
   box-sizing: content-box;
 }
-.dooray-calendar-task-day-scroll {
+.tui-full-calendar-task-day-scroll {
   height: 100%;
   overflow-y: scroll;
   position: relative;
 }
-.dooray-calendar-task-day {
+.tui-full-calendar-task-day {
   position: absolute;
   margin-left: -1px;
   height: 100%;
 }
-.dooray-calendar-task-day-wrap {
+.tui-full-calendar-task-day-wrap {
   padding: 0;
   overflow: hidden;
   min-height: 100%;
 }
-.dooray-calendar-task-duedate-class strong {
+.tui-full-calendar-task-duedate-class strong {
   font-weight: normal;
 }
-.dooray-calendar-task-list {
+.tui-full-calendar-task-list {
   padding: 1px 10px 1px 2px;
   margin: 0;
   list-style: none;
 }
-.dooray-calendar-task-item {
+.tui-full-calendar-task-item {
   list-style: none;
   white-space: nowrap;
   overflow: hidden;
@@ -715,28 +715,28 @@
   border-left-width: 3px;
   border-left-style: solid;
 }
-.dooray-calendar-task-item:last-child {
+.tui-full-calendar-task-item:last-child {
   margin-bottom: 0;
 }
-.dooray-calendar-vlayout-container {
+.tui-full-calendar-vlayout-container {
   position: relative;
 }
-.dooray-calendar-splitter {
+.tui-full-calendar-splitter {
   clear: left;
   height: 3px;
   border: 1px solid #ddd;
   border-width: 1px 0;
   cursor: row-resize;
 }
-.dooray-calendar-splitter:hover {
+.tui-full-calendar-splitter:hover {
   border-color: #999;
 }
-.dooray-calendar-splitter-focused {
+.tui-full-calendar-splitter-focused {
   height: 3px;
   background-color: #ddd;
   border: none;
 }
-.dooray-calendar-splitter-guide {
+.tui-full-calendar-splitter-guide {
   position: absolute;
   width: 100%;
   height: 3px;

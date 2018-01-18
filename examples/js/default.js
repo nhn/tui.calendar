@@ -17,7 +17,7 @@
 
     cal = new FullCalendar({
         defaultView: 'week',
-        isDoorayView: true,
+        taskView: true,
         template: {
             milestone: function(model) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
@@ -148,9 +148,9 @@
         {
             id: '10',
             calendarId: '2',
-            title: '[추가 추가 일정2]',
-            category: 'milestone',
-            dueDateClass: '',
+            title: '테스트 업무',
+            category: 'task',
+            dueDateClass: 'lunch',
             starts: formattedDate + 'T00:00:00+09:00',
             ends: formattedDate + 'T00:00:00+09:00'
         },

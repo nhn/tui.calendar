@@ -16,7 +16,7 @@ var BANNER = [
     '@license ' + pkg.license
 ].join('\n');
 var context = JSON.stringify({
-    CSS_PREFIX: 'dooray-calendar-',
+    CSS_PREFIX: 'tui-full-calendar-',
     BUNDLE_TYPE: (isProduction ? 'Release' : 'Debug')
 });
 var stylusLoader = ExtractTextPlugin.extract('style', `preprocess?${context}!css?sourceMap!stylus?sourceMap!`);

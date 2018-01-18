@@ -79,7 +79,7 @@ function Calendar(options, container) {
         },
         controller: null,
         defaultView: 'week',
-        isDoorayView: true,
+        taskView: true,
         defaultDate: new TZDate(),
         template: util.extend({
             allday: null,
@@ -836,14 +836,14 @@ Calendar.prototype.toggleView = function(newViewName, force) {
 };
 
 /**
- * Toggle dooray current view
+ * Toggle task view
  * @param {string} isUse - new view name to render
  */
-Calendar.prototype.toggleDoorayView = function(isUse) {
+Calendar.prototype.toggleTaskView = function(isUse) {
     var viewName = this.viewName,
         options = this.options;
 
-    options.isDoorayView = isUse;
+    options.taskView = isUse;
     this.toggleView(viewName, true);
 };
 

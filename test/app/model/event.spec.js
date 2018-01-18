@@ -2,7 +2,7 @@
 var CalEvent = require('model/calEvent');
 var TZDate = require('common/timezone').Date;
 
-describe('model/event', function() {
+describe('model/event basic', function() {
     var event;
 
     beforeEach(function() {
@@ -304,7 +304,7 @@ describe('model/event', function() {
     });
 });
 
-describe('dooray:model/Event', function() {
+describe('model/Event advanced', function() {
     var jsonFixtures;
 
     beforeEach(function() {
