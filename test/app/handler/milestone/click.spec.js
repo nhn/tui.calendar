@@ -1,7 +1,7 @@
 var Collection = require('common/collection');
 var MilestoneClick = require('handler/milestone/click');
 
-describe('service:handler:MilestoneClick', function() {
+describe('week:handler:MilestoneClick', function() {
     var mockInst, mockCollection;
 
     beforeEach(function() {

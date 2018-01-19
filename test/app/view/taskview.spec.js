@@ -1,7 +1,7 @@
 var TaskView = require('view/week/taskview');
 var datetime = require('common/datetime');
 
-describe('service:view/TaskView', function() {
+describe('week:view/TaskView', function() {
     var mockInst;
 
     beforeEach(function() {

@@ -1,7 +1,7 @@
 var Collection = require('common/collection');
 var TaskClick = require('handler/task/click');
 
-describe('service:handler:TaskClick', function() {
+describe('week:handler:TaskClick', function() {
     var mockInst, mockCollection;
 
     beforeEach(function() {
