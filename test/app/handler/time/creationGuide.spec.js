@@ -1,5 +1,6 @@
 var datetime = require('common/datetime');
 var TimeCreationGuide = require('handler/time/creationGuide');
+var reqAnimFrame = require('common/reqAnimFrame');
 
 describe('handler/time.creation.guide', function() {
     var mockTimeCreation,
@@ -147,7 +148,7 @@ describe('handler/time.creation.guide', function() {
             setTimeout(function() {
                 expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, +startTime, +time + min30);
                 done();
-            }, 10);
+            }, 100);
         });
     });
 });
