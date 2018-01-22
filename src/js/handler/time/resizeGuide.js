@@ -33,7 +33,7 @@ function TimeResizeGuide(timeResize) {
     /**
      * @type {HTMLElement}
      */
-    this._originEventElement = null;
+    this._originScheduleElement = null;
 
     /**
      * @type {number}
@@ -65,7 +65,7 @@ TimeResizeGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.timeResize.off(this);
     this.guideElement = this.timeResize = this._getTopFunc =
-        this._originEventElement = this._startHeightPixel =
+        this._originScheduleElement = this._startHeightPixel =
         this._startGridY = this._startTopPixel = null;
 };
 
@@ -74,7 +74,7 @@ TimeResizeGuide.prototype.destroy = function() {
  */
 TimeResizeGuide.prototype._clearGuideElement = function() {
     var guideElement = this.guideElement,
-        originElement = this._originEventElement;
+        originElement = this._originScheduleElement;
 
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('resizing'));
@@ -86,7 +86,7 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
 
     domutil.remove(guideElement);
 
-    this.guideElement = this._getTopFunc = this._originEventElement =
+    this.guideElement = this._getTopFunc = this._originScheduleElement =
         this._startHeightPixel = this._startGridY = this._startTopPixel = null;
 };
 
@@ -115,7 +115,7 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
 TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var originElement = domutil.closest(
             dragStartEventData.target,
-            config.classname('.time-date-event-block')
+            config.classname('.time-date-schedule-block')
         ),
         guideElement;
 
@@ -131,7 +131,7 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     this._startHeightPixel = parseFloat(originElement.style.height);
     this._startTopPixel = parseFloat(originElement.style.top);
 
-    this._originEventElement = originElement;
+    this._originScheduleElement = originElement;
     guideElement = this.guideElement = originElement.cloneNode(true);
     domutil.addClass(guideElement, config.classname('time-guide-resize'));
 
@@ -157,7 +157,7 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         height;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
-    // at least large than 30min from event start time.
+    // at least large than 30min from schedule start time.
     minHeight = guideTop + ratio(hourLength, viewHeight, 0.5);
     minHeight -= this._startTopPixel;
     // smaller than 24h

@@ -41,7 +41,7 @@ function MonthCreation(dragHandler, monthView, baseController) {
     /**
      * @type {function}
      */
-    this.getEventData = null;
+    this.getScheduleData = null;
 
     /**
      * Cache for dragging session
@@ -76,23 +76,23 @@ MonthCreation.prototype.destroy = function() {
     }
 
     this.dragHandler = this.monthView = this.baseController =
-        this.getEventData = this._cache = this.guide = null;
+        this.getScheduleData = this._cache = this.guide = null;
 };
 
 /**
- * Fire before create event
- * @fires {MonthCreation#beforeCreateEvent}
+ * Fire before create schedule
+ * @fires {MonthCreation#beforeCreateSchedule}
  * @param {object} eventData - cache data from single dragging session
  */
-MonthCreation.prototype._createEvent = function(eventData) {
+MonthCreation.prototype._createSchedule = function(eventData) {
     /**
-     * @event {MonthCreation#beforeCreateEvent}
+     * @event {MonthCreation#beforeCreateSchedule}
      * @type {object}
-     * @property {boolean} isAllDay - whether creating event is allday?
+     * @property {boolean} isAllDay - whether creating schedule is allday?
      * @property {Date} starts - select start date
      * @property {Date] ends - select end date
      */
-    this.fire('beforeCreateEvent', {
+    this.fire('beforeCreateSchedule', {
         isAllDay: eventData.isAllDay,
         starts: eventData.starts,
         ends: eventData.ends,
@@ -118,9 +118,9 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
-    this.getEventData = getMousePosDate(this.monthView);
+    this.getScheduleData = getMousePosDate(this.monthView);
 
-    eventData = this.getEventData(dragStartEvent.originEvent);
+    eventData = this.getScheduleData(dragStartEvent.originEvent);
 
     this._cache = {
         starts: new TZDate(Number(eventData.date))
@@ -144,11 +144,11 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
 MonthCreation.prototype._onDrag = function(dragEvent) {
     var eventData;
 
-    if (!this.getEventData) {
+    if (!this.getScheduleData) {
         return;
     }
 
-    eventData = this.getEventData(dragEvent.originEvent);
+    eventData = this.getScheduleData(dragEvent.originEvent);
 
     if (!eventData) {
         return;
@@ -179,11 +179,11 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
         dragEnd: this._onDragEnd
     }, this);
 
-    if (!this.getEventData) {
+    if (!this.getScheduleData) {
         return;
     }
 
-    eventData = this.getEventData(dragEndEvent.originEvent);
+    eventData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (eventData) {
         cache.ends = new TZDate(Number(eventData.date));
@@ -197,7 +197,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
         cache.starts = new TZDate(times[0]);
         cache.ends = datetime.end(new TZDate(times[1]));
 
-        this._createEvent(cache);
+        this._createSchedule(cache);
     }
 
     /**
@@ -209,7 +209,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
      */
     this.fire('monthCreationDragend', eventData);
 
-    this.getEventData = this._cache = null;
+    this.getScheduleData = this._cache = null;
 };
 
 /**
@@ -220,7 +220,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 MonthCreation.prototype._onDblClick = function(e) {
     var eventData, range;
 
-    if (!isElementWeekdayEvent(e.target)) {
+    if (!isElementWeekdaySchedule(e.target)) {
         return;
     }
 
@@ -230,7 +230,7 @@ MonthCreation.prototype._onDblClick = function(e) {
 
     range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 
-    this._createEvent({
+    this._createSchedule({
         starts: range.starts,
         ends: range.ends,
         isAllDay: false,
@@ -249,7 +249,7 @@ MonthCreation.prototype._onClick = function(e) {
     var self = this;
     var eventData, range;
 
-    if (!isElementWeekdayEvent(e.target)) {
+    if (!isElementWeekdaySchedule(e.target)) {
         return;
     }
 
@@ -262,7 +262,7 @@ MonthCreation.prototype._onClick = function(e) {
 
             range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 
-            self._createEvent({
+            self._createSchedule({
                 starts: range.starts,
                 ends: range.ends,
                 isAllDay: false,
@@ -299,11 +299,11 @@ function adjustStartAndEndTime(starts, ends) {
 }
 
 /**
- * Returns whether the given element is Weekday-Event.
+ * Returns whether the given element is Weekday-Schedule.
  * @param {HTMLElement} el - target element
  * @returns {boolean}
  */
-function isElementWeekdayEvent(el) {
+function isElementWeekdaySchedule(el) {
     return domutil.hasClass(el, config.classname('weekday-events'));
 }
 

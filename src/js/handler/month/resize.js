@@ -1,5 +1,5 @@
 /**
- * @fileoverview Module for resize event in month view
+ * @fileoverview Module for resize schedule in month view
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -37,7 +37,7 @@ function MonthResize(dragHandler, monthView, baseController) {
     /**
      * @type {function}
      */
-    this.getEventData = null;
+    this.getScheduleData = null;
 
     /**
      * @type {object}
@@ -63,24 +63,24 @@ MonthResize.prototype.destroy = function() {
 
 /**
  * Fire event for update model
- * @fires {MonthResize#beforeUpdateEvent}
- * @param {object} eventCache - cache object that result of single dragging
+ * @fires {MonthResize#beforeUpdateSchedule}
+ * @param {object} scheduleCache - cache object that result of single dragging
  *  session.
  */
-MonthResize.prototype._updateEvent = function(eventCache) {
+MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // 일정의 시작 일자를 변경할 순 없음.
     // 종료시간만 변경 가능.
-    var newEnds = datetime.end(new TZDate(Number(eventCache.ends))),
-        model = eventCache.model;
+    var newEnds = datetime.end(new TZDate(Number(scheduleCache.ends))),
+        model = scheduleCache.model;
 
     /**
-     * @event MonthResize#beforeUpdateEvent
+     * @event MonthResize#beforeUpdateSchedule
      * @type {object}
-     * @property {CalEvent} model - model instance to update
+     * @property {Schedule} model - model instance to update
      * @property {date} starts - start time to update
      * @property {date} ends - end time to update
      */
-    this.fire('beforeUpdateEvent', {
+    this.fire('beforeUpdateSchedule', {
         model: model,
         starts: new TZDate(Number(model.getStarts())),
         ends: newEnds
@@ -95,35 +95,35 @@ MonthResize.prototype._updateEvent = function(eventCache) {
 MonthResize.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
         modelID, model,
-        eventData;
+        scheduleData;
 
     if (!domutil.hasClass(target, config.classname('weekday-resize-handle'))) {
         return;
     }
 
-    target = domutil.closest(target, config.classname('.weekday-event-block'));
+    target = domutil.closest(target, config.classname('.weekday-schedule-block'));
 
     if (!target) {
         return;
     }
 
     modelID = domutil.getData(target, 'id');
-    model = this.baseController.events.items[modelID];
+    model = this.baseController.schedules.items[modelID];
 
     this.dragHandler.on({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
 
-    this.getEventData = getMousePosData(this.monthView);
-    eventData = this.getEventData(dragStartEvent.originEvent);
-    eventData.target = target;
-    eventData.model = model;
+    this.getScheduleData = getMousePosData(this.monthView);
+    scheduleData = this.getScheduleData(dragStartEvent.originEvent);
+    scheduleData.target = target;
+    scheduleData.model = model;
 
     this._cache = {
         model: model,
         target: target,
-        starts: new TZDate(Number(eventData.date))
+        starts: new TZDate(Number(scheduleData.date))
     };
 
     /**
@@ -132,10 +132,10 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
-     * @property {HTMLElement} target - event block element
-     * @property {CalEvent} model - model instance
+     * @property {HTMLElement} target - schedule block element
+     * @property {Schedule} model - model instance
      */
-    this.fire('monthResizeDragstart', eventData);
+    this.fire('monthResizeDragstart', scheduleData);
 };
 
 /**
@@ -143,15 +143,15 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
  * @param {object} dragEvent - drag event data
  */
 MonthResize.prototype._onDrag = function(dragEvent) {
-    var eventData;
+    var scheduleData;
 
-    if (!this.getEventData) {
+    if (!this.getScheduleData) {
         return;
     }
 
-    eventData = this.getEventData(dragEvent.originEvent);
+    scheduleData = this.getScheduleData(dragEvent.originEvent);
 
-    if (!eventData) {
+    if (!scheduleData) {
         return;
     }
 
@@ -162,7 +162,7 @@ MonthResize.prototype._onDrag = function(dragEvent) {
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('monthResizeDrag', eventData);
+    this.fire('monthResizeDrag', scheduleData);
 };
 
 /**
@@ -171,22 +171,22 @@ MonthResize.prototype._onDrag = function(dragEvent) {
  */
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache,
-        eventData;
+        scheduleData;
 
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
 
-    if (!this.getEventData) {
+    if (!this.getScheduleData) {
         return;
     }
 
-    eventData = this.getEventData(dragEndEvent.originEvent);
+    scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
-    if (eventData) {
-        cache.ends = new TZDate(Number(eventData.date));
-        this._updateEvent(cache);
+    if (scheduleData) {
+        cache.ends = new TZDate(Number(scheduleData.date));
+        this._updateSchedule(cache);
     }
 
     /**
@@ -196,9 +196,9 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('monthResizeDragend', eventData);
+    this.fire('monthResizeDragend', scheduleData);
 
-    this.getEventData = this._cache = null;
+    this.getScheduleData = this._cache = null;
 };
 
 util.CustomEvents.mixin(MonthResize);

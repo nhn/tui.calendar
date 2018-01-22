@@ -71,17 +71,17 @@ util.inherit(Week, View);
  **********/
 
 /**
- * Render each child view with events in ranges.
+ * Render each child view with schedules in ranges.
  * @fires Week#afterRender
  * @override
  */
 Week.prototype.render = function() {
     var options = this.options;
-    var renderStartDate, renderEndDate, eventsInDateRange, viewModel, grids;
+    var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids;
 
     renderStartDate = parseRangeDateString(options.renderStartDate);
     renderEndDate = parseRangeDateString(options.renderEndDate);
-    eventsInDateRange = this.controller.findByDateRange(
+    schedulesInDateRange = this.controller.findByDateRange(
         datetime.start(renderStartDate),
         datetime.end(renderEndDate)
     );
@@ -95,7 +95,7 @@ Week.prototype.render = function() {
         options.startDayOfWeek);
 
     viewModel = {
-        eventsInDateRange: eventsInDateRange,
+        schedulesInDateRange: schedulesInDateRange,
         renderStartDate: renderStartDate,
         renderEndDate: renderEndDate,
         grids: grids

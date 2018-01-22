@@ -1,16 +1,16 @@
 /*eslint-disable*/
-var CalEvent = require('model/calEvent');
+var Schedule = require('model/Schedule');
 var TZDate = require('common/timezone').Date;
 
-describe('model/event basic', function() {
-    var event;
+describe('model/schedule basic', function() {
+    var schedule;
 
     beforeEach(function() {
-        event = new CalEvent();
+        schedule = new Schedule();
     });
 
     it('creation', function() {
-        expect(event.isAllDay).toBe(false);
+        expect(schedule.isAllDay).toBe(false);
     });
 
     describe('init()', function() {
@@ -23,7 +23,7 @@ describe('model/event basic', function() {
             jasmine.clock().uninstall();
         });
 
-        it('initialize event with default values when data is not supplied.', function() {
+        it('initialize schedule with default values when data is not supplied.', function() {
             var expected = {
                 id: '',
                 title: '',
@@ -34,10 +34,10 @@ describe('model/event basic', function() {
                 bgColor: '#a1b56c'
             };
 
-            expect(event).toEqual(jasmine.objectContaining(expected));
+            expect(schedule).toEqual(jasmine.objectContaining(expected));
         });
 
-        it('initialize event with supplied options.', function() {
+        it('initialize schedule with supplied options.', function() {
             var expected = {
                 id: '123',
                 title: 'Go home',
@@ -50,7 +50,7 @@ describe('model/event basic', function() {
 
             var myObj = {};
 
-            event.init({
+            schedule.init({
                 id: '123',
                 title: 'Go home',
                 isAllDay: false,
@@ -58,85 +58,85 @@ describe('model/event basic', function() {
                 ends: '2015-05-02T00:00:00+09:00'
             });
 
-            expect(event).toEqual(jasmine.objectContaining(expected));
+            expect(schedule).toEqual(jasmine.objectContaining(expected));
         });
     });
 
     describe('equals()', function() {
-        var event,
-            event2;
+        var schedule,
+            schedule2;
 
         beforeEach(function() {
-            event = new CalEvent(),
-            event2 = new CalEvent();
+            schedule = new Schedule(),
+            schedule2 = new Schedule();
         });
 
-        it('return true when event\'s property are same', function() {
-            event.title = 'dance';
-            event2.title = 'dance';
-            event.isAllDay = true;
-            event2.isAllDay = true;
-            event.starts = new TZDate('2015/05/01');
-            event2.starts = new TZDate('2015/05/01');
-            event.ends = new TZDate('2015/05/02');
-            event2.ends = new TZDate('2015/05/02');
+        it('return true when schedule\'s property are same', function() {
+            schedule.title = 'dance';
+            schedule2.title = 'dance';
+            schedule.isAllDay = true;
+            schedule2.isAllDay = true;
+            schedule.starts = new TZDate('2015/05/01');
+            schedule2.starts = new TZDate('2015/05/01');
+            schedule.ends = new TZDate('2015/05/02');
+            schedule2.ends = new TZDate('2015/05/02');
 
-            expect(event.equals(event2)).toBe(true);
+            expect(schedule.equals(schedule2)).toBe(true);
         });
 
         it('return false when title is not equals.', function() {
-            event.title = 'meeting';
-            event2.title = 'working';
+            schedule.title = 'meeting';
+            schedule2.title = 'working';
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
         });
 
-        it('return false when two event has different all day flags.', function() {
-            event.title = 'dance';
-            event2.title = 'dance';
-            event.isAllDay = true;
-            event2.isAllDay = false;
+        it('return false when two schedule has different all day flags.', function() {
+            schedule.title = 'dance';
+            schedule2.title = 'dance';
+            schedule.isAllDay = true;
+            schedule2.isAllDay = false;
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
         });
 
-        it('return false when two event has different starts or ends.', function() {
-            event.title = 'dance';
-            event2.title = 'dance';
-            event.isAllDay = true;
-            event2.isAllDay = true;
-            event.starts = new TZDate('2015/05/01');
-            event2.starts = new TZDate('2015/04/01');
+        it('return false when two schedule has different starts or ends.', function() {
+            schedule.title = 'dance';
+            schedule2.title = 'dance';
+            schedule.isAllDay = true;
+            schedule2.isAllDay = true;
+            schedule.starts = new TZDate('2015/05/01');
+            schedule2.starts = new TZDate('2015/04/01');
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
 
-            event2.starts = new TZDate('2015/05/01');
+            schedule2.starts = new TZDate('2015/05/01');
 
-            event.ends = new TZDate('2015/06/01');
-            event2.ends = new TZDate('2015/07/01');
+            schedule.ends = new TZDate('2015/06/01');
+            schedule2.ends = new TZDate('2015/07/01');
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
         });
     });
 
     describe('duration()', function() {
         beforeEach(function() {
-            event.starts = new TZDate('2015-09-25T05:00:00+09:00');
-            event.ends = new TZDate('2015-09-26T05:00:00+09:00');
+            schedule.starts = new TZDate('2015-09-25T05:00:00+09:00');
+            schedule.ends = new TZDate('2015-09-26T05:00:00+09:00');
         });
 
         it('can calculate duration between starts and ends.', function() {
-            expect(+event.duration()).toBe(+new TZDate('1970-01-02T00:00:00Z'));
+            expect(+schedule.duration()).toBe(+new TZDate('1970-01-02T00:00:00Z'));
         });
 
-        it('return 24 hours when event is all day event.', function() {
-            event.isAllDay = true;
-            expect(+event.duration()).toBe(+new TZDate('1970-01-03T08:59:59+09:00'));
+        it('return 24 hours when schedule is all day schedule.', function() {
+            schedule.isAllDay = true;
+            expect(+schedule.duration()).toBe(+new TZDate('1970-01-03T08:59:59+09:00'));
         });
     });
 
-    describe('CalEvent.create()', function() {
-        it('create event model instance from data object.', function() {
+    describe('Schedule.create()', function() {
+        it('create schedule model instance from data object.', function() {
             var mock = {
                 title: 'hunting',
                 isAllDay: true,
@@ -144,9 +144,9 @@ describe('model/event basic', function() {
                 ends: '2015/05/02'
             };
 
-            var event = CalEvent.create(mock);
+            var schedule = Schedule.create(mock);
 
-            var compare = new CalEvent();
+            var compare = new Schedule();
             compare.title = 'hunting',
             compare.isAllDay = true;
             compare.starts = new TZDate('2015/05/02');
@@ -154,12 +154,12 @@ describe('model/event basic', function() {
             compare.ends = new TZDate('2015/05/02');
             compare.ends.setHours(23, 59, 59);
 
-            expect(event.equals(compare)).toBe(true);
+            expect(schedule.equals(compare)).toBe(true);
         });
 
         it('no error for empty some properties', function() {
             expect(function() {
-                CalEvent.create();
+                Schedule.create();
             }).not.toThrow();
         });
     });
@@ -179,13 +179,13 @@ describe('model/event basic', function() {
          * |---|
          */
         it('Check type A, B', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T10:00:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T09:40:00+09:00',
@@ -213,13 +213,13 @@ describe('model/event basic', function() {
          *     |---|
          */
         it('check type C, D', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T10:00:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T09:00:00+09:00',
@@ -248,13 +248,13 @@ describe('model/event basic', function() {
          * |---|
          */
         it('check type E, F', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T10:00:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T10:00:00+09:00',
@@ -285,13 +285,13 @@ describe('model/event basic', function() {
          * |---|
          */
         it('check type G, H', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
                 starts: '2015-05-01T09:30:00+09:00',
                 ends: '2015-05-01T09:50:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
                 starts: '2015-05-01T10:10:00+09:00',
@@ -304,7 +304,7 @@ describe('model/event basic', function() {
     });
 });
 
-describe('model/Event advanced', function() {
+describe('model/Schedule advanced', function() {
     var jsonFixtures;
 
     beforeEach(function() {
@@ -316,7 +316,7 @@ describe('model/Event advanced', function() {
     });
 
     it('factory function (create())', function() {
-        var e = CalEvent.create(jsonFixtures[0]);
+        var e = Schedule.create(jsonFixtures[0]);
 
         expect(e).toEqual(jasmine.objectContaining({
             title: '스크럼',
@@ -327,7 +327,7 @@ describe('model/Event advanced', function() {
             ends: new TZDate('2015-10-26T10:00:00+09:00')
         }));
 
-        e = CalEvent.create(jsonFixtures[1]);
+        e = Schedule.create(jsonFixtures[1]);
 
         expect(e).toEqual(jasmine.objectContaining({
             title: '[홍길동]연차',
@@ -338,7 +338,7 @@ describe('model/Event advanced', function() {
             ends: new TZDate(2015, 9, 26, 23, 59, 59)
         }));
 
-        e = CalEvent.create(jsonFixtures[2]);
+        e = Schedule.create(jsonFixtures[2]);
 
         expect(e).toEqual(jasmine.objectContaining({
             title: '테스트 마일스톤1',
@@ -349,7 +349,7 @@ describe('model/Event advanced', function() {
             ends: new TZDate('2015-10-26T23:59:59+09:00')
         }));
 
-        e = CalEvent.create(jsonFixtures[3]);
+        e = Schedule.create(jsonFixtures[3]);
 
         expect(e).toEqual(jasmine.objectContaining({
             title: '테스트 업무',
@@ -365,7 +365,7 @@ describe('model/Event advanced', function() {
         var raw = {
             hello: 'world'
         };
-        var e = CalEvent.create({
+        var e = Schedule.create({
             title: '굿',
             category: 'task',
             dueDateClass: 'morning',

@@ -61,7 +61,7 @@ describe('handler/time.creation.guide', function() {
     });
 
     describe('_getStyleDataFunc', function() {
-        it('return function that available for calculate guide element styles from drag events', function() {
+        it('return function that available for calculate guide element styles from drag schedules', function() {
             // 3시부터 렌더링하는 뷰
             var renderStart = new Date('2015-11-17T03:00:00+09:00');
             var func = inst._getStyleDataFunc(210, 21, +renderStart);

@@ -28,13 +28,13 @@ describe('handler/time.creation', function() {
         expect(TimeCreation.prototype.checkExpectedCondition.call(mock, target)).toBe('good');
     });
 
-    it('activate time.creation handler when mousedown on gutter element between events.', function() {
+    it('activate time.creation handler when mousedown on gutter element between schedules.', function() {
         var target = document.createElement('div');
         domutil.addClass(target, '/* @echo CSS_PREFIX */time-date');
         domutil.addClass(target, 'tui-view-20');
 
         var gutter = document.createElement('div');
-        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-event-block-wrap');
+        domutil.addClass(gutter, '/* @echo CSS_PREFIX */time-date-schedule-block-wrap');
 
         target.appendChild(gutter);
 
@@ -51,13 +51,13 @@ describe('handler/time.creation', function() {
         expect(TimeCreation.prototype.checkExpectedCondition.call(mock, gutter)).toBe('good');
     });
 
-    describe('_createEvent()', function() {
+    describe('_createSchedule()', function() {
         var baseControllerMock,
             mock;
 
         beforeEach(function() {
-            spyOn(window, 'prompt').and.returnValue('my event');
-            baseControllerMock = jasmine.createSpyObj('Base', ['createEvent']);
+            spyOn(window, 'prompt').and.returnValue('my schedule');
+            baseControllerMock = jasmine.createSpyObj('Base', ['createSchedule']);
             mock = {
                 baseController: baseControllerMock,
                 guide: jasmine.createSpyObj('timeCreation', ['clearGuideElement']),
@@ -65,8 +65,8 @@ describe('handler/time.creation', function() {
             };
         });
 
-        it('try to create event by dragend event data.', function() {
-            var eventData = {
+        it('try to create schedule by dragend schedule data.', function() {
+            var scheduleData = {
                 relatedView: {
                     getDate: function() {
                         return new TZDate(2015, 4, 5);
@@ -82,9 +82,9 @@ describe('handler/time.creation', function() {
                 }
             };
 
-            TimeCreation.prototype._createEvent.call(mock, eventData);
+            TimeCreation.prototype._createSchedule.call(mock, scheduleData);
 
-            expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
+            expect(mock.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: false,
                 starts: new TZDate(2015, 4, 5, 1),
                 ends: new TZDate(2015, 4, 5, 1, 30),
@@ -95,8 +95,8 @@ describe('handler/time.creation', function() {
             });
         });
 
-        it('can invoke base#createEvent by click event data.', function() {
-            var eventData = {
+        it('can invoke base#createSchedule by click schedule data.', function() {
+            var scheduleData = {
                 relatedView: {
                     getDate: function() {
                         return new TZDate(2015, 4, 5);
@@ -108,9 +108,9 @@ describe('handler/time.creation', function() {
                 }
             };
 
-            TimeCreation.prototype._createEvent.call(mock, eventData);
+            TimeCreation.prototype._createSchedule.call(mock, scheduleData);
 
-            expect(mock.fire).toHaveBeenCalledWith('beforeCreateEvent', {
+            expect(mock.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: false,
                 starts: new TZDate(2015, 4, 5, 1, 30),
                 ends: new TZDate(2015, 4, 5, 2),

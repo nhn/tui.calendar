@@ -46,7 +46,7 @@ function AlldayCreation(dragHandler, alldayView, baseController) {
     /**
      * @type {function}
      */
-    this.getEventDataFunc = null;
+    this.getScheduleDataFunc = null;
 
     /**
      * @type {AlldayCreationGuide}
@@ -74,7 +74,7 @@ AlldayCreation.prototype.destroy = function() {
         domevent.off(this.alldayView.container, 'dblclick', this._onDblClick, this);
     }
 
-    this.dragHandler = this.alldayView = this.baseController = this.getEventDataFunc = null;
+    this.dragHandler = this.alldayView = this.baseController = this.getScheduleDataFunc = null;
 };
 
 /**
@@ -86,7 +86,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var cssClass = domutil.getClass(target),
         matches;
 
-    if (cssClass !== config.classname('weekday-events')) {
+    if (cssClass !== config.classname('weekday-schedules')) {
         return false;
     }
 
@@ -102,19 +102,19 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
 };
 
 /**
- * Request event model creation to controller by custom events.
- * @fires {AlldayCreation#beforeCreateEvent}
- * @param {object} eventData - event data from AlldayCreation module.
+ * Request schedule model creation to controller by custom schedules.
+ * @fires {AlldayCreation#beforeCreateSchedule}
+ * @param {object} scheduleData - schedule data from AlldayCreation module.
  */
-AlldayCreation.prototype._createEvent = function(eventData) {
-    var viewOptions = eventData.relatedView.options,
+AlldayCreation.prototype._createSchedule = function(scheduleData) {
+    var viewOptions = scheduleData.relatedView.options,
         dateRange = datetime.range(
             datetime.start(datetime.parse(viewOptions.renderStartDate)),
             datetime.end(datetime.parse(viewOptions.renderEndDate)),
             datetime.MILLISECONDS_PER_DAY
         ),
-        startXIndex = eventData.dragStartXIndex,
-        xIndex = eventData.xIndex,
+        startXIndex = scheduleData.dragStartXIndex,
+        xIndex = scheduleData.xIndex,
         starts, ends;
 
     // when inverse start, end then change it.
@@ -128,31 +128,31 @@ AlldayCreation.prototype._createEvent = function(eventData) {
     ends = datetime.end(dateRange[xIndex]);
 
     /**
-     * @event {AlldayCreation#beforeCreateEvent}
+     * @event {AlldayCreation#beforeCreateSchedule}
      * @type {object}
-     * @property {boolean} isAllDay - whether event is fired in allday view area?
+     * @property {boolean} isAllDay - whether schedule is fired in allday view area?
      * @property {Date} starts - select start date
      * @property {Date] ends - select end date
      */
-    this.fire('beforeCreateEvent', {
+    this.fire('beforeCreateSchedule', {
         isAllDay: true,
         starts: starts,
         ends: ends,
         guide: this.guide,
-        triggerEvent: eventData.triggerEvent
+        triggerEvent: scheduleData.triggerEvent
     });
 };
 
 /**
  * DragStart event handler method.
  * @emits AlldayCreation#alldayCreationDragstart
- * @param {object} dragStartEventData - Drag#dragStart event handler event data.
+ * @param {object} dragStartEventData - Drag#dragStart event handler schedule data.
  */
 AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         result = this.checkExpectedCondition(target),
-        getEventDataFunc,
-        eventData;
+        getScheduleDataFunc,
+        scheduleData;
 
     if (!result) {
         return;
@@ -163,8 +163,8 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
         dragEnd: this._onDragEnd
     }, this);
 
-    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
-    eventData = getEventDataFunc(dragStartEventData.originEvent);
+    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+    scheduleData = getScheduleDataFunc(dragStartEventData.originEvent);
 
     /**
      * @event AlldayCreation#alldayCreationDragstart
@@ -174,23 +174,23 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('alldayCreationDragstart', eventData);
+    this.fire('alldayCreationDragstart', scheduleData);
 };
 
 /**
  * Drag event handler method.
  * @emits AlldayCreation#alldayCreationDrag
- * @param {object} dragEventData - Drag#drag event handler eventdata.
+ * @param {object} dragEventData - Drag#drag event handler scheduledata.
  */
 AlldayCreation.prototype._onDrag = function(dragEventData) {
-    var getEventDataFunc = this.getEventDataFunc,
-        eventData;
+    var getScheduleDataFunc = this.getScheduleDataFunc,
+        scheduleData;
 
-    if (!getEventDataFunc) {
+    if (!getScheduleDataFunc) {
         return;
     }
 
-    eventData = getEventDataFunc(dragEventData.originEvent);
+    scheduleData = getScheduleDataFunc(dragEventData.originEvent);
 
     /**
      * @event AlldayCreation#alldayCreationDrag
@@ -200,7 +200,7 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('alldayCreationDrag', eventData);
+    this.fire('alldayCreationDrag', scheduleData);
 };
 
 /**
@@ -210,10 +210,10 @@ AlldayCreation.prototype._onDrag = function(dragEventData) {
  * @param {string} [overrideEventName] - override emitted event name when supplied.
  */
 AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-    var getEventDataFunc = this.getEventDataFunc;
-    var eventData;
+    var getScheduleDataFunc = this.getScheduleDataFunc;
+    var scheduleData;
 
-    if (!getEventDataFunc) {
+    if (!getScheduleDataFunc) {
         return;
     }
 
@@ -222,9 +222,9 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
         dragEnd: this._onDragEnd
     }, this);
 
-    eventData = getEventDataFunc(dragEndEventData.originEvent);
+    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
 
-    this._createEvent(eventData);
+    this._createSchedule(scheduleData);
 
     /**
      * @event AlldayCreation#alldayCreationDragend
@@ -234,9 +234,9 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'alldayCreationDragend', eventData);
+    this.fire(overrideEventName || 'alldayCreationDragend', scheduleData);
 
-    this.getEventDataFunc = null;
+    this.getScheduleDataFunc = null;
 };
 
 /**
@@ -246,20 +246,20 @@ AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventNa
  */
 AlldayCreation.prototype._onClick = function(clickEventData) {
     var self = this;
-    var getEventDataFunc, eventData;
+    var getScheduleDataFunc, scheduleData;
 
     if (!this.checkExpectedCondition(clickEventData.target)) {
         return;
     }
 
-    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData.originEvent);
-    eventData = getEventDataFunc(clickEventData.originEvent);
+    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, clickEventData.originEvent);
+    scheduleData = getScheduleDataFunc(clickEventData.originEvent);
 
     this._requestOnClick = true;
     setTimeout(function() {
         if (self._requestOnClick) {
-            self.fire('alldayCreationClick', eventData);
-            self._createEvent(eventData);
+            self.fire('alldayCreationClick', scheduleData);
+            self._createSchedule(scheduleData);
         }
         self._requestOnClick = false;
     }, CLICK_DELAY);
@@ -271,18 +271,18 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
  * @param {object} clickEventData - Drag#Click event handler data.
  */
 AlldayCreation.prototype._onDblClick = function(clickEventData) {
-    var getEventDataFunc, eventData;
+    var getScheduleDataFunc, scheduleData;
 
     if (!this.checkExpectedCondition(clickEventData.target)) {
         return;
     }
 
-    getEventDataFunc = this._retriveEventData(this.alldayView, clickEventData);
-    eventData = getEventDataFunc(clickEventData);
+    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, clickEventData);
+    scheduleData = getScheduleDataFunc(clickEventData);
 
-    this.fire('alldayCreationClick', eventData);
+    this.fire('alldayCreationClick', scheduleData);
 
-    this._createEvent(eventData);
+    this._createSchedule(scheduleData);
 
     this._requestOnClick = false;
 };

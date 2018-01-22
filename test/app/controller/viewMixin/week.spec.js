@@ -2,8 +2,8 @@
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEventViewModel');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 var datetime = require('common/datetime');
 
 describe('Base.Week', function() {
@@ -13,15 +13,15 @@ describe('Base.Week', function() {
     var base,
         ctrl,
         mockData,
-        eventList;
+        scheduleList;
 
     beforeEach(function() {
         base = ControllerFactory(['Week']);
         ctrl = base.Week;
-        mockData = fixture.load('event_set_string3.json');
-        eventList = util.map(mockData, function(data) {
-            return CalEvent.create(data);
-        }).sort(array.compare.event.asc);
+        mockData = fixture.load('schedule_set_string3.json');
+        scheduleList = util.map(mockData, function(data) {
+            return Schedule.create(data);
+        }).sort(array.compare.schedule.asc);
     });
 
     afterEach(function() {
@@ -101,15 +101,15 @@ describe('Base.Week', function() {
     });
 
     describe('findByDateRange', function() {
-        var eventList,
+        var scheduleList,
             idList;
 
         beforeEach(function() {
-            eventList = [];
+            scheduleList = [];
             idList = [];
 
             util.forEach(mockData, function(data) {
-                base.createEvent(data);
+                base.createSchedule(data);
             });
 
             /*

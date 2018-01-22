@@ -25,12 +25,12 @@ function AlldayResizeGuide(alldayResize) {
      * 실제로 이벤트 엘리먼트를 담는 엘리먼트
      * @type {HTMLDIVElement}
      */
-    this.eventContainer = null;
+    this.scheduleContainer = null;
 
     /**
      * @type {function}
      */
-    this.getEventDataFunc = null;
+    this.getScheduleDataFunc = null;
 
     /**
      * @type {HTMLDIVElement}
@@ -51,7 +51,7 @@ function AlldayResizeGuide(alldayResize) {
 AlldayResizeGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.alldayResize.off(this);
-    this.alldayResize = this.eventContainer = this.getEventDataFunc =
+    this.alldayResize = this.scheduleContainer = this.getScheduleDataFunc =
         this.guideElement = null;
 };
 
@@ -65,7 +65,7 @@ AlldayResizeGuide.prototype._clearGuideElement = function() {
         domutil.removeClass(global.document.body, config.classname('resizing-x'));
     }
 
-    this.getEventDataFunc = null;
+    this.getScheduleDataFunc = null;
 };
 
 /**
@@ -82,7 +82,7 @@ AlldayResizeGuide.prototype.refreshGuideElement = function(newWidth) {
 
 /**
  * Return function that calculate guide element's new width percentage value.
- * @param {object} dragStartEventData - dragstart event data.
+ * @param {object} dragStartEventData - dragstart schedule data.
  * @returns {function} return function that calculate guide element new width percentage.
  */
 AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
@@ -116,30 +116,30 @@ AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventDa
 
 /**
  * DragStart event handler.
- * @param {object} dragStartEventData - event data.
+ * @param {object} dragStartEventData - schedule data.
  */
 AlldayResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var alldayViewContainer = this.alldayResize.alldayView.container,
-        guideElement = this.guideElement = dragStartEventData.eventBlockElement.cloneNode(true),
-        eventContainer;
+        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
+        scheduleContainer;
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('resizing-x'));
     }
 
-    eventContainer = domutil.find(config.classname('.weekday-events'), alldayViewContainer);
+    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
-    eventContainer.appendChild(guideElement);
+    scheduleContainer.appendChild(guideElement);
 
-    this.getEventDataFunc = this.getGuideElementWidthFunc(dragStartEventData);
+    this.getScheduleDataFunc = this.getGuideElementWidthFunc(dragStartEventData);
 };
 
 /**
  * Drag event handler.
- * @param {object} dragEventData - event data.
+ * @param {object} dragEventData - schedule data.
  */
 AlldayResizeGuide.prototype._onDrag = function(dragEventData) {
-    var func = this.getEventDataFunc;
+    var func = this.getScheduleDataFunc;
 
     if (!func) {
         return;

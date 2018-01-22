@@ -1,7 +1,7 @@
 var AlldayMoveGuide = require('handler/allday/moveGuide');
 
 describe('handler:AlldayMoveGuide', function() {
-    describe('_getEventBlockDataFunc()', function() {
+    describe('_getScheduleBlockDataFunc()', function() {
         var mockInst,
             mockEventData;
 
@@ -18,7 +18,7 @@ describe('handler:AlldayMoveGuide', function() {
             };
         });
 
-        it('return function that can calculate event block rendering information.', function() {
+        it('return function that can calculate schedule block rendering information.', function() {
             mockEventData = {
                 model: {
                     starts: new Date('2015-05-01T00:00:00+09:00'),
@@ -27,7 +27,7 @@ describe('handler:AlldayMoveGuide', function() {
                 datesInRange: 5
             };
 
-            var func = AlldayMoveGuide.prototype._getEventBlockDataFunc.call(mockInst, mockEventData);
+            var func = AlldayMoveGuide.prototype._getScheduleBlockDataFunc.call(mockInst, mockEventData);
 
             expect(func(0)).toEqual({
                 baseWidthPercent: 20,
@@ -63,7 +63,7 @@ describe('handler:AlldayMoveGuide', function() {
         describe('_onDrag()', function() {
             it('can calculate guide element new width and left.', function() {
                 // 2일짜리 일정을
-                inst.getEventDataFunc = inst._getEventBlockDataFunc({
+                inst.getScheduleDataFunc = inst._getScheduleBlockDataFunc({
                     model: {
                         starts: new Date('2015-05-01T00:00:00+09:00'),
                         ends: new Date('2015-05-02T23:59:59+09:00')
@@ -82,7 +82,7 @@ describe('handler:AlldayMoveGuide', function() {
 
                 inst.refreshGuideElement.calls.reset();
                 // 4일짜리 일정을
-                inst.getEventDataFunc = inst._getEventBlockDataFunc({
+                inst.getScheduleDataFunc = inst._getScheduleBlockDataFunc({
                     model: {
                         starts: new Date('2015-05-02T00:00:00+09:00'),
                         ends: new Date('2015-05-05T23:59:59+09:00')

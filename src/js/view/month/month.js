@@ -20,7 +20,7 @@ var config = require('../../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - options
- * @param {function} [options.eventFilter] - event filter
+ * @param {function} [options.scheduleFilter] - schedule filter
  * @param {number} [options.startDayOfWeek=0] - start day of week
  * @param {string} [options.renderMonth='2015-12'] - render month
  * @param {string[]} [options.daynames] - daynames to use upside of month view
@@ -49,7 +49,7 @@ function Month(options, container, controller) {
      * @type {string}
      */
     this.options = util.extend({
-        eventFilter: function(model) {
+        scheduleFilter: function(model) {
             return Boolean(model.visible);
         },
         startDayOfWeek: 0,
@@ -156,7 +156,7 @@ Month.prototype.render = function() {
         controller = this.controller,
         daynames = opt.daynames,
         calendar = this._getMonthCalendar(opt.renderMonth),
-        eventFilter = opt.eventFilter,
+        scheduleFilter = opt.scheduleFilter,
         grids = this.grids,
         daynameViewModel,
         baseViewModel;
@@ -185,7 +185,7 @@ Month.prototype.render = function() {
         var viewModel = controller.findByDateRange(
             datetime.start(datetime.parse(childView.options.renderStartDate)),
             datetime.end(datetime.parse(childView.options.renderEndDate)),
-            eventFilter
+            scheduleFilter
         );
 
         childView.render(viewModel);

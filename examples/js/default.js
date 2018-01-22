@@ -12,7 +12,7 @@
         '금',
         '토'
     ];
-    var lastClickEventModel;
+    var lastClickScheduleModel;
     // FullCalendar.setTimezoneOffset(540);
 
     cal = new FullCalendar({
@@ -63,7 +63,7 @@
         render: false
     });
 
-    cal.createEvents([
+    cal.createSchedules([
         {
             id: '1',
             calendarId: '1',
@@ -178,23 +178,23 @@
 
     // 일정 클릭 이벤트 핸들러
     cal.on({
-        'clickEvent': function(e) {
+        'clickSchedule': function(e) {
             var model = e.model;
             console.log('click', e);
-            if (lastClickEventModel) {
-                cal.updateEvent(lastClickEventModel.id, lastClickEventModel.calendarId, {isFocused: false});
+            if (lastClickScheduleModel) {
+                cal.updateSchedule(lastClickScheduleModel.id, lastClickScheduleModel.calendarId, {isFocused: false});
             }
-            cal.updateEvent(model.id, model.calendarId, {isFocused: true});
-            lastClickEventModel = model;
+            cal.updateSchedule(model.id, model.calendarId, {isFocused: true});
+            lastClickScheduleModel = model;
         },
         'clickDayname': function(date) {
             console.log('clickDayname', date);
         },
-        'beforeCreateEvent': function(e) {
+        'beforeCreateSchedule': function(e) {
             var message = 'start: ' + new Date(e.starts) +
                             '\nend: ' + new Date(e.ends) +
                             '\nallday: ' + e.isAllDay +
-                            '\nName of event to create:';
+                            '\nName of schedule to create:';
             var title = prompt(message);
 
             if (!title) {
@@ -203,7 +203,7 @@
             }
             console.log(e);
 
-            cal.createEvents([{
+            cal.createSchedules([{
                 id: String(idx),
                 calendarId: '',
                 title: title,
@@ -221,25 +221,25 @@
 
             console.log('select', e);
         },
-        'beforeUpdateEvent': function(e) {
-            cal.updateEvent(e.model.id, e.model.calendarId, {
+        'beforeUpdateSchedule': function(e) {
+            cal.updateSchedule(e.model.id, e.model.calendarId, {
                 starts: e.starts,
                 ends: e.ends
             });
 
             console.log('update', e);
         },
-        'beforeDeleteEvent': function(e) {
+        'beforeDeleteSchedule': function(e) {
             console.log('delete', e);
         },
         'resizePanel': function(e) {
             console.log('resizePanel', e);
         },
-        'dragStartEvent': function(e) {
-            console.log('dragStartEvent', e);
+        'dragStartSchedule': function(e) {
+            console.log('dragStartSchedule', e);
         },
-        'dragEndEvent': function(e) {
-            console.log('dragEndEvent', e);
+        'dragEndSchedule': function(e) {
+            console.log('dragEndSchedule', e);
         }
     });
 
@@ -300,20 +300,20 @@
 
 
     // 일정 클릭 이벤트 핸들러
-    cal.on('clickEvent', function() {
+    cal.on('clickSchedule', function() {
         console.log('click');
     });
 
-    cal.on('beforeCreateEvent', function(e) {
-        console.log('beforeCreateEvent', e);
+    cal.on('beforeCreateSchedule', function(e) {
+        console.log('beforeCreateSchedule', e);
     });
 
-    cal.on('beforeUpdateEvent', function(e) {
-        console.log('beforeUpdateEvent', e);
+    cal.on('beforeUpdateSchedule', function(e) {
+        console.log('beforeUpdateSchedule', e);
     });
 
-    cal.on('beforeDeleteEvent', function(e) {
-        console.log('beforeDeleteEvent', e);
+    cal.on('beforeDeleteSchedule', function(e) {
+        console.log('beforeDeleteSchedule', e);
     });
 
     document.querySelector('.control').addEventListener('click', onClick);

@@ -16,8 +16,8 @@ describe('Calendar', function() {
         spyOn(View.prototype, 'getViewBound').and.returnValue({height: 100});
 
         controller = ControllerFactory();
-        spyOn(controller, 'createEvents');
-        spyOn(Calendar.prototype, '_toggleViewEvent');
+        spyOn(controller, 'createSchedules');
+        spyOn(Calendar.prototype, '_toggleViewSchedule');
 
         inst = Calendar({
             defaultView: 'week',
@@ -33,43 +33,43 @@ describe('Calendar', function() {
     });
 
     describe('CRUD', function() {
-        it('createEvents() can create CalEvent model from dataObject list', function() {
-            inst.createEvents('hello world', true);
-            expect(controller.createEvents).toHaveBeenCalledWith('hello world', true);
+        it('createSchedules() can create Schedule model from dataObject list', function() {
+            inst.createSchedules('hello world', true);
+            expect(controller.createSchedules).toHaveBeenCalledWith('hello world', true);
             expect(inst.render).not.toHaveBeenCalled();
 
-            inst.createEvents('hello world');
+            inst.createSchedules('hello world');
             expect(inst.render).toHaveBeenCalled();
         });
 
-        it('updateEvent() can update CalEvent model', function() {
-            var calEvent = jasmine.createSpyObj('CalEvent', ['set', 'cid', 'dirty']);
-            var id = tui.util.stamp(calEvent);
-            var calendarId = calEvent.calendarId;
-            calEvent.id = id;
-            calEvent.cid.and.returnValue(id);
-            controller.events.add(calEvent);
-            spyOn(controller, 'updateEvent');
+        it('updateSchedule() can update Schedule model', function() {
+            var Schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
+            var id = tui.util.stamp(Schedule);
+            var calendarId = Schedule.calendarId;
+            Schedule.id = id;
+            Schedule.cid.and.returnValue(id);
+            controller.schedules.add(Schedule);
+            spyOn(controller, 'updateSchedule');
 
-            inst.updateEvent(id, calendarId, {'hello': 'world'});
+            inst.updateSchedule(id, calendarId, {'hello': 'world'});
 
-            expect(controller.updateEvent).toHaveBeenCalledWith(calEvent, {'hello': 'world'});
+            expect(controller.updateSchedule).toHaveBeenCalledWith(Schedule, {'hello': 'world'});
             expect(inst.render).toHaveBeenCalled();
         });
 
-        it('deleteEvent() can delete CalEvent model in collection.', function() {
-            var calEvent = jasmine.createSpyObj('CalEvent', ['set', 'cid', 'dirty']);
-            var id = tui.util.stamp(calEvent);
-            var calendarId = calEvent.calendarId;
-            calEvent.id = id;
-            calEvent.cid.and.returnValue(id);
-            controller.events.add(calEvent);
+        it('deleteSchedule() can delete Schedule model in collection.', function() {
+            var Schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
+            var id = tui.util.stamp(Schedule);
+            var calendarId = Schedule.calendarId;
+            Schedule.id = id;
+            Schedule.cid.and.returnValue(id);
+            controller.schedules.add(Schedule);
 
-            expect(controller.events.length).toBe(1);
+            expect(controller.schedules.length).toBe(1);
 
-            inst.deleteEvent(id, calendarId);
+            inst.deleteSchedule(id, calendarId);
 
-            expect(controller.events.length).toBe(0);
+            expect(controller.schedules.length).toBe(0);
         });
     });
 

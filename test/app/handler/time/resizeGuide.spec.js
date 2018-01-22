@@ -16,7 +16,7 @@ describe('handler/time.resize.guide', function() {
 
         mockInstance.guideElement.style.top = '0px';
 
-        var eventData = {
+        var scheduleData = {
             relatedView: {
                 options: {
                     hourStart: 0,
@@ -29,7 +29,7 @@ describe('handler/time.resize.guide', function() {
             nearestGridY: 1
         };
 
-        Guide.prototype._onDrag.call(mockInstance, eventData);
+        Guide.prototype._onDrag.call(mockInstance, scheduleData);
 
         var args = mockInstance._refreshGuideElement.calls.argsFor(0);
 

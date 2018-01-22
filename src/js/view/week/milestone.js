@@ -55,7 +55,7 @@ util.inherit(Milestone, View);
  */
 Milestone.prototype._getBaseViewModel = function(viewModel) {
     var options = this.options,
-        events = {},
+        schedules = {},
         range = datetime.range(
             datetime.start(datetime.parse(options.renderStartDate)),
             datetime.end(datetime.parse(options.renderEndDate)),
@@ -63,30 +63,30 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         ),
         height,
         today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
-        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'milestone'),
+        viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'milestone'),
         grids = viewModel.grids,
         i = 0;
 
     // 일정이 없는 경우라도 빈 객체를 생성
     util.forEach(range, function(d) {
-        events[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
+        schedules[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
     });
 
-    util.extend(events, viewModelEvents);
+    util.extend(schedules, viewModelSchedules);
 
-    util.forEach(events, function(event, key) {
-        event.isToday = (key === today);
-        event.left = grids[i].left;
-        event.width = grids[i].width;
+    util.forEach(schedules, function(schedule, key) {
+        schedule.isToday = (key === today);
+        schedule.left = grids[i].left;
+        schedule.width = grids[i].width;
         i += 1;
     });
 
-    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(events, function(coll) {
+    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(schedules, function(coll) {
         return coll.length;
     })) * ITEM_HEIGHT;
 
     return {
-        events: events,
+        schedules: schedules,
         height: height
     };
 };

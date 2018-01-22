@@ -11,11 +11,11 @@ describe('week:handler:TaskClick', function() {
 
         mockInst = jasmine.createSpyObj('MilstoneClick', ['checkExpectedCondition', 'fire']);
         mockInst.baseController = {
-            events: mockCollection
+            schedules: mockCollection
         };
     });
 
-    it('_onClick fire custom event "clickEvent" when target element is related with one of event instance of base controllers.', function() {
+    it('_onClick fire custom event "clickSchedule" when target element is related with one of event instance of base controllers.', function() {
         var vMouseEvent = {originEvent: 'test'};
         // 클릭 대상 엘리먼트가 id '2'인 일정과 관계가 있을 때
         mockInst.checkExpectedCondition.and.returnValue(2);
@@ -24,7 +24,7 @@ describe('week:handler:TaskClick', function() {
         TaskClick.prototype._onClick.call(mockInst, vMouseEvent);
 
         // 이벤트가 아래처럼 발생한다
-        expect(mockInst.fire).toHaveBeenCalledWith('clickEvent', {
+        expect(mockInst.fire).toHaveBeenCalledWith('clickSchedule', {
             model: {
                 _id: '2',
                 text: 'hello'
@@ -33,7 +33,7 @@ describe('week:handler:TaskClick', function() {
         });
     });
 
-    it('TaskClick doesn\'t fire custom event "task_click" when no target or target is not related with events.', function() {
+    it('TaskClick doesn\'t fire custom event "task_click" when no target or target is not related with schedules.', function() {
         // 엘리먼트가 TaskClick과 관계가 없다
         mockInst.checkExpectedCondition.and.returnValue(false);
 

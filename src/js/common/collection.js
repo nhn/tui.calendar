@@ -94,7 +94,7 @@ Collection.or = function(filters) {
 /**
  * Merge several collections.
  *
- * You can\'t merge collections different _getEventID functions. Take case of use.
+ * You can\'t merge collections different _getScheduleID functions. Take case of use.
  * @param {...Collection} collections collection arguments to merge
  * @returns {Collection} merged collection.
  */

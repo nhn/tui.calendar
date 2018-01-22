@@ -21,7 +21,7 @@ function AlldayCreationGuide(alldayCreation) {
     /**
      * @type {HTMLDIVElement}
      */
-    this.eventContainer = null;
+    this.scheduleContainer = null;
 
     /**
      * @type {HTMLDIVElement}
@@ -43,7 +43,7 @@ function AlldayCreationGuide(alldayCreation) {
 AlldayCreationGuide.prototype.destroy = function() {
     this.clearGuideElement();
     this.alldayCreation.off(this);
-    this.alldayCreation = this.eventContainer = this.guideElement = null;
+    this.alldayCreation = this.scheduleContainer = this.guideElement = null;
 };
 
 /**
@@ -55,10 +55,10 @@ AlldayCreationGuide.prototype.initializeGuideElement = function() {
 
 /**
  * Drag event handler
- * @param {object} eventData - event data from Allday.Creation handler.
+ * @param {object} scheduleData - schedule data from Allday.Creation handler.
  */
-AlldayCreationGuide.prototype._onDrag = function(eventData) {
-    this._refreshGuideElement(eventData, true);
+AlldayCreationGuide.prototype._onDrag = function(scheduleData) {
+    this._refreshGuideElement(scheduleData, true);
 };
 
 /**
@@ -80,18 +80,18 @@ AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndI
 
 /**
  * Refresh guide element.
- * @param {object} eventData - event data from Allday.Creation handler.
+ * @param {object} scheduleData - schedule data from Allday.Creation handler.
  * @param {boolean} defer - If set to true, set style in the next frame
  */
-AlldayCreationGuide.prototype._refreshGuideElement = function(eventData, defer) {
+AlldayCreationGuide.prototype._refreshGuideElement = function(scheduleData, defer) {
     var guideElement = this.guideElement,
-        dragStartXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.dragStartXIndex : eventData.xIndex,
-        dragEndXIndex = eventData.dragStartXIndex < eventData.xIndex ? eventData.xIndex : eventData.dragStartXIndex,
+        dragStartXIndex = scheduleData.dragStartXIndex < scheduleData.xIndex ? scheduleData.dragStartXIndex : scheduleData.xIndex,
+        dragEndXIndex = scheduleData.dragStartXIndex < scheduleData.xIndex ? scheduleData.xIndex : scheduleData.dragStartXIndex,
         leftPercent,
         widthPercent;
 
-    leftPercent = eventData.grids[dragStartXIndex].left;
-    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, eventData.grids);
+    leftPercent = scheduleData.grids[dragStartXIndex].left;
+    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, scheduleData.grids);
 
     function setStyle() {
         guideElement.style.display = 'block';
@@ -121,15 +121,15 @@ AlldayCreationGuide.prototype.clearGuideElement = function() {
 
 /**
  * Create guide element
- * @param {object} dragStartEventData - event data object of Allday.Creation.
+ * @param {object} dragStartEventData - schedule data object of Allday.Creation.
  */
 AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
-        eventContainer = domutil.find(config.classname('.weekday-creation'), alldayContainerElement);
+        scheduleContainer = domutil.find(config.classname('.weekday-creation'), alldayContainerElement);
 
-    eventContainer.appendChild(this.guideElement);
+    scheduleContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);
 };
 

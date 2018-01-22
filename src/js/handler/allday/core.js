@@ -18,10 +18,10 @@ var mmax = Math.max,
 var alldayCore = {
     /**
      * @param {Allday} alldayView - view instance of allday.
-     * @param {MouseEvent} mouseEvent - mouse event object.
-     * @returns {function|boolean} function that return event data by mouse events.
+     * @param {MouseEvent} mouseEvent - mouse schedule object.
+     * @returns {function|boolean} function that return schedule data by mouse events.
      */
-    _retriveEventData: function(alldayView, mouseEvent) {
+    _retriveScheduleData: function(alldayView, mouseEvent) {
         var weekdayView = alldayView.children.single(),
             container,
             renderStartDate,
@@ -52,15 +52,15 @@ var alldayCore = {
         dragStartXIndex = getX(grids, common.ratio(containerWidth, 100, mousePos[0]));
 
         /**
-         * @param {MouseEvent} mouseEvent - mouse event in drag actions.
-         * @returns {object} event data.
+         * @param {MouseEvent} mouseEvent - mouse schedule in drag actions.
+         * @returns {object} schedule data.
          */
         return function(mouseEvent) {
             var pos = domevent.getMousePosition(mouseEvent, container),
                 mouseX = pos[0],
                 xIndex = getX(grids, common.ratio(containerWidth, 100, mouseX));
 
-            // apply limitation of creation event X index.
+            // apply limitation of creation schedule X index.
             xIndex = mmax(xIndex, 0);
             xIndex = mmin(xIndex, datesInRange - 1);
 

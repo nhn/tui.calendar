@@ -30,7 +30,7 @@ describe('View/Week', function() {
             view.render();
 
             expect(child.render).toHaveBeenCalledWith({
-                eventsInDateRange: 'helloWorld',
+                schedulesInDateRange: 'helloWorld',
                 renderStartDate: jasmine.any(TZDate),
                 renderEndDate: jasmine.any(TZDate),
                 grids: jasmine.any(Array)

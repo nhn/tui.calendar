@@ -7,16 +7,16 @@
 var util = global.tui.util;
 
 /**
- * CalEvent ViewModel
+ * Schedule ViewModel
  * @constructor
- * @param {CalEvent} event CalEvent instance.
+ * @param {Schedule} schedule Schedule instance.
  */
-function CalEventViewModel(event) {
+function ScheduleViewModel(schedule) {
     /**
-     * The model of event.
-     * @type {CalEvent}
+     * The model of schedule.
+     * @type {Schedule}
      */
-    this.model = event;
+    this.model = schedule;
 
     /**
      * @type {number}
@@ -39,19 +39,19 @@ function CalEventViewModel(event) {
     this.height = 0;
 
     /**
-     * Represent event has collide with other events when rendering.
+     * Represent schedule has collide with other schedules when rendering.
      * @type {boolean}
      */
     this.hasCollide = false;
 
     /**
-     * Extra space at rigth side of this event.
+     * Extra space at rigth side of this schedule.
      * @type {number}
      */
     this.extraSpace = 0;
 
     /**
-     * represent this event block is not visible after rendered.
+     * represent this schedule block is not visible after rendered.
      *
      * in month view, some viewmodel in date need to hide when already rendered before dates.
      *
@@ -61,7 +61,7 @@ function CalEventViewModel(event) {
     this.hidden = false;
 
     /**
-     * whether the event includes multiple dates
+     * whether the schedule includes multiple dates
      */
     this.hasMultiDates = false;
 
@@ -99,12 +99,12 @@ function CalEventViewModel(event) {
  **********/
 
 /**
- * CalEventViewModel factory method.
- * @param {CalEvent} event CalEvent instance.
- * @returns {CalEventViewModel} CalEventViewModel instance.
+ * ScheduleViewModel factory method.
+ * @param {Schedule} schedule Schedule instance.
+ * @returns {ScheduleViewModel} ScheduleViewModel instance.
  */
-CalEventViewModel.create = function(event) {
-    return new CalEventViewModel(event);
+ScheduleViewModel.create = function(schedule) {
+    return new ScheduleViewModel(schedule);
 };
 
 
@@ -113,13 +113,13 @@ CalEventViewModel.create = function(event) {
  **********/
 
 /**
- * return renderStarts property to render properly when specific event that exceed rendering date range.
+ * return renderStarts property to render properly when specific schedule that exceed rendering date range.
  *
  * if renderStarts is not set. return model's starts property.
  * @override
  * @returns {Date} render start date.
  */
-CalEventViewModel.prototype.getStarts = function() {
+ScheduleViewModel.prototype.getStarts = function() {
     if (this.renderStarts) {
         return this.renderStarts;
     }
@@ -128,13 +128,13 @@ CalEventViewModel.prototype.getStarts = function() {
 };
 
 /**
- * return renderStarts property to render properly when specific event that exceed rendering date range.
+ * return renderStarts property to render properly when specific schedule that exceed rendering date range.
  *
  * if renderEnds is not set. return model's ends property.
  * @override
  * @returns {Date} render end date.
  */
-CalEventViewModel.prototype.getEnds = function() {
+ScheduleViewModel.prototype.getEnds = function() {
     if (this.renderEnds) {
         return this.renderEnds;
     }
@@ -145,32 +145,32 @@ CalEventViewModel.prototype.getEnds = function() {
 /**
  * @returns {number} unique number for model.
  */
-CalEventViewModel.prototype.cid = function() {
+ScheduleViewModel.prototype.cid = function() {
     return util.stamp(this.model);
 };
 
 /**
- * Shadowing valueOf method for event sorting.
- * @returns {CalEvent} The model of event.
+ * Shadowing valueOf method for schedule sorting.
+ * @returns {Schedule} The model of schedule.
  */
-CalEventViewModel.prototype.valueOf = function() {
+ScheduleViewModel.prototype.valueOf = function() {
     return this.model;
 };
 
 /**
  * Link duration method
- * @returns {number} CalEvent#duration result.
+ * @returns {number} Schedule#duration result.
  */
-CalEventViewModel.prototype.duration = function() {
+ScheduleViewModel.prototype.duration = function() {
     return this.model.duration();
 };
 
 /**
  * Link collidesWith method
- * @param {CalEvent|CalEventViewModel} viewModel - Model or viewmodel instance of CalEvents.
- * @returns {boolean} CalEvent#collidesWith result.
+ * @param {Schedule|ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.
+ * @returns {boolean} Schedule#collidesWith result.
  */
-CalEventViewModel.prototype.collidesWith = function(viewModel) {
+ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
         starts = viewModel.getStarts(),
@@ -184,5 +184,5 @@ CalEventViewModel.prototype.collidesWith = function(viewModel) {
     return false;
 };
 
-module.exports = CalEventViewModel;
+module.exports = ScheduleViewModel;
 

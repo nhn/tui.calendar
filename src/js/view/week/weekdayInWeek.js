@@ -13,12 +13,12 @@ var Weekday = require('../weekday'),
  * @constructor
  * @extends {Weekday}
  * @param {object} options - options for WeekdayInWeek view
- * @param {number} [options.containerHeight=40] - minimum height of event
+ * @param {number} [options.containerHeight=40] - minimum height of schedule
  *  container element.
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
- * @param {number} [options.eventHeight=18] - height of each event block.
- * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {number} [options.scheduleHeight=18] - height of each schedule block.
+ * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  */
@@ -36,11 +36,11 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
         baseViewModel = this.getBaseViewModel(),
-        maxEventInDay = 0;
+        maxScheduleInDay = 0;
 
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
-    maxEventInDay = mmax.apply(
+    maxScheduleInDay = mmax.apply(
         null,
         util.map(baseViewModel.matrices, function(matrix) {
             return Math.max.apply(null, util.map(matrix, function(row) {
@@ -49,8 +49,8 @@ WeekdayInWeek.prototype.render = function(viewModel) {
         })
     );
 
-    baseViewModel.minHeight = this._getMinHeight(maxEventInDay);
-    baseViewModel.eventContainerTop = this.options.eventContainerTop;
+    baseViewModel.minHeight = this._getMinHeight(maxScheduleInDay);
+    baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
 
     container.innerHTML = tmpl(baseViewModel);
 
@@ -59,15 +59,15 @@ WeekdayInWeek.prototype.render = function(viewModel) {
 
 /**
  * returns minimum height for container.
- * @param {number} maxEventInDay - max event blocks in one day
+ * @param {number} maxScheduleInDay - max schedule blocks in one day
  * @returns {number}
  */
-WeekdayInWeek.prototype._getMinHeight = function(maxEventInDay) {
+WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
     var opt = this.options;
 
     return (
-        (maxEventInDay * opt.eventHeight) +
-        ((maxEventInDay - 1) * opt.eventGutter) +
+        (maxScheduleInDay * opt.scheduleHeight) +
+        ((maxScheduleInDay - 1) * opt.scheduleGutter) +
         opt.containerBottomGutter
     );
 };

@@ -3,12 +3,12 @@
 </div>
 <div class="{{CSS_PREFIX}}milestone-right {{CSS_PREFIX}}right {{CSS_PREFIX}}clear">
   <div class="{{CSS_PREFIX}}task-day-grid-wrap">
-  {{#each events ~}}
+  {{#each schedules ~}}
   <div class="{{CSS_PREFIX}}task-day-grid" style="width:{{width}}%;left:{{left}}%"></div>
   {{/each ~}}
   </div>
   <div class="{{CSS_PREFIX}}milestone-day-scroll">
-  {{#each events ~}}
+  {{#each schedules ~}}
   <div class="{{CSS_PREFIX}}milestone-day" style="width:{{width}}%;left:{{left}}%">
       <ul class="{{CSS_PREFIX}}milestone-list {{#if isToday}} {{CSS_PREFIX}}today{{/if}}">
       {{#each items ~}}

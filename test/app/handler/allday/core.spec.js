@@ -7,12 +7,12 @@ var datetime = require('common/datetime');
 describe('handler:AlldayCore', function() {
     var result;
 
-    describe('_retriveEventData()', function() {
+    describe('_retriveScheduleData()', function() {
         beforeEach(function() {
             spyOn(domutil, 'getSize').and.returnValue([300, 30]);
         });
 
-        it('return function that return event data by mouse events.', function() {
+        it('return function that return schedule data by mouse events.', function() {
             var mockAlldayView = {
                 options: {
                     renderStartDate: '2015-08-10',
@@ -30,7 +30,7 @@ describe('handler:AlldayCore', function() {
             // Simulate mouse event action.
             // drag start position (11일)
             spyOn(domevent, 'getMousePosition').and.returnValue([90, 10]);
-            result = AlldayCore._retriveEventData.call(null, mockAlldayView);
+            result = AlldayCore._retriveScheduleData.call(null, mockAlldayView);
             // drag end position (12일)
             domevent.getMousePosition.and.returnValue([160, 10]);
 
@@ -45,7 +45,7 @@ describe('handler:AlldayCore', function() {
 
             // drag start position (12일)
             domevent.getMousePosition.and.returnValue([121, 25]);
-            result = AlldayCore._retriveEventData.call(null, mockAlldayView);
+            result = AlldayCore._retriveScheduleData.call(null, mockAlldayView);
             // drag end position (10일)
             domevent.getMousePosition.and.returnValue([59, 25]);
             expect(result(mouseEvent)).toEqual({

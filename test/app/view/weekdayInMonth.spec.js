@@ -1,7 +1,7 @@
 var Weekday = require('view/weekday');
 var WeekdayInMonth = require('view/month/weekdayInMonth');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEventViewModel');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 var datetime = require('common/datetime');
 
 describe('view:WeekdayInMonth', function() {
@@ -14,15 +14,15 @@ describe('view:WeekdayInMonth', function() {
             mockGetViewBound = jasmine.createSpy('getViewBound');
         });
 
-        it('should 2 when containerHeight 60, event block height is 20.', function() {
+        it('should 2 when containerHeight 60, schedule block height is 20.', function() {
 
             mockGetViewBound.and.returnValue({height: 60});
             mockInst = {
                 getViewBound: mockGetViewBound,
                 options: {
                     heightPercent: 100,
-                    eventHeight: 18,
-                    eventGutter: 2
+                    scheduleHeight: 18,
+                    scheduleGutter: 2
                 }
             };
 
@@ -35,8 +35,8 @@ describe('view:WeekdayInMonth', function() {
                 getViewBound: mockGetViewBound,
                 options: {
                     heightPercent: 100,
-                    eventHeight: 18,
-                    eventGutter: 2
+                    scheduleHeight: 18,
+                    scheduleGutter: 2
                 }
             };
 
@@ -46,8 +46,8 @@ describe('view:WeekdayInMonth', function() {
     });
 
     describe('_getSkipHelper()', function() {
-        it('should return helper that counting event period each date.', function() {
-            var viewModel = CalEventViewModel.create(CalEvent.create({
+        it('should return helper that counting schedule period each date.', function() {
+            var viewModel = ScheduleViewModel.create(Schedule.create({
                     title: 'A',
                     isAllDay: true,
                     starts: '2015-05-01T00:00:00',

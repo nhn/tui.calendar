@@ -52,7 +52,7 @@ util.inherit(TaskView, View);
  */
 TaskView.prototype._getBaseViewModel = function(viewModel) {
     var options = this.options,
-        events = {},
+        schedules = {},
         range = datetime.range(
             datetime.start(datetime.parse(options.renderStartDate)),
             datetime.end(datetime.parse(options.renderEndDate)),
@@ -61,21 +61,21 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         height = 0,
         mmax = Math.max,
         today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
-        viewModelEvents = util.pick(viewModel.eventsInDateRange, 'task'),
+        viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'task'),
         grids = viewModel.grids,
         i = 0;
 
     util.forEach(range, function(d) {
         var date = datetime.format(d, 'YYYY-MM-DD');
-        events[date] = {
+        schedules[date] = {
             morning: {length: 0},
             lunch: {length: 0},
             evening: {length: 0}
         };
     });
-    util.extend(events, viewModelEvents);
+    util.extend(schedules, viewModelSchedules);
 
-    height = mmax.apply(null, util.map(events, function(g) {
+    height = mmax.apply(null, util.map(schedules, function(g) {
         var subcount = 0;
 
         util.forEach(g, function(coll) {
@@ -84,15 +84,15 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         return subcount;
     })) * ITEM_HEIGHT;
 
-    util.forEach(events, function(event, key) {
-        event.isToday = (key === today);
-        event.left = grids[i].left;
-        event.width = grids[i].width;
+    util.forEach(schedules, function(schedule, key) {
+        schedule.isToday = (key === today);
+        schedule.left = grids[i].left;
+        schedule.width = grids[i].width;
         i += 1;
     });
 
     return {
-        events: events,
+        schedules: schedules,
         height: height
     };
 };

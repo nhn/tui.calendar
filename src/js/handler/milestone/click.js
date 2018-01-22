@@ -49,7 +49,7 @@ MilestoneClick.prototype.destroy = function() {
 /**
  * @param {HTMLElement} target - check reponsibility to this handler module supplied element
  * @returns {boolean|string} return false when handler has no responsibility for supplied element.
- * otherwise, return event model id that related with target element.
+ * otherwise, return schedule model id that related with target element.
  */
 MilestoneClick.prototype.checkExpectedCondition = function(target) {
     target = domutil.closest(target, config.classname('.milestone-item'));
@@ -62,7 +62,7 @@ MilestoneClick.prototype.checkExpectedCondition = function(target) {
 };
 
 /**
- * @emits MilestoneClick#clickEvent
+ * @emits MilestoneClick#clickSchedule
  * @param {object} clickEvent - click event object
  */
 MilestoneClick.prototype._onClick = function(clickEvent) {
@@ -73,14 +73,14 @@ MilestoneClick.prototype._onClick = function(clickEvent) {
         return;
     }
 
-    this.baseController.events.doWhenHas(modelID, function(model) {
+    this.baseController.schedules.doWhenHas(modelID, function(model) {
         /**
          * @events MilestoneClick#clickEvent
          * @type {object}
-         * @property {CalEvent} model - model instance
+         * @property {Schedule} model - model instance
          * @property {MouseEvent} jsEvent - MouseEvent object
          */
-        self.fire('clickEvent', {
+        self.fire('clickSchedule', {
             model: model,
             jsEvent: clickEvent.originEvent
         });

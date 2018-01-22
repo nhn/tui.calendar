@@ -66,18 +66,18 @@ Time.prototype._parseDateGroup = function(str) {
 };
 
 /**
- * @param {CalEventViewModel} viewModel - view model instance to calculate bound.
- * @param {object} options - options for calculating event element's bound.
- * @param {Date} options.todayStart - date object represent event date's start (00:00:00)
- * @param {number} options.baseMS - the number of milliseconds to render event blocks.
+ * @param {ScheduleViewModel} viewModel - view model instance to calculate bound.
+ * @param {object} options - options for calculating schedule element's bound.
+ * @param {Date} options.todayStart - date object represent schedule date's start (00:00:00)
+ * @param {number} options.baseMS - the number of milliseconds to render schedule blocks.
  * @param {number} options.baseHeight - pixel value related with baseMS options.
  * @param {number[]} options.baseLeft - left position percents for each columns.
- * @param {number} options.baseWidth - the unit of event blocks width percent.
- * @param {number} options.columnIndex - the number index of event blocks.
+ * @param {number} options.baseWidth - the unit of schedule blocks width percent.
+ * @param {number} options.columnIndex - the number index of schedule blocks.
  * it represent rendering index from left sides in view.
  * @returns {object} bound object for supplied view model.
  */
-Time.prototype.getEventViewBound = function(viewModel, options) {
+Time.prototype.getScheduleViewBound = function(viewModel, options) {
     var baseMS = options.baseMS;
     var baseHeight = options.baseHeight;
     var cropped = false;
@@ -85,7 +85,7 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
 
     offsetStart = viewModel.valueOf().starts - options.todayStart;
 
-    // containerHeight : milliseconds in day = x : event's milliseconds
+    // containerHeight : milliseconds in day = x : schedule's milliseconds
     top = (baseHeight * offsetStart) / baseMS;
     height = (baseHeight * viewModel.duration()) / baseMS;
     width = options.baseWidth * (viewModel.extraSpace + 1);
@@ -111,8 +111,8 @@ Time.prototype.getEventViewBound = function(viewModel, options) {
 
 /**
  * Set viewmodels for rendering.
- * @param {string} ymd The date of events. YYYYMMDD format.
- * @param {array} matrices The matrices for event placing.
+ * @param {string} ymd The date of schedules. YYYYMMDD format.
+ * @param {array} matrices The matrices for schedule placing.
  */
 Time.prototype._getBaseViewModel = function(ymd, matrices) {
     var self = this,
@@ -124,8 +124,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
         baseMS;
 
     /**
-     * Calculate each event element bounds relative with rendered hour milliseconds and
-     * wrap each event model to viewmodels.
+     * Calculate each schedule element bounds relative with rendered hour milliseconds and
+     * wrap each schedule model to viewmodels.
      */
     containerHeight = this.getViewBound().height;
     todayStart = this._parseDateGroup(ymd);
@@ -157,7 +157,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
                     return;
                 }
 
-                viewBound = self.getEventViewBound(viewModel, {
+                viewBound = self.getScheduleViewBound(viewModel, {
                     todayStart: todayStart,
                     baseMS: baseMS,
                     baseLeft: leftPercents,
@@ -182,8 +182,8 @@ Time.prototype.getDate = function() {
 
 /**
  * @override
- * @param {string} ymd The date of events. YYYYMMDD format
- * @param {array} matrices Matrices for placing events
+ * @param {string} ymd The date of schedules. YYYYMMDD format
+ * @param {array} matrices Matrices for placing schedules
  */
 Time.prototype.render = function(ymd, matrices) {
     this._getBaseViewModel(ymd, matrices);

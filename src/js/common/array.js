@@ -215,17 +215,17 @@ function stringDESCIgnoreCase(_a, _b) {
 }
 
 /**
- * Compare event models for sort.
+ * Compare schedule models for sort.
  *
- * 1. all day event first.
+ * 1. all day schedule first.
  * 2. early starts.
  * 3. longest duration.
  * 4. early created.
- * @param {CalEvent|CalEventViewModel} a The object event instance.
- * @param {CalEvent|CalEventViewModel} b The object event instance.
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
  * @returns {number} Result of comparison.
  */
-function eventASC(a, b) {
+function scheduleASC(a, b) {
     var durationA, durationB;
     var allDayCompare, startsCompare;
     var modelA = a.valueOf();
@@ -259,8 +259,8 @@ function eventASC(a, b) {
 module.exports = {
     bsearch: bsearch,
     compare: {
-        event: {
-            asc: eventASC
+        schedule: {
+            asc: scheduleASC
         },
         bool: {
             asc: booleanASC,

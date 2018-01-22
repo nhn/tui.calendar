@@ -1,5 +1,5 @@
 /**
- * @fileoverview View of allday event container inside of Week view.
+ * @fileoverview View of allday schedule container inside of Week view.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -17,9 +17,9 @@ var config = require('../../config'),
  * @param {object} options The object for view customization.
  * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
  * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.height=60] - minimum height of event container element.
- * @param {number} [options.eventBlockHeight=18] - height of each event block.
- * @param {number} [options.eventBlockGutter=2] - gutter height of each event block.
+ * @param {number} [options.height=60] - minimum height of schedule container element.
+ * @param {number} [options.scheduleBlockHeight=18] - height of each schedule block.
+ * @param {number} [options.scheduleBlockGutter=2] - gutter height of each schedule block.
  * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
  * @param {HTMLElement} container Container element.
  */
@@ -39,11 +39,11 @@ function Allday(options, container) {
         renderStartDate: '',
         renderEndDate: '',
         containerBottomGutter: 18,
-        eventHeight: 18,
-        eventGutter: 2,
-        eventContainerTop: 1,
+        scheduleHeight: 18,
+        scheduleGutter: 2,
+        scheduleContainerTop: 1,
         getViewModelFunc: function(viewModel) {
-            return viewModel.eventsInDateRange.allday;
+            return viewModel.schedulesInDateRange.allday;
         }
     }, options);
 
@@ -58,13 +58,13 @@ function Allday(options, container) {
 util.inherit(Allday, View);
 
 /**
- * create month week view model for render allday events in top of week views.
+ * create month week view model for render allday schedules in top of week views.
  * @override
  * @param {object} viewModel - viewModel from parent views.
  */
 Allday.prototype.render = function(viewModel) {
     var container = this.container;
-    var eventContainerTop = this.options.eventContainerTop;
+    var scheduleContainerTop = this.options.scheduleContainerTop;
     var weekdayView;
     var self = this;
 
@@ -77,7 +77,7 @@ Allday.prototype.render = function(viewModel) {
         domutil.find(config.classname('.weekday-container'), container)
     );
     weekdayView.on('afterRender', function(weekdayViewModel) {
-        self.contentHeight = weekdayViewModel.minHeight + eventContainerTop;
+        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
     });
 
     this.addChild(weekdayView);

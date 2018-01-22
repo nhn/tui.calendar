@@ -18,7 +18,7 @@ describe('week:view/TaskView', function() {
         it('일정이 없어도 렌더 일자에 대한 정보는 반환한다.', function() {
             var actual = TaskView.prototype._getBaseViewModel.call(mockInst, {
                 grids: datetime.getGridLeftAndWidth(2, 0, false),
-                eventsInDateRange: {
+                schedulesInDateRange: {
                     task: {
                         '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}, isToday: false},
                         '2015-05-02': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}, isToday: false}
@@ -26,7 +26,7 @@ describe('week:view/TaskView', function() {
                 }
             });
             var expected = {
-                events: {
+                schedules: {
                     '2015-05-01': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}, isToday: false, left: 0, width: 50},
                     '2015-05-02': {morning: {length: 0}, lunch: {length: 0}, evening: {length: 0}, isToday: false, left: 50, width: 50}
                 },
@@ -36,10 +36,10 @@ describe('week:view/TaskView', function() {
             expect(actual).toEqual(expected);
         });
 
-        it('상위 뷰에서 업무일정 정보가 내려오면 템플릿에 맞게 events 프로퍼티에 넣는다.', function() {
+        it('상위 뷰에서 업무일정 정보가 내려오면 템플릿에 맞게 schedules 프로퍼티에 넣는다.', function() {
             var viewModel = {
                 grids: datetime.getGridLeftAndWidth(2, 0, false),
-                eventsInDateRange: {
+                schedulesInDateRange: {
                     task: {
                         '2015-05-02': {hello: {length: 2}}
                     }
@@ -47,7 +47,7 @@ describe('week:view/TaskView', function() {
             };
             var actual = TaskView.prototype._getBaseViewModel.call(mockInst, viewModel);
             var expected = {
-                events: {
+                schedules: {
                     '2015-05-01': {
                         morning: {length: 0},
                         lunch: {length: 0},
@@ -70,7 +70,7 @@ describe('week:view/TaskView', function() {
 
             viewModel = {
                 grids: datetime.getGridLeftAndWidth(2, 0, false),
-                eventsInDateRange: {
+                schedulesInDateRange: {
                     task: {
                         '2015-05-02': {hello: {length: 8}}
                     }
@@ -79,7 +79,7 @@ describe('week:view/TaskView', function() {
 
             actual = TaskView.prototype._getBaseViewModel.call(mockInst, viewModel);
             expected = {
-                events: {
+                schedules: {
                     '2015-05-01': {
                         morning: {length: 0},
                         lunch: {length: 0},

@@ -43,7 +43,7 @@ MonthCreationGuide.prototype.destroy = function() {
 
 /**
  * Drag start event handler
- * @param {object} dragStartEvent - event data from MonthCreation
+ * @param {object} dragStartEvent - schedule data from MonthCreation
  */
 MonthCreationGuide.prototype._createGuideElement = function(dragStartEvent) {
     var options = {
@@ -58,7 +58,7 @@ MonthCreationGuide.prototype._createGuideElement = function(dragStartEvent) {
 
 /**
  * Drag event handler
- * @param {object} dragEvent - event data from MonthCreation
+ * @param {object} dragEvent - schedule data from MonthCreation
  */
 MonthCreationGuide.prototype._onDrag = function(dragEvent) {
     this.guide.update(dragEvent.x, dragEvent.y);

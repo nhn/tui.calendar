@@ -39,18 +39,18 @@ module.exports = function(options) {
     mixin(Month, controller, 'Month');
 
     /**********
-     * Override Week#findByDateRange for support events that category is 'miles
+     * Override Week#findByDateRange for support schedules that category is 'miles
      * tone', 'task'.
      **********/
 
     originQuery = controller.Week.findByDateRange;
 
     /**
-     * Find event and get view model for specific month
+     * Find schedule and get view model for specific month
      * @this Base
      * @override
-     * @param {Date} starts - start date to find events
-     * @param {Date} ends - end date to find events
+     * @param {Date} starts - start date to find schedules
+     * @param {Date} ends - end date to find schedules
      * @param {function[]} [andFilters] - optional filters to applying search query
      * @returns {object} view model data
      */

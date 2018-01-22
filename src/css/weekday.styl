@@ -2,10 +2,10 @@
     .{css-prefix}weekday-grid
         overflow-y: hidden
 
-    .{css-prefix}weekday-events
+    .{css-prefix}weekday-schedules
         overflow-y: visible
 
-    .{css-prefix}weekday-event
+    .{css-prefix}weekday-schedule
         margin: 0 10px
 
     .{css-prefix}today
@@ -67,37 +67,37 @@
         position: absolute
         overflow-y: scroll
 
-    .events
+    .schedules
         pos(0, 0)
         wh(100%, 100%)
         position: absolute
         font-size: 12px
         overflow-y: scroll
 
-    .events-height-span
+    .schedules-height-span
         width: 1px
         margin-left: -1px
 
-    .event-block
+    .schedule-block
         position: absolute
 
-    .event-block-dragging-dim
+    .schedule-block-dragging-dim
         opacity: 0.4
 
-    .event
+    .schedule
         position: relative
         margin: 0 10px 0 1px
         cursor: pointer
         border-left-style: solid
         border-left-width: 3px
 
-        &.event-time
+        &.schedule-time
             border-left-width: 0
 
-            .event-title
+            .schedule-title
                 padding-left: 9px
 
-    .event-bullet
+    .schedule-bullet
         position: absolute
         padding: 0
         wh(6px, 6px)
@@ -105,11 +105,11 @@
         left: 0
         border-radius: 50%
 
-    .event-bullet-focused
+    .schedule-bullet-focused
         left: 10px
         background: #ffffff
 
-    .event-title
+    .schedule-title
         display: block
         white-space: nowrap
         overflow: hidden
@@ -118,14 +118,14 @@
         padding-left: 3px;
         font-weight: bold;
 
-    .event-title-focused
+    .schedule-title-focused
         padding-left: 16px
 
-    .exceed-left .event
+    .exceed-left .schedule
         margin-left: 0
         border-left-width: 0
 
-    .exceed-right .event
+    .exceed-right .schedule
         margin-right: 0
 
     .exceed-right .resize-handle

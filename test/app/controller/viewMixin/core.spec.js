@@ -1,24 +1,24 @@
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEventViewModel');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 var TZDate = require('common/timezone').Date;
 
 describe('Base.Core', function() {
     var util = tui.util,
         mockData,
-        eventList,
+        scheduleList,
         controller,
         expected,
         actual;
 
     beforeEach(function() {
         controller = ControllerFactory();
-        mockData = fixture.load('event_set_string3.json');
-        eventList = util.map(mockData, function(data) {
-            return CalEvent.create(data);
-        }).sort(array.compare.event.asc);
+        mockData = fixture.load('schedule_set_string3.json');
+        scheduleList = util.map(mockData, function(data) {
+            return Schedule.create(data);
+        }).sort(array.compare.schedule.asc);
     });
 
     afterEach(function() {
@@ -27,28 +27,28 @@ describe('Base.Core', function() {
 
     describe('getCollisionGroup()', function() {
         it('Get collision group properly.', function() {
-            actual = controller.Core.getCollisionGroup(eventList);
+            actual = controller.Core.getCollisionGroup(scheduleList);
             expected = [
                 [
-                    eventList[0].cid(),
-                    eventList[1].cid(),
-                    eventList[2].cid(),
-                    eventList[3].cid()
+                    scheduleList[0].cid(),
+                    scheduleList[1].cid(),
+                    scheduleList[2].cid(),
+                    scheduleList[3].cid()
                 ],
                 [
-                    eventList[4].cid()
+                    scheduleList[4].cid()
                 ],
                 [
-                    eventList[5].cid(),
-                    eventList[6].cid()
+                    scheduleList[5].cid(),
+                    scheduleList[6].cid()
                 ],
                 [
-                    eventList[7].cid(),
-                    eventList[8].cid(),
-                    eventList[9].cid()
+                    scheduleList[7].cid(),
+                    scheduleList[8].cid(),
+                    scheduleList[9].cid()
                 ],
                 [
-                    eventList[10].cid()
+                    scheduleList[10].cid()
                 ]
             ];
 
@@ -86,25 +86,25 @@ describe('Base.Core', function() {
             collection = new Collection(function(model) {
                 return util.stamp(model);
             });
-            collection.add.apply(collection, eventList);
-            cg = controller.Core.getCollisionGroup(eventList);
+            collection.add.apply(collection, scheduleList);
+            cg = controller.Core.getCollisionGroup(scheduleList);
         });
 
         it('can calculate matrices accuratly.', function() {
             expected = [
                 [
-                    [eventList[0], eventList[1]],
-                    [eventList[2]],
-                    [eventList[3]]
+                    [scheduleList[0], scheduleList[1]],
+                    [scheduleList[2]],
+                    [scheduleList[3]]
                 ], [
-                    [eventList[4]]
+                    [scheduleList[4]]
                 ], [
-                    [eventList[5], eventList[6]]
+                    [scheduleList[5], scheduleList[6]]
                 ], [
-                    [eventList[7], eventList[8]],
-                    [eventList[9]]
+                    [scheduleList[7], scheduleList[8]],
+                    [scheduleList[9]]
                 ], [
-                    [eventList[10]]
+                    [scheduleList[10]]
                 ]
             ];
             actual = controller.Core.getMatrices(collection, cg);
@@ -124,7 +124,7 @@ describe('Base.Core', function() {
 
         it('fill renderStarts, renderEnds to each view model in collection.', function() {
             // 5/1 10:20 ~ 5/1 10:40
-            collection.add(CalEventViewModel.create(eventList[0]));
+            collection.add(ScheduleViewModel.create(scheduleList[0]));
 
             var limit1 = new TZDate('2015-05-01T10:30:00+09:00');
             var limit2 = new TZDate('2015-05-01T10:40:00+09:00');
@@ -139,7 +139,7 @@ describe('Base.Core', function() {
         });
     });
 
-    describe('getEventInDateRangeFilter', function() {
+    describe('getScheduleInDateRangeFilter', function() {
         var collection;
 
         beforeEach(function() {
@@ -148,7 +148,7 @@ describe('Base.Core', function() {
             });
         });
 
-        it('filter events properly.', function() {
+        it('filter schedules properly.', function() {
             var filter, d1, d2;
 
             //                     starts ------------- ends
@@ -164,66 +164,66 @@ describe('Base.Core', function() {
             // L ownStart ----------------------------------------------- ownEnd
 
             // 10:20 ~ 10:40
-            collection.add(CalEventViewModel.create(eventList[0]));
+            collection.add(ScheduleViewModel.create(scheduleList[0]));
 
             // A: 09:30 ~ 10:10
             d1 = new TZDate('2015-05-01T09:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:10:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(0);
 
             // B: 09:30 ~ 10:20
             d1 = new TZDate('2015-05-01T09:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:20:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // C: 09:30 ~ 10:30
             d1 = new TZDate('2015-05-01T09:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:30:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // D: 10:20 ~ 10:30
             d1 = new TZDate('2015-05-01T10:20:00+09:00');
             d2 = new TZDate('2015-05-01T10:30:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // E: 10:25 ~ 10:35
             d1 = new TZDate('2015-05-01T10:25:00+09:00');
             d2 = new TZDate('2015-05-01T10:35:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // F: 10:30 ~ 10:40
             d1 = new TZDate('2015-05-01T10:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:40:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // G: 10:30 ~ 10:50
             d1 = new TZDate('2015-05-01T10:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:50:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // H: 10:40 ~ 10:50
             d1 = new TZDate('2015-05-01T10:40:00+09:00');
             d2 = new TZDate('2015-05-01T10:50:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
 
             // I: 10:50 ~ 10:55
             d1 = new TZDate('2015-05-01T10:50:00+09:00');
             d2 = new TZDate('2015-05-01T10:55:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(0);
 
             // L: 10:10 ~ 10:50
             d1 = new TZDate('2015-05-01T10:10:00+09:00');
             d2 = new TZDate('2015-05-01T10:50:00+09:00');
-            filter = controller.Core.getEventInDateRangeFilter(d1, d2);
+            filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
             expect(collection.find(filter).length).toBe(1);
         });
     });

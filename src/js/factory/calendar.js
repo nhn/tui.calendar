@@ -18,7 +18,7 @@ var dw = require('../common/dw'),
     timezone = require('../common/timezone');
 
 /**
- * @typedef {object} CalEvent
+ * @typedef {object} Schedule
  * @property {string} [id] - 일정의 uniqueID.
  * @property {string} [calendarId] - 각 일정을 캘린더별로 그룹지을 수 있는 값.
  * @property {string} title - 이벤트 제목
@@ -39,12 +39,12 @@ var dw = require('../common/dw'),
  * @mixes util.CustomEvents
  * @param {object} options - options for calendar
  *  @param {string} [options.cssPrefix] - CSS classname prefix
- *  @param {function} [options.groupFunc] - function for group event models {@see Collection#groupBy}
+ *  @param {function} [options.groupFunc] - function for group schedule models {@see Collection#groupBy}
  *  @param {function} [options.controller] - controller instance
  *  @param {string} [options.defaultView='week'] - default view of calendar
  *  @param {string} [options.defaultDate=] - default date to render calendar.
  *   if not supplied, use today.
- *  @param {object} [options.calendarColor] - calendarId별로 스타일을 미리 지정 가능 {@see Calendar~CalEvent}
+ *  @param {object} [options.calendarColor] - calendarId별로 스타일을 미리 지정 가능 {@see Calendar~Schedule}
  *  @param {object} [options.template] - template option
  *   @param {function} [options.template.allday] - allday template function
  *   @param {function} [options.template.time] - time template function
@@ -52,8 +52,8 @@ var dw = require('../common/dw'),
  *   @param {number} [options.week.startDayOfWeek=0] - start day of week
  *   @param {string} [options.week.panelHeights] - each panel height
  *  @param {object} [options.month] - options for month view
- *   @param {function} [options.eventFilter] - event filter for month view
- *  @param {Array.<CalEvent>} [options.events] - array of CalEvent data for add calendar after initialize.
+ *   @param {function} [options.scheduleFilter] - schedule filter for month view
+ *  @param {Array.<Schedule>} [options.schedules] - array of Schedule data for add calendar after initialize.
  * @param {HTMLDivElement} container = container element for calendar
  */
 function Calendar(options, container) {
@@ -87,7 +87,7 @@ function Calendar(options, container) {
         }, util.pick(options, 'template') || {}),
         week: util.extend({}, util.pick(options, 'week') || {}),
         month: util.extend({}, util.pick(options, 'month') || {}),
-        events: []
+        schedules: []
     }, options);
 
     this.options.week = util.extend({
@@ -95,7 +95,7 @@ function Calendar(options, container) {
     }, util.pick(this.options, 'week') || {});
 
     this.options.month = util.extend({
-        eventFilter: function(model) {
+        scheduleFilter: function(model) {
             return Boolean(model.visible) &&
                 (model.category === 'allday' || model.category === 'time');
         }
@@ -234,8 +234,8 @@ Calendar.prototype.initialize = function() {
 
     this.layout.controller = controller;
 
-    if (opt.events && opt.events.length) {
-        this.createEvents(opt.events, true);
+    if (opt.schedules && opt.schedules.length) {
+        this.createSchedules(opt.schedules, true);
     }
 
     util.forEach(opt.template, function(func, name) {
@@ -252,11 +252,11 @@ Calendar.prototype.initialize = function() {
  **********/
 
 /**
- * Create events instance and render calendar.
- * @param {Array.<CalEvent>} dataObjectList - array of {@see Calendar~Event} object
+ * Create schedules instance and render calendar.
+ * @param {Array.<Schedule>} dataObjectList - array of {@see Calendar~Schedule} object
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-Calendar.prototype.createEvents = function(dataObjectList, silent) {
+Calendar.prototype.createSchedules = function(dataObjectList, silent) {
     var calColor = this.calendarColor;
 
     util.forEach(dataObjectList, function(obj) {
@@ -269,7 +269,7 @@ Calendar.prototype.createEvents = function(dataObjectList, silent) {
         }
     });
 
-    this.controller.createEvents(dataObjectList, silent);
+    this.controller.createSchedules(dataObjectList, silent);
 
     if (!silent) {
         this.render();
@@ -277,63 +277,63 @@ Calendar.prototype.createEvents = function(dataObjectList, silent) {
 };
 
 /**
- * Get event instance by event id
- * @param {string} id - ID of event instance
- * @param {string} calendarId - calendarId of event instance
- * @returns {CalEvent} event instance
+ * Get schedule instance by schedule id
+ * @param {string} id - ID of schedule instance
+ * @param {string} calendarId - calendarId of schedule instance
+ * @returns {Schedule} schedule instance
  */
-Calendar.prototype.getEvent = function(id, calendarId) {
-    return this.controller.events.single(function(model) {
+Calendar.prototype.getSchedule = function(id, calendarId) {
+    return this.controller.schedules.single(function(model) {
         return model.id === id && model.calendarId === calendarId;
     });
 };
 
 /**
- * Update event instance
- * @param {string} id - ID of event instance to update 
- * @param {string} calendarId - calendarId of event instance to update data
+ * Update schedule instance
+ * @param {string} id - ID of schedule instance to update 
+ * @param {string} calendarId - calendarId of schedule instance to update data
  * @param {object} data - object data to update instance
  */
-Calendar.prototype.updateEvent = function(id, calendarId, data) {
+Calendar.prototype.updateSchedule = function(id, calendarId, data) {
     var ctrl = this.controller,
-        ownEvents = ctrl.events,
-        calEvent = ownEvents.single(function(model) {
+        ownSchedules = ctrl.schedules,
+        Schedule = ownSchedules.single(function(model) {
             return model.id === id && model.calendarId === calendarId;
         });
 
-    if (calEvent) {
-        ctrl.updateEvent(calEvent, data);
+    if (Schedule) {
+        ctrl.updateSchedule(Schedule, data);
         this.render();
     }
 };
 
 /**
- * Delete event instance
- * @fires Calendar#beforeDeleteEvent
- * @param {string} id - ID of event instance to delete
- * @param {string} calendarId - calendarId of event to delete
+ * Delete schedule instance
+ * @fires Calendar#beforeDeleteSchedule
+ * @param {string} id - ID of schedule instance to delete
+ * @param {string} calendarId - calendarId of schedule to delete
  */
-Calendar.prototype.deleteEvent = function(id, calendarId) {
+Calendar.prototype.deleteSchedule = function(id, calendarId) {
     var ctrl = this.controller,
-        ownEvents = ctrl.events,
-        calEvent = ownEvents.single(function(model) {
+        ownSchedules = ctrl.schedules,
+        Schedule = ownSchedules.single(function(model) {
             return model.id === id && model.calendarId === calendarId;
         });
 
-    if (!calEvent) {
+    if (!Schedule) {
         return;
     }
 
     /**
-     * @event Calendar#beforeDeleteEvent
+     * @event Calendar#beforeDeleteSchedule
      * @type {object}
-     * @property {CalEvent} model - model instance to delete
+     * @property {Schedule} model - model instance to delete
      */
-    this.fire('beforeDeleteEvent', {
-        model: calEvent
+    this.fire('beforeDeleteSchedule', {
+        model: Schedule
     });
 
-    ctrl.deleteEvent(calEvent);
+    ctrl.deleteSchedule(Schedule);
     this.render();
 };
 
@@ -391,18 +391,18 @@ Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
 };
 
 /**
- * Toggle events visibility by calendar ID
+ * Toggle schedules visibility by calendar ID
  * @param {string} calendarId - calendar id value
- * @param {boolean} toHide - set true to hide events
+ * @param {boolean} toHide - set true to hide schedules
  * @param {boolean} render - set true then render after change visible property each models
  * @private
  */
-Calendar.prototype._toggleEventsByCalendarID = function(calendarId, toHide, render) {
-    var ownEvents = this.controller.events;
+Calendar.prototype._toggleSchedulesByCalendarID = function(calendarId, toHide, render) {
+    var ownSchedules = this.controller.schedules;
 
     calendarId = util.isArray(calendarId) ? calendarId : [calendarId];
 
-    ownEvents.each(function(model) {
+    ownSchedules.each(function(model) {
         if (~util.inArray(model.calendarId, calendarId)) {
             model.set('visible', !toHide);
         }
@@ -428,7 +428,7 @@ Calendar.prototype.render = function() {
  * Delete all data and clear view.
  */
 Calendar.prototype.clear = function() {
-    this.controller.clearEvents();
+    this.controller.clearSchedules();
     this.render();
 };
 
@@ -606,13 +606,13 @@ Calendar.prototype.getCurrentView = function() {
  * 같은 calendarId를 가진 모든 일정에 대해 글자색, 배경색을 재지정하고 뷰를 새로고침한다
  * @param {string} calendarId - calendarId value
  * @param {object} option - color data object
- *  @param {string} option.color - text color of event element
- *  @param {string} option.bgColor - bg color of event element
+ *  @param {string} option.color - text color of schedule element
+ *  @param {string} option.bgColor - bg color of schedule element
  *  @param {boolean} [option.render=true] - set false then does not auto render.
  */
 Calendar.prototype.setCalendarColor = function(calendarId, option) {
     var calColor = this.calendarColor,
-        ownEvents = this.controller.events,
+        ownSchedules = this.controller.schedules,
         ownColor = calColor[calendarId];
 
     if (!util.isObject(option)) {
@@ -626,7 +626,7 @@ Calendar.prototype.setCalendarColor = function(calendarId, option) {
         render: true
     }, option);
 
-    ownEvents.each(function(model) {
+    ownSchedules.each(function(model) {
         if (model.calendarId !== calendarId) {
             return;
         }
@@ -642,23 +642,23 @@ Calendar.prototype.setCalendarColor = function(calendarId, option) {
 };
 
 /**
- * Show events visibility by calendar ID
+ * Show schedules visibility by calendar ID
  * @param {string|string[]} calendarId - calendar id value
  * @param {boolean} [render=true] - set false then doesn't render after change model's property.
  */
-Calendar.prototype.showEventsByCalendarID = function(calendarId, render) {
+Calendar.prototype.showSchedulesByCalendarID = function(calendarId, render) {
     render = util.isExisty(render) ? render : true;
-    this._toggleEventsByCalendarID(calendarId, false, render);
+    this._toggleSchedulesByCalendarID(calendarId, false, render);
 };
 
 /**
- * Hide events visibility by calendar ID
+ * Hide schedules visibility by calendar ID
  * @param {string|string[]} calendarId - calendar id value
  * @param {boolean} [render=true] - set false then doesn't render after change model's property.
  */
-Calendar.prototype.hideEventsByCalendarID = function(calendarId, render) {
+Calendar.prototype.hideSchedulesByCalendarID = function(calendarId, render) {
     render = util.isExisty(render) ? render : true;
-    this._toggleEventsByCalendarID(calendarId, true, render);
+    this._toggleSchedulesByCalendarID(calendarId, true, render);
 };
 
 /**********
@@ -667,73 +667,73 @@ Calendar.prototype.hideEventsByCalendarID = function(calendarId, render) {
 
 /**
  * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
- * @fires Calendar#clickEvent
- * @param {object} clickEventData - 'clickEvent' 핸들러의 이벤트 데이터
+ * @fires Calendar#clickSchedule
+ * @param {object} clickScheduleData - 'clickSchedule' 핸들러의 이벤트 데이터
  */
-Calendar.prototype._onClick = function(clickEventData) {
+Calendar.prototype._onClick = function(clickScheduleData) {
     /**
-     * @events Calendar#clickEvent
+     * @events Calendar#clickSchedule
      * @type {object}
-     * @property {CalEvent} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
+     * @property {Schedule} model - 클릭 이벤트 블록과 관련된 일정 모델 인스턴스
      * @property {MouseEvent} jsEvent - 마우스 이벤트
      */
-    this.fire('clickEvent', clickEventData);
+    this.fire('clickSchedule', clickScheduleData);
 };
 
 /**
  * dayname 클릭 이벤트 핸들러
  * @fires Calendar#clickDayname
- * @param {object} clickEventData - 'clickDayname' 핸들러의 이벤트 데이터
+ * @param {object} clickScheduleData - 'clickDayname' 핸들러의 이벤트 데이터
  */
-Calendar.prototype._onClickDayname = function(clickEventData) {
+Calendar.prototype._onClickDayname = function(clickScheduleData) {
     /**
      * @events Calendar#clickDayname
      * @type {object}
      * @property {string} date - 'YYYY-MM-DD'형식의 날짜
      */
-    this.fire('clickDayname', clickEventData);
+    this.fire('clickDayname', clickScheduleData);
 };
 
 /**
- * @fires {Calendar#beforeCreateEvent}
- * @param {object} createEventData - select event data from allday, time
+ * @fires {Calendar#beforeCreateSchedule}
+ * @param {object} createScheduleData - select schedule data from allday, time
  */
-Calendar.prototype._onBeforeCreate = function(createEventData) {
+Calendar.prototype._onBeforeCreate = function(createScheduleData) {
     /**
-     * @events Calendar#beforeCreateEvent
+     * @events Calendar#beforeCreateSchedule
      * @type {object}
      * @property {Date} starts - select start date
      * @property {Date] ends - select end date
      */
-    this.fire('beforeCreateEvent', createEventData);
+    this.fire('beforeCreateSchedule', createScheduleData);
 };
 
 /**
- * @fires Calendar#beforeUpdateEvent
- * @param {object} updateEventData - update event data
+ * @fires Calendar#beforeUpdateSchedule
+ * @param {object} updateScheduleData - update schedule data
  */
-Calendar.prototype._onBeforeUpdate = function(updateEventData) {
+Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
     /**
-     * @event Calendar#beforeUpdateEvent
+     * @event Calendar#beforeUpdateSchedule
      * @type {object}
-     * @property {CalEvent} model - model instance to update
+     * @property {Schedule} model - model instance to update
      * @property {Date} starts - select start date
      * @property {Date] ends - select end date
      */
-    this.fire('beforeUpdateEvent', updateEventData);
+    this.fire('beforeUpdateSchedule', updateScheduleData);
 };
 
 /**
  * @fires Calendar#resizePanel
- * @param {object} resizeEventData - resize event data object
+ * @param {object} resizeScheduleData - resize schedule data object
  */
-Calendar.prototype._onResizePanel = function(resizeEventData) {
+Calendar.prototype._onResizePanel = function(resizeScheduleData) {
     /**
      * @event Calendar#resizePanel
      * @type {object}
      * @property {number[]} layoutData - layout data after resized
      */
-    this.fire('resizePanel', resizeEventData);
+    this.fire('resizePanel', resizeScheduleData);
 };
 
 /**
@@ -741,14 +741,14 @@ Calendar.prototype._onResizePanel = function(resizeEventData) {
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
  */
-Calendar.prototype._toggleViewEvent = function(isAttach, view) {
+Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     var self = this,
         handler = view.handler,
         isMonthView = view.viewName === 'month',
         method = isAttach ? 'on' : 'off';
 
     util.forEach(handler.click, function(clickHandler) {
-        clickHandler[method]('clickEvent', self._onClick, self);
+        clickHandler[method]('clickSchedule', self._onClick, self);
     });
 
     util.forEach(handler.dayname, function(clickHandler) {
@@ -756,15 +756,15 @@ Calendar.prototype._toggleViewEvent = function(isAttach, view) {
     });
 
     util.forEach(handler.creation, function(creationHandler) {
-        creationHandler[method]('beforeCreateEvent', self._onBeforeCreate, self);
+        creationHandler[method]('beforeCreateSchedule', self._onBeforeCreate, self);
     });
 
     util.forEach(handler.move, function(moveHandler) {
-        moveHandler[method]('beforeUpdateEvent', self._onBeforeUpdate, self);
+        moveHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
     });
 
     util.forEach(handler.resize, function(resizeHandler) {
-        resizeHandler[method]('beforeUpdateEvent', self._onBeforeUpdate, self);
+        resizeHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
     });
 
     if (!isMonthView) {
@@ -801,7 +801,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         newViewName = 'week';
     }
     layout.children.doWhenHas(viewName, function(view) {
-        self._toggleViewEvent(false, view);
+        self._toggleViewSchedule(false, view);
     });
 
     layout.clear();
@@ -825,7 +825,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
     layout.addChild(created.view);
 
     layout.children.doWhenHas(newViewName, function(view) {
-        self._toggleViewEvent(true, view);
+        self._toggleViewSchedule(true, view);
     });
 
     this.refreshMethod = created.refresh;

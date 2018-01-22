@@ -257,8 +257,8 @@ VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
  **********/
 
 /**
- * Drag start event handler
- * @param {object} e - drag start event data
+ * Drag start schedule handler
+ * @param {object} e - drag start schedule data
  */
 VLayout.prototype._onDragStart = function(e) {
     var oEvent = e.originEvent,
@@ -287,8 +287,8 @@ VLayout.prototype._onDragStart = function(e) {
 };
 
 /**
- * Drag event handler
- * @param {object} e - drag event data
+ * Drag schedule handler
+ * @param {object} e - drag schedule data
  */
 VLayout.prototype._onDrag = function(e) {
     var dragData = this._dragData,
@@ -300,9 +300,9 @@ VLayout.prototype._onDrag = function(e) {
 };
 
 /**
- * Drag end event handler
+ * Drag end schedule handler
  * @fires VLayout#resize
- * @param {object} e - dragend event data
+ * @param {object} e - dragend schedule data
  */
 VLayout.prototype._onDragEnd = function(e) {
     var dragData = this._dragData,

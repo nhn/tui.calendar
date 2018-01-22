@@ -1,5 +1,5 @@
 /**
- * @fileoverview Handling resize events from drag handler and time grid view
+ * @fileoverview Handling resize schedules from drag handler and time grid view
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -39,7 +39,7 @@ function TimeResize(dragHandler, timeGridView, baseController) {
     /**
      * @type {function}
      */
-    this._getEventDataFunc = null;
+    this._getScheduleDataFunc = null;
 
     /**
      * @type {object}
@@ -61,7 +61,7 @@ TimeResize.prototype.destroy = function() {
     this._guide.destroy();
     this.dragHandler.off(this);
     this.dragHandler = this.timeGridView = this.baseController =
-        this._getEventDataFunc = this._dragStart = this._guide = null;
+        this._getScheduleDataFunc = this._dragStart = this._guide = null;
 };
 
 /**
@@ -98,16 +98,16 @@ TimeResize.prototype.checkExpectCondition = function(target) {
 TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
-        getEventDataFunc,
-        eventData;
+        blockElement = domutil.closest(target, config.classname('.time-date-schedule-block')),
+        getScheduleDataFunc,
+        scheduleData;
 
     if (!timeView || !blockElement) {
         return;
     }
 
-    getEventDataFunc = this._getEventDataFunc = this._retriveEventData(timeView);
-    eventData = this._dragStart = getEventDataFunc(
+    getScheduleDataFunc = this._getScheduleDataFunc = this._retriveScheduleData(timeView);
+    scheduleData = this._dragStart = getScheduleDataFunc(
         dragStartEventData.originEvent, {
             targetModelID: domutil.getData(blockElement, 'id')
         }
@@ -130,9 +130,9 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} timeY - milliseconds value of mouseY points.
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
-     * @property {string} targetModelID - The model unique id emitted move event.
+     * @property {string} targetModelID - The model unique id emitted move schedule.
      */
-    this.fire('timeResizeDragstart', eventData);
+    this.fire('timeResizeDragstart', scheduleData);
 };
 
 /**
@@ -140,23 +140,23 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
  * @emits TimeResize#timeResizeDrag
  * @param {object} dragEventData - event data of Drag#drag custom event.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
- * @param {function} [revise] - supply function for revise event data before emit.
+ * @param {function} [revise] - supply function for revise schedule data before emit.
  */
 TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise) {
-    var getEventDataFunc = this._getEventDataFunc,
-        startEventData = this._dragStart,
-        eventData;
+    var getScheduleDataFunc = this._getScheduleDataFunc,
+        startScheduleData = this._dragStart,
+        scheduleData;
 
-    if (!getEventDataFunc || !startEventData) {
+    if (!getScheduleDataFunc || !startScheduleData) {
         return;
     }
 
-    eventData = getEventDataFunc(dragEventData.originEvent, {
-        targetModelID: startEventData.targetModelID
+    scheduleData = getScheduleDataFunc(dragEventData.originSchedule, {
+        targetModelID: startScheduleData.targetModelID
     });
 
     if (revise) {
-        revise(eventData);
+        revise(scheduleData);
     }
 
     /**
@@ -170,23 +170,23 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
      * @property {number} timeY - milliseconds value of mouseY points.
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
-     * @property {string} targetModelID - The model unique id emitted move event.
+     * @property {string} targetModelID - The model unique id emitted move schedule.
      */
-    this.fire(overrideEventName || 'timeResizeDrag', eventData);
+    this.fire(overrideEventName || 'timeResizeDrag', scheduleData);
 };
 
 /**
  * Update model instance by dragend event results.
- * @fires TimeResize#beforeUpdateEvent
- * @param {object} eventData - event data from TimeResize#timeResizeDragend
+ * @fires TimeResize#beforeUpdateSchedule
+ * @param {object} scheduleData - schedule data from TimeResize#timeResizeDragend
  */
-TimeResize.prototype._updateEvent = function(eventData) {
+TimeResize.prototype._updateSchedule = function(scheduleData) {
     var ctrl = this.baseController,
-        modelID = eventData.targetModelID,
-        range = eventData.nearestRange,
+        modelID = scheduleData.targetModelID,
+        range = scheduleData.nearestRange,
         timeDiff = range[1] - range[0],
-        model = ctrl.events.items[modelID],
-        relatedView = eventData.relatedView,
+        model = ctrl.schedules.items[modelID],
+        relatedView = scheduleData.relatedView,
         dateEnd,
         newEnds,
         baseDate;
@@ -210,13 +210,13 @@ TimeResize.prototype._updateEvent = function(eventData) {
     }
 
     /**
-     * @event TimeResize#beforeUpdateEvent
+     * @event TimeResize#beforeUpdateSchedule
      * @type {object}
-     * @property {CalEvent} model - model instance to update
+     * @property {Schedule} model - model instance to update
      * @property {date} starts - start time to update
      * @property {date} ends - end time to update
      */
-    this.fire('beforeUpdateEvent', {
+    this.fire('beforeUpdateSchedule', {
         model: model,
         starts: model.getStarts(),
         ends: newEnds
@@ -229,9 +229,9 @@ TimeResize.prototype._updateEvent = function(eventData) {
  * @param {MouseEvent} dragEndEventData - Mouse event of Drag#dragEnd custom event.
  */
 TimeResize.prototype._onDragEnd = function(dragEndEventData) {
-    var getEventDataFunc = this._getEventDataFunc,
+    var getScheduleDataFunc = this._getScheduleDataFunc,
         dragStart = this._dragStart,
-        eventData;
+        scheduleData;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -239,25 +239,25 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
         click: this._onClick
     }, this);
 
-    if (!getEventDataFunc || !dragStart) {
+    if (!getScheduleDataFunc || !dragStart) {
         return;
     }
 
-    eventData = getEventDataFunc(dragEndEventData.originEvent, {
+    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent, {
         targetModelID: dragStart.targetModelID
     });
 
-    eventData.range = [
+    scheduleData.range = [
         dragStart.timeY,
-        eventData.timeY + datetime.millisecondsFrom('hour', 0.5)
+        scheduleData.timeY + datetime.millisecondsFrom('hour', 0.5)
     ];
 
-    eventData.nearestRange = [
+    scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        eventData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+        scheduleData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
     ];
 
-    this._updateEvent(eventData);
+    this._updateSchedule(scheduleData);
 
     /**
      * @event TimeResize#timeResizeDragend
@@ -270,13 +270,13 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
      * @property {number} timeY - milliseconds value of mouseY points.
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
-     * @property {string} targetModelID - The model unique id emitted move event.
+     * @property {string} targetModelID - The model unique id emitted move schedule.
      * @property {number[]} range - milliseconds range between drag start and end.
      * @property {number[]} nearestRange - milliseconds range related with nearestGridY between start and end.
      */
-    this.fire('timeResizeDragend', eventData);
+    this.fire('timeResizeDragend', scheduleData);
 
-    this._getEventDataFunc = this._dragStart = null;
+    this._getScheduleDataFunc = this._dragStart = null;
 };
 
 /**

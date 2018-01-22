@@ -1,6 +1,6 @@
 /* eslint complexity: 0 */
 /**
- * @fileoverview Model of event.
+ * @fileoverview Model of schedule.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -16,7 +16,7 @@ var model = require('../common/model');
  * @readonly
  * @enum {string}
  */
-var EVENT_CATEGORY = {
+var SCHEDULE_CATEGORY = {
     /** 마일스톤 */
     MILESTONE: 'milestone',
 
@@ -31,12 +31,12 @@ var EVENT_CATEGORY = {
 };
 
 /**
- * The model of calendar events.
+ * The model of calendar schedules.
  * @constructor
  * @mixes dirty
  * @mixes model
  */
-function CalEvent() {
+function Schedule() {
     /**
      * `Optional` unique id for various use.
      * @type {string}
@@ -44,49 +44,49 @@ function CalEvent() {
     this.id = '';
 
     /**
-     * title for event.
+     * title for schedule.
      * @type {string}
      */
     this.title = '';
 
     /**
-     * is event is all day event?
+     * is schedule is all day schedule?
      * @type {boolean}
      */
     this.isAllDay = false;
 
     /**
-     * event starts
+     * schedule starts
      * @type {TZDate}
      */
     this.starts = null;
 
     /**
-     * event ends
+     * schedule ends
      * @type {TZDate}
      */
     this.ends = null;
 
     /**
-     * event text color
+     * schedule text color
      * @type {string}
      */
     this.color = '#000';
 
     /**
-     * event block visibility
+     * schedule block visibility
      * @type {boolean}
      */
     this.visible = true;
 
     /**
-     * event background color
+     * schedule background color
      * @type {string}
      */
     this.bgColor = '#a1b56c';
 
     /**
-     * event left border color
+     * schedule left border color
      * @type {string}
      */
     this.borderColor = '#000';
@@ -122,7 +122,7 @@ function CalEvent() {
     this.isPending = false;
 
     /**
-     * focused event flag
+     * focused schedule flag
      * @type {boolean}
      */
     this.isFocused = false;
@@ -141,18 +141,18 @@ function CalEvent() {
  * static props
  **********/
 
-CalEvent.schema = {
+Schedule.schema = {
     required: ['title'],
     dateRange: ['starts', 'ends']
 };
 
 /**
- * create event model from json(object) data.
+ * create schedule model from json(object) data.
  * @param {object} data object for model.
- * @returns {CalEvent} CalEvent model instance.
+ * @returns {Schedule} Schedule model instance.
  */
-CalEvent.create = function(data) {
-    var inst = new CalEvent();
+Schedule.create = function(data) {
+    var inst = new Schedule();
     inst.init(data);
 
     return inst;
@@ -163,12 +163,12 @@ CalEvent.create = function(data) {
  **********/
 
 /**
- * Initialize event instance.
+ * Initialize schedule instance.
  * @param {object} options options.
  */
-CalEvent.prototype.init = function(options) {
+Schedule.prototype.init = function(options) {
     options = util.extend({}, options);
-    if (options.category === EVENT_CATEGORY.ALLDAY) {
+    if (options.category === SCHEDULE_CATEGORY.ALLDAY) {
         options.isAllDay = true;
     }
 
@@ -193,15 +193,15 @@ CalEvent.prototype.init = function(options) {
         this.setTimePeriod(options.starts, options.ends);
     }
 
-    if (options.category === EVENT_CATEGORY.MILESTONE ||
-        options.category === EVENT_CATEGORY.TASK) {
+    if (options.category === SCHEDULE_CATEGORY.MILESTONE ||
+        options.category === SCHEDULE_CATEGORY.TASK) {
         this.starts = new TZDate(this.ends);
     }
 
     this.raw = options.raw || null;
 };
 
-CalEvent.prototype.setAllDayPeriod = function(starts, ends) {
+Schedule.prototype.setAllDayPeriod = function(starts, ends) {
     // 종일일정인 경우 문자열의 날짜정보만 사용한다.
     if (util.isString(starts)) {
         starts = datetime.parse(starts.substring(0, 10));
@@ -216,7 +216,7 @@ CalEvent.prototype.setAllDayPeriod = function(starts, ends) {
     this.ends.setHours(23, 59, 59);
 };
 
-CalEvent.prototype.setTimePeriod = function(starts, ends) {
+Schedule.prototype.setTimePeriod = function(starts, ends) {
     this.starts = new TZDate(starts || Date.now());
     this.ends = new TZDate(ends || this.starts);
 
@@ -228,59 +228,59 @@ CalEvent.prototype.setTimePeriod = function(starts, ends) {
 /**
  * @returns {Date} render start date.
  */
-CalEvent.prototype.getStarts = function() {
+Schedule.prototype.getStarts = function() {
     return this.starts;
 };
 
 /**
  * @returns {Date} render end date.
  */
-CalEvent.prototype.getEnds = function() {
+Schedule.prototype.getEnds = function() {
     return this.ends;
 };
 
 /**
  * @returns {number} instance unique id.
  */
-CalEvent.prototype.cid = function() {
+Schedule.prototype.cid = function() {
     return util.stamp(this);
 };
 
 /**
- * Check two event are equals (means title, isAllDay, starts, ends are same)
- * @param {CalEvent} event CalEvent model instance to compare.
+ * Check two schedule are equals (means title, isAllDay, starts, ends are same)
+ * @param {Schedule} schedule Schedule model instance to compare.
  * @returns {boolean} Return false when not same.
  */
-CalEvent.prototype.equals = function(event) {
-    if (this.id !== event.id) {
+Schedule.prototype.equals = function(schedule) {
+    if (this.id !== schedule.id) {
         return false;
     }
 
-    if (this.title !== event.title) {
+    if (this.title !== schedule.title) {
         return false;
     }
 
-    if (this.isAllDay !== event.isAllDay) {
+    if (this.isAllDay !== schedule.isAllDay) {
         return false;
     }
 
-    if (datetime.compare(this.getStarts(), event.getStarts()) !== 0) {
+    if (datetime.compare(this.getStarts(), schedule.getStarts()) !== 0) {
         return false;
     }
 
-    if (datetime.compare(this.getEnds(), event.getEnds()) !== 0) {
+    if (datetime.compare(this.getEnds(), schedule.getEnds()) !== 0) {
         return false;
     }
 
-    if (this.color !== event.color) {
+    if (this.color !== schedule.color) {
         return false;
     }
 
-    if (this.bgColor !== event.bgColor) {
+    if (this.bgColor !== schedule.bgColor) {
         return false;
     }
 
-    if (this.borderColor !== event.borderColor) {
+    if (this.borderColor !== schedule.borderColor) {
         return false;
     }
 
@@ -291,7 +291,7 @@ CalEvent.prototype.equals = function(event) {
  * return duration between starts and ends.
  * @returns {Date} duration (UTC)
  */
-CalEvent.prototype.duration = function() {
+Schedule.prototype.duration = function() {
     var starts = this.getStarts(),
         ends = this.getEnds(),
         duration;
@@ -306,16 +306,16 @@ CalEvent.prototype.duration = function() {
 };
 
 /**
- * Returns true if the given CalEvent coincides with the same time as the
- * calling CalEvent.
- * @param {CalEvent} event The other event to compare with this CalEvent.
- * @returns {boolean} If the other event occurs within the same time as the first object.
+ * Returns true if the given Schedule coincides with the same time as the
+ * calling Schedule.
+ * @param {Schedule} schedule The other schedule to compare with this Schedule.
+ * @returns {boolean} If the other schedule occurs within the same time as the first object.
  */
-CalEvent.prototype.collidesWith = function(event) {
+Schedule.prototype.collidesWith = function(schedule) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
-        starts = event.getStarts(),
-        ends = event.getEnds();
+        starts = schedule.getStarts(),
+        ends = schedule.getEnds();
 
     if ((starts > ownStarts && starts < ownEnds) ||
         (ends > ownStarts && ends < ownEnds) ||
@@ -325,7 +325,7 @@ CalEvent.prototype.collidesWith = function(event) {
     return false;
 };
 
-model.mixin(CalEvent.prototype);
-dirty.mixin(CalEvent.prototype);
+model.mixin(Schedule.prototype);
+dirty.mixin(Schedule.prototype);
 
-module.exports = CalEvent;
+module.exports = Schedule;

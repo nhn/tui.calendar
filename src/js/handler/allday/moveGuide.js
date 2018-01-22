@@ -25,7 +25,7 @@ function AlldayMoveGuide(alldayMove) {
      * 실제로 이벤트 엘리먼트를 담는 엘리먼트
      * @type {HTMLDIVElement}
      */
-    this.eventContainer = null;
+    this.scheduleContainer = null;
 
     /**
      * @type {number}
@@ -56,7 +56,7 @@ function AlldayMoveGuide(alldayMove) {
 AlldayMoveGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.alldayMove.off(this);
-    this.alldayMove = this.eventContainer = this._dragStartXIndex =
+    this.alldayMove = this.scheduleContainer = this._dragStartXIndex =
         this.elements = this.guideElement = null;
 };
 
@@ -70,23 +70,23 @@ AlldayMoveGuide.prototype._clearGuideElement = function() {
         domutil.removeClass(global.document.body, config.classname('dragging'));
     }
 
-    this._dragStartXIndex = this.getEventDataFunc = this.guideElement = null;
+    this._dragStartXIndex = this.getScheduleDataFunc = this.guideElement = null;
 };
 
 /**
  * Dim element blocks
- * @param {number} modelID - CalEvent model instance ID
+ * @param {number} modelID - Schedule model instance ID
  */
-AlldayMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
-    var className = config.classname('weekday-event-block-dragging-dim');
-    var eventBlocks = domutil.find(
-        config.classname('.weekday-event-block'),
+AlldayMoveGuide.prototype._hideOriginScheduleBlocks = function(modelID) {
+    var className = config.classname('weekday-schedule-block-dragging-dim');
+    var scheduleBlocks = domutil.find(
+        config.classname('.weekday-schedule-block'),
         this.alldayMove.alldayView.container,
         true
     );
 
-    this.elements = util.filter(eventBlocks, function(event) {
-        return domutil.getData(event, 'id') === modelID;
+    this.elements = util.filter(scheduleBlocks, function(schedule) {
+        return domutil.getData(schedule, 'id') === modelID;
     });
 
     util.forEach(this.elements, function(el) {
@@ -97,8 +97,8 @@ AlldayMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
 /**
  * Show element blocks
  */
-AlldayMoveGuide.prototype._showOriginEventBlocks = function() {
-    var className = config.classname('weekday-event-block-dragging-dim');
+AlldayMoveGuide.prototype._showOriginScheduleBlocks = function() {
+    var className = config.classname('weekday-schedule-block-dragging-dim');
 
     util.forEach(this.elements, function(el) {
         domutil.removeClass(el, className);
@@ -106,12 +106,12 @@ AlldayMoveGuide.prototype._showOriginEventBlocks = function() {
 };
 
 /**
- * @param {CalEvent} model - model
+ * @param {Schedule} model - model
  * @param {HTMLElement} parent - parent element
  * Highlight element blocks
  */
-AlldayMoveGuide.prototype._highlightEventBlocks = function(model, parent) {
-    var elements = domutil.find(config.classname('.weekday-event'), parent, true);
+AlldayMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
+    var elements = domutil.find(config.classname('.weekday-schedule'), parent, true);
 
     util.forEach(elements, function(el) {
         el.style.margin = '0';
@@ -129,8 +129,8 @@ AlldayMoveGuide.prototype._highlightEventBlocks = function(model, parent) {
  * Refresh guide element.
  * @param {number} leftPercent - left percent of guide element.
  * @param {number} widthPercent - width percent of guide element.
- * @param {boolean} isExceededLeft - event starts is faster then render start date?
- * @param {boolean} isExceededRight - event ends is later then render end date?
+ * @param {boolean} isExceededLeft - schedule starts is faster then render start date?
+ * @param {boolean} isExceededRight - schedule ends is later then render end date?
  */
 AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPercent, isExceededLeft, isExceededRight) {
     var guideElement = this.guideElement;
@@ -154,9 +154,9 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
 };
 
 /**
- * Get event block information from event data.
+ * Get schedule block information from schedule data.
  *
- * For example, there is single event has 10 length. but render range in view is 5 then
+ * For example, there is single schedule has 10 length. but render range in view is 5 then
  * rendered block must be cut out to render properly. in this case, this method return
  * how many block are cut before rendering.
  *
@@ -164,21 +164,21 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
  *
  * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때
  * 좌 우로 몇 만큼 잘려있는지에 관한 정보를 반환함.
- * @param {object} dragStartEventData - event data from Allday.Move handler.
- * @returns {function} function that return event block information.
+ * @param {object} dragStartEventData - schedule data from Allday.Move handler.
+ * @returns {function} function that return schedule block information.
  */
-AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) {
+AlldayMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         datesInRange = dragStartEventData.datesInRange,
         baseWidthPercent = (100 / datesInRange),
-        originEventStarts = datetime.start(model.starts),
-        originEventEnds = datetime.end(model.ends),
+        originScheduleStarts = datetime.start(model.starts),
+        originScheduleEnds = datetime.end(model.ends),
         viewOptions = this.alldayMove.alldayView.options,
         renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
         renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
-        fromLeft = (new TZDate(originEventStarts.getTime() -
+        fromLeft = (new TZDate(originScheduleStarts.getTime() -
             renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
-        fromRight = (new TZDate(originEventEnds.getTime() -
+        fromRight = (new TZDate(originScheduleEnds.getTime() -
             renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
 
     return function(indexOffset) {
@@ -192,59 +192,59 @@ AlldayMoveGuide.prototype._getEventBlockDataFunc = function(dragStartEventData) 
 
 /**
  * DragStart event handler.
- * @param {object} dragStartEventData - event data.
+ * @param {object} dragStartEventData - schedule data.
  */
 AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     var alldayViewContainer = this.alldayMove.alldayView.container,
-        guideElement = this.guideElement = dragStartEventData.eventBlockElement.cloneNode(true),
-        eventContainer;
+        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
+        scheduleContainer;
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('dragging'));
     }
 
-    this._hideOriginEventBlocks(String(dragStartEventData.model.cid()));
+    this._hideOriginScheduleBlocks(String(dragStartEventData.model.cid()));
 
-    eventContainer = domutil.find(config.classname('.weekday-events'), alldayViewContainer);
+    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), alldayViewContainer);
     domutil.addClass(guideElement, config.classname('allday-guide-move'));
-    eventContainer.appendChild(guideElement);
+    scheduleContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;
-    this.getEventDataFunc = this._getEventBlockDataFunc(dragStartEventData);
+    this.getScheduleDataFunc = this._getEventBlockDataFunc(dragStartEventData);
 
-    this._highlightEventBlocks(dragStartEventData.model, guideElement);
+    this._highlightScheduleBlocks(dragStartEventData.model, guideElement);
 };
 
 /**
  * Drag event handler.
- * @param {object} dragEventData - event data.
+ * @param {object} dragEventData - schedule data.
  */
 AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
-    var getEventDataFunc = this.getEventDataFunc,
+    var getScheduleDataFunc = this.getScheduleDataFunc,
         dragStartXIndex = this._dragStartXIndex,
         datesInRange = dragEventData.datesInRange,
-        eventData,
+        scheduleData,
         isExceededLeft,
         isExceededRight,
         originLength,
         newLeft,
         newWidth;
 
-    if (!getEventDataFunc) {
+    if (!getScheduleDataFunc) {
         return;
     }
 
-    eventData = getEventDataFunc(dragEventData.xIndex - dragStartXIndex);
-    isExceededLeft = eventData.fromLeft < 0;
-    isExceededRight = eventData.fromRight > 0;
+    scheduleData = getScheduleDataFunc(dragEventData.xIndex - dragStartXIndex);
+    isExceededLeft = scheduleData.fromLeft < 0;
+    isExceededRight = scheduleData.fromRight > 0;
 
-    newLeft = Math.max(0, eventData.fromLeft);
-    originLength = (eventData.fromLeft * -1) + (datesInRange + eventData.fromRight);
-    newWidth = isExceededLeft ? (originLength + eventData.fromLeft) : originLength;
-    newWidth = isExceededRight ? (newWidth - eventData.fromRight) : newWidth;
+    newLeft = Math.max(0, scheduleData.fromLeft);
+    originLength = (scheduleData.fromLeft * -1) + (datesInRange + scheduleData.fromRight);
+    newWidth = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
+    newWidth = isExceededRight ? (newWidth - scheduleData.fromRight) : newWidth;
 
-    newLeft *= eventData.baseWidthPercent;
-    newWidth *= eventData.baseWidthPercent;
+    newLeft *= scheduleData.baseWidthPercent;
+    newWidth *= scheduleData.baseWidthPercent;
 
     this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 };

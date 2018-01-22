@@ -5,8 +5,8 @@
 'use strict';
 
 var util = global.tui.util;
-var CalEvent = require('../model/calEvent');
-var CalEventViewModel = require('../model/viewModel/calEventViewModel');
+var Schedule = require('../model/Schedule');
+var ScheduleViewModel = require('../model/viewModel/ScheduleViewModel');
 var datetime = require('../common/datetime');
 var common = require('../common/common');
 
@@ -20,9 +20,9 @@ function Base(options) {
     options = options || {};
 
     /**
-     * function for group each event models.
+     * function for group each schedule models.
      * @type {function}
-     * @param {CalEventViewModel} viewModel - view model instance
+     * @param {ScheduleViewModel} viewModel - view model instance
      * @returns {string} group key
      */
     this.groupFunc = options.groupFunc || function(viewModel) {
@@ -33,28 +33,28 @@ function Base(options) {
     };
 
     /**
-     * events collection.
+     * schedules collection.
      * @type {Collection}
      */
-    this.events = common.createEventCollection();
+    this.schedules = common.createScheduleCollection();
 
     /**
-     * Matrix for multidate events.
+     * Matrix for multidate schedules.
      * @type {object.<string, array>}
      */
     this.dateMatrix = {};
 }
 
 /**
- * Calculate contain dates in event.
+ * Calculate contain dates in schedule.
  * @private
- * @param {CalEvent} event The instance of event.
+ * @param {Schedule} schedule The instance of schedule.
  * @returns {array} contain dates.
  */
-Base.prototype._getContainDatesInEvent = function(event) {
+Base.prototype._getContainDatesInSchedule = function(schedule) {
     var range = datetime.range(
-        datetime.start(event.getStarts()),
-        datetime.start(event.getEnds()),
+        datetime.start(schedule.getStarts()),
+        datetime.start(schedule.getEnds()),
         datetime.MILLISECONDS_PER_DAY
     );
 
@@ -66,153 +66,153 @@ Base.prototype._getContainDatesInEvent = function(event) {
  **********/
 
 /**
- * Create an event instance from raw data.
- * @emits Base#beforeCreateEvent
- * @emits Base#createdEvent
- * @param {object} options Data object to create event.
+ * Create an schedule instance from raw data.
+ * @emits Base#beforeCreateSchedule
+ * @emits Base#createdSchedule
+ * @param {object} options Data object to create schedule.
  * @param {boolean} silent - set true then don't fire events.
- * @returns {CalEvent} The instance of CalEvent that created.
+ * @returns {Schedule} The instance of Schedule that created.
  */
-Base.prototype.createEvent = function(options, silent) {
-    var event,
-        eventData = {
+Base.prototype.createSchedule = function(options, silent) {
+    var schedule,
+        scheduleData = {
             data: options
         };
 
     /**
-     * @event Base#beforeCreateEvent
-     * @type {Calendar~CalEvent[]}
+     * @event Base#beforeCreateSchedule
+     * @type {Calendar~Schedule[]}
      */
-    if (!this.invoke('beforeCreateEvent', eventData)) {
+    if (!this.invoke('beforeCreateSchedule', scheduleData)) {
         return;
     }
 
-    event = this.addEvent(CalEvent.create(options));
+    schedule = this.addSchedule(Schedule.create(options));
 
     if (!silent) {
         /**
-         * @event Base#createdEvent
-         * @type {CalEvent}
+         * @event Base#createdSchedule
+         * @type {Schedule}
          */
-        this.fire('createdEvent', event);
+        this.fire('createdSchedule', schedule);
     }
 
-    return event;
+    return schedule;
 };
 
 /**
- * @emits Base#beforeCreateEvent
- * @emits Base#createdEvent
- * @param {Calendar~CalEvent[]} dataList - dataObject list to create event.
+ * @emits Base#beforeCreateSchedule
+ * @emits Base#createdSchedule
+ * @param {Calendar~Schedule[]} dataList - dataObject list to create schedule.
  * @param {boolean} [silent=false] - set true then don't fire events.
- * @returns {CalEvent[]} The instance list of CalEvent that created.
+ * @returns {Schedule[]} The instance list of Schedule that created.
  */
-Base.prototype.createEvents = function(dataList, silent) {
+Base.prototype.createSchedules = function(dataList, silent) {
     var self = this;
 
     return util.map(dataList, function(data) {
-        return self.createEvent(data, silent);
+        return self.createSchedule(data, silent);
     });
 };
 
 /**
- * Update an event.
- * @emits Base#updateEvent
- * @param {CalEvent} calEvent - event instance to update
+ * Update an schedule.
+ * @emits Base#updateSchedule
+ * @param {Schedule} Schedule - schedule instance to update
  * @param {object} options updated object data.
- * @returns {CalEvent} updated event instance
+ * @returns {Schedule} updated schedule instance
  */
-Base.prototype.updateEvent = function(calEvent, options) {
-    var starts = options.starts || calEvent.starts;
-    var ends = options.ends || calEvent.ends;
+Base.prototype.updateSchedule = function(Schedule, options) {
+    var starts = options.starts || Schedule.starts;
+    var ends = options.ends || Schedule.ends;
 
     options = options || {};
 
     if (options.title) {
-        calEvent.set('title', options.title);
+        Schedule.set('title', options.title);
     }
 
     if (options.isAllDay) {
-        calEvent.set('isAllDay', options.isAllDay);
+        Schedule.set('isAllDay', options.isAllDay);
     }
 
     if (options.starts || options.ends) {
-        if (calEvent.isAllDay) {
-            calEvent.setAllDayPeriod(starts, ends);
+        if (Schedule.isAllDay) {
+            Schedule.setAllDayPeriod(starts, ends);
         } else {
-            calEvent.setTimePeriod(starts, ends);
+            Schedule.setTimePeriod(starts, ends);
         }
     }
 
     if (options.color) {
-        calEvent.set('color', options.color);
+        Schedule.set('color', options.color);
     }
 
     if (options.bgColor) {
-        calEvent.set('bgColor', options.bgColor);
+        Schedule.set('bgColor', options.bgColor);
     }
 
     if (options.borderColor) {
-        calEvent.set('borderColor', options.borderColor);
+        Schedule.set('borderColor', options.borderColor);
     }
 
     if (options.origin) {
-        calEvent.set('origin', options.origin);
+        Schedule.set('origin', options.origin);
     }
 
     if (!util.isUndefined(options.isPending)) {
-        calEvent.set('isPending', options.isPending);
+        Schedule.set('isPending', options.isPending);
     }
 
     if (!util.isUndefined(options.isFocused)) {
-        calEvent.set('isFocused', options.isFocused);
+        Schedule.set('isFocused', options.isFocused);
     }
 
-    this._removeFromMatrix(calEvent);
-    this._addToMatrix(calEvent);
+    this._removeFromMatrix(Schedule);
+    this._addToMatrix(Schedule);
 
     /**
-     * @event Base#updateEvent
+     * @event Base#updateSchedule
      */
-    this.fire('updateEvent');
+    this.fire('updateSchedule');
 
-    return calEvent;
+    return Schedule;
 };
 
 /**
- * Delete event instance from controller.
- * @param {CalEvent} calEvent - event instance to delete
- * @returns {CalEvent} deleted model instance.
+ * Delete schedule instance from controller.
+ * @param {Schedule} Schedule - schedule instance to delete
+ * @returns {Schedule} deleted model instance.
  */
-Base.prototype.deleteEvent = function(calEvent) {
-    this._removeFromMatrix(calEvent);
-    this.events.remove(calEvent);
+Base.prototype.deleteSchedule = function(Schedule) {
+    this._removeFromMatrix(Schedule);
+    this.schedules.remove(Schedule);
 
-    return calEvent;
+    return Schedule;
 };
 
 /**
- * Set date matrix to supplied event instance.
- * @param {CalEvent} event - instance of event.
+ * Set date matrix to supplied schedule instance.
+ * @param {Schedule} schedule - instance of schedule.
  */
-Base.prototype._addToMatrix = function(event) {
+Base.prototype._addToMatrix = function(schedule) {
     var ownMatrix = this.dateMatrix;
-    var containDates = this._getContainDatesInEvent(event);
+    var containDates = this._getContainDatesInSchedule(schedule);
 
     util.forEach(containDates, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),
             matrix = ownMatrix[ymd] = ownMatrix[ymd] || [];
 
-        matrix.push(util.stamp(event));
+        matrix.push(util.stamp(schedule));
     });
 };
 
 /**
- * Remove event's id from matrix.
- * @param {CalEvent} event - instance of event
+ * Remove schedule's id from matrix.
+ * @param {Schedule} schedule - instance of schedule
  */
-Base.prototype._removeFromMatrix = function(event) {
-    var modelID = util.stamp(event);
+Base.prototype._removeFromMatrix = function(schedule) {
+    var modelID = util.stamp(schedule);
 
     util.forEach(this.dateMatrix, function(matrix) {
         var index = util.inArray(modelID, matrix);
@@ -224,35 +224,35 @@ Base.prototype._removeFromMatrix = function(event) {
 };
 
 /**
- * Add an event instance.
- * @emits Base#addedEvent
- * @param {CalEvent} event The instance of CalEvent.
+ * Add an schedule instance.
+ * @emits Base#addedSchedule
+ * @param {Schedule} schedule The instance of Schedule.
  * @param {boolean} silent - set true then don't fire events.
- * @returns {CalEvent} The instance of CalEvent that added.
+ * @returns {Schedule} The instance of Schedule that added.
  */
-Base.prototype.addEvent = function(event, silent) {
-    this.events.add(event);
-    this._addToMatrix(event);
+Base.prototype.addSchedule = function(schedule, silent) {
+    this.schedules.add(schedule);
+    this._addToMatrix(schedule);
 
     if (!silent) {
         /**
-         * @event Base#addedEvent
+         * @event Base#addedSchedule
          * @type {object}
          */
-        this.fire('addedEvent', event);
+        this.fire('addedSchedule', schedule);
     }
 
-    return event;
+    return schedule;
 };
 
 /**
- * split event model by ymd.
+ * split schedule model by ymd.
  * @param {Date} starts - start date
  * @param {Date} ends - end date
- * @param {Collection} eventCollection - collection of event model.
- * @returns {object.<string, Collection>} splitted event model collections.
+ * @param {Collection} scheduleCollection - collection of schedule model.
+ * @returns {object.<string, Collection>} splitted schedule model collections.
  */
-Base.prototype.splitEventByDateRange = function(starts, ends, eventCollection) {
+Base.prototype.splitScheduleByDateRange = function(starts, ends, scheduleCollection) {
     var range = datetime.range(
             datetime.start(starts),
             datetime.start(ends),
@@ -266,12 +266,12 @@ Base.prototype.splitEventByDateRange = function(starts, ends, eventCollection) {
             matrix = ownMatrix[ymd],
             collection;
 
-        collection = result[ymd] = common.createEventCollection();
+        collection = result[ymd] = common.createScheduleCollection();
 
         if (matrix && matrix.length) {
             util.forEachArray(matrix, function(id) {
-                eventCollection.doWhenHas(id, function(event) {
-                    collection.add(event);
+                scheduleCollection.doWhenHas(id, function(schedule) {
+                    collection.add(schedule);
                 });
             });
         }
@@ -281,12 +281,12 @@ Base.prototype.splitEventByDateRange = function(starts, ends, eventCollection) {
 };
 
 /**
- * Return events in supplied date range.
+ * Return schedules in supplied date range.
  *
  * available only YMD.
  * @param {Date} starts start date.
  * @param {Date} ends end date.
- * @returns {object.<string, Collection>} event collection grouped by dates.
+ * @returns {object.<string, Collection>} schedule collection grouped by dates.
  */
 Base.prototype.findByDateRange = function(starts, ends) {
     var range = datetime.range(
@@ -294,7 +294,7 @@ Base.prototype.findByDateRange = function(starts, ends) {
             datetime.start(ends),
             datetime.MILLISECONDS_PER_DAY
         ),
-        ownEvents = this.events.items,
+        ownSchedules = this.schedules.items,
         ownMatrix = this.dateMatrix,
         dformat = datetime.format,
         result = {},
@@ -305,11 +305,11 @@ Base.prototype.findByDateRange = function(starts, ends) {
     util.forEachArray(range, function(date) {
         ymd = dformat(date, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
-        viewModels = result[ymd] = common.createEventCollection();
+        viewModels = result[ymd] = common.createScheduleCollection();
 
         if (matrix && matrix.length) {
             viewModels.add.apply(viewModels, util.map(matrix, function(id) {
-                return CalEventViewModel.create(ownEvents[id]);
+                return ScheduleViewModel.create(ownSchedules[id]);
             }));
         }
     });
@@ -317,15 +317,15 @@ Base.prototype.findByDateRange = function(starts, ends) {
     return result;
 };
 
-Base.prototype.clearEvents = function() {
+Base.prototype.clearSchedules = function() {
     this.dateMatrix = {};
-    this.events.clear();
+    this.schedules.clear();
     /**
-     * for inner view when clear events
-     * @event Base#clearEvents
-     * @type {CalEvent}
+     * for inner view when clear schedules
+     * @event Base#clearSchedules
+     * @type {Schedule}
      */
-    this.fire('clearEvents');
+    this.fire('clearSchedules');
 };
 
 // mixin

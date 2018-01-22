@@ -8,9 +8,9 @@
             border-left:3px solid {{model.borderColor}};
             {{/if}}">
     {{#unless model.isAllDay}}
-    <span class="{{CSS_PREFIX}}weekday-event-bullet {{CSS_PREFIX}}weekday-event-bullet-focused"></span>
+    <span class="{{CSS_PREFIX}}weekday-schedule-bullet {{CSS_PREFIX}}weekday-schedule-bullet-focused"></span>
     {{/unless}}
-    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-event-title {{CSS_PREFIX}}weekday-event-title-focused">
+    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-schedule-title {{CSS_PREFIX}}weekday-schedule-title-focused">
         {{#if model.isAllDay}}
             {{{allday-tmpl model}}}
         {{else}}

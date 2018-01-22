@@ -36,7 +36,7 @@ var timeCore = {
      * @param {Time} timeView - Instance of time view.
      * @returns {function} - Function that return event data from mouse event.
      */
-    _retriveEventData: function(timeView) {
+    _retriveScheduleData: function(timeView) {
         var self = this,
             container = timeView.container,
             options = timeView.options,

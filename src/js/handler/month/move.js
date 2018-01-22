@@ -38,7 +38,7 @@ function MonthMove(dragHandler, monthView, baseController) {
     /**
      * @type {function}
      */
-    this.getEventData = null;
+    this.getScheduleData = null;
 
     /**
      * @type {object}
@@ -63,28 +63,28 @@ MonthMove.prototype.destroy = function() {
 };
 
 /**
- * Update target event
- * @fires {MonthMove#beforeUpdateEvent}
- * @param {object} eventCache - cache object that result of single dragging
+ * Update target schedule
+ * @fires {MonthMove#beforeUpdateSchedule}
+ * @param {object} scheduleCache - cache object that result of single dragging
  *  session.
  */
-MonthMove.prototype.updateEvent = function(eventCache) {
-    var model = eventCache.model;
+MonthMove.prototype.updateSchedule = function(scheduleCache) {
+    var model = scheduleCache.model;
     var duration = model.duration().getTime();
     var startDateRaw = datetime.raw(model.starts);
-    var dragEndTime = Number(eventCache.ends);
+    var dragEndTime = Number(scheduleCache.ends);
     var newStartDate = new TZDate(dragEndTime);
 
     newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
 
     /**
-     * @event MonthMove#beforeUpdateEvent
+     * @event MonthMove#beforeUpdateSchedule
      * @type {object}
-     * @property {CalEvent} model - model instance to update
+     * @property {Schedule} model - model instance to update
      * @property {date} starts - start time to update
      * @property {date} ends - end time to update
      */
-    this.fire('beforeUpdateEvent', {
+    this.fire('beforeUpdateSchedule', {
         model: model,
         starts: newStartDate,
         ends: new TZDate(newStartDate.getTime() + duration)
@@ -92,33 +92,33 @@ MonthMove.prototype.updateEvent = function(eventCache) {
 };
 
 /**
- * Get event block to clone for month guide effect
- * @param {HTMLElement} target - target element that related with drag event
+ * Get schedule block to clone for month guide effect
+ * @param {HTMLElement} target - target element that related with drag schedule
  * @returns {HTMLElement} element to create guide effect
  */
-MonthMove.prototype.getMonthEventBlock = function(target) {
-    var blockSelector = config.classname('.weekday-event-block');
+MonthMove.prototype.getMonthScheduleBlock = function(target) {
+    var blockSelector = config.classname('.weekday-schedule-block');
 
     return domutil.closest(target, blockSelector);
 };
 
 /**
- * Get event block from more layer
+ * Get schedule block from more layer
  * @param {HTMLElement} target - element to check
- * @returns {HTMLElement} event element
+ * @returns {HTMLElement} schedule element
  */
-MonthMove.prototype.getMoreLayerEventBlock = function(target) {
-    var className = config.classname('.month-more-event');
+MonthMove.prototype.getMoreLayerScheduleBlock = function(target) {
+    var className = config.classname('.month-more-schedule');
 
     return domutil.closest(target, className);
 };
 
 /**
- * Check handler has permission to handle fired event
+ * Check handler has permission to handle fired schedule
  * @fires {MonthMove#monthMoveStart_from_morelayer}
- * @param {HTMLElement} target - target element of fired event
- * @returns {(string|null)} model instance ID related with event. if handle
- *  has not permission to handle the event then return null.
+ * @param {HTMLElement} target - target element of fired schedule
+ * @returns {(string|null)} model instance ID related with schedule. if handle
+ *  has not permission to handle the schedule then return null.
  */
 MonthMove.prototype.hasPermissionToHandle = function(target) {
     var modelID = null;
@@ -128,17 +128,17 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
         return null;
     }
 
-    blockElement = this.getMonthEventBlock(target);
+    blockElement = this.getMonthScheduleBlock(target);
 
     if (blockElement) {
         modelID = domutil.getData(blockElement, 'id');
     } else {
-        blockElement = this.getMoreLayerEventBlock(target);
+        blockElement = this.getMoreLayerScheduleBlock(target);
 
         if (blockElement) {
             modelID = domutil.getData(blockElement, 'id');
             /**
-             * Fire for notificate that the drag event start at more layer view.
+             * Fire for notificate that the drag schedule start at more layer view.
              * @event {MonthMove#monthMoveStart_from_morelayer}
              */
             this.fire('monthMoveStart_from_morelayer');
@@ -151,36 +151,36 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
 /**
  * Event handler for Drag#dragStart
  * @fires {MonthMove#monthMoveDragstart}
- * @param {object} dragStartEvent - drag start event data
+ * @param {object} dragStartEvent - drag start schedule data
  */
 MonthMove.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
         modelID = this.hasPermissionToHandle(target),
         model,
-        eventData;
+        scheduleData;
 
     if (!modelID) {
         return;
     }
 
-    model = this.baseController.events.items[modelID];
+    model = this.baseController.schedules.items[modelID];
 
     this.dragHandler.on({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
 
-    this.getEventData = getMousePosData(this.monthView);
+    this.getScheduleData = getMousePosData(this.monthView);
 
-    eventData = this.getEventData(dragStartEvent.originEvent);
-    eventData.originEvent = dragStartEvent.originEvent;
-    eventData.target = this.getMonthEventBlock(target);
-    eventData.model = model;
+    scheduleData = this.getScheduleData(dragStartEvent.originEvent);
+    scheduleData.originEvent = dragStartEvent.originEvent;
+    scheduleData.target = this.getMonthScheduleBlock(target);
+    scheduleData.model = model;
 
     this._cache = {
         model: model,
         target: target,
-        starts: new TZDate(Number(eventData.date))
+        starts: new TZDate(Number(scheduleData.date))
     };
 
     /**
@@ -189,10 +189,10 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
      * @property {number} x - x index
      * @property {number} y - y index
      * @property {Date} date - drag date
-     * @property {HTMLElement} target - event block element
-     * @property {CalEvent} model - model instance
+     * @property {HTMLElement} target - schedule block element
+     * @property {Schedule} model - model instance
      */
-    this.fire('monthMoveDragstart', eventData);
+    this.fire('monthMoveDragstart', scheduleData);
 };
 
 
@@ -201,17 +201,17 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
  * @param {object} dragEvent - drag event data
  */
 MonthMove.prototype._onDrag = function(dragEvent) {
-    var eventData;
+    var scheduleData;
 
     if (!this.getEventData) {
         return;
     }
 
-    eventData = util.extend({
+    scheduleData = util.extend({
         originEvent: dragEvent.originEvent
     }, this.getEventData(dragEvent.originEvent));
 
-    if (!eventData) {
+    if (!scheduleData) {
         return;
     }
 
@@ -222,7 +222,7 @@ MonthMove.prototype._onDrag = function(dragEvent) {
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('monthMoveDrag', eventData);
+    this.fire('monthMoveDrag', scheduleData);
 };
 
 /**
@@ -232,22 +232,22 @@ MonthMove.prototype._onDrag = function(dragEvent) {
  */
 MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache;
-    var eventData;
+    var scheduleData;
 
     this.dragHandler.off({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
     }, this);
 
-    if (!this.getEventData) {
+    if (!this.getScheduleData) {
         return;
     }
 
-    eventData = this.getEventData(dragEndEvent.originEvent);
+    scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
-    if (eventData) {
-        cache.ends = new TZDate(Number(eventData.date));
-        this.updateEvent(cache);
+    if (scheduleData) {
+        cache.ends = new TZDate(Number(scheduleData.date));
+        this.updateSchedule(cache);
     }
 
     /**
@@ -257,9 +257,9 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
      * @property {number} y - y index
      * @property {Date} date - drag date
      */
-    this.fire('monthMoveDragend', eventData);
+    this.fire('monthMoveDragend', scheduleData);
 
-    this.getEventData = this._cache = null;
+    this.getScheduleData = this._cache = null;
 };
 
 util.CustomEvents.mixin(MonthMove);

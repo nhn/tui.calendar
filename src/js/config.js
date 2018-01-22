@@ -6,7 +6,7 @@
 
 var cssPrefix = '/* @echo CSS_PREFIX */',
     alldayGetViewID = new RegExp('^' + cssPrefix + 'weekday[\\s]tui-view-(\\d+)'),
-    alldayCheckPermission = new RegExp('^' + cssPrefix + 'event(-title)?$'),
+    alldayCheckPermission = new RegExp('^' + cssPrefix + 'schedule(-title)?$'),
     timeGetViewID = new RegExp('^' + cssPrefix + 'time-date[\\s]tui-view-(\\d+)');
 
 var config = {
