@@ -52,9 +52,10 @@ MonthClick.prototype.destroy = function() {
  */
 MonthClick.prototype._onClick = function(clickEvent) {
     var self = this,
-      moreElement,
-      eventCollection = this.baseController.events,
-      blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-schedule-block')) || domutil.closest(clickEvent.target, config.classname('.month-more-schedule'));
+        moreElement,
+        scheduleCollection = this.baseController.schedules,
+        blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-schedule-block'))
+                    || domutil.closest(clickEvent.target, config.classname('.month-more-schedule'));
 
     moreElement = domutil.closest(
         clickEvent.target,
@@ -70,7 +71,7 @@ MonthClick.prototype._onClick = function(clickEvent) {
     }
 
     if (blockElement) {
-        eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
+        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
             /**
              * @events AlldayClick#clickSchedule
              * @type {object}
