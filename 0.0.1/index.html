@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home | FullCalendar</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 13px">
+        
+            <a href="https://github.com/nhnent/tui.jsdoc-template" rel="noopener noreferrer" target="_blank">
+                <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">FullCalendar</a></h1>
+        
+            <span class="version">v0.0.1</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-example01-basic.html">example01-basic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example01-basic_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Calendar.html">Calendar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Calendar_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Calendar.html#options">options</a></li><li><a href="Calendar.html#renderDate">renderDate</a></li><li><a href="Calendar.html#renderRange">renderRange</a></li><li><a href="Calendar.html#viewName">viewName</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Calendar.html#.setTimezoneOffset">setTimezoneOffset</a></li><li><a href="Calendar.html#clear">clear</a></li><li><a href="Calendar.html#createSchedules">createSchedules</a></li><li><a href="Calendar.html#deleteSchedule">deleteSchedule</a></li><li><a href="Calendar.html#destroy">destroy</a></li><li><a href="Calendar.html#getSchedule">getSchedule</a></li><li><a href="Calendar.html#next">next</a></li><li><a href="Calendar.html#prev">prev</a></li><li><a href="Calendar.html#refresh">refresh</a></li><li><a href="Calendar.html#render">render</a></li><li><a href="Calendar.html#scrollToNow">scrollToNow</a></li><li><a href="Calendar.html#setCalendarColor">setCalendarColor</a></li><li><a href="Calendar.html#setDate">setDate</a></li><li><a href="Calendar.html#today">today</a></li><li><a href="Calendar.html#toggleTaskView">toggleTaskView</a></li><li><a href="Calendar.html#toggleView">toggleView</a></li><li><a href="Calendar.html#updateSchedule">updateSchedule</a></li></ul><div class="member-type">Events</div><ul class="inner"><li><a href="Calendar.html#event:beforeCreateSchedule">beforeCreateSchedule</a></li><li><a href="Calendar.html#event:beforeDeleteSchedule">beforeDeleteSchedule</a></li><li><a href="Calendar.html#event:beforeUpdateSchedule">beforeUpdateSchedule</a></li><li><a href="Calendar.html#event:clickDayname">clickDayname</a></li><li><a href="Calendar.html#event:clickSchedule">clickSchedule</a></li><li><a href="Calendar.html#event:resizePanel">resizePanel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3><a href="global.html">Global</a></h3></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section>
+        <article class="readme"><h1>TOAST UI Component: FullCalendar</h1><p>tui-full-calendar</p>
+<h2>Feature</h2><ul>
+<li>Various view types: daily, weekly, monthly</li>
+<li>Narrow weekend</li>
+<li>Start Day of Week</li>
+</ul>
+<h2>Documentation</h2><ul>
+<li>API: <a href="http://nhnent.github.io/application-dooray-calendar/latest/">http://nhnent.github.io/application-dooray-calendar/latest/</a></li>
+<li>Examples: <a href="http://nhnent.github.io/application-dooray-calendar/latest/tutorial-example01-basic.html">http://nhnent.github.io/application-dooray-calendar/latest/tutorial-example01-basic.html</a></li>
+</ul>
+<h2>Dependency</h2><ul>
+<li><a href="https://github.com/nhnent/tui.code-snippet/releases/tag/v1.2.9">tui.code-snippet: 1.2.9</a></li>
+</ul>
+<h2>Tested Browsers</h2><ul>
+<li>Browser:<ul>
+<li>IE11</li>
+<li>Edge</li>
+<li>Chrome</li>
+<li>Firefox</li>
+<li>Safari</li>
+</ul>
+</li>
+</ul>
+<h2>Usage</h2><h3>Use <code>bower</code></h3><p>Install the latest version using <code>bower</code> command:</p>
+<pre class="prettyprint source"><code>$ bower install https://github.nhnent.com/fe/application-dooray-calendar</code></pre><h3>Download</h3><ul>
+<li><a href="https://github.nhnent.com/fe/application-dooray-calendar/tree/production/dist">Download bundle files from <code>dist</code> folder</a></li>
+<li><a href="https://github.nhnent.com/fe/application-dooray-calendar/releases">Download all sources for each version</a></li>
+</ul>
+<h3>Initialize a calendar</h3><pre class="prettyprint source lang-javascript"><code>var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
+    defaultView: 'week',
+    taskView: true,
+    template: {
+        milestone: function(schedule) {
+            return '&lt;span style=&quot;color:red;&quot;>&lt;i class=&quot;fa fa-flag&quot;>&lt;/i> ' + schedule.title + '&lt;/span>';
+        },
+        milestoneTitle: function() {
+            return 'Milestone';
+        },
+        task: function(schedule) {
+            return '&nbsp;&nbsp;#' + schedule.title;
+        },
+        taskTitle: function() {
+            return '&lt;label>&lt;input type=&quot;checkbox&quot; />Task&lt;/label>';
+        },
+        allday: function(schedule) {
+            return schedule.title + ' &lt;i class=&quot;fa fa-refresh&quot;>&lt;/i>';
+        },
+        time: function(schedule) {
+            return schedule.title + ' &lt;i class=&quot;fa fa-refresh&quot;>&lt;/i>' + schedule.start;
+        }
+    },
+    month: {
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        startDayOfWeek: 0,
+        narrowWeekend: true
+    },
+    week: {
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        panelHeights: [80, 80, 120],
+        startDayOfWeek: 0,
+        narrowWeekend: true
+    }
+});</code></pre><h3>Manipulate schedules</h3><p>Create schedules. Update a schedule, Delete a schedule.</p>
+<h4>Create schedules</h4><pre class="prettyprint source lang-javascript"><code>calendar.createSchedules([
+    {
+        id: '1',
+        calendarId: '1',
+        title: 'my schedule',
+        category: 'time',
+        dueDateClass: '',
+        start: '2018-01-18T22:30:00+09:00',
+        end: '2018-01-19T02:30:00+09:00'
+    },
+    {
+        id: '2',
+        calendarId: '1',
+        title: 'second schedule',
+        category: 'time',
+        dueDateClass: '',
+        start: '2018-01-18T17:30:00+09:00',
+        end: '2018-01-19T17:31:00+09:00'
+    }
+]);</code></pre><h4>Update a schedule</h4><pre class="prettyprint source lang-javascript"><code>calendar.updateSchedule(schedule.id, schedule.calendarId, {
+    start: startTime,
+    end: endTime
+});</code></pre><h4>Delete a schedule</h4><pre class="prettyprint source lang-javascript"><code>calendar.deleteSchedule(schedule.id, schedule.calendarId);</code></pre><h3>Add event handlers</h3><p>Examples to add event handlers</p>
+<h4>'beforeCreateSchedule'</h4><p>When select time period(daily, weekly, monthly) in only AllDay, Time types</p>
+<pre class="prettyprint source lang-javascript"><code>calendar.on('beforeCreateSchedule', function(event) {
+    var startTime = event.start;
+    var endTime = event.end;
+    var isAllDay = event.isAllDay;
+    var guide = event.guide;
+    var triggerEventName = event.triggerEventName;
+    var schedule;
+
+    if (triggerEventName === 'click') {
+        // open writing simple schedule popup
+        schedule = {...};
+    } else if (triggerEventName === 'dblclick') {
+        // open writing detail schedule popup
+        schedule = {...};
+    }
+
+    calendar.createSchedules([schedule]);
+});</code></pre><h4>'beforeUpdateSchedule'</h4><p>Update the schedule when dragging it.</p>
+<pre class="prettyprint source lang-javascript"><code>calendar.on('beforeUpdateSchedule', function(event) {
+    var schedule = event.schedule;
+    var startTime = event.start;
+    var endTime = event.end;
+
+    calendar.updateSchedule(schedule.id, schedule.calendarId, {
+        start: startTime,
+        end: endTime
+    });
+});</code></pre><h4>'clickSchedule'</h4><p>Open a detail schedule information or focus it</p>
+<pre class="prettyprint source lang-javascript"><code>calendar.on('clickSchedule', function(event) {
+    var schedule = event.schedule;
+
+    if (lastClickSchedule) {
+        calendar.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
+            isFocused: false
+        });
+    }
+    calendar.updateSchedule(schedule.id, schedule.calendarId, {
+        isFocused: true
+    });
+
+    lastClickSchedule = schedule;
+
+    // open detail view
+});</code></pre><h3>Move to today/prev/next</h3><h4>Today</h4><pre class="prettyprint source lang-javascript"><code>calendar.today();</code></pre><h4>Prev</h4><pre class="prettyprint source lang-javascript"><code>calendar.prev();</code></pre><h4>Next</h4><pre class="prettyprint source lang-javascript"><code>calendar.next();</code></pre><h3>Toggle view type</h3><pre class="prettyprint source lang-javascript"><code>// daily view
+calendar.toggleView('day', true);
+
+// weekly view
+calendar.toggleView('week', true);
+
+// monthly view(default 6 weeks view)
+calendar.options.month.visibleWeeksCount = 6; // or null
+calendar.toggleView('month', true);
+
+// 2 weeks monthly view
+calendar.options.month.visibleWeeksCount = 2;
+calendar.toggleView('month', true);
+
+// 3 weeks monthly view
+calendar.options.month.visibleWeeksCount = 3;
+calendar.toggleView('month', true);
+
+// narrow weekend
+calendar.options.month.narrowWeekend = true;
+calendar.options.week.narrowWeekend = true;
+calendar.toggleView(calendar.viewName, true);
+
+// change start day of week(from monday)
+calendar.options.month.startDayOfWeek = 1;
+calendar.options.week.startDayOfWeek = 1;
+calendar.toggleView(calendar.viewName, true);</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px; height: 13px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'package:tui-full-calendar_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

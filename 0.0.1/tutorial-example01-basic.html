@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: example01-basic | FullCalendar</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 13px">
+        
+            <a href="https://github.com/nhnent/tui.jsdoc-template" rel="noopener noreferrer" target="_blank">
+                <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">FullCalendar</a></h1>
+        
+            <span class="version">v0.0.1</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-example01-basic.html">example01-basic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example01-basic_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Calendar.html">Calendar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Calendar_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Calendar.html#options">options</a></li><li><a href="Calendar.html#renderDate">renderDate</a></li><li><a href="Calendar.html#renderRange">renderRange</a></li><li><a href="Calendar.html#viewName">viewName</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Calendar.html#.setTimezoneOffset">setTimezoneOffset</a></li><li><a href="Calendar.html#clear">clear</a></li><li><a href="Calendar.html#createSchedules">createSchedules</a></li><li><a href="Calendar.html#deleteSchedule">deleteSchedule</a></li><li><a href="Calendar.html#destroy">destroy</a></li><li><a href="Calendar.html#getSchedule">getSchedule</a></li><li><a href="Calendar.html#next">next</a></li><li><a href="Calendar.html#prev">prev</a></li><li><a href="Calendar.html#refresh">refresh</a></li><li><a href="Calendar.html#render">render</a></li><li><a href="Calendar.html#scrollToNow">scrollToNow</a></li><li><a href="Calendar.html#setCalendarColor">setCalendarColor</a></li><li><a href="Calendar.html#setDate">setDate</a></li><li><a href="Calendar.html#today">today</a></li><li><a href="Calendar.html#toggleTaskView">toggleTaskView</a></li><li><a href="Calendar.html#toggleView">toggleView</a></li><li><a href="Calendar.html#updateSchedule">updateSchedule</a></li></ul><div class="member-type">Events</div><ul class="inner"><li><a href="Calendar.html#event:beforeCreateSchedule">beforeCreateSchedule</a></li><li><a href="Calendar.html#event:beforeDeleteSchedule">beforeDeleteSchedule</a></li><li><a href="Calendar.html#event:beforeUpdateSchedule">beforeUpdateSchedule</a></li><li><a href="Calendar.html#event:clickDayname">clickDayname</a></li><li><a href="Calendar.html#event:clickSchedule">clickSchedule</a></li><li><a href="Calendar.html#event:resizePanel">resizePanel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3><a href="global.html">Global</a></h3></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+<section>
+    <header>
+        
+
+        <h2>example01-basic</h2>
+    </header>
+
+    
+        
+
+        <ul id="example-nav" class="nav nav-tabs hidden">
+            <li role="presentation" id="example-result-btn" class="active" onclick="showResult()">
+                <a href="#">Result</a>
+            </li>
+            <li role="presentation" id="example-js-btn" class="hidden" onclick="showJs()">
+                <a href="#">JS</a>
+            </li>
+            <li role="presentation" id="example-html-btn" class="hidden" onclick="showHtml()">
+                <a href="#">HTML</a>
+            </li>
+        </ul>
+        <article>
+            
+            <iframe id="example-result" width="100%" height="800" frameborder="0" src=tutorials/example01-basic.html></iframe>
+            <div id="example-js" class="hidden"><pre class="prettyprint source"></pre></div>
+            <div id="example-html" class="hidden"><pre class="prettyprint source"></pre></div>
+        </article>
+    
+</section>
+
+
+    <script>
+        var exampleResult = document.getElementById('example-result');
+        var exampleJs = document.getElementById('example-js');
+        var exampleHtml = document.getElementById('example-html');
+        var exampleResultBtn = document.getElementById('example-result-btn');
+        var exampleJsBtn = document.getElementById('example-js-btn');
+        var exampleHtmlBtn = document.getElementById('example-html-btn');
+
+        function setActive(el) {
+            el.className += ' active';
+        }
+
+        function setInactive(el) {
+            el.className = el.className.replace(/\s*active\s*/g, '');
+        }
+
+        function show(el) {
+            el.className = el.className.replace(/\s*hidden\s*/g, '');
+        }
+
+        function hide(el) {
+            el.className += ' hidden';
+        }
+
+        function showJs() {
+            hide(exampleHtml);
+            hide(exampleResult);
+            setInactive(exampleHtmlBtn);
+            setInactive(exampleResultBtn);
+
+            show(exampleJs);
+            setActive(exampleJsBtn);
+        }
+
+        function showHtml() {
+            hide(exampleJs);
+            hide(exampleResult);
+            setInactive(exampleJsBtn);
+            setInactive(exampleResultBtn);
+
+            show(exampleHtml);
+            setActive(exampleHtmlBtn);
+        }
+
+        function showResult() {
+            hide(exampleJs);
+            hide(exampleHtml);
+            setInactive(exampleJsBtn);
+            setInactive(exampleHtmlBtn);
+
+            show(exampleResult);
+            setActive(exampleResultBtn);
+        }
+    </script>
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px; height: 13px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        showLnbExamples();
+    </script>
+
+</body>
+</html>
