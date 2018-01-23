@@ -105,7 +105,7 @@ var dw = require('../common/dw'),
  * @param {HTMLElement|string} container - container element or selector id
  * @param {Options} options - calendar options
  * @example
- * calendar = new tui.FullCalendar(document.getElementById('calendar'), {
+ * var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
  *     defaultView: 'week',
  *     taskView: true,
  *     template: {
@@ -916,6 +916,7 @@ Calendar.prototype._onClick = function(clickScheduleData) {
      *     });
      *
      *     lastClickSchedule = schedule;
+     *     // open detail view
      * });
      */
     this.fire('clickSchedule', clickScheduleData);
