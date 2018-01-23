@@ -202,7 +202,7 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
         range = scheduleData.nearestRange,
         timeDiff = range[1] - range[0],
         dateDiff = 0,
-        model = ctrl.schedules.items[modelID],
+        schedule = ctrl.schedules.items[modelID],
         relatedView = scheduleData.relatedView,
         currentView = scheduleData.currentView,
         scheduleDuration,
@@ -212,7 +212,7 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
         newEnds,
         baseDate;
 
-    if (!model || !currentView) {
+    if (!schedule || !currentView) {
         return;
     }
 
@@ -220,9 +220,9 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
     baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    newStarts = new TZDate(model.getStarts().getTime() + timeDiff);
-    newEnds = new TZDate(model.getEnds().getTime() + timeDiff);
-    scheduleDuration = model.duration();
+    newStarts = new TZDate(schedule.getStarts().getTime() + timeDiff);
+    newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
+    scheduleDuration = schedule.duration();
 
     if (currentView) {
         dateDiff = currentView.getDate() - relatedView.getDate();
@@ -242,14 +242,14 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
     /**
      * @event TimeMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {Date} start - start time to update
+     * @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
-        model: model,
-        starts: newStarts,
-        ends: newEnds
+        schedule: schedule,
+        start: newStarts,
+        end: newEnds
     });
 };
 

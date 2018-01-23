@@ -60,8 +60,8 @@ describe('handler/time.move', function() {
                         getEnds: function() {
                             return new TZDate(2015, 4, 1, 10, 30);
                         },
-                        starts: new TZDate(2015, 4, 1, 9, 30),
-                        ends: new TZDate(2015, 4, 1, 10, 30),
+                        start: new TZDate(2015, 4, 1, 9, 30),
+                        end: new TZDate(2015, 4, 1, 10, 30),
                         duration: function() {
                             return new TZDate(datetime.millisecondsFrom('hour', 1));
                         }
@@ -90,16 +90,16 @@ describe('handler/time.move', function() {
             TimeMove.prototype._updateSchedule.call(mockInstance, scheduleData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: baseControllerMock.schedules.items[20],
-                starts: new TZDate(2015, 4, 1, 10),
-                ends: new TZDate(2015, 4, 1, 11)
+                schedule: baseControllerMock.schedules.items[20],
+                start: new TZDate(2015, 4, 1, 10),
+                end: new TZDate(2015, 4, 1, 11)
             });
         });
 
-        it('limit updatable start and ends.', function() {
+        it('limit updatable start and end.', function() {
             var oneHour = datetime.millisecondsFrom('hour', 1);
-            baseControllerMock.schedules.items['20'].starts = new TZDate(2015, 4, 1);
-            baseControllerMock.schedules.items['20'].starts = new TZDate(2015, 4, 1, 0, 30);
+            baseControllerMock.schedules.items['20'].start = new TZDate(2015, 4, 1);
+            baseControllerMock.schedules.items['20'].start = new TZDate(2015, 4, 1, 0, 30);
             baseControllerMock.schedules.items['20'].getStarts = function() {
                 return new TZDate(2015, 4, 1)
             };
@@ -124,9 +124,9 @@ describe('handler/time.move', function() {
             TimeMove.prototype._updateSchedule.call(mockInstance, scheduleData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: baseControllerMock.schedules.items[20],
-                starts: new TZDate(2015, 4, 1),
-                ends: new TZDate(2015, 4, 1, 0, 30)
+                schedule: baseControllerMock.schedules.items[20],
+                start: new TZDate(2015, 4, 1),
+                end: new TZDate(2015, 4, 1, 0, 30)
             });
 
             baseControllerMock.updateSchedule.calls.reset();
@@ -134,9 +134,9 @@ describe('handler/time.move', function() {
             TimeMove.prototype._updateSchedule.call(mockInstance, scheduleData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: baseControllerMock.schedules.items[20],
-                starts: new TZDate(2015, 4, 1, 23, 29, 59),
-                ends: new TZDate(2015, 4, 1, 23, 59, 59)
+                schedule: baseControllerMock.schedules.items[20],
+                start: new TZDate(2015, 4, 1, 23, 29, 59),
+                end: new TZDate(2015, 4, 1, 23, 59, 59)
             });
         });
     });

@@ -27,8 +27,8 @@ describe('handler:AlldayResizeGuide', function() {
                 xIndex: 3,
                 eventBlockElement: {},
                 model: {
-                    starts: new Date('2015-05-04T00:00:00+09:00'),
-                    ends: new Date('2015-05-04T23:59:59+09:00')
+                    start: new Date('2015-05-04T00:00:00+09:00'),
+                    end: new Date('2015-05-04T23:59:59+09:00')
                 }
             };
 

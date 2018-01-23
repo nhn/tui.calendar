@@ -25,11 +25,11 @@ describe('week:handler:TaskClick', function() {
 
         // 이벤트가 아래처럼 발생한다
         expect(mockInst.fire).toHaveBeenCalledWith('clickSchedule', {
-            model: {
+            schedule: {
                 _id: '2',
                 text: 'hello'
             },
-            jsEvent: 'test'
+            event: 'test'
         });
     });
 

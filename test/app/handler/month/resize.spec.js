@@ -16,14 +16,14 @@ describe('handler:month/resize', function() {
         scheduleInst = ctrl.createSchedule({
             title: 'test',
             isAllDay: true,
-            starts: '2015-05-01T00:00:00+09:00',
-            ends: '2015-05-01T23:59:59+09:00'
+            start: '2015-05-01T00:00:00+09:00',
+            end: '2015-05-01T23:59:59+09:00'
         });
 
         mockCache = {
-            model: scheduleInst,
-            starts: new TZDate('2015-04-01T00:00:00+09:00'),
-            ends: new TZDate('2015-05-02T23:59:59+09:00')
+            schedule: scheduleInst,
+            start: new TZDate('2015-04-01T00:00:00+09:00'),
+            end: new TZDate('2015-05-02T23:59:59+09:00')
         };
 
         MonthResize.prototype._updateSchedule.call(mockInst, mockCache);
@@ -31,9 +31,9 @@ describe('handler:month/resize', function() {
         expect(mockInst.fire).toHaveBeenCalledWith(
             'beforeUpdateSchedule',
             {
-                model: scheduleInst,
-                starts: new TZDate('2015-05-01T00:00:00+09:00'),
-                ends: new TZDate('2015-05-02T23:59:59+09:00')
+                schedule: scheduleInst,
+                start: new TZDate('2015-05-01T00:00:00+09:00'),
+                end: new TZDate('2015-05-02T23:59:59+09:00')
             }
         );
     });

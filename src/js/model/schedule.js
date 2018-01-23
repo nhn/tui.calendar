@@ -56,16 +56,16 @@ function Schedule() {
     this.isAllDay = false;
 
     /**
-     * schedule starts
+     * schedule start
      * @type {TZDate}
      */
-    this.starts = null;
+    this.start = null;
 
     /**
-     * schedule ends
+     * schedule end
      * @type {TZDate}
      */
-    this.ends = null;
+    this.end = null;
 
     /**
      * schedule text color
@@ -77,7 +77,7 @@ function Schedule() {
      * schedule block visibility
      * @type {boolean}
      */
-    this.visible = true;
+    this.isVisible = true;
 
     /**
      * schedule background color
@@ -143,7 +143,7 @@ function Schedule() {
 
 Schedule.schema = {
     required: ['title'],
-    dateRange: ['starts', 'ends']
+    dateRange: ['start', 'end']
 };
 
 /**
@@ -175,7 +175,7 @@ Schedule.prototype.init = function(options) {
     this.id = options.id || '';
     this.title = options.title || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
-    this.visible = util.isExisty(options.visible) ? options.visible : true;
+    this.isVisible = util.isExisty(options.isVisible) ? options.isVisible : true;
 
     this.color = options.color || this.color;
     this.bgColor = options.bgColor || this.bgColor;
@@ -188,40 +188,40 @@ Schedule.prototype.init = function(options) {
     this.isFocused = options.isFocused || false;
 
     if (this.isAllDay) {
-        this.setAllDayPeriod(options.starts, options.ends);
+        this.setAllDayPeriod(options.start, options.end);
     } else {
-        this.setTimePeriod(options.starts, options.ends);
+        this.setTimePeriod(options.start, options.end);
     }
 
     if (options.category === SCHEDULE_CATEGORY.MILESTONE ||
         options.category === SCHEDULE_CATEGORY.TASK) {
-        this.starts = new TZDate(this.ends);
+        this.start = new TZDate(this.end);
     }
 
     this.raw = options.raw || null;
 };
 
-Schedule.prototype.setAllDayPeriod = function(starts, ends) {
+Schedule.prototype.setAllDayPeriod = function(start, end) {
     // 종일일정인 경우 문자열의 날짜정보만 사용한다.
-    if (util.isString(starts)) {
-        starts = datetime.parse(starts.substring(0, 10));
+    if (util.isString(start)) {
+        start = datetime.parse(start.substring(0, 10));
     }
-    if (util.isString(ends)) {
-        ends = datetime.parse(ends.substring(0, 10));
+    if (util.isString(end)) {
+        end = datetime.parse(end.substring(0, 10));
     }
 
-    this.starts = starts;
-    this.starts.setHours(0, 0, 0);
-    this.ends = ends || new TZDate(this.starts);
-    this.ends.setHours(23, 59, 59);
+    this.start = start;
+    this.start.setHours(0, 0, 0);
+    this.end = end || new TZDate(this.start);
+    this.end.setHours(23, 59, 59);
 };
 
-Schedule.prototype.setTimePeriod = function(starts, ends) {
-    this.starts = new TZDate(starts || Date.now());
-    this.ends = new TZDate(ends || this.starts);
+Schedule.prototype.setTimePeriod = function(start, end) {
+    this.start = new TZDate(start || Date.now());
+    this.end = new TZDate(end || this.start);
 
-    if (!ends) {
-        this.ends.setMinutes(this.ends.getMinutes() + 30);
+    if (!end) {
+        this.end.setMinutes(this.end.getMinutes() + 30);
     }
 };
 
@@ -229,14 +229,14 @@ Schedule.prototype.setTimePeriod = function(starts, ends) {
  * @returns {Date} render start date.
  */
 Schedule.prototype.getStarts = function() {
-    return this.starts;
+    return this.start;
 };
 
 /**
  * @returns {Date} render end date.
  */
 Schedule.prototype.getEnds = function() {
-    return this.ends;
+    return this.end;
 };
 
 /**
@@ -247,7 +247,7 @@ Schedule.prototype.cid = function() {
 };
 
 /**
- * Check two schedule are equals (means title, isAllDay, starts, ends are same)
+ * Check two schedule are equals (means title, isAllDay, start, end are same)
  * @param {Schedule} schedule Schedule model instance to compare.
  * @returns {boolean} Return false when not same.
  */
@@ -288,18 +288,18 @@ Schedule.prototype.equals = function(schedule) {
 };
 
 /**
- * return duration between starts and ends.
+ * return duration between start and end.
  * @returns {Date} duration (UTC)
  */
 Schedule.prototype.duration = function() {
-    var starts = this.getStarts(),
-        ends = this.getEnds(),
+    var start = this.getStarts(),
+        end = this.getEnds(),
         duration;
 
     if (this.isAllDay) {
-        duration = new TZDate(datetime.end(ends) - datetime.start(starts));
+        duration = new TZDate(datetime.end(end) - datetime.start(start));
     } else {
-        duration = new TZDate(ends - starts);
+        duration = new TZDate(end - start);
     }
 
     return duration;
@@ -314,12 +314,12 @@ Schedule.prototype.duration = function() {
 Schedule.prototype.collidesWith = function(schedule) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
-        starts = schedule.getStarts(),
-        ends = schedule.getEnds();
+        start = schedule.getStarts(),
+        end = schedule.getEnds();
 
-    if ((starts > ownStarts && starts < ownEnds) ||
-        (ends > ownStarts && ends < ownEnds) ||
-        (starts <= ownStarts && ends >= ownEnds)) {
+    if ((start > ownStarts && start < ownEnds) ||
+        (end > ownStarts && end < ownEnds) ||
+        (start <= ownStarts && end >= ownEnds)) {
         return true;
     }
     return false;

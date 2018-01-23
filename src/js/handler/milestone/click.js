@@ -73,16 +73,16 @@ MilestoneClick.prototype._onClick = function(clickEvent) {
         return;
     }
 
-    this.baseController.schedules.doWhenHas(modelID, function(model) {
+    this.baseController.schedules.doWhenHas(modelID, function(schedule) {
         /**
          * @events MilestoneClick#clickEvent
          * @type {object}
-         * @property {Schedule} model - model instance
-         * @property {MouseEvent} jsEvent - MouseEvent object
+         * @property {Schedule} schedule - schedule instance
+         * @property {MouseEvent} event - MouseEvent object
          */
         self.fire('clickSchedule', {
-            model: model,
-            jsEvent: clickEvent.originEvent
+            schedule: schedule,
+            event: clickEvent.originEvent
         });
     });
 };

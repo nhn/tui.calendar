@@ -50,8 +50,8 @@ describe('view:WeekdayInMonth', function() {
             var viewModel = ScheduleViewModel.create(Schedule.create({
                     title: 'A',
                     isAllDay: true,
-                    starts: '2015-05-01T00:00:00',
-                    ends: '2015-05-03T23:59:59'
+                    start: '2015-05-01T00:00:00',
+                    end: '2015-05-03T23:59:59'
                 })),
                 cache = {},
                 helper = WeekdayInMonth.prototype._getSkipHelper(cache);

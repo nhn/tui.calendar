@@ -115,7 +115,7 @@ AlldayCreation.prototype._createSchedule = function(scheduleData) {
         ),
         startXIndex = scheduleData.dragStartXIndex,
         xIndex = scheduleData.xIndex,
-        starts, ends;
+        start, end;
 
     // when inverse start, end then change it.
     if (xIndex < startXIndex) {
@@ -124,22 +124,24 @@ AlldayCreation.prototype._createSchedule = function(scheduleData) {
         startXIndex = startXIndex - xIndex;
     }
 
-    starts = new TZDate(dateRange[startXIndex].getTime());
-    ends = datetime.end(dateRange[xIndex]);
+    start = new TZDate(dateRange[startXIndex].getTime());
+    end = datetime.end(dateRange[xIndex]);
 
     /**
      * @event {AlldayCreation#beforeCreateSchedule}
      * @type {object}
      * @property {boolean} isAllDay - whether schedule is fired in allday view area?
-     * @property {Date} starts - select start date
-     * @property {Date] ends - select end date
+     * @property {Date} start - select start time
+     * @property {Date} end - select end time
+     * @property {TimeCreationGuide} guide - TimeCreationGuide instance
+     * @property {string} triggerEventName - event name
      */
     this.fire('beforeCreateSchedule', {
         isAllDay: true,
-        starts: starts,
-        ends: ends,
+        start: start,
+        end: end,
         guide: this.guide,
-        triggerEvent: scheduleData.triggerEvent
+        triggerEventName: scheduleData.triggerEvent
     });
 };
 

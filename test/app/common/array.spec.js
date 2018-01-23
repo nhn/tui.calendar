@@ -89,7 +89,7 @@ describe('common/array', function() {
                 fixture.cleanup();
             });
 
-            it('isAllDay ASC, starts ASC, duration DESC, id ASC', function() {
+            it('isAllDay ASC, start ASC, duration DESC, id ASC', function() {
                 util.forEach(mockData, function(data) {
                     schedules.push(Schedule.create(data));
                 });
@@ -113,13 +113,13 @@ describe('common/array', function() {
                 fixtures = [{
                     title: 'A',
                     isAllDay: false,
-                    starts: '2015/05/03 12:00:00',
-                    ends: '2015/05/03 12:10:00'
+                    start: '2015/05/03 12:00:00',
+                    end: '2015/05/03 12:10:00'
                 }, {
                     title: 'B',
                     isAllDay: false,
-                    starts: '2015/05/03 12:00:00',
-                    ends: '2015/05/03 12:20:00'
+                    start: '2015/05/03 12:00:00',
+                    end: '2015/05/03 12:20:00'
                 }];
 
                 util.forEach(fixtures, function(data) {

@@ -129,8 +129,8 @@ AlldayMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
  * Refresh guide element.
  * @param {number} leftPercent - left percent of guide element.
  * @param {number} widthPercent - width percent of guide element.
- * @param {boolean} isExceededLeft - schedule starts is faster then render start date?
- * @param {boolean} isExceededRight - schedule ends is later then render end date?
+ * @param {boolean} isExceededLeft - schedule start is faster then render start date?
+ * @param {boolean} isExceededRight - schedule end is later then render end date?
  */
 AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPercent, isExceededLeft, isExceededRight) {
     var guideElement = this.guideElement;
@@ -171,8 +171,8 @@ AlldayMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventDat
     var model = dragStartEventData.model,
         datesInRange = dragStartEventData.datesInRange,
         baseWidthPercent = (100 / datesInRange),
-        originScheduleStarts = datetime.start(model.starts),
-        originScheduleEnds = datetime.end(model.ends),
+        originScheduleStarts = datetime.start(model.start),
+        originScheduleEnds = datetime.end(model.end),
         viewOptions = this.alldayMove.alldayView.options,
         renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
         renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
@@ -210,7 +210,7 @@ AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     scheduleContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;
-    this.getScheduleDataFunc = this._getEventBlockDataFunc(dragStartEventData);
+    this.getScheduleDataFunc = this._getScheduleBlockDataFunc(dragStartEventData);
 
     this._highlightScheduleBlocks(dragStartEventData.model, guideElement);
 };

@@ -1,7 +1,7 @@
 [{
     "title": "hunting",
     "isAllDay": true,
-    "starts": {
+    "start": {
         "y": 2015,
         "M": 5,
         "d": 1,
@@ -9,7 +9,7 @@
         "m": 0,
         "s": 0
     },
-    "ends": {
+    "end": {
         "y": 2015,
         "M": 5,
         "d": 2,
@@ -20,7 +20,7 @@
 }, {
     "title": "meeting",
     "isAllDay": false,
-    "starts": {
+    "start": {
         "y": 2015,
         "M": 5,
         "d": 3,
@@ -28,7 +28,7 @@
         "m": 30,
         "s": 0
     },
-    "ends": {
+    "end": {
         "y": 2015,
         "M": 5,
         "d": 3,
@@ -39,7 +39,7 @@
 }, {
     "title": "physical training",
     "isAllDay": false,
-    "starts": {
+    "start": {
         "y": 2015,
         "M": 5,
         "d": 3,
@@ -47,7 +47,7 @@
         "m": 30,
         "s": 0
     },
-    "ends": {
+    "end": {
         "y": 2015,
         "M": 5,
         "d": 3,

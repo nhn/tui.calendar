@@ -83,7 +83,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
     var cropped = false;
     var offsetStart, width, height, top;
 
-    offsetStart = viewModel.valueOf().starts - options.todayStart;
+    offsetStart = viewModel.valueOf().start - options.todayStart;
 
     // containerHeight : milliseconds in day = x : schedule's milliseconds
     top = (baseHeight * offsetStart) / baseMS;

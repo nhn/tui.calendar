@@ -41,20 +41,20 @@ var Month = {
     /**
      * Adjust render range to render properly.
      *
-     * Limit starts, ends for each allday schedules and expand starts, ends for
+     * Limit start, end for each allday schedules and expand start, end for
      * each time schedules
      * @this Base
-     * @param {Date} starts - render start date
-     * @param {Date} ends - render end date
+     * @param {Date} start - render start date
+     * @param {Date} end - render end date
      * @param {Collection} vColl - view model collection
      * property.
      */
-    _adjustRenderRange: function(starts, ends, vColl) {
+    _adjustRenderRange: function(start, end, vColl) {
         var ctrlCore = this.Core;
 
         vColl.each(function(viewModel) {
             if (viewModel.model.isAllDay || viewModel.hasMultiDates) {
-                ctrlCore.limitRenderRange(starts, ends, viewModel);
+                ctrlCore.limitRenderRange(start, end, viewModel);
             }
         });
     },
@@ -119,14 +119,14 @@ var Month = {
     _addMultiDatesInfo: function(vColl) {
         vColl.each(function(viewModel) {
             var model = viewModel.model;
-            var starts = model.getStarts();
-            var ends = model.getEnds();
+            var start = model.getStarts();
+            var end = model.getEnds();
 
-            viewModel.hasMultiDates = !datetime.isSameDate(starts, ends);
+            viewModel.hasMultiDates = !datetime.isSameDate(start, end);
 
             if (!model.isAllDay && viewModel.hasMultiDates) {
-                viewModel.renderStarts = datetime.start(starts);
-                viewModel.renderEnds = datetime.end(ends);
+                viewModel.renderStarts = datetime.start(start);
+                viewModel.renderEnds = datetime.end(end);
             }
         });
     },
@@ -134,15 +134,15 @@ var Month = {
     /**
      * Find schedule and get view model for specific month
      * @this Base
-     * @param {Date} starts - start date to find schedules
-     * @param {Date} ends - end date to find schedules
+     * @param {Date} start - start date to find schedules
+     * @param {Date} end - end date to find schedules
      * @param {function[]} [andFilters] - optional filters to applying search query
      * @returns {object} view model data
      */
-    findByDateRange: function(starts, ends, andFilters) {
+    findByDateRange: function(start, end, andFilters) {
         var ctrlCore = this.Core,
             ctrlMonth = this.Month,
-            filter = ctrlCore.getScheduleInDateRangeFilter(starts, ends),
+            filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
             coll, vColl, vList,
             collisionGroup,
             matrices;
@@ -153,12 +153,12 @@ var Month = {
         coll = this.schedules.find(filter);
         vColl = ctrlCore.convertToViewModel(coll);
         ctrlMonth._addMultiDatesInfo(vColl);
-        ctrlMonth._adjustRenderRange(starts, ends, vColl);
+        ctrlMonth._adjustRenderRange(start, end, vColl);
         vList = vColl.sort(array.compare.schedule.asc);
 
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
-        ctrlCore.positionViewModels(starts, ends, matrices, ctrlMonth._weightTopValue);
+        ctrlCore.positionViewModels(start, end, matrices, ctrlMonth._weightTopValue);
         ctrlMonth._adjustTimeTopIndex(vColl);
 
         return matrices;

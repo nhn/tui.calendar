@@ -34,8 +34,8 @@ describe('controller/base', function() {
             schedule = Schedule.create({
                 title: 'A',
                 isAllDay: true,
-                starts: '2015/05/01',
-                ends: '2015/05/03'
+                start: '2015/05/01',
+                end: '2015/05/03'
             });
 
             expect(ctrl._getContainDatesInSchedule(schedule)).toEqual(expected);
@@ -51,8 +51,8 @@ describe('controller/base', function() {
             schedule = Schedule.create({
                 title: 'A',
                 isAllDay: false,
-                starts: '2015/05/01 12:30:00',
-                ends: '2015/05/03 09:20:00'
+                start: '2015/05/01 12:30:00',
+                end: '2015/05/03 09:20:00'
             });
 
             expect(ctrl._getContainDatesInSchedule(schedule)).toEqual(expected);
@@ -146,10 +146,10 @@ describe('controller/base', function() {
                 '20150502': ['hunting', 'A']
             };
 
-            var starts = new TZDate('2015/04/30'),
-                ends = new TZDate('2015/05/02');
+            var start = new TZDate('2015/04/30'),
+                end = new TZDate('2015/05/02');
 
-            var result = ctrl.findByDateRange(starts, ends);
+            var result = ctrl.findByDateRange(start, end);
 
             expect(result).toEqualViewModel(expected);
         });
@@ -160,10 +160,10 @@ describe('controller/base', function() {
                 '20150503': ['A', 'meeting', 'physical training']
             };
 
-            var starts = new TZDate('2015/05/02'),
-                ends = new TZDate('2015/05/03');
+            var start = new TZDate('2015/05/02'),
+                end = new TZDate('2015/05/03');
 
-            var result = ctrl.findByDateRange(starts, ends);
+            var result = ctrl.findByDateRange(start, end);
 
             expect(result).toEqualViewModel(expected);
         });
@@ -177,23 +177,23 @@ describe('controller/base', function() {
             model = ctrl.createSchedule({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: '2015/05/01 09:30:00',
-                ends: '2015/05/01 18:30:00'
+                start: '2015/05/01 09:30:00',
+                end: '2015/05/01 18:30:00'
             });
             id = util.stamp(model);
 
             ctrl.updateSchedule(model, {
                 title: 'Go to work',
                 isAllDay: false,
-                starts: '2015/05/02',
-                ends: '2015/05/02'
+                start: '2015/05/02',
+                end: '2015/05/02'
             });
 
             expect(ctrl.schedules.single()).toEqual(jasmine.objectContaining({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: new TZDate('2015/05/02'),
-                ends: new TZDate('2015/05/02')
+                start: new TZDate('2015/05/02'),
+                end: new TZDate('2015/05/02')
             }));
 
             expect(ctrl.dateMatrix).toEqual({
@@ -211,8 +211,8 @@ describe('controller/base', function() {
             schedule = ctrl.createSchedule({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: '2015/05/01 09:30:00',
-                ends: '2015/05/01 18:30:00'
+                start: '2015/05/01 09:30:00',
+                end: '2015/05/01 18:30:00'
             });
             id = util.stamp(schedule);
         });
@@ -239,20 +239,20 @@ describe('controller/base', function() {
                 Schedule.create({
                     title: 'A',
                     isAllDay: false,
-                    starts: '2015/05/01 09:30:00',
-                    ends: '2015/05/01 18:30:00'
+                    start: '2015/05/01 09:30:00',
+                    end: '2015/05/01 18:30:00'
                 }),
                 Schedule.create({
                     title: 'B',
                     isAllDay: false,
-                    starts: '2015/05/02 09:30:00',
-                    ends: '2015/05/02 18:30:00'
+                    start: '2015/05/02 09:30:00',
+                    end: '2015/05/02 18:30:00'
                 }),
                 Schedule.create({
                     title: 'C',
                     isAllDay: true,
-                    starts: '2015/05/01 09:00:00',
-                    ends: '2015/05/02 09:00:00'
+                    start: '2015/05/01 09:00:00',
+                    end: '2015/05/02 09:00:00'
                 })
             ];
 

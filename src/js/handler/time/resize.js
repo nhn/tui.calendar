@@ -185,13 +185,13 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         modelID = scheduleData.targetModelID,
         range = scheduleData.nearestRange,
         timeDiff = range[1] - range[0],
-        model = ctrl.schedules.items[modelID],
+        schedule = ctrl.schedules.items[modelID],
         relatedView = scheduleData.relatedView,
         dateEnd,
         newEnds,
         baseDate;
 
-    if (!model) {
+    if (!schedule) {
         return;
     }
 
@@ -199,27 +199,27 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
 
     baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
-    newEnds = new TZDate(model.getEnds().getTime() + timeDiff);
+    newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
 
     if (newEnds > dateEnd) {
         newEnds = new TZDate(dateEnd.getTime());
     }
 
-    if (newEnds.getTime() - model.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new TZDate(model.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
+    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
+        newEnds = new TZDate(schedule.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
     }
 
     /**
      * @event TimeResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {Date} start - start time to update
+     * @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
-        model: model,
-        starts: model.getStarts(),
-        ends: newEnds
+        schedule: schedule,
+        start: schedule.getStarts(),
+        end: newEnds
     });
 };
 

@@ -201,8 +201,8 @@ TimeCreation.prototype._createSchedule = function(eventData) {
         baseDate,
         dateStart,
         dateEnd,
-        starts,
-        ends;
+        start,
+        end;
 
     if (!createRange) {
         createRange = [
@@ -214,22 +214,24 @@ TimeCreation.prototype._createSchedule = function(eventData) {
     baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    starts = Math.max(dateStart.getTime(), createRange[0]);
-    ends = Math.min(dateEnd.getTime(), createRange[1]);
+    start = Math.max(dateStart.getTime(), createRange[0]);
+    end = Math.min(dateEnd.getTime(), createRange[1]);
 
     /**
      * @event TimeCreation#beforeCreateSchedule
      * @type {object}
-     * @property {boolean} isAllDay - whether event is fired in allday view area?
-     * @property {Date} starts - select start time
-     * @property {Date] ends - select end time
+     * @property {boolean} isAllDay - whether schedule is fired in allday view area?
+     * @property {Date} start - select start time
+     * @property {Date} end - select end time
+     * @property {TimeCreationGuide} guide - TimeCreationGuide instance
+     * @property {string} triggerEventName - event name
      */
     this.fire('beforeCreateSchedule', {
         isAllDay: false,
-        starts: new TZDate(starts),
-        ends: new TZDate(ends),
+        start: new TZDate(start),
+        end: new TZDate(end),
         guide: this.guide,
-        triggerEvent: eventData.triggerEvent
+        triggerEventName: eventData.triggerEvent
     });
 };
 

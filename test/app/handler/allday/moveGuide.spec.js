@@ -21,8 +21,8 @@ describe('handler:AlldayMoveGuide', function() {
         it('return function that can calculate schedule block rendering information.', function() {
             mockEventData = {
                 model: {
-                    starts: new Date('2015-05-01T00:00:00+09:00'),
-                    ends: new Date('2015-05-03T23:59:59+09:00')
+                    start: new Date('2015-05-01T00:00:00+09:00'),
+                    end: new Date('2015-05-03T23:59:59+09:00')
                 },
                 datesInRange: 5
             };
@@ -65,8 +65,8 @@ describe('handler:AlldayMoveGuide', function() {
                 // 2일짜리 일정을
                 inst.getScheduleDataFunc = inst._getScheduleBlockDataFunc({
                     model: {
-                        starts: new Date('2015-05-01T00:00:00+09:00'),
-                        ends: new Date('2015-05-02T23:59:59+09:00')
+                        start: new Date('2015-05-01T00:00:00+09:00'),
+                        end: new Date('2015-05-02T23:59:59+09:00')
                     },
                     datesInRange: 5
                 });
@@ -84,8 +84,8 @@ describe('handler:AlldayMoveGuide', function() {
                 // 4일짜리 일정을
                 inst.getScheduleDataFunc = inst._getScheduleBlockDataFunc({
                     model: {
-                        starts: new Date('2015-05-02T00:00:00+09:00'),
-                        ends: new Date('2015-05-05T23:59:59+09:00')
+                        start: new Date('2015-05-02T00:00:00+09:00'),
+                        end: new Date('2015-05-05T23:59:59+09:00')
                     },
                     datesInRange: 5
                 });

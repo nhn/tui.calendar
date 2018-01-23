@@ -124,8 +124,8 @@ Month.prototype._renderChildren = function(container, calendar) {
     this.children.clear();
 
     util.forEach(calendar, function(weekArr) {
-        var starts = new TZDate(Number(weekArr[0])),
-            ends = new TZDate(Number(weekArr[weekArr.length - 1])),
+        var start = new TZDate(Number(weekArr[0])),
+            end = new TZDate(Number(weekArr[weekArr.length - 1])),
             weekdayViewContainer,
             weekdayView;
 
@@ -135,8 +135,8 @@ Month.prototype._renderChildren = function(container, calendar) {
         weekdayView = new WeekdayInMonth({
             renderMonth: renderMonth,
             heightPercent: heightPercent,
-            renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+            renderStartDate: datetime.format(start, 'YYYY-MM-DD'),
+            renderEndDate: datetime.format(end, 'YYYY-MM-DD'),
             narrowWeekend: narrowWeekend,
             startDayOfWeek: startDayOfWeek,
             visibleWeeksCount: visibleWeeksCount

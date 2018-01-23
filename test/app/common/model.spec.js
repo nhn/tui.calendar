@@ -36,27 +36,27 @@ describe('model/model', function() {
             it('return false then one of date is not valid date object.', function() {
                 // this will valid (null will convert to 1970-01-01 00:00:00)
                 myObj = {
-                    starts: null,
-                    ends: new TZDate('2015-05-01')
+                    start: null,
+                    end: new TZDate('2015-05-01')
                 };
 
-                expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(true);
+                expect(model.validators.dateRange(myObj, ['start', 'end'])).toBe(true);
 
                 myObj = {
-                    starts: 'wer',
-                    ends: null
+                    start: 'wer',
+                    end: null
                 };
 
-                expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(false);
+                expect(model.validators.dateRange(myObj, ['start', 'end'])).toBe(false);
             });
 
-            it('return true only starts and ends range are valid.', function() {
+            it('return true only start and end range are valid.', function() {
                 myObj = {
-                    starts: new TZDate('2015-05-03'),
-                    ends: new TZDate('2015-05-02')
+                    start: new TZDate('2015-05-03'),
+                    end: new TZDate('2015-05-02')
                 };
 
-                expect(model.validators.dateRange(myObj, ['starts', 'ends'])).toBe(false);
+                expect(model.validators.dateRange(myObj, ['start', 'end'])).toBe(false);
             });
         });
     });

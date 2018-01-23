@@ -67,22 +67,22 @@ TaskClick.prototype.checkExpectedCondition = function(target) {
  */
 TaskClick.prototype._onClick = function(clickEvent) {
     var self = this,
-        modelID = this.checkExpectedCondition(clickEvent.target);
+        scheduleID = this.checkExpectedCondition(clickEvent.target);
 
-    if (!modelID) {
+    if (!scheduleID) {
         return;
     }
 
-    this.baseController.schedules.doWhenHas(modelID, function(model) {
+    this.baseController.schedules.doWhenHas(scheduleID, function(schedule) {
         /**
          * @events TaskClick#clickSchedule
          * @type {object}
-         * @property {Schedule} model - model instance
-         * @property {MouseEvent} jsEvent - MouseEvent object
+         * @property {Schedule} schedule - schedule instance
+         * @property {MouseEvent} event - MouseEvent object
          */
         self.fire('clickSchedule', {
-            model: model,
-            jsEvent: clickEvent.originEvent
+            schedule: schedule,
+            event: clickEvent.originEvent
         });
     });
 };

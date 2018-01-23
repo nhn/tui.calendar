@@ -3,39 +3,34 @@
 (function(window, FullCalendar) {
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
-    var daynames = [
-        '일',
-        '월',
-        '화',
-        '수',
-        '목',
-        '금',
-        '토'
-    ];
-    var lastClickScheduleModel;
+    var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var lastClickSchedule;
     // FullCalendar.setTimezoneOffset(540);
 
-    cal = new FullCalendar({
+    cal = new FullCalendar(document.getElementById('calendar'), {
         defaultView: 'week',
         taskView: true,
         template: {
-            milestone: function(model) {
-                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + model.title + '</span>';
+            milestone: function(schedule) {
+                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
             },
             milestoneTitle: function() {
-                return '마일스톤';
+                return 'Milestone';
             },
-            task: function(model) {
-                return '&nbsp;&nbsp;#' + model.title;
+            task: function(schedule) {
+                return '&nbsp;&nbsp;#' + schedule.title;
             },
             taskTitle: function() {
-                return '<label><input type="checkbox" /> 업무</label>';
+                return '<label><input type="checkbox" />Task</label>';
             },
-            allday: function(model) {
-                return model.title + ' <i class="fa fa-refresh"></i>';
+            allday: function(schedule) {
+                return schedule.title + ' <i class="fa fa-refresh"></i>';
             },
-            time: function(model) {
-                return model.title + ' <i class="fa fa-refresh"></i>' + model.starts;
+            alldayTitle: function() {
+                return 'All Day';
+            },
+            time: function(schedule) {
+                return schedule.title + ' <i class="fa fa-refresh"></i>' + schedule.start;
             }
         },
         month: {
@@ -45,7 +40,7 @@
             daynames: daynames,
             panelHeights: [80, 80, 120]
         }
-    }, document.getElementById('calendar'));
+    });
 
     cal.setCalendarColor('1', {
         color: '#e8e8e8',
@@ -67,132 +62,132 @@
         {
             id: '1',
             calendarId: '1',
-            title: '스크럼',
+            title: 'Scrum',
             category: 'time',
             dueDateClass: '',
-            starts: '2018-01-18T22:30:00+09:00',
-            ends: '2018-01-19T02:30:00+09:00'
+            start: '2018-01-18T22:30:00+09:00',
+            end: '2018-01-19T02:30:00+09:00'
         },
         {
             id: '2',
             calendarId: '1',
-            title: '2차 QA',
+            title: '2nd QA',
             category: 'time',
             dueDateClass: '',
-            starts: '2018-01-18T17:30:00+09:00',
-            ends: '2018-01-19T17:31:00+09:00'
+            start: '2018-01-18T17:30:00+09:00',
+            end: '2018-01-19T17:31:00+09:00'
         },
         {
             id: '3',
             calendarId: '2',
-            title: '[추가 추가 일정]',
+            title: 'meeting',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
+            start: formattedDate + 'T11:00:00+09:00',
+            end: formattedDate + 'T12:59:59+09:00'
         },
         {
             id: '4',
-            calendarId: '2',
-            title: '[추가 추가 일정]',
+            calendarId: '1',
+            title: 'code review',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
+            start: formattedDate + 'T13:30:00+09:00',
+            end: formattedDate + 'T15:59:59+09:00'
         },
         {
             id: '5',
             calendarId: '2',
-            title: '[추가 추가 일정]',
+            title: 'schedule 1',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
+            start: formattedDate + 'T18:00:00+09:00',
+            end: formattedDate + 'T18:59:59+09:00'
         },
         {
             id: '6',
-            calendarId: '2',
-            title: '[추가 추가 일정]',
+            calendarId: '3',
+            title: 'schedule 2',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
+            start: formattedDate + 'T18:00:00+09:00',
+            end: formattedDate + 'T18:59:59+09:00'
         },
         {
             id: '7',
-            calendarId: '2',
-            title: '[추가 추가 일정]',
+            calendarId: '1',
+            title: 'schedule 3',
             category: 'time',
             dueDateClass: '',
-            starts: formattedDate + 'T18:00:00+09:00',
-            ends: formattedDate + 'T18:59:59+09:00'
+            start: formattedDate + 'T18:00:00+09:00',
+            end: formattedDate + 'T18:59:59+09:00'
         },
         {
             id: '8',
             calendarId: '2',
-            title: '[종일일정입니다!]',
+            title: 'interview',
             category: 'allday',
             dueDateClass: '',
-            starts: formattedDate + 'T00:00:00+09:00',
-            ends: formattedDate + 'T00:00:00+09:00'
+            start: formattedDate + 'T00:00:00+09:00',
+            end: formattedDate + 'T00:00:00+09:00'
         },
         {
             id: '9',
             calendarId: '2',
-            title: '[추가 추가 일정]',
+            title: 'TalkDay',
             category: 'milestone',
             dueDateClass: '',
-            starts: formattedDate + 'T00:00:00+09:00',
-            ends: formattedDate + 'T00:00:00+09:00'
+            start: formattedDate + 'T00:00:00+09:00',
+            end: formattedDate + 'T00:00:00+09:00'
         },
         {
             id: '10',
-            calendarId: '2',
-            title: '테스트 업무',
+            calendarId: '1',
+            title: 'Publish to npm',
             category: 'task',
             dueDateClass: 'lunch',
-            starts: formattedDate + 'T00:00:00+09:00',
-            ends: formattedDate + 'T00:00:00+09:00'
+            start: formattedDate + 'T00:00:00+09:00',
+            end: formattedDate + 'T00:00:00+09:00'
         },
         {
             id: '11',
-            calendarId: '2',
-            title: '[종일일정입니다2!]',
+            calendarId: '1',
+            title: 'Conference',
             category: 'allday',
             dueDateClass: '',
-            starts: formattedDate + 'T00:00:00+09:00',
-            ends: formattedDate + 'T00:00:00+09:00'
+            start: formattedDate + 'T00:00:00+09:00',
+            end: formattedDate + 'T00:00:00+09:00'
         },
         {
             id: '12',
             calendarId: '2',
-            title: '[종일일정입니다3!]',
+            title: 'All Day Important schedule',
             category: 'allday',
             dueDateClass: '',
-            starts: formattedDate + 'T00:00:00+09:00',
-            ends: formattedDate + 'T00:00:00+09:00'
+            start: formattedDate + 'T00:00:00+09:00',
+            end: formattedDate + 'T00:00:00+09:00'
         }
     ]);
 
     cal.render();
 
-    // 일정 클릭 이벤트 핸들러
+    // event handlers
     cal.on({
         'clickSchedule': function(e) {
-            var model = e.model;
+            var schedule = e.schedule;
             console.log('click', e);
-            if (lastClickScheduleModel) {
-                cal.updateSchedule(lastClickScheduleModel.id, lastClickScheduleModel.calendarId, {isFocused: false});
+            if (lastClickSchedule) {
+                cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {isFocused: false});
             }
-            cal.updateSchedule(model.id, model.calendarId, {isFocused: true});
-            lastClickScheduleModel = model;
+            cal.updateSchedule(schedule.id, schedule.calendarId, {isFocused: true});
+            lastClickSchedule = schedule;
         },
         'clickDayname': function(date) {
             console.log('clickDayname', date);
         },
         'beforeCreateSchedule': function(e) {
-            var message = 'start: ' + new Date(e.starts) +
-                            '\nend: ' + new Date(e.ends) +
+            var message = 'start: ' + new Date(e.start) +
+                            '\nend: ' + new Date(e.end) +
                             '\nallday: ' + e.isAllDay +
                             '\nName of schedule to create:';
             var title = prompt(message);
@@ -208,8 +203,8 @@
                 calendarId: '',
                 title: title,
                 isAllDay: e.isAllDay,
-                starts: e.starts,
-                ends: e.ends,
+                start: e.start,
+                end: e.end,
                 category: e.isAllDay ? 'allday' : 'time',
                 dueDateClass: '',
                 raw: {
@@ -222,9 +217,9 @@
             console.log('select', e);
         },
         'beforeUpdateSchedule': function(e) {
-            cal.updateSchedule(e.model.id, e.model.calendarId, {
-                starts: e.starts,
-                ends: e.ends
+            cal.updateSchedule(e.schedule.id, e.schedule.calendarId, {
+                start: e.start,
+                end: e.end
             });
 
             console.log('update', e);
@@ -298,8 +293,7 @@
         }
     }
 
-
-    // 일정 클릭 이벤트 핸들러
+    // multiple event handler
     cal.on('clickSchedule', function() {
         console.log('click');
     });

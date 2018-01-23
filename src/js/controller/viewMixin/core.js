@@ -127,36 +127,36 @@ var Core = {
 
     /**
      * Filter that get schedule model in supplied date ranges.
-     * @param {Date} starts - start date
-     * @param {Date} ends - end date
+     * @param {Date} start - start date
+     * @param {Date} end - end date
      * @returns {function} schedule filter function
      */
-    getScheduleInDateRangeFilter: function(starts, ends) {
+    getScheduleInDateRangeFilter: function(start, end) {
         return function(model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
 
             // shorthand condition of
             //
-            // (ownStarts >= starts && ownEnds <= ends) ||
-            // (ownStarts < starts && ownEnds >= starts) ||
-            // (ownEnds > ends && ownStarts <= ends)
-            return !(ownEnds < starts || ownStarts > ends);
+            // (ownStarts >= start && ownEnds <= end) ||
+            // (ownStarts < start && ownEnds >= start) ||
+            // (ownEnds > end && ownStarts <= end)
+            return !(ownEnds < start || ownStarts > end);
         };
     },
 
     /**
      * Position each view model for placing into container
-     * @param {Date} starts - start date to render
-     * @param {Date} ends - end date to render
+     * @param {Date} start - start date to render
+     * @param {Date} end - end date to render
      * @param {array} matrices - matrices from controller
      * @param {function} [iteratee] - iteratee function invoke each view models
      */
-    positionViewModels: function(starts, ends, matrices, iteratee) {
+    positionViewModels: function(start, end, matrices, iteratee) {
         var ymdListToRender;
 
         ymdListToRender = util.map(
-            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
+            datetime.range(start, end, datetime.MILLISECONDS_PER_DAY),
             function(date) {
                 return datetime.format(date, 'YYYYMMDD');
             }
@@ -192,28 +192,28 @@ var Core = {
 
     /**
      * Limit start, end date each view model for render properly
-     * @param {Date} starts - start date to render
-     * @param {Date} ends - end date to render
+     * @param {Date} start - start date to render
+     * @param {Date} end - end date to render
      * @param {Collection|ScheduleViewModel} viewModelColl - schedule view
      *  model collection or ScheduleViewModel
      * @returns {ScheduleViewModel} return view model when third parameter is
      *  view model
      */
-    limitRenderRange: function(starts, ends, viewModelColl) {
+    limitRenderRange: function(start, end, viewModelColl) {
         /**
          * Limit render range for view models
          * @param {ScheduleViewModel} viewModel - view model instance
          * @returns {ScheduleViewModel} view model that limited render range
          */
         function limit(viewModel) {
-            if (viewModel.getStarts() < starts) {
+            if (viewModel.getStarts() < start) {
                 viewModel.exceedLeft = true;
-                viewModel.renderStarts = new TZDate(starts.getTime());
+                viewModel.renderStarts = new TZDate(start.getTime());
             }
 
-            if (viewModel.getEnds() > ends) {
+            if (viewModel.getEnds() > end) {
                 viewModel.exceedRight = true;
-                viewModel.renderEnds = new TZDate(ends.getTime());
+                viewModel.renderEnds = new TZDate(end.getTime());
             }
 
             return viewModel;

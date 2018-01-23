@@ -77,21 +77,17 @@ describe('handler/time.creation', function() {
                     (new TZDate(2015, 4, 5, 1, 30).getTime())
                 ],
                 nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime()),
-                triggerEvent: {
-                    type: 'dragend'
-                }
+                triggerEvent: 'dragend'
             };
 
             TimeCreation.prototype._createSchedule.call(mock, scheduleData);
 
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: false,
-                starts: new TZDate(2015, 4, 5, 1),
-                ends: new TZDate(2015, 4, 5, 1, 30),
+                start: new TZDate(2015, 4, 5, 1),
+                end: new TZDate(2015, 4, 5, 1, 30),
                 guide: mock.guide,
-                triggerEvent: {
-                    type: 'dragend'
-                }
+                triggerEventName: 'dragend'
             });
         });
 
@@ -103,21 +99,17 @@ describe('handler/time.creation', function() {
                     }
                 },
                 nearestGridTimeY: (new TZDate(2015, 4, 5, 1, 30).getTime()),
-                triggerEvent: {
-                    type: 'click'
-                }
+                triggerEvent: 'click'
             };
 
             TimeCreation.prototype._createSchedule.call(mock, scheduleData);
 
             expect(mock.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: false,
-                starts: new TZDate(2015, 4, 5, 1, 30),
-                ends: new TZDate(2015, 4, 5, 2),
+                start: new TZDate(2015, 4, 5, 1, 30),
+                end: new TZDate(2015, 4, 5, 2),
                 guide: mock.guide,
-                triggerEvent: {
-                    type: 'click'
-                }
+                triggerEventName: 'click'
             });
 
         });

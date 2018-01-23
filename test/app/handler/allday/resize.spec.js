@@ -30,11 +30,11 @@ describe('handler:AlldayResize', function() {
                 cid: function() {
                     return '30';
                 },
-                starts: new TZDate('2015-05-02T00:00:00+09:00'),
+                start: new TZDate('2015-05-02T00:00:00+09:00'),
                 getStarts: function() {
-                    return mockScheduleInstance.starts;
+                    return mockScheduleInstance.start;
                 },
-                ends: new TZDate('2015-05-03T23:59:59+09:00')
+                end: new TZDate('2015-05-03T23:59:59+09:00')
             };
 
             // 이벤트 데이터 Mock
@@ -50,9 +50,9 @@ describe('handler:AlldayResize', function() {
 
             // 종료일자는 시작일자보다 앞설 수 없다.
             expect(inst.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: mockScheduleInstance,
-                starts: new TZDate('2015-05-02T00:00:00+09:00'),
-                ends: new TZDate('2015-05-02T23:59:59+09:00')
+                schedule: mockScheduleInstance,
+                start: new TZDate('2015-05-02T00:00:00+09:00'),
+                end: new TZDate('2015-05-02T23:59:59+09:00')
             });
         });
 
@@ -60,11 +60,11 @@ describe('handler:AlldayResize', function() {
             // 하루짜리 일정
             mockScheduleInstance = {
                 cid: function() { return '30'; },
-                starts: new TZDate('2015-04-30T00:00:00+09:00'),
+                start: new TZDate('2015-04-30T00:00:00+09:00'),
                 getStarts: function() {
-                    return mockScheduleInstance.starts;
+                    return mockScheduleInstance.start;
                 },
-                ends: new TZDate('2015-04-30T23:59:59+09:00')
+                end: new TZDate('2015-04-30T23:59:59+09:00')
             };
 
             // 이벤트 데이터 Mock
@@ -80,9 +80,9 @@ describe('handler:AlldayResize', function() {
 
             // 하루 증가함
             expect(inst.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: mockScheduleInstance,
-                starts: mockScheduleInstance.getStarts(),
-                ends: new TZDate('2015-05-01T23:59:59+09:00')
+                schedule: mockScheduleInstance,
+                start: mockScheduleInstance.getStarts(),
+                end: new TZDate('2015-05-01T23:59:59+09:00')
             });
         });
     });

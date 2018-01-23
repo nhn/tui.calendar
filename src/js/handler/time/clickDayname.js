@@ -79,7 +79,6 @@ DayNameClick.prototype._onClick = function(clickEvent) {
      * @events DayNameClick#clickDayname
      * @type {object}
      * @property {string} date - click date
-     * @property {MouseEvent} jsEvent - MouseEvent object
      */
     self.fire('clickDayname', {
         date: domutil.getData(blockElement, 'date')

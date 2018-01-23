@@ -69,17 +69,17 @@ describe('handler:AlldayCreation', function() {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
                 xIndex: 2,
-                triggerEvent: {}
+                triggerEvent: 'drag'
             };
 
             proto._createSchedule.call(inst, mockEventData);
 
             expect(inst.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: true,
-                starts: new TZDate('2015-05-02T00:00:00+09:00'),
-                ends: new TZDate('2015-05-03T23:59:59+09:00'),
+                start: new TZDate('2015-05-02T00:00:00+09:00'),
+                end: new TZDate('2015-05-03T23:59:59+09:00'),
                 guide: inst.guide,
-                triggerEvent: {}
+                triggerEventName: 'drag'
             });
         });
 
@@ -91,17 +91,17 @@ describe('handler:AlldayCreation', function() {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 3,
                 xIndex: 1,
-                triggerEvent: {}
+                triggerEvent: 'drag'
             };
 
             proto._createSchedule.call(inst, mockEventData);
 
             expect(inst.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: true,
-                starts: new TZDate('2015-05-02T00:00:00+09:00'),
-                ends: new TZDate('2015-05-04T23:59:59+09:00'),
+                start: new TZDate('2015-05-02T00:00:00+09:00'),
+                end: new TZDate('2015-05-04T23:59:59+09:00'),
                 guide: inst.guide,
-                triggerEvent: {}
+                triggerEventName: 'drag'
             });
         });
     });

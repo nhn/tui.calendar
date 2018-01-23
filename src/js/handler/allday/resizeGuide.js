@@ -90,13 +90,13 @@ AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventDa
         viewOptions = this.alldayResize.alldayView.options,
         startDate = datetime.start(
             new TZDate(Math.max(
-                model.starts.getTime(),
+                model.start.getTime(),
                 datetime.parse(viewOptions.renderStartDate).getTime()
             ))
         ),
         endDate = datetime.end(
             new TZDate(Math.min(
-                model.ends.getTime(),
+                model.end.getTime(),
                 datetime.parse(viewOptions.renderEndDate).getTime()
             ))
         ),

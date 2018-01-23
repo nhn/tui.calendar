@@ -19,10 +19,10 @@ describe('Calendar', function() {
         spyOn(controller, 'createSchedules');
         spyOn(Calendar.prototype, '_toggleViewSchedule');
 
-        inst = Calendar({
+        inst = new Calendar(document.getElementById('container'), {
             defaultView: 'week',
             controller: controller
-        }, document.getElementById('container'));
+        });
 
         spyOn(inst, 'render');
     });

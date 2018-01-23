@@ -124,21 +124,21 @@ describe('Base.Week', function() {
         });
 
         it('by YMD', function() {
-            var starts = new Date('2015/04/30'),
-                ends = new Date('2015/05/02');
+            var start = new Date('2015/04/30'),
+                end = new Date('2015/05/02');
 
-            var result = ctrl.findByDateRange(starts, ends);
+            var result = ctrl.findByDateRange(start, end);
 
             // 5/1일의 충돌 블럭은 총 5개이다.
             expect(result.time['20150501'].length).toBe(5);
         });
 
         it('Can add more AND clause filter function by third parameter', function() {
-            var starts = new Date('2015/04/30'),
-                ends = new Date('2015/05/02');
+            var start = new Date('2015/04/30'),
+                end = new Date('2015/05/02');
 
             // title이 J인 일정은 1개 뿐이므로
-            var result = ctrl.findByDateRange(starts, ends, function(model) {return model.title === 'J';});
+            var result = ctrl.findByDateRange(start, end, function(model) {return model.title === 'J';});
 
             // 시간별 일정 그룹 내 충돌 블럭은 1개
             expect(result.time['20150501'].length).toBe(1);

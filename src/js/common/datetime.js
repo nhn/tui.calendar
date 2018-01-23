@@ -427,7 +427,7 @@ datetime = {
      */
     arr2dCalendar: function(month, options, iteratee) {
         var weekArr,
-            starts, ends,
+            start, end,
             startIndex, endIndex,
             totalDate, afterDates,
             cursor, week,
@@ -437,30 +437,30 @@ datetime = {
             visibleWeeksCount = options.visibleWeeksCount;
 
         if (visibleWeeksCount) {
-            starts = new TZDate(month);
-            ends = dw(new TZDate(month));
-            ends.addDate(7 * (visibleWeeksCount - 1));
-            ends = ends.d;
+            start = new TZDate(month);
+            end = dw(new TZDate(month));
+            end.addDate(7 * (visibleWeeksCount - 1));
+            end = end.d;
         } else {
-            starts = datetime.startDateOfMonth(month);
-            ends = datetime.endDateOfMonth(month);
+            start = datetime.startDateOfMonth(month);
+            end = datetime.endDateOfMonth(month);
         }
 
         // create day number array by startDayOfWeek number
         // 4 -> [4, 5, 6, 0, 1, 2, 3]
         // 2 -> [2, 3, 4, 5, 6, 0, 1]
         weekArr = util.range(startDayOfWeek, 7).concat(util.range(7)).slice(0, 7);
-        startIndex = util.inArray(starts.getDay(), weekArr);
-        endIndex = util.inArray(ends.getDay(), weekArr);
+        startIndex = util.inArray(start.getDay(), weekArr);
+        endIndex = util.inArray(end.getDay(), weekArr);
         // free dates after last date of this month
         afterDates = 7 - (endIndex + 1);
 
         if (visibleWeeksCount) {
             totalDate = 7 * visibleWeeksCount;
         } else {
-            totalDate = isAlways6Week ? (7 * 6) : (startIndex + ends.getDate() + afterDates);
+            totalDate = isAlways6Week ? (7 * 6) : (startIndex + end.getDate() + afterDates);
         }
-        cursor = new TZDate(new TZDate(starts).setDate(starts.getDate() - startIndex));
+        cursor = new TZDate(new TZDate(start).setDate(start.getDate() - startIndex));
         // iteratee all dates to render
         util.forEachArray(util.range(totalDate), function(i) {
             var date;

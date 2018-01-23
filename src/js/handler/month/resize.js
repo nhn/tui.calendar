@@ -70,20 +70,20 @@ MonthResize.prototype.destroy = function() {
 MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // 일정의 시작 일자를 변경할 순 없음.
     // 종료시간만 변경 가능.
-    var newEnds = datetime.end(new TZDate(Number(scheduleCache.ends))),
-        model = scheduleCache.model;
+    var newEnd = datetime.end(new TZDate(Number(scheduleCache.end))),
+        schedule = scheduleCache.schedule;
 
     /**
      * @event MonthResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {Date} start - start time to update
+     * @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
-        model: model,
-        starts: new TZDate(Number(model.getStarts())),
-        ends: newEnds
+        schedule: schedule,
+        start: new TZDate(Number(schedule.getStarts())),
+        end: newEnd
     });
 };
 
@@ -94,7 +94,7 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
  */
 MonthResize.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
-        modelID, model,
+        modelID, schedule,
         scheduleData;
 
     if (!domutil.hasClass(target, config.classname('weekday-resize-handle'))) {
@@ -108,7 +108,7 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
     }
 
     modelID = domutil.getData(target, 'id');
-    model = this.baseController.schedules.items[modelID];
+    schedule = this.baseController.schedules.items[modelID];
 
     this.dragHandler.on({
         drag: this._onDrag,
@@ -118,12 +118,12 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
     this.getScheduleData = getMousePosData(this.monthView);
     scheduleData = this.getScheduleData(dragStartEvent.originEvent);
     scheduleData.target = target;
-    scheduleData.model = model;
+    scheduleData.model = schedule;
 
     this._cache = {
-        model: model,
+        schedule: schedule,
         target: target,
-        starts: new TZDate(Number(scheduleData.date))
+        start: new TZDate(Number(scheduleData.date))
     };
 
     /**
@@ -185,7 +185,7 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        cache.ends = new TZDate(Number(scheduleData.date));
+        cache.end = new TZDate(Number(scheduleData.date));
         this._updateSchedule(cache);
     }
 

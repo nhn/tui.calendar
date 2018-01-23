@@ -40,10 +40,10 @@ describe('Base.Month', function() {
         });
 
         it('get schedules instance in month', function() {
-            var starts = new TZDate(2015, 10, 1),
-                ends = new TZDate(2015, 10, 30);
+            var start = new TZDate(2015, 10, 1),
+                end = new TZDate(2015, 10, 30);
 
-            actual = controller.findByDateRange(starts, ends);
+            actual = controller.findByDateRange(start, end);
 /**
 * |15        |16        |17        |18        |19        |20        |21        |
 * |<<<<[김동우] 휴가>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>|

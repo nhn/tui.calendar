@@ -69,10 +69,10 @@ MonthMove.prototype.destroy = function() {
  *  session.
  */
 MonthMove.prototype.updateSchedule = function(scheduleCache) {
-    var model = scheduleCache.model;
-    var duration = model.duration().getTime();
-    var startDateRaw = datetime.raw(model.starts);
-    var dragEndTime = Number(scheduleCache.ends);
+    var schedule = scheduleCache.model;
+    var duration = schedule.duration().getTime();
+    var startDateRaw = datetime.raw(schedule.start);
+    var dragEndTime = Number(scheduleCache.end);
     var newStartDate = new TZDate(dragEndTime);
 
     newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
@@ -80,14 +80,14 @@ MonthMove.prototype.updateSchedule = function(scheduleCache) {
     /**
      * @event MonthMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {Date} start - start time to update
+     * @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
-        model: model,
-        starts: newStartDate,
-        ends: new TZDate(newStartDate.getTime() + duration)
+        schedule: schedule,
+        start: newStartDate,
+        end: new TZDate(newStartDate.getTime() + duration)
     });
 };
 
@@ -180,7 +180,7 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         model: model,
         target: target,
-        starts: new TZDate(Number(scheduleData.date))
+        start: new TZDate(Number(scheduleData.date))
     };
 
     /**
@@ -246,7 +246,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        cache.ends = new TZDate(Number(scheduleData.date));
+        cache.end = new TZDate(Number(scheduleData.date));
         this.updateSchedule(cache);
     }
 

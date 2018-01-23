@@ -26,7 +26,7 @@ function findGridTarget(moreTarget, day) {
 function getViewModelForMoreLayer(date, target, schedules) {
     schedules.each(function(schedule) {
         var model = schedule.model;
-        schedule.hasMultiDates = !datetime.isSameDate(model.starts, model.ends);
+        schedule.hasMultiDates = !datetime.isSameDate(model.start, model.end);
     });
 
     return {

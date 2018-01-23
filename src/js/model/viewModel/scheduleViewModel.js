@@ -68,7 +68,7 @@ function ScheduleViewModel(schedule) {
     /**
      * represent render start date used at rendering.
      *
-     * if set null then use model's 'starts' property.
+     * if set null then use model's 'start' property.
      * @type {TZDate}
      */
     this.renderStarts = null;
@@ -82,7 +82,7 @@ function ScheduleViewModel(schedule) {
     /**
      * represent render end date used at rendering.
      *
-     * if set null then use model's 'ends' property.
+     * if set null then use model's 'end' property.
      * @type {TZDate}
      */
     this.renderEnds = null;
@@ -115,7 +115,7 @@ ScheduleViewModel.create = function(schedule) {
 /**
  * return renderStarts property to render properly when specific schedule that exceed rendering date range.
  *
- * if renderStarts is not set. return model's starts property.
+ * if renderStarts is not set. return model's start property.
  * @override
  * @returns {Date} render start date.
  */
@@ -124,13 +124,13 @@ ScheduleViewModel.prototype.getStarts = function() {
         return this.renderStarts;
     }
 
-    return this.model.starts;
+    return this.model.start;
 };
 
 /**
  * return renderStarts property to render properly when specific schedule that exceed rendering date range.
  *
- * if renderEnds is not set. return model's ends property.
+ * if renderEnds is not set. return model's end property.
  * @override
  * @returns {Date} render end date.
  */
@@ -139,7 +139,7 @@ ScheduleViewModel.prototype.getEnds = function() {
         return this.renderEnds;
     }
 
-    return this.model.ends;
+    return this.model.end;
 };
 
 /**
@@ -173,12 +173,12 @@ ScheduleViewModel.prototype.duration = function() {
 ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
-        starts = viewModel.getStarts(),
-        ends = viewModel.getEnds();
+        start = viewModel.getStarts(),
+        end = viewModel.getEnds();
 
-    if ((starts > ownStarts && starts < ownEnds) ||
-        (ends > ownStarts && ends < ownEnds) ||
-        (starts <= ownStarts && ends >= ownEnds)) {
+    if ((start > ownStarts && start < ownEnds) ||
+        (end > ownStarts && end < ownEnds) ||
+        (start <= ownStarts && end >= ownEnds)) {
         return true;
     }
     return false;

@@ -88,16 +88,18 @@ MonthCreation.prototype._createSchedule = function(eventData) {
     /**
      * @event {MonthCreation#beforeCreateSchedule}
      * @type {object}
-     * @property {boolean} isAllDay - whether creating schedule is allday?
-     * @property {Date} starts - select start date
-     * @property {Date] ends - select end date
+     * @property {boolean} isAllDay - whether schedule is fired in allday view area?
+     * @property {Date} start - select start time
+     * @property {Date} end - select end time
+     * @property {TimeCreationGuide} guide - TimeCreationGuide instance
+     * @property {string} triggerEventName - event name
      */
     this.fire('beforeCreateSchedule', {
         isAllDay: eventData.isAllDay,
-        starts: eventData.starts,
-        ends: eventData.ends,
+        start: eventData.start,
+        end: eventData.end,
         guide: this.guide.guide,
-        triggerEvent: eventData.triggerEvent
+        triggerEventName: eventData.triggerEvent
     });
 };
 
@@ -109,7 +111,7 @@ MonthCreation.prototype._createSchedule = function(eventData) {
 MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     var eventData;
 
-    if (!isElementWeekdayEvent(dragStartEvent.target)) {
+    if (!isElementWeekdaySchedule(dragStartEvent.target)) {
         return;
     }
 
@@ -123,7 +125,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     eventData = this.getScheduleData(dragStartEvent.originEvent);
 
     this._cache = {
-        starts: new TZDate(Number(eventData.date))
+        start: new TZDate(Number(eventData.date))
     };
 
     /**
@@ -186,16 +188,16 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.ends = new TZDate(Number(eventData.date));
+        cache.end = new TZDate(Number(eventData.date));
         cache.isAllDay = true;
 
         times = [
-            Number(cache.starts),
-            Number(cache.ends)
+            Number(cache.start),
+            Number(cache.end)
         ].sort(array.compare.num.asc);
 
-        cache.starts = new TZDate(times[0]);
-        cache.ends = datetime.end(new TZDate(times[1]));
+        cache.start = new TZDate(times[0]);
+        cache.end = datetime.end(new TZDate(times[1]));
 
         this._createSchedule(cache);
     }
@@ -231,8 +233,8 @@ MonthCreation.prototype._onDblClick = function(e) {
     range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 
     this._createSchedule({
-        starts: range.starts,
-        ends: range.ends,
+        start: range.start,
+        end: range.end,
         isAllDay: false,
         triggerEvent: eventData.triggerEvent
     });
@@ -263,8 +265,8 @@ MonthCreation.prototype._onClick = function(e) {
             range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 
             self._createSchedule({
-                starts: range.starts,
-                ends: range.ends,
+                start: range.start,
+                end: range.end,
                 isAllDay: false,
                 triggerEvent: eventData.triggerEvent
             });
@@ -275,11 +277,11 @@ MonthCreation.prototype._onClick = function(e) {
 
 /**
  * Adjust time to half hour or hour o'clock
- * @param {TZDate} starts - start time
- * @param {TZDate} ends - end time
- * @returns {Object} starts and ends
+ * @param {TZDate} start - start time
+ * @param {TZDate} end - end time
+ * @returns {Object} start and end
  */
-function adjustStartAndEndTime(starts, ends) {
+function adjustStartAndEndTime(start, end) {
     var now = new TZDate();
     var hours = now.getHours();
     var minutes = now.getMinutes();
@@ -289,12 +291,12 @@ function adjustStartAndEndTime(starts, ends) {
         hours += 1;
         minutes = 0;
     }
-    starts.setHours(hours, minutes, 0, 0);
-    ends.setHours(hours + 1, minutes, 0, 0);
+    start.setHours(hours, minutes, 0, 0);
+    end.setHours(hours + 1, minutes, 0, 0);
 
     return {
-        starts: starts,
-        ends: ends
+        start: start,
+        end: end
     };
 }
 

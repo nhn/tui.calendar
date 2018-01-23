@@ -118,65 +118,65 @@ Base.prototype.createSchedules = function(dataList, silent) {
 /**
  * Update an schedule.
  * @emits Base#updateSchedule
- * @param {Schedule} Schedule - schedule instance to update
+ * @param {Schedule} schedule - schedule instance to update
  * @param {object} options updated object data.
  * @returns {Schedule} updated schedule instance
  */
-Base.prototype.updateSchedule = function(Schedule, options) {
-    var starts = options.starts || Schedule.starts;
-    var ends = options.ends || Schedule.ends;
+Base.prototype.updateSchedule = function(schedule, options) {
+    var start = options.start || schedule.start;
+    var end = options.end || schedule.end;
 
     options = options || {};
 
     if (options.title) {
-        Schedule.set('title', options.title);
+        schedule.set('title', options.title);
     }
 
     if (options.isAllDay) {
-        Schedule.set('isAllDay', options.isAllDay);
+        schedule.set('isAllDay', options.isAllDay);
     }
 
-    if (options.starts || options.ends) {
-        if (Schedule.isAllDay) {
-            Schedule.setAllDayPeriod(starts, ends);
+    if (options.start || options.end) {
+        if (schedule.isAllDay) {
+            schedule.setAllDayPeriod(start, end);
         } else {
-            Schedule.setTimePeriod(starts, ends);
+            schedule.setTimePeriod(start, end);
         }
     }
 
     if (options.color) {
-        Schedule.set('color', options.color);
+        schedule.set('color', options.color);
     }
 
     if (options.bgColor) {
-        Schedule.set('bgColor', options.bgColor);
+        schedule.set('bgColor', options.bgColor);
     }
 
     if (options.borderColor) {
-        Schedule.set('borderColor', options.borderColor);
+        schedule.set('borderColor', options.borderColor);
     }
 
     if (options.origin) {
-        Schedule.set('origin', options.origin);
+        schedule.set('origin', options.origin);
     }
 
     if (!util.isUndefined(options.isPending)) {
-        Schedule.set('isPending', options.isPending);
+        schedule.set('isPending', options.isPending);
     }
 
     if (!util.isUndefined(options.isFocused)) {
-        Schedule.set('isFocused', options.isFocused);
+        schedule.set('isFocused', options.isFocused);
     }
 
-    this._removeFromMatrix(Schedule);
-    this._addToMatrix(Schedule);
+    this._removeFromMatrix(schedule);
+    this._addToMatrix(schedule);
 
     /**
      * @event Base#updateSchedule
      */
     this.fire('updateSchedule');
 
-    return Schedule;
+    return schedule;
 };
 
 /**
@@ -247,15 +247,15 @@ Base.prototype.addSchedule = function(schedule, silent) {
 
 /**
  * split schedule model by ymd.
- * @param {Date} starts - start date
- * @param {Date} ends - end date
+ * @param {Date} start - start date
+ * @param {Date} end - end date
  * @param {Collection} scheduleCollection - collection of schedule model.
  * @returns {object.<string, Collection>} splitted schedule model collections.
  */
-Base.prototype.splitScheduleByDateRange = function(starts, ends, scheduleCollection) {
+Base.prototype.splitScheduleByDateRange = function(start, end, scheduleCollection) {
     var range = datetime.range(
-            datetime.start(starts),
-            datetime.start(ends),
+            datetime.start(start),
+            datetime.start(end),
             datetime.MILLISECONDS_PER_DAY
         ),
         ownMatrix = this.dateMatrix,
@@ -284,14 +284,14 @@ Base.prototype.splitScheduleByDateRange = function(starts, ends, scheduleCollect
  * Return schedules in supplied date range.
  *
  * available only YMD.
- * @param {Date} starts start date.
- * @param {Date} ends end date.
+ * @param {Date} start start date.
+ * @param {Date} end end date.
  * @returns {object.<string, Collection>} schedule collection grouped by dates.
  */
-Base.prototype.findByDateRange = function(starts, ends) {
+Base.prototype.findByDateRange = function(start, end) {
     var range = datetime.range(
-            datetime.start(starts),
-            datetime.start(ends),
+            datetime.start(start),
+            datetime.start(end),
             datetime.MILLISECONDS_PER_DAY
         ),
         ownSchedules = this.schedules.items,

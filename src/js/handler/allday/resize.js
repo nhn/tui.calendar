@@ -178,24 +178,24 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
  * @param {object} scheduleData - schedule data from AlldayResize handler.
  */
 AlldayResize.prototype._updateSchedule = function(scheduleData) {
-    var model = scheduleData.targetModel,
+    var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-        newEnds = new TZDate(model.ends.getTime());
+        newEnds = new TZDate(schedule.end.getTime());
 
     newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
-    newEnds = new TZDate(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
+    newEnds = new TZDate(Math.max(datetime.end(schedule.start).getTime(), newEnds.getTime()));
 
     /**
      * @event AlldayResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {date} start - start time to update
+     * @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
-        model: model,
-        starts: model.getStarts(),
-        ends: newEnds
+        schedule: schedule,
+        start: schedule.getStarts(),
+        end: newEnds
     });
 };
 

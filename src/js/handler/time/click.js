@@ -85,16 +85,16 @@ TimeClick.prototype._onClick = function(clickEvent) {
         return;
     }
 
-    schedulesCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
+    schedulesCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
         /**
          * @events TimeClick#clickSchedule
          * @type {object}
-         * @property {Schedule} model - model instance
-         * @property {MouseEvent} jsEvent - MouseEvent object
+         * @property {Schedule} schedule - schedule instance
+         * @property {MouseEvent} event - MouseEvent object
          */
         self.fire('clickSchedule', {
-            model: model,
-            jsEvent: clickEvent.originEvent
+            schedule: schedule,
+            event: clickEvent.originEvent
         });
     });
 };

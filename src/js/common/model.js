@@ -51,24 +51,24 @@ model = {
         /**
          * check supplied fields are valid dates and valid date ranges.
          * @param {object} instance model instance.
-         * @param {Date[]} fields array of date range (starts, ends)
+         * @param {Date[]} fields array of date range (start, end)
          * @returns {boolean} is valid date range?
          */
         dateRange: function(instance, fields) {
-            var starts, ends;
+            var start, end;
 
             if (!util.isExisty(instance) || fields.length !== 2) {
                 return true;
             }
 
-            starts = new TZDate(instance[fields[0]]);
-            ends = new TZDate(instance[fields[1]]);
+            start = new TZDate(instance[fields[0]]);
+            end = new TZDate(instance[fields[1]]);
 
-            if (!datetime.isValid(starts) || !datetime.isValid(ends)) {
+            if (!datetime.isValid(start) || !datetime.isValid(end)) {
                 return false;
             }
 
-            if (datetime.compare(starts, ends) === 1) {
+            if (datetime.compare(start, end) === 1) {
                 return false;
             }
 

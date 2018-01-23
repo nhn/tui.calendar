@@ -151,7 +151,7 @@ describe('Base.Core', function() {
         it('filter schedules properly.', function() {
             var filter, d1, d2;
 
-            //                     starts ------------- ends
+            //                     start ------------- end
             // A ownStart - ownEnd
             // B ownStart -------- ownEnd
             // C ownStart ------------------ ownEnd

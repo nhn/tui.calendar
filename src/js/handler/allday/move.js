@@ -180,10 +180,10 @@ AlldayMove.prototype._onDrag = function(dragEventData) {
  * @param {object} scheduleData - schedule data from AlldayMove handler module.
  */
 AlldayMove.prototype._updateSchedule = function(scheduleData) {
-    var model = scheduleData.targetModel,
+    var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-        newStarts = new TZDate(model.starts.getTime()),
-        newEnds = new TZDate(model.ends.getTime());
+        newStarts = new TZDate(schedule.start.getTime()),
+        newEnds = new TZDate(schedule.end.getTime());
 
     newStarts = new TZDate(newStarts.setDate(newStarts.getDate() + dateOffset));
     newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
@@ -191,14 +191,14 @@ AlldayMove.prototype._updateSchedule = function(scheduleData) {
     /**
      * @event AlldayMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {Date} start - start time to update
+     * @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
-        model: model,
-        starts: newStarts,
-        ends: newEnds
+        schedule: schedule,
+        start: newStarts,
+        end: newEnds
     });
 };
 

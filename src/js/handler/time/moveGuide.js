@@ -209,8 +209,8 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.min(top, bottomLimit);
 
     // update time
-    this._model.starts = new TZDate(this._model.getStarts().getTime() + timeDiff);
-    this._model.ends = new TZDate(this._model.getEnds().getTime() + timeDiff);
+    this._model.start = new TZDate(this._model.getStarts().getTime() + timeDiff);
+    this._model.end = new TZDate(this._model.getEnds().getTime() + timeDiff);
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model);

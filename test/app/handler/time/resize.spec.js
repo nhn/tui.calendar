@@ -50,8 +50,8 @@ describe('TimeResize', function() {
                         getEnds: function() {
                             return new TZDate(2015, 4, 1, 10, 30);
                         },
-                        starts: new TZDate(2015, 4, 1, 9, 30),
-                        ends: new TZDate(2015, 4, 1, 10, 30),
+                        start: new TZDate(2015, 4, 1, 9, 30),
+                        end: new TZDate(2015, 4, 1, 10, 30),
                         duration: function() {
                             return new TZDate(datetime.millisecondsFrom('hour', 1));
                         }
@@ -79,9 +79,9 @@ describe('TimeResize', function() {
             TimeResize.prototype._updateSchedule.call(mockInstance, scheduleData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: baseControllerMock.schedules.items[20],
-                starts: new TZDate(2015, 4, 1, 9, 30),
-                ends: new TZDate(2015, 4, 1, 11)
+                schedule: baseControllerMock.schedules.items[20],
+                start: new TZDate(2015, 4, 1, 9, 30),
+                end: new TZDate(2015, 4, 1, 11)
             });
         });
 
@@ -100,13 +100,13 @@ describe('TimeResize', function() {
             TimeResize.prototype._updateSchedule.call(mockInstance, scheduleData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: baseControllerMock.schedules.items[20],
-                starts: new TZDate(2015, 4, 1, 9, 30),
-                ends: new TZDate(2015, 4, 1, 10)
+                schedule: baseControllerMock.schedules.items[20],
+                start: new TZDate(2015, 4, 1, 9, 30),
+                end: new TZDate(2015, 4, 1, 10)
             });
         });
 
-        it('can\' update ends exceed 23:59:59:999', function() {
+        it('can\' update end exceed 23:59:59:999', function() {
             var twoDay = datetime.millisecondsFrom('hour', 48);
             var scheduleData = {
                 targetModelID: 20,
@@ -120,9 +120,9 @@ describe('TimeResize', function() {
             TimeResize.prototype._updateSchedule.call(mockInstance, scheduleData);
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
-                model: baseControllerMock.schedules.items[20],
-                starts: new TZDate(2015, 4, 1, 9, 30),
-                ends: new TZDate(2015, 4, 1, 23, 59, 59)
+                schedule: baseControllerMock.schedules.items[20],
+                start: new TZDate(2015, 4, 1, 9, 30),
+                end: new TZDate(2015, 4, 1, 23, 59, 59)
             });
         });
 

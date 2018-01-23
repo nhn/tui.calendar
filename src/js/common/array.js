@@ -218,7 +218,7 @@ function stringDESCIgnoreCase(_a, _b) {
  * Compare schedule models for sort.
  *
  * 1. all day schedule first.
- * 2. early starts.
+ * 2. early start.
  * 3. longest duration.
  * 4. early created.
  * @param {Schedule|ScheduleViewModel} a The object schedule instance.

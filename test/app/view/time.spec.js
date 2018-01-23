@@ -16,8 +16,8 @@ describe('View/Time', function() {
 
     it('getScheduleViewBound()', function() {
         var schedule = Schedule.create({
-            starts: '2015-05-01T09:00:00+09:00',
-            ends: '2015-05-01T10:00:00+09:00'
+            start: '2015-05-01T09:00:00+09:00',
+            end: '2015-05-01T10:00:00+09:00'
         });
         var mock = {
             options: {
