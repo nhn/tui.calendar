@@ -183,9 +183,9 @@ function Calendar(container, options) {
     }, util.pick(this.options, 'week') || {});
 
     this.options.month = util.extend({
-        scheduleFilter: function(model) {
-            return Boolean(model.visible) &&
-                (model.category === 'allday' || model.category === 'time');
+        scheduleFilter: function(schedule) {
+            return Boolean(schedule.isVisible) &&
+                (schedule.category === 'allday' || schedule.category === 'time');
         }
     }, util.pick(options, 'month') || {});
 

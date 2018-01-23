@@ -203,13 +203,13 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
 MonthMove.prototype._onDrag = function(dragEvent) {
     var scheduleData;
 
-    if (!this.getEventData) {
+    if (!this.getScheduleData) {
         return;
     }
 
     scheduleData = util.extend({
         originEvent: dragEvent.originEvent
-    }, this.getEventData(dragEvent.originEvent));
+    }, this.getScheduleData(dragEvent.originEvent));
 
     if (!scheduleData) {
         return;
