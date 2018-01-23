@@ -137,7 +137,7 @@ MonthGuide.prototype._getGuideElement = function(y) {
         guide = this._createGuideElement();
 
         container = domutil.find(
-            config.classname('.weekday-events'),
+            config.classname('.weekday-schedules'),
             weekdayView.container
         );
 
@@ -209,7 +209,7 @@ MonthGuide.prototype._getLimitedCoord = function(coord, min, max) {
 
 /**
  * Prepare guide element modification
- * @param {object} dragStartEvent - dragStart event data from *guide
+ * @param {object} dragStartEvent - dragStart schedule data from *guide
  */
 MonthGuide.prototype.start = function(dragStartEvent) {
     var opt = this.options,
@@ -244,8 +244,8 @@ MonthGuide.prototype.start = function(dragStartEvent) {
  * @property {HTMLElement} guide - guide element
  * @property {number} left - left style value
  * @property {number} width - width style value
- * @property {boolean} [exceedL=false] - whether event is exceeded past weeks?
- * @property {boolean} [exceedR=false] - whether event is exceeded future weeks?
+ * @property {boolean} [exceedL=false] - whether schedule is exceeded past weeks?
+ * @property {boolean} [exceedR=false] - whether schedule is exceeded future weeks?
  */
 
 /**

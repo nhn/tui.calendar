@@ -1,7 +1,8 @@
 var Weekday = require('view/weekday');
 var WeekdayInMonth = require('view/month/weekdayInMonth');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
+var datetime = require('common/datetime');
 
 describe('view:WeekdayInMonth', function() {
     var mockInst;
@@ -13,15 +14,15 @@ describe('view:WeekdayInMonth', function() {
             mockGetViewBound = jasmine.createSpy('getViewBound');
         });
 
-        it('should 2 when containerHeight 60, event block height is 20.', function() {
+        it('should 2 when containerHeight 60, schedule block height is 20.', function() {
 
             mockGetViewBound.and.returnValue({height: 60});
             mockInst = {
                 getViewBound: mockGetViewBound,
                 options: {
                     heightPercent: 100,
-                    eventHeight: 18,
-                    eventGutter: 2
+                    scheduleHeight: 18,
+                    scheduleGutter: 2
                 }
             };
 
@@ -34,8 +35,8 @@ describe('view:WeekdayInMonth', function() {
                 getViewBound: mockGetViewBound,
                 options: {
                     heightPercent: 100,
-                    eventHeight: 18,
-                    eventGutter: 2
+                    scheduleHeight: 18,
+                    scheduleGutter: 2
                 }
             };
 
@@ -45,12 +46,12 @@ describe('view:WeekdayInMonth', function() {
     });
 
     describe('_getSkipHelper()', function() {
-        it('should return helper that counting event period each date.', function() {
-            var viewModel = CalEventViewModel.create(CalEvent.create({
+        it('should return helper that counting schedule period each date.', function() {
+            var viewModel = ScheduleViewModel.create(Schedule.create({
                     title: 'A',
                     isAllDay: true,
-                    starts: '2015-05-01T00:00:00',
-                    ends: '2015-05-03T23:59:59'
+                    start: '2015-05-01T00:00:00',
+                    end: '2015-05-03T23:59:59'
                 })),
                 cache = {},
                 helper = WeekdayInMonth.prototype._getSkipHelper(cache);
@@ -78,7 +79,11 @@ describe('view:WeekdayInMonth', function() {
                 '20150502': 2,
                 '20150503': 4,
                 '20150504': 4
-            }
+            };
+            var grids = datetime.getGridLeftAndWidth(7, false, 0);
+            var viewModel = {
+                dates: grids
+            };
 
             spy.and.returnValue([
                 new Date('2015-05-01T00:00:00+09:00'),
@@ -89,24 +94,28 @@ describe('view:WeekdayInMonth', function() {
                 new Date('2015-05-06T00:00:00+09:00')
             ]);
 
-            expect(WeekdayInMonth.prototype._getSkipLabelViewModel(skipData))
+            expect(WeekdayInMonth.prototype._getSkipLabelViewModel(skipData, viewModel))
                 .toEqual([
                     {
-                        left: 0,
+                        left: grids[0].left,
                         skipped: 1,
-                        ymd: '20150501'
+                        ymd: '20150501',
+                        width: jasmine.any(Number)
                     }, {
-                        left: 1,
+                        left: grids[1].left,
                         skipped: 2,
-                        ymd: '20150502'
+                        ymd: '20150502',
+                        width: jasmine.any(Number)
                     }, {
-                        left: 2,
+                        left: grids[2].left,
                         skipped: 4,
-                        ymd: '20150503'
+                        ymd: '20150503',
+                        width: jasmine.any(Number)
                     }, {
-                        left: 3,
+                        left: grids[3].left,
                         skipped: 4,
-                        ymd: '20150504'
+                        ymd: '20150504',
+                        width: jasmine.any(Number)
                     }
                 ]);
         });

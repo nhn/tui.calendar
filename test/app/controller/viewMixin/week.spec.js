@@ -2,8 +2,8 @@
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 var datetime = require('common/datetime');
 
 describe('Base.Week', function() {
@@ -13,15 +13,15 @@ describe('Base.Week', function() {
     var base,
         ctrl,
         mockData,
-        eventList;
+        scheduleList;
 
     beforeEach(function() {
         base = ControllerFactory(['Week']);
         ctrl = base.Week;
-        mockData = fixture.load('event_set_string3.json');
-        eventList = util.map(mockData, function(data) {
-            return CalEvent.create(data);
-        }).sort(array.compare.event.asc);
+        mockData = fixture.load('schedule_set_string3.json');
+        scheduleList = util.map(mockData, function(data) {
+            return Schedule.create(data);
+        }).sort(array.compare.schedule.asc);
     });
 
     afterEach(function() {
@@ -101,15 +101,15 @@ describe('Base.Week', function() {
     });
 
     describe('findByDateRange', function() {
-        var eventList,
+        var scheduleList,
             idList;
 
         beforeEach(function() {
-            eventList = [];
+            scheduleList = [];
             idList = [];
 
             util.forEach(mockData, function(data) {
-                base.createEvent(data);
+                base.createSchedule(data);
             });
 
             /*
@@ -124,21 +124,21 @@ describe('Base.Week', function() {
         });
 
         it('by YMD', function() {
-            var starts = new Date('2015/04/30'),
-                ends = new Date('2015/05/02');
+            var start = new Date('2015/04/30'),
+                end = new Date('2015/05/02');
 
-            var result = ctrl.findByDateRange(starts, ends);
+            var result = ctrl.findByDateRange(start, end);
 
             // 5/1일의 충돌 블럭은 총 5개이다.
             expect(result.time['20150501'].length).toBe(5);
         });
 
         it('Can add more AND clause filter function by third parameter', function() {
-            var starts = new Date('2015/04/30'),
-                ends = new Date('2015/05/02');
+            var start = new Date('2015/04/30'),
+                end = new Date('2015/05/02');
 
             // title이 J인 일정은 1개 뿐이므로
-            var result = ctrl.findByDateRange(starts, ends, function(model) {return model.title === 'J';});
+            var result = ctrl.findByDateRange(start, end, function(model) {return model.title === 'J';});
 
             // 시간별 일정 그룹 내 충돌 블럭은 1개
             expect(result.time['20150501'].length).toBe(1);

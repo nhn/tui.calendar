@@ -78,23 +78,23 @@ TimeClick.prototype._onClick = function(clickEvent) {
     var self = this,
         target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, config.classname('.time-date-event-block')),
-        eventCollection = this.baseController.events;
+        blockElement = domutil.closest(target, config.classname('.time-date-schedule-block')),
+        schedulesCollection = this.baseController.schedules;
 
     if (!timeView || !blockElement) {
         return;
     }
 
-    eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
+    schedulesCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
         /**
-         * @events TimeClick#clickEvent
+         * @events TimeClick#clickSchedule
          * @type {object}
-         * @property {CalEvent} model - model instance
-         * @property {MouseEvent} jsEvent - MouseEvent object
+         * @property {Schedule} schedule - schedule instance
+         * @property {MouseEvent} event - MouseEvent object
          */
-        self.fire('clickEvent', {
-            model: model,
-            jsEvent: clickEvent.originEvent
+        self.fire('clickSchedule', {
+            schedule: schedule,
+            event: clickEvent.originEvent
         });
     });
 };

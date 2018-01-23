@@ -55,7 +55,7 @@
         height: 24px
         border-bottom: 1px dotted #f9f9f9
 
-    .events
+    .schedules
         position: absolute
         wh(100%, 100%)
         pos(0, 0)
@@ -114,29 +114,29 @@
             border-right: none
             margin: 0
             // last creation guide element
-            .event,
+            .schedule,
             .guide-creation
                 left: 0px
 
-    .date-event-block-wrap
+    .date-schedule-block-wrap
         position: relative
         margin-right: 10px
         height: 100%
 
-    .date-event-block
+    .date-schedule-block
         position: absolute
         right: 0px
 
-    .date-event-block-pending
+    .date-schedule-block-pending
         opacity: 0.7
 
-    .date-event-block-dragging-dim
+    .date-schedule-block-dragging-dim
         opacity: 0.4
 
-    .date-event-block-focused
+    .date-schedule-block-focused
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2)
 
-    .event
+    .schedule
         position: relative
         left: 1px
         height: 100%
@@ -168,7 +168,7 @@
 
     .guide-move,
     .guide-resize
-        .event,
+        .schedule,
         .resize-handle
             opacity: 0.8
             z-index: 97
@@ -185,50 +185,3 @@
     .guide-bottom
         position: absolute
         bottom: 0px
-
-+prefix-classes(split-timegrid)
-    .container
-        height: 100%
-        position: relative
-        overflow: hidden
-
-    .left
-        position: absolute
-        wh(30px, auto)
-
-    .hour
-        height: 25px
-        border-right: 1px solid #f1f1f1
-        color: #777
-        text-align: right
-        &:last-child
-            border-bottom: none
-
-    .hour span
-        line-height: 15px
-        padding-right: 5px
-
-    .right
-        position: relative
-        margin-left: 30px
-
-    .h-grid
-        background-color: #fff
-
-    .gridline
-        height: 25px
-        border-bottom: 1px solid #f1f1f1
-        &:last-child
-            border-bottom: none
-
-    .events
-        position: absolute
-        wh(100%, 100%)
-        pos(0, 0)
-
-    .schedule
-        border: 1px solid #ff0000
-        position: absolute
-        width: 100%
-        box-sizing: border-box
-        background: rgba(245, 215, 215, 0.3)

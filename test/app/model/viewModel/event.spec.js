@@ -1,5 +1,5 @@
 /*eslint-disable*/
-var CalEventViewModel = require('model/viewModel/calEvent');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 
-describe('CalEventViewModel', function() {
+describe('ScheduleViewModel', function() {
 });

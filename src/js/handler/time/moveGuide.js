@@ -12,7 +12,7 @@ var ratio = require('../../common/common').ratio;
 var FloatingLayer = require('../../common/floatingLayer');
 var tmpl = require('../../view/template/week/timeMoveGuide.hbs');
 var TZDate = require('../../common/timezone').Date;
-var DoorayEvent = require('../../model/calEvent');
+var Schedule = require('../../model/Schedule');
 
 /**
  * Class for Time.Move effect.
@@ -26,7 +26,7 @@ function TimeMoveGuide(timeMove) {
     this._guideLayer = null;
 
     /**
-     * @Type {CalEvent}
+     * @Type {Schedule}
      */
     this._model = null;
 
@@ -97,7 +97,7 @@ TimeMoveGuide.prototype._clearGuideElement = function() {
         this._guideLayer.destroy();
     }
 
-    this._showOriginEventBlocks();
+    this._showOriginScheduleBlocks();
 
     this.guideElement = this._getTopFunc = this._guideLayer = this._model = this._lastDrag =
         this._startGridY = this._startTopPixel = null;
@@ -105,10 +105,10 @@ TimeMoveGuide.prototype._clearGuideElement = function() {
 
 /**
  * Dim element blocks
- * @param {number} modelID - CalEvent model instance ID
+ * @param {number} modelID - Schedule model instance ID
  */
-TimeMoveGuide.prototype._hideOriginEventBlocks = function() {
-    var className = config.classname('time-date-event-block-dragging-dim');
+TimeMoveGuide.prototype._hideOriginScheduleBlocks = function() {
+    var className = config.classname('time-date-schedule-block-dragging-dim');
     if (this.guideElement) {
         domutil.addClass(this.guideElement, className);
     }
@@ -117,8 +117,8 @@ TimeMoveGuide.prototype._hideOriginEventBlocks = function() {
 /**
  * Show element blocks
  */
-TimeMoveGuide.prototype._showOriginEventBlocks = function() {
-    var className = config.classname('time-date-event-block-dragging-dim');
+TimeMoveGuide.prototype._showOriginScheduleBlocks = function() {
+    var className = config.classname('time-date-schedule-block-dragging-dim');
     if (this.guideElement) {
         domutil.removeClass(this.guideElement, className);
     }
@@ -133,7 +133,7 @@ TimeMoveGuide.prototype._getHighlightColorModel = function(model) {
 /**
  * Refresh guide element
  * @param {string} top - guide element's style top.
- * @param {CalEvent} model - updated model
+ * @param {Schedule} model - updated model
  */
 TimeMoveGuide.prototype._refreshGuideElement = function(top, model) {
     var self = this;
@@ -154,7 +154,7 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top, model) {
 TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     var guideElement = domutil.closest(
         dragStartEventData.target,
-        config.classname('.time-date-event-block')
+        config.classname('.time-date-schedule-block')
     );
 
     if (!guideElement) {
@@ -167,14 +167,14 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     this._container = dragStartEventData.relatedView.container;
 
     this._model = util.extend(
-        DoorayEvent.create(dragStartEventData.model),
+        Schedule.create(dragStartEventData.model),
         dragStartEventData.model,
         this._getHighlightColorModel(dragStartEventData.model)
     );
     this._lastDrag = dragStartEventData;
 
     this._resetGuideLayer();
-    this._hideOriginEventBlocks();
+    this._hideOriginScheduleBlocks();
 };
 
 /**
@@ -209,8 +209,8 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.min(top, bottomLimit);
 
     // update time
-    this._model.starts = new TZDate(this._model.getStarts().getTime() + timeDiff);
-    this._model.ends = new TZDate(this._model.getEnds().getTime() + timeDiff);
+    this._model.start = new TZDate(this._model.getStarts().getTime() + timeDiff);
+    this._model.end = new TZDate(this._model.getEnds().getTime() + timeDiff);
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model);

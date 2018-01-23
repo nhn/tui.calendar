@@ -12,7 +12,7 @@ describe('handler:TimeClick', function() {
 
         mockInst = jasmine.createSpyObj('TimeClick', ['checkExpectCondition', 'fire']);
         mockInst.baseController = {
-            events: mockCollection
+            schedules: mockCollection
         };
         mockInst.checkExpectCondition.and.returnValue(true);
 
@@ -29,16 +29,16 @@ describe('handler:TimeClick', function() {
         TimeClick.prototype._onClick.call(mockInst, vMouseEvent);
 
         // 이벤트가 아래처럼 발생한다
-        expect(mockInst.fire).toHaveBeenCalledWith('clickEvent', {
-            model: {
+        expect(mockInst.fire).toHaveBeenCalledWith('clickSchedule', {
+            schedule: {
                 _id: '2',
                 text: 'hello'
             },
-            jsEvent: 'test'
+            event: 'test'
         });
     });
 
-    it('TimeClick doesn\'t fire custom event "time_click_click" when no target or target is not related with events.', function() {
+    it('TimeClick doesn\'t fire custom event "time_click_click" when no target or target is not related with schedules.', function() {
         // 엘리먼트가 TimeClick과 관계가 없다
         mockInst.checkExpectCondition.and.returnValue(false);
 

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Module for modification of guide element in event resize
+ * @fileoverview Module for modification of guide element in schedule resize
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -48,11 +48,11 @@ MonthResizeGuide.prototype.destroy = function() {
 
 /**
  * Hide element blocks for resize effect
- * @param {number} modelID - CalEvent model instance ID
+ * @param {number} modelID - Schedule model instance ID
  */
-MonthResizeGuide.prototype._hideEventBlocks = function(modelID) {
+MonthResizeGuide.prototype._hideScheduleBlocks = function(modelID) {
     this.elements = domutil.find(
-        config.classname('.weekday-event-block-' + modelID),
+        config.classname('.weekday-schedule-block-' + modelID),
         this.monthResize.monthView.container,
         true
     );
@@ -65,7 +65,7 @@ MonthResizeGuide.prototype._hideEventBlocks = function(modelID) {
 /**
  * Show element blocks
  */
-MonthResizeGuide.prototype._showEventBlocks = function() {
+MonthResizeGuide.prototype._showScheduleBlocks = function() {
     util.forEach(this.elements, function(el) {
         el.style.display = 'block';
     });
@@ -73,14 +73,14 @@ MonthResizeGuide.prototype._showEventBlocks = function() {
 
 /**
  * Drag start event handler
- * @param {object} dragStartEvent - event data from MonthResize
+ * @param {object} dragStartEvent - schedule data from MonthResize
  */
 MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
     this.guide = new MonthGuide({
         isResizeMode: true
     }, this.monthResize.monthView);
 
-    this._hideEventBlocks(dragStartEvent.model.cid());
+    this._hideScheduleBlocks(dragStartEvent.model.cid());
 
     this.guide.start(dragStartEvent);
 
@@ -101,7 +101,7 @@ MonthResizeGuide.prototype._onDrag = function(dragEvent) {
  * Drag end event handler
  */
 MonthResizeGuide.prototype._onDragEnd = function() {
-    this._showEventBlocks();
+    this._showScheduleBlocks();
 
     this.guide.destroy();
     this.elements = this.guide = null;

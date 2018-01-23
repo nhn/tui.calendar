@@ -94,8 +94,8 @@ TimeCreationGuide.prototype.clearGuideElement = function() {
  * Refresh guide element
  * @param {number} top - The number of guide element's style top
  * @param {number} height - The number of guide element's style height
- * @param {Date} start - start time of event to create
- * @param {Date} end - end time of event to create
+ * @param {Date} start - start time of schedule to create
+ * @param {Date} end - end time of schedule to create
  * @param {boolean} bottomLabel - is label need to render bottom of guide element?
  */
 TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
@@ -118,7 +118,7 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
 
 /**
  * Get unit data of calculating new style of guide element by user interaction
- * @param {Time} relatedView - time view instance related with event
+ * @param {Time} relatedView - time view instance related with schedule
  * @returns {array} unit data.
  */
 TimeCreationGuide.prototype._getUnitData = function(relatedView) {
@@ -175,13 +175,13 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
     var todayEnd = Number(datetime.end(new TZDate(Number(todayStart))));
 
     /**
-     * Get top, time value from event dat
-     * @param {object} eventData - event data object
+     * Get top, time value from schedule dat
+     * @param {object} scheduleData - schedule data object
      * @returns {number[]} top, time
      */
-    function getStyleData(eventData) {
-        var gridY = eventData.nearestGridY,
-            gridTimeY = eventData.nearestGridTimeY,
+    function getStyleData(scheduleData) {
+        var gridY = scheduleData.nearestGridY,
+            gridTimeY = scheduleData.nearestGridTimeY,
             top, time;
 
         top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);
@@ -195,7 +195,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
 
 /**
  * DragStart event handler
- * @param {object} dragStartEventData - dragStart event data.
+ * @param {object} dragStartEventData - dragStart schedule data.
  */
 TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var relatedView = dragStartEventData.relatedView,
@@ -219,7 +219,7 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
 
 /**
  * Drag event handler
- * @param {object} dragEventData - drag event data.
+ * @param {object} dragEventData - drag schedule data.
  */
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
     var styleFunc = this._styleFunc,

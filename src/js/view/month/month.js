@@ -14,14 +14,13 @@ var config = require('../../config'),
     tmpl = require('./month.hbs'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
-    WeekdayInMonth = require('./weekdayInMonth'),
-    dw = require('../../common/dw');
+    WeekdayInMonth = require('./weekdayInMonth');
 
 /**
  * @constructor
  * @extends {View}
  * @param {object} options - options
- * @param {function} [options.eventFilter] - event filter
+ * @param {function} [options.scheduleFilter] - schedule filter
  * @param {number} [options.startDayOfWeek=0] - start day of week
  * @param {string} [options.renderMonth='2015-12'] - render month
  * @param {string[]} [options.daynames] - daynames to use upside of month view
@@ -50,7 +49,7 @@ function Month(options, container, controller) {
      * @type {string}
      */
     this.options = util.extend({
-        eventFilter: function(model) {
+        scheduleFilter: function(model) {
             return Boolean(model.visible);
         },
         startDayOfWeek: 0,
@@ -80,11 +79,11 @@ Month.prototype.viewName = 'month';
 
 /**
  * Get calendar array by supplied date
- * @param {string} renderMonthStr - month to render YYYY-MM
+ * @param {string} renderMonthStr - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
  * @returns {array.<Date[]>} calendar array
  */
 Month.prototype._getMonthCalendar = function(renderMonthStr) {
-    var date = dw(renderMonthStr).d;
+    var date = datetime.parse(renderMonthStr) || datetime.parse(renderMonthStr + '-01');
     var startDayOfWeek = this.options.startDayOfWeek || 0;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
     var datetimeOptions, calendar;
@@ -125,8 +124,8 @@ Month.prototype._renderChildren = function(container, calendar) {
     this.children.clear();
 
     util.forEach(calendar, function(weekArr) {
-        var starts = new TZDate(Number(weekArr[0])),
-            ends = new TZDate(Number(weekArr[weekArr.length - 1])),
+        var start = new TZDate(Number(weekArr[0])),
+            end = new TZDate(Number(weekArr[weekArr.length - 1])),
             weekdayViewContainer,
             weekdayView;
 
@@ -136,8 +135,8 @@ Month.prototype._renderChildren = function(container, calendar) {
         weekdayView = new WeekdayInMonth({
             renderMonth: renderMonth,
             heightPercent: heightPercent,
-            renderStartDate: datetime.format(starts, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(ends, 'YYYY-MM-DD'),
+            renderStartDate: datetime.format(start, 'YYYY-MM-DD'),
+            renderEndDate: datetime.format(end, 'YYYY-MM-DD'),
             narrowWeekend: narrowWeekend,
             startDayOfWeek: startDayOfWeek,
             visibleWeeksCount: visibleWeeksCount
@@ -157,7 +156,7 @@ Month.prototype.render = function() {
         controller = this.controller,
         daynames = opt.daynames,
         calendar = this._getMonthCalendar(opt.renderMonth),
-        eventFilter = opt.eventFilter,
+        scheduleFilter = opt.scheduleFilter,
         grids = this.grids,
         daynameViewModel,
         baseViewModel;
@@ -186,7 +185,7 @@ Month.prototype.render = function() {
         var viewModel = controller.findByDateRange(
             datetime.start(datetime.parse(childView.options.renderStartDate)),
             datetime.end(datetime.parse(childView.options.renderEndDate)),
-            eventFilter
+            scheduleFilter
         );
 
         childView.render(viewModel);

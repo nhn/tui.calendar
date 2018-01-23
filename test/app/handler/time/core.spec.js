@@ -12,7 +12,7 @@ describe('module:Time.Creation', function() {
         expect(core._calcGridYIndex(10800000, 100, 51)).toBe(1.5);
     });
 
-    it('_retriveEventData()', function() {
+    it('_retriveScheduleData()', function() {
         var container = document.createElement('div');
         container.style.height = '100px';
         spyOn(container, 'getBoundingClientRect').and.returnValue({
@@ -29,7 +29,7 @@ describe('module:Time.Creation', function() {
             height: 230
         });
 
-        var func = core._retriveEventData(time);
+        var func = core._retriveScheduleData(time);
 
         // center of timeview grid.
         var vMouseEvent = {

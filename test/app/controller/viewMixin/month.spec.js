@@ -1,6 +1,6 @@
 var array = require('common/array');
 var ControllerFactory = require('factory/controller');
-var CalEvent = require('model/calEvent');
+var Schedule = require('model/Schedule');
 var TZDate = require('common/timezone').Date;
 var matricesMatcher = require('../../../matcher/matrices');
 
@@ -10,18 +10,18 @@ describe('Base.Month', function() {
         base,
         controller,
         mockData,
-        eventList,
+        scheduleList,
         actual;
 
     beforeEach(function() {
         base = ControllerFactory();
         controller = base.Month;
 
-        mockData = fixture.load('event_set_month.json');
-        // mock event list
-        eventList = util.map(mockData, function(data) {
-            return CalEvent.create(data);
-        }).sort(array.compare.event.asc);
+        mockData = fixture.load('schedule_set_month.json');
+        // mock schedule list
+        scheduleList = util.map(mockData, function(data) {
+            return Schedule.create(data);
+        }).sort(array.compare.schedule.asc);
     });
 
     afterEach(function() {
@@ -30,20 +30,20 @@ describe('Base.Month', function() {
 
     describe('findByDateRange()', function() {
         beforeEach(function() {
-            // add event instance to controller
-            util.forEach(eventList, function(event) {
-                base.addEvent(event);
+            // add schedule instance to controller
+            util.forEach(scheduleList, function(schedule) {
+                base.addSchedule(schedule);
             });
 
             // test/matcher/matrices.js
             jasmine.addMatchers(matricesMatcher());
         });
 
-        it('get events instance in month', function() {
-            var starts = new TZDate(2015, 10, 1),
-                ends = new TZDate(2015, 10, 30);
+        it('get schedules instance in month', function() {
+            var start = new TZDate(2015, 10, 1),
+                end = new TZDate(2015, 10, 30);
 
-            actual = controller.findByDateRange(starts, ends);
+            actual = controller.findByDateRange(start, end);
 /**
 * |15        |16        |17        |18        |19        |20        |21        |
 * |<<<<[김동우] 휴가>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>|

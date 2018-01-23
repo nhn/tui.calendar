@@ -14,7 +14,7 @@ describe('handler:AlldayCreation', function() {
         spyOn(window, 'prompt');
     });
 
-    it('checkExpectedCondition() can judge specific event target is suitable for creation handler.', function() {
+    it('checkExpectedCondition() can judge specific schedule target is suitable for creation handler.', function() {
         var div = document.createElement('div');
         var inst = {
             alldayView: {
@@ -31,14 +31,14 @@ describe('handler:AlldayCreation', function() {
         var container = document.createElement('div');
         container.className = '/* @echo CSS_PREFIX */weekday tui-view-40';
 
-        div.className = '/* @echo CSS_PREFIX */weekday-events';
+        div.className = '/* @echo CSS_PREFIX */weekday-schedules';
         expect(proto.checkExpectedCondition.call(inst, div)).toBe(false);
 
         container.appendChild(div);
         expect(proto.checkExpectedCondition.call(inst, div)).toBe('hello world');
     });
 
-    describe('_createEvent()', function() {
+    describe('_createSchedule()', function() {
         var mockEventData,
             mockAlldayView,
             inst;
@@ -48,7 +48,7 @@ describe('handler:AlldayCreation', function() {
 
             // 인스턴스 Mock
             inst = {
-                baseController: jasmine.createSpyObj('baseController', ['createEvent']),
+                baseController: jasmine.createSpyObj('baseController', ['createSchedule']),
                 guide: jasmine.createSpyObj('alldayCreation', ['clearGuideElement']),
                 fire: jasmine.createSpy('on')
             };
@@ -62,28 +62,28 @@ describe('handler:AlldayCreation', function() {
             };
         });
 
-        it('request event model creation to base controller by supplied eventdata.', function() {
+        it('request schedule model creation to base controller by supplied scheduledata.', function() {
             // 이벤트 데이터 Mock
             // 2일부터 3일까지 드래그함.
             mockEventData = {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
                 xIndex: 2,
-                triggerEvent: {}
+                triggerEvent: 'drag'
             };
 
-            proto._createEvent.call(inst, mockEventData);
+            proto._createSchedule.call(inst, mockEventData);
 
-            expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
+            expect(inst.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: true,
-                starts: new TZDate('2015-05-02T00:00:00+09:00'),
-                ends: new TZDate('2015-05-03T23:59:59+09:00'),
+                start: new TZDate('2015-05-02T00:00:00+09:00'),
+                end: new TZDate('2015-05-03T23:59:59+09:00'),
                 guide: inst.guide,
-                triggerEvent: {}
+                triggerEventName: 'drag'
             });
         });
 
-        it('create event instance properly when supplied inverse dragstart, dragend index.', function() {
+        it('create schedule instance properly when supplied inverse dragstart, dragend index.', function() {
             // 이벤트 데이터 Mock
             // 4일부터 2일까지 드래그함.
             // 역방향으로 드래그했다
@@ -91,17 +91,17 @@ describe('handler:AlldayCreation', function() {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 3,
                 xIndex: 1,
-                triggerEvent: {}
+                triggerEvent: 'drag'
             };
 
-            proto._createEvent.call(inst, mockEventData);
+            proto._createSchedule.call(inst, mockEventData);
 
-            expect(inst.fire).toHaveBeenCalledWith('beforeCreateEvent', {
+            expect(inst.fire).toHaveBeenCalledWith('beforeCreateSchedule', {
                 isAllDay: true,
-                starts: new TZDate('2015-05-02T00:00:00+09:00'),
-                ends: new TZDate('2015-05-04T23:59:59+09:00'),
+                start: new TZDate('2015-05-02T00:00:00+09:00'),
+                end: new TZDate('2015-05-04T23:59:59+09:00'),
                 guide: inst.guide,
-                triggerEvent: {}
+                triggerEventName: 'drag'
             });
         });
     });
@@ -115,8 +115,8 @@ describe('handler:AlldayCreation', function() {
             mockAlldayView = {container: {}};
             inst = new AlldayCreation(mockDragHandler, mockAlldayView);
             spyOn(inst, 'fire');
-            spyOn(inst, '_retriveEventData').and.returnValue(function() {return 'good'});
-            spyOn(inst, '_createEvent');
+            spyOn(inst, '_retriveScheduleData').and.returnValue(function() {return 'good'});
+            spyOn(inst, '_createSchedule');
         });
 
         it('_onDragStart() not fire dragstart event when not meet expected conditions.', function() {
@@ -131,17 +131,17 @@ describe('handler:AlldayCreation', function() {
 
         describe('_onDrag()', function() {
             it('always work after initialize drag start event data.', function() {
-                inst.getEventDataFunc = null;
+                inst.getScheduleDataFunc = null;
                 inst._onDrag({});
                 expect(inst.fire).not.toHaveBeenCalled();
 
-                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({a:1});
+                inst.getScheduleDataFunc = jasmine.createSpy('getScheduleDataFunc').and.returnValue({a:1});
                 inst._onDrag({});
                 expect(inst.fire).toHaveBeenCalled();
             });
 
             it('extend eventData. add more property to complete creation action.', function() {
-                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({
+                inst.getScheduleDataFunc = jasmine.createSpy('getScheduleDataFunc').and.returnValue({
                     dragStartXIndex: 3,
                     xIndex:5
                 });
@@ -156,17 +156,17 @@ describe('handler:AlldayCreation', function() {
 
         describe('_onDragEnd()', function() {
             it('always work after initialize drag start event data.', function() {
-                inst.getEventDataFunc = null;
+                inst.getScheduleDataFunc = null;
                 inst._onDragEnd({});
                 expect(inst.fire).not.toHaveBeenCalled();
 
-                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({a:1});
+                inst.getScheduleDataFunc = jasmine.createSpy('getScheduleDataFunc').and.returnValue({a:1});
                 inst._onDragEnd({});
                 expect(inst.fire).toHaveBeenCalled();
             });
 
             it('extend eventData. add more property to complete creation action.', function() {
-                inst.getEventDataFunc = jasmine.createSpy('getEventDataFunc').and.returnValue({
+                inst.getScheduleDataFunc = jasmine.createSpy('getScheduleDataFunc').and.returnValue({
                     dragStartXIndex: 3,
                     xIndex:5
                 });

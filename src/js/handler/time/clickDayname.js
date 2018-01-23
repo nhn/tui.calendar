@@ -63,7 +63,7 @@ DayNameClick.prototype.checkExpectCondition = function(target) {
 /**
  * Click event hander
  * @param {object} clickEvent - click event from {@link Drag}
- * @emits DayNameClick#clickEvent
+ * @emits DayNameClick#clickDayname
  */
 DayNameClick.prototype._onClick = function(clickEvent) {
     var self = this,
@@ -76,10 +76,9 @@ DayNameClick.prototype._onClick = function(clickEvent) {
     }
 
     /**
-     * @events DayNameClick#clickEvent
+     * @events DayNameClick#clickDayname
      * @type {object}
      * @property {string} date - click date
-     * @property {MouseEvent} jsEvent - MouseEvent object
      */
     self.fire('clickDayname', {
         date: domutil.getData(blockElement, 'date')

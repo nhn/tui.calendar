@@ -11,21 +11,21 @@ var domutil = require('../common/domutil'),
     Collection = require('../common/collection');
 
 /**
- * Default event id getter for collection
- * @param {CalEvent} event - event instance
- * @returns {string} event id
+ * Default schedule id getter for collection
+ * @param {Schedule} schedule - schedule instance
+ * @returns {string} schedule id
  */
-function eventIDGetter(event) {
-    return event.cid();
+function scheduleIDGetter(schedule) {
+    return schedule.cid();
 }
 
 module.exports = {
     /**
      * @param {...*} initItems - items to add newly created collection.
-     * @returns {Collection} new collection for event models.
+     * @returns {Collection} new collection for schedule models.
      */
-    createEventCollection: function(initItems) {    // eslint-disable-line
-        var collection = new Collection(eventIDGetter);
+    createScheduleCollection: function(initItems) {    // eslint-disable-line
+        var collection = new Collection(scheduleIDGetter);
 
         if (arguments.length) {
             collection.add.apply(collection, arguments);

@@ -2,8 +2,8 @@
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
 
@@ -14,65 +14,65 @@ describe('controller/base', function() {
 
     beforeEach(function() {
         ctrl = ControllerFactory();
-        set = fixture.load('event_set_string.json');
+        set = fixture.load('schedule_set_string.json');
     });
 
     afterEach(function() {
         fixture.cleanup();
     });
 
-    describe('_getContainDatesInEvent()', function() {
-        var event;
+    describe('_getContainDatesInSchedule()', function() {
+        var schedule;
 
-        it('calculate contain dates for specific events.', function() {
+        it('calculate contain dates for specific schedules.', function() {
             var expected = [
                 new TZDate('2015/05/01'),
                 new TZDate('2015/05/02'),
                 new TZDate('2015/05/03')
             ];
 
-            event = CalEvent.create({
+            schedule = Schedule.create({
                 title: 'A',
                 isAllDay: true,
-                starts: '2015/05/01',
-                ends: '2015/05/03'
+                start: '2015/05/01',
+                end: '2015/05/03'
             });
 
-            expect(ctrl._getContainDatesInEvent(event)).toEqual(expected);
+            expect(ctrl._getContainDatesInSchedule(schedule)).toEqual(expected);
         });
 
-        it('can calculate non all day event.', function() {
+        it('can calculate non all day schedule.', function() {
             var expected = [
                 new TZDate('2015/05/01'),
                 new TZDate('2015/05/02'),
                 new TZDate('2015/05/03')
             ];
 
-            event = CalEvent.create({
+            schedule = Schedule.create({
                 title: 'A',
                 isAllDay: false,
-                starts: '2015/05/01 12:30:00',
-                ends: '2015/05/03 09:20:00'
+                start: '2015/05/01 12:30:00',
+                end: '2015/05/03 09:20:00'
             });
 
-            expect(ctrl._getContainDatesInEvent(event)).toEqual(expected);
+            expect(ctrl._getContainDatesInSchedule(schedule)).toEqual(expected);
         });
     });
 
-    describe('createEvent()', function() {
+    describe('createSchedule()', function() {
         var created;
 
         it('return itself for chaining pattern.', function() {
-            var event = CalEvent.create(set[0]);
-            expect(event.equals(ctrl.createEvent(set[0]))).toBe(true);
+            var schedule = Schedule.create(set[0]);
+            expect(schedule.equals(ctrl.createSchedule(set[0]))).toBe(true);
         });
 
-        it('create event instance by raw event data.', function() {
-            var id = util.stamp(ctrl.createEvent(set[0])),
-                id2 = util.stamp(ctrl.createEvent(set[1])),
-                id3 = util.stamp(ctrl.createEvent(set[3]));
+        it('create schedule instance by raw schedule data.', function() {
+            var id = util.stamp(ctrl.createSchedule(set[0])),
+                id2 = util.stamp(ctrl.createSchedule(set[1])),
+                id3 = util.stamp(ctrl.createSchedule(set[3]));
 
-            expect(ctrl.events.length).toBe(3);
+            expect(ctrl.schedules.length).toBe(3);
             expect(ctrl.dateMatrix).toEqual({
                 '20150501': [id],
                 '20150502': [id, id3],
@@ -82,18 +82,18 @@ describe('controller/base', function() {
     });
 
     describe('findByDateRange()', function() {
-        var eventList,
+        var scheduleList,
             viewModels,
             idList;
 
         beforeEach(function() {
-            eventList = [];
+            scheduleList = [];
             viewModels = [];
             idList = [];
 
             util.forEach(set, function(data) {
-                var item = ctrl.createEvent(data);
-                eventList.push(item);
+                var item = ctrl.createSchedule(data);
+                scheduleList.push(item);
                 idList.push(util.stamp(item));
             });
 
@@ -146,10 +146,10 @@ describe('controller/base', function() {
                 '20150502': ['hunting', 'A']
             };
 
-            var starts = new TZDate('2015/04/30'),
-                ends = new TZDate('2015/05/02');
+            var start = new TZDate('2015/04/30'),
+                end = new TZDate('2015/05/02');
 
-            var result = ctrl.findByDateRange(starts, ends);
+            var result = ctrl.findByDateRange(start, end);
 
             expect(result).toEqualViewModel(expected);
         });
@@ -160,40 +160,40 @@ describe('controller/base', function() {
                 '20150503': ['A', 'meeting', 'physical training']
             };
 
-            var starts = new TZDate('2015/05/02'),
-                ends = new TZDate('2015/05/03');
+            var start = new TZDate('2015/05/02'),
+                end = new TZDate('2015/05/03');
 
-            var result = ctrl.findByDateRange(starts, ends);
+            var result = ctrl.findByDateRange(start, end);
 
             expect(result).toEqualViewModel(expected);
         });
     });
 
-    describe('updateEvent()', function() {
+    describe('updateSchedule()', function() {
         var id,
             model;
 
-        it('update owned event and date matrix.', function() {
-            model = ctrl.createEvent({
+        it('update owned schedule and date matrix.', function() {
+            model = ctrl.createSchedule({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: '2015/05/01 09:30:00',
-                ends: '2015/05/01 18:30:00'
+                start: '2015/05/01 09:30:00',
+                end: '2015/05/01 18:30:00'
             });
             id = util.stamp(model);
 
-            ctrl.updateEvent(id, {
+            ctrl.updateSchedule(model, {
                 title: 'Go to work',
                 isAllDay: false,
-                starts: '2015/05/02',
-                ends: '2015/05/02'
+                start: '2015/05/02',
+                end: '2015/05/02'
             });
 
-            expect(ctrl.events.single()).toEqual(jasmine.objectContaining({
+            expect(ctrl.schedules.single()).toEqual(jasmine.objectContaining({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: new TZDate('2015/05/02'),
-                ends: new TZDate('2015/05/02')
+                start: new TZDate('2015/05/02'),
+                end: new TZDate('2015/05/02')
             }));
 
             expect(ctrl.dateMatrix).toEqual({
@@ -203,31 +203,31 @@ describe('controller/base', function() {
         });
     });
 
-    describe('deleteEvent()', function() {
+    describe('deleteSchedule()', function() {
         var id,
-            event;
+            schedule;
 
         beforeEach(function() {
-            event = ctrl.createEvent({
+            schedule = ctrl.createSchedule({
                 title: 'Go to work',
                 isAllDay: false,
-                starts: '2015/05/01 09:30:00',
-                ends: '2015/05/01 18:30:00'
+                start: '2015/05/01 09:30:00',
+                end: '2015/05/01 18:30:00'
             });
-            id = util.stamp(event);
+            id = util.stamp(schedule);
         });
 
-        it('delete an event by modelID.', function() {
-            expect(ctrl.deleteEvent(id)).toEqual(event);
-            expect(ctrl.events.length).toBe(0);
+        it('delete an schedule by model.', function() {
+            expect(ctrl.deleteSchedule(schedule)).toEqual(schedule);
+            expect(ctrl.schedules.length).toBe(0);
             expect(ctrl.dateMatrix).toEqual({
                 '20150501': []
             });
         });
     });
 
-    describe('splitEventByDateRange()', function() {
-        var events,
+    describe('splitScheduleByDateRange()', function() {
+        var schedules,
             collection;
 
         beforeEach(function() {
@@ -235,36 +235,36 @@ describe('controller/base', function() {
                 return util.stamp(item);
             });
 
-            events = [
-                CalEvent.create({
+            schedules = [
+                Schedule.create({
                     title: 'A',
                     isAllDay: false,
-                    starts: '2015/05/01 09:30:00',
-                    ends: '2015/05/01 18:30:00'
+                    start: '2015/05/01 09:30:00',
+                    end: '2015/05/01 18:30:00'
                 }),
-                CalEvent.create({
+                Schedule.create({
                     title: 'B',
                     isAllDay: false,
-                    starts: '2015/05/02 09:30:00',
-                    ends: '2015/05/02 18:30:00'
+                    start: '2015/05/02 09:30:00',
+                    end: '2015/05/02 18:30:00'
                 }),
-                CalEvent.create({
+                Schedule.create({
                     title: 'C',
                     isAllDay: true,
-                    starts: '2015/05/01 09:00:00',
-                    ends: '2015/05/02 09:00:00'
+                    start: '2015/05/01 09:00:00',
+                    end: '2015/05/02 09:00:00'
                 })
             ];
 
-            collection.add.apply(collection, events);
+            collection.add.apply(collection, schedules);
 
-            ctrl.addEvent(events[0]);
-            ctrl.addEvent(events[1]);
-            ctrl.addEvent(events[2]);
+            ctrl.addSchedule(schedules[0]);
+            ctrl.addSchedule(schedules[1]);
+            ctrl.addSchedule(schedules[2]);
         });
 
-        it('split event by ymd.', function() {
-            var result = ctrl.splitEventByDateRange(
+        it('split schedule by ymd.', function() {
+            var result = ctrl.splitScheduleByDateRange(
                 new TZDate('2015-05-01T00:00:00+09:00'),
                 new TZDate('2015-05-03T23:59:59+09:00'),
                 collection
@@ -282,10 +282,10 @@ describe('controller/base', function() {
                 })
             };
 
-            expected['20150501'].add(events[0]);
-            expected['20150501'].add(events[2]);
-            expected['20150502'].add(events[1]);
-            expected['20150502'].add(events[2]);
+            expected['20150501'].add(schedules[0]);
+            expected['20150501'].add(schedules[2]);
+            expected['20150502'].add(schedules[1]);
+            expected['20150502'].add(schedules[2]);
 
             expect(result['20150501'].items).toEqual(expected['20150501'].items);
             expect(result['20150502'].items).toEqual(expected['20150502'].items);

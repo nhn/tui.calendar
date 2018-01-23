@@ -1,16 +1,16 @@
 /*eslint-disable*/
-var CalEvent = require('model/calEvent');
+var Schedule = require('model/Schedule');
 var TZDate = require('common/timezone').Date;
 
-describe('model/event', function() {
-    var event;
+describe('model/schedule basic', function() {
+    var schedule;
 
     beforeEach(function() {
-        event = new CalEvent();
+        schedule = new Schedule();
     });
 
     it('creation', function() {
-        expect(event.isAllDay).toBe(false);
+        expect(schedule.isAllDay).toBe(false);
     });
 
     describe('init()', function() {
@@ -23,143 +23,143 @@ describe('model/event', function() {
             jasmine.clock().uninstall();
         });
 
-        it('initialize event with default values when data is not supplied.', function() {
+        it('initialize schedule with default values when data is not supplied.', function() {
             var expected = {
                 id: '',
                 title: '',
                 isAllDay: false,
-                starts: null,
-                ends: null,
+                start: null,
+                end: null,
                 color: '#000',
                 bgColor: '#a1b56c'
             };
 
-            expect(event).toEqual(jasmine.objectContaining(expected));
+            expect(schedule).toEqual(jasmine.objectContaining(expected));
         });
 
-        it('initialize event with supplied options.', function() {
+        it('initialize schedule with supplied options.', function() {
             var expected = {
                 id: '123',
                 title: 'Go home',
                 isAllDay: false,
-                starts: new TZDate('2015-05-01T00:00:00+09:00'),
-                ends: new TZDate('2015-05-02T00:00:00+09:00'),
+                start: new TZDate('2015-05-01T00:00:00+09:00'),
+                end: new TZDate('2015-05-02T00:00:00+09:00'),
                 color: '#000',
                 bgColor: '#a1b56c'
             };
 
             var myObj = {};
 
-            event.init({
+            schedule.init({
                 id: '123',
                 title: 'Go home',
                 isAllDay: false,
-                starts: '2015-05-01T00:00:00+09:00',
-                ends: '2015-05-02T00:00:00+09:00'
+                start: '2015-05-01T00:00:00+09:00',
+                end: '2015-05-02T00:00:00+09:00'
             });
 
-            expect(event).toEqual(jasmine.objectContaining(expected));
+            expect(schedule).toEqual(jasmine.objectContaining(expected));
         });
     });
 
     describe('equals()', function() {
-        var event,
-            event2;
+        var schedule,
+            schedule2;
 
         beforeEach(function() {
-            event = new CalEvent(),
-            event2 = new CalEvent();
+            schedule = new Schedule(),
+            schedule2 = new Schedule();
         });
 
-        it('return true when event\'s property are same', function() {
-            event.title = 'dance';
-            event2.title = 'dance';
-            event.isAllDay = true;
-            event2.isAllDay = true;
-            event.starts = new TZDate('2015/05/01');
-            event2.starts = new TZDate('2015/05/01');
-            event.ends = new TZDate('2015/05/02');
-            event2.ends = new TZDate('2015/05/02');
+        it('return true when schedule\'s property are same', function() {
+            schedule.title = 'dance';
+            schedule2.title = 'dance';
+            schedule.isAllDay = true;
+            schedule2.isAllDay = true;
+            schedule.start = new TZDate('2015/05/01');
+            schedule2.start = new TZDate('2015/05/01');
+            schedule.end = new TZDate('2015/05/02');
+            schedule2.end = new TZDate('2015/05/02');
 
-            expect(event.equals(event2)).toBe(true);
+            expect(schedule.equals(schedule2)).toBe(true);
         });
 
         it('return false when title is not equals.', function() {
-            event.title = 'meeting';
-            event2.title = 'working';
+            schedule.title = 'meeting';
+            schedule2.title = 'working';
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
         });
 
-        it('return false when two event has different all day flags.', function() {
-            event.title = 'dance';
-            event2.title = 'dance';
-            event.isAllDay = true;
-            event2.isAllDay = false;
+        it('return false when two schedule has different all day flags.', function() {
+            schedule.title = 'dance';
+            schedule2.title = 'dance';
+            schedule.isAllDay = true;
+            schedule2.isAllDay = false;
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
         });
 
-        it('return false when two event has different starts or ends.', function() {
-            event.title = 'dance';
-            event2.title = 'dance';
-            event.isAllDay = true;
-            event2.isAllDay = true;
-            event.starts = new TZDate('2015/05/01');
-            event2.starts = new TZDate('2015/04/01');
+        it('return false when two schedule has different start or end.', function() {
+            schedule.title = 'dance';
+            schedule2.title = 'dance';
+            schedule.isAllDay = true;
+            schedule2.isAllDay = true;
+            schedule.start = new TZDate('2015/05/01');
+            schedule2.start = new TZDate('2015/04/01');
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
 
-            event2.starts = new TZDate('2015/05/01');
+            schedule2.start = new TZDate('2015/05/01');
 
-            event.ends = new TZDate('2015/06/01');
-            event2.ends = new TZDate('2015/07/01');
+            schedule.end = new TZDate('2015/06/01');
+            schedule2.end = new TZDate('2015/07/01');
 
-            expect(event.equals(event2)).toBe(false);
+            expect(schedule.equals(schedule2)).toBe(false);
         });
     });
 
     describe('duration()', function() {
         beforeEach(function() {
-            event.starts = new TZDate('2015-09-25T05:00:00+09:00');
-            event.ends = new TZDate('2015-09-26T05:00:00+09:00');
+            schedule.start = new TZDate('2015-09-25T05:00:00+09:00');
+            schedule.end = new TZDate('2015-09-26T05:00:00+09:00');
         });
 
-        it('can calculate duration between starts and ends.', function() {
-            expect(+event.duration()).toBe(+new TZDate('1970-01-02T00:00:00Z'));
+        it('can calculate duration between start and end.', function() {
+            expect(+schedule.duration()).toBe(+new TZDate('1970-01-02T00:00:00Z'));
         });
 
-        it('return 24 hours when event is all day event.', function() {
-            event.isAllDay = true;
-            expect(+event.duration()).toBe(+new TZDate('1970-01-03T08:59:59+09:00'));
+        it('return 24 hours when schedule is all day schedule.', function() {
+            schedule.isAllDay = true;
+            expect(+schedule.duration()).toBe(+new TZDate('1970-01-03T08:59:59+09:00'));
         });
     });
 
-    describe('CalEvent.create()', function() {
-        it('create event model instance from data object.', function() {
+    describe('Schedule.create()', function() {
+        it('create schedule model instance from data object.', function() {
             var mock = {
                 title: 'hunting',
                 isAllDay: true,
-                starts: '2015/05/02',
-                ends: '2015/05/02'
+                start: '2015/05/02',
+                end: '2015/05/02'
             };
 
-            var event = CalEvent.create(mock);
+            var schedule = Schedule.create(mock);
 
-            var compare = new CalEvent();
+            var compare = new Schedule();
             compare.title = 'hunting',
             compare.isAllDay = true;
-            compare.starts = new TZDate('2015/05/02');
-            compare.starts.setHours(0, 0, 0);
-            compare.ends = new TZDate('2015/05/02');
-            compare.ends.setHours(23, 59, 59);
+            compare.start = new TZDate('2015/05/02');
+            compare.start.setHours(0, 0, 0);
+            compare.end = new TZDate('2015/05/02');
+            compare.end.setHours(23, 59, 59);
 
-            expect(event.equals(compare)).toBe(true);
+            expect(schedule.equals(compare)).toBe(true);
         });
 
         it('no error for empty some properties', function() {
             expect(function() {
-                CalEvent.create();
+                Schedule.create();
             }).not.toThrow();
         });
     });
@@ -179,17 +179,17 @@ describe('model/event', function() {
          * |---|
          */
         it('Check type A, B', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
-                starts: '2015-05-01T09:30:00+09:00',
-                ends: '2015-05-01T10:00:00+09:00'
+                start: '2015-05-01T09:30:00+09:00',
+                end: '2015-05-01T10:00:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
-                starts: '2015-05-01T09:40:00+09:00',
-                ends: '2015-05-01T10:10:00+09:00'
+                start: '2015-05-01T09:40:00+09:00',
+                end: '2015-05-01T10:10:00+09:00'
             });
 
             expect(a.collidesWith(b)).toBe(true);
@@ -213,17 +213,17 @@ describe('model/event', function() {
          *     |---|
          */
         it('check type C, D', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
-                starts: '2015-05-01T09:30:00+09:00',
-                ends: '2015-05-01T10:00:00+09:00'
+                start: '2015-05-01T09:30:00+09:00',
+                end: '2015-05-01T10:00:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
-                starts: '2015-05-01T09:00:00+09:00',
-                ends: '2015-05-01T10:30:00+09:00'
+                start: '2015-05-01T09:00:00+09:00',
+                end: '2015-05-01T10:30:00+09:00'
             });
 
             expect(a.collidesWith(b)).toBe(true);
@@ -248,17 +248,17 @@ describe('model/event', function() {
          * |---|
          */
         it('check type E, F', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
-                starts: '2015-05-01T09:30:00+09:00',
-                ends: '2015-05-01T10:00:00+09:00'
+                start: '2015-05-01T09:30:00+09:00',
+                end: '2015-05-01T10:00:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
-                starts: '2015-05-01T10:00:00+09:00',
-                ends: '2015-05-01T10:30:00+09:00'
+                start: '2015-05-01T10:00:00+09:00',
+                end: '2015-05-01T10:30:00+09:00'
             });
 
             expect(a.collidesWith(b)).toBe(false);
@@ -285,17 +285,17 @@ describe('model/event', function() {
          * |---|
          */
         it('check type G, H', function() {
-            var a = CalEvent.create({
+            var a = Schedule.create({
                 title: 'A',
                 isAllDay: false,
-                starts: '2015-05-01T09:30:00+09:00',
-                ends: '2015-05-01T09:50:00+09:00'
+                start: '2015-05-01T09:30:00+09:00',
+                end: '2015-05-01T09:50:00+09:00'
             });
-            var b = CalEvent.create({
+            var b = Schedule.create({
                 title: 'B',
                 isAllDay: false,
-                starts: '2015-05-01T10:10:00+09:00',
-                ends: '2015-05-01T10:30:00+09:00'
+                start: '2015-05-01T10:10:00+09:00',
+                end: '2015-05-01T10:30:00+09:00'
             });
 
             expect(a.collidesWith(b)).toBe(false);
@@ -304,3 +304,81 @@ describe('model/event', function() {
     });
 });
 
+describe('model/Schedule advanced', function() {
+    var jsonFixtures;
+
+    beforeEach(function() {
+        jsonFixtures = fixture.load('mock_tasks.json');
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
+    });
+
+    it('factory function (create())', function() {
+        var e = Schedule.create(jsonFixtures[0]);
+
+        expect(e).toEqual(jasmine.objectContaining({
+            title: '스크럼',
+            category: 'time',
+            dueDateClass: '',
+            isAllDay: false,
+            start: new TZDate('2015-10-26T09:40:00+09:00'),
+            end: new TZDate('2015-10-26T10:00:00+09:00')
+        }));
+
+        e = Schedule.create(jsonFixtures[1]);
+
+        expect(e).toEqual(jasmine.objectContaining({
+            title: '[홍길동]연차',
+            category: 'allday',
+            dueDateClass: '',
+            isAllDay: true,
+            start: new TZDate(2015, 9, 26),
+            end: new TZDate(2015, 9, 26, 23, 59, 59)
+        }));
+
+        e = Schedule.create(jsonFixtures[2]);
+
+        expect(e).toEqual(jasmine.objectContaining({
+            title: '테스트 마일스톤1',
+            category: 'milestone',
+            dueDateClass: '',
+            isAllDay: false,
+            start: new TZDate('2015-10-26T23:59:59+09:00'),
+            end: new TZDate('2015-10-26T23:59:59+09:00')
+        }));
+
+        e = Schedule.create(jsonFixtures[3]);
+
+        expect(e).toEqual(jasmine.objectContaining({
+            title: '테스트 업무',
+            category: 'task',
+            dueDateClass: 'morning',
+            isAllDay: false,
+            start: new TZDate('2015-10-26T23:59:59+09:00'),
+            end: new TZDate('2015-10-26T23:59:59+09:00')
+        }));
+    });
+
+    it('raw data', function() {
+        var raw = {
+            hello: 'world'
+        };
+        var e = Schedule.create({
+            title: '굿',
+            category: 'task',
+            dueDateClass: 'morning',
+            isAllDay: false,
+            start: new TZDate('2015-10-26T23:59:59+09:00'),
+            end: new TZDate('2015-10-26T23:59:59+09:00'),
+            raw: raw
+        });
+
+        expect(e.raw).toEqual({hello: 'world'});
+
+        raw.hello2 = 'good';
+
+        expect(e.raw).toEqual({hello: 'world', hello2: 'good'});
+    });
+});

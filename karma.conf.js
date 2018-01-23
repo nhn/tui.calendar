@@ -1,30 +1,117 @@
-/* eslint-env es6 */
-/* eslint strict: 0, no-process-env: 0 */
+/* eslint-disable consts-on-top, no-process-env, require-jsdoc */
+/* eslint-disable no-process-env, require-jsdoc */
+'use strict';
 
 var path = require('path');
+var webdriverConfig = {
+    hostname: 'fe.nhnent.com',
+    port: 4444,
+    remoteHost: true
+};
 
 var context = JSON.stringify({
-    CSS_PREFIX: 'dooray-calendar-',
+    CSS_PREFIX: 'tui-full-calendar-',
     BUNDLE_TYPE: 'Debug'
 });
 
+function setConfig(defaultConfig, server) {
+    if (server === 'ne') {
+        defaultConfig.customLaunchers = {
+            'IE9': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'internet explorer',
+                version: '9'
+            },
+            'IE10': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'internet explorer',
+                version: '10'
+            },
+            'IE11': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'internet explorer',
+                version: '11'
+            },
+            'Edge': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'MicrosoftEdge'
+            },
+            'Chrome-WebDriver': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'chrome'
+            },
+            'Firefox-WebDriver': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'firefox'
+            },
+            'Safari-WebDriver': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'safari'
+            }
+        };
+        defaultConfig.browsers = [
+            'IE9',
+            'IE10',
+            'IE11',
+            'Edge',
+            'Chrome-WebDriver',
+            'Firefox-WebDriver',
+            'Safari-WebDriver'
+        ];
+        defaultConfig.reporters.push('coverage');
+        // defaultConfig.reporters.push('junit');
+        defaultConfig.coverageReporter = {
+            dir: 'report/coverage/',
+            reporters: [
+                {
+                    type: 'html',
+                    subdir: function(browser) {
+                        return 'report-html/' + browser;
+                    }
+                },
+                {
+                    type: 'cobertura',
+                    subdir: function(browser) {
+                        return 'report-cobertura/' + browser;
+                    },
+                    file: 'cobertura.txt'
+                }
+            ]
+        };
+        // defaultConfig.junitReporter = {
+        //     outputDir: 'report',
+        //     suite: ''
+        // };
+    } else {
+        defaultConfig.browsers = [
+            'ChromeHeadless'
+        ];
+    }
+}
+
 module.exports = function(config) {
-    config.set({
-        plugins: [
-            'karma-fixture',
-            'karma-html2js-preprocessor',
-            'karma-json-fixtures-preprocessor',
-            'karma-jasmine',
-            'karma-jasmine-ajax',
-            'karma-webpack',
-            'karma-sourcemap-loader',
-            'karma-chrome-launcher',
-            'karma-phantomjs-launcher',
-            'karma-spec-reporter',
-            'karma-coverage',
-            'istanbul-instrumenter-loader'
-        ],
+    var defaultConfig = {
         basePath: '',
+        // plugins: [
+        //     'karma-fixture',
+        //     'karma-html2js-preprocessor',
+        //     'karma-json-fixtures-preprocessor',
+        //     'karma-jasmine',
+        //     'karma-jasmine-ajax',
+        //     'karma-webpack',
+        //     'karma-sourcemap-loader',
+        //     'karma-chrome-launcher',
+        //     'karma-spec-reporter',
+        //     'karma-coverage',
+        //     'istanbul-instrumenter-loader'
+        // ],
         frameworks: [
             'fixture',
             'jasmine-ajax',
@@ -32,11 +119,10 @@ module.exports = function(config) {
         ],
         files: [
             'node_modules/underscore/underscore.js',
-            'bower_components/tui-code-snippet/dist/code-snippet.js',
+            'node_modules/tui-code-snippet/dist/tui-code-snippet.js',
             'test/fixtures/**/*',
             'test/index.js'
         ],
-        exclude: [],
         preprocessors: {
             'src/**/*.js': ['webpack', 'sourcemap'],
             'test/index.js': ['webpack', 'sourcemap'],
@@ -47,28 +133,38 @@ module.exports = function(config) {
             variableName: '__json__'
         },
         webpack: {
-            devtool: '#inline-source-map',
+            devtool: 'inline-source-map',
             module: {
-                preLoaders: [{
-                    test: /\.js$/,
-                    include: path.resolve('src/js/'),
-                    loader: 'istanbul-instrumenter'
-                }],
-                loaders: [{
-                    test: /\.hbs$/,
-                    loader: 'handlebars-template'
-                }, {
-                    test: /\.js$/,
-                    loader: `preprocess?${context}`,
-                    exclude: /node_modules|bower_components/
-                }]
+                preLoaders: [
+                    {
+                        test: /\.js$/,
+                        include: 'src',
+                        exclude: /(test|bower_components|node_modules)/,
+                        loader: 'istanbul-instrumenter'
+                    }
+                    // {
+                    //     test: /\.js$/,
+                    //     include: /src/,
+                    //     exclude: /(bower_components|node_modules)/,
+                    //     loader: 'eslint-loader'
+                    // }
+                ],
+                loaders: [
+                    {
+                        test: /\.hbs$/,
+                        loader: 'handlebars-template',
+                        exclude: /node_modules|bower_components/
+                    },
+                    {
+                        test: /\.js$/,
+                        loader: 'preprocess?' + context,
+                        exclude: /node_modules|bower_components/
+                    }
+                ]
             },
             resolve: {
                 root: path.resolve('./src/js')
             }
-        },
-        webpackMiddleware: {
-            noInfo: true
         },
         reporters: ['spec', 'coverage'],
         specReporter: {
@@ -79,8 +175,10 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['PhantomJS'],
-        singleRun: false,
-        concurrency: Infinity
-    });
+        singleRun: true
+    };
+
+    /* eslint-disable */
+    setConfig(defaultConfig, process.env.KARMA_SERVER);
+    config.set(defaultConfig);
 };

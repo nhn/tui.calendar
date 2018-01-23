@@ -1,5 +1,5 @@
 /**
- * @fileoverview Floating layer for displaying event in specific date
+ * @fileoverview Floating layer for displaying schedule in specific date
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';

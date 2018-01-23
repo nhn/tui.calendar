@@ -1,5 +1,5 @@
 /**
- * @fileoverview View for rendered events by times.
+ * @fileoverview View for rendered schedules by times.
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -240,7 +240,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
     this.children.clear();
 
     // reconcilation of child views
-    util.forEach(viewModels, function(events, ymd) {
+    util.forEach(viewModels, function(schedules, ymd) {
         isToday = ymd === today;
 
         childOption = {
@@ -252,15 +252,14 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
             isPending: options.isPending,
             isFocused: options.isFocused,
             hourStart: options.hourStart,
-            hourEnd: options.hourEnd,
-            isSplitTimeGrid: options.isSplitTimeGrid
+            hourEnd: options.hourEnd
         };
 
         child = new Time(
             childOption,
             domutil.appendHTMLElement('div', container, config.classname('time-date'))
         );
-        child.render(ymd, events);
+        child.render(ymd, schedules);
 
         self.addChild(child);
 
@@ -273,13 +272,13 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
  * @param {object} viewModel ViewModel list from Week view.
  */
 TimeGrid.prototype.render = function(viewModel) {
-    var timeViewModel = viewModel.eventsInDateRange.time,
+    var timeViewModel = viewModel.schedulesInDateRange.time,
         container = this.container,
         grids = viewModel.grids,
         baseViewModel = this._getBaseViewModel(grids),
-        eventLen = util.keys(timeViewModel).length;
+        scheduleLen = util.keys(timeViewModel).length;
 
-    if (!eventLen) {
+    if (!scheduleLen) {
         return;
     }
 
@@ -293,7 +292,7 @@ TimeGrid.prototype.render = function(viewModel) {
     this._renderChildren(
         timeViewModel,
         grids,
-        domutil.find(config.classname('.timegrid-events-container'), container)
+        domutil.find(config.classname('.timegrid-schedules-container'), container)
     );
 
     this._hourLabels = domutil.find('ul', container);
@@ -382,7 +381,7 @@ TimeGrid.prototype.scrollToNow = function() {
 };
 
 /**********
- * CalEvent handlers
+ * Schedule handlers
  **********/
 
 /**

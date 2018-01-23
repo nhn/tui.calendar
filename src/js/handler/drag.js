@@ -166,7 +166,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
         this._dragStartFired = true;
 
         /**
-         * Drag starts events. cancelable.
+         * Drag start events. cancelable.
          * @event Drag#dragStart
          * @type {object}
          * @property {HTMLElement} target - target element in this event.

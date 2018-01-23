@@ -20,15 +20,15 @@ var Week = {
      **********/
 
     /**
-     * Make array with start and end times on events.
+     * Make array with start and end times on schedules.
      * @this Base.Week
      * @param {array[]} matrix - matrix from controller.
-     * @returns {array[]} starttime, endtime array (exclude first row's events)
+     * @returns {array[]} starttime, endtime array (exclude first row's schedules)
      */
     generateTimeArrayInRow: function(matrix) {
         var row,
             col,
-            event,
+            schedule,
             map = [],
             cursor = [],
             maxColLen = Math.max.apply(null, util.map(matrix, function(col) {
@@ -37,13 +37,13 @@ var Week = {
 
         for (col = 1; col < maxColLen; col += 1) {
             row = 0;
-            event = util.pick(matrix, row, col);
+            schedule = util.pick(matrix, row, col);
 
-            while (event) {
-                cursor.push([event.getStarts().getTime(), event.getEnds().getTime()]);
+            while (schedule) {
+                cursor.push([schedule.getStarts().getTime(), schedule.getEnds().getTime()]);
 
                 row += 1;
-                event = util.pick(matrix, row, col);
+                schedule = util.pick(matrix, row, col);
             }
 
             map.push(cursor);
@@ -57,8 +57,8 @@ var Week = {
      * Get collision information from list
      * @this Base
      * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
-     * @param {number} start - event start time that want to detect collisions.
-     * @param {number} end - event end time that want to detect collisions.
+     * @param {number} start - schedule start time that want to detect collisions.
+     * @param {number} end - schedule end time that want to detect collisions.
      * @returns {boolean} target has collide in supplied array?
      */
     hasCollide: function(arr, start, end) {
@@ -135,18 +135,18 @@ var Week = {
     /**
      * create view model for time view part
      * @this Base
-     * @param {Date} starts - start date.
-     * @param {Date} ends - end date.
+     * @param {Date} start - start date.
+     * @param {Date} end - end date.
      * @param {Collection} time - view model collection.
      * @returns {object} view model for time part.
      */
-    getViewModelForTimeView: function(starts, ends, time) {
+    getViewModelForTimeView: function(start, end, time) {
         var self = this,
-            ymdSplitted = this.splitEventByDateRange(starts, ends, time),
+            ymdSplitted = this.splitScheduleByDateRange(start, end, time),
             result = {};
 
         util.forEach(ymdSplitted, function(collection, ymd) {
-            var viewModels = collection.sort(array.compare.event.asc),
+            var viewModels = collection.sort(array.compare.schedule.asc),
                 collisionGroups,
                 matrices;
 
@@ -181,12 +181,12 @@ var Week = {
     /**
      * create view model for allday view part
      * @this Base
-     * @param {Date} starts start date.
-     * @param {Date} ends end date.
-     * @param {Collection} viewModelColl - allday event viewModel viewModels.
+     * @param {Date} start start date.
+     * @param {Date} end end date.
+     * @param {Collection} viewModelColl - allday schedule viewModel viewModels.
      * @returns {object} allday viewModel.
      */
-    getViewModelForAlldayView: function(starts, ends, viewModelColl) {
+    getViewModelForAlldayView: function(start, end, viewModelColl) {
         var ctrlCore = this.Core,
             ctrlWeek = this.Week,
             viewModels,
@@ -198,13 +198,13 @@ var Week = {
         }
 
         ctrlWeek._addMultiDatesInfo(viewModelColl);
-        ctrlCore.limitRenderRange(starts, ends, viewModelColl);
+        ctrlCore.limitRenderRange(start, end, viewModelColl);
 
-        viewModels = viewModelColl.sort(array.compare.event.asc);
+        viewModels = viewModelColl.sort(array.compare.schedule.asc);
         collisionGroups = ctrlCore.getCollisionGroup(viewModels);
 
         matrices = ctrlCore.getMatrices(viewModelColl, collisionGroups);
-        ctrlCore.positionViewModels(starts, ends, matrices);
+        ctrlCore.positionViewModels(start, end, matrices);
 
         return matrices;
     },
@@ -214,29 +214,29 @@ var Week = {
      **********/
 
     /**
-     * Populate events in date range.
+     * Populate schedules in date range.
      * @this Base
-     * @param {Date} starts start date.
-     * @param {Date} ends end date.
+     * @param {Date} start start date.
+     * @param {Date} end end date.
      * @param {function[]} [andFilters] - optional filters to applying search query
-     * @returns {object} events grouped by dates.
+     * @returns {object} schedules grouped by dates.
      */
-    findByDateRange: function(starts, ends, andFilters) {
+    findByDateRange: function(start, end, andFilters) {
         var ctrlCore = this.Core,
             ctrlWeek = this.Week,
-            filter = ctrlCore.getEventInDateRangeFilter(starts, ends),
+            filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
             modelColl,
             group;
 
         andFilters = andFilters || [];
         filter = Collection.and.apply(null, [filter].concat(andFilters));
 
-        modelColl = this.events.find(filter);
+        modelColl = this.schedules.find(filter);
         modelColl = ctrlCore.convertToViewModel(modelColl);
 
         group = modelColl.groupBy(['allday', 'time'], this.groupFunc);
-        group.allday = ctrlWeek.getViewModelForAlldayView(starts, ends, group.allday);
-        group.time = ctrlWeek.getViewModelForTimeView(starts, ends, group.time);
+        group.allday = ctrlWeek.getViewModelForAlldayView(start, end, group.allday);
+        group.time = ctrlWeek.getViewModelForTimeView(start, end, group.time);
 
         return group;
     }

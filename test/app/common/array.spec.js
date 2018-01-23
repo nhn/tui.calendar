@@ -1,6 +1,6 @@
 /*eslint-disable*/
 var array = require('common/array');
-var CalEvent = require('model/calEvent');
+var Schedule = require('model/Schedule');
 
 describe('common/array', function() {
     var util = tui.util;
@@ -76,27 +76,27 @@ describe('common/array', function() {
             });
         });
 
-        describe('CalEvent', function() {
+        describe('Schedule', function() {
             var mockData,
-                events;
+                schedules;
 
             beforeEach(function() {
-                mockData = fixture.load('event_set_string2.json');
-                events = [];
+                mockData = fixture.load('schedule_set_string2.json');
+                schedules = [];
             });
 
             afterEach(function() {
                 fixture.cleanup();
             });
 
-            it('isAllDay ASC, starts ASC, duration DESC, id ASC', function() {
+            it('isAllDay ASC, start ASC, duration DESC, id ASC', function() {
                 util.forEach(mockData, function(data) {
-                    events.push(CalEvent.create(data));
+                    schedules.push(Schedule.create(data));
                 });
 
-                events.sort(array.compare.event.asc);
+                schedules.sort(array.compare.schedule.asc);
 
-                expect(_.pluck(events, 'title')).toEqual([
+                expect(_.pluck(schedules, 'title')).toEqual([
                     'hunting',
                     '평가기간',
                     'drawing study',
@@ -113,22 +113,22 @@ describe('common/array', function() {
                 fixtures = [{
                     title: 'A',
                     isAllDay: false,
-                    starts: '2015/05/03 12:00:00',
-                    ends: '2015/05/03 12:10:00'
+                    start: '2015/05/03 12:00:00',
+                    end: '2015/05/03 12:10:00'
                 }, {
                     title: 'B',
                     isAllDay: false,
-                    starts: '2015/05/03 12:00:00',
-                    ends: '2015/05/03 12:20:00'
+                    start: '2015/05/03 12:00:00',
+                    end: '2015/05/03 12:20:00'
                 }];
 
                 util.forEach(fixtures, function(data) {
-                    events.push(CalEvent.create(data));
+                    schedules.push(Schedule.create(data));
                 });
 
-                events.sort(array.compare.event.asc);
+                schedules.sort(array.compare.schedule.asc);
 
-                expect(_.pluck(events, 'title')).toEqual(expected);
+                expect(_.pluck(schedules, 'title')).toEqual(expected);
             });
         });
     });

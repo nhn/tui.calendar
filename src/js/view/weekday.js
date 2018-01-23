@@ -14,12 +14,12 @@ var config = require('../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {number} [options.containerHeight=40] - minimum height of event
+ * @param {number} [options.containerHeight=40] - minimum height of schedule
  *  container element.
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
- * @param {number} [options.eventHeight=18] - height of each event block.
- * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {number} [options.scheduleHeight=18] - height of each schedule block.
+ * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  */
@@ -36,8 +36,8 @@ function Weekday(options, container) {
     this.options = util.extend({
         containerHeight: 40,
         containerBottomGutter: 8,
-        eventHeight: 18,
-        eventGutter: 2,
+        scheduleHeight: 18,
+        scheduleGutter: 2,
         narrowWeekend: false,
         startDayOfWeek: 0
     }, options);
@@ -77,9 +77,9 @@ Weekday.prototype.getBaseViewModel = function() {
 
     return {
         width: gridWidth,
-        eventHeight: opt.eventHeight,
-        eventBlockHeight: (opt.eventHeight + opt.eventGutter),
-        eventBlockGutter: opt.eventGutter,
+        scheduleHeight: opt.scheduleHeight,
+        scheduleBlockHeight: (opt.scheduleHeight + opt.scheduleGutter),
+        scheduleBlockGutter: opt.scheduleGutter,
         dates: util.map(range, function(date, index) {
             var day = date.getDay();
             return {

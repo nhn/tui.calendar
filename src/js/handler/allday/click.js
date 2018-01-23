@@ -1,5 +1,5 @@
 /**
- * @fileoverview Click handle module for allday events
+ * @fileoverview Click handle module for allday schedules
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -56,29 +56,29 @@ AlldayClick.prototype.checkExpectCondition = AlldayMove.prototype.checkExpectedC
 /**
  * Click event handler
  * @param {object} clickEvent - click event data
- * @emits AlldayClick#clickEvent
+ * @emits AlldayClick#clickSchedule
  */
 AlldayClick.prototype._onClick = function(clickEvent) {
     var self = this,
         target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, config.classname('.weekday-event-block')),
-        eventCollection = this.baseController.events;
+        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block')),
+        scheduleCollection = this.baseController.schedules;
 
     if (!timeView || !blockElement) {
         return;
     }
 
-    eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(model) {
+    scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
         /**
-         * @events AlldayClick#clickEvent
+         * @events AlldayClick#clickSchedule
          * @type {object}
-         * @property {CalEvent} model - model instance
-         * @property {MouseEvent} jsEvent - MouseEvent object
+         * @property {Schedule} schedule - schedule instance
+         * @property {MouseEvent} event - MouseEvent object
          */
-        self.fire('clickEvent', {
-            model: model,
-            jsEvent: clickEvent.originEvent
+        self.fire('clickSchedule', {
+            schedule: schedule,
+            event: clickEvent.originEvent
         });
     });
 };

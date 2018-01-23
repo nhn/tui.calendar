@@ -10,7 +10,7 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     FloatingLayer = require('../../common/floatingLayer'),
     tmpl = require('./moveGuide.hbs'),
-    DoorayEvent = require('../../model/calEvent');
+    Schedule = require('../../model/Schedule');
 
 /**
  * @constructor
@@ -65,13 +65,13 @@ MonthMoveGuide.prototype.destroy = function() {
 
 /**
  * Hide element blocks for resize effect
- * @param {number} modelID - CalEvent model instance ID
+ * @param {number} modelID - Schedule model instance ID
  */
-MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
-    var className = config.classname('weekday-event-block-dragging-dim');
+MonthMoveGuide.prototype._hideOriginScheduleBlocks = function(modelID) {
+    var className = config.classname('weekday-schedule-block-dragging-dim');
 
     this.elements = domutil.find(
-        config.classname('.weekday-event-block-' + modelID),
+        config.classname('.weekday-schedule-block-' + modelID),
         this.monthMove.monthView.container,
         true
     );
@@ -84,8 +84,8 @@ MonthMoveGuide.prototype._hideOriginEventBlocks = function(modelID) {
 /**
  * Show element blocks
  */
-MonthMoveGuide.prototype._showOriginEventBlocks = function() {
-    var className = config.classname('weekday-event-block-dragging-dim');
+MonthMoveGuide.prototype._showOriginScheduleBlocks = function() {
+    var className = config.classname('weekday-schedule-block-dragging-dim');
 
     util.forEach(this.elements, function(el) {
         domutil.removeClass(el, className);
@@ -134,20 +134,20 @@ MonthMoveGuide.prototype._updateGridBgColor = function(dragEvent) {
 
 /**
  * Handler for MonthMove#dragStart
- * @param {object} dragStartEvent - dragStart event data object
+ * @param {object} dragStartEvent - dragStart schedule data object
  */
 MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
     var monthView = this.monthMove.monthView,
         firstWeekdayView = monthView.children.single(),
         weekdayOptions = firstWeekdayView.options,
         widthPercent = 100 / firstWeekdayView.getRenderDateRange().length,
-        height = weekdayOptions.eventGutter + weekdayOptions.eventHeight,
+        height = weekdayOptions.scheduleGutter + weekdayOptions.scheduleHeight,
         container = monthView.container,
         mousePos = domevent.getMousePosition(dragStartEvent.originEvent, container),
         model = dragStartEvent.model,
         layer = new FloatingLayer(null, container);
 
-    this._hideOriginEventBlocks(model.cid());
+    this._hideOriginScheduleBlocks(model.cid());
 
     if (!this.gridElements) {
         this.gridElements = domutil.find(
@@ -162,7 +162,7 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
     layer.setPosition(mousePos[0], mousePos[1]);
     layer.setContent(tmpl({
         model: util.extend(
-            DoorayEvent.create(model),
+            Schedule.create(model),
             model,
             this._getHighlightColorModel(model)
         )
@@ -198,7 +198,7 @@ MonthMoveGuide.prototype._onDrag = function(dragEvent) {
  * Handler for MonthMove#dragEnd
  */
 MonthMoveGuide.prototype._onDragEnd = function() {
-    this._showOriginEventBlocks();
+    this._showOriginScheduleBlocks();
 
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('dragging'));

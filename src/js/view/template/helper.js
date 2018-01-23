@@ -5,7 +5,7 @@
  */
 'use strict';
 
-var util = tui.util;
+var util = global.tui.util;
 var Handlebars = require('handlebars-template-loader/runtime');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
@@ -150,19 +150,19 @@ Handlebars.registerHelper({
 
     /**
      * Use in time.hbs
-     * @param {CalEventViewModel} eventViewModel viewModel
+     * @param {ScheduleViewModel} viewModel viewModel
      * @returns {string} element size css class
      */
-    'time-eventBlock': function(eventViewModel) {
-        var top = getElSize(eventViewModel.top, 'px', 'top'),
-            left = getElSize(eventViewModel.left, '%', 'left'),
-            width = getElSize(eventViewModel.width, '%', 'width'),
-            height = getElSize(eventViewModel.height, 'px', 'height');
+    'time-scheduleBlock': function(viewModel) {
+        var top = getElSize(viewModel.top, 'px', 'top'),
+            left = getElSize(viewModel.left, '%', 'left'),
+            width = getElSize(viewModel.width, '%', 'width'),
+            height = getElSize(viewModel.height, 'px', 'height');
 
         return [top, left, width, height].join(';');
     },
 
-    'month-eventBlock': function(viewModel, grids, blockHeight, paddingTop) {
+    'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
         var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
         var left = getElSize(grids[viewModel.left].left, '%', 'left');
         var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
@@ -235,7 +235,7 @@ Handlebars.registerHelper({
 
 
     /**********
-     * Default event template
+     * Default schedule template
      **********/
 
     'milestone-tmpl': function(model) {
@@ -274,15 +274,5 @@ Handlebars.registerHelper({
 
     'time-tmpl': function(model) {
         return common.stripTags(model.title);
-    },
-
-    'split-time-tmpl': function(model) {
-        return common.stripTags(model.title);
-    },
-
-    'minicalendar-tmpl': function(model) {},  // eslint-disable-line
-
-    'freebusy-title-tmpl': function(model) {
-        return model.name;
     }
 });

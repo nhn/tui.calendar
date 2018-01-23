@@ -10,10 +10,14 @@ var domutil = require('../common/domutil');
 var VLayout = require('../common/vlayout');
 // Parent views
 var Week = require('../view/week/week');
+
 // Sub views
 var DayName = require('../view/week/dayname');
 var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
+var Milestone = require('../view/week/milestone');
+var TaskView = require('../view/week/taskview');
+
 // Handlers
 var AlldayClick = require('../handler/allday/click');
 var AlldayCreation = require('../handler/allday/creation');
@@ -24,24 +28,16 @@ var TimeClick = require('../handler/time/click');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
+var MilestoneClick = require('../handler/milestone/click');
+var TaskClick = require('../handler/task/click');
 
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
-    var weekView,
-        dayNameContainer,
-        dayNameView,
-        vLayoutContainer,
-        vLayout,
-        alldayView,
-        timeGridView,
-        alldayClickHandler,
-        alldayCreationHandler,
-        alldayMoveHandler,
-        alldayResizeHandler,
-        timeClickHandler,
-        timeCreationHandler,
-        timeMoveHandler,
-        timeResizeHandler,
-        daynameClickHandler;
+    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
+        milestoneView, taskView, alldayView, timeGridView,
+        milestoneClickHandler, taskClickHandler, alldayClickHandler, alldayCreationHandler,
+        alldayMoveHandler, alldayResizeHandler, timeClickHandler, timeCreationHandler,
+        timeMoveHandler, timeResizeHandler, daynameClickHandler,
+        panels;
 
     weekView = new Week(null, options.week, layoutContainer);
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -60,19 +56,60 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
                                      dayNameView.container.offsetHeight) + 'px';
 
-    vLayout = new VLayout({
-        panels: [
-            {height: 52, minHeight: 52},
+    panels = [
+        {height: 100, minHeight: 100},
+        {isSplitter: true},
+        {autoHeight: true}
+    ];
+
+    if (options.taskView) {
+        panels = [
+            {minHeight: 20, maxHeight: 80},
+            {isSplitter: true},
+            {minHeight: 40, maxHeight: 120},
+            {isSplitter: true},
+            {minHeight: 20, maxHeight: 80},
             {isSplitter: true},
             {autoHeight: true}
-        ]
+        ];
+    }
+
+    vLayout = new VLayout({
+        panels: panels,
+        panelHeights: options.week.panelHeights || []
     }, vLayoutContainer);
+
     weekView.vLayout = vLayout;
+
+    if (options.taskView) {
+        /**********
+         * 마일스톤
+         **********/
+        milestoneView = new Milestone(options.week, vLayout.panels[0].container);
+        milestoneView.on('afterRender', function(viewModel) {
+            vLayout.panels[0].setHeight(null, viewModel.height);
+        });
+        weekView.addChild(milestoneView);
+        milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
+
+        /**********
+         * 업무
+         **********/
+        taskView = new TaskView(options.week, vLayout.panels[2].container);
+        taskView.on('afterRender', function(viewModel) {
+            vLayout.panels[2].setHeight(null, viewModel.height);
+        });
+        weekView.addChild(taskView);
+        taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
+    }
 
     /**********
      * 종일일정
      **********/
-    alldayView = new Allday(options.week, vLayout.panels[0].container);
+    alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
+    alldayView.on('afterRender', function() {
+        vLayout.panels[panels.length - 3].setHeight(null, alldayView.contentHeight);
+    });
     weekView.addChild(alldayView);
     alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
     alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
@@ -82,7 +119,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 시간별 일정
      **********/
-    timeGridView = new TimeGrid(options.week, vLayout.panels[2].container);
+    timeGridView = new TimeGrid(options.week, vLayout.panels[panels.length - 1].container);
     weekView.addChild(timeGridView);
     timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
     timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
@@ -115,6 +152,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         }
     };
 
+    if (options.taskView) {
+        weekView.handler.click.milestone = milestoneClickHandler;
+        weekView.handler.click.task = taskClickHandler;
+    }
+
     // add controller
     weekView.controller = baseController.Week;
 
@@ -141,6 +183,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             vLayout.container.style.height =
                 weekViewHeight - daynameViewHeight + 'px';
             vLayout.refresh();
-        }
+        },
+        scrollToNow: timeGridView.scrollToNow.bind(timeGridView)
     };
 };

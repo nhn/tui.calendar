@@ -1,7 +1,7 @@
 /*eslint-disable*/
 var datetime = require('common/datetime');
-var CalEvent = require('model/calEvent');
-var CalEventViewModel = require('model/viewModel/calEvent');
+var Schedule = require('model/Schedule');
+var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
 var Time = require('view/week/time');
 var TZDate = require('common/timezone').Date;
 
@@ -14,10 +14,10 @@ describe('View/Time', function() {
         expect(actual).toEqual(expected);
     });
 
-    it('getEventViewBound()', function() {
-        var event = CalEvent.create({
-            starts: '2015-05-01T09:00:00+09:00',
-            ends: '2015-05-01T10:00:00+09:00'
+    it('getScheduleViewBound()', function() {
+        var schedule = Schedule.create({
+            start: '2015-05-01T09:00:00+09:00',
+            end: '2015-05-01T10:00:00+09:00'
         });
         var mock = {
             options: {
@@ -25,9 +25,9 @@ describe('View/Time', function() {
                 defaultMarginBottom: 0
             }
         };
-        var viewModel = CalEventViewModel.create(event);
+        var viewModel = ScheduleViewModel.create(schedule);
 
-        var result = Time.prototype.getEventViewBound.call(mock, viewModel, {
+        var result = Time.prototype.getScheduleViewBound.call(mock, viewModel, {
             todayStart: new Date('2015-05-01T00:00:00+09:00'),
             baseMS: datetime.millisecondsFrom('hour', 24),
             baseHeight: 230,

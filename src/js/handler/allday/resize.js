@@ -98,35 +98,35 @@ AlldayResize.prototype.checkExpectedCondition = function(target) {
 /**
  * DragStart event handler.
  * @emits AlldayResize#alldayResizeDragstart
- * @param {object} dragStartEventData - event data.
+ * @param {object} dragStartEventData - schedule data.
  */
 AlldayResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         result = this.checkExpectedCondition(target),
         controller = this.baseController,
-        eventBlockElement,
+        scheduleBlockElement,
         modelID,
         targetModel,
-        getEventDataFunc,
-        eventData;
+        getScheduleDataFunc,
+        scheduleData;
 
     if (!result) {
         return;
     }
 
-    eventBlockElement = domutil.closest(target, config.classname('.weekday-event-block'));
-    modelID = domutil.getData(eventBlockElement, 'id');
-    targetModel = controller.events.items[modelID];
+    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+    modelID = domutil.getData(scheduleBlockElement, 'id');
+    targetModel = controller.schedules.items[modelID];
 
     if (!targetModel) {
         return;
     }
 
-    getEventDataFunc = this.getEventDataFunc = this._retriveEventData(this.alldayView, dragStartEventData.originEvent);
-    eventData = this._dragStart = getEventDataFunc(dragStartEventData.originEvent);
+    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
 
-    util.extend(eventData, {
-        eventBlockElement: eventBlockElement,
+    util.extend(scheduleData, {
+        scheduleBlockElement: scheduleBlockElement,
         model: targetModel
     });
 
@@ -143,21 +143,21 @@ AlldayResize.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
-     * @property {CalEvent} model - data object of model isntance.
-     * @property {HTMLDivElement} eventBlockElement - target event block element.
+     * @property {Schedule} model - data object of model isntance.
+     * @property {HTMLDivElement} scheduleBlockElement - target schedule block element.
      */
-    this.fire('alldayResizeDragstart', eventData);
+    this.fire('alldayResizeDragstart', scheduleData);
 };
 
 /**
  * Drag event handler method.
  * @emits AlldayResize#alldayResizeDrag
- * @param {object} dragEventData - Drag#drag event handler eventdata.
+ * @param {object} dragEventData - Drag#drag event handler scheduledata.
  */
 AlldayResize.prototype._onDrag = function(dragEventData) {
-    var getEventDataFunc = this.getEventDataFunc;
+    var getScheduleDataFunc = this.getScheduleDataFunc;
 
-    if (!getEventDataFunc) {
+    if (!getScheduleDataFunc) {
         return;
     }
 
@@ -169,33 +169,33 @@ AlldayResize.prototype._onDrag = function(dragEventData) {
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire('alldayResizeDrag', getEventDataFunc(dragEventData.originEvent));
+    this.fire('alldayResizeDrag', getScheduleDataFunc(dragEventData.originEvent));
 };
 
 /**
- * Request update event instance to base controller.
- * @fires AlldayResize#beforeUpdateEvent
- * @param {object} eventData - event data from AlldayResize handler.
+ * Request update schedule instance to base controller.
+ * @fires AlldayResize#beforeUpdateSchedule
+ * @param {object} scheduleData - schedule data from AlldayResize handler.
  */
-AlldayResize.prototype._updateEvent = function(eventData) {
-    var model = eventData.targetModel,
-        dateOffset = eventData.xIndex - eventData.dragStartXIndex,
-        newEnds = new TZDate(model.ends.getTime());
+AlldayResize.prototype._updateSchedule = function(scheduleData) {
+    var schedule = scheduleData.targetModel,
+        dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
+        newEnds = new TZDate(schedule.end.getTime());
 
     newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
-    newEnds = new TZDate(Math.max(datetime.end(model.starts).getTime(), newEnds.getTime()));
+    newEnds = new TZDate(Math.max(datetime.end(schedule.start).getTime(), newEnds.getTime()));
 
     /**
-     * @event AlldayResize#beforeUpdateEvent
+     * @event AlldayResize#beforeUpdateSchedule
      * @type {object}
-     * @property {CalEvent} model - model instance to update
-     * @property {date} starts - start time to update
-     * @property {date} ends - end time to update
+     * @property {Schedule} schedule - schedule instance to update
+     * @property {date} start - start time to update
+     * @property {date} end - end time to update
      */
-    this.fire('beforeUpdateEvent', {
-        model: model,
-        starts: model.getStarts(),
-        ends: newEnds
+    this.fire('beforeUpdateSchedule', {
+        schedule: schedule,
+        start: schedule.getStarts(),
+        end: newEnds
     });
 };
 
@@ -204,14 +204,14 @@ AlldayResize.prototype._updateEvent = function(eventData) {
  * @emits AlldayResize#alldayResizeDragend
  * @param {object} dragEndEventData - Drag#DragEnd event handler data.
  * @param {string} [overrideEventName] - override emitted event name when supplied.
- * @param {?boolean} skipUpdate - true then skip update event model.
+ * @param {?boolean} skipUpdate - true then skip update schedule model.
  */
 AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
-    var getEventDataFunc = this.getEventDataFunc,
+    var getScheduleDataFunc = this.getScheduleDataFunc,
         dragStart = this._dragStart,
-        eventData;
+        scheduleData;
 
-    if (!getEventDataFunc || !dragStart) {
+    if (!getScheduleDataFunc || !dragStart) {
         return;
     }
 
@@ -221,13 +221,13 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
         click: this._onClick
     }, this);
 
-    eventData = getEventDataFunc(dragEndEventData.originEvent);
-    util.extend(eventData, {
+    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
+    util.extend(scheduleData, {
         targetModel: dragStart.model
     });
 
     if (!skipUpdate) {
-        this._updateEvent(eventData);
+        this._updateSchedule(scheduleData);
     }
 
     /**
@@ -238,9 +238,9 @@ AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
      */
-    this.fire(overrideEventName || 'alldayResizeDragend', eventData);
+    this.fire(overrideEventName || 'alldayResizeDragend', scheduleData);
 
-    this.getEventDataFunc = this._dragStart = null;
+    this.getScheduleDataFunc = this._dragStart = null;
 };
 
 /**

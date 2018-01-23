@@ -1,5 +1,5 @@
 /**
- * @fileoverview Core methods for event block placing
+ * @fileoverview Core methods for schedule block placing
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
@@ -10,7 +10,7 @@ var util = global.tui.util,
 var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
 var Collection = require('../../common/collection');
-var CalEventViewModel = require('../../model/viewModel/calEvent');
+var ScheduleViewModel = require('../../model/viewModel/ScheduleViewModel');
 
 var Core = {
     /**
@@ -20,29 +20,29 @@ var Core = {
      */
     getCollisionGroup: function(viewModels) {
         var collisionGroups = [],
-            foundPrevCollisionEvent = false,
-            previousEventList;
+            foundPrevCollisionSchedule = false,
+            previousScheduleList;
 
         if (!viewModels.length) {
             return collisionGroups;
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
-        forEachArr(viewModels.slice(1), function(event, index) {
-            foundPrevCollisionEvent = false;
-            previousEventList = aps.apply(viewModels, [0, index + 1]).reverse();
+        forEachArr(viewModels.slice(1), function(schedule, index) {
+            foundPrevCollisionSchedule = false;
+            previousScheduleList = aps.apply(viewModels, [0, index + 1]).reverse();
 
-            forEachArr(previousEventList, function(previous) {
-                if (event.collidesWith(previous)) {
+            forEachArr(previousScheduleList, function(previous) {
+                if (schedule.collidesWith(previous)) {
                     // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
                     // 찾아 이 일정을 추가한다
-                    foundPrevCollisionEvent = true;
+                    foundPrevCollisionSchedule = true;
 
                     forEachArr(collisionGroups.slice(0).reverse(), function(group) {
                         if (~util.inArray(util.stamp(previous.valueOf()), group)) {
                             // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
                             // Collision Group에 이 일정을 포함시킨다.
-                            group.push(util.stamp(event.valueOf()));
+                            group.push(util.stamp(schedule.valueOf()));
                             return false;
                         }
                     });
@@ -51,10 +51,10 @@ var Core = {
                 }
             });
 
-            if (!foundPrevCollisionEvent) {
+            if (!foundPrevCollisionSchedule) {
                 // 이 일정은 이전일정과 겹치지 않는 일정이므로
                 // 새 Collision Group을 구성한다.
-                collisionGroups.push([util.stamp(event.valueOf())]);
+                collisionGroups.push([util.stamp(schedule.valueOf())]);
             }
         });
 
@@ -83,7 +83,7 @@ var Core = {
     /**
      * Calculate matrix for appointment block element placing.
      * @param {Collection} collection model collection.
-     * @param {array[]} collisionGroups Collision groups for event set.
+     * @param {array[]} collisionGroups Collision groups for schedule set.
      * @returns {array} matrices
      */
     getMatrices: function(collection, collisionGroups) {
@@ -93,8 +93,8 @@ var Core = {
         forEachArr(collisionGroups, function(group) {
             var matrix = [[]];
 
-            forEachArr(group, function(eventID) {
-                var event = collection.items[eventID],
+            forEachArr(group, function(scheduleID) {
+                var schedule = collection.items[scheduleID],
                     col = 0,
                     found = false,
                     nextRow,
@@ -104,14 +104,14 @@ var Core = {
                     lastRowInColumn = getLastRowInColumn(matrix, col);
 
                     if (lastRowInColumn === false) {
-                        matrix[0].push(event);
+                        matrix[0].push(schedule);
                         found = true;
-                    } else if (!event.collidesWith(matrix[lastRowInColumn][col])) {
+                    } else if (!schedule.collidesWith(matrix[lastRowInColumn][col])) {
                         nextRow = lastRowInColumn + 1;
                         if (util.isUndefined(matrix[nextRow])) {
                             matrix[nextRow] = [];
                         }
-                        matrix[nextRow][col] = event;
+                        matrix[nextRow][col] = schedule;
                         found = true;
                     }
 
@@ -126,37 +126,37 @@ var Core = {
     },
 
     /**
-     * Filter that get event model in supplied date ranges.
-     * @param {Date} starts - start date
-     * @param {Date} ends - end date
-     * @returns {function} event filter function
+     * Filter that get schedule model in supplied date ranges.
+     * @param {Date} start - start date
+     * @param {Date} end - end date
+     * @returns {function} schedule filter function
      */
-    getEventInDateRangeFilter: function(starts, ends) {
+    getScheduleInDateRangeFilter: function(start, end) {
         return function(model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
 
             // shorthand condition of
             //
-            // (ownStarts >= starts && ownEnds <= ends) ||
-            // (ownStarts < starts && ownEnds >= starts) ||
-            // (ownEnds > ends && ownStarts <= ends)
-            return !(ownEnds < starts || ownStarts > ends);
+            // (ownStarts >= start && ownEnds <= end) ||
+            // (ownStarts < start && ownEnds >= start) ||
+            // (ownEnds > end && ownStarts <= end)
+            return !(ownEnds < start || ownStarts > end);
         };
     },
 
     /**
      * Position each view model for placing into container
-     * @param {Date} starts - start date to render
-     * @param {Date} ends - end date to render
+     * @param {Date} start - start date to render
+     * @param {Date} end - end date to render
      * @param {array} matrices - matrices from controller
      * @param {function} [iteratee] - iteratee function invoke each view models
      */
-    positionViewModels: function(starts, ends, matrices, iteratee) {
+    positionViewModels: function(start, end, matrices, iteratee) {
         var ymdListToRender;
 
         ymdListToRender = util.map(
-            datetime.range(starts, ends, datetime.MILLISECONDS_PER_DAY),
+            datetime.range(start, end, datetime.MILLISECONDS_PER_DAY),
             function(date) {
                 return datetime.format(date, 'YYYYMMDD');
             }
@@ -192,28 +192,28 @@ var Core = {
 
     /**
      * Limit start, end date each view model for render properly
-     * @param {Date} starts - start date to render
-     * @param {Date} ends - end date to render
-     * @param {Collection|CalEventViewModel} viewModelColl - event view
-     *  model collection or CalEventViewModel
-     * @returns {CalEventViewModel} return view model when third parameter is
+     * @param {Date} start - start date to render
+     * @param {Date} end - end date to render
+     * @param {Collection|ScheduleViewModel} viewModelColl - schedule view
+     *  model collection or ScheduleViewModel
+     * @returns {ScheduleViewModel} return view model when third parameter is
      *  view model
      */
-    limitRenderRange: function(starts, ends, viewModelColl) {
+    limitRenderRange: function(start, end, viewModelColl) {
         /**
          * Limit render range for view models
-         * @param {CalEventViewModel} viewModel - view model instance
-         * @returns {CalEventViewModel} view model that limited render range
+         * @param {ScheduleViewModel} viewModel - view model instance
+         * @returns {ScheduleViewModel} view model that limited render range
          */
         function limit(viewModel) {
-            if (viewModel.getStarts() < starts) {
+            if (viewModel.getStarts() < start) {
                 viewModel.exceedLeft = true;
-                viewModel.renderStarts = new TZDate(starts.getTime());
+                viewModel.renderStarts = new TZDate(start.getTime());
             }
 
-            if (viewModel.getEnds() > ends) {
+            if (viewModel.getEnds() > end) {
                 viewModel.exceedRight = true;
-                viewModel.renderEnds = new TZDate(ends.getTime());
+                viewModel.renderEnds = new TZDate(end.getTime());
             }
 
             return viewModel;
@@ -228,9 +228,9 @@ var Core = {
     },
 
     /**
-     * Convert event model collection to view model collection.
-     * @param {Collection} modelColl - collection of event model
-     * @returns {Collection} collection of event view model
+     * Convert schedule model collection to view model collection.
+     * @param {Collection} modelColl - collection of schedule model
+     * @returns {Collection} collection of schedule view model
      */
     convertToViewModel: function(modelColl) {
         var viewModelColl;
@@ -240,7 +240,7 @@ var Core = {
         });
 
         modelColl.each(function(model) {
-            viewModelColl.add(CalEventViewModel.create(model));
+            viewModelColl.add(ScheduleViewModel.create(model));
         });
 
         return viewModelColl;

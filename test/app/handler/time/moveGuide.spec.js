@@ -24,7 +24,7 @@ describe('handler/time.move.guide', function() {
 
         mockInstance.guideElement.style.height = '20px';
 
-        var eventData = {
+        var scheduleData = {
             currentView: {
                 options: {
                     hourStart: 0,
@@ -38,10 +38,10 @@ describe('handler/time.move.guide', function() {
         };
 
         util.extend(mockInstance, {
-            _lastDrag: eventData
+            _lastDrag: scheduleData
         });
 
-        Guide.prototype._onDrag.call(mockInstance, eventData);
+        Guide.prototype._onDrag.call(mockInstance, scheduleData);
 
         var args = mockInstance._refreshGuideElement.calls.argsFor(0);
 

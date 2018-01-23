@@ -17,7 +17,7 @@ var config = require('../../config'),
     View = require('../../view/view'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
-    eventTmpl = require('./weekdayInMonthEvent.hbs'),
+    scheduleTmpl = require('./weekdayInMonthSchedule.hbs'),
     skipTmpl = require('./weekdayInMonthSkip.hbs');
 
 var EVENT_PADDING_TOP = 14;
@@ -29,8 +29,8 @@ var EVENT_PADDING_TOP = 14;
  * @param {number} [options.heightPercent] - height percent of view
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
- * @param {number} [options.eventHeight=18] - height of each event block.
- * @param {number} [options.eventGutter=2] - gutter height of each event block.
+ * @param {number} [options.scheduleHeight=18] - height of each schedule block.
+ * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  */
@@ -42,14 +42,14 @@ function WeekdayInMonth(options, container) {
 util.inherit(WeekdayInMonth, Weekday);
 
 /**
- * Get event container element's bound properly by override
+ * Get schedule container element's bound properly by override
  *
  * View#getViewBound.
  * @override
  */
 WeekdayInMonth.prototype.getViewBound = function() {
     var bound = View.prototype.getViewBound.call(this),
-        selector = config.classname('.weekday-events'),
+        selector = config.classname('.weekday-schedules'),
         height = domutil.getSize(domutil.find(selector, this.container))[1];
 
     bound.height = height;
@@ -58,19 +58,19 @@ WeekdayInMonth.prototype.getViewBound = function() {
 };
 
 /**
- * Get limit index of event block in current view
+ * Get limit index of schedule block in current view
  * @returns {number} limit index
  */
 WeekdayInMonth.prototype._getRenderLimitIndex = function() {
     var opt = this.options;
     var containerHeight = this.getViewBound().height - EVENT_PADDING_TOP - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
-    var count = mfloor(containerHeight / (opt.eventHeight + opt.eventGutter));
+    var count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
 
     return mmax(count - 1, 0); // subtraction for '+n' label block
 };
 
 /**
- * Get handlebars custom helper method for limitation event block render count
+ * Get handlebars custom helper method for limitation schedule block render count
  * features
  *
  * Calculate count on each date. render +n label only when no cumulated
@@ -100,7 +100,7 @@ WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
 
 /**
  * Get view model for render skipped label
- * @param {object} exceedDate - object has count of each dates exceed event block
+ * @param {object} exceedDate - object has count of each dates exceed schedule block
  *  count.
  * @param {object} baseViewModel - view model of base view
  * @returns {object[]} - view model for skipped label
@@ -125,14 +125,14 @@ WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewM
 
 /**
  * @override
- * @param {object} viewModel - events view models
+ * @param {object} viewModel - schedules view models
  */
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(),
         renderLimitIdx,
         exceedDate = {},
-        eventContainer,
+        scheduleContainer,
         contentStr = '';
 
     if (!this.options.visibleWeeksCount) {
@@ -142,20 +142,20 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     renderLimitIdx = this._getRenderLimitIndex();
 
-    eventContainer = domutil.find(
-        config.classname('.weekday-events'),
+    scheduleContainer = domutil.find(
+        config.classname('.weekday-schedules'),
         container
     );
 
-    if (!eventContainer) {
+    if (!scheduleContainer) {
         return;
     }
 
     Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
 
-    contentStr += eventTmpl(util.extend({
+    contentStr += scheduleTmpl(util.extend({
         matrices: viewModel,
-        eventPaddingTop: EVENT_PADDING_TOP,
+        schedulePaddingTop: EVENT_PADDING_TOP,
         renderLimitIdx: renderLimitIdx
     }, baseViewModel));
 
@@ -164,10 +164,10 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         viewModelForSkip: this._getSkipLabelViewModel(exceedDate, baseViewModel)
     }, baseViewModel));
 
-    eventContainer.innerHTML = contentStr;
+    scheduleContainer.innerHTML = contentStr;
 
     common.setAutoEllipsis(
-        config.classname('.weekday-event-title'),
+        config.classname('.weekday-schedule-title'),
         container
     );
 };
