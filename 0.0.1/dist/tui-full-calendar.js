@@ -4283,9 +4283,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, util.pick(this.options, 'week') || {});
 	
 	    this.options.month = util.extend({
-	        scheduleFilter: function(model) {
-	            return Boolean(model.visible) &&
-	                (model.category === 'allday' || model.category === 'time');
+	        scheduleFilter: function(schedule) {
+	            return Boolean(schedule.isVisible) &&
+	                (schedule.category === 'allday' || schedule.category === 'time');
 	        }
 	    }, util.pick(options, 'month') || {});
 	
@@ -15758,8 +15758,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {string}
 	     */
 	    this.options = util.extend({
-	        scheduleFilter: function(model) {
-	            return Boolean(model.visible);
+	        scheduleFilter: function(schedule) {
+	            return Boolean(schedule.isVisible);
 	        },
 	        startDayOfWeek: 0,
 	        renderMonth: '2018-01',
@@ -16428,9 +16428,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	MonthClick.prototype._onClick = function(clickEvent) {
 	    var self = this,
-	      moreElement,
-	      eventCollection = this.baseController.events,
-	      blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-schedule-block')) || domutil.closest(clickEvent.target, config.classname('.month-more-schedule'));
+	        moreElement,
+	        scheduleCollection = this.baseController.schedules,
+	        blockElement = domutil.closest(clickEvent.target, config.classname('.weekday-schedule-block'))
+	                    || domutil.closest(clickEvent.target, config.classname('.month-more-schedule'));
 	
 	    moreElement = domutil.closest(
 	        clickEvent.target,
@@ -16446,7 +16447,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    if (blockElement) {
-	        eventCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
+	        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
 	            /**
 	             * @events AlldayClick#clickSchedule
 	             * @type {object}
@@ -18000,13 +18001,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	MonthMove.prototype._onDrag = function(dragEvent) {
 	    var scheduleData;
 	
-	    if (!this.getEventData) {
+	    if (!this.getScheduleData) {
 	        return;
 	    }
 	
 	    scheduleData = util.extend({
 	        originEvent: dragEvent.originEvent
-	    }, this.getEventData(dragEvent.originEvent));
+	    }, this.getScheduleData(dragEvent.originEvent));
 	
 	    if (!scheduleData) {
 	        return;
