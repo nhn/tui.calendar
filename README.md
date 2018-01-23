@@ -7,8 +7,8 @@ tui-full-calendar
 * Start Day of Week
 
 ## Documentation
-* API: [http://nhnent.github.io/application-dooray-calendar/latest/](http://nhnent.github.io/application-dooray-calendar/latest/)
-* Examples: [http://nhnent.github.io/application-dooray-calendar/latest/tutorial-example01-basic.html](http://nhnent.github.io/application-dooray-calendar/latest/tutorial-example01-basic.html)
+* API: [https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/](https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/)
+* Examples: [https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/tutorial-example01-basic.html](https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/tutorial-example01-basic.html)
 
 ## Dependency
 * [tui.code-snippet: 1.2.9](https://github.com/nhnent/tui.code-snippet/releases/tag/v1.2.9)
