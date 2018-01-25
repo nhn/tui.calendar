@@ -1,7 +1,7 @@
 /*eslint-disable*/
 var datetime = require('common/datetime');
-var Schedule = require('model/Schedule');
-var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
+var Schedule = require('model/schedule');
+var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
 var Time = require('view/week/time');
 var TZDate = require('common/timezone').Date;
 

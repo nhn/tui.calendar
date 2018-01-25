@@ -30,6 +30,7 @@ var dw = require('../common/dw'),
  * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
  * @property {boolean} isFocused - focused schedule flag
  * @property {boolean} isVisible - schedule visibility flag
+ * @property {boolean} isReadOnly - schedule read-only flag
  * @property {string} [color] - schedule text color
  * @property {string} [bgColor] - schedule background color
  * @property {string} [borderColor] - schedule left border color

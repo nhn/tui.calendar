@@ -128,6 +128,12 @@ function Schedule() {
     this.isFocused = false;
 
     /**
+     * read-only schedule flag
+     * @type {boolean}
+     */
+    this.isReadOnly = false;
+
+    /**
      * 렌더링과 관계 없는 별도 데이터 저장 공간.
      * @type {object}
      */
@@ -186,6 +192,7 @@ Schedule.prototype.init = function(options) {
     this.customStyle = options.customStyle || '';
     this.isPending = options.isPending || false;
     this.isFocused = options.isFocused || false;
+    this.isReadOnly = options.isReadOnly || false;
 
     if (this.isAllDay) {
         this.setAllDayPeriod(options.start, options.end);

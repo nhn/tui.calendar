@@ -10,7 +10,7 @@ var util = global.tui.util,
 var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
 var Collection = require('../../common/collection');
-var ScheduleViewModel = require('../../model/viewModel/ScheduleViewModel');
+var ScheduleViewModel = require('../../model/viewModel/scheduleViewModel');
 
 var Core = {
     /**

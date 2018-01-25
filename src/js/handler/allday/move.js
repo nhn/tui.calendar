@@ -123,6 +123,10 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
+    if (targetModel.isReadOnly) {
+        return;
+    }
+
     getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
     scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
 
