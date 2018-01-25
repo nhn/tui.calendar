@@ -1,6 +1,6 @@
 /*!
  * tui-full-calendar
- * @version 0.0.1 | Tue Jan 23 2018
+ * @version 0.1.0 | Thu Jan 25 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -4130,6 +4130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
 	 * @property {boolean} isFocused - focused schedule flag
 	 * @property {boolean} isVisible - schedule visibility flag
+	 * @property {boolean} isReadOnly - schedule read-only flag
 	 * @property {string} [color] - schedule text color
 	 * @property {string} [bgColor] - schedule background color
 	 * @property {string} [borderColor] - schedule left border color
@@ -6420,6 +6421,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.isFocused = false;
 	
 	    /**
+	     * read-only schedule flag
+	     * @type {boolean}
+	     */
+	    this.isReadOnly = false;
+	
+	    /**
 	     * 렌더링과 관계 없는 별도 데이터 저장 공간.
 	     * @type {object}
 	     */
@@ -6478,6 +6485,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.customStyle = options.customStyle || '';
 	    this.isPending = options.isPending || false;
 	    this.isFocused = options.isFocused || false;
+	    this.isReadOnly = options.isReadOnly || false;
 	
 	    if (this.isAllDay) {
 	        this.setAllDayPeriod(options.start, options.end);
@@ -9774,6 +9782,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var baseHeight = options.baseHeight;
 	    var cropped = false;
 	    var offsetStart, width, height, top;
+	    var isReadOnly = util.pick(viewModel, 'model', 'isReadOnly') || false;
 	
 	    offsetStart = viewModel.valueOf().start - options.todayStart;
 	
@@ -9789,6 +9798,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (height + top > baseHeight) {
 	        height = baseHeight - top;
+	        cropped = true;
+	    }
+	
+	    if (isReadOnly) {
 	        cropped = true;
 	    }
 	
@@ -10993,9 +11006,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title\">"
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</span>\n            <span class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle handle-y\">&nbsp;</span>\n        </div>\n    </div>\n";
+	    + "</span>\n            "
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(18, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\n        </div>\n    </div>\n";
 	},"8":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -11031,6 +11044,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
+	},"18":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<span class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -11725,6 +11744,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    targetModel = controller.schedules.items[modelID];
 	
 	    if (!targetModel) {
+	        return;
+	    }
+	
+	    if (targetModel.isReadOnly) {
 	        return;
 	    }
 	
@@ -14166,18 +14189,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        getScheduleDataFunc,
 	        scheduleData,
 	        ctrl = this.baseController,
-	        targetModelID;
+	        targetModelID,
+	        targetModel;
 	
 	    if (!timeView || !blockElement) {
 	        return;
 	    }
 	
 	    targetModelID = domutil.getData(blockElement, 'id');
+	    targetModel = ctrl.schedules.items[targetModelID];
+	
+	    if (targetModel.isReadOnly) {
+	        return;
+	    }
+	
 	    getScheduleDataFunc = this._getScheduleDataFunc = this._retriveScheduleData(timeView);
 	    scheduleData = this._dragStart = getScheduleDataFunc(
 	        dragStartEventData.originEvent, {
 	            targetModelID: targetModelID,
-	            model: ctrl.schedules.items[targetModelID]
+	            model: targetModel
 	        }
 	    );
 	
@@ -15758,8 +15788,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {string}
 	     */
 	    this.options = util.extend({
-	        scheduleFilter: function(model) {
-	            return Boolean(model.visible);
+	        scheduleFilter: function(schedule) {
+	            return Boolean(schedule.isVisible);
 	        },
 	        startDayOfWeek: 0,
 	        renderMonth: '2018-01',
@@ -16214,7 +16244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stack1;
 	
 	  return "\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.top : depth0),"<",((stack1 = (data && data.root)) && stack1.renderLimitIdx),{"name":"fi","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(26, data, 0),"data":data})) != null ? stack1 : "");
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.top : depth0),"<",((stack1 = (data && data.root)) && stack1.renderLimitIdx),{"name":"fi","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(28, data, 0),"data":data})) != null ? stack1 : "");
 	},"5":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function";
 	
@@ -16235,7 +16265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ";\n                margin-top:"
 	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleBlockGutter), depth0))
 	    + "px\">\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(10, data, 0),"inverse":container.program(17, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(10, data, 0),"inverse":container.program(19, data, 0),"data":data})) != null ? stack1 : "")
 	    + "    </div>\n";
 	},"6":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -16268,9 +16298,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</span>\n            <span class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle handle-y\">&nbsp;</span>\n        </div>\n";
+	    + "</span>\n            "
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\n        </div>\n";
 	},"11":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -16295,6 +16325,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
 	},"17":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<span class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
+	},"19":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
@@ -16308,33 +16344,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\">\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-bullet\"\n                  style=\"\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(18, data, 0),"inverse":container.program(20, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(20, data, 0),"inverse":container.program(22, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                    \"\n            ></span>\n            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title\"\n                  style=\"\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(22, data, 0),"inverse":container.program(24, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(24, data, 0),"inverse":container.program(26, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                    \"\n                  data-title=\""
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n        </div>\n";
-	},"18":function(container,depth0,helpers,partials,data) {
-	    return "                        background: #ffffff\n";
 	},"20":function(container,depth0,helpers,partials,data) {
+	    return "                        background: #ffffff\n";
+	},"22":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "                        background:"
 	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\n";
-	},"22":function(container,depth0,helpers,partials,data) {
+	},"24":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "                        color: #ffffff;\n                        background-color: "
 	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\n";
-	},"24":function(container,depth0,helpers,partials,data) {
-	    return "                        color:#333;\n";
 	},"26":function(container,depth0,helpers,partials,data) {
+	    return "                        color:#333;\n";
+	},"28":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return container.escapeExpression(((helper = (helper = helpers.wdSkipped || (depth0 != null ? depth0.wdSkipped : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"wdSkipped","hash":{},"data":data}) : helper)))
@@ -16781,7 +16817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {boolean}
 	 */
 	function isElementWeekdaySchedule(el) {
-	    return domutil.hasClass(el, config.classname('weekday-events'));
+	    return domutil.hasClass(el, config.classname('weekday-schedules'));
 	}
 	
 	util.CustomEvents.mixin(MonthCreation);
@@ -17962,6 +17998,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    model = this.baseController.schedules.items[modelID];
+	
+	    if (model.isReadOnly) {
+	        return;
+	    }
 	
 	    this.dragHandler.on({
 	        drag: this._onDrag,
