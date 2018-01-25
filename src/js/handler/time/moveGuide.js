@@ -12,7 +12,7 @@ var ratio = require('../../common/common').ratio;
 var FloatingLayer = require('../../common/floatingLayer');
 var tmpl = require('../../view/template/week/timeMoveGuide.hbs');
 var TZDate = require('../../common/timezone').Date;
-var Schedule = require('../../model/Schedule');
+var Schedule = require('../../model/schedule');
 
 /**
  * Class for Time.Move effect.

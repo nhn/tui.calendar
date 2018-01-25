@@ -166,6 +166,26 @@
             dueDateClass: '',
             start: formattedDate + 'T00:00:00+09:00',
             end: formattedDate + 'T00:00:00+09:00'
+        },
+        {
+            id: '13',
+            calendarId: '2',
+            title: 'ReadOnly allday',
+            category: 'allday',
+            dueDateClass: '',
+            start: formattedDate + 'T09:00:00+09:00',
+            end: formattedDate + 'T13:00:00+09:00',
+            isReadOnly: true
+        },
+        {
+            id: '14',
+            calendarId: '1',
+            title: 'ReadOnly schedule',
+            category: 'time',
+            dueDateClass: '',
+            start: formattedDate + 'T09:00:00+09:00',
+            end: formattedDate + 'T13:00:00+09:00',
+            isReadOnly: true
         }
     ]);
 

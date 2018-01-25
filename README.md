@@ -98,7 +98,8 @@ calendar.createSchedules([
         category: 'time',
         dueDateClass: '',
         start: '2018-01-18T17:30:00+09:00',
-        end: '2018-01-19T17:31:00+09:00'
+        end: '2018-01-19T17:31:00+09:00',
+        isReadOnly: true    // schedule is read-only
     }
 ]);
 ```
@@ -116,6 +117,17 @@ calendar.updateSchedule(schedule.id, schedule.calendarId, {
 
 ```javascript
 calendar.deleteSchedule(schedule.id, schedule.calendarId);
+```
+
+#### Set a schedule as read-only
+
+`Schedule.isReadOnly` indicates a schedule's read-only attribute.
+
+```javascript
+calendar.createSchedule({
+    title: 'read-only schedule',
+    isReadOnly: true
+});
 ```
 
 ### Add event handlers

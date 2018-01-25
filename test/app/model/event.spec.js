@@ -1,5 +1,5 @@
 /*eslint-disable*/
-var Schedule = require('model/Schedule');
+var Schedule = require('model/schedule');
 var TZDate = require('common/timezone').Date;
 
 describe('model/schedule basic', function() {

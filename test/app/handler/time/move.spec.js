@@ -140,4 +140,40 @@ describe('handler/time.move', function() {
             });
         });
     });
+
+    describe('event handlers', function() {
+        describe('_onDragStart()', function() {
+
+            beforeEach(function() {
+                spyOn(domutil, 'closest');
+                spyOn(domutil, 'getData');
+            });
+
+            it('cancel drag event when the schedule is read-only', function() {
+                var mockController = {
+                    schedules: {
+                        items: {
+                            '3': {
+                                isReadOnly: true
+                            }
+                        }
+                    }
+                };
+
+                var mockInst = {
+                    baseController: mockController,
+                    checkExpectCondition: jasmine.createSpy('checkExpectCondition'),
+                    fire: jasmine.createSpy('fire')
+                };
+
+                mockInst.checkExpectCondition.and.returnValue({});
+                domutil.getData.and.returnValue(3);
+                domutil.closest.and.returnValue({});
+
+                TimeMove.prototype._onDragStart.call(mockInst, {});
+
+                expect(mockInst.fire).not.toHaveBeenCalled();
+            })
+        });
+    });
 });
