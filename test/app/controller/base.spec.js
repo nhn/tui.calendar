@@ -2,8 +2,8 @@
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
-var Schedule = require('model/Schedule');
-var ScheduleViewModel = require('model/viewModel/ScheduleViewModel');
+var Schedule = require('model/schedule');
+var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
 var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
 

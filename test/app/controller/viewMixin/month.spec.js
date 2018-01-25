@@ -1,6 +1,6 @@
 var array = require('common/array');
 var ControllerFactory = require('factory/controller');
-var Schedule = require('model/Schedule');
+var Schedule = require('model/schedule');
 var TZDate = require('common/timezone').Date;
 var matricesMatcher = require('../../../matcher/matrices');
 

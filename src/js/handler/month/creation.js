@@ -306,7 +306,7 @@ function adjustStartAndEndTime(start, end) {
  * @returns {boolean}
  */
 function isElementWeekdaySchedule(el) {
-    return domutil.hasClass(el, config.classname('weekday-events'));
+    return domutil.hasClass(el, config.classname('weekday-schedules'));
 }
 
 util.CustomEvents.mixin(MonthCreation);

@@ -5,8 +5,8 @@
 'use strict';
 
 var util = global.tui.util;
-var Schedule = require('../model/Schedule');
-var ScheduleViewModel = require('../model/viewModel/ScheduleViewModel');
+var Schedule = require('../model/schedule');
+var ScheduleViewModel = require('../model/viewModel/scheduleViewModel');
 var datetime = require('../common/datetime');
 var common = require('../common/common');
 

@@ -141,6 +141,32 @@ describe('handler:AlldayMove', function() {
 
                 expect(mockInst.fire).not.toHaveBeenCalled();
             });
+
+            it('cancel drag event when the schedule is read-only', function() {
+                var mockController = {
+                    schedules: {
+                        items: {
+                            '3': {
+                                isReadOnly: true
+                            }
+                        }
+                    }
+                };
+
+                var mockInst = {
+                    baseController: mockController,
+                    checkExpectedCondition: jasmine.createSpy('checkExpectedCondition'),
+                    fire: jasmine.createSpy('fire')
+                };
+
+                mockInst.checkExpectedCondition.and.returnValue(true);
+                domutil.getData.and.returnValue(3); 
+                domutil.closest.and.returnValue({});
+
+                proto._onDragStart.call(mockInst, {});
+
+                expect(mockInst.fire).not.toHaveBeenCalled();
+            })
         });
     });
 });

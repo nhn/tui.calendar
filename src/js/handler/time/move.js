@@ -111,18 +111,25 @@ TimeMove.prototype._onDragStart = function(dragStartEventData) {
         getScheduleDataFunc,
         scheduleData,
         ctrl = this.baseController,
-        targetModelID;
+        targetModelID,
+        targetModel;
 
     if (!timeView || !blockElement) {
         return;
     }
 
     targetModelID = domutil.getData(blockElement, 'id');
+    targetModel = ctrl.schedules.items[targetModelID];
+
+    if (targetModel.isReadOnly) {
+        return;
+    }
+
     getScheduleDataFunc = this._getScheduleDataFunc = this._retriveScheduleData(timeView);
     scheduleData = this._dragStart = getScheduleDataFunc(
         dragStartEventData.originEvent, {
             targetModelID: targetModelID,
-            model: ctrl.schedules.items[targetModelID]
+            model: targetModel
         }
     );
 

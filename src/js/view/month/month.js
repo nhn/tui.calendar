@@ -49,8 +49,8 @@ function Month(options, container, controller) {
      * @type {string}
      */
     this.options = util.extend({
-        scheduleFilter: function(model) {
-            return Boolean(model.visible);
+        scheduleFilter: function(schedule) {
+            return Boolean(schedule.isVisible);
         },
         startDayOfWeek: 0,
         renderMonth: '2018-01',
