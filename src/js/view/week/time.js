@@ -82,6 +82,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
     var baseHeight = options.baseHeight;
     var cropped = false;
     var offsetStart, width, height, top;
+    var isReadOnly = util.pick(viewModel, 'model', 'isReadOnly') || false;
 
     offsetStart = viewModel.valueOf().start - options.todayStart;
 
@@ -97,6 +98,10 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
 
     if (height + top > baseHeight) {
         height = baseHeight - top;
+        cropped = true;
+    }
+
+    if (isReadOnly) {
         cropped = true;
     }
 

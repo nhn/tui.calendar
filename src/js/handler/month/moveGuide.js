@@ -10,7 +10,7 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     FloatingLayer = require('../../common/floatingLayer'),
     tmpl = require('./moveGuide.hbs'),
-    Schedule = require('../../model/Schedule');
+    Schedule = require('../../model/schedule');
 
 /**
  * @constructor

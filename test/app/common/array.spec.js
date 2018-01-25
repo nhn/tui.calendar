@@ -1,6 +1,6 @@
 /*eslint-disable*/
 var array = require('common/array');
-var Schedule = require('model/Schedule');
+var Schedule = require('model/schedule');
 
 describe('common/array', function() {
     var util = tui.util;

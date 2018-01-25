@@ -165,6 +165,10 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
 
     model = this.baseController.schedules.items[modelID];
 
+    if (model.isReadOnly) {
+        return;
+    }
+
     this.dragHandler.on({
         drag: this._onDrag,
         dragEnd: this._onDragEnd
