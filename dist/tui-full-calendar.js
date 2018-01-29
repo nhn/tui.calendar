@@ -1,19 +1,19 @@
 /*!
  * tui-full-calendar
- * @version 0.1.0 | Thu Jan 25 2018
+ * @version 0.2.0 | Mon Jan 29 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("tui-code-snippet"));
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define(["tui-code-snippet"], factory);
 	else if(typeof exports === 'object')
-		exports["FullCalendar"] = factory();
+		exports["FullCalendar"] = factory(require("tui-code-snippet"));
 	else
-		root["tui"] = root["tui"] || {}, root["tui"]["FullCalendar"] = factory();
-})(this, function() {
+		root["tui"] = root["tui"] || {}, root["tui"]["FullCalendar"] = factory((root["tui"] && root["tui"]["util"]));
+})(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(1);
 	__webpack_require__(5);
 	
-	module.exports = __webpack_require__(34);
+	module.exports = __webpack_require__(35);
 
 
 /***/ },
@@ -86,18 +86,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
+	/* eslint complexity: 0 */
 	/**
 	 * @fileoverview Helpers for handlebar templates.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var Handlebars = __webpack_require__(6);
-	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(29);
-	var config = __webpack_require__(33);
+	var util = __webpack_require__(6);
+	var Handlebars = __webpack_require__(7);
+	var datetime = __webpack_require__(27);
+	var common = __webpack_require__(30);
+	var config = __webpack_require__(34);
 	
 	/**
 	 * Get CSS syntax for element size
@@ -364,26 +364,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return common.stripTags(model.title);
 	    }
 	});
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	module.exports = __webpack_require__(7);
+	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// Create a simple path alias to allow browserify to resolve
-	// the runtime on a supported path.
-	module.exports = __webpack_require__(8)['default'];
-
+	module.exports = __webpack_require__(8);
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Create a simple path alias to allow browserify to resolve
+	// the runtime on a supported path.
+	module.exports = __webpack_require__(9)['default'];
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -397,30 +402,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _handlebarsBase = __webpack_require__(9);
+	var _handlebarsBase = __webpack_require__(10);
 	
 	var base = _interopRequireWildcard(_handlebarsBase);
 	
 	// Each of these augment the Handlebars object. No need to setup here.
 	// (This is done to easily share code between commonjs and browse envs)
 	
-	var _handlebarsSafeString = __webpack_require__(23);
+	var _handlebarsSafeString = __webpack_require__(24);
 	
 	var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 	
-	var _handlebarsException = __webpack_require__(11);
+	var _handlebarsException = __webpack_require__(12);
 	
 	var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 	
-	var _handlebarsUtils = __webpack_require__(10);
+	var _handlebarsUtils = __webpack_require__(11);
 	
 	var Utils = _interopRequireWildcard(_handlebarsUtils);
 	
-	var _handlebarsRuntime = __webpack_require__(24);
+	var _handlebarsRuntime = __webpack_require__(25);
 	
 	var runtime = _interopRequireWildcard(_handlebarsRuntime);
 	
-	var _handlebarsNoConflict = __webpack_require__(25);
+	var _handlebarsNoConflict = __webpack_require__(26);
 	
 	var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 	
@@ -455,7 +460,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -466,17 +471,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
-	var _exception = __webpack_require__(11);
+	var _exception = __webpack_require__(12);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
-	var _helpers = __webpack_require__(12);
+	var _helpers = __webpack_require__(13);
 	
-	var _decorators = __webpack_require__(20);
+	var _decorators = __webpack_require__(21);
 	
-	var _logger = __webpack_require__(22);
+	var _logger = __webpack_require__(23);
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
@@ -565,7 +570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -695,7 +700,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -755,7 +760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -766,31 +771,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _helpersBlockHelperMissing = __webpack_require__(13);
+	var _helpersBlockHelperMissing = __webpack_require__(14);
 	
 	var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 	
-	var _helpersEach = __webpack_require__(14);
+	var _helpersEach = __webpack_require__(15);
 	
 	var _helpersEach2 = _interopRequireDefault(_helpersEach);
 	
-	var _helpersHelperMissing = __webpack_require__(15);
+	var _helpersHelperMissing = __webpack_require__(16);
 	
 	var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 	
-	var _helpersIf = __webpack_require__(16);
+	var _helpersIf = __webpack_require__(17);
 	
 	var _helpersIf2 = _interopRequireDefault(_helpersIf);
 	
-	var _helpersLog = __webpack_require__(17);
+	var _helpersLog = __webpack_require__(18);
 	
 	var _helpersLog2 = _interopRequireDefault(_helpersLog);
 	
-	var _helpersLookup = __webpack_require__(18);
+	var _helpersLookup = __webpack_require__(19);
 	
 	var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 	
-	var _helpersWith = __webpack_require__(19);
+	var _helpersWith = __webpack_require__(20);
 	
 	var _helpersWith2 = _interopRequireDefault(_helpersWith);
 	
@@ -807,14 +812,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -852,7 +857,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -862,9 +867,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
-	var _exception = __webpack_require__(11);
+	var _exception = __webpack_require__(12);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
@@ -952,7 +957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -962,7 +967,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _exception = __webpack_require__(11);
+	var _exception = __webpack_require__(12);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
@@ -983,14 +988,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('if', function (conditional, options) {
@@ -1018,7 +1023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1050,7 +1055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1068,14 +1073,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('with', function (context, options) {
@@ -1107,7 +1112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1118,7 +1123,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _decoratorsInline = __webpack_require__(21);
+	var _decoratorsInline = __webpack_require__(22);
 	
 	var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 	
@@ -1129,14 +1134,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
 	exports['default'] = function (instance) {
 	  instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -1164,14 +1169,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
 	var logger = {
 	  methodMap: ['debug', 'info', 'warn', 'error'],
@@ -1217,7 +1222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	// Build out our basic SafeString type
@@ -1238,7 +1243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1258,15 +1263,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 	
 	var Utils = _interopRequireWildcard(_utils);
 	
-	var _exception = __webpack_require__(11);
+	var _exception = __webpack_require__(12);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
-	var _base = __webpack_require__(9);
+	var _base = __webpack_require__(10);
 	
 	function checkRevision(compilerInfo) {
 	  var compilerRevision = compilerInfo && compilerInfo[0] || 1,
@@ -1551,7 +1556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* global window */
@@ -1578,7 +1583,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -1587,9 +1592,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var TZDate = __webpack_require__(27).Date,
-	    dw = __webpack_require__(28);
-	var util = global.tui.util;
+	var TZDate = __webpack_require__(28).Date,
+	    dw = __webpack_require__(29);
+	var util = __webpack_require__(6);
 	var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 	var datetime, tokenFunc;
 	
@@ -2005,6 +2010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {number} [options.startDayOfWeek=0] - start day of week
 	     * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
 	     * @param {number} options.visibleWeeksCount visible weeks count
+	     * @param {boolean} options.workweek - only show work week
 	     * @param {function} [iteratee] - iteratee for customizing calendar object
 	     * @returns {Array.<string[]>} calendar 2d array
 	     */
@@ -2017,7 +2023,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            calendar = [],
 	            startDayOfWeek = options.startDayOfWeek,
 	            isAlways6Week = options.isAlways6Week,
-	            visibleWeeksCount = options.visibleWeeksCount;
+	            visibleWeeksCount = options.visibleWeeksCount,
+	            workweek = options.workweek;
 	
 	        if (visibleWeeksCount) {
 	            start = new TZDate(month);
@@ -2055,7 +2062,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            date = new TZDate(cursor);
 	            date = iteratee ? iteratee(date) : date;
-	            week.push(date);
+	            if (!workweek || !datetime.isWeekend(date.getDay())) {
+	                week.push(date);
+	            }
 	
 	            // add date
 	            cursor.setDate(cursor.getDate() + 1);
@@ -2065,19 +2074,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    /**
-	     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek
+	     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek, workweek
 	     * 
 	     * @param {number} days - day length of week
 	     * @param {boolean} narrowWeekend - narrow weekend
 	     * @param {number} startDayOfWeek - start day of week
+	     * @param {boolean} workweek - only show work week
 	     * @returns {Array} day, left, width
 	     */
-	    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek) {
+	    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek, workweek) {
 	        var limitDaysToApplyNarrowWeekend = 5;
 	        var uniformWidth = 100 / days;
 	        var wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
 	        var accumulatedWidth = 0;
-	        var dates = util.range(startDayOfWeek, days).concat(util.range(days)).slice(0, days);
+	        var dates = util.range(startDayOfWeek, 7).concat(util.range(days)).slice(0, 7);
+	
+	        if (workweek) {
+	            dates = util.filter(dates, function(day) {
+	                return !datetime.isWeekend(day);
+	            });
+	        }
+	
+	        narrowWeekend = workweek ? false : narrowWeekend;
 	
 	        return util.map(dates, function(day) {
 	            var model;
@@ -2113,7 +2131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	/**
@@ -2237,7 +2255,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2245,7 +2263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var TZDate = __webpack_require__(27).Date;
+	var TZDate = __webpack_require__(28).Date;
 	
 	/**
 	 * @constructor
@@ -2343,20 +2361,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview common/general utilities.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    aps = Array.prototype.slice;
 	
-	var domutil = __webpack_require__(30),
-	    Collection = __webpack_require__(32);
+	var domutil = __webpack_require__(31),
+	    Collection = __webpack_require__(33);
 	
 	/**
 	 * Default schedule id getter for collection
@@ -2524,24 +2542,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0, no-shadow: 0, max-nested-callbacks: 0  */
+	/* eslint complexity: 0, no-shadow: 0, max-nested-callbacks: 0  */
 	/**
 	 * @fileoverview Utility modules for manipulate DOM elements.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var domevent = __webpack_require__(31);
-	var Collection = __webpack_require__(32);
+	var domevent = __webpack_require__(32);
+	var Collection = __webpack_require__(33);
 	
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    posKey = '_pos',
 	    domutil;
 	
@@ -3169,21 +3186,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = domutil;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 31 */
-/***/ function(module, exports) {
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
+	/* eslint complexity: 0 */
 	/**
 	 * @fileoverview Utility module for handling DOM events.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    browser = util.browser,
 	    eventKey = '_evt',
 	    DRAG = {
@@ -3603,20 +3619,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = domevent;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 32 */
-/***/ function(module, exports) {
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Common collections.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    forEachProp = util.forEachOwnProperties,
 	    forEachArr = util.forEachArray,
 	    isFunc = util.isFunction,
@@ -4045,11 +4060,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Collection;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	/**
@@ -4095,27 +4109,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Factory module for control all other factory.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mmin = Math.min;
-	var Handlebars = __webpack_require__(6);
-	var dw = __webpack_require__(28),
-	    datetime = __webpack_require__(26),
-	    Layout = __webpack_require__(35),
-	    Drag = __webpack_require__(37),
-	    controllerFactory = __webpack_require__(38),
-	    weekViewFactory = __webpack_require__(48),
-	    monthViewFactory = __webpack_require__(91),
-	    TZDate = __webpack_require__(27).Date,
-	    config = __webpack_require__(33),
-	    timezone = __webpack_require__(27);
+	var Handlebars = __webpack_require__(7);
+	var dw = __webpack_require__(29),
+	    datetime = __webpack_require__(27),
+	    Layout = __webpack_require__(36),
+	    Drag = __webpack_require__(38),
+	    controllerFactory = __webpack_require__(39),
+	    weekViewFactory = __webpack_require__(49),
+	    monthViewFactory = __webpack_require__(92),
+	    TZDate = __webpack_require__(28).Date,
+	    config = __webpack_require__(34),
+	    timezone = __webpack_require__(28);
 	
 	/**
 	 * @typedef {object} Schedule
@@ -4169,6 +4183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {Array.<string>} [week.daynames] - day names in weekly and daily.
 	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 	 *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
+	 *   @property {boolean} [week.workweek=false] - show only 5 days except for weekend
 	 *  @property {object} [month] - options for month view
 	 *   @property {Array.<string>} [month.daynames] - day names in monthly.
 	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -4280,7 +4295,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, options);
 	
 	    this.options.week = util.extend({
-	        startDayOfWeek: 0
+	        startDayOfWeek: 0,
+	        workweek: false
 	    }, util.pick(this.options, 'week') || {});
 	
 	    this.options.month = util.extend({
@@ -4616,11 +4632,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @param {string|Date} date - date to show in calendar
 	 * @param {number} [startDayOfWeek=0] - start day of week
+	 * @param {boolean} [workweek=false] - only show work week
 	 * @returns {array} render range
 	 * @private
 	 */
-	Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
-	    var day, start, end,
+	Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek, workweek) {
+	    var day, start, end, range,
 	        msFrom = datetime.millisecondsFrom;
 	
 	    startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
@@ -4639,6 +4656,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (day < startDayOfWeek) {
 	        start = new TZDate(Number(start) - msFrom('day', 7));
 	        end = new TZDate(Number(end) - msFrom('day', 7));
+	    }
+	
+	    if (workweek) {
+	        range = datetime.range(
+	            datetime.start(start),
+	            datetime.end(end),
+	            datetime.MILLISECONDS_PER_DAY
+	        );
+	
+	        range = util.filter(range, function(weekday) {
+	            return !datetime.isWeekend(weekday.getDay());
+	        });
+	
+	        start = range[0];
+	        end = range[range.length - 1];
 	    }
 	
 	    return [start, end];
@@ -4773,19 +4805,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        viewName = this.viewName,
 	        view = this.getCurrentView(),
 	        recursiveSet = this.setOptionRecurseively,
-	        startDate, endDate, tempDate, startDayOfWeek, visibleWeeksCount, datetimeOptions;
+	        startDate, endDate, tempDate,
+	        startDayOfWeek, visibleWeeksCount, workweek, datetimeOptions;
 	
 	    offset = util.isExisty(offset) ? offset : 0;
 	
 	    if (viewName === 'month') {
 	        startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
 	        visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
+	        workweek = util.pick(this.options, 'month', 'workweek') || false;
 	
 	        if (visibleWeeksCount) {
 	            datetimeOptions = {
 	                startDayOfWeek: startDayOfWeek,
 	                isAlways6Week: false,
-	                visibleWeeksCount: visibleWeeksCount
+	                visibleWeeksCount: visibleWeeksCount,
+	                workweek: workweek
 	            };
 	
 	            renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
@@ -4797,7 +4832,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            datetimeOptions = {
 	                startDayOfWeek: startDayOfWeek,
-	                isAlways6Week: true
+	                isAlways6Week: true,
+	                workweek: workweek
 	            };
 	
 	            renderDate.addMonth(offset);
@@ -4809,10 +4845,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        startDate = tempDate[0][0];
-	        endDate = tempDate[tempDate.length - 1][6];
+	        endDate = tempDate[tempDate.length - 1][tempDate[tempDate.length - 1].length - 1];
 	    } else if (viewName === 'week') {
 	        renderDate.addDate(offset * 7);
-	        tempDate = this.getWeekDayRange(renderDate.d, util.pick(this.options, 'week', 'startDayOfWeek') || 0);
+	        startDayOfWeek = util.pick(this.options, 'week', 'startDayOfWeek') || 0;
+	        workweek = util.pick(this.options, 'week', 'workweek') || false;
+	        tempDate = this.getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
+	
 	        startDate = tempDate[0];
 	        endDate = tempDate[1];
 	
@@ -5303,24 +5342,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	util.CustomEvents.mixin(Calendar);
 	
 	module.exports = Calendar;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Layout view. wrap all view containers at outside.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var Collection = __webpack_require__(32);
-	var View = __webpack_require__(36);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var Collection = __webpack_require__(33);
+	var View = __webpack_require__(37);
 	
 	/**
 	 * Layout view for toggle each child view. It will controlled via navigation UI.
@@ -5387,22 +5425,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Layout;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview The base class of views.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var domutil = __webpack_require__(30);
-	var Collection = __webpack_require__(32);
+	var util = __webpack_require__(6);
+	var domutil = __webpack_require__(31);
+	var Collection = __webpack_require__(33);
 	
 	/**
 	 * Base class of views.
@@ -5597,11 +5634,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = View;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5610,9 +5646,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var domutil = __webpack_require__(30);
-	var domevent = __webpack_require__(31);
+	var util = __webpack_require__(6);
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
 	
 	/**
 	 * @constructor
@@ -5840,21 +5876,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Controller factory module.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var Base = __webpack_require__(39),
-	    Core = __webpack_require__(44),
-	    Week = __webpack_require__(45),
-	    Month = __webpack_require__(47),
-	    datetime = __webpack_require__(26);
+	var util = __webpack_require__(6);
+	var Base = __webpack_require__(40),
+	    Core = __webpack_require__(45),
+	    Week = __webpack_require__(46),
+	    Month = __webpack_require__(48),
+	    datetime = __webpack_require__(27);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -5942,24 +5978,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return controller;
 	};
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Base calendar controller
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var Schedule = __webpack_require__(40);
-	var ScheduleViewModel = __webpack_require__(43);
-	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(29);
+	var util = __webpack_require__(6);
+	var Schedule = __webpack_require__(41);
+	var ScheduleViewModel = __webpack_require__(44);
+	var datetime = __webpack_require__(27);
+	var common = __webpack_require__(30);
 	
 	/**
 	 * @constructor
@@ -6284,25 +6319,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Base;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* eslint complexity: 0 */
+	/* eslint complexity: 0 */
 	/**
 	 * @fileoverview Model of schedule.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var TZDate = __webpack_require__(27).Date;
-	var datetime = __webpack_require__(26);
-	var dirty = __webpack_require__(41);
-	var model = __webpack_require__(42);
+	var util = __webpack_require__(6);
+	var TZDate = __webpack_require__(28).Date;
+	var datetime = __webpack_require__(27);
+	var dirty = __webpack_require__(42);
+	var model = __webpack_require__(43);
 	
 	/**
 	 * 일정 카테고리
@@ -6629,21 +6663,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	dirty.mixin(Schedule.prototype);
 	
 	module.exports = Schedule;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 41 */
-/***/ function(module, exports) {
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Dirty flagging module for objects.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var common = global.tui.util,
-	    existy = common.isExisty,
+	var common = __webpack_require__(6);
+	var existy = common.isExisty,
 	    pick = common.pick,
 	    isFunc = common.isFunction;
 	
@@ -6839,25 +6872,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = dirty;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Mixin module for models.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var TZDate = __webpack_require__(27).Date;
-	var util = global.tui.util,
+	var TZDate = __webpack_require__(28).Date;
+	var util = __webpack_require__(6),
 	    spaceRx = /^\s*|\s*$/g,
 	    model;
 	
-	var datetime = __webpack_require__(26);
+	var datetime = __webpack_require__(27);
 	
 	/**
 	 * Mixin module for models.
@@ -6994,20 +7026,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = model;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 43 */
-/***/ function(module, exports) {
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Model for views
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
 	/**
 	 * Schedule ViewModel
@@ -7189,26 +7220,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = ScheduleViewModel;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Core methods for schedule block placing
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    forEachArr = util.forEachArray,
 	    aps = Array.prototype.slice;
 	
-	var datetime = __webpack_require__(26);
-	var TZDate = __webpack_require__(27).Date;
-	var Collection = __webpack_require__(32);
-	var ScheduleViewModel = __webpack_require__(43);
+	var datetime = __webpack_require__(27);
+	var TZDate = __webpack_require__(28).Date;
+	var Collection = __webpack_require__(33);
+	var ScheduleViewModel = __webpack_require__(44);
 	
 	var Core = {
 	    /**
@@ -7447,25 +7477,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Core;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* eslint no-shadow: 0 */
+	/* eslint no-shadow: 0 */
 	/**
 	 * @fileoverview Controller mixin modules for day views.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
-	var Collection = __webpack_require__(32);
-	var array = __webpack_require__(46);
-	var datetime = __webpack_require__(26);
+	var Collection = __webpack_require__(33);
+	var array = __webpack_require__(47);
+	var datetime = __webpack_require__(27);
 	
 	/**
 	 * @mixin Base.Week
@@ -7700,21 +7729,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Week;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Utility module for array sort, binary search.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var datetime = __webpack_require__(26);
+	var util = __webpack_require__(6);
+	var datetime = __webpack_require__(27);
 	
 	/**
 	 * A module for sorting array.
@@ -7988,24 +8016,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Controller mixin for Month View
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mmax = Math.max;
 	
-	var array = __webpack_require__(46),
-	    datetime = __webpack_require__(26),
-	    Collection = __webpack_require__(32);
+	var array = __webpack_require__(47),
+	    datetime = __webpack_require__(27),
+	    Collection = __webpack_require__(33);
 	
 	var Month = {
 	    /**
@@ -8164,45 +8191,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Month;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Factory module for WeekView
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var VLayout = __webpack_require__(49);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var VLayout = __webpack_require__(50);
 	// Parent views
-	var Week = __webpack_require__(51);
+	var Week = __webpack_require__(52);
 	
 	// Sub views
-	var DayName = __webpack_require__(52);
-	var TimeGrid = __webpack_require__(54);
-	var Allday = __webpack_require__(61);
-	var Milestone = __webpack_require__(66);
-	var TaskView = __webpack_require__(68);
+	var DayName = __webpack_require__(53);
+	var TimeGrid = __webpack_require__(55);
+	var Allday = __webpack_require__(62);
+	var Milestone = __webpack_require__(67);
+	var TaskView = __webpack_require__(69);
 	
 	// Handlers
-	var AlldayClick = __webpack_require__(70);
-	var AlldayCreation = __webpack_require__(74);
-	var AlldayMove = __webpack_require__(71);
-	var AlldayResize = __webpack_require__(76);
-	var DayNameClick = __webpack_require__(78);
-	var TimeClick = __webpack_require__(79);
-	var TimeCreation = __webpack_require__(80);
-	var TimeMove = __webpack_require__(83);
-	var TimeResize = __webpack_require__(87);
-	var MilestoneClick = __webpack_require__(89);
-	var TaskClick = __webpack_require__(90);
+	var AlldayClick = __webpack_require__(71);
+	var AlldayCreation = __webpack_require__(75);
+	var AlldayMove = __webpack_require__(72);
+	var AlldayResize = __webpack_require__(77);
+	var DayNameClick = __webpack_require__(79);
+	var TimeClick = __webpack_require__(80);
+	var TimeCreation = __webpack_require__(81);
+	var TimeMove = __webpack_require__(84);
+	var TimeResize = __webpack_require__(88);
+	var MilestoneClick = __webpack_require__(90);
+	var TaskClick = __webpack_require__(91);
 	
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
@@ -8360,28 +8386,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scrollToNow: timeGridView.scrollToNow.bind(timeGridView)
 	    };
 	};
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Layout module that supplied split height, resize height features.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mAbs = Math.abs;
 	
-	var config = __webpack_require__(33),
-	    common = __webpack_require__(29),
-	    domutil = __webpack_require__(30),
-	    domevent = __webpack_require__(31),
-	    View = __webpack_require__(36),
-	    VPanel = __webpack_require__(50),
-	    Drag = __webpack_require__(37);
+	var config = __webpack_require__(34),
+	    common = __webpack_require__(30),
+	    domutil = __webpack_require__(31),
+	    domevent = __webpack_require__(32),
+	    View = __webpack_require__(37),
+	    VPanel = __webpack_require__(51),
+	    Drag = __webpack_require__(38);
 	
 	/**
 	 * @typedef PanelOptions
@@ -8770,23 +8795,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = VLayout;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Panel class for VLayout module
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    common = __webpack_require__(29),
-	    domutil = __webpack_require__(30),
-	    View = __webpack_require__(36);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    common = __webpack_require__(30),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37);
 	
 	/**
 	 * @constructor
@@ -8932,25 +8956,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = VPanel;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview View of days UI.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var datetime = __webpack_require__(26);
-	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(36);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var datetime = __webpack_require__(27);
+	var TZDate = __webpack_require__(28).Date;
+	var View = __webpack_require__(37);
 	
 	/**
 	 * FullCalendar 에서는 날짜 정보만 사용(YYYY-MM-DD) 하고,
@@ -8995,7 +9018,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
 	        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
 	        narrowWeekend: false,
-	        startDayOfWeek: 0
+	        startDayOfWeek: 0,
+	        workweek: false
 	    }, options);
 	
 	    /**
@@ -9017,29 +9041,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @override
 	 */
 	Week.prototype.render = function() {
-	    var options = this.options;
-	    var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids;
+	    var options = this.options,
+	        narrowWeekend = options.narrowWeekend,
+	        startDayOfWeek = options.startDayOfWeek,
+	        workweek = options.workweek;
+	    var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 	
 	    renderStartDate = parseRangeDateString(options.renderStartDate);
 	    renderEndDate = parseRangeDateString(options.renderEndDate);
+	
+	    range = datetime.range(
+	        datetime.start(renderStartDate),
+	        datetime.end(renderEndDate),
+	        datetime.MILLISECONDS_PER_DAY
+	    );
+	
+	    if (options.workweek && datetime.compare(renderStartDate, renderEndDate)) {
+	        range = util.filter(range, function(date) {
+	            return !datetime.isWeekend(date.getDay());
+	        });
+	
+	        renderStartDate = range[0];
+	        renderEndDate = range[range.length - 1];
+	    }
+	
 	    schedulesInDateRange = this.controller.findByDateRange(
 	        datetime.start(renderStartDate),
 	        datetime.end(renderEndDate)
 	    );
 	    grids = datetime.getGridLeftAndWidth(
-	        datetime.range(
-	            datetime.start(renderStartDate),
-	            datetime.end(renderEndDate),
-	            datetime.MILLISECONDS_PER_DAY
-	        ).length,
-	        options.narrowWeekend,
-	        options.startDayOfWeek);
+	        range.length,
+	        narrowWeekend,
+	        startDayOfWeek,
+	        workweek
+	    );
 	
 	    viewModel = {
 	        schedulesInDateRange: schedulesInDateRange,
 	        renderStartDate: renderStartDate,
 	        renderEndDate: renderEndDate,
-	        grids: grids
+	        grids: grids,
+	        range: range
 	    };
 	
 	    this.children.each(function(childView) {
@@ -9081,26 +9123,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Week;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview View for rendering daynames
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var TZDate = __webpack_require__(27).Date;
-	var domutil = __webpack_require__(30);
-	var View = __webpack_require__(36);
-	var daynameTmpl = __webpack_require__(53);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var TZDate = __webpack_require__(28).Date;
+	var domutil = __webpack_require__(31);
+	var View = __webpack_require__(37);
+	var daynameTmpl = __webpack_require__(54);
 	
 	/**
 	 * @constructor
@@ -9171,14 +9212,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = DayName;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -9221,26 +9261,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview View for rendered schedules by times.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var common = __webpack_require__(29);
-	var domutil = __webpack_require__(30);
-	var datetime = __webpack_require__(26);
-	var TZDate = __webpack_require__(27).Date;
-	var reqAnimFrame = __webpack_require__(55);
-	var View = __webpack_require__(36);
-	var Time = __webpack_require__(56);
-	var AutoScroll = __webpack_require__(58);
-	var mainTmpl = __webpack_require__(60);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var common = __webpack_require__(30);
+	var domutil = __webpack_require__(31);
+	var datetime = __webpack_require__(27);
+	var TZDate = __webpack_require__(28).Date;
+	var reqAnimFrame = __webpack_require__(56);
+	var View = __webpack_require__(37);
+	var Time = __webpack_require__(57);
+	var AutoScroll = __webpack_require__(59);
+	var mainTmpl = __webpack_require__(61);
 	
 	var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 	var SIXTY_SECONDS = 60;
@@ -9329,6 +9369,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this._scrolled = false;
 	
+	    /*
+	     * cache parent's view model
+	     * @type {object}
+	     */
+	    this._cacheParentViewModel = null;
+	
 	    this.attachEvent();
 	}
 	
@@ -9355,7 +9401,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._autoScroll.destroy();
 	    }
 	
-	    this._autoScroll = this.hourmarker = this.intervalID = this.timerID = null;
+	    this._autoScroll = this.hourmarker = this.intervalID = this.timerID = this._cacheParentViewModel = null;
 	};
 	
 	/**
@@ -9381,43 +9427,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * @returns {object} grid information(width, left, day)
-	 */
-	TimeGrid.prototype._getGrids = function() {
-	    var opt = this.options,
-	        dateRange = datetime.range(
-	            datetime.parse(opt.renderStartDate),
-	            datetime.parse(opt.renderEndDate),
-	            datetime.MILLISECONDS_PER_DAY
-	        ),
-	        grids = datetime.getGridLeftAndWidth(
-	            dateRange.length,
-	            this.options.narrowWeekend,
-	            this.options.startDayOfWeek
-	        );
-	
-	    return grids;
-	};
-	
-	/**
 	 * Get Hourmarker viewmodel.
 	 * @param {Date} now - now
 	 * @param {object} grids grid information(width, left, day)
+	 * @param {Array.<TZDate>} range render range
 	 * @returns {object} ViewModel of hourmarker.
 	 */
-	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids) {
-	    var opt = this.options,
-	        dateRange = datetime.range(
-	            datetime.parse(opt.renderStartDate),
-	            datetime.parse(opt.renderEndDate),
-	            datetime.MILLISECONDS_PER_DAY
-	        ),
-	        todaymarkerLeft = -1,
+	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
+	    var todaymarkerLeft = -1,
 	        viewModel;
 	
 	    now = now || new TZDate();
 	
-	    util.forEach(dateRange, function(date, index) {
+	    util.forEach(range, function(date, index) {
 	        if (datetime.isSameDate(now, date)) {
 	            todaymarkerLeft = grids[index].left;
 	        }
@@ -9436,11 +9458,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Get base viewModel.
 	 * @param {object} grids grid information(width, left, day)
+	 * @param {Array.<TZDate>} range render range
 	 * @returns {object} ViewModel
 	 */
-	TimeGrid.prototype._getBaseViewModel = function(grids) {
+	TimeGrid.prototype._getBaseViewModel = function(grids, range) {
 	    var opt = this.options;
-	    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids);
+	    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
 	    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 	
 	    return viewModel;
@@ -9501,8 +9524,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var timeViewModel = viewModel.schedulesInDateRange.time,
 	        container = this.container,
 	        grids = viewModel.grids,
-	        baseViewModel = this._getBaseViewModel(grids),
+	        range = viewModel.range,
+	        baseViewModel = this._getBaseViewModel(grids, range),
 	        scheduleLen = util.keys(timeViewModel).length;
+	
+	    this._cacheParentViewModel = viewModel;
 	
 	    if (!scheduleLen) {
 	        return;
@@ -9539,7 +9565,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	TimeGrid.prototype.refreshHourmarker = function() {
 	    var hourmarker = this.hourmarker,
-	        viewModel = this._getHourmarkerViewModel(new TZDate(), this._getGrids()),
+	        grids = this._cacheParentViewModel ? this._cacheParentViewModel.grids : null,
+	        range = this._cacheParentViewModel ? this._cacheParentViewModel.range : null,
+	        viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range),
 	        todaymarker,
 	        hourmarkerText;
 	
@@ -9626,12 +9654,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = TimeGrid;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 55 */
-/***/ function(module, exports) {
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * @fileoverview RequestAnimFrame
@@ -9639,7 +9666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	var requestFn,
 	    cancelFn;
 	
@@ -9695,22 +9722,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview View of time.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(36);
-	var timeTmpl = __webpack_require__(57);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var TZDate = __webpack_require__(28).Date;
+	var View = __webpack_require__(37);
+	var timeTmpl = __webpack_require__(58);
 	
 	var forEachArr = util.forEachArray;
 	
@@ -9898,14 +9925,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = Time;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -9988,7 +10014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9997,10 +10023,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var domevent = __webpack_require__(31);
-	var domutil = __webpack_require__(30);
-	var Point = __webpack_require__(59);
+	var util = __webpack_require__(6);
+	var domevent = __webpack_require__(32);
+	var domutil = __webpack_require__(31);
+	var Point = __webpack_require__(60);
 	
 	var SCROLL_INTERVAL = 30;
 	var SCROLL_MAX = 15;
@@ -10238,10 +10264,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 59 */
-/***/ function(module, exports) {
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview
 	 * Class for represent two dimensional x, y coordinates.
 	 *
@@ -10259,7 +10285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
 	/**
 	 * Class for represent two dimentional x, y coordinates.
@@ -10573,14 +10599,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Point;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -10652,21 +10677,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview View of allday schedule container inside of Week view.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    domutil = __webpack_require__(30),
-	    View = __webpack_require__(36),
-	    WeekdayInWeek = __webpack_require__(62),
-	    tmpl = __webpack_require__(65);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37),
+	    WeekdayInWeek = __webpack_require__(63),
+	    tmpl = __webpack_require__(66);
 	
 	/**
 	 * @constructor
@@ -10748,23 +10773,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Allday;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Weekday view for week
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mmax = Math.max;
 	
-	var Weekday = __webpack_require__(63),
-	    tmpl = __webpack_require__(64);
+	var Weekday = __webpack_require__(64),
+	    tmpl = __webpack_require__(65);
 	
 	/**
 	 * @constructor
@@ -10792,7 +10816,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	WeekdayInWeek.prototype.render = function(viewModel) {
 	    var opt = this.options,
 	        container = this.container,
-	        baseViewModel = this.getBaseViewModel(),
+	        baseViewModel = this.getBaseViewModel(viewModel),
 	        maxScheduleInDay = 0;
 	
 	    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
@@ -10831,24 +10855,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	module.exports = WeekdayInWeek;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Weekday view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    domutil = __webpack_require__(30),
-	    datetime = __webpack_require__(26),
-	    TZDate = __webpack_require__(27).Date,
-	    View = __webpack_require__(36);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    datetime = __webpack_require__(27),
+	    TZDate = __webpack_require__(28).Date,
+	    View = __webpack_require__(37);
 	
 	/**
 	 * @constructor
@@ -10879,8 +10902,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleHeight: 18,
 	        scheduleGutter: 2,
 	        narrowWeekend: false,
-	        startDayOfWeek: 0
+	        startDayOfWeek: 0,
+	        workweek: false
 	    }, options);
+	
+	    /*
+	     * cache parent's view model
+	     * @type {object}
+	     */
+	    this._cacheParentViewModel = null;
 	
 	    View.call(this, container);
 	}
@@ -10892,28 +10922,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Date[]} rendered date range
 	 */
 	Weekday.prototype.getRenderDateRange = function() {
-	    var opt = this.options;
+	    return this._cacheParentViewModel.range;
+	};
 	
-	    return datetime.range(
-	        datetime.start(datetime.parse(opt.renderStartDate)),
-	        datetime.end(datetime.parse(opt.renderEndDate)),
-	        datetime.MILLISECONDS_PER_DAY
-	    );
+	/**
+	 * Get render date grids information
+	 * @returns {Date[]} rendered date grids information
+	 */
+	Weekday.prototype.getRenderDateGrids = function() {
+	    return this._cacheParentViewModel.grids;
 	};
 	
 	/**
 	 * Get default view model.
+	 * @param {object} viewModel parent's view model
 	 * @returns {object} viewModel to rendering.
 	 */
-	Weekday.prototype.getBaseViewModel = function() {
+	Weekday.prototype.getBaseViewModel = function(viewModel) {
 	    var opt = this.options;
-	    var range = this.getRenderDateRange();
+	    var range = viewModel.range;
 	    var today = datetime.format(new TZDate(), 'YYYYMMDD');
 	    var gridWidth = (100 / range.length);
-	    var grids = datetime.getGridLeftAndWidth(
-	        this.getRenderDateRange().length,
-	        this.options.narrowWeekend,
-	        this.options.startDayOfWeek);
+	    var grids = viewModel.grids;
+	
+	    this._cacheParentViewModel = viewModel;
 	
 	    return {
 	        width: gridWidth,
@@ -10935,14 +10967,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = Weekday;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -11073,10 +11104,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -11096,22 +11127,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview 마일스톤 뷰
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var TZDate = __webpack_require__(27).Date;
-	var View = __webpack_require__(36);
-	var tmpl = __webpack_require__(67);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var TZDate = __webpack_require__(28).Date;
+	var View = __webpack_require__(37);
+	var tmpl = __webpack_require__(68);
 	
 	// item height + gutter (defined in css)
 	var ITEM_HEIGHT = 17;
@@ -11155,13 +11186,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {object} view model for task view
 	 */
 	Milestone.prototype._getBaseViewModel = function(viewModel) {
-	    var options = this.options,
-	        schedules = {},
-	        range = datetime.range(
-	            datetime.start(datetime.parse(options.renderStartDate)),
-	            datetime.end(datetime.parse(options.renderEndDate)),
-	            datetime.MILLISECONDS_PER_DAY
-	        ),
+	    var schedules = {},
+	        range = viewModel.range,
 	        height,
 	        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
 	        viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'milestone'),
@@ -11214,14 +11240,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Milestone;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -11295,22 +11320,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Task view for upper area of Week view.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var View = __webpack_require__(36);
-	var tmpl = __webpack_require__(69);
-	var TZDate = __webpack_require__(27).Date;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var View = __webpack_require__(37);
+	var tmpl = __webpack_require__(70);
+	var TZDate = __webpack_require__(28).Date;
 	
 	// height + gutter (defined in CSS)
 	var ITEM_HEIGHT = 20;
@@ -11351,13 +11376,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {object} view model for task view
 	 */
 	TaskView.prototype._getBaseViewModel = function(viewModel) {
-	    var options = this.options,
-	        schedules = {},
-	        range = datetime.range(
-	            datetime.start(datetime.parse(options.renderStartDate)),
-	            datetime.end(datetime.parse(options.renderEndDate)),
-	            datetime.MILLISECONDS_PER_DAY
-	        ),
+	    var schedules = {},
+	        range = viewModel.range,
 	        height = 0,
 	        mmax = Math.max,
 	        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
@@ -11418,14 +11438,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = TaskView;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -11523,19 +11542,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Click handle module for allday schedules
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var AlldayMove = __webpack_require__(71);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var AlldayMove = __webpack_require__(72);
 	
 	/**
 	 * @constructor
@@ -11615,25 +11634,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = AlldayClick;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Move handler for Allday view.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var common = __webpack_require__(29);
-	var domutil = __webpack_require__(30);
-	var AlldayCore = __webpack_require__(72);
-	var AlldayMoveGuide = __webpack_require__(73);
-	var TZDate = __webpack_require__(27).Date;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var common = __webpack_require__(30);
+	var domutil = __webpack_require__(31);
+	var AlldayCore = __webpack_require__(73);
+	var AlldayMoveGuide = __webpack_require__(74);
+	var TZDate = __webpack_require__(28).Date;
 	
 	/**
 	 * @constructor
@@ -11896,11 +11914,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = AlldayMove;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-shadow: 0 */
@@ -11909,10 +11926,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var domutil = __webpack_require__(30);
-	var domevent = __webpack_require__(31);
-	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(29);
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
+	var common = __webpack_require__(30);
 	
 	var mmax = Math.max,
 	    mmin = Math.min;
@@ -11929,28 +11945,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _retriveScheduleData: function(alldayView, mouseEvent) {
 	        var weekdayView = alldayView.children.single(),
 	            container,
-	            renderStartDate,
-	            renderEndDate,
 	            datesInRange,
 	            containerWidth,
 	            mousePos,
 	            dragStartXIndex,
-	            grids;
+	            grids,
+	            range;
 	
 	        if (!weekdayView) {
 	            return false;
 	        }
 	
 	        container = weekdayView.container;
-	        renderStartDate = datetime.parse(alldayView.options.renderStartDate);
-	        renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
-	        datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
-	
-	        grids = datetime.getGridLeftAndWidth(
-	            datesInRange,
-	            alldayView.options.narrowWeekend,
-	            alldayView.options.startDayOfWeek
-	        );
+	        range = weekdayView.getRenderDateRange();
+	        datesInRange = range.length;
+	        grids = weekdayView.getRenderDateGrids();
 	
 	        containerWidth = domutil.getSize(container)[0];
 	        mousePos = domevent.getMousePosition(mouseEvent, container);
@@ -11975,7 +11984,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                datesInRange: datesInRange,
 	                xIndex: xIndex,
 	                triggerEvent: mouseEvent.type,
-	                grids: grids
+	                grids: grids,
+	                range: range
 	            };
 	        };
 	    }
@@ -12000,7 +12010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12008,12 +12018,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var reqAnimFrame = __webpack_require__(55);
-	var TZDate = __webpack_require__(27).Date;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(56);
+	var TZDate = __webpack_require__(28).Date;
 	
 	/**
 	 * Class for Allday.Move dragging effect.
@@ -12175,12 +12185,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	AlldayMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventData) {
 	    var model = dragStartEventData.model,
 	        datesInRange = dragStartEventData.datesInRange,
+	        range = dragStartEventData.range,
 	        baseWidthPercent = (100 / datesInRange),
 	        originScheduleStarts = datetime.start(model.start),
 	        originScheduleEnds = datetime.end(model.end),
-	        viewOptions = this.alldayMove.alldayView.options,
-	        renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
-	        renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
+	        renderStartDate = datetime.start(range[0]),
+	        renderEndDate = datetime.end(range[range.length - 1]),
 	        fromLeft = (new TZDate(originScheduleStarts.getTime() -
 	            renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
 	        fromRight = (new TZDate(originScheduleEnds.getTime() -
@@ -12260,23 +12270,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Handler module for WeekdayInWeek view's creation actions.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var common = __webpack_require__(29);
-	var domutil = __webpack_require__(30);
-	var domevent = __webpack_require__(31);
-	var alldayCore = __webpack_require__(72);
-	var AlldayCreationGuide = __webpack_require__(75);
-	var TZDate = __webpack_require__(27).Date;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var common = __webpack_require__(30);
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
+	var alldayCore = __webpack_require__(73);
+	var AlldayCreationGuide = __webpack_require__(76);
+	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
 	
@@ -12372,12 +12382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} scheduleData - schedule data from AlldayCreation module.
 	 */
 	AlldayCreation.prototype._createSchedule = function(scheduleData) {
-	    var viewOptions = scheduleData.relatedView.options,
-	        dateRange = datetime.range(
-	            datetime.start(datetime.parse(viewOptions.renderStartDate)),
-	            datetime.end(datetime.parse(viewOptions.renderEndDate)),
-	            datetime.MILLISECONDS_PER_DAY
-	        ),
+	    var dateRange = scheduleData.range,
 	        startXIndex = scheduleData.dragStartXIndex,
 	        xIndex = scheduleData.xIndex,
 	        start, end;
@@ -12558,11 +12563,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	util.CustomEvents.mixin(AlldayCreation);
 	
 	module.exports = AlldayCreation;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12570,9 +12574,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var reqAnimFrame = __webpack_require__(55);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(56);
 	
 	/**
 	 * Class for Allday.Creation dragging effect.
@@ -12712,22 +12716,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Resize handler module for Allday view.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var common = __webpack_require__(29);
-	var AlldayCore = __webpack_require__(72);
-	var AlldayResizeGuide = __webpack_require__(77);
-	var TZDate = __webpack_require__(27).Date;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var common = __webpack_require__(30);
+	var AlldayCore = __webpack_require__(73);
+	var AlldayResizeGuide = __webpack_require__(78);
+	var TZDate = __webpack_require__(28).Date;
 	
 	/**
 	 * @constructor
@@ -12982,11 +12986,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = AlldayResize;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12994,12 +12997,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var datetime = __webpack_require__(26);
-	var reqAnimFrame = __webpack_require__(55);
-	var TZDate = __webpack_require__(27).Date;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var datetime = __webpack_require__(27);
+	var reqAnimFrame = __webpack_require__(56);
+	var TZDate = __webpack_require__(28).Date;
 	
 	
 	/**
@@ -13145,18 +13148,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Dayname click event hander module
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
 	
 	/**
 	 * @constructor
@@ -13239,22 +13242,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = DayNameClick;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Allday event click event hander module
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
 	
 	/**
 	 * @constructor
@@ -13351,28 +13353,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = TimeClick;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Handling creation events from drag handler and time grid view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var array = __webpack_require__(46);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var domevent = __webpack_require__(31);
-	var TimeCreationGuide = __webpack_require__(81);
-	var TZDate = __webpack_require__(27).Date;
-	var timeCore = __webpack_require__(82);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var array = __webpack_require__(47);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
+	var TimeCreationGuide = __webpack_require__(82);
+	var TZDate = __webpack_require__(28).Date;
+	var timeCore = __webpack_require__(83);
 	
 	var CLICK_DELAY = 300;
 	
@@ -13702,11 +13703,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	util.CustomEvents.mixin(TimeCreation);
 	
 	module.exports = TimeCreation;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13715,13 +13715,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var common = __webpack_require__(29);
-	var datetime = __webpack_require__(26);
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var reqAnimFrame = __webpack_require__(55);
-	var ratio = __webpack_require__(29).ratio;
-	var TZDate = __webpack_require__(27).Date;
+	var common = __webpack_require__(30);
+	var datetime = __webpack_require__(27);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(56);
+	var ratio = __webpack_require__(30).ratio;
+	var TZDate = __webpack_require__(28).Date;
 	var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 	
 	/**
@@ -13975,20 +13975,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Core methods for dragging actions
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var common = __webpack_require__(29);
-	var datetime = __webpack_require__(26);
-	var domevent = __webpack_require__(31);
-	var Point = __webpack_require__(59);
+	var util = __webpack_require__(6);
+	var common = __webpack_require__(30);
+	var datetime = __webpack_require__(27);
+	var domevent = __webpack_require__(32);
+	var Point = __webpack_require__(60);
 	
 	/**
 	 * @mixin Time.Core
@@ -14069,26 +14069,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = timeCore;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Handling move schedules from drag handler and time grid view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var TZDate = __webpack_require__(27).Date;
-	var timeCore = __webpack_require__(82);
-	var TimeMoveGuide = __webpack_require__(84);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var TZDate = __webpack_require__(28).Date;
+	var timeCore = __webpack_require__(83);
+	var TimeMoveGuide = __webpack_require__(85);
 	
 	/**
 	 * @constructor
@@ -14438,11 +14437,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = TimeMove;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14451,15 +14449,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var reqAnimFrame = __webpack_require__(55);
-	var ratio = __webpack_require__(29).ratio;
-	var FloatingLayer = __webpack_require__(85);
-	var tmpl = __webpack_require__(86);
-	var TZDate = __webpack_require__(27).Date;
-	var Schedule = __webpack_require__(40);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(56);
+	var ratio = __webpack_require__(30).ratio;
+	var FloatingLayer = __webpack_require__(86);
+	var tmpl = __webpack_require__(87);
+	var TZDate = __webpack_require__(28).Date;
+	var Schedule = __webpack_require__(41);
 	
 	/**
 	 * Class for Time.Move effect.
@@ -14680,18 +14678,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Floating layer module
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    domutil = __webpack_require__(30),
-	    View = __webpack_require__(36);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37);
 	
 	/**
 	 * @constructor
@@ -14867,14 +14865,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = FloatingLayer;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -14904,21 +14901,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Handling resize schedules from drag handler and time grid view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var domutil = __webpack_require__(30);
-	var TZDate = __webpack_require__(27).Date;
-	var timeCore = __webpack_require__(82);
-	var TimeResizeGuide = __webpack_require__(88);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var TZDate = __webpack_require__(28).Date;
+	var timeCore = __webpack_require__(83);
+	var TimeResizeGuide = __webpack_require__(89);
 	
 	/**
 	 * @constructor
@@ -15060,7 +15057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    scheduleData = getScheduleDataFunc(dragEventData.originSchedule, {
+	    scheduleData = getScheduleDataFunc(dragEventData.originEvent, {
 	        targetModelID: startScheduleData.targetModelID
 	    });
 	
@@ -15209,11 +15206,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = TimeResize;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15221,11 +15217,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
-	var reqAnimFrame = __webpack_require__(55);
-	var ratio = __webpack_require__(29).ratio;
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(56);
+	var ratio = __webpack_require__(30).ratio;
 	
 	/**
 	 * Class for Time.Resize effect.
@@ -15393,18 +15389,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
 	
 	/**
 	 * 마일스톤 클릭 이벤트 핸들러 모듈
@@ -15489,22 +15485,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = MilestoneClick;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33);
-	var domutil = __webpack_require__(30);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
 	
 	/**
 	 * 마일스톤 클릭 이벤트 핸들러 모듈
@@ -15589,30 +15584,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = TaskClick;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Month view factory module
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    array = __webpack_require__(46),
-	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(30),
-	    Month = __webpack_require__(92),
-	    MonthClick = __webpack_require__(98),
-	    MonthCreation = __webpack_require__(99),
-	    MonthResize = __webpack_require__(104),
-	    MonthMove = __webpack_require__(106),
-	    More = __webpack_require__(109);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    array = __webpack_require__(47),
+	    datetime = __webpack_require__(27),
+	    domutil = __webpack_require__(31),
+	    Month = __webpack_require__(93),
+	    MonthClick = __webpack_require__(99),
+	    MonthCreation = __webpack_require__(100),
+	    MonthResize = __webpack_require__(105),
+	    MonthMove = __webpack_require__(107),
+	    More = __webpack_require__(110);
 	
 	function findGridTarget(moreTarget, day) {
 	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
@@ -15730,30 +15724,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = createMonthView;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mmin = Math.min;
 	
-	var config = __webpack_require__(33),
-	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(30),
-	    TZDate = __webpack_require__(27).Date,
-	    tmpl = __webpack_require__(93),
-	    View = __webpack_require__(36),
-	    VLayout = __webpack_require__(49),
-	    WeekdayInMonth = __webpack_require__(94);
+	var config = __webpack_require__(34),
+	    datetime = __webpack_require__(27),
+	    domutil = __webpack_require__(31),
+	    TZDate = __webpack_require__(28).Date,
+	    tmpl = __webpack_require__(94),
+	    View = __webpack_require__(37),
+	    VLayout = __webpack_require__(50),
+	    WeekdayInMonth = __webpack_require__(95);
 	
 	/**
 	 * @constructor
@@ -15825,18 +15818,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var date = datetime.parse(renderMonthStr) || datetime.parse(renderMonthStr + '-01');
 	    var startDayOfWeek = this.options.startDayOfWeek || 0;
 	    var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
+	    var workweek = this.options.workweek || false;
 	    var datetimeOptions, calendar;
 	
 	    if (this.options.visibleWeeksCount) {
 	        datetimeOptions = {
 	            startDayOfWeek: startDayOfWeek,
 	            isAlways6Week: false,
-	            visibleWeeksCount: visibleWeeksCount
+	            visibleWeeksCount: visibleWeeksCount,
+	            workweek: workweek
 	        };
 	    } else {
 	        datetimeOptions = {
 	            startDayOfWeek: startDayOfWeek,
-	            isAlways6Week: true
+	            isAlways6Week: true,
+	            workweek: workweek
 	        };
 	    }
 	
@@ -15894,11 +15890,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        vLayout = this.vLayout,
 	        controller = this.controller,
 	        daynames = opt.daynames,
+	        workweek = opt.workweek,
 	        calendar = this._getMonthCalendar(opt.renderMonth),
 	        scheduleFilter = opt.scheduleFilter,
-	        grids = this.grids,
+	        grids,
 	        daynameViewModel,
 	        baseViewModel;
+	
+	    grids = this.grids = datetime.getGridLeftAndWidth(
+	        opt.daynames.length,
+	        opt.narrowWeekend,
+	        opt.startDayOfWeek
+	    );
 	
 	    daynameViewModel = util.map(
 	        util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
@@ -15912,6 +15915,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    );
 	
+	    if (workweek) {
+	        grids = this.grids = datetime.getGridLeftAndWidth(5, opt.narrowWeekend, opt.startDayOfWeek, workweek);
+	
+	        daynameViewModel = util.filter(daynameViewModel, function(daynameModel) {
+	            return !datetime.isWeekend(daynameModel.day);
+	        });
+	
+	        util.forEach(daynameViewModel, function(daynameModel, index) {
+	            daynameModel.width = grids[index].width;
+	            daynameModel.left = grids[index].left;
+	        });
+	    }
+	
 	    baseViewModel = {
 	        daynames: daynameViewModel
 	    };
@@ -15921,11 +15937,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._renderChildren(vLayout.panels[1].container, calendar);
 	
 	    this.children.each(function(childView) {
-	        var viewModel = controller.findByDateRange(
-	            datetime.start(datetime.parse(childView.options.renderStartDate)),
-	            datetime.end(datetime.parse(childView.options.renderEndDate)),
+	        var start = datetime.parse(childView.options.renderStartDate);
+	        var end = datetime.parse(childView.options.renderEndDate);
+	        var eventsInDateRange = controller.findByDateRange(
+	            datetime.start(start),
+	            datetime.end(end),
 	            scheduleFilter
 	        );
+	        var dateRange = datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);
+	        var viewModel = {
+	            eventsInDateRange: eventsInDateRange,
+	            range: dateRange,
+	            grids: grids
+	        };
 	
 	        childView.render(viewModel);
 	    });
@@ -15933,14 +15957,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = Month;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -15968,30 +15991,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Monthday in month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    existy = util.isExisty,
 	    mfloor = Math.floor,
 	    mmax = Math.max;
 	
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	
-	var config = __webpack_require__(33),
-	    common = __webpack_require__(29),
-	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(30),
-	    View = __webpack_require__(36),
-	    Weekday = __webpack_require__(63),
-	    baseTmpl = __webpack_require__(95),
-	    scheduleTmpl = __webpack_require__(96),
-	    skipTmpl = __webpack_require__(97);
+	var config = __webpack_require__(34),
+	    common = __webpack_require__(30),
+	    datetime = __webpack_require__(27),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37),
+	    Weekday = __webpack_require__(64),
+	    baseTmpl = __webpack_require__(96),
+	    scheduleTmpl = __webpack_require__(97),
+	    skipTmpl = __webpack_require__(98);
 	
 	var EVENT_PADDING_TOP = 14;
 	
@@ -16102,7 +16125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	WeekdayInMonth.prototype.render = function(viewModel) {
 	    var container = this.container,
-	        baseViewModel = this.getBaseViewModel(),
+	        baseViewModel = this.getBaseViewModel(viewModel),
 	        renderLimitIdx,
 	        exceedDate = {},
 	        scheduleContainer,
@@ -16127,7 +16150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
 	
 	    contentStr += scheduleTmpl(util.extend({
-	        matrices: viewModel,
+	        matrices: viewModel.eventsInDateRange,
 	        schedulePaddingTop: EVENT_PADDING_TOP,
 	        renderLimitIdx: renderLimitIdx
 	    }, baseViewModel));
@@ -16163,14 +16186,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	module.exports = WeekdayInMonth;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -16222,10 +16244,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -16382,10 +16404,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -16407,19 +16429,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Click handler for month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(30);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    datetime = __webpack_require__(27),
+	    domutil = __webpack_require__(31);
 	
 	/**
 	 * @constructor
@@ -16502,28 +16524,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = MonthClick;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Creation handler for month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
-	var config = __webpack_require__(33);
-	var datetime = __webpack_require__(26);
-	var array = __webpack_require__(46);
-	var domutil = __webpack_require__(30);
-	var domevent = __webpack_require__(31);
-	var getMousePosDate = __webpack_require__(100);
-	var Guide = __webpack_require__(101);
-	var TZDate = __webpack_require__(27).Date;
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var array = __webpack_require__(47);
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
+	var getMousePosDate = __webpack_require__(101);
+	var Guide = __webpack_require__(102);
+	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
 	
@@ -16823,24 +16844,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	util.CustomEvents.mixin(MonthCreation);
 	
 	module.exports = MonthCreation;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Module for calculate date by month view and mouse event object
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mfloor = Math.floor;
 	
-	var common = __webpack_require__(29),
-	    domutil = __webpack_require__(30),
-	    domevent = __webpack_require__(31);
+	var common = __webpack_require__(30),
+	    domutil = __webpack_require__(31),
+	    domevent = __webpack_require__(32);
 	
 	/**
 	 * Get high order function that can calc date in mouse point
@@ -16911,11 +16931,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	module.exports = getMousePosDate;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16923,7 +16942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var MonthGuide = __webpack_require__(102);
+	var MonthGuide = __webpack_require__(103);
 	
 	/**
 	 * @constructor
@@ -16996,26 +17015,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Guide element controller for creation, resize in month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util,
+	var util = __webpack_require__(6),
 	    mmax = Math.max,
 	    mmin = Math.min,
 	    mabs = Math.abs,
 	    mfloor = Math.floor;
 	
-	var config = __webpack_require__(33),
-	    common = __webpack_require__(29),
-	    domutil = __webpack_require__(30),
-	    datetime = __webpack_require__(26),
-	    dw = __webpack_require__(28),
-	    tmpl = __webpack_require__(103);
+	var config = __webpack_require__(34),
+	    common = __webpack_require__(30),
+	    domutil = __webpack_require__(31),
+	    datetime = __webpack_require__(27),
+	    dw = __webpack_require__(29),
+	    tmpl = __webpack_require__(104);
 	
 	/**
 	 * @constructor
@@ -17443,14 +17462,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = MonthGuide;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -17492,22 +17510,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Module for resize schedule in month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
-	var config = __webpack_require__(33),
-	    datetime = __webpack_require__(26),
-	    domutil = __webpack_require__(30),
-	    getMousePosData = __webpack_require__(100),
-	    MonthResizeGuide = __webpack_require__(105),
-	    TZDate = __webpack_require__(27).Date;
+	var config = __webpack_require__(34),
+	    datetime = __webpack_require__(27),
+	    domutil = __webpack_require__(31),
+	    getMousePosData = __webpack_require__(101),
+	    MonthResizeGuide = __webpack_require__(106),
+	    TZDate = __webpack_require__(28).Date;
 	
 	/**
 	 * @constructor
@@ -17702,11 +17720,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = MonthResize;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17714,11 +17731,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
-	var config = __webpack_require__(33),
-	    domutil = __webpack_require__(30),
-	    MonthGuide = __webpack_require__(102);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    MonthGuide = __webpack_require__(103);
 	
 	/**
 	 * @constructor
@@ -17829,22 +17846,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Move handler for month view
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
-	var config = __webpack_require__(33),
-	    domutil = __webpack_require__(30),
-	    datetime = __webpack_require__(26),
-	    getMousePosData = __webpack_require__(100),
-	    MonthMoveGuide = __webpack_require__(107),
-	    TZDate = __webpack_require__(27).Date;
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    datetime = __webpack_require__(27),
+	    getMousePosData = __webpack_require__(101),
+	    MonthMoveGuide = __webpack_require__(108),
+	    TZDate = __webpack_require__(28).Date;
 	
 	/**
 	 * @constructor
@@ -18104,11 +18121,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = MonthMove;
 	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18116,14 +18132,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = global.tui.util;
+	var util = __webpack_require__(6);
 	
-	var config = __webpack_require__(33),
-	    domutil = __webpack_require__(30),
-	    domevent = __webpack_require__(31),
-	    FloatingLayer = __webpack_require__(85),
-	    tmpl = __webpack_require__(108),
-	    Schedule = __webpack_require__(40);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    domevent = __webpack_require__(32),
+	    FloatingLayer = __webpack_require__(86),
+	    tmpl = __webpack_require__(109),
+	    Schedule = __webpack_require__(41);
 	
 	/**
 	 * @constructor
@@ -18329,10 +18345,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -18384,23 +18400,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/**
+	/**
 	 * @fileoverview Floating layer for displaying schedule in specific date
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
 	
 	var OUT_PADDING = 5;
-	var util = global.tui.util;
-	var config = __webpack_require__(33),
-	    domevent = __webpack_require__(31),
-	    domutil = __webpack_require__(30),
-	    View = __webpack_require__(36),
-	    FloatingLayer = __webpack_require__(85),
-	    tmpl = __webpack_require__(110);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domevent = __webpack_require__(32),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37),
+	    FloatingLayer = __webpack_require__(86),
+	    tmpl = __webpack_require__(111);
 	
 	/**
 	 * @constructor
@@ -18518,14 +18534,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = More;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(7);
+	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
