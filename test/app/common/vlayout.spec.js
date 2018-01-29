@@ -1,3 +1,4 @@
+var util = require('tui-code-snippet');
 var VLayout = require('common/vlayout');
 var VPanel = require('common/vpanel');
 
@@ -120,11 +121,11 @@ describe('VLayout', function() {
                 {isSplitter: true},    //
                 {height: 100},         // 100,  205
             ], inst.container);
-            spyOn(tui.util, 'forEach');
+            spyOn(util, 'forEach');
             inst._resize(inst.panels[1], 100, 110);
 
             // 첫 번째 패널은 10 증가, 두 번째 패널은 10 감소
-            var allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
+            var allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
             expect(allArgs).toEqual([110, 90]);
         });
 
@@ -136,11 +137,11 @@ describe('VLayout', function() {
                 {isSplitter: true},    //
                 {height: 30}           // 30 ,  230
             ], inst.container);
-            spyOn(tui.util, 'forEach');
+            spyOn(util, 'forEach');
 
             // 첫 번째 스플리터를 마지막 패널까지 드래그 했다고 가정
             inst._resize(inst.panels[1], 100, 210);
-            var allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
+            var allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
             expect(allArgs).toEqual([210, 0, 20]);
         });
 
@@ -152,10 +153,10 @@ describe('VLayout', function() {
                 {isSplitter: true},    //
                 {height: 30}           // 30 ,  230
             ], inst.container);
-            spyOn(tui.util, 'forEach');
+            spyOn(util, 'forEach');
 
             inst._resize(inst.panels[3], 200, 170);
-            allArgs = _.pluck(tui.util.forEach.calls.argsFor(0)[0], 1);
+            allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
             expect(allArgs).toEqual([60, 70, 100]);
         });
     });

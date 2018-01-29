@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 
 /**
  * Schedule ViewModel

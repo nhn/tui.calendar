@@ -1,9 +1,9 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var Guide = require('handler/time/resizeGuide');
 
 describe('handler/time.resize.guide', function() {
-    var util = tui.util,
-        mockInstance;
+    var mockInstance;
 
     it('_onDrag() calculate guide element\'s height properly.', function() {
         mockInstance = jasmine.createSpyObj('TimeResizeGuide', ['_refreshGuideElement']);

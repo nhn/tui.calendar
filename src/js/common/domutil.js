@@ -8,7 +8,7 @@
 var domevent = require('./domevent');
 var Collection = require('./collection');
 
-var util = global.tui.util,
+var util = require('tui-code-snippet'),
     posKey = '_pos',
     domutil;
 

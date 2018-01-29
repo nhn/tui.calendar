@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
@@ -7,8 +8,7 @@ var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
 var datetime = require('common/datetime');
 
 describe('Base.Week', function() {
-    var util = tui.util,
-        stamp = tui.util.stamp;
+    var stamp = util.stamp;
 
     var base,
         ctrl,

@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var dirty = require('common/dirty');
 
 describe('dirty mixin', function() {
@@ -103,7 +104,7 @@ describe('dirty mixin', function() {
                Animal.call(this);
                this.name = 'bear';
            }
-           tui.util.inherit(Bear, Animal);
+           util.inherit(Bear, Animal);
            Bear.prototype.run = function() {
                return 'run!';
            };
@@ -120,7 +121,7 @@ describe('dirty mixin', function() {
                Animal.call(this);
                this.name = 'bear';
            }
-           tui.util.inherit(Bear, Animal);
+           util.inherit(Bear, Animal);
            Bear.prototype.run = function() {
                return 'run!';
            };

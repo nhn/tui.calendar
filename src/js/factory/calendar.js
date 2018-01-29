@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util,
+var util = require('tui-code-snippet'),
     mmin = Math.min;
 var Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
@@ -69,6 +69,7 @@ var dw = require('../common/dw'),
  *   @property {Array.<string>} [week.daynames] - day names in weekly and daily.
  * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
+ *   @property {boolean} [week.workweek=false] - show only 5 days except for weekend
  *  @property {object} [month] - options for month view
  *   @property {Array.<string>} [month.daynames] - day names in monthly.
  * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -180,7 +181,8 @@ function Calendar(container, options) {
     }, options);
 
     this.options.week = util.extend({
-        startDayOfWeek: 0
+        startDayOfWeek: 0,
+        workweek: false
     }, util.pick(this.options, 'week') || {});
 
     this.options.month = util.extend({
@@ -516,11 +518,12 @@ Calendar.prototype.setOptionRecurseively = function(view, func) {
 /**
  * @param {string|Date} date - date to show in calendar
  * @param {number} [startDayOfWeek=0] - start day of week
+ * @param {boolean} [workweek=false] - only show work week
  * @returns {array} render range
  * @private
  */
-Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
-    var day, start, end,
+Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek, workweek) {
+    var day, start, end, range,
         msFrom = datetime.millisecondsFrom;
 
     startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
@@ -539,6 +542,21 @@ Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek) {
     if (day < startDayOfWeek) {
         start = new TZDate(Number(start) - msFrom('day', 7));
         end = new TZDate(Number(end) - msFrom('day', 7));
+    }
+
+    if (workweek) {
+        range = datetime.range(
+            datetime.start(start),
+            datetime.end(end),
+            datetime.MILLISECONDS_PER_DAY
+        );
+
+        range = util.filter(range, function(weekday) {
+            return !datetime.isWeekend(weekday.getDay());
+        });
+
+        start = range[0];
+        end = range[range.length - 1];
     }
 
     return [start, end];
@@ -673,19 +691,22 @@ Calendar.prototype.move = function(offset) {
         viewName = this.viewName,
         view = this.getCurrentView(),
         recursiveSet = this.setOptionRecurseively,
-        startDate, endDate, tempDate, startDayOfWeek, visibleWeeksCount, datetimeOptions;
+        startDate, endDate, tempDate,
+        startDayOfWeek, visibleWeeksCount, workweek, datetimeOptions;
 
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
         startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
         visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
+        workweek = util.pick(this.options, 'month', 'workweek') || false;
 
         if (visibleWeeksCount) {
             datetimeOptions = {
                 startDayOfWeek: startDayOfWeek,
                 isAlways6Week: false,
-                visibleWeeksCount: visibleWeeksCount
+                visibleWeeksCount: visibleWeeksCount,
+                workweek: workweek
             };
 
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
@@ -697,7 +718,8 @@ Calendar.prototype.move = function(offset) {
         } else {
             datetimeOptions = {
                 startDayOfWeek: startDayOfWeek,
-                isAlways6Week: true
+                isAlways6Week: true,
+                workweek: workweek
             };
 
             renderDate.addMonth(offset);
@@ -709,10 +731,13 @@ Calendar.prototype.move = function(offset) {
         }
 
         startDate = tempDate[0][0];
-        endDate = tempDate[tempDate.length - 1][6];
+        endDate = tempDate[tempDate.length - 1][tempDate[tempDate.length - 1].length - 1];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        tempDate = this.getWeekDayRange(renderDate.d, util.pick(this.options, 'week', 'startDayOfWeek') || 0);
+        startDayOfWeek = util.pick(this.options, 'week', 'startDayOfWeek') || 0;
+        workweek = util.pick(this.options, 'week', 'workweek') || false;
+        tempDate = this.getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
+
         startDate = tempDate[0];
         endDate = tempDate[1];
 

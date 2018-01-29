@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
@@ -107,12 +107,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
  * @param {object} scheduleData - schedule data from AlldayCreation module.
  */
 AlldayCreation.prototype._createSchedule = function(scheduleData) {
-    var viewOptions = scheduleData.relatedView.options,
-        dateRange = datetime.range(
-            datetime.start(datetime.parse(viewOptions.renderStartDate)),
-            datetime.end(datetime.parse(viewOptions.renderEndDate)),
-            datetime.MILLISECONDS_PER_DAY
-        ),
+    var dateRange = scheduleData.range,
         startXIndex = scheduleData.dragStartXIndex,
         xIndex = scheduleData.xIndex,
         start, end;

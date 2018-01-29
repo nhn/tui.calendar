@@ -6,7 +6,7 @@
 
 var TZDate = require('./timezone').Date,
     dw = require('../common/dw');
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 var datetime, tokenFunc;
 
@@ -422,6 +422,7 @@ datetime = {
      * @param {number} [options.startDayOfWeek=0] - start day of week
      * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
      * @param {number} options.visibleWeeksCount visible weeks count
+     * @param {boolean} options.workweek - only show work week
      * @param {function} [iteratee] - iteratee for customizing calendar object
      * @returns {Array.<string[]>} calendar 2d array
      */
@@ -434,7 +435,8 @@ datetime = {
             calendar = [],
             startDayOfWeek = options.startDayOfWeek,
             isAlways6Week = options.isAlways6Week,
-            visibleWeeksCount = options.visibleWeeksCount;
+            visibleWeeksCount = options.visibleWeeksCount,
+            workweek = options.workweek;
 
         if (visibleWeeksCount) {
             start = new TZDate(month);
@@ -472,7 +474,9 @@ datetime = {
 
             date = new TZDate(cursor);
             date = iteratee ? iteratee(date) : date;
-            week.push(date);
+            if (!workweek || !datetime.isWeekend(date.getDay())) {
+                week.push(date);
+            }
 
             // add date
             cursor.setDate(cursor.getDate() + 1);
@@ -482,19 +486,28 @@ datetime = {
     },
 
     /**
-     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek
+     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek, workweek
      * 
      * @param {number} days - day length of week
      * @param {boolean} narrowWeekend - narrow weekend
      * @param {number} startDayOfWeek - start day of week
+     * @param {boolean} workweek - only show work week
      * @returns {Array} day, left, width
      */
-    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek) {
+    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek, workweek) {
         var limitDaysToApplyNarrowWeekend = 5;
         var uniformWidth = 100 / days;
         var wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
         var accumulatedWidth = 0;
-        var dates = util.range(startDayOfWeek, days).concat(util.range(days)).slice(0, days);
+        var dates = util.range(startDayOfWeek, 7).concat(util.range(days)).slice(0, 7);
+
+        if (workweek) {
+            dates = util.filter(dates, function(day) {
+                return !datetime.isWeekend(day);
+            });
+        }
+
+        narrowWeekend = workweek ? false : narrowWeekend;
 
         return util.map(dates, function(day) {
             var model;

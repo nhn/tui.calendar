@@ -43,7 +43,12 @@ describe('week:view/TaskView', function() {
                     task: {
                         '2015-05-02': {hello: {length: 2}}
                     }
-                }
+                },
+                range: datetime.range(
+                    datetime.start(datetime.parse(mockInst.options.renderStartDate)),
+                    datetime.end(datetime.parse(mockInst.options.renderEndDate)),
+                    datetime.MILLISECONDS_PER_DAY
+                )
             };
             var actual = TaskView.prototype._getBaseViewModel.call(mockInst, viewModel);
             var expected = {
@@ -74,7 +79,12 @@ describe('week:view/TaskView', function() {
                     task: {
                         '2015-05-02': {hello: {length: 8}}
                     }
-                }
+                },
+                range: datetime.range(
+                    datetime.start(datetime.parse(mockInst.options.renderStartDate)),
+                    datetime.end(datetime.parse(mockInst.options.renderEndDate)),
+                    datetime.MILLISECONDS_PER_DAY
+                )
             };
 
             actual = TaskView.prototype._getBaseViewModel.call(mockInst, viewModel);

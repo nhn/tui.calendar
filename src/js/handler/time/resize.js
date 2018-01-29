@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
@@ -151,7 +151,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
         return;
     }
 
-    scheduleData = getScheduleDataFunc(dragEventData.originSchedule, {
+    scheduleData = getScheduleDataFunc(dragEventData.originEvent, {
         targetModelID: startScheduleData.targetModelID
     });
 

@@ -1,12 +1,12 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var domutil = require('common/domutil');
 var datetime = require('common/datetime');
 var TimeMove = require('handler/time/move');
 var TZDate = require('common/timezone').Date;
 
 describe('handler/time.move', function() {
-    var util = tui.util,
-        mockInstance;
+    var mockInstance;
 
     it('checkExpectedCondition()', function() {
         mockInstance = jasmine.createSpyObj('TimeMove', ['_getTimeView']);

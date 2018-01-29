@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
@@ -54,13 +54,8 @@ util.inherit(Milestone, View);
  * @returns {object} view model for task view
  */
 Milestone.prototype._getBaseViewModel = function(viewModel) {
-    var options = this.options,
-        schedules = {},
-        range = datetime.range(
-            datetime.start(datetime.parse(options.renderStartDate)),
-            datetime.end(datetime.parse(options.renderEndDate)),
-            datetime.MILLISECONDS_PER_DAY
-        ),
+    var schedules = {},
+        range = viewModel.range,
         height,
         today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
         viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'milestone'),

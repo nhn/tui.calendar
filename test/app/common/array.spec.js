@@ -1,9 +1,9 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var array = require('common/array');
 var Schedule = require('model/schedule');
 
 describe('common/array', function() {
-    var util = tui.util;
 
     describe('common compare methods', function() {
         describe('compare.num', function() {
@@ -154,7 +154,7 @@ describe('common/array', function() {
 
         it('it can be used to insert the element.', function() {
             arr.splice(Math.abs(array.bsearch(arr, 'g')), 0, 'g');
-            expect(tui.util.inArray('g', arr)).toBe(7);
+            expect(util.inArray('g', arr)).toBe(7);
         });
 
         it('search by custom functions.', function() {

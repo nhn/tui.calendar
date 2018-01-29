@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util,
+var util = require('tui-code-snippet'),
     mmax = Math.max;
 
 var Weekday = require('../weekday'),
@@ -35,7 +35,7 @@ util.inherit(WeekdayInWeek, Weekday);
 WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
-        baseViewModel = this.getBaseViewModel(),
+        baseViewModel = this.getBaseViewModel(viewModel),
         maxScheduleInDay = 0;
 
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);

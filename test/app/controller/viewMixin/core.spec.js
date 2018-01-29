@@ -1,20 +1,20 @@
+var util = require('tui-code-snippet');
 var array = require('common/array');
 var Collection = require('common/collection');
-var ControllerFactory = require('factory/controller');
+var controllerFactory = require('factory/controller');
 var Schedule = require('model/schedule');
 var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
 var TZDate = require('common/timezone').Date;
 
 describe('Base.Core', function() {
-    var util = tui.util,
-        mockData,
+    var mockData,
         scheduleList,
         controller,
         expected,
         actual;
 
     beforeEach(function() {
-        controller = ControllerFactory();
+        controller = controllerFactory();
         mockData = fixture.load('schedule_set_string3.json');
         scheduleList = util.map(mockData, function(data) {
             return Schedule.create(data);

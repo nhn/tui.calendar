@@ -1,6 +1,7 @@
 var Weekday = require('view/weekday');
 var TZDate = require('common/timezone').Date;
 var timezoneMatchers = require('../../matcher/timezone');
+var datetime = require('common/datetime');
 
 describe('Weekday view', function() {
     beforeEach(function() {
@@ -12,6 +13,13 @@ describe('Weekday view', function() {
             options: {
                 renderStartDate: '2015-01-01',
                 renderEndDate: '2015-01-05'
+            },
+            _cacheParentViewModel: {
+                range: datetime.range(
+                    datetime.start(datetime.parse('2015-01-01')),
+                    datetime.end(datetime.parse('2015-01-05')),
+                    datetime.MILLISECONDS_PER_DAY
+                )
             }
         };
         var actual = Weekday.prototype.getRenderDateRange.call(mockInst);
