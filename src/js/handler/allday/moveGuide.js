@@ -170,12 +170,12 @@ AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerce
 AlldayMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         datesInRange = dragStartEventData.datesInRange,
+        range = dragStartEventData.range,
         baseWidthPercent = (100 / datesInRange),
         originScheduleStarts = datetime.start(model.start),
         originScheduleEnds = datetime.end(model.end),
-        viewOptions = this.alldayMove.alldayView.options,
-        renderStartDate = datetime.start(datetime.parse(viewOptions.renderStartDate)),
-        renderEndDate = datetime.end(datetime.parse(viewOptions.renderEndDate)),
+        renderStartDate = datetime.start(range[0]),
+        renderEndDate = datetime.end(range[range.length - 1]),
         fromLeft = (new TZDate(originScheduleStarts.getTime() -
             renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
         fromRight = (new TZDate(originScheduleEnds.getTime() -

@@ -33,7 +33,8 @@ describe('View/Week', function() {
                 schedulesInDateRange: 'helloWorld',
                 renderStartDate: jasmine.any(TZDate),
                 renderEndDate: jasmine.any(TZDate),
-                grids: jasmine.any(Array)
+                grids: jasmine.any(Array),
+                range: jasmine.any(Array)
             });
         });
     });

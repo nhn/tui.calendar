@@ -129,7 +129,7 @@ WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewM
  */
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
-        baseViewModel = this.getBaseViewModel(),
+        baseViewModel = this.getBaseViewModel(viewModel),
         renderLimitIdx,
         exceedDate = {},
         scheduleContainer,
@@ -154,7 +154,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
     Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
 
     contentStr += scheduleTmpl(util.extend({
-        matrices: viewModel,
+        matrices: viewModel.eventsInDateRange,
         schedulePaddingTop: EVENT_PADDING_TOP,
         renderLimitIdx: renderLimitIdx
     }, baseViewModel));

@@ -6,7 +6,6 @@
 'use strict';
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
-var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 
 var mmax = Math.max,
@@ -24,28 +23,21 @@ var alldayCore = {
     _retriveScheduleData: function(alldayView, mouseEvent) {
         var weekdayView = alldayView.children.single(),
             container,
-            renderStartDate,
-            renderEndDate,
             datesInRange,
             containerWidth,
             mousePos,
             dragStartXIndex,
-            grids;
+            grids,
+            range;
 
         if (!weekdayView) {
             return false;
         }
 
         container = weekdayView.container;
-        renderStartDate = datetime.parse(alldayView.options.renderStartDate);
-        renderEndDate = datetime.end(datetime.parse(alldayView.options.renderEndDate));
-        datesInRange = datetime.range(renderStartDate, renderEndDate, datetime.MILLISECONDS_PER_DAY).length;
-
-        grids = datetime.getGridLeftAndWidth(
-            datesInRange,
-            alldayView.options.narrowWeekend,
-            alldayView.options.startDayOfWeek
-        );
+        range = weekdayView.getRenderDateRange();
+        datesInRange = range.length;
+        grids = weekdayView.getRenderDateGrids();
 
         containerWidth = domutil.getSize(container)[0];
         mousePos = domevent.getMousePosition(mouseEvent, container);
@@ -70,7 +62,8 @@ var alldayCore = {
                 datesInRange: datesInRange,
                 xIndex: xIndex,
                 triggerEvent: mouseEvent.type,
-                grids: grids
+                grids: grids,
+                range: range
             };
         };
     }

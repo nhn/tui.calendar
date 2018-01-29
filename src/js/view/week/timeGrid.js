@@ -103,6 +103,12 @@ function TimeGrid(options, container) {
      */
     this._scrolled = false;
 
+    /*
+     * cache parent's view model
+     * @type {object}
+     */
+    this._cacheParentViewModel = null;
+
     this.attachEvent();
 }
 
@@ -129,7 +135,7 @@ TimeGrid.prototype._beforeDestroy = function() {
         this._autoScroll.destroy();
     }
 
-    this._autoScroll = this.hourmarker = this.intervalID = this.timerID = null;
+    this._autoScroll = this.hourmarker = this.intervalID = this.timerID = this._cacheParentViewModel = null;
 };
 
 /**
@@ -155,43 +161,19 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
 };
 
 /**
- * @returns {object} grid information(width, left, day)
- */
-TimeGrid.prototype._getGrids = function() {
-    var opt = this.options,
-        dateRange = datetime.range(
-            datetime.parse(opt.renderStartDate),
-            datetime.parse(opt.renderEndDate),
-            datetime.MILLISECONDS_PER_DAY
-        ),
-        grids = datetime.getGridLeftAndWidth(
-            dateRange.length,
-            this.options.narrowWeekend,
-            this.options.startDayOfWeek
-        );
-
-    return grids;
-};
-
-/**
  * Get Hourmarker viewmodel.
  * @param {Date} now - now
  * @param {object} grids grid information(width, left, day)
+ * @param {Array.<TZDate>} range render range
  * @returns {object} ViewModel of hourmarker.
  */
-TimeGrid.prototype._getHourmarkerViewModel = function(now, grids) {
-    var opt = this.options,
-        dateRange = datetime.range(
-            datetime.parse(opt.renderStartDate),
-            datetime.parse(opt.renderEndDate),
-            datetime.MILLISECONDS_PER_DAY
-        ),
-        todaymarkerLeft = -1,
+TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
+    var todaymarkerLeft = -1,
         viewModel;
 
     now = now || new TZDate();
 
-    util.forEach(dateRange, function(date, index) {
+    util.forEach(range, function(date, index) {
         if (datetime.isSameDate(now, date)) {
             todaymarkerLeft = grids[index].left;
         }
@@ -210,11 +192,12 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids) {
 /**
  * Get base viewModel.
  * @param {object} grids grid information(width, left, day)
+ * @param {Array.<TZDate>} range render range
  * @returns {object} ViewModel
  */
-TimeGrid.prototype._getBaseViewModel = function(grids) {
+TimeGrid.prototype._getBaseViewModel = function(grids, range) {
     var opt = this.options;
-    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids);
+    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
     viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
 
     return viewModel;
@@ -275,8 +258,11 @@ TimeGrid.prototype.render = function(viewModel) {
     var timeViewModel = viewModel.schedulesInDateRange.time,
         container = this.container,
         grids = viewModel.grids,
-        baseViewModel = this._getBaseViewModel(grids),
+        range = viewModel.range,
+        baseViewModel = this._getBaseViewModel(grids, range),
         scheduleLen = util.keys(timeViewModel).length;
+
+    this._cacheParentViewModel = viewModel;
 
     if (!scheduleLen) {
         return;
@@ -313,7 +299,9 @@ TimeGrid.prototype.render = function(viewModel) {
  */
 TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarker = this.hourmarker,
-        viewModel = this._getHourmarkerViewModel(new TZDate(), this._getGrids()),
+        grids = this._cacheParentViewModel ? this._cacheParentViewModel.grids : null,
+        range = this._cacheParentViewModel ? this._cacheParentViewModel.range : null,
+        viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range),
         todaymarker,
         hourmarkerText;
 

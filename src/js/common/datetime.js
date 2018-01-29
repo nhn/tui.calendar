@@ -482,19 +482,28 @@ datetime = {
     },
 
     /**
-     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek
+     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek, workweek
      * 
      * @param {number} days - day length of week
      * @param {boolean} narrowWeekend - narrow weekend
      * @param {number} startDayOfWeek - start day of week
+     * @param {boolean} workweek - only show work week
      * @returns {Array} day, left, width
      */
-    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek) {
+    getGridLeftAndWidth: function(days, narrowWeekend, startDayOfWeek, workweek) {
         var limitDaysToApplyNarrowWeekend = 5;
         var uniformWidth = 100 / days;
         var wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
         var accumulatedWidth = 0;
-        var dates = util.range(startDayOfWeek, days).concat(util.range(days)).slice(0, days);
+        var dates = util.range(startDayOfWeek, 7).concat(util.range(days)).slice(0, 7);
+
+        if (workweek) {
+            dates = util.filter(dates, function(day) {
+                return !datetime.isWeekend(day);
+            });
+        }
+
+        narrowWeekend = workweek ? false : narrowWeekend;
 
         return util.map(dates, function(day) {
             var model;

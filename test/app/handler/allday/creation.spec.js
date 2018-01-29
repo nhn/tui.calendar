@@ -69,7 +69,8 @@ describe('handler:AlldayCreation', function() {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 1,
                 xIndex: 2,
-                triggerEvent: 'drag'
+                triggerEvent: 'drag',
+                range: [null, new TZDate('2015-05-02T00:00:00+09:00'), new TZDate('2015-05-03T23:59:59+09:00')]
             };
 
             proto._createSchedule.call(inst, mockEventData);
@@ -91,7 +92,8 @@ describe('handler:AlldayCreation', function() {
                 relatedView: mockAlldayView,
                 dragStartXIndex: 3,
                 xIndex: 1,
-                triggerEvent: 'drag'
+                triggerEvent: 'drag',
+                range: [null, new TZDate('2015-05-02T00:00:00+09:00'), null, new TZDate('2015-05-04T23:59:59+09:00')]
             };
 
             proto._createSchedule.call(inst, mockEventData);

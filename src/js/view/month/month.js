@@ -182,11 +182,19 @@ Month.prototype.render = function() {
     this._renderChildren(vLayout.panels[1].container, calendar);
 
     this.children.each(function(childView) {
-        var viewModel = controller.findByDateRange(
-            datetime.start(datetime.parse(childView.options.renderStartDate)),
-            datetime.end(datetime.parse(childView.options.renderEndDate)),
+        var start = datetime.parse(childView.options.renderStartDate);
+        var end = datetime.parse(childView.options.renderEndDate);
+        var eventsInDateRange = controller.findByDateRange(
+            datetime.start(start),
+            datetime.end(end),
             scheduleFilter
         );
+        var dateRange = datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);
+        var viewModel = {
+            eventsInDateRange: eventsInDateRange,
+            range: dateRange,
+            grids: grids
+        };
 
         childView.render(viewModel);
     });

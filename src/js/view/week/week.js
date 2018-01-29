@@ -54,7 +54,8 @@ function Week(controller, options, container) {
         renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
         renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
         narrowWeekend: false,
-        startDayOfWeek: 0
+        startDayOfWeek: 0,
+        workweek: false
     }, options);
 
     /**
@@ -76,29 +77,47 @@ util.inherit(Week, View);
  * @override
  */
 Week.prototype.render = function() {
-    var options = this.options;
-    var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids;
+    var options = this.options,
+        narrowWeekend = options.narrowWeekend,
+        startDayOfWeek = options.startDayOfWeek,
+        workweek = options.workweek;
+    var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 
     renderStartDate = parseRangeDateString(options.renderStartDate);
     renderEndDate = parseRangeDateString(options.renderEndDate);
+
+    range = datetime.range(
+        datetime.start(renderStartDate),
+        datetime.end(renderEndDate),
+        datetime.MILLISECONDS_PER_DAY
+    );
+
+    if (options.workweek && datetime.compare(renderStartDate, renderEndDate)) {
+        range = util.filter(range, function(date) {
+            return !datetime.isWeekend(date.getDay());
+        });
+
+        renderStartDate = range[0];
+        renderEndDate = range[range.length - 1];
+    }
+
     schedulesInDateRange = this.controller.findByDateRange(
         datetime.start(renderStartDate),
         datetime.end(renderEndDate)
     );
     grids = datetime.getGridLeftAndWidth(
-        datetime.range(
-            datetime.start(renderStartDate),
-            datetime.end(renderEndDate),
-            datetime.MILLISECONDS_PER_DAY
-        ).length,
-        options.narrowWeekend,
-        options.startDayOfWeek);
+        range.length,
+        narrowWeekend,
+        startDayOfWeek,
+        workweek
+    );
 
     viewModel = {
         schedulesInDateRange: schedulesInDateRange,
         renderStartDate: renderStartDate,
         renderEndDate: renderEndDate,
-        grids: grids
+        grids: grids,
+        range: range
     };
 
     this.children.each(function(childView) {
