@@ -1,12 +1,12 @@
+var util = require('tui-code-snippet');
 var array = require('common/array');
-var ControllerFactory = require('factory/controller');
+var controllerFactory = require('factory/controller');
 var Schedule = require('model/schedule');
 var TZDate = require('common/timezone').Date;
 var matricesMatcher = require('../../../matcher/matrices');
 
 describe('Base.Month', function() {
     var undef = (function() {})(),
-        util = tui.util,
         base,
         controller,
         mockData,
@@ -14,7 +14,7 @@ describe('Base.Month', function() {
         actual;
 
     beforeEach(function() {
-        base = ControllerFactory();
+        base = controllerFactory();
         controller = base.Month;
 
         mockData = fixture.load('schedule_set_month.json');

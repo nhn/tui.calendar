@@ -1,9 +1,9 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var View = require('view/view');
 
 describe('View', function() {
-    var util = tui.util,
-        view;
+    var view;
 
     beforeEach(function() {
         fixture.load('view.html');

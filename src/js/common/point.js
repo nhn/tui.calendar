@@ -16,7 +16,7 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 
 /**
  * Class for represent two dimentional x, y coordinates.

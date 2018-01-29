@@ -1,6 +1,7 @@
+var util = require('tui-code-snippet');
 var View = require('view/view');
 var Calendar = require('factory/calendar');
-var ControllerFactory = require('factory/controller');
+var controllerFactory = require('factory/controller');
 var TimeGrid = require('view/week/timeGrid');
 var TZDate = require('common/timezone').Date;
 
@@ -15,7 +16,7 @@ describe('Calendar', function() {
         spyOn(TimeGrid.prototype, 'scrollToNow');
         spyOn(View.prototype, 'getViewBound').and.returnValue({height: 100});
 
-        controller = ControllerFactory();
+        controller = controllerFactory();
         spyOn(controller, 'createSchedules');
         spyOn(Calendar.prototype, '_toggleViewSchedule');
 
@@ -44,7 +45,7 @@ describe('Calendar', function() {
 
         it('updateSchedule() can update Schedule model', function() {
             var Schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
-            var id = tui.util.stamp(Schedule);
+            var id = util.stamp(Schedule);
             var calendarId = Schedule.calendarId;
             Schedule.id = id;
             Schedule.cid.and.returnValue(id);
@@ -59,7 +60,7 @@ describe('Calendar', function() {
 
         it('deleteSchedule() can delete Schedule model in collection.', function() {
             var Schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
-            var id = tui.util.stamp(Schedule);
+            var id = util.stamp(Schedule);
             var calendarId = Schedule.calendarId;
             Schedule.id = id;
             Schedule.cid.and.returnValue(id);

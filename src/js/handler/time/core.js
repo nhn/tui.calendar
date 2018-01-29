@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var common = require('../../common/common');
 var datetime = require('../../common/datetime');
 var domevent = require('../../common/domevent');
