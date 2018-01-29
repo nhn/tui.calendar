@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = global.tui.util,
+var util = require('tui-code-snippet'),
     mAbs = Math.abs;
 
 var config = require('../config'),

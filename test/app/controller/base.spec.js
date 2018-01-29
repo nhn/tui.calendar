@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var util = require('tui-code-snippet');
 var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
@@ -8,8 +9,7 @@ var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
 
 describe('controller/base', function() {
-    var util = tui.util,
-        ctrl,
+    var ctrl,
         set;
 
     beforeEach(function() {
@@ -99,13 +99,13 @@ describe('controller/base', function() {
 
             // Add returned viewmodel matcher.
             jasmine.addMatchers({
-                toEqualViewModel: function(util, customEqualityTesters) {
+                toEqualViewModel: function(matchersUtil, customEqualityTesters) {
                     return {
                         compare: function(actual, expected) {
                             var result = {},
                                 isEqual = true;
 
-                            tui.util.forEach(expected, function(compareTo, ymd) {
+                                util.forEach(expected, function(compareTo, ymd) {
                                 var models = actual[ymd];
 
                                 if (!models) {
@@ -113,11 +113,11 @@ describe('controller/base', function() {
                                     return false;
                                 }
 
-                                titleList = tui.util.map(models.items, function(item) {
+                                titleList = util.map(models.items, function(item) {
                                     return item.valueOf().title;
                                 });
 
-                                isEqual = util.equals(titleList.sort(), expected[ymd].sort());
+                                isEqual = matchersUtil.equals(titleList.sort(), expected[ymd].sort());
 
                                 return isEqual;
                             });

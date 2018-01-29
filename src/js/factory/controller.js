@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var Base = require('../controller/base'),
     Core = require('../controller/viewMixin/core'),
     Week = require('../controller/viewMixin/week'),

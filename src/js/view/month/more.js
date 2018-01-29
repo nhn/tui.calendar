@@ -5,7 +5,7 @@
 'use strict';
 
 var OUT_PADDING = 5;
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var config = require('../../config'),
     domevent = require('../../common/domevent'),
     domutil = require('../../common/domutil'),

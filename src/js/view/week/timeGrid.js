@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = global.tui.util;
+var util = require('tui-code-snippet');
 var config = require('../../config');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');

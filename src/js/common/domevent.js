@@ -5,7 +5,7 @@
  */
 'use strict';
 
-var util = global.tui.util,
+var util = require('tui-code-snippet'),
     browser = util.browser,
     eventKey = '_evt',
     DRAG = {
