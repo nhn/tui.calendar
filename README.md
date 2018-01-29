@@ -63,13 +63,15 @@ var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
     month: {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         startDayOfWeek: 0,
-        narrowWeekend: true
+        narrowWeekend: true,
+        workweek: false
     },
     week: {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         panelHeights: [80, 80, 120],
         startDayOfWeek: 0,
-        narrowWeekend: true
+        narrowWeekend: true,
+        workweek: false
     }
 });
 ```
@@ -248,4 +250,9 @@ calendar.toggleView(calendar.viewName, true);
 calendar.options.month.startDayOfWeek = 1;
 calendar.options.week.startDayOfWeek = 1;
 calendar.toggleView(calendar.viewName, true);
+
+// work week
+calendar.options.month.workweek = true;
+calendar.options.week.workweek = true;
+cal.toggleView(cal.viewName, true);
 ```
