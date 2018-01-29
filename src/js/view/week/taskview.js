@@ -51,13 +51,8 @@ util.inherit(TaskView, View);
  * @returns {object} view model for task view
  */
 TaskView.prototype._getBaseViewModel = function(viewModel) {
-    var options = this.options,
-        schedules = {},
-        range = datetime.range(
-            datetime.start(datetime.parse(options.renderStartDate)),
-            datetime.end(datetime.parse(options.renderEndDate)),
-            datetime.MILLISECONDS_PER_DAY
-        ),
+    var schedules = {},
+        range = viewModel.range,
         height = 0,
         mmax = Math.max,
         today = datetime.format(new TZDate(), 'YYYY-MM-DD'),

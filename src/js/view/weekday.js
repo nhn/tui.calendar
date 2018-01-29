@@ -39,8 +39,15 @@ function Weekday(options, container) {
         scheduleHeight: 18,
         scheduleGutter: 2,
         narrowWeekend: false,
-        startDayOfWeek: 0
+        startDayOfWeek: 0,
+        workweek: false
     }, options);
+
+    /*
+     * cache parent's view model
+     * @type {object}
+     */
+    this._cacheParentViewModel = null;
 
     View.call(this, container);
 }
@@ -52,28 +59,30 @@ util.inherit(Weekday, View);
  * @returns {Date[]} rendered date range
  */
 Weekday.prototype.getRenderDateRange = function() {
-    var opt = this.options;
+    return this._cacheParentViewModel.range;
+};
 
-    return datetime.range(
-        datetime.start(datetime.parse(opt.renderStartDate)),
-        datetime.end(datetime.parse(opt.renderEndDate)),
-        datetime.MILLISECONDS_PER_DAY
-    );
+/**
+ * Get render date grids information
+ * @returns {Date[]} rendered date grids information
+ */
+Weekday.prototype.getRenderDateGrids = function() {
+    return this._cacheParentViewModel.grids;
 };
 
 /**
  * Get default view model.
+ * @param {object} viewModel parent's view model
  * @returns {object} viewModel to rendering.
  */
-Weekday.prototype.getBaseViewModel = function() {
+Weekday.prototype.getBaseViewModel = function(viewModel) {
     var opt = this.options;
-    var range = this.getRenderDateRange();
+    var range = viewModel.range;
     var today = datetime.format(new TZDate(), 'YYYYMMDD');
     var gridWidth = (100 / range.length);
-    var grids = datetime.getGridLeftAndWidth(
-        this.getRenderDateRange().length,
-        this.options.narrowWeekend,
-        this.options.startDayOfWeek);
+    var grids = viewModel.grids;
+
+    this._cacheParentViewModel = viewModel;
 
     return {
         width: gridWidth,

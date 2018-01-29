@@ -107,12 +107,7 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
  * @param {object} scheduleData - schedule data from AlldayCreation module.
  */
 AlldayCreation.prototype._createSchedule = function(scheduleData) {
-    var viewOptions = scheduleData.relatedView.options,
-        dateRange = datetime.range(
-            datetime.start(datetime.parse(viewOptions.renderStartDate)),
-            datetime.end(datetime.parse(viewOptions.renderEndDate)),
-            datetime.MILLISECONDS_PER_DAY
-        ),
+    var dateRange = scheduleData.range,
         startXIndex = scheduleData.dragStartXIndex,
         xIndex = scheduleData.xIndex,
         start, end;

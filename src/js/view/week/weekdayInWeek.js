@@ -35,7 +35,7 @@ util.inherit(WeekdayInWeek, Weekday);
 WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
-        baseViewModel = this.getBaseViewModel(),
+        baseViewModel = this.getBaseViewModel(viewModel),
         maxScheduleInDay = 0;
 
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);

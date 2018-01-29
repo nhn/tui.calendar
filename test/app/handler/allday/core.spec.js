@@ -13,6 +13,7 @@ describe('handler:AlldayCore', function() {
         });
 
         it('return function that return schedule data by mouse events.', function() {
+            var mockWeekdayView = jasmine.createSpyObj('Weekday', ['getRenderDateRange', 'getRenderDateGrids']);
             var mockAlldayView = {
                 options: {
                     renderStartDate: '2015-08-10',
@@ -24,8 +25,15 @@ describe('handler:AlldayCore', function() {
                 type: 'dragStart'
             };
             var grids = datetime.getGridLeftAndWidth(5, false, 0);
+            var range = datetime.range(
+                datetime.start(datetime.parse(mockAlldayView.options.renderStartDate)),
+                datetime.end(datetime.parse(mockAlldayView.options.renderEndDate)),
+                datetime.MILLISECONDS_PER_DAY
+            );
 
-            mockAlldayView.children.single.and.returnValue(true);
+            mockAlldayView.children.single.and.returnValue(mockWeekdayView);
+            mockWeekdayView.getRenderDateRange.and.returnValue(range);
+            mockWeekdayView.getRenderDateGrids.and.returnValue(grids);
 
             // Simulate mouse event action.
             // drag start position (11일)
@@ -40,7 +48,8 @@ describe('handler:AlldayCore', function() {
                 datesInRange: 5,
                 xIndex: 2,
                 triggerEvent: mouseEvent.type,
-                grids: grids
+                grids: grids,
+                range: range
             });
 
             // drag start position (12일)
@@ -54,7 +63,8 @@ describe('handler:AlldayCore', function() {
                 datesInRange: 5,
                 xIndex: 0,
                 triggerEvent: mouseEvent.type,
-                grids: grids
+                grids: grids,
+                range: range
             });
         });
     });

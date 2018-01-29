@@ -8,7 +8,7 @@
     "dist/tui-full-calendar.js",
     "dist/tui-full-calendar.css"
   ],
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "TOAST UI Component: FullCalendar",
   "ignore": [
     "**/.*",

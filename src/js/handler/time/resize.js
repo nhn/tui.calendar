@@ -151,7 +151,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
         return;
     }
 
-    scheduleData = getScheduleDataFunc(dragEventData.originSchedule, {
+    scheduleData = getScheduleDataFunc(dragEventData.originEvent, {
         targetModelID: startScheduleData.targetModelID
     });
 
