@@ -8,7 +8,7 @@
     // FullCalendar.setTimezoneOffset(540);
 
     cal = new FullCalendar(document.getElementById('calendar'), {
-        defaultView: 'week',
+        defaultView: 'month',
         taskView: true,
         template: {
             milestone: function(schedule) {
@@ -308,9 +308,23 @@
                 cal.options.week.startDayOfWeek = cal.options.week.startDayOfWeek ? 0 : 1;
                 cal.toggleView(cal.viewName, true);
                 break;
+            case 'toggle-workweek':
+                cal.options.month.workweek = !cal.options.month.workweek;
+                cal.options.week.workweek = !cal.options.week.workweek;
+                cal.toggleView(cal.viewName, true);
+                break;
             default:
                 return;
         }
+
+        refreshRenderRange();
+    }
+
+    function refreshRenderRange() {
+        var renderRange = document.getElementById('renderRange');
+        renderRange.innerHTML =
+            new Date(cal.renderRange.start.getTime()).toDateString() + ' ~ '
+            + new Date(cal.renderRange.end.getTime()).toDateString();
     }
 
     // multiple event handler
@@ -332,5 +346,6 @@
 
     document.querySelector('.control').addEventListener('click', onClick);
 
+    refreshRenderRange();
     window.cal = cal;
 })(window, tui.FullCalendar);

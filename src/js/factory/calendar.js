@@ -699,12 +699,14 @@ Calendar.prototype.move = function(offset) {
     if (viewName === 'month') {
         startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
         visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
+        workweek = util.pick(this.options, 'month', 'workweek') || false;
 
         if (visibleWeeksCount) {
             datetimeOptions = {
                 startDayOfWeek: startDayOfWeek,
                 isAlways6Week: false,
-                visibleWeeksCount: visibleWeeksCount
+                visibleWeeksCount: visibleWeeksCount,
+                workweek: workweek
             };
 
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
@@ -716,7 +718,8 @@ Calendar.prototype.move = function(offset) {
         } else {
             datetimeOptions = {
                 startDayOfWeek: startDayOfWeek,
-                isAlways6Week: true
+                isAlways6Week: true,
+                workweek: workweek
             };
 
             renderDate.addMonth(offset);

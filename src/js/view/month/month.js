@@ -86,18 +86,21 @@ Month.prototype._getMonthCalendar = function(renderMonthStr) {
     var date = datetime.parse(renderMonthStr) || datetime.parse(renderMonthStr + '-01');
     var startDayOfWeek = this.options.startDayOfWeek || 0;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
+    var workweek = this.options.workweek || false;
     var datetimeOptions, calendar;
 
     if (this.options.visibleWeeksCount) {
         datetimeOptions = {
             startDayOfWeek: startDayOfWeek,
             isAlways6Week: false,
-            visibleWeeksCount: visibleWeeksCount
+            visibleWeeksCount: visibleWeeksCount,
+            workweek: workweek
         };
     } else {
         datetimeOptions = {
             startDayOfWeek: startDayOfWeek,
-            isAlways6Week: true
+            isAlways6Week: true,
+            workweek: workweek
         };
     }
 
@@ -155,11 +158,18 @@ Month.prototype.render = function() {
         vLayout = this.vLayout,
         controller = this.controller,
         daynames = opt.daynames,
+        workweek = opt.workweek,
         calendar = this._getMonthCalendar(opt.renderMonth),
         scheduleFilter = opt.scheduleFilter,
-        grids = this.grids,
+        grids,
         daynameViewModel,
         baseViewModel;
+
+    grids = this.grids = datetime.getGridLeftAndWidth(
+        opt.daynames.length,
+        opt.narrowWeekend,
+        opt.startDayOfWeek
+    );
 
     daynameViewModel = util.map(
         util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
@@ -172,6 +182,19 @@ Month.prototype.render = function() {
             };
         }
     );
+
+    if (workweek) {
+        grids = this.grids = datetime.getGridLeftAndWidth(5, opt.narrowWeekend, opt.startDayOfWeek, workweek);
+
+        daynameViewModel = util.filter(daynameViewModel, function(daynameModel) {
+            return !datetime.isWeekend(daynameModel.day);
+        });
+
+        util.forEach(daynameViewModel, function(daynameModel, index) {
+            daynameModel.width = grids[index].width;
+            daynameModel.left = grids[index].left;
+        });
+    }
 
     baseViewModel = {
         daynames: daynameViewModel

@@ -422,6 +422,7 @@ datetime = {
      * @param {number} [options.startDayOfWeek=0] - start day of week
      * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
      * @param {number} options.visibleWeeksCount visible weeks count
+     * @param {boolean} options.workweek - only show work week
      * @param {function} [iteratee] - iteratee for customizing calendar object
      * @returns {Array.<string[]>} calendar 2d array
      */
@@ -434,7 +435,8 @@ datetime = {
             calendar = [],
             startDayOfWeek = options.startDayOfWeek,
             isAlways6Week = options.isAlways6Week,
-            visibleWeeksCount = options.visibleWeeksCount;
+            visibleWeeksCount = options.visibleWeeksCount,
+            workweek = options.workweek;
 
         if (visibleWeeksCount) {
             start = new TZDate(month);
@@ -472,7 +474,9 @@ datetime = {
 
             date = new TZDate(cursor);
             date = iteratee ? iteratee(date) : date;
-            week.push(date);
+            if (!workweek || !datetime.isWeekend(date.getDay())) {
+                week.push(date);
+            }
 
             // add date
             cursor.setDate(cursor.getDate() + 1);
