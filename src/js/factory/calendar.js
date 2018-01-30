@@ -433,7 +433,7 @@ Calendar.prototype.getSchedule = function(id, calendarId) {
  * Update the schedule
  * @param {string} id - ID of schedule to update 
  * @param {string} calendarId - calendarId of schedule to update
- * @param {Schedule} schedule - schedule data to update
+ * @param {Schedule} scheduleData - schedule data to update
  * @example
  * calendar.on('beforeUpdateSchedule', function(event) {
  *     var schedule = event.schedule;
@@ -445,15 +445,15 @@ Calendar.prototype.getSchedule = function(id, calendarId) {
  *     });
  * });
  */
-Calendar.prototype.updateSchedule = function(id, calendarId, schedule) {
+Calendar.prototype.updateSchedule = function(id, calendarId, scheduleData) {
     var ctrl = this.controller,
         ownSchedules = ctrl.schedules,
-        Schedule = ownSchedules.single(function(model) {
+        schedule = ownSchedules.single(function(model) {
             return model.id === id && model.calendarId === calendarId;
         });
 
-    if (Schedule) {
-        ctrl.updateSchedule(Schedule, schedule);
+    if (schedule) {
+        ctrl.updateSchedule(schedule, scheduleData);
         this.render();
     }
 };
