@@ -4,7 +4,7 @@
         {{#each this}}
         {{#if this ~}}
         <div class="{{CSS_PREFIX}}time-date-schedule-block {{#if model.isPending}} {{CSS_PREFIX}}time-date-schedule-block-pending{{/if}}" data-id="{{stamp model}}" style="{{time-scheduleBlock this}}">
-            <div class="{{CSS_PREFIX}}time-schedule {{#if model.isFocused}}{{CSS_PREFIX}}time-schedule-focused {{/if}}"
+            <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}time-schedule {{#if model.isFocused}}{{CSS_PREFIX}}time-schedule-focused {{/if}}"
                 style="
                 {{#if model.isFocused}}
                     color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};

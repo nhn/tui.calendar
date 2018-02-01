@@ -112,4 +112,20 @@ describe('Calendar', function() {
             expect(inst.renderDate).toEqual(new TZDate('2015-11-01T00:00:00+09:00'));
         });
     });
+
+    describe('getElement()', function() {
+        it('can return the HTMLElement by schedule id and calendar id', function() {
+            var schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
+            var id = util.stamp(schedule);
+            var calendarId = schedule.calendarId;
+            schedule.id = id;
+            schedule.cid.and.returnValue(id);
+
+            inst.controller.schedules.add(schedule);
+            spyOn(document, 'querySelector').and.callThrough();
+
+            inst.getElement(id, calendarId);
+            expect(document.querySelector).toHaveBeenCalled();
+        });
+    });
 });
