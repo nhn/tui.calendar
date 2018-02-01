@@ -1214,6 +1214,24 @@ Calendar.prototype._setViewName = function(viewName) {
 };
 
 /**
+ * Get schedule by schedule id and calendar id.
+ * @param {string} scheduleId - ID of schedule
+ * @param {string} calendarId - calendarId of schedule
+ * @returns {HTMLElement} schedule element if found or null
+ * @example
+ * var element = calendar.getElement(scheduleId, calendarId);
+ * console.log(element);
+ */
+Calendar.prototype.getElement = function(scheduleId, calendarId) {
+    var schedule = this.getSchedule(scheduleId, calendarId);
+    if (schedule) {
+        return document.querySelector('[data-schedule-id="' + scheduleId + '"]');
+    }
+
+    return null;
+};
+
+/**
  * Set timezone offset
  * @param {number} offset - offset (min)
  * @static

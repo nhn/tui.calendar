@@ -7,8 +7,8 @@
     var lastClickSchedule;
     // FullCalendar.setTimezoneOffset(540);
 
-    cal = new FullCalendar(document.getElementById('calendar'), {
-        defaultView: 'month',
+    cal = new FullCalendar('#calendar', {
+        defaultView: 'week',
         taskView: true,
         template: {
             milestone: function(schedule) {
@@ -348,4 +348,6 @@
 
     refreshRenderRange();
     window.cal = cal;
+
+    cal.getElement('3', '2');
 })(window, tui.FullCalendar);
