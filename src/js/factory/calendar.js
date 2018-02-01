@@ -433,7 +433,7 @@ Calendar.prototype.getSchedule = function(id, calendarId) {
  * Update the schedule
  * @param {string} id - ID of schedule to update 
  * @param {string} calendarId - calendarId of schedule to update
- * @param {Schedule} schedule - schedule data to update
+ * @param {Schedule} scheduleData - schedule data to update
  * @example
  * calendar.on('beforeUpdateSchedule', function(event) {
  *     var schedule = event.schedule;
@@ -445,15 +445,15 @@ Calendar.prototype.getSchedule = function(id, calendarId) {
  *     });
  * });
  */
-Calendar.prototype.updateSchedule = function(id, calendarId, schedule) {
+Calendar.prototype.updateSchedule = function(id, calendarId, scheduleData) {
     var ctrl = this.controller,
         ownSchedules = ctrl.schedules,
-        Schedule = ownSchedules.single(function(model) {
+        schedule = ownSchedules.single(function(model) {
             return model.id === id && model.calendarId === calendarId;
         });
 
-    if (Schedule) {
-        ctrl.updateSchedule(Schedule, schedule);
+    if (schedule) {
+        ctrl.updateSchedule(schedule, scheduleData);
         this.render();
     }
 };
@@ -1211,6 +1211,24 @@ Calendar.prototype.toggleTaskView = function(enabled) {
 Calendar.prototype._setViewName = function(viewName) {
     this.prevViewName = this.viewName;
     this.viewName = viewName;
+};
+
+/**
+ * Get schedule by schedule id and calendar id.
+ * @param {string} scheduleId - ID of schedule
+ * @param {string} calendarId - calendarId of schedule
+ * @returns {HTMLElement} schedule element if found or null
+ * @example
+ * var element = calendar.getElement(scheduleId, calendarId);
+ * console.log(element);
+ */
+Calendar.prototype.getElement = function(scheduleId, calendarId) {
+    var schedule = this.getSchedule(scheduleId, calendarId);
+    if (schedule) {
+        return document.querySelector('[data-schedule-id="' + scheduleId + '"]');
+    }
+
+    return null;
 };
 
 /**

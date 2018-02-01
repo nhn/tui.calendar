@@ -12,7 +12,7 @@
   <div class="{{CSS_PREFIX}}milestone-day" style="width:{{width}}%;left:{{left}}%">
       <ul class="{{CSS_PREFIX}}milestone-list {{#if isToday}} {{CSS_PREFIX}}today{{/if}}">
       {{#each items ~}}
-          <li data-id="{{stamp model}}"
+          <li data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" data-id="{{stamp model}}"
             data-title="{{model.title}}"
             class="{{CSS_PREFIX}}milestone-item"
             style="color:{{model.color}}">

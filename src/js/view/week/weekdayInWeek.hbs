@@ -18,7 +18,7 @@
         style="top:{{multiply top @root.scheduleBlockHeight}}px;
                 left:{{grid-left this @root.dates}}%;
                 width:{{grid-width this @root.dates}}%">
-        <div class="{{CSS_PREFIX}}weekday-schedule {{#if model.isFocused}}{{CSS_PREFIX}}weekday-schedule-focused {{/if}}"
+        <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}weekday-schedule {{#if model.isFocused}}{{CSS_PREFIX}}weekday-schedule-focused {{/if}}"
             style="height:{{@root.scheduleHeight}}px;
                 {{#if model.isFocused}}
                     color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};

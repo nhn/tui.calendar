@@ -15,19 +15,19 @@
     <div class="{{CSS_PREFIX}}task-day-wrap {{#if isToday}} {{CSS_PREFIX}}today{{/if}}">
         <ul class="{{CSS_PREFIX}}task-list">
             {{#each morning.items ~}}
-            <li data-id="{{stamp model}}"
+            <li data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" data-id="{{stamp model}}"
             data-title="{{model.title}}"
             class="{{CSS_PREFIX}}task-item"
             style="background-color:{{model.bgColor}};color:{{model.color}}; border-color:{{model.borderColor}} "><span></span>{{{task-tmpl model}}}</li>
             {{/each ~}}
             {{#each lunch.items ~}}
-            <li data-id="{{stamp model}}"
+            <li data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" data-id="{{stamp model}}"
             data-title="{{model.title}}"
             class="{{CSS_PREFIX}}task-item"
             style="background-color:{{model.bgColor}};color:{{model.color}}; border-color:{{model.borderColor}}"><span></span>{{{task-tmpl model}}}</li>
             {{/each ~}}
             {{#each evening.items ~}}
-            <li data-id="{{stamp model}}"
+            <li data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" data-id="{{stamp model}}"
             data-title="{{model.title}}"
             class="{{CSS_PREFIX}}task-item"
             style="background-color:{{model.bgColor}};color:{{model.color}}; border-color:{{model.borderColor}}"><span></span>{{{task-tmpl model}}}</li>

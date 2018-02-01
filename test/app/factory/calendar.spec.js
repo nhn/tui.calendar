@@ -44,27 +44,27 @@ describe('Calendar', function() {
         });
 
         it('updateSchedule() can update Schedule model', function() {
-            var Schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
-            var id = util.stamp(Schedule);
-            var calendarId = Schedule.calendarId;
-            Schedule.id = id;
-            Schedule.cid.and.returnValue(id);
-            controller.schedules.add(Schedule);
+            var schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
+            var id = util.stamp(schedule);
+            var calendarId = schedule.calendarId;
+            schedule.id = id;
+            schedule.cid.and.returnValue(id);
+            controller.schedules.add(schedule);
             spyOn(controller, 'updateSchedule');
 
             inst.updateSchedule(id, calendarId, {'hello': 'world'});
 
-            expect(controller.updateSchedule).toHaveBeenCalledWith(Schedule, {'hello': 'world'});
+            expect(controller.updateSchedule).toHaveBeenCalledWith(schedule, {'hello': 'world'});
             expect(inst.render).toHaveBeenCalled();
         });
 
         it('deleteSchedule() can delete Schedule model in collection.', function() {
-            var Schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
-            var id = util.stamp(Schedule);
-            var calendarId = Schedule.calendarId;
-            Schedule.id = id;
-            Schedule.cid.and.returnValue(id);
-            controller.schedules.add(Schedule);
+            var schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
+            var id = util.stamp(schedule);
+            var calendarId = schedule.calendarId;
+            schedule.id = id;
+            schedule.cid.and.returnValue(id);
+            controller.schedules.add(schedule);
 
             expect(controller.schedules.length).toBe(1);
 
@@ -110,6 +110,22 @@ describe('Calendar', function() {
             inst.setDate('2015-11-01');
 
             expect(inst.renderDate).toEqual(new TZDate('2015-11-01T00:00:00+09:00'));
+        });
+    });
+
+    describe('getElement()', function() {
+        it('can return the HTMLElement by schedule id and calendar id', function() {
+            var schedule = jasmine.createSpyObj('Schedule', ['set', 'cid', 'dirty']);
+            var id = util.stamp(schedule);
+            var calendarId = schedule.calendarId;
+            schedule.id = id;
+            schedule.cid.and.returnValue(id);
+
+            inst.controller.schedules.add(schedule);
+            spyOn(document, 'querySelector').and.callThrough();
+
+            inst.getElement(id, calendarId);
+            expect(document.querySelector).toHaveBeenCalled();
         });
     });
 });

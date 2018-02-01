@@ -181,14 +181,14 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
 /**
  * Delete schedule instance from controller.
- * @param {Schedule} Schedule - schedule instance to delete
+ * @param {Schedule} schedule - schedule instance to delete
  * @returns {Schedule} deleted model instance.
  */
-Base.prototype.deleteSchedule = function(Schedule) {
-    this._removeFromMatrix(Schedule);
-    this.schedules.remove(Schedule);
+Base.prototype.deleteSchedule = function(schedule) {
+    this._removeFromMatrix(schedule);
+    this.schedules.remove(schedule);
 
-    return Schedule;
+    return schedule;
 };
 
 /**
