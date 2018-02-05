@@ -274,5 +274,13 @@ Handlebars.registerHelper({
 
     'time-tmpl': function(model) {
         return common.stripTags(model.title);
+    },
+
+    'monthMoreTitleDate-tmpl': function(date) {
+        return date;
+    },
+
+    'monthMoreClose-tmpl': function() {
+        return 'close';
     }
 });

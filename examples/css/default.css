@@ -50,3 +50,8 @@ div {
 .calendar-options {
     font-size: 12px;
 }
+
+.tui-full-calendar-month-more-close {
+    margin-top: 3px;
+    cursor: pointer;
+}
