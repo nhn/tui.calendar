@@ -1,7 +1,7 @@
 <div class="{{CSS_PREFIX}}month-more" style="width:100%">
     <div class="{{CSS_PREFIX}}month-more-title">
-        {{date}}
-        <button type="button" class="{{CSS_PREFIX}}month-more-close"><i class="material-icons">close</i></button>
+        <span class="{{CSS_PREFIX}}month-more-title-date">{{{monthMoreTitleDate-tmpl date}}}</span>
+        <button type="button" class="{{CSS_PREFIX}}month-more-close">{{{monthMoreClose-tmpl}}}</button>
     </div>
     <div class="{{CSS_PREFIX}}month-more-list">
         {{#each schedules}}

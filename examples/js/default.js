@@ -8,7 +8,7 @@
     // FullCalendar.setTimezoneOffset(540);
 
     cal = new FullCalendar('#calendar', {
-        defaultView: 'week',
+        defaultView: 'month',
         taskView: true,
         template: {
             milestone: function(schedule) {
@@ -31,6 +31,13 @@
             },
             time: function(schedule) {
                 return schedule.title + ' <i class="fa fa-refresh"></i>' + schedule.start;
+            },
+            monthMoreTitleDate: function(date) {
+                date = new Date(date);
+                return tui.util.formatDate('MM-DD', date) + '(' + daynames[date.getDay()] + ')';
+            },
+            monthMoreClose: function() {
+                return '<i class="fa fa-close"></i>';
             }
         },
         month: {
