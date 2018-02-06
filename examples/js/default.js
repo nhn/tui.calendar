@@ -38,6 +38,9 @@
             },
             monthMoreClose: function() {
                 return '<i class="fa fa-close"></i>';
+            },
+            monthMoreSchedules: function(skippedSchedules) {
+                return '<span style="color: #7eb9e7">+ Show more ' + skippedSchedules + ' schedules</span>';
             }
         },
         month: {

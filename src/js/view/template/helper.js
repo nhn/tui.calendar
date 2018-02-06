@@ -282,5 +282,9 @@ Handlebars.registerHelper({
 
     'monthMoreClose-tmpl': function() {
         return 'close';
+    },
+
+    'monthMoreSchedules-tmpl': function(skippedSchedules) {
+        return '+' + skippedSchedules;
     }
 });
