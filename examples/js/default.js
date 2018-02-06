@@ -44,7 +44,10 @@
             }
         },
         month: {
-            daynames: daynames
+            daynames: daynames,
+            moreLayerSize: {
+                height: 'auto'
+            }
         },
         week: {
             daynames: daynames,

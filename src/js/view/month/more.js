@@ -16,9 +16,15 @@ var config = require('../../config'),
 /**
  * @constructor
  * @extends {View}
+ * @param {object} options - options
+ * @param {object} [options.moreLayerSize] - more layer size
+ * @param {object} [options.moreLayerSize.width=null] - css width value(px, auto).
+ *                                                           The default value 'null' is to fit a grid cell.
+ * @param {object} [options.moreLayerSize.height=null] - css height value(px, auto).
+ *                                                            The default value 'null' is to fit a grid cell.
  * @param {HTMLElement} container = container element
  */
-function More(container) {
+function More(options, container) {
     View.call(this, container);
 
     /**
@@ -31,6 +37,16 @@ function More(container) {
      * @type {object}
      */
     this._viewModel = null;
+
+    /**
+     * @type {object}
+     */
+    this.options = util.extend({
+        moreLayerSize: {
+            width: null,
+            height: null
+        }
+    }, options);
 
     domevent.on(container, 'click', this._onClick, this);
 }
@@ -106,7 +122,16 @@ More.prototype.render = function(viewModel) {
     var pos = this._getRenderPosition(target, weekItem);
     var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
     var width = viewModel.width + (OUT_PADDING * 2);
+    var optMoreLayerSize = this.options.moreLayerSize;
     this._viewModel = viewModel;
+
+    if (optMoreLayerSize.width) {
+        width = optMoreLayerSize.width;
+    }
+
+    if (optMoreLayerSize.height) {
+        height = optMoreLayerSize.height;
+    }
 
     layer.setContent(tmpl(viewModel));
     if (weekItem.parentElement.lastElementChild === weekItem) {

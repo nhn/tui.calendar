@@ -76,6 +76,11 @@ var dw = require('../common/dw'),
  *   @property {number} [month.startDayOfWeek=0] - start day of week
  *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
  *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ *   @property {object} [month.moreLayerSize] - more layer size
+ *    @property {object} [month.moreLayerSize.width=null] - css width value(px, auto).
+ *                                                           The default value 'null' is to fit a grid cell.
+ *    @property {object} [month.moreLayerSize.height=null] - css height value(px, auto).
+ *                                                            The default value 'null' is to fit a grid cell.
  *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
  */
 
