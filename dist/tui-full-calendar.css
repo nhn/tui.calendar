@@ -1,6 +1,6 @@
 /*!
  * tui-full-calendar
- * @version 0.3.0 | Thu Feb 01 2018
+ * @version 0.4.0 | Tue Feb 06 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -653,6 +653,7 @@
   outline: 0;
   background: none;
   border: 0;
+  font-size: 14px;
 }
 .tui-full-calendar-month-more-list {
   height: calc(100% - 29px);
@@ -661,7 +662,6 @@
 }
 .tui-full-calendar-month-more-schedule {
   margin: 2px;
-  padding: 0 3px;
   font-size: 12px;
   line-height: 18px;
   cursor: pointer;

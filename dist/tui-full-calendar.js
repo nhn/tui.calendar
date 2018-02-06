@@ -1,6 +1,6 @@
 /*!
  * tui-full-calendar
- * @version 0.3.0 | Thu Feb 01 2018
+ * @version 0.4.0 | Tue Feb 06 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -362,6 +362,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    'time-tmpl': function(model) {
 	        return common.stripTags(model.title);
+	    },
+	
+	    'monthMoreTitleDate-tmpl': function(date) {
+	        return date;
+	    },
+	
+	    'monthMoreClose-tmpl': function() {
+	        return 'close';
 	    }
 	});
 
@@ -15677,7 +15685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function createMonthView(baseController, layoutContainer, dragHandler, options) {
 	    var monthViewContainer, monthView, moreView;
-	    var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler;
+	    var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler, onUpdateSchedule;
 	
 	    monthViewContainer = domutil.appendHTMLElement(
 	        'div', layoutContainer, config.classname('month'));
@@ -15694,6 +15702,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    clearSchedulesHandler = function() {
 	        if (moreView) {
 	            moreView.hide();
+	        }
+	    };
+	
+	    onUpdateSchedule = function() {
+	        if (moreView) {
+	            moreView.refresh();
 	        }
 	    };
 	
@@ -15717,6 +15731,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // binding clear schedules
 	    baseController.on('clearSchedules', clearSchedulesHandler);
+	
+	    // bind update schedule event
+	    baseController.on('updateSchedule', onUpdateSchedule);
 	
 	    moveHandler.on('monthMoveStart_from_morelayer', function() {
 	        moreView.hide();
@@ -18477,6 +18494,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this.layer = new FloatingLayer(null, container);
 	
+	    /**
+	     * cached view model
+	     * @type {object}
+	     */
+	    this._viewModel = null;
+	
 	    domevent.on(container, 'click', this._onClick, this);
 	}
 	
@@ -18551,6 +18574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var pos = this._getRenderPosition(target, weekItem);
 	    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
 	    var width = viewModel.width + (OUT_PADDING * 2);
+	    this._viewModel = viewModel;
 	
 	    layer.setContent(tmpl(viewModel));
 	    if (weekItem.parentElement.lastElementChild === weekItem) {
@@ -18563,7 +18587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        layer.setPosition(pos[0], pos[1]);
 	        layer.setSize(width, height);
 	    }
-	    
+	
 	    layer.show();
 	
 	    util.debounce(function() {
@@ -18579,6 +18603,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
 	};
 	
+	/**
+	 * refresh layer
+	 */
+	More.prototype.refresh = function() {
+	    if (this._viewModel) {
+	        this.layer.setContent(tmpl(this._viewModel));
+	    }
+	};
+	
 	module.exports = More;
 
 
@@ -18590,7 +18623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "");
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "");
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
 	
@@ -18600,16 +18633,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-schedule "
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-allday\"\n             style=\"background-color:"
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + "; color:"
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "; border-left:3px solid "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + "month-more-allday\"\n             style=\"\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
+	    + "                \n                "
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\n        </div>\n";
-	},"4":function(container,depth0,helpers,partials,data) {
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+	
+	  return "                    color: #ffffff; background-color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "; border-left:3px solid "
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + ";\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+	
+	  return "                    color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "; background-color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + ";  border-left:3px solid "
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + "\n";
+	},"7":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function";
 	
 	  return "        <div data-id=\""
@@ -18620,15 +18669,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule "
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-time\">\n            <span class=\""
+	    + "weekday-schedule-time\"\n             style=\""
+	    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
+	    + "\">\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-bullet\" style=\"background:"
-	    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "weekday-schedule-bullet\"\n                style=\""
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
 	    + "\"></span>\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title\" style=\"color:#000\">"
+	    + "weekday-schedule-title\"\n                style=\""
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(14, data, 0),"data":data})) != null ? stack1 : "")
+	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n        </div>\n";
+	},"8":function(container,depth0,helpers,partials,data) {
+	    return "\n                        background: #ffffff\n";
+	},"10":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "                        background:"
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "\n                    ";
+	},"12":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "\n                        color: #ffffff;\n                        background-color: "
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "\n";
+	},"14":function(container,depth0,helpers,partials,data) {
+	    return "                        color:#333;\n                    ";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -18636,11 +18705,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more\" style=\"width:100%\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-title\">\n        "
-	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-	    + "\n        <button type=\"button\" class=\""
+	    + "month-more-title\">\n        <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-close\"><i class=\"material-icons\">close</i></button>\n    </div>\n    <div class=\""
+	    + "month-more-title-date\">"
+	    + ((stack1 = (helpers["monthMoreTitleDate-tmpl"] || (depth0 && depth0["monthMoreTitleDate-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.date : depth0),{"name":"monthMoreTitleDate-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n        <button type=\"button\" class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-more-close\">"
+	    + ((stack1 = ((helper = (helper = helpers["monthMoreClose-tmpl"] || (depth0 != null ? depth0["monthMoreClose-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"monthMoreClose-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+	    + "</button>\n    </div>\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-list\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.schedules : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
