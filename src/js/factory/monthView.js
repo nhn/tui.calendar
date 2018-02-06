@@ -47,7 +47,7 @@ function getViewModelForMoreLayer(date, target, schedules) {
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
     var monthViewContainer, monthView, moreView;
-    var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler;
+    var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler, onUpdateSchedule;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -64,6 +64,12 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     clearSchedulesHandler = function() {
         if (moreView) {
             moreView.hide();
+        }
+    };
+
+    onUpdateSchedule = function() {
+        if (moreView) {
+            moreView.refresh();
         }
     };
 
@@ -87,6 +93,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // binding clear schedules
     baseController.on('clearSchedules', clearSchedulesHandler);
+
+    // bind update schedule event
+    baseController.on('updateSchedule', onUpdateSchedule);
 
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();

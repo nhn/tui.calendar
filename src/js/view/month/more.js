@@ -26,6 +26,12 @@ function More(container) {
      */
     this.layer = new FloatingLayer(null, container);
 
+    /**
+     * cached view model
+     * @type {object}
+     */
+    this._viewModel = null;
+
     domevent.on(container, 'click', this._onClick, this);
 }
 
@@ -100,6 +106,7 @@ More.prototype.render = function(viewModel) {
     var pos = this._getRenderPosition(target, weekItem);
     var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
     var width = viewModel.width + (OUT_PADDING * 2);
+    this._viewModel = viewModel;
 
     layer.setContent(tmpl(viewModel));
     if (weekItem.parentElement.lastElementChild === weekItem) {
@@ -112,7 +119,7 @@ More.prototype.render = function(viewModel) {
         layer.setPosition(pos[0], pos[1]);
         layer.setSize(width, height);
     }
-    
+
     layer.show();
 
     util.debounce(function() {
@@ -126,6 +133,15 @@ More.prototype.render = function(viewModel) {
 More.prototype.hide = function() {
     this.layer.hide();
     domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+};
+
+/**
+ * refresh layer
+ */
+More.prototype.refresh = function() {
+    if (this._viewModel) {
+        this.layer.setContent(tmpl(this._viewModel));
+    }
 };
 
 module.exports = More;
