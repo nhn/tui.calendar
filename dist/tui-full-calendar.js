@@ -1,6 +1,6 @@
 /*!
  * tui-full-calendar
- * @version 0.4.0 | Tue Feb 06 2018
+ * @version 0.4.1 | Wed Feb 07 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -15757,6 +15757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    monthView._beforeDestroy = function() {
 	        moreView.destroy();
 	        baseController.off('clearSchedules', clearSchedulesHandler);
+	        baseController.off('updateSchedule', onUpdateSchedule);
 	
 	        util.forEach(monthView.handler, function(type) {
 	            util.forEach(type, function(handler) {
