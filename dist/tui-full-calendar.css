@@ -1,6 +1,6 @@
 /*!
  * tui-full-calendar
- * @version 0.4.1 | Wed Feb 07 2018
+ * @version 0.5.0 | Wed Feb 07 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -80,7 +80,12 @@
 .tui-full-calendar-month-week-item .tui-full-calendar-today {
   background: none;
 }
-.tui-full-calendar-month-week-item .tui-full-calendar-today > span {
+.tui-full-calendar-month-week-item .tui-full-calendar-today > .tui-full-calendar-weekday-grid-date-decorator {
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  line-height: 27px;
+  text-align: center;
   background: #135de6;
   border-radius: 50%;
   color: #fff;
@@ -121,15 +126,19 @@
   border-left: 1px solid #ddd;
   margin-left: -1px;
   padding: 3px;
-  text-align: right;
   font-size: 16px;
 }
-.tui-full-calendar-weekday-grid-line > span {
+.tui-full-calendar-weekday-grid-line > .tui-full-calendar-weekday-grid-date {
   display: inline-block;
   width: 27px;
   height: 27px;
   line-height: 27px;
   text-align: center;
+}
+.tui-full-calendar-weekday-grid-line > .tui-full-calendar-weekday-grid-date-title {
+  float: right;
+  line-height: 27px;
+  margin-right: 5px;
 }
 .tui-full-calendar-weekday-creation {
   top: 0;
@@ -227,6 +236,9 @@
 }
 .tui-full-calendar-weekday-filled {
   background-color: #e8e8e8;
+}
+.tui-full-calendar-weekday-exceed {
+  cursor: pointer;
 }
 .tui-full-calendar-left {
   width: 77px;

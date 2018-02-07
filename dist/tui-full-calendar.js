@@ -1,6 +1,6 @@
 /*!
  * tui-full-calendar
- * @version 0.4.1 | Wed Feb 07 2018
+ * @version 0.5.0 | Wed Feb 07 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -370,6 +370,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    'monthMoreClose-tmpl': function() {
 	        return 'close';
+	    },
+	
+	    'monthMoreSchedules-tmpl': function(skippedSchedules) {
+	        return '+' + skippedSchedules;
+	    },
+	
+	    'monthGridDate-tmpl': function(model) {
+	        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
 	    }
 	});
 
@@ -2937,8 +2945,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        el[posKey] = [x, y];
 	
-	        el.style.left = x + 'px';
-	        el.style.top = y + 'px';
+	        el.style.left = util.isNumber(x) ? (x + 'px') : x;
+	        el.style.top = util.isNumber(y) ? (y + 'px') : y;
 	    },
 	
 	    /**
@@ -2952,8 +2960,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    setLTRB: function(el, ltrb) {
 	        var props = ['left', 'top', 'right', 'bottom'];
+	        var value;
 	        props.forEach(function(prop) {
-	            el.style[prop] = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop] + 'px';
+	            value = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop];
+	            el.style[prop] = util.isNumber(value) ? (value + 'px') : value;
 	        });
 	    },
 	
@@ -4185,6 +4195,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {function} [template.alldayTitle] - allday title(at left column) template function
 	 *   @property {function} [template.allday] - allday template function
 	 *   @property {function} [template.time] - time template function
+	 *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
+	 *   @property {function} [template.monthMoreClose] - month more layer close button template function
+	 *   @property {function} [template.monthMoreSchedules] - month more schedules template function
+	 *   @property {function} [template.monthGridDate] - month grid template(date, decorator, title) template function
 	 *  @property {object} [week] - options for week view
 	 *   @property {number} [week.startDayOfWeek=0] - start day of week
 	 *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
@@ -4198,6 +4212,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {number} [month.startDayOfWeek=0] - start day of week
 	 *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
 	 *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+	 *   @property {object} [month.moreLayerSize] - more layer size
+	 *    @property {object} [month.moreLayerSize.width=null] - css width value(px, auto).
+	 *                                                           The default value 'null' is to fit a grid cell.
+	 *    @property {object} [month.moreLayerSize.height=null] - css height value(px, auto).
+	 *                                                            The default value 'null' is to fit a grid cell.
 	 *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
 	 */
 	
@@ -5347,7 +5366,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Calendar.prototype.getElement = function(scheduleId, calendarId) {
 	    var schedule = this.getSchedule(scheduleId, calendarId);
 	    if (schedule) {
-	        return document.querySelector('[data-schedule-id="' + scheduleId + '"]');
+	        return document.querySelector('[data-schedule-id="' + scheduleId + '"][data-calendar-id="' + calendarId + '"]');
 	    }
 	
 	    return null;
@@ -10985,7 +11004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dates: util.map(range, function(date, index) {
 	            var day = date.getDay();
 	            return {
-	                date: date.getDate(),
+	                date: datetime.format(date, 'YYYY-MM-DD'),
 	                month: date.getMonth() + 1,
 	                day: day,
 	                isToday: datetime.format(date, 'YYYYMMDD') === today,
@@ -15691,7 +15710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div', layoutContainer, config.classname('month'));
 	
 	    monthView = new Month(options.month, monthViewContainer, baseController.Month);
-	    moreView = new More(layoutContainer);
+	    moreView = new More(options.month, layoutContainer);
 	
 	    // handlers
 	    clickHandler = new MonthClick(dragHandler, monthView, baseController);
@@ -16266,9 +16285,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%; left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%;\">\n        <span>"
-	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-	    + "</span>\n    </div>\n";
+	    + "%;\">\n        "
+	    + ((stack1 = (helpers["monthGridDate-tmpl"] || (depth0 && depth0["monthGridDate-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthGridDate-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n    </div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -16473,7 +16492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div style=\"position: absolute;\n            left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
@@ -16483,9 +16502,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-exceed\"\n     data-ymd=\""
 	    + alias4(container.lambda((depth0 != null ? depth0.ymd : depth0), depth0))
-	    + "\">\n    <span>+"
-	    + alias4(((helper = (helper = helpers.skipped || (depth0 != null ? depth0.skipped : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"skipped","hash":{},"data":data}) : helper)))
-	    + "</span>\n</div>\n";
+	    + "\">\n    "
+	    + ((stack1 = (helpers["monthMoreSchedules-tmpl"] || (depth0 && depth0["monthMoreSchedules-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.skipped : depth0),{"name":"monthMoreSchedules-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n</div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -18480,14 +18499,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
 	    FloatingLayer = __webpack_require__(86),
+	    common = __webpack_require__(30),
 	    tmpl = __webpack_require__(111);
 	
 	/**
 	 * @constructor
 	 * @extends {View}
+	 * @param {object} options - options
+	 * @param {object} [options.moreLayerSize] - more layer size
+	 * @param {object} [options.moreLayerSize.width=null] - css width value(px, auto).
+	 *                                                           The default value 'null' is to fit a grid cell.
+	 * @param {object} [options.moreLayerSize.height=null] - css height value(px, auto).
+	 *                                                            The default value 'null' is to fit a grid cell.
 	 * @param {HTMLElement} container = container element
 	 */
-	function More(container) {
+	function More(options, container) {
 	    View.call(this, container);
 	
 	    /**
@@ -18500,6 +18526,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object}
 	     */
 	    this._viewModel = null;
+	
+	    /**
+	     * @type {object}
+	     */
+	    this.options = util.extend({
+	        moreLayerSize: {
+	            width: null,
+	            height: null
+	        }
+	    }, options);
 	
 	    domevent.on(container, 'click', this._onClick, this);
 	}
@@ -18548,8 +18584,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        clientX: domutil.getPosition(target)[0],
 	        clientY: domutil.getPosition(weekItem)[1]
 	    }, this.container);
+	    var containerSize = domutil.getSize(this.container);
+	    var left = pos[0] - OUT_PADDING;
+	    var top = pos[1] - OUT_PADDING;
 	
-	    return [pos[0] - OUT_PADDING, pos[1] - OUT_PADDING];
+	    left = common.ratio(containerSize[0], 100, left) + '%';
+	    top = common.ratio(containerSize[1], 100, top) + '%';
+	
+	    return [left, top];
 	};
 	
 	/**
@@ -18575,7 +18617,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var pos = this._getRenderPosition(target, weekItem);
 	    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
 	    var width = viewModel.width + (OUT_PADDING * 2);
+	    var optMoreLayerSize = this.options.moreLayerSize;
 	    this._viewModel = viewModel;
+	
+	    if (optMoreLayerSize.width) {
+	        width = optMoreLayerSize.width;
+	    }
+	
+	    if (optMoreLayerSize.height) {
+	        height = optMoreLayerSize.height;
+	    }
 	
 	    layer.setContent(tmpl(viewModel));
 	    if (weekItem.parentElement.lastElementChild === weekItem) {
@@ -18626,20 +18677,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "");
 	},"2":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda, alias5="function";
 	
 	  return "<div data-id=\""
 	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+	    + "\"\n             data-schedule-id=\""
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
+	    + "\" data-calendar-id=\""
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
 	    + "\"\n             class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-schedule "
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-allday\"\n             style=\"\n"
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                \n                "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n            "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\n        </div>\n";
 	},"3":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
@@ -18660,24 +18715,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\n";
 	},"7":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function";
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda, alias5="function";
 	
 	  return "        <div data-id=\""
 	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+	    + "\"\n             data-schedule-id=\""
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
+	    + "\" data-calendar-id=\""
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
 	    + "\"\n             class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-schedule "
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule "
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-time\"\n             style=\""
-	    + alias3(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
+	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n            <span class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-bullet\"\n                style=\""
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
 	    + "\"></span>\n            <span class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title\"\n                style=\""
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(14, data, 0),"data":data})) != null ? stack1 : "")
 	    + "\">"
