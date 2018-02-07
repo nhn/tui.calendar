@@ -55,3 +55,13 @@ div {
     margin-top: 3px;
     cursor: pointer;
 }
+
+.tui-full-calendar-month-week-item .tui-full-calendar-today > .tui-full-calendar-weekday-grid-date-decorator {
+    width: auto;
+    border-radius: 27px;
+    padding: 0 5px;
+}
+
+.tui-full-calendar-month-week-item .tui-full-calendar-weekday-grid-date-title {
+    color: red;
+}
