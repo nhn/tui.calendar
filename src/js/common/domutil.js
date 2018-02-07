@@ -379,8 +379,8 @@ domutil = {
 
         el[posKey] = [x, y];
 
-        el.style.left = x + 'px';
-        el.style.top = y + 'px';
+        el.style.left = util.isNumber(x) ? (x + 'px') : x;
+        el.style.top = util.isNumber(y) ? (y + 'px') : y;
     },
 
     /**
@@ -394,8 +394,10 @@ domutil = {
      */
     setLTRB: function(el, ltrb) {
         var props = ['left', 'top', 'right', 'bottom'];
+        var value;
         props.forEach(function(prop) {
-            el.style[prop] = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop] + 'px';
+            value = util.isUndefined(ltrb[prop]) ? '' : ltrb[prop];
+            el.style[prop] = util.isNumber(value) ? (value + 'px') : value;
         });
     },
 

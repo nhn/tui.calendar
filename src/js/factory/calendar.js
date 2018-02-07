@@ -1234,7 +1234,7 @@ Calendar.prototype._setViewName = function(viewName) {
 Calendar.prototype.getElement = function(scheduleId, calendarId) {
     var schedule = this.getSchedule(scheduleId, calendarId);
     if (schedule) {
-        return document.querySelector('[data-schedule-id="' + scheduleId + '"]');
+        return document.querySelector('[data-schedule-id="' + scheduleId + '"][data-calendar-id="' + calendarId + '"]');
     }
 
     return null;

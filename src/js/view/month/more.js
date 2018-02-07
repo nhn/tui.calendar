@@ -11,6 +11,7 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     View = require('../../view/view'),
     FloatingLayer = require('../../common/floatingLayer'),
+    common = require('../../common/common'),
     tmpl = require('./more.hbs');
 
 /**
@@ -95,8 +96,14 @@ More.prototype._getRenderPosition = function(target, weekItem) {
         clientX: domutil.getPosition(target)[0],
         clientY: domutil.getPosition(weekItem)[1]
     }, this.container);
+    var containerSize = domutil.getSize(this.container);
+    var left = pos[0] - OUT_PADDING;
+    var top = pos[1] - OUT_PADDING;
 
-    return [pos[0] - OUT_PADDING, pos[1] - OUT_PADDING];
+    left = common.ratio(containerSize[0], 100, left) + '%';
+    top = common.ratio(containerSize[1], 100, top) + '%';
+
+    return [left, top];
 };
 
 /**
