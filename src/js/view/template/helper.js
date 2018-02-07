@@ -286,5 +286,9 @@ Handlebars.registerHelper({
 
     'monthMoreSchedules-tmpl': function(skippedSchedules) {
         return '+' + skippedSchedules;
+    },
+
+    'monthGridDate-tmpl': function(model) {
+        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
     }
 });

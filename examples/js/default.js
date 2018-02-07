@@ -4,7 +4,14 @@
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var tempHolidays = {
+        6: 'Holiday',
+        17: 'Holiday',
+        22: 'Holiday'
+    };
     var lastClickSchedule;
+    
+    tempHolidays[baseDate.getDate()] = 'HoliDay';
     // FullCalendar.setTimezoneOffset(540);
 
     cal = new FullCalendar('#calendar', {
@@ -41,6 +48,18 @@
             },
             monthMoreSchedules: function(skippedSchedules) {
                 return '<span style="color: #7eb9e7">+ Show more ' + skippedSchedules + ' schedules</span>';
+            },
+            monthGridDate: function(model) {
+                var date = new Date(model.date);
+                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+                var today = model.isToday ? 'Today' : '';
+                if (today) {
+                    template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
+                }
+                if (tempHolidays[date.getDate()]) {
+                    template += '<span class="tui-full-calendar-weekday-grid-date-title">' + tempHolidays[date.getDate()] + '</span>';
+                }
+                return template;
             }
         },
         month: {
