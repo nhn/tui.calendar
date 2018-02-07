@@ -92,7 +92,7 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
         dates: util.map(range, function(date, index) {
             var day = date.getDay();
             return {
-                date: date.getDate(),
+                date: datetime.format(date, 'YYYY-MM-DD'),
                 month: date.getMonth() + 1,
                 day: day,
                 isToday: datetime.format(date, 'YYYYMMDD') === today,

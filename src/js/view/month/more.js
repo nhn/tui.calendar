@@ -11,14 +11,21 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     View = require('../../view/view'),
     FloatingLayer = require('../../common/floatingLayer'),
+    common = require('../../common/common'),
     tmpl = require('./more.hbs');
 
 /**
  * @constructor
  * @extends {View}
+ * @param {object} options - options
+ * @param {object} [options.moreLayerSize] - more layer size
+ * @param {object} [options.moreLayerSize.width=null] - css width value(px, auto).
+ *                                                           The default value 'null' is to fit a grid cell.
+ * @param {object} [options.moreLayerSize.height=null] - css height value(px, auto).
+ *                                                            The default value 'null' is to fit a grid cell.
  * @param {HTMLElement} container = container element
  */
-function More(container) {
+function More(options, container) {
     View.call(this, container);
 
     /**
@@ -31,6 +38,16 @@ function More(container) {
      * @type {object}
      */
     this._viewModel = null;
+
+    /**
+     * @type {object}
+     */
+    this.options = util.extend({
+        moreLayerSize: {
+            width: null,
+            height: null
+        }
+    }, options);
 
     domevent.on(container, 'click', this._onClick, this);
 }
@@ -79,8 +96,14 @@ More.prototype._getRenderPosition = function(target, weekItem) {
         clientX: domutil.getPosition(target)[0],
         clientY: domutil.getPosition(weekItem)[1]
     }, this.container);
+    var containerSize = domutil.getSize(this.container);
+    var left = pos[0] - OUT_PADDING;
+    var top = pos[1] - OUT_PADDING;
 
-    return [pos[0] - OUT_PADDING, pos[1] - OUT_PADDING];
+    left = common.ratio(containerSize[0], 100, left) + '%';
+    top = common.ratio(containerSize[1], 100, top) + '%';
+
+    return [left, top];
 };
 
 /**
@@ -106,7 +129,16 @@ More.prototype.render = function(viewModel) {
     var pos = this._getRenderPosition(target, weekItem);
     var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
     var width = viewModel.width + (OUT_PADDING * 2);
+    var optMoreLayerSize = this.options.moreLayerSize;
     this._viewModel = viewModel;
+
+    if (optMoreLayerSize.width) {
+        width = optMoreLayerSize.width;
+    }
+
+    if (optMoreLayerSize.height) {
+        height = optMoreLayerSize.height;
+    }
 
     layer.setContent(tmpl(viewModel));
     if (weekItem.parentElement.lastElementChild === weekItem) {
