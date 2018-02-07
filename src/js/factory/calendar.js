@@ -63,6 +63,10 @@ var dw = require('../common/dw'),
  *   @property {function} [template.alldayTitle] - allday title(at left column) template function
  *   @property {function} [template.allday] - allday template function
  *   @property {function} [template.time] - time template function
+ *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
+ *   @property {function} [template.monthMoreClose] - month more layer close button template function
+ *   @property {function} [template.monthMoreSchedules] - month more schedules template function
+ *   @property {function} [template.monthGridDate] - month grid template(date, decorator, title) template function
  *  @property {object} [week] - options for week view
  *   @property {number} [week.startDayOfWeek=0] - start day of week
  *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
