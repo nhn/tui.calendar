@@ -63,6 +63,10 @@ var dw = require('../common/dw'),
  *   @property {function} [template.alldayTitle] - allday title(at left column) template function
  *   @property {function} [template.allday] - allday template function
  *   @property {function} [template.time] - time template function
+ *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
+ *   @property {function} [template.monthMoreClose] - month more layer close button template function
+ *   @property {function} [template.monthMoreSchedules] - month more schedules template function
+ *   @property {function} [template.monthGridDate] - month grid template(date, decorator, title) template function
  *  @property {object} [week] - options for week view
  *   @property {number} [week.startDayOfWeek=0] - start day of week
  *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
@@ -76,6 +80,11 @@ var dw = require('../common/dw'),
  *   @property {number} [month.startDayOfWeek=0] - start day of week
  *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
  *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ *   @property {object} [month.moreLayerSize] - more layer size
+ *    @property {object} [month.moreLayerSize.width=null] - css width value(px, auto).
+ *                                                           The default value 'null' is to fit a grid cell.
+ *    @property {object} [month.moreLayerSize.height=null] - css height value(px, auto).
+ *                                                            The default value 'null' is to fit a grid cell.
  *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
  */
 
@@ -1225,7 +1234,7 @@ Calendar.prototype._setViewName = function(viewName) {
 Calendar.prototype.getElement = function(scheduleId, calendarId) {
     var schedule = this.getSchedule(scheduleId, calendarId);
     if (schedule) {
-        return document.querySelector('[data-schedule-id="' + scheduleId + '"]');
+        return document.querySelector('[data-schedule-id="' + scheduleId + '"][data-calendar-id="' + calendarId + '"]');
     }
 
     return null;

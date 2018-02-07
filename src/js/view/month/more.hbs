@@ -7,6 +7,7 @@
         {{#each schedules}}
         {{#fi model.isAllDay '||' hasMultiDates ~}}
         <div data-id="{{stamp model}}"
+             data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}"
              class="{{CSS_PREFIX}}month-more-schedule {{CSS_PREFIX}}month-more-allday"
              style="
                 {{#if model.isFocused}}
@@ -20,6 +21,7 @@
         </div>
         {{else}}
         <div data-id="{{stamp model}}"
+             data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}"
              class="{{CSS_PREFIX}}month-more-schedule {{CSS_PREFIX}}weekday-schedule {{CSS_PREFIX}}weekday-schedule-time"
              style="{{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-schedule-bullet"
