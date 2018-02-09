@@ -163,7 +163,7 @@ Handlebars.registerHelper({
     },
 
     'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
-        var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
+        var top = getElSize((viewModel.top - 1) * blockHeight + paddingTop, 'px', 'top');
         var left = getElSize(grids[viewModel.left].left, '%', 'left');
         var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
         var height = getElSize(viewModel.height, 'px', 'height');
@@ -284,11 +284,21 @@ Handlebars.registerHelper({
         return 'close';
     },
 
-    'monthMoreSchedules-tmpl': function(skippedSchedules) {
-        return '+' + skippedSchedules;
+    'monthGridHeader-tmpl': function(model) {
+        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
     },
 
-    'monthGridDate-tmpl': function(model) {
-        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
+    /* eslint no-unused-vars: 0 */
+    'monthGridHeaderExceed-tmpl': function(hiddenSchedules) {
+        return '';
+    },
+
+    'monthGridFooter-tmpl': function() {
+        return '';
+    },
+
+    /* eslint no-unused-vars: 0 */
+    'monthGridFooterExceed-tmpl': function(hiddenSchedules) {
+        return '';
     }
 });

@@ -135,14 +135,8 @@ MonthGuide.prototype._getGuideElement = function(y) {
 
     if (!guide) {
         guide = this._createGuideElement();
-
-        container = domutil.find(
-            config.classname('.weekday-schedules'),
-            weekdayView.container
-        );
-
+        container = weekdayView.container;
         container.appendChild(guide);
-
         guideElements[y] = guide;
     }
 

@@ -87,7 +87,7 @@ More.prototype._onMouseDown = function(mouseDownEvent) {
 
 /**
  * Get new position for more layer by +n element itself
- * @param {HTMLElement} target - +n element
+ * @param {HTMLElement} target - parent grid-line element of +n element
  * @param {HTMLElement} weekItem - weekItem container element
  * @returns {number[]} new position of more layer
  */
@@ -122,7 +122,7 @@ More.prototype.destroy = function() {
  * @param {object} viewModel - view model from factory/monthView
  */
 More.prototype.render = function(viewModel) {
-    var target = viewModel.target;
+    var target = domutil.closest(viewModel.target, config.classname('.weekday-grid-line'));
     var weekItem = domutil.closest(target, config.classname('.month-week-item'));
     var layer = this.layer;
     var self = this;

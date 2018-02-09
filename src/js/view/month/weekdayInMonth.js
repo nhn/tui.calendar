@@ -6,9 +6,7 @@
 var util = require('tui-code-snippet'),
     existy = util.isExisty,
     mfloor = Math.floor,
-    mmax = Math.max;
-
-var Handlebars = require('handlebars/runtime');
+    mmin = Math.min;
 
 var config = require('../../config'),
     common = require('../../common/common.js'),
@@ -17,10 +15,7 @@ var config = require('../../config'),
     View = require('../../view/view'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
-    scheduleTmpl = require('./weekdayInMonthSchedule.hbs'),
-    skipTmpl = require('./weekdayInMonthSkip.hbs');
-
-var EVENT_PADDING_TOP = 14;
+    scheduleTmpl = require('./weekdayInMonthSchedule.hbs');
 
 /**
  * @constructor
@@ -48,12 +43,7 @@ util.inherit(WeekdayInMonth, Weekday);
  * @override
  */
 WeekdayInMonth.prototype.getViewBound = function() {
-    var bound = View.prototype.getViewBound.call(this),
-        selector = config.classname('.weekday-schedules'),
-        height = domutil.getSize(domutil.find(selector, this.container))[1];
-
-    bound.height = height;
-
+    var bound = View.prototype.getViewBound.call(this);
     return bound;
 };
 
@@ -63,64 +53,49 @@ WeekdayInMonth.prototype.getViewBound = function() {
  */
 WeekdayInMonth.prototype._getRenderLimitIndex = function() {
     var opt = this.options;
-    var containerHeight = this.getViewBound().height - EVENT_PADDING_TOP - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
-    var count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
+    var containerHeight = this.getViewBound().height;
+    var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
+    var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
+    var visibleScheduleCount = opt.visibleScheduleCount || 0;
+    var count;
 
-    return mmax(count - 1, 0); // subtraction for '+n' label block
+    containerHeight -= (gridHeaderHeight + gridFooterHeight);
+
+    count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
+
+    if (!visibleScheduleCount) {
+        visibleScheduleCount = count;
+    }
+
+    return mmin(count, visibleScheduleCount); // subtraction for '+n' label block
 };
 
 /**
- * Get handlebars custom helper method for limitation schedule block render count
- * features
- *
- * Calculate count on each date. render +n label only when no cumulated
- * count on cache object
- * @param {object} exceedDate - object to be used as a cache
- * @returns {function} custom helper function
+ * @override
+ * @param {object} viewModel - schedules view models
  */
-WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
-    return function() {
-        var viewModel = this; // eslint-disable-line
-        var period = datetime.range(
-            viewModel.getStarts(),
-            viewModel.getEnds(),
-            datetime.MILLISECONDS_PER_DAY
-        );
+WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
+    var opt = this.options,
+        gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
+        gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
+        renderLimitIdx = this._getRenderLimitIndex(),
+        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange);
+    var baseViewModel;
 
-        util.forEach(period, function(date) {
-            var ymd = datetime.format(date, 'YYYYMMDD');
-            if (!existy(exceedDate[ymd])) {
-                exceedDate[ymd] = 0;
-            }
+    viewModel = util.extend({
+        exceedDate: exceedDate
+    }, viewModel);
 
-            exceedDate[ymd] += 1;
-        });
-    };
-};
+    baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
 
-/**
- * Get view model for render skipped label
- * @param {object} exceedDate - object has count of each dates exceed schedule block
- *  count.
- * @param {object} baseViewModel - view model of base view
- * @returns {object[]} - view model for skipped label
- */
-WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewModel) {
-    var dateRange = util.map(this.getRenderDateRange(), function(date) {
-        return datetime.format(date, 'YYYYMMDD');
-    });
-    var dates = baseViewModel.dates;
+    baseViewModel = util.extend({
+        matrices: viewModel.eventsInDateRange,
+        gridHeaderHeight: gridHeaderHeight,
+        gridFooterHeight: gridFooterHeight,
+        renderLimitIdx: renderLimitIdx + 1
+    }, baseViewModel);
 
-    return util.map(exceedDate, function(skipped, ymd) {
-        var index = util.inArray(ymd, dateRange);
-
-        return {
-            left: dates[index].left,
-            width: dates[index].width,
-            skipped: skipped,
-            ymd: ymd
-        };
-    });
+    return baseViewModel;
 };
 
 /**
@@ -130,17 +105,14 @@ WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewM
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(viewModel),
-        renderLimitIdx,
-        exceedDate = {},
         scheduleContainer,
         contentStr = '';
 
     if (!this.options.visibleWeeksCount) {
         setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
     }
-    container.innerHTML = baseTmpl(baseViewModel);
 
-    renderLimitIdx = this._getRenderLimitIndex();
+    container.innerHTML = baseTmpl(baseViewModel);
 
     scheduleContainer = domutil.find(
         config.classname('.weekday-schedules'),
@@ -151,18 +123,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         return;
     }
 
-    Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
-
-    contentStr += scheduleTmpl(util.extend({
-        matrices: viewModel.eventsInDateRange,
-        schedulePaddingTop: EVENT_PADDING_TOP,
-        renderLimitIdx: renderLimitIdx
-    }, baseViewModel));
-
-    contentStr += skipTmpl(util.extend({
-        renderLimitIdx: renderLimitIdx,
-        viewModelForSkip: this._getSkipLabelViewModel(exceedDate, baseViewModel)
-    }, baseViewModel));
+    contentStr += scheduleTmpl(baseViewModel);
 
     scheduleContainer.innerHTML = contentStr;
 
@@ -173,7 +134,52 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 };
 
 WeekdayInMonth.prototype._beforeDestroy = function() {
-    Handlebars.unregisterHelper('wdSkipped');
+};
+
+/* eslint max-nested-callbacks: 0 */
+/**
+ * Make exceed date information
+ * @param {number} maxCount - exceed schedule count
+ * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+ * @returns {object} exceedDate
+ */
+WeekdayInMonth.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
+    var exceedDate = {};
+    util.forEach(eventsInDateRange, function(matrix) {
+        util.forEach(matrix, function(column) {
+            util.forEach(column, function(viewModel) {
+                var period;
+                if (!viewModel) {
+                    return;
+                }
+
+                period = datetime.range(
+                    viewModel.getStarts(),
+                    viewModel.getEnds(),
+                    datetime.MILLISECONDS_PER_DAY
+                );
+
+                util.forEach(period, function(date) {
+                    var ymd = datetime.format(date, 'YYYYMMDD');
+                    if (!existy(exceedDate[ymd])) {
+                        exceedDate[ymd] = 0;
+                    }
+
+                    exceedDate[ymd] += 1;
+                });
+            });
+        });
+    });
+
+    util.forEach(exceedDate, function(value, ymd) {
+        if (value > maxCount) {
+            exceedDate[ymd] = value - maxCount;
+        } else {
+            exceedDate[ymd] = 0;
+        }
+    });
+
+    return exceedDate;
 };
 
 /**

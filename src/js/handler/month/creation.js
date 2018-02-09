@@ -111,7 +111,7 @@ MonthCreation.prototype._createSchedule = function(eventData) {
 MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     var eventData;
 
-    if (!isElementWeekdaySchedule(dragStartEvent.target)) {
+    if (!isElementWeekdayGrid(dragStartEvent.target)) {
         return;
     }
 
@@ -222,7 +222,7 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
 MonthCreation.prototype._onDblClick = function(e) {
     var eventData, range;
 
-    if (!isElementWeekdaySchedule(e.target)) {
+    if (!isElementWeekdayGrid(e.target)) {
         return;
     }
 
@@ -251,7 +251,7 @@ MonthCreation.prototype._onClick = function(e) {
     var self = this;
     var eventData, range;
 
-    if (!isElementWeekdaySchedule(e.target)) {
+    if (!isElementWeekdayGrid(e.target)) {
         return;
     }
 
@@ -305,8 +305,9 @@ function adjustStartAndEndTime(start, end) {
  * @param {HTMLElement} el - target element
  * @returns {boolean}
  */
-function isElementWeekdaySchedule(el) {
-    return domutil.hasClass(el, config.classname('weekday-schedules'));
+function isElementWeekdayGrid(el) {
+    return domutil.closest(el, config.classname('.weekday-grid'))
+        && !domutil.closest(el, config.classname('.weekday-exceed'));
 }
 
 util.CustomEvents.mixin(MonthCreation);

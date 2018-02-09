@@ -56,8 +56,23 @@ function Month(options, container, controller) {
         renderMonth: '2018-01',
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         narrowWeekend: false,
-        visibleWeeksCount: null
+        visibleWeeksCount: null,
+        grid: {
+            header: {
+                height: 34
+            },
+            footer: {
+                height: 34
+            }
+        }
     }, options);
+
+    this.options.grid.header = util.extend({
+        height: 34
+    }, util.pick(options, 'grid', 'header'));
+    this.options.grid.footer = util.extend({
+        height: 34
+    }, util.pick(options, 'grid', 'footer'));
 
     /**
      * horizontal grid information
@@ -118,10 +133,13 @@ Month.prototype._renderChildren = function(container, calendar) {
     var self = this;
     var weekCount = calendar.length;
     var heightPercent = 100 / weekCount;
-    var renderMonth = this.options.renderMonth;
-    var narrowWeekend = this.options.narrowWeekend;
-    var startDayOfWeek = this.options.startDayOfWeek;
-    var visibleWeeksCount = this.options.visibleWeeksCount;
+    var opt = this.options;
+    var renderMonth = opt.renderMonth;
+    var narrowWeekend = opt.narrowWeekend;
+    var startDayOfWeek = opt.startDayOfWeek;
+    var visibleWeeksCount = opt.visibleWeeksCount;
+    var visibleScheduleCount = opt.visibleScheduleCount;
+    var gridOption = opt.grid;
 
     container.innerHTML = '';
     this.children.clear();
@@ -142,7 +160,9 @@ Month.prototype._renderChildren = function(container, calendar) {
             renderEndDate: datetime.format(end, 'YYYY-MM-DD'),
             narrowWeekend: narrowWeekend,
             startDayOfWeek: startDayOfWeek,
-            visibleWeeksCount: visibleWeeksCount
+            visibleWeeksCount: visibleWeeksCount,
+            visibleScheduleCount: visibleScheduleCount,
+            grid: gridOption
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
