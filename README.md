@@ -1,5 +1,5 @@
-# TOAST UI Component: FullCalendar
-tui-full-calendar
+# TOAST UI Calendar
+tui-calendar
 
 ## Feature
 * Various view types: daily, weekly, monthly
@@ -37,7 +37,7 @@ $ bower install https://github.nhnent.com/fe/application-dooray-calendar
 ### Initialize a calendar
 
 ```javascript
-var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
+var calendar = new tui.Calendar(document.getElementById('calendar'), {
     defaultView: 'week',
     taskView: true,
     template: {

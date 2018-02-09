@@ -10,7 +10,7 @@ var webdriverConfig = {
 };
 
 var context = JSON.stringify({
-    CSS_PREFIX: 'tui-full-calendar-',
+    CSS_PREFIX: 'tui-calendar-',
     BUNDLE_TYPE: 'Debug'
 });
 

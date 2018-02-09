@@ -1,10 +1,10 @@
 {
-  "name": "tui-full-calendar",
+  "name": "tui-calendar",
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
   "version": "0.5.0",
-  "main": "dist/tui-full-calendar.js",
+  "main": "dist/tui-calendar.js",
   "license:": "MIT",
-  "description": "TOAST UI Component: FullCalendar",
+  "description": "TOAST UI Calendar",
   "keywords": [
     "nhnent",
     "tui",

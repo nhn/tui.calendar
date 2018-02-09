@@ -129,7 +129,7 @@ var mmin = Math.min;
  * @param {HTMLElement|string} container - container element or selector id
  * @param {Options} options - calendar options
  * @example
- * var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
+ * var calendar = new tui.Calendar(document.getElementById('calendar'), {
  *     defaultView: 'week',
  *     taskView: true,
  *     template: {
@@ -1259,7 +1259,7 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  * @static
  * @example
  * var timezoneName = moment.tz.guess();
- * tui.FullCalendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
+ * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
  */
 Calendar.setTimezoneOffset = function(offset) {
     timezone.setOffset(offset);

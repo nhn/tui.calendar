@@ -1,6 +1,6 @@
 /* eslint no-console: 0, complexity: 0 */
 'use strict';
-(function(window, FullCalendar) {
+(function(window, Calendar) {
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -10,9 +10,9 @@
         22: 'Holiday'
     };
     var lastClickSchedule;
-    // FullCalendar.setTimezoneOffset(540);
+    // Calendar.setTimezoneOffset(540);
 
-    cal = new FullCalendar('#calendar', {
+    cal = new Calendar('#calendar', {
         defaultView: 'month',
         taskView: true,
         template: {
@@ -391,4 +391,4 @@
     window.cal = cal;
 
     cal.getElement('3', '2');
-})(window, tui.FullCalendar);
+})(window, tui.Calendar);
