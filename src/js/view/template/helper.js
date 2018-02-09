@@ -304,5 +304,9 @@ Handlebars.registerHelper({
 
     'weekDayname-tmpl': function(model) {
         return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span> ' + model.dayName;
+    },
+
+    'monthDayname-tmpl': function(model) {
+        return model.label;
     }
 });

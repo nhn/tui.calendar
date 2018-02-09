@@ -13,7 +13,7 @@
     // FullCalendar.setTimezoneOffset(540);
 
     cal = new FullCalendar('#calendar', {
-        defaultView: 'week',
+        defaultView: 'month',
         taskView: true,
         template: {
             milestone: function(schedule) {
@@ -61,6 +61,9 @@
             },
             weekDayname: function(dayname) {
                 return '<span class="calendar-week-dayname-name">' + dayname.dayName + '</span><br><span class="calendar-week-dayname-date">' + dayname.date + '</span>';
+            },
+            monthDayname: function(dayname) {
+                return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
             }
         },
         month: {

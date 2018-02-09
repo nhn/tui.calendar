@@ -73,6 +73,7 @@ div {
 .calendar-week-dayname-name {
     font-size: 12px;
     line-height: 24px;
+    font-weight: bold;
 }
 
 .calendar-week-dayname-date {
@@ -103,4 +104,10 @@ div {
     float: right;
     margin-top: 4px;
     margin-right: 5px;
+}
+
+.tui-full-calendar-month-dayname-item {
+    padding-left: 8px;
+    padding-right: 0;
+    text-align: unset;
 }

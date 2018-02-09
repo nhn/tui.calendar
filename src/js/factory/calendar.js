@@ -72,6 +72,7 @@ var mmin = Math.min;
  *   @property {function} [template.monthGridHeaderExceed] - month grid header(exceed schedule count) template function
  *   @property {function} [template.monthGridFooterExceed] - month grid footer(exceed schedule count) template function
  *   @property {function} [template.weekDayname] - weekly dayname template function
+ *   @property {function} [template.monthDayname] - monthly dayname template function
  *  @property {object} [week] - options for week view
  *   @property {number} [week.startDayOfWeek=0] - start day of week
  *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)

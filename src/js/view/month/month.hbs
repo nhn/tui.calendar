@@ -4,7 +4,9 @@
          style="position: absolute;
                 width: {{width}}%;
                 left: {{left}}%">
-        <span class="{{holiday day}}">{{label}}</span>
+        <span class="{{holiday day}}">
+            {{{monthDayname-tmpl this}}}
+        </span>
     </div>
 {{/each}}
 </div>
