@@ -4,8 +4,8 @@
  */
 'use strict';
 
-var util = require('tui-code-snippet'),
-    aps = Array.prototype.slice;
+var util = require('tui-code-snippet');
+var aps = Array.prototype.slice;
 
 var domutil = require('../common/domutil'),
     Collection = require('../common/collection');

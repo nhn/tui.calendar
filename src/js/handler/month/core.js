@@ -3,12 +3,11 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = require('tui-code-snippet'),
-    mfloor = Math.floor;
-
+var util = require('tui-code-snippet');
 var common = require('../../common/common'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent');
+var mfloor = Math.floor;
 
 /**
  * Get high order function that can calc date in mouse point

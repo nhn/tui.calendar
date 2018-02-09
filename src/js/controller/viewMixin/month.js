@@ -3,12 +3,11 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = require('tui-code-snippet'),
-    mmax = Math.max;
-
+var util = require('tui-code-snippet');
 var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
     Collection = require('../../common/collection');
+var mmax = Math.max;
 
 var Month = {
     /**

@@ -7,9 +7,9 @@
 
 var domevent = require('./domevent');
 var Collection = require('./collection');
+var util = require('tui-code-snippet');
 
-var util = require('tui-code-snippet'),
-    posKey = '_pos',
+var posKey = '_pos',
     domutil;
 
 var CSS_AUTO_REGEX = /^auto$|^$|%/;
@@ -545,8 +545,7 @@ domutil = {
                 } else if (nodeName === 'select') {
                     elements.find(function(el) {
                         return !!el.childNodes.length;
-                    })
-                    .each(function(el) {
+                    }).each(function(el) {
                         result = result.concat(
                             domutil.find('option', el, function(opt) {
                                 return opt.selected;

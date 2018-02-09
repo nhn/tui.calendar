@@ -3,11 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = require('tui-code-snippet'),
-    existy = util.isExisty,
-    mfloor = Math.floor,
-    mmin = Math.min;
-
+var util = require('tui-code-snippet');
 var config = require('../../config'),
     common = require('../../common/common.js'),
     datetime = require('../../common/datetime'),
@@ -16,6 +12,9 @@ var config = require('../../config'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     scheduleTmpl = require('./weekdayInMonthSchedule.hbs');
+var existy = util.isExisty,
+    mfloor = Math.floor,
+    mmin = Math.min;
 
 /**
  * @constructor

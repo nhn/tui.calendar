@@ -4,8 +4,7 @@
  */
 'use strict';
 var util = require('tui-code-snippet'),
-    mmin = Math.min;
-var Handlebars = require('handlebars-template-loader/runtime');
+    Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
@@ -17,6 +16,8 @@ var dw = require('../common/dw'),
     config = require('../config'),
     timezone = require('../common/timezone');
 
+var mmin = Math.min;
+
 /**
  * @typedef {object} Schedule
  * @property {string} id - unique schedule id depends on calendar id
@@ -26,7 +27,8 @@ var dw = require('../common/dw'),
  * @property {string} end - end time
  * @property {boolean} isAllDay - all day schedule
  * @property {string} category - schedule type('milestone', 'task', allday', 'time')
- * @property {string} dueDateClass - task schedule type string(any string value is ok and mandatory if category is 'task')
+ * @property {string} dueDateClass - task schedule type string
+ *                                   (any string value is ok and mandatory if category is 'task')
  * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
  * @property {boolean} isFocused - focused schedule flag
  * @property {boolean} isVisible - schedule visibility flag
@@ -110,7 +112,8 @@ var dw = require('../common/dw'),
  * calendar.on('beforeCreateSchedule', function(event) {
  *     var guide = event.guide;
  *     // use guideEl$'s left, top to locate your schedule creation popup
- *     var guideEl$ = guide.guideElement ? guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
+ *     var guideEl$ = guide.guideElement ? 
+ *          guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
  * 
  *     // after that call this to hide the creation guide
  *     guide.clearGuideElement();

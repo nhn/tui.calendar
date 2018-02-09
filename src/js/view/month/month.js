@@ -4,9 +4,7 @@
  */
 'use strict';
 
-var util = require('tui-code-snippet'),
-    mmin = Math.min;
-
+var util = require('tui-code-snippet');
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
@@ -15,6 +13,7 @@ var config = require('../../config'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
     WeekdayInMonth = require('./weekdayInMonth');
+var mmin = Math.min;
 
 /**
  * @constructor
