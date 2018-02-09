@@ -1,258 +1,178 @@
 # TOAST UI Calendar
-tui-calendar
 
-## Feature
-* Various view types: daily, weekly, monthly
-* Narrow weekend
-* Start Day of Week
+> A JavaScript schedule calendar with full featured. Now your service just got the customizable calendar.
 
-## Documentation
-* API: [https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/](https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/)
-* Examples: [https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/tutorial-example01-basic.html](https://github.nhnent.com/pages/fe/application-dooray-calendar/latest/tutorial-example01-basic.html)
+[![GitHub release](https://img.shields.io/github/release/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/releases/latest)
+[![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/tui-calendar)
+[![GitHub license](https://img.shields.io/github/license/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/blob/master/LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.project-name/labels/help%20wanted)
+[![code with hearth by NHN Entertainment](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN%20Entertainment-ff1414.svg)](https://github.com/nhnent)
 
-## Dependency
-* [tui.code-snippet: 1.2.9](https://github.com/nhnent/tui.code-snippet/releases/tag/v1.2.9)
+## 🚩 Table of Contents
 
-## Tested Browsers
-* Browser:
-   * IE11
-   * Edge
-   * Chrome
-   * Firefox
-   * Safari
+* [Browser Support](#-browser-support)
+* [Features](#-features)
+* [Examples](#-examples)
+* [Install](#-install)
+  * [Via Package Manager](#via-package-manager)
+  * [Download Source Files](#download-source-files)
+* [Usage](#-usage)
+  * [HTML](#html)
+  * [JavaScript](#javascript)
+* [Pull Request Steps](#-pull-request-steps)
+  * [Setup](#setup)
+  * [Develop](#develop)
+  * [Pull Request Steps](#pull-request)
+* [Documents](#-documents)
+* [Contributing](#-contributing)
+* [License](#-license)
 
-## Usage
-### Use `bower`
-Install the latest version using `bower` command:
+## 🌏 Browser Support
+| <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer |
+| :---------: | :---------: | :---------: | :---------: | :---------: |
+| Yes | Yes | Yes | Yes | 9+ |
 
+## 🎨 Features
+
+* Supports various view types: daily, weekly, monthly(6 weeks, 2 weeks, 3 weeks)
+* Supports efficient management of milestone and task schedules
+* Supports the narrow width of weekend
+* Supports changing start day of week
+* Supports customizing the date and schedule information UI(including a header and a footer of grid cell)
+* Supports adjusting a schedule by mouse dragging
+
+## 🐾 Examples
+
+* [Basic](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html) : Example of using default options.
+
+More examples can be found on the left sidebar of each example page, and have fun with it.
+
+## 💾 Install
+
+TOAST UI products can be used by using the package manager or downloading the source directly.
+However, we highly recommend using the package manager.
+
+### Via Package Manager
+
+TOAST UI products are registered in two package managers, [npm](https://www.npmjs.com/) and [bower](https://bower.io/).
+You can conveniently install it using the commands provided by each package manager.
+When using npm, be sure to use it in the environment [Node.js](https://nodejs.org) is installed.
+
+#### npm
+
+``` sh
+$ npm install --save tui-calendar # Latest version
+$ npm install --save tui-calendar@<version> # Specific version
 ```
-$ bower install https://github.nhnent.com/fe/application-dooray-calendar
+
+#### bower
+
+``` sh
+$ bower install tui-calendar # Latest version
+$ bower install tui-calendar#<tag> # Specific version
 ```
 
+### Download Source Files
 
-### Download
-* [Download bundle files from `dist` folder](https://github.nhnent.com/fe/application-dooray-calendar/tree/production/dist)
-* [Download all sources for each version](https://github.nhnent.com/fe/application-dooray-calendar/releases)
+* [Download bundle files](https://github.com/nhnent/tui.calendar/tree/master/dist)
+* [Download all sources for each version](https://github.com/nhnent/tui.calendar/releases)
 
-### Initialize a calendar
+
+## 🔨 Usage
+
+### HTML
+
+Place a `<div></div>` where you want TOAST UI Calendar rendered.
+
+```html
+<body>
+...
+<div id="calendar" style="height: 800px;"></div>
+...
+</body>
+```
+
+### JavaScript
 
 ```javascript
-var calendar = new tui.Calendar(document.getElementById('calendar'), {
-    defaultView: 'week',
-    taskView: true,
-    template: {
-        milestone: function(schedule) {
-            return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
-        },
-        milestoneTitle: function() {
-            return 'Milestone';
-        },
-        task: function(schedule) {
-            return '&nbsp;&nbsp;#' + schedule.title;
-        },
-        taskTitle: function() {
-            return '<label><input type="checkbox" />Task</label>';
-        },
-        allday: function(schedule) {
-            return schedule.title + ' <i class="fa fa-refresh"></i>';
-        },
-        time: function(schedule) {
-            return schedule.title + ' <i class="fa fa-refresh"></i>' + schedule.start;
+var Calendar = require('tui-calendar');
+
+var cal = new Calendar('#calendar', {
+        defaultView: 'month',
+        taskView: true,
+        template: {
+          monthGridHeader: function(model) {
+                var date = new Date(model.date);
+                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+                return template;
+            }
         }
-    },
-    month: {
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        startDayOfWeek: 0,
-        narrowWeekend: true,
-        workweek: false
-    },
-    week: {
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        panelHeights: [80, 80, 120],
-        startDayOfWeek: 0,
-        narrowWeekend: true,
-        workweek: false
-    }
 });
 ```
 
-### Manipulate schedules
+## 🔧 Pull Request Steps
 
-Create schedules. Update a schedule, Delete a schedule.
+TOAST UI products are open source, so you can create a pull request(PR) after you fix issues.
+Run npm scripts and develop yourself with the following process.
 
-#### Create schedules
+### Setup
 
-```javascript
-calendar.createSchedules([
-    {
-        id: '1',
-        calendarId: '1',
-        title: 'my schedule',
-        category: 'time',
-        dueDateClass: '',
-        start: '2018-01-18T22:30:00+09:00',
-        end: '2018-01-19T02:30:00+09:00'
-    },
-    {
-        id: '2',
-        calendarId: '1',
-        title: 'second schedule',
-        category: 'time',
-        dueDateClass: '',
-        start: '2018-01-18T17:30:00+09:00',
-        end: '2018-01-19T17:31:00+09:00',
-        isReadOnly: true    // schedule is read-only
-    }
-]);
+Fork `develop` branch into your personal repository.
+Clone it to local computer. Install node modules.
+Before starting development, you should check to haveany errors.
+
+``` sh
+$ git clone https://github.com/{your-personal-repo}/tui.calendar.git
+$ cd tui.calendar
+$ npm install
+$ npm run test
 ```
 
-#### Update a schedule
+### Develop
 
-```javascript
-calendar.updateSchedule(schedule.id, schedule.calendarId, {
-    start: startTime,
-    end: endTime
-});
+Let's start development!
+You can see your code is reflected as soon as you saving the codes by running a server.
+Don't miss adding test cases and then make green rights.
+
+#### Run webpack-dev-server
+
+``` sh
+$ npm run serve
+$ npm run serve:ie8 # Run on Internet Explorer 8
 ```
 
-#### Delete a schedule
+#### Run karma test
 
-```javascript
-calendar.deleteSchedule(schedule.id, schedule.calendarId);
+``` sh
+$ npm run test
 ```
 
-#### Set a schedule as read-only
+### Pull Request
 
-`Schedule.isReadOnly` indicates a schedule's read-only attribute.
+Before PR, check to test lastly and then check any errors.
+If it has no error, commit and then push it!
 
-```javascript
-calendar.createSchedule({
-    title: 'read-only schedule',
-    isReadOnly: true
-});
-```
+For more information on PR's step, please see links of Contributing section.
 
-### Add event handlers
-Examples to add event handlers
+## 📙 Documents
 
-#### 'beforeCreateSchedule'
+* [Getting Started](https://github.com/nhnent/tui.calendar/blob/master/docs/getting-started.md)
+* [Tutorials](https://github.com/nhnent/tui.calendar/tree/master/docs)
+* [APIs](https://nhnent.github.io/tui.calendar/latest)
 
-When select time period(daily, weekly, monthly) in only AllDay, Time types
+You can also see the older versions of API page on the [releases page](https://github.com/nhnent/tui.calendar/releases).
 
-```javascript
-calendar.on('beforeCreateSchedule', function(event) {
-    var startTime = event.start;
-    var endTime = event.end;
-    var isAllDay = event.isAllDay;
-    var guide = event.guide;
-    var triggerEventName = event.triggerEventName;
-    var schedule;
+## 💬 Contributing
 
-    if (triggerEventName === 'click') {
-        // open writing simple schedule popup
-        schedule = {...};
-    } else if (triggerEventName === 'dblclick') {
-        // open writing detail schedule popup
-        schedule = {...};
-    }
+* [Code of Conduct](https://github.com/nhnent/tui.calendar/blob/master/CODE_OF_CONDUCT.md)
+* [Contributing guideline](https://github.com/nhnent/tui.calendar/blob/master/CONTRIBUTING.md)
+* [Issue guideline](https://github.com/nhnent/tui.calendar/blob/master/docs/ISSUE_TEMPLATE.md)
+* [Commit convention](https://github.com/nhnent/tui.calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
 
-    calendar.createSchedules([schedule]);
-});
-```
+## 🔩 Dependency
 
-#### 'beforeUpdateSchedule'
+* [tui-code-snippet](https://github.com/nhnent/tui.code-snippet) >=1.2.9
 
-Update the schedule when dragging it.
+## 📜 License
 
-```javascript
-calendar.on('beforeUpdateSchedule', function(event) {
-    var schedule = event.schedule;
-    var startTime = event.start;
-    var endTime = event.end;
-
-    calendar.updateSchedule(schedule.id, schedule.calendarId, {
-        start: startTime,
-        end: endTime
-    });
-});
-```
-
-#### 'clickSchedule'
-
-Open a detail schedule information or focus it
-
-```javascript
-calendar.on('clickSchedule', function(event) {
-    var schedule = event.schedule;
-
-    if (lastClickSchedule) {
-        calendar.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-            isFocused: false
-        });
-    }
-    calendar.updateSchedule(schedule.id, schedule.calendarId, {
-        isFocused: true
-    });
-
-    lastClickSchedule = schedule;
-
-    // open detail view
-});
-```
-
-### Move to today/prev/next
-
-#### Today
-
-```javascript
-calendar.today();
-```
-
-#### Prev
-
-```javascript
-calendar.prev();
-```
-
-#### Next
-
-```javascript
-calendar.next();
-```
-
-### Toggle view type
-
-```javascript
-// daily view
-calendar.toggleView('day', true);
-
-// weekly view
-calendar.toggleView('week', true);
-
-// monthly view(default 6 weeks view)
-calendar.options.month.visibleWeeksCount = 6; // or null
-calendar.toggleView('month', true);
-
-// 2 weeks monthly view
-calendar.options.month.visibleWeeksCount = 2;
-calendar.toggleView('month', true);
-
-// 3 weeks monthly view
-calendar.options.month.visibleWeeksCount = 3;
-calendar.toggleView('month', true);
-
-// narrow weekend
-calendar.options.month.narrowWeekend = true;
-calendar.options.week.narrowWeekend = true;
-calendar.toggleView(calendar.viewName, true);
-
-// change start day of week(from monday)
-calendar.options.month.startDayOfWeek = 1;
-calendar.options.week.startDayOfWeek = 1;
-calendar.toggleView(calendar.viewName, true);
-
-// work week
-calendar.options.month.workweek = true;
-calendar.options.week.workweek = true;
-cal.toggleView(cal.viewName, true);
-```
+This software is licensed under the [MIT](https://github.com/nhnent/tui.calendar/blob/master/LICENSE) © [NHN Entertainment](https://github.com/nhnent).

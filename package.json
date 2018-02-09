@@ -59,11 +59,10 @@
     "webpack-dev-server": "1.16.3"
   },
   "scripts": {
-    "start": "webpack-dev-server --progress --inline --hot",
-    "build": "webpack",
-    "release": "NODE_ENV=production webpack -p",
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
+    "bundle": "webpack && NODE_ENV=production webpack -p",
+    "serve": "webpack-dev-server --progress --inline --hot",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc"
   },
