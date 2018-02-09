@@ -300,5 +300,9 @@ Handlebars.registerHelper({
     /* eslint no-unused-vars: 0 */
     'monthGridFooterExceed-tmpl': function(hiddenSchedules) {
         return '';
+    },
+
+    'weekDayname-tmpl': function(model) {
+        return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span> ' + model.dayName;
     }
 });
