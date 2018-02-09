@@ -51,12 +51,23 @@ div {
     font-size: 12px;
 }
 
+.calendar-more-schedules {
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    padding: 0 5px;
+    border-radius: 3px;
+    border: 1px solid #dddddd;
+    font-size: 14px;
+    text-align: center;
+}
+
 .tui-full-calendar-month-more-close {
     margin-top: 3px;
     cursor: pointer;
 }
 
-.tui-full-calendar-month-week-item .tui-full-calendar-today > .tui-full-calendar-weekday-grid-date-decorator {
+.tui-full-calendar-month-week-item .tui-full-calendar-today .tui-full-calendar-weekday-grid-date-decorator {
     width: auto;
     border-radius: 27px;
     padding: 0 5px;
@@ -64,4 +75,10 @@ div {
 
 .tui-full-calendar-month-week-item .tui-full-calendar-weekday-grid-date-title {
     color: red;
+}
+
+.tui-full-calendar-weekday-exceed {
+    float: right;
+    margin-top: 4px;
+    margin-right: 5px;
 }

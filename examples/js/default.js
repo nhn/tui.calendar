@@ -10,8 +10,6 @@
         22: 'Holiday'
     };
     var lastClickSchedule;
-    
-    tempHolidays[baseDate.getDate()] = 'HoliDay';
     // FullCalendar.setTimezoneOffset(540);
 
     cal = new FullCalendar('#calendar', {
@@ -46,13 +44,10 @@
             monthMoreClose: function() {
                 return '<i class="fa fa-close"></i>';
             },
-            monthMoreSchedules: function(skippedSchedules) {
-                return '<span style="color: #7eb9e7">+ Show more ' + skippedSchedules + ' schedules</span>';
-            },
-            monthGridDate: function(model) {
+            monthGridHeader: function(model) {
                 var date = new Date(model.date);
                 var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-                var today = model.isToday ? 'Today' : '';
+                var today = model.isToday ? 'TDY' : '';
                 if (today) {
                     template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
                 }
@@ -60,12 +55,20 @@
                     template += '<span class="tui-full-calendar-weekday-grid-date-title">' + tempHolidays[date.getDate()] + '</span>';
                 }
                 return template;
+            },
+            monthGridHeaderExceed: function(hiddenSchedules) {
+                return '<span class="calendar-more-schedules">+' + hiddenSchedules + '</span>';
             }
         },
         month: {
             daynames: daynames,
             moreLayerSize: {
                 height: 'auto'
+            },
+            grid: {
+                footer: {
+                    height: 10
+                }
             }
         },
         week: {

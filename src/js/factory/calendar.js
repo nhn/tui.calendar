@@ -65,8 +65,10 @@ var dw = require('../common/dw'),
  *   @property {function} [template.time] - time template function
  *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
  *   @property {function} [template.monthMoreClose] - month more layer close button template function
- *   @property {function} [template.monthMoreSchedules] - month more schedules template function
- *   @property {function} [template.monthGridDate] - month grid template(date, decorator, title) template function
+ *   @property {function} [template.monthGridHeader] - month grid header(date, decorator, title) template function
+ *   @property {function} [template.monthGridFooter] - month grid footer(date, decorator, title) template function
+ *   @property {function} [template.monthGridHeaderExceed] - month grid header(exceed schedule count) template function
+ *   @property {function} [template.monthGridFooterExceed] - month grid footer(exceed schedule count) template function
  *  @property {object} [week] - options for week view
  *   @property {number} [week.startDayOfWeek=0] - start day of week
  *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
@@ -80,11 +82,17 @@ var dw = require('../common/dw'),
  *   @property {number} [month.startDayOfWeek=0] - start day of week
  *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
  *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ *   @property {number} [month.visibleScheduleCount] - visible schedule count in monthly grid
  *   @property {object} [month.moreLayerSize] - more layer size
- *    @property {object} [month.moreLayerSize.width=null] - css width value(px, auto).
+ *    @property {object} [month.moreLayerSize.width=null] - css width value(px, 'auto').
  *                                                           The default value 'null' is to fit a grid cell.
- *    @property {object} [month.moreLayerSize.height=null] - css height value(px, auto).
+ *    @property {object} [month.moreLayerSize.height=null] - css height value(px, 'auto').
  *                                                            The default value 'null' is to fit a grid cell.
+ *   @property {object} [month.grid] - grid's header and footer information
+ *    @property {object} [month.grid.header] - grid's header informatioin
+ *     @property {number} [month.grid.header.height=34] - grid's header height
+ *    @property {object} [month.grid.footer] - grid's footer informatioin
+ *     @property {number} [month.grid.footer.height=34] - grid's footer height
  *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
  */
 
