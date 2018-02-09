@@ -62,6 +62,10 @@ div {
     text-align: center;
 }
 
+.calendar-footer-more-schedules {
+    font-size: 14px;
+}
+
 .tui-full-calendar-dayname-container {
     height: 60px;
 }
@@ -110,4 +114,40 @@ div {
     padding-left: 8px;
     padding-right: 0;
     text-align: unset;
+}
+
+.tui-full-calendar-weekday-grid-line:hover {
+    background-color: #f0f1f5;
+}
+
+.tui-full-calendar-weekday-grid-footer {
+    left: 0;
+    right: 0;
+    height: 50px;
+}
+
+.tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed {
+    float: none;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #7eb9e7;
+}
+
+.tui-full-calendar-weekday-grid-line:hover .calendar-new-schedule-button {
+    visibility: visible;
+}
+
+.calendar-new-schedule-button {
+    cursor: pointer;
+    visibility: hidden;
+    border: 1px dashed #ddd;
+    margin: 0 10px;
+    padding: 3px 0;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0
 }

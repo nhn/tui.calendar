@@ -59,6 +59,14 @@
             monthGridHeaderExceed: function(hiddenSchedules) {
                 return '<span class="calendar-more-schedules">+' + hiddenSchedules + '</span>';
             },
+
+            monthGridFooter: function() {
+                return '<div class="calendar-new-schedule-button">New Schedule</div>';
+            },
+
+            monthGridFooterExceed: function(hiddenSchedules) {
+                return '<span class="calendar-footer-more-schedules">+ See ' + hiddenSchedules + ' more events</span>';
+            },
             weekDayname: function(dayname) {
                 return '<span class="calendar-week-dayname-name">' + dayname.dayName + '</span><br><span class="calendar-week-dayname-date">' + dayname.date + '</span>';
             },
@@ -75,7 +83,8 @@
                 footer: {
                     height: 10
                 }
-            }
+            },
+            visibleScheduleCount: 4
         },
         week: {
             daynames: daynames,
