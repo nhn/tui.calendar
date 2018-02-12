@@ -4,6 +4,7 @@
 
     .{css-prefix}weekday-schedules
         overflow-y: visible
+        height: 0
 
     .{css-prefix}weekday-schedule
         margin: 0 10px
@@ -11,7 +12,7 @@
     .{css-prefix}today
         background: none
 
-        > .{css-prefix}weekday-grid-date-decorator
+        .{css-prefix}weekday-grid-date-decorator
             display: inline-block
             wh(27px, 27px)
             line-height: 27px
@@ -58,14 +59,17 @@
         padding: 3px
         font-size: 16px
 
-        > .grid-date
+        .grid-footer
+            position: absolute
+            bottom: 4px
+
+        .grid-date
             display: inline-block
             wh(27px, 27px)
             line-height: 27px
             text-align: center
 
-        > .grid-date-title
-            float: right
+        .grid-date-title
             line-height: 27px
             margin-right: 5px
 
@@ -140,14 +144,9 @@
         display: none
 
     .exceed
-        text-align: right
-        bottom: 12px
-        padding: 0 10px
-        line-height: 14px
-        color: #000
-
-        > span
-            cursor: pointer
+        cursor: pointer
+        &:hover
+            background-color: #f0f1f5
 
     .resize-handle
         position: absolute
@@ -160,9 +159,6 @@
 
     .filled
         background-color: #e8e8e8
-
-    .exceed
-        cursor: pointer
 
 +prefix-classes(css-prefix)
     .left

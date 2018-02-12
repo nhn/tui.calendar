@@ -3,9 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = require('tui-code-snippet'),
-    mAbs = Math.abs;
-
+var util = require('tui-code-snippet');
 var config = require('../config'),
     common = require('./common'),
     domutil = require('./domutil'),
@@ -13,6 +11,8 @@ var config = require('../config'),
     View = require('../view/view'),
     VPanel = require('./vpanel'),
     Drag = require('../handler/drag');
+
+var mAbs = Math.abs;
 
 /**
  * @typedef PanelOptions
@@ -204,8 +204,8 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
     resizeMap.push([cursor, resizeInfo[0]]);
 
     for (cursor = this[forwardMethod](cursor);
-         util.isExisty(cursor);
-         cursor = this[forwardMethod](cursor)) {
+        util.isExisty(cursor);
+        cursor = this[forwardMethod](cursor)) {
         if (cursor.isSplitter()) {
             continue;
         }
@@ -238,14 +238,14 @@ VLayout.prototype._getMouseYAdditionalLimit = function(splPanel) {
         };
 
     for (cursor = this.prevPanel(splPanel);
-         util.isExisty(cursor);
-         cursor = this.prevPanel(cursor)) {
+        util.isExisty(cursor);
+        cursor = this.prevPanel(cursor)) {
         upper += func(cursor);
     }
 
     for (cursor = this.nextPanel(splPanel);
-         util.isExisty(cursor);
-         cursor = this.nextPanel(cursor)) {
+        util.isExisty(cursor);
+        cursor = this.nextPanel(cursor)) {
         below += func(cursor);
     }
 

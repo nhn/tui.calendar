@@ -1,10 +1,20 @@
 <div class="{{CSS_PREFIX}}weekday-border"></div>
 <div class="{{CSS_PREFIX}}weekday-grid">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line {{holiday day}} {{#fi date '!==' 1}}{{CSS_PREFIX}}near-month-day{{/fi}}
-    {{#if isToday}} {{CSS_PREFIX}}today{{/if}} {{#if isOtherMonth}}{{CSS_PREFIX}}extra-date{{/if}}"
-         style="width:{{width}}%; left:{{left}}%;">
-        {{{monthGridDate-tmpl this}}}
+    <div class="{{CSS_PREFIX}}weekday-grid-line {{holiday day}} {{#fi date '!==' 1}}{{CSS_PREFIX}}near-month-day{{/fi}} {{#if isToday}} {{CSS_PREFIX}}today{{/if}} {{#if isOtherMonth}}{{CSS_PREFIX}}extra-date{{/if}}"
+        style="width:{{width}}%; left:{{left}}%;">
+        <div class="{{CSS_PREFIX}}weekday-grid-header">
+            {{{monthGridHeader-tmpl this}}}
+            {{#if hiddenSchedules}}
+                <span class="{{CSS_PREFIX}}weekday-exceed" data-ymd="{{ymd}}">{{{monthGridHeaderExceed-tmpl hiddenSchedules}}}</span>
+            {{/if}}
+        </div>
+        <div class="{{CSS_PREFIX}}weekday-grid-footer">
+            {{{monthGridFooter-tmpl this}}}
+            {{#if hiddenSchedules}}
+                <span class="{{CSS_PREFIX}}weekday-exceed" data-ymd="{{ymd}}">{{{monthGridFooterExceed-tmpl hiddenSchedules}}}</span>
+            {{/if}}
+        </div>
     </div>
 {{/each ~}}
 </div>

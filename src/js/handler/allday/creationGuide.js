@@ -85,13 +85,14 @@ AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndI
  */
 AlldayCreationGuide.prototype._refreshGuideElement = function(scheduleData, defer) {
     var guideElement = this.guideElement,
-        dragStartXIndex = scheduleData.dragStartXIndex < scheduleData.xIndex ? scheduleData.dragStartXIndex : scheduleData.xIndex,
-        dragEndXIndex = scheduleData.dragStartXIndex < scheduleData.xIndex ? scheduleData.xIndex : scheduleData.dragStartXIndex,
+        data = scheduleData,
+        dragStartXIndex = data.dragStartXIndex < data.xIndex ? data.dragStartXIndex : data.xIndex,
+        dragEndXIndex = data.dragStartXIndex < data.xIndex ? data.xIndex : data.dragStartXIndex,
         leftPercent,
         widthPercent;
 
-    leftPercent = scheduleData.grids[dragStartXIndex].left;
-    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, scheduleData.grids);
+    leftPercent = data.grids[dragStartXIndex].left;
+    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
 
     function setStyle() {
         guideElement.style.display = 'block';

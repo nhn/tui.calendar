@@ -12,7 +12,7 @@
     "plugins/markdown"
   ],
   "templates": {
-    "name": "FullCalendar",
+    "name": "Calendar",
     "logo": {
       "url": "https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png",
       "width": "150px",

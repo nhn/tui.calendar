@@ -29,7 +29,7 @@ module.exports = {
     },
     entry: './src/index.js',
     output: {
-        library: ['tui', 'FullCalendar'],
+        library: ['tui', 'Calendar'],
         libraryTarget: 'umd',
         path: path.join(__dirname, 'dist'),
         filename: FILENAME + '.js',

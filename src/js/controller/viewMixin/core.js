@@ -3,8 +3,8 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
-var util = require('tui-code-snippet'),
-    forEachArr = util.forEachArray,
+var util = require('tui-code-snippet');
+var forEachArr = util.forEachArray,
     aps = Array.prototype.slice;
 
 var datetime = require('../../common/datetime');

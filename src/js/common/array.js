@@ -50,7 +50,7 @@ function bsearch(arr, search, fn, compare) {
     compare = compare || stringASC;
 
     while (minIndex <= maxIndex) {
-        currentIndex = (minIndex + maxIndex) / 2 | 0;    // Math.floor
+        currentIndex = (minIndex + maxIndex) / 2 | 0; // Math.floor
         value = fn ? fn(arr[currentIndex]) : arr[currentIndex];
         comp = compare(value, search);
 

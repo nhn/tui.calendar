@@ -127,7 +127,8 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+    this.getScheduleDataFunc = getScheduleDataFunc;
     scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
 
     util.extend(scheduleData, {

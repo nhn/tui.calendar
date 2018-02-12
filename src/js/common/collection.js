@@ -4,8 +4,8 @@
  */
 'use strict';
 
-var util = require('tui-code-snippet'),
-    forEachProp = util.forEachOwnProperties,
+var util = require('tui-code-snippet');
+var forEachProp = util.forEachOwnProperties,
     forEachArr = util.forEachArray,
     isFunc = util.isFunction,
     isObj = util.isObject;

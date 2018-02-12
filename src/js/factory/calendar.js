@@ -4,8 +4,7 @@
  */
 'use strict';
 var util = require('tui-code-snippet'),
-    mmin = Math.min;
-var Handlebars = require('handlebars-template-loader/runtime');
+    Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
     datetime = require('../common/datetime'),
     Layout = require('../view/layout'),
@@ -17,6 +16,8 @@ var dw = require('../common/dw'),
     config = require('../config'),
     timezone = require('../common/timezone');
 
+var mmin = Math.min;
+
 /**
  * @typedef {object} Schedule
  * @property {string} id - unique schedule id depends on calendar id
@@ -26,7 +27,8 @@ var dw = require('../common/dw'),
  * @property {string} end - end time
  * @property {boolean} isAllDay - all day schedule
  * @property {string} category - schedule type('milestone', 'task', allday', 'time')
- * @property {string} dueDateClass - task schedule type string(any string value is ok and mandatory if category is 'task')
+ * @property {string} dueDateClass - task schedule type string
+ *                                   (any string value is ok and mandatory if category is 'task')
  * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
  * @property {boolean} isFocused - focused schedule flag
  * @property {boolean} isVisible - schedule visibility flag
@@ -65,8 +67,12 @@ var dw = require('../common/dw'),
  *   @property {function} [template.time] - time template function
  *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
  *   @property {function} [template.monthMoreClose] - month more layer close button template function
- *   @property {function} [template.monthMoreSchedules] - month more schedules template function
- *   @property {function} [template.monthGridDate] - month grid template(date, decorator, title) template function
+ *   @property {function} [template.monthGridHeader] - month grid header(date, decorator, title) template function
+ *   @property {function} [template.monthGridFooter] - month grid footer(date, decorator, title) template function
+ *   @property {function} [template.monthGridHeaderExceed] - month grid header(exceed schedule count) template function
+ *   @property {function} [template.monthGridFooterExceed] - month grid footer(exceed schedule count) template function
+ *   @property {function} [template.weekDayname] - weekly dayname template function
+ *   @property {function} [template.monthDayname] - monthly dayname template function
  *  @property {object} [week] - options for week view
  *   @property {number} [week.startDayOfWeek=0] - start day of week
  *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
@@ -80,11 +86,17 @@ var dw = require('../common/dw'),
  *   @property {number} [month.startDayOfWeek=0] - start day of week
  *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
  *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ *   @property {number} [month.visibleScheduleCount] - visible schedule count in monthly grid
  *   @property {object} [month.moreLayerSize] - more layer size
- *    @property {object} [month.moreLayerSize.width=null] - css width value(px, auto).
+ *    @property {object} [month.moreLayerSize.width=null] - css width value(px, 'auto').
  *                                                           The default value 'null' is to fit a grid cell.
- *    @property {object} [month.moreLayerSize.height=null] - css height value(px, auto).
+ *    @property {object} [month.moreLayerSize.height=null] - css height value(px, 'auto').
  *                                                            The default value 'null' is to fit a grid cell.
+ *   @property {object} [month.grid] - grid's header and footer information
+ *    @property {object} [month.grid.header] - grid's header informatioin
+ *     @property {number} [month.grid.header.height=34] - grid's header height
+ *    @property {object} [month.grid.footer] - grid's footer informatioin
+ *     @property {number} [month.grid.footer.height=34] - grid's footer height
  *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
  */
 
@@ -102,7 +114,8 @@ var dw = require('../common/dw'),
  * calendar.on('beforeCreateSchedule', function(event) {
  *     var guide = event.guide;
  *     // use guideEl$'s left, top to locate your schedule creation popup
- *     var guideEl$ = guide.guideElement ? guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
+ *     var guideEl$ = guide.guideElement ? 
+ *          guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
  * 
  *     // after that call this to hide the creation guide
  *     guide.clearGuideElement();
@@ -116,7 +129,7 @@ var dw = require('../common/dw'),
  * @param {HTMLElement|string} container - container element or selector id
  * @param {Options} options - calendar options
  * @example
- * var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
+ * var calendar = new tui.Calendar(document.getElementById('calendar'), {
  *     defaultView: 'week',
  *     taskView: true,
  *     template: {
@@ -1246,7 +1259,7 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  * @static
  * @example
  * var timezoneName = moment.tz.guess();
- * tui.FullCalendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
+ * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
  */
 Calendar.setTimezoneOffset = function(offset) {
     timezone.setOffset(offset);

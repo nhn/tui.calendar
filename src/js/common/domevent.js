@@ -5,8 +5,8 @@
  */
 'use strict';
 
-var util = require('tui-code-snippet'),
-    browser = util.browser,
+var util = require('tui-code-snippet');
+var browser = util.browser,
     eventKey = '_evt',
     DRAG = {
         START: ['touchstart', 'mousedown'],

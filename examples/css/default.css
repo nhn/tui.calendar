@@ -51,12 +51,50 @@ div {
     font-size: 12px;
 }
 
+.calendar-more-schedules {
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    padding: 0 5px;
+    border-radius: 3px;
+    border: 1px solid #dddddd;
+    font-size: 14px;
+    text-align: center;
+}
+
+.calendar-footer-more-schedules {
+    font-size: 14px;
+}
+
+.tui-full-calendar-dayname-container {
+    height: 60px;
+}
+
+.tui-full-calendar-dayname {
+    height: 59px;
+}
+
+.calendar-week-dayname-name {
+    font-size: 12px;
+    line-height: 24px;
+    font-weight: bold;
+}
+
+.calendar-week-dayname-date {
+    font-size: 26px;
+}
+
+.calendar-week-dayname-date:hover {
+    cursor: pointer;
+    border-bottom: 2px solid;
+}
+
 .tui-full-calendar-month-more-close {
     margin-top: 3px;
     cursor: pointer;
 }
 
-.tui-full-calendar-month-week-item .tui-full-calendar-today > .tui-full-calendar-weekday-grid-date-decorator {
+.tui-full-calendar-month-week-item .tui-full-calendar-today .tui-full-calendar-weekday-grid-date-decorator {
     width: auto;
     border-radius: 27px;
     padding: 0 5px;
@@ -64,4 +102,52 @@ div {
 
 .tui-full-calendar-month-week-item .tui-full-calendar-weekday-grid-date-title {
     color: red;
+}
+
+.tui-full-calendar-weekday-exceed {
+    float: right;
+    margin-top: 4px;
+    margin-right: 5px;
+}
+
+.tui-full-calendar-month-dayname-item {
+    padding-left: 8px;
+    padding-right: 0;
+    text-align: unset;
+}
+
+.tui-full-calendar-weekday-grid-line:hover {
+    background-color: #f0f1f5;
+}
+
+.tui-full-calendar-weekday-grid-footer {
+    left: 0;
+    right: 0;
+    height: 50px;
+}
+
+.tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed {
+    float: none;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #7eb9e7;
+}
+
+.tui-full-calendar-weekday-grid-line:hover .calendar-new-schedule-button {
+    visibility: visible;
+}
+
+.calendar-new-schedule-button {
+    cursor: pointer;
+    visibility: hidden;
+    border: 1px dashed #ddd;
+    margin: 0 10px;
+    padding: 3px 0;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0
 }

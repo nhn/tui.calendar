@@ -160,7 +160,9 @@ AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
         dragEnd: this._onDragEnd
     }, this);
 
-    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+    this.getScheduleDataFunc = getScheduleDataFunc;
+
     scheduleData = getScheduleDataFunc(dragStartEventData.originEvent);
 
     /**

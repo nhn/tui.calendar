@@ -1,6 +1,6 @@
 /* eslint no-console: 0, complexity: 0 */
 'use strict';
-(function(window, FullCalendar) {
+(function(window, Calendar) {
     var cal, resizeThrottled, idx = 20;
     var baseDate = new Date(), formattedDate = tui.util.formatDate('YYYY-MM-DD', baseDate);
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -10,11 +10,9 @@
         22: 'Holiday'
     };
     var lastClickSchedule;
-    
-    tempHolidays[baseDate.getDate()] = 'HoliDay';
-    // FullCalendar.setTimezoneOffset(540);
+    // Calendar.setTimezoneOffset(540);
 
-    cal = new FullCalendar('#calendar', {
+    cal = new Calendar('#calendar', {
         defaultView: 'month',
         taskView: true,
         template: {
@@ -46,13 +44,10 @@
             monthMoreClose: function() {
                 return '<i class="fa fa-close"></i>';
             },
-            monthMoreSchedules: function(skippedSchedules) {
-                return '<span style="color: #7eb9e7">+ Show more ' + skippedSchedules + ' schedules</span>';
-            },
-            monthGridDate: function(model) {
+            monthGridHeader: function(model) {
                 var date = new Date(model.date);
                 var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-                var today = model.isToday ? 'Today' : '';
+                var today = model.isToday ? 'TDY' : '';
                 if (today) {
                     template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
                 }
@@ -60,13 +55,36 @@
                     template += '<span class="tui-full-calendar-weekday-grid-date-title">' + tempHolidays[date.getDate()] + '</span>';
                 }
                 return template;
+            },
+            monthGridHeaderExceed: function(hiddenSchedules) {
+                return '<span class="calendar-more-schedules">+' + hiddenSchedules + '</span>';
+            },
+
+            monthGridFooter: function() {
+                return '<div class="calendar-new-schedule-button">New Schedule</div>';
+            },
+
+            monthGridFooterExceed: function(hiddenSchedules) {
+                return '<span class="calendar-footer-more-schedules">+ See ' + hiddenSchedules + ' more events</span>';
+            },
+            weekDayname: function(dayname) {
+                return '<span class="calendar-week-dayname-name">' + dayname.dayName + '</span><br><span class="calendar-week-dayname-date">' + dayname.date + '</span>';
+            },
+            monthDayname: function(dayname) {
+                return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
             }
         },
         month: {
             daynames: daynames,
             moreLayerSize: {
                 height: 'auto'
-            }
+            },
+            grid: {
+                footer: {
+                    height: 10
+                }
+            },
+            visibleScheduleCount: 4
         },
         week: {
             daynames: daynames,
@@ -382,4 +400,4 @@
     window.cal = cal;
 
     cal.getElement('3', '2');
-})(window, tui.FullCalendar);
+})(window, tui.Calendar);
