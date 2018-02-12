@@ -1,6 +1,6 @@
 /*!
- * tui-full-calendar
- * @version 0.5.0 | Wed Feb 07 2018
+ * tui-calendar
+ * @version 0.5.0 | Mon Feb 12 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -73,6 +73,7 @@
 }
 .tui-full-calendar-month-week-item .tui-full-calendar-weekday-schedules {
   overflow-y: visible;
+  height: 0;
 }
 .tui-full-calendar-month-week-item .tui-full-calendar-weekday-schedule {
   margin: 0 10px;
@@ -80,7 +81,7 @@
 .tui-full-calendar-month-week-item .tui-full-calendar-today {
   background: none;
 }
-.tui-full-calendar-month-week-item .tui-full-calendar-today > .tui-full-calendar-weekday-grid-date-decorator {
+.tui-full-calendar-month-week-item .tui-full-calendar-today .tui-full-calendar-weekday-grid-date-decorator {
   display: inline-block;
   width: 27px;
   height: 27px;
@@ -128,15 +129,18 @@
   padding: 3px;
   font-size: 16px;
 }
-.tui-full-calendar-weekday-grid-line > .tui-full-calendar-weekday-grid-date {
+.tui-full-calendar-weekday-grid-line .tui-full-calendar-weekday-grid-footer {
+  position: absolute;
+  bottom: 4px;
+}
+.tui-full-calendar-weekday-grid-line .tui-full-calendar-weekday-grid-date {
   display: inline-block;
   width: 27px;
   height: 27px;
   line-height: 27px;
   text-align: center;
 }
-.tui-full-calendar-weekday-grid-line > .tui-full-calendar-weekday-grid-date-title {
-  float: right;
+.tui-full-calendar-weekday-grid-line .tui-full-calendar-weekday-grid-date-title {
   line-height: 27px;
   margin-right: 5px;
 }
@@ -216,14 +220,10 @@
   display: none;
 }
 .tui-full-calendar-weekday-exceed {
-  text-align: right;
-  bottom: 12px;
-  padding: 0 10px;
-  line-height: 14px;
-  color: #000;
-}
-.tui-full-calendar-weekday-exceed > span {
   cursor: pointer;
+}
+.tui-full-calendar-weekday-exceed:hover {
+  background-color: #f0f1f5;
 }
 .tui-full-calendar-weekday-resize-handle {
   position: absolute;
@@ -236,9 +236,6 @@
 }
 .tui-full-calendar-weekday-filled {
   background-color: #e8e8e8;
-}
-.tui-full-calendar-weekday-exceed {
-  cursor: pointer;
 }
 .tui-full-calendar-left {
   width: 77px;
@@ -276,7 +273,7 @@
   background: none;
 }
 .tui-full-calendar-holiday-sun {
-  color: #f2acac;
+  color: #f44336;
 }
 .tui-full-calendar-dayname {
   position: absolute;
@@ -284,6 +281,7 @@
   font-size: 13px;
   padding-left: 5px;
   border-left: 1px solid #ddd;
+  height: 41px;
 }
 .tui-full-calendar-dayname .tui-full-calendar-dayname-date {
   font-size: 26px;
@@ -756,4 +754,4 @@
   background-color: #e8e8e8;
 }
 /*# sourceMappingURL=src/css/main.css.map */
-/*# sourceMappingURL=tui-full-calendar.css.map*/
+/*# sourceMappingURL=tui-calendar.css.map*/

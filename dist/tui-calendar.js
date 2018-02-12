@@ -1,6 +1,6 @@
 /*!
- * tui-full-calendar
- * @version 0.5.0 | Wed Feb 07 2018
+ * tui-calendar
+ * @version 0.5.0 | Mon Feb 12 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -10,9 +10,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define(["tui-code-snippet"], factory);
 	else if(typeof exports === 'object')
-		exports["FullCalendar"] = factory(require("tui-code-snippet"));
+		exports["Calendar"] = factory(require("tui-code-snippet"));
 	else
-		root["tui"] = root["tui"] || {}, root["tui"]["FullCalendar"] = factory((root["tui"] && root["tui"]["util"]));
+		root["tui"] = root["tui"] || {}, root["tui"]["Calendar"] = factory((root["tui"] && root["tui"]["util"]));
 })(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -251,7 +251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
-	        var top = getElSize(viewModel.top * blockHeight + paddingTop, 'px', 'top');
+	        var top = getElSize((viewModel.top - 1) * blockHeight + paddingTop, 'px', 'top');
 	        var left = getElSize(grids[viewModel.left].left, '%', 'left');
 	        var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
 	        var height = getElSize(viewModel.height, 'px', 'height');
@@ -372,12 +372,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return 'close';
 	    },
 	
-	    'monthMoreSchedules-tmpl': function(skippedSchedules) {
-	        return '+' + skippedSchedules;
+	    'monthGridHeader-tmpl': function(model) {
+	        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
 	    },
 	
-	    'monthGridDate-tmpl': function(model) {
-	        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
+	    /* eslint no-unused-vars: 0 */
+	    'monthGridHeaderExceed-tmpl': function(hiddenSchedules) {
+	        return '';
+	    },
+	
+	    'monthGridFooter-tmpl': function() {
+	        return '';
+	    },
+	
+	    /* eslint no-unused-vars: 0 */
+	    'monthGridFooterExceed-tmpl': function(hiddenSchedules) {
+	        return '';
+	    },
+	
+	    'weekDayname-tmpl': function(model) {
+	        return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span> ' + model.dayName;
+	    },
+	
+	    'monthDayname-tmpl': function(model) {
+	        return model.label;
 	    }
 	});
 
@@ -2386,8 +2404,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6),
-	    aps = Array.prototype.slice;
+	var util = __webpack_require__(6);
+	var aps = Array.prototype.slice;
 	
 	var domutil = __webpack_require__(31),
 	    Collection = __webpack_require__(33);
@@ -2573,9 +2591,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var domevent = __webpack_require__(32);
 	var Collection = __webpack_require__(33);
+	var util = __webpack_require__(6);
 	
-	var util = __webpack_require__(6),
-	    posKey = '_pos',
+	var posKey = '_pos',
 	    domutil;
 	
 	var CSS_AUTO_REGEX = /^auto$|^$|%/;
@@ -3111,8 +3129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else if (nodeName === 'select') {
 	                    elements.find(function(el) {
 	                        return !!el.childNodes.length;
-	                    })
-	                    .each(function(el) {
+	                    }).each(function(el) {
 	                        result = result.concat(
 	                            domutil.find('option', el, function(opt) {
 	                                return opt.selected;
@@ -3217,8 +3234,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6),
-	    browser = util.browser,
+	var util = __webpack_require__(6);
+	var browser = util.browser,
 	    eventKey = '_evt',
 	    DRAG = {
 	        START: ['touchstart', 'mousedown'],
@@ -3649,8 +3666,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6),
-	    forEachProp = util.forEachOwnProperties,
+	var util = __webpack_require__(6);
+	var forEachProp = util.forEachOwnProperties,
 	    forEachArr = util.forEachArray,
 	    isFunc = util.isFunction,
 	    isObj = util.isObject;
@@ -4136,8 +4153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	var util = __webpack_require__(6),
-	    mmin = Math.min;
-	var Handlebars = __webpack_require__(7);
+	    Handlebars = __webpack_require__(7);
 	var dw = __webpack_require__(29),
 	    datetime = __webpack_require__(27),
 	    Layout = __webpack_require__(36),
@@ -4149,6 +4165,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    config = __webpack_require__(34),
 	    timezone = __webpack_require__(28);
 	
+	var mmin = Math.min;
+	
 	/**
 	 * @typedef {object} Schedule
 	 * @property {string} id - unique schedule id depends on calendar id
@@ -4158,7 +4176,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {string} end - end time
 	 * @property {boolean} isAllDay - all day schedule
 	 * @property {string} category - schedule type('milestone', 'task', allday', 'time')
-	 * @property {string} dueDateClass - task schedule type string(any string value is ok and mandatory if category is 'task')
+	 * @property {string} dueDateClass - task schedule type string
+	 *                                   (any string value is ok and mandatory if category is 'task')
 	 * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
 	 * @property {boolean} isFocused - focused schedule flag
 	 * @property {boolean} isVisible - schedule visibility flag
@@ -4197,8 +4216,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {function} [template.time] - time template function
 	 *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
 	 *   @property {function} [template.monthMoreClose] - month more layer close button template function
-	 *   @property {function} [template.monthMoreSchedules] - month more schedules template function
-	 *   @property {function} [template.monthGridDate] - month grid template(date, decorator, title) template function
+	 *   @property {function} [template.monthGridHeader] - month grid header(date, decorator, title) template function
+	 *   @property {function} [template.monthGridFooter] - month grid footer(date, decorator, title) template function
+	 *   @property {function} [template.monthGridHeaderExceed] - month grid header(exceed schedule count) template function
+	 *   @property {function} [template.monthGridFooterExceed] - month grid footer(exceed schedule count) template function
+	 *   @property {function} [template.weekDayname] - weekly dayname template function
+	 *   @property {function} [template.monthDayname] - monthly dayname template function
 	 *  @property {object} [week] - options for week view
 	 *   @property {number} [week.startDayOfWeek=0] - start day of week
 	 *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
@@ -4212,11 +4235,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {number} [month.startDayOfWeek=0] - start day of week
 	 *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
 	 *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+	 *   @property {number} [month.visibleScheduleCount] - visible schedule count in monthly grid
 	 *   @property {object} [month.moreLayerSize] - more layer size
-	 *    @property {object} [month.moreLayerSize.width=null] - css width value(px, auto).
+	 *    @property {object} [month.moreLayerSize.width=null] - css width value(px, 'auto').
 	 *                                                           The default value 'null' is to fit a grid cell.
-	 *    @property {object} [month.moreLayerSize.height=null] - css height value(px, auto).
+	 *    @property {object} [month.moreLayerSize.height=null] - css height value(px, 'auto').
 	 *                                                            The default value 'null' is to fit a grid cell.
+	 *   @property {object} [month.grid] - grid's header and footer information
+	 *    @property {object} [month.grid.header] - grid's header informatioin
+	 *     @property {number} [month.grid.header.height=34] - grid's header height
+	 *    @property {object} [month.grid.footer] - grid's footer informatioin
+	 *     @property {number} [month.grid.footer.height=34] - grid's footer height
 	 *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
 	 */
 	
@@ -4234,7 +4263,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.on('beforeCreateSchedule', function(event) {
 	 *     var guide = event.guide;
 	 *     // use guideEl$'s left, top to locate your schedule creation popup
-	 *     var guideEl$ = guide.guideElement ? guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
+	 *     var guideEl$ = guide.guideElement ? 
+	 *          guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
 	 * 
 	 *     // after that call this to hide the creation guide
 	 *     guide.clearGuideElement();
@@ -4248,7 +4278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {HTMLElement|string} container - container element or selector id
 	 * @param {Options} options - calendar options
 	 * @example
-	 * var calendar = new tui.FullCalendar(document.getElementById('calendar'), {
+	 * var calendar = new tui.Calendar(document.getElementById('calendar'), {
 	 *     defaultView: 'week',
 	 *     taskView: true,
 	 *     template: {
@@ -5378,7 +5408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @static
 	 * @example
 	 * var timezoneName = moment.tz.guess();
-	 * tui.FullCalendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
+	 * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
 	 */
 	Calendar.setTimezoneOffset = function(offset) {
 	    timezone.setOffset(offset);
@@ -6930,8 +6960,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var TZDate = __webpack_require__(28).Date;
-	var util = __webpack_require__(6),
-	    spaceRx = /^\s*|\s*$/g,
+	var util = __webpack_require__(6);
+	var spaceRx = /^\s*|\s*$/g,
 	    model;
 	
 	var datetime = __webpack_require__(27);
@@ -7276,8 +7306,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    forEachArr = util.forEachArray,
+	var util = __webpack_require__(6);
+	var forEachArr = util.forEachArray,
 	    aps = Array.prototype.slice;
 	
 	var datetime = __webpack_require__(27);
@@ -7832,7 +7862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    compare = compare || stringASC;
 	
 	    while (minIndex <= maxIndex) {
-	        currentIndex = (minIndex + maxIndex) / 2 | 0;    // Math.floor
+	        currentIndex = (minIndex + maxIndex) / 2 | 0; // Math.floor
 	        value = fn ? fn(arr[currentIndex]) : arr[currentIndex];
 	        comp = compare(value, search);
 	
@@ -8072,12 +8102,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    mmax = Math.max;
-	
+	var util = __webpack_require__(6);
 	var array = __webpack_require__(47),
 	    datetime = __webpack_require__(27),
 	    Collection = __webpack_require__(33);
+	var mmax = Math.max;
 	
 	var Month = {
 	    /**
@@ -8442,9 +8471,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    mAbs = Math.abs;
-	
+	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
@@ -8452,6 +8479,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    View = __webpack_require__(37),
 	    VPanel = __webpack_require__(51),
 	    Drag = __webpack_require__(38);
+	
+	var mAbs = Math.abs;
 	
 	/**
 	 * @typedef PanelOptions
@@ -8643,8 +8672,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    resizeMap.push([cursor, resizeInfo[0]]);
 	
 	    for (cursor = this[forwardMethod](cursor);
-	         util.isExisty(cursor);
-	         cursor = this[forwardMethod](cursor)) {
+	        util.isExisty(cursor);
+	        cursor = this[forwardMethod](cursor)) {
 	        if (cursor.isSplitter()) {
 	            continue;
 	        }
@@ -8677,14 +8706,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	
 	    for (cursor = this.prevPanel(splPanel);
-	         util.isExisty(cursor);
-	         cursor = this.prevPanel(cursor)) {
+	        util.isExisty(cursor);
+	        cursor = this.prevPanel(cursor)) {
 	        upper += func(cursor);
 	    }
 	
 	    for (cursor = this.nextPanel(splPanel);
-	         util.isExisty(cursor);
-	         cursor = this.nextPanel(cursor)) {
+	        util.isExisty(cursor);
+	        cursor = this.nextPanel(cursor)) {
 	        below += func(cursor);
 	    }
 	
@@ -9281,15 +9310,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\">\n    <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "dayname-date-area\">\n        <span class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "dayname-date\">"
-	    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-	    + "</span> <span class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "dayname-label\">"
-	    + alias4(((helper = (helper = helpers.dayName || (depth0 != null ? depth0.dayName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"dayName","hash":{},"data":data}) : helper)))
-	    + "</span>\n    </span>\n</div>\n";
+	    + "dayname-date-area\">\n        "
+	    + ((stack1 = (helpers["weekDayname-tmpl"] || (depth0 && depth0["weekDayname-tmpl"]) || alias2).call(alias1,depth0,{"name":"weekDayname-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n    </span>\n</div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -10079,7 +10102,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var SCROLL_INTERVAL = 30;
 	var SCROLL_MAX = 15;
-	var SCROLL_CLICK_INCREASED = 2;    // IE에서 스크롤 바 클릭 시 실제 UI pixel 보다 넓게 잡히는 현상 offset.
+	var SCROLL_CLICK_INCREASED = 2; // IE에서 스크롤 바 클릭 시 실제 UI pixel 보다 넓게 잡히는 현상 offset.
 	
 	/**
 	 * Add autoscroll feature to elements that prevented text selection.
@@ -10833,11 +10856,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    mmax = Math.max;
-	
+	var util = __webpack_require__(6);
 	var Weekday = __webpack_require__(64),
 	    tmpl = __webpack_require__(65);
+	var mmax = Math.max;
 	
 	/**
 	 * @constructor
@@ -10993,6 +11015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var today = datetime.format(new TZDate(), 'YYYYMMDD');
 	    var gridWidth = (100 / range.length);
 	    var grids = viewModel.grids;
+	    var exceedDate = viewModel.exceedDate || {};
 	
 	    this._cacheParentViewModel = viewModel;
 	
@@ -11003,11 +11026,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleBlockGutter: opt.scheduleGutter,
 	        dates: util.map(range, function(date, index) {
 	            var day = date.getDay();
+	            var ymd = datetime.format(date, 'YYYYMMDD');
 	            return {
 	                date: datetime.format(date, 'YYYY-MM-DD'),
 	                month: date.getMonth() + 1,
 	                day: day,
-	                isToday: datetime.format(date, 'YYYYMMDD') === today,
+	                isToday: ymd === today,
+	                ymd: ymd,
+	                hiddenSchedules: exceedDate[ymd] || 0,
 	                width: grids[index].width,
 	                left: grids[index].left
 	            };
@@ -11834,7 +11860,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+	    this.getScheduleDataFunc = getScheduleDataFunc;
 	    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
 	
 	    util.extend(scheduleData, {
@@ -12500,7 +12527,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dragEnd: this._onDragEnd
 	    }, this);
 	
-	    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+	    this.getScheduleDataFunc = getScheduleDataFunc;
+	
 	    scheduleData = getScheduleDataFunc(dragStartEventData.originEvent);
 	
 	    /**
@@ -12721,13 +12750,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	AlldayCreationGuide.prototype._refreshGuideElement = function(scheduleData, defer) {
 	    var guideElement = this.guideElement,
-	        dragStartXIndex = scheduleData.dragStartXIndex < scheduleData.xIndex ? scheduleData.dragStartXIndex : scheduleData.xIndex,
-	        dragEndXIndex = scheduleData.dragStartXIndex < scheduleData.xIndex ? scheduleData.xIndex : scheduleData.dragStartXIndex,
+	        data = scheduleData,
+	        dragStartXIndex = data.dragStartXIndex < data.xIndex ? data.dragStartXIndex : data.xIndex,
+	        dragEndXIndex = data.dragStartXIndex < data.xIndex ? data.xIndex : data.dragStartXIndex,
 	        leftPercent,
 	        widthPercent;
 	
-	    leftPercent = scheduleData.grids[dragStartXIndex].left;
-	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, scheduleData.grids);
+	    leftPercent = data.grids[dragStartXIndex].left;
+	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
 	
 	    function setStyle() {
 	        guideElement.style.display = 'block';
@@ -12908,7 +12938,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    getScheduleDataFunc = this.getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
+	    this.getScheduleDataFunc = getScheduleDataFunc;
 	    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
 	
 	    util.extend(scheduleData, {
@@ -15667,11 +15698,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
 	    Month = __webpack_require__(93),
-	    MonthClick = __webpack_require__(99),
-	    MonthCreation = __webpack_require__(100),
-	    MonthResize = __webpack_require__(105),
-	    MonthMove = __webpack_require__(107),
-	    More = __webpack_require__(110);
+	    MonthClick = __webpack_require__(98),
+	    MonthCreation = __webpack_require__(99),
+	    MonthResize = __webpack_require__(104),
+	    MonthMove = __webpack_require__(106),
+	    More = __webpack_require__(109);
 	
 	function findGridTarget(moreTarget, day) {
 	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
@@ -15811,9 +15842,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6),
-	    mmin = Math.min;
-	
+	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
@@ -15822,6 +15851,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    View = __webpack_require__(37),
 	    VLayout = __webpack_require__(50),
 	    WeekdayInMonth = __webpack_require__(95);
+	var mmin = Math.min;
 	
 	/**
 	 * @constructor
@@ -15863,8 +15893,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        renderMonth: '2018-01',
 	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 	        narrowWeekend: false,
-	        visibleWeeksCount: null
+	        visibleWeeksCount: null,
+	        grid: {
+	            header: {
+	                height: 34
+	            },
+	            footer: {
+	                height: 34
+	            }
+	        }
 	    }, options);
+	
+	    this.options.grid.header = util.extend({
+	        height: 34
+	    }, util.pick(options, 'grid', 'header'));
+	    this.options.grid.footer = util.extend({
+	        height: 34
+	    }, util.pick(options, 'grid', 'footer'));
 	
 	    /**
 	     * horizontal grid information
@@ -15925,10 +15970,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var self = this;
 	    var weekCount = calendar.length;
 	    var heightPercent = 100 / weekCount;
-	    var renderMonth = this.options.renderMonth;
-	    var narrowWeekend = this.options.narrowWeekend;
-	    var startDayOfWeek = this.options.startDayOfWeek;
-	    var visibleWeeksCount = this.options.visibleWeeksCount;
+	    var opt = this.options;
+	    var renderMonth = opt.renderMonth;
+	    var narrowWeekend = opt.narrowWeekend;
+	    var startDayOfWeek = opt.startDayOfWeek;
+	    var visibleWeeksCount = opt.visibleWeeksCount;
+	    var visibleScheduleCount = opt.visibleScheduleCount;
+	    var gridOption = opt.grid;
 	
 	    container.innerHTML = '';
 	    this.children.clear();
@@ -15949,7 +15997,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            renderEndDate: datetime.format(end, 'YYYY-MM-DD'),
 	            narrowWeekend: narrowWeekend,
 	            startDayOfWeek: startDayOfWeek,
-	            visibleWeeksCount: visibleWeeksCount
+	            visibleWeeksCount: visibleWeeksCount,
+	            visibleScheduleCount: visibleScheduleCount,
+	            grid: gridOption
 	        }, weekdayViewContainer);
 	
 	        self.addChild(weekdayView);
@@ -16040,7 +16090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -16050,9 +16100,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%\">\n        <span class=\""
 	    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
-	    + "\">"
-	    + alias4(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"label","hash":{},"data":data}) : helper)))
-	    + "</span>\n    </div>\n";
+	    + "\">\n            "
+	    + ((stack1 = (helpers["monthDayname-tmpl"] || (depth0 && depth0["monthDayname-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthDayname-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n        </span>\n    </div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -16074,13 +16124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    existy = util.isExisty,
-	    mfloor = Math.floor,
-	    mmax = Math.max;
-	
-	var Handlebars = __webpack_require__(8);
-	
+	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    datetime = __webpack_require__(27),
@@ -16088,10 +16132,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    View = __webpack_require__(37),
 	    Weekday = __webpack_require__(64),
 	    baseTmpl = __webpack_require__(96),
-	    scheduleTmpl = __webpack_require__(97),
-	    skipTmpl = __webpack_require__(98);
-	
-	var EVENT_PADDING_TOP = 14;
+	    scheduleTmpl = __webpack_require__(97);
+	var existy = util.isExisty,
+	    mfloor = Math.floor,
+	    mmin = Math.min;
 	
 	/**
 	 * @constructor
@@ -16119,12 +16163,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @override
 	 */
 	WeekdayInMonth.prototype.getViewBound = function() {
-	    var bound = View.prototype.getViewBound.call(this),
-	        selector = config.classname('.weekday-schedules'),
-	        height = domutil.getSize(domutil.find(selector, this.container))[1];
-	
-	    bound.height = height;
-	
+	    var bound = View.prototype.getViewBound.call(this);
 	    return bound;
 	};
 	
@@ -16134,64 +16173,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	WeekdayInMonth.prototype._getRenderLimitIndex = function() {
 	    var opt = this.options;
-	    var containerHeight = this.getViewBound().height - EVENT_PADDING_TOP - 5; // 더보기 버튼이 일정과 겹치지 않기 위한 보정값
-	    var count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
+	    var containerHeight = this.getViewBound().height;
+	    var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
+	    var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
+	    var visibleScheduleCount = opt.visibleScheduleCount || 0;
+	    var count;
 	
-	    return mmax(count - 1, 0); // subtraction for '+n' label block
+	    containerHeight -= (gridHeaderHeight + gridFooterHeight);
+	
+	    count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
+	
+	    if (!visibleScheduleCount) {
+	        visibleScheduleCount = count;
+	    }
+	
+	    return mmin(count, visibleScheduleCount); // subtraction for '+n' label block
 	};
 	
 	/**
-	 * Get handlebars custom helper method for limitation schedule block render count
-	 * features
-	 *
-	 * Calculate count on each date. render +n label only when no cumulated
-	 * count on cache object
-	 * @param {object} exceedDate - object to be used as a cache
-	 * @returns {function} custom helper function
+	 * @override
+	 * @param {object} viewModel - schedules view models
 	 */
-	WeekdayInMonth.prototype._getSkipHelper = function(exceedDate) {
-	    return function() {
-	        var viewModel = this; // eslint-disable-line
-	        var period = datetime.range(
-	            viewModel.getStarts(),
-	            viewModel.getEnds(),
-	            datetime.MILLISECONDS_PER_DAY
-	        );
+	WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
+	    var opt = this.options,
+	        gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
+	        gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
+	        renderLimitIdx = this._getRenderLimitIndex(),
+	        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange);
+	    var baseViewModel;
 	
-	        util.forEach(period, function(date) {
-	            var ymd = datetime.format(date, 'YYYYMMDD');
-	            if (!existy(exceedDate[ymd])) {
-	                exceedDate[ymd] = 0;
-	            }
+	    viewModel = util.extend({
+	        exceedDate: exceedDate
+	    }, viewModel);
 	
-	            exceedDate[ymd] += 1;
-	        });
-	    };
-	};
+	    baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
 	
-	/**
-	 * Get view model for render skipped label
-	 * @param {object} exceedDate - object has count of each dates exceed schedule block
-	 *  count.
-	 * @param {object} baseViewModel - view model of base view
-	 * @returns {object[]} - view model for skipped label
-	 */
-	WeekdayInMonth.prototype._getSkipLabelViewModel = function(exceedDate, baseViewModel) {
-	    var dateRange = util.map(this.getRenderDateRange(), function(date) {
-	        return datetime.format(date, 'YYYYMMDD');
-	    });
-	    var dates = baseViewModel.dates;
+	    baseViewModel = util.extend({
+	        matrices: viewModel.eventsInDateRange,
+	        gridHeaderHeight: gridHeaderHeight,
+	        gridFooterHeight: gridFooterHeight,
+	        renderLimitIdx: renderLimitIdx + 1
+	    }, baseViewModel);
 	
-	    return util.map(exceedDate, function(skipped, ymd) {
-	        var index = util.inArray(ymd, dateRange);
-	
-	        return {
-	            left: dates[index].left,
-	            width: dates[index].width,
-	            skipped: skipped,
-	            ymd: ymd
-	        };
-	    });
+	    return baseViewModel;
 	};
 	
 	/**
@@ -16201,17 +16225,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	WeekdayInMonth.prototype.render = function(viewModel) {
 	    var container = this.container,
 	        baseViewModel = this.getBaseViewModel(viewModel),
-	        renderLimitIdx,
-	        exceedDate = {},
 	        scheduleContainer,
 	        contentStr = '';
 	
 	    if (!this.options.visibleWeeksCount) {
 	        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
 	    }
-	    container.innerHTML = baseTmpl(baseViewModel);
 	
-	    renderLimitIdx = this._getRenderLimitIndex();
+	    container.innerHTML = baseTmpl(baseViewModel);
 	
 	    scheduleContainer = domutil.find(
 	        config.classname('.weekday-schedules'),
@@ -16222,18 +16243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    Handlebars.registerHelper('wdSkipped', this._getSkipHelper(exceedDate));
-	
-	    contentStr += scheduleTmpl(util.extend({
-	        matrices: viewModel.eventsInDateRange,
-	        schedulePaddingTop: EVENT_PADDING_TOP,
-	        renderLimitIdx: renderLimitIdx
-	    }, baseViewModel));
-	
-	    contentStr += skipTmpl(util.extend({
-	        renderLimitIdx: renderLimitIdx,
-	        viewModelForSkip: this._getSkipLabelViewModel(exceedDate, baseViewModel)
-	    }, baseViewModel));
+	    contentStr += scheduleTmpl(baseViewModel);
 	
 	    scheduleContainer.innerHTML = contentStr;
 	
@@ -16244,7 +16254,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	WeekdayInMonth.prototype._beforeDestroy = function() {
-	    Handlebars.unregisterHelper('wdSkipped');
+	};
+	
+	/* eslint max-nested-callbacks: 0 */
+	/**
+	 * Make exceed date information
+	 * @param {number} maxCount - exceed schedule count
+	 * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+	 * @returns {object} exceedDate
+	 */
+	WeekdayInMonth.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
+	    var exceedDate = {};
+	    util.forEach(eventsInDateRange, function(matrix) {
+	        util.forEach(matrix, function(column) {
+	            util.forEach(column, function(viewModel) {
+	                var period;
+	                if (!viewModel) {
+	                    return;
+	                }
+	
+	                period = datetime.range(
+	                    viewModel.getStarts(),
+	                    viewModel.getEnds(),
+	                    datetime.MILLISECONDS_PER_DAY
+	                );
+	
+	                util.forEach(period, function(date) {
+	                    var ymd = datetime.format(date, 'YYYYMMDD');
+	                    if (!existy(exceedDate[ymd])) {
+	                        exceedDate[ymd] = 0;
+	                    }
+	
+	                    exceedDate[ymd] += 1;
+	                });
+	            });
+	        });
+	    });
+	
+	    util.forEach(exceedDate, function(value, ymd) {
+	        if (value > maxCount) {
+	            exceedDate[ymd] = value - maxCount;
+	        } else {
+	            exceedDate[ymd] = 0;
+	        }
+	    });
+	
+	    return exceedDate;
 	};
 	
 	/**
@@ -16277,17 +16332,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
 	    + " "
 	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.date : depth0),"!==",1,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\n    "
+	    + " "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + " "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isOtherMonth : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\"\n         style=\"width:"
+	    + "\"\n        style=\"width:"
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%; left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%;\">\n        "
-	    + ((stack1 = (helpers["monthGridDate-tmpl"] || (depth0 && depth0["monthGridDate-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthGridDate-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "\n    </div>\n";
+	    + "%;\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-grid-header\">\n            "
+	    + ((stack1 = (helpers["monthGridHeader-tmpl"] || (depth0 && depth0["monthGridHeader-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthGridHeader-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "        </div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-grid-footer\">\n            "
+	    + ((stack1 = (helpers["monthGridFooter-tmpl"] || (depth0 && depth0["monthGridFooter-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthGridFooter-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "        </div>\n    </div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -16304,6 +16369,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "extra-date";
+	},"8":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "                <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed\" data-ymd=\""
+	    + alias4(((helper = (helper = helpers.ymd || (depth0 != null ? depth0.ymd : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data}) : helper)))
+	    + "\">"
+	    + ((stack1 = (helpers["monthGridHeaderExceed-tmpl"] || (depth0 && depth0["monthGridHeaderExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"monthGridHeaderExceed-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n";
+	},"10":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "                <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed\" data-ymd=\""
+	    + alias4(((helper = (helper = helpers.ymd || (depth0 != null ? depth0.ymd : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data}) : helper)))
+	    + "\">"
+	    + ((stack1 = (helpers["monthGridFooterExceed-tmpl"] || (depth0 && depth0["monthGridFooterExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"monthGridFooterExceed-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -16341,7 +16426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stack1;
 	
 	  return "\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.top : depth0),"<",((stack1 = (data && data.root)) && stack1.renderLimitIdx),{"name":"fi","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(28, data, 0),"data":data})) != null ? stack1 : "");
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.top : depth0),"<",((stack1 = (data && data.root)) && stack1.renderLimitIdx),{"name":"fi","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"5":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function";
 	
@@ -16358,7 +16443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\n            "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n         style=\""
-	    + alias3((helpers["month-scheduleBlock"] || (depth0 && depth0["month-scheduleBlock"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),((stack1 = (data && data.root)) && stack1.scheduleBlockHeight),14,{"name":"month-scheduleBlock","hash":{},"data":data}))
+	    + alias3((helpers["month-scheduleBlock"] || (depth0 && depth0["month-scheduleBlock"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),((stack1 = (data && data.root)) && stack1.scheduleBlockHeight),((stack1 = (data && data.root)) && stack1.gridHeaderHeight),{"name":"month-scheduleBlock","hash":{},"data":data}))
 	    + ";\n                margin-top:"
 	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleBlockGutter), depth0))
 	    + "px\">\n"
@@ -16475,11 +16560,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\n";
 	},"26":function(container,depth0,helpers,partials,data) {
 	    return "                        color:#333;\n";
-	},"28":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return container.escapeExpression(((helper = (helper = helpers.wdSkipped || (depth0 != null ? depth0.wdSkipped : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"wdSkipped","hash":{},"data":data}) : helper)))
-	    + "\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -16488,31 +16568,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div style=\"position: absolute;\n            left:"
-	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%;\n            width:"
-	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%\"\n     class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-exceed\"\n     data-ymd=\""
-	    + alias4(container.lambda((depth0 != null ? depth0.ymd : depth0), depth0))
-	    + "\">\n    "
-	    + ((stack1 = (helpers["monthMoreSchedules-tmpl"] || (depth0 && depth0["monthMoreSchedules-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.skipped : depth0),{"name":"monthMoreSchedules-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "\n</div>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.viewModelForSkip : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"useData":true});
-
-/***/ },
-/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16610,7 +16665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 100 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16625,8 +16680,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var array = __webpack_require__(47);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var getMousePosDate = __webpack_require__(101);
-	var Guide = __webpack_require__(102);
+	var getMousePosDate = __webpack_require__(100);
+	var Guide = __webpack_require__(101);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -16726,7 +16781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	MonthCreation.prototype._onDragStart = function(dragStartEvent) {
 	    var eventData;
 	
-	    if (!isElementWeekdaySchedule(dragStartEvent.target)) {
+	    if (!isElementWeekdayGrid(dragStartEvent.target)) {
 	        return;
 	    }
 	
@@ -16837,7 +16892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	MonthCreation.prototype._onDblClick = function(e) {
 	    var eventData, range;
 	
-	    if (!isElementWeekdaySchedule(e.target)) {
+	    if (!isElementWeekdayGrid(e.target)) {
 	        return;
 	    }
 	
@@ -16866,7 +16921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var self = this;
 	    var eventData, range;
 	
-	    if (!isElementWeekdaySchedule(e.target)) {
+	    if (!isElementWeekdayGrid(e.target)) {
 	        return;
 	    }
 	
@@ -16920,8 +16975,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {HTMLElement} el - target element
 	 * @returns {boolean}
 	 */
-	function isElementWeekdaySchedule(el) {
-	    return domutil.hasClass(el, config.classname('weekday-schedules'));
+	function isElementWeekdayGrid(el) {
+	    return domutil.closest(el, config.classname('.weekday-grid'))
+	        && !domutil.closest(el, config.classname('.weekday-exceed'));
 	}
 	
 	util.CustomEvents.mixin(MonthCreation);
@@ -16930,7 +16986,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 101 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16938,12 +16994,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    mfloor = Math.floor;
-	
+	var util = __webpack_require__(6);
 	var common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32);
+	var mfloor = Math.floor;
 	
 	/**
 	 * Get high order function that can calc date in mouse point
@@ -17017,7 +17072,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 102 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17025,7 +17080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var MonthGuide = __webpack_require__(103);
+	var MonthGuide = __webpack_require__(102);
 	
 	/**
 	 * @constructor
@@ -17098,7 +17153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 103 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17106,18 +17161,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
-	var util = __webpack_require__(6),
-	    mmax = Math.max,
-	    mmin = Math.min,
-	    mabs = Math.abs,
-	    mfloor = Math.floor;
-	
+	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
 	    dw = __webpack_require__(29),
-	    tmpl = __webpack_require__(104);
+	    tmpl = __webpack_require__(103);
+	var mmax = Math.max,
+	    mmin = Math.min,
+	    mabs = Math.abs,
+	    mfloor = Math.floor;
 	
 	/**
 	 * @constructor
@@ -17238,14 +17292,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (!guide) {
 	        guide = this._createGuideElement();
-	
-	        container = domutil.find(
-	            config.classname('.weekday-schedules'),
-	            weekdayView.container
-	        );
-	
+	        container = weekdayView.container;
 	        container.appendChild(guide);
-	
 	        guideElements[y] = guide;
 	    }
 	
@@ -17548,7 +17596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 104 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -17593,7 +17641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 105 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17606,8 +17654,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    getMousePosData = __webpack_require__(101),
-	    MonthResizeGuide = __webpack_require__(106),
+	    getMousePosData = __webpack_require__(100),
+	    MonthResizeGuide = __webpack_require__(105),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -17806,7 +17854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 106 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17818,7 +17866,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
-	    MonthGuide = __webpack_require__(103);
+	    MonthGuide = __webpack_require__(102);
 	
 	/**
 	 * @constructor
@@ -17929,7 +17977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 107 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17942,8 +17990,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
-	    getMousePosData = __webpack_require__(101),
-	    MonthMoveGuide = __webpack_require__(108),
+	    getMousePosData = __webpack_require__(100),
+	    MonthMoveGuide = __webpack_require__(107),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -18207,7 +18255,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 108 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18221,7 +18269,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32),
 	    FloatingLayer = __webpack_require__(86),
-	    tmpl = __webpack_require__(109),
+	    tmpl = __webpack_require__(108),
 	    Schedule = __webpack_require__(41);
 	
 	/**
@@ -18428,7 +18476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 109 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18483,7 +18531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 110 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18500,7 +18548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    View = __webpack_require__(37),
 	    FloatingLayer = __webpack_require__(86),
 	    common = __webpack_require__(30),
-	    tmpl = __webpack_require__(111);
+	    tmpl = __webpack_require__(110);
 	
 	/**
 	 * @constructor
@@ -18575,7 +18623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Get new position for more layer by +n element itself
-	 * @param {HTMLElement} target - +n element
+	 * @param {HTMLElement} target - parent grid-line element of +n element
 	 * @param {HTMLElement} weekItem - weekItem container element
 	 * @returns {number[]} new position of more layer
 	 */
@@ -18610,7 +18658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} viewModel - view model from factory/monthView
 	 */
 	More.prototype.render = function(viewModel) {
-	    var target = viewModel.target;
+	    var target = domutil.closest(viewModel.target, config.classname('.weekday-grid-line'));
 	    var weekItem = domutil.closest(target, config.classname('.month-week-item'));
 	    var layer = this.layer;
 	    var self = this;
@@ -18668,7 +18716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 111 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18784,4 +18832,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-//# sourceMappingURL=tui-full-calendar.js.map
+//# sourceMappingURL=tui-calendar.js.map
