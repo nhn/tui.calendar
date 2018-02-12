@@ -59,6 +59,3 @@ build/
 
 # performance tester fixtures
 perf/**/*.json
-
-
-package-lock.json
