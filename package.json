@@ -1,10 +1,14 @@
 {
   "name": "tui-calendar",
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": "dist/tui-calendar.js",
   "license:": "MIT",
   "description": "TOAST UI Calendar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nhnent/tui.calendar.git"
+  },
   "keywords": [
     "nhnent",
     "tui",
@@ -56,7 +60,8 @@
     "tui-jsdoc-template": "^1.2.2",
     "underscore": "^1.8.3",
     "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.3"
+    "webpack-dev-server": "1.16.3",
+    "tui-release-notes": "git+https://github.com/nhnent/tui.release-notes.git#v1.0.0"
   },
   "scripts": {
     "test": "karma start --no-single-run",
@@ -64,7 +69,8 @@
     "bundle": "webpack && NODE_ENV=production webpack -p",
     "serve": "webpack-dev-server --progress --inline --hot",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
-    "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc"
+    "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc",
+    "release-note": "tuie"
   },
   "dependencies": {
     "tui-code-snippet": "^1.2.9"
