@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Calendar DEMO</title>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css" />
+<link rel="stylesheet" type="text/css" href="./css/default.css"></link>
+</head>
+<body>
+<div id="wrap">
+    <div class="control clearfix">
+        <div class="inline-block">
+            <button data-action="move-prev">Prev</button>
+            <button data-action="move-today">Today</button>
+            <button data-action="move-next">Next</button>
+        </div>
+        <div class="inline-block calendar-options">
+            <label>
+                <input type="checkbox" data-action="toggle-narrow-weekend"><span>Narrow Weekend</span>
+            </label>
+            <label>
+                <input type="checkbox" data-action="toggle-start-day-1"><span>Start from Monday</span>
+            </label>
+            <label>
+                <input type="checkbox" data-action="toggle-workweek"><span>Work Week</span>
+            </label>
+        </div>
+        <div class="float-right inline-block">
+            <button data-action="toggle-daily">Daily</button>
+            <button data-action="toggle-weekly">Weekly</button>
+            <button data-action="toggle-monthly">Monthly</button>
+            <button data-action="toggle-weeks2">2 Weeks</button>
+            <button data-action="toggle-weeks3">3 Weeks</button>
+        </div>
+    </div>
+    <div>
+        <span id="renderRange" class="render-range"></span>
+    </div>
+    <div id="calendar"></div>
+</div>
+<script type="text/javascript" src="https://cdn.rawgit.com/nhnent/tui.code-snippet/v1.2.9/dist/tui-code-snippet.js"></script>
+<script src="../dist/tui-calendar.js"></script>
+<script src="./js/default.js"></script>
+</body>
+</html>
