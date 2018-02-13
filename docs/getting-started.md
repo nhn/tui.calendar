@@ -25,18 +25,26 @@ Place a `<div></div>` where you want TOAST UI Calendar rendered.
 Initialize the Calendar class with given element to make an Calendar.
 
 ```javascript
-var Calendar = require('tui-calendar');
+var Calendar = require('tui-calendar'); /* CommonJS */
+```
 
+```javascript
+import Calendar from 'tui-calendar'; /* ES6 */
+```
+
+Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options) to set configuration.
+
+```javascript
 var calendar = new Calendar('#calendar', {
-    defaultView: 'week',
-    taskView: true,
-    template: {
-        monthGridHeader: function(model) {
-            var date = new Date(model.date);
-            var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-            return template;
-        }
+  defaultView: 'month',
+  taskView: true,
+  template: {
+    monthGridHeader: function(model) {
+      var date = new Date(model.date);
+      var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+      return template;
     }
+  }
 });
 ```
 
@@ -46,7 +54,7 @@ var calendar = new Calendar('#calendar', {
 
 Create schedules. Update a schedule, Delete a schedule.
 
-Find out `Schedule` object in [here](https://nhnent.github.io/tui.calendar/api/latest/global.html#Schedule)
+Find out `Schedule` object in [here](https://nhnent.github.io/tui.calendar/latest/global.html#Schedule)
 
 #### Create schedules
 
@@ -229,7 +237,7 @@ cal.toggleView(cal.viewName, true);
 
 ### Calendar options
 
-Find out more options in [here](https://nhnent.github.io/tui.calendar/api/latest/global.html#Options)
+Find out more options in [here](https://nhnent.github.io/tui.calendar/latest/global.html#Options)
 
 ```js
 var calendar = new Calendar('#calendar', {

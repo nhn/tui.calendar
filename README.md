@@ -25,6 +25,7 @@
   * [Pull Request Steps](#pull-request)
 * [Documents](#-documents)
 * [Contributing](#-contributing)
+* [Dependency](#-dependency)
 * [License](#-license)
 
 ## 🌏 Browser Support
@@ -44,8 +45,6 @@
 ## 🐾 Examples
 
 * [Basic](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html) : Example of using default options.
-
-More examples can be found on the left sidebar of each example page, and have fun with it.
 
 ## 💾 Install
 
@@ -94,19 +93,35 @@ Place a `<div></div>` where you want TOAST UI Calendar rendered.
 
 ### JavaScript
 
-```javascript
-var Calendar = require('tui-calendar');
+#### Using namespace in browser environment
 
-var cal = new Calendar('#calendar', {
-        defaultView: 'month',
-        taskView: true,
-        template: {
-          monthGridHeader: function(model) {
-                var date = new Date(model.date);
-                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-                return template;
-            }
-        }
+```javascript
+var Calendar = tui.Calendar;
+```
+
+#### Using module format in node environment
+
+```javascript
+var Calendar = require('tui-calendar'); /* CommonJS */
+```
+
+```javascript
+import Calendar from 'tui-calendar'; /* ES6 */
+```
+
+Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options) to set configuration.
+
+```javascript
+var calendar = new Calendar('#calendar', {
+  defaultView: 'month',
+  taskView: true,
+  template: {
+    monthGridHeader: function(model) {
+      var date = new Date(model.date);
+      var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+      return template;
+    }
+  }
 });
 ```
 
