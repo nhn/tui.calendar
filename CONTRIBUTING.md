@@ -48,14 +48,13 @@ Unsure where to begin contributing to TOAST UI? You can start by looking through
 ### Development environment
 - Prepare your machine node and it's packages installed.
 - Checkout our repository
-- Install dependencies by `npm install && bower install`
+- Install dependencies by `npm install`
 - Start webpack-dev-server by `npm run serve`
 
 ### Make changes
 #### Checkout a branch
-- **develop**: PR base branch. merge features, updates for next minor or major release
-- **master**: bug fix or document update for next patch release. develop branch will rebase every time master branch update. so keep code change to a minimum.
-- **production**: lastest release branch with distribution files. never make a PR on this
+* **master**: PR base branch. merge features, updates for next minor or major release.
+lastest release branch with distribution files.
 - **gh-pages**: API docs, examples and demo
 
 #### Check Code Style
