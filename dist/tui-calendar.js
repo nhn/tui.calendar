@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.0 | Mon Feb 12 2018
+ * @version 0.6.1 | Tue Feb 13 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -189,12 +189,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return (a == b) ? options.fn(this) : options.inverse(this);  // eslint-disable-line
 	            case '===':
 	                return (a === b) ? options.fn(this) : options.inverse(this);
+	            case '!==':
+	                return (a !== b) ? options.fn(this) : options.inverse(this);
 	            case '<':
 	                return (a < b) ? options.fn(this) : options.inverse(this);
 	            case '||':
 	                return (a || b) ? options.fn(this) : options.inverse(this);
 	            default:
-	                break;
+	                throw new Error('Not match operation');
 	        }
 	    },
 	
@@ -251,7 +253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
-	        var top = getElSize((viewModel.top - 1) * blockHeight + paddingTop, 'px', 'top');
+	        var top = getElSize(((viewModel.top - 1) * blockHeight) + paddingTop, 'px', 'top');
 	        var left = getElSize(grids[viewModel.left].left, '%', 'left');
 	        var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
 	        var height = getElSize(viewModel.height, 'px', 'height');
@@ -320,7 +322,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'CSS_PREFIX': function() {
 	        return config.cssPrefix;
 	    },
-	
 	
 	    /**********
 	     * Default schedule template
@@ -1629,6 +1630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TZDate = __webpack_require__(28).Date,
 	    dw = __webpack_require__(29);
 	var util = __webpack_require__(6);
+	/* eslint-disable no-useless-escape */
 	var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 	var datetime, tokenFunc;
 	
@@ -1816,9 +1818,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (_d1 < _d2) {
 	            return -1;
-	        } else if (_d1 > _d2) {
+	        }
+	        if (_d1 > _d2) {
 	            return 1;
 	        }
+	
 	        return 0;
 	    },
 	
@@ -1839,6 +1843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    isSameDate: function(d1, d2) {
 	        var sameMonth = datetime.isSameMonth(d1, d2);
+	
 	        return sameMonth && (d1.getDate() === d2.getDate());
 	    },
 	
@@ -1851,6 +1856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (d instanceof TZDate) {
 	            return !window.isNaN(d.getTime());
 	        }
+	
 	        return false;
 	    },
 	
@@ -2109,7 +2115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek, workweek
-	     * 
+	     *
 	     * @param {number} days - day length of week
 	     * @param {boolean} narrowWeekend - narrow weekend
 	     * @param {number} startDayOfWeek - start day of week
@@ -2145,6 +2151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	
 	            accumulatedWidth += width;
+	
 	            return model;
 	        });
 	    },
@@ -2199,10 +2206,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'setSeconds'
 	];
 	
+	/**
+	 * Create a Date instance with multiple arguments
+	 * @param {Array} args - arguments
+	 * @returns {Date}
+	 */
 	function createDateWithMultipleArgs(args) {
 	    return new Date(Date.UTC.apply(null, args) + SYSTEM_OFFSET_MS);
 	}
 	
+	/**
+	 * Create a Date instance with argument
+	 * @param {Date|TZDate|string|number} arg - arguments
+	 * @returns {Date}
+	 */
 	function createDateWithSingleArg(arg) {
 	    var time;
 	
@@ -2241,7 +2258,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._date = date;
 	}
 	
-	
 	TZDate.prototype.setTime = function(time) {
 	    return this._date.setTime(time - customOffsetMs + SYSTEM_OFFSET_MS);
 	};
@@ -2263,6 +2279,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	setterMethods.forEach(function(methodName) {
 	    TZDate.prototype[methodName] = function() {
 	        this._date[methodName].apply(this._date, arguments);
+	
 	        return this.getTime();
 	    };
 	});
@@ -2297,6 +2314,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -2346,6 +2364,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DW.prototype.addDate = function(day) {
 	    this.d.setDate(this.d.getDate() + day);
+	
 	    return this;
 	};
 	
@@ -2364,6 +2383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
 	        this.d.setMonth(prevMonth + m, 1);
 	    }
+	
 	    return this;
 	};
 	
@@ -2377,6 +2397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DW.prototype.setHours = function(h, m, s, ms) {
 	    this.d.setHours(h, m, s, ms);
+	
 	    return this;
 	};
 	
@@ -2388,6 +2409,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DW.prototype.isBetween = function(d1, d2) {
 	    var safe = this.safe;
+	
 	    return safe(d1) <= this.d && this.d <= safe(d2);
 	};
 	
@@ -2533,6 +2555,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    limit: function(value, minArr, maxArr) {
 	        var v = Math.max.apply(null, [value].concat(minArr));
 	        v = Math.min.apply(null, [v].concat(maxArr));
+	
 	        return v;
 	    },
 	
@@ -2664,7 +2687,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (cssClassSelector.test(selector)) {
 	            return domutil.hasClass(el, selector.replace('.', ''));
-	        } else if (idSelector.test(selector)) {
+	        }
+	        if (idSelector.test(selector)) {
 	            return el.id === selector.replace('#', '');
 	        }
 	
@@ -2742,7 +2766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Find parent element recursively.
 	     * @param {HTMLElement} el - base element to start find.
 	     * @param {string} selector - selector string for find
-	     * @returns {HTMLElement} - element finded or undefined.
+	     * @returns {HTMLElement} - element finded or null.
 	     */
 	    closest: function(el, selector) {
 	        var parent = el.parentNode;
@@ -2758,6 +2782,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            parent = parent.parentNode;
 	        }
+	
+	        return null;
 	    },
 	
 	    /**
@@ -2789,6 +2815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                ret += domutil.text(el[i]);
 	            }
 	        }
+	
 	        return ret;
 	    },
 	
@@ -2801,6 +2828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    setData: function(el, key, data) {
 	        if ('dataset' in el) {
 	            el.dataset[key] = data;
+	
 	            return;
 	        }
 	
@@ -2932,6 +2960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!defaultView || !defaultView.getComputedStyle) {
 	            return {
 	                getPropertyValue: function(prop) {
+	                    /* eslint-disable no-useless-escape */
 	                    var re = /(\-([a-z]){1})/g;
 	                    if (prop === 'float') {
 	                        prop = 'styleFloat';
@@ -3080,6 +3109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return props[i];
 	            }
 	        }
+	
 	        return false;
 	    },
 	
@@ -3090,7 +3120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    getFormData: function(formElement) {
 	        var groupedByName = new Collection(function() {
-	                return this.length;    // eslint-disable-line
+	                return this.length;
 	            }),
 	            noDisabledFilter = function(el) {
 	                return !el.disabled;
@@ -3105,7 +3135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        );
 	
 	        groupedByName = groupedByName.groupBy(function(el) {
-	            return el && el.getAttribute('name') || '_other';
+	            return (el && el.getAttribute('name')) || '_other';
 	        });
 	
 	        util.forEach(groupedByName, function(elements, name) {
@@ -3170,7 +3200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	]);
 	var supportSelectStart = 'onselectstart' in document;
 	var prevSelectStyle = '';
-	/*eslint-enable*/
+	/* eslint-enable*/
 	
 	/**
 	 * Disable browser's text selection behaviors.
@@ -3389,6 +3419,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // throw exception when deleting host object's property in below IE8
 	        if (util.browser.msie && util.browser.version < 9) {
 	            obj[eventKey] = null;
+	
 	            return;
 	        }
 	
@@ -3409,6 +3440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            util.forEachOwnProperties(types, function(handler, type) {
 	                domevent.once(obj, type, handler, fn);
 	            });
+	
 	            return;
 	        }
 	
@@ -3612,8 +3644,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            util.forEach(e, function(value, propName) {
 	                evt[propName] = value;
 	            }, this);
-	            evt.button = {0: 1, 1: 4, 2: 2}[evt.button] || evt.button;
+	            evt.button = {0: 1,
+	                1: 4,
+	                2: 2}[evt.button] || evt.button;
 	        }
+	
 	        return evt;
 	    },
 	
@@ -3644,11 +3679,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        button = String(mouseEvent.button);
 	        if (primary.indexOf(button) > -1) {
 	            return 0;
-	        } else if (secondary.indexOf(button) > -1) {
+	        }
+	        if (secondary.indexOf(button) > -1) {
 	            return 2;
-	        } else if (~wheel.indexOf(button)) {
+	        }
+	        if (~wheel.indexOf(button)) {
 	            return 1;
 	        }
+	
+	        return -1;
 	    }
 	};
 	
@@ -3883,8 +3922,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.each(function(item) {
 	            if (id(item) === true) {
 	                has = true;
-	                return false;
+	
+	                return false; // returning false can stop this loop
 	            }
+	
+	            return true;
 	        });
 	    } else {
 	        id = isObj(id) ? this.getItemID(id) : id;
@@ -4039,11 +4081,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.each(function(item) {
 	        if (!useFilter) {
 	            result = item;
-	            return false;
-	        } else if (filter(item)) {
-	            result = item;
-	            return false;
+	
+	            return false; // returning false can stop this loop
 	        }
+	        if (filter(item)) {
+	            result = item;
+	
+	            return false; // returning false can stop this loop
+	        }
+	
+	        return true;
 	    }, this);
 	
 	    return result;
@@ -4152,6 +4199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6),
 	    Handlebars = __webpack_require__(7);
 	var dw = __webpack_require__(29),
@@ -4263,9 +4311,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.on('beforeCreateSchedule', function(event) {
 	 *     var guide = event.guide;
 	 *     // use guideEl$'s left, top to locate your schedule creation popup
-	 *     var guideEl$ = guide.guideElement ? 
+	 *     var guideEl$ = guide.guideElement ?
 	 *          guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
-	 * 
+	 *
 	 *     // after that call this to hide the creation guide
 	 *     guide.clearGuideElement();
 	 * });
@@ -4336,6 +4384,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
 	                return 'allday';
 	            }
+	
 	            return model.category;
 	        },
 	        controller: null,
@@ -4602,7 +4651,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Update the schedule
-	 * @param {string} id - ID of schedule to update 
+	 * @param {string} id - ID of schedule to update
 	 * @param {string} calendarId - calendarId of schedule to update
 	 * @param {Schedule} scheduleData - schedule data to update
 	 * @example
@@ -4823,6 +4872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Calendar.prototype.refreshChildView = function(viewName) {
 	    if (!viewName) {
 	        this.render();
+	
 	        return;
 	    }
 	
@@ -5102,7 +5152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @example
 	     * calendar.on('clickSchedule', function(event) {
 	     *     var schedule = event.schedule;
-	     * 
+	     *
 	     *     if (lastClickSchedule) {
 	     *         calendar.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
 	     *             isFocused: false
@@ -5165,7 +5215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *     var guide = event.guide;
 	     *     var triggerEventName = event.triggerEventName;
 	     *     var schedule;
-	     * 
+	     *
 	     *     if (triggerEventName === 'click') {
 	     *         // open writing simple schedule popup
 	     *         schedule = {...};
@@ -5173,7 +5223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *         // open writing detail schedule popup
 	     *         schedule = {...};
 	     *     }
-	     * 
+	     *
 	     *     calendar.createSchedules([schedule]);
 	     * });
 	     */
@@ -5272,27 +5322,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * // daily view
 	 * calendar.toggleView('day', true);
-	 * 
+	 *
 	 * // weekly view
 	 * calendar.toggleView('week', true);
-	 * 
+	 *
 	 * // monthly view(default 6 weeks view)
 	 * calendar.options.month.visibleWeeksCount = 6; // or null
 	 * calendar.toggleView('month', true);
-	 * 
+	 *
 	 * // 2 weeks monthly view
 	 * calendar.options.month.visibleWeeksCount = 2;
 	 * calendar.toggleView('month', true);
-	 * 
+	 *
 	 * // 3 weeks monthly view
 	 * calendar.options.month.visibleWeeksCount = 3;
 	 * calendar.toggleView('month', true);
-	 * 
+	 *
 	 * // narrow weekend
 	 * calendar.options.month.narrowWeekend = true;
 	 * calendar.options.week.narrowWeekend = true;
 	 * calendar.toggleView(calendar.viewName, true);
-	 * 
+	 *
 	 * // change start day of week(from monday)
 	 * calendar.options.month.startDayOfWeek = 1;
 	 * calendar.options.week.startDayOfWeek = 1;
@@ -5313,7 +5363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this._setViewName(newViewName);
 	
-	    //convert day to week
+	    // convert day to week
 	    if (viewName === 'day') {
 	        viewName = 'week';
 	    }
@@ -5362,7 +5412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * // There is no milestone, task, so hide those view panel
 	 * calendar.toggleTaskView(false);
-	 * 
+	 *
 	 * // There are some milestone, task, so show those view panel.
 	 * calendar.toggleTaskView(true);
 	 */
@@ -5456,7 +5506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.children = new Collection(function(childView) {
 	        return childView.viewName;
 	    });
-	    /*eslint-enable*/
+	    /* eslint-enable*/
 	}
 	
 	util.inherit(Layout, View);
@@ -5553,7 +5603,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.children = new Collection(function(view) {
 	        return util.stamp(view);
 	    });
-	    /*eslint-enable*/
+	    /* eslint-enable*/
 	
 	    /**
 	     * parent view instance.
@@ -5676,7 +5726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this._destroy();
 	};
-	/*eslint-enable*/
+	/* eslint-enable*/
 	
 	/**
 	 * Calculate view's container element bound.
@@ -5694,7 +5744,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        height: size[1]
 	    };
 	};
-	
 	
 	/**
 	 * Return view default CSS prefix
@@ -5846,6 +5895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (opt.exclude && opt.exclude(target)) {
 	        this._cancelled = true;
+	
 	        return;
 	    }
 	
@@ -5866,6 +5916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (this._cancelled) {
 	        this._clearData();
+	
 	        return;
 	    }
 	
@@ -5875,6 +5926,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (this._distance < distance) {
 	        this._distance += 1;
+	
 	        return;
 	    }
 	    this._isMoved = true;
@@ -5892,6 +5944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!this.invoke('dragStart', this._dragStartEventData)) {
 	            this._toggleDragEvent(false);
 	            this._clearData();
+	
 	            return;
 	        }
 	    }
@@ -6090,6 +6143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (viewModel.model.isAllDay) {
 	            return 'allday';
 	        }
+	
 	        return 'time';
 	    };
 	
@@ -6145,7 +6199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {Calendar~Schedule[]}
 	     */
 	    if (!this.invoke('beforeCreateSchedule', scheduleData)) {
-	        return;
+	        return null;
 	    }
 	
 	    schedule = this.addSchedule(Schedule.create(options));
@@ -6731,6 +6785,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        (start <= ownStarts && end >= ownEnds)) {
 	        return true;
 	    }
+	
 	    return false;
 	};
 	
@@ -6912,6 +6967,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            common.forEachOwnProperties(methodName, function(_flag, _name) {
 	                wrap(target, _name, _flag);
 	            });
+	
 	            return;
 	        }
 	
@@ -6930,6 +6986,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var args = Array.prototype.slice.call(arguments);
 	                    var result = _fn.apply(this, args); // eslint-disable-line
 	                    this._dirty = flagToSet; // eslint-disable-line
+	
 	                    return result;
 	                };
 	            };
@@ -6997,6 +7054,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            util.forEach(fields, function(fieldName) {
 	                valid = isValid(instance[fieldName]);
+	
 	                return valid;
 	            });
 	
@@ -7055,8 +7113,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            if (validator) {
 	                valid = validator(self, values);
-	                return valid;
+	
+	                return valid; // returning false can stop this loop
 	            }
+	
+	            return true;
 	        });
 	
 	        return valid;
@@ -7216,7 +7277,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return new ScheduleViewModel(schedule);
 	};
 	
-	
 	/**********
 	 * prototype props
 	 **********/
@@ -7290,6 +7350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        (start <= ownStarts && end >= ownEnds)) {
 	        return true;
 	    }
+	
 	    return false;
 	};
 	
@@ -7306,6 +7367,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var forEachArr = util.forEachArray,
 	    aps = Array.prototype.slice;
@@ -7346,12 +7408,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
 	                            // Collision Group에 이 일정을 포함시킨다.
 	                            group.push(util.stamp(schedule.valueOf()));
-	                            return false;
+	
+	                            return false; // returning false can stop this loop
 	                        }
+	
+	                        return true;
 	                    });
 	
-	                    return false;
+	                    return false; // returning false can stop this loop
 	                }
+	
+	                return true;
 	            });
 	
 	            if (!foundPrevCollisionSchedule) {
@@ -7524,7 +7591,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (viewModelColl.constructor === Collection) {
 	            viewModelColl.each(limit);
-	            return;
+	
+	            return null;
 	        }
 	
 	        return limit(viewModelColl);
@@ -7894,6 +7962,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (a !== b) {
 	        return a ? -1 : 1;
 	    }
+	
 	    return 0;
 	}
 	
@@ -7909,6 +7978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (a !== b) {
 	        return a ? 1 : -1;
 	    }
+	
 	    return 0;
 	}
 	
@@ -7956,7 +8026,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (a > b) {
 	        return 1;
-	    } else if (a < b) {
+	    }
+	    if (a < b) {
 	        return -1;
 	    }
 	
@@ -7977,7 +8048,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (a > b) {
 	        return -1;
-	    } else if (a < b) {
+	    }
+	    if (a < b) {
 	        return 1;
 	    }
 	
@@ -7998,7 +8070,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (a > b) {
 	        return 1;
-	    } else if (a < b) {
+	    }
+	    if (a < b) {
 	        return -1;
 	    }
 	
@@ -8019,7 +8092,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (a > b) {
 	        return -1;
-	    } else if (a < b) {
+	    }
+	    if (a < b) {
 	        return 1;
 	    }
 	
@@ -8060,13 +8134,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (durationA < durationB) {
 	        return 1;
-	    } else if (durationA > durationB) {
+	    }
+	    if (durationA > durationB) {
 	        return -1;
 	    }
 	
 	    return util.stamp(modelA) - util.stamp(modelB);
 	}
-	
 	
 	module.exports = {
 	    bsearch: bsearch,
@@ -8102,6 +8176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var array = __webpack_require__(47),
 	    datetime = __webpack_require__(27),
@@ -8176,6 +8251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (topIndexesInDate.length > 0) {
 	            return mmax.apply(null, topIndexesInDate);
 	        }
+	
 	        return 0;
 	    },
 	
@@ -8201,10 +8277,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            maxIndexInYMD[scheduleYMD] = timeViewModel.top =
 	                (alldayMaxTopInYMD + 1);
-	
-	            if (timeViewModel.top > alldayMaxTopInYMD) {
-	                return;
-	            }
 	        });
 	    },
 	
@@ -8330,18 +8402,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                     dayNameView.container.offsetHeight) + 'px';
 	
 	    panels = [
-	        {height: 100, minHeight: 100},
+	        {height: 100,
+	            minHeight: 100},
 	        {isSplitter: true},
 	        {autoHeight: true}
 	    ];
 	
 	    if (options.taskView) {
 	        panels = [
-	            {minHeight: 20, maxHeight: 80},
+	            {minHeight: 20,
+	                maxHeight: 80},
 	            {isSplitter: true},
-	            {minHeight: 40, maxHeight: 120},
+	            {minHeight: 40,
+	                maxHeight: 120},
 	            {isSplitter: true},
-	            {minHeight: 20, maxHeight: 80},
+	            {minHeight: 20,
+	                maxHeight: 80},
 	            {isSplitter: true},
 	            {autoHeight: true}
 	        ];
@@ -8471,6 +8547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
@@ -8880,6 +8957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
@@ -9009,6 +9087,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (options.isSplitter) {
 	        domutil.addClass(container, config.classname('splitter'));
+	
 	        return;
 	    }
 	
@@ -9059,6 +9138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (dateString.length === 10) {
 	        return datetime.parse(dateString);
 	    }
+	
 	    return new TZDate(dateString);
 	}
 	
@@ -9979,7 +10059,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this._parseDateGroup(this.options.ymd);
 	};
 	
-	
 	/**
 	 * @override
 	 * @param {string} ymd The date of schedules. YYYYMMDD format
@@ -10258,30 +10337,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (pos.y >= edge.top && pos.y <= edge.bottom &&
 	        pos.x >= edge.left && pos.x <= edge.right) {
 	        this._direction = AutoScroll.DIRECTION.INSIDE;
+	
 	        return;
 	    }
 	
 	    if (pos.y < edge.top) {
 	        this._direction = AutoScroll.DIRECTION.TOP;
 	        this._offset = edge.top - pos.y;
+	
 	        return;
 	    }
 	
 	    if (pos.y > edge.bottom) {
 	        this._direction = AutoScroll.DIRECTION.BOTTOM;
 	        this._offset = pos.y - edge.bottom;
+	
 	        return;
 	    }
 	
 	    if (pos.x < edge.left) {
 	        this._direction = AutoScroll.DIRECTION.LEFT;
 	        this._offset = edge.left - pos.x;
+	
 	        return;
 	    }
 	
 	    this._direction = AutoScroll.DIRECTION.RIGHT;
 	    this._offset = pos.x - edge.right;
-	    return;
 	};
 	
 	/**
@@ -10450,6 +10532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._add = function(point) {
 	    this.x += point.x;
 	    this.y += point.y;
+	
 	    return this;
 	};
 	
@@ -10470,6 +10553,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._subtract = function(point) {
 	    this.x -= point.x;
 	    this.y -= point.y;
+	
 	    return this;
 	};
 	
@@ -10490,6 +10574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._divideBy = function(num) {
 	    this.x /= num;
 	    this.y /= num;
+	
 	    return this;
 	};
 	
@@ -10510,6 +10595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._multiplyBy = function(num) {
 	    this.x *= num;
 	    this.y *= num;
+	
 	    return this;
 	};
 	
@@ -10528,6 +10614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._round = function() {
 	    this.x = Math.round(this.x);
 	    this.y = Math.round(this.y);
+	
 	    return this;
 	};
 	
@@ -10546,6 +10633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._reverse = function() {
 	    this.x *= -1;
 	    this.y *= -1;
+	
 	    return this;
 	};
 	
@@ -10564,6 +10652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._floor = function() {
 	    this.x = Math.floor(this.x);
 	    this.y = Math.floor(this.y);
+	
 	    return this;
 	};
 	
@@ -10582,6 +10671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Point.prototype._ceil = function() {
 	    this.x = Math.ceil(this.x);
 	    this.y = Math.ceil(this.y);
+	
 	    return this;
 	};
 	
@@ -10618,8 +10708,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    x = this.x;
 	    y = this.y;
 	
-	    this.x = x * cos - y * sin;
-	    this.y = x * sin + y * cos;
+	    this.x = (x * cos) - (y * sin);
+	    this.y = (x * sin) + (y * cos);
 	
 	    this._add(center);
 	
@@ -10640,7 +10730,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    x = point.x - this.x;
 	    y = point.y - this.y;
 	
-	    return Math.sqrt(x * x + y * y);
+	    return Math.sqrt((x * x) + (y * y));
 	};
 	
 	/**
@@ -10650,6 +10740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Point.prototype.equals = function(point) {
 	    point = Point.n(point);
+	
 	    return point.x === this.x && point.y === this.y;
 	};
 	
@@ -10856,6 +10947,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var Weekday = __webpack_require__(64),
 	    tmpl = __webpack_require__(65);
@@ -10924,7 +11016,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    );
 	};
 	
-	
 	module.exports = WeekdayInWeek;
 
 
@@ -10937,6 +11028,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
@@ -11027,6 +11119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dates: util.map(range, function(date, index) {
 	            var day = date.getDay();
 	            var ymd = datetime.format(date, 'YYYYMMDD');
+	
 	            return {
 	                date: datetime.format(date, 'YYYY-MM-DD'),
 	                month: date.getMonth() + 1,
@@ -11287,7 +11380,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        i += 1;
 	    });
 	
-	    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(schedules, function(coll) {
+	    height = LIST_PADDING_TOP;
+	    height += Math.max.apply(null, util.map(schedules, function(coll) {
 	        return coll.length;
 	    })) * ITEM_HEIGHT;
 	
@@ -11484,6 +11578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        util.forEach(g, function(coll) {
 	            subcount += (coll.length || 0);
 	        });
+	
 	        return subcount;
 	    })) * ITEM_HEIGHT;
 	
@@ -11736,6 +11831,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var common = __webpack_require__(30);
@@ -11888,7 +11984,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.fire('alldayMoveDragstart', scheduleData);
 	};
 	
-	
 	/**
 	 * Drag event handler method.
 	 * @emits AlldayMove#alldayMoveDrag
@@ -12018,6 +12113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
 	var common = __webpack_require__(30);
@@ -12083,6 +12179,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	/**
+	 * Get the left index
+	 * @param {Array} grids - grid size information
+	 * @param {number} left - left position(percent)
+	 * @returns {number} grid left index
+	 */
 	function getX(grids, left) {
 	    var i = 0;
 	    var length = grids.length;
@@ -12110,6 +12212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
@@ -12230,7 +12333,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	};
-	
 	
 	/**
 	 * Refresh guide element.
@@ -12370,6 +12472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
@@ -12668,6 +12771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var reqAnimFrame = __webpack_require__(56);
@@ -12759,6 +12863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    leftPercent = data.grids[dragStartXIndex].left;
 	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
 	
+	    /** eslint-disable require-jsdoc */
 	    function setStyle() {
 	        guideElement.style.display = 'block';
 	        guideElement.style.left = leftPercent + '%';
@@ -12819,6 +12924,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
@@ -13093,13 +13199,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
 	var reqAnimFrame = __webpack_require__(56);
 	var TZDate = __webpack_require__(28).Date;
-	
 	
 	/**
 	 * @constructor
@@ -13793,7 +13899,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this._requestOnClick = false;
 	};
-	
 	
 	timeCore.mixin(TimeCreation);
 	util.CustomEvents.mixin(TimeCreation);
@@ -14782,6 +14887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
@@ -15005,6 +15111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
@@ -15313,6 +15420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
@@ -15416,7 +15524,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        guideElement.style.display = 'block';
 	    });
 	};
-	
 	
 	/**
 	 * TimeMove#timeMoveDragstart event handler
@@ -15704,6 +15811,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    MonthMove = __webpack_require__(106),
 	    More = __webpack_require__(109);
 	
+	/**
+	 * Find a grid element for more element
+	 * @param {HTMLElement} moreTarget - more element
+	 * @param {number} day - day number
+	 * @returns {HTMLElement}
+	 */
 	function findGridTarget(moreTarget, day) {
 	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
 	    var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
@@ -15711,6 +15824,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return weekGridEls[day];
 	}
 	
+	/**
+	 * Get the view model for more layer
+	 * @param {TZDate} date - date has more schedules
+	 * @param {HTMLElement} target - target element
+	 * @param {Collection} schedules - schedule collection
+	 * @returns {object} view model
+	 */
 	function getViewModelForMoreLayer(date, target, schedules) {
 	    schedules.each(function(schedule) {
 	        var model = schedule.model;
@@ -16124,6 +16244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
@@ -16164,6 +16285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	WeekdayInMonth.prototype.getViewBound = function() {
 	    var bound = View.prototype.getViewBound.call(this);
+	
 	    return bound;
 	};
 	
@@ -16673,6 +16795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	
 	var config = __webpack_require__(34);
@@ -16994,6 +17117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
@@ -17017,6 +17141,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        size = domutil.getSize(relativeContainer),
 	        grids = monthView.grids;
 	
+	    /**
+	     * Get the left index
+	     * @param {number} left - left position(percent)
+	     * @returns {number} grid left index
+	     */
 	    function getX(left) {
 	        var i = 0;
 	        var length = grids.length;
@@ -17045,13 +17174,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        weekdayView = util.pick(weeks, y);
 	
 	        if (!weekdayView) {
-	            return;
+	            return null;
 	        }
 	
 	        date = util.pick(weekdayView.getRenderDateRange(), x);
 	
 	        if (!date) {
-	            return;
+	            return null;
 	        }
 	
 	        return {
@@ -17080,6 +17209,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var MonthGuide = __webpack_require__(102);
 	
 	/**
@@ -17161,6 +17291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
@@ -17260,6 +17391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	MonthGuide.prototype._getRatioValueInWeek = function(value) {
 	    var grid = this.grids[value] || {left: 100};
+	
 	    return grid.left;
 	};
 	
@@ -17649,6 +17781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	
 	var config = __webpack_require__(34),
@@ -17862,6 +17995,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	
 	var config = __webpack_require__(34),
@@ -17965,7 +18099,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.guide.destroy();
 	    this.elements = this.guide = null;
 	
-	
 	    if (!util.browser.msie) {
 	        domutil.removeClass(global.document.body, config.classname('resizing-x'));
 	    }
@@ -17985,6 +18118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	
 	var config = __webpack_require__(34),
@@ -18181,7 +18315,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.fire('monthMoveDragstart', scheduleData);
 	};
 	
-	
 	/**
 	 * @fires {MonthMove#monthMoveDrag}
 	 * @param {object} dragEvent - drag event data
@@ -18263,6 +18396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
 	'use strict';
+	
 	var util = __webpack_require__(6);
 	
 	var config = __webpack_require__(34),
@@ -18367,7 +18501,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        beforeGridElement = domutil.find(selector,
 	            this.monthMove.monthView.container);
 	
-	
 	    if (beforeGridElement) {
 	        domutil.removeClass(beforeGridElement, className);
 	    }
@@ -18470,7 +18603,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	module.exports = MonthMoveGuide;
-	
 	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
