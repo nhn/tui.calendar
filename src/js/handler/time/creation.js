@@ -337,7 +337,6 @@ TimeCreation.prototype._onDblClick = function(e) {
     this._requestOnClick = false;
 };
 
-
 timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);
 

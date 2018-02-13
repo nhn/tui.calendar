@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var MonthGuide = require('./guide');
 
 /**

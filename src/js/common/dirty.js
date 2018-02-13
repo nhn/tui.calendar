@@ -166,6 +166,7 @@ var dirty = {
             common.forEachOwnProperties(methodName, function(_flag, _name) {
                 wrap(target, _name, _flag);
             });
+
             return;
         }
 
@@ -184,6 +185,7 @@ var dirty = {
                     var args = Array.prototype.slice.call(arguments);
                     var result = _fn.apply(this, args); // eslint-disable-line
                     this._dirty = flagToSet; // eslint-disable-line
+
                     return result;
                 };
             };

@@ -131,7 +131,7 @@ describe('handler/time.creation.guide', function() {
             setTimeout(function() {
                 expect(inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, +time, (+startTime + min30), true);
                 done();
-            }, 10);
+            }, 100);
         });
 
         it('calculate style properly2', function(done) {

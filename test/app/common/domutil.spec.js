@@ -109,9 +109,9 @@ describe('module:domutil', function() {
             expect(domutil.closest(li, '#parent')).toBe(document.getElementById('parent'));
         });
 
-        it('selector에 해당하는 부모 엘리먼트가 없으면 undefined를 반환한다', function() {
+        it('selector에 해당하는 부모 엘리먼트가 없으면 null을 반환한다', function() {
             var li = document.getElementById('list-item');
-            expect(domutil.closest(li, '#notexist')).toBeUndefined();
+            expect(domutil.closest(li, '#notexist')).toBeNull();
         });
 
         it('렌더링 되지 않은 엘리먼트에 대해서도 동작함', function() {
@@ -124,9 +124,9 @@ describe('module:domutil', function() {
             expect(domutil.closest(li, '#good')).toBe(div);
         });
 
-        it('parentNode가 undefined일 경우 반환함.', function() {
+        it('parentNode가 null일 경우 반환함.', function() {
             var div = document.createElement('div');
-            expect(domutil.closest(div, '#good')).toBeUndefined();
+            expect(domutil.closest(div, '#good')).toBeNull();
         });
     });
 

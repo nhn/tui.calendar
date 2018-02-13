@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../config'),
     common = require('./common'),
@@ -132,6 +133,7 @@ VPanel.prototype._initPanel = function(options, container) {
 
     if (options.isSplitter) {
         domutil.addClass(container, config.classname('splitter'));
+
         return;
     }
 

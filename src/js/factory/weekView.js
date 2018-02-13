@@ -57,18 +57,22 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                                      dayNameView.container.offsetHeight) + 'px';
 
     panels = [
-        {height: 100, minHeight: 100},
+        {height: 100,
+            minHeight: 100},
         {isSplitter: true},
         {autoHeight: true}
     ];
 
     if (options.taskView) {
         panels = [
-            {minHeight: 20, maxHeight: 80},
+            {minHeight: 20,
+                maxHeight: 80},
             {isSplitter: true},
-            {minHeight: 40, maxHeight: 120},
+            {minHeight: 40,
+                maxHeight: 120},
             {isSplitter: true},
-            {minHeight: 20, maxHeight: 80},
+            {minHeight: 20,
+                maxHeight: 80},
             {isSplitter: true},
             {autoHeight: true}
         ];

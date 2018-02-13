@@ -329,6 +329,7 @@ Schedule.prototype.collidesWith = function(schedule) {
         (start <= ownStarts && end >= ownEnds)) {
         return true;
     }
+
     return false;
 };
 

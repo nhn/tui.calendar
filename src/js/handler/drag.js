@@ -129,6 +129,7 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
 
     if (opt.exclude && opt.exclude(target)) {
         this._cancelled = true;
+
         return;
     }
 
@@ -149,6 +150,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
 
     if (this._cancelled) {
         this._clearData();
+
         return;
     }
 
@@ -158,6 +160,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
 
     if (this._distance < distance) {
         this._distance += 1;
+
         return;
     }
     this._isMoved = true;
@@ -175,6 +178,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
         if (!this.invoke('dragStart', this._dragStartEventData)) {
             this._toggleDragEvent(false);
             this._clearData();
+
             return;
         }
     }

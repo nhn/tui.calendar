@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var forEachArr = util.forEachArray,
     aps = Array.prototype.slice;
@@ -43,12 +44,17 @@ var Core = {
                             // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
                             // Collision Group에 이 일정을 포함시킨다.
                             group.push(util.stamp(schedule.valueOf()));
-                            return false;
+
+                            return false; // returning false can stop this loop
                         }
+
+                        return true;
                     });
 
-                    return false;
+                    return false; // returning false can stop this loop
                 }
+
+                return true;
             });
 
             if (!foundPrevCollisionSchedule) {
@@ -221,7 +227,8 @@ var Core = {
 
         if (viewModelColl.constructor === Collection) {
             viewModelColl.each(limit);
-            return;
+
+            return null;
         }
 
         return limit(viewModelColl);

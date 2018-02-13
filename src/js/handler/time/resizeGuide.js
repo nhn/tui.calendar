@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../../config');
 var domutil = require('../../common/domutil');
@@ -106,7 +107,6 @@ TimeResizeGuide.prototype._refreshGuideElement = function(height) {
         guideElement.style.display = 'block';
     });
 };
-
 
 /**
  * TimeMove#timeMoveDragstart event handler

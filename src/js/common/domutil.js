@@ -80,7 +80,8 @@ domutil = {
 
         if (cssClassSelector.test(selector)) {
             return domutil.hasClass(el, selector.replace('.', ''));
-        } else if (idSelector.test(selector)) {
+        }
+        if (idSelector.test(selector)) {
             return el.id === selector.replace('#', '');
         }
 
@@ -158,7 +159,7 @@ domutil = {
      * Find parent element recursively.
      * @param {HTMLElement} el - base element to start find.
      * @param {string} selector - selector string for find
-     * @returns {HTMLElement} - element finded or undefined.
+     * @returns {HTMLElement} - element finded or null.
      */
     closest: function(el, selector) {
         var parent = el.parentNode;
@@ -174,6 +175,8 @@ domutil = {
 
             parent = parent.parentNode;
         }
+
+        return null;
     },
 
     /**
@@ -205,6 +208,7 @@ domutil = {
                 ret += domutil.text(el[i]);
             }
         }
+
         return ret;
     },
 
@@ -217,6 +221,7 @@ domutil = {
     setData: function(el, key, data) {
         if ('dataset' in el) {
             el.dataset[key] = data;
+
             return;
         }
 
@@ -348,6 +353,7 @@ domutil = {
         if (!defaultView || !defaultView.getComputedStyle) {
             return {
                 getPropertyValue: function(prop) {
+                    /* eslint-disable no-useless-escape */
                     var re = /(\-([a-z]){1})/g;
                     if (prop === 'float') {
                         prop = 'styleFloat';
@@ -496,6 +502,7 @@ domutil = {
                 return props[i];
             }
         }
+
         return false;
     },
 
@@ -506,7 +513,7 @@ domutil = {
      */
     getFormData: function(formElement) {
         var groupedByName = new Collection(function() {
-                return this.length;    // eslint-disable-line
+                return this.length;
             }),
             noDisabledFilter = function(el) {
                 return !el.disabled;
@@ -521,7 +528,7 @@ domutil = {
         );
 
         groupedByName = groupedByName.groupBy(function(el) {
-            return el && el.getAttribute('name') || '_other';
+            return (el && el.getAttribute('name')) || '_other';
         });
 
         util.forEach(groupedByName, function(elements, name) {
@@ -586,7 +593,7 @@ var userSelectProperty = domutil.testProp([
 ]);
 var supportSelectStart = 'onselectstart' in document;
 var prevSelectStyle = '';
-/*eslint-enable*/
+/* eslint-enable*/
 
 /**
  * Disable browser's text selection behaviors.

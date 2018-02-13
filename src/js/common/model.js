@@ -42,6 +42,7 @@ model = {
 
             util.forEach(fields, function(fieldName) {
                 valid = isValid(instance[fieldName]);
+
                 return valid;
             });
 
@@ -100,8 +101,11 @@ model = {
 
             if (validator) {
                 valid = validator(self, values);
-                return valid;
+
+                return valid; // returning false can stop this loop
             }
+
+            return true;
         });
 
         return valid;

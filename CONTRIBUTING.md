@@ -42,7 +42,7 @@ Unsure where to begin contributing to TOAST UI? You can start by looking through
 ### Development WorkFlow
 - Set up your development environment
 - Make change from a right branch
-- Be sure the code passes `npm run lint`, `npm run test`
+- Be sure the code passes `npm run eslint`, `npm run test`
 - Make a pull request
 
 ### Development environment

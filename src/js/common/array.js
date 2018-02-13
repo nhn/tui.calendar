@@ -82,6 +82,7 @@ function booleanASC(a, b) {
     if (a !== b) {
         return a ? -1 : 1;
     }
+
     return 0;
 }
 
@@ -97,6 +98,7 @@ function booleanDESC(a, b) {
     if (a !== b) {
         return a ? 1 : -1;
     }
+
     return 0;
 }
 
@@ -144,7 +146,8 @@ function stringASC(_a, _b) {
 
     if (a > b) {
         return 1;
-    } else if (a < b) {
+    }
+    if (a < b) {
         return -1;
     }
 
@@ -165,7 +168,8 @@ function stringDESC(_a, _b) {
 
     if (a > b) {
         return -1;
-    } else if (a < b) {
+    }
+    if (a < b) {
         return 1;
     }
 
@@ -186,7 +190,8 @@ function stringASCIgnoreCase(_a, _b) {
 
     if (a > b) {
         return 1;
-    } else if (a < b) {
+    }
+    if (a < b) {
         return -1;
     }
 
@@ -207,7 +212,8 @@ function stringDESCIgnoreCase(_a, _b) {
 
     if (a > b) {
         return -1;
-    } else if (a < b) {
+    }
+    if (a < b) {
         return 1;
     }
 
@@ -248,13 +254,13 @@ function scheduleASC(a, b) {
 
     if (durationA < durationB) {
         return 1;
-    } else if (durationA > durationB) {
+    }
+    if (durationA > durationB) {
         return -1;
     }
 
     return util.stamp(modelA) - util.stamp(modelB);
 }
-
 
 module.exports = {
     bsearch: bsearch,

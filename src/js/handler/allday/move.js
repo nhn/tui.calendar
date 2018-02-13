@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../../config');
 var common = require('../../common/common');
@@ -154,7 +155,6 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
      */
     this.fire('alldayMoveDragstart', scheduleData);
 };
-
 
 /**
  * Drag event handler method.

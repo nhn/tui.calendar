@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet'),
     Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
@@ -114,9 +115,9 @@ var mmin = Math.min;
  * calendar.on('beforeCreateSchedule', function(event) {
  *     var guide = event.guide;
  *     // use guideEl$'s left, top to locate your schedule creation popup
- *     var guideEl$ = guide.guideElement ? 
+ *     var guideEl$ = guide.guideElement ?
  *          guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
- * 
+ *
  *     // after that call this to hide the creation guide
  *     guide.clearGuideElement();
  * });
@@ -187,6 +188,7 @@ function Calendar(container, options) {
             if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
                 return 'allday';
             }
+
             return model.category;
         },
         controller: null,
@@ -453,7 +455,7 @@ Calendar.prototype.getSchedule = function(id, calendarId) {
 
 /**
  * Update the schedule
- * @param {string} id - ID of schedule to update 
+ * @param {string} id - ID of schedule to update
  * @param {string} calendarId - calendarId of schedule to update
  * @param {Schedule} scheduleData - schedule data to update
  * @example
@@ -674,6 +676,7 @@ Calendar.prototype.refresh = function() {
 Calendar.prototype.refreshChildView = function(viewName) {
     if (!viewName) {
         this.render();
+
         return;
     }
 
@@ -953,7 +956,7 @@ Calendar.prototype._onClick = function(clickScheduleData) {
      * @example
      * calendar.on('clickSchedule', function(event) {
      *     var schedule = event.schedule;
-     * 
+     *
      *     if (lastClickSchedule) {
      *         calendar.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
      *             isFocused: false
@@ -1016,7 +1019,7 @@ Calendar.prototype._onBeforeCreate = function(createScheduleData) {
      *     var guide = event.guide;
      *     var triggerEventName = event.triggerEventName;
      *     var schedule;
-     * 
+     *
      *     if (triggerEventName === 'click') {
      *         // open writing simple schedule popup
      *         schedule = {...};
@@ -1024,7 +1027,7 @@ Calendar.prototype._onBeforeCreate = function(createScheduleData) {
      *         // open writing detail schedule popup
      *         schedule = {...};
      *     }
-     * 
+     *
      *     calendar.createSchedules([schedule]);
      * });
      */
@@ -1123,27 +1126,27 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
  * @example
  * // daily view
  * calendar.toggleView('day', true);
- * 
+ *
  * // weekly view
  * calendar.toggleView('week', true);
- * 
+ *
  * // monthly view(default 6 weeks view)
  * calendar.options.month.visibleWeeksCount = 6; // or null
  * calendar.toggleView('month', true);
- * 
+ *
  * // 2 weeks monthly view
  * calendar.options.month.visibleWeeksCount = 2;
  * calendar.toggleView('month', true);
- * 
+ *
  * // 3 weeks monthly view
  * calendar.options.month.visibleWeeksCount = 3;
  * calendar.toggleView('month', true);
- * 
+ *
  * // narrow weekend
  * calendar.options.month.narrowWeekend = true;
  * calendar.options.week.narrowWeekend = true;
  * calendar.toggleView(calendar.viewName, true);
- * 
+ *
  * // change start day of week(from monday)
  * calendar.options.month.startDayOfWeek = 1;
  * calendar.options.week.startDayOfWeek = 1;
@@ -1164,7 +1167,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
 
     this._setViewName(newViewName);
 
-    //convert day to week
+    // convert day to week
     if (viewName === 'day') {
         viewName = 'week';
     }
@@ -1213,7 +1216,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
  * @example
  * // There is no milestone, task, so hide those view panel
  * calendar.toggleTaskView(false);
- * 
+ *
  * // There are some milestone, task, so show those view panel.
  * calendar.toggleTaskView(true);
  */

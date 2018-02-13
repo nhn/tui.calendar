@@ -76,6 +76,7 @@ TaskView.prototype._getBaseViewModel = function(viewModel) {
         util.forEach(g, function(coll) {
             subcount += (coll.length || 0);
         });
+
         return subcount;
     })) * ITEM_HEIGHT;
 

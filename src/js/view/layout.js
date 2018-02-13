@@ -31,7 +31,7 @@ function Layout(container) {
     this.children = new Collection(function(childView) {
         return childView.viewName;
     });
-    /*eslint-enable*/
+    /* eslint-enable*/
 }
 
 util.inherit(Layout, View);

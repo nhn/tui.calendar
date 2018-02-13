@@ -109,6 +109,7 @@ Point.prototype.add = function(point) {
 Point.prototype._add = function(point) {
     this.x += point.x;
     this.y += point.y;
+
     return this;
 };
 
@@ -129,6 +130,7 @@ Point.prototype.subtract = function(point) {
 Point.prototype._subtract = function(point) {
     this.x -= point.x;
     this.y -= point.y;
+
     return this;
 };
 
@@ -149,6 +151,7 @@ Point.prototype.divideBy = function(num) {
 Point.prototype._divideBy = function(num) {
     this.x /= num;
     this.y /= num;
+
     return this;
 };
 
@@ -169,6 +172,7 @@ Point.prototype.multiplyBy = function(num) {
 Point.prototype._multiplyBy = function(num) {
     this.x *= num;
     this.y *= num;
+
     return this;
 };
 
@@ -187,6 +191,7 @@ Point.prototype.round = function() {
 Point.prototype._round = function() {
     this.x = Math.round(this.x);
     this.y = Math.round(this.y);
+
     return this;
 };
 
@@ -205,6 +210,7 @@ Point.prototype.reverse = function() {
 Point.prototype._reverse = function() {
     this.x *= -1;
     this.y *= -1;
+
     return this;
 };
 
@@ -223,6 +229,7 @@ Point.prototype.floor = function() {
 Point.prototype._floor = function() {
     this.x = Math.floor(this.x);
     this.y = Math.floor(this.y);
+
     return this;
 };
 
@@ -241,6 +248,7 @@ Point.prototype.ceil = function() {
 Point.prototype._ceil = function() {
     this.x = Math.ceil(this.x);
     this.y = Math.ceil(this.y);
+
     return this;
 };
 
@@ -277,8 +285,8 @@ Point.prototype._rotate = function(deg, center, cos, sin) {
     x = this.x;
     y = this.y;
 
-    this.x = x * cos - y * sin;
-    this.y = x * sin + y * cos;
+    this.x = (x * cos) - (y * sin);
+    this.y = (x * sin) + (y * cos);
 
     this._add(center);
 
@@ -299,7 +307,7 @@ Point.prototype.distanceTo = function(point) {
     x = point.x - this.x;
     y = point.y - this.y;
 
-    return Math.sqrt(x * x + y * y);
+    return Math.sqrt((x * x) + (y * y));
 };
 
 /**
@@ -309,6 +317,7 @@ Point.prototype.distanceTo = function(point) {
  */
 Point.prototype.equals = function(point) {
     point = Point.n(point);
+
     return point.x === this.x && point.y === this.y;
 };
 

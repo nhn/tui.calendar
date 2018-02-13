@@ -101,12 +101,14 @@ Handlebars.registerHelper({
                 return (a == b) ? options.fn(this) : options.inverse(this);  // eslint-disable-line
             case '===':
                 return (a === b) ? options.fn(this) : options.inverse(this);
+            case '!==':
+                return (a !== b) ? options.fn(this) : options.inverse(this);
             case '<':
                 return (a < b) ? options.fn(this) : options.inverse(this);
             case '||':
                 return (a || b) ? options.fn(this) : options.inverse(this);
             default:
-                break;
+                throw new Error('Not match operation');
         }
     },
 
@@ -163,7 +165,7 @@ Handlebars.registerHelper({
     },
 
     'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
-        var top = getElSize((viewModel.top - 1) * blockHeight + paddingTop, 'px', 'top');
+        var top = getElSize(((viewModel.top - 1) * blockHeight) + paddingTop, 'px', 'top');
         var left = getElSize(grids[viewModel.left].left, '%', 'left');
         var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
         var height = getElSize(viewModel.height, 'px', 'height');
@@ -232,7 +234,6 @@ Handlebars.registerHelper({
     'CSS_PREFIX': function() {
         return config.cssPrefix;
     },
-
 
     /**********
      * Default schedule template

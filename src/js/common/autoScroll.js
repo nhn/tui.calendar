@@ -167,30 +167,33 @@ AutoScroll.prototype._onMouseMove = function(mouseEvent) {
     if (pos.y >= edge.top && pos.y <= edge.bottom &&
         pos.x >= edge.left && pos.x <= edge.right) {
         this._direction = AutoScroll.DIRECTION.INSIDE;
+
         return;
     }
 
     if (pos.y < edge.top) {
         this._direction = AutoScroll.DIRECTION.TOP;
         this._offset = edge.top - pos.y;
+
         return;
     }
 
     if (pos.y > edge.bottom) {
         this._direction = AutoScroll.DIRECTION.BOTTOM;
         this._offset = pos.y - edge.bottom;
+
         return;
     }
 
     if (pos.x < edge.left) {
         this._direction = AutoScroll.DIRECTION.LEFT;
         this._offset = edge.left - pos.x;
+
         return;
     }
 
     this._direction = AutoScroll.DIRECTION.RIGHT;
     this._offset = pos.x - edge.right;
-    return;
 };
 
 /**

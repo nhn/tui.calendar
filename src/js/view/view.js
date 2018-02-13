@@ -45,7 +45,7 @@ function View(container) {
     this.children = new Collection(function(view) {
         return util.stamp(view);
     });
-    /*eslint-enable*/
+    /* eslint-enable*/
 
     /**
      * parent view instance.
@@ -168,7 +168,7 @@ View.prototype.destroy = function(isChildView) {
 
     this._destroy();
 };
-/*eslint-enable*/
+/* eslint-enable*/
 
 /**
  * Calculate view's container element bound.
@@ -186,7 +186,6 @@ View.prototype.getViewBound = function() {
         height: size[1]
     };
 };
-
 
 /**
  * Return view default CSS prefix

@@ -133,6 +133,7 @@ module.exports = {
     limit: function(value, minArr, maxArr) {
         var v = Math.max.apply(null, [value].concat(minArr));
         v = Math.min.apply(null, [v].concat(maxArr));
+
         return v;
     },
 

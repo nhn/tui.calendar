@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var TZDate = require('../common/timezone').Date;
 
 /**
@@ -52,6 +53,7 @@ DW.prototype.clone = function() {
  */
 DW.prototype.addDate = function(day) {
     this.d.setDate(this.d.getDate() + day);
+
     return this;
 };
 
@@ -70,6 +72,7 @@ DW.prototype.addMonth = function(m) {
     if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
         this.d.setMonth(prevMonth + m, 1);
     }
+
     return this;
 };
 
@@ -83,6 +86,7 @@ DW.prototype.addMonth = function(m) {
  */
 DW.prototype.setHours = function(h, m, s, ms) {
     this.d.setHours(h, m, s, ms);
+
     return this;
 };
 
@@ -94,6 +98,7 @@ DW.prototype.setHours = function(h, m, s, ms) {
  */
 DW.prototype.isBetween = function(d1, d2) {
     var safe = this.safe;
+
     return safe(d1) <= this.d && this.d <= safe(d2);
 };
 

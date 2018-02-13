@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var common = require('../../common/common'),
     domutil = require('../../common/domutil'),
@@ -26,6 +27,11 @@ function getMousePosDate(monthView) {
         size = domutil.getSize(relativeContainer),
         grids = monthView.grids;
 
+    /**
+     * Get the left index
+     * @param {number} left - left position(percent)
+     * @returns {number} grid left index
+     */
     function getX(left) {
         var i = 0;
         var length = grids.length;
@@ -54,13 +60,13 @@ function getMousePosDate(monthView) {
         weekdayView = util.pick(weeks, y);
 
         if (!weekdayView) {
-            return;
+            return null;
         }
 
         date = util.pick(weekdayView.getRenderDateRange(), x);
 
         if (!date) {
-            return;
+            return null;
         }
 
         return {

@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 
 var config = require('../../config'),
@@ -107,7 +108,6 @@ MonthMoveGuide.prototype._clearGridBgColor = function() {
         beforeGridElement = domutil.find(selector,
             this.monthMove.monthView.container);
 
-
     if (beforeGridElement) {
         domutil.removeClass(beforeGridElement, className);
     }
@@ -210,5 +210,4 @@ MonthMoveGuide.prototype._onDragEnd = function() {
 };
 
 module.exports = MonthMoveGuide;
-
 

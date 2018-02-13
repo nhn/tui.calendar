@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 
 var config = require('../../config'),
@@ -105,7 +106,6 @@ MonthResizeGuide.prototype._onDragEnd = function() {
 
     this.guide.destroy();
     this.elements = this.guide = null;
-
 
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('resizing-x'));

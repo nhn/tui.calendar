@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../config'),
     domutil = require('../common/domutil'),
@@ -93,6 +94,7 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
         dates: util.map(range, function(date, index) {
             var day = date.getDay();
             var ymd = datetime.format(date, 'YYYYMMDD');
+
             return {
                 date: datetime.format(date, 'YYYY-MM-DD'),
                 month: date.getMonth() + 1,

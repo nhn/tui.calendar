@@ -16,6 +16,12 @@ var config = require('../config'),
     MonthMove = require('../handler/month/move'),
     More = require('../view/month/more');
 
+/**
+ * Find a grid element for more element
+ * @param {HTMLElement} moreTarget - more element
+ * @param {number} day - day number
+ * @returns {HTMLElement}
+ */
 function findGridTarget(moreTarget, day) {
     var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
     var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
@@ -23,6 +29,13 @@ function findGridTarget(moreTarget, day) {
     return weekGridEls[day];
 }
 
+/**
+ * Get the view model for more layer
+ * @param {TZDate} date - date has more schedules
+ * @param {HTMLElement} target - target element
+ * @param {Collection} schedules - schedule collection
+ * @returns {object} view model
+ */
 function getViewModelForMoreLayer(date, target, schedules) {
     schedules.each(function(schedule) {
         var model = schedule.model;

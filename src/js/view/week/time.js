@@ -184,7 +184,6 @@ Time.prototype.getDate = function() {
     return this._parseDateGroup(this.options.ymd);
 };
 
-
 /**
  * @override
  * @param {string} ymd The date of schedules. YYYYMMDD format

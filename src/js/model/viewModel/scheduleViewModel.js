@@ -107,7 +107,6 @@ ScheduleViewModel.create = function(schedule) {
     return new ScheduleViewModel(schedule);
 };
 
-
 /**********
  * prototype props
  **********/
@@ -181,6 +180,7 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
         (start <= ownStarts && end >= ownEnds)) {
         return true;
     }
+
     return false;
 };
 

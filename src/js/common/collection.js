@@ -221,8 +221,11 @@ Collection.prototype.has = function(id) {
         this.each(function(item) {
             if (id(item) === true) {
                 has = true;
-                return false;
+
+                return false; // returning false can stop this loop
             }
+
+            return true;
         });
     } else {
         id = isObj(id) ? this.getItemID(id) : id;
@@ -377,11 +380,16 @@ Collection.prototype.single = function(filter) {
     this.each(function(item) {
         if (!useFilter) {
             result = item;
-            return false;
-        } else if (filter(item)) {
-            result = item;
-            return false;
+
+            return false; // returning false can stop this loop
         }
+        if (filter(item)) {
+            result = item;
+
+            return false; // returning false can stop this loop
+        }
+
+        return true;
     }, this);
 
     return result;

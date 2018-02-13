@@ -3,13 +3,13 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../../config');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var TZDate = require('../../common/timezone').Date;
-
 
 /**
  * @constructor

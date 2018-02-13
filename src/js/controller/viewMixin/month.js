@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var array = require('../../common/array'),
     datetime = require('../../common/datetime'),
@@ -77,6 +78,7 @@ var Month = {
         if (topIndexesInDate.length > 0) {
             return mmax.apply(null, topIndexesInDate);
         }
+
         return 0;
     },
 
@@ -102,10 +104,6 @@ var Month = {
             }
             maxIndexInYMD[scheduleYMD] = timeViewModel.top =
                 (alldayMaxTopInYMD + 1);
-
-            if (timeViewModel.top > alldayMaxTopInYMD) {
-                return;
-            }
         });
     },
 

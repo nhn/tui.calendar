@@ -21,6 +21,7 @@ function parseRangeDateString(dateString) {
     if (dateString.length === 10) {
         return datetime.parse(dateString);
     }
+
     return new TZDate(dateString);
 }
 

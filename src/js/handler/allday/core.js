@@ -4,6 +4,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var common = require('../../common/common');
@@ -69,6 +70,12 @@ var alldayCore = {
     }
 };
 
+/**
+ * Get the left index
+ * @param {Array} grids - grid size information
+ * @param {number} left - left position(percent)
+ * @returns {number} grid left index
+ */
 function getX(grids, left) {
     var i = 0;
     var length = grids.length;

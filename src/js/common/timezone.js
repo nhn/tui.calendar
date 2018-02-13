@@ -29,10 +29,20 @@ var setterMethods = [
     'setSeconds'
 ];
 
+/**
+ * Create a Date instance with multiple arguments
+ * @param {Array} args - arguments
+ * @returns {Date}
+ */
 function createDateWithMultipleArgs(args) {
     return new Date(Date.UTC.apply(null, args) + SYSTEM_OFFSET_MS);
 }
 
+/**
+ * Create a Date instance with argument
+ * @param {Date|TZDate|string|number} arg - arguments
+ * @returns {Date}
+ */
 function createDateWithSingleArg(arg) {
     var time;
 
@@ -71,7 +81,6 @@ function TZDate() {
     this._date = date;
 }
 
-
 TZDate.prototype.setTime = function(time) {
     return this._date.setTime(time - customOffsetMs + SYSTEM_OFFSET_MS);
 };
@@ -93,6 +102,7 @@ getterMethods.forEach(function(methodName) {
 setterMethods.forEach(function(methodName) {
     TZDate.prototype[methodName] = function() {
         this._date[methodName].apply(this._date, arguments);
+
         return this.getTime();
     };
 });

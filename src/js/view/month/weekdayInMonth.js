@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     common = require('../../common/common.js'),
@@ -43,6 +44,7 @@ util.inherit(WeekdayInMonth, Weekday);
  */
 WeekdayInMonth.prototype.getViewBound = function() {
     var bound = View.prototype.getViewBound.call(this);
+
     return bound;
 };
 

@@ -29,6 +29,7 @@ function Base(options) {
         if (viewModel.model.isAllDay) {
             return 'allday';
         }
+
         return 'time';
     };
 
@@ -84,7 +85,7 @@ Base.prototype.createSchedule = function(options, silent) {
      * @type {Calendar~Schedule[]}
      */
     if (!this.invoke('beforeCreateSchedule', scheduleData)) {
-        return;
+        return null;
     }
 
     schedule = this.addSchedule(Schedule.create(options));

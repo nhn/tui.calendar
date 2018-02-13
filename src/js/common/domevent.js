@@ -160,6 +160,7 @@ var domevent = {
         // throw exception when deleting host object's property in below IE8
         if (util.browser.msie && util.browser.version < 9) {
             obj[eventKey] = null;
+
             return;
         }
 
@@ -180,6 +181,7 @@ var domevent = {
             util.forEachOwnProperties(types, function(handler, type) {
                 domevent.once(obj, type, handler, fn);
             });
+
             return;
         }
 
@@ -383,8 +385,11 @@ var domevent = {
             util.forEach(e, function(value, propName) {
                 evt[propName] = value;
             }, this);
-            evt.button = {0: 1, 1: 4, 2: 2}[evt.button] || evt.button;
+            evt.button = {0: 1,
+                1: 4,
+                2: 2}[evt.button] || evt.button;
         }
+
         return evt;
     },
 
@@ -415,11 +420,15 @@ var domevent = {
         button = String(mouseEvent.button);
         if (primary.indexOf(button) > -1) {
             return 0;
-        } else if (secondary.indexOf(button) > -1) {
+        }
+        if (secondary.indexOf(button) > -1) {
             return 2;
-        } else if (~wheel.indexOf(button)) {
+        }
+        if (~wheel.indexOf(button)) {
             return 1;
         }
+
+        return -1;
     }
 };
 

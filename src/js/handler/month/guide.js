@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     common = require('../../common/common'),
@@ -102,6 +103,7 @@ MonthGuide.prototype.clearGuideElement = function() {
  */
 MonthGuide.prototype._getRatioValueInWeek = function(value) {
     var grid = this.grids[value] || {left: 100};
+
     return grid.left;
 };
 

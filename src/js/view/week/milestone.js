@@ -76,7 +76,8 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
         i += 1;
     });
 
-    height = LIST_PADDING_TOP + Math.max.apply(null, util.map(schedules, function(coll) {
+    height = LIST_PADDING_TOP;
+    height += Math.max.apply(null, util.map(schedules, function(coll) {
         return coll.length;
     })) * ITEM_HEIGHT;
 

@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
@@ -94,6 +95,7 @@ AlldayCreationGuide.prototype._refreshGuideElement = function(scheduleData, defe
     leftPercent = data.grids[dragStartXIndex].left;
     widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
 
+    /** eslint-disable require-jsdoc */
     function setStyle() {
         guideElement.style.display = 'block';
         guideElement.style.left = leftPercent + '%';

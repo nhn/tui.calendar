@@ -7,6 +7,7 @@
 var TZDate = require('./timezone').Date,
     dw = require('../common/dw');
 var util = require('tui-code-snippet');
+/* eslint-disable no-useless-escape */
 var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 var datetime, tokenFunc;
 
@@ -194,9 +195,11 @@ datetime = {
 
         if (_d1 < _d2) {
             return -1;
-        } else if (_d1 > _d2) {
+        }
+        if (_d1 > _d2) {
             return 1;
         }
+
         return 0;
     },
 
@@ -217,6 +220,7 @@ datetime = {
      */
     isSameDate: function(d1, d2) {
         var sameMonth = datetime.isSameMonth(d1, d2);
+
         return sameMonth && (d1.getDate() === d2.getDate());
     },
 
@@ -229,6 +233,7 @@ datetime = {
         if (d instanceof TZDate) {
             return !window.isNaN(d.getTime());
         }
+
         return false;
     },
 
@@ -487,7 +492,7 @@ datetime = {
 
     /**
      * Calculate grid left(%), width(%) by narrowWeekend, startDayOfWeek, workweek
-     * 
+     *
      * @param {number} days - day length of week
      * @param {boolean} narrowWeekend - narrow weekend
      * @param {number} startDayOfWeek - start day of week
@@ -523,6 +528,7 @@ datetime = {
             };
 
             accumulatedWidth += width;
+
             return model;
         });
     },

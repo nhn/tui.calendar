@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 var Weekday = require('../weekday'),
     tmpl = require('./weekdayInWeek.hbs');
@@ -70,6 +71,5 @@ WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
         opt.containerBottomGutter
     );
 };
-
 
 module.exports = WeekdayInWeek;

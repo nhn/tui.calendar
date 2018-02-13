@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var util = require('tui-code-snippet');
 
 var config = require('../../config'),
@@ -198,7 +199,6 @@ MonthMove.prototype._onDragStart = function(dragStartEvent) {
      */
     this.fire('monthMoveDragstart', scheduleData);
 };
-
 
 /**
  * @fires {MonthMove#monthMoveDrag}

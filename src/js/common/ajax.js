@@ -12,26 +12,16 @@ var util = require('tui-code-snippet');
  */
 function AJAX() {}
 
-AJAX.ERROR = {
-    NOT_SUPPORT: '사용하시는 브라우저가 서비스 이용에 필요한 필수 기능을 지원하지 않습니다. 최신 버전의 브라우저를 사용해 주세요.'
-};
-
 /**********
  * ajax
  **********/
 
 /**
  * 비동기 요청을 위한 객체를 만들어 반환한다
- * @returns {(XMLHttpRequest|ActiveXObject)} 비동기 통신 지원 객체
+ * @returns {(XMLHttpRequest)} 비동기 통신 지원 객체
  */
 AJAX.prototype._createXHR = function() {
-    if (util.isExisty(util.pick(window, 'XMLHttpRequest'))) {
-        return new XMLHttpRequest();
-    } else if (util.isExisty(util.pick(window, 'ActiveXObject'))) {
-        return new ActiveXObject('Microsoft.XMLHTTP'); // jshint ignore:line
-    }
-
-    window.alert(AJAX.ERROR.NOT_SUPPORT);
+    return new XMLHttpRequest();
 };
 
 /**
@@ -88,7 +78,6 @@ AJAX.prototype._onReadyStateChange = function(options, xhr) {
 
     options.complete();
 };
-
 
 /**
  * ajax 요청을 수행한다.
