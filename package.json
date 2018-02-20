@@ -1,7 +1,7 @@
 {
   "name": "tui-calendar",
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "main": "dist/tui-calendar.js",
   "license:": "MIT",
   "description": "TOAST UI Calendar",
