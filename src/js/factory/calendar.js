@@ -600,7 +600,7 @@ Calendar.prototype._toggleSchedulesByCalendarID = function(calendarId, toHide, r
 
     ownSchedules.each(function(schedule) {
         if (~util.inArray(schedule.calendarId, calendarId)) {
-            schedule.set('visible', !toHide);
+            schedule.set('isVisible', !toHide);
         }
     });
 
