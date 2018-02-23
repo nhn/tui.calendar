@@ -33,11 +33,6 @@ function MonthMoveGuide(monthMove) {
      */
     this.layer = null;
 
-    /**
-     * @type {HTMLElement[]}
-     */
-    this.gridElements = null;
-
     monthMove.on({
         monthMoveDragstart: this._onDragStart,
         monthMoveDrag: this._onDrag,
@@ -60,8 +55,7 @@ MonthMoveGuide.prototype.destroy = function() {
         domutil.remove(this.element);
     }
 
-    this.monthMove = this.elements = this.layer =
-        this.gridElements = null;
+    this.monthMove = this.elements = this.layer = null;
 };
 
 /**
@@ -118,18 +112,17 @@ MonthMoveGuide.prototype._clearGridBgColor = function() {
  * @param {object} dragEvent - drag event data from MonthMoveGuide#_onDrag
  */
 MonthMoveGuide.prototype._updateGridBgColor = function(dragEvent) {
-    var gridElements = this.gridElements,
+    var gridElements = domutil.find(config.classname('.weekday-grid-line'), this.monthMove.monthView.container, true),
         className = config.classname('weekday-filled'),
-        targetIndex = (dragEvent.x + (dragEvent.sizeX * dragEvent.y)),
-        target = gridElements[targetIndex];
+        targetIndex = (dragEvent.x + (dragEvent.sizeX * dragEvent.y));
 
     this._clearGridBgColor();
 
-    if (!target) {
+    if (!gridElements || !gridElements[targetIndex]) {
         return;
     }
 
-    domutil.addClass(target, className);
+    domutil.addClass(gridElements[targetIndex], className);
 };
 
 /**
@@ -148,14 +141,6 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
         layer = new FloatingLayer(null, container);
 
     this._hideOriginScheduleBlocks(model.cid());
-
-    if (!this.gridElements) {
-        this.gridElements = domutil.find(
-            config.classname('.weekday-grid-line'),
-            container,
-            true
-        );
-    }
 
     this.layer = layer;
     layer.setSize(widthPercent + '%', height);
