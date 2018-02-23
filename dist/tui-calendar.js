@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.2 | Tue Feb 20 2018
+ * @version 0.6.3 | Fri Feb 23 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -4796,7 +4796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    ownSchedules.each(function(schedule) {
 	        if (~util.inArray(schedule.calendarId, calendarId)) {
-	            schedule.set('visible', !toHide);
+	            schedule.set('isVisible', !toHide);
 	        }
 	    });
 	
@@ -9169,6 +9169,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object} Options for view.
 	     */
 	    this.options = util.extend({
+	        scheduleFilter: function(schedule) {
+	            return Boolean(schedule.isVisible);
+	        },
 	        renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
 	        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
 	        narrowWeekend: false,
@@ -9196,6 +9199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Week.prototype.render = function() {
 	    var options = this.options,
+	        scheduleFilter = options.scheduleFilter,
 	        narrowWeekend = options.narrowWeekend,
 	        startDayOfWeek = options.startDayOfWeek,
 	        workweek = options.workweek;
@@ -9221,7 +9225,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    schedulesInDateRange = this.controller.findByDateRange(
 	        datetime.start(renderStartDate),
-	        datetime.end(renderEndDate)
+	        datetime.end(renderEndDate),
+	        scheduleFilter
 	    );
 	    grids = datetime.getGridLeftAndWidth(
 	        range.length,
@@ -18426,11 +18431,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this.layer = null;
 	
-	    /**
-	     * @type {HTMLElement[]}
-	     */
-	    this.gridElements = null;
-	
 	    monthMove.on({
 	        monthMoveDragstart: this._onDragStart,
 	        monthMoveDrag: this._onDrag,
@@ -18453,8 +18453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        domutil.remove(this.element);
 	    }
 	
-	    this.monthMove = this.elements = this.layer =
-	        this.gridElements = null;
+	    this.monthMove = this.elements = this.layer = null;
 	};
 	
 	/**
@@ -18511,18 +18510,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} dragEvent - drag event data from MonthMoveGuide#_onDrag
 	 */
 	MonthMoveGuide.prototype._updateGridBgColor = function(dragEvent) {
-	    var gridElements = this.gridElements,
+	    var gridElements = domutil.find(config.classname('.weekday-grid-line'), this.monthMove.monthView.container, true),
 	        className = config.classname('weekday-filled'),
-	        targetIndex = (dragEvent.x + (dragEvent.sizeX * dragEvent.y)),
-	        target = gridElements[targetIndex];
+	        targetIndex = (dragEvent.x + (dragEvent.sizeX * dragEvent.y));
 	
 	    this._clearGridBgColor();
 	
-	    if (!target) {
+	    if (!gridElements || !gridElements[targetIndex]) {
 	        return;
 	    }
 	
-	    domutil.addClass(target, className);
+	    domutil.addClass(gridElements[targetIndex], className);
 	};
 	
 	/**
@@ -18541,14 +18539,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        layer = new FloatingLayer(null, container);
 	
 	    this._hideOriginScheduleBlocks(model.cid());
-	
-	    if (!this.gridElements) {
-	        this.gridElements = domutil.find(
-	            config.classname('.weekday-grid-line'),
-	            container,
-	            true
-	        );
-	    }
 	
 	    this.layer = layer;
 	    layer.setSize(widthPercent + '%', height);
