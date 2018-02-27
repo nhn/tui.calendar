@@ -43,4 +43,13 @@ describe('VPanel', function() {
 
         expect(domutil.setData).toHaveBeenCalledWith(container, 'autoHeight', true);
     });
+
+    it('setHeight() can set specified height after force resizing if options.autoHeight is true', function() {
+        inst.options.autoHeight = true;
+        inst.isHeightForcedSet = true;
+
+        inst.setHeight(null, 350);
+
+        expect(container.style.height).toBe('350px');
+    });
 });
