@@ -67,10 +67,11 @@ VPanel.prototype.isSplitter = function() {
 VPanel.prototype.setHeight = function(container, newHeight, force) {
     var maxHeight = this.options.maxHeight;
     var minHeight = this.options.minHeight;
+    var autoHeight = this.options.autoHeight;
     container = container || this.container;
 
     // 한번 force 호출이 일어난 이후에는 force 호출만 허용한다
-    if (!force && this.isHeightForcedSet) {
+    if (!force && this.isHeightForcedSet && !autoHeight) {
         return;
     }
 
