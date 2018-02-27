@@ -128,7 +128,7 @@ More.prototype.render = function(viewModel) {
     var self = this;
     var pos = this._getRenderPosition(target, weekItem);
     var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
-    var width = viewModel.width + (OUT_PADDING * 2);
+    var width = target.offsetWidth + (OUT_PADDING * 2);
     var optMoreLayerSize = this.options.moreLayerSize;
     this._viewModel = viewModel;
 
