@@ -17,19 +17,6 @@ var config = require('../config'),
     More = require('../view/month/more');
 
 /**
- * Find a grid element for more element
- * @param {HTMLElement} moreTarget - more element
- * @param {number} day - day number
- * @returns {HTMLElement}
- */
-function findGridTarget(moreTarget, day) {
-    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
-    var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
-
-    return weekGridEls[day];
-}
-
-/**
  * Get the view model for more layer
  * @param {TZDate} date - date has more schedules
  * @param {HTMLElement} target - target element
@@ -44,10 +31,8 @@ function getViewModelForMoreLayer(date, target, schedules) {
 
     return {
         target: target,
-        gridTarget: findGridTarget(target, date.getDay()),
         date: datetime.format(date, 'YYYY.MM.DD'),
-        schedules: schedules.sort(array.compare.schedule.asc),
-        width: target.offsetWidth
+        schedules: schedules.sort(array.compare.schedule.asc)
     };
 }
 
