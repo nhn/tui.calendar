@@ -3,6 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  */
 'use strict';
+
 var undef = (function() {})();
 module.exports = function() {
     function pickTitle(matrix) {
@@ -21,7 +22,6 @@ module.exports = function() {
         return titleList;
     }
 
-
     function fail(msg) {
         return {
             message: msg,
@@ -33,7 +33,7 @@ module.exports = function() {
         return function matcher(actual, expected) {
             var i, j, cnt, cnt2,
                 aMatrix, aLength, bMatrix, bLength,
-                aColumn, bColumn, aViewModel, bValue,
+                aColumn, aViewModel, bValue,
                 result = {
                     message: '매트릭스 일치',
                     pass: true
@@ -71,13 +71,12 @@ module.exports = function() {
                         return fail('[' + i + '][' + j + '] 번째 매트릭스 다름\n' +
                                     'actual: ' + aViewModel + '\n' +
                                     'expected: ' + bValue);
-
                     }
                 }
             }
 
             return result;
-        }
+        };
     }
 
     function titleComparator(viewModel, title) {
@@ -89,12 +88,12 @@ module.exports = function() {
     }
 
     return {
-        toEqualMatricesTitle: function(util, customEqualityTesters) {
+        toEqualMatricesTitle: function() {
             return {
                 compare: getMatcher(titleComparator)
             };
         },
-        toEqualMatricesTop: function(util, customEqualityTesters) {
+        toEqualMatricesTop: function() {
             return {
                 compare: getMatcher(topComparator)
             };

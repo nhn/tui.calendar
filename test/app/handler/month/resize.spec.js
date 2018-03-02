@@ -1,3 +1,5 @@
+'use strict';
+
 var MonthResize = require('handler/month/resize');
 var controllerFactory = require('factory/controller');
 var TZDate = require('common/timezone').Date;

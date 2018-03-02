@@ -1,3 +1,5 @@
+'use strict';
+
 var AlldayResizeGuide = require('handler/allday/resizeGuide');
 
 describe('handler:AlldayResizeGuide', function() {

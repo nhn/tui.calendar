@@ -1,3 +1,5 @@
+'use strict';
+
 var util = require('tui-code-snippet');
 var array = require('common/array');
 var Collection = require('common/collection');
@@ -59,21 +61,23 @@ describe('Base.Core', function() {
     describe('getLastRowInColumn()', function() {
         var test;
         beforeEach(function() {
+            /* eslint-disable no-undefined */
             test = [
-                [1,     1,          1        ],
-                [1,     undefined,  3        ],
-                [4,     undefined,  undefined]
+                [1, 1, 1],
+                [1, undefined, 3],
+                [4, undefined, undefined]
             ];
         });
 
         it('return false when column not exist.', function() {
             var result = controller.Core.getLastRowInColumn(test, 4);
-            expect(result).toBe(false);
 
+            expect(result).toBe(false);
         });
 
         it('can calculate last row in column in 2d array.', function() {
             var result = controller.Core.getLastRowInColumn(test, 0);
+
             expect(result).toBe(2);
         });
     });
@@ -123,12 +127,14 @@ describe('Base.Core', function() {
         });
 
         it('fill renderStarts, renderEnds to each view model in collection.', function() {
+            var limit1,
+                limit2,
+                viewModel;
             // 5/1 10:20 ~ 5/1 10:40
             collection.add(ScheduleViewModel.create(scheduleList[0]));
 
-            var limit1 = new TZDate('2015-05-01T10:30:00+09:00');
-            var limit2 = new TZDate('2015-05-01T10:40:00+09:00');
-            var viewModel;
+            limit1 = new TZDate('2015-05-01T10:30:00+09:00');
+            limit2 = new TZDate('2015-05-01T10:40:00+09:00');
 
             controller.Core.limitRenderRange(limit1, limit2, collection);
 
@@ -170,60 +176,70 @@ describe('Base.Core', function() {
             d1 = new TZDate('2015-05-01T09:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:10:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(0);
 
             // B: 09:30 ~ 10:20
             d1 = new TZDate('2015-05-01T09:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:20:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // C: 09:30 ~ 10:30
             d1 = new TZDate('2015-05-01T09:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:30:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // D: 10:20 ~ 10:30
             d1 = new TZDate('2015-05-01T10:20:00+09:00');
             d2 = new TZDate('2015-05-01T10:30:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // E: 10:25 ~ 10:35
             d1 = new TZDate('2015-05-01T10:25:00+09:00');
             d2 = new TZDate('2015-05-01T10:35:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // F: 10:30 ~ 10:40
             d1 = new TZDate('2015-05-01T10:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:40:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // G: 10:30 ~ 10:50
             d1 = new TZDate('2015-05-01T10:30:00+09:00');
             d2 = new TZDate('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // H: 10:40 ~ 10:50
             d1 = new TZDate('2015-05-01T10:40:00+09:00');
             d2 = new TZDate('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
 
             // I: 10:50 ~ 10:55
             d1 = new TZDate('2015-05-01T10:50:00+09:00');
             d2 = new TZDate('2015-05-01T10:55:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(0);
 
             // L: 10:10 ~ 10:50
             d1 = new TZDate('2015-05-01T10:10:00+09:00');
             d2 = new TZDate('2015-05-01T10:50:00+09:00');
             filter = controller.Core.getScheduleInDateRangeFilter(d1, d2);
+
             expect(collection.find(filter).length).toBe(1);
         });
     });

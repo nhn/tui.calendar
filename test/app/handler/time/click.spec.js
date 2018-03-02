@@ -1,3 +1,5 @@
+'use strict';
+
 var domutil = require('common/domutil');
 var Collection = require('common/collection');
 var TimeClick = require('handler/time/click');
@@ -8,7 +10,8 @@ describe('handler:TimeClick', function() {
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정
         mockCollection = new Collection();
-        mockCollection.add({_id: '2', text: 'hello'});
+        mockCollection.add({_id: '2',
+            text: 'hello'});
 
         mockInst = jasmine.createSpyObj('TimeClick', ['checkExpectCondition', 'fire']);
         mockInst.baseController = {
@@ -18,7 +21,6 @@ describe('handler:TimeClick', function() {
 
         spyOn(domutil, 'closest').and.returnValue(true);
     });
-
 
     it('_onClick fire custom event "time_click_click" when target element is related with one of event instance of base controllers.', function() {
         var vMouseEvent = {originEvent: 'test'};

@@ -1,3 +1,5 @@
+'use strict';
+
 var FloatingLayer = require('common/floatingLayer');
 
 describe('FloatingLayer', function() {

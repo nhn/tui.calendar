@@ -1,3 +1,5 @@
+'use strict';
+
 var common = require('common/common');
 var domutil = require('common/domutil');
 var MonthGuide = require('handler/month/guide');
@@ -25,6 +27,7 @@ describe('handler:month/guide', function() {
             exceedR: true
         };
         actual = proto._getOriginIndicate.call(mockInst, [1, 1], [2, 2]);
+
         expect(actual).toEqual(expected);
 
         // 2,3 ~ 5,3 드래그 시 계산
@@ -35,6 +38,7 @@ describe('handler:month/guide', function() {
             exceedR: undef
         };
         actual = proto._getOriginIndicate.call(mockInst, [2, 3], [5, 3]);
+
         expect(actual).toEqual(expected);
 
         // 2,3 ~ 1,0
@@ -45,6 +49,7 @@ describe('handler:month/guide', function() {
             exceedR: undef
         };
         actual = proto._getOriginIndicate.call(mockInst, [2, 3], [1, 0]);
+
         expect(actual).toEqual(expected);
     });
 
@@ -64,6 +69,7 @@ describe('handler:month/guide', function() {
             exceedR: undef
         };
         actual = proto._getMouseIndicate.call(mockInst, [0, 2], [1, 4]);
+
         expect(actual).toEqual(expected);
 
         // 3,4 ~ 2,4
@@ -74,6 +80,7 @@ describe('handler:month/guide', function() {
             exceedR: undef
         };
         actual = proto._getMouseIndicate.call(mockInst, [3, 4], [2, 4]);
+
         expect(actual).toEqual(expected);
 
         // 3,2 ~ 2,3
@@ -84,6 +91,7 @@ describe('handler:month/guide', function() {
             exceedR: undef
         };
         actual = proto._getMouseIndicate.call(mockInst, [3, 2], [2, 3]);
+
         expect(actual).toEqual(expected);
     });
 
@@ -105,7 +113,6 @@ describe('handler:month/guide', function() {
 
             mockInst._getExcludesInRange = proto._getExcludesInRange;
             mockInst._getGuideElement.and.returnValue(true);
-
 
             // 가이드 엘리먼트가 0, 1 에 존재하는 상태에서
             mockInst.options = {
@@ -145,7 +152,6 @@ describe('handler:month/guide', function() {
                     renderEndDate: '2016-01-09'
                 }
             },
-            mockInst,
             date;
 
         beforeEach(function() {
@@ -157,15 +163,19 @@ describe('handler:month/guide', function() {
 
         it('should calculate coordinate by date properly.', function() {
             date = new Date('2015-12-29T09:30:00+09:00');
+
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, 0]);
 
             date = new Date('2016-01-06T00:00:00+09:00');
+
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([3, 1]);
 
             date = new Date('2016-01-13T09:30:00+09:00');
+
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([3, 2]);
 
             date = new Date('2015-12-15T00:00:00+09:00');
+
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, -2]);
 
             mockInst.days = 5;
@@ -174,6 +184,7 @@ describe('handler:month/guide', function() {
             w2.options.renderEndDate = '2016-01-05';
 
             date = new Date('2015-12-24T00:00:00+09:00');
+
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, -1]);
         });
     });

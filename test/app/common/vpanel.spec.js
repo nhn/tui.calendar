@@ -1,3 +1,5 @@
+'use strict';
+
 var domutil = require('common/domutil');
 var VPanel = require('common/vpanel');
 
@@ -10,12 +12,15 @@ describe('VPanel', function() {
     });
 
     it('getResizeInfoByGrowth() calculate new height and remain height by supplied growth value.', function() {
+        var actual;
         spyOn(inst, 'getHeight').and.returnValue(100);
 
-        var actual = inst.getResizeInfoByGrowth(+20);
+        actual = inst.getResizeInfoByGrowth(+20);
+
         expect(actual).toEqual([120, -20]);
 
         actual = inst.getResizeInfoByGrowth(-20);
+
         expect(actual).toEqual([80, 20]);
     });
 
