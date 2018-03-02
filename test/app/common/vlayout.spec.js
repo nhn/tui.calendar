@@ -22,8 +22,10 @@ describe('VLayout', function() {
     it('getLayoutData() return height list for each normal panels with `autoHeight` false', function() {
         inst = new VLayout({
             panels: [
-                {minHeight: 50,
-                    height: 60},
+                {
+                    minHeight: 50,
+                    height: 60
+                },
                 {isSplitter: true},
                 {autoHeight: true}
             ]
@@ -37,8 +39,10 @@ describe('VLayout', function() {
 
         inst = new VLayout({
             panels: [
-                {minHeight: 50,
-                    height: 60},
+                {
+                    minHeight: 50,
+                    height: 60
+                },
                 {isSplitter: true},
                 {autoHeight: true}
             ]

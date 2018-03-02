@@ -22,31 +22,39 @@ describe('week:view/TaskView', function() {
                 grids: datetime.getGridLeftAndWidth(2, 0, false),
                 schedulesInDateRange: {
                     task: {
-                        '2015-05-01': {morning: {length: 0},
+                        '2015-05-01': {
+                            morning: {length: 0},
                             lunch: {length: 0},
                             evening: {length: 0},
-                            isToday: false},
-                        '2015-05-02': {morning: {length: 0},
+                            isToday: false
+                        },
+                        '2015-05-02': {
+                            morning: {length: 0},
                             lunch: {length: 0},
                             evening: {length: 0},
-                            isToday: false}
+                            isToday: false
+                        }
                     }
                 }
             });
             var expected = {
                 schedules: {
-                    '2015-05-01': {morning: {length: 0},
+                    '2015-05-01': {
+                        morning: {length: 0},
                         lunch: {length: 0},
                         evening: {length: 0},
                         isToday: false,
                         left: 0,
-                        width: 50},
-                    '2015-05-02': {morning: {length: 0},
+                        width: 50
+                    },
+                    '2015-05-02': {
+                        morning: {length: 0},
                         lunch: {length: 0},
                         evening: {length: 0},
                         isToday: false,
                         left: 50,
-                        width: 50}
+                        width: 50
+                    }
                 },
                 height: 0
             };
