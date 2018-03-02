@@ -9,8 +9,10 @@ describe('week:handler:MilestoneClick', function() {
     beforeEach(function() {
         // 컨트롤러에 id '2'인 객체가 있다고 가정
         mockCollection = new Collection();
-        mockCollection.add({_id: '2',
-            text: 'hello'});
+        mockCollection.add({
+            _id: '2',
+            text: 'hello'
+        });
 
         mockInst = jasmine.createSpyObj('MilstoneClick', ['checkExpectedCondition', 'fire']);
         mockInst.baseController = {
