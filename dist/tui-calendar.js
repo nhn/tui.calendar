@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.3 | Fri Feb 23 2018
+ * @version 0.6.4 | Fri Mar 02 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -9021,10 +9021,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	VPanel.prototype.setHeight = function(container, newHeight, force) {
 	    var maxHeight = this.options.maxHeight;
 	    var minHeight = this.options.minHeight;
+	    var autoHeight = this.options.autoHeight;
 	    container = container || this.container;
 	
 	    // 한번 force 호출이 일어난 이후에는 force 호출만 허용한다
-	    if (!force && this.isHeightForcedSet) {
+	    if (!force && this.isHeightForcedSet && !autoHeight) {
 	        return;
 	    }
 	
@@ -15817,19 +15818,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    More = __webpack_require__(109);
 	
 	/**
-	 * Find a grid element for more element
-	 * @param {HTMLElement} moreTarget - more element
-	 * @param {number} day - day number
-	 * @returns {HTMLElement}
-	 */
-	function findGridTarget(moreTarget, day) {
-	    var weekdayEl = domutil.closest(moreTarget, config.classname('.weekday'));
-	    var weekGridEls = domutil.find(config.classname('.weekday-grid-line'), weekdayEl, true);
-	
-	    return weekGridEls[day];
-	}
-	
-	/**
 	 * Get the view model for more layer
 	 * @param {TZDate} date - date has more schedules
 	 * @param {HTMLElement} target - target element
@@ -15844,10 +15832,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return {
 	        target: target,
-	        gridTarget: findGridTarget(target, date.getDay()),
 	        date: datetime.format(date, 'YYYY.MM.DD'),
-	        schedules: schedules.sort(array.compare.schedule.asc),
-	        width: target.offsetWidth
+	        schedules: schedules.sort(array.compare.schedule.asc)
 	    };
 	}
 	
@@ -18786,7 +18772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var self = this;
 	    var pos = this._getRenderPosition(target, weekItem);
 	    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
-	    var width = viewModel.width + (OUT_PADDING * 2);
+	    var width = target.offsetWidth + (OUT_PADDING * 2);
 	    var optMoreLayerSize = this.options.moreLayerSize;
 	    this._viewModel = viewModel;
 	

@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.3 | Fri Feb 23 2018
+ * @version 0.6.4 | Fri Mar 02 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -657,9 +657,11 @@
   font-size: 14px;
   background: #f4f4f4;
   border-bottom: 1px solid #ddd;
+  position: relative;
 }
 .tui-full-calendar-month-more-close {
-  float: right;
+  position: absolute;
+  right: 0;
   outline: 0;
   background: none;
   border: 0;
