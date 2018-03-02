@@ -1,4 +1,19 @@
-rules:
-  no-plusplus: 0
-  no-magic-numbers: 0
-  strict: 0
+{
+  "extends": "tui",
+  "env": {
+    "jasmine": true
+  },
+  "plugins": [
+    "jasmine"
+  ],
+  "globals": {
+    "fixture": false,
+    "_": false
+  },
+  "rules": {
+    "require-jsdoc": 0,
+    "max-nested-callbacks": [
+      "error", 7
+    ]
+  }
+}

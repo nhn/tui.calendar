@@ -1,9 +1,10 @@
+'use strict';
+
 var getMousePosData = require('handler/month/core');
 var Month = require('view/month/month');
 var WeekdayInMonth = require('view/month/weekdayInMonth');
 var TZDate = require('common/timezone').Date;
 var datetime = require('common/datetime');
-
 
 describe('handler:MonthCore', function() {
     var m, w1, w2;

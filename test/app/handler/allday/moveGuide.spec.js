@@ -1,3 +1,5 @@
+'use strict';
+
 var AlldayMoveGuide = require('handler/allday/moveGuide');
 
 describe('handler:AlldayMoveGuide', function() {

@@ -1,3 +1,5 @@
+'use strict';
+
 var AlldayResize = require('handler/allday/resize');
 var TZDate = require('common/timezone').Date;
 
@@ -59,7 +61,9 @@ describe('handler:AlldayResize', function() {
         it('update schedule model properly by supplied schedule data.', function() {
             // 하루짜리 일정
             mockScheduleInstance = {
-                cid: function() { return '30'; },
+                cid: function() {
+                    return '30';
+                },
                 start: new TZDate('2015-04-30T00:00:00+09:00'),
                 getStarts: function() {
                     return mockScheduleInstance.start;

@@ -1,3 +1,5 @@
+'use strict';
+
 var util = require('tui-code-snippet');
 var array = require('common/array');
 var controllerFactory = require('factory/controller');
@@ -43,8 +45,7 @@ describe('Base.Month', function() {
             var start = new TZDate(2015, 10, 1),
                 end = new TZDate(2015, 10, 30);
 
-            actual = controller.findByDateRange(start, end);
-/**
+            /**
 * |15        |16        |17        |18        |19        |20        |21        |
 * |<<<<[김동우] 휴가>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>|
 * |          |<<<<김태용[오전반차]>>>>>>>>>>>>|          |          |          |
@@ -74,6 +75,8 @@ describe('Base.Month', function() {
                 [undef, undef, 5],
                 [undef, undef, 6]
             ];
+
+            actual = controller.findByDateRange(start, end);
 
             expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
             expect(actual[0]).toEqualMatricesTop(expectedTop);

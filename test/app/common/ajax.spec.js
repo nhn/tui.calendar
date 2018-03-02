@@ -1,3 +1,5 @@
+'use strict';
+
 var AJAX = require('common/ajax');
 
 describe('API', function() {
@@ -21,17 +23,22 @@ describe('API', function() {
             mock;
 
         beforeEach(function() {
-            origin = {a: '123', name: 'cony'};
+            origin = {
+                a: '123',
+                name: 'cony'
+            };
             mock = stringify(origin);
         });
 
         it('type 파라미터가 json이면 결과를 파싱하여 객체로 반환한다.', function() {
             var processed = ajax._processRawData('json', mock);
+
             expect(processed).toEqual(origin);
         });
 
         it('json이외의 타입은 그냥 반환한다', function() {
             var processed = ajax._processRawData('text/html', mock);
+
             expect(processed).toBe(stringify(origin));
         });
     });
@@ -60,6 +67,7 @@ describe('API', function() {
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
+
             expect(spies.success).toHaveBeenCalled();
 
             mockXHR = {
@@ -69,6 +77,7 @@ describe('API', function() {
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
+
             expect(spies.fail).toHaveBeenCalled();
         });
 
@@ -80,6 +89,7 @@ describe('API', function() {
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
+
             expect(spies.success).not.toHaveBeenCalled();
             expect(spies.error).toHaveBeenCalled();
 
@@ -94,6 +104,7 @@ describe('API', function() {
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
+
             expect(spies.success).not.toHaveBeenCalled();
             expect(spies.error).toHaveBeenCalled();
         });
@@ -106,13 +117,17 @@ describe('API', function() {
             };
 
             ajax._onReadyStateChange(mockOption, mockXHR);
+
             expect(spies.complete).toHaveBeenCalled();
         });
     });
 
     describe('ajax()', function() {
         var doneFn,
-            req;
+            req,
+            url,
+            url1,
+            url2;
 
         beforeEach(function() {
             doneFn = jasmine.createSpy('success');
@@ -123,13 +138,13 @@ describe('API', function() {
                 cache: false
             });
 
-            var url1 = jasmine.Ajax.requests.mostRecent().url;
+            url1 = jasmine.Ajax.requests.mostRecent().url;
 
             ajax.ajax('/ajax.test', {
                 cache: true
             });
 
-            var url2 = jasmine.Ajax.requests.mostRecent().url;
+            url2 = jasmine.Ajax.requests.mostRecent().url;
 
             expect(url1).not.toBe(url2);
         });
@@ -139,9 +154,9 @@ describe('API', function() {
                 cache: false
             });
 
-            var url = jasmine.Ajax.requests.mostRecent().url;
+            url = jasmine.Ajax.requests.mostRecent().url;
 
-            expect(url).toMatch(/\/ajax\.test\?myname\=hong&_=\d+/)
+            expect(url).toMatch(/\/ajax\.test\?myname=hong&_=\d+/);
         });
 
         it('ajax 요청을 보낸다', function() {
@@ -195,6 +210,7 @@ describe('API', function() {
             });
 
             req = jasmine.Ajax.requests.mostRecent();
+
             expect(req.method).toBe('GET');
 
             ajax.ajax('/ajax.test', {
@@ -202,6 +218,7 @@ describe('API', function() {
             });
 
             req = jasmine.Ajax.requests.mostRecent();
+
             expect(req.method).toBe('DELETE');
         });
 
@@ -213,7 +230,7 @@ describe('API', function() {
 
             req = jasmine.Ajax.requests.mostRecent();
 
-            expect(req.requestHeaders['type']).toBe('text');
+            expect(req.requestHeaders.type).toBe('text');
             expect(req.requestHeaders['content-type']).toBe('text/html');
         });
 
@@ -232,7 +249,6 @@ describe('API', function() {
 
             expect(successFn).not.toHaveBeenCalled();
             expect(errFn).toHaveBeenCalled();
-
         });
 
         it('complete콜백은 성공/실패 유무와 상관없이 수행된다', function() {

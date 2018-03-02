@@ -1,3 +1,5 @@
+'use strict';
+
 var WeekdayInMonth = require('view/month/weekdayInMonth');
 var Schedule = require('model/schedule');
 var ScheduleViewModel = require('model/viewModel/scheduleViewModel');

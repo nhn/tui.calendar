@@ -1,3 +1,5 @@
+'use strict';
+
 var util = require('tui-code-snippet');
 var View = require('view/view');
 var Calendar = require('factory/calendar');
@@ -36,10 +38,12 @@ describe('Calendar', function() {
     describe('CRUD', function() {
         it('createSchedules() can create Schedule model from dataObject list', function() {
             inst.createSchedules('hello world', true);
+
             expect(controller.createSchedules).toHaveBeenCalledWith('hello world', true);
             expect(inst.render).not.toHaveBeenCalled();
 
             inst.createSchedules('hello world');
+
             expect(inst.render).toHaveBeenCalled();
         });
 
@@ -125,6 +129,7 @@ describe('Calendar', function() {
             spyOn(document, 'querySelector').and.callThrough();
 
             inst.getElement(id, calendarId);
+
             expect(document.querySelector).toHaveBeenCalled();
         });
     });
