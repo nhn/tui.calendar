@@ -34,7 +34,7 @@
 | Yes | Yes | Yes | Yes | 9+ |
 
 ## 🎨 Features
-
+![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/36890790-8ede0bc4-1e42-11e8-8046-f90290f3e1bf.gif)
 * Supports various view types: daily, weekly, monthly(6 weeks, 2 weeks, 3 weeks)
 * Supports efficient management of milestone and task schedules
 * Supports the narrow width of weekend
