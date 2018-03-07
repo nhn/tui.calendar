@@ -5,8 +5,13 @@
 'use strict';
 
 var MIN_TO_MS = 60 * 1000;
-var SYSTEM_OFFSET_MS = new Date().getTimezoneOffset() * MIN_TO_MS;
-var customOffsetMs = SYSTEM_OFFSET_MS;
+var getTimezoneOffset = function(time) {
+    time = time || Date.now();
+
+    return new Date(time).getTimezoneOffset() * MIN_TO_MS;
+};
+
+var customOffsetMs = getTimezoneOffset();
 
 var getterMethods = [
     'getDate',
@@ -35,7 +40,9 @@ var setterMethods = [
  * @returns {Date}
  */
 function createDateWithMultipleArgs(args) {
-    return new Date(Date.UTC.apply(null, args) + SYSTEM_OFFSET_MS);
+    var utc = Date.UTC.apply(null, args);
+
+    return new Date(utc + getTimezoneOffset(utc));
 }
 
 /**
@@ -58,7 +65,7 @@ function createDateWithSingleArg(arg) {
         throw new Error('Invalid Type');
     }
 
-    return new Date(time - customOffsetMs + SYSTEM_OFFSET_MS);
+    return new Date(time - customOffsetMs + getTimezoneOffset(time));
 }
 
 /**
@@ -82,11 +89,11 @@ function TZDate() {
 }
 
 TZDate.prototype.setTime = function(time) {
-    return this._date.setTime(time - customOffsetMs + SYSTEM_OFFSET_MS);
+    return this._date.setTime(time - customOffsetMs + getTimezoneOffset(time));
 };
 
 TZDate.prototype.getTime = function() {
-    return this._date.getTime() + customOffsetMs - SYSTEM_OFFSET_MS;
+    return this._date.getTime() + customOffsetMs - getTimezoneOffset(this._date.getTime());
 };
 
 TZDate.prototype.valueOf = function() {
@@ -123,6 +130,6 @@ module.exports = {
      * Reset system timezone and custom timezone
      */
     restoreOffset: function() {
-        customOffsetMs = SYSTEM_OFFSET_MS;
+        customOffsetMs = getTimezoneOffset();
     }
 };
