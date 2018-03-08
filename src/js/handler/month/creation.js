@@ -263,7 +263,7 @@ MonthCreation.prototype._onClick = function(e) {
         if (self._requestOnClick) {
             self.fire('monthCreationClick', eventData);
 
-            range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+            range = self._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 
             self._createSchedule({
                 start: range.start,
@@ -277,20 +277,21 @@ MonthCreation.prototype._onClick = function(e) {
 };
 
 /**
- * Adjust time to half hour or hour o'clock
+ * Adjust time to our o'clock
  * @param {TZDate} start - start time
  * @param {TZDate} end - end time
  * @returns {Object} start and end
  */
-function adjustStartAndEndTime(start, end) {
+MonthCreation.prototype._adjustStartAndEndTime = function(start, end) {
     var now = new TZDate();
     var hours = now.getHours();
     var minutes = now.getMinutes();
+
+    // adjust start to less time. Adjusting had been greater time in monthly view when clicking grid
     if (minutes <= 30) {
-        minutes = 30;
-    } else {
-        hours += 1;
         minutes = 0;
+    } else {
+        minutes = 30;
     }
     start.setHours(hours, minutes, 0, 0);
     end.setHours(hours + 1, minutes, 0, 0);
@@ -299,7 +300,7 @@ function adjustStartAndEndTime(start, end) {
         start: start,
         end: end
     };
-}
+};
 
 /**
  * Returns whether the given element is Weekday-Schedule.
