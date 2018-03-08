@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.4 | Fri Mar 02 2018
+ * @version 0.6.5 | Thu Mar 08 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -17046,7 +17046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (self._requestOnClick) {
 	            self.fire('monthCreationClick', eventData);
 	
-	            range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+	            range = self._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 	
 	            self._createSchedule({
 	                start: range.start,
@@ -17060,20 +17060,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Adjust time to half hour or hour o'clock
+	 * Adjust time to our o'clock
 	 * @param {TZDate} start - start time
 	 * @param {TZDate} end - end time
 	 * @returns {Object} start and end
 	 */
-	function adjustStartAndEndTime(start, end) {
+	MonthCreation.prototype._adjustStartAndEndTime = function(start, end) {
 	    var now = new TZDate();
 	    var hours = now.getHours();
 	    var minutes = now.getMinutes();
+	
+	    // adjust start to less time. Adjusting had been greater time in monthly view when clicking grid
 	    if (minutes <= 30) {
-	        minutes = 30;
-	    } else {
-	        hours += 1;
 	        minutes = 0;
+	    } else {
+	        minutes = 30;
 	    }
 	    start.setHours(hours, minutes, 0, 0);
 	    end.setHours(hours + 1, minutes, 0, 0);
@@ -17082,7 +17083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        start: start,
 	        end: end
 	    };
-	}
+	};
 	
 	/**
 	 * Returns whether the given element is Weekday-Schedule.

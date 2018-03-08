@@ -8,7 +8,7 @@
     "dist/tui-calendar.js",
     "dist/tui-calendar.css"
   ],
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "TOAST UI Calendar",
   "ignore": [
     "**/.*",
