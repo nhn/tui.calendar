@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home | Calendar</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 13px">
+        
+            <a href="https://github.com/nhnent/tui.jsdoc-template" rel="noopener noreferrer" target="_blank">
+                <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Calendar</a></h1>
+        
+            <span class="version">v0.6.5</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-example01-basic.html">example01-basic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example01-basic_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Calendar.html">Calendar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Calendar_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Calendar.html#options">options</a></li><li><a href="Calendar.html#renderDate">renderDate</a></li><li><a href="Calendar.html#renderRange">renderRange</a></li><li><a href="Calendar.html#viewName">viewName</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Calendar.html#.setTimezoneOffset">setTimezoneOffset</a></li><li><a href="Calendar.html#clear">clear</a></li><li><a href="Calendar.html#createSchedules">createSchedules</a></li><li><a href="Calendar.html#deleteSchedule">deleteSchedule</a></li><li><a href="Calendar.html#destroy">destroy</a></li><li><a href="Calendar.html#getElement">getElement</a></li><li><a href="Calendar.html#getSchedule">getSchedule</a></li><li><a href="Calendar.html#next">next</a></li><li><a href="Calendar.html#prev">prev</a></li><li><a href="Calendar.html#refresh">refresh</a></li><li><a href="Calendar.html#render">render</a></li><li><a href="Calendar.html#scrollToNow">scrollToNow</a></li><li><a href="Calendar.html#setCalendarColor">setCalendarColor</a></li><li><a href="Calendar.html#setDate">setDate</a></li><li><a href="Calendar.html#today">today</a></li><li><a href="Calendar.html#toggleTaskView">toggleTaskView</a></li><li><a href="Calendar.html#toggleView">toggleView</a></li><li><a href="Calendar.html#updateSchedule">updateSchedule</a></li></ul><div class="member-type">Events</div><ul class="inner"><li><a href="Calendar.html#event:beforeCreateSchedule">beforeCreateSchedule</a></li><li><a href="Calendar.html#event:beforeDeleteSchedule">beforeDeleteSchedule</a></li><li><a href="Calendar.html#event:beforeUpdateSchedule">beforeUpdateSchedule</a></li><li><a href="Calendar.html#event:clickDayname">clickDayname</a></li><li><a href="Calendar.html#event:clickSchedule">clickSchedule</a></li><li><a href="Calendar.html#event:resizePanel">resizePanel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3><a href="global.html">Global</a></h3></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section>
+        <article class="readme"><h1>TOAST UI Calendar</h1><blockquote>
+<p>A JavaScript schedule calendar with full featured. Now your service just got the customizable calendar.</p>
+</blockquote>
+<p><a href="https://github.com/nhnent/tui.calendar/releases/latest"><img src="https://img.shields.io/github/release/nhnent/tui.calendar.svg" alt="GitHub release"></a>
+<a href="https://www.npmjs.com/package/tui-calendar"><img src="https://img.shields.io/npm/v/tui-calendar.svg" alt="npm"></a>
+<a href="https://github.com/nhnent/tui.calendar/blob/master/LICENSE"><img src="https://img.shields.io/github/license/nhnent/tui.calendar.svg" alt="GitHub license"></a>
+<a href="https://github.com/nhnent/tui.project-name/labels/help%20wanted"><img src="https://img.shields.io/badge/PRs-welcome-ff69b4.svg" alt="PRs welcome"></a>
+<a href="https://github.com/nhnent"><img src="https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN%20Entertainment-ff1414.svg" alt="code with hearth by NHN Entertainment"></a></p>
+<h2>🚩 Table of Contents</h2><ul>
+<li><a href="#-browser-support">Browser Support</a></li>
+<li><a href="#-features">Features</a></li>
+<li><a href="#-examples">Examples</a></li>
+<li><a href="#-install">Install</a><ul>
+<li><a href="#via-package-manager">Via Package Manager</a></li>
+<li><a href="#download-source-files">Download Source Files</a></li>
+</ul>
+</li>
+<li><a href="#-usage">Usage</a><ul>
+<li><a href="#html">HTML</a></li>
+<li><a href="#javascript">JavaScript</a></li>
+</ul>
+</li>
+<li><a href="#-pull-request-steps">Pull Request Steps</a><ul>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#develop">Develop</a></li>
+<li><a href="#pull-request">Pull Request Steps</a></li>
+</ul>
+</li>
+<li><a href="#-documents">Documents</a></li>
+<li><a href="#-contributing">Contributing</a></li>
+<li><a href="#-dependency">Dependency</a></li>
+<li><a href="#-license">License</a></li>
+</ul>
+<h2>🌏 Browser Support</h2><table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome</th>
+<th style="text-align:center"><img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox</th>
+<th style="text-align:center"><img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari</th>
+<th style="text-align:center"><img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge</th>
+<th style="text-align:center"><img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Yes</td>
+<td style="text-align:center">Yes</td>
+<td style="text-align:center">Yes</td>
+<td style="text-align:center">Yes</td>
+<td style="text-align:center">9+</td>
+</tr>
+</tbody>
+</table>
+<h2>🎨 Features</h2><p><img src="https://user-images.githubusercontent.com/26706716/36890790-8ede0bc4-1e42-11e8-8046-f90290f3e1bf.gif" alt="tui-calendar-demo"></p>
+<ul>
+<li>Supports various view types: daily, weekly, monthly(6 weeks, 2 weeks, 3 weeks)</li>
+<li>Supports efficient management of milestone and task schedules</li>
+<li>Supports the narrow width of weekend</li>
+<li>Supports changing start day of week</li>
+<li>Supports customizing the date and schedule information UI(including a header and a footer of grid cell)</li>
+<li>Supports adjusting a schedule by mouse dragging</li>
+</ul>
+<h2>🐾 Examples</h2><ul>
+<li><a href="https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html">Basic</a> : Example of using default options.</li>
+</ul>
+<h2>💾 Install</h2><p>TOAST UI products can be used by using the package manager or downloading the source directly.
+However, we highly recommend using the package manager.</p>
+<h3>Via Package Manager</h3><p>TOAST UI products are registered in two package managers, <a href="https://www.npmjs.com/">npm</a> and <a href="https://bower.io/">bower</a>.
+You can conveniently install it using the commands provided by each package manager.
+When using npm, be sure to use it in the environment <a href="https://nodejs.org">Node.js</a> is installed.</p>
+<h4>npm</h4><pre class="prettyprint source lang-sh"><code>$ npm install --save tui-calendar # Latest version
+$ npm install --save tui-calendar@&lt;version> # Specific version</code></pre><h4>bower</h4><pre class="prettyprint source lang-sh"><code>$ bower install tui-calendar # Latest version
+$ bower install tui-calendar#&lt;tag> # Specific version</code></pre><h3>Download Source Files</h3><ul>
+<li><a href="https://github.com/nhnent/tui.calendar/tree/master/dist">Download bundle files</a></li>
+<li><a href="https://github.com/nhnent/tui.calendar/releases">Download all sources for each version</a></li>
+</ul>
+<h2>🔨 Usage</h2><h3>HTML</h3><p>Place a <code>&lt;div&gt;&lt;/div&gt;</code> where you want TOAST UI Calendar rendered.</p>
+<pre class="prettyprint source lang-html"><code>&lt;body>
+...
+&lt;div id=&quot;calendar&quot; style=&quot;height: 800px;&quot;>&lt;/div>
+...
+&lt;/body></code></pre><h3>JavaScript</h3><h4>Using namespace in browser environment</h4><pre class="prettyprint source lang-javascript"><code>var Calendar = tui.Calendar;</code></pre><h4>Using module format in node environment</h4><pre class="prettyprint source lang-javascript"><code>var Calendar = require('tui-calendar'); /* CommonJS */</code></pre><pre class="prettyprint source lang-javascript"><code>import Calendar from 'tui-calendar'; /* ES6 */</code></pre><p>Then you can create a calendar instance with <a href="https://nhnent.github.io/tui.calendar/latest/global.html#Options">options</a> to set configuration.</p>
+<pre class="prettyprint source lang-javascript"><code>var calendar = new Calendar('#calendar', {
+  defaultView: 'month',
+  taskView: true,
+  template: {
+    monthGridHeader: function(model) {
+      var date = new Date(model.date);
+      var template = '&lt;span class=&quot;tui-full-calendar-weekday-grid-date&quot;>' + date.getDate() + '&lt;/span>';
+      return template;
+    }
+  }
+});</code></pre><h2>🔧 Pull Request Steps</h2><p>TOAST UI products are open source, so you can create a pull request(PR) after you fix issues.
+Run npm scripts and develop yourself with the following process.</p>
+<h3>Setup</h3><p>Fork <code>develop</code> branch into your personal repository.
+Clone it to local computer. Install node modules.
+Before starting development, you should check to haveany errors.</p>
+<pre class="prettyprint source lang-sh"><code>$ git clone https://github.com/{your-personal-repo}/tui.calendar.git
+$ cd tui.calendar
+$ npm install
+$ npm run test</code></pre><h3>Develop</h3><p>Let's start development!
+You can see your code is reflected as soon as you saving the codes by running a server.
+Don't miss adding test cases and then make green rights.</p>
+<h4>Run webpack-dev-server</h4><pre class="prettyprint source lang-sh"><code>$ npm run serve
+$ npm run serve:ie8 # Run on Internet Explorer 8</code></pre><h4>Run karma test</h4><pre class="prettyprint source lang-sh"><code>$ npm run test</code></pre><h3>Pull Request</h3><p>Before PR, check to test lastly and then check any errors.
+If it has no error, commit and then push it!</p>
+<p>For more information on PR's step, please see links of Contributing section.</p>
+<h2>📙 Documents</h2><ul>
+<li><a href="https://github.com/nhnent/tui.calendar/blob/master/docs/getting-started.md">Getting Started</a></li>
+<li><a href="https://github.com/nhnent/tui.calendar/tree/master/docs">Tutorials</a></li>
+<li><a href="https://nhnent.github.io/tui.calendar/latest">APIs</a></li>
+</ul>
+<p>You can also see the older versions of API page on the <a href="https://github.com/nhnent/tui.calendar/releases">releases page</a>.</p>
+<h2>💬 Contributing</h2><ul>
+<li><a href="https://github.com/nhnent/tui.calendar/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a></li>
+<li><a href="https://github.com/nhnent/tui.calendar/blob/master/CONTRIBUTING.md">Contributing guideline</a></li>
+<li><a href="https://github.com/nhnent/tui.calendar/blob/master/docs/ISSUE_TEMPLATE.md">Issue guideline</a></li>
+<li><a href="https://github.com/nhnent/tui.calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md">Commit convention</a></li>
+</ul>
+<h2>🔩 Dependency</h2><ul>
+<li><a href="https://github.com/nhnent/tui.code-snippet">tui-code-snippet</a> &gt;=1.2.9</li>
+</ul>
+<h2>📜 License</h2><p>This software is licensed under the <a href="https://github.com/nhnent/tui.calendar/blob/master/LICENSE">MIT</a> © <a href="https://github.com/nhnent">NHN Entertainment</a>.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px; height: 13px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'package:tui-calendar_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
