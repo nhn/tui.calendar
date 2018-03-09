@@ -231,7 +231,7 @@ MonthCreation.prototype._onDblClick = function(e) {
 
     this.fire('monthCreationClick', eventData);
 
-    range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+    range = this._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 
     this._createSchedule({
         start: range.start,
