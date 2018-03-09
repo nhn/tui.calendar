@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.5 | Thu Mar 08 2018
+ * @version 0.6.6 | Fri Mar 09 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -17014,7 +17014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.fire('monthCreationClick', eventData);
 	
-	    range = adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+	    range = this._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
 	
 	    this._createSchedule({
 	        start: range.start,
