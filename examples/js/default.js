@@ -80,8 +80,8 @@
                 return '<i class="fa fa-close"></i>';
             },
             monthGridHeader: function(model) {
-                var date = new Date(model.date);
-                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+                var date = Number(model.date.split('-')[2]);
+                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date + '</span>';
                 var today = model.isToday ? 'TDY' : '';
                 if (today) {
                     template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
