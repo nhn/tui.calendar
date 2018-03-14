@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.7.1 | Wed Mar 14 2018
+ * @version 0.7.2 | Wed Mar 14 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -122,7 +122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {number} element left
 	 */
 	function getElLeft(viewModel, grids) {
-	    return grids[viewModel.left].left;
+	    return grids[viewModel.left] ? grids[viewModel.left].left : 0;
 	}
 	
 	/**
@@ -140,7 +140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        left = (viewModel.left + i) % length;
 	        left += parseInt((viewModel.left + i) / length, 10);
 	        if (left < length) {
-	            width += grids[left].width;
+	            width += grids[left] ? grids[left].width : 0;
 	        }
 	    }
 	
@@ -258,7 +258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
 	        var top = getElSize(((viewModel.top - 1) * blockHeight) + paddingTop, 'px', 'top');
-	        var left = getElSize(grids[viewModel.left].left, '%', 'left');
+	        var left = getElSize(grids[viewModel.left] ? grids[viewModel.left].left : 0, '%', 'left');
 	        var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
 	        var height = getElSize(viewModel.height, 'px', 'height');
 	
@@ -1785,13 +1785,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {array} Date array.
 	     */
 	    range: function(start, end, step) {
-	        var cursor = start.getTime();
+	        var startTime = start.getTime();
 	        var endTime = end.getTime();
+	        var cursor = startTime;
+	        var date = dw(startTime);
 	        var result = [];
 	
-	        while (cursor <= endTime) {
-	            result.push(new TZDate(cursor));
+	        while (cursor <= endTime && endTime > date.d.getTime()) {
+	            result.push(new TZDate(date.d));
 	            cursor = cursor + step;
+	            date.addDate(1);
 	        }
 	
 	        return result;
@@ -9402,8 +9405,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            dayName: daynames[day],
 	            isToday: datetime.isSameDate(d, new TZDate()),
 	            date: d.getDate(),
-	            left: grids[i].left,
-	            width: grids[i].width,
+	            left: grids[i] ? grids[i].left : 0,
+	            width: grids[i] ? grids[i].width : 0,
 	            renderDate: datetime.format(d, 'YYYY-MM-DD')
 	        };
 	    });
@@ -9649,7 +9652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    util.forEach(range, function(date, index) {
 	        if (datetime.isSameDate(now, date)) {
-	            todaymarkerLeft = grids[index].left;
+	            todaymarkerLeft = grids[index] ? grids[index].left : 0;
 	        }
 	    });
 	
@@ -9702,8 +9705,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        childOption = {
 	            index: i,
-	            left: grids[i].left,
-	            width: grids[i].width,
+	            left: grids[i] ? grids[i].left : 0,
+	            width: grids[i] ? grids[i].width : 0,
 	            ymd: ymd,
 	            isToday: isToday,
 	            isPending: options.isPending,
@@ -11187,8 +11190,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                isToday: ymd === today,
 	                ymd: ymd,
 	                hiddenSchedules: exceedDate[ymd] || 0,
-	                width: grids[index].width,
-	                left: grids[index].left
+	                width: grids[index] ? grids[index].width : 0,
+	                left: grids[index] ? grids[index].left : 0
 	            };
 	        })
 	    };
@@ -11435,8 +11438,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    util.forEach(schedules, function(schedule, key) {
 	        schedule.isToday = (key === today);
-	        schedule.left = grids[i].left;
-	        schedule.width = grids[i].width;
+	        schedule.left = grids[i] ? grids[i].left : 0;
+	        schedule.width = grids[i] ? grids[i].width : 0;
 	        i += 1;
 	    });
 	
@@ -11644,8 +11647,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    util.forEach(schedules, function(schedule, key) {
 	        schedule.isToday = (key === today);
-	        schedule.left = grids[i].left;
-	        schedule.width = grids[i].width;
+	        schedule.left = grids[i] ? grids[i].left : 0;
+	        schedule.width = grids[i] ? grids[i].width : 0;
 	        i += 1;
 	    });
 	
@@ -12901,7 +12904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var width = 0;
 	    var i = dragStartIndex;
 	    for (; i <= dragEndIndex; i += 1) {
-	        width += grids[i].width;
+	        width += grids[i] ? grids[i].width : 0;
 	    }
 	
 	    return width;
@@ -12920,7 +12923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        leftPercent,
 	        widthPercent;
 	
-	    leftPercent = data.grids[dragStartXIndex].left;
+	    leftPercent = data.grids[dragStartXIndex] ? data.grids[dragStartXIndex].left : 0;
 	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
 	
 	    /** eslint-disable require-jsdoc */
@@ -16199,8 +16202,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return {
 	                day: day,
 	                label: daynames[day],
-	                width: grids[index].width,
-	                left: grids[index].left
+	                width: grids[index] ? grids[index].width : 0,
+	                left: grids[index] ? grids[index].left : 0
 	            };
 	        }
 	    );
@@ -16213,8 +16216,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	
 	        util.forEach(daynameViewModel, function(daynameModel, index) {
-	            daynameModel.width = grids[index].width;
-	            daynameModel.left = grids[index].left;
+	            daynameModel.width = grids[index] ? grids[index].width : 0;
+	            daynameModel.left = grids[index] ? grids[index].left : 0;
 	        });
 	    }
 	
@@ -16240,7 +16243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            datetime.MILLISECONDS_PER_DAY);
 	        var viewModel = {
 	            eventsInDateRange: eventsInDateRange,
-	            range: dateRange,
+	            range: dateRange.slice(0, grids.length),
 	            grids: grids
 	        };
 	
