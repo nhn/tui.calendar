@@ -55,7 +55,7 @@ function Base(options) {
 Base.prototype._getContainDatesInSchedule = function(schedule) {
     var range = datetime.range(
         datetime.start(schedule.getStarts()),
-        datetime.start(schedule.getEnds()),
+        datetime.end(schedule.getEnds()),
         datetime.MILLISECONDS_PER_DAY
     );
 
@@ -256,7 +256,7 @@ Base.prototype.addSchedule = function(schedule, silent) {
 Base.prototype.splitScheduleByDateRange = function(start, end, scheduleCollection) {
     var range = datetime.range(
             datetime.start(start),
-            datetime.start(end),
+            datetime.end(end),
             datetime.MILLISECONDS_PER_DAY
         ),
         ownMatrix = this.dateMatrix,
@@ -292,7 +292,7 @@ Base.prototype.splitScheduleByDateRange = function(start, end, scheduleCollectio
 Base.prototype.findByDateRange = function(start, end) {
     var range = datetime.range(
             datetime.start(start),
-            datetime.start(end),
+            datetime.end(end),
             datetime.MILLISECONDS_PER_DAY
         ),
         ownSchedules = this.schedules.items,

@@ -231,7 +231,10 @@ Month.prototype.render = function() {
             datetime.end(end),
             scheduleFilter
         );
-        var dateRange = datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);
+        var dateRange = datetime.range(
+            datetime.start(start),
+            datetime.end(end),
+            datetime.MILLISECONDS_PER_DAY);
         var viewModel = {
             eventsInDateRange: eventsInDateRange,
             range: dateRange,

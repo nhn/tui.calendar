@@ -46,10 +46,14 @@ function getElLeft(viewModel, grids) {
 function getElWidth(viewModel, grids) {
     var width = 0;
     var i = 0;
+    var length = grids.length;
     var left;
     for (; i < viewModel.width; i += 1) {
-        left = viewModel.left + i;
-        width += grids[left].width;
+        left = (viewModel.left + i) % length;
+        left += parseInt((viewModel.left + i) / length, 10);
+        if (left < length) {
+            width += grids[left].width;
+        }
     }
 
     return width;

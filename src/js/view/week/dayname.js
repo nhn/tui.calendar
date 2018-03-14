@@ -47,7 +47,7 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
 
     viewModel = util.map(datetime.range(
         datetime.start(start),
-        datetime.start(end),
+        datetime.end(end),
         datetime.MILLISECONDS_PER_DAY
     ), function(d, i) {
         var day = d.getDay();
