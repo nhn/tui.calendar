@@ -11,8 +11,7 @@
     var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
     Calendar.setTimezoneOffsetCallback(function(timestamp) {
-        // return moment.tz.zone(moment.tz.guess()).utcOffset(timestamp);
-        return 1521026396802 > timestamp ? 480 : 420;
+        return new Date(timestamp).getTimezoneOffset();
     });
 
     cal = new Calendar('#calendar', {
@@ -84,8 +83,8 @@
                 return '<i class="fa fa-close"></i>';
             },
             monthGridHeader: function(model) {
-                var date = new Date(model.date);
-                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+                var date = parseInt(model.date.split('-')[2], 10);
+                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date + '</span>';
                 var today = model.isToday ? 'TDY' : '';
                 if (today) {
                     template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';

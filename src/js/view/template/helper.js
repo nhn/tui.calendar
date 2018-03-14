@@ -34,7 +34,7 @@ function getElSize(value, postfix, prefix) {
  * @returns {number} element left
  */
 function getElLeft(viewModel, grids) {
-    return grids[viewModel.left].left;
+    return grids[viewModel.left] ? grids[viewModel.left].left : 0;
 }
 
 /**
@@ -52,7 +52,7 @@ function getElWidth(viewModel, grids) {
         left = (viewModel.left + i) % length;
         left += parseInt((viewModel.left + i) / length, 10);
         if (left < length) {
-            width += grids[left].width;
+            width += grids[left] ? grids[left].width : 0;
         }
     }
 
@@ -170,7 +170,7 @@ Handlebars.registerHelper({
 
     'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
         var top = getElSize(((viewModel.top - 1) * blockHeight) + paddingTop, 'px', 'top');
-        var left = getElSize(grids[viewModel.left].left, '%', 'left');
+        var left = getElSize(grids[viewModel.left] ? grids[viewModel.left].left : 0, '%', 'left');
         var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
         var height = getElSize(viewModel.height, 'px', 'height');
 

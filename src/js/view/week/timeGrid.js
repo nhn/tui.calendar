@@ -175,7 +175,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 
     util.forEach(range, function(date, index) {
         if (datetime.isSameDate(now, date)) {
-            todaymarkerLeft = grids[index].left;
+            todaymarkerLeft = grids[index] ? grids[index].left : 0;
         }
     });
 
@@ -228,8 +228,8 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
 
         childOption = {
             index: i,
-            left: grids[i].left,
-            width: grids[i].width,
+            left: grids[i] ? grids[i].left : 0,
+            width: grids[i] ? grids[i].width : 0,
             ymd: ymd,
             isToday: isToday,
             isPending: options.isPending,

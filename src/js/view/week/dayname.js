@@ -57,8 +57,8 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
             dayName: daynames[day],
             isToday: datetime.isSameDate(d, new TZDate()),
             date: d.getDate(),
-            left: grids[i].left,
-            width: grids[i].width,
+            left: grids[i] ? grids[i].left : 0,
+            width: grids[i] ? grids[i].width : 0,
             renderDate: datetime.format(d, 'YYYY-MM-DD')
         };
     });

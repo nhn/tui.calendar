@@ -71,8 +71,8 @@ Milestone.prototype._getBaseViewModel = function(viewModel) {
 
     util.forEach(schedules, function(schedule, key) {
         schedule.isToday = (key === today);
-        schedule.left = grids[i].left;
-        schedule.width = grids[i].width;
+        schedule.left = grids[i] ? grids[i].left : 0;
+        schedule.width = grids[i] ? grids[i].width : 0;
         i += 1;
     });
 

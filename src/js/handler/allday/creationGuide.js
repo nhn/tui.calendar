@@ -73,7 +73,7 @@ AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndI
     var width = 0;
     var i = dragStartIndex;
     for (; i <= dragEndIndex; i += 1) {
-        width += grids[i].width;
+        width += grids[i] ? grids[i].width : 0;
     }
 
     return width;
@@ -92,7 +92,7 @@ AlldayCreationGuide.prototype._refreshGuideElement = function(scheduleData, defe
         leftPercent,
         widthPercent;
 
-    leftPercent = data.grids[dragStartXIndex].left;
+    leftPercent = data.grids[dragStartXIndex] ? data.grids[dragStartXIndex].left : 0;
     widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
 
     /** eslint-disable require-jsdoc */

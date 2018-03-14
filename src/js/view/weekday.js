@@ -102,8 +102,8 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
                 isToday: ymd === today,
                 ymd: ymd,
                 hiddenSchedules: exceedDate[ymd] || 0,
-                width: grids[index].width,
-                left: grids[index].left
+                width: grids[index] ? grids[index].width : 0,
+                left: grids[index] ? grids[index].left : 0
             };
         })
     };

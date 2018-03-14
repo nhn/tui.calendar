@@ -196,8 +196,8 @@ Month.prototype.render = function() {
             return {
                 day: day,
                 label: daynames[day],
-                width: grids[index].width,
-                left: grids[index].left
+                width: grids[index] ? grids[index].width : 0,
+                left: grids[index] ? grids[index].left : 0
             };
         }
     );
@@ -210,8 +210,8 @@ Month.prototype.render = function() {
         });
 
         util.forEach(daynameViewModel, function(daynameModel, index) {
-            daynameModel.width = grids[index].width;
-            daynameModel.left = grids[index].left;
+            daynameModel.width = grids[index] ? grids[index].width : 0;
+            daynameModel.left = grids[index] ? grids[index].left : 0;
         });
     }
 
@@ -237,7 +237,7 @@ Month.prototype.render = function() {
             datetime.MILLISECONDS_PER_DAY);
         var viewModel = {
             eventsInDateRange: eventsInDateRange,
-            range: dateRange,
+            range: dateRange.slice(0, grids.length),
             grids: grids
         };
 
