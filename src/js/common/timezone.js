@@ -5,13 +5,8 @@
 'use strict';
 
 var MIN_TO_MS = 60 * 1000;
-var getTimezoneOffset = function(time) {
-    time = time || Date.now();
-
-    return new Date(time).getTimezoneOffset() * MIN_TO_MS;
-};
-
 var customOffsetMs = getTimezoneOffset();
+var timezoneOffsetCallback = null;
 
 var getterMethods = [
     'getDate',
@@ -33,6 +28,30 @@ var setterMethods = [
     'setMonth',
     'setSeconds'
 ];
+
+/**
+ * Get the timezone offset by timestampe
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezone offset
+ */
+function getTimezoneOffset(timestamp) {
+    timestamp = timestamp || Date.now();
+
+    return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
+}
+
+/**
+ * Get the custome timezone offset by timestampe
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezone offset
+ */
+function getCustomTimezoneOffset(timestamp) {
+    if (timezoneOffsetCallback) {
+        return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
+    }
+
+    return customOffsetMs;
+}
 
 /**
  * Create a Date instance with multiple arguments
@@ -65,7 +84,7 @@ function createDateWithSingleArg(arg) {
         throw new Error('Invalid Type');
     }
 
-    return new Date(time - customOffsetMs + getTimezoneOffset(time));
+    return new Date(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
 }
 
 /**
@@ -89,11 +108,13 @@ function TZDate() {
 }
 
 TZDate.prototype.setTime = function(time) {
-    return this._date.setTime(time - customOffsetMs + getTimezoneOffset(time));
+    return this._date.setTime(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
 };
 
 TZDate.prototype.getTime = function() {
-    return this._date.getTime() + customOffsetMs - getTimezoneOffset(this._date.getTime());
+    var time = this._date.getTime();
+
+    return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
 };
 
 TZDate.prototype.valueOf = function() {
@@ -123,6 +144,14 @@ module.exports = {
      */
     setOffset: function(offset) {
         customOffsetMs = offset * MIN_TO_MS;
+    },
+
+    /**
+     * Set a callback function to get timezone offset by timestamp
+     * @param {function} callback - callback function
+     */
+    setOffsetCallback: function(callback) {
+        timezoneOffsetCallback = callback;
     },
 
     /**

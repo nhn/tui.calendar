@@ -1262,10 +1262,24 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  * @static
  * @example
  * var timezoneName = moment.tz.guess();
- * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
+ * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
  */
 Calendar.setTimezoneOffset = function(offset) {
     timezone.setOffset(offset);
+};
+
+/**
+ * Set a callback function to get timezone offset by timestamp
+ * @param {function} callback - callback function
+ * @static
+ * @example
+ * var timezoneName = moment.tz.guess();
+ * tui.Calendar.setTimezoneOffsetCallback(function(timestamp) {
+ *      return moment.tz.zone(timezoneName).utcOffset(timestamp));
+ * });
+ */
+Calendar.setTimezoneOffsetCallback = function(callback) {
+    timezone.setOffsetCallback(callback);
 };
 
 util.CustomEvents.mixin(Calendar);
