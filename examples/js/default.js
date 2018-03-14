@@ -10,6 +10,10 @@
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
+    Calendar.setTimezoneOffsetCallback(function(timestamp) {
+        // return moment.tz.zone(moment.tz.guess()).utcOffset(timestamp);
+        return 1521026396802 > timestamp ? 480 : 420;
+    });
 
     cal = new Calendar('#calendar', {
         defaultView: 'month',

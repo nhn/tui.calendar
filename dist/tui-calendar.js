@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.7.0 | Wed Mar 14 2018
+ * @version 0.7.1 | Wed Mar 14 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -134,10 +134,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	function getElWidth(viewModel, grids) {
 	    var width = 0;
 	    var i = 0;
+	    var length = grids.length;
 	    var left;
 	    for (; i < viewModel.width; i += 1) {
-	        left = viewModel.left + i;
-	        width += grids[left].width;
+	        left = (viewModel.left + i) % length;
+	        left += parseInt((viewModel.left + i) / length, 10);
+	        if (left < length) {
+	            width += grids[left].width;
+	        }
 	    }
 	
 	    return width;
@@ -6219,7 +6223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Base.prototype._getContainDatesInSchedule = function(schedule) {
 	    var range = datetime.range(
 	        datetime.start(schedule.getStarts()),
-	        datetime.start(schedule.getEnds()),
+	        datetime.end(schedule.getEnds()),
 	        datetime.MILLISECONDS_PER_DAY
 	    );
 	
@@ -6420,7 +6424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Base.prototype.splitScheduleByDateRange = function(start, end, scheduleCollection) {
 	    var range = datetime.range(
 	            datetime.start(start),
-	            datetime.start(end),
+	            datetime.end(end),
 	            datetime.MILLISECONDS_PER_DAY
 	        ),
 	        ownMatrix = this.dateMatrix,
@@ -6456,7 +6460,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Base.prototype.findByDateRange = function(start, end) {
 	    var range = datetime.range(
 	            datetime.start(start),
-	            datetime.start(end),
+	            datetime.end(end),
 	            datetime.MILLISECONDS_PER_DAY
 	        ),
 	        ownSchedules = this.schedules.items,
@@ -9388,7 +9392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    viewModel = util.map(datetime.range(
 	        datetime.start(start),
-	        datetime.start(end),
+	        datetime.end(end),
 	        datetime.MILLISECONDS_PER_DAY
 	    ), function(d, i) {
 	        var day = d.getDay();
@@ -16230,7 +16234,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            datetime.end(end),
 	            scheduleFilter
 	        );
-	        var dateRange = datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);
+	        var dateRange = datetime.range(
+	            datetime.start(start),
+	            datetime.end(end),
+	            datetime.MILLISECONDS_PER_DAY);
 	        var viewModel = {
 	            eventsInDateRange: eventsInDateRange,
 	            range: dateRange,
