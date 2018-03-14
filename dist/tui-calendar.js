@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.6.6 | Fri Mar 09 2018
+ * @version 0.7.0 | Wed Mar 14 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -2182,8 +2182,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var MIN_TO_MS = 60 * 1000;
-	var SYSTEM_OFFSET_MS = new Date().getTimezoneOffset() * MIN_TO_MS;
-	var customOffsetMs = SYSTEM_OFFSET_MS;
+	var customOffsetMs = getTimezoneOffset();
+	var timezoneOffsetCallback = null;
 	
 	var getterMethods = [
 	    'getDate',
@@ -2207,12 +2207,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	];
 	
 	/**
+	 * Get the timezone offset by timestampe
+	 * @param {number} timestamp - timestamp
+	 * @returns {number} timezone offset
+	 */
+	function getTimezoneOffset(timestamp) {
+	    timestamp = timestamp || Date.now();
+	
+	    return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
+	}
+	
+	/**
+	 * Get the custome timezone offset by timestampe
+	 * @param {number} timestamp - timestamp
+	 * @returns {number} timezone offset
+	 */
+	function getCustomTimezoneOffset(timestamp) {
+	    if (timezoneOffsetCallback) {
+	        return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
+	    }
+	
+	    return customOffsetMs;
+	}
+	
+	/**
 	 * Create a Date instance with multiple arguments
 	 * @param {Array} args - arguments
 	 * @returns {Date}
 	 */
 	function createDateWithMultipleArgs(args) {
-	    return new Date(Date.UTC.apply(null, args) + SYSTEM_OFFSET_MS);
+	    var utc = Date.UTC.apply(null, args);
+	
+	    return new Date(utc + getTimezoneOffset(utc));
 	}
 	
 	/**
@@ -2235,7 +2261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new Error('Invalid Type');
 	    }
 	
-	    return new Date(time - customOffsetMs + SYSTEM_OFFSET_MS);
+	    return new Date(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
 	}
 	
 	/**
@@ -2259,11 +2285,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	TZDate.prototype.setTime = function(time) {
-	    return this._date.setTime(time - customOffsetMs + SYSTEM_OFFSET_MS);
+	    return this._date.setTime(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
 	};
 	
 	TZDate.prototype.getTime = function() {
-	    return this._date.getTime() + customOffsetMs - SYSTEM_OFFSET_MS;
+	    var time = this._date.getTime();
+	
+	    return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
 	};
 	
 	TZDate.prototype.valueOf = function() {
@@ -2296,11 +2324,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    /**
+	     * Set a callback function to get timezone offset by timestamp
+	     * @param {function} callback - callback function
+	     */
+	    setOffsetCallback: function(callback) {
+	        timezoneOffsetCallback = callback;
+	    },
+	
+	    /**
 	     * (Use this method only for testing)
 	     * Reset system timezone and custom timezone
 	     */
 	    restoreOffset: function() {
-	        customOffsetMs = SYSTEM_OFFSET_MS;
+	        customOffsetMs = getTimezoneOffset();
 	    }
 	};
 
@@ -5458,10 +5494,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @static
 	 * @example
 	 * var timezoneName = moment.tz.guess();
-	 * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).offset(moment()));
+	 * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
 	 */
 	Calendar.setTimezoneOffset = function(offset) {
 	    timezone.setOffset(offset);
+	};
+	
+	/**
+	 * Set a callback function to get timezone offset by timestamp
+	 * @param {function} callback - callback function
+	 * @static
+	 * @example
+	 * var timezoneName = moment.tz.guess();
+	 * tui.Calendar.setTimezoneOffsetCallback(function(timestamp) {
+	 *      return moment.tz.zone(timezoneName).utcOffset(timestamp));
+	 * });
+	 */
+	Calendar.setTimezoneOffsetCallback = function(callback) {
+	    timezone.setOffsetCallback(callback);
 	};
 	
 	util.CustomEvents.mixin(Calendar);
