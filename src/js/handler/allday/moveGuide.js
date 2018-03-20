@@ -65,6 +65,8 @@ AlldayMoveGuide.prototype.destroy = function() {
  * Clear guide element.
  */
 AlldayMoveGuide.prototype._clearGuideElement = function() {
+    this._showOriginScheduleBlocks();
+
     domutil.remove(this.guideElement);
 
     if (!util.browser.msie) {
