@@ -30,6 +30,7 @@ function VPanel(options, container) {
      */
     this.options = util.extend({
         index: 0,
+        name: '0',
         minHeight: 0,
         maxHeight: null,
         height: null,
@@ -42,6 +43,11 @@ function VPanel(options, container) {
      * @type {number}
      */
     this.index = this.options.index;
+
+    /**
+     * @type {string}
+     */
+    this.name = this.options.name || String(this.index);
 
     this.isHeightForcedSet = false;
 

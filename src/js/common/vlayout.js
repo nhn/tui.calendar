@@ -401,4 +401,20 @@ VLayout.prototype.addPanels = function(options, container) {
     container.appendChild(frag);
 };
 
+/**
+ * Get a panel by name
+ * @param {string} name - panel's name
+ * @returns {VPanel}
+ */
+VLayout.prototype.getPanelByName = function(name) {
+    var found;
+    util.forEach(this.panels, function(panel) {
+        if (panel.name === name) {
+            found = panel;
+        }
+    });
+
+    return found;
+};
+
 module.exports = VLayout;
