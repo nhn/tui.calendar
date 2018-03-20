@@ -71,19 +71,11 @@ module.exports = function(options) {
         util.forEach(viewModels, function(coll, key, obj) {
             var groupedByYMD;
 
-            // 마일스톤, 업무 뷰 뷰모델 가공
-            if (key === 'task' || key === 'milestone') {
+            // Change view model
+            if (key === 'milestone') {
                 groupedByYMD = coll.groupBy(ymdRange, function(viewModel) {
                     return datetime.format(viewModel.model.end, 'YYYY-MM-DD');
                 });
-
-                if (key === 'task') {
-                    util.forEach(groupedByYMD, function(tasks, ymd, _obj) {
-                        _obj[ymd] = tasks.groupBy(function(viewModel) {
-                            return viewModel.model.dueDateClass;
-                        });
-                    });
-                }
 
                 obj[key] = groupedByYMD;
             }

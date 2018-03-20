@@ -6,9 +6,9 @@ var ScheduleList = [];
 
 var SCHEDULE_CATEGORY = [
     'milestone',
-    'task',
+    'task'
     // 'allday',
-    'time'
+    // 'time'
 ];
 
 function ScheduleInfo() {
@@ -59,8 +59,11 @@ function generateTime(schedule, renderStart, renderEnd) {
     schedule.isAllday = chance.bool({likelihood: 30});
     if (schedule.isAllday) {
         schedule.category = 'allday';
-    } else if (chance.bool({likelihood: 10})) {
+    } else if (chance.bool({likelihood: 30})) {
         schedule.category = SCHEDULE_CATEGORY[chance.integer({min: 0, max: 1})];
+        if (schedule.category === SCHEDULE_CATEGORY[1]) {
+            schedule.dueDateClass = 'morning';
+        }
     } else {
         schedule.category = 'time';
     }

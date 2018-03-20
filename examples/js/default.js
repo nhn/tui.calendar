@@ -26,10 +26,10 @@
                 return 'Milestone';
             },
             task: function(schedule) {
-                return '&nbsp;&nbsp;#' + schedule.title;
+                return '#' + schedule.title;
             },
             taskTitle: function() {
-                return '<label><input type="checkbox" />Task</label>';
+                return 'Task';
             },
             allday: function(schedule) {
                 var html = [];

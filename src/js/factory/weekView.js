@@ -29,7 +29,6 @@ var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
 var MilestoneClick = require('../handler/milestone/click');
-var TaskClick = require('../handler/task/click');
 
 var DEFAULT_VIEW_SEQUENCE = ['Milestone', 'Task', 'AllDay', 'TimeGrid'];
 var DEFAULT_VIEWS = {
@@ -146,7 +145,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             vLayout.getPanelByName('Task').setHeight(null, viewModel.height);
         });
         weekView.addChild(taskView);
-        weekView.handler.click.task = new TaskClick(dragHandler, taskView, baseController);
+        weekView.handler.click.task = new AlldayClick(dragHandler, taskView, baseController);
+        weekView.handler.move.task = new AlldayMove(dragHandler, taskView, baseController);
     }
 
     if (util.pick(views, 'AllDay').show) {
