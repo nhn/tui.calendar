@@ -36,7 +36,8 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
         baseViewModel = this.getBaseViewModel(viewModel),
-        maxScheduleInDay = 0;
+        maxScheduleInDay = 0,
+        minHeight;
 
     baseViewModel.matrices = opt.getViewModelFunc(viewModel);
 
@@ -49,7 +50,9 @@ WeekdayInWeek.prototype.render = function(viewModel) {
         })
     );
 
-    baseViewModel.minHeight = this._getMinHeight(maxScheduleInDay);
+    minHeight = this._getMinHeight(maxScheduleInDay);
+    baseViewModel.minHeight = minHeight;
+    baseViewModel.contentHeight = minHeight;
     baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
 
     container.innerHTML = tmpl(baseViewModel);
@@ -67,7 +70,7 @@ WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
 
     return (
         (maxScheduleInDay * opt.scheduleHeight) +
-        ((maxScheduleInDay - 1) * opt.scheduleGutter) +
+        (maxScheduleInDay * opt.scheduleGutter) +
         opt.containerBottomGutter
     );
 };
