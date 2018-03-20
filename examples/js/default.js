@@ -17,6 +17,7 @@
     cal = new Calendar('#calendar', {
         defaultView: 'month',
         taskView: true,
+        scheduleView: true,
         template: {
             milestone: function(schedule) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';

@@ -58,6 +58,7 @@ var mmin = Math.min;
  *   @property {string} [calendarColor.borderColor] - calendar left border color
  *   @property {boolean} [calendarColor.render] - immediately apply colors when setCalendarColor called.
  *  @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
+ * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
  *  @property {object} [template] - template option
  *   @property {function} [template.milestoneTitle] - milestone title(at left column) template function
  *   @property {function} [template.milestone] - milestone template function
@@ -133,6 +134,7 @@ var mmin = Math.min;
  * var calendar = new tui.Calendar(document.getElementById('calendar'), {
  *     defaultView: 'week',
  *     taskView: true,
+ *     scheduleView: true,
  *     template: {
  *         milestone: function(schedule) {
  *             return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
@@ -194,6 +196,7 @@ function Calendar(container, options) {
         controller: null,
         defaultView: 'week',
         taskView: true,
+        scheduleView: true,
         defaultDate: new TZDate(),
         template: util.extend({
             allday: null,
@@ -1211,7 +1214,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
 };
 
 /**
- * Toggle task view panel
+ * Toggle task view('Milestone', 'Task') panel
  * @param {boolean} enabled - use task view
  * @example
  * // There is no milestone, task, so hide those view panel
@@ -1225,6 +1228,26 @@ Calendar.prototype.toggleTaskView = function(enabled) {
         options = this.options;
 
     options.taskView = enabled;
+
+    this.toggleView(viewName, true);
+};
+
+/**
+ * Toggle schedule view('AllDay', TimeGrid') panel
+ * @param {boolean} enabled - use task view
+ * @example
+ * // hide those view panel to show only 'Milestone', 'Task'
+ * calendar.toggleScheduleView(false);
+ *
+ * // show those view panel.
+ * calendar.toggleScheduleView(true);
+ */
+Calendar.prototype.toggleScheduleView = function(enabled) {
+    var viewName = this.viewName,
+        options = this.options;
+
+    options.scheduleView = enabled;
+
     this.toggleView(viewName, true);
 };
 
