@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.7.2 | Wed Mar 14 2018
+ * @version 0.8.0 | Wed Mar 21 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -4251,7 +4251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Drag = __webpack_require__(38),
 	    controllerFactory = __webpack_require__(39),
 	    weekViewFactory = __webpack_require__(49),
-	    monthViewFactory = __webpack_require__(92),
+	    monthViewFactory = __webpack_require__(91),
 	    TZDate = __webpack_require__(28).Date,
 	    config = __webpack_require__(34),
 	    timezone = __webpack_require__(28);
@@ -4297,6 +4297,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {string} [calendarColor.borderColor] - calendar left border color
 	 *   @property {boolean} [calendarColor.render] - immediately apply colors when setCalendarColor called.
 	 *  @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
+	 * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
 	 *  @property {object} [template] - template option
 	 *   @property {function} [template.milestoneTitle] - milestone title(at left column) template function
 	 *   @property {function} [template.milestone] - milestone template function
@@ -4372,6 +4373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * var calendar = new tui.Calendar(document.getElementById('calendar'), {
 	 *     defaultView: 'week',
 	 *     taskView: true,
+	 *     scheduleView: true,
 	 *     template: {
 	 *         milestone: function(schedule) {
 	 *             return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
@@ -4433,6 +4435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        controller: null,
 	        defaultView: 'week',
 	        taskView: true,
+	        scheduleView: true,
 	        defaultDate: new TZDate(),
 	        template: util.extend({
 	            allday: null,
@@ -5450,7 +5453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Toggle task view panel
+	 * Toggle task view('Milestone', 'Task') panel
 	 * @param {boolean} enabled - use task view
 	 * @example
 	 * // There is no milestone, task, so hide those view panel
@@ -5464,6 +5467,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        options = this.options;
 	
 	    options.taskView = enabled;
+	
+	    this.toggleView(viewName, true);
+	};
+	
+	/**
+	 * Toggle schedule view('AllDay', TimeGrid') panel
+	 * @param {boolean} enabled - use task view
+	 * @example
+	 * // hide those view panel to show only 'Milestone', 'Task'
+	 * calendar.toggleScheduleView(false);
+	 *
+	 * // show those view panel.
+	 * calendar.toggleScheduleView(true);
+	 */
+	Calendar.prototype.toggleScheduleView = function(enabled) {
+	    var viewName = this.viewName,
+	        options = this.options;
+	
+	    options.scheduleView = enabled;
+	
 	    this.toggleView(viewName, true);
 	};
 	
@@ -6137,19 +6160,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        util.forEach(viewModels, function(coll, key, obj) {
 	            var groupedByYMD;
 	
-	            // 마일스톤, 업무 뷰 뷰모델 가공
-	            if (key === 'task' || key === 'milestone') {
+	            // Change view model
+	            if (key === 'milestone') {
 	                groupedByYMD = coll.groupBy(ymdRange, function(viewModel) {
 	                    return datetime.format(viewModel.model.end, 'YYYY-MM-DD');
 	                });
-	
-	                if (key === 'task') {
-	                    util.forEach(groupedByYMD, function(tasks, ymd, _obj) {
-	                        _obj[ymd] = tasks.groupBy(function(viewModel) {
-	                            return viewModel.model.dueDateClass;
-	                        });
-	                    });
-	                }
 	
 	                obj[key] = groupedByYMD;
 	            }
@@ -7919,7 +7934,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        modelColl = this.schedules.find(filter);
 	        modelColl = ctrlCore.convertToViewModel(modelColl);
 	
-	        group = modelColl.groupBy(['allday', 'time'], this.groupFunc);
+	        group = modelColl.groupBy(['task', 'allday', 'time'], this.groupFunc);
+	        group.task = ctrlWeek.getViewModelForAlldayView(start, end, group.task);
 	        group.allday = ctrlWeek.getViewModelForAlldayView(start, end, group.allday);
 	        group.time = ctrlWeek.getViewModelForTimeView(start, end, group.time);
 	
@@ -8431,54 +8447,93 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TimeMove = __webpack_require__(84);
 	var TimeResize = __webpack_require__(88);
 	var MilestoneClick = __webpack_require__(90);
-	var TaskClick = __webpack_require__(91);
 	
+	var DEFAULT_VIEW_SEQUENCE = ['Milestone', 'Task', 'AllDay', 'TimeGrid'];
+	var DEFAULT_VIEWS = {
+	    'Milestone': {
+	        minHeight: 20,
+	        height: 80,
+	        maxHeight: 80,
+	        show: true
+	    },
+	    'Task': {
+	        minHeight: 40,
+	        height: 120,
+	        maxHeight: 120,
+	        show: true
+	    },
+	    'AllDay': {
+	        minHeight: 20,
+	        height: 80,
+	        maxHeight: 80,
+	        show: true
+	    },
+	    'TimeGrid': {
+	        autoHeight: true,
+	        show: true
+	    }
+	};
+	
+	/* eslint-disable complexity*/
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
 	    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
-	        milestoneView, taskView, alldayView, timeGridView,
-	        milestoneClickHandler, taskClickHandler, alldayClickHandler, alldayCreationHandler,
-	        alldayMoveHandler, alldayResizeHandler, timeClickHandler, timeCreationHandler,
-	        timeMoveHandler, timeResizeHandler, daynameClickHandler,
-	        panels;
+	        milestoneView, taskView, alldayView, timeGridView;
+	    var viewSequence = options.week.viewSequence || DEFAULT_VIEW_SEQUENCE,
+	        views = options.week.views || DEFAULT_VIEWS,
+	        panels = [];
 	
 	    weekView = new Week(null, options.week, layoutContainer);
+	    weekView.handler = {
+	        click: {},
+	        dayname: {},
+	        creation: {},
+	        move: {},
+	        resize: {}
+	    };
+	
+	    // Change visibilities
+	    util.forEach(views, function(value, key) {
+	        if (key === 'Milestone' || key === 'Task') {
+	            value.show = options.taskView;
+	        } else if (key === 'AllDay' || key === 'TimeGrid') {
+	            value.show = options.scheduleView;
+	        }
+	    });
+	
+	    // Make panels by view sequence and visibilities
+	    util.forEach(viewSequence, function(name) {
+	        var view = views[name];
+	        if (view.show) {
+	            if (panels.length) {
+	                panels.push({
+	                    isSplitter: true
+	                });
+	            }
+	            panels.push(util.extend({
+	                name: name
+	            }, view));
+	        }
+	    });
+	
+	    if (panels.length) {
+	        panels[panels.length - 1].autoHeight = true;
+	        panels[panels.length - 1].maxHeight = null;
+	    }
+	
 	    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 	
 	    /**********
 	     * 일자표기 (상단 일월화수...)
 	     **********/
 	    dayNameView = new DayName(options.week, dayNameContainer);
-	    daynameClickHandler = new DayNameClick(dragHandler, dayNameView, baseController);
+	    weekView.handler.dayname.date = new DayNameClick(dragHandler, dayNameView, baseController);
 	    weekView.addChild(dayNameView);
 	
 	    /**********
 	     * 수직 레이아웃 모듈 초기화
 	     **********/
 	    vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
-	    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] -
-	                                     dayNameView.container.offsetHeight) + 'px';
-	
-	    panels = [
-	        {height: 100,
-	            minHeight: 100},
-	        {isSplitter: true},
-	        {autoHeight: true}
-	    ];
-	
-	    if (options.taskView) {
-	        panels = [
-	            {minHeight: 20,
-	                maxHeight: 80},
-	            {isSplitter: true},
-	            {minHeight: 40,
-	                maxHeight: 120},
-	            {isSplitter: true},
-	            {minHeight: 20,
-	                maxHeight: 80},
-	            {isSplitter: true},
-	            {autoHeight: true}
-	        ];
-	    }
+	    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
 	
 	    vLayout = new VLayout({
 	        panels: panels,
@@ -8487,81 +8542,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    weekView.vLayout = vLayout;
 	
-	    if (options.taskView) {
+	    if (util.pick(views, 'Milestone').show) {
 	        /**********
 	         * 마일스톤
 	         **********/
-	        milestoneView = new Milestone(options.week, vLayout.panels[0].container);
+	        milestoneView = new Milestone(options.week, vLayout.getPanelByName('Milestone').container);
 	        milestoneView.on('afterRender', function(viewModel) {
-	            vLayout.panels[0].setHeight(null, viewModel.height);
+	            vLayout.getPanelByName('Milestone').setHeight(null, viewModel.height);
 	        });
 	        weekView.addChild(milestoneView);
-	        milestoneClickHandler = new MilestoneClick(dragHandler, milestoneView, baseController);
+	        weekView.handler.click.milestone = new MilestoneClick(dragHandler, milestoneView, baseController);
+	    }
 	
+	    if (util.pick(views, 'Task').show) {
 	        /**********
 	         * 업무
 	         **********/
-	        taskView = new TaskView(options.week, vLayout.panels[2].container);
+	        taskView = new TaskView(options.week, vLayout.getPanelByName('Task').container);
 	        taskView.on('afterRender', function(viewModel) {
-	            vLayout.panels[2].setHeight(null, viewModel.height);
+	            vLayout.getPanelByName('Task').setHeight(null, viewModel.height);
 	        });
 	        weekView.addChild(taskView);
-	        taskClickHandler = new TaskClick(dragHandler, taskView, baseController);
+	        weekView.handler.click.task = new AlldayClick(dragHandler, taskView, baseController);
+	        weekView.handler.move.task = new AlldayMove(dragHandler, taskView, baseController);
 	    }
 	
-	    /**********
-	     * 종일일정
-	     **********/
-	    alldayView = new Allday(options.week, vLayout.panels[panels.length - 3].container);
-	    alldayView.on('afterRender', function() {
-	        vLayout.panels[panels.length - 3].setHeight(null, alldayView.contentHeight);
-	    });
-	    weekView.addChild(alldayView);
-	    alldayClickHandler = new AlldayClick(dragHandler, alldayView, baseController);
-	    alldayCreationHandler = new AlldayCreation(dragHandler, alldayView, baseController);
-	    alldayMoveHandler = new AlldayMove(dragHandler, alldayView, baseController);
-	    alldayResizeHandler = new AlldayResize(dragHandler, alldayView, baseController);
+	    if (util.pick(views, 'AllDay').show) {
+	        /**********
+	         * 종일일정
+	         **********/
+	        alldayView = new Allday(options.week, vLayout.getPanelByName('AllDay').container);
+	        alldayView.on('afterRender', function() {
+	            vLayout.getPanelByName('AllDay').setHeight(null, alldayView.contentHeight);
+	        });
+	        weekView.addChild(alldayView);
+	        weekView.handler.click.allday = new AlldayClick(dragHandler, alldayView, baseController);
+	        weekView.handler.creation.allday = new AlldayCreation(dragHandler, alldayView, baseController);
+	        weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
+	        weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
+	    }
 	
-	    /**********
-	     * 시간별 일정
-	     **********/
-	    timeGridView = new TimeGrid(options.week, vLayout.panels[panels.length - 1].container);
-	    weekView.addChild(timeGridView);
-	    timeClickHandler = new TimeClick(dragHandler, timeGridView, baseController);
-	    timeCreationHandler = new TimeCreation(dragHandler, timeGridView, baseController);
-	    timeMoveHandler = new TimeMove(dragHandler, timeGridView, baseController);
-	    timeResizeHandler = new TimeResize(dragHandler, timeGridView, baseController);
+	    if (util.pick(views, 'TimeGrid').show) {
+	        /**********
+	         * 시간별 일정
+	         **********/
+	        timeGridView = new TimeGrid(options.week, vLayout.getPanelByName('TimeGrid').container);
+	        weekView.addChild(timeGridView);
+	        weekView.handler.click.time = new TimeClick(dragHandler, timeGridView, baseController);
+	        weekView.handler.creation.time = new TimeCreation(dragHandler, timeGridView, baseController);
+	        weekView.handler.move.time = new TimeMove(dragHandler, timeGridView, baseController);
+	        weekView.handler.resize.time = new TimeResize(dragHandler, timeGridView, baseController);
+	    }
 	
 	    weekView.on('afterRender', function() {
 	        vLayout.refresh();
 	    });
-	
-	    weekView.handler = {
-	        click: {
-	            allday: alldayClickHandler,
-	            time: timeClickHandler
-	        },
-	        dayname: {
-	            date: daynameClickHandler
-	        },
-	        creation: {
-	            allday: alldayCreationHandler,
-	            time: timeCreationHandler
-	        },
-	        move: {
-	            allday: alldayMoveHandler,
-	            time: timeMoveHandler
-	        },
-	        resize: {
-	            allday: alldayResizeHandler,
-	            time: timeResizeHandler
-	        }
-	    };
-	
-	    if (options.taskView) {
-	        weekView.handler.click.milestone = milestoneClickHandler;
-	        weekView.handler.click.task = taskClickHandler;
-	    }
 	
 	    // add controller
 	    weekView.controller = baseController.Week;
@@ -8590,7 +8625,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                weekViewHeight - daynameViewHeight + 'px';
 	            vLayout.refresh();
 	        },
-	        scrollToNow: timeGridView.scrollToNow.bind(timeGridView)
+	        scrollToNow: function() {
+	            if (timeGridView) {
+	                timeGridView.scrollToNow();
+	            }
+	        }
 	    };
 	};
 
@@ -9002,6 +9041,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    container.appendChild(frag);
 	};
 	
+	/**
+	 * Get a panel by name
+	 * @param {string} name - panel's name
+	 * @returns {VPanel}
+	 */
+	VLayout.prototype.getPanelByName = function(name) {
+	    var found;
+	    util.forEach(this.panels, function(panel) {
+	        if (panel.name === name) {
+	            found = panel;
+	        }
+	    });
+	
+	    return found;
+	};
+	
 	module.exports = VLayout;
 
 
@@ -9041,6 +9096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this.options = util.extend({
 	        index: 0,
+	        name: '0',
 	        minHeight: 0,
 	        maxHeight: null,
 	        height: null,
@@ -9053,6 +9109,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {number}
 	     */
 	    this.index = this.options.index;
+	
+	    /**
+	     * @type {string}
+	     */
+	    this.name = this.options.name || String(this.index);
 	
 	    this.isHeightForcedSet = false;
 	
@@ -11268,12 +11329,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(14, data, 0),"inverse":container.program(16, data, 0),"data":data})) != null ? stack1 : "")
 	    + "            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
-	    + "\">\n            <span class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title\">"
-	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</span>\n            "
-	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(18, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(18, data, 0),"inverse":container.program(20, data, 0),"data":data})) != null ? stack1 : "")
+	    + "            "
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(22, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n        </div>\n    </div>\n";
 	},"8":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -11311,6 +11370,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
 	},"18":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
+	
+	  return "                <span class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule-title\">"
+	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n";
+	},"20":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
+	
+	  return "                <span class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule-title\">"
+	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n";
+	},"22":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return "<span class=\""
@@ -11570,24 +11645,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var datetime = __webpack_require__(27);
-	var domutil = __webpack_require__(31);
-	var View = __webpack_require__(37);
-	var tmpl = __webpack_require__(70);
-	var TZDate = __webpack_require__(28).Date;
-	
-	// height + gutter (defined in CSS)
-	var ITEM_HEIGHT = 20;
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37),
+	    WeekdayInWeek = __webpack_require__(63),
+	    tmpl = __webpack_require__(70);
 	
 	/**
 	 * @constructor
 	 * @extends {View}
 	 * @param {object} options - options for TaskView
-	 * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
-	 * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
-	 * @param {number} [options.minHeight=52] - min-height of taskview
-	 * @param {number} [options.lineHeight=12] - line height of milestone view
+	 * @param {string} options.renderStartDate - start date of this view's render date. YYYY-MM-DD
+	 * @param {string} options.renderEndDate - end date of this view's render date. YYYY-MM-DD
+	 * @param {number} [options.height=60] - minimum height of schedule container element.
+	 * @param {number} [options.scheduleBlockHeight=18] - height of each schedule block.
+	 * @param {number} [options.scheduleBlockGutter=2] - gutter height of each schedule block.
+	 * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
+	 
 	 * @param {HTMLElement} container - container element
 	 */
 	function TaskView(options, container) {
@@ -11597,84 +11671,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	        config.classname('task-container')
 	    );
 	
-	    View.call(this, container);
-	
 	    /**
+	     * rendering options.
 	     * @type {object}
 	     */
 	    this.options = util.extend({
+	        title: 'task',
 	        renderStartDate: '',
-	        renderEndDate: ''
+	        renderEndDate: '',
+	        containerBottomGutter: 18,
+	        scheduleHeight: 18,
+	        scheduleGutter: 2,
+	        scheduleContainerTop: 1,
+	        getViewModelFunc: function(viewModel) {
+	            return viewModel.schedulesInDateRange.task;
+	        }
 	    }, options);
+	
+	    /**
+	     * height of content
+	     */
+	    this.contentHeight = 0;
+	
+	    View.call(this, container);
 	}
 	
 	util.inherit(TaskView, View);
-	
-	/**
-	 * Get base viewmodel for task view
-	 * @param {object} [viewModel] - view model from parent view
-	 * @returns {object} view model for task view
-	 */
-	TaskView.prototype._getBaseViewModel = function(viewModel) {
-	    var schedules = {},
-	        range = viewModel.range,
-	        height = 0,
-	        mmax = Math.max,
-	        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
-	        viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'task'),
-	        grids = viewModel.grids,
-	        i = 0;
-	
-	    util.forEach(range, function(d) {
-	        var date = datetime.format(d, 'YYYY-MM-DD');
-	        schedules[date] = {
-	            morning: {length: 0},
-	            lunch: {length: 0},
-	            evening: {length: 0}
-	        };
-	    });
-	    util.extend(schedules, viewModelSchedules);
-	
-	    height = mmax.apply(null, util.map(schedules, function(g) {
-	        var subcount = 0;
-	
-	        util.forEach(g, function(coll) {
-	            subcount += (coll.length || 0);
-	        });
-	
-	        return subcount;
-	    })) * ITEM_HEIGHT;
-	
-	    util.forEach(schedules, function(schedule, key) {
-	        schedule.isToday = (key === today);
-	        schedule.left = grids[i] ? grids[i].left : 0;
-	        schedule.width = grids[i] ? grids[i].width : 0;
-	        i += 1;
-	    });
-	
-	    return {
-	        schedules: schedules,
-	        height: height
-	    };
-	};
 	
 	/**
 	 * 업무 뷰 렌더링
 	 * @override
 	 */
 	TaskView.prototype.render = function(viewModel) {
-	    var container = this.container,
-	        baseViewModel = this._getBaseViewModel(viewModel);
+	    var container = this.container;
+	    var scheduleContainerTop = this.options.scheduleContainerTop;
+	    var self = this;
+	    var weekdayView;
 	
-	    container.innerHTML = tmpl(baseViewModel);
+	    container.innerHTML = tmpl(this.options);
 	
-	    util.forEach(domutil.find('li', container, true), function(el) {
-	        if (el.offsetWidth < el.scrollWidth) {
-	            el.setAttribute('title', domutil.getData(el, 'title'));
-	        }
+	    this.children.clear();
+	
+	    weekdayView = new WeekdayInWeek(
+	        this.options,
+	        domutil.find(config.classname('.weekday-container'), container)
+	    );
+	    weekdayView.on('afterRender', function(weekdayViewModel) {
+	        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
 	    });
 	
-	    this.fire('afterRender', baseViewModel);
+	    this.addChild(weekdayView);
+	
+	    this.children.each(function(childView) {
+	        childView.render(viewModel);
+	    });
+	
+	    this.fire('afterRender', viewModel);
 	};
 	
 	module.exports = TaskView;
@@ -11686,87 +11738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day-grid\" style=\"width:"
-	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%;left:"
-	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%\"></div>\n";
-	},"3":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day\" style=\"width:"
-	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%;left:"
-	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%\">\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day-wrap "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\">\n        <ul class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-list\">\n"
-	    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.morning : depth0)) != null ? stack1.items : stack1),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.lunch : depth0)) != null ? stack1.items : stack1),{"name":"each","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.evening : depth0)) != null ? stack1.items : stack1),{"name":"each","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</ul>\n    </div>\n    </div>\n";
-	},"4":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "today";
-	},"6":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {}), alias4=helpers.helperMissing;
-	
-	  return "<li data-schedule-id=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
-	    + "\" data-calendar-id=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
-	    + "\" data-id=\""
-	    + alias2((helpers.stamp || (depth0 && depth0.stamp) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n            data-title=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\"\n            class=\""
-	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === "function" ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-item\"\n            style=\"background-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + ";color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "; border-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + " \"><span></span>"
-	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</li>\n";
-	},"8":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {}), alias4=helpers.helperMissing;
-	
-	  return "<li data-schedule-id=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
-	    + "\" data-calendar-id=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
-	    + "\" data-id=\""
-	    + alias2((helpers.stamp || (depth0 && depth0.stamp) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n            data-title=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\"\n            class=\""
-	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === "function" ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-item\"\n            style=\"background-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + ";color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "; border-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + "\"><span></span>"
-	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</li>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
@@ -11775,19 +11747,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "left\">\n    <span>"
 	    + ((stack1 = ((helper = (helper = helpers["taskTitle-tmpl"] || (depth0 != null ? depth0["taskTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"taskTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-	    + "</span>\n</div>\n\n<div class=\""
+	    + "</span>\n</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "task-right "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "right schedule-view clear\">\n    <div class=\""
+	    + "right\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day-grid-wrap\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.schedules : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day-scroll\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.schedules : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n</div>\n";
+	    + "weekday-container\"></div>\n</div>";
 	},"useData":true});
 
 /***/ },
@@ -12337,6 +12303,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Clear guide element.
 	 */
 	AlldayMoveGuide.prototype._clearGuideElement = function() {
+	    this._showOriginScheduleBlocks();
+	
 	    domutil.remove(this.guideElement);
 	
 	    if (!util.browser.msie) {
@@ -12495,10 +12463,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var getScheduleDataFunc = this.getScheduleDataFunc,
 	        dragStartXIndex = this._dragStartXIndex,
 	        datesInRange = dragEventData.datesInRange,
+	        grids = dragEventData.grids,
 	        scheduleData,
 	        isExceededLeft,
 	        isExceededRight,
 	        originLength,
+	        leftIndex,
+	        size,
 	        newLeft,
 	        newWidth;
 	
@@ -12510,16 +12481,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	    isExceededLeft = scheduleData.fromLeft < 0;
 	    isExceededRight = scheduleData.fromRight > 0;
 	
-	    newLeft = Math.max(0, scheduleData.fromLeft);
+	    leftIndex = Math.max(0, scheduleData.fromLeft);
 	    originLength = (scheduleData.fromLeft * -1) + (datesInRange + scheduleData.fromRight);
-	    newWidth = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
-	    newWidth = isExceededRight ? (newWidth - scheduleData.fromRight) : newWidth;
+	    size = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
+	    size = isExceededRight ? (size - scheduleData.fromRight) : size;
 	
-	    newLeft *= scheduleData.baseWidthPercent;
-	    newWidth *= scheduleData.baseWidthPercent;
+	    newLeft = grids[leftIndex] ? grids[leftIndex].left : 0;
+	    newWidth = getScheduleBlockWidth(leftIndex, size, grids);
 	
 	    this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 	};
+	
+	/**
+	 * Get schedule width based on grids
+	 * @param {number} left - left index
+	 * @param {number} size - schedule width
+	 * @param {Array} grids - dates information
+	 * @returns {number} element width
+	 */
+	function getScheduleBlockWidth(left, size, grids) {
+	    var width = 0;
+	    var i = 0;
+	    var length = grids.length;
+	    for (; i < size; i += 1) {
+	        left = (left + i) % length;
+	        if (left < length) {
+	            width += grids[left] ? grids[left].width : 0;
+	        }
+	    }
+	
+	    return width;
+	}
 	
 	module.exports = AlldayMoveGuide;
 	
@@ -15758,105 +15750,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var domutil = __webpack_require__(31);
-	
-	/**
-	 * 마일스톤 클릭 이벤트 핸들러 모듈
-	 * @constructor
-	 * @implelements {Handler}
-	 * @mixes util.CustomEvents
-	 * @param {Drag} dragHandler - dragHandler instance
-	 * @param {Task} taskView - milstone view instance
-	 * @param {Base} baseController - baseController instance
-	 */
-	function TaskClick(dragHandler, taskView, baseController) {
-	    /**
-	     * @type {Drag}
-	     */
-	    this.dragHandler = dragHandler;
-	
-	    /**
-	     * @type {Task}
-	     */
-	    this.taskView = taskView;
-	
-	    /**
-	     * @type {Base}
-	     */
-	    this.baseController = baseController;
-	
-	    dragHandler.on({
-	        'click': this._onClick
-	    }, this);
-	}
-	
-	/**
-	 * Destroy
-	 */
-	TaskClick.prototype.destroy = function() {
-	    this.dragHandler.off(this);
-	    this.dragHandler = this.taskView = this.baseController = null;
-	};
-	
-	/**
-	 * @param {HTMLElement} target - check reponsibility to this handler module supplied element
-	 * @returns {boolean|string} return false when handler has no responsibility for supplied element.
-	 * otherwise, return event model id that related with target element.
-	 */
-	TaskClick.prototype.checkExpectedCondition = function(target) {
-	    target = domutil.closest(target, config.classname('.task-item'));
-	
-	    if (!target) {
-	        return false;
-	    }
-	
-	    return domutil.getData(target, 'id');
-	};
-	
-	/**
-	 * @emits TaskClick#clickSchedule
-	 * @param {object} clickEvent - click event object
-	 */
-	TaskClick.prototype._onClick = function(clickEvent) {
-	    var self = this,
-	        scheduleID = this.checkExpectedCondition(clickEvent.target);
-	
-	    if (!scheduleID) {
-	        return;
-	    }
-	
-	    this.baseController.schedules.doWhenHas(scheduleID, function(schedule) {
-	        /**
-	         * @events TaskClick#clickSchedule
-	         * @type {object}
-	         * @property {Schedule} schedule - schedule instance
-	         * @property {MouseEvent} event - MouseEvent object
-	         */
-	        self.fire('clickSchedule', {
-	            schedule: schedule,
-	            event: clickEvent.originEvent
-	        });
-	    });
-	};
-	
-	util.CustomEvents.mixin(TaskClick);
-	
-	module.exports = TaskClick;
-	
-
-
-/***/ },
-/* 92 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
 	 * @fileoverview Month view factory module
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
@@ -15867,12 +15760,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    array = __webpack_require__(47),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    Month = __webpack_require__(93),
-	    MonthClick = __webpack_require__(98),
-	    MonthCreation = __webpack_require__(99),
-	    MonthResize = __webpack_require__(104),
-	    MonthMove = __webpack_require__(106),
-	    More = __webpack_require__(109);
+	    Month = __webpack_require__(92),
+	    MonthClick = __webpack_require__(97),
+	    MonthCreation = __webpack_require__(98),
+	    MonthResize = __webpack_require__(103),
+	    MonthMove = __webpack_require__(105),
+	    More = __webpack_require__(108);
 	
 	/**
 	 * Get the view model for more layer
@@ -16001,7 +15894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 93 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16015,10 +15908,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
 	    TZDate = __webpack_require__(28).Date,
-	    tmpl = __webpack_require__(94),
+	    tmpl = __webpack_require__(93),
 	    View = __webpack_require__(37),
 	    VLayout = __webpack_require__(50),
-	    WeekdayInMonth = __webpack_require__(95);
+	    WeekdayInMonth = __webpack_require__(94);
 	var mmin = Math.min;
 	
 	/**
@@ -16256,7 +16149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 94 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16287,7 +16180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 95 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16303,8 +16196,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
 	    Weekday = __webpack_require__(64),
-	    baseTmpl = __webpack_require__(96),
-	    scheduleTmpl = __webpack_require__(97);
+	    baseTmpl = __webpack_require__(95),
+	    scheduleTmpl = __webpack_require__(96);
 	var existy = util.isExisty,
 	    mfloor = Math.floor,
 	    mmin = Math.min;
@@ -16492,7 +16385,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 96 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16577,7 +16470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 97 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16740,7 +16633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 98 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16838,7 +16731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 99 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16854,8 +16747,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var array = __webpack_require__(47);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var getMousePosDate = __webpack_require__(100);
-	var Guide = __webpack_require__(101);
+	var getMousePosDate = __webpack_require__(99);
+	var Guide = __webpack_require__(100);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -17161,7 +17054,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 100 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17253,7 +17146,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 101 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17262,7 +17155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var MonthGuide = __webpack_require__(102);
+	var MonthGuide = __webpack_require__(101);
 	
 	/**
 	 * @constructor
@@ -17335,7 +17228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 102 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17350,7 +17243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
 	    dw = __webpack_require__(29),
-	    tmpl = __webpack_require__(103);
+	    tmpl = __webpack_require__(102);
 	var mmax = Math.max,
 	    mmin = Math.min,
 	    mabs = Math.abs,
@@ -17780,7 +17673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 103 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -17825,7 +17718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 104 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17839,8 +17732,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    getMousePosData = __webpack_require__(100),
-	    MonthResizeGuide = __webpack_require__(105),
+	    getMousePosData = __webpack_require__(99),
+	    MonthResizeGuide = __webpack_require__(104),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -18039,7 +17932,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 105 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18052,7 +17945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
-	    MonthGuide = __webpack_require__(102);
+	    MonthGuide = __webpack_require__(101);
 	
 	/**
 	 * @constructor
@@ -18162,7 +18055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 106 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18176,8 +18069,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
-	    getMousePosData = __webpack_require__(100),
-	    MonthMoveGuide = __webpack_require__(107),
+	    getMousePosData = __webpack_require__(99),
+	    MonthMoveGuide = __webpack_require__(106),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -18440,7 +18333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 107 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18455,7 +18348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32),
 	    FloatingLayer = __webpack_require__(86),
-	    tmpl = __webpack_require__(108),
+	    tmpl = __webpack_require__(107),
 	    Schedule = __webpack_require__(41);
 	
 	/**
@@ -18645,7 +18538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 108 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18700,7 +18593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 109 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18717,7 +18610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    View = __webpack_require__(37),
 	    FloatingLayer = __webpack_require__(86),
 	    common = __webpack_require__(30),
-	    tmpl = __webpack_require__(110);
+	    tmpl = __webpack_require__(109);
 	
 	/**
 	 * @constructor
@@ -18885,7 +18778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 110 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
