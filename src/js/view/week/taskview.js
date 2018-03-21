@@ -65,8 +65,8 @@ util.inherit(TaskView, View);
 TaskView.prototype.render = function(viewModel) {
     var container = this.container;
     var scheduleContainerTop = this.options.scheduleContainerTop;
-    var weekdayView;
     var self = this;
+    var weekdayView;
 
     container.innerHTML = tmpl(this.options);
 

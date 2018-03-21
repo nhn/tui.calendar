@@ -65,6 +65,22 @@ describe('handler:AlldayMoveGuide', function() {
         });
 
         it('_onDrag can calculate guide element new width and left.', function() {
+            var grids = [{
+                left: 0,
+                width: 20
+            }, {
+                left: 20,
+                width: 20
+            }, {
+                left: 40,
+                width: 20
+            }, {
+                left: 60,
+                width: 20
+            }, {
+                left: 80,
+                width: 20
+            }];
             // 2일짜리 일정을
             inst.getScheduleDataFunc = inst._getScheduleBlockDataFunc({
                 model: {
@@ -79,7 +95,8 @@ describe('handler:AlldayMoveGuide', function() {
             inst._dragStartXIndex = 0;
             inst._onDrag({
                 xIndex: 1,
-                datesInRange: 5
+                datesInRange: 5,
+                grids: grids
             });
 
             expect(inst.refreshGuideElement).toHaveBeenCalledWith(20, 40, false, false);
@@ -99,7 +116,8 @@ describe('handler:AlldayMoveGuide', function() {
             inst._dragStartXIndex = 3;
             inst._onDrag({
                 xIndex: 4,
-                datesInRange: 5
+                datesInRange: 5,
+                grids: grids
             });
 
             // left: 40, width: 80 이지만 오른쪽으로 렌더링 범위를 초과했으므로 width는 60%
