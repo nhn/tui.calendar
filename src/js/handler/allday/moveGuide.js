@@ -65,6 +65,8 @@ AlldayMoveGuide.prototype.destroy = function() {
  * Clear guide element.
  */
 AlldayMoveGuide.prototype._clearGuideElement = function() {
+    this._showOriginScheduleBlocks();
+
     domutil.remove(this.guideElement);
 
     if (!util.browser.msie) {
@@ -223,10 +225,13 @@ AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
     var getScheduleDataFunc = this.getScheduleDataFunc,
         dragStartXIndex = this._dragStartXIndex,
         datesInRange = dragEventData.datesInRange,
+        grids = dragEventData.grids,
         scheduleData,
         isExceededLeft,
         isExceededRight,
         originLength,
+        leftIndex,
+        size,
         newLeft,
         newWidth;
 
@@ -238,16 +243,37 @@ AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
     isExceededLeft = scheduleData.fromLeft < 0;
     isExceededRight = scheduleData.fromRight > 0;
 
-    newLeft = Math.max(0, scheduleData.fromLeft);
+    leftIndex = Math.max(0, scheduleData.fromLeft);
     originLength = (scheduleData.fromLeft * -1) + (datesInRange + scheduleData.fromRight);
-    newWidth = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
-    newWidth = isExceededRight ? (newWidth - scheduleData.fromRight) : newWidth;
+    size = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
+    size = isExceededRight ? (size - scheduleData.fromRight) : size;
 
-    newLeft *= scheduleData.baseWidthPercent;
-    newWidth *= scheduleData.baseWidthPercent;
+    newLeft = grids[leftIndex] ? grids[leftIndex].left : 0;
+    newWidth = getScheduleBlockWidth(leftIndex, size, grids);
 
     this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
 };
+
+/**
+ * Get schedule width based on grids
+ * @param {number} left - left index
+ * @param {number} size - schedule width
+ * @param {Array} grids - dates information
+ * @returns {number} element width
+ */
+function getScheduleBlockWidth(left, size, grids) {
+    var width = 0;
+    var i = 0;
+    var length = grids.length;
+    for (; i < size; i += 1) {
+        left = (left + i) % length;
+        if (left < length) {
+            width += grids[left] ? grids[left].width : 0;
+        }
+    }
+
+    return width;
+}
 
 module.exports = AlldayMoveGuide;
 

@@ -26,7 +26,11 @@
                     color:{{model.color}}; background-color:{{model.bgColor}}; border-color:{{model.borderColor}};
                 {{/if}}
             {{model.customStyle}}">
-            <span class="{{CSS_PREFIX}}weekday-schedule-title">{{{allday-tmpl model}}}</span>
+            {{#if model.isAllDay}}
+                <span class="{{CSS_PREFIX}}weekday-schedule-title">{{{allday-tmpl model}}}</span>
+            {{else}}
+                <span class="{{CSS_PREFIX}}weekday-schedule-title">{{{task-tmpl model}}}</span>
+            {{/if}}
             {{#unless model.isReadOnly}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>{{/unless}}
         </div>
     </div>

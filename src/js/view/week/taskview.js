@@ -5,24 +5,23 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var config = require('../../config');
-var datetime = require('../../common/datetime');
-var domutil = require('../../common/domutil');
-var View = require('../../view/view');
-var tmpl = require('../template/week//taskview.hbs');
-var TZDate = require('../../common/timezone').Date;
-
-// height + gutter (defined in CSS)
-var ITEM_HEIGHT = 20;
+var config = require('../../config'),
+    domutil = require('../../common/domutil'),
+    View = require('../view'),
+    WeekdayInWeek = require('./weekdayInWeek'),
+    tmpl = require('../template/week/taskview.hbs');
 
 /**
  * @constructor
  * @extends {View}
  * @param {object} options - options for TaskView
- * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
- * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
- * @param {number} [options.minHeight=52] - min-height of taskview
- * @param {number} [options.lineHeight=12] - line height of milestone view
+ * @param {string} options.renderStartDate - start date of this view's render date. YYYY-MM-DD
+ * @param {string} options.renderEndDate - end date of this view's render date. YYYY-MM-DD
+ * @param {number} [options.height=60] - minimum height of schedule container element.
+ * @param {number} [options.scheduleBlockHeight=18] - height of each schedule block.
+ * @param {number} [options.scheduleBlockGutter=2] - gutter height of each schedule block.
+ * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
+ 
  * @param {HTMLElement} container - container element
  */
 function TaskView(options, container) {
@@ -32,84 +31,62 @@ function TaskView(options, container) {
         config.classname('task-container')
     );
 
-    View.call(this, container);
-
     /**
+     * rendering options.
      * @type {object}
      */
     this.options = util.extend({
+        title: 'task',
         renderStartDate: '',
-        renderEndDate: ''
+        renderEndDate: '',
+        containerBottomGutter: 18,
+        scheduleHeight: 18,
+        scheduleGutter: 2,
+        scheduleContainerTop: 1,
+        getViewModelFunc: function(viewModel) {
+            return viewModel.schedulesInDateRange.task;
+        }
     }, options);
+
+    /**
+     * height of content
+     */
+    this.contentHeight = 0;
+
+    View.call(this, container);
 }
 
 util.inherit(TaskView, View);
-
-/**
- * Get base viewmodel for task view
- * @param {object} [viewModel] - view model from parent view
- * @returns {object} view model for task view
- */
-TaskView.prototype._getBaseViewModel = function(viewModel) {
-    var schedules = {},
-        range = viewModel.range,
-        height = 0,
-        mmax = Math.max,
-        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
-        viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'task'),
-        grids = viewModel.grids,
-        i = 0;
-
-    util.forEach(range, function(d) {
-        var date = datetime.format(d, 'YYYY-MM-DD');
-        schedules[date] = {
-            morning: {length: 0},
-            lunch: {length: 0},
-            evening: {length: 0}
-        };
-    });
-    util.extend(schedules, viewModelSchedules);
-
-    height = mmax.apply(null, util.map(schedules, function(g) {
-        var subcount = 0;
-
-        util.forEach(g, function(coll) {
-            subcount += (coll.length || 0);
-        });
-
-        return subcount;
-    })) * ITEM_HEIGHT;
-
-    util.forEach(schedules, function(schedule, key) {
-        schedule.isToday = (key === today);
-        schedule.left = grids[i] ? grids[i].left : 0;
-        schedule.width = grids[i] ? grids[i].width : 0;
-        i += 1;
-    });
-
-    return {
-        schedules: schedules,
-        height: height
-    };
-};
 
 /**
  * 업무 뷰 렌더링
  * @override
  */
 TaskView.prototype.render = function(viewModel) {
-    var container = this.container,
-        baseViewModel = this._getBaseViewModel(viewModel);
+    var container = this.container;
+    var scheduleContainerTop = this.options.scheduleContainerTop;
+    var self = this;
+    var weekdayView;
 
-    container.innerHTML = tmpl(baseViewModel);
+    container.innerHTML = tmpl(this.options);
 
-    util.forEach(domutil.find('li', container, true), function(el) {
-        if (el.offsetWidth < el.scrollWidth) {
-            el.setAttribute('title', domutil.getData(el, 'title'));
-        }
+    this.children.clear();
+
+    weekdayView = new WeekdayInWeek(
+        this.options,
+        domutil.find(config.classname('.weekday-container'), container)
+    );
+    weekdayView.on('afterRender', function(weekdayViewModel) {
+        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
     });
 
-    this.fire('afterRender', baseViewModel);
+    this.addChild(weekdayView);
+
+    this.children.each(function(childView) {
+        childView.render(viewModel);
+    });
+
+    this.fire('afterRender', viewModel);
 };
 
 module.exports = TaskView;

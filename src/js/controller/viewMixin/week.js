@@ -234,7 +234,8 @@ var Week = {
         modelColl = this.schedules.find(filter);
         modelColl = ctrlCore.convertToViewModel(modelColl);
 
-        group = modelColl.groupBy(['allday', 'time'], this.groupFunc);
+        group = modelColl.groupBy(['task', 'allday', 'time'], this.groupFunc);
+        group.task = ctrlWeek.getViewModelForAlldayView(start, end, group.task);
         group.allday = ctrlWeek.getViewModelForAlldayView(start, end, group.allday);
         group.time = ctrlWeek.getViewModelForTimeView(start, end, group.time);
 
