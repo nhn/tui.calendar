@@ -1,3 +1,7 @@
 {
-    "extends": "tui"
+    "extends": "tui",
+    "globals": {
+        "chance": true,
+        "moment": true
+    }
 }

@@ -161,13 +161,11 @@ datetime = {
         var startTime = start.getTime();
         var endTime = end.getTime();
         var cursor = startTime;
-        var date = dw(startTime);
         var result = [];
 
-        while (cursor <= endTime && endTime > date.d.getTime()) {
-            result.push(new TZDate(date.d));
+        while (cursor <= endTime) {
+            result.push(new TZDate(cursor));
             cursor = cursor + step;
-            date.addDate(1);
         }
 
         return result;

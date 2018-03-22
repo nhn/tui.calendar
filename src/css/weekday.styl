@@ -31,7 +31,7 @@
 
         &.{css-prefix}holiday-sun
             color: #f3acac
-
+    
 +prefix-classes(weekday)
     .container,
     .grid,
@@ -143,10 +143,21 @@
     .exceed-right .resize-handle
         display: none
 
-    .exceed
+    .exceed-in-month
         cursor: pointer
         &:hover
             background-color: #f0f1f5
+
+    .exceed-in-week
+        position: absolute
+        bottom: 1px
+        left: 1px
+        font-size: 12px
+        font-height: 14px
+        cursor: pointer
+        padding: 0 5px
+        background-color: #ffffff
+        border: 1px solid #dddddd
 
     .resize-handle
         position: absolute
@@ -180,3 +191,7 @@
         margin-left: 77px 
         overflow-y: scroll
         position: relative
+
+.fixed 
+    height: 0
+    overflow-y: visible

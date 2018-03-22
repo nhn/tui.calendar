@@ -22,11 +22,12 @@ describe('handler:AlldayCreation', function() {
                     items: {
                         '40': 'hello world'
                     }
-                }
+                },
+                options: {}
             }
         };
 
-        expect(proto.checkExpectedCondition(div)).toBe(false);
+        expect(proto.checkExpectedCondition.call(inst, div)).toBe(false);
 
         var container = document.createElement('div');
         container.className = '/* @echo CSS_PREFIX */weekday tui-view-40';

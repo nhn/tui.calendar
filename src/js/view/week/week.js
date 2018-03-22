@@ -111,6 +111,7 @@ Week.prototype.render = function() {
         datetime.end(renderEndDate),
         scheduleFilter
     );
+
     grids = datetime.getGridLeftAndWidth(
         range.length,
         narrowWeekend,

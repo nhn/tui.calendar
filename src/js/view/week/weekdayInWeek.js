@@ -7,7 +7,9 @@
 var util = require('tui-code-snippet');
 var Weekday = require('../weekday'),
     tmpl = require('./weekdayInWeek.hbs');
-var mmax = Math.max;
+var mmax = Math.max,
+    mfloor = Math.floor,
+    mmin = Math.min;
 
 /**
  * @constructor
@@ -21,9 +23,13 @@ var mmax = Math.max;
  * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
+ * @param {object} [aboutMe] - parent container info
+ * @param {string} [aboutMe.panelName] - panel name ['Milestone'|'Task'|'AllDay'|'TimeGrid']
+ * @param {boolean} [aboutMe.forcedLayout] - force layout height by dragging
  */
-function WeekdayInWeek(options, container) {
+function WeekdayInWeek(options, container, aboutMe) {
     Weekday.call(this, options, container);
+    this.aboutMe = aboutMe || {};
 }
 
 util.inherit(WeekdayInWeek, Weekday);
@@ -35,24 +41,55 @@ util.inherit(WeekdayInWeek, Weekday);
 WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
-        baseViewModel = this.getBaseViewModel(viewModel),
-        maxScheduleInDay = 0,
-        minHeight;
-
-    baseViewModel.matrices = opt.getViewModelFunc(viewModel);
+        matrices = opt.getViewModelFunc(viewModel),
+        renderLimitIdx = this._getRenderLimitIndex();
+    var maxScheduleInDay, baseViewModel, panelHeight, visibleScheduleCount;
 
     maxScheduleInDay = mmax.apply(
         null,
-        util.map(baseViewModel.matrices, function(matrix) {
+        util.map(matrices, function(matrix) {
             return Math.max.apply(null, util.map(matrix, function(row) {
                 return row.length;
             }));
         })
     );
 
-    minHeight = this._getMinHeight(maxScheduleInDay);
-    baseViewModel.minHeight = minHeight;
-    baseViewModel.contentHeight = minHeight;
+    if (this.collapsed) {
+        panelHeight = this.aboutMe.forcedLayout ? this.getViewBound().height : opt.panelHeights[0];
+        visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
+
+        if (maxScheduleInDay > visibleScheduleCount) {
+            viewModel.exceedDate = this.getExceedDate(
+                renderLimitIdx - 1, viewModel.schedulesInDateRange[this.aboutMe.panelName]
+            );
+
+            matrices = matrices.map(function(matrix) {
+                return matrix.map(function(row) {
+                    if (row.length >= visibleScheduleCount) {
+                        return row.filter(function(item) {
+                            return item.top < visibleScheduleCount - 1;
+                        });
+                    }
+
+                    return row;
+                });
+            });
+        } else {
+            viewModel.exceedDate = this.getExceedDate(
+                renderLimitIdx, viewModel.schedulesInDateRange[this.aboutMe.panelName]
+            );
+        }
+        baseViewModel = this.getBaseViewModel(viewModel);
+        baseViewModel.fixed = 'fixed';
+        this.fire('sendMaxScheduleInDay', maxScheduleInDay);
+    } else {
+        baseViewModel = this.getBaseViewModel(viewModel);
+        baseViewModel.fixed = '';
+    }
+
+    baseViewModel.contentHeight = this._getMinHeight(maxScheduleInDay);
+    baseViewModel.collapsed = this.collapsed;
+    baseViewModel.matrices = matrices;
     baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
 
     container.innerHTML = tmpl(baseViewModel);
@@ -69,10 +106,32 @@ WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
     var opt = this.options;
 
     return (
-        (maxScheduleInDay * opt.scheduleHeight) +
-        (maxScheduleInDay * opt.scheduleGutter) +
+        (maxScheduleInDay * (opt.scheduleHeight + opt.scheduleGutter)) +
         opt.containerBottomGutter
     );
+};
+
+/**
+ * Get limit index of schedule block in current view
+ * @returns {number} limit index
+ */
+WeekdayInWeek.prototype._getRenderLimitIndex = function() {
+    var opt = this.options;
+    var containerHeight = this.getViewBound().height;
+    var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
+    var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
+    var visibleScheduleCount = opt.visibleScheduleCount || 0;
+    var count;
+
+    containerHeight -= (gridHeaderHeight + gridFooterHeight);
+
+    count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
+
+    if (!visibleScheduleCount) {
+        visibleScheduleCount = count;
+    }
+
+    return mmin(count, visibleScheduleCount); // subtraction for '+n' label block
 };
 
 module.exports = WeekdayInWeek;

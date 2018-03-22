@@ -54,6 +54,9 @@
             alldayTitle: function() {
                 return 'All Day';
             },
+            alldayCollapseBtnTitle: function() {
+                return '∧';
+            },
             time: function(schedule) {
                 var html = [];
                 html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
@@ -124,7 +127,8 @@
         },
         week: {
             daynames: daynames,
-            panelHeights: [80, 80, 120]
+            panelHeights: [80, 80, 120],
+            alldayViewType: 'toggle'
         }
     });
 

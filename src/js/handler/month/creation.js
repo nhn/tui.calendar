@@ -309,7 +309,7 @@ MonthCreation.prototype._adjustStartAndEndTime = function(start, end) {
  */
 function isElementWeekdayGrid(el) {
     return domutil.closest(el, config.classname('.weekday-grid'))
-        && !domutil.closest(el, config.classname('.weekday-exceed'));
+        && !domutil.closest(el, config.classname('.weekday-exceed-in-month'));
 }
 
 util.CustomEvents.mixin(MonthCreation);

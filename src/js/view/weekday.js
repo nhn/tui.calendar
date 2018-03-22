@@ -10,6 +10,7 @@ var config = require('../config'),
     datetime = require('../common/datetime'),
     TZDate = require('../common/timezone').Date,
     View = require('./view');
+var existy = util.isExisty;
 
 /**
  * @constructor
@@ -107,6 +108,52 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
             };
         })
     };
+};
+
+/* eslint max-nested-callbacks: 0 */
+/**
+ * Make exceed date information
+ * @param {number} maxCount - exceed schedule count
+ * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+ * @returns {object} exceedDate
+ */
+Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
+    var exceedDate = {};
+    util.forEach(eventsInDateRange, function(matrix) {
+        util.forEach(matrix, function(column) {
+            util.forEach(column, function(viewModel) {
+                var period;
+                if (!viewModel) {
+                    return;
+                }
+
+                period = datetime.range(
+                    viewModel.getStarts(),
+                    viewModel.getEnds(),
+                    datetime.MILLISECONDS_PER_DAY
+                );
+
+                util.forEach(period, function(date) {
+                    var ymd = datetime.format(date, 'YYYYMMDD');
+                    if (!existy(exceedDate[ymd])) {
+                        exceedDate[ymd] = 0;
+                    }
+
+                    exceedDate[ymd] += 1;
+                });
+            });
+        });
+    });
+
+    util.forEach(exceedDate, function(value, ymd) {
+        if (value > maxCount) {
+            exceedDate[ymd] = value - maxCount;
+        } else {
+            exceedDate[ymd] = 0;
+        }
+    });
+
+    return exceedDate;
 };
 
 module.exports = Weekday;

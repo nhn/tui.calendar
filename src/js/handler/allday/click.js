@@ -62,25 +62,38 @@ AlldayClick.prototype._onClick = function(clickEvent) {
     var self = this,
         target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block')),
         scheduleCollection = this.baseController.schedules;
+    var blockElement, moreElement;
 
-    if (!timeView || !blockElement) {
+    if (!timeView) {
         return;
     }
 
-    scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
-        /**
-         * @events AlldayClick#clickSchedule
-         * @type {object}
-         * @property {Schedule} schedule - schedule instance
-         * @property {MouseEvent} event - MouseEvent object
-         */
-        self.fire('clickSchedule', {
-            schedule: schedule,
-            event: clickEvent.originEvent
+    moreElement = domutil.closest(
+        clickEvent.target,
+        config.classname('.weekday-exceed-in-week')
+    );
+
+    if (moreElement) {
+        self.fire('clickMore');
+    }
+
+    blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+
+    if (blockElement) {
+        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
+            /**
+             * @events AlldayClick#clickSchedule
+             * @type {object}
+             * @property {Schedule} schedule - schedule instance
+             * @property {MouseEvent} event - MouseEvent object
+             */
+            self.fire('clickSchedule', {
+                schedule: schedule,
+                event: clickEvent.originEvent
+            });
         });
-    });
+    }
 };
 
 util.CustomEvents.mixin(AlldayClick);

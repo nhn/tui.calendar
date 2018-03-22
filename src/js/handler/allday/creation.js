@@ -84,8 +84,15 @@ AlldayCreation.prototype.destroy = function() {
  * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayCreation.prototype.checkExpectedCondition = function(target) {
-    var cssClass = domutil.getClass(target),
-        matches;
+    var alldayView = this.alldayView;
+    var alldayViewType = alldayView.options.alldayViewType;
+    var cssClass = domutil.getClass(target).trim();
+    var matches;
+
+    if (alldayViewType === 'toggle' && alldayView.collapsed) {
+        return domutil.closest(target, config.classname('.weekday-grid'))
+            && !domutil.closest(target, config.classname('.weekday-exceed-in-week'));
+    }
 
     if (cssClass !== config.classname('weekday-schedules')) {
         return false;

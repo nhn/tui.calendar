@@ -7,14 +7,12 @@
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     common = require('../../common/common.js'),
-    datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     View = require('../../view/view'),
     Weekday = require('../weekday'),
     baseTmpl = require('./weekdayInMonth.hbs'),
     scheduleTmpl = require('./weekdayInMonthSchedule.hbs');
-var existy = util.isExisty,
-    mfloor = Math.floor,
+var mfloor = Math.floor,
     mmin = Math.min;
 
 /**
@@ -135,52 +133,6 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 };
 
 WeekdayInMonth.prototype._beforeDestroy = function() {
-};
-
-/* eslint max-nested-callbacks: 0 */
-/**
- * Make exceed date information
- * @param {number} maxCount - exceed schedule count
- * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
- * @returns {object} exceedDate
- */
-WeekdayInMonth.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
-    var exceedDate = {};
-    util.forEach(eventsInDateRange, function(matrix) {
-        util.forEach(matrix, function(column) {
-            util.forEach(column, function(viewModel) {
-                var period;
-                if (!viewModel) {
-                    return;
-                }
-
-                period = datetime.range(
-                    viewModel.getStarts(),
-                    viewModel.getEnds(),
-                    datetime.MILLISECONDS_PER_DAY
-                );
-
-                util.forEach(period, function(date) {
-                    var ymd = datetime.format(date, 'YYYYMMDD');
-                    if (!existy(exceedDate[ymd])) {
-                        exceedDate[ymd] = 0;
-                    }
-
-                    exceedDate[ymd] += 1;
-                });
-            });
-        });
-    });
-
-    util.forEach(exceedDate, function(value, ymd) {
-        if (value > maxCount) {
-            exceedDate[ymd] = value - maxCount;
-        } else {
-            exceedDate[ymd] = 0;
-        }
-    });
-
-    return exceedDate;
 };
 
 /**

@@ -64,6 +64,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var viewSequence = options.week.viewSequence || DEFAULT_VIEW_SEQUENCE,
         views = options.week.views || DEFAULT_VIEWS,
         panels = [];
+    var alldayPanel;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.handler = {
@@ -153,15 +154,43 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         /**********
          * 종일일정
          **********/
-        alldayView = new Allday(options.week, vLayout.getPanelByName('AllDay').container);
+        alldayPanel = vLayout.getPanelByName('AllDay');
+        alldayView = new Allday(options.week, alldayPanel.container);
         alldayView.on('afterRender', function() {
+            var collapseBtn = domutil.find(config.classname('.allday-collapse-button'), alldayView.container);
+
             vLayout.getPanelByName('AllDay').setHeight(null, alldayView.contentHeight);
+
+            if (collapseBtn) {
+                collapseBtn.addEventListener('click', function() {
+                    var newHeight = DEFAULT_VIEWS.AllDay.maxHeight;
+                    alldayPanel.options.maxHeight = newHeight;
+                    alldayPanel.setHeight(null, newHeight);
+                    alldayView.collapsed = true;
+                    weekView.render();
+                });
+                alldayView.changeFoldButtonVisibility();
+            }
         });
+
         weekView.addChild(alldayView);
         weekView.handler.click.allday = new AlldayClick(dragHandler, alldayView, baseController);
         weekView.handler.creation.allday = new AlldayCreation(dragHandler, alldayView, baseController);
         weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
         weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
+
+        weekView.handler.click.allday.on('clickMore', function() {
+            alldayPanel.options.maxHeight = alldayView.maxScheduleInDay > 10 ? 220 : 210;
+            alldayPanel.isHeightForcedSet = false;
+            alldayView.collapsed = false;
+            alldayView.forcedLayout = false;
+            weekView.render();
+        });
+
+        vLayout.getPanelByName('AllDay').on('resize', function() {
+            alldayView.forcedLayout = true;
+            weekView.render();
+        });
     }
 
     if (util.pick(views, 'TimeGrid').show) {

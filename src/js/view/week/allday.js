@@ -10,6 +10,7 @@ var config = require('../../config'),
     View = require('../view'),
     WeekdayInWeek = require('./weekdayInWeek'),
     tmpl = require('../template/week/allday.hbs');
+var PANEL_NAME = 'allday';
 
 /**
  * @constructor
@@ -52,6 +53,10 @@ function Allday(options, container) {
      */
     this.contentHeight = 0;
 
+    this.viewType = options.alldayViewType || 'scroll';
+
+    this.collapsed = (this.viewType === 'toggle');
+
     View.call(this, container);
 }
 
@@ -65,8 +70,12 @@ util.inherit(Allday, View);
 Allday.prototype.render = function(viewModel) {
     var container = this.container;
     var scheduleContainerTop = this.options.scheduleContainerTop;
-    var weekdayView;
+    var aboutMe = {
+        panelName: PANEL_NAME,
+        forcedLayout: this.forcedLayout
+    };
     var self = this;
+    var weekdayView;
 
     container.innerHTML = tmpl(this.options);
 
@@ -74,19 +83,35 @@ Allday.prototype.render = function(viewModel) {
 
     weekdayView = new WeekdayInWeek(
         this.options,
-        domutil.find(config.classname('.weekday-container'), container)
+        domutil.find(config.classname('.weekday-container'), container),
+        aboutMe
     );
+    weekdayView.collapsed = this.collapsed;
     weekdayView.on('afterRender', function(weekdayViewModel) {
-        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
+        self.contentHeight = weekdayViewModel.contentHeight + scheduleContainerTop;
+    });
+    weekdayView.on('sendMaxScheduleInDay', function(maxScheduleInDay) {
+        self.maxScheduleInDay = maxScheduleInDay;
     });
 
     this.addChild(weekdayView);
 
     this.children.each(function(childView) {
+        childView.collapsed = this.collapsed;
         childView.render(viewModel);
-    });
+    }, this);
 
     this.fire('afterRender', viewModel);
+};
+
+Allday.prototype.changeFoldButtonVisibility = function() {
+    var cssClass = config.classname('.allday-collapse-button');
+    var btnFold = domutil.find(cssClass, this.container);
+    var isToggleViewType = this.viewType === 'toggle';
+
+    if (btnFold) {
+        btnFold.style.display = (!isToggleViewType || this.collapsed) ? 'none' : 'inline';
+    }
 };
 
 module.exports = Allday;
