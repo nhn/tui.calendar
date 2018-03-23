@@ -62,8 +62,18 @@ AlldayClick.prototype._onClick = function(clickEvent) {
     var self = this,
         target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        scheduleCollection = this.baseController.schedules;
+        scheduleCollection = this.baseController.schedules,
+        collapseElement = domutil.closest(
+            clickEvent.target,
+            config.classname('.allday-collapse-button')
+        );
     var blockElement, moreElement;
+
+    if (collapseElement) {
+        self.fire('clickCollapse');
+
+        return;
+    }
 
     if (!timeView) {
         return;
@@ -75,7 +85,9 @@ AlldayClick.prototype._onClick = function(clickEvent) {
     );
 
     if (moreElement) {
-        self.fire('clickMore');
+        self.fire('clickExpand');
+
+        return;
     }
 
     blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
@@ -99,4 +111,3 @@ AlldayClick.prototype._onClick = function(clickEvent) {
 util.CustomEvents.mixin(AlldayClick);
 
 module.exports = AlldayClick;
-

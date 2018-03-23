@@ -24,7 +24,7 @@ var mmax = Math.max,
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
  * @param {object} [aboutMe] - parent container info
- * @param {string} [aboutMe.panelName] - panel name ['Milestone'|'Task'|'AllDay'|'TimeGrid']
+ * @param {string} [aboutMe.name] - panel name ['Milestone'|'Task'|'AllDay'|'TimeGrid']
  * @param {boolean} [aboutMe.forcedLayout] - force layout height by dragging
  */
 function WeekdayInWeek(options, container, aboutMe) {
@@ -42,7 +42,8 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
         matrices = opt.getViewModelFunc(viewModel),
-        renderLimitIdx = this._getRenderLimitIndex();
+        renderLimitIdx = this._getRenderLimitIndex(),
+        aboutMe = this.aboutMe;
     var maxScheduleInDay, baseViewModel, panelHeight, visibleScheduleCount;
 
     maxScheduleInDay = mmax.apply(
@@ -55,12 +56,12 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     );
 
     if (this.collapsed) {
-        panelHeight = this.aboutMe.forcedLayout ? this.getViewBound().height : opt.panelHeights[0];
+        panelHeight = aboutMe.forcedLayout ? this.getViewBound().height : mmin(aboutMe.height, aboutMe.maxHeight);
         visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
 
         if (maxScheduleInDay > visibleScheduleCount) {
             viewModel.exceedDate = this.getExceedDate(
-                renderLimitIdx - 1, viewModel.schedulesInDateRange[this.aboutMe.panelName]
+                renderLimitIdx - 1, viewModel.schedulesInDateRange[this.aboutMe.name]
             );
 
             matrices = matrices.map(function(matrix) {
@@ -76,21 +77,17 @@ WeekdayInWeek.prototype.render = function(viewModel) {
             });
         } else {
             viewModel.exceedDate = this.getExceedDate(
-                renderLimitIdx, viewModel.schedulesInDateRange[this.aboutMe.panelName]
+                renderLimitIdx, viewModel.schedulesInDateRange[this.aboutMe.name]
             );
         }
-        baseViewModel = this.getBaseViewModel(viewModel);
-        baseViewModel.fixed = 'fixed';
-        this.fire('sendMaxScheduleInDay', maxScheduleInDay);
-    } else {
-        baseViewModel = this.getBaseViewModel(viewModel);
-        baseViewModel.fixed = '';
     }
 
+    baseViewModel = this.getBaseViewModel(viewModel);
     baseViewModel.contentHeight = this._getMinHeight(maxScheduleInDay);
-    baseViewModel.collapsed = this.collapsed;
     baseViewModel.matrices = matrices;
     baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
+    baseViewModel.collapsed = this.collapsed ? 'collapsed' : '';
+    baseViewModel.maxScheduleInDay = maxScheduleInDay;
 
     container.innerHTML = tmpl(baseViewModel);
 

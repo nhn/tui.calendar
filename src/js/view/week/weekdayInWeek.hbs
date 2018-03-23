@@ -9,8 +9,8 @@
     </div>
 {{/each ~}}
 </div>
-<div class="{{CSS_PREFIX}}weekday-creation {{fixed}}"></div>
-<div class="{{CSS_PREFIX}}weekday-schedules {{fixed}}"style="top:{{@root.scheduleContainerTop}}px;">
+<div class="{{CSS_PREFIX}}weekday-creation {{collapsed}}"></div>
+<div class="{{CSS_PREFIX}}weekday-schedules {{collapsed}}"style="top:{{@root.scheduleContainerTop}}px;">
     <!-- weekday-schedules 높이를 하단 패딩까지 확보하기 위한 빈 div -->
     <div class="{{CSS_PREFIX}}weekday-schedules-height-span" style="height:{{contentHeight}}px"></div>
     {{#each matrices ~}}
@@ -38,6 +38,6 @@
     </div>
     {{/if ~}}
     {{/each ~}}
-    {{/each ~}}    
+    {{/each ~}}
     {{/each ~}}
 </div>

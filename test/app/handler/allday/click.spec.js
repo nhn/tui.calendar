@@ -3,6 +3,7 @@
 var domutil = require('common/domutil');
 var Collection = require('common/collection');
 var AlldayClick = require('handler/allday/click');
+var config = require('config');
 
 describe('handler:AlldayClick', function() {
     var mockInst, mockCollection;
@@ -26,13 +27,18 @@ describe('handler:AlldayClick', function() {
         var vMouseEvent = {originEvent: 'test'};
         // 클릭 대상 엘리먼트가 id '2'인 일정과 관계가 있을 때
         spyOn(domutil, 'getData').and.returnValue('2');
-        spyOn(domutil, 'closest').and.returnValue(true);
+        spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
+            if (cssClass === config.classname('.weekday-schedule-block')) {
+                return true;
+            }
+
+            return false;
+        });
 
         // 실행하면
         AlldayClick.prototype._onClick.call(mockInst, vMouseEvent);
 
         // 이벤트가 아래처럼 발생한다
-        expect(mockInst.fire).toHaveBeenCalledWith('clickMore');
         expect(mockInst.fire).toHaveBeenCalledWith('clickSchedule', {
             schedule: {
                 _id: '2',
@@ -42,7 +48,43 @@ describe('handler:AlldayClick', function() {
         });
     });
 
+    it('_onClick fire custom event "clickExpand" when click expand button.', function() {
+        var vMouseEvent = {originEvent: 'test'};
+        spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
+            if (cssClass === config.classname('.weekday-exceed-in-week')) {
+                return true;
+            }
+
+            return false;
+        });
+
+        // 실행하면
+        AlldayClick.prototype._onClick.call(mockInst, vMouseEvent);
+
+        // 이벤트가 아래처럼 발생한다
+        expect(mockInst.fire).toHaveBeenCalledWith('clickExpand');
+    });
+
+    it('_onClick fire custom event "clickCollapse" when click expand button.', function() {
+        var vMouseEvent = {originEvent: 'test'};
+        spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
+            if (cssClass === config.classname('.allday-collapse-button')) {
+                return true;
+            }
+
+            return false;
+        });
+
+        // 실행하면
+        AlldayClick.prototype._onClick.call(mockInst, vMouseEvent);
+
+        // 이벤트가 아래처럼 발생한다
+        expect(mockInst.fire).toHaveBeenCalledWith('clickCollapse');
+    });
+
     it('AlldayClick doesn\'t fire custom event "click" when no target or target is not related with events.', function() {
+        spyOn(domutil, 'closest').and.returnValue(false);
+
         // 엘리먼트가 AlldayClick과 관계가 없다
         mockInst.checkExpectCondition.and.returnValue(false);
 

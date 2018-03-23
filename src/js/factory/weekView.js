@@ -49,7 +49,8 @@ var DEFAULT_VIEWS = {
         minHeight: 20,
         height: 80,
         maxHeight: 80,
-        show: true
+        show: true,
+        maxExpandCount: 10
     },
     'TimeGrid': {
         autoHeight: true,
@@ -155,20 +156,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
          * 종일일정
          **********/
         alldayPanel = vLayout.getPanelByName('AllDay');
-        alldayView = new Allday(options.week, alldayPanel.container);
+        alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
         alldayView.on('afterRender', function() {
-            var collapseBtn = domutil.find(config.classname('.allday-collapse-button'), alldayView.container);
+            alldayPanel.setHeight(null, alldayView.contentHeight);
 
-            vLayout.getPanelByName('AllDay').setHeight(null, alldayView.contentHeight);
-
-            if (collapseBtn) {
-                collapseBtn.addEventListener('click', function() {
-                    var newHeight = DEFAULT_VIEWS.AllDay.maxHeight;
-                    alldayPanel.options.maxHeight = newHeight;
-                    alldayPanel.setHeight(null, newHeight);
-                    alldayView.collapsed = true;
-                    weekView.render();
-                });
+            if (alldayView.options.alldayViewType === 'toggle') {
                 alldayView.changeFoldButtonVisibility();
             }
         });
@@ -179,16 +171,26 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
         weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
 
-        weekView.handler.click.allday.on('clickMore', function() {
-            alldayPanel.options.maxHeight = alldayView.maxScheduleInDay > 10 ? 220 : 210;
+        weekView.handler.click.allday.on('clickExpand', function() {
+            alldayView.prevMaxHeight = alldayView.aboutMe.maxHeight;
+            alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
             alldayPanel.isHeightForcedSet = false;
             alldayView.collapsed = false;
-            alldayView.forcedLayout = false;
+            alldayView.aboutMe.forcedLayout = false;
             weekView.render();
         });
 
-        vLayout.getPanelByName('AllDay').on('resize', function() {
-            alldayView.forcedLayout = true;
+        weekView.handler.click.allday.on('clickCollapse', function() {
+            var newHeight = alldayView.prevMaxHeight;
+            delete alldayView.prevMaxHeight;
+            alldayPanel.options.maxHeight = newHeight;
+            alldayPanel.setHeight(null, newHeight);
+            alldayView.collapsed = true;
+            weekView.render();
+        });
+
+        alldayPanel.on('resize', function() {
+            alldayView.aboutMe.forcedLayout = true;
             weekView.render();
         });
     }
