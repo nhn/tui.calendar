@@ -60,12 +60,12 @@ var DEFAULT_VIEWS = {
 
 /* eslint-disable complexity*/
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
-    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
-        milestoneView, taskView, alldayView, timeGridView;
     var viewSequence = options.week.viewSequence || DEFAULT_VIEW_SEQUENCE,
         views = options.week.views || DEFAULT_VIEWS,
-        panels = [];
-    var alldayPanel;
+        panels = [],
+        isAllDayPanelFirstRender = true;
+    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
+        milestoneView, taskView, alldayView, timeGridView, alldayPanel;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.handler = {
@@ -158,7 +158,12 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayPanel = vLayout.getPanelByName('AllDay');
         alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
         alldayView.on('afterRender', function() {
-            alldayPanel.setHeight(null, alldayView.contentHeight);
+            if (isAllDayPanelFirstRender) {
+                alldayPanel.setHeight(null, alldayView.options.height);
+                isAllDayPanelFirstRender = false;
+            } else {
+                alldayPanel.setHeight(null, alldayView.contentHeight);
+            }
 
             if (alldayView.options.alldayViewType === 'toggle') {
                 alldayView.changeFoldButtonVisibility();

@@ -273,7 +273,7 @@ Handlebars.registerHelper({
         return '종일';
     },
 
-    'alldayCollapseBtnTitle-tmpl': function(tmpl) {
+    'alldayCollapseBtnTitle-tmpl': function() {
         return '∧';
     },
 

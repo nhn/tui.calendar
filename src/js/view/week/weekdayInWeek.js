@@ -6,7 +6,9 @@
 
 var util = require('tui-code-snippet');
 var Weekday = require('../weekday'),
-    tmpl = require('./weekdayInWeek.hbs');
+    tmpl = require('./weekdayInWeek.hbs'),
+    dw = require('../../common/dw'),
+    datetime = require('../../common/datetime');
 var mmax = Math.max,
     mfloor = Math.floor,
     mmin = Math.min;
@@ -42,8 +44,8 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     var opt = this.options,
         container = this.container,
         matrices = opt.getViewModelFunc(viewModel),
-        renderLimitIdx = this._getRenderLimitIndex(),
-        aboutMe = this.aboutMe;
+        aboutMe = this.aboutMe,
+        exceedDate = {};
     var maxScheduleInDay, baseViewModel, panelHeight, visibleScheduleCount;
 
     maxScheduleInDay = mmax.apply(
@@ -60,25 +62,25 @@ WeekdayInWeek.prototype.render = function(viewModel) {
         visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
 
         if (maxScheduleInDay > visibleScheduleCount) {
-            viewModel.exceedDate = this.getExceedDate(
-                renderLimitIdx - 1, viewModel.schedulesInDateRange[this.aboutMe.name]
-            );
-
             matrices = matrices.map(function(matrix) {
                 return matrix.map(function(row) {
                     if (row.length >= visibleScheduleCount) {
                         return row.filter(function(item) {
-                            return item.top < visibleScheduleCount - 1;
-                        });
+                            var exceeded = item.top >= visibleScheduleCount - 1;
+
+                            if (exceeded) {
+                                this._updateExceedDate(exceedDate, item.renderStarts, item.renderEnds);
+                            }
+
+                            return !exceeded;
+                        }, this);
                     }
 
                     return row;
-                });
-            });
-        } else {
-            viewModel.exceedDate = this.getExceedDate(
-                renderLimitIdx, viewModel.schedulesInDateRange[this.aboutMe.name]
-            );
+                }, this);
+            }, this);
+
+            viewModel.exceedDate = exceedDate;
         }
     }
 
@@ -86,8 +88,9 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     baseViewModel.contentHeight = this._getMinHeight(maxScheduleInDay);
     baseViewModel.matrices = matrices;
     baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
-    baseViewModel.collapsed = this.collapsed ? 'collapsed' : '';
+    baseViewModel.collapsed = (this.collapsed && (maxScheduleInDay > visibleScheduleCount)) ? 'collapsed' : '';
     baseViewModel.maxScheduleInDay = maxScheduleInDay;
+    baseViewModel.visibleScheduleCount = visibleScheduleCount;
 
     container.innerHTML = tmpl(baseViewModel);
 
@@ -129,6 +132,26 @@ WeekdayInWeek.prototype._getRenderLimitIndex = function() {
     }
 
     return mmin(count, visibleScheduleCount); // subtraction for '+n' label block
+};
+
+/**
+ * make and update data of exceed date
+ * @param {object} exceedDate - data to have exceed date in a week
+ * @param {TZDate} renderStarts - start date of a week
+ * @param {TZDate} renderEnds - end date of a week
+ */
+WeekdayInWeek.prototype._updateExceedDate = function(exceedDate, renderStarts, renderEnds) {
+    var date = datetime.clone(renderStarts);
+    var day;
+
+    for (; date <= renderEnds; date.setDate(date.getDate() + 1)) {
+        day = datetime.format(date, 'YYYYMMDD');
+        if (!exceedDate[day]) {
+            exceedDate[day] = 1;
+        } else {
+            exceedDate[day] += 1;
+        }
+    }
 };
 
 module.exports = WeekdayInWeek;
