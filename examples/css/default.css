@@ -160,6 +160,7 @@
     text-align: unset;
 }
 
+.tui-full-calendar-month-week-item >
 .tui-full-calendar-weekday-grid-line:hover {
     background-color: #f0f1f5;
 }
