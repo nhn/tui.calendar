@@ -108,6 +108,46 @@ var Month = {
     },
 
     /**
+     * Adjust time view model's top index value
+     * @this Base
+     * @param {Collection} vColl - collection of schedules
+     */
+    _stackTimeFromTop: function(vColl) {
+        var ctrlMonth = this.Month;
+        var vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter);
+        var sortedTimeSchedules = vColl.find(ctrlMonth._onlyTimeFilter).sort(array.compare.schedule.asc);
+        var indiceInYMD = {};
+        var dateMatrix = this.dateMatrix;
+
+        sortedTimeSchedules.forEach(function(timeViewModel) {
+            var scheduleYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD');
+            var topArrayInYMD = indiceInYMD[scheduleYMD];
+            var maxTopInYMD;
+            var i;
+
+            if (util.isUndefined(topArrayInYMD)) {
+                topArrayInYMD = indiceInYMD[scheduleYMD] = [];
+                util.forEach(dateMatrix[scheduleYMD], function(cid) {
+                    vAlldayColl.doWhenHas(cid, function(viewModel) {
+                        topArrayInYMD.push(viewModel.top);
+                    });
+                });
+            }
+
+            if (util.inArray(timeViewModel.top, topArrayInYMD) >= 0) {
+                maxTopInYMD = mmax.apply(null, topArrayInYMD) + 1;
+                for (i = 1; i <= maxTopInYMD; i += 1) {
+                    timeViewModel.top = i;
+                    if (util.inArray(timeViewModel.top, topArrayInYMD) < 0) {
+                        break;
+                    }
+                }
+            }
+            topArrayInYMD.push(timeViewModel.top);
+        });
+    },
+
+    /**
      * Convert multi-date time schedule to all-day schedule
      * @this Base
      * @param {Collection} vColl - view model collection
@@ -134,9 +174,10 @@ var Month = {
      * @param {Date} start - start date to find schedules
      * @param {Date} end - end date to find schedules
      * @param {function[]} [andFilters] - optional filters to applying search query
+     * @param {boolean} [alldayFirstMode=true] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
      * @returns {object} view model data
      */
-    findByDateRange: function(start, end, andFilters) {
+    findByDateRange: function(start, end, andFilters, alldayFirstMode) {
         var ctrlCore = this.Core,
             ctrlMonth = this.Month,
             filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
@@ -144,6 +185,7 @@ var Month = {
             collisionGroup,
             matrices;
 
+        alldayFirstMode = alldayFirstMode || false;
         andFilters = andFilters || [];
         filter = Collection.and.apply(null, [filter].concat(andFilters));
 
@@ -156,7 +198,11 @@ var Month = {
         collisionGroup = ctrlCore.getCollisionGroup(vList);
         matrices = ctrlCore.getMatrices(vColl, collisionGroup);
         ctrlCore.positionViewModels(start, end, matrices, ctrlMonth._weightTopValue);
-        ctrlMonth._adjustTimeTopIndex(vColl);
+        if (alldayFirstMode) {
+            ctrlMonth._adjustTimeTopIndex(vColl);
+        } else {
+            ctrlMonth._stackTimeFromTop(vColl);
+        }
 
         return matrices;
     }
