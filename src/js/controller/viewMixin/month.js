@@ -174,7 +174,7 @@ var Month = {
      * @param {Date} start - start date to find schedules
      * @param {Date} end - end date to find schedules
      * @param {function[]} [andFilters] - optional filters to applying search query
-     * @param {boolean} [alldayFirstMode=true] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
+     * @param {boolean} [alldayFirstMode=false] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
      * @returns {object} view model data
      */
     findByDateRange: function(start, end, andFilters, alldayFirstMode) {
