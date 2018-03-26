@@ -143,8 +143,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
          * 업무
          **********/
         taskView = new TaskView(options.week, vLayout.getPanelByName('Task').container);
-        taskView.on('afterRender', function(viewModel) {
-            vLayout.getPanelByName('Task').setHeight(null, viewModel.height);
+        taskView.on('afterRender', function() {
+            vLayout.getPanelByName('Task').setHeight(null, taskView.contentHeight);
         });
         weekView.addChild(taskView);
         weekView.handler.click.task = new AlldayClick(dragHandler, taskView, baseController);

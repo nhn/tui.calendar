@@ -90,7 +90,7 @@ Allday.prototype.render = function(viewModel) {
     );
     weekdayView.collapsed = this.collapsed;
     weekdayView.on('afterRender', function(weekdayViewModel) {
-        self.contentHeight = weekdayViewModel.contentHeight + scheduleContainerTop;
+        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
         self.maxScheduleInDay = weekdayViewModel.maxScheduleInDay;
     });
 
