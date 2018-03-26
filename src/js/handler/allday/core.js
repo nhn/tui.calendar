@@ -80,6 +80,10 @@ function getX(grids, left) {
     var i = 0;
     var length = grids.length;
     var grid;
+    if (left < 0) {
+        left = 0;
+    }
+
     for (; i < length; i += 1) {
         grid = grids[i];
         if (grid.left <= left && left <= (grid.left + grid.width)) {

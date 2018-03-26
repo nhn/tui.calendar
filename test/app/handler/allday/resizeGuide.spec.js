@@ -31,7 +31,8 @@ describe('handler:AlldayResizeGuide', function() {
                 model: {
                     start: new Date('2015-05-04T00:00:00+09:00'),
                     end: new Date('2015-05-04T23:59:59+09:00')
-                }
+                },
+                grids: [{width: 20}, {width: 20}, {width: 20}, {width: 20}, {width: 20}]
             };
 
             var func = inst.getGuideElementWidthFunc.call(mockAlldayResize, mockDragStartEventData);
