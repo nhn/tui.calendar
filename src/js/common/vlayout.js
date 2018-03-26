@@ -218,6 +218,7 @@ VLayout.prototype._resize = function(splPanel, startY, mouseY) {
 
     util.forEach(resizeMap, function(pair) {
         pair[0].setHeight(null, pair[1], true);
+        pair[0].fire('resize');
     });
 };
 

@@ -273,6 +273,10 @@ Handlebars.registerHelper({
         return '종일';
     },
 
+    'alldayCollapseBtnTitle-tmpl': function() {
+        return '∧';
+    },
+
     'allday-tmpl': function(model) {
         return common.stripTags(model.title);
     },
@@ -313,5 +317,9 @@ Handlebars.registerHelper({
 
     'monthDayname-tmpl': function(model) {
         return model.label;
+    },
+
+    'weekGridFooterExceed-tmpl': function(hiddenSchedules) {
+        return '+' + hiddenSchedules;
     }
 });

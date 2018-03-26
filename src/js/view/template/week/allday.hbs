@@ -1,4 +1,9 @@
 <div class="{{CSS_PREFIX}}allday-left {{CSS_PREFIX}}left">
+    {{#fi alldayViewType '===' 'toggle'}}
+    <span class="{{CSS_PREFIX}}allday-collapse-button">
+        {{{alldayCollapseBtnTitle-tmpl}}}
+    </span>
+    {{/fi}}
     <span>{{{alldayTitle-tmpl}}}</span>
 </div>
 <div class="{{CSS_PREFIX}}allday-right {{CSS_PREFIX}}right">

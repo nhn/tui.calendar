@@ -113,7 +113,7 @@
         position: absolute
         padding: 0
         wh(6px, 6px)
-        top: 6px 
+        top: 6px
         left: 0
         border-radius: 50%
 
@@ -143,10 +143,21 @@
     .exceed-right .resize-handle
         display: none
 
-    .exceed
+    .exceed-in-month
         cursor: pointer
         &:hover
             background-color: #f0f1f5
+
+    .exceed-in-week
+        position: absolute
+        bottom: 1px
+        left: 1px
+        font-size: 12px
+        line-height: 14px
+        cursor: pointer
+        padding: 1px 5px
+        background-color: #ffffff
+        border: 1px solid #dddddd
 
     .resize-handle
         position: absolute
@@ -177,6 +188,10 @@
     .right
         height: 100%
         background-color: #fff
-        margin-left: 77px 
+        margin-left: 77px
         overflow-y: scroll
         position: relative
+
+.collapsed
+    height: 0
+    overflow-y: visible

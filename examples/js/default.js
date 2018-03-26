@@ -54,6 +54,9 @@
             alldayTitle: function() {
                 return 'All Day';
             },
+            alldayCollapseBtnTitle: function() {
+                return '∧';
+            },
             time: function(schedule) {
                 var html = [];
                 html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
@@ -124,7 +127,8 @@
         },
         week: {
             daynames: daynames,
-            panelHeights: [80, 80, 120]
+            panelHeights: [80, 80, 120],
+            alldayViewType: 'toggle'
         }
     });
 
@@ -272,14 +276,14 @@
 
     /**
      * A listener for click the menu
-     * @param {Event} e - click event 
+     * @param {Event} e - click event
      */
     function onClickMenu(e) {
         var target = $(e.target).closest('a[role="menuitem"]')[0];
-        var action = target.dataset.action;
+        var action = getDataAction(target);
 
         console.log(target);
-        console.log(target.dataset);
+        console.log(action);
         switch (action) {
             case 'toggle-daily':
                 cal.toggleView('day');
@@ -330,7 +334,7 @@
     }
 
     function onClickNavi(e) {
-        var action = e.target.dataset.action;
+        var action = getDataAction(e.target);
 
         switch (action) {
             case 'move-prev':
@@ -399,7 +403,7 @@
 
     function onChangeNewScheduleCalendar(e) {
         var target = $(e.target).closest('a[role="menuitem"]')[0];
-        var calendarId = target.dataset.action;
+        var calendarId = getDataAction(target);
         changeNewScheduleCalendar(calendarId);
     }
 
@@ -553,6 +557,10 @@
 
         window.addEventListener('resize', resizeThrottled);
         document.addEventListener('click', closePopover);
+    }
+
+    function getDataAction(target) {
+        return target.dataset ? target.dataset.action : target.getAttribute('data-action');
     }
 
     resizeThrottled = tui.util.throttle(function() {

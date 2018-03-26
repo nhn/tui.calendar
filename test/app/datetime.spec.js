@@ -25,7 +25,7 @@ describe('datetime', function() {
         });
     });
 
-    describe('range()', function() {
+    xdescribe('range()', function() {
         it('makes date array by supplied dates.', function() {
             var start = new TZDate('2015/05/01'),
                 end = new TZDate('2015/05/03'),

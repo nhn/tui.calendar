@@ -148,7 +148,7 @@
     color: red;
 }
 
-.tui-full-calendar-weekday-exceed {
+.tui-full-calendar-weekday-exceed-in-month {
     float: right;
     margin-top: 4px;
     margin-right: 5px;
@@ -160,6 +160,7 @@
     text-align: unset;
 }
 
+.tui-full-calendar-month-week-item >
 .tui-full-calendar-weekday-grid-line:hover {
     background-color: #f0f1f5;
 }
@@ -170,7 +171,7 @@
     height: 50px;
 }
 
-.tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed {
+.tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed-in-month {
     float: none;
     margin-left: 10px;
     font-size: 12px;

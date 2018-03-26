@@ -48,7 +48,8 @@ var DEFAULT_VIEWS = {
         minHeight: 20,
         height: 80,
         maxHeight: 80,
-        show: true
+        show: true,
+        maxExpandCount: 10
     },
     'TimeGrid': {
         autoHeight: true,
@@ -58,11 +59,12 @@ var DEFAULT_VIEWS = {
 
 /* eslint-disable complexity*/
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
-    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
-        milestoneView, taskView, alldayView, timeGridView;
     var viewSequence = options.week.viewSequence || DEFAULT_VIEW_SEQUENCE,
         views = options.week.views || DEFAULT_VIEWS,
-        panels = [];
+        panels = [],
+        isAllDayPanelFirstRender = true;
+    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
+        milestoneView, taskView, alldayView, timeGridView, alldayPanel;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.handler = {
@@ -153,15 +155,49 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         /**********
          * 종일일정
          **********/
-        alldayView = new Allday(options.week, vLayout.getPanelByName('AllDay').container);
+        alldayPanel = vLayout.getPanelByName('AllDay');
+        alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
         alldayView.on('afterRender', function() {
-            vLayout.getPanelByName('AllDay').setHeight(null, alldayView.contentHeight);
+            if (isAllDayPanelFirstRender) {
+                alldayPanel.setHeight(null, alldayView.options.height);
+                isAllDayPanelFirstRender = false;
+            } else {
+                alldayPanel.setHeight(null, alldayView.contentHeight);
+            }
+
+            if (alldayView.options.alldayViewType === 'toggle') {
+                alldayView.changeFoldButtonVisibility();
+            }
         });
+
         weekView.addChild(alldayView);
         weekView.handler.click.allday = new AlldayClick(dragHandler, alldayView, baseController);
         weekView.handler.creation.allday = new AlldayCreation(dragHandler, alldayView, baseController);
         weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
         weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
+
+        weekView.handler.click.allday.on('clickExpand', function() {
+            alldayView.prevMaxHeight = alldayView.aboutMe.maxHeight;
+            alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
+            alldayPanel.isHeightForcedSet = false;
+            alldayView.collapsed = false;
+            alldayView.aboutMe.forcedLayout = false;
+            weekView.render();
+        });
+
+        weekView.handler.click.allday.on('clickCollapse', function() {
+            var newHeight = alldayView.prevMaxHeight;
+            delete alldayView.prevMaxHeight;
+            alldayPanel.options.maxHeight = newHeight;
+            alldayPanel.setHeight(null, newHeight);
+            alldayView.collapsed = true;
+            weekView.render();
+        });
+
+        alldayPanel.on('resize', function() {
+            alldayView.aboutMe.forcedLayout = true;
+            weekView.render();
+        });
     }
 
     if (util.pick(views, 'TimeGrid').show) {

@@ -62,28 +62,52 @@ AlldayClick.prototype._onClick = function(clickEvent) {
     var self = this,
         target = clickEvent.target,
         timeView = this.checkExpectCondition(target),
-        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block')),
-        scheduleCollection = this.baseController.schedules;
+        scheduleCollection = this.baseController.schedules,
+        collapseElement = domutil.closest(
+            clickEvent.target,
+            config.classname('.allday-collapse-button')
+        );
+    var blockElement, moreElement;
 
-    if (!timeView || !blockElement) {
+    if (collapseElement) {
+        self.fire('clickCollapse');
+
         return;
     }
 
-    scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
-        /**
-         * @events AlldayClick#clickSchedule
-         * @type {object}
-         * @property {Schedule} schedule - schedule instance
-         * @property {MouseEvent} event - MouseEvent object
-         */
-        self.fire('clickSchedule', {
-            schedule: schedule,
-            event: clickEvent.originEvent
+    if (!timeView) {
+        return;
+    }
+
+    moreElement = domutil.closest(
+        clickEvent.target,
+        config.classname('.weekday-exceed-in-week')
+    );
+
+    if (moreElement) {
+        self.fire('clickExpand');
+
+        return;
+    }
+
+    blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+
+    if (blockElement) {
+        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
+            /**
+             * @events AlldayClick#clickSchedule
+             * @type {object}
+             * @property {Schedule} schedule - schedule instance
+             * @property {MouseEvent} event - MouseEvent object
+             */
+            self.fire('clickSchedule', {
+                schedule: schedule,
+                event: clickEvent.originEvent
+            });
         });
-    });
+    }
 };
 
 util.CustomEvents.mixin(AlldayClick);
 
 module.exports = AlldayClick;
-

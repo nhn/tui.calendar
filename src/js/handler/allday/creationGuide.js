@@ -130,7 +130,7 @@ AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData)
     var alldayCreation = this.alldayCreation,
         alldayView = alldayCreation.alldayView,
         alldayContainerElement = alldayView.container,
-        scheduleContainer = domutil.find(config.classname('.weekday-creation'), alldayContainerElement);
+        scheduleContainer = domutil.find(config.classname('.weekday-grid'), alldayContainerElement);
 
     scheduleContainer.appendChild(this.guideElement);
     this._refreshGuideElement(dragStartEventData);
