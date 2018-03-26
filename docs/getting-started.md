@@ -265,6 +265,7 @@ var calendar = new Calendar('#calendar', {
         panelHeights: [80, 80, 120],
         narrowWeekend: true,
         startDayOfWeek: 1 // monday
+        alldayViewType: 'toggle' // default: scroll
     }
 ```
 
