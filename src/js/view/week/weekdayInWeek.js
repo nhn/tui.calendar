@@ -7,7 +7,6 @@
 var util = require('tui-code-snippet');
 var Weekday = require('../weekday'),
     tmpl = require('./weekdayInWeek.hbs'),
-    dw = require('../../common/dw'),
     datetime = require('../../common/datetime');
 var mmax = Math.max,
     mfloor = Math.floor,
