@@ -79,7 +79,7 @@ function generateTime(schedule, renderStart, renderEnd) {
     }
 
     schedule.end = endDate
-        .add(chance.integer({min: 0, max: 4}), 'hour')
+        .add(chance.integer({min: 1, max: 4}), 'hour')
         .toDate();
 }
 
