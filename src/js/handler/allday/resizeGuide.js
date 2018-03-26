@@ -88,29 +88,24 @@ AlldayResizeGuide.prototype.refreshGuideElement = function(newWidth) {
 AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         viewOptions = this.alldayResize.alldayView.options,
-        startDate = datetime.start(
-            new TZDate(Math.max(
-                model.start.getTime(),
-                datetime.parse(viewOptions.renderStartDate).getTime()
-            ))
-        ),
-        endDate = datetime.end(
-            new TZDate(Math.min(
-                model.end.getTime(),
-                datetime.parse(viewOptions.renderEndDate).getTime()
-            ))
-        ),
-        originLength = datetime.range(startDate, endDate, datetime.MILLISECONDS_PER_DAY).length,
-        baseWidthPercent = 100 / dragStartEventData.datesInRange,
-        dragStartIndex = dragStartEventData.xIndex;
+        fromLeft = (new TZDate(
+            model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
+        )) / datetime.MILLISECONDS_PER_DAY | 0,
+        grids = dragStartEventData.grids;
 
     return function(xIndex) {
-        var offset = xIndex - dragStartIndex,
-            newLength = originLength + offset;
+        var width = 0;
+        var i = 0;
+        var length = grids.length;
+        width += grids[fromLeft] ? grids[fromLeft].width : 0;
 
-        newLength = Math.max(1, newLength);
+        for (; i < length; i += 1) {
+            if (i > fromLeft && i <= xIndex) {
+                width += grids[i] ? grids[i].width : 0;
+            }
+        }
 
-        return newLength * baseWidthPercent;
+        return width;
     };
 };
 
