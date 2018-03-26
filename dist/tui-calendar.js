@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.0 | Mon Mar 26 2018
+ * @version 0.9.1 | Mon Mar 26 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -4329,6 +4329,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 	 *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
 	 *   @property {boolean} [week.workweek=false] - show only 5 days except for weekend
+	 *   @property {string} [week.alldayViewType='scroll'] - set view type of allday panel. ('scroll'|'toggle')
 	 *  @property {object} [month] - options for month view
 	 *   @property {Array.<string>} [month.daynames] - day names in monthly.
 	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -8362,6 +8363,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    /**
+	     * Adjust time view model's top index value
+	     * @this Base
+	     * @param {Collection} vColl - collection of schedules
+	     */
+	    _stackTimeFromTop: function(vColl) {
+	        var ctrlMonth = this.Month;
+	        var vAlldayColl = vColl.find(ctrlMonth._onlyAlldayFilter);
+	        var sortedTimeSchedules = vColl.find(ctrlMonth._onlyTimeFilter).sort(array.compare.schedule.asc);
+	        var indiceInYMD = {};
+	        var dateMatrix = this.dateMatrix;
+	
+	        sortedTimeSchedules.forEach(function(timeViewModel) {
+	            var scheduleYMD = datetime.format(timeViewModel.getStarts(), 'YYYYMMDD');
+	            var topArrayInYMD = indiceInYMD[scheduleYMD];
+	            var maxTopInYMD;
+	            var i;
+	
+	            if (util.isUndefined(topArrayInYMD)) {
+	                topArrayInYMD = indiceInYMD[scheduleYMD] = [];
+	                util.forEach(dateMatrix[scheduleYMD], function(cid) {
+	                    vAlldayColl.doWhenHas(cid, function(viewModel) {
+	                        topArrayInYMD.push(viewModel.top);
+	                    });
+	                });
+	            }
+	
+	            if (util.inArray(timeViewModel.top, topArrayInYMD) >= 0) {
+	                maxTopInYMD = mmax.apply(null, topArrayInYMD) + 1;
+	                for (i = 1; i <= maxTopInYMD; i += 1) {
+	                    timeViewModel.top = i;
+	                    if (util.inArray(timeViewModel.top, topArrayInYMD) < 0) {
+	                        break;
+	                    }
+	                }
+	            }
+	            topArrayInYMD.push(timeViewModel.top);
+	        });
+	    },
+	
+	    /**
 	     * Convert multi-date time schedule to all-day schedule
 	     * @this Base
 	     * @param {Collection} vColl - view model collection
@@ -8388,9 +8429,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Date} start - start date to find schedules
 	     * @param {Date} end - end date to find schedules
 	     * @param {function[]} [andFilters] - optional filters to applying search query
+	     * @param {boolean} [alldayFirstMode=false] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
 	     * @returns {object} view model data
 	     */
-	    findByDateRange: function(start, end, andFilters) {
+	    findByDateRange: function(start, end, andFilters, alldayFirstMode) {
 	        var ctrlCore = this.Core,
 	            ctrlMonth = this.Month,
 	            filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
@@ -8398,6 +8440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            collisionGroup,
 	            matrices;
 	
+	        alldayFirstMode = alldayFirstMode || false;
 	        andFilters = andFilters || [];
 	        filter = Collection.and.apply(null, [filter].concat(andFilters));
 	
@@ -8410,7 +8453,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        collisionGroup = ctrlCore.getCollisionGroup(vList);
 	        matrices = ctrlCore.getMatrices(vColl, collisionGroup);
 	        ctrlCore.positionViewModels(start, end, matrices, ctrlMonth._weightTopValue);
-	        ctrlMonth._adjustTimeTopIndex(vColl);
+	        if (alldayFirstMode) {
+	            ctrlMonth._adjustTimeTopIndex(vColl);
+	        } else {
+	            ctrlMonth._stackTimeFromTop(vColl);
+	        }
 	
 	        return matrices;
 	    }
@@ -11156,7 +11203,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var Weekday = __webpack_require__(64),
 	    tmpl = __webpack_require__(65),
-	    dw = __webpack_require__(29),
 	    datetime = __webpack_require__(27);
 	var mmax = Math.max,
 	    mfloor = Math.floor,
@@ -11556,7 +11602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(21, data, 0),"inverse":container.program(23, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.category : stack1),"===","task",{"name":"fi","hash":{},"fn":container.program(21, data, 0),"inverse":container.program(23, data, 0),"data":data})) != null ? stack1 : "")
 	    + "            "
 	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n        </div>\n    </div>\n";
@@ -11601,7 +11647,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return "                <span class=\""
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title\">"
-	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n";
 	},"23":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
@@ -11609,7 +11655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return "                <span class=\""
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title\">"
-	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n";
 	},"25":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -12482,6 +12528,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var i = 0;
 	    var length = grids.length;
 	    var grid;
+	    if (left < 0) {
+	        left = 0;
+	    }
+	
 	    for (; i < length; i += 1) {
 	        grid = grids[i];
 	        if (grid.left <= left && left <= (grid.left + grid.width)) {
@@ -13621,29 +13671,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
 	    var model = dragStartEventData.model,
 	        viewOptions = this.alldayResize.alldayView.options,
-	        startDate = datetime.start(
-	            new TZDate(Math.max(
-	                model.start.getTime(),
-	                datetime.parse(viewOptions.renderStartDate).getTime()
-	            ))
-	        ),
-	        endDate = datetime.end(
-	            new TZDate(Math.min(
-	                model.end.getTime(),
-	                datetime.parse(viewOptions.renderEndDate).getTime()
-	            ))
-	        ),
-	        originLength = datetime.range(startDate, endDate, datetime.MILLISECONDS_PER_DAY).length,
-	        baseWidthPercent = 100 / dragStartEventData.datesInRange,
-	        dragStartIndex = dragStartEventData.xIndex;
+	        fromLeft = (new TZDate(
+	            model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
+	        )) / datetime.MILLISECONDS_PER_DAY | 0,
+	        grids = dragStartEventData.grids;
 	
 	    return function(xIndex) {
-	        var offset = xIndex - dragStartIndex,
-	            newLength = originLength + offset;
+	        var width = 0;
+	        var i = 0;
+	        var length = grids.length;
+	        width += grids[fromLeft] ? grids[fromLeft].width : 0;
 	
-	        newLength = Math.max(1, newLength);
+	        for (; i < length; i += 1) {
+	            if (i > fromLeft && i <= xIndex) {
+	                width += grids[i] ? grids[i].width : 0;
+	            }
+	        }
 	
-	        return newLength * baseWidthPercent;
+	        return width;
 	    };
 	};
 	
