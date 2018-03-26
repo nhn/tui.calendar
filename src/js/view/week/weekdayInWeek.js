@@ -84,7 +84,7 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     }
 
     baseViewModel = this.getBaseViewModel(viewModel);
-    baseViewModel.contentHeight = this._getMinHeight(maxScheduleInDay);
+    baseViewModel.minHeight = this._getMinHeight(maxScheduleInDay);
     baseViewModel.matrices = matrices;
     baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
     baseViewModel.collapsed = (this.collapsed && (maxScheduleInDay > visibleScheduleCount)) ? 'collapsed' : '';
@@ -105,7 +105,8 @@ WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
     var opt = this.options;
 
     return (
-        (maxScheduleInDay * (opt.scheduleHeight + opt.scheduleGutter)) +
+        (maxScheduleInDay * opt.scheduleHeight) +
+        ((maxScheduleInDay - 1) * opt.scheduleGutter) +
         opt.containerBottomGutter
     );
 };
