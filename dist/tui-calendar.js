@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.1 | Mon Mar 26 2018
+ * @version 0.9.2 | Mon Mar 26 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -8616,8 +8616,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * 업무
 	         **********/
 	        taskView = new TaskView(options.week, vLayout.getPanelByName('Task').container);
-	        taskView.on('afterRender', function(viewModel) {
-	            vLayout.getPanelByName('Task').setHeight(null, viewModel.height);
+	        taskView.on('afterRender', function() {
+	            vLayout.getPanelByName('Task').setHeight(null, taskView.contentHeight);
 	        });
 	        weekView.addChild(taskView);
 	        weekView.handler.click.task = new AlldayClick(dragHandler, taskView, baseController);
@@ -11152,7 +11152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    );
 	    weekdayView.collapsed = this.collapsed;
 	    weekdayView.on('afterRender', function(weekdayViewModel) {
-	        self.contentHeight = weekdayViewModel.contentHeight + scheduleContainerTop;
+	        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
 	        self.maxScheduleInDay = weekdayViewModel.maxScheduleInDay;
 	    });
 	
@@ -11280,7 +11280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    baseViewModel = this.getBaseViewModel(viewModel);
-	    baseViewModel.contentHeight = this._getMinHeight(maxScheduleInDay);
+	    baseViewModel.minHeight = this._getMinHeight(maxScheduleInDay);
 	    baseViewModel.matrices = matrices;
 	    baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
 	    baseViewModel.collapsed = (this.collapsed && (maxScheduleInDay > visibleScheduleCount)) ? 'collapsed' : '';
@@ -11301,7 +11301,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var opt = this.options;
 	
 	    return (
-	        (maxScheduleInDay * (opt.scheduleHeight + opt.scheduleGutter)) +
+	        (maxScheduleInDay * opt.scheduleHeight) +
+	        ((maxScheduleInDay - 1) * opt.scheduleGutter) +
 	        opt.containerBottomGutter
 	    );
 	};
