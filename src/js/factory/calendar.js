@@ -82,6 +82,7 @@ var mmin = Math.min;
  * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
  *   @property {boolean} [week.workweek=false] - show only 5 days except for weekend
+ *   @property {string} [week.alldayViewType='scroll'] - set view type of allday panel. ('scroll'|'toggle')
  *  @property {object} [month] - options for month view
  *   @property {Array.<string>} [month.daynames] - day names in monthly.
  * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
