@@ -91,7 +91,6 @@ AlldayClick.prototype._onClick = function(clickEvent) {
     }
 
     scheduleElement = domutil.closest(target, config.classname('.weekday-schedule'));
-    blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
     if (scheduleElement) {
         blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
         scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
