@@ -167,10 +167,11 @@ module.exports = {
      * container
      * @param {string} selector - CSS selector {@see domutil#find}
      * @param {HTMLElement} container - container element
+     * @param {boolean} force - force to apply
      */
-    setAutoEllipsis: function(selector, container) {
+    setAutoEllipsis: function(selector, container, force) {
         util.forEach(domutil.find(selector, container, true), function(el) {
-            if (el.offsetWidth < el.scrollWidth) {
+            if (force || el.offsetWidth < el.scrollWidth) {
                 el.setAttribute('title', domutil.getData(el, 'title'));
             }
         });

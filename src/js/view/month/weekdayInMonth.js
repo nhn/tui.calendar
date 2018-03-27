@@ -48,11 +48,12 @@ WeekdayInMonth.prototype.getViewBound = function() {
 
 /**
  * Get limit index of schedule block in current view
+ * @param {number} panelHeight - panel's height for pre-calculation
  * @returns {number} limit index
  */
-WeekdayInMonth.prototype._getRenderLimitIndex = function() {
+WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
     var opt = this.options;
-    var containerHeight = this.getViewBound().height;
+    var containerHeight = panelHeight || this.getViewBound().height;
     var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
     var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
     var visibleScheduleCount = opt.visibleScheduleCount || 0;
@@ -104,8 +105,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(viewModel),
-        scheduleContainer,
-        contentStr = '';
+        scheduleContainer;
 
     if (!this.options.visibleWeeksCount) {
         setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
@@ -122,13 +122,12 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         return;
     }
 
-    contentStr += scheduleTmpl(baseViewModel);
-
-    scheduleContainer.innerHTML = contentStr;
+    scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
 
     common.setAutoEllipsis(
         config.classname('.weekday-schedule-title'),
-        container
+        container,
+        true
     );
 };
 
