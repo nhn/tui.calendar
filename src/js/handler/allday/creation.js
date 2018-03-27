@@ -87,17 +87,23 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var alldayView = this.alldayView;
     var alldayViewType = alldayView.options.alldayViewType;
     var cssClass = domutil.getClass(target).trim();
-    var matches;
+    var excludeTarget = true;
+    var matches, schedulesElement;
 
     if (alldayViewType === 'toggle' && alldayView.collapsed) {
         return this._checkExpectedConditionOnToggleViewType(target);
     }
 
-    if (cssClass !== config.classname('weekday-schedules')) {
+    if (domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget)) {
         return false;
     }
 
-    target = target.parentNode;
+    schedulesElement = domutil.closest(target, config.classname('.weekday-schedules'));
+    if (!schedulesElement && cssClass !== config.classname('weekday-schedules')) {
+        return false;
+    }
+
+    target = schedulesElement ? schedulesElement.parentNode : target.parentNode;
     cssClass = domutil.getClass(target);
     matches = cssClass.match(config.allday.getViewIDRegExp);
 
@@ -114,10 +120,12 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
  * @returns {boolean} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayCreation.prototype._checkExpectedConditionOnToggleViewType = function(target) {
+    var excludeTarget = true;
+
     return (domutil.closest(target, config.classname('.weekday-grid'))
         && !domutil.closest(target, config.classname('.weekday-exceed-in-week')))
         || (domutil.closest(target, config.classname('.weekday-schedules'))
-            && !domutil.closest(target, config.classname('.weekday-schedule-block')));
+            && !domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget));
 };
 
 /**
