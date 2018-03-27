@@ -102,6 +102,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         result = this.checkExpectedCondition(target),
         controller = this.baseController,
+        excludeTarget = true,
         scheduleBlockElement,
         modelID,
         targetModel,
@@ -112,7 +113,7 @@ AlldayMove.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
-    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget);
     if (!scheduleBlockElement) {
         return;
     }

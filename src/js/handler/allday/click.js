@@ -67,7 +67,7 @@ AlldayClick.prototype._onClick = function(clickEvent) {
             clickEvent.target,
             config.classname('.allday-collapse-button')
         );
-    var blockElement, moreElement;
+    var blockElement, moreElement, scheduleElement;
 
     if (collapseElement) {
         self.fire('clickCollapse');
@@ -90,9 +90,9 @@ AlldayClick.prototype._onClick = function(clickEvent) {
         return;
     }
 
-    blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
-
-    if (blockElement) {
+    scheduleElement = domutil.closest(target, config.classname('.weekday-schedule'));
+    if (scheduleElement) {
+        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
         scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
             /**
              * @events AlldayClick#clickSchedule

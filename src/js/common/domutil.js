@@ -159,12 +159,13 @@ domutil = {
      * Find parent element recursively.
      * @param {HTMLElement} el - base element to start find.
      * @param {string} selector - selector string for find
+     * @param {boolean} excludeEl - exclude the base element to find
      * @returns {HTMLElement} - element finded or null.
      */
-    closest: function(el, selector) {
+    closest: function(el, selector, excludeEl) {
         var parent = el.parentNode;
 
-        if (domutil._matcher(el, selector)) {
+        if (!excludeEl && domutil._matcher(el, selector)) {
             return el;
         }
 
