@@ -104,16 +104,6 @@ Allday.prototype.render = function(viewModel) {
     this.fire('afterRender', viewModel);
 };
 
-Allday.prototype.changeFoldButtonVisibility = function() {
-    var cssClass = config.classname('.allday-collapse-button');
-    var btnFold = domutil.find(cssClass, this.container);
-    var isToggleViewType = this.viewType === 'toggle';
-
-    if (btnFold) {
-        btnFold.style.display = (!isToggleViewType || this.collapsed) ? 'none' : 'inline';
-    }
-};
-
 Allday.prototype.getExpandMaxHeight = function() {
     var scheduleHeight = this.options.scheduleHeight + this.options.scheduleGutter;
     var maxExpandCount = this.aboutMe.maxExpandCount;
@@ -122,7 +112,7 @@ Allday.prototype.getExpandMaxHeight = function() {
         return scheduleHeight * (maxExpandCount + 0.5);
     }
 
-    return scheduleHeight * (maxExpandCount + 1);
+    return scheduleHeight * maxExpandCount;
 };
 
 module.exports = Allday;

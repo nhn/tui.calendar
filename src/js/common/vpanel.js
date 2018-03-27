@@ -156,6 +156,7 @@ VPanel.prototype._initPanel = function(options, container) {
             [options.maxHeight || options.height]
         );
 
+        options.height = height;
         this.setHeight(container, height);
     }
 };

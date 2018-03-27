@@ -87,9 +87,14 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     var alldayView = this.alldayView;
     var alldayViewType = alldayView.options.alldayViewType;
     var cssClass = domutil.getClass(target).trim();
+    var isAllDay = domutil.closest(target, config.classname('.allday-container'));
     var matches;
 
-    if (alldayViewType === 'toggle' && alldayView.collapsed) {
+    if (!isAllDay) {
+        return false;
+    }
+
+    if (alldayViewType === 'toggle') {
         return this._checkExpectedConditionOnToggleViewType(target);
     }
 
@@ -114,10 +119,16 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
  * @returns {boolean} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayCreation.prototype._checkExpectedConditionOnToggleViewType = function(target) {
-    return (domutil.closest(target, config.classname('.weekday-grid'))
-        && !domutil.closest(target, config.classname('.weekday-exceed-in-week')))
-        || (domutil.closest(target, config.classname('.weekday-schedules'))
-            && !domutil.closest(target, config.classname('.weekday-schedule-block')));
+    if (domutil.closest(target, config.classname('.weekday-grid'))) {
+        return !(domutil.closest(target, config.classname('.weekday-exceed-in-week'))
+            || domutil.closest(target, config.classname('.weekday-collapse-btn')));
+    }
+
+    if (domutil.closest(target, config.classname('.weekday-schedules'))) {
+        return !domutil.closest(target, config.classname('.weekday-schedule-block'));
+    }
+
+    return false;
 };
 
 /**

@@ -164,10 +164,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             } else {
                 alldayPanel.setHeight(null, alldayView.contentHeight);
             }
-
-            if (alldayView.options.alldayViewType === 'toggle') {
-                alldayView.changeFoldButtonVisibility();
-            }
         });
 
         weekView.addChild(alldayView);

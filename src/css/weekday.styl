@@ -72,6 +72,9 @@
         .grid-date-title
             line-height: 27px
             margin-right: 5px
+        
+        &.no-border
+            border-width: 0
 
     .creation
         pos(0, 0)
@@ -148,16 +151,15 @@
         &:hover
             background-color: #f0f1f5
 
-    .exceed-in-week
+    .exceed-in-week,  .collapse-btn
         position: absolute
-        bottom: 1px
-        left: 1px
         font-size: 12px
         line-height: 14px
         cursor: pointer
         padding: 1px 5px
         background-color: #ffffff
         border: 1px solid #dddddd
+        color: #000000
 
     .resize-handle
         position: absolute

@@ -1,12 +1,6 @@
 <div class="{{CSS_PREFIX}}weekday-grid">
 {{#each dates ~}}
-    <div class="{{CSS_PREFIX}}weekday-grid-line {{#if isToday}} {{CSS_PREFIX}}today{{/if}}" style="width:{{width}}%;left:{{left}}%;">
-        {{#if @root.collapsed}}
-        {{#if hiddenSchedules}}
-        <span class="{{CSS_PREFIX}}weekday-exceed-in-week" data-ymd="{{ymd}}">{{weekGridFooterExceed-tmpl hiddenSchedules}}</span>
-        {{/if}}
-        {{/if}}
-    </div>
+    <div class="{{CSS_PREFIX}}weekday-grid-line {{#if isToday}} {{CSS_PREFIX}}today{{/if}}" style="width:{{width}}%;left:{{left}}%;"></div>
 {{/each ~}}
 </div>
 <div class="{{CSS_PREFIX}}weekday-creation {{collapsed}}"></div>
@@ -44,4 +38,19 @@
     {{/each ~}}
     {{/each ~}}
     {{/each ~}}
+    {{#fi panelName '===' 'allday'}}
+    {{#fi viewType '===' 'toggle'}}
+    {{#each dates ~}}
+        {{#if @root.collapsed}}
+            {{#if hiddenSchedules}}
+            <span class="{{CSS_PREFIX}}weekday-exceed-in-week" data-ymd="{{ymd}}" style="left:{{add left width}}%; top: {{@root.floatingButtonTop}}px; margin-top: -4px;">{{weekGridFooterExceed-tmpl hiddenSchedules}}</span>
+            {{/if}}
+        {{else}}
+            {{#fi @key '===' @root.minHiddenScheduleIndex}}
+                <div class="{{CSS_PREFIX}}weekday-collapse-btn" style="left:{{add left width}}%; top: {{@root.floatingButtonTop}}px; margin-top: -4px;">{{{alldayCollapseBtnTitle-tmpl}}}</div>
+            {{/fi}}
+        {{/if}}
+    {{/each ~}}
+    {{/fi}}
+    {{/fi}}
 </div>
