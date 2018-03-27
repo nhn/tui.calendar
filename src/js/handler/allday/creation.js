@@ -84,13 +84,18 @@ AlldayCreation.prototype.destroy = function() {
  * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
  */
 AlldayCreation.prototype.checkExpectedCondition = function(target) {
-    var alldayView = this.alldayView;
-    var alldayViewType = alldayView.options.alldayViewType;
     var cssClass = domutil.getClass(target).trim();
+    var isAllDay = domutil.closest(target, config.classname('.allday-container'));
     var matches;
 
-    if (alldayViewType === 'toggle' && alldayView.collapsed) {
-        return this._checkExpectedConditionOnToggleViewType(target);
+    if (!isAllDay) {
+        return false;
+    }
+
+    if (domutil.closest(target, config.classname('.weekday-exceed-in-week'))
+        || domutil.closest(target, config.classname('.weekday-collapse-btn'))
+    ) {
+        return false;
     }
 
     if (cssClass !== config.classname('weekday-schedules')) {
@@ -106,18 +111,6 @@ AlldayCreation.prototype.checkExpectedCondition = function(target) {
     }
 
     return util.pick(this.alldayView.children.items, matches[1]);
-};
-
-/**
- * Check dragstart target is expected conditions for this handler
- * @param {HTMLElement} target - dragstart event handler's target element.
- * @returns {boolean} return WeekdayInWeek view instance when satiate condition.
- */
-AlldayCreation.prototype._checkExpectedConditionOnToggleViewType = function(target) {
-    return (domutil.closest(target, config.classname('.weekday-grid'))
-        && !domutil.closest(target, config.classname('.weekday-exceed-in-week')))
-        || (domutil.closest(target, config.classname('.weekday-schedules'))
-            && !domutil.closest(target, config.classname('.weekday-schedule-block')));
 };
 
 /**

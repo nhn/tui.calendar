@@ -10,7 +10,6 @@ var config = require('../config'),
     datetime = require('../common/datetime'),
     TZDate = require('../common/timezone').Date,
     View = require('./view');
-var existy = util.isExisty;
 
 /**
  * @constructor
@@ -115,15 +114,17 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
  * Make exceed date information
  * @param {number} maxCount - exceed schedule count
  * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+ * @param {Array.<TZDate>} range - date range of one week
  * @returns {object} exceedDate
  */
-Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
-    var exceedDate = {};
+Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
+    var exceedDate = this._initExceedDate(range);
+
     util.forEach(eventsInDateRange, function(matrix) {
         util.forEach(matrix, function(column) {
             util.forEach(column, function(viewModel) {
                 var period;
-                if (!viewModel) {
+                if (!viewModel || viewModel.top < maxCount) {
                     return;
                 }
 
@@ -135,22 +136,26 @@ Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
 
                 util.forEach(period, function(date) {
                     var ymd = datetime.format(date, 'YYYYMMDD');
-                    if (!existy(exceedDate[ymd])) {
-                        exceedDate[ymd] = 0;
-                    }
-
                     exceedDate[ymd] += 1;
                 });
             });
         });
     });
 
-    util.forEach(exceedDate, function(value, ymd) {
-        if (value > maxCount) {
-            exceedDate[ymd] = value - maxCount;
-        } else {
-            exceedDate[ymd] = 0;
-        }
+    return exceedDate;
+};
+
+/**
+ * Initiate exceed date information
+ * @param {Array.<TZDate>} range - date range of one week
+ * @returns {Object} - initiated exceed date
+ */
+Weekday.prototype._initExceedDate = function(range) {
+    var exceedDate = {};
+
+    util.forEach(range, function(date) {
+        var ymd = datetime.format(date, 'YYYYMMDD');
+        exceedDate[ymd] = 0;
     });
 
     return exceedDate;

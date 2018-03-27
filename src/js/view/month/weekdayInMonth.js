@@ -78,7 +78,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
         gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
         gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
         renderLimitIdx = this._getRenderLimitIndex(),
-        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange);
+        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range);
     var baseViewModel;
 
     viewModel = util.extend({

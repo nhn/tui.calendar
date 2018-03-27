@@ -65,7 +65,7 @@ AlldayClick.prototype._onClick = function(clickEvent) {
         scheduleCollection = this.baseController.schedules,
         collapseElement = domutil.closest(
             clickEvent.target,
-            config.classname('.allday-collapse-button')
+            config.classname('.weekday-collapse-btn')
         );
     var blockElement, moreElement;
 
