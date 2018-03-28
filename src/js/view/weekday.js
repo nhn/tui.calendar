@@ -10,8 +10,6 @@ var config = require('../config'),
     datetime = require('../common/datetime'),
     TZDate = require('../common/timezone').Date,
     View = require('./view');
-var mfloor = Math.floor,
-    mmin = Math.min;
 
 /**
  * @constructor
@@ -161,29 +159,6 @@ Weekday.prototype._initExceedDate = function(range) {
     });
 
     return exceedDate;
-};
-
-/**
- * Get limit index of schedule block in current view
- * @returns {number} limit index
- */
-Weekday.prototype._getRenderLimitIndex = function() {
-    var opt = this.options;
-    var containerHeight = this.getViewBound().height;
-    var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
-    var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
-    var visibleScheduleCount = opt.visibleScheduleCount || 0;
-    var count;
-
-    containerHeight -= (gridHeaderHeight + gridFooterHeight);
-
-    count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
-
-    if (!visibleScheduleCount) {
-        visibleScheduleCount = count;
-    }
-
-    return mmin(count, visibleScheduleCount); // subtraction for '+n' label block
 };
 
 module.exports = Weekday;

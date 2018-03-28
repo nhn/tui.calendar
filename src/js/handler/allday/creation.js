@@ -266,7 +266,6 @@ AlldayCreation.prototype._onClick = function(clickEventData) {
     var getScheduleDataFunc, scheduleData;
 
     if (!this.checkExpectedCondition(clickEventData.target)) {
-        console.log('tried create schedule');
         return;
     }
 
