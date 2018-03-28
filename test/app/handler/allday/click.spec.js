@@ -28,7 +28,7 @@ describe('handler:AlldayClick', function() {
         // 클릭 대상 엘리먼트가 id '2'인 일정과 관계가 있을 때
         spyOn(domutil, 'getData').and.returnValue('2');
         spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
-            if (cssClass === config.classname('.weekday-schedule-block')) {
+            if (cssClass === config.classname('.weekday-schedule')) {
                 return true;
             }
 
