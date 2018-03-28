@@ -93,7 +93,8 @@ WeekdayInWeek.prototype._getMaxScheduleInDay = function(matrices) {
 WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
     var opt = this.options;
 
-    return (maxScheduleInDay * (opt.scheduleHeight + opt.scheduleGutter));
+    return (maxScheduleInDay * opt.scheduleHeight)
+     + ((maxScheduleInDay - 1) * opt.scheduleGutter);
 };
 
 /**
@@ -196,6 +197,8 @@ WeekdayInWeek.prototype.getBaseViewModel = function(viewModel) {
         ),
         panelName: aboutMe.name
     }, baseViewModel);
+
+    console.log(baseViewModel.minHeight, maxScheduleInDay);
 
     return baseViewModel;
 };

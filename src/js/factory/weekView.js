@@ -8,6 +8,7 @@ var util = require('tui-code-snippet');
 var config = require('../config');
 var domutil = require('../common/domutil');
 var VLayout = require('../common/vlayout');
+var reqAnimFrame = require('../common/reqAnimFrame');
 // Parent views
 var Week = require('../view/week/week');
 
@@ -158,6 +159,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         alldayPanel = vLayout.getPanelByName('AllDay');
         alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
         alldayView.on('afterRender', function() {
+            if (alldayView.viewType === 'toggle' && !alldayView.collapsed) {
+                alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
+            }
             if (isAllDayPanelFirstRender) {
                 alldayPanel.setHeight(null, alldayView.options.height);
                 isAllDayPanelFirstRender = false;
@@ -178,7 +182,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             alldayPanel.isHeightForcedSet = false;
             alldayView.collapsed = false;
             alldayView.aboutMe.forcedLayout = false;
-            weekView.render();
+            reqAnimFrame.requestAnimFrame(function() {
+                weekView.render();
+            });
         });
 
         weekView.handler.click.allday.on('clickCollapse', function() {
@@ -187,7 +193,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             alldayPanel.options.maxHeight = newHeight;
             alldayPanel.setHeight(null, newHeight);
             alldayView.collapsed = true;
-            weekView.render();
+            reqAnimFrame.requestAnimFrame(function() {
+                weekView.render();
+            });
         });
 
         alldayPanel.on('resize', function() {
