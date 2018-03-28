@@ -127,8 +127,7 @@
         },
         week: {
             daynames: daynames,
-            panelHeights: [80, 80, 120],
-            alldayViewType: 'toggle'
+            panelHeights: [80, 80, 120]
         }
     });
 

@@ -68,7 +68,7 @@ describe('handler:AlldayClick', function() {
     it('_onClick fire custom event "clickCollapse" when click expand button.', function() {
         var vMouseEvent = {originEvent: 'test'};
         spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
-            if (cssClass === config.classname('.allday-collapse-button')) {
+            if (cssClass === config.classname('.weekday-collapse-btn')) {
                 return true;
             }
 

@@ -29,8 +29,13 @@ describe('handler:AlldayCreation', function() {
 
         expect(proto.checkExpectedCondition.call(inst, div)).toBe(false);
 
+        var alldayPanel = document.createElement('div');
+        alldayPanel.className = '/* @echo CSS_PREFIX */allday-container';
+
         var container = document.createElement('div');
         container.className = '/* @echo CSS_PREFIX */weekday tui-view-40';
+
+        alldayPanel.appendChild(container);
 
         div.className = '/* @echo CSS_PREFIX */weekday-schedules';
         expect(proto.checkExpectedCondition.call(inst, div)).toBe(false);
