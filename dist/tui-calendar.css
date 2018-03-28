@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.2 | Mon Mar 26 2018
+ * @version 0.9.3 | Thu Mar 29 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -225,16 +225,16 @@
 .tui-full-calendar-weekday-exceed-in-month:hover {
   background-color: #f0f1f5;
 }
-.tui-full-calendar-weekday-exceed-in-week {
+.tui-full-calendar-weekday-exceed-in-week,
+.tui-full-calendar-weekday-collapse-btn {
   position: absolute;
-  bottom: 1px;
-  left: 1px;
   font-size: 12px;
   line-height: 14px;
   cursor: pointer;
   padding: 1px 5px;
   background-color: #fff;
   border: 1px solid #ddd;
+  color: #000;
 }
 .tui-full-calendar-weekday-resize-handle {
   position: absolute;
@@ -272,10 +272,6 @@
   margin-left: 77px;
   overflow-y: scroll;
   position: relative;
-}
-.collapsed {
-  height: 0;
-  overflow-y: visible;
 }
 .tui-full-calendar-week-container {
   width: 100%;

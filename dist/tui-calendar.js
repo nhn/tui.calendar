@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.2 | Mon Mar 26 2018
+ * @version 0.9.3 | Thu Mar 29 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -2817,12 +2817,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Find parent element recursively.
 	     * @param {HTMLElement} el - base element to start find.
 	     * @param {string} selector - selector string for find
+	     * @param {boolean} excludeEl - exclude the base element to find
 	     * @returns {HTMLElement} - element finded or null.
 	     */
-	    closest: function(el, selector) {
+	    closest: function(el, selector, excludeEl) {
 	        var parent = el.parentNode;
 	
-	        if (domutil._matcher(el, selector)) {
+	        if (!excludeEl && domutil._matcher(el, selector)) {
 	            return el;
 	        }
 	
@@ -8481,12 +8482,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var VLayout = __webpack_require__(50);
+	var reqAnimFrame = __webpack_require__(52);
 	// Parent views
-	var Week = __webpack_require__(52);
+	var Week = __webpack_require__(53);
 	
 	// Sub views
-	var DayName = __webpack_require__(53);
-	var TimeGrid = __webpack_require__(55);
+	var DayName = __webpack_require__(54);
+	var TimeGrid = __webpack_require__(56);
 	var Allday = __webpack_require__(62);
 	var Milestone = __webpack_require__(67);
 	var TaskView = __webpack_require__(69);
@@ -8631,15 +8633,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        alldayPanel = vLayout.getPanelByName('AllDay');
 	        alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
 	        alldayView.on('afterRender', function() {
+	            if (alldayView.viewType === 'toggle' && !alldayView.collapsed) {
+	                alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
+	            }
 	            if (isAllDayPanelFirstRender) {
 	                alldayPanel.setHeight(null, alldayView.options.height);
 	                isAllDayPanelFirstRender = false;
 	            } else {
 	                alldayPanel.setHeight(null, alldayView.contentHeight);
-	            }
-	
-	            if (alldayView.options.alldayViewType === 'toggle') {
-	                alldayView.changeFoldButtonVisibility();
 	            }
 	        });
 	
@@ -8655,7 +8656,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            alldayPanel.isHeightForcedSet = false;
 	            alldayView.collapsed = false;
 	            alldayView.aboutMe.forcedLayout = false;
-	            weekView.render();
+	            reqAnimFrame.requestAnimFrame(function() {
+	                weekView.render();
+	            });
 	        });
 	
 	        weekView.handler.click.allday.on('clickCollapse', function() {
@@ -8664,7 +8667,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            alldayPanel.options.maxHeight = newHeight;
 	            alldayPanel.setHeight(null, newHeight);
 	            alldayView.collapsed = true;
-	            weekView.render();
+	            reqAnimFrame.requestAnimFrame(function() {
+	                weekView.render();
+	            });
 	        });
 	
 	        alldayPanel.on('resize', function() {
@@ -9314,6 +9319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            [options.maxHeight || options.height]
 	        );
 	
+	        options.height = height;
 	        this.setHeight(container, height);
 	    }
 	};
@@ -9324,6 +9330,71 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * @fileoverview RequestAnimFrame
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var requestFn,
+	    cancelFn;
+	
+	/**
+	 * Get name with vendor prefix
+	 * @param {string} name - name to prepend prefix
+	 * @returns {string} vendor prefixed name
+	 */
+	function getPrefixed(name) {
+	    return global['webkit' + name] || global['moz' + name] || global['ms' + name];
+	}
+	
+	requestFn = global.requestAnimationFrame ||
+	    getPrefixed('RequestAnimationFrame') ||
+	    function(fn, context) {
+	        fn.call(context);
+	    };
+	
+	cancelFn = global.cancelAnimationFrame ||
+	    getPrefixed('CancelAnimationFrame') ||
+	    getPrefixed('CancelRequestAnimationFrame') ||
+	    function() {};
+	
+	/**
+	 * @module module:reqAnimFrame
+	 */
+	
+	module.exports = {
+	    /**
+	     * Shim of requestAnimationFrame
+	     * @param {function} fn callback function
+	     * @param {*} context context for callback
+	     * @returns {number} Unique id
+	     */
+	    requestAnimFrame: function(fn, context) {
+	        return requestFn.call(global, util.bind(fn, context));
+	    },
+	
+	    /**
+	     * Shim of cancelAnimationFrame
+	     * @param {number} id requestAnimationFrame id
+	     */
+	    cancelAnimFrame: function(id) {
+	        if (!id) {
+	            return;
+	        }
+	
+	        cancelFn.call(global, id);
+	    }
+	};
+	
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9497,7 +9568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9512,7 +9583,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TZDate = __webpack_require__(28).Date;
 	var domutil = __webpack_require__(31);
 	var View = __webpack_require__(37);
-	var daynameTmpl = __webpack_require__(54);
+	var daynameTmpl = __webpack_require__(55);
 	
 	/**
 	 * @constructor
@@ -9586,7 +9657,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -9626,7 +9697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9641,7 +9712,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
 	var TZDate = __webpack_require__(28).Date;
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	var View = __webpack_require__(37);
 	var Time = __webpack_require__(57);
 	var AutoScroll = __webpack_require__(59);
@@ -10020,71 +10091,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = TimeGrid;
 
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview RequestAnimFrame
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var requestFn,
-	    cancelFn;
-	
-	/**
-	 * Get name with vendor prefix
-	 * @param {string} name - name to prepend prefix
-	 * @returns {string} vendor prefixed name
-	 */
-	function getPrefixed(name) {
-	    return global['webkit' + name] || global['moz' + name] || global['ms' + name];
-	}
-	
-	requestFn = global.requestAnimationFrame ||
-	    getPrefixed('RequestAnimationFrame') ||
-	    function(fn, context) {
-	        fn.call(context);
-	    };
-	
-	cancelFn = global.cancelAnimationFrame ||
-	    getPrefixed('CancelAnimationFrame') ||
-	    getPrefixed('CancelRequestAnimationFrame') ||
-	    function() {};
-	
-	/**
-	 * @module module:reqAnimFrame
-	 */
-	
-	module.exports = {
-	    /**
-	     * Shim of requestAnimationFrame
-	     * @param {function} fn callback function
-	     * @param {*} context context for callback
-	     * @returns {number} Unique id
-	     */
-	    requestAnimFrame: function(fn, context) {
-	        return requestFn.call(global, util.bind(fn, context));
-	    },
-	
-	    /**
-	     * Shim of cancelAnimationFrame
-	     * @param {number} id requestAnimationFrame id
-	     */
-	    cancelAnimFrame: function(id) {
-	        if (!id) {
-	            return;
-	        }
-	
-	        cancelFn.call(global, id);
-	    }
-	};
-	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 57 */
@@ -11166,16 +11172,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.fire('afterRender', viewModel);
 	};
 	
-	Allday.prototype.changeFoldButtonVisibility = function() {
-	    var cssClass = config.classname('.allday-collapse-button');
-	    var btnFold = domutil.find(cssClass, this.container);
-	    var isToggleViewType = this.viewType === 'toggle';
-	
-	    if (btnFold) {
-	        btnFold.style.display = (!isToggleViewType || this.collapsed) ? 'none' : 'inline';
-	    }
-	};
-	
 	Allday.prototype.getExpandMaxHeight = function() {
 	    var scheduleHeight = this.options.scheduleHeight + this.options.scheduleGutter;
 	    var maxExpandCount = this.aboutMe.maxExpandCount;
@@ -11184,7 +11180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return scheduleHeight * (maxExpandCount + 0.5);
 	    }
 	
-	    return scheduleHeight * (maxExpandCount + 1);
+	    return scheduleHeight * maxExpandCount;
 	};
 	
 	module.exports = Allday;
@@ -11204,8 +11200,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Weekday = __webpack_require__(64),
 	    tmpl = __webpack_require__(65),
 	    datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var config = __webpack_require__(34);
 	var mmax = Math.max,
-	    mfloor = Math.floor,
 	    mmin = Math.min;
 	
 	/**
@@ -11238,12 +11235,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	WeekdayInWeek.prototype.render = function(viewModel) {
 	    var opt = this.options,
 	        container = this.container,
-	        matrices = opt.getViewModelFunc(viewModel),
 	        aboutMe = this.aboutMe,
-	        exceedDate = {};
-	    var maxScheduleInDay, baseViewModel, panelHeight, visibleScheduleCount;
+	        name = aboutMe.name;
+	    var baseViewModel;
 	
-	    maxScheduleInDay = mmax.apply(
+	    this.viewType = opt[name + 'ViewType'] || '';
+	
+	    baseViewModel = this.getBaseViewModel(viewModel);
+	
+	    if (this.viewType === 'toggle') {
+	        baseViewModel.viewType = this.viewType;
+	        baseViewModel.collapsed = this.collapsed ? 'collapsed' : '';
+	    }
+	
+	    container.innerHTML = tmpl(baseViewModel);
+	
+	    util.forEach(domutil.find(config.classname('.weekday-exceed-in-week'), container, true), function(el) {
+	        el.style.marginLeft = -(el.offsetWidth + 6) + 'px';
+	    });
+	
+	    util.forEach(domutil.find(config.classname('.weekday-collapse-btn'), container, true), function(el) {
+	        el.style.marginLeft = -(el.offsetWidth + 6) + 'px';
+	    });
+	
+	    this.fire('afterRender', baseViewModel);
+	};
+	
+	/**
+	 * returns maximum schedule count in day
+	 * @param {array} matrices - The matrices for schedule placing.
+	 * @returns {number} maximum schedule count in day
+	 */
+	WeekdayInWeek.prototype._getMaxScheduleInDay = function(matrices) {
+	    return mmax.apply(
 	        null,
 	        util.map(matrices, function(matrix) {
 	            return Math.max.apply(null, util.map(matrix, function(row) {
@@ -11251,45 +11275,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }));
 	        })
 	    );
-	
-	    if (this.collapsed) {
-	        panelHeight = aboutMe.forcedLayout ? this.getViewBound().height : mmin(aboutMe.height, aboutMe.maxHeight);
-	        visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
-	
-	        if (maxScheduleInDay > visibleScheduleCount) {
-	            matrices = matrices.map(function(matrix) {
-	                return matrix.map(function(row) {
-	                    if (row.length >= visibleScheduleCount) {
-	                        return row.filter(function(item) {
-	                            var exceeded = item.top >= visibleScheduleCount - 1;
-	
-	                            if (exceeded) {
-	                                this._updateExceedDate(exceedDate, item.renderStarts, item.renderEnds);
-	                            }
-	
-	                            return !exceeded;
-	                        }, this);
-	                    }
-	
-	                    return row;
-	                }, this);
-	            }, this);
-	
-	            viewModel.exceedDate = exceedDate;
-	        }
-	    }
-	
-	    baseViewModel = this.getBaseViewModel(viewModel);
-	    baseViewModel.minHeight = this._getMinHeight(maxScheduleInDay);
-	    baseViewModel.matrices = matrices;
-	    baseViewModel.scheduleContainerTop = this.options.scheduleContainerTop;
-	    baseViewModel.collapsed = (this.collapsed && (maxScheduleInDay > visibleScheduleCount)) ? 'collapsed' : '';
-	    baseViewModel.maxScheduleInDay = maxScheduleInDay;
-	    baseViewModel.visibleScheduleCount = visibleScheduleCount;
-	
-	    container.innerHTML = tmpl(baseViewModel);
-	
-	    this.fire('afterRender', baseViewModel);
 	};
 	
 	/**
@@ -11299,35 +11284,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
 	    var opt = this.options;
+	    var contentHeight = (maxScheduleInDay * opt.scheduleHeight)
+	    + ((maxScheduleInDay - 1) * opt.scheduleGutter);
 	
-	    return (
-	        (maxScheduleInDay * opt.scheduleHeight) +
-	        ((maxScheduleInDay - 1) * opt.scheduleGutter) +
-	        opt.containerBottomGutter
-	    );
-	};
-	
-	/**
-	 * Get limit index of schedule block in current view
-	 * @returns {number} limit index
-	 */
-	WeekdayInWeek.prototype._getRenderLimitIndex = function() {
-	    var opt = this.options;
-	    var containerHeight = this.getViewBound().height;
-	    var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
-	    var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
-	    var visibleScheduleCount = opt.visibleScheduleCount || 0;
-	    var count;
-	
-	    containerHeight -= (gridHeaderHeight + gridFooterHeight);
-	
-	    count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
-	
-	    if (!visibleScheduleCount) {
-	        visibleScheduleCount = count;
+	    if (this.collapsed && this.aboutMe.maxHeight >= contentHeight + opt.containerBottomGutter) {
+	        contentHeight += opt.containerBottomGutter;
 	    }
 	
-	    return mmin(count, visibleScheduleCount); // subtraction for '+n' label block
+	    return contentHeight;
 	};
 	
 	/**
@@ -11350,6 +11314,131 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	/**
+	 * Exclude overflow schedules from matrices
+	 * @param {array} matrices - The matrices for schedule placing.
+	 * @param {number} visibleScheduleCount - maximum visible count on panel
+	 * @param {number} maxScheduleInDay - maximum number of schedules in day
+	 * @returns {array} - The matrices for schedule placing except overflowed schedules.
+	 */
+	WeekdayInWeek.prototype._excludeExceedSchedules = function(matrices, visibleScheduleCount, maxScheduleInDay) {
+	    if (visibleScheduleCount >= maxScheduleInDay) {
+	        return matrices;
+	    }
+	
+	    return matrices.map(function(matrix) {
+	        return matrix.map(function(row) {
+	            if (row.length > visibleScheduleCount) {
+	                return row.filter(function(item) {
+	                    return item.top < visibleScheduleCount;
+	                }, this);
+	            }
+	
+	            return row;
+	        }, this);
+	    }, this);
+	};
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - schedules view models
+	 */
+	WeekdayInWeek.prototype.getBaseViewModel = function(viewModel) {
+	    var opt = this.options;
+	    var matrices = opt.getViewModelFunc(viewModel);
+	    var maxScheduleInDay = this._getMaxScheduleInDay(matrices);
+	    var visibleScheduleCount = this.aboutMe.visibleScheduleCount;
+	    var aboutMe = this.aboutMe;
+	    var exceedDate = {};
+	    var baseViewModel, panelHeight, maxHiddenScheduleCount;
+	
+	    if (this.viewType === 'toggle') {
+	        panelHeight = aboutMe.forcedLayout ? this.getViewBound().height : mmin(aboutMe.height, aboutMe.maxHeight);
+	        visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
+	        if (this.collapsed) {
+	            visibleScheduleCount = mmin(visibleScheduleCount, mmin(maxScheduleInDay, aboutMe.maxExpandCount));
+	            exceedDate =
+	                this.getExceedDate(visibleScheduleCount,
+	                    viewModel.schedulesInDateRange[aboutMe.name],
+	                    viewModel.range,
+	                    maxScheduleInDay
+	                );
+	            matrices = this._excludeExceedSchedules(matrices, visibleScheduleCount, maxScheduleInDay);
+	            aboutMe.visibleScheduleCount = visibleScheduleCount;
+	        } else {
+	            maxHiddenScheduleCount = maxScheduleInDay - aboutMe.visibleScheduleCount;
+	            exceedDate =
+	                this.getExceedDate(
+	                    mmin(maxScheduleInDay, aboutMe.maxExpandCount) - maxHiddenScheduleCount,
+	                    viewModel.schedulesInDateRange[aboutMe.name],
+	                    viewModel.range
+	                );
+	            visibleScheduleCount = mmax(visibleScheduleCount, mmin(maxScheduleInDay, aboutMe.maxExpandCount));
+	        }
+	    }
+	
+	    viewModel = util.extend({
+	        exceedDate: exceedDate || {}
+	    }, viewModel);
+	
+	    baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
+	
+	    baseViewModel = util.extend({
+	        minHeight: this._getMinHeight(maxScheduleInDay),
+	        matrices: matrices,
+	        scheduleContainerTop: this.options.scheduleContainerTop,
+	        minHiddenScheduleIndex: this._getCollapseBtnIndex(viewModel.range,
+	            baseViewModel.dates,
+	            maxHiddenScheduleCount,
+	            exceedDate
+	        ),
+	        maxScheduleInDay: maxScheduleInDay,
+	        floatingButtonTop: this._calculateFloatingBtnTop(visibleScheduleCount, maxScheduleInDay),
+	        panelName: aboutMe.name
+	    }, baseViewModel);
+	
+	    return baseViewModel;
+	};
+	
+	/**
+	 * return weekday index to show collapse button
+	 * @param {Array.<TZDate>} range - view model
+	 * @param {Array.<Object>} dates - base view model
+	 * @param {number} maxHiddenCount - maximum hidden count when panel is collapsed
+	 * @param {array} exceedDate - overflowed schedule count in week
+	 * @returns {number} weekday index
+	 */
+	WeekdayInWeek.prototype._getCollapseBtnIndex = function(range, dates, maxHiddenCount, exceedDate) {
+	    var minHiddenScheduleCount = maxHiddenCount;
+	    var btnIndex = range.length > 0 ? range.length - 1 : 0;
+	
+	    util.forEach(dates, function(date, index) {
+	        var ymd = date.ymd;
+	        if (exceedDate[ymd] !== 0 && minHiddenScheduleCount >= exceedDate[ymd]) {
+	            minHiddenScheduleCount = exceedDate[ymd];
+	            btnIndex = index;
+	        }
+	    });
+	
+	    return btnIndex;
+	};
+	
+	/**
+	 * Calculate absolute top position of floating button layer
+	 * @param {number} visibleScheduleCount - maximum (row) number of schedules that panel can show
+	 * @param {number} maxScheduleInDay - maximum number of schedules in day
+	 * @returns {number} absolute top position of floating buttons in weekday panel
+	 */
+	WeekdayInWeek.prototype._calculateFloatingBtnTop = function(visibleScheduleCount, maxScheduleInDay) {
+	    var scheduleHeight = this.options.scheduleHeight + this.options.scheduleGutter;
+	
+	    if (!this.collapsed && maxScheduleInDay > this.aboutMe.maxExpandCount) {
+	        return (visibleScheduleCount - 0.5) * scheduleHeight;
+	    }
+	
+	    return (visibleScheduleCount - 1) * scheduleHeight;
+	};
+	
 	module.exports = WeekdayInWeek;
 
 
@@ -11369,7 +11458,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    datetime = __webpack_require__(27),
 	    TZDate = __webpack_require__(28).Date,
 	    View = __webpack_require__(37);
-	var existy = util.isExisty;
 	
 	/**
 	 * @constructor
@@ -11474,15 +11562,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Make exceed date information
 	 * @param {number} maxCount - exceed schedule count
 	 * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+	 * @param {Array.<TZDate>} range - date range of one week
 	 * @returns {object} exceedDate
 	 */
-	Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange) {
-	    var exceedDate = {};
+	Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
+	    var exceedDate = this._initExceedDate(range);
+	
 	    util.forEach(eventsInDateRange, function(matrix) {
 	        util.forEach(matrix, function(column) {
 	            util.forEach(column, function(viewModel) {
 	                var period;
-	                if (!viewModel) {
+	                if (!viewModel || viewModel.top < maxCount) {
 	                    return;
 	                }
 	
@@ -11494,22 +11584,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                util.forEach(period, function(date) {
 	                    var ymd = datetime.format(date, 'YYYYMMDD');
-	                    if (!existy(exceedDate[ymd])) {
-	                        exceedDate[ymd] = 0;
-	                    }
-	
 	                    exceedDate[ymd] += 1;
 	                });
 	            });
 	        });
 	    });
 	
-	    util.forEach(exceedDate, function(value, ymd) {
-	        if (value > maxCount) {
-	            exceedDate[ymd] = value - maxCount;
-	        } else {
-	            exceedDate[ymd] = 0;
-	        }
+	    return exceedDate;
+	};
+	
+	/**
+	 * Initiate exceed date information
+	 * @param {Array.<TZDate>} range - date range of one week
+	 * @returns {Object} - initiated exceed date
+	 */
+	Weekday.prototype._initExceedDate = function(range) {
+	    var exceedDate = {};
+	
+	    util.forEach(range, function(date) {
+	        var ymd = datetime.format(date, 'YYYYMMDD');
+	        exceedDate[ymd] = 0;
 	    });
 	
 	    return exceedDate;
@@ -11534,9 +11628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%;\">\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.collapsed),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "    </div>\n";
+	    + "%;\"></div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
@@ -11546,32 +11638,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"4":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"5":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1;
 	
-	  return "        <span class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-exceed-in-week\" data-ymd=\""
-	    + alias4(((helper = (helper = helpers.ymd || (depth0 != null ? depth0.ymd : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data}) : helper)))
-	    + "\">"
-	    + alias4((helpers["weekGridFooterExceed-tmpl"] || (depth0 && depth0["weekGridFooterExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"weekGridFooterExceed-tmpl","hash":{},"data":data}))
-	    + "</span>\n";
+	  return "\n    "
+	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"6":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "\n    "
+	    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"7":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"8":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return "\n    "
-	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"9":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return "\n    "
-	    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"10":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
 	
 	  return "\n    <div data-id=\""
@@ -11579,9 +11657,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\"\n        class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-block\n            "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n            "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n        style=\"top:"
 	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.scheduleBlockHeight),{"name":"multiply","hash":{},"data":data}))
 	    + "px;\n                left:"
@@ -11595,36 +11673,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\" class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule "
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n            style=\"height:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
 	    + "px;\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(17, data, 0),"inverse":container.program(19, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(14, data, 0),"inverse":container.program(16, data, 0),"data":data})) != null ? stack1 : "")
 	    + "            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.category : stack1),"===","task",{"name":"fi","hash":{},"fn":container.program(21, data, 0),"inverse":container.program(23, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.category : stack1),"===","task",{"name":"fi","hash":{},"fn":container.program(18, data, 0),"inverse":container.program(20, data, 0),"data":data})) != null ? stack1 : "")
 	    + "            "
-	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(22, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n        </div>\n    </div>\n";
-	},"11":function(container,depth0,helpers,partials,data) {
+	},"8":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return " "
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-exceed-left";
-	},"13":function(container,depth0,helpers,partials,data) {
+	},"10":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return " "
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-exceed-right";
-	},"15":function(container,depth0,helpers,partials,data) {
+	},"12":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-focused ";
-	},"17":function(container,depth0,helpers,partials,data) {
+	},"14":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 	
 	  return "                    color: #ffffff; background-color:"
@@ -11632,7 +11710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";\n";
-	},"19":function(container,depth0,helpers,partials,data) {
+	},"16":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 	
 	  return "                    color:"
@@ -11642,7 +11720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
-	},"21":function(container,depth0,helpers,partials,data) {
+	},"18":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
 	
 	  return "                <span class=\""
@@ -11650,7 +11728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "weekday-schedule-title\">"
 	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n";
-	},"23":function(container,depth0,helpers,partials,data) {
+	},"20":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
 	
 	  return "                <span class=\""
@@ -11658,12 +11736,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "weekday-schedule-title\">"
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n";
-	},"25":function(container,depth0,helpers,partials,data) {
+	},"22":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return "<span class=\""
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
+	},"24":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.viewType : depth0),"===","toggle",{"name":"fi","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"25":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(26, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"26":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (data && data.root)) && stack1.collapsed),{"name":"if","hash":{},"fn":container.program(27, data, 0),"inverse":container.program(30, data, 0),"data":data})) != null ? stack1 : "");
+	},"27":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"28":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "            <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed-in-week\" data-ymd=\""
+	    + alias4(((helper = (helper = helpers.ymd || (depth0 != null ? depth0.ymd : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data}) : helper)))
+	    + "\" style=\"left:"
+	    + alias4((helpers.add || (depth0 && depth0.add) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"add","hash":{},"data":data}))
+	    + "%; top: "
+	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.floatingButtonTop), depth0))
+	    + "px; margin-top: -4px;\">"
+	    + alias4((helpers["weekGridFooterExceed-tmpl"] || (depth0 && depth0["weekGridFooterExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"weekGridFooterExceed-tmpl","hash":{},"data":data}))
+	    + "</span>\n";
+	},"30":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.minHiddenScheduleIndex),{"name":"fi","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"31":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "                <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-collapse-btn\" style=\"left:"
+	    + alias4((helpers.add || (depth0 && depth0.add) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"add","hash":{},"data":data}))
+	    + "%; top: "
+	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.floatingButtonTop), depth0))
+	    + "px; margin-top: -4px;\">"
+	    + ((stack1 = ((helper = (helper = helpers["alldayCollapseBtnTitle-tmpl"] || (depth0 != null ? depth0["alldayCollapseBtnTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"alldayCollapseBtnTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+	    + "</div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -11673,20 +11797,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-creation "
-	    + alias4(((helper = (helper = helpers.collapsed || (depth0 != null ? depth0.collapsed : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"collapsed","hash":{},"data":data}) : helper)))
-	    + "\"></div>\n<div class=\""
+	    + "weekday-creation\"></div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedules "
-	    + alias4(((helper = (helper = helpers.collapsed || (depth0 != null ? depth0.collapsed : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"collapsed","hash":{},"data":data}) : helper)))
-	    + "\"style=\"top:"
+	    + "weekday-schedules\"style=\"top:"
 	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleContainerTop), depth0))
 	    + "px;\">\n    <!-- weekday-schedules 높이를 하단 패딩까지 확보하기 위한 빈 div -->\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedules-height-span\" style=\"height:"
 	    + alias4(((helper = (helper = helpers.contentHeight || (depth0 != null ? depth0.contentHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"contentHeight","hash":{},"data":data}) : helper)))
 	    + "px\"></div>\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.panelName : depth0),"===","allday",{"name":"fi","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
 
@@ -11695,24 +11816,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function";
-	
-	  return "    <span class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "allday-collapse-button\">\n        "
-	    + ((stack1 = ((helper = (helper = helpers["alldayCollapseBtnTitle-tmpl"] || (depth0 != null ? depth0["alldayCollapseBtnTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"alldayCollapseBtnTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-	    + "\n    </span>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "allday-left "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "left\">\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.alldayViewType : depth0),"===","toggle",{"name":"fi","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "    <span>"
+	    + "left\">\n    <span>"
 	    + ((stack1 = ((helper = (helper = helpers["alldayTitle-tmpl"] || (depth0 != null ? depth0["alldayTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"alldayTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
 	    + "</span>\n</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -12114,9 +12225,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleCollection = this.baseController.schedules,
 	        collapseElement = domutil.closest(
 	            clickEvent.target,
-	            config.classname('.allday-collapse-button')
+	            config.classname('.weekday-collapse-btn')
 	        );
-	    var blockElement, moreElement;
+	    var blockElement, moreElement, scheduleElement;
 	
 	    if (collapseElement) {
 	        self.fire('clickCollapse');
@@ -12139,9 +12250,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
-	
-	    if (blockElement) {
+	    scheduleElement = domutil.closest(target, config.classname('.weekday-schedule'));
+	    if (scheduleElement) {
+	        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
 	        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
 	            /**
 	             * @events AlldayClick#clickSchedule
@@ -12270,6 +12381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var target = dragStartEventData.target,
 	        result = this.checkExpectedCondition(target),
 	        controller = this.baseController,
+	        excludeTarget = true,
 	        scheduleBlockElement,
 	        modelID,
 	        targetModel,
@@ -12280,7 +12392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+	    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget);
 	    if (!scheduleBlockElement) {
 	        return;
 	    }
@@ -12561,7 +12673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -12923,20 +13035,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
 	 */
 	AlldayCreation.prototype.checkExpectedCondition = function(target) {
-	    var alldayView = this.alldayView;
-	    var alldayViewType = alldayView.options.alldayViewType;
 	    var cssClass = domutil.getClass(target).trim();
-	    var matches;
+	    var isAllDay = domutil.closest(target, config.classname('.allday-container'));
+	    var excludeTarget = true;
+	    var matches, schedulesElement;
 	
-	    if (alldayViewType === 'toggle' && alldayView.collapsed) {
-	        return this._checkExpectedConditionOnToggleViewType(target);
-	    }
-	
-	    if (cssClass !== config.classname('weekday-schedules')) {
+	    if (!isAllDay) {
 	        return false;
 	    }
 	
-	    target = target.parentNode;
+	    if (domutil.closest(target, config.classname('.weekday-exceed-in-week'))
+	        || domutil.closest(target, config.classname('.weekday-collapse-btn'))
+	    ) {
+	        return false;
+	    }
+	
+	    if (domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget)) {
+	        return false;
+	    }
+	
+	    schedulesElement = domutil.closest(target, config.classname('.weekday-schedules'));
+	    if (!schedulesElement && cssClass !== config.classname('weekday-schedules')) {
+	        return false;
+	    }
+	
+	    target = schedulesElement ? schedulesElement.parentNode : target.parentNode;
 	    cssClass = domutil.getClass(target);
 	    matches = cssClass.match(config.allday.getViewIDRegExp);
 	
@@ -12945,18 +13068,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    return util.pick(this.alldayView.children.items, matches[1]);
-	};
-	
-	/**
-	 * Check dragstart target is expected conditions for this handler
-	 * @param {HTMLElement} target - dragstart event handler's target element.
-	 * @returns {boolean} return WeekdayInWeek view instance when satiate condition.
-	 */
-	AlldayCreation.prototype._checkExpectedConditionOnToggleViewType = function(target) {
-	    return (domutil.closest(target, config.classname('.weekday-grid'))
-	        && !domutil.closest(target, config.classname('.weekday-exceed-in-week')))
-	        || (domutil.closest(target, config.classname('.weekday-schedules'))
-	            && !domutil.closest(target, config.classname('.weekday-schedule-block')));
 	};
 	
 	/**
@@ -13162,7 +13273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	
 	/**
 	 * Class for Allday.Creation dragging effect.
@@ -13592,7 +13703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -14303,7 +14414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	var ratio = __webpack_require__(30).ratio;
 	var TZDate = __webpack_require__(28).Date;
 	var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
@@ -15036,7 +15147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	var ratio = __webpack_require__(30).ratio;
 	var FloatingLayer = __webpack_require__(86);
 	var tmpl = __webpack_require__(87);
@@ -15807,7 +15918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(56);
+	var reqAnimFrame = __webpack_require__(52);
 	var ratio = __webpack_require__(30).ratio;
 	
 	/**
@@ -16591,7 +16702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
 	        gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
 	        renderLimitIdx = this._getRenderLimitIndex(),
-	        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange);
+	        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range);
 	    var baseViewModel;
 	
 	    viewModel = util.extend({
