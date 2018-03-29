@@ -164,7 +164,7 @@ datetime = {
         var date = dw(startTime);
         var result = [];
 
-        while (cursor <= endTime && endTime > date.d.getTime()) {
+        while (cursor <= endTime && endTime >= date.d.getTime()) {
             result.push(new TZDate(date.d));
             cursor = cursor + step;
             date.addDate(1);

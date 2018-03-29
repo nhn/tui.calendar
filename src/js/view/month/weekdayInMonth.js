@@ -77,7 +77,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
     var opt = this.options,
         gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
         gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
-        renderLimitIdx = this._getRenderLimitIndex(),
+        renderLimitIdx = this._getRenderLimitIndex() + 1,
         exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range);
     var baseViewModel;
 
@@ -91,7 +91,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
         matrices: viewModel.eventsInDateRange,
         gridHeaderHeight: gridHeaderHeight,
         gridFooterHeight: gridFooterHeight,
-        renderLimitIdx: renderLimitIdx + 1
+        renderLimitIdx: renderLimitIdx
     }, baseViewModel);
 
     return baseViewModel;
