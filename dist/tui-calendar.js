@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.4 | Thu Mar 29 2018
+ * @version 0.9.5 | Thu Mar 29 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -1799,7 +1799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var date = dw(startTime);
 	        var result = [];
 	
-	        while (cursor <= endTime && endTime > date.d.getTime()) {
+	        while (cursor <= endTime && endTime >= date.d.getTime()) {
 	            result.push(new TZDate(date.d));
 	            cursor = cursor + step;
 	            date.addDate(1);
@@ -12230,10 +12230,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	AlldayClick.prototype._onClickMoreElement = function(target) {
 	    var moreElement = domutil.closest(target, config.classname('.weekday-exceed-in-week'));
-	    var index = moreElement.dataset ? moreElement.dataset.index : moreElement.getAttribute('data-index');
-	    var parseInt = Number.parseInt || window.parseInt;
+	    var index;
 	
 	    if (moreElement) {
+	        index = domutil.getData(moreElement, 'index');
 	        this.fire('clickExpand', parseInt(index || 0, 10));
 	
 	        return true;
@@ -16675,7 +16675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var opt = this.options,
 	        gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
 	        gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
-	        renderLimitIdx = this._getRenderLimitIndex(),
+	        renderLimitIdx = this._getRenderLimitIndex() + 1,
 	        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range);
 	    var baseViewModel;
 	
@@ -16689,7 +16689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        matrices: viewModel.eventsInDateRange,
 	        gridHeaderHeight: gridHeaderHeight,
 	        gridFooterHeight: gridFooterHeight,
-	        renderLimitIdx: renderLimitIdx + 1
+	        renderLimitIdx: renderLimitIdx
 	    }, baseViewModel);
 	
 	    return baseViewModel;
