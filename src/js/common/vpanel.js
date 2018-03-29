@@ -65,6 +65,30 @@ VPanel.prototype.isSplitter = function() {
 };
 
 /**
+ * set max height of panel
+ * @param {number} maxHeight - maxHeight
+ */
+VPanel.prototype.setMaxHeight = function(maxHeight) {
+    this.options.maxHeight = maxHeight;
+};
+
+/**
+ * set forced height flag
+ * @param {boolean} set - enable or not
+ */
+VPanel.prototype.setHeightForcedSet = function(set) {
+    this.isHeightForcedSet = set;
+};
+
+/**
+ * get forced height flag
+ * @returns {boolean} set - enable or not
+ */
+VPanel.prototype.getHeightForcedSet = function() {
+    return this.isHeightForcedSet;
+};
+
+/**
  * set height of html element
  * @param {HTMLElement} [container] - container element
  * @param {number} newHeight - height

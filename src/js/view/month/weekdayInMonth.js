@@ -10,8 +10,8 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     View = require('../../view/view'),
     Weekday = require('../weekday'),
-    baseTmpl = require('./weekdayInMonth.hbs'),
-    scheduleTmpl = require('./weekdayInMonthSchedule.hbs');
+    baseTmpl = require('../template/month/weekdayInMonth.hbs'),
+    scheduleTmpl = require('../template/month/weekdayInMonthSchedule.hbs');
 var mfloor = Math.floor,
     mmin = Math.min;
 

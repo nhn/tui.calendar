@@ -14,60 +14,80 @@ var Week = require('../view/week/week');
 
 // Sub views
 var DayName = require('../view/week/dayname');
+var DayGrid = require('../view/week/dayGrid');
 var TimeGrid = require('../view/week/timeGrid');
-var Allday = require('../view/week/allday');
-var Milestone = require('../view/week/milestone');
-var TaskView = require('../view/week/taskview');
-
 // Handlers
-var AlldayClick = require('../handler/allday/click');
-var AlldayCreation = require('../handler/allday/creation');
-var AlldayMove = require('../handler/allday/move');
-var AlldayResize = require('../handler/allday/resize');
 var DayNameClick = require('../handler/time/clickDayname');
+var DayGridClick = require('../handler/daygrid/click');
+var DayGridCreation = require('../handler/daygrid/creation');
+var DayGridMove = require('../handler/daygrid/move');
+var DayGridResize = require('../handler/daygrid/resize');
 var TimeClick = require('../handler/time/click');
 var TimeCreation = require('../handler/time/creation');
 var TimeMove = require('../handler/time/move');
 var TimeResize = require('../handler/time/resize');
-var MilestoneClick = require('../handler/milestone/click');
 
-var DEFAULT_VIEW_SEQUENCE = ['Milestone', 'Task', 'AllDay', 'TimeGrid'];
-var DEFAULT_VIEWS = {
-    'Milestone': {
+var DAYGRID_HANDLDERS = {
+    'click': DayGridClick,
+    'creation': DayGridCreation,
+    'move': DayGridMove,
+    'resize': DayGridResize
+};
+var TIMEGRID_HANDLERS = {
+    'click': TimeClick,
+    'creation': TimeCreation,
+    'move': TimeMove,
+    'resize': TimeResize
+};
+var DEFAULT_PANELS = [
+    {
+        name: 'milestone',
+        type: 'daygrid',
         minHeight: 20,
-        height: 80,
         maxHeight: 80,
+        showExpandableButton: true,
+        maxExpandableHeight: 230,
+        handlers: ['click'],
         show: true
     },
-    'Task': {
+    {
+        name: 'task',
+        type: 'daygrid',
         minHeight: 40,
-        height: 120,
         maxHeight: 120,
+        showExpandableButton: true,
+        maxExpandableHeight: 230,
+        handlers: ['click', 'move'],
         show: true
     },
-    'AllDay': {
+    {
+        name: 'allday',
+        type: 'daygrid',
         minHeight: 20,
-        height: 80,
         maxHeight: 80,
-        show: true,
-        maxExpandCount: 10
+        showExpandableButton: true,
+        maxExpandableHeight: 230,
+        handlers: ['click', 'creation', 'move', 'resize'],
+        show: true
     },
-    'TimeGrid': {
+    {
+        name: 'time',
+        type: 'timegrid',
         autoHeight: true,
+        handlers: ['click', 'creation', 'move', 'resize'],
         show: true
     }
-};
+];
 
 /* eslint-disable complexity*/
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
-    var viewSequence = options.week.viewSequence || DEFAULT_VIEW_SEQUENCE,
-        views = options.week.views || DEFAULT_VIEWS,
-        panels = [],
-        isAllDayPanelFirstRender = true;
-    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
-        milestoneView, taskView, alldayView, timeGridView, alldayPanel;
+    var panels = options.week.panels || DEFAULT_PANELS,
+        vpanels = [];
+    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
 
-    weekView = new Week(null, options.week, layoutContainer);
+    util.extend(options.week, {panels: panels});
+
+    weekView = new Week(null, options.week, layoutContainer, panels);
     weekView.handler = {
         click: {},
         dayname: {},
@@ -76,33 +96,30 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         resize: {}
     };
 
-    // Change visibilities
-    util.forEach(views, function(value, key) {
-        if (key === 'Milestone' || key === 'Task') {
-            value.show = options.taskView;
-        } else if (key === 'AllDay' || key === 'TimeGrid') {
-            value.show = options.scheduleView;
-        }
-    });
-
     // Make panels by view sequence and visibilities
-    util.forEach(viewSequence, function(name) {
-        var view = views[name];
-        if (view.show) {
-            if (panels.length) {
-                panels.push({
+    util.forEach(panels, function(panel) {
+        var name = panel.name;
+
+        // Change visibilities
+        if (name === 'milestone' || name === 'task') {
+            panel.show = options.taskView;
+        } else if (name === 'allday' || name === 'time') {
+            panel.show = options.scheduleView;
+        }
+
+        if (panel.show) {
+            if (vpanels.length) {
+                vpanels.push({
                     isSplitter: true
                 });
             }
-            panels.push(util.extend({
-                name: name
-            }, view));
+            vpanels.push(util.extend({}, panel));
         }
     });
 
-    if (panels.length) {
-        panels[panels.length - 1].autoHeight = true;
-        panels[panels.length - 1].maxHeight = null;
+    if (vpanels.length) {
+        vpanels[vpanels.length - 1].autoHeight = true;
+        vpanels[vpanels.length - 1].maxHeight = null;
     }
 
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -121,101 +138,53 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
 
     vLayout = new VLayout({
-        panels: panels,
+        panels: vpanels,
         panelHeights: options.week.panelHeights || []
     }, vLayoutContainer);
 
     weekView.vLayout = vLayout;
 
-    if (util.pick(views, 'Milestone').show) {
-        /**********
-         * 마일스톤
-         **********/
-        milestoneView = new Milestone(options.week, vLayout.getPanelByName('Milestone').container);
-        milestoneView.on('afterRender', function(viewModel) {
-            vLayout.getPanelByName('Milestone').setHeight(null, viewModel.height);
-        });
-        weekView.addChild(milestoneView);
-        weekView.handler.click.milestone = new MilestoneClick(dragHandler, milestoneView, baseController);
-    }
+    util.forEach(panels, function(panel) {
+        var name = panel.name;
+        var handlers = panel.handlers;
+        var view;
 
-    if (util.pick(views, 'Task').show) {
-        /**********
-         * 업무
-         **********/
-        taskView = new TaskView(options.week, vLayout.getPanelByName('Task').container);
-        taskView.on('afterRender', function() {
-            vLayout.getPanelByName('Task').setHeight(null, taskView.contentHeight);
-        });
-        weekView.addChild(taskView);
-        weekView.handler.click.task = new AlldayClick(dragHandler, taskView, baseController);
-        weekView.handler.move.task = new AlldayMove(dragHandler, taskView, baseController);
-    }
+        if (!panel.show) {
+            return;
+        }
 
-    if (util.pick(views, 'AllDay').show) {
-        /**********
-         * 종일일정
-         **********/
-        alldayPanel = vLayout.getPanelByName('AllDay');
-        alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
-        alldayView.on('afterRender', function() {
-            if (alldayView.viewType === 'toggle' && !alldayView.collapsed) {
-                alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
-            }
-            if (isAllDayPanelFirstRender) {
-                alldayPanel.setHeight(null, alldayView.options.height);
-                isAllDayPanelFirstRender = false;
-            } else {
-                alldayPanel.setHeight(null, alldayView.contentHeight);
-            }
-        });
-
-        weekView.addChild(alldayView);
-        weekView.handler.click.allday = new AlldayClick(dragHandler, alldayView, baseController);
-        weekView.handler.creation.allday = new AlldayCreation(dragHandler, alldayView, baseController);
-        weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
-        weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
-
-        weekView.handler.click.allday.on('clickExpand', function(index) {
-            alldayView.prevMaxHeight = alldayView.aboutMe.maxHeight;
-            alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
-            alldayPanel.isHeightForcedSet = false;
-            alldayView.collapsed = false;
-            alldayView.aboutMe.forcedLayout = false;
-            alldayView.aboutMe.collapseBtnIndex = index;
-            reqAnimFrame.requestAnimFrame(function() {
-                weekView.render();
+        if (panel.type === 'daygrid') {
+            /**********
+             * Schedule panel by Grid
+             **********/
+            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container);
+            view.on('afterRender', function(viewModel) {
+                vLayout.getPanelByName(name).setHeight(null, viewModel.height);
             });
-        });
 
-        weekView.handler.click.allday.on('clickCollapse', function() {
-            var newHeight = alldayView.prevMaxHeight;
-            delete alldayView.prevMaxHeight;
-            alldayPanel.options.maxHeight = newHeight;
-            alldayPanel.setHeight(null, newHeight);
-            alldayView.collapsed = true;
-            reqAnimFrame.requestAnimFrame(function() {
-                weekView.render();
+            weekView.addChild(view);
+
+            util.forEach(handlers, function(type) {
+                weekView.handler[type][name] = new DAYGRID_HANDLDERS[type](dragHandler, view, baseController);
+                view.addHandler(type, weekView.handler[type][name], vLayout.getPanelByName(name));
             });
-        });
+        } else if (panel.type === 'timegrid') {
+            /**********
+             * Schedule panel by TimeGrid
+             **********/
+            view = new TimeGrid(name, options.week, vLayout.getPanelByName(name).container);
+            weekView.addChild(view);
+            util.forEach(handlers, function(type) {
+                weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController);
+            });
+        }
+    });
 
-        alldayPanel.on('resize', function() {
-            alldayView.aboutMe.forcedLayout = true;
+    vLayout.on('resize', function() {
+        reqAnimFrame.requestAnimFrame(function() {
             weekView.render();
         });
-    }
-
-    if (util.pick(views, 'TimeGrid').show) {
-        /**********
-         * 시간별 일정
-         **********/
-        timeGridView = new TimeGrid(options.week, vLayout.getPanelByName('TimeGrid').container);
-        weekView.addChild(timeGridView);
-        weekView.handler.click.time = new TimeClick(dragHandler, timeGridView, baseController);
-        weekView.handler.creation.time = new TimeCreation(dragHandler, timeGridView, baseController);
-        weekView.handler.move.time = new TimeMove(dragHandler, timeGridView, baseController);
-        weekView.handler.resize.time = new TimeResize(dragHandler, timeGridView, baseController);
-    }
+    });
 
     weekView.on('afterRender', function() {
         vLayout.refresh();
@@ -249,9 +218,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             vLayout.refresh();
         },
         scrollToNow: function() {
-            if (timeGridView) {
-                timeGridView.scrollToNow();
-            }
+            weekView.children.each(function(childView) {
+                if (childView.scrollToNow) {
+                    childView.scrollToNow();
+                }
+            });
         }
     };
 };

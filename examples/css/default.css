@@ -358,6 +358,19 @@ body {
 .more-title-day {
     vertical-align: baseline;
 }
+
+.weekly-left-title {
+    height: 100%;
+    text-align: right;
+    display: table;
+    width: 100%;
+}
+
+.weekly-left-content {
+    vertical-align: middle;
+    display: table-cell;
+}
+
 /** custom fontawesome */
 
 .fa {

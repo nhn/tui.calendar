@@ -35,9 +35,10 @@ function parseRangeDateString(dateString) {
  *  if not supplied then use +3d from today. YYYY-MM-DD format.
  * @param {string} [options.cssPrefix] - CSS classname prefix
  * @param {HTMLElement} container The element to use container for this view.
+ * @param {object} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
  * @extends {View}
  */
-function Week(controller, options, container) {
+function Week(controller, options, container, panels) {
     var range;
 
     container = domutil.appendHTMLElement('div', container);
@@ -67,6 +68,12 @@ function Week(controller, options, container) {
      * @type {Base.Week}
      */
     this.controller = controller;
+
+    /**
+     * Schedule Panels
+     * @type {Array.<object>}
+     */
+    this.panels = panels;
 }
 
 util.inherit(Week, View);
@@ -109,6 +116,7 @@ Week.prototype.render = function() {
     schedulesInDateRange = this.controller.findByDateRange(
         datetime.start(renderStartDate),
         datetime.end(renderEndDate),
+        this.panels,
         scheduleFilter
     );
 
