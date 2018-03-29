@@ -106,7 +106,7 @@ AlldayClick.prototype._onClickMoreElement = function(target) {
     var index;
 
     if (moreElement) {
-        index = moreElement.dataset ? moreElement.dataset.index : moreElement.getAttribute('data-index');
+        index = domutil.getData(moreElement, 'index');
         this.fire('clickExpand', parseInt(index || 0, 10));
 
         return true;
