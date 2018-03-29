@@ -103,10 +103,10 @@ AlldayClick.prototype._onClick = function(clickEvent) {
 
 AlldayClick.prototype._onClickMoreElement = function(target) {
     var moreElement = domutil.closest(target, config.classname('.weekday-exceed-in-week'));
-    var index = moreElement.dataset ? moreElement.dataset.index : moreElement.getAttribute('data-index');
-    var parseInt = Number.parseInt || window.parseInt;
+    var index;
 
     if (moreElement) {
+        index = moreElement.dataset ? moreElement.dataset.index : moreElement.getAttribute('data-index');
         this.fire('clickExpand', parseInt(index || 0, 10));
 
         return true;
