@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.3 | Thu Mar 29 2018
+ * @version 0.9.4 | Thu Mar 29 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -8650,12 +8650,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
 	        weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
 	
-	        weekView.handler.click.allday.on('clickExpand', function() {
+	        weekView.handler.click.allday.on('clickExpand', function(index) {
 	            alldayView.prevMaxHeight = alldayView.aboutMe.maxHeight;
 	            alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
 	            alldayPanel.isHeightForcedSet = false;
 	            alldayView.collapsed = false;
 	            alldayView.aboutMe.forcedLayout = false;
+	            alldayView.aboutMe.collapseBtnIndex = index;
 	            reqAnimFrame.requestAnimFrame(function() {
 	                weekView.render();
 	            });
@@ -11246,6 +11247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.viewType === 'toggle') {
 	        baseViewModel.viewType = this.viewType;
 	        baseViewModel.collapsed = this.collapsed ? 'collapsed' : '';
+	        baseViewModel.collapseBtnIndex = aboutMe.collapseBtnIndex;
 	    }
 	
 	    container.innerHTML = tmpl(baseViewModel);
@@ -11350,7 +11352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var visibleScheduleCount = this.aboutMe.visibleScheduleCount;
 	    var aboutMe = this.aboutMe;
 	    var exceedDate = {};
-	    var baseViewModel, panelHeight, maxHiddenScheduleCount;
+	    var baseViewModel, panelHeight;
 	
 	    if (this.viewType === 'toggle') {
 	        panelHeight = aboutMe.forcedLayout ? this.getViewBound().height : mmin(aboutMe.height, aboutMe.maxHeight);
@@ -11366,13 +11368,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            matrices = this._excludeExceedSchedules(matrices, visibleScheduleCount, maxScheduleInDay);
 	            aboutMe.visibleScheduleCount = visibleScheduleCount;
 	        } else {
-	            maxHiddenScheduleCount = maxScheduleInDay - aboutMe.visibleScheduleCount;
-	            exceedDate =
-	                this.getExceedDate(
-	                    mmin(maxScheduleInDay, aboutMe.maxExpandCount) - maxHiddenScheduleCount,
-	                    viewModel.schedulesInDateRange[aboutMe.name],
-	                    viewModel.range
-	                );
 	            visibleScheduleCount = mmax(visibleScheduleCount, mmin(maxScheduleInDay, aboutMe.maxExpandCount));
 	        }
 	    }
@@ -11387,40 +11382,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        minHeight: this._getMinHeight(maxScheduleInDay),
 	        matrices: matrices,
 	        scheduleContainerTop: this.options.scheduleContainerTop,
-	        minHiddenScheduleIndex: this._getCollapseBtnIndex(viewModel.range,
-	            baseViewModel.dates,
-	            maxHiddenScheduleCount,
-	            exceedDate
-	        ),
 	        maxScheduleInDay: maxScheduleInDay,
 	        floatingButtonTop: this._calculateFloatingBtnTop(visibleScheduleCount, maxScheduleInDay),
 	        panelName: aboutMe.name
 	    }, baseViewModel);
 	
 	    return baseViewModel;
-	};
-	
-	/**
-	 * return weekday index to show collapse button
-	 * @param {Array.<TZDate>} range - view model
-	 * @param {Array.<Object>} dates - base view model
-	 * @param {number} maxHiddenCount - maximum hidden count when panel is collapsed
-	 * @param {array} exceedDate - overflowed schedule count in week
-	 * @returns {number} weekday index
-	 */
-	WeekdayInWeek.prototype._getCollapseBtnIndex = function(range, dates, maxHiddenCount, exceedDate) {
-	    var minHiddenScheduleCount = maxHiddenCount;
-	    var btnIndex = range.length > 0 ? range.length - 1 : 0;
-	
-	    util.forEach(dates, function(date, index) {
-	        var ymd = date.ymd;
-	        if (exceedDate[ymd] !== 0 && minHiddenScheduleCount >= exceedDate[ymd]) {
-	            minHiddenScheduleCount = exceedDate[ymd];
-	            btnIndex = index;
-	        }
-	    });
-	
-	    return btnIndex;
 	};
 	
 	/**
@@ -11763,8 +11730,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return "            <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-exceed-in-week\" data-ymd=\""
-	    + alias4(((helper = (helper = helpers.ymd || (depth0 != null ? depth0.ymd : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed-in-week\" data-index=\""
+	    + alias4(((helper = (helper = helpers.key || (data && data.key)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"key","hash":{},"data":data}) : helper)))
 	    + "\" style=\"left:"
 	    + alias4((helpers.add || (depth0 && depth0.add) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"add","hash":{},"data":data}))
 	    + "%; top: "
@@ -11775,7 +11742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"30":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.minHiddenScheduleIndex),{"name":"fi","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.collapseBtnIndex),{"name":"fi","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"31":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -12227,7 +12194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            clickEvent.target,
 	            config.classname('.weekday-collapse-btn')
 	        );
-	    var blockElement, moreElement, scheduleElement;
+	    var blockElement, scheduleElement;
 	
 	    if (collapseElement) {
 	        self.fire('clickCollapse');
@@ -12239,14 +12206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    moreElement = domutil.closest(
-	        clickEvent.target,
-	        config.classname('.weekday-exceed-in-week')
-	    );
-	
-	    if (moreElement) {
-	        self.fire('clickExpand');
-	
+	    if (this._onClickMoreElement(clickEvent.target)) {
 	        return;
 	    }
 	
@@ -12266,6 +12226,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	        });
 	    }
+	};
+	
+	AlldayClick.prototype._onClickMoreElement = function(target) {
+	    var moreElement = domutil.closest(target, config.classname('.weekday-exceed-in-week'));
+	    var index = moreElement.dataset ? moreElement.dataset.index : moreElement.getAttribute('data-index');
+	    var parseInt = Number.parseInt || window.parseInt;
+	
+	    if (moreElement) {
+	        this.fire('clickExpand', parseInt(index || 0, 10));
+	
+	        return true;
+	    }
+	
+	    return false;
 	};
 	
 	util.CustomEvents.mixin(AlldayClick);
