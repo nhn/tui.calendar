@@ -16,7 +16,7 @@ describe('handler:AlldayClick', function() {
             text: 'hello'
         });
 
-        mockInst = jasmine.createSpyObj('AlldayClick', ['checkExpectCondition', 'fire']);
+        mockInst = jasmine.createSpyObj('AlldayClick', ['checkExpectCondition', 'fire', '_onClickMoreElement']);
         mockInst.baseController = {
             schedules: mockCollection
         };
@@ -34,6 +34,7 @@ describe('handler:AlldayClick', function() {
 
             return false;
         });
+        mockInst._onClickMoreElement.and.returnValue(false);
 
         // 실행하면
         AlldayClick.prototype._onClick.call(mockInst, vMouseEvent);
@@ -46,23 +47,6 @@ describe('handler:AlldayClick', function() {
             },
             event: 'test'
         });
-    });
-
-    it('_onClick fire custom event "clickExpand" when click expand button.', function() {
-        var vMouseEvent = {originEvent: 'test'};
-        spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
-            if (cssClass === config.classname('.weekday-exceed-in-week')) {
-                return true;
-            }
-
-            return false;
-        });
-
-        // 실행하면
-        AlldayClick.prototype._onClick.call(mockInst, vMouseEvent);
-
-        // 이벤트가 아래처럼 발생한다
-        expect(mockInst.fire).toHaveBeenCalledWith('clickExpand');
     });
 
     it('_onClick fire custom event "clickCollapse" when click expand button.', function() {
@@ -84,6 +68,7 @@ describe('handler:AlldayClick', function() {
 
     it('AlldayClick doesn\'t fire custom event "click" when no target or target is not related with events.', function() {
         spyOn(domutil, 'closest').and.returnValue(false);
+        spyOn(AlldayClick.prototype, '_onClickMoreElement').and.returnValue(false);
 
         // 엘리먼트가 AlldayClick과 관계가 없다
         mockInst.checkExpectCondition.and.returnValue(false);
@@ -93,5 +78,24 @@ describe('handler:AlldayClick', function() {
 
         // 무반응
         expect(mockInst.fire).not.toHaveBeenCalled();
+    });
+
+    it('_onClickMoreElement fire custom event "clickExpand" when click expand button.', function() {
+        var vMouseTarget = document.createElement('SPAN');
+        vMouseTarget.setAttribute('data-index', '1');
+
+        spyOn(domutil, 'closest').and.callFake(function(target, cssClass) {
+            if (cssClass === config.classname('.weekday-exceed-in-week')) {
+                return vMouseTarget;
+            }
+
+            return false;
+        });
+
+        // 실행하면
+        AlldayClick.prototype._onClickMoreElement.call(mockInst, vMouseTarget);
+
+        // 이벤트가 아래처럼 발생한다
+        expect(mockInst.fire).toHaveBeenCalledWith('clickExpand', 1);
     });
 });

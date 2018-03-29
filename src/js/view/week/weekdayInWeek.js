@@ -54,6 +54,7 @@ WeekdayInWeek.prototype.render = function(viewModel) {
     if (this.viewType === 'toggle') {
         baseViewModel.viewType = this.viewType;
         baseViewModel.collapsed = this.collapsed ? 'collapsed' : '';
+        baseViewModel.collapseBtnIndex = aboutMe.collapseBtnIndex;
     }
 
     container.innerHTML = tmpl(baseViewModel);
@@ -158,7 +159,7 @@ WeekdayInWeek.prototype.getBaseViewModel = function(viewModel) {
     var visibleScheduleCount = this.aboutMe.visibleScheduleCount;
     var aboutMe = this.aboutMe;
     var exceedDate = {};
-    var baseViewModel, panelHeight, maxHiddenScheduleCount;
+    var baseViewModel, panelHeight;
 
     if (this.viewType === 'toggle') {
         panelHeight = aboutMe.forcedLayout ? this.getViewBound().height : mmin(aboutMe.height, aboutMe.maxHeight);
@@ -174,13 +175,6 @@ WeekdayInWeek.prototype.getBaseViewModel = function(viewModel) {
             matrices = this._excludeExceedSchedules(matrices, visibleScheduleCount, maxScheduleInDay);
             aboutMe.visibleScheduleCount = visibleScheduleCount;
         } else {
-            maxHiddenScheduleCount = maxScheduleInDay - aboutMe.visibleScheduleCount;
-            exceedDate =
-                this.getExceedDate(
-                    mmin(maxScheduleInDay, aboutMe.maxExpandCount) - maxHiddenScheduleCount,
-                    viewModel.schedulesInDateRange[aboutMe.name],
-                    viewModel.range
-                );
             visibleScheduleCount = mmax(visibleScheduleCount, mmin(maxScheduleInDay, aboutMe.maxExpandCount));
         }
     }
@@ -195,40 +189,12 @@ WeekdayInWeek.prototype.getBaseViewModel = function(viewModel) {
         minHeight: this._getMinHeight(maxScheduleInDay),
         matrices: matrices,
         scheduleContainerTop: this.options.scheduleContainerTop,
-        minHiddenScheduleIndex: this._getCollapseBtnIndex(viewModel.range,
-            baseViewModel.dates,
-            maxHiddenScheduleCount,
-            exceedDate
-        ),
         maxScheduleInDay: maxScheduleInDay,
         floatingButtonTop: this._calculateFloatingBtnTop(visibleScheduleCount, maxScheduleInDay),
         panelName: aboutMe.name
     }, baseViewModel);
 
     return baseViewModel;
-};
-
-/**
- * return weekday index to show collapse button
- * @param {Array.<TZDate>} range - view model
- * @param {Array.<Object>} dates - base view model
- * @param {number} maxHiddenCount - maximum hidden count when panel is collapsed
- * @param {array} exceedDate - overflowed schedule count in week
- * @returns {number} weekday index
- */
-WeekdayInWeek.prototype._getCollapseBtnIndex = function(range, dates, maxHiddenCount, exceedDate) {
-    var minHiddenScheduleCount = maxHiddenCount;
-    var btnIndex = range.length > 0 ? range.length - 1 : 0;
-
-    util.forEach(dates, function(date, index) {
-        var ymd = date.ymd;
-        if (exceedDate[ymd] !== 0 && minHiddenScheduleCount >= exceedDate[ymd]) {
-            minHiddenScheduleCount = exceedDate[ymd];
-            btnIndex = index;
-        }
-    });
-
-    return btnIndex;
 };
 
 /**

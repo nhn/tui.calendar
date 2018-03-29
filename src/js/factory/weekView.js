@@ -176,12 +176,13 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
         weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
 
-        weekView.handler.click.allday.on('clickExpand', function() {
+        weekView.handler.click.allday.on('clickExpand', function(index) {
             alldayView.prevMaxHeight = alldayView.aboutMe.maxHeight;
             alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
             alldayPanel.isHeightForcedSet = false;
             alldayView.collapsed = false;
             alldayView.aboutMe.forcedLayout = false;
+            alldayView.aboutMe.collapseBtnIndex = index;
             reqAnimFrame.requestAnimFrame(function() {
                 weekView.render();
             });

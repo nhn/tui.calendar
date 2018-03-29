@@ -67,7 +67,7 @@ AlldayClick.prototype._onClick = function(clickEvent) {
             clickEvent.target,
             config.classname('.weekday-collapse-btn')
         );
-    var blockElement, moreElement, scheduleElement;
+    var blockElement, scheduleElement;
 
     if (collapseElement) {
         self.fire('clickCollapse');
@@ -79,14 +79,7 @@ AlldayClick.prototype._onClick = function(clickEvent) {
         return;
     }
 
-    moreElement = domutil.closest(
-        clickEvent.target,
-        config.classname('.weekday-exceed-in-week')
-    );
-
-    if (moreElement) {
-        self.fire('clickExpand');
-
+    if (this._onClickMoreElement(clickEvent.target)) {
         return;
     }
 
@@ -106,6 +99,20 @@ AlldayClick.prototype._onClick = function(clickEvent) {
             });
         });
     }
+};
+
+AlldayClick.prototype._onClickMoreElement = function(target) {
+    var moreElement = domutil.closest(target, config.classname('.weekday-exceed-in-week'));
+    var index = moreElement.dataset ? moreElement.dataset.index : moreElement.getAttribute('data-index');
+    var parseInt = Number.parseInt || window.parseInt;
+
+    if (moreElement) {
+        this.fire('clickExpand', parseInt(index || 0, 10));
+
+        return true;
+    }
+
+    return false;
 };
 
 util.CustomEvents.mixin(AlldayClick);
