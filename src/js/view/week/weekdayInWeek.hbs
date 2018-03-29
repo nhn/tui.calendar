@@ -43,10 +43,10 @@
     {{#each dates ~}}
         {{#if @root.collapsed}}
             {{#if hiddenSchedules}}
-            <span class="{{CSS_PREFIX}}weekday-exceed-in-week" data-ymd="{{ymd}}" style="left:{{add left width}}%; top: {{@root.floatingButtonTop}}px; margin-top: -4px;">{{weekGridFooterExceed-tmpl hiddenSchedules}}</span>
+            <span class="{{CSS_PREFIX}}weekday-exceed-in-week" data-index="{{@key}}" style="left:{{add left width}}%; top: {{@root.floatingButtonTop}}px; margin-top: -4px;">{{weekGridFooterExceed-tmpl hiddenSchedules}}</span>
             {{/if}}
         {{else}}
-            {{#fi @key '===' @root.minHiddenScheduleIndex}}
+            {{#fi @key '===' @root.collapseBtnIndex}}
                 <div class="{{CSS_PREFIX}}weekday-collapse-btn" style="left:{{add left width}}%; top: {{@root.floatingButtonTop}}px; margin-top: -4px;">{{{alldayCollapseBtnTitle-tmpl}}}</div>
             {{/fi}}
         {{/if}}
