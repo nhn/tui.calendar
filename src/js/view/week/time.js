@@ -118,13 +118,13 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
  * Set viewmodels for rendering.
  * @param {string} ymd The date of schedules. YYYYMMDD format.
  * @param {array} matrices The matrices for schedule placing.
+ * @param {number} containerHeight - container's height
  */
-Time.prototype._getBaseViewModel = function(ymd, matrices) {
+Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
     var self = this,
         options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
-        containerHeight,
         todayStart,
         baseMS;
 
@@ -132,7 +132,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices) {
      * Calculate each schedule element bounds relative with rendered hour milliseconds and
      * wrap each schedule model to viewmodels.
      */
-    containerHeight = this.getViewBound().height;
+    containerHeight = containerHeight || this.getViewBound().height;
     todayStart = this._parseDateGroup(ymd);
     todayStart.setHours(hourStart);
     baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
@@ -188,9 +188,10 @@ Time.prototype.getDate = function() {
  * @override
  * @param {string} ymd The date of schedules. YYYYMMDD format
  * @param {array} matrices Matrices for placing schedules
+ * @param {number} containerHeight - container's height
  */
-Time.prototype.render = function(ymd, matrices) {
-    this._getBaseViewModel(ymd, matrices);
+Time.prototype.render = function(ymd, matrices, containerHeight) {
+    this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
         matrices: matrices
     });

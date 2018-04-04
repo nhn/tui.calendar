@@ -215,12 +215,15 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
         childOption,
         child,
         isToday,
+        containerHeight,
         today = datetime.format(new TZDate(), 'YYYYMMDD'),
         i = 0;
 
     // clear contents
     container.innerHTML = '';
     this.children.clear();
+
+    containerHeight = domutil.getSize(container.parentElement)[1];
 
     // reconcilation of child views
     util.forEach(viewModels, function(schedules, ymd) {
@@ -242,7 +245,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
             childOption,
             domutil.appendHTMLElement('div', container, config.classname('time-date'))
         );
-        child.render(ymd, schedules);
+        child.render(ymd, schedules, containerHeight);
 
         self.addChild(child);
 

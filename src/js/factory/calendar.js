@@ -15,7 +15,8 @@ var dw = require('../common/dw'),
     monthViewFactory = require('./monthView'),
     TZDate = require('../common/timezone').Date,
     config = require('../config'),
-    timezone = require('../common/timezone');
+    timezone = require('../common/timezone'),
+    reqAnimFrame = require('../common/reqAnimFrame');
 
 var mmin = Math.min;
 
@@ -626,7 +627,17 @@ Calendar.prototype._toggleSchedulesByCalendarID = function(calendarId, toHide, r
  * calendar.render();
  */
 Calendar.prototype.render = function() {
-    this.layout.render();
+    var renderFunc = function() {
+        if (this.layout) {
+            this.layout.render();
+        }
+        this.requestRender = null;
+    };
+
+    if (this.requestRender) {
+        reqAnimFrame.cancelAnimFrame(this.requestRender);
+    }
+    this.requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
 };
 
 /**

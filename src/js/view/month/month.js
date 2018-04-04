@@ -223,6 +223,8 @@ Month.prototype.render = function() {
 
     this._renderChildren(vLayout.panels[1].container, calendar);
 
+    baseViewModel.panelHeight = vLayout.panels[1].getHeight();
+
     this.children.each(function(childView) {
         var start = datetime.parse(childView.options.renderStartDate);
         var end = datetime.parse(childView.options.renderEndDate);
@@ -238,7 +240,8 @@ Month.prototype.render = function() {
         var viewModel = {
             eventsInDateRange: eventsInDateRange,
             range: dateRange.slice(0, grids.length),
-            grids: grids
+            grids: grids,
+            panelHeight: baseViewModel.panelHeight
         };
 
         childView.render(viewModel);
