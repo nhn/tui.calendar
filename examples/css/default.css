@@ -1,7 +1,7 @@
-@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
- 
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans);
+
 body {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
 }
 
 /**  custom bootstrap - start */
@@ -31,7 +31,7 @@ body {
   outline: none;
 }
 
-.open>.dropdown-toggle.btn-default {
+.open > .dropdown-toggle.btn-default {
   background-color: #fff;
 }
 
@@ -43,12 +43,12 @@ body {
   border: 1px solid #bbb;
 }
 
-.dropdown-menu>li>a {
+.dropdown-menu > li > a {
   padding: 9px 12px;
   cursor: pointer;
 }
 
-.dropdown-menu>li>a:hover {
+.dropdown-menu > li > a:hover {
   background-color: rgba(81, 92, 230, 0.05);
   color: #333;
 }
@@ -57,7 +57,7 @@ body {
   width: 500px;
 }
 
-.modal-body>.input-group {
+.modal-body > .input-group {
   margin-bottom: 8px;
 }
 
@@ -65,7 +65,7 @@ body {
   line-height: 33px;
 }
 
-.modal-body-allday>label {
+.modal-body-allday > label {
   margin-bottom: 0;
 }
 
@@ -152,7 +152,7 @@ body {
   font-weight: bold;
 }
 
-.lnb-calendars>div {
+.lnb-calendars > div {
   padding: 12px 16px;
   border-bottom: 1px solid #e5e5e5;
   font-weight: normal;
@@ -181,8 +181,6 @@ body {
 }
 
 #menu {
-  height: 32px;
-  line-height: 32px;
   padding: 16px;
 }
 
@@ -227,9 +225,6 @@ body {
   padding-left: 12px;
   font-size: 19px;
   vertical-align: middle;
-  height: 19px;
-  line-height: 24px;
-  display: inline-block;
 }
 
 .dropdown-menu-title .icon {
@@ -246,131 +241,131 @@ body {
 }
 
 .calendar-name {
-  font-size: 14px;
-  font-weight: bold;
-  vertical-align: middle;
+    font-size: 14px;
+    font-weight: bold;
+    vertical-align: middle;
 }
 
 .schedule-time {
-  color: #005aff;
+    color: #005aff;
 }
 
 #calendar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 5px;
-  top: 64px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    top: 64px;
 }
 
 .calendar-more-schedules {
-  display: inline-block;
-  height: 18px;
-  line-height: 18px;
-  padding: 0 5px;
-  border-radius: 3px;
-  border: 1px solid #dddddd;
-  font-size: 14px;
-  text-align: center;
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    padding: 0 5px;
+    border-radius: 3px;
+    border: 1px solid #dddddd;
+    font-size: 14px;
+    text-align: center;
 }
 
 .calendar-footer-more-schedules {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .tui-full-calendar-dayname-container {
-  height: 60px;
+    height: 60px;
 }
 
 .tui-full-calendar-dayname {
-  height: 59px;
+    height: 59px;
 }
 
 .calendar-week-dayname-name {
-  font-size: 12px;
-  line-height: 21px;
-  font-weight: bold;
+    font-size: 12px;
+    line-height: 21px;
+    font-weight: bold;
 }
 
 .calendar-week-dayname-date {
-  font-size: 26px;
+    font-size: 26px;
 }
 
 .calendar-week-dayname-date:hover {
-  cursor: pointer;
-  border-bottom: 2px solid;
+    cursor: pointer;
+    border-bottom: 2px solid;
 }
 
 .tui-full-calendar-month-more-close {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .tui-full-calendar-month-week-item .tui-full-calendar-today .tui-full-calendar-weekday-grid-date-decorator {
-  width: auto;
-  border-radius: 27px;
-  padding: 0 5px;
+    width: auto;
+    border-radius: 27px;
+    padding: 0 5px;
 }
 
 .tui-full-calendar-month-week-item .tui-full-calendar-weekday-grid-date-title {
-  color: red;
+    color: red;
 }
 
 .tui-full-calendar-weekday-exceed-in-month {
-  float: right;
-  margin-top: 4px;
-  margin-right: 5px;
+    float: right;
+    margin-top: 4px;
+    margin-right: 5px;
 }
 
 .tui-full-calendar-month-dayname-item {
-  padding-left: 8px;
-  padding-right: 0;
-  text-align: unset;
+    padding-left: 8px;
+    padding-right: 0;
+    text-align: unset;
 }
 
-.tui-full-calendar-month-week-item>.tui-full-calendar-weekday-grid-line:hover {
-  background-color: #f0f1f5;
+.tui-full-calendar-month-week-item > .tui-full-calendar-weekday-grid-line:hover {
+    background-color: #f0f1f5;
 }
 
 .tui-full-calendar-weekday-grid-footer {
-  left: 0;
-  right: 0;
-  height: 50px;
+    left: 0;
+    right: 0;
+    height: 50px;
 }
 
 .tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed-in-month {
-  float: none;
-  margin-left: 10px;
-  font-size: 12px;
-  color: #7eb9e7;
+    float: none;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #7eb9e7;
 }
 
 .tui-full-calendar-weekday-grid-line:hover .calendar-new-schedule-button {
-  visibility: visible;
+    visibility: visible;
 }
 
 .calendar-new-schedule-button {
-  cursor: pointer;
-  visibility: hidden;
-  border: 1px dashed #ddd;
-  margin: 0 10px;
-  padding: 3px 0;
-  font-size: 12px;
-  text-align: center;
-  color: #999;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+    cursor: pointer;
+    visibility: hidden;
+    border: 1px dashed #ddd;
+    margin: 0 10px;
+    padding: 3px 0;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .more-title-day {
-  font-size: 12px;
-  vertical-align: baseline;
+    font-size: 12px;
+    vertical-align: baseline;
 }
 /** custom fontawesome */
 
 .fa {
-  width: 12px;
-  height: 12px;
-  margin-right: 2px;
+    width: 12px;
+    height: 12px;
+    margin-right: 2px;
 }
