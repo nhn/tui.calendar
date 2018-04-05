@@ -2,6 +2,8 @@
 
 body {
   font-family: 'Noto Sans', sans-serif;
+  color: '#333';
+  font-size: 12px;
 }
 
 /**  custom bootstrap - start */
@@ -38,7 +40,6 @@ body {
 .dropdown-menu {
   top: 25px;
   padding: 3px 0;
-  font-size: 12px;
   border-radius: 2px;
   border: 1px solid #bbb;
 }
@@ -99,7 +100,6 @@ body {
   border-right: 1px solid #d5d5d5;
   padding: 12px 10px;
   background: #fafafa;
-  font-size: 12px;
 }
 
 #right {
@@ -282,7 +282,6 @@ body {
 }
 
 .calendar-week-dayname-name {
-    font-size: 12px;
     line-height: 21px;
     font-weight: bold;
 }
@@ -335,7 +334,6 @@ body {
 .tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed-in-month {
     float: none;
     margin-left: 10px;
-    font-size: 12px;
     color: #7eb9e7;
 }
 
@@ -349,7 +347,6 @@ body {
     border: 1px dashed #ddd;
     margin: 0 10px;
     padding: 3px 0;
-    font-size: 12px;
     text-align: center;
     color: #999;
     position: absolute;
@@ -359,7 +356,6 @@ body {
 }
 
 .more-title-day {
-    font-size: 12px;
     vertical-align: baseline;
 }
 /** custom fontawesome */
