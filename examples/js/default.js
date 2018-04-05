@@ -465,7 +465,9 @@
             allCheckedCalendars = checked;
 
             calendarElements.forEach(function(input) {
+                var span = input.parentNode;
                 input.checked = checked;
+                span.style.backgroundColor = checked ? span.style.borderColor : 'transparent';
             });
 
             CalendarList.forEach(function(calendar) {
@@ -489,6 +491,8 @@
     }
 
     function refreshScheduleVisibility() {
+        var calendarElements = Array.prototype.slice.call(document.querySelectorAll('#calendarList input'));
+
         CalendarList.forEach(function(calendar) {
             if (calendar.checked) {
                 cal.showSchedulesByCalendarID(calendar.id, false);
@@ -498,25 +502,38 @@
         });
 
         cal.render();
+
+        calendarElements.forEach(function(input) {
+            var span = input.nextElementSibling;
+            span.style.backgroundColor = input.checked ? span.style.borderColor : 'transparent';
+        });
     }
 
     function setDropdownCalendarType() {
         var calendarTypeName = document.getElementById('calendarTypeName');
+        var calendarTypeIcon = document.getElementById('calendarTypeIcon');
         var type = cal.viewName;
+        var iconClassName;
 
         if (type === 'day') {
             type = 'Daily';
+            iconClassName = 'icon ic_view_day';
         } else if (type === 'week') {
             type = 'Weekly';
+            iconClassName = 'icon ic_view_week';
         } else if (cal.options.month.visibleWeeksCount === 2) {
             type = '2 weeks';
+            iconClassName = 'icon ic_view_week';
         } else if (cal.options.month.visibleWeeksCount === 3) {
             type = '3 weeks';
+            iconClassName = 'icon ic_view_week';
         } else {
             type = 'Monthly';
+            iconClassName = 'icon ic_view_month';
         }
 
         calendarTypeName.innerHTML = type;
+        calendarTypeIcon.className = iconClassName;
     }
 
     function setRenderRangeText() {
@@ -579,7 +596,12 @@
     var calendarList = document.getElementById('calendarList');
     var html = [];
     CalendarList.forEach(function(calendar) {
-        html.push('<div class="lnb-calendars-item"><label><input type="checkbox" value="' + calendar.id + '"checked><span style="color: ' + calendar.color + ';">' + calendar.name + '</span></label></div>');
+        html.push('<div class="lnb-calendars-item"><label>' +
+            '<input type="checkbox" class="checkbox-round" value="' + calendar.id + '" checked>' +
+            '<span style="border-color: ' + calendar.borderColor + '; background-color: ' + calendar.borderColor + ';"></span>' +
+            '<span>' + calendar.name + '</span>' +
+            '</label></div>'
+        );
     });
     calendarList.innerHTML = html.join('\n');
 

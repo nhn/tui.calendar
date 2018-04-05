@@ -1,6 +1,6 @@
 'use strict';
 
-/*eslint-disable*/
+/* eslint-disable require-jsdoc, no-unused-vars */
 
 var CalendarList = [];
 
@@ -48,50 +48,80 @@ function hexToRGBA(hex) {
     calendar = new CalendarInfo();
     id += 1;
     calendar.id = String(id);
-    calendar.name = 'My calendar';
-    calendar.color = hexToRGBA('#79c87e');
-    calendar.textColor = hexToRGBA('#2c9032');
-    calendar.bgColor = hexToRGBA('#79c87e33');
-    calendar.borderColor = hexToRGBA('#79c87e');
+    calendar.name = 'My Calendar';
+    calendar.color = hexToRGBA('#9e5fff');
+    calendar.textColor = hexToRGBA('#ffffff');
+    calendar.bgColor = hexToRGBA('#9e5fff');
+    calendar.borderColor = hexToRGBA('#9e5fff');
     addCalendar(calendar);
 
     calendar = new CalendarInfo();
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Company';
-    calendar.color = hexToRGBA('#4091d0');
-    calendar.textColor = hexToRGBA('#2b6796');
-    calendar.bgColor = hexToRGBA('#4091d033');
-    calendar.borderColor = hexToRGBA('#4091d0');
+    calendar.color = hexToRGBA('#00a9ff');
+    calendar.textColor = hexToRGBA('#ffffff');
+    calendar.bgColor = hexToRGBA('#00a9ff');
+    calendar.borderColor = hexToRGBA('#00a9ff');
     addCalendar(calendar);
 
     calendar = new CalendarInfo();
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Family';
-    calendar.color = hexToRGBA('#da1b1b');
-    calendar.textColor = hexToRGBA('#9a1313');
-    calendar.bgColor = hexToRGBA('#da1b1b33');
-    calendar.borderColor = hexToRGBA('#da1b1b');
-    addCalendar(calendar);
-
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'Travel';
-    calendar.color = hexToRGBA('#57c6b4');
-    calendar.textColor = hexToRGBA('#1a907d');
-    calendar.bgColor = hexToRGBA('#57c6b433');
-    calendar.borderColor = hexToRGBA('#57c6b4');
+    calendar.color = hexToRGBA('#ff5583');
+    calendar.textColor = hexToRGBA('#ffffff');
+    calendar.bgColor = hexToRGBA('#ff5583');
+    calendar.borderColor = hexToRGBA('#ff5583');
     addCalendar(calendar);
 
     calendar = new CalendarInfo();
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Friend';
-    calendar.color = '#a38705';
-    calendar.textColor = '#1a907d';
-    calendar.bgColor = '#f8cf1433';
-    calendar.borderColor = '#f8cf14';
+    calendar.color = hexToRGBA('#03bd9e');
+    calendar.textColor = hexToRGBA('#ffffff');
+    calendar.bgColor = hexToRGBA('#03bd9e');
+    calendar.borderColor = hexToRGBA('#03bd9e');
+    addCalendar(calendar);
+
+    calendar = new CalendarInfo();
+    id += 1;
+    calendar.id = String(id);
+    calendar.name = 'Travel';
+    calendar.color = '#bbdc00';
+    calendar.textColor = '#ffffff';
+    calendar.bgColor = '#bbdc00';
+    calendar.borderColor = '#bbdc00';
+    addCalendar(calendar);
+
+    calendar = new CalendarInfo();
+    id += 1;
+    calendar.id = String(id);
+    calendar.name = 'etc';
+    calendar.color = '#9d9d9d';
+    calendar.textColor = '#ffffff';
+    calendar.bgColor = '#9d9d9d';
+    calendar.borderColor = '#9d9d9d';
+    addCalendar(calendar);
+
+    calendar = new CalendarInfo();
+    id += 1;
+    calendar.id = String(id);
+    calendar.name = 'Birthdays';
+    calendar.color = '#ffbb3b';
+    calendar.textColor = '#ffffff';
+    calendar.bgColor = '#ffbb3b';
+    calendar.borderColor = '#ffbb3b';
+    addCalendar(calendar);
+
+    calendar = new CalendarInfo();
+    id += 1;
+    calendar.id = String(id);
+    calendar.name = 'National Holidays';
+    calendar.color = '#ff4040';
+    calendar.textColor = '#ffffff';
+    calendar.bgColor = '#ff4040';
+    calendar.borderColor = '#ff4040';
     addCalendar(calendar);
 })();

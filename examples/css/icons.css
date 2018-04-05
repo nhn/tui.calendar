@@ -1,0 +1,87 @@
+.icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.img-bi {
+  background: url('../images/img-bi.png') no-repeat;
+  width: 215px;
+  height: 16px;
+}
+
+.ic_view_month {
+  background: url('../images/ic-view-month.png') no-repeat;
+}
+
+.ic_view_week {
+  background: url('../images/ic-view-week.png') no-repeat;
+}
+
+.ic_view_day {
+  background: url('../images/ic-view-day.png') no-repeat;
+}
+
+.ic-arrow-solid-top {
+  background: url('../images/ic-arrow-solid-top.png') no-repeat;
+}
+
+.ic-arrow-solid-bottom {
+  background: url('../images/ic-arrow-solid-bottom.png') no-repeat;
+}
+.ic-arrow-line-left {
+  background: url('../images/ic-arrow-line-left.png') no-repeat;
+}
+
+.ic-arrow-line-right {
+  background: url('../images/ic-arrow-line-right.png') no-repeat;
+}
+
+.ic-checkbox-checked {
+  background: url('../images/ic-checkbox-checked.png') no-repeat;
+}
+
+.ic-checkbox-normal {
+  background: url('../images/ic-checkbox-normal.png') no-repeat;
+}
+
+.ic-close {
+  background: url('../images/ic-close.png') no-repeat;
+}
+
+input[type='checkbox'].checkbox-square {
+  display: none;
+}
+
+input[type='checkbox'].checkbox-square+span {
+  display: inline-block;
+  cursor: pointer;
+  line-height: 14px;
+  margin-right: 8px;
+  width: 14px;
+  height: 14px;
+  background: url('../images/ic-checkbox-normal.png') no-repeat;
+  vertical-align: middle;
+}
+
+input[type='checkbox'].checkbox-square:checked+span {
+  background: url('../images/ic-checkbox-checked.png') no-repeat;
+}
+
+input[type='checkbox'].checkbox-round {
+  display: none;
+}
+
+input[type='checkbox'].checkbox-round + span {
+  display: inline-block;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: middle;
+  margin-right: 8px;
+  border-radius: 8px;
+  border: solid 2px;
+  background: transparent;
+}
