@@ -231,6 +231,10 @@ Handlebars.registerHelper({
         return a - b;
     },
 
+    'getRight': function(a, b) {
+        return 100 - (a + b);
+    },
+
     /**
      * Get css prefix in global configuration
      * @returns {string} css prefix
@@ -321,5 +325,27 @@ Handlebars.registerHelper({
 
     'weekGridFooterExceed-tmpl': function(hiddenSchedules) {
         return '+' + hiddenSchedules;
+    },
+
+    'dayGridTitle-tmpl': function(viewName) {
+        var tmpl = Handlebars.helpers[viewName + 'Title-tmpl'];
+        if (tmpl) {
+            return tmpl(viewName);
+        }
+
+        return viewName;
+    },
+
+    'schedule-tmpl': function(model) {
+        var tmpl = Handlebars.helpers[model.category + '-tmpl'];
+        if (tmpl) {
+            return tmpl(model);
+        }
+
+        return '';
+    },
+
+    'collapseBtnTitle-tmpl': function() {
+        return '∧';
     }
 });

@@ -218,13 +218,15 @@ var Week = {
      * @this Base
      * @param {Date} start start date.
      * @param {Date} end end date.
+     * @param {Array.<object>} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
      * @param {function[]} [andFilters] - optional filters to applying search query
      * @returns {object} schedules grouped by dates.
      */
-    findByDateRange: function(start, end, andFilters) {
+    findByDateRange: function(start, end, panels, andFilters) {
         var ctrlCore = this.Core,
             ctrlWeek = this.Week,
             filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
+            scheduleTypes = util.pluck(panels, 'name'),
             modelColl,
             group;
 
@@ -234,12 +236,78 @@ var Week = {
         modelColl = this.schedules.find(filter);
         modelColl = ctrlCore.convertToViewModel(modelColl);
 
-        group = modelColl.groupBy(['task', 'allday', 'time'], this.groupFunc);
-        group.task = ctrlWeek.getViewModelForAlldayView(start, end, group.task);
-        group.allday = ctrlWeek.getViewModelForAlldayView(start, end, group.allday);
-        group.time = ctrlWeek.getViewModelForTimeView(start, end, group.time);
+        group = modelColl.groupBy(scheduleTypes, this.groupFunc);
+        util.forEach(panels, function(panel) {
+            var name = panel.name;
+            if (panel.type === 'daygrid') {
+                group[name] = ctrlWeek.getViewModelForAlldayView(start, end, group[name]);
+            } else if (panel.type === 'timegrid') {
+                group[name] = ctrlWeek.getViewModelForTimeView(start, end, group[name]);
+            }
+        });
 
         return group;
+    },
+
+    /* eslint max-nested-callbacks: 0 */
+    /**
+     * Make exceed date information
+     * @param {number} maxCount - exceed schedule count
+     * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+     * @param {Array.<TZDate>} range - date range of one week
+     * @returns {object} exceedDate
+     */
+    getExceedDate: function(maxCount, eventsInDateRange, range) {
+        var exceedDate = {};
+
+        util.forEach(range, function(date) {
+            var ymd = datetime.format(date, 'YYYYMMDD');
+            exceedDate[ymd] = 0;
+        });
+
+        util.forEach(eventsInDateRange, function(matrix) {
+            util.forEach(matrix, function(column) {
+                util.forEach(column, function(viewModel) {
+                    var period;
+                    if (!viewModel || viewModel.top < maxCount) {
+                        return;
+                    }
+
+                    period = datetime.range(
+                        viewModel.getStarts(),
+                        viewModel.getEnds(),
+                        datetime.MILLISECONDS_PER_DAY
+                    );
+
+                    util.forEach(period, function(date) {
+                        var ymd = datetime.format(date, 'YYYYMMDD');
+                        exceedDate[ymd] += 1;
+                    });
+                });
+            });
+        });
+
+        return exceedDate;
+    },
+
+    /**
+     * Exclude overflow schedules from matrices
+     * @param {array} matrices - The matrices for schedule placing.
+     * @param {number} visibleScheduleCount - maximum visible count on panel
+     * @returns {array} - The matrices for schedule placing except overflowed schedules.
+     */
+    excludeExceedSchedules: function(matrices, visibleScheduleCount) {
+        return matrices.map(function(matrix) {
+            return matrix.map(function(row) {
+                if (row.length > visibleScheduleCount) {
+                    return row.filter(function(item) {
+                        return item.top < visibleScheduleCount;
+                    }, this);
+                }
+
+                return row;
+            }, this);
+        }, this);
     }
 };
 

@@ -52,6 +52,7 @@ function getHoursLabels(start, end, hasHourMarker) {
 /**
  * @constructor
  * @extends {View}
+ * @param {string} name - view name
  * @param {object} options The object for view customization.
  * @param {string} options.renderStartDate - render start date. YYYY-MM-DD
  * @param {string} options.renderEndDate - render end date. YYYY-MM-DD
@@ -59,12 +60,13 @@ function getHoursLabels(start, end, hasHourMarker) {
  * @param {number} [options.hourEnd=0] You can change view's end hours.
  * @param {HTMLElement} container Container element.
  */
-function TimeGrid(options, container) {
+function TimeGrid(name, options, container) {
     container = domutil.appendHTMLElement(
         'div',
         container,
         config.classname('timegrid-container')
     );
+    name = name || 'time';
 
     View.call(this, container);
 
@@ -80,6 +82,7 @@ function TimeGrid(options, container) {
      * @type {object}
      */
     this.options = util.extend({
+        viewName: name,
         renderStartDate: '',
         renderEndDate: '',
         hourStart: 0,
@@ -258,7 +261,8 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
  * @param {object} viewModel ViewModel list from Week view.
  */
 TimeGrid.prototype.render = function(viewModel) {
-    var timeViewModel = viewModel.schedulesInDateRange.time,
+    var opt = this.options,
+        timeViewModel = viewModel.schedulesInDateRange[opt.viewName],
         container = this.container,
         grids = viewModel.grids,
         range = viewModel.range,

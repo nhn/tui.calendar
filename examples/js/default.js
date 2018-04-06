@@ -23,13 +23,13 @@
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
             },
             milestoneTitle: function() {
-                return 'Milestone';
+                return '<div class="weekly-left-title"><span class="weekly-left-content">Milestone</span></div>';
             },
             task: function(schedule) {
                 return '#' + schedule.title;
             },
             taskTitle: function() {
-                return 'Task';
+                return '<div class="weekly-left-title"><span class="weekly-left-content">Task</span></div>';
             },
             allday: function(schedule) {
                 var html = [];
@@ -52,7 +52,7 @@
                 return html.join('');
             },
             alldayTitle: function() {
-                return 'All Day';
+                return '<div class="weekly-left-title"><span class="weekly-left-content">All Day</span></div>';
             },
             alldayCollapseBtnTitle: function() {
                 return '∧';
@@ -112,6 +112,9 @@
             },
             monthDayname: function(dayname) {
                 return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
+            },
+            collapseBtnTitle: function() {
+                return '<i class="fa fa-chevron-up"></i>';
             }
         },
         month: {

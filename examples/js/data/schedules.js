@@ -97,6 +97,11 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.bgColor = calendar.bgColor;
     schedule.borderColor = calendar.borderColor;
 
+    if (schedule.category === 'milestone') {
+        schedule.bgColor = 'transparent';
+        schedule.borderColor = 'transparent';
+    }
+
     schedule.raw.memo = chance.sentence();
     schedule.raw.hasToOrCc = chance.bool({likelihood: 70});
     schedule.raw.hasRecurrenceRule = chance.bool({likelihood: 20});

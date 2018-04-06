@@ -8,8 +8,7 @@ var util = require('tui-code-snippet');
 var Base = require('../controller/base'),
     Core = require('../controller/viewMixin/core'),
     Week = require('../controller/viewMixin/week'),
-    Month = require('../controller/viewMixin/month'),
-    datetime = require('../common/datetime');
+    Month = require('../controller/viewMixin/month');
 
 /**
  * Mixin object. create object property to target and mix to that
@@ -31,60 +30,11 @@ function mixin(from, to, propertyName) {
  * @returns {Base} The controller instance.
  */
 module.exports = function(options) {
-    var controller = new Base(options),
-        originQuery;
+    var controller = new Base(options);
 
     mixin(Core, controller, 'Core');
     mixin(Week, controller, 'Week');
     mixin(Month, controller, 'Month');
-
-    /**********
-     * Override Week#findByDateRange for support schedules that category is 'miles
-     * tone', 'task'.
-     **********/
-
-    originQuery = controller.Week.findByDateRange;
-
-    /**
-     * Find schedule and get view model for specific month
-     * @this Base
-     * @override
-     * @param {Date} start - start date to find schedules
-     * @param {Date} end - end date to find schedules
-     * @param {function[]} [andFilters] - optional filters to applying search query
-     * @returns {object} view model data
-     */
-    function findByDateRange(start, end, andFilters) {
-        var dateRange = datetime.range(
-                datetime.start(start),
-                datetime.end(end),
-                datetime.MILLISECONDS_PER_DAY
-            ),
-            ymdRange = util.map(dateRange, function(d) {
-                return datetime.format(d, 'YYYY-MM-DD');
-            }),
-            viewModels;
-
-        andFilters = andFilters || [];
-        viewModels = originQuery(start, end, andFilters);
-
-        util.forEach(viewModels, function(coll, key, obj) {
-            var groupedByYMD;
-
-            // Change view model
-            if (key === 'milestone') {
-                groupedByYMD = coll.groupBy(ymdRange, function(viewModel) {
-                    return datetime.format(viewModel.model.end, 'YYYY-MM-DD');
-                });
-
-                obj[key] = groupedByYMD;
-            }
-        });
-
-        return viewModels;
-    }
-
-    controller.Week.findByDateRange = findByDateRange;
 
     return controller;
 };

@@ -12,7 +12,7 @@ var config = require('../../config'),
     View = require('../../view/view'),
     FloatingLayer = require('../../common/floatingLayer'),
     common = require('../../common/common'),
-    tmpl = require('./more.hbs');
+    tmpl = require('../template/month/more.hbs');
 
 /**
  * @constructor

@@ -78,7 +78,7 @@ var mmin = Math.min;
  *   @property {function} [template.monthDayname] - monthly dayname template function
  *  @property {object} [week] - options for week view
  *   @property {number} [week.startDayOfWeek=0] - start day of week
- *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
+ *   @deprecated @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
  *   @property {Array.<string>} [week.daynames] - day names in weekly and daily.
  * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
@@ -1226,6 +1226,7 @@ Calendar.prototype.toggleView = function(newViewName, force) {
 };
 
 /**
+ * @deprecated
  * Toggle task view('Milestone', 'Task') panel
  * @param {boolean} enabled - use task view
  * @example
@@ -1245,6 +1246,7 @@ Calendar.prototype.toggleTaskView = function(enabled) {
 };
 
 /**
+ * @deprecated
  * Toggle schedule view('AllDay', TimeGrid') panel
  * @param {boolean} enabled - use task view
  * @example

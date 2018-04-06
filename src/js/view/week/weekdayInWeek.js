@@ -6,7 +6,7 @@
 
 var util = require('tui-code-snippet');
 var Weekday = require('../weekday'),
-    tmpl = require('./weekdayInWeek.hbs'),
+    tmpl = require('../template/week/weekdayInWeek.hbs'),
     datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var config = require('../../config');

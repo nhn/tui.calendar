@@ -1,0 +1,20 @@
+// DayGrid view
++prefix-classes(daygrid)
+    .layout
+        height: 100%;
+
+.{css-prefix}daygrid-layout
+    .{css-prefix}right
+        overflow-y: hidden
+
+// Guide element
++prefix-classes(daygrid + guide-)
+    .creation-block
+        position: absolute
+        top: 0
+        bottom: 0
+        border: 1px solid #135de6
+        background-color: rgba(19, 93, 230, 0.1)
+
+    .move
+        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2)
