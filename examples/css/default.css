@@ -112,6 +112,7 @@ body {
 
 #lnb label {
   margin-bottom: 0;
+  cursor: pointer;
 }
 
 .lnb-new-schedule {
