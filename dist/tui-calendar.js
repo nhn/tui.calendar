@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.5 | Thu Mar 29 2018
+ * @version 0.10.0 | Mon Apr 09 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -319,6 +319,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return a - b;
 	    },
 	
+	    'getRight': function(a, b) {
+	        return 100 - (a + b);
+	    },
+	
 	    /**
 	     * Get css prefix in global configuration
 	     * @returns {string} css prefix
@@ -409,6 +413,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    'weekGridFooterExceed-tmpl': function(hiddenSchedules) {
 	        return '+' + hiddenSchedules;
+	    },
+	
+	    'dayGridTitle-tmpl': function(viewName) {
+	        var tmpl = Handlebars.helpers[viewName + 'Title-tmpl'];
+	        if (tmpl) {
+	            return tmpl(viewName);
+	        }
+	
+	        return viewName;
+	    },
+	
+	    'schedule-tmpl': function(model) {
+	        var tmpl = Handlebars.helpers[model.category + '-tmpl'];
+	        if (tmpl) {
+	            return tmpl(model);
+	        }
+	
+	        return '';
+	    },
+	
+	    'collapseBtnTitle-tmpl': function() {
+	        return '∧';
 	    }
 	});
 
@@ -2640,10 +2666,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * container
 	     * @param {string} selector - CSS selector {@see domutil#find}
 	     * @param {HTMLElement} container - container element
+	     * @param {boolean} force - force to apply
 	     */
-	    setAutoEllipsis: function(selector, container) {
+	    setAutoEllipsis: function(selector, container, force) {
 	        util.forEach(domutil.find(selector, container, true), function(el) {
-	            if (el.offsetWidth < el.scrollWidth) {
+	            if (force || el.offsetWidth < el.scrollWidth) {
 	                el.setAttribute('title', domutil.getData(el, 'title'));
 	            }
 	        });
@@ -4233,6 +4260,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        checkCondRegExp: alldayCheckPermission
 	    },
 	
+	    daygrid: {
+	        getViewIDRegExp: alldayGetViewID,
+	        checkCondRegExp: alldayCheckPermission
+	    },
+	
 	    time: {
 	        getViewIDRegExp: timeGetViewID
 	    }
@@ -4260,10 +4292,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Drag = __webpack_require__(38),
 	    controllerFactory = __webpack_require__(39),
 	    weekViewFactory = __webpack_require__(49),
-	    monthViewFactory = __webpack_require__(91),
+	    monthViewFactory = __webpack_require__(86),
 	    TZDate = __webpack_require__(28).Date,
 	    config = __webpack_require__(34),
-	    timezone = __webpack_require__(28);
+	    timezone = __webpack_require__(28),
+	    reqAnimFrame = __webpack_require__(52);
 	
 	var mmin = Math.min;
 	
@@ -4325,7 +4358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   @property {function} [template.monthDayname] - monthly dayname template function
 	 *  @property {object} [week] - options for week view
 	 *   @property {number} [week.startDayOfWeek=0] - start day of week
-	 *   @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
+	 *   @deprecated @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
 	 *   @property {Array.<string>} [week.daynames] - day names in weekly and daily.
 	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 	 *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
@@ -4874,7 +4907,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.render();
 	 */
 	Calendar.prototype.render = function() {
-	    this.layout.render();
+	    var renderFunc = function() {
+	        if (this.layout) {
+	            this.layout.render();
+	        }
+	        this.requestRender = null;
+	    };
+	
+	    if (this.requestRender) {
+	        reqAnimFrame.cancelAnimFrame(this.requestRender);
+	    }
+	    this.requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
 	};
 	
 	/**
@@ -5463,6 +5506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
+	 * @deprecated
 	 * Toggle task view('Milestone', 'Task') panel
 	 * @param {boolean} enabled - use task view
 	 * @example
@@ -5482,6 +5526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
+	 * @deprecated
 	 * Toggle schedule view('AllDay', TimeGrid') panel
 	 * @param {boolean} enabled - use task view
 	 * @example
@@ -5700,6 +5745,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {View}
 	     */
 	    this.parent = null;
+	
+	    /**
+	     * state of view
+	     */
+	    this.state = {};
 	}
 	
 	/**
@@ -5842,6 +5892,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	View.prototype.cssprefix = function(className) {
 	    return this.cssPrefix + (className || '');
+	};
+	
+	/**
+	 * set state
+	 * @param {object} state - state
+	 */
+	View.prototype.setState = function(state) {
+	    util.extend(this.state, state);
 	};
 	
 	util.CustomEvents.mixin(View);
@@ -6107,8 +6165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Base = __webpack_require__(40),
 	    Core = __webpack_require__(45),
 	    Week = __webpack_require__(46),
-	    Month = __webpack_require__(48),
-	    datetime = __webpack_require__(27);
+	    Month = __webpack_require__(48);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -6130,60 +6187,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Base} The controller instance.
 	 */
 	module.exports = function(options) {
-	    var controller = new Base(options),
-	        originQuery;
+	    var controller = new Base(options);
 	
 	    mixin(Core, controller, 'Core');
 	    mixin(Week, controller, 'Week');
 	    mixin(Month, controller, 'Month');
-	
-	    /**********
-	     * Override Week#findByDateRange for support schedules that category is 'miles
-	     * tone', 'task'.
-	     **********/
-	
-	    originQuery = controller.Week.findByDateRange;
-	
-	    /**
-	     * Find schedule and get view model for specific month
-	     * @this Base
-	     * @override
-	     * @param {Date} start - start date to find schedules
-	     * @param {Date} end - end date to find schedules
-	     * @param {function[]} [andFilters] - optional filters to applying search query
-	     * @returns {object} view model data
-	     */
-	    function findByDateRange(start, end, andFilters) {
-	        var dateRange = datetime.range(
-	                datetime.start(start),
-	                datetime.end(end),
-	                datetime.MILLISECONDS_PER_DAY
-	            ),
-	            ymdRange = util.map(dateRange, function(d) {
-	                return datetime.format(d, 'YYYY-MM-DD');
-	            }),
-	            viewModels;
-	
-	        andFilters = andFilters || [];
-	        viewModels = originQuery(start, end, andFilters);
-	
-	        util.forEach(viewModels, function(coll, key, obj) {
-	            var groupedByYMD;
-	
-	            // Change view model
-	            if (key === 'milestone') {
-	                groupedByYMD = coll.groupBy(ymdRange, function(viewModel) {
-	                    return datetime.format(viewModel.model.end, 'YYYY-MM-DD');
-	                });
-	
-	                obj[key] = groupedByYMD;
-	            }
-	        });
-	
-	        return viewModels;
-	    }
-	
-	    controller.Week.findByDateRange = findByDateRange;
 	
 	    return controller;
 	};
@@ -7928,13 +7936,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @this Base
 	     * @param {Date} start start date.
 	     * @param {Date} end end date.
+	     * @param {Array.<object>} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
 	     * @param {function[]} [andFilters] - optional filters to applying search query
 	     * @returns {object} schedules grouped by dates.
 	     */
-	    findByDateRange: function(start, end, andFilters) {
+	    findByDateRange: function(start, end, panels, andFilters) {
 	        var ctrlCore = this.Core,
 	            ctrlWeek = this.Week,
 	            filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
+	            scheduleTypes = util.pluck(panels, 'name'),
 	            modelColl,
 	            group;
 	
@@ -7944,12 +7954,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	        modelColl = this.schedules.find(filter);
 	        modelColl = ctrlCore.convertToViewModel(modelColl);
 	
-	        group = modelColl.groupBy(['task', 'allday', 'time'], this.groupFunc);
-	        group.task = ctrlWeek.getViewModelForAlldayView(start, end, group.task);
-	        group.allday = ctrlWeek.getViewModelForAlldayView(start, end, group.allday);
-	        group.time = ctrlWeek.getViewModelForTimeView(start, end, group.time);
+	        group = modelColl.groupBy(scheduleTypes, this.groupFunc);
+	        util.forEach(panels, function(panel) {
+	            var name = panel.name;
+	            if (panel.type === 'daygrid') {
+	                group[name] = ctrlWeek.getViewModelForAlldayView(start, end, group[name]);
+	            } else if (panel.type === 'timegrid') {
+	                group[name] = ctrlWeek.getViewModelForTimeView(start, end, group[name]);
+	            }
+	        });
 	
 	        return group;
+	    },
+	
+	    /* eslint max-nested-callbacks: 0 */
+	    /**
+	     * Make exceed date information
+	     * @param {number} maxCount - exceed schedule count
+	     * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+	     * @param {Array.<TZDate>} range - date range of one week
+	     * @returns {object} exceedDate
+	     */
+	    getExceedDate: function(maxCount, eventsInDateRange, range) {
+	        var exceedDate = {};
+	
+	        util.forEach(range, function(date) {
+	            var ymd = datetime.format(date, 'YYYYMMDD');
+	            exceedDate[ymd] = 0;
+	        });
+	
+	        util.forEach(eventsInDateRange, function(matrix) {
+	            util.forEach(matrix, function(column) {
+	                util.forEach(column, function(viewModel) {
+	                    var period;
+	                    if (!viewModel || viewModel.top < maxCount) {
+	                        return;
+	                    }
+	
+	                    period = datetime.range(
+	                        viewModel.getStarts(),
+	                        viewModel.getEnds(),
+	                        datetime.MILLISECONDS_PER_DAY
+	                    );
+	
+	                    util.forEach(period, function(date) {
+	                        var ymd = datetime.format(date, 'YYYYMMDD');
+	                        exceedDate[ymd] += 1;
+	                    });
+	                });
+	            });
+	        });
+	
+	        return exceedDate;
+	    },
+	
+	    /**
+	     * Exclude overflow schedules from matrices
+	     * @param {array} matrices - The matrices for schedule placing.
+	     * @param {number} visibleScheduleCount - maximum visible count on panel
+	     * @returns {array} - The matrices for schedule placing except overflowed schedules.
+	     */
+	    excludeExceedSchedules: function(matrices, visibleScheduleCount) {
+	        return matrices.map(function(matrix) {
+	            return matrix.map(function(row) {
+	                if (row.length > visibleScheduleCount) {
+	                    return row.filter(function(item) {
+	                        return item.top < visibleScheduleCount;
+	                    }, this);
+	                }
+	
+	                return row;
+	            }, this);
+	        }, this);
 	    }
 	};
 	
@@ -8488,60 +8564,80 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// Sub views
 	var DayName = __webpack_require__(54);
-	var TimeGrid = __webpack_require__(56);
-	var Allday = __webpack_require__(62);
-	var Milestone = __webpack_require__(67);
-	var TaskView = __webpack_require__(69);
-	
+	var DayGrid = __webpack_require__(56);
+	var TimeGrid = __webpack_require__(61);
 	// Handlers
-	var AlldayClick = __webpack_require__(71);
-	var AlldayCreation = __webpack_require__(75);
-	var AlldayMove = __webpack_require__(72);
-	var AlldayResize = __webpack_require__(77);
-	var DayNameClick = __webpack_require__(79);
-	var TimeClick = __webpack_require__(80);
-	var TimeCreation = __webpack_require__(81);
-	var TimeMove = __webpack_require__(84);
-	var TimeResize = __webpack_require__(88);
-	var MilestoneClick = __webpack_require__(90);
+	var DayNameClick = __webpack_require__(67);
+	var DayGridClick = __webpack_require__(68);
+	var DayGridCreation = __webpack_require__(72);
+	var DayGridMove = __webpack_require__(69);
+	var DayGridResize = __webpack_require__(74);
+	var TimeClick = __webpack_require__(76);
+	var TimeCreation = __webpack_require__(77);
+	var TimeMove = __webpack_require__(80);
+	var TimeResize = __webpack_require__(84);
 	
-	var DEFAULT_VIEW_SEQUENCE = ['Milestone', 'Task', 'AllDay', 'TimeGrid'];
-	var DEFAULT_VIEWS = {
-	    'Milestone': {
+	var DAYGRID_HANDLDERS = {
+	    'click': DayGridClick,
+	    'creation': DayGridCreation,
+	    'move': DayGridMove,
+	    'resize': DayGridResize
+	};
+	var TIMEGRID_HANDLERS = {
+	    'click': TimeClick,
+	    'creation': TimeCreation,
+	    'move': TimeMove,
+	    'resize': TimeResize
+	};
+	var DEFAULT_PANELS = [
+	    {
+	        name: 'milestone',
+	        type: 'daygrid',
 	        minHeight: 20,
-	        height: 80,
 	        maxHeight: 80,
+	        showExpandableButton: true,
+	        maxExpandableHeight: 230,
+	        handlers: ['click'],
 	        show: true
 	    },
-	    'Task': {
+	    {
+	        name: 'task',
+	        type: 'daygrid',
 	        minHeight: 40,
-	        height: 120,
 	        maxHeight: 120,
+	        showExpandableButton: true,
+	        maxExpandableHeight: 230,
+	        handlers: ['click', 'move'],
 	        show: true
 	    },
-	    'AllDay': {
+	    {
+	        name: 'allday',
+	        type: 'daygrid',
 	        minHeight: 20,
-	        height: 80,
 	        maxHeight: 80,
-	        show: true,
-	        maxExpandCount: 10
+	        showExpandableButton: true,
+	        maxExpandableHeight: 230,
+	        handlers: ['click', 'creation', 'move', 'resize'],
+	        show: true
 	    },
-	    'TimeGrid': {
+	    {
+	        name: 'time',
+	        type: 'timegrid',
 	        autoHeight: true,
+	        handlers: ['click', 'creation', 'move', 'resize'],
 	        show: true
 	    }
-	};
+	];
 	
 	/* eslint-disable complexity*/
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
-	    var viewSequence = options.week.viewSequence || DEFAULT_VIEW_SEQUENCE,
-	        views = options.week.views || DEFAULT_VIEWS,
-	        panels = [],
-	        isAllDayPanelFirstRender = true;
-	    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
-	        milestoneView, taskView, alldayView, timeGridView, alldayPanel;
+	    var panels = options.week.panels || DEFAULT_PANELS,
+	        vpanels = [];
+	    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
 	
-	    weekView = new Week(null, options.week, layoutContainer);
+	    util.extend(options.week, {panels: panels});
+	
+	    weekView = new Week(null, options.week, layoutContainer, panels);
 	    weekView.handler = {
 	        click: {},
 	        dayname: {},
@@ -8550,33 +8646,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        resize: {}
 	    };
 	
-	    // Change visibilities
-	    util.forEach(views, function(value, key) {
-	        if (key === 'Milestone' || key === 'Task') {
-	            value.show = options.taskView;
-	        } else if (key === 'AllDay' || key === 'TimeGrid') {
-	            value.show = options.scheduleView;
-	        }
-	    });
-	
 	    // Make panels by view sequence and visibilities
-	    util.forEach(viewSequence, function(name) {
-	        var view = views[name];
-	        if (view.show) {
-	            if (panels.length) {
-	                panels.push({
+	    util.forEach(panels, function(panel) {
+	        var name = panel.name;
+	
+	        // Change visibilities
+	        if (name === 'milestone' || name === 'task') {
+	            panel.show = options.taskView;
+	        } else if (name === 'allday' || name === 'time') {
+	            panel.show = options.scheduleView;
+	        }
+	
+	        if (panel.show) {
+	            if (vpanels.length) {
+	                vpanels.push({
 	                    isSplitter: true
 	                });
 	            }
-	            panels.push(util.extend({
-	                name: name
-	            }, view));
+	            vpanels.push(util.extend({}, panel));
 	        }
 	    });
 	
-	    if (panels.length) {
-	        panels[panels.length - 1].autoHeight = true;
-	        panels[panels.length - 1].maxHeight = null;
+	    if (vpanels.length) {
+	        vpanels[vpanels.length - 1].autoHeight = true;
+	        vpanels[vpanels.length - 1].maxHeight = null;
 	    }
 	
 	    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
@@ -8595,101 +8688,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
 	
 	    vLayout = new VLayout({
-	        panels: panels,
+	        panels: vpanels,
 	        panelHeights: options.week.panelHeights || []
 	    }, vLayoutContainer);
 	
 	    weekView.vLayout = vLayout;
 	
-	    if (util.pick(views, 'Milestone').show) {
-	        /**********
-	         * 마일스톤
-	         **********/
-	        milestoneView = new Milestone(options.week, vLayout.getPanelByName('Milestone').container);
-	        milestoneView.on('afterRender', function(viewModel) {
-	            vLayout.getPanelByName('Milestone').setHeight(null, viewModel.height);
-	        });
-	        weekView.addChild(milestoneView);
-	        weekView.handler.click.milestone = new MilestoneClick(dragHandler, milestoneView, baseController);
-	    }
+	    util.forEach(panels, function(panel) {
+	        var name = panel.name;
+	        var handlers = panel.handlers;
+	        var view;
 	
-	    if (util.pick(views, 'Task').show) {
-	        /**********
-	         * 업무
-	         **********/
-	        taskView = new TaskView(options.week, vLayout.getPanelByName('Task').container);
-	        taskView.on('afterRender', function() {
-	            vLayout.getPanelByName('Task').setHeight(null, taskView.contentHeight);
-	        });
-	        weekView.addChild(taskView);
-	        weekView.handler.click.task = new AlldayClick(dragHandler, taskView, baseController);
-	        weekView.handler.move.task = new AlldayMove(dragHandler, taskView, baseController);
-	    }
+	        if (!panel.show) {
+	            return;
+	        }
 	
-	    if (util.pick(views, 'AllDay').show) {
-	        /**********
-	         * 종일일정
-	         **********/
-	        alldayPanel = vLayout.getPanelByName('AllDay');
-	        alldayView = new Allday(options.week, alldayPanel.container, alldayPanel.options);
-	        alldayView.on('afterRender', function() {
-	            if (alldayView.viewType === 'toggle' && !alldayView.collapsed) {
-	                alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
-	            }
-	            if (isAllDayPanelFirstRender) {
-	                alldayPanel.setHeight(null, alldayView.options.height);
-	                isAllDayPanelFirstRender = false;
-	            } else {
-	                alldayPanel.setHeight(null, alldayView.contentHeight);
-	            }
-	        });
-	
-	        weekView.addChild(alldayView);
-	        weekView.handler.click.allday = new AlldayClick(dragHandler, alldayView, baseController);
-	        weekView.handler.creation.allday = new AlldayCreation(dragHandler, alldayView, baseController);
-	        weekView.handler.move.allday = new AlldayMove(dragHandler, alldayView, baseController);
-	        weekView.handler.resize.allday = new AlldayResize(dragHandler, alldayView, baseController);
-	
-	        weekView.handler.click.allday.on('clickExpand', function(index) {
-	            alldayView.prevMaxHeight = alldayView.aboutMe.maxHeight;
-	            alldayPanel.options.maxHeight = alldayView.getExpandMaxHeight();
-	            alldayPanel.isHeightForcedSet = false;
-	            alldayView.collapsed = false;
-	            alldayView.aboutMe.forcedLayout = false;
-	            alldayView.aboutMe.collapseBtnIndex = index;
-	            reqAnimFrame.requestAnimFrame(function() {
-	                weekView.render();
+	        if (panel.type === 'daygrid') {
+	            /**********
+	             * Schedule panel by Grid
+	             **********/
+	            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container);
+	            view.on('afterRender', function(viewModel) {
+	                vLayout.getPanelByName(name).setHeight(null, viewModel.height);
 	            });
-	        });
 	
-	        weekView.handler.click.allday.on('clickCollapse', function() {
-	            var newHeight = alldayView.prevMaxHeight;
-	            delete alldayView.prevMaxHeight;
-	            alldayPanel.options.maxHeight = newHeight;
-	            alldayPanel.setHeight(null, newHeight);
-	            alldayView.collapsed = true;
-	            reqAnimFrame.requestAnimFrame(function() {
-	                weekView.render();
+	            weekView.addChild(view);
+	
+	            util.forEach(handlers, function(type) {
+	                weekView.handler[type][name] = new DAYGRID_HANDLDERS[type](dragHandler, view, baseController);
+	                view.addHandler(type, weekView.handler[type][name], vLayout.getPanelByName(name));
 	            });
-	        });
+	        } else if (panel.type === 'timegrid') {
+	            /**********
+	             * Schedule panel by TimeGrid
+	             **********/
+	            view = new TimeGrid(name, options.week, vLayout.getPanelByName(name).container);
+	            weekView.addChild(view);
+	            util.forEach(handlers, function(type) {
+	                weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController);
+	            });
+	        }
+	    });
 	
-	        alldayPanel.on('resize', function() {
-	            alldayView.aboutMe.forcedLayout = true;
+	    vLayout.on('resize', function() {
+	        reqAnimFrame.requestAnimFrame(function() {
 	            weekView.render();
 	        });
-	    }
-	
-	    if (util.pick(views, 'TimeGrid').show) {
-	        /**********
-	         * 시간별 일정
-	         **********/
-	        timeGridView = new TimeGrid(options.week, vLayout.getPanelByName('TimeGrid').container);
-	        weekView.addChild(timeGridView);
-	        weekView.handler.click.time = new TimeClick(dragHandler, timeGridView, baseController);
-	        weekView.handler.creation.time = new TimeCreation(dragHandler, timeGridView, baseController);
-	        weekView.handler.move.time = new TimeMove(dragHandler, timeGridView, baseController);
-	        weekView.handler.resize.time = new TimeResize(dragHandler, timeGridView, baseController);
-	    }
+	    });
 	
 	    weekView.on('afterRender', function() {
 	        vLayout.refresh();
@@ -8723,9 +8768,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            vLayout.refresh();
 	        },
 	        scrollToNow: function() {
-	            if (timeGridView) {
-	                timeGridView.scrollToNow();
-	            }
+	            weekView.children.each(function(childView) {
+	                if (childView.scrollToNow) {
+	                    childView.scrollToNow();
+	                }
+	            });
 	        }
 	    };
 	};
@@ -9229,6 +9276,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
+	 * set max height of panel
+	 * @param {number} maxHeight - maxHeight
+	 */
+	VPanel.prototype.setMaxHeight = function(maxHeight) {
+	    this.options.maxHeight = maxHeight;
+	};
+	
+	/**
+	 * set forced height flag
+	 * @param {boolean} set - enable or not
+	 */
+	VPanel.prototype.setHeightForcedSet = function(set) {
+	    this.isHeightForcedSet = set;
+	};
+	
+	/**
+	 * get forced height flag
+	 * @returns {boolean} set - enable or not
+	 */
+	VPanel.prototype.getHeightForcedSet = function() {
+	    return this.isHeightForcedSet;
+	};
+	
+	/**
 	 * set height of html element
 	 * @param {HTMLElement} [container] - container element
 	 * @param {number} newHeight - height
@@ -9435,9 +9506,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *  if not supplied then use +3d from today. YYYY-MM-DD format.
 	 * @param {string} [options.cssPrefix] - CSS classname prefix
 	 * @param {HTMLElement} container The element to use container for this view.
+	 * @param {object} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
 	 * @extends {View}
 	 */
-	function Week(controller, options, container) {
+	function Week(controller, options, container, panels) {
 	    var range;
 	
 	    container = domutil.appendHTMLElement('div', container);
@@ -9467,6 +9539,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {Base.Week}
 	     */
 	    this.controller = controller;
+	
+	    /**
+	     * Schedule Panels
+	     * @type {Array.<object>}
+	     */
+	    this.panels = panels;
 	}
 	
 	util.inherit(Week, View);
@@ -9509,6 +9587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    schedulesInDateRange = this.controller.findByDateRange(
 	        datetime.start(renderStartDate),
 	        datetime.end(renderEndDate),
+	        this.panels,
 	        scheduleFilter
 	    );
 	
@@ -9702,6 +9781,703 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
+	 * @fileoverview DayGrid in weekly view
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    datetime = __webpack_require__(27),
+	    domutil = __webpack_require__(31),
+	    TZDate = __webpack_require__(28).Date,
+	    View = __webpack_require__(37),
+	    DayGridSchedule = __webpack_require__(57),
+	    baseTmpl = __webpack_require__(60),
+	    reqAnimFrame = __webpack_require__(52);
+	var mmax = Math.max,
+	    mmin = Math.min;
+	
+	/**
+	 * @constructor
+	 * @extends {Weekday}
+	 * @param {string} name - view name
+	 * @param {object} options - options for DayGridSchedule view
+	 * @param {number} [options.heightPercent] - height percent of view
+	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
+	 *  make create easy.
+	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
+	 * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
+	 * @param {HTMLDIVElement} container - DOM element to use container for this
+	 *  view.
+	 */
+	function DayGrid(name, options, container) {
+	    container = domutil.appendHTMLElement(
+	        'div',
+	        container,
+	        config.classname('daygrid-layout')
+	    );
+	    View.call(this, container);
+	
+	    name = name || 'daygrid';
+	
+	    this.options = util.extend({
+	        viewName: name,
+	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	        renderStartDate: '',
+	        renderEndDate: '',
+	        containerBottomGutter: 18,
+	        scheduleHeight: 18,
+	        scheduleGutter: 2,
+	        scheduleContainerTop: 1,
+	        getViewModelFunc: function(viewModel) {
+	            return viewModel.schedulesInDateRange[name];
+	        },
+	        setViewModelFunc: function(viewModel, matrices) {
+	            viewModel.schedulesInDateRange[name] = matrices;
+	        }
+	    }, options);
+	
+	    this.handler = {};
+	    this.vPanel = null;
+	
+	    this.setState({
+	        collapsed: true
+	    });
+	}
+	
+	util.inherit(DayGrid, View);
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - schedules view models
+	 */
+	DayGrid.prototype.getBaseViewModel = function(viewModel) {
+	    var opt = this.options,
+	        daynames = opt.daynames,
+	        range = viewModel.range,
+	        grids = viewModel.grids,
+	        matrices = opt.getViewModelFunc(viewModel),
+	        exceedDate = {},
+	        panel = getPanel(opt.panels, opt.viewName),
+	        panelHeight = this.getViewBound().height,
+	        collapsed = this.state.collapsed,
+	        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false;
+	
+	    var baseViewModel, visibleScheduleCount;
+	
+	    if (panel.showExpandableButton) {
+	        if (!heightForcedSet) {
+	            if (collapsed) {
+	                panelHeight = mmax(panelHeight, panel.maxHeight);
+	            } else {
+	                panelHeight = mmin(panelHeight, panel.maxExpandableHeight);
+	            }
+	        }
+	
+	        visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
+	        if (collapsed) {
+	            exceedDate = this.parent.controller.getExceedDate(visibleScheduleCount,
+	                matrices,
+	                viewModel.range
+	            );
+	            matrices = this.parent.controller.excludeExceedSchedules(matrices, visibleScheduleCount);
+	            opt.setViewModelFunc(viewModel, matrices);
+	        }
+	    }
+	
+	    baseViewModel = {
+	        viewName: opt.viewName,
+	        range: range,
+	        grids: grids,
+	        days: util.map(viewModel.range, function(d, index) {
+	            var day = d.getDay();
+	            var ymd = datetime.format(d, 'YYYYMMDD');
+	
+	            return {
+	                day: day,
+	                dayName: daynames[day],
+	                isToday: datetime.isSameDate(d, new TZDate()),
+	                date: d.getDate(),
+	                renderDate: datetime.format(d, 'YYYY-MM-DD'),
+	                hiddenSchedules: exceedDate[ymd] || 0,
+	                width: grids[index] ? grids[index].width : 0,
+	                left: grids[index] ? grids[index].left : 0
+	            };
+	        }),
+	        exceedDate: exceedDate,
+	        showExpandableButton: panel.showExpandableButton,
+	        collapsed: collapsed,
+	        collapseBtnIndex: this.state.clickedExpandBtnIndex
+	    };
+	
+	    return baseViewModel;
+	};
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - schedules view models
+	 */
+	DayGrid.prototype.render = function(viewModel) {
+	    var opt = this.options,
+	        container = this.container,
+	        baseViewModel = this.getBaseViewModel(viewModel),
+	        scheduleContainerTop = this.options.scheduleContainerTop;
+	    var dayGridSchedule;
+	
+	    container.innerHTML = baseTmpl(baseViewModel);
+	
+	    this.children.clear();
+	
+	    dayGridSchedule = new DayGridSchedule(
+	        opt,
+	        domutil.find(config.classname('.container'), container)
+	    );
+	    this.addChild(dayGridSchedule);
+	
+	    dayGridSchedule.on('afterRender', function(weekdayViewModel) {
+	        baseViewModel.height = weekdayViewModel.minHeight + scheduleContainerTop;
+	    });
+	
+	    this.children.each(function(childView) {
+	        childView.render(viewModel);
+	    }, this);
+	
+	    this.fire('afterRender', baseViewModel);
+	};
+	
+	DayGrid.prototype._beforeDestroy = function() {
+	};
+	
+	DayGrid.prototype.addHandler = function(type, handler, vPanel) {
+	    var opt = this.options;
+	
+	    this.handler[type] = handler;
+	    this.vPanel = vPanel;
+	
+	    if (type === 'click') {
+	        handler.on('expand', function() {
+	            var panel = getPanel(opt.panels, opt.viewName);
+	            vPanel.setMaxHeight(panel.maxExpandableHeight);
+	            vPanel.setHeightForcedSet(false);
+	            vPanel.setHeight(null, panel.maxExpandableHeight);
+	
+	            this.setState({collapsed: false});
+	            reqAnimFrame.requestAnimFrame(function() {
+	                this.parent.render();
+	            }, this);
+	        }, this);
+	        handler.on('collapse', function() {
+	            var panel = getPanel(opt.panels, opt.viewName);
+	            vPanel.setMaxHeight(panel.maxHeight);
+	            vPanel.setHeightForcedSet(false);
+	            vPanel.setHeight(null, panel.minHeight);
+	
+	            this.setState({collapsed: true});
+	            reqAnimFrame.requestAnimFrame(function() {
+	                this.parent.render();
+	            }, this);
+	        }, this);
+	    }
+	};
+	
+	/**
+	 * get a panel infomation
+	 * @param {Array.<object[]>} panels - panel infomations
+	 * @param {string} name - panel name
+	 * @returns {object} panel information
+	 */
+	function getPanel(panels, name) {
+	    var found;
+	
+	    util.forEach(panels, function(panel) {
+	        if (panel.name === name) {
+	            found = panel;
+	        }
+	    });
+	
+	    return found;
+	}
+	
+	module.exports = DayGrid;
+
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Weekday view for week
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var Weekday = __webpack_require__(58),
+	    tmpl = __webpack_require__(59);
+	var mmax = Math.max;
+	
+	/**
+	 * @constructor
+	 * @extends {Weekday}
+	 * @param {object} options - options for DayGridSchedule view
+	 * @param {number} [options.containerHeight=40] - minimum height of schedule
+	 *  container element.
+	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
+	 *  make create easy.
+	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
+	 * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
+	 * @param {HTMLDIVElement} container - DOM element to use container for this
+	 *  view.
+	 */
+	function DayGridSchedule(options, container) {
+	    Weekday.call(this, options, container);
+	
+	    this.collapsed = true;
+	}
+	
+	util.inherit(DayGridSchedule, Weekday);
+	
+	/**
+	 * Render Weekday view
+	 * @override
+	 */
+	DayGridSchedule.prototype.render = function(viewModel) {
+	    var container = this.container;
+	    var baseViewModel;
+	
+	    baseViewModel = this.getBaseViewModel(viewModel);
+	
+	    container.innerHTML = tmpl(baseViewModel);
+	
+	    this.fire('afterRender', baseViewModel);
+	};
+	
+	/**
+	 * returns maximum schedule count in day
+	 * @param {array} matrices - The matrices for schedule placing.
+	 * @returns {number} maximum schedule count in day
+	 */
+	DayGridSchedule.prototype._getMaxScheduleInDay = function(matrices) {
+	    return mmax.apply(
+	        null,
+	        util.map(matrices, function(matrix) {
+	            return Math.max.apply(null, util.map(matrix, function(row) {
+	                return row.length;
+	            }));
+	        })
+	    );
+	};
+	
+	/**
+	 * returns minimum height for container.
+	 * @param {number} maxScheduleInDay - max schedule blocks in one day
+	 * @returns {number}
+	 */
+	DayGridSchedule.prototype._getMinHeight = function(maxScheduleInDay) {
+	    var opt = this.options;
+	    var contentHeight = (maxScheduleInDay * opt.scheduleHeight)
+	        + ((maxScheduleInDay - 1) * opt.scheduleGutter);
+	
+	    // if (this.collapsed && this.aboutMe.maxHeight >= contentHeight + opt.containerBottomGutter) {
+	    //     contentHeight += opt.containerBottomGutter;
+	    // }
+	
+	    return contentHeight;
+	};
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - schedules view models
+	 */
+	DayGridSchedule.prototype.getBaseViewModel = function(viewModel) {
+	    var opt = this.options;
+	    var matrices = opt.getViewModelFunc(viewModel);
+	    var maxScheduleInDay = this._getMaxScheduleInDay(matrices);
+	    var baseViewModel;
+	
+	    baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
+	
+	    baseViewModel = util.extend({
+	        minHeight: this._getMinHeight(maxScheduleInDay),
+	        matrices: matrices,
+	        scheduleContainerTop: this.options.scheduleContainerTop,
+	        maxScheduleInDay: maxScheduleInDay
+	    }, baseViewModel);
+	
+	    return baseViewModel;
+	};
+	
+	module.exports = DayGridSchedule;
+
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Weekday view
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    datetime = __webpack_require__(27),
+	    TZDate = __webpack_require__(28).Date,
+	    View = __webpack_require__(37);
+	
+	/**
+	 * @constructor
+	 * @extends {View}
+	 * @param {object} options - view options.
+	 * @param {number} [options.containerHeight=40] - minimum height of schedule
+	 *  container element.
+	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
+	 *  make create easy.
+	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
+	 * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
+	 * @param {HTMLDIVElement} container - DOM element to use container for this
+	 *  view.
+	 */
+	function Weekday(options, container) {
+	    container = domutil.appendHTMLElement(
+	        'div',
+	        container,
+	        config.classname('weekday')
+	    );
+	
+	    /**
+	     * @type {object}
+	     */
+	    this.options = util.extend({
+	        containerHeight: 40,
+	        containerBottomGutter: 8,
+	        scheduleHeight: 18,
+	        scheduleGutter: 2,
+	        narrowWeekend: false,
+	        startDayOfWeek: 0,
+	        workweek: false
+	    }, options);
+	
+	    /*
+	     * cache parent's view model
+	     * @type {object}
+	     */
+	    this._cacheParentViewModel = null;
+	
+	    View.call(this, container);
+	}
+	
+	util.inherit(Weekday, View);
+	
+	/**
+	 * Get render date range
+	 * @returns {Date[]} rendered date range
+	 */
+	Weekday.prototype.getRenderDateRange = function() {
+	    return this._cacheParentViewModel.range;
+	};
+	
+	/**
+	 * Get render date grids information
+	 * @returns {Date[]} rendered date grids information
+	 */
+	Weekday.prototype.getRenderDateGrids = function() {
+	    return this._cacheParentViewModel.grids;
+	};
+	
+	/**
+	 * Get default view model.
+	 * @param {object} viewModel parent's view model
+	 * @returns {object} viewModel to rendering.
+	 */
+	Weekday.prototype.getBaseViewModel = function(viewModel) {
+	    var opt = this.options;
+	    var range = viewModel.range;
+	    var today = datetime.format(new TZDate(), 'YYYYMMDD');
+	    var gridWidth = (100 / range.length);
+	    var grids = viewModel.grids;
+	    var exceedDate = viewModel.exceedDate || {};
+	
+	    this._cacheParentViewModel = viewModel;
+	
+	    return {
+	        width: gridWidth,
+	        scheduleHeight: opt.scheduleHeight,
+	        scheduleBlockHeight: (opt.scheduleHeight + opt.scheduleGutter),
+	        scheduleBlockGutter: opt.scheduleGutter,
+	        dates: util.map(range, function(date, index) {
+	            var day = date.getDay();
+	            var ymd = datetime.format(date, 'YYYYMMDD');
+	
+	            return {
+	                date: datetime.format(date, 'YYYY-MM-DD'),
+	                month: date.getMonth() + 1,
+	                day: day,
+	                isToday: ymd === today,
+	                ymd: ymd,
+	                hiddenSchedules: exceedDate[ymd] || 0,
+	                width: grids[index] ? grids[index].width : 0,
+	                left: grids[index] ? grids[index].left : 0
+	            };
+	        })
+	    };
+	};
+	
+	/* eslint max-nested-callbacks: 0 */
+	/**
+	 * Make exceed date information
+	 * @param {number} maxCount - exceed schedule count
+	 * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
+	 * @param {Array.<TZDate>} range - date range of one week
+	 * @returns {object} exceedDate
+	 */
+	Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
+	    var exceedDate = this._initExceedDate(range);
+	
+	    util.forEach(eventsInDateRange, function(matrix) {
+	        util.forEach(matrix, function(column) {
+	            util.forEach(column, function(viewModel) {
+	                var period;
+	                if (!viewModel || viewModel.top < maxCount) {
+	                    return;
+	                }
+	
+	                period = datetime.range(
+	                    viewModel.getStarts(),
+	                    viewModel.getEnds(),
+	                    datetime.MILLISECONDS_PER_DAY
+	                );
+	
+	                util.forEach(period, function(date) {
+	                    var ymd = datetime.format(date, 'YYYYMMDD');
+	                    exceedDate[ymd] += 1;
+	                });
+	            });
+	        });
+	    });
+	
+	    return exceedDate;
+	};
+	
+	/**
+	 * Initiate exceed date information
+	 * @param {Array.<TZDate>} range - date range of one week
+	 * @returns {Object} - initiated exceed date
+	 */
+	Weekday.prototype._initExceedDate = function(range) {
+	    var exceedDate = {};
+	
+	    util.forEach(range, function(date) {
+	        var ymd = datetime.format(date, 'YYYYMMDD');
+	        exceedDate[ymd] = 0;
+	    });
+	
+	    return exceedDate;
+	};
+	
+	module.exports = Weekday;
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(8);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"2":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "\n    "
+	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "\n    "
+	    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"4":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
+	
+	  return "\n    <div data-id=\""
+	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
+	    + "\"\n        class=\""
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule-block\n            "
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\n            "
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\"\n        style=\"top:"
+	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.scheduleBlockHeight),{"name":"multiply","hash":{},"data":data}))
+	    + "px;\n                left:"
+	    + alias3((helpers["grid-left"] || (depth0 && depth0["grid-left"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),{"name":"grid-left","hash":{},"data":data}))
+	    + "%;\n                width:"
+	    + alias3((helpers["grid-width"] || (depth0 && depth0["grid-width"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),{"name":"grid-width","hash":{},"data":data}))
+	    + "%\">\n        <div data-schedule-id=\""
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
+	    + "\" data-calendar-id=\""
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
+	    + "\" class=\""
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule "
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\"\n            style=\"height:"
+	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px;\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.program(13, data, 0),"data":data})) != null ? stack1 : "")
+	    + "            "
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
+	    + "\">\n            <span class=\""
+	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule-title\" title=\""
+	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
+	    + "\">"
+	    + ((stack1 = (helpers["schedule-tmpl"] || (depth0 && depth0["schedule-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"schedule-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n            "
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\n        </div>\n    </div>\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed-left";
+	},"7":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed-right";
+	},"9":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule-focused ";
+	},"11":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+	
+	  return "                    color: #ffffff; background-color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "; border-color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + ";\n";
+	},"13":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+	
+	  return "                    color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + "; background-color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "; border-color:"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
+	    + ";\n";
+	},"15":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return "<span class=\""
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedules "
+	    + alias4(((helper = (helper = helpers.collapsed || (depth0 != null ? depth0.collapsed : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"collapsed","hash":{},"data":data}) : helper)))
+	    + "\"style=\"top:"
+	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleContainerTop), depth0))
+	    + "px;\">\n"
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</div>\n";
+	},"useData":true});
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(8);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-grid-line\" style=\"left:"
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
+	    + "%; width:"
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
+	    + "%;\"></div>\n";
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.days : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"4":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (data && data.root)) && stack1.collapsed),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "");
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"6":function(container,depth0,helpers,partials,data) {
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "                    <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-exceed-in-week\" style=\"z-index: 1; right:"
+	    + alias4((helpers.getRight || (depth0 && depth0.getRight) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"getRight","hash":{},"data":data}))
+	    + "%;\" data-index=\""
+	    + alias4(((helper = (helper = helpers.key || (data && data.key)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"key","hash":{},"data":data}) : helper)))
+	    + "\">"
+	    + alias4((helpers["weekGridFooterExceed-tmpl"] || (depth0 && depth0["weekGridFooterExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"weekGridFooterExceed-tmpl","hash":{},"data":data}))
+	    + "</span>\n";
+	},"8":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.collapseBtnIndex),{"name":"fi","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"9":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "                    <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-collapse-btn\" style=\"z-index: 1; right:"
+	    + alias4((helpers.getRight || (depth0 && depth0.getRight) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"getRight","hash":{},"data":data}))
+	    + "%;\">"
+	    + ((stack1 = ((helper = (helper = helpers["collapseBtnTitle-tmpl"] || (depth0 != null ? depth0["collapseBtnTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"collapseBtnTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+	    + "</span>\n";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.viewName || (depth0 != null ? depth0.viewName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"viewName","hash":{},"data":data}) : helper)))
+	    + "-left "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "left\">\n    "
+	    + ((stack1 = (helpers["dayGridTitle-tmpl"] || (depth0 && depth0["dayGridTitle-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.viewName : depth0),{"name":"dayGridTitle-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n</div>\n<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + alias4(((helper = (helper = helpers.viewName || (depth0 != null ? depth0.viewName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"viewName","hash":{},"data":data}) : helper)))
+	    + "-right "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "right\">\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "container\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-grid\">\n"
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.days : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showExpandableButton),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "        </div>\n    </div>\n</div>";
+	},"useData":true});
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
 	 * @fileoverview View for rendered schedules by times.
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
@@ -9715,9 +10491,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TZDate = __webpack_require__(28).Date;
 	var reqAnimFrame = __webpack_require__(52);
 	var View = __webpack_require__(37);
-	var Time = __webpack_require__(57);
-	var AutoScroll = __webpack_require__(59);
-	var mainTmpl = __webpack_require__(61);
+	var Time = __webpack_require__(62);
+	var AutoScroll = __webpack_require__(64);
+	var mainTmpl = __webpack_require__(66);
 	
 	var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 	var SIXTY_SECONDS = 60;
@@ -9755,6 +10531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @constructor
 	 * @extends {View}
+	 * @param {string} name - view name
 	 * @param {object} options The object for view customization.
 	 * @param {string} options.renderStartDate - render start date. YYYY-MM-DD
 	 * @param {string} options.renderEndDate - render end date. YYYY-MM-DD
@@ -9762,12 +10539,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {number} [options.hourEnd=0] You can change view's end hours.
 	 * @param {HTMLElement} container Container element.
 	 */
-	function TimeGrid(options, container) {
+	function TimeGrid(name, options, container) {
 	    container = domutil.appendHTMLElement(
 	        'div',
 	        container,
 	        config.classname('timegrid-container')
 	    );
+	    name = name || 'time';
 	
 	    View.call(this, container);
 	
@@ -9783,6 +10561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object}
 	     */
 	    this.options = util.extend({
+	        viewName: name,
 	        renderStartDate: '',
 	        renderEndDate: '',
 	        hourStart: 0,
@@ -9918,12 +10697,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        childOption,
 	        child,
 	        isToday,
+	        containerHeight,
 	        today = datetime.format(new TZDate(), 'YYYYMMDD'),
 	        i = 0;
 	
 	    // clear contents
 	    container.innerHTML = '';
 	    this.children.clear();
+	
+	    containerHeight = domutil.getSize(container.parentElement)[1];
 	
 	    // reconcilation of child views
 	    util.forEach(viewModels, function(schedules, ymd) {
@@ -9945,7 +10727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            childOption,
 	            domutil.appendHTMLElement('div', container, config.classname('time-date'))
 	        );
-	        child.render(ymd, schedules);
+	        child.render(ymd, schedules, containerHeight);
 	
 	        self.addChild(child);
 	
@@ -9958,7 +10740,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} viewModel ViewModel list from Week view.
 	 */
 	TimeGrid.prototype.render = function(viewModel) {
-	    var timeViewModel = viewModel.schedulesInDateRange.time,
+	    var opt = this.options,
+	        timeViewModel = viewModel.schedulesInDateRange[opt.viewName],
 	        container = this.container,
 	        grids = viewModel.grids,
 	        range = viewModel.range,
@@ -10094,7 +10877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 57 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10109,7 +10892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
 	var View = __webpack_require__(37);
-	var timeTmpl = __webpack_require__(58);
+	var timeTmpl = __webpack_require__(63);
 	
 	var forEachArr = util.forEachArray;
 	
@@ -10217,13 +11000,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Set viewmodels for rendering.
 	 * @param {string} ymd The date of schedules. YYYYMMDD format.
 	 * @param {array} matrices The matrices for schedule placing.
+	 * @param {number} containerHeight - container's height
 	 */
-	Time.prototype._getBaseViewModel = function(ymd, matrices) {
+	Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
 	    var self = this,
 	        options = this.options,
 	        hourStart = options.hourStart,
 	        hourEnd = options.hourEnd,
-	        containerHeight,
 	        todayStart,
 	        baseMS;
 	
@@ -10231,7 +11014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Calculate each schedule element bounds relative with rendered hour milliseconds and
 	     * wrap each schedule model to viewmodels.
 	     */
-	    containerHeight = this.getViewBound().height;
+	    containerHeight = containerHeight || this.getViewBound().height;
 	    todayStart = this._parseDateGroup(ymd);
 	    todayStart.setHours(hourStart);
 	    baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
@@ -10287,9 +11070,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @override
 	 * @param {string} ymd The date of schedules. YYYYMMDD format
 	 * @param {array} matrices Matrices for placing schedules
+	 * @param {number} containerHeight - container's height
 	 */
-	Time.prototype.render = function(ymd, matrices) {
-	    this._getBaseViewModel(ymd, matrices);
+	Time.prototype.render = function(ymd, matrices, containerHeight) {
+	    this._getBaseViewModel(ymd, matrices, containerHeight);
 	    this.container.innerHTML = this.timeTmpl({
 	        matrices: matrices
 	    });
@@ -10299,7 +11083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 58 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -10389,7 +11173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 59 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10401,7 +11185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var domevent = __webpack_require__(32);
 	var domutil = __webpack_require__(31);
-	var Point = __webpack_require__(60);
+	var Point = __webpack_require__(65);
 	
 	var SCROLL_INTERVAL = 30;
 	var SCROLL_MAX = 15;
@@ -10642,7 +11426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 60 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10989,7 +11773,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 61 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -11064,2761 +11848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview View of allday schedule container inside of Week view.
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34),
-	    domutil = __webpack_require__(31),
-	    View = __webpack_require__(37),
-	    WeekdayInWeek = __webpack_require__(63),
-	    tmpl = __webpack_require__(66);
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {object} options The object for view customization.
-	 * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
-	 * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
-	 * @param {number} [options.height=60] - minimum height of schedule container element.
-	 * @param {number} [options.scheduleBlockHeight=18] - height of each schedule block.
-	 * @param {number} [options.scheduleBlockGutter=2] - gutter height of each schedule block.
-	 * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
-	 * @param {HTMLElement} container Container element.
-	 * @param {object} aboutMe allday panel name and height
-	 */
-	function Allday(options, container, aboutMe) {
-	    container = domutil.appendHTMLElement(
-	        'div',
-	        container,
-	        config.classname('allday-container')
-	    );
-	
-	    /**
-	     * rendering options.
-	     * @type {object}
-	     */
-	    this.options = util.extend({
-	        title: 'All-day',
-	        renderStartDate: '',
-	        renderEndDate: '',
-	        containerBottomGutter: 18,
-	        scheduleHeight: 18,
-	        scheduleGutter: 2,
-	        scheduleContainerTop: 1,
-	        getViewModelFunc: function(viewModel) {
-	            return viewModel.schedulesInDateRange.allday;
-	        }
-	    }, options);
-	
-	    /**
-	     * height of content
-	     */
-	    this.contentHeight = 0;
-	
-	    this.viewType = options.alldayViewType || 'scroll';
-	    this.collapsed = (this.viewType === 'toggle');
-	    this.aboutMe = util.extend(
-	        aboutMe, {
-	            name: 'allday'
-	        }
-	    );
-	
-	    this.maxScheduleInDay = 0;
-	
-	    View.call(this, container);
-	}
-	
-	util.inherit(Allday, View);
-	
-	/**
-	 * create month week view model for render allday schedules in top of week views.
-	 * @override
-	 * @param {object} viewModel - viewModel from parent views.
-	 */
-	Allday.prototype.render = function(viewModel) {
-	    var container = this.container;
-	    var scheduleContainerTop = this.options.scheduleContainerTop;
-	    var self = this;
-	    var weekdayView;
-	
-	    container.innerHTML = tmpl(this.options);
-	
-	    this.children.clear();
-	
-	    weekdayView = new WeekdayInWeek(
-	        this.options,
-	        domutil.find(config.classname('.weekday-container'), container),
-	        this.aboutMe
-	    );
-	    weekdayView.collapsed = this.collapsed;
-	    weekdayView.on('afterRender', function(weekdayViewModel) {
-	        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
-	        self.maxScheduleInDay = weekdayViewModel.maxScheduleInDay;
-	    });
-	
-	    this.addChild(weekdayView);
-	
-	    this.children.each(function(childView) {
-	        childView.collapsed = this.collapsed;
-	        childView.render(viewModel);
-	    }, this);
-	
-	    this.fire('afterRender', viewModel);
-	};
-	
-	Allday.prototype.getExpandMaxHeight = function() {
-	    var scheduleHeight = this.options.scheduleHeight + this.options.scheduleGutter;
-	    var maxExpandCount = this.aboutMe.maxExpandCount;
-	
-	    if (this.maxScheduleInDay > maxExpandCount) {
-	        return scheduleHeight * (maxExpandCount + 0.5);
-	    }
-	
-	    return scheduleHeight * maxExpandCount;
-	};
-	
-	module.exports = Allday;
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Weekday view for week
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var Weekday = __webpack_require__(64),
-	    tmpl = __webpack_require__(65),
-	    datetime = __webpack_require__(27);
-	var domutil = __webpack_require__(31);
-	var config = __webpack_require__(34);
-	var mmax = Math.max,
-	    mmin = Math.min;
-	
-	/**
-	 * @constructor
-	 * @extends {Weekday}
-	 * @param {object} options - options for WeekdayInWeek view
-	 * @param {number} [options.containerHeight=40] - minimum height of schedule
-	 *  container element.
-	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
-	 *  make create easy.
-	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
-	 * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
-	 * @param {HTMLDIVElement} container - DOM element to use container for this
-	 *  view.
-	 * @param {object} [aboutMe] - parent container info
-	 * @param {string} [aboutMe.name] - panel name ['Milestone'|'Task'|'AllDay'|'TimeGrid']
-	 * @param {boolean} [aboutMe.forcedLayout] - force layout height by dragging
-	 */
-	function WeekdayInWeek(options, container, aboutMe) {
-	    Weekday.call(this, options, container);
-	    this.aboutMe = aboutMe || {};
-	}
-	
-	util.inherit(WeekdayInWeek, Weekday);
-	
-	/**
-	 * Render Weekday view
-	 * @override
-	 */
-	WeekdayInWeek.prototype.render = function(viewModel) {
-	    var opt = this.options,
-	        container = this.container,
-	        aboutMe = this.aboutMe,
-	        name = aboutMe.name;
-	    var baseViewModel;
-	
-	    this.viewType = opt[name + 'ViewType'] || '';
-	
-	    baseViewModel = this.getBaseViewModel(viewModel);
-	
-	    if (this.viewType === 'toggle') {
-	        baseViewModel.viewType = this.viewType;
-	        baseViewModel.collapsed = this.collapsed ? 'collapsed' : '';
-	        baseViewModel.collapseBtnIndex = aboutMe.collapseBtnIndex;
-	    }
-	
-	    container.innerHTML = tmpl(baseViewModel);
-	
-	    util.forEach(domutil.find(config.classname('.weekday-exceed-in-week'), container, true), function(el) {
-	        el.style.marginLeft = -(el.offsetWidth + 6) + 'px';
-	    });
-	
-	    util.forEach(domutil.find(config.classname('.weekday-collapse-btn'), container, true), function(el) {
-	        el.style.marginLeft = -(el.offsetWidth + 6) + 'px';
-	    });
-	
-	    this.fire('afterRender', baseViewModel);
-	};
-	
-	/**
-	 * returns maximum schedule count in day
-	 * @param {array} matrices - The matrices for schedule placing.
-	 * @returns {number} maximum schedule count in day
-	 */
-	WeekdayInWeek.prototype._getMaxScheduleInDay = function(matrices) {
-	    return mmax.apply(
-	        null,
-	        util.map(matrices, function(matrix) {
-	            return Math.max.apply(null, util.map(matrix, function(row) {
-	                return row.length;
-	            }));
-	        })
-	    );
-	};
-	
-	/**
-	 * returns minimum height for container.
-	 * @param {number} maxScheduleInDay - max schedule blocks in one day
-	 * @returns {number}
-	 */
-	WeekdayInWeek.prototype._getMinHeight = function(maxScheduleInDay) {
-	    var opt = this.options;
-	    var contentHeight = (maxScheduleInDay * opt.scheduleHeight)
-	    + ((maxScheduleInDay - 1) * opt.scheduleGutter);
-	
-	    if (this.collapsed && this.aboutMe.maxHeight >= contentHeight + opt.containerBottomGutter) {
-	        contentHeight += opt.containerBottomGutter;
-	    }
-	
-	    return contentHeight;
-	};
-	
-	/**
-	 * make and update data of exceed date
-	 * @param {object} exceedDate - data to have exceed date in a week
-	 * @param {TZDate} renderStarts - start date of a week
-	 * @param {TZDate} renderEnds - end date of a week
-	 */
-	WeekdayInWeek.prototype._updateExceedDate = function(exceedDate, renderStarts, renderEnds) {
-	    var date = datetime.clone(renderStarts);
-	    var day;
-	
-	    for (; date <= renderEnds; date.setDate(date.getDate() + 1)) {
-	        day = datetime.format(date, 'YYYYMMDD');
-	        if (!exceedDate[day]) {
-	            exceedDate[day] = 1;
-	        } else {
-	            exceedDate[day] += 1;
-	        }
-	    }
-	};
-	
-	/**
-	 * Exclude overflow schedules from matrices
-	 * @param {array} matrices - The matrices for schedule placing.
-	 * @param {number} visibleScheduleCount - maximum visible count on panel
-	 * @param {number} maxScheduleInDay - maximum number of schedules in day
-	 * @returns {array} - The matrices for schedule placing except overflowed schedules.
-	 */
-	WeekdayInWeek.prototype._excludeExceedSchedules = function(matrices, visibleScheduleCount, maxScheduleInDay) {
-	    if (visibleScheduleCount >= maxScheduleInDay) {
-	        return matrices;
-	    }
-	
-	    return matrices.map(function(matrix) {
-	        return matrix.map(function(row) {
-	            if (row.length > visibleScheduleCount) {
-	                return row.filter(function(item) {
-	                    return item.top < visibleScheduleCount;
-	                }, this);
-	            }
-	
-	            return row;
-	        }, this);
-	    }, this);
-	};
-	
-	/**
-	 * @override
-	 * @param {object} viewModel - schedules view models
-	 */
-	WeekdayInWeek.prototype.getBaseViewModel = function(viewModel) {
-	    var opt = this.options;
-	    var matrices = opt.getViewModelFunc(viewModel);
-	    var maxScheduleInDay = this._getMaxScheduleInDay(matrices);
-	    var visibleScheduleCount = this.aboutMe.visibleScheduleCount;
-	    var aboutMe = this.aboutMe;
-	    var exceedDate = {};
-	    var baseViewModel, panelHeight;
-	
-	    if (this.viewType === 'toggle') {
-	        panelHeight = aboutMe.forcedLayout ? this.getViewBound().height : mmin(aboutMe.height, aboutMe.maxHeight);
-	        visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
-	        if (this.collapsed) {
-	            visibleScheduleCount = mmin(visibleScheduleCount, mmin(maxScheduleInDay, aboutMe.maxExpandCount));
-	            exceedDate =
-	                this.getExceedDate(visibleScheduleCount,
-	                    viewModel.schedulesInDateRange[aboutMe.name],
-	                    viewModel.range,
-	                    maxScheduleInDay
-	                );
-	            matrices = this._excludeExceedSchedules(matrices, visibleScheduleCount, maxScheduleInDay);
-	            aboutMe.visibleScheduleCount = visibleScheduleCount;
-	        } else {
-	            visibleScheduleCount = mmax(visibleScheduleCount, mmin(maxScheduleInDay, aboutMe.maxExpandCount));
-	        }
-	    }
-	
-	    viewModel = util.extend({
-	        exceedDate: exceedDate || {}
-	    }, viewModel);
-	
-	    baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
-	
-	    baseViewModel = util.extend({
-	        minHeight: this._getMinHeight(maxScheduleInDay),
-	        matrices: matrices,
-	        scheduleContainerTop: this.options.scheduleContainerTop,
-	        maxScheduleInDay: maxScheduleInDay,
-	        floatingButtonTop: this._calculateFloatingBtnTop(visibleScheduleCount, maxScheduleInDay),
-	        panelName: aboutMe.name
-	    }, baseViewModel);
-	
-	    return baseViewModel;
-	};
-	
-	/**
-	 * Calculate absolute top position of floating button layer
-	 * @param {number} visibleScheduleCount - maximum (row) number of schedules that panel can show
-	 * @param {number} maxScheduleInDay - maximum number of schedules in day
-	 * @returns {number} absolute top position of floating buttons in weekday panel
-	 */
-	WeekdayInWeek.prototype._calculateFloatingBtnTop = function(visibleScheduleCount, maxScheduleInDay) {
-	    var scheduleHeight = this.options.scheduleHeight + this.options.scheduleGutter;
-	
-	    if (!this.collapsed && maxScheduleInDay > this.aboutMe.maxExpandCount) {
-	        return (visibleScheduleCount - 0.5) * scheduleHeight;
-	    }
-	
-	    return (visibleScheduleCount - 1) * scheduleHeight;
-	};
-	
-	module.exports = WeekdayInWeek;
-
-
-/***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Weekday view
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34),
-	    domutil = __webpack_require__(31),
-	    datetime = __webpack_require__(27),
-	    TZDate = __webpack_require__(28).Date,
-	    View = __webpack_require__(37);
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {object} options - view options.
-	 * @param {number} [options.containerHeight=40] - minimum height of schedule
-	 *  container element.
-	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
-	 *  make create easy.
-	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
-	 * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
-	 * @param {HTMLDIVElement} container - DOM element to use container for this
-	 *  view.
-	 */
-	function Weekday(options, container) {
-	    container = domutil.appendHTMLElement(
-	        'div',
-	        container,
-	        config.classname('weekday')
-	    );
-	
-	    /**
-	     * @type {object}
-	     */
-	    this.options = util.extend({
-	        containerHeight: 40,
-	        containerBottomGutter: 8,
-	        scheduleHeight: 18,
-	        scheduleGutter: 2,
-	        narrowWeekend: false,
-	        startDayOfWeek: 0,
-	        workweek: false
-	    }, options);
-	
-	    /*
-	     * cache parent's view model
-	     * @type {object}
-	     */
-	    this._cacheParentViewModel = null;
-	
-	    View.call(this, container);
-	}
-	
-	util.inherit(Weekday, View);
-	
-	/**
-	 * Get render date range
-	 * @returns {Date[]} rendered date range
-	 */
-	Weekday.prototype.getRenderDateRange = function() {
-	    return this._cacheParentViewModel.range;
-	};
-	
-	/**
-	 * Get render date grids information
-	 * @returns {Date[]} rendered date grids information
-	 */
-	Weekday.prototype.getRenderDateGrids = function() {
-	    return this._cacheParentViewModel.grids;
-	};
-	
-	/**
-	 * Get default view model.
-	 * @param {object} viewModel parent's view model
-	 * @returns {object} viewModel to rendering.
-	 */
-	Weekday.prototype.getBaseViewModel = function(viewModel) {
-	    var opt = this.options;
-	    var range = viewModel.range;
-	    var today = datetime.format(new TZDate(), 'YYYYMMDD');
-	    var gridWidth = (100 / range.length);
-	    var grids = viewModel.grids;
-	    var exceedDate = viewModel.exceedDate || {};
-	
-	    this._cacheParentViewModel = viewModel;
-	
-	    return {
-	        width: gridWidth,
-	        scheduleHeight: opt.scheduleHeight,
-	        scheduleBlockHeight: (opt.scheduleHeight + opt.scheduleGutter),
-	        scheduleBlockGutter: opt.scheduleGutter,
-	        dates: util.map(range, function(date, index) {
-	            var day = date.getDay();
-	            var ymd = datetime.format(date, 'YYYYMMDD');
-	
-	            return {
-	                date: datetime.format(date, 'YYYY-MM-DD'),
-	                month: date.getMonth() + 1,
-	                day: day,
-	                isToday: ymd === today,
-	                ymd: ymd,
-	                hiddenSchedules: exceedDate[ymd] || 0,
-	                width: grids[index] ? grids[index].width : 0,
-	                left: grids[index] ? grids[index].left : 0
-	            };
-	        })
-	    };
-	};
-	
-	/* eslint max-nested-callbacks: 0 */
-	/**
-	 * Make exceed date information
-	 * @param {number} maxCount - exceed schedule count
-	 * @param {Array} eventsInDateRange  - matrix of ScheduleViewModel
-	 * @param {Array.<TZDate>} range - date range of one week
-	 * @returns {object} exceedDate
-	 */
-	Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
-	    var exceedDate = this._initExceedDate(range);
-	
-	    util.forEach(eventsInDateRange, function(matrix) {
-	        util.forEach(matrix, function(column) {
-	            util.forEach(column, function(viewModel) {
-	                var period;
-	                if (!viewModel || viewModel.top < maxCount) {
-	                    return;
-	                }
-	
-	                period = datetime.range(
-	                    viewModel.getStarts(),
-	                    viewModel.getEnds(),
-	                    datetime.MILLISECONDS_PER_DAY
-	                );
-	
-	                util.forEach(period, function(date) {
-	                    var ymd = datetime.format(date, 'YYYYMMDD');
-	                    exceedDate[ymd] += 1;
-	                });
-	            });
-	        });
-	    });
-	
-	    return exceedDate;
-	};
-	
-	/**
-	 * Initiate exceed date information
-	 * @param {Array.<TZDate>} range - date range of one week
-	 * @returns {Object} - initiated exceed date
-	 */
-	Weekday.prototype._initExceedDate = function(range) {
-	    var exceedDate = {};
-	
-	    util.forEach(range, function(date) {
-	        var ymd = datetime.format(date, 'YYYYMMDD');
-	        exceedDate[ymd] = 0;
-	    });
-	
-	    return exceedDate;
-	};
-	
-	module.exports = Weekday;
-
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-grid-line "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\" style=\"width:"
-	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%;left:"
-	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%;\"></div>\n";
-	},"2":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "today";
-	},"4":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"5":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return "\n    "
-	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"6":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return "\n    "
-	    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"7":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4="function", alias5=container.lambda;
-	
-	  return "\n    <div data-id=\""
-	    + alias3((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n        class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-block\n            "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\n            "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.exceedRight : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\"\n        style=\"top:"
-	    + alias3((helpers.multiply || (depth0 && depth0.multiply) || alias2).call(alias1,(depth0 != null ? depth0.top : depth0),((stack1 = (data && data.root)) && stack1.scheduleBlockHeight),{"name":"multiply","hash":{},"data":data}))
-	    + "px;\n                left:"
-	    + alias3((helpers["grid-left"] || (depth0 && depth0["grid-left"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),{"name":"grid-left","hash":{},"data":data}))
-	    + "%;\n                width:"
-	    + alias3((helpers["grid-width"] || (depth0 && depth0["grid-width"]) || alias2).call(alias1,depth0,((stack1 = (data && data.root)) && stack1.dates),{"name":"grid-width","hash":{},"data":data}))
-	    + "%\">\n        <div data-schedule-id=\""
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
-	    + "\" data-calendar-id=\""
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
-	    + "\" class=\""
-	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias4 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule "
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\"\n            style=\"height:"
-	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
-	    + "px;\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(14, data, 0),"inverse":container.program(16, data, 0),"data":data})) != null ? stack1 : "")
-	    + "            "
-	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
-	    + "\">\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.category : stack1),"===","task",{"name":"fi","hash":{},"fn":container.program(18, data, 0),"inverse":container.program(20, data, 0),"data":data})) != null ? stack1 : "")
-	    + "            "
-	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(22, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\n        </div>\n    </div>\n";
-	},"8":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-exceed-left";
-	},"10":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-exceed-right";
-	},"12":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-focused ";
-	},"14":function(container,depth0,helpers,partials,data) {
-	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
-	
-	  return "                    color: #ffffff; background-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "; border-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + ";\n";
-	},"16":function(container,depth0,helpers,partials,data) {
-	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
-	
-	  return "                    color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "; background-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.bgColor : stack1), depth0))
-	    + "; border-color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
-	    + ";\n";
-	},"18":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
-	
-	  return "                <span class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title\">"
-	    + ((stack1 = (helpers["task-tmpl"] || (depth0 && depth0["task-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"task-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</span>\n";
-	},"20":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing;
-	
-	  return "                <span class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title\">"
-	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "</span>\n";
-	},"22":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return "<span class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
-	},"24":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.viewType : depth0),"===","toggle",{"name":"fi","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"25":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(26, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"26":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (data && data.root)) && stack1.collapsed),{"name":"if","hash":{},"fn":container.program(27, data, 0),"inverse":container.program(30, data, 0),"data":data})) != null ? stack1 : "");
-	},"27":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"28":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "            <span class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-exceed-in-week\" data-index=\""
-	    + alias4(((helper = (helper = helpers.key || (data && data.key)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"key","hash":{},"data":data}) : helper)))
-	    + "\" style=\"left:"
-	    + alias4((helpers.add || (depth0 && depth0.add) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"add","hash":{},"data":data}))
-	    + "%; top: "
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.floatingButtonTop), depth0))
-	    + "px; margin-top: -4px;\">"
-	    + alias4((helpers["weekGridFooterExceed-tmpl"] || (depth0 && depth0["weekGridFooterExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"weekGridFooterExceed-tmpl","hash":{},"data":data}))
-	    + "</span>\n";
-	},"30":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.collapseBtnIndex),{"name":"fi","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"31":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "                <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-collapse-btn\" style=\"left:"
-	    + alias4((helpers.add || (depth0 && depth0.add) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),(depth0 != null ? depth0.width : depth0),{"name":"add","hash":{},"data":data}))
-	    + "%; top: "
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.floatingButtonTop), depth0))
-	    + "px; margin-top: -4px;\">"
-	    + ((stack1 = ((helper = (helper = helpers["alldayCollapseBtnTitle-tmpl"] || (depth0 != null ? depth0["alldayCollapseBtnTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"alldayCollapseBtnTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-	    + "</div>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-grid\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-creation\"></div>\n<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedules\"style=\"top:"
-	    + alias4(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleContainerTop), depth0))
-	    + "px;\">\n    <!-- weekday-schedules 높이를 하단 패딩까지 확보하기 위한 빈 div -->\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedules-height-span\" style=\"height:"
-	    + alias4(((helper = (helper = helpers.contentHeight || (depth0 != null ? depth0.contentHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"contentHeight","hash":{},"data":data}) : helper)))
-	    + "px\"></div>\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.panelName : depth0),"===","allday",{"name":"fi","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n";
-	},"useData":true});
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "allday-left "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "left\">\n    <span>"
-	    + ((stack1 = ((helper = (helper = helpers["alldayTitle-tmpl"] || (depth0 != null ? depth0["alldayTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"alldayTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-	    + "</span>\n</div>\n<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "allday-right "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "right\">\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-container\"></div>\n</div>\n";
-	},"useData":true});
-
-/***/ },
 /* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview 마일스톤 뷰
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var datetime = __webpack_require__(27);
-	var domutil = __webpack_require__(31);
-	var TZDate = __webpack_require__(28).Date;
-	var View = __webpack_require__(37);
-	var tmpl = __webpack_require__(68);
-	
-	// item height + gutter (defined in css)
-	var ITEM_HEIGHT = 17;
-	
-	// list padding-top (defined in css)
-	var LIST_PADDING_TOP = 1;
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {object} options - options
-	 * @param {string} options.renderStartDate - start date of allday view's render date. YYYY-MM-DD
-	 * @param {string} options.renderEndDate - end date of allday view's render date. YYYY-MM-DD
-	 * @param {number} [options.minHeight=52] - min-height of milestone view
-	 * @param {number} [options.lineHeight=12] - line height of milestone view
-	 * @param {HTMLElement} container - container element
-	 */
-	function Milestone(options, container) {
-	    container = domutil.appendHTMLElement(
-	        'div',
-	        container,
-	        config.classname('milestone-container')
-	    );
-	
-	    View.call(this, container);
-	
-	    /**
-	     * @type {object}
-	     */
-	    this.options = util.extend({
-	        renderStartDate: '',
-	        renderEndDate: ''
-	    }, options);
-	}
-	
-	util.inherit(Milestone, View);
-	
-	/**
-	 * Get base viewmodel for task view
-	 * @param {object} [viewModel] - view model from parent view
-	 * @returns {object} view model for task view
-	 */
-	Milestone.prototype._getBaseViewModel = function(viewModel) {
-	    var schedules = {},
-	        range = viewModel.range,
-	        height,
-	        today = datetime.format(new TZDate(), 'YYYY-MM-DD'),
-	        viewModelSchedules = util.pick(viewModel.schedulesInDateRange, 'milestone'),
-	        grids = viewModel.grids,
-	        i = 0;
-	
-	    // 일정이 없는 경우라도 빈 객체를 생성
-	    util.forEach(range, function(d) {
-	        schedules[datetime.format(d, 'YYYY-MM-DD')] = {length: 0};
-	    });
-	
-	    util.extend(schedules, viewModelSchedules);
-	
-	    util.forEach(schedules, function(schedule, key) {
-	        schedule.isToday = (key === today);
-	        schedule.left = grids[i] ? grids[i].left : 0;
-	        schedule.width = grids[i] ? grids[i].width : 0;
-	        i += 1;
-	    });
-	
-	    height = LIST_PADDING_TOP;
-	    height += Math.max.apply(null, util.map(schedules, function(coll) {
-	        return coll.length;
-	    })) * ITEM_HEIGHT;
-	
-	    return {
-	        schedules: schedules,
-	        height: height
-	    };
-	};
-	
-	/**
-	 * 마일스톤 뷰 렌더링
-	 * @override
-	 */
-	Milestone.prototype.render = function(viewModel) {
-	    var container = this.container,
-	        baseViewModel = this._getBaseViewModel(viewModel);
-	
-	    container.style.minHeight = this.options.minHeight + 'px';
-	    container.innerHTML = tmpl(baseViewModel);
-	
-	    util.forEach(domutil.find('li', container, true), function(el) {
-	        if (el.offsetWidth < el.scrollWidth) {
-	            el.setAttribute('title', domutil.getData(el, 'title'));
-	        }
-	    });
-	
-	    this.fire('afterRender', baseViewModel);
-	};
-	
-	module.exports = Milestone;
-	
-
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day-grid\" style=\"width:"
-	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%;left:"
-	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%\"></div>\n";
-	},"3":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-day\" style=\"width:"
-	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%;left:"
-	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%\">\n      <ul class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-list "
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.items : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</ul>\n  </div>\n";
-	},"4":function(container,depth0,helpers,partials,data) {
-	    var helper;
-	
-	  return " "
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "today";
-	},"6":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {}), alias4=helpers.helperMissing;
-	
-	  return "<li data-schedule-id=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
-	    + "\" data-calendar-id=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
-	    + "\" data-id=\""
-	    + alias2((helpers.stamp || (depth0 && depth0.stamp) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\"\n            data-title=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\"\n            class=\""
-	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === "function" ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-item\"\n            style=\"color:"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
-	    + "\">\n            "
-	    + ((stack1 = (helpers["milestone-tmpl"] || (depth0 && depth0["milestone-tmpl"]) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"milestone-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "\n          </li>\n";
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-left "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "left\">\n    <span>"
-	    + ((stack1 = ((helper = (helper = helpers["milestoneTitle-tmpl"] || (depth0 != null ? depth0["milestoneTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"milestoneTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-	    + "</span>\n</div>\n<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-right "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "right "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "clear\">\n  <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-day-grid-wrap\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.schedules : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n  <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "milestone-day-scroll\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.schedules : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n</div>\n";
-	},"useData":true});
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Task view for upper area of Week view.
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34),
-	    domutil = __webpack_require__(31),
-	    View = __webpack_require__(37),
-	    WeekdayInWeek = __webpack_require__(63),
-	    tmpl = __webpack_require__(70);
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {object} options - options for TaskView
-	 * @param {string} options.renderStartDate - start date of this view's render date. YYYY-MM-DD
-	 * @param {string} options.renderEndDate - end date of this view's render date. YYYY-MM-DD
-	 * @param {number} [options.height=60] - minimum height of schedule container element.
-	 * @param {number} [options.scheduleBlockHeight=18] - height of each schedule block.
-	 * @param {number} [options.scheduleBlockGutter=2] - gutter height of each schedule block.
-	 * @param {function} [options.getViewModelFunc] - function for extract partial view model data from whole view models.
-	 
-	 * @param {HTMLElement} container - container element
-	 */
-	function TaskView(options, container) {
-	    container = domutil.appendHTMLElement(
-	        'div',
-	        container,
-	        config.classname('task-container')
-	    );
-	
-	    /**
-	     * rendering options.
-	     * @type {object}
-	     */
-	    this.options = util.extend({
-	        title: 'task',
-	        renderStartDate: '',
-	        renderEndDate: '',
-	        containerBottomGutter: 18,
-	        scheduleHeight: 18,
-	        scheduleGutter: 2,
-	        scheduleContainerTop: 1,
-	        getViewModelFunc: function(viewModel) {
-	            return viewModel.schedulesInDateRange.task;
-	        }
-	    }, options);
-	
-	    /**
-	     * height of content
-	     */
-	    this.contentHeight = 0;
-	
-	    View.call(this, container);
-	}
-	
-	util.inherit(TaskView, View);
-	
-	/**
-	 * 업무 뷰 렌더링
-	 * @override
-	 */
-	TaskView.prototype.render = function(viewModel) {
-	    var container = this.container;
-	    var scheduleContainerTop = this.options.scheduleContainerTop;
-	    var self = this;
-	    var weekdayView;
-	
-	    container.innerHTML = tmpl(this.options);
-	
-	    this.children.clear();
-	
-	    weekdayView = new WeekdayInWeek(
-	        this.options,
-	        domutil.find(config.classname('.weekday-container'), container)
-	    );
-	    weekdayView.on('afterRender', function(weekdayViewModel) {
-	        self.contentHeight = weekdayViewModel.minHeight + scheduleContainerTop;
-	    });
-	
-	    this.addChild(weekdayView);
-	
-	    this.children.each(function(childView) {
-	        childView.render(viewModel);
-	    });
-	
-	    this.fire('afterRender', viewModel);
-	};
-	
-	module.exports = TaskView;
-	
-
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Handlebars = __webpack_require__(8);
-	module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-	
-	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-left "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "left\">\n    <span>"
-	    + ((stack1 = ((helper = (helper = helpers["taskTitle-tmpl"] || (depth0 != null ? depth0["taskTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"taskTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-	    + "</span>\n</div>\n<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "task-right "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "right\">\n    <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-container\"></div>\n</div>";
-	},"useData":true});
-
-/***/ },
-/* 71 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Click handle module for allday schedules
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var domutil = __webpack_require__(31);
-	var AlldayMove = __webpack_require__(72);
-	
-	/**
-	 * @constructor
-	 * @implements {Handler}
-	 * @mixes CustomEvents
-	 * @param {Drag} [dragHandler] - Drag handler instance.
-	 * @param {Allday} [alldayView] - allday view instance.
-	 * @param {Base} [baseController] - Base controller instance.
-	 */
-	function AlldayClick(dragHandler, alldayView, baseController) {
-	    /**
-	     * @type {Drag}
-	     */
-	    this.dragHandler = dragHandler;
-	
-	    /**
-	     * @type {Allday}
-	     */
-	    this.alldayView = alldayView;
-	
-	    /**
-	     * @type {Base}
-	     */
-	    this.baseController = baseController;
-	
-	    dragHandler.on({
-	        'click': this._onClick
-	    }, this);
-	}
-	
-	/**
-	 * Destroy handler module
-	 */
-	AlldayClick.prototype.destroy = function() {
-	    this.dragHandler.off(this);
-	    this.alldayView = this.baseController = this.dragHandler = null;
-	};
-	
-	/**
-	 * Check target element is expected condition for activate this plugins.
-	 * @param {HTMLElement} target - The element to check
-	 * @returns {string} - model id
-	 */
-	AlldayClick.prototype.checkExpectCondition = AlldayMove.prototype.checkExpectedCondition;
-	
-	/**
-	 * Click event handler
-	 * @param {object} clickEvent - click event data
-	 * @emits AlldayClick#clickSchedule
-	 */
-	AlldayClick.prototype._onClick = function(clickEvent) {
-	    var self = this,
-	        target = clickEvent.target,
-	        timeView = this.checkExpectCondition(target),
-	        scheduleCollection = this.baseController.schedules,
-	        collapseElement = domutil.closest(
-	            clickEvent.target,
-	            config.classname('.weekday-collapse-btn')
-	        );
-	    var blockElement, scheduleElement;
-	
-	    if (collapseElement) {
-	        self.fire('clickCollapse');
-	
-	        return;
-	    }
-	
-	    if (!timeView) {
-	        return;
-	    }
-	
-	    if (this._onClickMoreElement(clickEvent.target)) {
-	        return;
-	    }
-	
-	    scheduleElement = domutil.closest(target, config.classname('.weekday-schedule'));
-	    if (scheduleElement) {
-	        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
-	        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
-	            /**
-	             * @events AlldayClick#clickSchedule
-	             * @type {object}
-	             * @property {Schedule} schedule - schedule instance
-	             * @property {MouseEvent} event - MouseEvent object
-	             */
-	            self.fire('clickSchedule', {
-	                schedule: schedule,
-	                event: clickEvent.originEvent
-	            });
-	        });
-	    }
-	};
-	
-	AlldayClick.prototype._onClickMoreElement = function(target) {
-	    var moreElement = domutil.closest(target, config.classname('.weekday-exceed-in-week'));
-	    var index;
-	
-	    if (moreElement) {
-	        index = domutil.getData(moreElement, 'index');
-	        this.fire('clickExpand', parseInt(index || 0, 10));
-	
-	        return true;
-	    }
-	
-	    return false;
-	};
-	
-	util.CustomEvents.mixin(AlldayClick);
-	
-	module.exports = AlldayClick;
-
-
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Move handler for Allday view.
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var common = __webpack_require__(30);
-	var domutil = __webpack_require__(31);
-	var AlldayCore = __webpack_require__(73);
-	var AlldayMoveGuide = __webpack_require__(74);
-	var TZDate = __webpack_require__(28).Date;
-	
-	/**
-	 * @constructor
-	 * @implements {Handler}
-	 * @mixes AlldayCore
-	 * @mixes CustomEvents
-	 * @param {Drag} [dragHandler] - Drag handler instance.
-	 * @param {Allday} [alldayView] - Allday view instance.
-	 * @param {Base} [baseController] - Base controller instance.
-	 */
-	function AlldayMove(dragHandler, alldayView, baseController) {
-	    /**
-	     * Drag handler instance.
-	     * @type {Drag}
-	     */
-	    this.dragHandler = dragHandler;
-	
-	    /**
-	     * allday view instance.
-	     * @type {Allday}
-	     */
-	    this.alldayView = alldayView;
-	
-	    /**
-	     * Base controller instance.
-	     * @type {Base}
-	     */
-	    this.baseController = baseController;
-	
-	    /**
-	     * Temporary variable for dragstart event data.
-	     * @type {object}
-	     */
-	    this._dragStart = null;
-	
-	    dragHandler.on({
-	        dragStart: this._onDragStart
-	    }, this);
-	
-	    /**
-	     * @type {AlldayMoveGuide}
-	     */
-	    this.guide = new AlldayMoveGuide(this);
-	}
-	
-	AlldayMove.prototype.destroy = function() {
-	    this.guide.destroy();
-	    this.dragHandler.off(this);
-	    this.dragHandler = this.alldayView = this.baseController =
-	        this.guide = this._dragStart = null;
-	};
-	
-	/**
-	 * Check dragstart target is expected conditions for this handler.
-	 * @param {HTMLElement} target - dragstart event handler's target element.
-	 * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
-	 */
-	AlldayMove.prototype.checkExpectedCondition = function(target) {
-	    var cssClass = domutil.getClass(target),
-	        parentView,
-	        matches;
-	
-	    if (~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
-	        return false;
-	    }
-	
-	    parentView = domutil.closest(target, config.classname('.weekday'));
-	
-	    if (!parentView) {
-	        return false;
-	    }
-	
-	    cssClass = domutil.getClass(parentView);
-	    matches = cssClass.match(config.allday.getViewIDRegExp);
-	
-	    if (!matches || matches.length < 2) {
-	        return false;
-	    }
-	
-	    return util.pick(this.alldayView.children.items, matches[1]);
-	};
-	
-	/**
-	 * DragStart event handler method.
-	 * @emits AlldayMove#alldayMoveDragstart
-	 * @param {object} dragStartEventData - Drag#dragStart event handler event data.
-	 */
-	AlldayMove.prototype._onDragStart = function(dragStartEventData) {
-	    var target = dragStartEventData.target,
-	        result = this.checkExpectedCondition(target),
-	        controller = this.baseController,
-	        excludeTarget = true,
-	        scheduleBlockElement,
-	        modelID,
-	        targetModel,
-	        getScheduleDataFunc,
-	        scheduleData;
-	
-	    if (!result) {
-	        return;
-	    }
-	
-	    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget);
-	    if (!scheduleBlockElement) {
-	        return;
-	    }
-	
-	    modelID = domutil.getData(scheduleBlockElement, 'id');
-	    targetModel = controller.schedules.items[modelID];
-	
-	    if (!targetModel) {
-	        return;
-	    }
-	
-	    if (targetModel.isReadOnly) {
-	        return;
-	    }
-	
-	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
-	    this.getScheduleDataFunc = getScheduleDataFunc;
-	    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
-	
-	    util.extend(scheduleData, {
-	        scheduleBlockElement: scheduleBlockElement,
-	        model: targetModel
-	    });
-	
-	    this.dragHandler.on({
-	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
-	    }, this);
-	
-	    /**
-	     * @event AlldayMove#alldayMoveDragstart
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     * @property {Schedule} model - data object of model isntance.
-	     * @property {HTMLDivElement} scheduleBlockElement - target schedule block element.
-	     */
-	    this.fire('alldayMoveDragstart', scheduleData);
-	};
-	
-	/**
-	 * Drag event handler method.
-	 * @emits AlldayMove#alldayMoveDrag
-	 * @param {object} dragEventData - Drag#drag event handler eventdata.
-	 */
-	AlldayMove.prototype._onDrag = function(dragEventData) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc;
-	
-	    if (!getScheduleDataFunc) {
-	        return;
-	    }
-	
-	    /**
-	     * @schedule AlldayMove#alldayMoveDrag
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire('alldayMoveDrag', getScheduleDataFunc(dragEventData.originEvent));
-	};
-	
-	/**
-	 * Request update schedule model to base controller.
-	 * @fires AlldayMove#beforeUpdateSchedule
-	 * @param {object} scheduleData - schedule data from AlldayMove handler module.
-	 */
-	AlldayMove.prototype._updateSchedule = function(scheduleData) {
-	    var schedule = scheduleData.targetModel,
-	        dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-	        newStarts = new TZDate(schedule.start.getTime()),
-	        newEnds = new TZDate(schedule.end.getTime());
-	
-	    newStarts = new TZDate(newStarts.setDate(newStarts.getDate() + dateOffset));
-	    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
-	
-	    /**
-	     * @event AlldayMove#beforeUpdateSchedule
-	     * @type {object}
-	     * @property {Schedule} schedule - schedule instance to update
-	     * @property {Date} start - start time to update
-	     * @property {Date} end - end time to update
-	     */
-	    this.fire('beforeUpdateSchedule', {
-	        schedule: schedule,
-	        start: newStarts,
-	        end: newEnds
-	    });
-	};
-	
-	/**
-	 * DragEnd event hander method.
-	 * @emits AlldayMove#alldayMoveDragend
-	 * @param {object} dragEndEventData - Drag#DragEnd event handler data.
-	 * @param {string} [overrideEventName] - override emitted event name when supplied.
-	 * @param {?boolean} skipUpdate - true then skip update schedule model.
-	 */
-	AlldayMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc,
-	        dragStart = this._dragStart,
-	        scheduleData;
-	
-	    if (!getScheduleDataFunc || !dragStart) {
-	        return;
-	    }
-	
-	    this.dragHandler.off({
-	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
-	    }, this);
-	
-	    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
-	    util.extend(scheduleData, {
-	        targetModel: dragStart.model
-	    });
-	
-	    if (!skipUpdate) {
-	        this._updateSchedule(scheduleData);
-	    }
-	
-	    /**
-	     * @event AlldayMove#alldayMoveDragend
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire(overrideEventName || 'alldayMoveDragend', scheduleData);
-	
-	    this.getScheduleDataFunc = this._dragStart = null;
-	};
-	
-	/**
-	 * Click event handler method.
-	 * @emits AlldayMove#alldayMoveClick
-	 * @param {object} clickEventData - Drag#Click event handler data.
-	 */
-	AlldayMove.prototype._onClick = function(clickEventData) {
-	    /**
-	     * @event AlldayMove#alldayMoveClick
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this._onDragEnd(clickEventData, 'alldayMoveClick', true);
-	};
-	
-	common.mixin(AlldayCore, AlldayMove);
-	util.CustomEvents.mixin(AlldayMove);
-	
-	module.exports = AlldayMove;
-	
-
-
-/***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* eslint no-shadow: 0 */
-	/**
-	 * @fileoverview Base mixin object for handler/allday
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var domutil = __webpack_require__(31);
-	var domevent = __webpack_require__(32);
-	var common = __webpack_require__(30);
-	
-	var mmax = Math.max,
-	    mmin = Math.min;
-	
-	/**
-	 * @mixin Allday.Core
-	 */
-	var alldayCore = {
-	    /**
-	     * @param {Allday} alldayView - view instance of allday.
-	     * @param {MouseEvent} mouseEvent - mouse schedule object.
-	     * @returns {function|boolean} function that return schedule data by mouse events.
-	     */
-	    _retriveScheduleData: function(alldayView, mouseEvent) {
-	        var weekdayView = alldayView.children.single(),
-	            container,
-	            datesInRange,
-	            containerWidth,
-	            mousePos,
-	            dragStartXIndex,
-	            grids,
-	            range;
-	
-	        if (!weekdayView) {
-	            return false;
-	        }
-	
-	        container = weekdayView.container;
-	        range = weekdayView.getRenderDateRange();
-	        datesInRange = range.length;
-	        grids = weekdayView.getRenderDateGrids();
-	
-	        containerWidth = domutil.getSize(container)[0];
-	        mousePos = domevent.getMousePosition(mouseEvent, container);
-	        dragStartXIndex = getX(grids, common.ratio(containerWidth, 100, mousePos[0]));
-	
-	        /**
-	         * @param {MouseEvent} mouseEvent - mouse schedule in drag actions.
-	         * @returns {object} schedule data.
-	         */
-	        return function(mouseEvent) {
-	            var pos = domevent.getMousePosition(mouseEvent, container),
-	                mouseX = pos[0],
-	                xIndex = getX(grids, common.ratio(containerWidth, 100, mouseX));
-	
-	            // apply limitation of creation schedule X index.
-	            xIndex = mmax(xIndex, 0);
-	            xIndex = mmin(xIndex, datesInRange - 1);
-	
-	            return {
-	                relatedView: alldayView,
-	                dragStartXIndex: dragStartXIndex,
-	                datesInRange: datesInRange,
-	                xIndex: xIndex,
-	                triggerEvent: mouseEvent.type,
-	                grids: grids,
-	                range: range
-	            };
-	        };
-	    }
-	};
-	
-	/**
-	 * Get the left index
-	 * @param {Array} grids - grid size information
-	 * @param {number} left - left position(percent)
-	 * @returns {number} grid left index
-	 */
-	function getX(grids, left) {
-	    var i = 0;
-	    var length = grids.length;
-	    var grid;
-	    if (left < 0) {
-	        left = 0;
-	    }
-	
-	    for (; i < length; i += 1) {
-	        grid = grids[i];
-	        if (grid.left <= left && left <= (grid.left + grid.width)) {
-	            return i;
-	        }
-	    }
-	
-	    return i;
-	}
-	
-	module.exports = alldayCore;
-	
-
-
-/***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview Effect module for Allday.Move
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var datetime = __webpack_require__(27);
-	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
-	var TZDate = __webpack_require__(28).Date;
-	
-	/**
-	 * Class for Allday.Move dragging effect.
-	 * @constructor
-	 * @param {AlldayMove} alldayMove - instance of AlldayMove.
-	 */
-	function AlldayMoveGuide(alldayMove) {
-	    /**
-	     * @type {AlldayMove}
-	     */
-	    this.alldayMove = alldayMove;
-	
-	    /**
-	     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
-	     * @type {HTMLDIVElement}
-	     */
-	    this.scheduleContainer = null;
-	
-	    /**
-	     * @type {number}
-	     */
-	    this._dragStartXIndex = null;
-	
-	    /**
-	     * @type {HTMLDIVElement}
-	     */
-	    this.guideElement = null;
-	
-	    /**
-	     * @type {HTMLElement[]}
-	     */
-	    this.elements = null;
-	
-	    alldayMove.on({
-	        'alldayMoveDragstart': this._onDragStart,
-	        'alldayMoveDrag': this._onDrag,
-	        'alldayMoveDragend': this._clearGuideElement,
-	        'alldayMoveClick': this._clearGuideElement
-	    }, this);
-	}
-	
-	/**
-	 * Destroy method
-	 */
-	AlldayMoveGuide.prototype.destroy = function() {
-	    this._clearGuideElement();
-	    this.alldayMove.off(this);
-	    this.alldayMove = this.scheduleContainer = this._dragStartXIndex =
-	        this.elements = this.guideElement = null;
-	};
-	
-	/**
-	 * Clear guide element.
-	 */
-	AlldayMoveGuide.prototype._clearGuideElement = function() {
-	    this._showOriginScheduleBlocks();
-	
-	    domutil.remove(this.guideElement);
-	
-	    if (!util.browser.msie) {
-	        domutil.removeClass(global.document.body, config.classname('dragging'));
-	    }
-	
-	    this._dragStartXIndex = this.getScheduleDataFunc = this.guideElement = null;
-	};
-	
-	/**
-	 * Dim element blocks
-	 * @param {number} modelID - Schedule model instance ID
-	 */
-	AlldayMoveGuide.prototype._hideOriginScheduleBlocks = function(modelID) {
-	    var className = config.classname('weekday-schedule-block-dragging-dim');
-	    var scheduleBlocks = domutil.find(
-	        config.classname('.weekday-schedule-block'),
-	        this.alldayMove.alldayView.container,
-	        true
-	    );
-	
-	    this.elements = util.filter(scheduleBlocks, function(schedule) {
-	        return domutil.getData(schedule, 'id') === modelID;
-	    });
-	
-	    util.forEach(this.elements, function(el) {
-	        domutil.addClass(el, className);
-	    });
-	};
-	
-	/**
-	 * Show element blocks
-	 */
-	AlldayMoveGuide.prototype._showOriginScheduleBlocks = function() {
-	    var className = config.classname('weekday-schedule-block-dragging-dim');
-	
-	    util.forEach(this.elements, function(el) {
-	        domutil.removeClass(el, className);
-	    });
-	};
-	
-	/**
-	 * @param {Schedule} model - model
-	 * @param {HTMLElement} parent - parent element
-	 * Highlight element blocks
-	 */
-	AlldayMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
-	    var elements = domutil.find(config.classname('.weekday-schedule'), parent, true);
-	
-	    util.forEach(elements, function(el) {
-	        el.style.margin = '0';
-	
-	        if (!model.isFocused) {
-	            el.style.backgroundColor = el.style.color;
-	            el.style.borderLeftColor = el.style.color;
-	            el.style.color = '#ffffff';
-	        }
-	    });
-	};
-	
-	/**
-	 * Refresh guide element.
-	 * @param {number} leftPercent - left percent of guide element.
-	 * @param {number} widthPercent - width percent of guide element.
-	 * @param {boolean} isExceededLeft - schedule start is faster then render start date?
-	 * @param {boolean} isExceededRight - schedule end is later then render end date?
-	 */
-	AlldayMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPercent, isExceededLeft, isExceededRight) {
-	    var guideElement = this.guideElement;
-	
-	    reqAnimFrame.requestAnimFrame(function() {
-	        guideElement.style.left = leftPercent + '%';
-	        guideElement.style.width = widthPercent + '%';
-	
-	        if (isExceededLeft) {
-	            domutil.addClass(guideElement, config.classname('weekday-exceed-left'));
-	        } else {
-	            domutil.removeClass(guideElement, config.classname('weekday-exceed-left'));
-	        }
-	
-	        if (isExceededRight) {
-	            domutil.addClass(guideElement, config.classname('weekday-exceed-right'));
-	        } else {
-	            domutil.removeClass(guideElement, config.classname('weekday-exceed-right'));
-	        }
-	    });
-	};
-	
-	/**
-	 * Get schedule block information from schedule data.
-	 *
-	 * For example, there is single schedule has 10 length. but render range in view is 5 then
-	 * rendered block must be cut out to render properly. in this case, this method return
-	 * how many block are cut before rendering.
-	 *
-	 * 이벤트 데이터에서 이벤트 블록 엘리먼트 렌더링에 대한 필요 정보를 추출한다.
-	 *
-	 * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때
-	 * 좌 우로 몇 만큼 잘려있는지에 관한 정보를 반환함.
-	 * @param {object} dragStartEventData - schedule data from Allday.Move handler.
-	 * @returns {function} function that return schedule block information.
-	 */
-	AlldayMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventData) {
-	    var model = dragStartEventData.model,
-	        datesInRange = dragStartEventData.datesInRange,
-	        range = dragStartEventData.range,
-	        baseWidthPercent = (100 / datesInRange),
-	        originScheduleStarts = datetime.start(model.start),
-	        originScheduleEnds = datetime.end(model.end),
-	        renderStartDate = datetime.start(range[0]),
-	        renderEndDate = datetime.end(range[range.length - 1]),
-	        fromLeft = (new TZDate(originScheduleStarts.getTime() -
-	            renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0,
-	        fromRight = (new TZDate(originScheduleEnds.getTime() -
-	            renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY | 0;
-	
-	    return function(indexOffset) {
-	        return {
-	            baseWidthPercent: baseWidthPercent,
-	            fromLeft: fromLeft + indexOffset,
-	            fromRight: fromRight + indexOffset
-	        };
-	    };
-	};
-	
-	/**
-	 * DragStart event handler.
-	 * @param {object} dragStartEventData - schedule data.
-	 */
-	AlldayMoveGuide.prototype._onDragStart = function(dragStartEventData) {
-	    var alldayViewContainer = this.alldayMove.alldayView.container,
-	        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
-	        scheduleContainer;
-	
-	    if (!util.browser.msie) {
-	        domutil.addClass(global.document.body, config.classname('dragging'));
-	    }
-	
-	    this._hideOriginScheduleBlocks(String(dragStartEventData.model.cid()));
-	
-	    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), alldayViewContainer);
-	    domutil.addClass(guideElement, config.classname('allday-guide-move'));
-	    scheduleContainer.appendChild(guideElement);
-	
-	    this._dragStartXIndex = dragStartEventData.xIndex;
-	    this.getScheduleDataFunc = this._getScheduleBlockDataFunc(dragStartEventData);
-	
-	    this._highlightScheduleBlocks(dragStartEventData.model, guideElement);
-	};
-	
-	/**
-	 * Drag event handler.
-	 * @param {object} dragEventData - schedule data.
-	 */
-	AlldayMoveGuide.prototype._onDrag = function(dragEventData) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc,
-	        dragStartXIndex = this._dragStartXIndex,
-	        datesInRange = dragEventData.datesInRange,
-	        grids = dragEventData.grids,
-	        scheduleData,
-	        isExceededLeft,
-	        isExceededRight,
-	        originLength,
-	        leftIndex,
-	        size,
-	        newLeft,
-	        newWidth;
-	
-	    if (!getScheduleDataFunc) {
-	        return;
-	    }
-	
-	    scheduleData = getScheduleDataFunc(dragEventData.xIndex - dragStartXIndex);
-	    isExceededLeft = scheduleData.fromLeft < 0;
-	    isExceededRight = scheduleData.fromRight > 0;
-	
-	    leftIndex = Math.max(0, scheduleData.fromLeft);
-	    originLength = (scheduleData.fromLeft * -1) + (datesInRange + scheduleData.fromRight);
-	    size = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
-	    size = isExceededRight ? (size - scheduleData.fromRight) : size;
-	
-	    newLeft = grids[leftIndex] ? grids[leftIndex].left : 0;
-	    newWidth = getScheduleBlockWidth(leftIndex, size, grids);
-	
-	    this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
-	};
-	
-	/**
-	 * Get schedule width based on grids
-	 * @param {number} left - left index
-	 * @param {number} size - schedule width
-	 * @param {Array} grids - dates information
-	 * @returns {number} element width
-	 */
-	function getScheduleBlockWidth(left, size, grids) {
-	    var width = 0;
-	    var i = 0;
-	    var length = grids.length;
-	    for (; i < size; i += 1) {
-	        left = (left + i) % length;
-	        if (left < length) {
-	            width += grids[left] ? grids[left].width : 0;
-	        }
-	    }
-	
-	    return width;
-	}
-	
-	module.exports = AlldayMoveGuide;
-	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Handler module for WeekdayInWeek view's creation actions.
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var datetime = __webpack_require__(27);
-	var common = __webpack_require__(30);
-	var domutil = __webpack_require__(31);
-	var domevent = __webpack_require__(32);
-	var alldayCore = __webpack_require__(73);
-	var AlldayCreationGuide = __webpack_require__(76);
-	var TZDate = __webpack_require__(28).Date;
-	
-	var CLICK_DELAY = 300;
-	
-	/**
-	 * @constructor
-	 * @implements {Handler}
-	 * @mixes AlldayCore
-	 * @mixes CutomEvents
-	 * @param {Drag} [dragHandler] - Drag handler instance.
-	 * @param {Allday} [alldayView] - Allday view instance.
-	 * @param {Base} [baseController] - Base controller instance.
-	 */
-	function AlldayCreation(dragHandler, alldayView, baseController) {
-	    /**
-	     * Drag handler instance.
-	     * @type {Drag}
-	     */
-	    this.dragHandler = dragHandler;
-	
-	    /**
-	     * allday view instance.
-	     * @type {Allday}
-	     */
-	    this.alldayView = alldayView;
-	
-	    /**
-	     * Base controller instance.
-	     * @type {Base}
-	     */
-	    this.baseController = baseController;
-	
-	    /**
-	     * @type {function}
-	     */
-	    this.getScheduleDataFunc = null;
-	
-	    /**
-	     * @type {AlldayCreationGuide}
-	     */
-	    this.guide = new AlldayCreationGuide(this);
-	
-	    /**
-	     * @type {boolean}
-	     */
-	    this._requestOnClick = false;
-	
-	    dragHandler.on('dragStart', this._onDragStart, this);
-	    dragHandler.on('click', this._onClick, this);
-	    domevent.on(alldayView.container, 'dblclick', this._onDblClick, this);
-	}
-	
-	/**
-	 * Destroy method
-	 */
-	AlldayCreation.prototype.destroy = function() {
-	    this.guide.destroy();
-	    this.dragHandler.off(this);
-	
-	    if (this.alldayView && this.alldayView.container) {
-	        domevent.off(this.alldayView.container, 'dblclick', this._onDblClick, this);
-	    }
-	
-	    this.dragHandler = this.alldayView = this.baseController = this.getScheduleDataFunc = null;
-	};
-	
-	/**
-	 * Check dragstart target is expected conditions for this handler.
-	 * @param {HTMLElement} target - dragstart event handler's target element.
-	 * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
-	 */
-	AlldayCreation.prototype.checkExpectedCondition = function(target) {
-	    var cssClass = domutil.getClass(target).trim();
-	    var isAllDay = domutil.closest(target, config.classname('.allday-container'));
-	    var excludeTarget = true;
-	    var matches, schedulesElement;
-	
-	    if (!isAllDay) {
-	        return false;
-	    }
-	
-	    if (domutil.closest(target, config.classname('.weekday-exceed-in-week'))
-	        || domutil.closest(target, config.classname('.weekday-collapse-btn'))
-	    ) {
-	        return false;
-	    }
-	
-	    if (domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget)) {
-	        return false;
-	    }
-	
-	    schedulesElement = domutil.closest(target, config.classname('.weekday-schedules'));
-	    if (!schedulesElement && cssClass !== config.classname('weekday-schedules')) {
-	        return false;
-	    }
-	
-	    target = schedulesElement ? schedulesElement.parentNode : target.parentNode;
-	    cssClass = domutil.getClass(target);
-	    matches = cssClass.match(config.allday.getViewIDRegExp);
-	
-	    if (!matches || matches.length < 2) {
-	        return false;
-	    }
-	
-	    return util.pick(this.alldayView.children.items, matches[1]);
-	};
-	
-	/**
-	 * Request schedule model creation to controller by custom schedules.
-	 * @fires {AlldayCreation#beforeCreateSchedule}
-	 * @param {object} scheduleData - schedule data from AlldayCreation module.
-	 */
-	AlldayCreation.prototype._createSchedule = function(scheduleData) {
-	    var dateRange = scheduleData.range,
-	        startXIndex = scheduleData.dragStartXIndex,
-	        xIndex = scheduleData.xIndex,
-	        start, end;
-	
-	    // when inverse start, end then change it.
-	    if (xIndex < startXIndex) {
-	        startXIndex = xIndex + startXIndex;
-	        xIndex = startXIndex - xIndex;
-	        startXIndex = startXIndex - xIndex;
-	    }
-	
-	    start = new TZDate(dateRange[startXIndex].getTime());
-	    end = datetime.end(dateRange[xIndex]);
-	
-	    /**
-	     * @event {AlldayCreation#beforeCreateSchedule}
-	     * @type {object}
-	     * @property {boolean} isAllDay - whether schedule is fired in allday view area?
-	     * @property {Date} start - select start time
-	     * @property {Date} end - select end time
-	     * @property {TimeCreationGuide} guide - TimeCreationGuide instance
-	     * @property {string} triggerEventName - event name
-	     */
-	    this.fire('beforeCreateSchedule', {
-	        isAllDay: true,
-	        start: start,
-	        end: end,
-	        guide: this.guide,
-	        triggerEventName: scheduleData.triggerEvent
-	    });
-	};
-	
-	/**
-	 * DragStart event handler method.
-	 * @emits AlldayCreation#alldayCreationDragstart
-	 * @param {object} dragStartEventData - Drag#dragStart event handler schedule data.
-	 */
-	AlldayCreation.prototype._onDragStart = function(dragStartEventData) {
-	    var target = dragStartEventData.target,
-	        result = this.checkExpectedCondition(target),
-	        getScheduleDataFunc,
-	        scheduleData;
-	
-	    if (!result) {
-	        return;
-	    }
-	
-	    this.dragHandler.on({
-	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd
-	    }, this);
-	
-	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
-	    this.getScheduleDataFunc = getScheduleDataFunc;
-	
-	    scheduleData = getScheduleDataFunc(dragStartEventData.originEvent);
-	
-	    /**
-	     * @event AlldayCreation#alldayCreationDragstart
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire('alldayCreationDragstart', scheduleData);
-	};
-	
-	/**
-	 * Drag event handler method.
-	 * @emits AlldayCreation#alldayCreationDrag
-	 * @param {object} dragEventData - Drag#drag event handler scheduledata.
-	 */
-	AlldayCreation.prototype._onDrag = function(dragEventData) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc,
-	        scheduleData;
-	
-	    if (!getScheduleDataFunc) {
-	        return;
-	    }
-	
-	    scheduleData = getScheduleDataFunc(dragEventData.originEvent);
-	
-	    /**
-	     * @event AlldayCreation#alldayCreationDrag
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire('alldayCreationDrag', scheduleData);
-	};
-	
-	/**
-	 * DragEnd event hander method.
-	 * @emits AlldayCreation#alldayCreationDragend
-	 * @param {object} dragEndEventData - Drag#DragEnd event handler data.
-	 * @param {string} [overrideEventName] - override emitted event name when supplied.
-	 */
-	AlldayCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc;
-	    var scheduleData;
-	
-	    if (!getScheduleDataFunc) {
-	        return;
-	    }
-	
-	    this.dragHandler.off({
-	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd
-	    }, this);
-	
-	    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
-	
-	    this._createSchedule(scheduleData);
-	
-	    /**
-	     * @event AlldayCreation#alldayCreationDragend
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire(overrideEventName || 'alldayCreationDragend', scheduleData);
-	
-	    this.getScheduleDataFunc = null;
-	};
-	
-	/**
-	 * Click event handler method.
-	 * @emits AlldayCreation#alldayCreationClick
-	 * @param {object} clickEventData - Drag#Click event handler data.
-	 */
-	AlldayCreation.prototype._onClick = function(clickEventData) {
-	    var self = this;
-	    var getScheduleDataFunc, scheduleData;
-	
-	    if (!this.checkExpectedCondition(clickEventData.target)) {
-	        return;
-	    }
-	
-	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, clickEventData.originEvent);
-	    scheduleData = getScheduleDataFunc(clickEventData.originEvent);
-	
-	    this._requestOnClick = true;
-	    setTimeout(function() {
-	        if (self._requestOnClick) {
-	            self.fire('alldayCreationClick', scheduleData);
-	            self._createSchedule(scheduleData);
-	        }
-	        self._requestOnClick = false;
-	    }, CLICK_DELAY);
-	};
-	
-	/**
-	 * Dblclick event handler method.
-	 * @emits AlldayCreation#alldayCreationClick
-	 * @param {object} clickEventData - Drag#Click event handler data.
-	 */
-	AlldayCreation.prototype._onDblClick = function(clickEventData) {
-	    var getScheduleDataFunc, scheduleData;
-	
-	    if (!this.checkExpectedCondition(clickEventData.target)) {
-	        return;
-	    }
-	
-	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, clickEventData);
-	    scheduleData = getScheduleDataFunc(clickEventData);
-	
-	    this.fire('alldayCreationClick', scheduleData);
-	
-	    this._createSchedule(scheduleData);
-	
-	    this._requestOnClick = false;
-	};
-	
-	common.mixin(alldayCore, AlldayCreation);
-	util.CustomEvents.mixin(AlldayCreation);
-	
-	module.exports = AlldayCreation;
-
-
-/***/ },
-/* 76 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Guide element for Allday.Creation
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var config = __webpack_require__(34);
-	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
-	
-	/**
-	 * Class for Allday.Creation dragging effect.
-	 * @constructor
-	 * @param {AlldayCreation} alldayCreation - instance of AlldayCreation.
-	 */
-	function AlldayCreationGuide(alldayCreation) {
-	    /**
-	     * @type {AlldayCreation}
-	     */
-	    this.alldayCreation = alldayCreation;
-	
-	    /**
-	     * @type {HTMLDIVElement}
-	     */
-	    this.scheduleContainer = null;
-	
-	    /**
-	     * @type {HTMLDIVElement}
-	     */
-	    this.guideElement = document.createElement('div');
-	
-	    this.initializeGuideElement();
-	
-	    alldayCreation.on({
-	        alldayCreationDragstart: this._createGuideElement,
-	        alldayCreationDrag: this._onDrag,
-	        alldayCreationClick: this._createGuideElement
-	    }, this);
-	}
-	
-	/**
-	 * Destroy method
-	 */
-	AlldayCreationGuide.prototype.destroy = function() {
-	    this.clearGuideElement();
-	    this.alldayCreation.off(this);
-	    this.alldayCreation = this.scheduleContainer = this.guideElement = null;
-	};
-	
-	/**
-	 * initialize guide element's default style.
-	 */
-	AlldayCreationGuide.prototype.initializeGuideElement = function() {
-	    domutil.addClass(this.guideElement, config.classname('allday-guide-creation-block'));
-	};
-	
-	/**
-	 * Drag event handler
-	 * @param {object} scheduleData - schedule data from Allday.Creation handler.
-	 */
-	AlldayCreationGuide.prototype._onDrag = function(scheduleData) {
-	    this._refreshGuideElement(scheduleData, true);
-	};
-	
-	/**
-	 * Get element width based on narrowWeekend
-	 * @param {number} dragStartIndex - grid start index
-	 * @param {number} dragEndIndex - grid end index
-	 * @param {Array} grids - dates information
-	 * @returns {number} element width
-	 */
-	AlldayCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndIndex, grids) {
-	    var width = 0;
-	    var i = dragStartIndex;
-	    for (; i <= dragEndIndex; i += 1) {
-	        width += grids[i] ? grids[i].width : 0;
-	    }
-	
-	    return width;
-	};
-	
-	/**
-	 * Refresh guide element.
-	 * @param {object} scheduleData - schedule data from Allday.Creation handler.
-	 * @param {boolean} defer - If set to true, set style in the next frame
-	 */
-	AlldayCreationGuide.prototype._refreshGuideElement = function(scheduleData, defer) {
-	    var guideElement = this.guideElement,
-	        data = scheduleData,
-	        dragStartXIndex = data.dragStartXIndex < data.xIndex ? data.dragStartXIndex : data.xIndex,
-	        dragEndXIndex = data.dragStartXIndex < data.xIndex ? data.xIndex : data.dragStartXIndex,
-	        leftPercent,
-	        widthPercent;
-	
-	    leftPercent = data.grids[dragStartXIndex] ? data.grids[dragStartXIndex].left : 0;
-	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
-	
-	    /** eslint-disable require-jsdoc */
-	    function setStyle() {
-	        guideElement.style.display = 'block';
-	        guideElement.style.left = leftPercent + '%';
-	        guideElement.style.width = widthPercent + '%';
-	    }
-	
-	    if (defer) {
-	        reqAnimFrame.requestAnimFrame(setStyle);
-	    } else {
-	        setStyle();
-	    }
-	};
-	
-	/**
-	 * Clear guide element.
-	 */
-	AlldayCreationGuide.prototype.clearGuideElement = function() {
-	    var guideElement = this.guideElement;
-	
-	    domutil.remove(guideElement);
-	
-	    guideElement.style.display = 'none';
-	    guideElement.style.left = '';
-	    guideElement.style.width = '';
-	};
-	
-	/**
-	 * Create guide element
-	 * @param {object} dragStartEventData - schedule data object of Allday.Creation.
-	 */
-	AlldayCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
-	    var alldayCreation = this.alldayCreation,
-	        alldayView = alldayCreation.alldayView,
-	        alldayContainerElement = alldayView.container,
-	        scheduleContainer = domutil.find(config.classname('.weekday-grid'), alldayContainerElement);
-	
-	    scheduleContainer.appendChild(this.guideElement);
-	    this._refreshGuideElement(dragStartEventData);
-	};
-	
-	/**
-	 * Drag event handler.
-	 * @param {object} dragEventData - event data object of Allday.Creation.
-	 */
-	AlldayCreationGuide.prototype._onDrag = function(dragEventData) {
-	    this._refreshGuideElement(dragEventData);
-	};
-	
-	module.exports = AlldayCreationGuide;
-
-
-/***/ },
-/* 77 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Resize handler module for Allday view.
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var datetime = __webpack_require__(27);
-	var domutil = __webpack_require__(31);
-	var common = __webpack_require__(30);
-	var AlldayCore = __webpack_require__(73);
-	var AlldayResizeGuide = __webpack_require__(78);
-	var TZDate = __webpack_require__(28).Date;
-	
-	/**
-	 * @constructor
-	 * @implements {Handler}
-	 * @mixes AlldayCore
-	 * @mixes CustomEvents
-	 * @param {Drag} [dragHandler] - Drag handler instance.
-	 * @param {Allday} [alldayView] - Allday view instance.
-	 * @param {Base} [baseController] - Base controller instance.
-	 */
-	function AlldayResize(dragHandler, alldayView, baseController) {
-	    /**
-	     * Drag handler instance.
-	     * @type {Drag}
-	     */
-	    this.dragHandler = dragHandler;
-	
-	    /**
-	     * allday view instance.
-	     * @type {Allday}
-	     */
-	    this.alldayView = alldayView;
-	
-	    /**
-	     * Base controller instance.
-	     * @type {Base}
-	     */
-	    this.baseController = baseController;
-	
-	    /**
-	     * Temporary variable for dragStart event data.
-	     * @type {object}
-	     */
-	    this._dragStart = null;
-	
-	    dragHandler.on({
-	        dragStart: this._onDragStart
-	    }, this);
-	
-	    /**
-	     * @type {AlldayResizeGuide}
-	     */
-	    this.guide = new AlldayResizeGuide(this);
-	}
-	
-	/**
-	 * Destroy method
-	 */
-	AlldayResize.prototype.destroy = function() {
-	    this.guide.destroy();
-	    this.dragHandler.off(this);
-	    this.dragHandler = this.alldayView = this.baseController =
-	        this.guide = this._dragStart = null;
-	};
-	
-	/**
-	 * Check dragstart target is expected conditions for this handler.
-	 * @param {HTMLElement} target - dragstart event handler's target element.
-	 * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
-	 */
-	AlldayResize.prototype.checkExpectedCondition = function(target) {
-	    var cssClass = domutil.getClass(target),
-	        matches;
-	
-	    if (!~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
-	        return false;
-	    }
-	
-	    target = domutil.closest(target, config.classname('.weekday'));
-	
-	    if (!target) {
-	        return false;
-	    }
-	
-	    cssClass = domutil.getClass(target);
-	    matches = cssClass.match(config.allday.getViewIDRegExp);
-	
-	    if (!matches || matches.length < 2) {
-	        return false;
-	    }
-	
-	    return util.pick(this.alldayView.children.items, matches[1]);
-	};
-	
-	/**
-	 * DragStart event handler.
-	 * @emits AlldayResize#alldayResizeDragstart
-	 * @param {object} dragStartEventData - schedule data.
-	 */
-	AlldayResize.prototype._onDragStart = function(dragStartEventData) {
-	    var target = dragStartEventData.target,
-	        result = this.checkExpectedCondition(target),
-	        controller = this.baseController,
-	        scheduleBlockElement,
-	        modelID,
-	        targetModel,
-	        getScheduleDataFunc,
-	        scheduleData;
-	
-	    if (!result) {
-	        return;
-	    }
-	
-	    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
-	    modelID = domutil.getData(scheduleBlockElement, 'id');
-	    targetModel = controller.schedules.items[modelID];
-	
-	    if (!targetModel) {
-	        return;
-	    }
-	
-	    getScheduleDataFunc = this._retriveScheduleData(this.alldayView, dragStartEventData.originEvent);
-	    this.getScheduleDataFunc = getScheduleDataFunc;
-	    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
-	
-	    util.extend(scheduleData, {
-	        scheduleBlockElement: scheduleBlockElement,
-	        model: targetModel
-	    });
-	
-	    this.dragHandler.on({
-	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
-	    }, this);
-	
-	    /**
-	     * @event AlldayResize#alldayResizeDragstart
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     * @property {Schedule} model - data object of model isntance.
-	     * @property {HTMLDivElement} scheduleBlockElement - target schedule block element.
-	     */
-	    this.fire('alldayResizeDragstart', scheduleData);
-	};
-	
-	/**
-	 * Drag event handler method.
-	 * @emits AlldayResize#alldayResizeDrag
-	 * @param {object} dragEventData - Drag#drag event handler scheduledata.
-	 */
-	AlldayResize.prototype._onDrag = function(dragEventData) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc;
-	
-	    if (!getScheduleDataFunc) {
-	        return;
-	    }
-	
-	    /**
-	     * @event AlldayResize#alldayResizeDrag
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire('alldayResizeDrag', getScheduleDataFunc(dragEventData.originEvent));
-	};
-	
-	/**
-	 * Request update schedule instance to base controller.
-	 * @fires AlldayResize#beforeUpdateSchedule
-	 * @param {object} scheduleData - schedule data from AlldayResize handler.
-	 */
-	AlldayResize.prototype._updateSchedule = function(scheduleData) {
-	    var schedule = scheduleData.targetModel,
-	        dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-	        newEnds = new TZDate(schedule.end.getTime());
-	
-	    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
-	    newEnds = new TZDate(Math.max(datetime.end(schedule.start).getTime(), newEnds.getTime()));
-	
-	    /**
-	     * @event AlldayResize#beforeUpdateSchedule
-	     * @type {object}
-	     * @property {Schedule} schedule - schedule instance to update
-	     * @property {date} start - start time to update
-	     * @property {date} end - end time to update
-	     */
-	    this.fire('beforeUpdateSchedule', {
-	        schedule: schedule,
-	        start: schedule.getStarts(),
-	        end: newEnds
-	    });
-	};
-	
-	/**
-	 * DragEnd event hander method.
-	 * @emits AlldayResize#alldayResizeDragend
-	 * @param {object} dragEndEventData - Drag#DragEnd event handler data.
-	 * @param {string} [overrideEventName] - override emitted event name when supplied.
-	 * @param {?boolean} skipUpdate - true then skip update schedule model.
-	 */
-	AlldayResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
-	    var getScheduleDataFunc = this.getScheduleDataFunc,
-	        dragStart = this._dragStart,
-	        scheduleData;
-	
-	    if (!getScheduleDataFunc || !dragStart) {
-	        return;
-	    }
-	
-	    this.dragHandler.off({
-	        drag: this._onDrag,
-	        dragEnd: this._onDragEnd,
-	        click: this._onClick
-	    }, this);
-	
-	    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
-	    util.extend(scheduleData, {
-	        targetModel: dragStart.model
-	    });
-	
-	    if (!skipUpdate) {
-	        this._updateSchedule(scheduleData);
-	    }
-	
-	    /**
-	     * @event AlldayResize#alldayResizeDragend
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this.fire(overrideEventName || 'alldayResizeDragend', scheduleData);
-	
-	    this.getScheduleDataFunc = this._dragStart = null;
-	};
-	
-	/**
-	 * Click event handler method.
-	 * @emits AlldayResize#alldayResizeClick
-	 * @param {object} clickEventData - Drag#Click event handler data.
-	 */
-	AlldayResize.prototype._onClick = function(clickEventData) {
-	    /**
-	     * @event AlldayResize#alldayResizeClick
-	     * @type {object}
-	     * @property {AlldayView} relatedView - allday view instance.
-	     * @property {number} datesInRange - date count of this view.
-	     * @property {number} dragStartXIndex - index number of dragstart grid index.
-	     * @property {number} xIndex - index number of mouse positions.
-	     */
-	    this._onDragEnd(clickEventData, 'alldayResizeClick', true);
-	};
-	
-	common.mixin(AlldayCore, AlldayResize);
-	util.CustomEvents.mixin(AlldayResize);
-	
-	module.exports = AlldayResize;
-	
-
-
-/***/ },
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {/**
-	 * @fileoverview Resize Guide module.
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var domutil = __webpack_require__(31);
-	var datetime = __webpack_require__(27);
-	var reqAnimFrame = __webpack_require__(52);
-	var TZDate = __webpack_require__(28).Date;
-	
-	/**
-	 * @constructor
-	 * @param {AlldayResize} alldayResize - instance of AlldayResize
-	 */
-	function AlldayResizeGuide(alldayResize) {
-	    /**
-	     * @type {AlldayResize}
-	     */
-	    this.alldayResize = alldayResize;
-	
-	    /**
-	     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
-	     * @type {HTMLDIVElement}
-	     */
-	    this.scheduleContainer = null;
-	
-	    /**
-	     * @type {function}
-	     */
-	    this.getScheduleDataFunc = null;
-	
-	    /**
-	     * @type {HTMLDIVElement}
-	     */
-	    this.guideElement = null;
-	
-	    alldayResize.on({
-	        'alldayResizeDragstart': this._onDragStart,
-	        'alldayResizeDrag': this._onDrag,
-	        'alldayResizeDragend': this._clearGuideElement,
-	        'alldayResizeClick': this._clearGuideElement
-	    }, this);
-	}
-	
-	/**
-	 * Destroy method
-	 */
-	AlldayResizeGuide.prototype.destroy = function() {
-	    this._clearGuideElement();
-	    this.alldayResize.off(this);
-	    this.alldayResize = this.scheduleContainer = this.getScheduleDataFunc =
-	        this.guideElement = null;
-	};
-	
-	/**
-	 * Clear guide element.
-	 */
-	AlldayResizeGuide.prototype._clearGuideElement = function() {
-	    domutil.remove(this.guideElement);
-	
-	    if (!util.browser.msie) {
-	        domutil.removeClass(global.document.body, config.classname('resizing-x'));
-	    }
-	
-	    this.getScheduleDataFunc = null;
-	};
-	
-	/**
-	 * Refresh guide element
-	 * @param {number} newWidth - new width percentage value to resize guide element.
-	 */
-	AlldayResizeGuide.prototype.refreshGuideElement = function(newWidth) {
-	    var guideElement = this.guideElement;
-	
-	    reqAnimFrame.requestAnimFrame(function() {
-	        guideElement.style.width = newWidth + '%';
-	    });
-	};
-	
-	/**
-	 * Return function that calculate guide element's new width percentage value.
-	 * @param {object} dragStartEventData - dragstart schedule data.
-	 * @returns {function} return function that calculate guide element new width percentage.
-	 */
-	AlldayResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
-	    var model = dragStartEventData.model,
-	        viewOptions = this.alldayResize.alldayView.options,
-	        fromLeft = (new TZDate(
-	            model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
-	        )) / datetime.MILLISECONDS_PER_DAY | 0,
-	        grids = dragStartEventData.grids;
-	
-	    return function(xIndex) {
-	        var width = 0;
-	        var i = 0;
-	        var length = grids.length;
-	        width += grids[fromLeft] ? grids[fromLeft].width : 0;
-	
-	        for (; i < length; i += 1) {
-	            if (i > fromLeft && i <= xIndex) {
-	                width += grids[i] ? grids[i].width : 0;
-	            }
-	        }
-	
-	        return width;
-	    };
-	};
-	
-	/**
-	 * DragStart event handler.
-	 * @param {object} dragStartEventData - schedule data.
-	 */
-	AlldayResizeGuide.prototype._onDragStart = function(dragStartEventData) {
-	    var alldayViewContainer = this.alldayResize.alldayView.container,
-	        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
-	        scheduleContainer;
-	
-	    if (!util.browser.msie) {
-	        domutil.addClass(global.document.body, config.classname('resizing-x'));
-	    }
-	
-	    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), alldayViewContainer);
-	    domutil.addClass(guideElement, config.classname('allday-guide-move'));
-	    scheduleContainer.appendChild(guideElement);
-	
-	    this.getScheduleDataFunc = this.getGuideElementWidthFunc(dragStartEventData);
-	};
-	
-	/**
-	 * Drag event handler.
-	 * @param {object} dragEventData - schedule data.
-	 */
-	AlldayResizeGuide.prototype._onDrag = function(dragEventData) {
-	    var func = this.getScheduleDataFunc;
-	
-	    if (!func) {
-	        return;
-	    }
-	
-	    this.refreshGuideElement(func(dragEventData.xIndex));
-	};
-	
-	module.exports = AlldayResizeGuide;
-	
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13915,7 +11945,1711 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 80 */
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Click handle module for daygrid schedules
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var DayGridMove = __webpack_require__(69);
+	
+	/**
+	 * @constructor
+	 * @implements {Handler}
+	 * @mixes CustomEvents
+	 * @param {Drag} [dragHandler] - Drag handler instance.
+	 * @param {DayGrid} [view] - daygrid view instance.
+	 * @param {Base} [controller] - Base controller instance.
+	 */
+	function DayGridClick(dragHandler, view, controller) {
+	    /**
+	     * @type {Drag}
+	     */
+	    this.dragHandler = dragHandler;
+	
+	    /**
+	     * @type {DayGrid}
+	     */
+	    this.view = view;
+	
+	    /**
+	     * @type {Base}
+	     */
+	    this.controller = controller;
+	
+	    dragHandler.on({
+	        'click': this._onClick
+	    }, this);
+	}
+	
+	/**
+	 * Destroy handler module
+	 */
+	DayGridClick.prototype.destroy = function() {
+	    this.dragHandler.off(this);
+	    this.view = this.controller = this.dragHandler = null;
+	};
+	
+	/**
+	 * Check target element is expected condition for activate this plugins.
+	 * @param {HTMLElement} target - The element to check
+	 * @returns {string} - model id
+	 */
+	DayGridClick.prototype.checkExpectCondition = DayGridMove.prototype.checkExpectedCondition;
+	
+	/**
+	 * Click event handler
+	 * @param {object} clickEvent - click event data
+	 * @emits DayGridClick#clickSchedule
+	 * @emits DayGridClick#collapse
+	 * @emits DayGridClick#expand
+	 */
+	DayGridClick.prototype._onClick = function(clickEvent) {
+	    var self = this,
+	        target = clickEvent.target,
+	        dayGridScheduleView = this.checkExpectCondition(target),
+	        scheduleCollection = this.controller.schedules,
+	        collapseBtnElement = domutil.closest(
+	            target,
+	            config.classname('.weekday-collapse-btn')
+	        ),
+	        expandBtnElement = domutil.closest(
+	            target,
+	            config.classname('.weekday-exceed-in-week')
+	        ),
+	        containsTarget = this.view.container.contains(target);
+	    var blockElement, scheduleElement;
+	
+	    if (!containsTarget) {
+	        return;
+	    }
+	
+	    if (collapseBtnElement) {
+	        /**
+	         * click collpase btn event
+	         * @events DayGridClick#collapse
+	         */
+	        self.fire('collapse');
+	
+	        return;
+	    }
+	
+	    if (expandBtnElement) {
+	        this.view.setState({
+	            clickedExpandBtnIndex: parseInt(domutil.getData(expandBtnElement, 'index'), 10)
+	        });
+	
+	        /**
+	         * click expand btn event
+	         * @events DayGridClick#expand
+	         */
+	        self.fire('expand');
+	
+	        return;
+	    }
+	
+	    if (!dayGridScheduleView) {
+	        return;
+	    }
+	
+	    scheduleElement = domutil.closest(target, config.classname('.weekday-schedule'));
+	    if (scheduleElement) {
+	        blockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+	        scheduleCollection.doWhenHas(domutil.getData(blockElement, 'id'), function(schedule) {
+	            /**
+	             * @events DayGridClick#clickSchedule
+	             * @type {object}
+	             * @property {Schedule} schedule - schedule instance
+	             * @property {MouseEvent} event - MouseEvent object
+	             */
+	            self.fire('clickSchedule', {
+	                schedule: schedule,
+	                event: clickEvent.originEvent
+	            });
+	        });
+	    }
+	};
+	
+	util.CustomEvents.mixin(DayGridClick);
+	
+	module.exports = DayGridClick;
+
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Move handler for DayGrid view.
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var common = __webpack_require__(30);
+	var domutil = __webpack_require__(31);
+	var dayGridCore = __webpack_require__(70);
+	var DayGridMoveGuide = __webpack_require__(71);
+	var TZDate = __webpack_require__(28).Date;
+	
+	/**
+	 * @constructor
+	 * @implements {Handler}
+	 * @mixes dayGridCore
+	 * @mixes CustomEvents
+	 * @param {Drag} dragHandler - Drag handler instance.
+	 * @param {DayGrid} view - view instance.
+	 * @param {Base} controller - Base controller instance.
+	 */
+	function DayGridMove(dragHandler, view, controller) {
+	    /**
+	     * Drag handler instance.
+	     * @type {Drag}
+	     */
+	    this.dragHandler = dragHandler;
+	
+	    /**
+	     * view instance.
+	     * @type {DayGrid}
+	     */
+	    this.view = view;
+	
+	    /**
+	     * Base controller instance.
+	     * @type {Base}
+	     */
+	    this.controller = controller;
+	
+	    /**
+	     * Temporary variable for dragstart event data.
+	     * @type {object}
+	     */
+	    this._dragStart = null;
+	
+	    dragHandler.on({
+	        dragStart: this._onDragStart
+	    }, this);
+	
+	    /**
+	     * @type {DayGridMoveGuide}
+	     */
+	    this.guide = new DayGridMoveGuide(this);
+	}
+	
+	DayGridMove.prototype.destroy = function() {
+	    this.guide.destroy();
+	    this.dragHandler.off(this);
+	    this.dragHandler = this.view = this.controller =
+	        this.guide = this._dragStart = null;
+	};
+	
+	/**
+	 * Check dragstart target is expected conditions for this handler.
+	 * @param {HTMLElement} target - dragstart event handler's target element.
+	 * @returns {boolean|DayGridSchedule} return DayGridSchedule view instance when satiate condition.
+	 */
+	DayGridMove.prototype.checkExpectedCondition = function(target) {
+	    var cssClass = domutil.getClass(target),
+	        parentView,
+	        matches;
+	
+	    if (~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
+	        return false;
+	    }
+	
+	    parentView = domutil.closest(target, config.classname('.weekday'));
+	
+	    if (!parentView) {
+	        return false;
+	    }
+	
+	    cssClass = domutil.getClass(parentView);
+	    matches = cssClass.match(config.daygrid.getViewIDRegExp);
+	
+	    if (!matches || matches.length < 2) {
+	        return false;
+	    }
+	
+	    return util.pick(this.view.children.items, matches[1]);
+	};
+	
+	/**
+	 * DragStart event handler method.
+	 * @emits DayGridMove#dragstart
+	 * @param {object} dragStartEventData - Drag#dragStart event handler event data.
+	 */
+	DayGridMove.prototype._onDragStart = function(dragStartEventData) {
+	    var target = dragStartEventData.target,
+	        result = this.checkExpectedCondition(target),
+	        controller = this.controller,
+	        excludeTarget = true,
+	        scheduleBlockElement,
+	        modelID,
+	        targetModel,
+	        getScheduleDataFunc,
+	        scheduleData;
+	
+	    if (!result) {
+	        return;
+	    }
+	
+	    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget);
+	    if (!scheduleBlockElement) {
+	        return;
+	    }
+	
+	    modelID = domutil.getData(scheduleBlockElement, 'id');
+	    targetModel = controller.schedules.items[modelID];
+	
+	    if (!targetModel) {
+	        return;
+	    }
+	
+	    if (targetModel.isReadOnly) {
+	        return;
+	    }
+	
+	    getScheduleDataFunc = this._retriveScheduleData(this.view, dragStartEventData.originEvent);
+	    this.getScheduleDataFunc = getScheduleDataFunc;
+	    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
+	
+	    util.extend(scheduleData, {
+	        scheduleBlockElement: scheduleBlockElement,
+	        model: targetModel
+	    });
+	
+	    this.dragHandler.on({
+	        drag: this._onDrag,
+	        dragEnd: this._onDragEnd,
+	        click: this._onClick
+	    }, this);
+	
+	    /**
+	     * @event DayGridMove#dragstart
+	     * @type {object}
+	     * @property {DayGrid} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     * @property {Schedule} model - data object of model isntance.
+	     * @property {HTMLDivElement} scheduleBlockElement - target schedule block element.
+	     */
+	    this.fire('dragstart', scheduleData);
+	};
+	
+	/**
+	 * Drag event handler method.
+	 * @emits DayGridMove#drag
+	 * @param {object} dragEventData - Drag#drag event handler eventdata.
+	 */
+	DayGridMove.prototype._onDrag = function(dragEventData) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc;
+	
+	    if (!getScheduleDataFunc) {
+	        return;
+	    }
+	
+	    /**
+	     * @schedule DayGridMove#drag
+	     * @type {object}
+	     * @property {DayGrid} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire('drag', getScheduleDataFunc(dragEventData.originEvent));
+	};
+	
+	/**
+	 * Request update schedule model to base controller.
+	 * @fires DayGridMove#beforeUpdateSchedule
+	 * @param {object} scheduleData - schedule data from DayGridMove handler module.
+	 */
+	DayGridMove.prototype._updateSchedule = function(scheduleData) {
+	    var schedule = scheduleData.targetModel,
+	        dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
+	        newStarts = new TZDate(schedule.start.getTime()),
+	        newEnds = new TZDate(schedule.end.getTime());
+	
+	    newStarts = new TZDate(newStarts.setDate(newStarts.getDate() + dateOffset));
+	    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
+	
+	    /**
+	     * @event DayGridMove#beforeUpdateSchedule
+	     * @type {object}
+	     * @property {Schedule} schedule - schedule instance to update
+	     * @property {Date} start - start time to update
+	     * @property {Date} end - end time to update
+	     */
+	    this.fire('beforeUpdateSchedule', {
+	        schedule: schedule,
+	        start: newStarts,
+	        end: newEnds
+	    });
+	};
+	
+	/**
+	 * DragEnd event hander method.
+	 * @emits DayGridMove#dragend
+	 * @param {object} dragEndEventData - Drag#DragEnd event handler data.
+	 * @param {string} [overrideEventName] - override emitted event name when supplied.
+	 * @param {?boolean} skipUpdate - true then skip update schedule model.
+	 */
+	DayGridMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc,
+	        dragStart = this._dragStart,
+	        scheduleData;
+	
+	    if (!getScheduleDataFunc || !dragStart) {
+	        return;
+	    }
+	
+	    this.dragHandler.off({
+	        drag: this._onDrag,
+	        dragEnd: this._onDragEnd,
+	        click: this._onClick
+	    }, this);
+	
+	    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
+	    util.extend(scheduleData, {
+	        targetModel: dragStart.model
+	    });
+	
+	    if (!skipUpdate) {
+	        this._updateSchedule(scheduleData);
+	    }
+	
+	    /**
+	     * @event DayGridMove#dragend
+	     * @type {object}
+	     * @property {DayGrid} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire(overrideEventName || 'dragend', scheduleData);
+	
+	    this.getScheduleDataFunc = this._dragStart = null;
+	};
+	
+	/**
+	 * Click event handler method.
+	 * @emits DayGridMove#click
+	 * @param {object} clickEventData - Drag#Click event handler data.
+	 */
+	DayGridMove.prototype._onClick = function(clickEventData) {
+	    /**
+	     * @event DayGridMove#click
+	     * @type {object}
+	     * @property {DayGrid} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this._onDragEnd(clickEventData, 'click', true);
+	};
+	
+	common.mixin(dayGridCore, DayGridMove);
+	util.CustomEvents.mixin(DayGridMove);
+	
+	module.exports = DayGridMove;
+	
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* eslint no-shadow: 0 */
+	/**
+	 * @fileoverview Base mixin object for handler/daygrid
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
+	var common = __webpack_require__(30);
+	
+	var mmax = Math.max,
+	    mmin = Math.min;
+	
+	/**
+	 * @mixin dayGridCore
+	 */
+	var dayGridCore = {
+	    /**
+	     * @param {view} view - view instance.
+	     * @param {MouseEvent} mouseEvent - mouse schedule object.
+	     * @returns {function|boolean} function that return schedule data by mouse events.
+	     */
+	    _retriveScheduleData: function(view, mouseEvent) {
+	        var weekdayView = view.children.single(),
+	            container,
+	            datesInRange,
+	            containerWidth,
+	            mousePos,
+	            dragStartXIndex,
+	            grids,
+	            range;
+	
+	        if (!weekdayView) {
+	            return false;
+	        }
+	
+	        container = weekdayView.container;
+	        range = weekdayView.getRenderDateRange();
+	        datesInRange = range.length;
+	        grids = weekdayView.getRenderDateGrids();
+	
+	        containerWidth = domutil.getSize(container)[0];
+	        mousePos = domevent.getMousePosition(mouseEvent, container);
+	        dragStartXIndex = getX(grids, common.ratio(containerWidth, 100, mousePos[0]));
+	
+	        /**
+	         * @param {MouseEvent} mouseEvent - mouse schedule in drag actions.
+	         * @returns {object} schedule data.
+	         */
+	        return function(mouseEvent) {
+	            var pos = domevent.getMousePosition(mouseEvent, container),
+	                mouseX = pos[0],
+	                xIndex = getX(grids, common.ratio(containerWidth, 100, mouseX));
+	
+	            // apply limitation of creation schedule X index.
+	            xIndex = mmax(xIndex, 0);
+	            xIndex = mmin(xIndex, datesInRange - 1);
+	
+	            return {
+	                relatedView: view,
+	                dragStartXIndex: dragStartXIndex,
+	                datesInRange: datesInRange,
+	                xIndex: xIndex,
+	                triggerEvent: mouseEvent.type,
+	                grids: grids,
+	                range: range
+	            };
+	        };
+	    }
+	};
+	
+	/**
+	 * Get the left index
+	 * @param {Array} grids - grid size information
+	 * @param {number} left - left position(percent)
+	 * @returns {number} grid left index
+	 */
+	function getX(grids, left) {
+	    var i = 0;
+	    var length = grids.length;
+	    var grid;
+	    if (left < 0) {
+	        left = 0;
+	    }
+	
+	    for (; i < length; i += 1) {
+	        grid = grids[i];
+	        if (grid.left <= left && left <= (grid.left + grid.width)) {
+	            return i;
+	        }
+	    }
+	
+	    return i;
+	}
+	
+	module.exports = dayGridCore;
+	
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * @fileoverview Effect module for DayGrid.Move
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(52);
+	var TZDate = __webpack_require__(28).Date;
+	
+	/**
+	 * Class for DayGrid.Move dragging effect.
+	 * @constructor
+	 * @param {DayGridMove} daygridMove - instance of DayGridMove.
+	 */
+	function DayGridMoveGuide(daygridMove) {
+	    /**
+	     * @type {DayGridMove}
+	     */
+	    this.daygridMove = daygridMove;
+	
+	    /**
+	     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
+	     * @type {HTMLDIVElement}
+	     */
+	    this.scheduleContainer = null;
+	
+	    /**
+	     * @type {number}
+	     */
+	    this._dragStartXIndex = null;
+	
+	    /**
+	     * @type {HTMLDIVElement}
+	     */
+	    this.guideElement = null;
+	
+	    /**
+	     * @type {HTMLElement[]}
+	     */
+	    this.elements = null;
+	
+	    daygridMove.on({
+	        'dragstart': this._onDragStart,
+	        'drag': this._onDrag,
+	        'dragend': this._clearGuideElement,
+	        'click': this._clearGuideElement
+	    }, this);
+	}
+	
+	/**
+	 * Destroy method
+	 */
+	DayGridMoveGuide.prototype.destroy = function() {
+	    this._clearGuideElement();
+	    this.daygridMove.off(this);
+	    this.daygridMove = this.scheduleContainer = this._dragStartXIndex =
+	        this.elements = this.guideElement = null;
+	};
+	
+	/**
+	 * Clear guide element.
+	 */
+	DayGridMoveGuide.prototype._clearGuideElement = function() {
+	    this._showOriginScheduleBlocks();
+	
+	    domutil.remove(this.guideElement);
+	
+	    if (!util.browser.msie) {
+	        domutil.removeClass(global.document.body, config.classname('dragging'));
+	    }
+	
+	    this._dragStartXIndex = this.getScheduleDataFunc = this.guideElement = null;
+	};
+	
+	/**
+	 * Dim element blocks
+	 * @param {number} modelID - Schedule model instance ID
+	 */
+	DayGridMoveGuide.prototype._hideOriginScheduleBlocks = function(modelID) {
+	    var className = config.classname('weekday-schedule-block-dragging-dim');
+	    var scheduleBlocks = domutil.find(
+	        config.classname('.weekday-schedule-block'),
+	        this.daygridMove.view.container,
+	        true
+	    );
+	
+	    this.elements = util.filter(scheduleBlocks, function(schedule) {
+	        return domutil.getData(schedule, 'id') === modelID;
+	    });
+	
+	    util.forEach(this.elements, function(el) {
+	        domutil.addClass(el, className);
+	    });
+	};
+	
+	/**
+	 * Show element blocks
+	 */
+	DayGridMoveGuide.prototype._showOriginScheduleBlocks = function() {
+	    var className = config.classname('weekday-schedule-block-dragging-dim');
+	
+	    util.forEach(this.elements, function(el) {
+	        domutil.removeClass(el, className);
+	    });
+	};
+	
+	/**
+	 * Highlight element blocks 
+	 * @param {Schedule} model - model
+	 * @param {HTMLElement} parent - parent element
+	 */
+	DayGridMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
+	    var elements = domutil.find(config.classname('.weekday-schedule'), parent, true);
+	
+	    util.forEach(elements, function(el) {
+	        el.style.margin = '0';
+	
+	        if (!model.isFocused) {
+	            el.style.backgroundColor = el.style.color;
+	            el.style.borderLeftColor = el.style.color;
+	            el.style.color = '#ffffff';
+	        }
+	    });
+	};
+	
+	/**
+	 * Refresh guide element.
+	 * @param {number} leftPercent - left percent of guide element.
+	 * @param {number} widthPercent - width percent of guide element.
+	 * @param {boolean} isExceededLeft - schedule start is faster then render start date?
+	 * @param {boolean} isExceededRight - schedule end is later then render end date?
+	 */
+	DayGridMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPercent, isExceededLeft, isExceededRight) {
+	    var guideElement = this.guideElement;
+	
+	    reqAnimFrame.requestAnimFrame(function() {
+	        guideElement.style.left = leftPercent + '%';
+	        guideElement.style.width = widthPercent + '%';
+	
+	        if (isExceededLeft) {
+	            domutil.addClass(guideElement, config.classname('weekday-exceed-left'));
+	        } else {
+	            domutil.removeClass(guideElement, config.classname('weekday-exceed-left'));
+	        }
+	
+	        if (isExceededRight) {
+	            domutil.addClass(guideElement, config.classname('weekday-exceed-right'));
+	        } else {
+	            domutil.removeClass(guideElement, config.classname('weekday-exceed-right'));
+	        }
+	    });
+	};
+	
+	/**
+	 * Get schedule block information from schedule data.
+	 *
+	 * For example, there is single schedule has 10 length. but render range in view is 5 then
+	 * rendered block must be cut out to render properly. in this case, this method return
+	 * how many block are cut before rendering.
+	 *
+	 * 이벤트 데이터에서 이벤트 블록 엘리먼트 렌더링에 대한 필요 정보를 추출한다.
+	 *
+	 * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때
+	 * 좌 우로 몇 만큼 잘려있는지에 관한 정보를 반환함.
+	 * @param {object} dragStartEventData - schedule data from DayGrid.Move handler.
+	 * @returns {function} function that return schedule block information.
+	 */
+	DayGridMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventData) {
+	    var model = dragStartEventData.model,
+	        datesInRange = dragStartEventData.datesInRange,
+	        range = dragStartEventData.range,
+	        baseWidthPercent = (100 / datesInRange),
+	        originScheduleStarts = datetime.start(model.start),
+	        originScheduleEnds = datetime.end(model.end),
+	        renderStartDate = datetime.start(range[0]),
+	        renderEndDate = datetime.end(range[range.length - 1]),
+	        fromLeft = (new TZDate(originScheduleStarts.getTime() -
+	            renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY || 0,
+	        fromRight = (new TZDate(originScheduleEnds.getTime() -
+	            renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY || 0;
+	
+	    return function(indexOffset) {
+	        return {
+	            baseWidthPercent: baseWidthPercent,
+	            fromLeft: fromLeft + indexOffset,
+	            fromRight: fromRight + indexOffset
+	        };
+	    };
+	};
+	
+	/**
+	 * DragStart event handler.
+	 * @param {object} dragStartEventData - schedule data.
+	 */
+	DayGridMoveGuide.prototype._onDragStart = function(dragStartEventData) {
+	    var container = this.daygridMove.view.container,
+	        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
+	        scheduleContainer;
+	
+	    if (!util.browser.msie) {
+	        domutil.addClass(global.document.body, config.classname('dragging'));
+	    }
+	
+	    this._hideOriginScheduleBlocks(String(dragStartEventData.model.cid()));
+	
+	    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
+	    domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+	    scheduleContainer.appendChild(guideElement);
+	
+	    this._dragStartXIndex = dragStartEventData.xIndex;
+	    this.getScheduleDataFunc = this._getScheduleBlockDataFunc(dragStartEventData);
+	
+	    this._highlightScheduleBlocks(dragStartEventData.model, guideElement);
+	};
+	
+	/**
+	 * Drag event handler.
+	 * @param {object} dragEventData - schedule data.
+	 */
+	DayGridMoveGuide.prototype._onDrag = function(dragEventData) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc,
+	        dragStartXIndex = this._dragStartXIndex,
+	        datesInRange = dragEventData.datesInRange,
+	        grids = dragEventData.grids,
+	        scheduleData,
+	        isExceededLeft,
+	        isExceededRight,
+	        originLength,
+	        leftIndex,
+	        size,
+	        newLeft,
+	        newWidth;
+	
+	    if (!getScheduleDataFunc) {
+	        return;
+	    }
+	
+	    scheduleData = getScheduleDataFunc(dragEventData.xIndex - dragStartXIndex);
+	    isExceededLeft = scheduleData.fromLeft < 0;
+	    isExceededRight = scheduleData.fromRight > 0;
+	
+	    leftIndex = Math.max(0, scheduleData.fromLeft);
+	    originLength = (scheduleData.fromLeft * -1) + (datesInRange + scheduleData.fromRight);
+	    size = isExceededLeft ? (originLength + scheduleData.fromLeft) : originLength;
+	    size = isExceededRight ? (size - scheduleData.fromRight) : size;
+	
+	    newLeft = grids[leftIndex] ? grids[leftIndex].left : 0;
+	    newWidth = getScheduleBlockWidth(leftIndex, size, grids);
+	
+	    this.refreshGuideElement(newLeft, newWidth, isExceededLeft, isExceededRight);
+	};
+	
+	/**
+	 * Get schedule width based on grids
+	 * @param {number} left - left index
+	 * @param {number} size - schedule width
+	 * @param {Array} grids - dates information
+	 * @returns {number} element width
+	 */
+	function getScheduleBlockWidth(left, size, grids) {
+	    var width = 0;
+	    var i = 0;
+	    var length = grids.length;
+	    for (; i < size; i += 1) {
+	        left = (left + i) % length;
+	        if (left < length) {
+	            width += grids[left] ? grids[left].width : 0;
+	        }
+	    }
+	
+	    return width;
+	}
+	
+	module.exports = DayGridMoveGuide;
+	
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Handler module for WeekdayInWeek view's creation actions.
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var common = __webpack_require__(30);
+	var domutil = __webpack_require__(31);
+	var domevent = __webpack_require__(32);
+	var dayGridCore = __webpack_require__(70);
+	var DayGridCreationGuide = __webpack_require__(73);
+	var TZDate = __webpack_require__(28).Date;
+	
+	var CLICK_DELAY = 300;
+	
+	/**
+	 * @constructor
+	 * @implements {Handler}
+	 * @mixes dayGridCore
+	 * @mixes CutomEvents
+	 * @param {Drag} [dragHandler] - Drag handler instance.
+	 * @param {DayGrid} [view] - DayGrid view instance.
+	 * @param {Base} [controller] - Base controller instance.
+	 */
+	function DayGridCreation(dragHandler, view, controller) {
+	    /**
+	     * Drag handler instance.
+	     * @type {Drag}
+	     */
+	    this.dragHandler = dragHandler;
+	
+	    /**
+	     * view instance.
+	     * @type {DayGrid}
+	     */
+	    this.view = view;
+	
+	    /**
+	     * Base controller instance.
+	     * @type {Base}
+	     */
+	    this.controller = controller;
+	
+	    /**
+	     * @type {function}
+	     */
+	    this.getScheduleDataFunc = null;
+	
+	    /**
+	     * @type {DayGridCreationGuide}
+	     */
+	    this.guide = new DayGridCreationGuide(this);
+	
+	    /**
+	     * @type {boolean}
+	     */
+	    this._requestOnClick = false;
+	
+	    dragHandler.on('dragStart', this._onDragStart, this);
+	    dragHandler.on('click', this._onClick, this);
+	    domevent.on(view.container, 'dblclick', this._onDblClick, this);
+	}
+	
+	/**
+	 * Destroy method
+	 */
+	DayGridCreation.prototype.destroy = function() {
+	    this.guide.destroy();
+	    this.dragHandler.off(this);
+	
+	    if (this.view && this.view.container) {
+	        domevent.off(this.view.container, 'dblclick', this._onDblClick, this);
+	    }
+	
+	    this.dragHandler = this.view = this.controller = this.getScheduleDataFunc = null;
+	};
+	
+	/**
+	 * Check dragstart target is expected conditions for this handler.
+	 * @param {HTMLElement} target - dragstart event handler's target element.
+	 * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
+	 */
+	DayGridCreation.prototype.checkExpectedCondition = function(target) {
+	    var cssClass = domutil.getClass(target).trim();
+	    var excludeTarget = true;
+	    var matches, schedulesElement;
+	
+	    if (domutil.closest(target, config.classname('.weekday-exceed-in-week'))
+	        || domutil.closest(target, config.classname('.weekday-collapse-btn'))
+	    ) {
+	        return false;
+	    }
+	
+	    if (domutil.closest(target, config.classname('.weekday-schedule-block'), excludeTarget)) {
+	        return false;
+	    }
+	
+	    schedulesElement = domutil.closest(target, config.classname('.weekday-schedules'));
+	    if (!schedulesElement && cssClass !== config.classname('weekday-schedules')) {
+	        return false;
+	    }
+	
+	    target = schedulesElement ? schedulesElement.parentNode : target.parentNode;
+	    cssClass = domutil.getClass(target);
+	    matches = cssClass.match(config.daygrid.getViewIDRegExp);
+	
+	    if (!matches || matches.length < 2) {
+	        return false;
+	    }
+	
+	    return util.pick(this.view.children.items, matches[1]);
+	};
+	
+	/**
+	 * Request schedule model creation to controller by custom schedules.
+	 * @fires {DayGridCreation#beforeCreateSchedule}
+	 * @param {object} scheduleData - schedule data from DayGridCreation module.
+	 */
+	DayGridCreation.prototype._createSchedule = function(scheduleData) {
+	    var dateRange = scheduleData.range,
+	        startXIndex = scheduleData.dragStartXIndex,
+	        xIndex = scheduleData.xIndex,
+	        start, end;
+	
+	    // when inverse start, end then change it.
+	    if (xIndex < startXIndex) {
+	        startXIndex = xIndex + startXIndex;
+	        xIndex = startXIndex - xIndex;
+	        startXIndex = startXIndex - xIndex;
+	    }
+	
+	    start = new TZDate(dateRange[startXIndex].getTime());
+	    end = datetime.end(dateRange[xIndex]);
+	
+	    /**
+	     * @event {DayGridCreation#beforeCreateSchedule}
+	     * @type {object}
+	     * @property {string} category - schedule category
+	     * @property {boolean} isAllDay - whether schedule is fired in view area?
+	     * @property {Date} start - select start time
+	     * @property {Date} end - select end time
+	     * @property {DayGridCreationGuide} guide - DayGridCreationGuide instance
+	     * @property {string} triggerEventName - event name
+	     */
+	    this.fire('beforeCreateSchedule', {
+	        category: this.view.options.viewName,
+	        isAllDay: true,
+	        start: start,
+	        end: end,
+	        guide: this.guide,
+	        triggerEventName: scheduleData.triggerEvent
+	    });
+	};
+	
+	/**
+	 * DragStart event handler method.
+	 * @emits DayGridCreation#dragstart
+	 * @param {object} dragStartEventData - Drag#dragStart event handler schedule data.
+	 */
+	DayGridCreation.prototype._onDragStart = function(dragStartEventData) {
+	    var target = dragStartEventData.target,
+	        result = this.checkExpectedCondition(target),
+	        getScheduleDataFunc,
+	        scheduleData;
+	
+	    if (!result) {
+	        return;
+	    }
+	
+	    this.dragHandler.on({
+	        drag: this._onDrag,
+	        dragEnd: this._onDragEnd
+	    }, this);
+	
+	    getScheduleDataFunc = this._retriveScheduleData(this.view, dragStartEventData.originEvent);
+	    this.getScheduleDataFunc = getScheduleDataFunc;
+	
+	    scheduleData = getScheduleDataFunc(dragStartEventData.originEvent);
+	
+	    /**
+	     * @event DayGridCreation#dragstart
+	     * @type {object}
+	     * @property {DayGridView} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire('dragstart', scheduleData);
+	};
+	
+	/**
+	 * Drag event handler method.
+	 * @emits DayGridCreation#drag
+	 * @param {object} dragEventData - Drag#drag event handler scheduledata.
+	 */
+	DayGridCreation.prototype._onDrag = function(dragEventData) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc,
+	        scheduleData;
+	
+	    if (!getScheduleDataFunc) {
+	        return;
+	    }
+	
+	    scheduleData = getScheduleDataFunc(dragEventData.originEvent);
+	
+	    /**
+	     * @event DayGridCreation#drag
+	     * @type {object}
+	     * @property {DayGridView} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire('drag', scheduleData);
+	};
+	
+	/**
+	 * DragEnd event hander method.
+	 * @emits DayGridCreation#dragend
+	 * @param {object} dragEndEventData - Drag#dragEnd event handler data.
+	 * @param {string} [overrideEventName] - override emitted event name when supplied.
+	 */
+	DayGridCreation.prototype._onDragEnd = function(dragEndEventData, overrideEventName) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc;
+	    var scheduleData;
+	
+	    if (!getScheduleDataFunc) {
+	        return;
+	    }
+	
+	    this.dragHandler.off({
+	        drag: this._onDrag,
+	        dragEnd: this._onDragEnd
+	    }, this);
+	
+	    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
+	
+	    this._createSchedule(scheduleData);
+	
+	    /**
+	     * @event DayGridCreation#dragend
+	     * @type {object}
+	     * @property {DayGridView} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire(overrideEventName || 'dragend', scheduleData);
+	
+	    this.getScheduleDataFunc = null;
+	};
+	
+	/**
+	 * Click event handler method.
+	 * @emits DayGridCreation#click
+	 * @param {object} clickEventData - Drag#click event handler data.
+	 */
+	DayGridCreation.prototype._onClick = function(clickEventData) {
+	    var self = this;
+	    var getScheduleDataFunc, scheduleData;
+	
+	    if (!this.checkExpectedCondition(clickEventData.target)) {
+	        return;
+	    }
+	
+	    getScheduleDataFunc = this._retriveScheduleData(this.view, clickEventData.originEvent);
+	    scheduleData = getScheduleDataFunc(clickEventData.originEvent);
+	
+	    this._requestOnClick = true;
+	    setTimeout(function() {
+	        if (self._requestOnClick) {
+	            self.fire('click', scheduleData);
+	            self._createSchedule(scheduleData);
+	        }
+	        self._requestOnClick = false;
+	    }, CLICK_DELAY);
+	};
+	
+	/**
+	 * Dblclick event handler method.
+	 * @emits DayGridCreation#click
+	 * @param {object} clickEventData - Drag#Click event handler data.
+	 */
+	DayGridCreation.prototype._onDblClick = function(clickEventData) {
+	    var getScheduleDataFunc, scheduleData;
+	
+	    if (!this.checkExpectedCondition(clickEventData.target)) {
+	        return;
+	    }
+	
+	    getScheduleDataFunc = this._retriveScheduleData(this.view, clickEventData);
+	    scheduleData = getScheduleDataFunc(clickEventData);
+	
+	    this.fire('click', scheduleData);
+	
+	    this._createSchedule(scheduleData);
+	
+	    this._requestOnClick = false;
+	};
+	
+	common.mixin(dayGridCore, DayGridCreation);
+	util.CustomEvents.mixin(DayGridCreation);
+	
+	module.exports = DayGridCreation;
+
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Guide element for DayGrid.Creation
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var reqAnimFrame = __webpack_require__(52);
+	
+	/**
+	 * Class for DayGrid.Creation dragging effect.
+	 * @constructor
+	 * @param {DayGridCreation} creation - instance of DayGridCreation.
+	 */
+	function DayGridCreationGuide(creation) {
+	    /**
+	     * @type {DayGridCreation}
+	     */
+	    this.creation = creation;
+	
+	    /**
+	     * @type {HTMLDIVElement}
+	     */
+	    this.scheduleContainer = null;
+	
+	    /**
+	     * @type {HTMLDIVElement}
+	     */
+	    this.guideElement = document.createElement('div');
+	
+	    this.initializeGuideElement();
+	
+	    creation.on({
+	        dragstart: this._createGuideElement,
+	        drag: this._onDrag,
+	        click: this._createGuideElement
+	    }, this);
+	}
+	
+	/**
+	 * Destroy method
+	 */
+	DayGridCreationGuide.prototype.destroy = function() {
+	    this.clearGuideElement();
+	    this.creation.off(this);
+	    this.creation = this.scheduleContainer = this.guideElement = null;
+	};
+	
+	/**
+	 * initialize guide element's default style.
+	 */
+	DayGridCreationGuide.prototype.initializeGuideElement = function() {
+	    domutil.addClass(this.guideElement, config.classname('daygrid-guide-creation-block'));
+	};
+	
+	/**
+	 * Drag event handler
+	 * @param {object} scheduleData - schedule data from DayGrid.Creation handler.
+	 */
+	DayGridCreationGuide.prototype._onDrag = function(scheduleData) {
+	    this._refreshGuideElement(scheduleData, true);
+	};
+	
+	/**
+	 * Get element width based on narrowWeekend
+	 * @param {number} dragStartIndex - grid start index
+	 * @param {number} dragEndIndex - grid end index
+	 * @param {Array} grids - dates information
+	 * @returns {number} element width
+	 */
+	DayGridCreationGuide.prototype._getGuideWidth = function(dragStartIndex, dragEndIndex, grids) {
+	    var width = 0;
+	    var i = dragStartIndex;
+	    for (; i <= dragEndIndex; i += 1) {
+	        width += grids[i] ? grids[i].width : 0;
+	    }
+	
+	    return width;
+	};
+	
+	/**
+	 * Refresh guide element.
+	 * @param {object} scheduleData - schedule data from DayGrid.Creation handler.
+	 * @param {boolean} defer - If set to true, set style in the next frame
+	 */
+	DayGridCreationGuide.prototype._refreshGuideElement = function(scheduleData, defer) {
+	    var guideElement = this.guideElement,
+	        data = scheduleData,
+	        dragStartXIndex = data.dragStartXIndex < data.xIndex ? data.dragStartXIndex : data.xIndex,
+	        dragEndXIndex = data.dragStartXIndex < data.xIndex ? data.xIndex : data.dragStartXIndex,
+	        leftPercent,
+	        widthPercent;
+	
+	    leftPercent = data.grids[dragStartXIndex] ? data.grids[dragStartXIndex].left : 0;
+	    widthPercent = this._getGuideWidth(dragStartXIndex, dragEndXIndex, data.grids);
+	
+	    /** eslint-disable require-jsdoc */
+	    function setStyle() {
+	        guideElement.style.display = 'block';
+	        guideElement.style.left = leftPercent + '%';
+	        guideElement.style.width = widthPercent + '%';
+	    }
+	
+	    if (defer) {
+	        reqAnimFrame.requestAnimFrame(setStyle);
+	    } else {
+	        setStyle();
+	    }
+	};
+	
+	/**
+	 * Clear guide element.
+	 */
+	DayGridCreationGuide.prototype.clearGuideElement = function() {
+	    var guideElement = this.guideElement;
+	
+	    domutil.remove(guideElement);
+	
+	    guideElement.style.display = 'none';
+	    guideElement.style.left = '';
+	    guideElement.style.width = '';
+	};
+	
+	/**
+	 * Create guide element
+	 * @param {object} dragStartEventData - schedule data object of DayGrid.Creation.
+	 */
+	DayGridCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
+	    var creation = this.creation,
+	        view = creation.view,
+	        container = view.container,
+	        scheduleContainer = domutil.find(config.classname('.weekday-grid'), container);
+	
+	    scheduleContainer.appendChild(this.guideElement);
+	    this._refreshGuideElement(dragStartEventData);
+	};
+	
+	/**
+	 * Drag event handler.
+	 * @param {object} dragEventData - event data object of DayGrid.Creation.
+	 */
+	DayGridCreationGuide.prototype._onDrag = function(dragEventData) {
+	    this._refreshGuideElement(dragEventData);
+	};
+	
+	module.exports = DayGridCreationGuide;
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Resize handler module for DayGrid view.
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var datetime = __webpack_require__(27);
+	var domutil = __webpack_require__(31);
+	var common = __webpack_require__(30);
+	var dayGridCore = __webpack_require__(70);
+	var DayGridResizeGuide = __webpack_require__(75);
+	var TZDate = __webpack_require__(28).Date;
+	
+	/**
+	 * @constructor
+	 * @implements {Handler}
+	 * @mixes dayGridCore
+	 * @mixes CustomEvents
+	 * @param {Drag} [dragHandler] - Drag handler instance.
+	 * @param {DayGrid} [view] - view instance.
+	 * @param {Base} [controller] - Base controller instance.
+	 */
+	function DayGridResize(dragHandler, view, controller) {
+	    /**
+	     * Drag handler instance.
+	     * @type {Drag}
+	     */
+	    this.dragHandler = dragHandler;
+	
+	    /**
+	     * view instance.
+	     * @type {DayGrid}
+	     */
+	    this.view = view;
+	
+	    /**
+	     * Base controller instance.
+	     * @type {Base}
+	     */
+	    this.controller = controller;
+	
+	    /**
+	     * Temporary variable for dragStart event data.
+	     * @type {object}
+	     */
+	    this._dragStart = null;
+	
+	    dragHandler.on({
+	        dragStart: this._onDragStart
+	    }, this);
+	
+	    /**
+	     * @type {DayGridResizeGuide}
+	     */
+	    this.guide = new DayGridResizeGuide(this);
+	}
+	
+	/**
+	 * Destroy method
+	 */
+	DayGridResize.prototype.destroy = function() {
+	    this.guide.destroy();
+	    this.dragHandler.off(this);
+	    this.dragHandler = this.view = this.controller =
+	        this.guide = this._dragStart = null;
+	};
+	
+	/**
+	 * Check dragstart target is expected conditions for this handler.
+	 * @param {HTMLElement} target - dragstart event handler's target element.
+	 * @returns {boolean|WeekdayInWeek} return WeekdayInWeek view instance when satiate condition.
+	 */
+	DayGridResize.prototype.checkExpectedCondition = function(target) {
+	    var cssClass = domutil.getClass(target),
+	        matches;
+	
+	    if (!~cssClass.indexOf(config.classname('weekday-resize-handle'))) {
+	        return false;
+	    }
+	
+	    target = domutil.closest(target, config.classname('.weekday'));
+	
+	    if (!target) {
+	        return false;
+	    }
+	
+	    cssClass = domutil.getClass(target);
+	    matches = cssClass.match(config.daygrid.getViewIDRegExp);
+	
+	    if (!matches || matches.length < 2) {
+	        return false;
+	    }
+	
+	    return util.pick(this.view.children.items, matches[1]);
+	};
+	
+	/**
+	 * DragStart event handler.
+	 * @emits DayGridResize#dragstart
+	 * @param {object} dragStartEventData - schedule data.
+	 */
+	DayGridResize.prototype._onDragStart = function(dragStartEventData) {
+	    var target = dragStartEventData.target,
+	        result = this.checkExpectedCondition(target),
+	        controller = this.controller,
+	        scheduleBlockElement,
+	        modelID,
+	        targetModel,
+	        getScheduleDataFunc,
+	        scheduleData;
+	
+	    if (!result) {
+	        return;
+	    }
+	
+	    scheduleBlockElement = domutil.closest(target, config.classname('.weekday-schedule-block'));
+	    modelID = domutil.getData(scheduleBlockElement, 'id');
+	    targetModel = controller.schedules.items[modelID];
+	
+	    if (!targetModel) {
+	        return;
+	    }
+	
+	    getScheduleDataFunc = this._retriveScheduleData(this.view, dragStartEventData.originEvent);
+	    this.getScheduleDataFunc = getScheduleDataFunc;
+	    scheduleData = this._dragStart = getScheduleDataFunc(dragStartEventData.originEvent);
+	
+	    util.extend(scheduleData, {
+	        scheduleBlockElement: scheduleBlockElement,
+	        model: targetModel
+	    });
+	
+	    this.dragHandler.on({
+	        drag: this._onDrag,
+	        dragEnd: this._onDragEnd,
+	        click: this._onClick
+	    }, this);
+	
+	    /**
+	     * @event DayGridResize#dragstart
+	     * @type {object}
+	     * @property {View} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     * @property {Schedule} model - data object of model isntance.
+	     * @property {HTMLDivElement} scheduleBlockElement - target schedule block element.
+	     */
+	    this.fire('dragstart', scheduleData);
+	};
+	
+	/**
+	 * Drag event handler method.
+	 * @emits DayGridResize#drag
+	 * @param {object} dragEventData - Drag#drag event handler scheduledata.
+	 */
+	DayGridResize.prototype._onDrag = function(dragEventData) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc;
+	
+	    if (!getScheduleDataFunc) {
+	        return;
+	    }
+	
+	    /**
+	     * @event DayGridResize#drag
+	     * @type {object}
+	     * @property {View} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire('drag', getScheduleDataFunc(dragEventData.originEvent));
+	};
+	
+	/**
+	 * Request update schedule instance to base controller.
+	 * @fires DayGridResize#beforeUpdateSchedule
+	 * @param {object} scheduleData - schedule data from DayGridResize handler.
+	 */
+	DayGridResize.prototype._updateSchedule = function(scheduleData) {
+	    var schedule = scheduleData.targetModel,
+	        dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
+	        newEnds = new TZDate(schedule.end.getTime());
+	
+	    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
+	    newEnds = new TZDate(Math.max(datetime.end(schedule.start).getTime(), newEnds.getTime()));
+	
+	    /**
+	     * @event DayGridResize#beforeUpdateSchedule
+	     * @type {object}
+	     * @property {Schedule} schedule - schedule instance to update
+	     * @property {date} start - start time to update
+	     * @property {date} end - end time to update
+	     */
+	    this.fire('beforeUpdateSchedule', {
+	        schedule: schedule,
+	        start: schedule.getStarts(),
+	        end: newEnds
+	    });
+	};
+	
+	/**
+	 * DragEnd event hander method.
+	 * @emits DayGridResize#dragend
+	 * @param {object} dragEndEventData - Drag#DragEnd event handler data.
+	 * @param {string} [overrideEventName] - override emitted event name when supplied.
+	 * @param {?boolean} skipUpdate - true then skip update schedule model.
+	 */
+	DayGridResize.prototype._onDragEnd = function(dragEndEventData, overrideEventName, skipUpdate) {
+	    var getScheduleDataFunc = this.getScheduleDataFunc,
+	        dragStart = this._dragStart,
+	        scheduleData;
+	
+	    if (!getScheduleDataFunc || !dragStart) {
+	        return;
+	    }
+	
+	    this.dragHandler.off({
+	        drag: this._onDrag,
+	        dragEnd: this._onDragEnd,
+	        click: this._onClick
+	    }, this);
+	
+	    scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
+	    util.extend(scheduleData, {
+	        targetModel: dragStart.model
+	    });
+	
+	    if (!skipUpdate) {
+	        this._updateSchedule(scheduleData);
+	    }
+	
+	    /**
+	     * @event DayGridResize#dragend
+	     * @type {object}
+	     * @property {View} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this.fire(overrideEventName || 'dragend', scheduleData);
+	
+	    this.getScheduleDataFunc = this._dragStart = null;
+	};
+	
+	/**
+	 * Click event handler method.
+	 * @emits DayGridResize#click
+	 * @param {object} clickEventData - Drag#Click event handler data.
+	 */
+	DayGridResize.prototype._onClick = function(clickEventData) {
+	    /**
+	     * @event DayGridResize#click
+	     * @type {object}
+	     * @property {View} relatedView - view instance.
+	     * @property {number} datesInRange - date count of this view.
+	     * @property {number} dragStartXIndex - index number of dragstart grid index.
+	     * @property {number} xIndex - index number of mouse positions.
+	     */
+	    this._onDragEnd(clickEventData, 'click', true);
+	};
+	
+	common.mixin(dayGridCore, DayGridResize);
+	util.CustomEvents.mixin(DayGridResize);
+	
+	module.exports = DayGridResize;
+	
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * @fileoverview Resize Guide module.
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34);
+	var domutil = __webpack_require__(31);
+	var datetime = __webpack_require__(27);
+	var reqAnimFrame = __webpack_require__(52);
+	var TZDate = __webpack_require__(28).Date;
+	
+	/**
+	 * @constructor
+	 * @param {DayGridResize} resizeHandler - instance of DayGridResize
+	 */
+	function DayGridResizeGuide(resizeHandler) {
+	    /**
+	     * @type {DayGridResize}
+	     */
+	    this.resizeHandler = resizeHandler;
+	
+	    /**
+	     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
+	     * @type {HTMLDIVElement}
+	     */
+	    this.scheduleContainer = null;
+	
+	    /**
+	     * @type {function}
+	     */
+	    this.getScheduleDataFunc = null;
+	
+	    /**
+	     * @type {HTMLDIVElement}
+	     */
+	    this.guideElement = null;
+	
+	    resizeHandler.on({
+	        'dragstart': this._onDragStart,
+	        'drag': this._onDrag,
+	        'dragend': this._clearGuideElement,
+	        'click': this._clearGuideElement
+	    }, this);
+	}
+	
+	/**
+	 * Destroy method
+	 */
+	DayGridResizeGuide.prototype.destroy = function() {
+	    this._clearGuideElement();
+	    this.resizeHandler.off(this);
+	    this.resizeHandler = this.scheduleContainer = this.getScheduleDataFunc =
+	        this.guideElement = null;
+	};
+	
+	/**
+	 * Clear guide element.
+	 */
+	DayGridResizeGuide.prototype._clearGuideElement = function() {
+	    domutil.remove(this.guideElement);
+	
+	    if (!util.browser.msie) {
+	        domutil.removeClass(global.document.body, config.classname('resizing-x'));
+	    }
+	
+	    this.getScheduleDataFunc = null;
+	};
+	
+	/**
+	 * Refresh guide element
+	 * @param {number} newWidth - new width percentage value to resize guide element.
+	 */
+	DayGridResizeGuide.prototype.refreshGuideElement = function(newWidth) {
+	    var guideElement = this.guideElement;
+	
+	    reqAnimFrame.requestAnimFrame(function() {
+	        guideElement.style.width = newWidth + '%';
+	    });
+	};
+	
+	/**
+	 * Return function that calculate guide element's new width percentage value.
+	 * @param {object} dragStartEventData - dragstart schedule data.
+	 * @returns {function} return function that calculate guide element new width percentage.
+	 */
+	DayGridResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
+	    var model = dragStartEventData.model,
+	        viewOptions = this.resizeHandler.view.options,
+	        fromLeft = (new TZDate(
+	            model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
+	        )) / datetime.MILLISECONDS_PER_DAY || 0,
+	        grids = dragStartEventData.grids;
+	
+	    return function(xIndex) {
+	        var width = 0;
+	        var i = 0;
+	        var length = grids.length;
+	        width += grids[fromLeft] ? grids[fromLeft].width : 0;
+	
+	        for (; i < length; i += 1) {
+	            if (i > fromLeft && i <= xIndex) {
+	                width += grids[i] ? grids[i].width : 0;
+	            }
+	        }
+	
+	        return width;
+	    };
+	};
+	
+	/**
+	 * DragStart event handler.
+	 * @param {object} dragStartEventData - schedule data.
+	 */
+	DayGridResizeGuide.prototype._onDragStart = function(dragStartEventData) {
+	    var container = this.resizeHandler.view.container,
+	        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
+	        scheduleContainer;
+	
+	    if (!util.browser.msie) {
+	        domutil.addClass(global.document.body, config.classname('resizing-x'));
+	    }
+	
+	    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
+	    domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+	    scheduleContainer.appendChild(guideElement);
+	
+	    this.getScheduleDataFunc = this.getGuideElementWidthFunc(dragStartEventData);
+	};
+	
+	/**
+	 * Drag event handler.
+	 * @param {object} dragEventData - schedule data.
+	 */
+	DayGridResizeGuide.prototype._onDrag = function(dragEventData) {
+	    var func = this.getScheduleDataFunc;
+	
+	    if (!func) {
+	        return;
+	    }
+	
+	    this.refreshGuideElement(func(dragEventData.xIndex));
+	};
+	
+	module.exports = DayGridResizeGuide;
+	
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14026,7 +13760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 81 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14041,9 +13775,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var TimeCreationGuide = __webpack_require__(82);
+	var TimeCreationGuide = __webpack_require__(78);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(83);
+	var timeCore = __webpack_require__(79);
 	
 	var CLICK_DELAY = 300;
 	
@@ -14375,7 +14109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 82 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14644,7 +14378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 83 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14657,7 +14391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common = __webpack_require__(30);
 	var datetime = __webpack_require__(27);
 	var domevent = __webpack_require__(32);
-	var Point = __webpack_require__(60);
+	var Point = __webpack_require__(65);
 	
 	/**
 	 * @mixin Time.Core
@@ -14741,7 +14475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 84 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14755,8 +14489,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(83);
-	var TimeMoveGuide = __webpack_require__(85);
+	var timeCore = __webpack_require__(79);
+	var TimeMoveGuide = __webpack_require__(81);
 	
 	/**
 	 * @constructor
@@ -15109,7 +14843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 85 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15123,8 +14857,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var domutil = __webpack_require__(31);
 	var reqAnimFrame = __webpack_require__(52);
 	var ratio = __webpack_require__(30).ratio;
-	var FloatingLayer = __webpack_require__(86);
-	var tmpl = __webpack_require__(87);
+	var FloatingLayer = __webpack_require__(82);
+	var tmpl = __webpack_require__(83);
 	var TZDate = __webpack_require__(28).Date;
 	var Schedule = __webpack_require__(41);
 	
@@ -15347,7 +15081,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 86 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15538,7 +15272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 87 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -15571,7 +15305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 88 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15585,8 +15319,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(83);
-	var TimeResizeGuide = __webpack_require__(89);
+	var timeCore = __webpack_require__(79);
+	var TimeResizeGuide = __webpack_require__(85);
 	
 	/**
 	 * @constructor
@@ -15880,7 +15614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 89 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16060,106 +15794,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview 마일스톤 항목 클릭 이벤트 핸들러 모듈
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34);
-	var domutil = __webpack_require__(31);
-	
-	/**
-	 * 마일스톤 클릭 이벤트 핸들러 모듈
-	 * @constructor
-	 * @implelements {Handler}
-	 * @mixes util.CustomEvents
-	 * @param {Drag} dragHandler - dragHandler instance
-	 * @param {Milestone} milestoneView - milstone view instance
-	 * @param {Base} baseController - baseController instance
-	 */
-	function MilestoneClick(dragHandler, milestoneView, baseController) {
-	    /**
-	     * @type {Drag}
-	     */
-	    this.dragHandler = dragHandler;
-	
-	    /**
-	     * @type {Milestone}
-	     */
-	    this.milestoneView = milestoneView;
-	
-	    /**
-	     * @type {Base}
-	     */
-	    this.baseController = baseController;
-	
-	    dragHandler.on({
-	        'click': this._onClick
-	    }, this);
-	}
-	
-	/**
-	 * Destroy
-	 */
-	MilestoneClick.prototype.destroy = function() {
-	    this.dragHandler.off(this);
-	    this.dragHandler = this.milestoneView = this.baseController = null;
-	};
-	
-	/**
-	 * @param {HTMLElement} target - check reponsibility to this handler module supplied element
-	 * @returns {boolean|string} return false when handler has no responsibility for supplied element.
-	 * otherwise, return schedule model id that related with target element.
-	 */
-	MilestoneClick.prototype.checkExpectedCondition = function(target) {
-	    target = domutil.closest(target, config.classname('.milestone-item'));
-	
-	    if (!target) {
-	        return false;
-	    }
-	
-	    return domutil.getData(target, 'id');
-	};
-	
-	/**
-	 * @emits MilestoneClick#clickSchedule
-	 * @param {object} clickEvent - click event object
-	 */
-	MilestoneClick.prototype._onClick = function(clickEvent) {
-	    var self = this,
-	        modelID = this.checkExpectedCondition(clickEvent.target);
-	
-	    if (!modelID) {
-	        return;
-	    }
-	
-	    this.baseController.schedules.doWhenHas(modelID, function(schedule) {
-	        /**
-	         * @events MilestoneClick#clickEvent
-	         * @type {object}
-	         * @property {Schedule} schedule - schedule instance
-	         * @property {MouseEvent} event - MouseEvent object
-	         */
-	        self.fire('clickSchedule', {
-	            schedule: schedule,
-	            event: clickEvent.originEvent
-	        });
-	    });
-	};
-	
-	util.CustomEvents.mixin(MilestoneClick);
-	
-	module.exports = MilestoneClick;
-	
-
-
-/***/ },
-/* 91 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16173,12 +15808,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    array = __webpack_require__(47),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    Month = __webpack_require__(92),
-	    MonthClick = __webpack_require__(97),
-	    MonthCreation = __webpack_require__(98),
-	    MonthResize = __webpack_require__(103),
-	    MonthMove = __webpack_require__(105),
-	    More = __webpack_require__(108);
+	    Month = __webpack_require__(87),
+	    MonthClick = __webpack_require__(92),
+	    MonthCreation = __webpack_require__(93),
+	    MonthResize = __webpack_require__(98),
+	    MonthMove = __webpack_require__(100),
+	    More = __webpack_require__(103);
 	
 	/**
 	 * Get the view model for more layer
@@ -16307,7 +15942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 92 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16321,10 +15956,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
 	    TZDate = __webpack_require__(28).Date,
-	    tmpl = __webpack_require__(93),
+	    tmpl = __webpack_require__(88),
 	    View = __webpack_require__(37),
 	    VLayout = __webpack_require__(50),
-	    WeekdayInMonth = __webpack_require__(94);
+	    WeekdayInMonth = __webpack_require__(89);
 	var mmin = Math.min;
 	
 	/**
@@ -16535,6 +16170,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this._renderChildren(vLayout.panels[1].container, calendar);
 	
+	    baseViewModel.panelHeight = vLayout.panels[1].getHeight();
+	
 	    this.children.each(function(childView) {
 	        var start = datetime.parse(childView.options.renderStartDate);
 	        var end = datetime.parse(childView.options.renderEndDate);
@@ -16550,7 +16187,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var viewModel = {
 	            eventsInDateRange: eventsInDateRange,
 	            range: dateRange.slice(0, grids.length),
-	            grids: grids
+	            grids: grids,
+	            panelHeight: baseViewModel.panelHeight
 	        };
 	
 	        childView.render(viewModel);
@@ -16562,7 +16200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 93 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16593,7 +16231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 94 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16607,9 +16245,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
-	    Weekday = __webpack_require__(64),
-	    baseTmpl = __webpack_require__(95),
-	    scheduleTmpl = __webpack_require__(96);
+	    Weekday = __webpack_require__(58),
+	    baseTmpl = __webpack_require__(90),
+	    scheduleTmpl = __webpack_require__(91);
 	var mfloor = Math.floor,
 	    mmin = Math.min;
 	
@@ -16646,11 +16284,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Get limit index of schedule block in current view
+	 * @param {number} panelHeight - panel's height for pre-calculation
 	 * @returns {number} limit index
 	 */
-	WeekdayInMonth.prototype._getRenderLimitIndex = function() {
+	WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
 	    var opt = this.options;
-	    var containerHeight = this.getViewBound().height;
+	    var containerHeight = panelHeight || this.getViewBound().height;
 	    var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
 	    var gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0;
 	    var visibleScheduleCount = opt.visibleScheduleCount || 0;
@@ -16702,8 +16341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	WeekdayInMonth.prototype.render = function(viewModel) {
 	    var container = this.container,
 	        baseViewModel = this.getBaseViewModel(viewModel),
-	        scheduleContainer,
-	        contentStr = '';
+	        scheduleContainer;
 	
 	    if (!this.options.visibleWeeksCount) {
 	        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
@@ -16720,13 +16358,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    contentStr += scheduleTmpl(baseViewModel);
-	
-	    scheduleContainer.innerHTML = contentStr;
+	    scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
 	
 	    common.setAutoEllipsis(
 	        config.classname('.weekday-schedule-title'),
-	        container
+	        container,
+	        true
 	    );
 	};
 	
@@ -16750,7 +16387,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 95 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16835,7 +16472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 96 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16981,7 +16618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stack1;
 	
 	  return "                        background:"
-	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\n";
 	},"24":function(container,depth0,helpers,partials,data) {
 	    var stack1;
@@ -16998,7 +16635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 97 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17096,7 +16733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 98 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17112,8 +16749,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var array = __webpack_require__(47);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var getMousePosDate = __webpack_require__(99);
-	var Guide = __webpack_require__(100);
+	var getMousePosDate = __webpack_require__(94);
+	var Guide = __webpack_require__(95);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -17419,7 +17056,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 99 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17511,7 +17148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 100 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17520,7 +17157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var MonthGuide = __webpack_require__(101);
+	var MonthGuide = __webpack_require__(96);
 	
 	/**
 	 * @constructor
@@ -17593,7 +17230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 101 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17608,7 +17245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
 	    dw = __webpack_require__(29),
-	    tmpl = __webpack_require__(102);
+	    tmpl = __webpack_require__(97);
 	var mmax = Math.max,
 	    mmin = Math.min,
 	    mabs = Math.abs,
@@ -18038,7 +17675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 102 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18083,7 +17720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 103 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18097,8 +17734,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    getMousePosData = __webpack_require__(99),
-	    MonthResizeGuide = __webpack_require__(104),
+	    getMousePosData = __webpack_require__(94),
+	    MonthResizeGuide = __webpack_require__(99),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -18297,7 +17934,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 104 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18310,7 +17947,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
-	    MonthGuide = __webpack_require__(101);
+	    MonthGuide = __webpack_require__(96);
 	
 	/**
 	 * @constructor
@@ -18420,7 +18057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 105 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18434,8 +18071,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
-	    getMousePosData = __webpack_require__(99),
-	    MonthMoveGuide = __webpack_require__(106),
+	    getMousePosData = __webpack_require__(94),
+	    MonthMoveGuide = __webpack_require__(101),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -18698,7 +18335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 106 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18712,8 +18349,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32),
-	    FloatingLayer = __webpack_require__(86),
-	    tmpl = __webpack_require__(107),
+	    FloatingLayer = __webpack_require__(82),
+	    tmpl = __webpack_require__(102),
 	    Schedule = __webpack_require__(41);
 	
 	/**
@@ -18903,7 +18540,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 107 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18958,7 +18595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 108 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18973,9 +18610,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domevent = __webpack_require__(32),
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
-	    FloatingLayer = __webpack_require__(86),
+	    FloatingLayer = __webpack_require__(82),
 	    common = __webpack_require__(30),
-	    tmpl = __webpack_require__(109);
+	    tmpl = __webpack_require__(104);
 	
 	/**
 	 * @constructor
@@ -19143,7 +18780,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 109 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -19225,7 +18862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stack1;
 	
 	  return "                        background:"
-	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\n                    ";
 	},"12":function(container,depth0,helpers,partials,data) {
 	    var stack1;

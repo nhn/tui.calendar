@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 0.9.5 | Thu Mar 29 2018
+ * @version 0.10.0 | Mon Apr 09 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -228,6 +228,8 @@
 .tui-full-calendar-weekday-exceed-in-week,
 .tui-full-calendar-weekday-collapse-btn {
   position: absolute;
+  bottom: 5px;
+  margin-right: 5px;
   font-size: 12px;
   line-height: 14px;
   cursor: pointer;
@@ -251,13 +253,6 @@
 .tui-full-calendar-left {
   width: 77px;
   height: 100%;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  align-items: center;
   float: left;
   border-right: 1px solid #ddd;
   padding-right: 5px;
@@ -438,6 +433,22 @@
   background-color: rgba(19,93,230,0.1);
 }
 .tui-full-calendar-allday-guide-move {
+  box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+}
+.tui-full-calendar-daygrid-layout {
+  height: 100%;
+}
+.tui-full-calendar-daygrid-layout .tui-full-calendar-right {
+  overflow-y: hidden;
+}
+.tui-full-calendar-daygrid-guide-creation-block {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border: 1px solid #135de6;
+  background-color: rgba(19,93,230,0.1);
+}
+.tui-full-calendar-daygrid-guide-move {
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
 }
 .tui-full-calendar-timegrid-container {
