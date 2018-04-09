@@ -175,6 +175,21 @@ module.exports = {
                 el.setAttribute('title', domutil.getData(el, 'title'));
             }
         });
+    },
+
+    set: function(object, path, value) {
+        var names = path.split('.');
+        var store = object;
+
+        util.forEach(names, function(name, index) {
+            store[name] = store[name] || {};
+
+            if (index === names.length - 1) {
+                store[name] = value;
+            } else {
+                store = store[name];
+            }
+        });
     }
 };
 
