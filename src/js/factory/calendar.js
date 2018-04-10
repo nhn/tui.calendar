@@ -60,6 +60,7 @@ var mmin = Math.min;
  *   @property {boolean} [calendarColor.render] - immediately apply colors when setCalendarColor called.
  *  @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
  * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
+ * @property {themeConfig} [theme] = custom theme options
  *  @property {object} [template] - template option
  *   @property {function} [template.milestoneTitle] - milestone title(at left column) template function
  *   @property {function} [template.milestone] - milestone template function
@@ -1291,6 +1292,21 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
     }
 
     return null;
+};
+
+/**
+ * Set a theme. Using not predefined keys will be returned.
+ * @param {object} theme - multiple styles map
+ * @returns {Array.<string>} keys - error keys not predefined.
+ * @example
+ * cal.setTheme({
+    'month.dayname.height': '31px',
+    'month.dayname.borderTop': '1px solid #e5e5e5',
+    'month.dayname.borderBottom': '1px solid #e5e5e5',
+ * });
+ */
+Calendar.prototype.setTheme = function(theme) {
+    return this.controller.setTheme(theme);
 };
 
 /**
