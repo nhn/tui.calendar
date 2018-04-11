@@ -342,10 +342,9 @@ Base.prototype.clearSchedules = function() {
  * @returns {Array.<string>} keys - error keys not predefined.
  */
 Base.prototype.setTheme = function(theme) {
-    var errors = this.theme.setStyles(theme);
-    this.theme = new Theme(theme);
+    this.theme.clear();
 
-    return errors;
+    return this.theme.setStyles(theme);
 };
 
 // mixin
