@@ -66,4 +66,24 @@ Theme.prototype.setStyles = function(styles) {
     return errors;
 };
 
+/**
+ * Delete all styles
+ */
+Theme.prototype.clear = function() {
+    var keys = this._map.keys();
+    var categories = {};
+    util.forEach(keys, function(key) {
+        var category = key.split('.')[0];
+        if (!categories[category]) {
+            categories[category] = category;
+        }
+    });
+
+    util.forEach(categories, function(child) {
+        delete this[child];
+    }, this);
+
+    this._map.removeAll();
+};
+
 module.exports = Theme;

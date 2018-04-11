@@ -99,4 +99,21 @@ describe('Theme', function() {
             expect(theme.getStyle(key)).not.toBeUndefined();
         });
     });
+
+    it('can clear all styles and set another styles', function() {
+        var customTheme = fixture.load('theme-dooray.json');
+        var keys = util.keys(themeStandard);
+        theme.clear();
+
+        util.forEach(keys, function(key) {
+            expect(theme.getStyle(key)).toBeUndefined();
+        });
+
+        theme.setStyles(customTheme);
+
+        keys = util.keys(customTheme);
+        util.forEach(keys, function(key) {
+            expect(theme.getStyle(key)).not.toBeUndefined();
+        });
+    });
 });
