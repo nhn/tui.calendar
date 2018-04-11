@@ -34,7 +34,7 @@ var THEME_DOORAY = {
     'month.schedule.marginTop': '2px',
     'month.schedule.marginLeft': '10px',
     'month.schedule.marginRight': '10px',
-    
+
     // week header 'dayname'
     'week.dayname.height': '41px',
     'week.dayname.borderTop': '1px solid #ddd',

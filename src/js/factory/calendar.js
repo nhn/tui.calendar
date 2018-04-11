@@ -264,7 +264,7 @@ function Calendar(container, options) {
      * @type {Layout}
      * @private
      */
-    this.layout = new Layout(container);
+    this.layout = new Layout(container, this.controller.theme);
 
     /**
      * global drag handler
