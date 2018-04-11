@@ -1,9 +1,13 @@
-<div class="{{CSS_PREFIX}}month-dayname">
+<div class="{{CSS_PREFIX}}month-dayname" style="border-top: {{styles.borderTop}}">
 {{#each daynames}}
     <div class="{{CSS_PREFIX}}month-dayname-item"
          style="position: absolute;
                 width: {{width}}%;
-                left: {{left}}%">
+                left: {{left}}%;
+                {{#unless @last}}
+                border-right: {{@root.styles.borderLeft}};
+                {{/unless}}
+                ">
         <span class="{{holiday day}}">
             {{{monthDayname-tmpl this}}}
         </span>

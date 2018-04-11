@@ -27,6 +27,8 @@ var mmin = Math.min;
  * @param {Base.Month} controller - controller instance
  */
 function Month(options, container, controller) {
+    var theme = controller ? controller.theme : null;
+
     View.call(this, container);
 
     /**
@@ -42,7 +44,7 @@ function Month(options, container, controller) {
             {height: 42},
             {autoHeight: true}
         ]
-    }, container);
+    }, container, theme);
 
     /**
      * @type {string}
@@ -139,6 +141,7 @@ Month.prototype._renderChildren = function(container, calendar) {
     var visibleWeeksCount = opt.visibleWeeksCount;
     var visibleScheduleCount = opt.visibleScheduleCount;
     var gridOption = opt.grid;
+    var theme = this.theme;
 
     container.innerHTML = '';
     this.children.clear();
@@ -161,7 +164,8 @@ Month.prototype._renderChildren = function(container, calendar) {
             startDayOfWeek: startDayOfWeek,
             visibleWeeksCount: visibleWeeksCount,
             visibleScheduleCount: visibleScheduleCount,
-            grid: gridOption
+            grid: gridOption,
+            theme: theme
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -180,6 +184,8 @@ Month.prototype.render = function() {
         workweek = opt.workweek,
         calendar = this._getMonthCalendar(opt.renderMonth),
         scheduleFilter = opt.scheduleFilter,
+        theme = controller ? controller.theme : null,
+        styles = this._getStyles(theme),
         grids,
         daynameViewModel,
         baseViewModel;
@@ -216,7 +222,8 @@ Month.prototype.render = function() {
     }
 
     baseViewModel = {
-        daynames: daynameViewModel
+        daynames: daynameViewModel,
+        styles: styles
     };
 
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
@@ -241,11 +248,28 @@ Month.prototype.render = function() {
             eventsInDateRange: eventsInDateRange,
             range: dateRange.slice(0, grids.length),
             grids: grids,
-            panelHeight: baseViewModel.panelHeight
+            panelHeight: baseViewModel.panelHeight,
+            theme: theme
         };
 
         childView.render(viewModel);
     });
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+Month.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderTop = theme.common.border;
+        styles.borderLeft = theme.common.border;
+    }
+
+    return styles;
 };
 
 module.exports = Month;

@@ -252,8 +252,8 @@ body {
 
 #calendar {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 5px;
+    right: 5px;
     bottom: 5px;
     top: 64px;
 }
@@ -274,7 +274,7 @@ body {
 }
 
 .tui-full-calendar-dayname-container {
-    height: 60px;
+    height: 61px;
 }
 
 .tui-full-calendar-dayname {

@@ -1,8 +1,15 @@
-<div class="{{CSS_PREFIX}}weekday-border"></div>
+<div class="{{CSS_PREFIX}}weekday-border"
+    style="
+    border-top: {{styles.borderTop}};
+"></div>
 <div class="{{CSS_PREFIX}}weekday-grid">
 {{#each dates ~}}
     <div class="{{CSS_PREFIX}}weekday-grid-line {{holiday day}} {{#fi date '!==' 1}}{{CSS_PREFIX}}near-month-day{{/fi}} {{#if isToday}} {{CSS_PREFIX}}today{{/if}} {{#if isOtherMonth}}{{CSS_PREFIX}}extra-date{{/if}}"
-        style="width:{{width}}%; left:{{left}}%;">
+        style="width:{{width}}%; left:{{left}}%;
+        {{#unless @last}}
+        border-right:{{@root.styles.borderLeft}};
+        {{/unless}}
+        ">
         <div class="{{CSS_PREFIX}}weekday-grid-header">
             {{{monthGridHeader-tmpl this}}}
             {{#if hiddenSchedules}}

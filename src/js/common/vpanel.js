@@ -21,8 +21,9 @@ var config = require('../config'),
  *  @param {boolean} [options.autoHeight=false] - set true then this panel use remain height after other panel resized.
  *  @param {string} [options.className] - additional class name to add element
  * @param {HTMLElement} container - container element
+ * @param {Theme} theme - theme instance
  */
-function VPanel(options, container) {
+function VPanel(options, container, theme) {
     View.call(this, container);
 
     /**
@@ -50,6 +51,11 @@ function VPanel(options, container) {
     this.name = this.options.name || String(this.index);
 
     this.isHeightForcedSet = false;
+
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
 
     this._initPanel(this.options, container);
 }
@@ -164,6 +170,7 @@ VPanel.prototype._initPanel = function(options, container) {
 
     if (options.isSplitter) {
         domutil.addClass(container, config.classname('splitter'));
+        this.applyTheme();
 
         return;
     }
@@ -183,6 +190,18 @@ VPanel.prototype._initPanel = function(options, container) {
         options.height = height;
         this.setHeight(container, height);
     }
+};
+
+VPanel.prototype.applyTheme = function() {
+    var style = this.container.style;
+    var theme = this.theme;
+
+    if (!theme) {
+        return;
+    }
+
+    style.borderTop = theme.common.border;
+    style.borderBottom = theme.common.border;
 };
 
 module.exports = VPanel;

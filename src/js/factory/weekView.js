@@ -127,7 +127,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * 일자표기 (상단 일월화수...)
      **********/
-    dayNameView = new DayName(options.week, dayNameContainer);
+    dayNameView = new DayName(options.week, dayNameContainer, baseController.theme);
     weekView.handler.dayname.date = new DayNameClick(dragHandler, dayNameView, baseController);
     weekView.addChild(dayNameView);
 
@@ -140,7 +140,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     vLayout = new VLayout({
         panels: vpanels,
         panelHeights: options.week.panelHeights || []
-    }, vLayoutContainer);
+    }, vLayoutContainer, baseController.theme);
 
     weekView.vLayout = vLayout;
 

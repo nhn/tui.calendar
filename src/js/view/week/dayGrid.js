@@ -80,7 +80,8 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         panel = getPanel(opt.panels, opt.viewName),
         panelHeight = this.getViewBound().height,
         collapsed = this.state.collapsed,
-        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false;
+        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false,
+        styles = this._getStyles(viewModel.theme);
 
     var baseViewModel, visibleScheduleCount;
 
@@ -126,7 +127,8 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         exceedDate: exceedDate,
         showExpandableButton: panel.showExpandableButton,
         collapsed: collapsed,
-        collapseBtnIndex: this.state.clickedExpandBtnIndex
+        collapseBtnIndex: this.state.clickedExpandBtnIndex,
+        styles: styles
     };
 
     return baseViewModel;
@@ -197,6 +199,21 @@ DayGrid.prototype.addHandler = function(type, handler, vPanel) {
             }, this);
         }, this);
     }
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+DayGrid.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderRight = theme.common.border;
+    }
+
+    return styles;
 };
 
 /**

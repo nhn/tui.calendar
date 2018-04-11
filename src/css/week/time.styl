@@ -19,7 +19,6 @@
     .hour
         height: 48px
         position: relative
-        border-right: 1px solid #ddd
         color: #555
         box-sizing: border-box
         &:first-child span
@@ -46,9 +45,7 @@
         &:last-child
             border-bottom: none
 
-    .gridline:after
-        content: ''
-        display: block
+    .gridline-half
         height: 24px
         border-bottom: 1px dotted #f9f9f9
 
@@ -105,7 +102,6 @@
         position: absolute
         height: 100%
         margin-left: -1px
-        border-right: 1px solid #ddd
         box-sizing: content-box
         &:last-child
             border-right: none

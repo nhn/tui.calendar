@@ -1,4 +1,5 @@
-<div class="{{CSS_PREFIX}}timegrid-left">
+<div class="{{CSS_PREFIX}}timegrid-left"
+    style="border-right: {{styles.borderRight}};">
     {{#each hoursLabels ~}}
         <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hours}}">
             <span style="{{#if hidden}}display:none{{/if}}">{{hours}}</span>
@@ -8,7 +9,13 @@
 <div class="{{CSS_PREFIX}}timegrid-right">
     <div class="{{CSS_PREFIX}}timegrid-h-grid">
         {{#each hoursLabels ~}}
-        <div class="{{CSS_PREFIX}}timegrid-gridline"></div>
+        <div class="{{CSS_PREFIX}}timegrid-gridline" style="
+            {{#unless @last}}
+            border-bottom: {{@root.styles.borderBottom}};
+            {{/unless}}
+        ">
+            <div class="{{CSS_PREFIX}}timegrid-gridline-half" style="border-bottom: {{@root.styles.borderBottom}};"></div>
+        </div>
         {{/each ~}}
     </div>
     <div class="{{CSS_PREFIX}}timegrid-schedules">

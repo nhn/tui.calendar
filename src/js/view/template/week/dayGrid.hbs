@@ -1,11 +1,18 @@
-<div class="{{CSS_PREFIX}}{{viewName}}-left {{CSS_PREFIX}}left">
+<div class="{{CSS_PREFIX}}{{viewName}}-left {{CSS_PREFIX}}left" style="
+    border-right: {{styles.borderRight}};
+">
     {{{dayGridTitle-tmpl viewName}}}
 </div>
 <div class="{{CSS_PREFIX}}{{viewName}}-right {{CSS_PREFIX}}right">
     <div class="{{CSS_PREFIX}}container">
         <div class="{{CSS_PREFIX}}weekday-grid">
         {{#each days ~}}
-            <div class="{{CSS_PREFIX}}weekday-grid-line" style="left:{{left}}%; width:{{width}}%;"></div>
+            <div class="{{CSS_PREFIX}}weekday-grid-line"
+                style="left:{{left}}%; width:{{width}}%;
+                    {{#unless @last}}
+                    border-right: {{@root.styles.borderRight}};
+                    {{/unless}}
+            "></div>
         {{/each ~}}
 
         {{#if @root.showExpandableButton}}

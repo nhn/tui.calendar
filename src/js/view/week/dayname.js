@@ -16,9 +16,10 @@ var daynameTmpl = require('../template/week/daynames.hbs');
  * @constructor
  * @param {object} options - options for dayname view
  * @param {HTMLElement} container Container element to use.
+ * @param {Theme} theme - theme instance
  * @extends {View}
  */
-function DayName(options, container) {
+function DayName(options, container, theme) {
     container = domutil.appendHTMLElement(
         'div',
         container,
@@ -29,7 +30,14 @@ function DayName(options, container) {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     }, options);
 
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
+
     View.call(this, container);
+
+    this.applyTheme();
 }
 
 util.inherit(DayName, View);
@@ -71,13 +79,40 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
  * @param {object} viewModel View model from parent (WeekView)
  */
 DayName.prototype.render = function(viewModel) {
-    var _viewModel = this._getBaseViewModel(
+    var dayNames = this._getBaseViewModel(
         viewModel.renderStartDate,
         viewModel.renderEndDate,
         viewModel.grids
     );
+    var styles = this._getStyles(this.theme);
+    var baseViewModel = util.extend({}, {
+        dayNames: dayNames,
+        styles: styles
+    });
 
-    this.container.innerHTML = daynameTmpl(_viewModel);
+    this.container.innerHTML = daynameTmpl(baseViewModel);
+};
+
+DayName.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderTop = theme.common.border;
+        styles.borderBottom = theme.common.border;
+        styles.borderLeft = theme.common.border;
+    }
+
+    return styles;
+};
+
+DayName.prototype.applyTheme = function() {
+    var styles = this._getStyles(this.theme);
+    var style = this.container.style;
+
+    style.borderTop = styles.borderTop;
+    style.borderBottom = styles.borderBottom;
+
+    return style;
 };
 
 module.exports = DayName;

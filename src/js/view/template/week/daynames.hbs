@@ -1,8 +1,10 @@
 <div class="{{CSS_PREFIX}}dayname-leftmargin">
-{{#each this}}
+{{#each dayNames}}
 <div class="{{CSS_PREFIX}}dayname {{#if isToday}}{{CSS_PREFIX}}today{{/if}} {{holiday day}}"
      data-date="{{renderDate}}"
-     style="{{common-width width}};left:{{left}}%">
+     style="{{common-width width}};left:{{left}}%;
+     border-left: {{@root.styles.borderLeft}};
+     ">
     <span class="{{CSS_PREFIX}}dayname-date-area">
         {{{weekDayname-tmpl this}}}
     </span>

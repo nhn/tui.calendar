@@ -39,8 +39,6 @@ function Layout(container, theme) {
      */
     this.theme = theme;
 
-    console.log('Layout', this.applyTheme);
-
     this.applyTheme();
 }
 
