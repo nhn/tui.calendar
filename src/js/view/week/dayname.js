@@ -112,7 +112,7 @@ DayName.prototype._getDayNameColor = function(theme, day, isToday) {
         } else if (day === 6) {
             color = theme.common.saturday.color;
         } else if (isToday) {
-            color = theme.common.today.color;
+            color = theme.week.today.color || theme.common.today.color;
         } else {
             color = theme.common.dayname.color;
         }
@@ -130,9 +130,13 @@ DayName.prototype._getStyles = function(theme) {
     var styles = {};
 
     if (theme) {
-        styles.borderTop = theme.common.border;
-        styles.borderBottom = theme.common.border;
-        styles.borderLeft = theme.common.border;
+        styles.borderTop = theme.week.dayname.borderTop || theme.common.border;
+        styles.borderBottom = theme.week.dayname.borderBottom || theme.common.border;
+        styles.borderLeft = theme.week.dayname.borderLeft || theme.common.border;
+        styles.paddingLeft = theme.week.dayname.paddingLeft;
+        styles.backgroundColor = theme.week.dayname.backgroundColor;
+        styles.height = theme.week.dayname.height;
+        styles.textAlign = theme.week.dayname.textAlign;
     }
 
     return styles;
@@ -144,6 +148,9 @@ DayName.prototype.applyTheme = function() {
 
     style.borderTop = styles.borderTop;
     style.borderBottom = styles.borderBottom;
+    style.height = styles.height;
+    style.backgroundColor = styles.backgroundColor;
+    style.textAlign = styles.textAlign;
 
     return style;
 };

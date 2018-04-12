@@ -272,17 +272,9 @@ body {
     font-size: 14px;
 }
 
-.tui-full-calendar-dayname-container {
-    height: 61px;
-}
-
-.tui-full-calendar-dayname {
-    height: 59px;
-}
-
 .calendar-week-dayname-name {
-    line-height: 21px;
     font-weight: bold;
+    font-size: 12px;
 }
 
 .calendar-week-dayname-date {

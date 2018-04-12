@@ -163,17 +163,14 @@ var themeConfig = {
     'month.schedule.marginRight': '8px',
 
     // week header 'dayname'
-    'week.dayname.height': '40px',
+    'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.borderLeft': '',
-    'week.dayname.paddingLeft': '10px',
-    'week.dayname.backgroundColor': '',
-    'week.dayname.color': '#333',
-    'week.dayname.fontSize': '26px',
-    'week.dayname.fontWeight': 'normal',
+    'week.dayname.borderLeft': 'none',
+    'week.dayname.paddingLeft': '0',
+    'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
-    'week.todayName.color': '',
+    'week.today.color': '#333',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',

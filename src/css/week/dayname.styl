@@ -1,22 +1,16 @@
 .{css-prefix}dayname
     position: absolute;
     margin-left: -1px
-    font-size: 13px
-    padding-left: 5px
-    height: 41px
-
-    .{css-prefix}dayname-date
-        font-size: 26px
-        line-height: 41px
+    height: 100%
 
     &.{css-prefix}today
         font-weight: bold
 
 +prefix-classes(dayname)
     .container
-        height: 42px
         overflow-y: scroll
 
     .leftmargin
         position: relative
+        height: 100%
         margin-left: 77px 

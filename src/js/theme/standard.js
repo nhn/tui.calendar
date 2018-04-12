@@ -44,10 +44,14 @@ var theme = {
     'month.schedule.marginRight': '8px',
 
     // week header 'dayname'
-    'week.dayname.height': '40px',
+    'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.color': '#333',
+    'week.dayname.borderLeft': 'none',
+    'week.dayname.paddingLeft': '0',
+    'week.dayname.backgroundColor': 'inherit',
+    'week.dayname.textAlign': 'left',
+    'week.today.color': 'inherit',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',

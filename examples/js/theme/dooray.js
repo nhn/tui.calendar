@@ -40,9 +40,9 @@ var THEME_DOORAY = {
     'week.dayname.borderBottom': '1px solid #ddd',
     'week.dayname.borderLeft': '1px solid #ddd',
     'week.dayname.paddingLeft': '5px',
-    'week.dayname.color': '#333',
-    'week.dayname.fontWeight': 'bold',
-    'week.todayName.color': '#135de6',
+    'week.dayname.backgroundColor': 'inherit',
+    'week.dayname.textAlign': 'left',
+    'week.today.color': '#135de6',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #ddd',
