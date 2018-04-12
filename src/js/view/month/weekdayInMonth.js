@@ -147,6 +147,7 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
     if (theme) {
         styles.borderTop = theme.common.border;
         styles.borderLeft = theme.common.border;
+        styles.fontSize = theme.month.day.fontSize;
     }
 
     return styles;

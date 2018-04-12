@@ -106,7 +106,8 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
                 hiddenSchedules: exceedDate[ymd] || 0,
                 width: grids[index] ? grids[index].width : 0,
                 left: grids[index] ? grids[index].left : 0,
-                color: this._getDayNameColor(theme, day, isToday)
+                color: this._getDayNameColor(theme, day, isToday),
+                backgroundColor: this._getDayBackgroundColor(theme, day)
             };
         }, this)
     };
@@ -184,6 +185,28 @@ Weekday.prototype._getDayNameColor = function(theme, day, isToday, isOtherMonth)
             color = theme.common.today.color;
         } else {
             color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.dayname.color;
+        }
+    }
+
+    return color;
+};
+
+/**
+ * Get a day background color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @returns {string} style - color style
+ */
+Weekday.prototype._getDayBackgroundColor = function(theme, day) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0) {
+            color = theme.month.weekend.backgroundColor;
+        } else if (day === 6) {
+            color = theme.month.weekend.backgroundColor;
+        } else {
+            color = 'inherit';
         }
     }
 

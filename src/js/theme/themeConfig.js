@@ -35,12 +35,6 @@
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-
-    'month.day.color': '#333',
-    'month.day.fontSize': '14px',
-    'month.day.borderTop': '1px solid #e5e5e5',
-    'month.day.borderBottom': '1px solid #e5e5e5',
-    'month.day.borderLeft': '1px solid #e5e5e5',
     'month.weekend.backgroundColor': '',
 
     // month creation guide style
@@ -152,13 +146,8 @@ var themeConfig = {
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-
-    'month.day.color': '#333',
-    'month.day.fontSize': '14px',
-    'month.day.borderTop': '1px solid #e5e5e5',
-    'month.day.borderBottom': '1px solid #e5e5e5',
-    'month.day.borderLeft': '1px solid #e5e5e5',
     'month.weekend.backgroundColor': '',
+    'month.day.fontSize': '14px',
 
     // month creation guide style
     'month.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',

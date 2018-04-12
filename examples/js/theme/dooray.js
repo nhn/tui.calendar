@@ -21,13 +21,8 @@ var THEME_DOORAY = {
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': '#f3acac',
     'month.dayExceptThisMonth.color': '#bbb',
-
-    'month.day.color': '#333',
-    'month.day.fontSize': '16px',
-    'month.day.borderTop': '1px solid #ddd',
-    'month.day.borderBottom': '1px solid #ddd',
-    'month.day.borderLeft': '1px solid #ddd',
     'month.weekend.backgroundColor': '#fafafa',
+    'month.day.fontSize': '16px',
 
     // month creation guide style
     'month.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',

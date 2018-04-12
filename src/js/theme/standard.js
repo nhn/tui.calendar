@@ -29,11 +29,8 @@ var theme = {
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-
-    'month.day.color': '#333',
+    'month.weekend.backgroundColor': 'none',
     'month.day.fontSize': '14px',
-    'month.day.borderTop': '1px solid #e5e5e5',
-    'month.day.borderLeft': '1px solid #e5e5e5',
 
     // month creation guide style
     'month.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
