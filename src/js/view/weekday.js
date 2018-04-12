@@ -15,8 +15,6 @@ var config = require('../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {number} [options.containerHeight=40] - minimum height of schedule
- *  container element.
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.scheduleHeight=18] - height of each schedule block.
@@ -35,7 +33,6 @@ function Weekday(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        containerHeight: 40,
         containerBottomGutter: 8,
         scheduleHeight: 18,
         scheduleGutter: 2,

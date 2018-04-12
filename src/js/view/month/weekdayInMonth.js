@@ -148,6 +148,9 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
         styles.borderTop = theme.common.border;
         styles.borderLeft = theme.common.border;
         styles.fontSize = theme.month.day.fontSize;
+        styles.borderRadius = theme.month.schedule.borderRadius;
+        styles.marginLeft = theme.month.schedule.marginLeft;
+        styles.marginRight = theme.month.schedule.marginRight;
     }
 
     return styles;

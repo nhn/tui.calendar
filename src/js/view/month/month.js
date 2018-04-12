@@ -129,8 +129,9 @@ Month.prototype._getMonthCalendar = function(renderMonthStr) {
  * Create children view (week) and add children
  * @param {HTMLElement} container - container element to render weeks
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
+ * @param {Theme} theme - theme instance
  */
-Month.prototype._renderChildren = function(container, calendar) {
+Month.prototype._renderChildren = function(container, calendar, theme) {
     var self = this;
     var weekCount = calendar.length;
     var heightPercent = 100 / weekCount;
@@ -141,7 +142,6 @@ Month.prototype._renderChildren = function(container, calendar) {
     var visibleWeeksCount = opt.visibleWeeksCount;
     var visibleScheduleCount = opt.visibleScheduleCount;
     var gridOption = opt.grid;
-    var theme = this.theme;
 
     container.innerHTML = '';
     this.children.clear();
@@ -165,7 +165,8 @@ Month.prototype._renderChildren = function(container, calendar) {
             visibleWeeksCount: visibleWeeksCount,
             visibleScheduleCount: visibleScheduleCount,
             grid: gridOption,
-            theme: theme
+            scheduleHeight: parseInt(theme.month.schedule.height, 10),
+            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10)
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -228,11 +229,9 @@ Month.prototype.render = function() {
         styles: styles
     };
 
-    console.log('styles', styles);
-
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 
-    this._renderChildren(vLayout.panels[1].container, calendar);
+    this._renderChildren(vLayout.panels[1].container, calendar, theme);
 
     baseViewModel.panelHeight = vLayout.panels[1].getHeight();
 

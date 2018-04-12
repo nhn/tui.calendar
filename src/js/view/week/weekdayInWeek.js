@@ -17,8 +17,6 @@ var mmax = Math.max,
  * @constructor
  * @extends {Weekday}
  * @param {object} options - options for WeekdayInWeek view
- * @param {number} [options.containerHeight=40] - minimum height of schedule
- *  container element.
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.scheduleHeight=18] - height of each schedule block.
