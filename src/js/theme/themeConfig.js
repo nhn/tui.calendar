@@ -16,7 +16,9 @@
     'common.border': '1px solid #e5e5e5',
     'common.backgroundColor': 'white',
     'common.holiday.color': '#ff4040',
+    'common.saturday.color': '#135de6',
     'common.dayname.color': '#333',
+    'common.today.color': '',
 
     // month header 'dayname'
     'month.dayname.height': '31px',
@@ -32,7 +34,7 @@
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
-    'month.dayExceptThisMonth.color': '#rgba(51, 51, 51, 0.4)',
+    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
 
     'month.day.color': '#333',
     'month.day.fontSize': '14px',
@@ -132,7 +134,9 @@ var themeConfig = {
     'common.border': '1px solid #e5e5e5',
     'common.backgroundColor': 'white',
     'common.holiday.color': '#ff4040',
+    'common.saturday.color': '#135de6',
     'common.dayname.color': '#333',
+    'common.today.color': '#135de6',
 
     // month header 'dayname'
     'month.dayname.height': '31px',
@@ -148,7 +152,7 @@ var themeConfig = {
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
-    'month.dayExceptThisMonth.color': '#rgba(51, 51, 51, 0.4)',
+    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
 
     'month.day.color': '#333',
     'month.day.fontSize': '14px',

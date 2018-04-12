@@ -203,9 +203,11 @@ Month.prototype.render = function() {
                 day: day,
                 label: daynames[day],
                 width: grids[index] ? grids[index].width : 0,
-                left: grids[index] ? grids[index].left : 0
+                left: grids[index] ? grids[index].left : 0,
+                color: this._getDayNameColor(theme, day)
             };
-        }
+        },
+        this
     );
 
     if (workweek) {
@@ -270,6 +272,28 @@ Month.prototype._getStyles = function(theme) {
     }
 
     return styles;
+};
+
+/**
+ * Get a day name color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @returns {string} style - color style
+ */
+Month.prototype._getDayNameColor = function(theme, day) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0) {
+            color = theme.common.holiday.color;
+        } else if (day === 6) {
+            color = theme.common.saturday.color;
+        } else {
+            color = theme.common.dayname.color;
+        }
+    }
+
+    return color;
 };
 
 module.exports = Month;

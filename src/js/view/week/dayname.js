@@ -51,6 +51,7 @@ util.inherit(DayName, View);
  */
 DayName.prototype._getBaseViewModel = function(start, end, grids) {
     var daynames = this.options.daynames,
+        theme = this.theme,
         viewModel;
 
     viewModel = util.map(datetime.range(
@@ -59,17 +60,19 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
         datetime.MILLISECONDS_PER_DAY
     ), function(d, i) {
         var day = d.getDay();
+        var isToday = datetime.isSameDate(d, new TZDate());
 
         return {
             day: day,
             dayName: daynames[day],
-            isToday: datetime.isSameDate(d, new TZDate()),
+            isToday: isToday,
             date: d.getDate(),
             left: grids[i] ? grids[i].left : 0,
             width: grids[i] ? grids[i].width : 0,
-            renderDate: datetime.format(d, 'YYYY-MM-DD')
+            renderDate: datetime.format(d, 'YYYY-MM-DD'),
+            color: this._getDayNameColor(theme, day, isToday)
         };
-    });
+    }, this);
 
     return viewModel;
 };
@@ -93,6 +96,36 @@ DayName.prototype.render = function(viewModel) {
     this.container.innerHTML = daynameTmpl(baseViewModel);
 };
 
+/**
+ * Get a day name color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @param {boolean} isToday - today flag
+ * @returns {string} style - color style
+ */
+DayName.prototype._getDayNameColor = function(theme, day, isToday) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0) {
+            color = theme.common.holiday.color;
+        } else if (day === 6) {
+            color = theme.common.saturday.color;
+        } else if (isToday) {
+            color = theme.common.today.color;
+        } else {
+            color = theme.common.dayname.color;
+        }
+    }
+
+    return color;
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
 DayName.prototype._getStyles = function(theme) {
     var styles = {};
 

@@ -13,7 +13,9 @@ var theme = {
     'common.border': '1px solid #e5e5e5',
     'common.backgroundColor': 'white',
     'common.holiday.color': '#ff4040',
+    'common.saturday.color': '#333',
     'common.dayname.color': '#333',
+    'common.today.color': '#333',
 
     // month header 'dayname'
     'month.dayname.height': '31px',
@@ -25,7 +27,7 @@ var theme = {
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
-    'month.dayExceptThisMonth.color': '#rgba(51, 51, 51, 0.4)',
+    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
 
     'month.day.color': '#333',
     'month.day.fontSize': '14px',
@@ -42,7 +44,7 @@ var theme = {
     'month.schedule.marginTop': '2px',
     'month.schedule.marginLeft': '8px',
     'month.schedule.marginRight': '8px',
-    
+
     // week header 'dayname'
     'week.dayname.height': '40px',
     'week.dayname.borderTop': '1px solid #e5e5e5',

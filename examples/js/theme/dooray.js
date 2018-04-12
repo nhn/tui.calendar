@@ -4,7 +4,9 @@ var THEME_DOORAY = {
     'common.border': '1px solid #ddd',
     'common.backgroundColor': 'white',
     'common.holiday.color': '#f4436',
+    'common.saturday.color': '#333',
     'common.dayname.color': '#333',
+    'common.today.color': '#135de6',
 
     // month header 'dayname'
     'month.dayname.height': '42px',

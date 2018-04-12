@@ -110,7 +110,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         scheduleContainer;
 
     if (!this.options.visibleWeeksCount) {
-        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
     }
 
     console.log('baseViewModel', baseViewModel);
@@ -157,12 +157,18 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
  * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
  * @param {Array} dates - 날짜정보 배열
  * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+ * @param {Theme} theme - theme instance
  */
-function setIsOtherMonthFlag(dates, renderMonthStr) {
+function setIsOtherMonthFlag(dates, renderMonthStr, theme) {
     var renderMonth = Number(renderMonthStr.substring(5));
 
     util.forEach(dates, function(dateObj) {
-        dateObj.isOtherMonth = dateObj.month !== renderMonth;
+        var isOtherMonth = dateObj.month !== renderMonth;
+        dateObj.isOtherMonth = isOtherMonth;
+
+        if (isOtherMonth) {
+            dateObj.color = Weekday.prototype._getDayNameColor(theme, dateObj.day, dateObj.isToday, isOtherMonth);
+        }
     });
 }
 
