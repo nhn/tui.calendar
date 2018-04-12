@@ -8,6 +8,10 @@ var THEME_DOORAY = {
     'common.dayname.color': '#333',
     'common.today.color': '#135de6',
 
+    // creation guide style
+    'common.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',
+    'common.creationGuide.border': '1px solid #135de6',
+
     // month header 'dayname'
     'month.dayname.height': '42px',
     'month.dayname.borderTop': '1px solid #ddd',
@@ -23,10 +27,6 @@ var THEME_DOORAY = {
     'month.dayExceptThisMonth.color': '#bbb',
     'month.weekend.backgroundColor': '#fafafa',
     'month.day.fontSize': '16px',
-
-    // month creation guide style
-    'month.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',
-    'month.creationGuide.border': '1px solid #135de6',
 
     // month schedule style
     'month.schedule.height': '18px',
@@ -92,8 +92,6 @@ var THEME_DOORAY = {
     'week.currentTimeLineFuture.border': '1px solid #135de6',
 
     // week creation guide style
-    'week.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',
-    'week.creationGuide.border': '1px solid #135de6',
     'week.creationGuide.color': '#135de6',
     'week.creationGuide.fontSize': '12px',
     'week.creationGuide.fontWeight': 'bold'

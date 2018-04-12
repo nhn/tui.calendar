@@ -20,6 +20,10 @@
     'common.dayname.color': '#333',
     'common.today.color': '',
 
+    // creation guide style
+    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'common.creationGuide.border': '1px solid #515ce6',
+
     // month header 'dayname'
     'month.dayname.height': '31px',
     'month.dayname.borderTop': '1px solid #e5e5e5',
@@ -36,10 +40,6 @@
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
     'month.weekend.backgroundColor': '',
-
-    // month creation guide style
-    'month.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'month.creationGuide.border': '1px solid #515ce6',
 
     // month schedule style
     'month.schedule.borderRadius': '2px',
@@ -114,8 +114,6 @@
     'week.currentTimeLineFuture.border': '',
 
     // week creation guide style
-    'week.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'week.creationGuide.border': '1px solid #515ce6',
     'week.creationGuide.color': '#515ce6',
     'week.creationGuide.fontSize': '11px',
     'week.creationGuide.fontWeight': 'bold',
@@ -131,6 +129,10 @@ var themeConfig = {
     'common.saturday.color': '#135de6',
     'common.dayname.color': '#333',
     'common.today.color': '#135de6',
+
+    // creation guide style
+    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'common.creationGuide.border': '1px solid #515ce6',
 
     // month header 'dayname'
     'month.dayname.height': '31px',
@@ -149,10 +151,6 @@ var themeConfig = {
     'month.weekend.backgroundColor': '',
     'month.day.fontSize': '14px',
 
-    // month creation guide style
-    'month.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'month.creationGuide.border': '1px solid #515ce6',
-
     // month schedule style
     'month.schedule.borderRadius': '2px',
     'month.schedule.height': '24px',
@@ -226,8 +224,6 @@ var themeConfig = {
     'week.currentTimeLineFuture.border': '',
 
     // week creation guide style
-    'week.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'week.creationGuide.border': '1px solid #515ce6',
     'week.creationGuide.color': '#515ce6',
     'week.creationGuide.fontSize': '11px',
     'week.creationGuide.fontWeight': 'bold',

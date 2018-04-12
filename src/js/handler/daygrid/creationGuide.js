@@ -30,6 +30,7 @@ function DayGridCreationGuide(creation) {
     this.guideElement = document.createElement('div');
 
     this.initializeGuideElement();
+    this.applyTheme(creation.controller.theme);
 
     creation.on({
         dragstart: this._createGuideElement,
@@ -142,6 +143,13 @@ DayGridCreationGuide.prototype._createGuideElement = function(dragStartEventData
  */
 DayGridCreationGuide.prototype._onDrag = function(dragEventData) {
     this._refreshGuideElement(dragEventData);
+};
+
+DayGridCreationGuide.prototype.applyTheme = function(theme) {
+    var style = this.guideElement.style;
+
+    style.backgroundColor = theme.common.creationGuide.backgroundColor;
+    style.border = theme.common.creationGuide.border;
 };
 
 module.exports = DayGridCreationGuide;

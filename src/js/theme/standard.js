@@ -17,6 +17,10 @@ var theme = {
     'common.dayname.color': '#333',
     'common.today.color': '#333',
 
+    // creation guide style
+    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'common.creationGuide.border': '1px solid #515ce6',
+
     // month header 'dayname'
     'month.dayname.height': '31px',
     'month.dayname.borderLeft': 'none',
@@ -31,10 +35,6 @@ var theme = {
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
     'month.weekend.backgroundColor': 'none',
     'month.day.fontSize': '14px',
-
-    // month creation guide style
-    'month.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'month.creationGuide.border': '1px solid #515ce6',
 
     // month schedule style
     'month.schedule.borderRadius': '2px',
@@ -92,8 +92,6 @@ var theme = {
     'week.currentTimeLineToday.border': '1px solid #515ce6',
 
     // week creation guide style
-    'week.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'week.creationGuide.border': '1px solid #515ce6',
     'week.creationGuide.color': '#515ce6',
     'week.creationGuide.fontSize': '11px',
     'week.creationGuide.fontWeight': 'bold',

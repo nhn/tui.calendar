@@ -36,7 +36,8 @@ function MonthGuide(options, monthView) {
         bgColor: '#f7ca88',
         label: '새 일정',
         isResizeMode: false,
-        isCreationMode: false
+        isCreationMode: false,
+        styles: this._getStyles(monthView.controller.theme)
     }, options);
 
     /**
@@ -433,6 +434,22 @@ MonthGuide.prototype.clear = function() {
     });
 
     this.guideElements = {};
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+MonthGuide.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.border = theme.common.creationGuide.border;
+        styles.backgroundColor = theme.common.creationGuide.backgroundColor;
+    }
+
+    return styles;
 };
 
 module.exports = MonthGuide;
