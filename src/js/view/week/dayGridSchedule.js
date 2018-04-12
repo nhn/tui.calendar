@@ -85,6 +85,7 @@ DayGridSchedule.prototype.getBaseViewModel = function(viewModel) {
     var matrices = opt.getViewModelFunc(viewModel);
     var maxScheduleInDay = this._getMaxScheduleInDay(matrices);
     var baseViewModel;
+    var styles = this._getStyles(viewModel.theme);
 
     baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
 
@@ -92,10 +93,26 @@ DayGridSchedule.prototype.getBaseViewModel = function(viewModel) {
         minHeight: this._getMinHeight(maxScheduleInDay),
         matrices: matrices,
         scheduleContainerTop: this.options.scheduleContainerTop,
-        maxScheduleInDay: maxScheduleInDay
+        maxScheduleInDay: maxScheduleInDay,
+        styles: styles
     }, baseViewModel);
 
     return baseViewModel;
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+DayGridSchedule.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderRadius = theme.week.dayGridSchedule.borderRadius;
+    }
+
+    return styles;
 };
 
 module.exports = DayGridSchedule;

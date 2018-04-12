@@ -28,8 +28,9 @@ var mmax = Math.max,
  * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
+ * @param {Theme} theme - theme instance
  */
-function DayGrid(name, options, container) {
+function DayGrid(name, options, container, theme) {
     container = domutil.appendHTMLElement(
         'div',
         container,
@@ -45,8 +46,8 @@ function DayGrid(name, options, container) {
         renderStartDate: '',
         renderEndDate: '',
         containerBottomGutter: 18,
-        scheduleHeight: 18,
-        scheduleGutter: 2,
+        scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
+        scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
         scheduleContainerTop: 1,
         getViewModelFunc: function(viewModel) {
             return viewModel.schedulesInDateRange[name];

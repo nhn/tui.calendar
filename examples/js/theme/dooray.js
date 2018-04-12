@@ -94,5 +94,12 @@ var THEME_DOORAY = {
     // week creation guide style
     'week.creationGuide.color': '#135de6',
     'week.creationGuide.fontSize': '12px',
-    'week.creationGuide.fontWeight': 'bold'
+    'week.creationGuide.fontWeight': 'bold',
+
+    // week daygrid schedule style
+    'week.dayGridSchedule.borderRadius': '0px',
+    'week.dayGridSchedule.height': '18px',
+    'week.dayGridSchedule.marginTop': '2px',
+    'week.dayGridSchedule.marginLeft': '10px',
+    'week.dayGridSchedule.marginRight': '10px'
 };

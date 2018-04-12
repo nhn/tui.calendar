@@ -96,8 +96,12 @@ var theme = {
     'week.creationGuide.fontSize': '11px',
     'week.creationGuide.fontWeight': 'bold',
 
-    // week schedule style
-    'week.schedule.borderRadius': '2px'
+    // week daygrid schedule style
+    'week.dayGridSchedule.borderRadius': '2px',
+    'week.dayGridSchedule.height': '24px',
+    'week.dayGridSchedule.marginTop': '2px',
+    'week.dayGridSchedule.marginLeft': '8px',
+    'week.dayGridSchedule.marginRight': '8px'
 };
 
 module.exports = theme;

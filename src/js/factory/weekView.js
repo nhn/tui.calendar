@@ -157,7 +157,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             /**********
              * Schedule panel by Grid
              **********/
-            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container);
+            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container, baseController.theme);
             view.on('afterRender', function(viewModel) {
                 vLayout.getPanelByName(name).setHeight(null, viewModel.height);
             });
