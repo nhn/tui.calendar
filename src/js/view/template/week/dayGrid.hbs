@@ -3,10 +3,10 @@
 </div>
 <div class="{{CSS_PREFIX}}{{viewName}}-right {{CSS_PREFIX}}right">
     <div class="{{CSS_PREFIX}}container">
-        <div class="{{CSS_PREFIX}}weekday-grid" style="background-color: {{styles.backgroundColor}}">
+        <div class="{{CSS_PREFIX}}weekday-grid">
         {{#each days ~}}
             <div class="{{CSS_PREFIX}}weekday-grid-line"
-                style="left:{{left}}%; width:{{width}}%;
+                style="left:{{left}}%; width:{{width}}%; background-color: {{backgroundColor}};
                     {{#unless @last}}
                     border-right: {{@root.styles.borderRight}};
                     {{/unless}}

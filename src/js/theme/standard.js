@@ -67,6 +67,7 @@ var theme = {
     'week.daygridLeft.borderRight': '1px solid #e5e5e5',
 
     'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'week.weekend.backgroundColor': 'inherit',
 
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',

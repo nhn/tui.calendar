@@ -113,16 +113,18 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         days: util.map(viewModel.range, function(d, index) {
             var day = d.getDay();
             var ymd = datetime.format(d, 'YYYYMMDD');
+            var isToday = datetime.isSameDate(d, new TZDate());
 
             return {
                 day: day,
                 dayName: daynames[day],
-                isToday: datetime.isSameDate(d, new TZDate()),
+                isToday: isToday,
                 date: d.getDate(),
                 renderDate: datetime.format(d, 'YYYY-MM-DD'),
                 hiddenSchedules: exceedDate[ymd] || 0,
                 width: grids[index] ? grids[index].width : 0,
-                left: grids[index] ? grids[index].left : 0
+                left: grids[index] ? grids[index].left : 0,
+                backgroundColor: viewModel.range.length > 1 ? getWeekBackgroundColor(day, isToday, styles) : styles.backgroundColor
             };
         }),
         exceedDate: exceedDate,
@@ -212,6 +214,8 @@ DayGrid.prototype._getStyles = function(theme) {
 
     if (theme) {
         styles.borderRight = theme.week.daygrid.borderRight || theme.common.border;
+        styles.todayBackgroundColor = theme.week.today.backgroundColor;
+        styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
         styles.backgroundColor = theme.week.daygrid.backgroundColor;
         styles.leftWidth = theme.week.daygridLeft.width;
         styles.leftBackgroundColor = theme.week.daygridLeft.backgroundColor;
@@ -221,6 +225,27 @@ DayGrid.prototype._getStyles = function(theme) {
 
     return styles;
 };
+
+/**
+ * 
+ * @param {number} day - day number
+ * @param {boolean} isToday - today flag
+ * @param {object} styles - style object
+ * @returns {string} backgroundColor
+ */
+function getWeekBackgroundColor(day, isToday, styles) {
+    var backgroundColor = '';
+
+    if (day === 0 || day === 6) {
+        backgroundColor = styles.weekendBackgroundColor;
+    } else if (isToday) {
+        backgroundColor = styles.todayBackgroundColor;
+    } else {
+        backgroundColor = styles.backgroundColor;
+    }
+
+    return backgroundColor;
+}
 
 /**
  * get a panel infomation

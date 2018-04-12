@@ -56,6 +56,9 @@ var THEME_DOORAY = {
     'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #ddd',
 
+    'week.today.backgroundColor': 'inherit',
+    'week.weekend.backgroundColor': 'inherit',
+
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',
     'week.timegridLeft.backgroundColor': '#fafafa',
