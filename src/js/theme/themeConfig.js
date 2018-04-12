@@ -64,7 +64,6 @@
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',
     'week.vpanelSplitter.height': '3px',
-    'week.vpanelSplitter.backgroundColor': '',
 
     // week daygrid 'daygrid'
     'week.daygrid.borderTop': '1px solid #e5e5e5',
@@ -175,7 +174,6 @@ var themeConfig = {
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',
     'week.vpanelSplitter.height': '3px',
-    'week.vpanelSplitter.backgroundColor': '',
 
     // week daygrid 'daygrid'
     'week.daygrid.borderTop': '1px solid #e5e5e5',

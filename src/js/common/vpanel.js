@@ -200,8 +200,9 @@ VPanel.prototype.applyTheme = function() {
         return;
     }
 
-    style.borderTop = theme.common.border;
-    style.borderBottom = theme.common.border;
+    style.borderTop = theme.week.vpanelSplitter.border || theme.common.border;
+    style.borderBottom = theme.week.vpanelSplitter.border || theme.common.border;
+    style.height = theme.week.vpanelSplitter.height;
 };
 
 module.exports = VPanel;
