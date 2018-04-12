@@ -1,11 +1,9 @@
-<div class="{{CSS_PREFIX}}{{viewName}}-left {{CSS_PREFIX}}left" style="
-    border-right: {{styles.borderRight}};
-">
+<div class="{{CSS_PREFIX}}{{viewName}}-left {{CSS_PREFIX}}left" style="border-right: {{styles.leftBorderRight}}; width: {{styles.leftWidth}}; background-color: {{styles.leftBackgroundColor}}; padding-right: {{styles.leftPaddingRight}};">
     {{{dayGridTitle-tmpl viewName}}}
 </div>
 <div class="{{CSS_PREFIX}}{{viewName}}-right {{CSS_PREFIX}}right">
     <div class="{{CSS_PREFIX}}container">
-        <div class="{{CSS_PREFIX}}weekday-grid">
+        <div class="{{CSS_PREFIX}}weekday-grid" style="background-color: {{styles.backgroundColor}}">
         {{#each days ~}}
             <div class="{{CSS_PREFIX}}weekday-grid-line"
                 style="left:{{left}}%; width:{{width}}%;

@@ -68,7 +68,7 @@
     // week daygrid 'daygrid'
     'week.daygrid.borderTop': '1px solid #e5e5e5',
     'week.daygrid.borderBottom': '1px solid #e5e5e5',
-    'week.daygrid.borderLeft': '1px solid #e5e5e5',
+    'week.daygrid.borderRight': '1px solid #e5e5e5',
     'week.daygrid.backgroundColor': '',
 
     'week.daygridLeft.width': '72px',
@@ -176,16 +176,13 @@ var themeConfig = {
     'week.vpanelSplitter.height': '3px',
 
     // week daygrid 'daygrid'
-    'week.daygrid.borderTop': '1px solid #e5e5e5',
-    'week.daygrid.borderBottom': '1px solid #e5e5e5',
-    'week.daygrid.borderLeft': '1px solid #e5e5e5',
-    'week.daygrid.backgroundColor': '',
+    'week.daygrid.borderRight': '1px solid #e5e5e5',
+    'week.daygrid.backgroundColor': 'inherit',
 
     'week.daygridLeft.width': '72px',
     'week.daygridLeft.backgroundColor': '',
-    'week.daygridLeft.paddingRight': '7px',
+    'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #e5e5e5',
-    'week.daygridLeft.fontSize': '11px',
 
     'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
     'week.weekend.backgroundColor': '',

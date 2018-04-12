@@ -211,7 +211,12 @@ DayGrid.prototype._getStyles = function(theme) {
     var styles = {};
 
     if (theme) {
-        styles.borderRight = theme.common.border;
+        styles.borderRight = theme.week.daygrid.borderRight || theme.common.border;
+        styles.backgroundColor = theme.week.daygrid.backgroundColor;
+        styles.leftWidth = theme.week.daygridLeft.width;
+        styles.leftBackgroundColor = theme.week.daygridLeft.backgroundColor;
+        styles.leftPaddingRight = theme.week.daygridLeft.paddingRight;
+        styles.leftBorderRight = theme.week.daygridLeft.borderRight;
     }
 
     return styles;

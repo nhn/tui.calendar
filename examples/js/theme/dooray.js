@@ -49,15 +49,12 @@ var THEME_DOORAY = {
     'week.vpanelSplitter.height': '3px',
 
     // week daygrid 'daygrid'
-    'week.daygrid.borderTop': '1px solid #ddd',
-    'week.daygrid.borderBottom': '1px solid #ddd',
-    'week.daygrid.borderLeft': '1px solid #ddd',
+    'week.daygrid.borderRight': '1px solid #ddd',
 
     'week.daygridLeft.width': '77px',
     'week.daygridLeft.backgroundColor': '#fafafa',
-    'week.daygridLeft.paddingRight': '5px',
+    'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #ddd',
-    'week.daygridLeft.fontSize': '11px',
 
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',

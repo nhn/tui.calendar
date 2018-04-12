@@ -349,6 +349,7 @@ body {
     text-align: right;
     display: table;
     width: 100%;
+    font-size: 11px;
 }
 
 .weekly-left-content {
