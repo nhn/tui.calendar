@@ -11,10 +11,12 @@ var THEME_DOORAY = {
     // month header 'dayname'
     'month.dayname.height': '42px',
     'month.dayname.borderTop': '1px solid #ddd',
-    'month.dayname.borderBottom': '1px solid #ddd',
+    'month.dayname.borderLeft': '1px solid #ddd',
     'month.dayname.paddingLeft': '8px',
-    'month.dayname.color': '#333',
     'month.dayname.fontSize': '13px',
+    'month.dayname.backgroundColor': 'inherit',
+    'month.dayname.fontWeight': 'normal',
+    'month.dayname.textAlign': 'left',
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': '#f3acac',

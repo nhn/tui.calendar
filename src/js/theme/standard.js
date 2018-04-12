@@ -19,11 +19,12 @@ var theme = {
 
     // month header 'dayname'
     'month.dayname.height': '31px',
-    'month.dayname.borderTop': '1px solid #e5e5e5',
-    'month.dayname.borderBottom': '1px solid #e5e5e5',
+    'month.dayname.borderLeft': 'none',
     'month.dayname.paddingLeft': '10px',
-    'month.dayname.color': '#333',
     'month.dayname.fontSize': '12px',
+    'month.dayname.backgroundColor': 'inherit',
+    'month.dayname.fontWeight': 'normal',
+    'month.dayname.textAlign': 'left',
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',

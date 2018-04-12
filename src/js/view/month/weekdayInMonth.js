@@ -113,7 +113,6 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
     }
 
-    console.log('baseViewModel', baseViewModel);
     container.innerHTML = baseTmpl(baseViewModel);
 
     scheduleContainer = domutil.find(

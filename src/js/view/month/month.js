@@ -41,7 +41,7 @@ function Month(options, container, controller) {
      */
     this.vLayout = new VLayout({
         panels: [
-            {height: 42},
+            {height: parseInt(controller.theme.month.dayname.height, 10)},
             {autoHeight: true}
         ]
     }, container, theme);
@@ -228,6 +228,8 @@ Month.prototype.render = function() {
         styles: styles
     };
 
+    console.log('styles', styles);
+
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 
     this._renderChildren(vLayout.panels[1].container, calendar);
@@ -265,10 +267,20 @@ Month.prototype.render = function() {
  */
 Month.prototype._getStyles = function(theme) {
     var styles = {};
+    var dayname;
 
     if (theme) {
-        styles.borderTop = theme.common.border;
-        styles.borderLeft = theme.common.border;
+        dayname = theme.month.dayname;
+
+        styles.borderTop = dayname.borderTop || theme.common.border;
+        styles.borderLeft = dayname.borderLeft || theme.common.border;
+        styles.height = dayname.height;
+        styles.paddingLeft = dayname.paddingLeft;
+        styles.paddingRight = dayname.paddingRight;
+        styles.fontSize = dayname.fontSize;
+        styles.backgroundColor = dayname.backgroundColor;
+        styles.fontWeight = dayname.fontWeight;
+        styles.textAlign = dayname.textAlign;
     }
 
     return styles;
