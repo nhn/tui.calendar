@@ -190,17 +190,18 @@ var themeConfig = {
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',
     'week.timegridLeft.backgroundColor': '',
-    'week.timegridLeft.paddingRight': '8px',
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
-    'week.timegridLeft.color': '#333',
 
     'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.borderBottom': '',
+    'week.timegridHalfHour.height': '26px',
+    'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
     'week.timegrid.paddingRight': '8px',
     'week.timegrid.borderRight': '1px solid #e5e5e5',
+    'week.timegridSchedule.borderRadius': '2px',
+    'week.timegridSchedule.paddingLeft': '2px',
 
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',

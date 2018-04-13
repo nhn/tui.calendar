@@ -408,8 +408,19 @@ TimeGrid.prototype._getStyles = function(theme) {
     var styles = {};
 
     if (theme) {
-        styles.borderRight = theme.common.border;
-        styles.borderBottom = theme.common.border;
+        styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
+        styles.halfHourBorderBottom = theme.week.timegridHalfHour.borderBottom || theme.common.border;
+
+        styles.todayBackgroundColor = theme.week.today.backgroundColor;
+        styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
+        styles.backgroundColor = theme.week.daygrid.backgroundColor;
+        styles.leftWidth = theme.week.timegridLeft.width;
+        styles.leftBackgroundColor = theme.week.timegridLeft.backgroundColor;
+        styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
+        styles.leftFontSize = theme.week.timegridLeft.fontSize;
+
+        styles.oneHourHeight = theme.week.timegridOneHour.height;
+        styles.halfHourHeight = theme.week.timegridHalfHour.height;
     }
 
     return styles;

@@ -202,7 +202,8 @@ Time.prototype.getDate = function() {
 Time.prototype.render = function(ymd, matrices, containerHeight) {
     this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
-        matrices: matrices
+        matrices: matrices,
+        styles: this._getStyles(this.theme)
     });
 };
 
@@ -213,9 +214,14 @@ Time.prototype.render = function(ymd, matrices, containerHeight) {
  */
 Time.prototype._getStyles = function(theme) {
     var styles = {};
+    var options = this.options;
 
     if (theme) {
-        styles.borderRight = theme.common.border;
+        styles.borderRight = theme.week.timegrid.borderRight || theme.common.border;
+        styles.marginRight = theme.week.timegrid.paddingRight;
+        styles.borderRadius = theme.week.timegridSchedule.borderRadius;
+        styles.paddingLeft = theme.week.timegridSchedule.paddingLeft;
+        styles.backgroundColor = options.isToday ? theme.week.today.backgroundColor : 'inherit';
     }
 
     return styles;
@@ -226,6 +232,7 @@ Time.prototype.applyTheme = function() {
     var styles = this._getStyles(this.theme);
 
     style.borderRight = styles.borderRight;
+    style.backgroundColor = styles.backgroundColor;
 };
 
 module.exports = Time;

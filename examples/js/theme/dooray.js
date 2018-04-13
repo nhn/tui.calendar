@@ -62,17 +62,19 @@ var THEME_DOORAY = {
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',
     'week.timegridLeft.backgroundColor': '#fafafa',
-    'week.timegridLeft.paddingRight': '7px',
     'week.timegridLeft.borderRight': '1px solid #ddd',
     'week.timegridLeft.fontSize': '12px',
     'week.timegridLeft.color': '#555',
 
     'week.timegridOneHour.height': '48px',
+    'week.timegridHalfHour.height': '24px',
     'week.timegridHalfHour.borderBottom': '1px dotted #f9f9f9',
-    'week.timegridHorizontalLine.borderBottom': '1px solid #ddd',
+    'week.timegridHorizontalLine.borderBottom': '1px solid #eee',
 
     'week.timegrid.paddingRight': '10px',
     'week.timegrid.borderRight': '1px solid #ddd',
+    'week.timegridSchedule.borderRadius': '0',
+    'week.timegridSchedule.paddingLeft': '0',
 
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
