@@ -130,8 +130,11 @@
         },
         week: {
             daynames: daynames
-        }
+        },
+        useWritePopup: true
     });
+
+    cal.setCalendars(CalendarList);
 
     // event handlers
     cal.on({
@@ -163,7 +166,6 @@
         },
         'beforeCreateSchedule': function(e) {
             console.log(e);
-            createNewSchedule(e);
         },
         'beforeUpdateSchedule': function(e) {
             cal.updateSchedule(e.schedule.id, e.schedule.calendarId, {
@@ -175,6 +177,9 @@
         },
         'beforeDeleteSchedule': function(e) {
             console.log('delete', e);
+        },
+        'saveSchedule': function(e) {
+            console.log('saveSchedule', e);
         }
     });
 
@@ -280,7 +285,7 @@
         console.log(action);
         switch (action) {
             case 'toggle-daily':
-                viewName = 'day'
+                viewName = 'day';
                 break;
             case 'toggle-weekly':
                 viewName = 'week';
