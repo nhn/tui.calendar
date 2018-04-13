@@ -34,13 +34,13 @@ describe('Theme', function() {
         var map = {
             'common.border': '2px dashed #ddd',
             'month.dayname.paddingLeft': '3px',
-            'week.dayname.color': '#555'
+            'week.today.color': '#555'
         };
         var result = theme.setStyles(map);
 
         expect(theme.common.border).toBe('2px dashed #ddd');
         expect(theme.month.dayname.paddingLeft).toBe('3px');
-        expect(theme.week.dayname.color).toBe('#555');
+        expect(theme.week.today.color).toBe('#555');
         expect(result.length).toBe(0);
     });
 
@@ -109,7 +109,7 @@ describe('Theme', function() {
             expect(theme.getStyle(key)).toBeUndefined();
         });
 
-        theme.setStyles(customTheme);
+        console.log(theme.setStyles(customTheme));
 
         keys = util.keys(customTheme);
         util.forEach(keys, function(key) {
