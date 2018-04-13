@@ -50,7 +50,7 @@ function Base(options) {
      * Theme
      * @type {Theme}
      */
-    this.theme = new Theme();
+    this.theme = new Theme(options.theme);
 }
 
 /**
