@@ -15,7 +15,7 @@
     });
 
     cal = new Calendar('#calendar', {
-        defaultView: 'week',
+        defaultView: 'month',
         taskView: true,
         scheduleView: true,
         template: {

@@ -3,7 +3,7 @@
 var THEME_DOORAY = {
     'common.border': '1px solid #ddd',
     'common.backgroundColor': 'white',
-    'common.holiday.color': '#f4436',
+    'common.holiday.color': '#f44336',
     'common.saturday.color': '#333',
     'common.dayname.color': '#333',
     'common.today.color': '#135de6',
@@ -17,6 +17,7 @@ var THEME_DOORAY = {
     'month.dayname.borderTop': '1px solid #ddd',
     'month.dayname.borderLeft': '1px solid #ddd',
     'month.dayname.paddingLeft': '8px',
+    'month.dayname.paddingRight': '0',
     'month.dayname.fontSize': '13px',
     'month.dayname.backgroundColor': 'inherit',
     'month.dayname.fontWeight': 'normal',
