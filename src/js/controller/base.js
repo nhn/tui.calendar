@@ -329,6 +329,10 @@ Base.prototype.clearSchedules = function() {
     this.fire('clearSchedules');
 };
 
+/**
+ * Set calendar list
+ * @param {Array.<Object>} calendars - calendar list
+ */
 Base.prototype.setCalendars = function(calendars) {
     this.calendars = calendars;
     this.fire('setCalendars', calendars);
