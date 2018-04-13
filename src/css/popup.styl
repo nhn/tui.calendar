@@ -1,0 +1,315 @@
+.{css-prefix}popup
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1)
+    min-width: 474px
+
+.{css-prefix}button
+    background: #fff;
+    border: 1px solid #dddddd
+    border-radius: 2px
+    text-align: left
+    font-size: 12px
+    padding: 8px
+    color: #333
+    outline: none
+
+    &:hover
+        border: 1px solid #bbbbbb
+    
+    &:active
+    &:focus
+        background: #f9f9f9
+        border: 1px solid #bbbbbb
+        outline: none
+    
+    &.disable
+        background: #f9f9f9
+        border: 1px solid #dddddd
+        color: #bbbbbb
+
+    &.round
+        border-radius: 25px
+        padding: 8px 17px
+
+.{css-prefix}button-emphasize
+    background: #ff6618
+    border-radius: 40px
+    min-width: 96px;
+    color: #fff
+    font-weight: bold
+    padding: 12px
+    border: none
+    line-height: 12px
+    outline: none
+
+    &:hover
+        background: #e55b15
+    
+    &:active
+    &:focus
+        background: #d95614
+
+
+.{css-prefix}button-icon-square
+    background: #fff;
+    border: 1px solid #dddddd
+    border-radius: 2px
+    text-align: left
+    font-size: 0
+    padding: 8px
+    color: #333
+
+    &:hover
+        border: 1px solid #bbbbbb
+    
+    &:active
+    &:focus
+        background: #f9f9f9
+        border: 1px solid #bbbbbb
+    
+    &.disable
+        background: #f9f9f9
+        border: 1px solid #dddddd
+        color: #bbbbbb
+
+.icon
+    width: 14px
+    height: 14px
+    vertical-align: middle
+    font-size: 0
+    line-height: 14px
+
+.icon.calendar
+    border-radius: 8px;
+    width: 12px;
+    height: 12px;
+    margin: 2px;
+
+.icon.right
+    float: right
+
+.icon.ic-subject
+    background: url('ic-subject.png')
+
+.icon.ic-location
+    background: url('ic-location.png')
+
+.icon.ic-date
+    background: url('ic-date.png')
+
+.icon.ic-state
+    background: url('ic-state.png')
+
+.icon.ic-lock
+    background: url('ic-lock.png')
+
+.icon.ic-unlock
+    background: url('ic-unlock.png')
+
+
++prefix-classes(css-prefix + 'popup-')
+    .body
+        padding: 16px
+        background: #fff
+        border-radius: 2px;
+        border: 1px solid #d5d5d5
+        position: relative
+
+        > div
+            margin-bottom: 8px
+        
+        input::placeholder
+            color: #bbbbbb
+            font-weight: 300
+        
+        .close
+            position: absolute;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 12px;
+            font-size: 0;
+            outline: none
+
+    .dropdown
+        position: relative
+
+    .dropdown-button
+        min-width: 176px
+        padding-left: 11px
+        .icon
+            margin-top: -2px
+            margin-right: 8px
+
+    .dropdown-menu
+        border-radius: 2px
+        border: 1px solid #dddddd
+        background: #ffffff
+        display: none
+        position: absolute;
+        min-width: 176px;
+        top: 0;
+        list-style: none;
+        padding: 0 0 4px 0
+        z-index: 1001
+
+        &:hover
+            border: 1px solid #bbbbbb
+
+        > li
+            padding: 8px
+            padding-left: 11px
+
+            &:first-child
+                &:hover
+                    background: none
+            
+            &:nth-child(2)
+                margin-top: 4px
+
+            &:hover
+                background-color: rgba(81, 92, 230, 0.05)
+
+            .icon
+                margin-right: 7px
+
+    .dropdown-button.state
+    .dropdown-menu.state
+        min-width: 109px
+
+    
+    #subjectDiv
+        display: inline-block
+        width: calc(100% - 36px)
+        vertical-align: middle
+
+    #lockBtn
+        font-size: 0
+        vertical-align: middle
+
+    .textfield
+        border-radius: 2px;
+        border: 1px solid #dddddd
+        background-color: #ffffff
+        width: 100%
+        padding: 0 11px
+
+        &:hover, &:active, &:focus
+            border-color: #bbbbbb
+
+        .icon
+            margin-top: -2px
+            margin-right: 8px
+        
+        input
+            height: 30px
+            width: calc(100% - 22px)
+            border: none
+            outline: none
+            
+    
+    .datepicker
+        min-width: 176px
+        display: inline-block
+        border-radius: 2px;
+        border: 1px solid #dddddd
+        background-color: #ffffff
+        padding: 0 11px
+
+        &:hover, &:active, &:focus
+            border-color: #bbbbbb
+
+        .icon
+            margin-top: -2px
+            margin-right: 8px
+        
+        input
+            height: 30px
+            width: calc(100%-22px)
+            border: none
+            outline: none
+
+    .arrow-border
+        width: 0px
+        heigth: 0px
+        position: absolute
+        &.top
+            border-top: none
+            border-right: 8px solid transparent
+            border-bottom: 8px solid #d5d5d5
+            border-left: 8px solid transparent
+            left: calc(50% - 8px)
+            top: -7px
+        &.bottom
+            border-top: 8px solid #d5d5d5
+            border-right: 8px solid transparent
+            border-bottom: none
+            border-left: 8px solid transparent
+            left: calc(50% - 8px)
+            bottom: -7px
+        &.right
+            border-top: 8px solid transparent
+            border-right: none
+            border-bottom: 8px solid transparent
+            border-left: 8px solid #d5d5d5
+            top: calc(50% - 8px)
+            right: -7px
+        &.left
+            border-top: 8px solid transparent
+            border-right: 8px solid #d5d5d5
+            border-bottom: 8px solid transparent
+            border-left: none
+            top: calc(50% - 8px)
+            left: -7px
+    .arrow-fill
+        width: 0px
+        heigth: 0px
+        position: absolute
+        &.top
+            border-top: none
+            border-right: 7px solid transparent
+            border-bottom: 7px solid #fff
+            border-left: 7px solid transparent
+            left: -7px
+            top: 1px
+        &.bottom
+            border-top: 7px solid #fff
+            border-right: 7px solid transparent
+            border-bottom: none
+            border-left: 7px solid transparent
+            left: -7px
+            bottom: 1px
+        &.right
+            border-top: 7px solid transparent
+            border-right: none
+            border-bottom: 7px solid transparent
+            border-left: 7px solid #fff
+            top: -7px
+            right: 1px
+        &.left
+            border-top: 7px solid transparent
+            border-right: 7px solid #fff
+            border-bottom: 7px solid transparent
+            border-left: none
+            top: -7px
+            left: 1px
+
+.tui-datetime-input
+    width: inherit;
+    display: inline-block
+
+.tui-ico-date
+    display: none
+
+.dash
+    color: #dddddd
+
+/* date-picker override */
+#startpicker-container .tui-datepicker
+    left: 16px
+    z-index: 1
+
+#endpicker-container .tui-datepicker
+    left: 204px
+    z-index: 1
