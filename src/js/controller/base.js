@@ -354,6 +354,10 @@ Base.prototype.setTheme = function(theme) {
     return this.theme.setStyles(theme);
 };
 
+/**
+ * Set calendar list
+ * @param {Array.<Object>} calendars - calendar list
+ */
 Base.prototype.setCalendars = function(calendars) {
     this.calendars = calendars;
     this.fire('setCalendars', calendars);
