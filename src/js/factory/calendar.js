@@ -174,6 +174,7 @@ var mmin = Math.min;
  * });
  */
 function Calendar(container, options) {
+    var self = this;
     var opt;
 
     if (util.isString(container)) {
@@ -206,7 +207,8 @@ function Calendar(container, options) {
         }, util.pick(options, 'template') || {}),
         week: util.extend({}, util.pick(options, 'week') || {}),
         month: util.extend({}, util.pick(options, 'month') || {}),
-        schedules: []
+        schedules: [],
+        useWritePopup: true
     }, options);
 
     this.options.week = util.extend({
@@ -257,6 +259,11 @@ function Calendar(container, options) {
      * @private
      */
     this.controller = opt.controller || this.createController();
+    if (this.options.useWritePopup) {
+        this.controller.on('saveSchedule', function(saveSchedule) {
+            self.fire('saveSchedule', saveSchedule);
+        });
+    }
 
     /**
      * layout view (layout manager)
@@ -1289,6 +1296,14 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
     }
 
     return null;
+};
+
+/**
+ * Set calendar list
+ * @param {Array.<Object>} calendars - calendar list
+ */
+Calendar.prototype.setCalendars = function(calendars) {
+    this.controller.setCalendars(calendars);
 };
 
 /**

@@ -321,5 +321,33 @@ Handlebars.registerHelper({
 
     'weekGridFooterExceed-tmpl': function(hiddenSchedules) {
         return '+' + hiddenSchedules;
+    },
+
+    'isAllday-tmpl': function() {
+        return 'All day';
+    },
+
+    'freeState-tmpl': function() {
+        return 'Free';
+    },
+
+    'busyState-tmpl': function() {
+        return 'Busy';
+    },
+
+    'subjectPlaceholder-tmpl': function() {
+        return 'Subject';
+    },
+
+    'locationPlaceholder-tmpl': function() {
+        return 'Location';
+    },
+
+    'startDatePlaceholder-tmpl': function() {
+        return 'Start date';
+    },
+
+    'endDatePlaceholder-tmpl': function() {
+        return 'End date';
     }
 });

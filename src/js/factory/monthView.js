@@ -14,7 +14,8 @@ var config = require('../config'),
     MonthCreation = require('../handler/month/creation'),
     MonthResize = require('../handler/month/resize'),
     MonthMove = require('../handler/month/move'),
-    More = require('../view/month/more');
+    More = require('../view/month/more'),
+    PopupWrite = require('../view/popup/popupWrite');
 
 /**
  * Get the view model for more layer
@@ -44,8 +45,9 @@ function getViewModelForMoreLayer(date, target, schedules) {
  * @returns {object} view instance and refresh method
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
-    var monthViewContainer, monthView, moreView;
+    var monthViewContainer, monthView, moreView, writeView;
     var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler, onUpdateSchedule;
+    var onSetCalendars;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -89,11 +91,26 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
     });
 
+    // binding write schedules
+    if (options.useWritePopup) {
+        writeView = createWritePopup(monthView, layoutContainer, creationHandler);
+        onSetCalendars = function(calendars) {
+            writeView.setCalendars(calendars);
+        };
+        baseController.on('setCalendars', onSetCalendars);
+        writeView.on('saveSchedule', function(scheduleData) {
+            baseController.fire('saveSchedule', scheduleData);
+        });
+    }
+
     // binding clear schedules
     baseController.on('clearSchedules', clearSchedulesHandler);
 
     // bind update schedule event
     baseController.on('updateSchedule', onUpdateSchedule);
+
+    // binding set calendar list
+    baseController.on('setCalendars', onSetCalendars);
 
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();
@@ -118,6 +135,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         moreView.destroy();
         baseController.off('clearSchedules', clearSchedulesHandler);
         baseController.off('updateSchedule', onUpdateSchedule);
+        baseController.off('setCalendars', onSetCalendars);
 
         util.forEach(monthView.handler, function(type) {
             util.forEach(type, function(handler) {
@@ -136,6 +154,29 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             monthView.vLayout.refresh();
         }
     };
+}
+
+/**
+ * @param {object} monthView - month view
+ * @param {HTMLElement} container - container element
+ * @param {MonthCreation} creationHandler - event handler for creating new schedule
+ * @returns {object} - write popup view
+ */
+function createWritePopup(monthView, container, creationHandler) {
+    var writeView = new PopupWrite(container);
+    var guide;
+
+    creationHandler.on('beforeCreateSchedule', function(eventData) {
+        writeView.render(eventData);
+
+        guide = eventData.guide;
+    });
+
+    writeView.on('beforeHidePopup', function() {
+        guide.clear();
+    });
+
+    return writeView;
 }
 
 module.exports = createMonthView;

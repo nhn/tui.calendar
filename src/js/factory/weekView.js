@@ -18,6 +18,7 @@ var TimeGrid = require('../view/week/timeGrid');
 var Allday = require('../view/week/allday');
 var Milestone = require('../view/week/milestone');
 var TaskView = require('../view/week/taskview');
+var PopupWrite = require('../view/popup/popupWrite');
 
 // Handlers
 var AlldayClick = require('../handler/allday/click');
@@ -65,7 +66,8 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         panels = [],
         isAllDayPanelFirstRender = true;
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout,
-        milestoneView, taskView, alldayView, timeGridView, alldayPanel;
+        milestoneView, taskView, alldayView, timeGridView, alldayPanel, writeView,
+        onSetCalendars;
 
     weekView = new Week(null, options.week, layoutContainer);
     weekView.handler = {
@@ -217,6 +219,18 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         weekView.handler.resize.time = new TimeResize(dragHandler, timeGridView, baseController);
     }
 
+    // binding write schedules
+    if (options.useWritePopup) {
+        writeView = createWritePopup(weekView, layoutContainer, weekView.handler.creation);
+        onSetCalendars = function(calendars) {
+            writeView.setCalendars(calendars);
+        };
+        baseController.on('setCalendars', onSetCalendars);
+        writeView.on('saveSchedule', function(scheduleData) {
+            baseController.fire('saveSchedule', scheduleData);
+        });
+    }
+
     weekView.on('afterRender', function() {
         vLayout.refresh();
     });
@@ -255,3 +269,28 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         }
     };
 };
+
+/**
+ * @param {object} weekView - weekView
+ * @param {HTMLElement} container - container element
+ * @param {Array.<Object>} creationHandlers - event handler for creating new schedule
+ * @returns {object} - write popup view
+ */
+function createWritePopup(weekView, container, creationHandlers) {
+    var writeView = new PopupWrite(container);
+    var guide;
+
+    util.forEach(creationHandlers, function(handler) {
+        handler.on('beforeCreateSchedule', function(eventData) {
+            writeView.render(eventData);
+
+            guide = eventData.guide;
+        });
+    });
+
+    writeView.on('beforeHidePopup', function() {
+        guide.clearGuideElement();
+    });
+
+    return writeView;
+}
