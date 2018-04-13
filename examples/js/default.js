@@ -128,8 +128,11 @@
         week: {
             daynames: daynames,
             panelHeights: [80, 80, 120]
-        }
+        },
+        useWritePopup: true
     });
+
+    cal.setCalendars(CalendarList);
 
     // event handlers
     cal.on({
@@ -161,7 +164,6 @@
         },
         'beforeCreateSchedule': function(e) {
             console.log(e);
-            createNewSchedule(e);
         },
         'beforeUpdateSchedule': function(e) {
             cal.updateSchedule(e.schedule.id, e.schedule.calendarId, {
@@ -182,6 +184,9 @@
         },
         'dragEndSchedule': function(e) {
             console.log('dragEndSchedule', e);
+        },
+        'saveSchedule': function(e) {
+            console.log('saveSchedule', e);
         }
     });
 
