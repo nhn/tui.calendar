@@ -64,7 +64,6 @@ var THEME_DOORAY = {
     'week.timegridLeft.backgroundColor': '#fafafa',
     'week.timegridLeft.borderRight': '1px solid #ddd',
     'week.timegridLeft.fontSize': '12px',
-    'week.timegridLeft.color': '#555',
 
     'week.timegridOneHour.height': '48px',
     'week.timegridHalfHour.height': '24px',
