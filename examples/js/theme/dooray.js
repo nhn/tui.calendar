@@ -15,7 +15,7 @@ var THEME_DOORAY = {
     // month header 'dayname'
     'month.dayname.height': '42px',
     'month.dayname.borderTop': '1px solid #ddd',
-    'month.dayname.borderLeft': '1px solid #ddd',
+    'month.dayname.borderLeft': 'none',
     'month.dayname.paddingLeft': '8px',
     'month.dayname.paddingRight': '0',
     'month.dayname.fontSize': '13px',
@@ -54,7 +54,7 @@ var THEME_DOORAY = {
 
     'week.daygridLeft.width': '77px',
     'week.daygridLeft.backgroundColor': '',
-    'week.daygridLeft.paddingRight': '8px',
+    'week.daygridLeft.paddingRight': '5px',
     'week.daygridLeft.borderRight': '1px solid #ddd',
 
     'week.today.backgroundColor': 'inherit',
