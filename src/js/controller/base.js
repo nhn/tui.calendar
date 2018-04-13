@@ -76,9 +76,9 @@ Base.prototype._getContainDatesInSchedule = function(schedule) {
     return range;
 };
 
-/**********
- * CRUD
- **********/
+/****************
+ * CRUD Schedule
+ ****************/
 
 /**
  * Create an schedule instance from raw data.
@@ -354,8 +354,12 @@ Base.prototype.setTheme = function(theme) {
     return this.theme.setStyles(theme);
 };
 
+Base.prototype.setCalendars = function(calendars) {
+    this.calendars = calendars;
+    this.fire('setCalendars', calendars);
+};
+
 // mixin
 util.CustomEvents.mixin(Base);
 
 module.exports = Base;
-

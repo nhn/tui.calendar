@@ -1222,6 +1222,14 @@ Calendar.prototype.getViewName = function() {
 };
 
 /**
+ * Set calendar list
+ * @param {Array.<Object>} calendars - calendar list
+ */
+Calendar.prototype.setCalendars = function(calendars) {
+    this.controller.setCalendars(calendars);
+};
+
+/**
  * Set timezone offset
  * @param {number} offset - offset (min)
  * @static

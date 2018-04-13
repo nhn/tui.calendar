@@ -16,6 +16,7 @@ var Week = require('../view/week/week');
 var DayName = require('../view/week/dayname');
 var DayGrid = require('../view/week/dayGrid');
 var TimeGrid = require('../view/week/timeGrid');
+var PopupWrite = require('../view/popup/popupWrite');
 // Handlers
 var DayNameClick = require('../handler/time/clickDayname');
 var DayGridClick = require('../handler/daygrid/click');
@@ -84,6 +85,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var panels = options.week.panels || DEFAULT_PANELS,
         vpanels = [];
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
+    var writeView, onSetCalendars;
 
     util.extend(options.week, {panels: panels});
 
@@ -186,6 +188,18 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         });
     });
 
+    // binding write schedules
+    if (options.useWritePopup) {
+        writeView = createWritePopup(weekView, layoutContainer, weekView.handler.creation);
+        onSetCalendars = function(calendars) {
+            writeView.setCalendars(calendars);
+        };
+        baseController.on('setCalendars', onSetCalendars);
+        writeView.on('saveSchedule', function(scheduleData) {
+            baseController.fire('saveSchedule', scheduleData);
+        });
+    }
+
     weekView.on('afterRender', function() {
         vLayout.refresh();
     });
@@ -226,3 +240,28 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         }
     };
 };
+
+/**
+ * @param {object} weekView - weekView
+ * @param {HTMLElement} container - container element
+ * @param {Array.<Object>} creationHandlers - event handler for creating new schedule
+ * @returns {object} - write popup view
+ */
+function createWritePopup(weekView, container, creationHandlers) {
+    var writeView = new PopupWrite(container);
+    var guide;
+
+    util.forEach(creationHandlers, function(handler) {
+        handler.on('beforeCreateSchedule', function(eventData) {
+            writeView.render(eventData);
+
+            guide = eventData.guide;
+        });
+    });
+
+    writeView.on('beforeHidePopup', function() {
+        guide.clearGuideElement();
+    });
+
+    return writeView;
+}
