@@ -79,18 +79,9 @@ var THEME_DOORAY = {
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
     'week.currentTime.fontWeight': 'bold',
-
-    'week.currentTimeLinePast.height': '1px',
     'week.currentTimeLinePast.border': '1px solid rgba(19, 93, 230, 0.3)',
-
     'week.currentTimeLineBullet.backgroundColor': '#135de6',
-    'week.currentTimeLineBullet.width': '9px',
-    'week.currentTimeLineBullet.height': '9px',
-
-    'week.currentTimeLineToday.height': '1px',
     'week.currentTimeLineToday.border': '1px solid #135de6',
-
-    'week.currentTimeLineFuture.height': '1px',
     'week.currentTimeLineFuture.border': '1px solid #135de6',
 
     // week creation guide style

@@ -24,10 +24,11 @@
     {{#if showHourMarker}}
     <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{hourmarkerTop}}%">
         <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap" ">
-            <div class="{{CSS_PREFIX}}timegrid-hourmarker-time">{{hourmarkerText}}</div>
-            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line-left" style="width:{{todaymarkerLeft}}%;"></div>
-            <div class="{{CSS_PREFIX}}timegrid-todaymarker" style="left:{{todaymarkerLeft}}%;">today</div>
-            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line-right" style="left:{{todaymarkerLeft}}%;"></div>
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{styles.currentTimeColor}}; font-size: {{styles.currentTimeFontSize}}; font-weight: {{styles.currentTimeFontWeight}}">{{hourmarkerText}}</div>
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line-left" style="width:{{todaymarkerLeft}}%; border-top: {{styles.currentTimeLeftBorderTop}};"></div>
+            <div class="{{CSS_PREFIX}}timegrid-todaymarker" style="left:{{todaymarkerLeft}}%; background-color: {{styles.currentTimeBulletBackgroundColor}}; ">today</div>
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line-today" style="left:{{todaymarkerLeft}}%; width: {{todaymarkerWidth}}%; border-top: {{styles.currentTimeTodayBorderTop}};"></div>
+            <div class="{{CSS_PREFIX}}timegrid-hourmarker-line-right" style="left:{{todaymarkerRight}}%; border-top: {{styles.currentTimeRightBorderTop}};"></div>
         </div>
     </div>
     {{/if}}

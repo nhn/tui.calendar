@@ -87,16 +87,11 @@ var theme = {
 
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
-
-    'week.currentTimeLinePast.height': '1px',
+    'week.currentTime.fontWeight': 'normal',
     'week.currentTimeLinePast.border': '1px dashed #515ce6',
-
     'week.currentTimeLineBullet.backgroundColor': '#515ce6',
-    'week.currentTimeLineBullet.width': '7px',
-    'week.currentTimeLineBullet.height': '7px',
-
-    'week.currentTimeLineToday.height': '1px',
     'week.currentTimeLineToday.border': '1px solid #515ce6',
+    'week.currentTimeLineFuture.border': 'none',
 
     // week creation guide style
     'week.creationGuide.color': '#515ce6',

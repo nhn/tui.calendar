@@ -18,7 +18,7 @@
     'common.holiday.color': '#ff4040',
     'common.saturday.color': '#135de6',
     'common.dayname.color': '#333',
-    'common.today.color': '',
+    'common.today.color': '#135de6',
 
     // creation guide style
     'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
@@ -27,7 +27,6 @@
     // month header 'dayname'
     'month.dayname.height': '31px',
     'month.dayname.borderTop': '1px solid #e5e5e5',
-    'month.dayname.borderBottom': '1px solid #e5e5e5',
     'month.dayname.borderLeft': '1px solid #e5e5e5',
     'month.dayname.paddingLeft': '10px',
     'month.dayname.paddingRight': '10px',
@@ -39,7 +38,8 @@
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-    'month.weekend.backgroundColor': '',
+    'month.weekend.backgroundColor': 'inherit',
+    'month.day.fontSize': '14px',
 
     // month schedule style
     'month.schedule.borderRadius': '2px',
@@ -49,68 +49,54 @@
     'month.schedule.marginRight': '8px',
 
     // week header 'dayname'
-    'week.dayname.height': '40px',
+    'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.borderLeft': '',
-    'week.dayname.paddingLeft': '10px',
-    'week.dayname.backgroundColor': '',
-    'week.dayname.color': '#333',
-    'week.dayname.fontSize': '26px',
-    'week.dayname.fontWeight': 'normal',
+    'week.dayname.borderLeft': 'inherit',
+    'week.dayname.paddingLeft': '0',
+    'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
-    'week.todayName.color': '',
+    'week.today.color': '#333',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',
     'week.vpanelSplitter.height': '3px',
 
     // week daygrid 'daygrid'
-    'week.daygrid.borderTop': '1px solid #e5e5e5',
-    'week.daygrid.borderBottom': '1px solid #e5e5e5',
     'week.daygrid.borderRight': '1px solid #e5e5e5',
-    'week.daygrid.backgroundColor': '',
+    'week.daygrid.backgroundColor': 'inherit',
 
     'week.daygridLeft.width': '72px',
-    'week.daygridLeft.backgroundColor': '',
-    'week.daygridLeft.paddingRight': '7px',
+    'week.daygridLeft.backgroundColor': 'inherit',
+    'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #e5e5e5',
-    'week.daygridLeft.fontSize': '11px',
 
     'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-    'week.weekend.backgroundColor': '',
+    'week.weekend.backgroundColor': 'inherit',
 
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',
-    'week.timegridLeft.backgroundColor': '',
-    'week.timegridLeft.paddingRight': '8px',
+    'week.timegridLeft.backgroundColor': 'inherit',
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
-    'week.timegridLeft.color': '#333',
 
     'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.borderBottom': '',
+    'week.timegridHalfHour.height': '26px',
+    'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
     'week.timegrid.paddingRight': '8px',
     'week.timegrid.borderRight': '1px solid #e5e5e5',
+    'week.timegridSchedule.borderRadius': '2px',
+    'week.timegridSchedule.paddingLeft': '2px',
 
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
-    'week.currentTime.fontWeight': '',
-
-    'week.currentTimeLinePast.height': '1px',
+    'week.currentTime.fontWeight': 'normal',
     'week.currentTimeLinePast.border': '1px dashed #515ce6',
-
     'week.currentTimeLineBullet.backgroundColor': '#515ce6',
-    'week.currentTimeLineBullet.width': '7px',
-    'week.currentTimeLineBullet.height': '7px',
-
-    'week.currentTimeLineToday.height': '1px',
     'week.currentTimeLineToday.border': '1px solid #515ce6',
-
-    'week.currentTimeLineFuture.height': '',
-    'week.currentTimeLineFuture.border': '',
+    'week.currentTimeLineFuture.border': 'none',
 
     // week creation guide style
     'week.creationGuide.color': '#515ce6',
@@ -143,7 +129,7 @@ var themeConfig = {
     'month.dayname.borderLeft': '1px solid #e5e5e5',
     'month.dayname.paddingLeft': '10px',
     'month.dayname.paddingRight': '10px',
-    'month.dayname.backgroundColor': '',
+    'month.dayname.backgroundColor': 'inherit',
     'month.dayname.fontSize': '12px',
     'month.dayname.fontWeight': 'normal',
     'month.dayname.textAlign': 'left',
@@ -151,7 +137,7 @@ var themeConfig = {
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-    'month.weekend.backgroundColor': '',
+    'month.weekend.backgroundColor': 'inherit',
     'month.day.fontSize': '14px',
 
     // month schedule style
@@ -165,7 +151,7 @@ var themeConfig = {
     'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.borderLeft': 'none',
+    'week.dayname.borderLeft': 'inherit',
     'week.dayname.paddingLeft': '0',
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
@@ -180,7 +166,7 @@ var themeConfig = {
     'week.daygrid.backgroundColor': 'inherit',
 
     'week.daygridLeft.width': '72px',
-    'week.daygridLeft.backgroundColor': '',
+    'week.daygridLeft.backgroundColor': 'inherit',
     'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #e5e5e5',
 
@@ -189,7 +175,7 @@ var themeConfig = {
 
     // week timegrid 'timegrid'
     'week.timegridLeft.width': '72px',
-    'week.timegridLeft.backgroundColor': '',
+    'week.timegridLeft.backgroundColor': 'inherit',
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
 
@@ -205,20 +191,11 @@ var themeConfig = {
 
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
-    'week.currentTime.fontWeight': '',
-
-    'week.currentTimeLinePast.height': '1px',
+    'week.currentTime.fontWeight': 'normal',
     'week.currentTimeLinePast.border': '1px dashed #515ce6',
-
     'week.currentTimeLineBullet.backgroundColor': '#515ce6',
-    'week.currentTimeLineBullet.width': '7px',
-    'week.currentTimeLineBullet.height': '7px',
-
-    'week.currentTimeLineToday.height': '1px',
     'week.currentTimeLineToday.border': '1px solid #515ce6',
-
-    'week.currentTimeLineFuture.height': '',
-    'week.currentTimeLineFuture.border': '',
+    'week.currentTimeLineFuture.border': 'none',
 
     // week creation guide style
     'week.creationGuide.color': '#515ce6',

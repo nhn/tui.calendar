@@ -168,10 +168,13 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
  * @param {Date} now - now
  * @param {object} grids grid information(width, left, day)
  * @param {Array.<TZDate>} range render range
+ * @param {Theme} theme - theme instance
  * @returns {object} ViewModel of hourmarker.
  */
-TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
+TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range, theme) {
     var todaymarkerLeft = -1,
+        todaymarkerWidth = -1,
+        styles = this._getStyles(theme),
         viewModel;
 
     now = now || new TZDate();
@@ -179,6 +182,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     util.forEach(range, function(date, index) {
         if (datetime.isSameDate(now, date)) {
             todaymarkerLeft = grids[index] ? grids[index].left : 0;
+            todaymarkerWidth = grids[index] ? grids[index].width : 0;
         }
     });
 
@@ -186,7 +190,10 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
         currentHours: now.getHours(),
         hourmarkerTop: this._getTopPercentByTime(now),
         hourmarkerText: datetime.format(now, 'HH:mm'),
-        todaymarkerLeft: todaymarkerLeft
+        todaymarkerLeft: todaymarkerLeft,
+        todaymarkerWidth: todaymarkerWidth,
+        todaymarkerRight: todaymarkerLeft + todaymarkerWidth,
+        styles: styles
     };
 
     return viewModel;
@@ -201,7 +208,7 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var grids = viewModel.grids;
     var range = viewModel.range;
     var opt = this.options;
-    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
+    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range, viewModel.theme);
 
     return util.extend(baseViewModel, {
         hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0),
@@ -421,6 +428,15 @@ TimeGrid.prototype._getStyles = function(theme) {
 
         styles.oneHourHeight = theme.week.timegridOneHour.height;
         styles.halfHourHeight = theme.week.timegridHalfHour.height;
+
+        styles.currentTimeColor = theme.week.currentTime.color;
+        styles.currentTimeFontSize = theme.week.currentTime.fontSize;
+        styles.currentTimeFontWeight = theme.week.currentTime.fontWeight;
+
+        styles.currentTimeLeftBorderTop = theme.week.currentTimeLinePast.border;
+        styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
+        styles.currentTimeTodayBorderTop = theme.week.currentTimeLineToday.border;
+        styles.currentTimeRightBorderTop = theme.week.currentTimeLineFuture.border;
     }
 
     return styles;
