@@ -53,7 +53,7 @@ var THEME_DOORAY = {
     'week.daygrid.borderRight': '1px solid #ddd',
 
     'week.daygridLeft.width': '77px',
-    'week.daygridLeft.backgroundColor': '#fafafa',
+    'week.daygridLeft.backgroundColor': '',
     'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #ddd',
 
@@ -61,7 +61,7 @@ var THEME_DOORAY = {
     'week.weekend.backgroundColor': 'inherit',
 
     // week timegrid 'timegrid'
-    'week.timegridLeft.width': '72px',
+    'week.timegridLeft.width': '77px',
     'week.timegridLeft.backgroundColor': '#fafafa',
     'week.timegridLeft.borderRight': '1px solid #ddd',
     'week.timegridLeft.fontSize': '12px',
@@ -76,8 +76,8 @@ var THEME_DOORAY = {
     'week.timegridSchedule.borderRadius': '0',
     'week.timegridSchedule.paddingLeft': '0',
 
-    'week.currentTime.color': '#515ce6',
-    'week.currentTime.fontSize': '11px',
+    'week.currentTime.color': '#135de6',
+    'week.currentTime.fontSize': '13px',
     'week.currentTime.fontWeight': 'bold',
     'week.currentTimeLinePast.border': '1px solid rgba(19, 93, 230, 0.3)',
     'week.currentTimeLineBullet.backgroundColor': '#135de6',
