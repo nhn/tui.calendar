@@ -41,6 +41,24 @@ module.exports = {
             'commonjs2': 'tui-code-snippet',
             'amd': 'tui-code-snippet',
             'root': ['tui', 'util']
+        },
+        'jquery': {
+            'commonjs': 'jquery',
+            'commonjs2': 'jquery',
+            'amd': 'jquery',
+            'root': '$'
+        },
+        'tui-date-picker': {
+            'commonjs': 'tui-date-picker',
+            'commonjs2': 'tui-date-picker',
+            'amd': 'tui-date-picker',
+            'root': ['tui', 'DatePicker']
+        },
+        'tui-time-picker': {
+            'commonjs': 'tui-time-picker',
+            'commonjs2': 'tui-time-picker',
+            'amd': 'tui-time-picker',
+            'root': ['tui', 'TimePicker']
         }
     },
     module: {
