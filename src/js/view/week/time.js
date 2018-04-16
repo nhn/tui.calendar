@@ -25,8 +25,9 @@ var forEachArr = util.forEachArray;
  * @param {number} options.hourStart Can limit of render hour start.
  * @param {number} options.hourEnd Can limit of render hour end.
  * @param {HTMLElement} container Element to use container for this view.
+ * @param {Theme} theme - theme instance
  */
-function Time(options, container) {
+function Time(options, container, theme) {
     View.call(this, container);
 
     this.options = util.extend({
@@ -42,12 +43,20 @@ function Time(options, container) {
     }, options);
 
     this.timeTmpl = timeTmpl;
+
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
+
     container.style.width = options.width + '%';
     container.style.left = options.left + '%';
 
     if (this.options.isToday) {
         domutil.addClass(this.container, config.classname('today'));
     }
+
+    this.applyTheme();
 }
 
 util.inherit(Time, View);
@@ -193,8 +202,37 @@ Time.prototype.getDate = function() {
 Time.prototype.render = function(ymd, matrices, containerHeight) {
     this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
-        matrices: matrices
+        matrices: matrices,
+        styles: this._getStyles(this.theme)
     });
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+Time.prototype._getStyles = function(theme) {
+    var styles = {};
+    var options = this.options;
+
+    if (theme) {
+        styles.borderRight = theme.week.timegrid.borderRight || theme.common.border;
+        styles.marginRight = theme.week.timegrid.paddingRight;
+        styles.borderRadius = theme.week.timegridSchedule.borderRadius;
+        styles.paddingLeft = theme.week.timegridSchedule.paddingLeft;
+        styles.backgroundColor = options.isToday ? theme.week.today.backgroundColor : 'inherit';
+    }
+
+    return styles;
+};
+
+Time.prototype.applyTheme = function() {
+    var style = this.container.style;
+    var styles = this._getStyles(this.theme);
+
+    style.borderRight = styles.borderRight;
+    style.backgroundColor = styles.backgroundColor;
 };
 
 module.exports = Time;

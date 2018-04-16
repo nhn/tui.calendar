@@ -61,6 +61,8 @@ function TimeCreationGuide(timeCreation) {
         timeCreationDrag: this._onDrag,
         timeCreationClick: this._createGuideElement
     }, this);
+
+    this.applyTheme(timeCreation.baseController.theme);
 }
 
 /**
@@ -257,6 +259,20 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
     reqAnimFrame.requestAnimFrame(function() {
         refreshGuideElement.apply(null, result);
     });
+};
+
+TimeCreationGuide.prototype.applyTheme = function(theme) {
+    var style = this.guideElement.style;
+    var timeStyle = this.guideTimeElement.style;
+
+    // block
+    style.backgroundColor = theme.common.creationGuide.backgroundColor;
+    style.border = theme.common.creationGuide.border;
+
+    // label
+    timeStyle.color = theme.week.creationGuide.color;
+    timeStyle.fontSize = theme.week.creationGuide.fontSize;
+    timeStyle.fontWeight = theme.week.creationGuide.fontWeight;
 };
 
 module.exports = TimeCreationGuide;

@@ -2,13 +2,15 @@
 
 var datetime = require('common/datetime');
 var TimeCreationGuide = require('handler/time/creationGuide');
+var Theme = require('theme/theme');
 
 describe('handler/time.creation.guide', function() {
     var mockTimeCreation,
         inst;
 
     beforeEach(function() {
-        mockTimeCreation = jasmine.createSpyObj('TimeCreation', ['on']);
+        mockTimeCreation = jasmine.createSpyObj('TimeCreation', ['on', 'baseController']);
+        mockTimeCreation.baseController.theme = new Theme();
         inst = new TimeCreationGuide(mockTimeCreation);
     });
 

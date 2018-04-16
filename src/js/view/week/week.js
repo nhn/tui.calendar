@@ -92,7 +92,8 @@ Week.prototype.render = function() {
         scheduleFilter = options.scheduleFilter,
         narrowWeekend = options.narrowWeekend,
         startDayOfWeek = options.startDayOfWeek,
-        workweek = options.workweek;
+        workweek = options.workweek,
+        theme = this.controller.theme || {};
     var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 
     renderStartDate = parseRangeDateString(options.renderStartDate);
@@ -132,7 +133,8 @@ Week.prototype.render = function() {
         renderStartDate: renderStartDate,
         renderEndDate: renderEndDate,
         grids: grids,
-        range: range
+        range: range,
+        theme: theme
     };
 
     this.children.each(function(childView) {

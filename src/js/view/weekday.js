@@ -15,8 +15,6 @@ var config = require('../config'),
  * @constructor
  * @extends {View}
  * @param {object} options - view options.
- * @param {number} [options.containerHeight=40] - minimum height of schedule
- *  container element.
  * @param {number} [options.containerButtonGutter=8] - free space at bottom to
  *  make create easy.
  * @param {number} [options.scheduleHeight=18] - height of each schedule block.
@@ -35,7 +33,6 @@ function Weekday(options, container) {
      * @type {object}
      */
     this.options = util.extend({
-        containerHeight: 40,
         containerBottomGutter: 8,
         scheduleHeight: 18,
         scheduleGutter: 2,
@@ -83,6 +80,7 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
     var gridWidth = (100 / range.length);
     var grids = viewModel.grids;
     var exceedDate = viewModel.exceedDate || {};
+    var theme = viewModel.theme;
 
     this._cacheParentViewModel = viewModel;
 
@@ -94,18 +92,21 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
         dates: util.map(range, function(date, index) {
             var day = date.getDay();
             var ymd = datetime.format(date, 'YYYYMMDD');
+            var isToday = ymd === today;
 
             return {
                 date: datetime.format(date, 'YYYY-MM-DD'),
                 month: date.getMonth() + 1,
                 day: day,
-                isToday: ymd === today,
+                isToday: isToday,
                 ymd: ymd,
                 hiddenSchedules: exceedDate[ymd] || 0,
                 width: grids[index] ? grids[index].width : 0,
-                left: grids[index] ? grids[index].left : 0
+                left: grids[index] ? grids[index].left : 0,
+                color: this._getDayNameColor(theme, day, isToday),
+                backgroundColor: this._getDayBackgroundColor(theme, day)
             };
-        })
+        }, this)
     };
 };
 
@@ -159,6 +160,52 @@ Weekday.prototype._initExceedDate = function(range) {
     });
 
     return exceedDate;
+};
+
+/**
+ * Get a day name color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @param {boolean} isToday - today flag
+ * @param {boolean} isOtherMonth - not this month flag
+ * @returns {string} style - color style
+ */
+Weekday.prototype._getDayNameColor = function(theme, day, isToday, isOtherMonth) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0) {
+            color = isOtherMonth ? theme.month.holidayExceptThisMonth.color : theme.common.holiday.color;
+        } else if (day === 6) {
+            color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.saturday.color;
+        } else if (isToday) {
+            color = theme.common.today.color;
+        } else {
+            color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.dayname.color;
+        }
+    }
+
+    return color;
+};
+
+/**
+ * Get a day background color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @returns {string} style - color style
+ */
+Weekday.prototype._getDayBackgroundColor = function(theme, day) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0 || day === 6) {
+            color = theme.month.weekend.backgroundColor;
+        } else {
+            color = 'inherit';
+        }
+    }
+
+    return color;
 };
 
 module.exports = Weekday;

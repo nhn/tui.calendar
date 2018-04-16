@@ -27,6 +27,8 @@ var mmin = Math.min;
  * @param {Base.Month} controller - controller instance
  */
 function Month(options, container, controller) {
+    var theme = controller ? controller.theme : null;
+
     View.call(this, container);
 
     /**
@@ -39,10 +41,10 @@ function Month(options, container, controller) {
      */
     this.vLayout = new VLayout({
         panels: [
-            {height: 42},
+            {height: parseInt(controller.theme.month.dayname.height, 10) || 42},
             {autoHeight: true}
         ]
-    }, container);
+    }, container, theme);
 
     /**
      * @type {string}
@@ -127,8 +129,9 @@ Month.prototype._getMonthCalendar = function(renderMonthStr) {
  * Create children view (week) and add children
  * @param {HTMLElement} container - container element to render weeks
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
+ * @param {Theme} theme - theme instance
  */
-Month.prototype._renderChildren = function(container, calendar) {
+Month.prototype._renderChildren = function(container, calendar, theme) {
     var self = this;
     var weekCount = calendar.length;
     var heightPercent = 100 / weekCount;
@@ -161,7 +164,9 @@ Month.prototype._renderChildren = function(container, calendar) {
             startDayOfWeek: startDayOfWeek,
             visibleWeeksCount: visibleWeeksCount,
             visibleScheduleCount: visibleScheduleCount,
-            grid: gridOption
+            grid: gridOption,
+            scheduleHeight: parseInt(theme.month.schedule.height, 10),
+            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10)
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -180,6 +185,8 @@ Month.prototype.render = function() {
         workweek = opt.workweek,
         calendar = this._getMonthCalendar(opt.renderMonth),
         scheduleFilter = opt.scheduleFilter,
+        theme = controller ? controller.theme : null,
+        styles = this._getStyles(theme),
         grids,
         daynameViewModel,
         baseViewModel;
@@ -197,9 +204,11 @@ Month.prototype.render = function() {
                 day: day,
                 label: daynames[day],
                 width: grids[index] ? grids[index].width : 0,
-                left: grids[index] ? grids[index].left : 0
+                left: grids[index] ? grids[index].left : 0,
+                color: this._getDayNameColor(theme, day)
             };
-        }
+        },
+        this
     );
 
     if (workweek) {
@@ -216,12 +225,13 @@ Month.prototype.render = function() {
     }
 
     baseViewModel = {
-        daynames: daynameViewModel
+        daynames: daynameViewModel,
+        styles: styles
     };
 
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 
-    this._renderChildren(vLayout.panels[1].container, calendar);
+    this._renderChildren(vLayout.panels[1].container, calendar, theme);
 
     baseViewModel.panelHeight = vLayout.panels[1].getHeight();
 
@@ -241,11 +251,60 @@ Month.prototype.render = function() {
             eventsInDateRange: eventsInDateRange,
             range: dateRange.slice(0, grids.length),
             grids: grids,
-            panelHeight: baseViewModel.panelHeight
+            panelHeight: baseViewModel.panelHeight,
+            theme: theme
         };
 
         childView.render(viewModel);
     });
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+Month.prototype._getStyles = function(theme) {
+    var styles = {};
+    var dayname;
+
+    if (theme) {
+        dayname = theme.month.dayname;
+
+        styles.borderTop = dayname.borderTop || theme.common.border;
+        styles.borderLeft = dayname.borderLeft || theme.common.border;
+        styles.height = dayname.height;
+        styles.paddingLeft = dayname.paddingLeft;
+        styles.paddingRight = dayname.paddingRight;
+        styles.fontSize = dayname.fontSize;
+        styles.backgroundColor = dayname.backgroundColor;
+        styles.fontWeight = dayname.fontWeight;
+        styles.textAlign = dayname.textAlign;
+    }
+
+    return styles;
+};
+
+/**
+ * Get a day name color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @returns {string} style - color style
+ */
+Month.prototype._getDayNameColor = function(theme, day) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0) {
+            color = theme.common.holiday.color;
+        } else if (day === 6) {
+            color = theme.common.saturday.color;
+        } else {
+            color = theme.common.dayname.color;
+        }
+    }
+
+    return color;
 };
 
 module.exports = Month;

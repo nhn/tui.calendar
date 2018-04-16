@@ -12,14 +12,9 @@
 
     .left
         position: absolute
-        font-size: 12px
-        background-color: #fafafa
-        wh(77px, auto)
 
     .hour
-        height: 48px
         position: relative
-        border-right: 1px solid #ddd
         color: #555
         box-sizing: border-box
         &:first-child span
@@ -37,23 +32,12 @@
 
     .right
         position: relative
-        margin-left: 77px
-
-    .h-grid
-        background-color: #fff
 
     .gridline
-        height: 48px
         border-bottom: 1px solid #eee
         box-sizing: border-box
         &:last-child
             border-bottom: none
-
-    .gridline:after
-        content: ''
-        display: block
-        height: 24px
-        border-bottom: 1px dotted #f9f9f9
 
     .schedules
         position: absolute
@@ -72,14 +56,16 @@
 
     .hourmarker-line-left
         position: absolute
-        background-color: rgba(19, 93, 230, 0.3)
-        height: 1px
+        min-height: 1px
         left: 0
+
+    .hourmarker-line-today
+        position: absolute
+        min-height: 1px
 
     .hourmarker-line-right
         position: absolute
-        background-color: #135de6
-        height: 1px
+        min-height: 1px
         right: 0
 
     .hourmarker-time
@@ -88,10 +74,7 @@
         left: -60px
         top: -6px
         line-height: 12px
-        font-size: 13px
-        font-weight: bold
         text-align: right
-        color: #135de6
 
     // Todaymarker
     .todaymarker
@@ -108,7 +91,6 @@
         position: absolute
         height: 100%
         margin-left: -1px
-        border-right: 1px solid #ddd
         box-sizing: content-box
         &:last-child
             border-right: none
@@ -120,7 +102,6 @@
 
     .date-schedule-block-wrap
         position: relative
-        margin-right: 10px
         height: 100%
 
     .date-schedule-block
@@ -163,8 +144,7 @@
         position: absolute
         right: 10px
         left: 1px
-        border: 1px solid #135de6
-        background-color: rgba(19, 93, 230, 0.1)
+        padding: 3px
 
     .guide-move,
     .guide-resize
@@ -174,14 +154,8 @@
             z-index: 97
 
     .guide-creation-label
-        color: #fff
         cursor: default
-        line-height: 16px
-        color: #135de6
-        font-size: 12px
-        font-weight: bold
-        padding-left: 3px
 
     .guide-bottom
         position: absolute
-        bottom: 0px
+        bottom: 3px

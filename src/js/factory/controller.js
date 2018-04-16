@@ -36,6 +36,10 @@ module.exports = function(options) {
     mixin(Week, controller, 'Week');
     mixin(Month, controller, 'Month');
 
+    // for Theme
+    controller.Core.theme = controller.theme;
+    controller.Week.theme = controller.theme;
+    controller.Month.theme = controller.theme;
+
     return controller;
 };
-

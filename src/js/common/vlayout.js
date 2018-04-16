@@ -32,8 +32,9 @@ var mAbs = Math.abs;
  *  @param {PanelOptions[]} [options.panels] - panels to add layout when initialize
  *  @param {number[]} [options.panelHeights] - panel height list
  * @param {HTMLElement} container - container element
+ * @param {Theme} theme - theme instance
  */
-function VLayout(options, container) {
+function VLayout(options, container, theme) {
     var opt, tempHeights;
 
     if (!(this instanceof VLayout)) {
@@ -77,6 +78,11 @@ function VLayout(options, container) {
      * @type {object}
      */
     this._dragData = null;
+
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
 
     if (opt.panels.length) {
         if (opt.panelHeights.length) {
@@ -381,7 +387,7 @@ VLayout.prototype.addPanel = function(options, container) {
         index: index
     }, options);
 
-    panels.push(new VPanel(options, element));
+    panels.push(new VPanel(options, element, this.theme));
 
     container.appendChild(element);
 };

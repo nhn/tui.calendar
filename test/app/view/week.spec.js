@@ -4,6 +4,7 @@ var Week = require('view/week/week');
 var TZDate = require('common/timezone').Date;
 var timezoneMatchers = require('../../matcher/timezone');
 var datetime = require('common/datetime');
+var Theme = require('theme/theme');
 
 describe('View/Week', function() {
     var view;
@@ -34,7 +35,8 @@ describe('View/Week', function() {
                 renderStartDate: jasmine.any(TZDate),
                 renderEndDate: jasmine.any(TZDate),
                 grids: jasmine.any(Array),
-                range: jasmine.any(Array)
+                range: jasmine.any(Array),
+                theme: jasmine.anything()
             });
         });
     });
