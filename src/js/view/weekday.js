@@ -198,9 +198,7 @@ Weekday.prototype._getDayBackgroundColor = function(theme, day) {
     var color = '';
 
     if (theme) {
-        if (day === 0) {
-            color = theme.month.weekend.backgroundColor;
-        } else if (day === 6) {
+        if (day === 0 || day === 6) {
             color = theme.month.weekend.backgroundColor;
         } else {
             color = 'inherit';

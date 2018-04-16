@@ -34,7 +34,7 @@ Theme.prototype.getStyle = function(key) {
 };
 
 /**
- * 
+ * Set a style
  * @param {string} key - key for setting a style
  * @param {string} style - style value
  * @returns {boolean} true if the give key is valid or false
@@ -47,9 +47,9 @@ Theme.prototype.setStyle = function(key, style) {
 };
 
 /**
- * Set style
+ * Set styles
  * @param {object} styles - multiple styles map
- * @returns {Array.<string>} keys - error keys
+ * @returns {Array.<string>} error keys
  */
 Theme.prototype.setStyles = function(styles) {
     var errors = [];

@@ -41,7 +41,7 @@ function Month(options, container, controller) {
      */
     this.vLayout = new VLayout({
         panels: [
-            {height: parseInt(controller.theme.month.dayname.height, 10)},
+            {height: parseInt(controller.theme.month.dayname.height, 10) || 42},
             {autoHeight: true}
         ]
     }, container, theme);

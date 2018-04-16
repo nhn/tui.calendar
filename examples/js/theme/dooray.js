@@ -90,7 +90,7 @@ var THEME_DOORAY = {
     'week.creationGuide.fontWeight': 'bold',
 
     // week daygrid schedule style
-    'week.dayGridSchedule.borderRadius': '0px',
+    'week.dayGridSchedule.borderRadius': '0',
     'week.dayGridSchedule.height': '18px',
     'week.dayGridSchedule.marginTop': '2px',
     'week.dayGridSchedule.marginLeft': '10px',

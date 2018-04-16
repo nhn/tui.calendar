@@ -227,7 +227,7 @@ DayGrid.prototype._getStyles = function(theme) {
 };
 
 /**
- * 
+ * Get a background color based on day.
  * @param {number} day - day number
  * @param {boolean} isToday - today flag
  * @param {object} styles - style object

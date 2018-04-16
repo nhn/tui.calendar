@@ -60,7 +60,7 @@ var mmin = Math.min;
  *   @property {boolean} [calendarColor.render] - immediately apply colors when setCalendarColor called.
  *  @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
  * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
- * @property {themeConfig} [theme] = custom theme options
+ * @property {themeConfig} [theme] - custom theme options
  *  @property {object} [template] - template option
  *   @property {function} [template.milestoneTitle] - milestone title(at left column) template function
  *   @property {function} [template.milestone] - milestone template function
@@ -1295,7 +1295,7 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
 };
 
 /**
- * Set a theme. Using not predefined keys will be returned.
+ * Set a theme. If some keys are not defined in the preset, will be return.
  * @param {object} theme - multiple styles map
  * @returns {Array.<string>} keys - error keys not predefined.
  * @example
