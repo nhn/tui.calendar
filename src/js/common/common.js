@@ -177,6 +177,12 @@ module.exports = {
         });
     },
 
+    /**
+     * Set the value at path of object.
+     * @param {object} object - the object to modify
+     * @param {string} path -the path of property to set
+     * @param {*} value - the value to set
+     */
     set: function(object, path, value) {
         var names = path.split('.');
         var store = object;
