@@ -1,0 +1,95 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <link rel="stylesheet" href="../css/main.css"></link>
+    <link rel="stylesheet" href="../css/popup.css"></link>
+    <link rel="stylesheet" href="../css/button.css"></link>
+    <link rel="stylesheet" href="../css/icon.css"></link>
+  </head>
+  <body>
+    <button id="btnPopup">Create Schedule</button>
+    <div id="popupLayer" style="position: absolute">
+      <div class="popup">
+          <div class="popup-container">
+            <div class="popup-section dropdown open section-calendar">
+              <button class="button dropdown-button popup-section-item">
+                <span class="icon calendar-dot" style="background-color: #9e5fff"></span>
+                  <span class="content">My Calendar</span>
+                  <span class="icon right dropdown-arrow"></span>
+                  </span>
+              </button>
+              <ul class="dropdown-menu" style="z-index: 10">
+                <li class="popup-section-item dropdown-menu-item">
+                  <span class="icon calendar-dot" style="background-color: #9e5fff"></span>
+                  <span class="content">My Calendar</span>
+                </li>
+                <li class="popup-section-item dropdown-menu-item">
+                  <span class="icon calendar-dot" style="background-color: #03bd9e"></span>
+                  <span class="content">Friend</span>
+                </li>
+                <li class="popup-section-item dropdown-menu-item">
+                  <span class="icon calendar-dot" style="background-color: #ff5583"></span>
+                  <span class="content">Travel</span>
+                </li>
+              </ul>
+            </div>
+            <div class="popup-section">
+              <div class="popup-section-item section-title">
+                <span class="icon ic-title"></span>
+                <input class="content" placeholder="Subject"></span>
+              </div>
+              <button class="button section-private">
+                <span class="icon ic-private"></span>
+              </button>
+            </div>
+            <div class="popup-section">
+              <div class="popup-section-item section-location">
+                <span class="icon ic-location"></span>
+                <input class="content" placeholder="Location"></span>
+              </div>
+            </div>
+            <div class="popup-section">
+              <div class="popup-section-item section-start-date">
+                <span class="icon ic-date"></span>
+                <input class="content" placeholder="Start date"></span>
+              </div>
+              <span class="section-date-dash">-</span>
+              <div class="popup-section-item section-end-date">
+                <span class="icon ic-date"></span>
+                <input class="content" placeholder="End date"></span>
+              </div>
+              <div class="popup-section-item section-allday">
+                  <input type="checkbox" class="checkbox-square"></input>
+                  <span class="icon checkbox"></span>
+                  <span class="content">All day</span>
+              </div>
+            </div>
+            <div class="popup-section dropdown close section-state">
+                <button class="button dropdown-button popup-section-item">
+                    <span class="icon ic-state"></span>
+                    <span class="content">Busy</span>
+                    <span class="icon right dropdown-arrow"></span>
+                </button>
+                <ul class="dropdown-menu" style="z-index: 10">
+                  <li class="popup-section-item dropdown-menu-item">
+                    <span class="icon none"></span>
+                    <span class="content">Busy</span>
+                  </li>
+                  <li class="popup-section-item dropdown-menu-item">
+                    <span class="icon none"></span>
+                    <span class="content">Free</span>
+                  </li>
+                </ul>
+            </div>
+            <button class="button popup-close"><span class="icon ic-close"></span></button>
+            <div class="section-button-save"><button class="button confirm popup-save"><span>Save</span></button></div>
+          </div>
+          <div class="popup-arrow bottom">
+              <div class="popup-arrow-border">
+                  <div class="popup-arrow-fill"></div>
+              </div>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

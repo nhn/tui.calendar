@@ -7,8 +7,6 @@ var ScheduleList = [];
 var SCHEDULE_CATEGORY = [
     'milestone',
     'task'
-    // 'allday',
-    // 'time'
 ];
 
 function ScheduleInfo() {
@@ -93,7 +91,7 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.isReadOnly = chance.bool({likelihood: 20});
     generateTime(schedule, renderStart, renderEnd);
 
-    schedule.color = calendar.textColor;
+    schedule.color = calendar.color;
     schedule.bgColor = calendar.bgColor;
     schedule.borderColor = calendar.borderColor;
 

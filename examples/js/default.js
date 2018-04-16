@@ -8,6 +8,7 @@
 (function(window, Calendar) {
     var cal, resizeThrottled;
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var useCreationPopup = true;
     var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
     Calendar.setTimezoneOffsetCallback(function(timestamp) {
@@ -129,20 +130,19 @@
             daynames: daynames,
             panelHeights: [80, 80, 120]
         },
-        useWritePopup: true
+        useCreationPopup: useCreationPopup,
+        calendars: CalendarList
     });
-
-    cal.setCalendars(CalendarList);
 
     // event handlers
     cal.on({
         'clickSchedule': function(e) {
             var schedule = e.schedule;
-            console.log('click', e);
+            console.log('clickSchedule', e);
 
             if (lastClickSchedule) {
                 cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-                    color: findCalendar(lastClickSchedule.calendarId).textColor,
+                    color: findCalendar(lastClickSchedule.calendarId).color,
                     isFocused: false
                 });
             }
@@ -164,6 +164,9 @@
         },
         'beforeCreateSchedule': function(e) {
             console.log(e);
+            if (!useCreationPopup) {
+                createNewSchedule(e);
+            }
         },
         'beforeUpdateSchedule': function(e) {
             cal.updateSchedule(e.schedule.id, e.schedule.calendarId, {
@@ -185,8 +188,30 @@
         'dragEndSchedule': function(e) {
             console.log('dragEndSchedule', e);
         },
-        'saveSchedule': function(e) {
-            console.log('saveSchedule', e);
+        'saveSchedule': function(scheduleData) {
+            var calendar = scheduleData.calendar;
+            var schedule = {
+                id: String(chance.guid()),
+                title: scheduleData.subject,
+                isAllDay: scheduleData.isAllDay,
+                start: scheduleData.startDate,
+                end: scheduleData.endDate,
+                category: scheduleData.isAllDay ? 'allday' : 'time',
+                dueDateClass: '',
+                raw: {
+                    private: scheduleData.raw['private'],
+                    location: scheduleData.raw.location
+                }
+            };
+            if (calendar) {
+                schedule.calendarId = calendar.id;
+                schedule.color = calendar.color;
+                schedule.bgColor = calendar.bgColor;
+                schedule.borderColor = calendar.borderColor;
+            }
+
+            cal.createSchedules([schedule]);
+            console.log('saveSchedule', scheduleData);
         }
     });
 
@@ -264,17 +289,34 @@
         return element;
     }
 
+    function isLastClickSchedule(target) {
+        var scheduleEl = target.closest('.tui-full-calendar-weekday-schedule');
+
+        if (scheduleEl.length && lastClickSchedule) {
+            return scheduleEl[0].getAttribute('data-schedule-id') === lastClickSchedule.id;
+        }
+
+        return false;
+    }
+
     function closePopover(e) {
         var target = $(e.target);
+
+        if (isLastClickSchedule(target)) {
+            return;
+        }
+
         if (!target.closest('.popover').length && lastClickPopover) {
             if (lastClickSchedule) {
                 cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-                    color: findCalendar(lastClickSchedule.calendarId).textColor,
+                    color: findCalendar(lastClickSchedule.calendarId).colors,
                     isFocused: false
                 });
             }
 
-            lastClickPopover.popover('hide');
+            if (lastClickSchedule.calendarId !== lastClickPopover.calendarId) {
+                lastClickPopover.popover('hide');
+            }
         }
     }
 
@@ -364,8 +406,7 @@
 
     function onHideNewSchedule() {
         if (guideElement) {
-            guideElement.clearGuideElement();
-            guideElement = null;
+            guideElement.style.display = 'none';
         }
 
         $('#new-schedule-title').val('');
@@ -394,7 +435,7 @@
             end: end,
             category: isAllDay ? 'allday' : 'time',
             dueDateClass: '',
-            color: calendar.textColor,
+            color: calendar.color,
             bgColor: calendar.bgColor,
             borderColor: calendar.borderColor,
             raw: {

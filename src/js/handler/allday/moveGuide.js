@@ -118,12 +118,6 @@ AlldayMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
 
     util.forEach(elements, function(el) {
         el.style.margin = '0';
-
-        if (!model.isFocused) {
-            el.style.backgroundColor = el.style.color;
-            el.style.borderLeftColor = el.style.color;
-            el.style.color = '#ffffff';
-        }
     });
 };
 
