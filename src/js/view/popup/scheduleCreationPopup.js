@@ -13,9 +13,8 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     domutil = require('../../common/domutil');
 var tmpl = require('../template/popup/scheduleCreationPopup.hbs');
-var mmax = Math.max;
-var mmin = Math.min;
-var MAX_WEEK_OF_MONTH = 5;
+var MAX_WEEK_OF_MONTH = 6;
+var ARROW_WIDTH_HALF = 8;
 
 /**
  * @constructor
@@ -24,7 +23,6 @@ var MAX_WEEK_OF_MONTH = 5;
  * @param {Array.<Calendar>} calendars - calendar list used to create new schedule
  */
 function ScheduleCreationPopup(container, calendars) {
-    var self = this;
     View.call(this, container);
     /**
      * @type {FloatingLayer}
@@ -245,9 +243,16 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
+    startDate = this.rangePicker.getStartDate();
+    endDate = this.rangePicker.getEndDate();
+
     if (!title.value) {
         title.focus();
 
+        return true;
+    }
+
+    if (!startDate && !endDate) {
         return true;
     }
 
@@ -255,8 +260,6 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     location = domutil.get(cssPrefix + 'schedule-location');
     state = domutil.get(cssPrefix + 'schedule-state');
     isAllDay = domutil.get(cssPrefix + 'schedule-allday');
-    startDate = this.rangePicker.getStartDate();
-    endDate = this.rangePicker.getEndDate();
 
     if (isAllDay) {
         startDate.setHours(0);
@@ -275,8 +278,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     this.fire('saveSchedule', {
         calendar: this._selectedCals,
         subject: title.value,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: new TZDate(startDate),
+        endDate: new TZDate(endDate),
         isAllDay: isAllDay.checked,
         state: state.innerText,
         raw: {
@@ -298,10 +301,8 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
     var calendars = this.calendars;
     var layer = this.layer;
     var self = this;
-    var pos;
 
     viewModel.floatingZIndex = this.layer.zIndex + 5;
-    viewModel.isAllDay = viewModel.start.getDate() !== viewModel.end.getDate();
     viewModel.calendars = calendars;
     if (calendars.length) {
         viewModel.selectedCal = this._selectedCal = calendars[0];
@@ -310,15 +311,42 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
     layer.setContent(tmpl(viewModel));
     this._createDatepicker(viewModel.start, viewModel.end);
     layer.show();
-
-    this.guideElements = this._getGuideElements(viewModel.guide);
-    pos = this._calcRenderingData(this.guideElements);
-    layer.setPosition(pos.x, pos.y);
-    this._setArrowDirection(pos.arrow);
+    this._setPopupPositionAndArrowDirection(viewModel.guide);
 
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
     })();
+};
+
+/**
+ * Set popup position and arrow direction to apear near guide element
+ * @param {MonthCreationGuide|TimeCreationGuide|DayGridCreationGuide} guide - creation guide element
+ */
+ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(guide) {
+    var layer = domutil.find(config.classname('.popup'), this.layer.container);
+    var layerSize = {
+        width: layer.offsetWidth,
+        height: layer.offsetHeight
+    };
+    var windowSize = {
+        right: window.innerWidth,
+        bottom: window.innerHeight
+    };
+    var parentRect = this.layer.parent.getBoundingClientRect();
+    var parentBounds = {
+        left: parentRect.left,
+        top: parentRect.top
+    };
+    var guideElements, guideBound, pos;
+
+    this.guide = guide;
+    guideElements = this._getGuideElements(guide);
+    guideBound = this._getBoundOfFirstRowGuideElement(guideElements);
+    pos = this._calcRenderingData(layerSize, windowSize, guideBound);
+    pos.x -= parentBounds.left;
+    pos.y -= (parentBounds.top + 6);
+    this.layer.setPosition(pos.x, pos.y);
+    this._setArrowDirection(pos.arrow);
 };
 
 /**
@@ -332,62 +360,70 @@ ScheduleCreationPopup.prototype._getGuideElements = function(guide) {
     var guideElements = [];
     var i = 0;
 
-    if (guide.timeCreation || guide.alldayCreation) {
+    if (guide.guideElement) {
         guideElements.push(guide.guideElement);
-        this.guide = guide;
     } else if (guide.guideElements) {
         for (; i < MAX_WEEK_OF_MONTH; i += 1) {
             if (guide.guideElements[i]) {
                 guideElements.push(guide.guideElements[i]);
             }
         }
-        this.guide = guide;
     }
 
     return guideElements;
 };
 
 /**
+ * Get guide element's bound data which only includes top, right, bottom, left
+ * @param {Array.<HTMLElement>} guideElements - creation guide elements
+ * @returns {Object} - popup bound data
+ */
+ScheduleCreationPopup.prototype._getBoundOfFirstRowGuideElement = function(guideElements) {
+    var bound;
+
+    if (!guideElements.length) {
+        return null;
+    }
+
+    bound = guideElements[0].getBoundingClientRect();
+
+    return {
+        top: bound.top,
+        left: bound.left,
+        bottom: bound.bottom,
+        right: bound.right
+    };
+};
+
+/**
  * Calculate rendering position usering guide elements
- * @param {Array.<HTMLElement>} guideElements - schedule creation guide elements when dragging calendar
+ * @param {{width: {number}, height: {number}}} layerSize - popup layer's width and height
+ * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} parentSize - width and height of the upper layer, that acts as a border of popup
+ * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} guideBound - guide element bound data
  * @returns {PopupRenderingData} rendering position of popup and popup arrow
  */
-ScheduleCreationPopup.prototype._calcRenderingData = function(guideElements) {
-    var parentRect = this.layer.parent.getBoundingClientRect();
-    var layerWidth = this.layer.container.offsetWidth;
-    var layerHeight = this.layer.container.offsetHeight;
-    var bounds = util.map(guideElements, function(element) {
-        return element.getBoundingClientRect();
-    });
-    var boundsInFirstRow = util.filter(bounds, function(bound) {
-        return bounds[0].top === bound.top;
-    });
-    var top = Number.MAX_VALUE;
-    var left = Number.MAX_VALUE;
-    var bottom = 0;
-    var right = 0;
-    var x, y, arrowDirection, arrowPoint;
+ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentSize, guideBound) {
+    var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
+    var x = guideHorizontalCenter - (layerSize.width / 2);
+    var y = guideBound.top - layerSize.height + 3;
+    var arrowDirection = 'bottom';
+    var arrowLeft;
 
-    util.forEach(boundsInFirstRow, function(bound) {
-        top = mmin(top, bound.top);
-        left = mmin(left, bound.left);
-        bottom = mmax(bottom, bound.bottom);
-        right = mmax(right, bound.right);
-    });
-
-    if (top >= layerHeight) {
-        y = top - layerHeight - 3;
-        arrowDirection = 'bottom';
-    } else {
-        y = bottom + 4;
+    if (y < 0) {
+        y = guideBound.bottom + 9;
         arrowDirection = 'top';
     }
 
-    x = (left + right - layerWidth) / 2;
+    if (x > 0 && (x + layerSize.width > parentSize.right)) {
+        x = parentSize.right - layerSize.width;
+    }
 
-    if (x + layerWidth >= window.innerWidth) {
-        arrowPoint = (right - x + 2);
-        x = window.innerWidth - layerWidth;
+    if (x < 0) {
+        x = 0;
+    }
+
+    if (guideHorizontalCenter - x !== layerSize.width / 2) {
+        arrowLeft = guideHorizontalCenter - x - ARROW_WIDTH_HALF;
     }
 
     /**
@@ -395,14 +431,14 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(guideElements) {
      * @property {number} x - left position
      * @property {number} y - top position
      * @property {string} arrow.direction - direction of popup arrow
-     * @property {number} [arrow.point] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
+     * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
      */
     return {
-        x: x - parentRect.left - (layerWidth / 2),
-        y: y - parentRect.top - layerHeight,
+        x: x,
+        y: y,
         arrow: {
             direction: arrowDirection,
-            point: arrowPoint
+            position: arrowLeft
         }
     };
 };
@@ -421,8 +457,8 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
         domutil.addClass(arrowEl, direction);
     }
 
-    if (arrow.point) {
-        borderElement.style.left = arrow.point + 'px';
+    if (arrow.position) {
+        borderElement.style.left = arrow.position + 'px';
     }
 };
 
@@ -435,12 +471,12 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end) {
     var cssPrefix = config.cssPrefix;
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
-            date: new TZDate(start),
+            date: new Date(start.getTime()),
             input: '#' + cssPrefix + 'schedule-start-date',
             container: '#' + cssPrefix + 'startpicker-container'
         },
         endpicker: {
-            date: new TZDate(end),
+            date: new Date(end.getTime()),
             input: '#' + cssPrefix + 'schedule-end-date',
             container: '#' + cssPrefix + 'endpicker-container'
         },
@@ -456,13 +492,13 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end) {
  * Hide layer
  */
 ScheduleCreationPopup.prototype.hide = function() {
-    var guideElements = this.guideElements;
-
     this.layer.hide();
 
-    util.forEach(guideElements, function(element) {
-        element.clearGuideElement();
-    });
+    if (this.guide) {
+        this.guide.clearGuideElement();
+        this.guide = null;
+    }
+
     domevent.off(document.body, 'mousedown', this._onMouseDown, this);
 };
 
