@@ -9,6 +9,8 @@ taskview = css-prefix + 'task-'
 // Allday
 allday = css-prefix + 'allday-'
 weekday = css-prefix + 'weekday-'
+// DayGrid
+daygrid = css-prefix + 'daygrid-'
 // Time
 timegrid = css-prefix + 'timegrid-'
 time = css-prefix + 'time-'
@@ -32,19 +34,6 @@ vendor(prop, args)
     -webkit-{prop} args
     -moz-{prop} args
     {prop} args
-
-flex()
-    display: -ms-flexbox
-    display: -webkit-flex
-    display: flex
-
-flex-justify-content(val)
-    -webkit-justify-content: val
-    justify-content: val
-
-flex-align-items(val)
-    -webkit-align-items: val
-    align-items: val
 
 clearfix()
     zoom: 1;

@@ -36,6 +36,11 @@ var config = {
         checkCondRegExp: alldayCheckPermission
     },
 
+    daygrid: {
+        getViewIDRegExp: alldayGetViewID,
+        checkCondRegExp: alldayCheckPermission
+    },
+
     time: {
         getViewIDRegExp: timeGetViewID
     }

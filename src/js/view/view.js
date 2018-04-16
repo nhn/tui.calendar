@@ -52,6 +52,11 @@ function View(container) {
      * @type {View}
      */
     this.parent = null;
+
+    /**
+     * state of view
+     */
+    this.state = {};
 }
 
 /**
@@ -194,6 +199,14 @@ View.prototype.getViewBound = function() {
  */
 View.prototype.cssprefix = function(className) {
     return this.cssPrefix + (className || '');
+};
+
+/**
+ * set state
+ * @param {object} state - state
+ */
+View.prototype.setState = function(state) {
+    util.extend(this.state, state);
 };
 
 util.CustomEvents.mixin(View);
