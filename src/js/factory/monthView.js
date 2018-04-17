@@ -15,7 +15,8 @@ var config = require('../config'),
     MonthResize = require('../handler/month/resize'),
     MonthMove = require('../handler/month/move'),
     More = require('../view/month/more'),
-    ScheduleCreationPopup = require('../view/popup/scheduleCreationPopup');
+    ScheduleCreationPopup = require('../view/popup/scheduleCreationPopup'),
+    Schedule = require('../model/schedule');
 
 /**
  * Get the view model for more layer
@@ -165,6 +166,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         view: monthView,
         refresh: function() {
             monthView.vLayout.refresh();
+        },
+        openCreationPopup: function(schedule) {
+            if (createView) {
+                creationHandler.invokeCreationClick(Schedule.create(schedule));
+            }
         }
     };
 }

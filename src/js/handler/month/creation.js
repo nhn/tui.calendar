@@ -303,6 +303,25 @@ MonthCreation.prototype._adjustStartAndEndTime = function(start, end) {
 };
 
 /**
+ * Invoke creation click
+ * @param {Schedule} schedule - schedule instance
+ */
+MonthCreation.prototype.invokeCreationClick = function(schedule) {
+    var eventData = {
+        model: schedule
+    };
+
+    this.fire('monthCreationClick', eventData);
+
+    this._createSchedule({
+        start: schedule.start,
+        end: schedule.end,
+        isAllDay: schedule.isAllDay,
+        triggerEvent: 'manual'
+    });
+};
+
+/**
  * Returns whether the given element is Weekday-Schedule.
  * @param {HTMLElement} el - target element
  * @returns {boolean}

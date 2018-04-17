@@ -5,9 +5,11 @@
  */
 'use strict';
 
+var util = require('tui-code-snippet');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var common = require('../../common/common');
+var datetime = require('../../common/datetime');
 
 var mmax = Math.max,
     mmin = Math.min;
@@ -63,6 +65,61 @@ var dayGridCore = {
                 datesInRange: datesInRange,
                 xIndex: xIndex,
                 triggerEvent: mouseEvent.type,
+                grids: grids,
+                range: range
+            };
+        };
+    },
+
+    /**
+     * @param {view} view - view instance.
+     * @param {TZDate} startDate - start date
+     * @returns {function|boolean} function that return schedule data by mouse events.
+     */
+    _retriveScheduleDataFromDate: function(view, startDate) {
+        var weekdayView = view.children.single(),
+            datesInRange,
+            dragStartXIndex,
+            grids,
+            range;
+
+        if (!weekdayView) {
+            return false;
+        }
+
+        range = weekdayView.getRenderDateRange();
+        datesInRange = range.length;
+        grids = weekdayView.getRenderDateGrids();
+
+        util.forEach(range, function(date, index) {
+            if (datetime.isSameDate(date, startDate)) {
+                dragStartXIndex = index;
+            }
+        });
+
+        /**
+         * @param {TZDate} targetDate - target date
+         * @returns {object} schedule data.
+         */
+        return function(targetDate) {
+            var xIndex;
+
+            util.forEach(range, function(date, index) {
+                if (datetime.isSameDate(date, targetDate)) {
+                    xIndex = index;
+                }
+            });
+
+            // apply limitation of creation schedule X index.
+            xIndex = mmax(xIndex, 0);
+            xIndex = mmin(xIndex, datesInRange - 1);
+
+            return {
+                relatedView: view,
+                dragStartXIndex: dragStartXIndex,
+                datesInRange: datesInRange,
+                xIndex: xIndex,
+                triggerEvent: 'manual',
                 grids: grids,
                 range: range
             };

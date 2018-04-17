@@ -9,6 +9,7 @@ var config = require('../config');
 var domutil = require('../common/domutil');
 var VLayout = require('../common/vlayout');
 var reqAnimFrame = require('../common/reqAnimFrame');
+var Schedule = require('../model/schedule');
 // Parent views
 var Week = require('../view/week/week');
 
@@ -252,6 +253,15 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                     childView.scrollToNow();
                 }
             });
+        },
+        openCreationPopup: function(schedule) {
+            if (createView) {
+                if (schedule.isAllDay) {
+                    weekView.handler.creation.allday.invokeCreationClick(Schedule.create(schedule));
+                } else {
+                    weekView.handler.creation.time.invokeCreationClick(Schedule.create(schedule));
+                }
+            }
         }
     };
 };

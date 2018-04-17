@@ -72,6 +72,44 @@ var timeCore = {
     },
 
     /**
+     * Get function to makes event data from Time and mouseEvent
+     * @param {Time} timeView - Instance of time view.
+     * @param {number} xIndex - Time view index
+     * @returns {function} - Function that return event data from mouse event.
+     */
+    _retriveScheduleDataFromDate: function(timeView) {
+        var viewTime = Number(timeView.getDate());
+
+        /**
+         * @param {TZDate} startDate - start date
+         * @param {TZDate} endDate - end date
+         * @returns {object} - common event data for time.*
+         */
+        return util.bind(function(startDate, endDate) {
+            var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
+
+            gridY = startDate.getHours() + getNearestHour(startDate.getMinutes());
+            timeY = viewTime + datetime.millisecondsFrom('hour', gridY);
+            nearestGridY = gridY;
+            nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY);
+            nearestGridEndY = endDate.getHours() + getNearestHour(endDate.getMinutes());
+            nearestGridEndTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridEndY);
+
+            return util.extend({
+                target: timeView,
+                relatedView: timeView,
+                gridY: gridY,
+                timeY: timeY,
+                nearestGridY: nearestGridY,
+                nearestGridTimeY: nearestGridTimeY,
+                nearestGridEndY: nearestGridEndY,
+                nearestGridEndTimeY: nearestGridEndTimeY,
+                triggerEvent: 'manual'
+            });
+        }, this);
+    },
+
+    /**
      * Mixin method.
      * @param {(TimeCreation|TimeMove)} obj - Constructor functions
      */
@@ -86,6 +124,24 @@ var timeCore = {
         });
     }
 };
+
+/**
+ * Get the nearest hour
+ * @param {number} minutes - minutes
+ * @returns {number} hour
+ */
+function getNearestHour(minutes) {
+    var nearestHour;
+    if (minutes === 0) {
+        nearestHour = 0;
+    } else if (minutes > 30) {
+        nearestHour = 1;
+    } else if (minutes <= 30) {
+        nearestHour = 0.5;
+    }
+
+    return nearestHour;
+}
 
 module.exports = timeCore;
 

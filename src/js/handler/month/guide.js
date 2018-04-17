@@ -227,6 +227,12 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         }, model);
     }
 
+    if (util.isUndefined(x) || util.isUndefined(y)) {
+        temp = this._getCoordByDate(model.getStarts());
+        x = temp[0];
+        y = temp[1];
+    }
+
     this.startCoord = [x, y];
     this.update(x, y);
 };
