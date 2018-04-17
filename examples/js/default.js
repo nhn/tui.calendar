@@ -166,7 +166,9 @@
         },
         'beforeCreateSchedule': function(e) {
             console.log(e);
-            if (!useCreationPopup) {
+            if (useCreationPopup) {
+                saveNewSchedule(e);
+            } else {
                 createNewSchedule(e);
             }
         },
@@ -180,10 +182,6 @@
         },
         'beforeDeleteSchedule': function(e) {
             console.log('delete', e);
-        },
-        'saveSchedule': function(e) {
-            console.log('saveSchedule', e);
-            saveNewSchedule(e);
         }
     });
 
@@ -469,13 +467,13 @@
     }
 
     function saveNewSchedule(scheduleData) {
-        var calendar = scheduleData.calendar;
+        var calendar = scheduleData.calendar || findCalendar(scheduleData.calendarId);
         var schedule = {
             id: String(chance.guid()),
-            title: scheduleData.subject,
+            title: scheduleData.title,
             isAllDay: scheduleData.isAllDay,
-            start: scheduleData.startDate,
-            end: scheduleData.endDate,
+            start: scheduleData.start,
+            end: scheduleData.end,
             category: scheduleData.isAllDay ? 'allday' : 'time',
             dueDateClass: '',
             raw: {
@@ -491,6 +489,8 @@
         }
 
         cal.createSchedules([schedule]);
+
+        refreshScheduleVisibility();
     }
 
     function onChangeCalendars(e) {

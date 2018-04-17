@@ -903,6 +903,13 @@ Calendar.prototype._onClickDayname = function(clickScheduleData) {
  * @private
  */
 Calendar.prototype._onBeforeCreate = function(createScheduleData) {
+    if (this._options.useCreationPopup && !createScheduleData.useCreationPopup) {
+        if (this._showCreationPopup) {
+            this._showCreationPopup(createScheduleData);
+
+            return;
+        }
+    }
     /**
      * Fire this event when select time period in daily, weekly, monthly.
      * @event Calendar#beforeCreateSchedule
@@ -1087,6 +1094,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
     this._refreshMethod = created.refresh;
     this._scrollToNowMethod = created.scrollToNow;
     this._openCreationPopup = created.openCreationPopup;
+    this._showCreationPopup = created.showCreationPopup;
 
     this.move();
     this.render();

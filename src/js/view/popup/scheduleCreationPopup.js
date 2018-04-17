@@ -176,7 +176,7 @@ ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
     if (domutil.hasClass(dropdown, config.classname('section-calendar'))) {
         domutil.find('.icon', dropdownBtn).style.backgroundColor = bgColor;
         this._selectedCal = this.calendars.find(function(cal) {
-            return cal.id === domutil.getData(selectedItem, 'calendar-id');
+            return cal.id === domutil.getData(selectedItem, 'calendarId');
         });
     }
 
@@ -261,7 +261,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     state = domutil.get(cssPrefix + 'schedule-state');
     isAllDay = domutil.get(cssPrefix + 'schedule-allday');
 
-    if (isAllDay) {
+    if (isAllDay.checked) {
         startDate.setHours(0);
         startDate.setMinutes(0);
         startDate.setSeconds(0);
@@ -276,10 +276,10 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
      * @property {Schedule} schedule - new schedule instance to be added
      */
     this.fire('saveSchedule', {
-        calendar: this._selectedCal,
-        subject: title.value,
-        startDate: new TZDate(startDate),
-        endDate: new TZDate(endDate),
+        calendarId: this._selectedCal.id,
+        title: title.value,
+        start: new TZDate(startDate),
+        end: new TZDate(endDate),
         isAllDay: isAllDay.checked,
         state: state.innerText,
         raw: {

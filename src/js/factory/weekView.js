@@ -193,15 +193,18 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     // binding create schedules event
     if (options.useCreationPopup) {
         createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
-        onShowCreationPopup = function(eventData) {
-            createView.setCalendars(baseController.calendars);
-            createView.render(eventData);
-        };
+
         onSaveNewSchedule = function(scheduleData) {
-            baseController.fire('saveSchedule', scheduleData);
+            util.extend(scheduleData, {
+                useCreationPopup: true
+            });
+            if (scheduleData.isAllDay) {
+                weekView.handler.creation.allday.fire('beforeCreateSchedule', scheduleData);
+            } else {
+                weekView.handler.creation.time.fire('beforeCreateSchedule', scheduleData);
+            }
         };
-        weekView.handler.creation.allday.on('beforeCreateSchedule', onShowCreationPopup);
-        weekView.handler.creation.time.on('beforeCreateSchedule', onShowCreationPopup);
+
         createView.on('saveSchedule', onSaveNewSchedule);
     }
     onSetCalendars = function(calendars) {
@@ -261,6 +264,12 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                 } else {
                     weekView.handler.creation.time.invokeCreationClick(Schedule.create(schedule));
                 }
+            }
+        },
+        showCreationPopup: function(eventData) {
+            if (createView) {
+                createView.setCalendars(baseController.calendars);
+                createView.render(eventData);
             }
         }
     };

@@ -198,6 +198,7 @@ TimeCreation.prototype._createSchedule = function(eventData) {
     var relatedView = eventData.relatedView,
         createRange = eventData.createRange,
         nearestGridTimeY = eventData.nearestGridTimeY,
+        nearestGridEndTimeY = eventData.nearestGridEndTimeY ? eventData.nearestGridEndTimeY : nearestGridTimeY + datetime.millisecondsFrom('minutes', 30),
         baseDate,
         dateStart,
         dateEnd,
@@ -207,7 +208,7 @@ TimeCreation.prototype._createSchedule = function(eventData) {
     if (!createRange) {
         createRange = [
             nearestGridTimeY,
-            nearestGridTimeY + datetime.millisecondsFrom('minutes', 30)
+            nearestGridEndTimeY
         ];
     }
 
