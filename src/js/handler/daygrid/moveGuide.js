@@ -204,7 +204,7 @@ DayGridMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     this._hideOriginScheduleBlocks(String(dragStartEventData.model.cid()));
 
     scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
-    domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+    domutil.appendHTMLElement('div', guideElement, config.classname('weekday-schedule-cover'));
     scheduleContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;

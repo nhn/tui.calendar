@@ -37,6 +37,11 @@ function DayGridResizeGuide(resizeHandler) {
      */
     this.guideElement = null;
 
+    /**
+     * @type {HTMLDIVElement}
+     */
+    this.scheduleBlockElement = null;
+
     resizeHandler.on({
         'dragstart': this._onDragStart,
         'drag': this._onDrag,
@@ -52,7 +57,7 @@ DayGridResizeGuide.prototype.destroy = function() {
     this._clearGuideElement();
     this.resizeHandler.off(this);
     this.resizeHandler = this.scheduleContainer = this.getScheduleDataFunc =
-        this.guideElement = null;
+        this.guideElement = this.scheduleBlockElement = null;
 };
 
 /**
@@ -63,6 +68,10 @@ DayGridResizeGuide.prototype._clearGuideElement = function() {
 
     if (!util.browser.msie) {
         domutil.removeClass(global.document.body, config.classname('resizing-x'));
+    }
+
+    if (this.scheduleBlockElement) {
+        domutil.removeClass(this.scheduleBlockElement, config.classname('weekday-schedule-block-dragging-dim'));
     }
 
     this.getScheduleDataFunc = null;
@@ -88,9 +97,9 @@ DayGridResizeGuide.prototype.refreshGuideElement = function(newWidth) {
 DayGridResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         viewOptions = this.resizeHandler.view.options,
-        fromLeft = (new TZDate(
+        fromLeft = parseInt((new TZDate(
             model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
-        )) / datetime.MILLISECONDS_PER_DAY || 0,
+        )) / datetime.MILLISECONDS_PER_DAY, 10) || 0,
         grids = dragStartEventData.grids;
 
     return function(xIndex) {
@@ -115,7 +124,8 @@ DayGridResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventD
  */
 DayGridResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     var container = this.resizeHandler.view.container,
-        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
+        scheduleBlockElement = this.scheduleBlockElement = dragStartEventData.scheduleBlockElement,
+        guideElement = this.guideElement = scheduleBlockElement.cloneNode(true),
         scheduleContainer;
 
     if (!util.browser.msie) {
@@ -124,6 +134,8 @@ DayGridResizeGuide.prototype._onDragStart = function(dragStartEventData) {
 
     scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
     domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+    domutil.addClass(scheduleBlockElement, config.classname('weekday-schedule-block-dragging-dim'));
+
     scheduleContainer.appendChild(guideElement);
 
     this.getScheduleDataFunc = this.getGuideElementWidthFunc(dragStartEventData);
