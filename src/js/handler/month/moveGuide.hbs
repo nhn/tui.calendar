@@ -5,13 +5,15 @@
             color: #ffffff;
             background-color:{{model.bgColor}};
             height:{{styles.scheduleHeight}}px;
+            line-height:{{styles.scheduleHeight}}px;
+            border-radius: {{styles.borderRadius}};
             {{#if model.isAllDay}}
             border-left:3px solid {{model.borderColor}};
             {{/if}}">
     {{#unless model.isAllDay}}
-    <span class="{{CSS_PREFIX}}weekday-schedule-bullet {{CSS_PREFIX}}weekday-schedule-bullet-focused"></span>
+    <span class="{{CSS_PREFIX}}weekday-schedule-bullet {{CSS_PREFIX}}weekday-schedule-bullet-focused" style="top: {{styles.scheduleBulletTop}}px;"></span>
     {{/unless}}
-    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-schedule-title {{CSS_PREFIX}}weekday-schedule-title-focused">
+    <div class="{{CSS_PREFIX}}month-move-guide {{CSS_PREFIX}}weekday-schedule-title {{#unless model.isAllDay}}{{CSS_PREFIX}}weekday-schedule-title-focused"{{/unless}}>
         {{#if model.isAllDay}}
             {{{allday-tmpl model}}}
         {{else}}

@@ -87,12 +87,6 @@ MonthMoveGuide.prototype._showOriginScheduleBlocks = function() {
     });
 };
 
-MonthMoveGuide.prototype._getHighlightColorModel = function(model) {
-    return {
-        bgColor: model.bgColor
-    };
-};
-
 /**
  * Clear background color for filled grid element.
  */
@@ -148,11 +142,12 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
     layer.setContent(tmpl({
         model: util.extend(
             Schedule.create(model),
-            model,
-            this._getHighlightColorModel(model)
+            model
         ),
         styles: {
-            scheduleHeight: weekdayOptions.scheduleHeight
+            scheduleHeight: weekdayOptions.scheduleHeight,
+            scheduleBulletTop: weekdayOptions.scheduleHeight / 3,
+            borderRadius: monthView.controller.theme.month.schedule.borderRadius
         }
     }));
     layer.show();
