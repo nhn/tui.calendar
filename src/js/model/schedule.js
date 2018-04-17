@@ -86,6 +86,12 @@ function Schedule() {
     this.bgColor = '#a1b56c';
 
     /**
+     * schedule background color when dragging it
+     * @type {string}
+     */
+    this.dragBgColor = '#a1b56c';
+
+    /**
      * schedule left border color
      * @type {string}
      */
@@ -185,6 +191,7 @@ Schedule.prototype.init = function(options) {
 
     this.color = options.color || this.color;
     this.bgColor = options.bgColor || this.bgColor;
+    this.dragBgColor = options.dragBgColor || this.dragBgColor;
     this.borderColor = options.borderColor || this.borderColor;
     this.calendarId = options.calendarId || '';
     this.category = options.category || '';
@@ -284,6 +291,10 @@ Schedule.prototype.equals = function(schedule) {
     }
 
     if (this.bgColor !== schedule.bgColor) {
+        return false;
+    }
+
+    if (this.dragBgColor !== schedule.dragBgColor) {
         return false;
     }
 

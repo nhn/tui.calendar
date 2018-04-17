@@ -223,10 +223,8 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         util.extend(this.options, {
             top: parseInt(target.style.top, 10) + 'px',
             height: parseInt(target.style.height, 10) + 'px',
-            bgColor: model.bgColor,
-            borderColor: model.borderColor,
             label: model.title
-        });
+        }, model);
     }
 
     this.startCoord = [x, y];
@@ -447,6 +445,11 @@ MonthGuide.prototype._getStyles = function(theme) {
     if (theme) {
         styles.border = theme.common.creationGuide.border;
         styles.backgroundColor = theme.common.creationGuide.backgroundColor;
+        styles.scheduleHeight = theme.month.schedule.height;
+        styles.scheduleGutter = theme.month.schedule.marginTop;
+        styles.marginLeft = theme.month.schedule.marginLeft;
+        styles.marginRight = theme.month.schedule.marginRight;
+        styles.borderRadius = theme.month.schedule.borderRadius;
     }
 
     return styles;

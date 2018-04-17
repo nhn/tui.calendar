@@ -38,6 +38,7 @@ var mmin = Math.min;
  * @property {boolean} isReadOnly - schedule read-only flag
  * @property {string} [color] - schedule text color
  * @property {string} [bgColor] - schedule background color
+ * @property {string} [dragBgColor] - schedule background color when dragging it
  * @property {string} [borderColor] - schedule left border color
  * @property {string} customStyle - schedule's custom css class
  * @property {any} raw - user data

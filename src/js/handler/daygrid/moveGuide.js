@@ -120,7 +120,7 @@ DayGridMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
         el.style.margin = '0';
 
         if (!model.isFocused) {
-            el.style.backgroundColor = model.bgColor;
+            el.style.backgroundColor = model.dragBgColor;
             el.style.borderLeftColor = model.borderColor;
             el.style.color = '#ffffff';
         }
@@ -204,7 +204,7 @@ DayGridMoveGuide.prototype._onDragStart = function(dragStartEventData) {
     this._hideOriginScheduleBlocks(String(dragStartEventData.model.cid()));
 
     scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
-    domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+    domutil.appendHTMLElement('div', guideElement, config.classname('weekday-schedule-cover'));
     scheduleContainer.appendChild(guideElement);
 
     this._dragStartXIndex = dragStartEventData.xIndex;

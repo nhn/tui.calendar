@@ -22,6 +22,7 @@ function ScheduleInfo() {
 
     this.color = null;
     this.bgColor = null;
+    this.dragBgColor = null;
     this.borderColor = null;
     this.customStyle = '';
 
@@ -93,10 +94,12 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
 
     schedule.color = calendar.color;
     schedule.bgColor = calendar.bgColor;
+    schedule.dragBgColor = calendar.dragBgColor;
     schedule.borderColor = calendar.borderColor;
 
     if (schedule.category === 'milestone') {
         schedule.bgColor = 'transparent';
+        schedule.dragBgColor = 'transparent';
         schedule.borderColor = 'transparent';
     }
 
