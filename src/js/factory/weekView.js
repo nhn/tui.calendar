@@ -193,6 +193,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     if (options.useCreationPopup) {
         createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
         onShowCreationPopup = function(eventData) {
+            createView.setCalendars(baseController.calendars);
             createView.render(eventData);
         };
         onSaveNewSchedule = function(scheduleData) {
@@ -207,8 +208,6 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             createView.setCalendars(calendars);
         }
     };
-
-    baseController.on('setCalendars', onSetCalendars);
 
     baseController.on('setCalendars', onSetCalendars);
 

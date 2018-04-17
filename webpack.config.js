@@ -42,12 +42,6 @@ module.exports = {
             'amd': 'tui-code-snippet',
             'root': ['tui', 'util']
         },
-        'jquery': {
-            'commonjs': 'jquery',
-            'commonjs2': 'jquery',
-            'amd': 'jquery',
-            'root': '$'
-        },
         'tui-date-picker': {
             'commonjs': 'tui-date-picker',
             'commonjs2': 'tui-date-picker',

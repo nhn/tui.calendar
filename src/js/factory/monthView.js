@@ -101,6 +101,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     if (options.useCreationPopup) {
         createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
         onShowCreationPopup = function(eventData) {
+            createView.setCalendars(baseController.calendars);
             createView.render(eventData);
         };
         onSaveNewSchedule = function(scheduleData) {
@@ -152,8 +153,8 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         });
 
         if (options.useCreationPopup) {
-            creationHandler.on('beforeCreateSchedule', onShowCreationPopup);
-            createView.on('saveSchedule', onSaveNewSchedule);
+            creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
+            createView.off('saveSchedule', onSaveNewSchedule);
         }
     };
 

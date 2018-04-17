@@ -376,7 +376,6 @@ Base.prototype.setTheme = function(theme) {
  */
 Base.prototype.setCalendars = function(calendars) {
     this.calendars = calendars;
-    this.fire('setCalendars', calendars);
 };
 
 // mixin

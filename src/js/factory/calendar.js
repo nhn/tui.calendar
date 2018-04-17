@@ -220,6 +220,7 @@ function Calendar(container, options) {
      * @private
      */
     this._controller = _createController(options);
+    this._controller.setCalendars(options.calendars);
 
     /**
      * layout view (layout manager)
@@ -311,7 +312,9 @@ Calendar.prototype._initialize = function(options) {
             time: null
         }, util.pick(options, 'template') || {}),
         week: util.extend({}, util.pick(options, 'week') || {}),
-        month: util.extend({}, util.pick(options, 'month') || {})
+        month: util.extend({}, util.pick(options, 'month') || {}),
+        calendars: [],
+        useCreationPopup: true
     }, options);
 
     this._options.week = util.extend({
@@ -1228,7 +1231,7 @@ Calendar.prototype.getViewName = function() {
  * @param {Array.<Object>} calendars - calendar list
  */
 Calendar.prototype.setCalendars = function(calendars) {
-    this.controller.setCalendars(calendars);
+    this._controller.setCalendars(calendars);
     this.render();
 };
 
