@@ -4,7 +4,7 @@
     {{else ~}}
     <div class="{{CSS_PREFIX}}weekday-schedule"
         style="height: {{styles.scheduleHeight}}; line-height: {{styles.scheduleHeight}}; margin-top: {{styles.scheduleGutter}}; border-radius:{{styles.borderRadius}}; margin-left: {{styles.marginLeft}}; margin-right: {{styles.marginRight}};
-            color:#fff ;border-color:{{borderColor}};background-color:{{dragBgColor}}">
+            color:{{color}};border-color:{{borderColor}};background-color:{{bgColor}}">
         <div class="{{CSS_PREFIX}}weekday-schedule-title">
             {{#if isAllDay}}
                 {{{allday-tmpl this}}}
