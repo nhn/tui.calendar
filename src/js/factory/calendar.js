@@ -111,6 +111,8 @@ var mmin = Math.min;
  * @property {Template} [template={}] - template options
  * @property {WeekOptions} [week={}] - options for week view
  * @property {MonthOptions} [month={}] - options for month view
+ * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
+ * @property {boolean} [useCreationPopup=true] - whether use creation popup or not
  */
 
 /**
@@ -218,6 +220,7 @@ function Calendar(container, options) {
      * @private
      */
     this._controller = _createController(options);
+    this._controller.setCalendars(options.calendars);
 
     /**
      * layout view (layout manager)
@@ -309,7 +312,9 @@ Calendar.prototype._initialize = function(options) {
             time: null
         }, util.pick(options, 'template') || {}),
         week: util.extend({}, util.pick(options, 'week') || {}),
-        month: util.extend({}, util.pick(options, 'month') || {})
+        month: util.extend({}, util.pick(options, 'month') || {}),
+        calendars: [],
+        useCreationPopup: true
     }, options);
 
     this._options.week = util.extend({
@@ -1219,6 +1224,15 @@ Calendar.prototype.getDateRangeEnd = function() {
  */
 Calendar.prototype.getViewName = function() {
     return this._viewName;
+};
+
+/**
+ * Set calendar list
+ * @param {Array.<Object>} calendars - calendar list
+ */
+Calendar.prototype.setCalendars = function(calendars) {
+    this._controller.setCalendars(calendars);
+    this.render();
 };
 
 /**

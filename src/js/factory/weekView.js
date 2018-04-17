@@ -16,6 +16,8 @@ var Week = require('../view/week/week');
 var DayName = require('../view/week/dayname');
 var DayGrid = require('../view/week/dayGrid');
 var TimeGrid = require('../view/week/timeGrid');
+var ScheduleCreationPopup = require('../view/popup/scheduleCreationPopup');
+
 // Handlers
 var DayNameClick = require('../handler/time/clickDayname');
 var DayGridClick = require('../handler/daygrid/click');
@@ -84,6 +86,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var panels = options.week.panels || DEFAULT_PANELS,
         vpanels = [];
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
+    var createView, onShowCreationPopup, onSaveNewSchedule, onSetCalendars;
 
     util.extend(options.week, {panels: panels});
 
@@ -186,6 +189,28 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         });
     });
 
+    // binding create schedules event
+    if (options.useCreationPopup) {
+        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+        onShowCreationPopup = function(eventData) {
+            createView.setCalendars(baseController.calendars);
+            createView.render(eventData);
+        };
+        onSaveNewSchedule = function(scheduleData) {
+            baseController.fire('saveSchedule', scheduleData);
+        };
+        weekView.handler.creation.allday.on('beforeCreateSchedule', onShowCreationPopup);
+        weekView.handler.creation.time.on('beforeCreateSchedule', onShowCreationPopup);
+        createView.on('saveSchedule', onSaveNewSchedule);
+    }
+    onSetCalendars = function(calendars) {
+        if (createView) {
+            createView.setCalendars(calendars);
+        }
+    };
+
+    baseController.on('setCalendars', onSetCalendars);
+
     weekView.on('afterRender', function() {
         vLayout.refresh();
     });
@@ -201,6 +226,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                 handler.destroy();
             });
         });
+
+        if (options.useCreationPopup) {
+            createView.off('saveSchedule', onSaveNewSchedule);
+        }
 
         weekView.off();
     };

@@ -347,5 +347,33 @@ Handlebars.registerHelper({
 
     'collapseBtnTitle-tmpl': function() {
         return '∧';
+    },
+
+    'popupIsAllDay-tmpl': function() {
+        return 'All day';
+    },
+
+    'popupStateFree-tmpl': function() {
+        return 'Free';
+    },
+
+    'popupStateBusy-tmpl': function() {
+        return 'Busy';
+    },
+
+    'titlePlaceholder-tmpl': function() {
+        return 'Subject';
+    },
+
+    'locationPlaceholder-tmpl': function() {
+        return 'Location';
+    },
+
+    'startDatePlaceholder-tmpl': function() {
+        return 'Start date';
+    },
+
+    'endDatePlaceholder-tmpl': function() {
+        return 'End date';
     }
 });
