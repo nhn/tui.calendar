@@ -24,8 +24,9 @@ var config = require('../../config'),
  * @param {object} [options.moreLayerSize.height=null] - css height value(px, auto).
  *                                                            The default value 'null' is to fit a grid cell.
  * @param {HTMLElement} container = container element
+ * @param {Theme} theme - theme instance
  */
-function More(options, container) {
+function More(options, container, theme) {
     View.call(this, container);
 
     /**
@@ -46,7 +47,11 @@ function More(options, container) {
         moreLayerSize: {
             width: null,
             height: null
-        }
+        },
+        scheduleHeight: parseInt(theme.month.schedule.height, 10) || 18,
+        scheduleGutter: parseInt(theme.month.schedule.marginTop, 10) || 2,
+        scheduleBulletTop: (parseInt(theme.month.schedule.height, 10) || 18) / 3,
+        borderRadius: theme.month.schedule.borderRadius
     }, options);
 
     domevent.on(container, 'click', this._onClick, this);
@@ -129,8 +134,14 @@ More.prototype.render = function(viewModel) {
     var pos = this._getRenderPosition(target, weekItem);
     var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
     var width = target.offsetWidth + (OUT_PADDING * 2);
-    var optMoreLayerSize = this.options.moreLayerSize;
-    this._viewModel = viewModel;
+    var opt = this.options;
+    var optMoreLayerSize = opt.moreLayerSize;
+    this._viewModel = util.extend(viewModel, {
+        scheduleGutter: opt.scheduleGutter,
+        scheduleHeight: opt.scheduleHeight,
+        scheduleBulletTop: opt.scheduleBulletTop,
+        borderRadius: opt.borderRadius
+    });
 
     if (optMoreLayerSize.width) {
         width = optMoreLayerSize.width;
