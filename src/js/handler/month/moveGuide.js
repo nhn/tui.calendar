@@ -150,7 +150,10 @@ MonthMoveGuide.prototype._onDragStart = function(dragStartEvent) {
             Schedule.create(model),
             model,
             this._getHighlightColorModel(model)
-        )
+        ),
+        styles: {
+            scheduleHeight: weekdayOptions.scheduleHeight
+        }
     }));
     layer.show();
 
