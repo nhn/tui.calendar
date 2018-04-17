@@ -129,8 +129,7 @@
             }
         },
         week: {
-            daynames: daynames,
-            panelHeights: [80, 80, 120]
+            daynames: daynames
         }
     });
 
@@ -176,9 +175,6 @@
         },
         'beforeDeleteSchedule': function(e) {
             console.log('delete', e);
-        },
-        'resizePanel': function(e) {
-            console.log('resizePanel', e);
         },
         'dragStartSchedule': function(e) {
             console.log('dragStartSchedule', e);
@@ -283,52 +279,57 @@
     function onClickMenu(e) {
         var target = $(e.target).closest('a[role="menuitem"]')[0];
         var action = getDataAction(target);
+        var options = cal.getOptions();
+        var viewName = '';
 
         console.log(target);
         console.log(action);
         switch (action) {
             case 'toggle-daily':
-                cal.toggleView('day');
+                viewName = 'day'
                 break;
             case 'toggle-weekly':
-                cal.toggleView('week');
+                viewName = 'week';
                 break;
             case 'toggle-monthly':
-                cal.options.month.visibleWeeksCount = 0;
-                cal.toggleView('month', true);
+                options.month.visibleWeeksCount = 0;
+                viewName = 'month';
                 break;
             case 'toggle-weeks2':
-                cal.options.month.visibleWeeksCount = 2;
-                cal.toggleView('month', true);
+                options.month.visibleWeeksCount = 2;
+                viewName = 'month';
                 break;
             case 'toggle-weeks3':
-                cal.options.month.visibleWeeksCount = 3;
-                cal.toggleView('month', true);
+                options.month.visibleWeeksCount = 3;
+                viewName = 'month';
                 break;
             case 'toggle-narrow-weekend':
-                cal.options.month.narrowWeekend = !cal.options.month.narrowWeekend;
-                cal.options.week.narrowWeekend = !cal.options.week.narrowWeekend;
-                cal.toggleView(cal.viewName, true);
+                options.month.narrowWeekend = !options.month.narrowWeekend;
+                options.week.narrowWeekend = !options.week.narrowWeekend;
+                viewName = cal.getViewName();
 
-                target.querySelector('input').checked = cal.options.month.narrowWeekend;
+                target.querySelector('input').checked = options.month.narrowWeekend;
                 break;
             case 'toggle-start-day-1':
-                cal.options.month.startDayOfWeek = cal.options.month.startDayOfWeek ? 0 : 1;
-                cal.options.week.startDayOfWeek = cal.options.week.startDayOfWeek ? 0 : 1;
-                cal.toggleView(cal.viewName, true);
+                options.month.startDayOfWeek = options.month.startDayOfWeek ? 0 : 1;
+                options.week.startDayOfWeek = options.week.startDayOfWeek ? 0 : 1;
+                viewName = cal.getViewName();
 
-                target.querySelector('input').checked = cal.options.month.startDayOfWeek;
+                target.querySelector('input').checked = options.month.startDayOfWeek;
                 break;
             case 'toggle-workweek':
-                cal.options.month.workweek = !cal.options.month.workweek;
-                cal.options.week.workweek = !cal.options.week.workweek;
-                cal.toggleView(cal.viewName, true);
+                options.month.workweek = !options.month.workweek;
+                options.week.workweek = !options.week.workweek;
+                viewName = cal.getViewName();
 
-                target.querySelector('input').checked = !cal.options.month.workweek;
+                target.querySelector('input').checked = !options.month.workweek;
                 break;
             default:
-                return;
+                break;
         }
+
+        cal.setOptions(options, true);
+        cal.changeView(viewName, true);
 
         setDropdownCalendarType();
         setRenderRangeText();
@@ -497,11 +498,7 @@
         var calendarElements = Array.prototype.slice.call(document.querySelectorAll('#calendarList input'));
 
         CalendarList.forEach(function(calendar) {
-            if (calendar.checked) {
-                cal.showSchedulesByCalendarID(calendar.id, false);
-            } else {
-                cal.hideSchedulesByCalendarID(calendar.id, false);
-            }
+            cal.toggleSchedules(calendar.id, !calendar.checked, false);
         });
 
         cal.render();
@@ -515,7 +512,8 @@
     function setDropdownCalendarType() {
         var calendarTypeName = document.getElementById('calendarTypeName');
         var calendarTypeIcon = document.getElementById('calendarTypeIcon');
-        var type = cal.viewName;
+        var options = cal.getOptions();
+        var type = cal.getViewName();
         var iconClassName;
 
         if (type === 'day') {
@@ -524,10 +522,10 @@
         } else if (type === 'week') {
             type = 'Weekly';
             iconClassName = 'icon ic_view_week';
-        } else if (cal.options.month.visibleWeeksCount === 2) {
+        } else if (options.month.visibleWeeksCount === 2) {
             type = '2 weeks';
             iconClassName = 'icon ic_view_week';
-        } else if (cal.options.month.visibleWeeksCount === 3) {
+        } else if (options.month.visibleWeeksCount === 3) {
             type = '3 weeks';
             iconClassName = 'icon ic_view_week';
         } else {
@@ -541,23 +539,25 @@
 
     function setRenderRangeText() {
         var renderRange = document.getElementById('renderRange');
+        var options = cal.getOptions();
+        var viewName = cal.getViewName();
         var html = [];
-        if (cal.viewName === 'day') {
-            html.push(moment(cal.renderDate.getTime()).format('YYYY.MM.DD'));
-        } else if (cal.viewName === 'month' &&
-            (!cal.options.month.visibleWeeksCount || cal.options.month.visibleWeeksCount > 4)) {
-            html.push(moment(cal.renderDate.getTime()).format('YYYY.MM'));
+        if (viewName === 'day') {
+            html.push(moment(cal.getDate().getTime()).format('YYYY.MM.DD'));
+        } else if (viewName === 'month' &&
+            (!options.month.visibleWeeksCount || options.month.visibleWeeksCount > 4)) {
+            html.push(moment(cal.getDate().getTime()).format('YYYY.MM'));
         } else {
-            html.push(moment(cal.renderRange.start.getTime()).format('YYYY.MM.DD'));
+            html.push(moment(cal.getDateRangeStart().getTime()).format('YYYY.MM.DD'));
             html.push(' ~ ');
-            html.push(moment(cal.renderRange.end.getTime()).format(' MM.DD'));
+            html.push(moment(cal.getDateRangeEnd().getTime()).format(' MM.DD'));
         }
         renderRange.innerHTML = html.join('');
     }
 
     function setSchedules() {
         cal.clear();
-        generateSchedule(cal.viewName, cal.renderRange.start, cal.renderRange.end);
+        generateSchedule(cal.getViewName(), cal.getDateRangeStart(), cal.getDateRangeEnd());
         cal.createSchedules(ScheduleList);
         refreshScheduleVisibility();
     }
@@ -583,7 +583,7 @@
     }
 
     resizeThrottled = tui.util.throttle(function() {
-        cal.refresh();
+        cal.render();
     }, 50);
 
     window.cal = cal;

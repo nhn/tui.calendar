@@ -3,6 +3,7 @@
     "include": [
       "src/js/factory/calendar.js",
       "src/js/theme/themeConfig.js",
+      "src/js/common/timezone.js",
       "README.md"
     ],
     "exclude": [],

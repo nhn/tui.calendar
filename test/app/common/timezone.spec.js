@@ -202,16 +202,4 @@ describe('module:timezone TZDate', function() {
 
         expect(date.getTime()).toBe(tzdate.getTime());
     });
-
-    it('setTime() should not be affected by the timezone', function() {
-        var time, tzdate;
-
-        tz.setOffset(120);
-        time = Date.UTC(2017, 0, 1);
-
-        tzdate = new tz.Date(Date.now());
-        tzdate.setTime(time);
-
-        expect(tzdate.getTime()).toBe(time);
-    });
 });

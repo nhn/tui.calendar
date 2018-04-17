@@ -21,12 +21,13 @@ var dw = require('../common/dw'),
 var mmin = Math.min;
 
 /**
+ * Schedule information
  * @typedef {object} Schedule
  * @property {string} id - unique schedule id depends on calendar id
  * @property {string} calendarId - unique calendar id
  * @property {string} title - schedule title
- * @property {string} start - start time
- * @property {string} end - end time
+ * @property {string|TZDate} start - start time. It's 'string' for input. It's 'TZDate' for output like event handler.
+ * @property {string|TZDate} end - end time. It's 'string' for input. It's 'TZDate' for output like event handler.
  * @property {boolean} isAllDay - all day schedule
  * @property {string} category - schedule type('milestone', 'task', allday', 'time')
  * @property {string} dueDateClass - task schedule type string
@@ -43,71 +44,78 @@ var mmin = Math.min;
  */
 
 /**
- * @typedef {object} RenderRange - rendered range
- * @property {Date} start - start date
- * @property {Date} end - end date
+ * Template functions to support customer renderer
+ * @typedef {object} Template
+ * @property {function} [milestoneTitle] - milestone title(at left column) template function
+ * @property {function} [milestone] - milestone template function
+   @property {function} [taskTitle] - task title(at left column) template function
+ * @property {function} [task] - task template function
+ * @property {function} [alldayTitle] - allday title(at left column) template function
+ * @property {function} [allday] - allday template function
+ * @property {function} [time] - time template function
+ * @property {function} [monthMoreTitleDate] - month more layer title template function
+ * @property {function} [monthMoreClose] - month more layer close button template function
+ * @property {function} [monthGridHeader] - month grid header(date, decorator, title) template function
+ * @property {function} [monthGridFooter] - month grid footer(date, decorator, title) template function
+ * @property {function} [monthGridHeaderExceed] - month grid header(exceed schedule count) template function
+ * @property {function} [monthGridFooterExceed] - month grid footer(exceed schedule count) template function
+ * @property {function} [weekDayname] - weekly dayname template function
+ *  @property {function} [monthDayname] - monthly dayname template function
+ */
+
+/**
+ * Options for daily, weekly view.
+ * @typedef {object} WeekOptions
+ * @property {number} [startDayOfWeek=0] - start day of week
+ * @property {Array.<string>} [daynames] - day names in weekly and daily.
+ *                    Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+ * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
+ * @property {boolean} [workweek=false] - show only 5 days except for weekend
+ */
+
+/**
+ * Options for monthly view.
+ * @typedef {object} MonthOptions
+ * @property {Array.<string>} [daynames] - day names in monthly.
+ * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+ * @property {number} [startDayOfWeek=0] - start day of week
+ * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
+ * @property {boolean} [visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ * @property {boolean} [workweek=false] - show only 5 days except for weekend
+ * @property {number} [visibleScheduleCount] - visible schedule count in monthly grid
+ * @property {object} [moreLayerSize] - more layer size
+ * @property {object} [moreLayerSize.width=null] - css width value(px, 'auto').
+ *                                                       The default value 'null' is to fit a grid cell.
+ * @property {object} [moreLayerSize.height=null] - css height value(px, 'auto').
+ *                                                        The default value 'null' is to fit a grid cell.
+ * @property {object} [grid] - grid's header and footer information
+ *  @property {object} [grid.header] - grid's header informatioin
+ *   @property {number} [grid.header.height=34] - grid's header height
+ *  @property {object} [grid.footer] - grid's footer informatioin
+ *   @property {number} [grid.footer.height=34] - grid's footer height
+ */
+
+/**
+ * @typedef {object} CalendarColor
+ * @property {string} [CalendarColor.color] - calendar color
+ * @property {string} [CalendarColor.bgColor] - calendar background color
+ * @property {string} [CalendarColor.borderColor] - calendar left border color
  */
 
 /**
  * @typedef {object} Options - calendar option object
- * @property {string} [cssPrefix] - CSS classname prefix
- *  @property {string} [defaultView='week'] - default view of calendar
- *  @property {string} [defaultDate=null] - default date to render calendar. if not supplied, use today.
- *  @property {object} [calendarColor] - preset calendar colors
- *   @property {string} [calendarColor.color] - calendar color
- *   @property {string} [calendarColor.bgColor] - calendar background color
- *   @property {string} [calendarColor.borderColor] - calendar left border color
- *   @property {boolean} [calendarColor.render] - immediately apply colors when setCalendarColor called.
- *  @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
+ * @property {string} [defaultView='week'] - default view of calendar
+ * @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
  * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
- * @property {themeConfig} [theme] - custom theme options
- *  @property {object} [template] - template option
- *   @property {function} [template.milestoneTitle] - milestone title(at left column) template function
- *   @property {function} [template.milestone] - milestone template function
- *   @property {function} [template.taskTitle] - task title(at left column) template function
- *   @property {function} [template.task] - task template function
- *   @property {function} [template.alldayTitle] - allday title(at left column) template function
- *   @property {function} [template.allday] - allday template function
- *   @property {function} [template.time] - time template function
- *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
- *   @property {function} [template.monthMoreClose] - month more layer close button template function
- *   @property {function} [template.monthGridHeader] - month grid header(date, decorator, title) template function
- *   @property {function} [template.monthGridFooter] - month grid footer(date, decorator, title) template function
- *   @property {function} [template.monthGridHeaderExceed] - month grid header(exceed schedule count) template function
- *   @property {function} [template.monthGridFooterExceed] - month grid footer(exceed schedule count) template function
- *   @property {function} [template.weekDayname] - weekly dayname template function
- *   @property {function} [template.monthDayname] - monthly dayname template function
- *  @property {object} [week] - options for week view
- *   @property {number} [week.startDayOfWeek=0] - start day of week
- *   @deprecated @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
- *   @property {Array.<string>} [week.daynames] - day names in weekly and daily.
- * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
- *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
- *   @property {boolean} [week.workweek=false] - show only 5 days except for weekend
- *   @property {string} [week.alldayViewType='scroll'] - set view type of allday panel. ('scroll'|'toggle')
- *  @property {object} [month] - options for month view
- *   @property {Array.<string>} [month.daynames] - day names in monthly.
- * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
- *   @property {number} [month.startDayOfWeek=0] - start day of week
- *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
- *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
- *   @property {number} [month.visibleScheduleCount] - visible schedule count in monthly grid
- *   @property {object} [month.moreLayerSize] - more layer size
- *    @property {object} [month.moreLayerSize.width=null] - css width value(px, 'auto').
- *                                                           The default value 'null' is to fit a grid cell.
- *    @property {object} [month.moreLayerSize.height=null] - css height value(px, 'auto').
- *                                                            The default value 'null' is to fit a grid cell.
- *   @property {object} [month.grid] - grid's header and footer information
- *    @property {object} [month.grid.header] - grid's header informatioin
- *     @property {number} [month.grid.header.height=34] - grid's header height
- *    @property {object} [month.grid.footer] - grid's footer informatioin
- *     @property {number} [month.grid.footer.height=34] - grid's footer height
- *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
+ * @property {themeConfig} [theme=themeConfig] - custom theme options
+ * @property {Template} [template={}] - template options
+ * @property {WeekOptions} [week={}] - options for week view
+ * @property {MonthOptions} [month={}] - options for month view
  */
 
 /**
  * @typedef {class} CustomEvents
- * https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html
+ * {@link https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhnent/tui.code-snippet tui-code-snippet}
  */
 
 /**
@@ -168,86 +176,38 @@ var mmin = Math.min;
  *     },
  *     week: {
  *         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
- *         panelHeights: [80, 80, 120],
  *         startDayOfWeek: 0,
  *         narrowWeekend: true
  *     }
  * });
  */
 function Calendar(container, options) {
-    var opt;
+    var opt = options;
 
     if (util.isString(container)) {
         container = document.querySelector(container);
     }
 
     /**
-     * calendar options
-     * @type {Options}
-     */
-    this.options = opt = util.extend({
-        calendarColor: {},
-        groupFunc: function(viewModel) {
-            var model = viewModel.model;
-
-            if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
-                return 'allday';
-            }
-
-            return model.category;
-        },
-        controller: null,
-        defaultView: 'week',
-        taskView: true,
-        scheduleView: true,
-        defaultDate: new TZDate(),
-        template: util.extend({
-            allday: null,
-            time: null
-        }, util.pick(options, 'template') || {}),
-        week: util.extend({}, util.pick(options, 'week') || {}),
-        month: util.extend({}, util.pick(options, 'month') || {}),
-        schedules: []
-    }, options);
-
-    this.options.week = util.extend({
-        startDayOfWeek: 0,
-        workweek: false
-    }, util.pick(this.options, 'week') || {});
-
-    this.options.month = util.extend({
-        scheduleFilter: function(schedule) {
-            return Boolean(schedule.isVisible) &&
-                (schedule.category === 'allday' || schedule.category === 'time');
-        }
-    }, util.pick(options, 'month') || {});
-
-    /**
      * Calendar color map
      * @type {object}
      * @private
      */
-    this.calendarColor = opt.calendarColor;
-
-    /**
-     * @type {HTMLElement}
-     * @private
-     */
-    this.container = container;
+    this._calendarColor = {};
 
     /**
      * Current rendered date
-     * @type {Date}
-     * @readonly
+     * @type {TZDate}
+     * @private
      */
-    this.renderDate = opt.defaultDate;
+    this._renderDate = new TZDate();
 
     /**
      * start and end date of weekly, monthly
-     * @type {RenderRange}
-     * @readonly
+     * @type {object}
+     * @private
      */
-    this.renderRange = {
+    this._renderRange = {
         start: null,
         end: null
     };
@@ -257,141 +217,124 @@ function Calendar(container, options) {
      * @type {Base}
      * @private
      */
-    this.controller = opt.controller || this.createController();
+    this._controller = _createController();
 
     /**
      * layout view (layout manager)
      * @type {Layout}
      * @private
      */
-    this.layout = new Layout(container, this.controller.theme);
+    this._layout = new Layout(container, this._controller.theme);
 
     /**
      * global drag handler
      * @type {Drag}
      * @private
      */
-    this.dragHandler = new Drag({distance: 10}, this.layout.container);
+    this._dragHandler = new Drag({distance: 10}, this._layout.container);
 
     /**
      * current rendered view name. ('day', 'week', 'month')
      * @type {string}
      * @default 'week'
-     * @readonly
-     */
-    this.viewName = opt.defaultView;
-
-    /**
-     * previous rendered view name
-     * @type {string}
      * @private
      */
-    this.prevViewName = this.viewName;
+    this._viewName = opt.defaultView || 'week';
 
     /**
      * Refresh method. it can be ref different functions for each view modes.
      * @type {function}
      * @private
      */
-    this.refreshMethod = null;
+    this._refreshMethod = null;
 
     /**
      * Scroll to now. It can be called for 'week', 'day' view modes.
      * @type {function}
      * @private
      */
-    this.scrollToNowMethod = null;
+    this._scrollToNowMethod = null;
 
-    this.initialize();
+    /**
+     * Unique id for requestAnimFrame()
+     * @type {number}
+     */
+    this._requestRender = 0;
+
+    /**
+     * calendar options
+     * @type {Options}
+     * @private
+     */
+    this._options = {};
+
+    this._initialize(options);
 }
-
-/**
- * Create controller instance
- * @returns {Base} controller instance
- * @private
- */
-Calendar.prototype.createController = function() {
-    return controllerFactory(this.options);
-};
-
-/**
- * Create week view instance by dependent module instances
- * @param {Base} controller - controller
- * @param {HTMLElement} container - container element
- * @param {Drag} dragHandler - global drag handler
- * @param {object} options - options for week view
- * @returns {Week} week view instance
- * @private
- */
-Calendar.prototype.createWeekView = function(controller, container, dragHandler, options) {
-    return weekViewFactory(
-        controller,
-        container,
-        dragHandler,
-        options
-    );
-};
-
-/**
- * Create week view instance by dependent module instances
- * @param {Base} controller - controller
- * @param {HTMLElement} container - container element
- * @param {Drag} dragHandler - global drag handler
- * @param {object} options - options for week view
- * @returns {Month} month view instance
- * @private
- */
-Calendar.prototype.createMonthView = function(controller, container, dragHandler, options) {
-    return monthViewFactory(
-        controller,
-        container,
-        dragHandler,
-        options
-    );
-};
 
 /**
  * destroy calendar instance.
  */
 Calendar.prototype.destroy = function() {
-    this.dragHandler.destroy();
-    this.controller.off();
-    this.layout.clear();
-    this.layout.destroy();
+    this._dragHandler.destroy();
+    this._controller.off();
+    this._layout.clear();
+    this._layout.destroy();
 
-    util.forEach(this.options.template, function(func, name) {
+    util.forEach(this._options.template, function(func, name) {
         if (func) {
             Handlebars.unregisterHelper(name + '-tmpl');
         }
     });
 
-    this.options = this.renderDate = this.controller =
-        this.layout = this.dragHandler = this.viewName = this.prevViewName =
-        this.refreshMethod = this.scrollToNowMethod = null;
+    this._options = this._renderDate = this._controller =
+        this._layout = this._dragHandler = this._viewName =
+        this._refreshMethod = this._scrollToNowMethod = null;
 };
 
 /**
  * Initialize calendar
+ * @param {Options} options - calendar options
  * @private
  */
-Calendar.prototype.initialize = function() {
-    var controller = this.controller,
-        viewName = this.viewName,
-        opt = this.options;
+Calendar.prototype._initialize = function(options) {
+    var controller = this._controller,
+        viewName = this._viewName;
 
-    this.layout.controller = controller;
+    this._options = util.extend({
+        defaultView: viewName,
+        taskView: true,
+        scheduleView: true,
+        template: util.extend({
+            allday: null,
+            time: null
+        }, util.pick(options, 'template') || {}),
+        week: util.extend({}, util.pick(options, 'week') || {}),
+        month: util.extend({}, util.pick(options, 'month') || {})
+    }, options);
 
-    if (opt.schedules && opt.schedules.length) {
-        this.createSchedules(opt.schedules, true);
-    }
+    this._options.week = util.extend({
+        startDayOfWeek: 0,
+        workweek: false
+    }, util.pick(this._options, 'week') || {});
 
-    util.forEach(opt.template, function(func, name) {
+    this._options.month = util.extend({
+        startDayOfWeek: 0,
+        workweek: false,
+        scheduleFilter: function(schedule) {
+            return Boolean(schedule.isVisible) &&
+                (schedule.category === 'allday' || schedule.category === 'time');
+        }
+    }, util.pick(options, 'month') || {});
+
+    this._layout.controller = controller;
+
+    util.forEach(this._options.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
 
-    this.toggleView(viewName, true);
+    this.changeView(viewName, true);
 };
 
 /**********
@@ -425,7 +368,7 @@ Calendar.prototype.initialize = function() {
  * ]);
  */
 Calendar.prototype.createSchedules = function(schedules, silent) {
-    var calColor = this.calendarColor;
+    var calColor = this._calendarColor;
 
     util.forEach(schedules, function(obj) {
         var color = calColor[obj.calendarId];
@@ -437,7 +380,7 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
         }
     });
 
-    this.controller.createSchedules(schedules, silent);
+    this._controller.createSchedules(schedules, silent);
 
     if (!silent) {
         this.render();
@@ -445,24 +388,24 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
 };
 
 /**
- * Get schedule by schedule id and calendar id.
- * @param {string} id - ID of schedule
- * @param {string} calendarId - calendarId of schedule
+ * Get a schedule object by schedule id and calendar id.
+ * @param {string} scheduleId - ID of schedule
+ * @param {string} calendarId - calendarId of the schedule
  * @returns {Schedule} schedule object
  * @example
  * var schedule = calendar.getSchedule(scheduleId, calendarId);
  * console.log(schedule.title);
  */
-Calendar.prototype.getSchedule = function(id, calendarId) {
-    return this.controller.schedules.single(function(model) {
-        return model.id === id && model.calendarId === calendarId;
+Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
+    return this._controller.schedules.single(function(model) {
+        return model.id === scheduleId && model.calendarId === calendarId;
     });
 };
 
 /**
  * Update the schedule
- * @param {string} id - ID of schedule to update
- * @param {string} calendarId - calendarId of schedule to update
+ * @param {string} scheduleId - ID of a schedule to update
+ * @param {string} calendarId - calendarId of the schedule to update
  * @param {Schedule} scheduleData - schedule data to update
  * @example
  * calendar.on('beforeUpdateSchedule', function(event) {
@@ -475,11 +418,11 @@ Calendar.prototype.getSchedule = function(id, calendarId) {
  *     });
  * });
  */
-Calendar.prototype.updateSchedule = function(id, calendarId, scheduleData) {
-    var ctrl = this.controller,
+Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData) {
+    var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
         schedule = ownSchedules.single(function(model) {
-            return model.id === id && model.calendarId === calendarId;
+            return model.id === scheduleId && model.calendarId === calendarId;
         });
 
     if (schedule) {
@@ -489,16 +432,16 @@ Calendar.prototype.updateSchedule = function(id, calendarId, scheduleData) {
 };
 
 /**
- * Delete schedule.
+ * Delete a schedule.
  * @fires Calendar#beforeDeleteSchedule
- * @param {string} id - ID of schedule to delete
- * @param {string} calendarId - calendarId of schedule to delete
+ * @param {string} scheduleId - ID of schedule to delete
+ * @param {string} calendarId - calendarId of the schedule to delete
  */
-Calendar.prototype.deleteSchedule = function(id, calendarId) {
-    var ctrl = this.controller,
+Calendar.prototype.deleteSchedule = function(scheduleId, calendarId) {
+    var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
         schedule = ownSchedules.single(function(model) {
-            return model.id === id && model.calendarId === calendarId;
+            return model.id === scheduleId && model.calendarId === calendarId;
         });
 
     if (!schedule) {
@@ -528,31 +471,13 @@ Calendar.prototype.deleteSchedule = function(id, calendarId) {
  **********/
 
 /**
- * Set child view's options recursively
- * @param {View} view - parent view
- * @param {function} func - option manipulate function
- * @private
- */
-Calendar.prototype.setOptionRecurseively = function(view, func) {
-    view.recursive(function(childView) {
-        var opt = childView.options;
-
-        if (!opt) {
-            return;
-        }
-
-        func(opt);
-    });
-};
-
-/**
  * @param {string|Date} date - date to show in calendar
  * @param {number} [startDayOfWeek=0] - start day of week
  * @param {boolean} [workweek=false] - only show work week
  * @returns {array} render range
  * @private
  */
-Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek, workweek) {
+Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
     var day, start, end, range,
         msFrom = datetime.millisecondsFrom;
 
@@ -593,15 +518,15 @@ Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek, workweek) {
 };
 
 /**
- * Toggle schedules visibility by calendar ID
+ * Toggle schedules' visibility by calendar ID
  * @param {string} calendarId - calendar id value
  * @param {boolean} toHide - set true to hide schedules
- * @param {boolean} render - set true then render after change visible property each models
- * @private
+ * @param {boolean} [render=true] - set true then render after change visible property each models
  */
-Calendar.prototype._toggleSchedulesByCalendarID = function(calendarId, toHide, render) {
-    var ownSchedules = this.controller.schedules;
+Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
+    var ownSchedules = this._controller.schedules;
 
+    render = util.isExisty(render) ? render : true;
     calendarId = util.isArray(calendarId) ? calendarId : [calendarId];
 
     ownSchedules.each(function(schedule) {
@@ -626,19 +551,28 @@ Calendar.prototype._toggleSchedulesByCalendarID = function(calendarId, toHide, r
  * calendar.clear();
  * calendar.createSchedules(schedules, silent);
  * calendar.render();
+ * @example
+ * // Render a calendar when resizing a window.
+ * window.addEventListener('resize', function() {
+ *     calendar.render();
+ * });
  */
 Calendar.prototype.render = function() {
     var renderFunc = function() {
-        if (this.layout) {
-            this.layout.render();
+        if (this._layout) {
+            this._layout.render();
         }
-        this.requestRender = null;
+        if (this._refreshMethod) {
+            this._refreshMethod();
+        }
+
+        this._requestRender = null;
     };
 
-    if (this.requestRender) {
-        reqAnimFrame.cancelAnimFrame(this.requestRender);
+    if (this._requestRender) {
+        reqAnimFrame.cancelAnimFrame(this._requestRender);
     }
-    this.requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
+    this._requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
 };
 
 /**
@@ -649,58 +583,24 @@ Calendar.prototype.render = function() {
  * calendar.render();
  */
 Calendar.prototype.clear = function() {
-    this.controller.clearSchedules();
+    this._controller.clearSchedules();
     this.render();
 };
 
 /**
- * Scroll to now in daily, weekly view
+ * Scroll to current time on today in case of daily, weekly view
  * @example
  * function onNewSchedules(schedules) {
  *     calendar.createSchedules(schedules);
- *     if (calendar.viewName !== 'month') {
+ *     if (calendar.getViewName() !== 'month') {
  *         calendar.scrollToNow();
  *     }
  * }
  */
 Calendar.prototype.scrollToNow = function() {
-    if (this.scrollToNowMethod) {
-        this.scrollToNowMethod();
+    if (this._scrollToNowMethod) {
+        this._scrollToNowMethod();
     }
-};
-
-/**
- * Refresh the calendar layout.
- * @example
- * window.addEventListener('resize', function() {
- *     calendar.refresh();
- * });
- */
-Calendar.prototype.refresh = function() {
-    if (this.refreshMethod) {
-        this.refreshMethod();
-    }
-
-    this.render();
-};
-
-/**
- * Refresh child views
- * @param {string} [viewName] - the name of view to render. if not supplied then refresh all.
- * @private
- */
-Calendar.prototype.refreshChildView = function(viewName) {
-    if (!viewName) {
-        this.render();
-
-        return;
-    }
-
-    if (viewName === 'day') {
-        viewName = 'week';
-    }
-
-    this.layout.children.items[viewName].render();
 };
 
 /**
@@ -711,9 +611,9 @@ Calendar.prototype.refreshChildView = function(viewName) {
  * }
  */
 Calendar.prototype.today = function() {
-    this.renderDate = new TZDate();
+    this._renderDate = new TZDate();
 
-    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
+    this._setViewName(this._viewName);
     this.move();
     this.render();
 };
@@ -728,19 +628,19 @@ Calendar.prototype.today = function() {
  * calendar.move(-1);
  */
 Calendar.prototype.move = function(offset) {
-    var renderDate = dw(this.renderDate),
-        viewName = this.viewName,
-        view = this.getCurrentView(),
-        recursiveSet = this.setOptionRecurseively,
+    var renderDate = dw(this._renderDate),
+        viewName = this._viewName,
+        view = this._getCurrentView(),
+        recursiveSet = _setOptionRecurseively,
         startDate, endDate, tempDate,
         startDayOfWeek, visibleWeeksCount, workweek, datetimeOptions;
 
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
-        visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
-        workweek = util.pick(this.options, 'month', 'workweek') || false;
+        startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 0;
+        visibleWeeksCount = mmin(util.pick(this._options, 'month', 'visibleWeeksCount') || 0, 6);
+        workweek = util.pick(this._options, 'month', 'workweek') || false;
 
         if (visibleWeeksCount) {
             datetimeOptions = {
@@ -751,7 +651,7 @@ Calendar.prototype.move = function(offset) {
             };
 
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
-            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 
             recursiveSet(view, function(opt) {
                 opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
@@ -764,7 +664,7 @@ Calendar.prototype.move = function(offset) {
             };
 
             renderDate.addMonth(offset);
-            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 
             recursiveSet(view, function(opt) {
                 opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -775,9 +675,9 @@ Calendar.prototype.move = function(offset) {
         endDate = tempDate[tempDate.length - 1][tempDate[tempDate.length - 1].length - 1];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        startDayOfWeek = util.pick(this.options, 'week', 'startDayOfWeek') || 0;
-        workweek = util.pick(this.options, 'week', 'workweek') || false;
-        tempDate = this.getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
+        startDayOfWeek = util.pick(this._options, 'week', 'startDayOfWeek') || 0;
+        workweek = util.pick(this._options, 'week', 'workweek') || false;
+        tempDate = this._getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
 
         startDate = tempDate[0];
         endDate = tempDate[1];
@@ -796,8 +696,8 @@ Calendar.prototype.move = function(offset) {
         });
     }
 
-    this.renderDate = renderDate.d;
-    this.renderRange = {
+    this._renderDate = renderDate.d;
+    this._renderRange = {
         start: startDate,
         end: endDate
     };
@@ -808,9 +708,9 @@ Calendar.prototype.move = function(offset) {
  * @param {(Date|string)} date - date to move
  * @example
  * calendar.on('clickDayname', function(event) {
- *     if (calendar.viewName === 'week') {
+ *     if (calendar.getViewName() === 'week') {
  *         calendar.setDate(new Date(event.date));
- *         calendar.toggleView('day', true);
+ *         calendar.changeView('day', true);
  *     }
  * });
  */
@@ -819,17 +719,16 @@ Calendar.prototype.setDate = function(date) {
         date = datetime.parse(date);
     }
 
-    this.renderDate = new TZDate(Number(date));
-    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
+    this._renderDate = new TZDate(Number(date));
+    this._setViewName(this._viewName);
     this.move(0);
     this.render();
 };
 
 /**
- * Move the calendar forward a day, a week, a month
+ * Move the calendar forward a day, a week, a month, 2 weeks, 3 weeks.
  * @example
  * function moveToNextOrPrevRange(val) {
-    calendar.clear();
     if (val === -1) {
         calendar.prev();
     } else if (val === 1) {
@@ -843,10 +742,9 @@ Calendar.prototype.next = function() {
 };
 
 /**
- * Move the calendar backward a day, a week, a month
+ * Move the calendar backward a day, a week, a month, 2 weeks, 3 weeks.
  * @example
  * function moveToNextOrPrevRange(val) {
-    calendar.clear();
     if (val === -1) {
         calendar.prev();
     } else if (val === 1) {
@@ -864,44 +762,41 @@ Calendar.prototype.prev = function() {
  * @returns {View} current view instance
  * @private
  */
-Calendar.prototype.getCurrentView = function() {
-    var viewName = this.viewName;
+Calendar.prototype._getCurrentView = function() {
+    var viewName = this._viewName;
 
     if (viewName === 'day') {
         viewName = 'week';
     }
 
-    return util.pick(this.layout.children.items, viewName);
+    return util.pick(this._layout.children.items, viewName);
 };
 
 /**
  * Change calendar's schedule color with option
  * @param {string} calendarId - calendar ID
- * @param {object} option - color data object
- *  @param {string} option.color - text color of schedule element
- *  @param {string} option.bgColor - bg color of schedule element
- *  @param {string} option.borderColor - border color of schedule element
- *  @param {boolean} [option.render=true] - set false then does not auto render.
+ * @param {CalendarColor} option - color data object
+ * @param {boolean} [silent=false] - no auto render after creation when set true
  * @example
  * calendar.setCalendarColor('1', {
  *     color: '#e8e8e8',
  *     bgColor: '#585858',
- *     render: false
+ *     borderColor: '#a1b56c'
  * });
  * calendar.setCalendarColor('2', {
  *     color: '#282828',
  *     bgColor: '#dc9656',
- *     render: false
+ *     borderColor: '#a1b56c'
  * });
  * calendar.setCalendarColor('3', {
  *     color: '#a16946',
  *     bgColor: '#ab4642',
- *     render: true
+ *     borderColor: '#a1b56c'
  * });
  */
-Calendar.prototype.setCalendarColor = function(calendarId, option) {
-    var calColor = this.calendarColor,
-        ownSchedules = this.controller.schedules,
+Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
+    var calColor = this._calendarColor,
+        ownSchedules = this._controller.schedules,
         ownColor = calColor[calendarId];
 
     if (!util.isObject(option)) {
@@ -911,8 +806,7 @@ Calendar.prototype.setCalendarColor = function(calendarId, option) {
     ownColor = calColor[calendarId] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
-        borderColor: '#a1b56c',
-        render: true
+        borderColor: '#a1b56c'
     }, option);
 
     ownSchedules.each(function(model) {
@@ -925,31 +819,9 @@ Calendar.prototype.setCalendarColor = function(calendarId, option) {
         model.borderColor = ownColor.borderColor;
     });
 
-    if (ownColor.render) {
+    if (silent) {
         this.render();
     }
-};
-
-/**
- * Show schedules visibility by calendar ID
- * @param {string|string[]} calendarId - calendar id value
- * @param {boolean} [render=true] - set false then doesn't render after change model's property.
- * @private
- */
-Calendar.prototype.showSchedulesByCalendarID = function(calendarId, render) {
-    render = util.isExisty(render) ? render : true;
-    this._toggleSchedulesByCalendarID(calendarId, false, render);
-};
-
-/**
- * Hide schedules visibility by calendar ID
- * @param {string|string[]} calendarId - calendar id value
- * @param {boolean} [render=true] - set false then doesn't render after change model's property.
- * @private
- */
-Calendar.prototype.hideSchedulesByCalendarID = function(calendarId, render) {
-    render = util.isExisty(render) ? render : true;
-    this._toggleSchedulesByCalendarID(calendarId, true, render);
 };
 
 /**********
@@ -1003,9 +875,9 @@ Calendar.prototype._onClickDayname = function(clickScheduleData) {
      * @property {string} date - date string by format 'YYYY-MM-DD'
      * @example
      * calendar.on('clickDayname', function(event) {
-     *     if (calendar.viewName === 'week') {
+     *     if (calendar.getViewName() === 'week') {
      *         calendar.setDate(new Date(event.date));
-     *         calendar.toggleView('day', true);
+     *         calendar.changeView('day', true);
      *     }
      * });
      */
@@ -1013,7 +885,7 @@ Calendar.prototype._onClickDayname = function(clickScheduleData) {
 };
 
 /**
- * @fires {Calendar#beforeCreateSchedule}
+ * @fires {Calendar#n('beforeCreateSchedule', function}
  * @param {object} createScheduleData - select schedule data from allday, time
  * @private
  */
@@ -1079,26 +951,6 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
 };
 
 /**
- * @fires Calendar#resizePanel
- * @param {object} resizeScheduleData - resize schedule data object
- * @private
- */
-Calendar.prototype._onResizePanel = function(resizeScheduleData) {
-    /**
-     * Fire this event when resize view panels(milestone, task, allday).
-     * @event Calendar#resizePanel
-     * @type {object}
-     * @property {number[]} layoutData - layout data after resized
-     * @example
-     * calendar.on('resizePanel', function(layoutData) {
-     *     console.log(layoutData);
-     *     // do something to resize your UI if necessary.
-     * });
-     */
-    this.fire('resizePanel', resizeScheduleData);
-};
-
-/**
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
@@ -1107,7 +959,6 @@ Calendar.prototype._onResizePanel = function(resizeScheduleData) {
 Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     var self = this,
         handler = view.handler,
-        isMonthView = view.viewName === 'month',
         method = isAttach ? 'on' : 'off';
 
     util.forEach(handler.click, function(clickHandler) {
@@ -1115,7 +966,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     });
 
     util.forEach(handler.dayname, function(clickHandler) {
-        clickHandler[method]('clickDayname', self._onClickDayname, self);
+        clickHandler[method]('clickDayname', self._onClickDaynOame, self);
     });
 
     util.forEach(handler.creation, function(creationHandler) {
@@ -1129,52 +980,48 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     util.forEach(handler.resize, function(resizeHandler) {
         resizeHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
     });
-
-    if (!isMonthView) {
-        view.vLayout[method]('resize', self._onResizePanel, self);
-    }
 };
 
 /**
- * Toggle current view
+ * Change current view with view name('day', 'week', 'month')
  * @param {string} newViewName - new view name to render
  * @param {boolean} force - force render despite of current view and new view are equal
  * @example
  * // daily view
- * calendar.toggleView('day', true);
+ * calendar.changeView('day', true);
  *
  * // weekly view
- * calendar.toggleView('week', true);
+ * calendar.changeView('week', true);
  *
  * // monthly view(default 6 weeks view)
- * calendar.options.month.visibleWeeksCount = 6; // or null
- * calendar.toggleView('month', true);
+ * calendar.setOptions({month: {visibleWeeksCount: 6}}, true); // or null
+ * calendar.changeView('month', true);
  *
  * // 2 weeks monthly view
- * calendar.options.month.visibleWeeksCount = 2;
- * calendar.toggleView('month', true);
+ * calendar.setOptions({month: {visibleWeeksCount: 2}}, true);
+ * calendar.changeView('month', true);
  *
  * // 3 weeks monthly view
- * calendar.options.month.visibleWeeksCount = 3;
- * calendar.toggleView('month', true);
+ * calendar.setOptions({month: {visibleWeeksCount: 3}}, true);
+ * calendar.changeView('month', true);
  *
  * // narrow weekend
- * calendar.options.month.narrowWeekend = true;
- * calendar.options.week.narrowWeekend = true;
- * calendar.toggleView(calendar.viewName, true);
+ * calendar.setOptions({month: {narrowWeekend: true}}, true);
+ * calendar.setOptions({week: {narrowWeekend: true}}, true);
+ * calendar.changeView(calendar.getViewName(), true);
  *
  * // change start day of week(from monday)
- * calendar.options.month.startDayOfWeek = 1;
- * calendar.options.week.startDayOfWeek = 1;
- * calendar.toggleView(calendar.viewName, true);
+ * calendar.setOptions({week: {startDayOfWeek: 1}}, true);
+ * calendar.setOptions({month: {startDayOfWeek: 1}}, true);
+ * calendar.changeView(calendar.getViewName(), true);
  */
-Calendar.prototype.toggleView = function(newViewName, force) {
+Calendar.prototype.changeView = function(newViewName, force) {
     var self = this,
-        layout = this.layout,
-        controller = this.controller,
-        dragHandler = this.dragHandler,
-        options = this.options,
-        viewName = this.viewName,
+        layout = this._layout,
+        controller = this._controller,
+        dragHandler = this._dragHandler,
+        options = this._options,
+        viewName = this._viewName,
         created;
 
     if (!force && viewName === newViewName) {
@@ -1198,14 +1045,14 @@ Calendar.prototype.toggleView = function(newViewName, force) {
     layout.clear();
 
     if (newViewName === 'month') {
-        created = this.createMonthView(
+        created = _createMonthView(
             controller,
             layout.container,
             dragHandler,
             options
         );
     } else if (newViewName === 'week' || newViewName === 'day') {
-        created = this.createWeekView(
+        created = _createWeekView(
             controller,
             layout.container,
             dragHandler,
@@ -1219,8 +1066,8 @@ Calendar.prototype.toggleView = function(newViewName, force) {
         self._toggleViewSchedule(true, view);
     });
 
-    this.refreshMethod = created.refresh;
-    this.scrollToNowMethod = created.scrollToNow;
+    this._refreshMethod = created.refresh;
+    this._scrollToNowMethod = created.scrollToNow;
 
     this.move();
     this.render();
@@ -1238,12 +1085,12 @@ Calendar.prototype.toggleView = function(newViewName, force) {
  * calendar.toggleTaskView(true);
  */
 Calendar.prototype.toggleTaskView = function(enabled) {
-    var viewName = this.viewName,
-        options = this.options;
+    var viewName = this._viewName,
+        options = this._options;
 
     options.taskView = enabled;
 
-    this.toggleView(viewName, true);
+    this.changeView(viewName, true);
 };
 
 /**
@@ -1258,12 +1105,12 @@ Calendar.prototype.toggleTaskView = function(enabled) {
  * calendar.toggleScheduleView(true);
  */
 Calendar.prototype.toggleScheduleView = function(enabled) {
-    var viewName = this.viewName,
-        options = this.options;
+    var viewName = this._viewName,
+        options = this._options;
 
     options.scheduleView = enabled;
 
-    this.toggleView(viewName, true);
+    this.changeView(viewName, true);
 };
 
 /**
@@ -1272,12 +1119,11 @@ Calendar.prototype.toggleScheduleView = function(enabled) {
  * @private
  */
 Calendar.prototype._setViewName = function(viewName) {
-    this.prevViewName = this.viewName;
-    this.viewName = viewName;
+    this._viewName = viewName;
 };
 
 /**
- * Get schedule by schedule id and calendar id.
+ * Get a schedule element by schedule id and calendar id.
  * @param {string} scheduleId - ID of schedule
  * @param {string} calendarId - calendarId of schedule
  * @returns {HTMLElement} schedule element if found or null
@@ -1306,7 +1152,68 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  * });
  */
 Calendar.prototype.setTheme = function(theme) {
-    return this.controller.setTheme(theme);
+    return this._controller.setTheme(theme);
+};
+
+/**
+ * Set options of calendar
+ * @param {Options} options - options to set
+ * @param {boolean} [silent=false] - no auto render after creation when set true
+ */
+Calendar.prototype.setOptions = function(options, silent) {
+    util.forEach(options, function(value, name) {
+        if (util.isObject(value)) {
+            util.forEach(value, function(innerValue, innerName) {
+                this._options[name][innerName] = innerValue;
+            }, this);
+        } else {
+            this._options[name] = value;
+        }
+    }, this);
+
+    if (!silent) {
+        this.changeView(this._viewName, true);
+    }
+};
+
+/**
+ * Get current options.
+ * @returns {Options} options
+ */
+Calendar.prototype.getOptions = function() {
+    return this._options;
+};
+
+/**
+ * Current rendered date
+ * @returns {TZDate}
+ */
+Calendar.prototype.getDate = function() {
+    return this._renderDate;
+};
+
+/**
+ * Start time of rendered date range
+ * @returns {TZDate}
+ */
+Calendar.prototype.getDateRangeStart = function() {
+    return this._renderRange.start;
+};
+
+/**
+ * End time of rendered date range
+ * @returns {TZDate}
+ */
+Calendar.prototype.getDateRangeEnd = function() {
+    return this._renderRange.end;
+};
+
+/**
+ * Get current view name('day', 'week', 'month')
+ * @returns {string} view name
+ */
+Calendar.prototype.getViewName = function() {
+    return this._viewName;
 };
 
 /**
@@ -1334,6 +1241,70 @@ Calendar.setTimezoneOffset = function(offset) {
 Calendar.setTimezoneOffsetCallback = function(callback) {
     timezone.setOffsetCallback(callback);
 };
+
+/**
+ * Create controller instance
+ * @returns {Base} controller instance
+ * @param {Options} options - calendar options
+ * @private
+ */
+function _createController(options) {
+    return controllerFactory(options);
+}
+
+/**
+ * Create week view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Week} week view instance
+ * @private
+ */
+function _createWeekView(controller, container, dragHandler, options) {
+    return weekViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+}
+
+/**
+ * Create week view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Month} month view instance
+ * @private
+ */
+function _createMonthView(controller, container, dragHandler, options) {
+    return monthViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+}
+
+/**
+ * Set child view's options recursively
+ * @param {View} view - parent view
+ * @param {function} func - option manipulate function
+ * @private
+ */
+function _setOptionRecurseively(view, func) {
+    view.recursive(function(childView) {
+        var opt = childView.options;
+
+        if (!opt) {
+            return;
+        }
+
+        func(opt);
+    });
+}
 
 util.CustomEvents.mixin(Calendar);
 
