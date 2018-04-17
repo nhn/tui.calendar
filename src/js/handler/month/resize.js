@@ -69,8 +69,7 @@ MonthResize.prototype.destroy = function() {
  *  session.
  */
 MonthResize.prototype._updateSchedule = function(scheduleCache) {
-    // 일정의 시작 일자를 변경할 순 없음.
-    // 종료시간만 변경 가능.
+    // You can not change the start date of the event. Only the end time can be changed.
     var newEnd = datetime.end(new TZDate(Number(scheduleCache.end))),
         schedule = scheduleCache.schedule;
 

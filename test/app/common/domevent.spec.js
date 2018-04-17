@@ -21,7 +21,7 @@ describe('module:domevent', function() {
             domevent.trigger(btn, 'click');
         });
 
-        it('DOM엘리먼트에 이벤트 핸들러를 설정한다', function() {
+        it('Set event handler to DOM element', function() {
             var btn = document.getElementById('btn1');
             var clickHandler = jasmine.createSpy('click');
 
@@ -31,7 +31,7 @@ describe('module:domevent', function() {
             expect(clickHandler).toHaveBeenCalled();
         });
 
-        it('이벤트명:핸들러 객체로도 설정할 수 있다', function() {
+        it('Event name: can also be set as handler object', function() {
             var btn = document.getElementById('btn1');
             var handler = jasmine.createSpyObj('handler', ['click', 'mousedown']);
 
@@ -47,7 +47,7 @@ describe('module:domevent', function() {
             expect(handler.mousedown).toHaveBeenCalled();
         });
 
-        it('동일 파라미터로 두번 이상 바인딩 불가', function() {
+        it('Can not bind more than once with same parameter', function() {
             var btn = document.getElementById('btn1');
 
             var clickCount = 0;
@@ -63,7 +63,7 @@ describe('module:domevent', function() {
             expect(clickCount).toBe(1);
         });
 
-        it('브라우저마다 다른 마우스 휠 이벤트의 정규화 기능을 제공한다', function() {
+        it('Provides normalization of mouse wheel events for different browsers', function() {
             var div = document.getElementById('div1');
 
             function wheelHandler(eventData) {
@@ -89,7 +89,7 @@ describe('module:domevent', function() {
             handler = jasmine.createSpyObj('handler', ['click', 'mousedown', 'mouseenter', 'mouseleave', 'mousewheel']);
         });
 
-        it('DOM에 걸린 이벤트 핸들러를 제거한다', function() {
+        it('Removes event handlers from the DOM', function() {
             domevent.on(btn, 'click', handler.click);
 
             domevent.off(btn, 'click', handler.click);
@@ -98,7 +98,7 @@ describe('module:domevent', function() {
             expect(handler.click).not.toHaveBeenCalled();
         });
 
-        it('이벤트명:핸들러 객체를 사용해 한번에 여러 핸들러를 해제할 수 있다', function() {
+        it('Event name: multiple handlers can be released at once using a handler object', function() {
             domevent.on(btn, {
                 'click': handler.click,
                 'mousedown': handler.mousedown,
@@ -135,7 +135,7 @@ describe('module:domevent', function() {
             expect(handler.mouseleave).not.toHaveBeenCalled();
         });
 
-        it('등록된 이벤트가 전부 해제되면 관련 프로퍼티를 아예 제거한다.', function() {
+        it('When all the registered events are released, the related property is completely removed.', function() {
             domevent.on(btn, {
                 'click': handler.click,
                 'mousedown': handler.mousedown,
@@ -159,7 +159,7 @@ describe('module:domevent', function() {
             btn = document.getElementById('btn1');
         });
 
-        it('이벤트를 단발성으로 등록할 수 있다', function() {
+        it('Event can be registered as a single event', function() {
             var clickCount = 0;
             function clickHandler() {
                 clickCount += 1;
@@ -173,7 +173,7 @@ describe('module:domevent', function() {
             expect(clickCount).toBe(1);
         });
 
-        it('이벤트명:핸들러의 객체로 여러 핸들러를 단발성으로 한번에 등록할 수 있다', function() {
+        it('Event name: It is possible to register multiple handlers at once with one handler object', function() {
             var clickCount = 0,
                 mouseDownCount = 0;
 
@@ -200,7 +200,7 @@ describe('module:domevent', function() {
         });
     });
 
-    it('stopPropagation() 으로 이벤트의 버블링을 방지할 수 있다', function() {
+    it('stopPropagation() prevents bubbling of events', function() {
         var wrap1 = document.getElementById('wrap1'),
             wrap2 = document.getElementById('wrap2');
 
@@ -218,7 +218,7 @@ describe('module:domevent', function() {
         expect(handler).not.toHaveBeenCalled();
     });
 
-    it('getMousePosition()에 컨테이너를 넘기면 특정 엘리먼트 기준의 마우스 위치를 쉽게 계산할 수 있다', function() {
+    it('If you pass a container to getMousePosition(), you can easily calculate the mouse position based on a specific element', function() {
         var wrap1 = document.getElementById('wrap1'),
             wrap2 = document.getElementById('wrap2');
 

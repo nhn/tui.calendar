@@ -224,7 +224,7 @@ describe('datetime', function() {
             isAlways6Week: false
         };
 
-        it('iteratee를 제공하면 각 일자 요소를 조작할 수 있다.', function() {
+        it('Providing iteratee allows you to manipulate each date element.', function() {
             var month = new TZDate('2014-10-01T00:00:00+09:00');
             
             var actual = dt.arr2dCalendar(month, options, function(date) {
@@ -234,7 +234,7 @@ describe('datetime', function() {
             expect(actual[0][0]).toEqual({ customize: true, date: new TZDate('2014-09-28T00:00:00+09:00') });
         });
 
-        it('2014/10은 일요일 기준일 때 9/28 ~ 11/1 까지 렌더링된다.', function() {
+        it('2014/10 will be rendered on 9/28 - 11/1 at Sunday time.', function() {
             var month = new TZDate('2014-10-01T00:00:00+09:00');
             var actual = dt.arr2dCalendar(month, options);
             var expected = [
@@ -282,7 +282,7 @@ describe('datetime', function() {
             expect(actual).toEqual(expected);
         });
 
-        it('2015/12는 월요일 기준일 때 11/30 ~ 2016/1/3까지 렌더링된다.', function() {
+        it('2015/12 will be rendered from 11/30 to 2013/1/3 as of Monday.', function() {
             var month = new TZDate('2015-12-01T00:00:00+09:00');
             var actual = dt.arr2dCalendar(month, {
                 startDayOfWeek: 1
@@ -332,7 +332,7 @@ describe('datetime', function() {
             expect(actual).toEqual(expected);
         });
 
-        it('2016/8은 화요일 기준일 때 7/26 ~ 9/5까지 렌더링된다.', function() {
+        it('2016/8 will be rendered from 7/26 to 9/5 on Tuesday.', function() {
             var month = new TZDate('2016-08-01T00:00:00+09:00');
             var actual = dt.arr2dCalendar(month, {
                 startDayOfWeek: 2
@@ -390,7 +390,7 @@ describe('datetime', function() {
             expect(actual).toEqual(expected);
         });
 
-        it('2015/11은 일요일 기준일 때 11/1 ~ 12/5까지 렌더링된다.', function() {
+        it('2015/11 will be rendered until 11/1 to 12/5 on Sunday.', function() {
             var month = new TZDate('2015-11-01T00:00:00+09:00');
             var actual = dt.arr2dCalendar(month, options);
             var expected = [

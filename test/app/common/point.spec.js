@@ -14,25 +14,25 @@ describe('Point', function() {
 
     describe('initializer', function() {
 
-        it('x, y 파라미터를 통해 생성할 수 있다', function() {
+        it('It can be generated via the x, y parameters', function() {
             var p1 = new Point(10, 20);
 
             expect(p1 + '').toBe('Point(10, 20)');
         });
 
-        it('Point.n() static 메서드로도 생성할 수 있다', function() {
+        it('It can also be created with the static method Point.n()', function() {
             var p1 = Point.n(10, 20);
 
             expect(p1 + '').toBe('Point(10, 20)');
         });
 
-        it('Point.n() static 메서드는 첫 번째 인자를 [x, y] 배열로 생성할 수 있다', function() {
+        it('The Point.n() static method can generate the first argument as an array [x, y]', function() {
             var p1 = Point.n([10, 20]);
 
             expect(p1 + '').toBe('Point(10, 20)');
         });
 
-        it('생성 시 세 번째 인자를 true로 주면 좌표를 반올림한 후 생성한다', function() {
+        it('If you give the third argument as true when you create it, it rounds the coordinates and creates it.', function() {
             var p1 = new Point(10, 20.5, true);
 
             expect(p1 + '').toBe('Point(10, 21)');
@@ -40,7 +40,7 @@ describe('Point', function() {
 
     });
 
-    it('기본적인 연산, 올림, 반올림, round가 가능하다.', function() {
+    it('Basic operations, rounding, rounding, and rounding are possible.', function() {
 
         var gets = function(x, y) {
             return new Point(x, y).toString();
@@ -89,7 +89,7 @@ describe('Point', function() {
 
     });
 
-    it('두 점 사이의 거리를 잴 수 있다.', function() {
+    it('The distance between two points can be measured.', function() {
 
         var p1 = new Point(10, 10);
 
@@ -100,7 +100,7 @@ describe('Point', function() {
 
     });
 
-    it('두 점이 같은 위치인지 확인할 수 있다', function() {
+    it('I can see if the two points are in the same position', function() {
         var p1 = new Point(10, 10);
 
         var p2 = new Point(10, 20);
@@ -108,7 +108,7 @@ describe('Point', function() {
         expect(p1.equals(p2)).toBeFalsy();
     });
 
-    it('reverse 메서드를 통해 점 위치를 0,0 기준으로 반전할 수 있다', function() {
+    it('The reverse method allows you to invert the point position to 0,0', function() {
         var p1 = new Point(-20, 5);
 
         var rp1 = p1.reverse();
@@ -117,7 +117,7 @@ describe('Point', function() {
 
     });
 
-    it('rotate() 를 통해 Point를 특정 Point기준으로 회전시킬 수 있다', function() {
+    it('rotate() allows you to rotate the Point relative to a specific Point', function() {
         var p1 = new Point(0, 0);
 
         var p2 = new Point(0, 10);
@@ -127,7 +127,7 @@ describe('Point', function() {
         expect(p1 + '').toBe(new Point(10, 10) + '');
     });
 
-    it('getRatio()스테틱 메서드로 비율계산을 쉽게 할 수 있다', function() {
+    it('getRatio() Static method makes it easy to calculate the ratio', function() {
         var p1 = new Point(10, 10);
         var p2 = Point.getRatio(p1, 1, 2);
         var p3 = Point.getRatio(p1, 1, 1);

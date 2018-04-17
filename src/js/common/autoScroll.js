@@ -11,7 +11,7 @@ var Point = require('../common/point');
 
 var SCROLL_INTERVAL = 30;
 var SCROLL_MAX = 15;
-var SCROLL_CLICK_INCREASED = 2; // IE에서 스크롤 바 클릭 시 실제 UI pixel 보다 넓게 잡히는 현상 offset.
+var SCROLL_CLICK_INCREASED = 2; // In IE, the offset of the actual UI pixel when the scroll bar is clicked is offset.
 
 /**
  * Add autoscroll feature to elements that prevented text selection.

@@ -62,7 +62,7 @@ describe('Handler/Drag', function() {
             mockInst.invoke.and.returnValue(true);
             Drag.prototype._onMouseDown.call(mockInst, mockEvent);
 
-            // 9px 움직였다고 가정
+            // Assuming 9px moved
             mockInst._distance = 9;
             Drag.prototype._onMouseMove.call(mockInst, mockEvent);
             Drag.prototype._onMouseMove.call(mockInst, mockEvent);
@@ -105,7 +105,7 @@ describe('Handler/Drag', function() {
             mockInst.invoke.and.returnValue(true);
             Drag.prototype._onMouseDown.call(mockInst, mockEvent);
 
-            // 10px 이동했다고 가정
+            // Assumed 10px moved
             mockInst._distance = 10;
             Drag.prototype._onMouseMove.call(mockInst, mockEvent);
 

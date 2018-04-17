@@ -12,8 +12,8 @@ var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 
 /**
- * FullCalendar 에서는 날짜 정보만 사용(YYYY-MM-DD) 하고,
- * SplitTimeCalendar 에서는 타임존 정보까지 포함된 문자열을 사용하기 때문에 분기처리함.
+ * FullCalendar uses only date information (YYYY-MM-DD)
+ * SplitTimeCalendar uses a string containing time zone information, so it branches.
  * @param {String} dateString - date string
  * @returns {TZDate}
  */

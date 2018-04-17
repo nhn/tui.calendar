@@ -22,7 +22,7 @@ function DayGridResizeGuide(resizeHandler) {
     this.resizeHandler = resizeHandler;
 
     /**
-     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
+     * The element that actually contains the event element
      * @type {HTMLDIVElement}
      */
     this.scheduleContainer = null;

@@ -257,7 +257,7 @@ Handlebars.registerHelper({
     },
 
     'milestoneTitle-tmpl': function() {
-        return '마일스톤';
+        return 'Milestone';
     },
 
     'task-tmpl': function(model) {
@@ -270,11 +270,11 @@ Handlebars.registerHelper({
     },
 
     'taskTitle-tmpl': function() {
-        return '업무';
+        return 'Task';
     },
 
     'alldayTitle-tmpl': function() {
-        return '종일';
+        return 'AllDay';
     },
 
     'alldayCollapseBtnTitle-tmpl': function() {

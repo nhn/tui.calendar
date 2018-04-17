@@ -30,7 +30,7 @@ describe('dirty mixin', function() {
            dirty.mixin(obj);
        });
 
-       it('모듈 믹스인', function() {
+       it('Mixin a module', function() {
            expect(obj.set).toBeDefined();
            expect(obj.isDirty).toBeDefined();
 
@@ -46,7 +46,7 @@ describe('dirty mixin', function() {
            obj.hello = jasmine.createSpy('hello');
        });
 
-       it('중첩 래핑 불가', function() {
+       it('Nested wrapping is disabled', function() {
            dirty.wrap(obj, 'hello');
 
            var origin = obj.hello;
@@ -57,14 +57,14 @@ describe('dirty mixin', function() {
            expect(obj.hello._wrapped).toBe(true);
        });
 
-       it('메서드 수행 후 더티 플래깅을 자동 처리함', function() {
+       it('Automatically processes dirty flagging after method execution', function() {
            dirty.wrap(obj, 'hello');
 
            obj.hello();
            expect(obj._dirty).toBe(true);
        });
 
-       it('메서드명:플래그 객체를 넘겨 래핑 가능', function() {
+       it('(Method name: Flags) can be passed over by flags object', function() {
            obj.render = jasmine.createSpy('render');
 
            dirty.wrap(obj, {
@@ -81,7 +81,7 @@ describe('dirty mixin', function() {
            expect(obj._dirty).toBe(false);
        });
 
-       it('프로토타입 객체도 정상 래핑', function() {
+       it('Prototype objects wrap normally', function() {
            var animal = new Animal('lion');
 
            animal.growl();
@@ -92,14 +92,14 @@ describe('dirty mixin', function() {
            expect(animal.test()).toBe('lion');
        });
 
-       it('래핑한 함수에 인자 전달', function() {
+       it('Passing arguments to wrapped functions', function() {
            var spy = obj.needArgs = jasmine.createSpy('needArgs');
            dirty.wrap(obj, 'needArgs');
            obj.needArgs('qwe');
            expect(spy.calls.argsFor(0)).toEqual(['qwe']);
        });
 
-       it('상속받은 객체에도 잘 동작', function() {
+       it('Works well with inherited objects', function() {
            function Bear() {
                Animal.call(this);
                this.name = 'bear';
@@ -116,7 +116,7 @@ describe('dirty mixin', function() {
            expect(bear.isDirty()).toBe(true);
        });
 
-       it('상속 클래스에서도 래핑 가능', function() {
+       it('Can also be wrapped in inheritance class', function() {
            function Bear() {
                Animal.call(this);
                this.name = 'bear';
@@ -146,14 +146,14 @@ describe('dirty mixin', function() {
            expect(obj._dirty).toBeUndefined();
        });
 
-       it('객체에 값 설정과 더티 플래깅 가능', function() {
+       it('Set values and dirty flags on objects', function() {
            obj.set('hello', 'world');
 
            expect(obj.hello).toBe('world');
            expect(obj._dirty).toBe(true);
        });
 
-       it('인스턴스에도 값 설정과 더티 플래깅', function() {
+       it('Setting values and dirty flagging on instances', function() {
            var animal = new Animal('penguin');
 
            animal.set('leg', 2);
@@ -165,7 +165,7 @@ describe('dirty mixin', function() {
            expect(Animal.prototype.leg).toBeUndefined();
        });
 
-       it('객체에 값 설정 시 변경사항을 기록함', function() {
+       it('Log changes when setting values on objects', function() {
            var myObj = { hello: 'world' };
 
            dirty.mixin(myObj);
@@ -174,7 +174,7 @@ describe('dirty mixin', function() {
            expect(myObj._changed).toEqual({ hello: true });
        });
 
-       it('인스턴스에 값 설정 시 변경사항을 기록함', function() {
+       it('Log changes when setting values in an instance', function() {
            var animal = new Animal('penguin');
 
            animal.set('leg', 2);
@@ -205,18 +205,18 @@ describe('dirty mixin', function() {
     });
 
     describe('isDirty()', function() {
-       it('set()으로 값 설정 후 이 메서드로 더티 여부 확인 가능', function() {
+       it('You can check whether this method is dirty after setting the value with set()', function() {
            obj.set('hello', 'world!');
            expect(obj.isDirty()).toBe(true);
        });
 
-       it('wrap()처리된 메서드 호출 후에도 더티 여부 확인', function() {
+       it('wrap() check whether dirty even after calling a method that has been processed', function() {
            var animal = new Animal('bear');
            animal.growl();
            expect(animal.isDirty()).toBe(true);
        });
 
-       it('wrap()에서 false처리한 경우 false반환', function() {
+       it('Returns false if wrap() handles false', function() {
            var animal = new Animal('giraffe');
            animal.growl();
            expect(animal.isDirty()).toBe(true);
@@ -226,7 +226,7 @@ describe('dirty mixin', function() {
     });
 
     describe('dirty()', function() {
-       it('객체의 더티 플래그를 직접 수정', function() {
+       it('Directly modify object\'s dirty flags', function() {
            obj.dirty(true);
            expect(obj._dirty).toBe(true);
            obj.dirty(false);
@@ -235,7 +235,7 @@ describe('dirty mixin', function() {
            expect(obj._dirty).toBe(true);
        });
 
-       it('_changed속성이 비워진다', function() {
+       it('_changed attribute is emptied', function() {
            var animal = new Animal('camel');
            animal.set('leg', 4);
 

@@ -109,7 +109,7 @@ describe('Theme', function() {
             expect(theme.getStyle(key)).toBeUndefined();
         });
 
-        console.log(theme.setStyles(customTheme));
+        theme.setStyles(customTheme);
 
         keys = util.keys(customTheme);
         util.forEach(keys, function(key) {

@@ -34,7 +34,7 @@ function MonthGuide(options, monthView) {
         top: 0,
         height: '20px',
         bgColor: '#f7ca88',
-        label: '새 일정',
+        label: 'New event',
         isResizeMode: false,
         isCreationMode: false,
         styles: this._getStyles(monthView.controller.theme)
