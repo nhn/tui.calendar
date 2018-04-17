@@ -327,6 +327,34 @@ Handlebars.registerHelper({
         return '+' + hiddenSchedules;
     },
 
+    'popupIsAllDay-tmpl': function() {
+        return 'All day';
+    },
+
+    'popupStateFree-tmpl': function() {
+        return 'Free';
+    },
+
+    'popupStateBusy-tmpl': function() {
+        return 'Busy';
+    },
+
+    'titlePlaceholder-tmpl': function() {
+        return 'Subject';
+    },
+
+    'locationPlaceholder-tmpl': function() {
+        return 'Location';
+    },
+
+    'startDatePlaceholder-tmpl': function() {
+        return 'Start date';
+    },
+
+    'endDatePlaceholder-tmpl': function() {
+        return 'End date';
+    },
+
     'dayGridTitle-tmpl': function(viewName) {
         var tmpl = Handlebars.helpers[viewName + 'Title-tmpl'];
         if (tmpl) {
@@ -344,7 +372,6 @@ Handlebars.registerHelper({
 
         return '';
     },
-
     'collapseBtnTitle-tmpl': function() {
         return '∧';
     }

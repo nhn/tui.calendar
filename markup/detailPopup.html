@@ -1,0 +1,52 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="detailPopup.css">
+  </head>
+  <body>
+    <div class="{{CSS_PREFIX}}popup">
+      <div class="{{CSS_PREFIX}}popup-body-detail">
+        <div class="{{CSS_PREFIX}}popup-top-line" style="background-color: {{bgColor}}"></div>
+        <div class="{{CSS_PREFIX}}popup-container">
+          <div class="{{CSS_PREFIX}}popup-container-header">
+            <div class="{{CSS_PREFIX}}popup-title">{{#fi raw.class '===' 'private'}}<span class="{{CSS_PREFIX}}popup-icon icon private"></span>{{/fi}}<span class="{{CSS_PREFIX}}popup-schedule-title"></span></div>
+            <div class="{{CSS_PREFIX}}popup-date {{CSS_PREFIX}}popup-text"></div>
+          </div>
+          <div class="{{CSS_PREFIX}}popup-container-body">
+            {{#if raw.location}}
+              <div class="{{CSS_PREFIX}}popup-schedule-location">
+                <span class="{{CSS_PREFIX}}popup-icon icon location"></span><span class="{{CSS_PREFIX}}popup-text">{{raw.location}}</span>
+              </div>
+            {{/if}}
+            {{#if raw.creator}}
+              <div class="{{CSS_PREFIX}}popup-schedule-creator">
+                <span class="{{CSS_PREFIX}}popup-icon icon location"></span><span class="{{CSS_PREFIX}}popup-text">{{raw.creator.name}}</span>
+              </div>
+            {{/if}}
+            <div class="{{CSS_PREFIX}}popup-schedule-state">
+              <span class="{{CSS_PREFIX}}popup-icon icon state"></span><span class="{{CSS_PREFIX}}popup-text">{{state}}</span>
+            </div>
+            {{#if calendar}}
+              <div class="{{CSS_PREFIX}}popup-schedule-calendar">
+                <span class="{{CSS_PREFIX}}popup-icon icon circle" style="background-color: {{bgColor}}"></span><span class="{{CSS_PREFIX}}popup-text">{{calendar.name}}</span>
+              </div>
+            {{/if}}
+          </div>
+          <div class="{{CSS_PREFIX}}popup-container-divider horizontal"></div>
+          <div class="{{CSS_PREFIX}}popup-container-footer">
+            <div class="{{CSS_PREFIX}}popup-container-footer-button">
+              <span class="{{CSS_PREFIX}}popup-icon icon edit"></span><span class="{{CSS_PREFIX}}popup-text">Edit</span>
+            </div>
+            <div class="{{CSS_PREFIX}}popup-container-divider {{CSS_PREFIX}}popup-vertical"></div>
+            <div>
+              <span class="{{CSS_PREFIX}}popup-icon icon delete"></span><span class="{{CSS_PREFIX}}popup-text">Delete</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="arrow-border" class="{{CSS_PREFIX}}popup-arrow-border {{CSS_PREFIX}}popup-left">
+        <div id="arrow-fill" class="{{CSS_PREFIX}}popup-arrow-fill {{CSS_PREFIX}}popup-left"></div>
+      </div>
+    </div>
+  </body>
+</html>

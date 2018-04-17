@@ -14,7 +14,8 @@ var config = require('../config'),
     MonthCreation = require('../handler/month/creation'),
     MonthResize = require('../handler/month/resize'),
     MonthMove = require('../handler/month/move'),
-    More = require('../view/month/more');
+    More = require('../view/month/more'),
+    ScheduleCreationPopup = require('../view/popup/scheduleCreationPopup');
 
 /**
  * Get the view model for more layer
@@ -44,8 +45,9 @@ function getViewModelForMoreLayer(date, target, schedules) {
  * @returns {object} view instance and refresh method
  */
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
-    var monthViewContainer, monthView, moreView;
+    var monthViewContainer, monthView, moreView, createView;
     var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler, onUpdateSchedule;
+    var onShowCreationPopup, onSaveNewSchedule, onSetCalendars;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -71,6 +73,12 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
     };
 
+    onSetCalendars = function(calendars) {
+        if (createView) {
+            createView.setCalendars(calendars);
+        }
+    };
+
     // binding +n click schedule
     clickHandler.on('clickMore', function(clickMoreSchedule) {
         var date = clickMoreSchedule.date,
@@ -89,11 +97,27 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
     });
 
+    // binding popup for schedules creation
+    if (options.useCreationPopup) {
+        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+        onShowCreationPopup = function(eventData) {
+            createView.render(eventData);
+        };
+        onSaveNewSchedule = function(scheduleData) {
+            baseController.fire('saveSchedule', scheduleData);
+        };
+        creationHandler.on('beforeCreateSchedule', onShowCreationPopup);
+        createView.on('saveSchedule', onSaveNewSchedule);
+    }
+
     // binding clear schedules
     baseController.on('clearSchedules', clearSchedulesHandler);
 
     // bind update schedule event
     baseController.on('updateSchedule', onUpdateSchedule);
+
+    // bind set calendar list event
+    baseController.on('setCalendars', onSetCalendars);
 
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();
@@ -118,6 +142,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         moreView.destroy();
         baseController.off('clearSchedules', clearSchedulesHandler);
         baseController.off('updateSchedule', onUpdateSchedule);
+        baseController.off('setCalendars', onSetCalendars);
 
         util.forEach(monthView.handler, function(type) {
             util.forEach(type, function(handler) {
@@ -125,6 +150,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
                 handler.destroy();
             });
         });
+
+        if (options.useCreationPopup) {
+            creationHandler.on('beforeCreateSchedule', onShowCreationPopup);
+            createView.on('saveSchedule', onSaveNewSchedule);
+        }
     };
 
     // add controller

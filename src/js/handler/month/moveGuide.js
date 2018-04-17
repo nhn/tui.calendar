@@ -89,7 +89,7 @@ MonthMoveGuide.prototype._showOriginScheduleBlocks = function() {
 
 MonthMoveGuide.prototype._getHighlightColorModel = function(model) {
     return {
-        bgColor: model.color
+        bgColor: model.bgColor
     };
 };
 

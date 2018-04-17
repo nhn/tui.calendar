@@ -196,22 +196,6 @@ body {
   line-height: 30px;
 }
 
-.dropdown .ic-arrow-solid-bottom {
-  display: inline-block;
-}
-
-.dropdown .ic-arrow-solid-top {
-  display: none;
-}
-
-.dropdown.open .ic-arrow-solid-bottom {
-  display: none;
-}
-
-.dropdown.open .ic-arrow-solid-top {
-  display: inline-block;
-}
-
 .move-today {
   padding: 0 16px;
   line-height: 30px;

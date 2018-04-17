@@ -103,6 +103,8 @@ var mmin = Math.min;
  *    @property {object} [month.grid.footer] - grid's footer informatioin
  *     @property {number} [month.grid.footer.height=34] - grid's footer height
  *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
+ *  @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
+ *  @property {boolean} [useCreationPopup=true] - whether use creation popup or not
  */
 
 /**
@@ -175,6 +177,7 @@ var mmin = Math.min;
  * });
  */
 function Calendar(container, options) {
+    var self = this;
     var opt;
 
     if (util.isString(container)) {
@@ -207,7 +210,9 @@ function Calendar(container, options) {
         }, util.pick(options, 'template') || {}),
         week: util.extend({}, util.pick(options, 'week') || {}),
         month: util.extend({}, util.pick(options, 'month') || {}),
-        schedules: []
+        schedules: [],
+        calendars: [],
+        useCreationPopup: true
     }, options);
 
     this.options.week = util.extend({
@@ -258,6 +263,10 @@ function Calendar(container, options) {
      * @private
      */
     this.controller = opt.controller || this.createController();
+    this.controller.setCalendars(opt.calendars);
+    if (opt.useCreationPopup) {
+        this.controller.on('saveSchedule', this._onSaveSchedule, this);
+    }
 
     /**
      * layout view (layout manager)
@@ -1099,6 +1108,27 @@ Calendar.prototype._onResizePanel = function(resizeScheduleData) {
 };
 
 /**
+ * @fires Calendar#saveSchedule
+ * @param {Schedule} scheduleData - new schedule data
+ * @private
+ */
+Calendar.prototype._onSaveSchedule = function(scheduleData) {
+    /**
+     * Fire this event when new schedule is created by default schedule creation popup
+     * Fired after click save button, and the data is valid(must have title)
+     * @event Calendar#saveSchedule
+     * @type {object}
+     * @property {number[]} layoutData - layout data after resized
+     * @example
+     * calendar.on('saveSchedule', function(scheduleData) {
+     *     console.log(layoutData);
+     *     // do something to save schedule
+     * });
+     */
+    this.fire('saveSchedule', scheduleData);
+};
+
+/**
  * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
  * @param {boolean} isAttach - true면 이벤트 연결함.
  * @param {Week|Month} view - 주뷰 또는 월뷰
@@ -1293,6 +1323,15 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
 
     return null;
 };
+
+/**
+ * Set calendar list
+ * @param {Array.<Object>} calendars - calendar list
+ */
+Calendar.prototype.setCalendars = function(calendars) {
+    this.controller.setCalendars(calendars);
+    this.render();
+}
 
 /**
  * Set a theme. If some keys are not defined in the preset, will be return.

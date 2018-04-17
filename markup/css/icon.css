@@ -1,0 +1,94 @@
+.icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon.right {
+  float: right;
+}
+
+.icon none {
+  display: none;
+}
+
+.icon.calendar-dot {
+  border-radius: 8px;
+  width: 12px;
+  height: 12px;
+  margin: 1px;
+}
+
+.icon.ic-arrow-bottom {
+  background: url('../images/ic-arrow-solid-bottom.png');
+}
+
+.icon.ic-arrow-top {
+  background: url('../images/ic-arrow-solid-top.png');
+}
+
+.icon.ic-title {
+  background: url('../images/ic-subject.png');
+}
+
+.icon.ic-location {
+    background: url('../images/ic-location.png');
+}
+
+.icon.ic-date {
+    background: url('../images/ic-date.png');
+}
+
+.icon.ic-state {
+    background: url('../images/ic-state.png');
+}
+
+.icon.ic-private {
+    background: url('../images/ic-lock.png');
+}
+
+.icon.ic-public {
+    background: url('../images/ic-unlock.png');
+}
+
+.ic-close {
+  background: url('../images/ic-close.png') no-repeat;
+}
+
+
+input[type='checkbox'].checkbox-square {
+  display: none;
+}
+
+input[type='checkbox'].checkbox-square+span {
+  display: inline-block;
+  cursor: pointer;
+  line-height: 14px;
+  margin-right: 8px;
+  width: 14px;
+  height: 14px;
+  background: url('../images/ic-checkbox-normal.png') no-repeat;
+  vertical-align: middle;
+}
+
+input[type='checkbox'].checkbox-square:checked+span {
+  background: url('../images/ic-checkbox-checked.png') no-repeat;
+}
+
+input[type='checkbox'].checkbox-round {
+  display: none;
+}
+
+input[type='checkbox'].checkbox-round + span {
+  display: inline-block;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: middle;
+  margin-right: 8px;
+  border-radius: 8px;
+  border: solid 2px;
+  background: transparent;
+}

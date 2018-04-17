@@ -47,6 +47,12 @@ function Base(options) {
     this.dateMatrix = {};
 
     /**
+     * Calendar list
+     * @type {Array.<Calendar>}
+     */
+    this.calendars = [];
+
+    /**
      * Theme
      * @type {Theme}
      */
@@ -69,9 +75,9 @@ Base.prototype._getContainDatesInSchedule = function(schedule) {
     return range;
 };
 
-/**********
- * CRUD
- **********/
+/****************
+ * CRUD Schedule
+ ****************/
 
 /**
  * Create an schedule instance from raw data.
@@ -335,6 +341,25 @@ Base.prototype.clearSchedules = function() {
      */
     this.fire('clearSchedules');
 };
+
+/**
+ * @typedef {Calendar}
+ * @property {string|number} id - calendar id
+ * @property {string} name - calendar name
+ * @property {string} color - text color when schedule is displayed
+ * @property {string} bgColor - background color schedule is displayed 
+ * @property {string} borderColor - color of left border or bullet point when schedule is displayed
+ * @property {boolean} [checked] - whether to show calendar's schedules or not
+ */
+
+/**
+ * Set calendar list
+ * @param {Array.<Calendar>} calendars - calendar list
+ */
+Base.prototype.setCalendars = function(calendars) {
+    this.calendars = calendars;
+    this.fire('setCalendars', calendars);
+}
 
 /**
  * Set a theme.
