@@ -260,6 +260,13 @@ function Calendar(container, options) {
     this._scrollToNowMethod = null;
 
     /**
+     * Open schedule creation popup
+     * @type {function}
+     * @private
+     */
+    this._openCreationPopup = null;
+
+    /**
      * Unique id for requestAnimFrame()
      * @type {number}
      */
@@ -1079,6 +1086,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
 
     this._refreshMethod = created.refresh;
     this._scrollToNowMethod = created.scrollToNow;
+    this._openCreationPopup = created.openCreationPopup;
 
     this.move();
     this.render();
@@ -1234,6 +1242,16 @@ Calendar.prototype.getViewName = function() {
 Calendar.prototype.setCalendars = function(calendars) {
     this._controller.setCalendars(calendars);
     this.render();
+};
+
+/**
+ * Open schedule creation popup
+ * @param {Schedule} schedule - preset schedule data
+ */
+Calendar.prototype.openCreationPopup = function(schedule) {
+    if (this._openCreationPopup) {
+        this._openCreationPopup(schedule);
+    }
 };
 
 /**

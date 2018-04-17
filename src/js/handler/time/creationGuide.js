@@ -12,6 +12,7 @@ var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
 var TZDate = require('../../common/timezone').Date;
 var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
+var MIN60 = (datetime.MILLISECONDS_PER_MINUTES * 60);
 
 /**
  * Class for Time.Creation dragging effect.
@@ -184,12 +185,14 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
     function getStyleData(scheduleData) {
         var gridY = scheduleData.nearestGridY,
             gridTimeY = scheduleData.nearestGridTimeY,
-            top, time;
+            gridEndTimeY = scheduleData.nearestGridEndTimeY,
+            top, startTime, endTime;
 
         top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);
-        time = common.limit(gridTimeY, [todayStart], [todayEnd]);
+        startTime = common.limit(gridTimeY, [todayStart], [todayEnd]);
+        endTime = common.limit(gridEndTimeY, [todayStart], [todayEnd]);
 
-        return [top, time];
+        return [top, startTime, endTime];
     }
 
     return getStyleData;
@@ -201,17 +204,22 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
  */
 TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var relatedView = dragStartEventData.relatedView,
-        unitData, styleFunc, styleData, result;
+        unitData, styleFunc, styleData, result, top, height, start, end;
 
     unitData = this._styleUnit = this._getUnitData(relatedView);
     styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
     styleData = this._styleStart = styleFunc(dragStartEventData);
 
+    start = styleData[1];
+    end = styleData[2] || (styleData[1] + MIN30);
+    top = styleData[0];
+    height = (unitData[4] * (end - start) / MIN60);
+
     result = this._limitStyleData(
-        styleData[0],
-        (unitData[4] / 2),
-        styleData[1],
-        (styleData[1] + MIN30)
+        top,
+        height,
+        start,
+        end
     );
 
     this._refreshGuideElement.apply(this, result);

@@ -301,6 +301,21 @@ DayGridCreation.prototype._onDblClick = function(clickEventData) {
     this._requestOnClick = false;
 };
 
+/**
+ * Invoke creation click
+ * @param {Schedule} schedule - schedule instance
+ */
+DayGridCreation.prototype.invokeCreationClick = function(schedule) {
+    var getScheduleDataFunc, scheduleData;
+
+    getScheduleDataFunc = this._retriveScheduleDataFromDate(this.view, schedule.start);
+    scheduleData = getScheduleDataFunc(schedule.start);
+
+    this.fire('click', scheduleData);
+
+    this._createSchedule(scheduleData);
+};
+
 common.mixin(dayGridCore, DayGridCreation);
 util.CustomEvents.mixin(DayGridCreation);
 

@@ -452,13 +452,20 @@
         var start = event.start ? new Date(event.start.getTime()) : new Date();
         var end = event.end ? new Date(event.end.getTime()) : moment().add(1, 'hours').toDate();
 
-        createDatePicker(start, end, event.isAllDay);
-        changeNewScheduleCalendar(CalendarList[0].id);
+        if (useCreationPopup) {
+            cal.openCreationPopup({
+                start: start,
+                end: end
+            });
+        } else {
+            createDatePicker(start, end, event.isAllDay);
+            changeNewScheduleCalendar(CalendarList[0].id);
 
-        document.getElementById('new-schedule-allday').checked = event.isAllDay;
+            document.getElementById('new-schedule-allday').checked = event.isAllDay;
 
-        guideElement = event.guide;
-        $('#modal-new-schedule').modal();
+            guideElement = event.guide;
+            $('#modal-new-schedule').modal();
+        }
     }
 
     function saveNewSchedule(scheduleData) {

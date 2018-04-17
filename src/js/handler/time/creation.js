@@ -337,6 +337,33 @@ TimeCreation.prototype._onDblClick = function(e) {
     this._requestOnClick = false;
 };
 
+/**
+ * Invoke creation click
+ * @param {Schedule} schedule - schedule instance
+ */
+TimeCreation.prototype.invokeCreationClick = function(schedule) {
+    var opt = this.timeGridView.options,
+        range = datetime.range(
+            datetime.parse(opt.renderStartDate),
+            datetime.parse(opt.renderEndDate),
+            datetime.MILLISECONDS_PER_DAY),
+        targetDate = schedule.start;
+    var getScheduleDataFunc, eventData, timeView;
+
+    util.forEach(range, function(date, index) {
+        if (datetime.isSameDate(date, targetDate)) {
+            timeView = this.timeGridView.children.toArray()[index];
+        }
+    }, this);
+
+    getScheduleDataFunc = this._retriveScheduleDataFromDate(timeView);
+    eventData = getScheduleDataFunc(schedule.start, schedule.end);
+
+    this.fire('timeCreationClick', eventData);
+
+    this._createSchedule(eventData);
+};
+
 timeCore.mixin(TimeCreation);
 util.CustomEvents.mixin(TimeCreation);
 
