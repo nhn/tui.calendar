@@ -79,7 +79,8 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
         gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
         gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
         renderLimitIdx = this._getRenderLimitIndex() + 1,
-        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range);
+        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range),
+        styles = this._getStyles(viewModel.theme);
     var baseViewModel;
 
     viewModel = util.extend({
@@ -92,7 +93,8 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
         matrices: viewModel.eventsInDateRange,
         gridHeaderHeight: gridHeaderHeight,
         gridFooterHeight: gridFooterHeight,
-        renderLimitIdx: renderLimitIdx
+        renderLimitIdx: renderLimitIdx,
+        styles: styles
     }, baseViewModel);
 
     return baseViewModel;
@@ -108,7 +110,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         scheduleContainer;
 
     if (!this.options.visibleWeeksCount) {
-        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
     }
 
     container.innerHTML = baseTmpl(baseViewModel);
@@ -135,15 +137,41 @@ WeekdayInMonth.prototype._beforeDestroy = function() {
 };
 
 /**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+WeekdayInMonth.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderTop = theme.common.border;
+        styles.borderLeft = theme.common.border;
+        styles.fontSize = theme.month.day.fontSize;
+        styles.borderRadius = theme.month.schedule.borderRadius;
+        styles.marginLeft = theme.month.schedule.marginLeft;
+        styles.marginRight = theme.month.schedule.marginRight;
+    }
+
+    return styles;
+};
+
+/**
  * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
  * @param {Array} dates - 날짜정보 배열
  * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+ * @param {Theme} theme - theme instance
  */
-function setIsOtherMonthFlag(dates, renderMonthStr) {
+function setIsOtherMonthFlag(dates, renderMonthStr, theme) {
     var renderMonth = Number(renderMonthStr.substring(5));
 
     util.forEach(dates, function(dateObj) {
-        dateObj.isOtherMonth = dateObj.month !== renderMonth;
+        var isOtherMonth = dateObj.month !== renderMonth;
+        dateObj.isOtherMonth = isOtherMonth;
+
+        if (isOtherMonth) {
+            dateObj.color = Weekday.prototype._getDayNameColor(theme, dateObj.day, dateObj.isToday, isOtherMonth);
+        }
     });
 }
 

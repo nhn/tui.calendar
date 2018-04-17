@@ -168,10 +168,13 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
  * @param {Date} now - now
  * @param {object} grids grid information(width, left, day)
  * @param {Array.<TZDate>} range render range
+ * @param {Theme} theme - theme instance
  * @returns {object} ViewModel of hourmarker.
  */
-TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
+TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range, theme) {
     var todaymarkerLeft = -1,
+        todaymarkerWidth = -1,
+        styles = this._getStyles(theme),
         viewModel;
 
     now = now || new TZDate();
@@ -179,6 +182,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     util.forEach(range, function(date, index) {
         if (datetime.isSameDate(now, date)) {
             todaymarkerLeft = grids[index] ? grids[index].left : 0;
+            todaymarkerWidth = grids[index] ? grids[index].width : 0;
         }
     });
 
@@ -186,7 +190,10 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
         currentHours: now.getHours(),
         hourmarkerTop: this._getTopPercentByTime(now),
         hourmarkerText: datetime.format(now, 'HH:mm'),
-        todaymarkerLeft: todaymarkerLeft
+        todaymarkerLeft: todaymarkerLeft,
+        todaymarkerWidth: todaymarkerWidth,
+        todaymarkerRight: todaymarkerLeft + todaymarkerWidth,
+        styles: styles
     };
 
     return viewModel;
@@ -194,16 +201,19 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 
 /**
  * Get base viewModel.
- * @param {object} grids grid information(width, left, day)
- * @param {Array.<TZDate>} range render range
+ * @param {object} viewModel - view model
  * @returns {object} ViewModel
  */
-TimeGrid.prototype._getBaseViewModel = function(grids, range) {
+TimeGrid.prototype._getBaseViewModel = function(viewModel) {
+    var grids = viewModel.grids;
+    var range = viewModel.range;
     var opt = this.options;
-    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
-    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
+    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range, viewModel.theme);
 
-    return viewModel;
+    return util.extend(baseViewModel, {
+        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0),
+        styles: this._getStyles(viewModel.theme)
+    });
 };
 
 /**
@@ -211,8 +221,9 @@ TimeGrid.prototype._getBaseViewModel = function(grids, range) {
  * @param {object} viewModels Viewmodel
  * @param {object} grids grid information(width, left, day)
  * @param {HTMLElement} container Container element for each time view.
+ * @param {Theme} theme - theme instance
  */
-TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
+TimeGrid.prototype._renderChildren = function(viewModels, grids, container, theme) {
     var self = this,
         options = this.options,
         childOption,
@@ -246,7 +257,8 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
 
         child = new Time(
             childOption,
-            domutil.appendHTMLElement('div', container, config.classname('time-date'))
+            domutil.appendHTMLElement('div', container, config.classname('time-date')),
+            theme
         );
         child.render(ymd, schedules, containerHeight);
 
@@ -265,8 +277,7 @@ TimeGrid.prototype.render = function(viewModel) {
         timeViewModel = viewModel.schedulesInDateRange[opt.viewName],
         container = this.container,
         grids = viewModel.grids,
-        range = viewModel.range,
-        baseViewModel = this._getBaseViewModel(grids, range),
+        baseViewModel = this._getBaseViewModel(viewModel),
         scheduleLen = util.keys(timeViewModel).length;
 
     this._cacheParentViewModel = viewModel;
@@ -285,7 +296,8 @@ TimeGrid.prototype.render = function(viewModel) {
     this._renderChildren(
         timeViewModel,
         grids,
-        domutil.find(config.classname('.timegrid-schedules-container'), container)
+        domutil.find(config.classname('.timegrid-schedules-container'), container),
+        viewModel.theme
     );
 
     this._hourLabels = domutil.find('ul', container);
@@ -392,6 +404,42 @@ TimeGrid.prototype.onTick = function() {
         this.intervalID = setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
     }
     this.refreshHourmarker();
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+TimeGrid.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
+        styles.halfHourBorderBottom = theme.week.timegridHalfHour.borderBottom || theme.common.border;
+
+        styles.todayBackgroundColor = theme.week.today.backgroundColor;
+        styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
+        styles.backgroundColor = theme.week.daygrid.backgroundColor;
+        styles.leftWidth = theme.week.timegridLeft.width;
+        styles.leftBackgroundColor = theme.week.timegridLeft.backgroundColor;
+        styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
+        styles.leftFontSize = theme.week.timegridLeft.fontSize;
+
+        styles.oneHourHeight = theme.week.timegridOneHour.height;
+        styles.halfHourHeight = theme.week.timegridHalfHour.height;
+
+        styles.currentTimeColor = theme.week.currentTime.color;
+        styles.currentTimeFontSize = theme.week.currentTime.fontSize;
+        styles.currentTimeFontWeight = theme.week.currentTime.fontWeight;
+
+        styles.currentTimeLeftBorderTop = theme.week.currentTimeLinePast.border;
+        styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
+        styles.currentTimeTodayBorderTop = theme.week.currentTimeLineToday.border;
+        styles.currentTimeRightBorderTop = theme.week.currentTimeLineFuture.border;
+    }
+
+    return styles;
 };
 
 module.exports = TimeGrid;

@@ -15,8 +15,9 @@ var View = require('./view');
  * @constructor
  * @extends {View}
  * @param {HTMLElement} container Container element to use layout view.
+ * @param {Theme} theme - theme instance
  */
-function Layout(container) {
+function Layout(container, theme) {
     container = domutil.appendHTMLElement('div', container, config.classname('layout'));
 
     /**
@@ -32,6 +33,13 @@ function Layout(container) {
         return childView.viewName;
     });
     /* eslint-enable*/
+
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
+
+    this.applyTheme();
 }
 
 util.inherit(Layout, View);
@@ -71,6 +79,14 @@ Layout.prototype.toggleChildView = function(viewName) {
         flag = Number(childView.viewName === viewName);
         domutil[prefix[flag] + 'Class'](container, config.classname('hidden'));
     });
+};
+
+Layout.prototype.applyTheme = function() {
+    var style = this.container.style;
+    var theme = this.theme.common;
+
+    // background color
+    style.backgroundColor = theme.backgroundColor;
 };
 
 module.exports = Layout;

@@ -9,6 +9,7 @@ var Schedule = require('../model/schedule');
 var ScheduleViewModel = require('../model/viewModel/scheduleViewModel');
 var datetime = require('../common/datetime');
 var common = require('../common/common');
+var Theme = require('../theme/theme');
 
 /**
  * @constructor
@@ -45,7 +46,17 @@ function Base(options) {
      */
     this.dateMatrix = {};
 
+    /**
+     * Calendar list
+     * @type {Array.<Calendar>}
+     */
     this.calendars = [];
+
+    /**
+     * Theme
+     * @type {Theme}
+     */
+    this.theme = new Theme(options.theme);
 }
 
 /**
@@ -348,6 +359,17 @@ Base.prototype.clearSchedules = function() {
 Base.prototype.setCalendars = function(calendars) {
     this.calendars = calendars;
     this.fire('setCalendars', calendars);
+}
+
+/**
+ * Set a theme.
+ * @param {themeConfig} theme - theme keys, styles
+ * @returns {Array.<string>} keys - error keys not predefined.
+ */
+Base.prototype.setTheme = function(theme) {
+    this.theme.clear();
+
+    return this.theme.setStyles(theme);
 };
 
 // mixin

@@ -22,16 +22,6 @@
             color: #fff
             font-weight: bold
 
-    .{css-prefix}holiday-sun,
-    .{css-prefix}holiday-sat
-        background: #fafafa
-
-    .{css-prefix}extra-date
-        color: #bbb
-
-        &.{css-prefix}holiday-sun
-            color: #f3acac
-
 +prefix-classes(weekday)
     .container,
     .grid,
@@ -54,10 +44,7 @@
 
     .grid-line
         position: absolute
-        border-left: 1px solid #ddd
-        margin-left: -1px
         padding: 3px
-        font-size: 16px
 
         .grid-footer
             position: absolute
@@ -126,7 +113,6 @@
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
-        line-height: 18px
         padding-left: 3px;
         font-weight: bold;
 
@@ -174,18 +160,11 @@
 
 +prefix-classes(css-prefix)
     .left
-        wh(77px, 100%)
+        height: 100%
         float: left
-        border-right: 1px solid #ddd
-        padding-right: 5px
         box-sizing: border-box
-        font-size: 11px
-        line-height: 18px
-        color: #222
 
     .right
         height: 100%
-        background-color: #fff
-        margin-left: 77px
         overflow-y: scroll
         position: relative

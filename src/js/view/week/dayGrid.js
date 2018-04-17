@@ -28,8 +28,9 @@ var mmax = Math.max,
  * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
  * @param {HTMLDIVElement} container - DOM element to use container for this
  *  view.
+ * @param {Theme} theme - theme instance
  */
-function DayGrid(name, options, container) {
+function DayGrid(name, options, container, theme) {
     container = domutil.appendHTMLElement(
         'div',
         container,
@@ -45,8 +46,8 @@ function DayGrid(name, options, container) {
         renderStartDate: '',
         renderEndDate: '',
         containerBottomGutter: 18,
-        scheduleHeight: 18,
-        scheduleGutter: 2,
+        scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
+        scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
         scheduleContainerTop: 1,
         getViewModelFunc: function(viewModel) {
             return viewModel.schedulesInDateRange[name];
@@ -80,7 +81,8 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         panel = getPanel(opt.panels, opt.viewName),
         panelHeight = this.getViewBound().height,
         collapsed = this.state.collapsed,
-        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false;
+        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false,
+        styles = this._getStyles(viewModel.theme);
 
     var baseViewModel, visibleScheduleCount;
 
@@ -111,22 +113,25 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         days: util.map(viewModel.range, function(d, index) {
             var day = d.getDay();
             var ymd = datetime.format(d, 'YYYYMMDD');
+            var isToday = datetime.isSameDate(d, new TZDate());
 
             return {
                 day: day,
                 dayName: daynames[day],
-                isToday: datetime.isSameDate(d, new TZDate()),
+                isToday: isToday,
                 date: d.getDate(),
                 renderDate: datetime.format(d, 'YYYY-MM-DD'),
                 hiddenSchedules: exceedDate[ymd] || 0,
                 width: grids[index] ? grids[index].width : 0,
-                left: grids[index] ? grids[index].left : 0
+                left: grids[index] ? grids[index].left : 0,
+                backgroundColor: viewModel.range.length > 1 ? getWeekBackgroundColor(day, isToday, styles) : styles.backgroundColor
             };
         }),
         exceedDate: exceedDate,
         showExpandableButton: panel.showExpandableButton,
         collapsed: collapsed,
-        collapseBtnIndex: this.state.clickedExpandBtnIndex
+        collapseBtnIndex: this.state.clickedExpandBtnIndex,
+        styles: styles
     };
 
     return baseViewModel;
@@ -198,6 +203,49 @@ DayGrid.prototype.addHandler = function(type, handler, vPanel) {
         }, this);
     }
 };
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+DayGrid.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderRight = theme.week.daygrid.borderRight || theme.common.border;
+        styles.todayBackgroundColor = theme.week.today.backgroundColor;
+        styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
+        styles.backgroundColor = theme.week.daygrid.backgroundColor;
+        styles.leftWidth = theme.week.daygridLeft.width;
+        styles.leftBackgroundColor = theme.week.daygridLeft.backgroundColor;
+        styles.leftPaddingRight = theme.week.daygridLeft.paddingRight;
+        styles.leftBorderRight = theme.week.daygridLeft.borderRight;
+    }
+
+    return styles;
+};
+
+/**
+ * Get a background color based on day.
+ * @param {number} day - day number
+ * @param {boolean} isToday - today flag
+ * @param {object} styles - style object
+ * @returns {string} backgroundColor
+ */
+function getWeekBackgroundColor(day, isToday, styles) {
+    var backgroundColor = '';
+
+    if (day === 0 || day === 6) {
+        backgroundColor = styles.weekendBackgroundColor;
+    } else if (isToday) {
+        backgroundColor = styles.todayBackgroundColor;
+    } else {
+        backgroundColor = styles.backgroundColor;
+    }
+
+    return backgroundColor;
+}
 
 /**
  * get a panel infomation

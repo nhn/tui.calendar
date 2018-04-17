@@ -109,7 +109,7 @@
                 return '';
             },
             weekDayname: function(dayname) {
-                return '<span class="calendar-week-dayname-name">' + dayname.dayName + '</span><br><span class="calendar-week-dayname-date">' + dayname.date + '</span>';
+                return '<span class="calendar-week-dayname-date">' + dayname.date + '</span>&nbsp;&nbsp;<span class="calendar-week-dayname-name">' + dayname.dayName + '</span>';
             },
             monthDayname: function(dayname) {
                 return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';

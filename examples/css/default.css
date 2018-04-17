@@ -112,6 +112,7 @@ body {
 
 #lnb label {
   margin-bottom: 0;
+  cursor: pointer;
 }
 
 .lnb-new-schedule {
@@ -236,8 +237,8 @@ body {
 
 #calendar {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 5px;
+    right: 5px;
     bottom: 5px;
     top: 64px;
 }
@@ -249,7 +250,6 @@ body {
     padding: 0 5px;
     border-radius: 3px;
     border: 1px solid #dddddd;
-    font-size: 14px;
     text-align: center;
 }
 
@@ -257,17 +257,9 @@ body {
     font-size: 14px;
 }
 
-.tui-full-calendar-dayname-container {
-    height: 60px;
-}
-
-.tui-full-calendar-dayname {
-    height: 59px;
-}
-
 .calendar-week-dayname-name {
-    line-height: 21px;
     font-weight: bold;
+    font-size: 12px;
 }
 
 .calendar-week-dayname-date {
@@ -297,12 +289,6 @@ body {
     float: right;
     margin-top: 4px;
     margin-right: 5px;
-}
-
-.tui-full-calendar-month-dayname-item {
-    padding-left: 8px;
-    padding-right: 0;
-    text-align: unset;
 }
 
 .tui-full-calendar-month-week-item > .tui-full-calendar-weekday-grid-line:hover {
@@ -348,6 +334,7 @@ body {
     text-align: right;
     display: table;
     width: 100%;
+    font-size: 11px;
 }
 
 .weekly-left-content {

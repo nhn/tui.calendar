@@ -175,6 +175,27 @@ module.exports = {
                 el.setAttribute('title', domutil.getData(el, 'title'));
             }
         });
+    },
+
+    /**
+     * Set the value at path of object.
+     * @param {object} object - the object to modify
+     * @param {string} path -the path of property to set
+     * @param {*} value - the value to set
+     */
+    set: function(object, path, value) {
+        var names = path.split('.');
+        var store = object;
+
+        util.forEach(names, function(name, index) {
+            store[name] = store[name] || {};
+
+            if (index === names.length - 1) {
+                store[name] = value;
+            } else {
+                store = store[name];
+            }
+        });
     }
 };
 

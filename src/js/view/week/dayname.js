@@ -16,9 +16,10 @@ var daynameTmpl = require('../template/week/daynames.hbs');
  * @constructor
  * @param {object} options - options for dayname view
  * @param {HTMLElement} container Container element to use.
+ * @param {Theme} theme - theme instance
  * @extends {View}
  */
-function DayName(options, container) {
+function DayName(options, container, theme) {
     container = domutil.appendHTMLElement(
         'div',
         container,
@@ -29,7 +30,14 @@ function DayName(options, container) {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     }, options);
 
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
+
     View.call(this, container);
+
+    this.applyTheme();
 }
 
 util.inherit(DayName, View);
@@ -43,6 +51,7 @@ util.inherit(DayName, View);
  */
 DayName.prototype._getBaseViewModel = function(start, end, grids) {
     var daynames = this.options.daynames,
+        theme = this.theme,
         viewModel;
 
     viewModel = util.map(datetime.range(
@@ -51,17 +60,19 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
         datetime.MILLISECONDS_PER_DAY
     ), function(d, i) {
         var day = d.getDay();
+        var isToday = datetime.isSameDate(d, new TZDate());
 
         return {
             day: day,
             dayName: daynames[day],
-            isToday: datetime.isSameDate(d, new TZDate()),
+            isToday: isToday,
             date: d.getDate(),
             left: grids[i] ? grids[i].left : 0,
             width: grids[i] ? grids[i].width : 0,
-            renderDate: datetime.format(d, 'YYYY-MM-DD')
+            renderDate: datetime.format(d, 'YYYY-MM-DD'),
+            color: this._getDayNameColor(theme, day, isToday)
         };
-    });
+    }, this);
 
     return viewModel;
 };
@@ -71,13 +82,77 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
  * @param {object} viewModel View model from parent (WeekView)
  */
 DayName.prototype.render = function(viewModel) {
-    var _viewModel = this._getBaseViewModel(
+    var dayNames = this._getBaseViewModel(
         viewModel.renderStartDate,
         viewModel.renderEndDate,
         viewModel.grids
     );
+    var styles = this._getStyles(this.theme);
+    var baseViewModel = util.extend({}, {
+        dayNames: dayNames,
+        styles: styles
+    });
 
-    this.container.innerHTML = daynameTmpl(_viewModel);
+    this.container.innerHTML = daynameTmpl(baseViewModel);
+};
+
+/**
+ * Get a day name color
+ * @param {Theme} theme - theme instance
+ * @param {number} day - day number
+ * @param {boolean} isToday - today flag
+ * @returns {string} style - color style
+ */
+DayName.prototype._getDayNameColor = function(theme, day, isToday) {
+    var color = '';
+
+    if (theme) {
+        if (day === 0) {
+            color = theme.common.holiday.color;
+        } else if (day === 6) {
+            color = theme.common.saturday.color;
+        } else if (isToday) {
+            color = theme.week.today.color || theme.common.today.color;
+        } else {
+            color = theme.common.dayname.color;
+        }
+    }
+
+    return color;
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+DayName.prototype._getStyles = function(theme) {
+    var styles = {};
+
+    if (theme) {
+        styles.borderTop = theme.week.dayname.borderTop || theme.common.border;
+        styles.borderBottom = theme.week.dayname.borderBottom || theme.common.border;
+        styles.borderLeft = theme.week.dayname.borderLeft || theme.common.border;
+        styles.paddingLeft = theme.week.dayname.paddingLeft;
+        styles.backgroundColor = theme.week.dayname.backgroundColor;
+        styles.height = theme.week.dayname.height;
+        styles.textAlign = theme.week.dayname.textAlign;
+    }
+
+    return styles;
+};
+
+DayName.prototype.applyTheme = function() {
+    var styles = this._getStyles(this.theme);
+    var style = this.container.style;
+
+    style.borderTop = styles.borderTop;
+    style.borderBottom = styles.borderBottom;
+    style.height = styles.height;
+    style.backgroundColor = styles.backgroundColor;
+    style.textAlign = styles.textAlign;
+
+    return style;
 };
 
 module.exports = DayName;
