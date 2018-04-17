@@ -175,12 +175,6 @@
         },
         'beforeDeleteSchedule': function(e) {
             console.log('delete', e);
-        },
-        'dragStartSchedule': function(e) {
-            console.log('dragStartSchedule', e);
-        },
-        'dragEndSchedule': function(e) {
-            console.log('dragEndSchedule', e);
         }
     });
 
