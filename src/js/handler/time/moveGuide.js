@@ -124,12 +124,6 @@ TimeMoveGuide.prototype._showOriginScheduleBlocks = function() {
     }
 };
 
-TimeMoveGuide.prototype._getHighlightColorModel = function(model) {
-    return {
-        bgColor: model.color
-    };
-};
-
 /**
  * Refresh guide element
  * @param {string} top - guide element's style top.
@@ -168,8 +162,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
 
     this._model = util.extend(
         Schedule.create(dragStartEventData.model),
-        dragStartEventData.model,
-        this._getHighlightColorModel(dragStartEventData.model)
+        dragStartEventData.model
     );
     this._lastDrag = dragStartEventData;
 

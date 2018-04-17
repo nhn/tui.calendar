@@ -53,7 +53,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         'div', layoutContainer, config.classname('month'));
 
     monthView = new Month(options.month, monthViewContainer, baseController.Month);
-    moreView = new More(options.month, layoutContainer);
+    moreView = new More(options.month, layoutContainer, baseController.theme);
 
     // handlers
     clickHandler = new MonthClick(dragHandler, monthView, baseController);

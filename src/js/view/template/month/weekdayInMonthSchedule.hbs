@@ -27,12 +27,13 @@
                     {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-schedule-title"
                   data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
-            {{#unless model.isReadOnly}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y">&nbsp;</span>{{/unless}}
+            {{#unless model.isReadOnly}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y" style="line-height: {{@root.scheduleHeight}}px;">&nbsp;</span>{{/unless}}
         </div>
         {{else ~}}
-        <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}weekday-schedule {{CSS_PREFIX}}weekday-schedule-time" style="height:{{@root.scheduleHeight}}px; {{model.customStyle}}">
+        <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}weekday-schedule {{CSS_PREFIX}}weekday-schedule-time"
+            style="height:{{@root.scheduleHeight}}px; line-height:{{@root.scheduleHeight}}px; {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-schedule-bullet"
-                  style="
+                  style="top: {{@root.styles.scheduleBulletTop}}px;
                     {{#if model.isFocused}}
                         background: #ffffff
                     {{else}}

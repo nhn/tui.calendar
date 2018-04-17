@@ -9,7 +9,7 @@
         <div data-id="{{stamp model}}"
              data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}"
              class="{{CSS_PREFIX}}month-more-schedule {{CSS_PREFIX}}month-more-allday {{CSS_PREFIX}}weekday-schedule-title"
-             style="
+             style="height: {{@root.scheduleHeight}}px; line-height: {{@root.scheduleHeight}}px; margin-top: {{@root.scheduleGutter}}px; border-radius: {{@root.borderRadius}};
                 {{#if model.isFocused}}
                     color: #ffffff; background-color:{{model.color}}; border-left:3px solid {{model.borderColor}};
                 {{else}}
@@ -23,9 +23,10 @@
         <div data-id="{{stamp model}}"
              data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}"
              class="{{CSS_PREFIX}}month-more-schedule {{CSS_PREFIX}}weekday-schedule {{CSS_PREFIX}}weekday-schedule-time"
-             style="{{model.customStyle}}">
+             style="height: {{@root.scheduleHeight}}px; line-height: {{@root.scheduleHeight}}px; margin-top: {{@root.scheduleGutter}}px;{{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-schedule-bullet"
-                style="{{#if model.isFocused}}
+                style="top: {{@root.scheduleBulletTop}}px;
+                    {{#if model.isFocused}}
                         background: #ffffff
                     {{else}}
                         background:{{model.borderColor}}
