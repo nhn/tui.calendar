@@ -120,7 +120,7 @@ DayGridMoveGuide.prototype._highlightScheduleBlocks = function(model, parent) {
         el.style.margin = '0';
 
         if (!model.isFocused) {
-            el.style.backgroundColor = model.bgColor;
+            el.style.backgroundColor = model.dragBgColor;
             el.style.borderLeftColor = model.borderColor;
             el.style.color = '#ffffff';
         }

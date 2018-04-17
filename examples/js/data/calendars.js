@@ -50,6 +50,7 @@ function hexToRGBA(hex) {
     calendar.name = 'My Calendar';
     calendar.color = '#ffffff';
     calendar.bgColor = '#9e5fff';
+    calendar.dragBgColor = '#9e5fff';
     calendar.borderColor = '#9e5fff';
     addCalendar(calendar);
 
@@ -59,6 +60,7 @@ function hexToRGBA(hex) {
     calendar.name = 'Company';
     calendar.color = '#ffffff';
     calendar.bgColor = '#00a9ff';
+    calendar.dragBgColor = '#00a9ff';
     calendar.borderColor = '#00a9ff';
     addCalendar(calendar);
 
@@ -68,6 +70,7 @@ function hexToRGBA(hex) {
     calendar.name = 'Family';
     calendar.color = '#ffffff';
     calendar.bgColor = '#ff5583';
+    calendar.dragBgColor = '#ff5583';
     calendar.borderColor = '#ff5583';
     addCalendar(calendar);
 
@@ -77,6 +80,7 @@ function hexToRGBA(hex) {
     calendar.name = 'Friend';
     calendar.color = '#ffffff';
     calendar.bgColor = '#03bd9e';
+    calendar.dragBgColor = '#03bd9e';
     calendar.borderColor = '#03bd9e';
     addCalendar(calendar);
 
@@ -86,6 +90,7 @@ function hexToRGBA(hex) {
     calendar.name = 'Travel';
     calendar.color = '#ffffff';
     calendar.bgColor = '#bbdc00';
+    calendar.dragBgColor = '#bbdc00';
     calendar.borderColor = '#bbdc00';
     addCalendar(calendar);
 
@@ -95,6 +100,7 @@ function hexToRGBA(hex) {
     calendar.name = 'etc';
     calendar.color = '#ffffff';
     calendar.bgColor = '#9d9d9d';
+    calendar.dragBgColor = '#9d9d9d';
     calendar.borderColor = '#9d9d9d';
     addCalendar(calendar);
 
@@ -104,6 +110,7 @@ function hexToRGBA(hex) {
     calendar.name = 'Birthdays';
     calendar.color = '#ffffff';
     calendar.bgColor = '#ffbb3b';
+    calendar.dragBgColor = '#ffbb3b';
     calendar.borderColor = '#ffbb3b';
     addCalendar(calendar);
 
@@ -113,6 +120,7 @@ function hexToRGBA(hex) {
     calendar.name = 'National Holidays';
     calendar.color = '#ffffff';
     calendar.bgColor = '#ff4040';
+    calendar.dragBgColor = '#ff4040';
     calendar.borderColor = '#ff4040';
     addCalendar(calendar);
 })();
