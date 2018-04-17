@@ -217,7 +217,7 @@ function Calendar(container, options) {
      * @type {Base}
      * @private
      */
-    this._controller = _createController();
+    this._controller = _createController(options);
 
     /**
      * layout view (layout manager)

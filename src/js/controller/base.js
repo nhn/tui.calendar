@@ -15,6 +15,7 @@ var Theme = require('../theme/theme');
  * @constructor
  * @param {object} options - options for base controller
  * @param {function} [options.groupFunc] - function for group each models {@see Collection#groupBy}
+ * @param {themeConfig} [options.theme] - theme object
  * @mixes util.CustomEvents
  */
 function Base(options) {
