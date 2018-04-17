@@ -87,12 +87,12 @@ If you want to use a specific version, use the tag name instead of `latest` in t
 The CDN directory has the following structure.
 
 ```
-tui-animation/
+tui-calendar/
 ├─ latest/
-│  ├─ tui-animation.js
-│  └─ tui-animation.min.js
-│  └─ tui-animation.css
-│  └─ tui-animation.min.css
+│  ├─ tui-calendar.js
+│  └─ tui-calendar.min.js
+│  └─ tui-calendar.css
+│  └─ tui-calendar.min.css
 ├─ v1.1.0/
 │  ├─ ...
 ```
