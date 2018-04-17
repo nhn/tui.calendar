@@ -267,6 +267,13 @@ function Calendar(container, options) {
     this._openCreationPopup = null;
 
     /**
+     * Hide the more view
+     * @type {function}
+     * @private
+     */
+    this._hideMoreView = null;
+
+    /**
      * Unique id for requestAnimFrame()
      * @type {number}
      */
@@ -1095,6 +1102,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
     this._scrollToNowMethod = created.scrollToNow;
     this._openCreationPopup = created.openCreationPopup;
     this._showCreationPopup = created.showCreationPopup;
+    this._hideMoreView = created.hideMoreView;
 
     this.move();
     this.render();
@@ -1259,6 +1267,15 @@ Calendar.prototype.setCalendars = function(calendars) {
 Calendar.prototype.openCreationPopup = function(schedule) {
     if (this._openCreationPopup) {
         this._openCreationPopup(schedule);
+    }
+};
+
+/**
+ * Hide the more view
+ */
+Calendar.prototype.hideMoreView = function() {
+    if (this._hideMoreView) {
+        this._hideMoreView();
     }
 };
 

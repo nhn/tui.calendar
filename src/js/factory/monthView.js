@@ -175,6 +175,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
                 createView.setCalendars(baseController.calendars);
                 createView.render(eventData);
             }
+        },
+        hideMoreView: function() {
+            if (moreView) {
+                moreView.hide();
+            }
         }
     };
 }
