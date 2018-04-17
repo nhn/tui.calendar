@@ -18,7 +18,7 @@
                 {{/if}}
                  {{model.customStyle}}"
             >{{{time-tmpl model}}}</div>
-            {{#unless cropped}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x">&nbsp;</div>{{/unless}}
+            {{#unless cropped}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x" style="margin-left: {{@root.styles.paddingLeft}};">&nbsp;</div>{{/unless}}
         </div>
         {{/if ~}}
         {{/each}}
