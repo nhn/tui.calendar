@@ -228,6 +228,11 @@ calendar.changeView(calendar.getViewName(), true);
 calendar.setOptions({week: {startDayOfWeek: 1}}, true);
 calendar.setOptions({month: {startDayOfWeek: 1}}, true);
 calendar.changeView(calendar.getViewName(), true);
+
+// work week
+calendar.setOptions({week: {workweek: true}}, true);
+calendar.setOptions({month: {workweek: true}}, true);
+calendar.changeView(calendar.getViewName(), true);
 ```
 
 ### Calendar options
