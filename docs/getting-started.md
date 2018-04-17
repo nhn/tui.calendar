@@ -202,37 +202,37 @@ calendar.next();
 
 ```javascript
 // daily view
-calendar.toggleView('day', true);
+calendar.changeView('day', true);
 
 // weekly view
-calendar.toggleView('week', true);
+calendar.changeView('week', true);
 
 // monthly view(default 6 weeks view)
-calendar.options.month.visibleWeeksCount = 6; // or null
-calendar.toggleView('month', true);
+calendar.setOptions({month: {visibleWeeksCount: 6}}, true); // or null
+calendar.changeView('month', true);
 
 // 2 weeks monthly view
-calendar.options.month.visibleWeeksCount = 2;
-calendar.toggleView('month', true);
+calendar.setOptions({month: {visibleWeeksCount: 2}}, true);
+calendar.changeView('month', true);
 
 // 3 weeks monthly view
-calendar.options.month.visibleWeeksCount = 3;
-calendar.toggleView('month', true);
+calendar.setOptions({month: {visibleWeeksCount: 3}}, true);
+calendar.changeView('month', true);
 
 // narrow weekend
-calendar.options.month.narrowWeekend = true;
-calendar.options.week.narrowWeekend = true;
-calendar.toggleView(calendar.viewName, true);
+calendar.setOptions({month: {narrowWeekend: true}}, true);
+calendar.setOptions({week: {narrowWeekend: true}}, true);
+calendar.changeView(calendar.getViewName(), true);
 
 // change start day of week(from monday)
-calendar.options.month.startDayOfWeek = 1;
-calendar.options.week.startDayOfWeek = 1;
-calendar.toggleView(calendar.viewName, true);
+calendar.setOptions({week: {startDayOfWeek: 1}}, true);
+calendar.setOptions({month: {startDayOfWeek: 1}}, true);
+calendar.changeView(calendar.getViewName(), true);
 
 // work week
-calendar.options.month.workweek = true;
-calendar.options.week.workweek = true;
-cal.toggleView(cal.viewName, true);
+calendar.setOptions({week: {workweek: true}}, true);
+calendar.setOptions({month: {workweek: true}}, true);
+calendar.changeView(calendar.getViewName(), true);
 ```
 
 ### Calendar options
@@ -262,10 +262,8 @@ var calendar = new Calendar('#calendar', {
     },
     week: {
         daynames: daynames,
-        panelHeights: [80, 80, 120],
         narrowWeekend: true,
         startDayOfWeek: 1 // monday
-        alldayViewType: 'toggle' // default: scroll
     }
 ```
 

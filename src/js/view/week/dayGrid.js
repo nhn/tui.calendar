@@ -124,7 +124,8 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
                 hiddenSchedules: exceedDate[ymd] || 0,
                 width: grids[index] ? grids[index].width : 0,
                 left: grids[index] ? grids[index].left : 0,
-                backgroundColor: viewModel.range.length > 1 ? getWeekBackgroundColor(day, isToday, styles) : styles.backgroundColor
+                backgroundColor: viewModel.range.length > 1 ?
+                    getWeekBackgroundColor(day, isToday, styles) : styles.backgroundColor
             };
         }),
         exceedDate: exceedDate,

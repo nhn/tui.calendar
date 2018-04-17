@@ -33,6 +33,7 @@ var setterMethods = [
  * Get the timezone offset by timestampe
  * @param {number} timestamp - timestamp
  * @returns {number} timezone offset
+ * @private
  */
 function getTimezoneOffset(timestamp) {
     timestamp = timestamp || Date.now();
@@ -44,6 +45,7 @@ function getTimezoneOffset(timestamp) {
  * Get the custome timezone offset by timestampe
  * @param {number} timestamp - timestamp
  * @returns {number} timezone offset
+ * @private
  */
 function getCustomTimezoneOffset(timestamp) {
     if (timezoneOffsetCallback) {
@@ -57,6 +59,7 @@ function getCustomTimezoneOffset(timestamp) {
  * Create a Date instance with multiple arguments
  * @param {Array} args - arguments
  * @returns {Date}
+ * @private
  */
 function createDateWithMultipleArgs(args) {
     var utc = Date.UTC.apply(null, args);
@@ -68,6 +71,7 @@ function createDateWithMultipleArgs(args) {
  * Create a Date instance with argument
  * @param {Date|TZDate|string|number} arg - arguments
  * @returns {Date}
+ * @private
  */
 function createDateWithSingleArg(arg) {
     var time;
@@ -88,7 +92,8 @@ function createDateWithSingleArg(arg) {
 }
 
 /**
- * Date Class
+ * Timezone Date Class
+ * @constructor
  */
 function TZDate() {
     var date;
@@ -107,10 +112,10 @@ function TZDate() {
     this._date = date;
 }
 
-TZDate.prototype.setTime = function(time) {
-    return this._date.setTime(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
-};
-
+/**
+ * Get milliseconds which is converted by timezone
+ * @returns {number} milliseconds
+ */
 TZDate.prototype.getTime = function() {
     var time = this._date.getTime();
 

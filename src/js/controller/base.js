@@ -15,6 +15,7 @@ var Theme = require('../theme/theme');
  * @constructor
  * @param {object} options - options for base controller
  * @param {function} [options.groupFunc] - function for group each models {@see Collection#groupBy}
+ * @param {themeConfig} [options.theme] - theme object
  * @mixes util.CustomEvents
  */
 function Base(options) {
@@ -27,11 +28,17 @@ function Base(options) {
      * @returns {string} group key
      */
     this.groupFunc = options.groupFunc || function(viewModel) {
+        var model = viewModel.model;
+
         if (viewModel.model.isAllDay) {
             return 'allday';
         }
 
-        return 'time';
+        if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
+            return 'allday';
+        }
+
+        return model.category;
     };
 
     /**
