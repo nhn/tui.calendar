@@ -111,6 +111,8 @@ var mmin = Math.min;
  * @property {Template} [template={}] - template options
  * @property {WeekOptions} [week={}] - options for week view
  * @property {MonthOptions} [month={}] - options for month view
+ * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
+ * @property {boolean} [useCreationPopup=true] - whether use creation popup or not
  */
 
 /**
@@ -1227,6 +1229,7 @@ Calendar.prototype.getViewName = function() {
  */
 Calendar.prototype.setCalendars = function(calendars) {
     this.controller.setCalendars(calendars);
+    this.render();
 };
 
 /**

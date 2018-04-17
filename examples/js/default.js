@@ -8,6 +8,7 @@
 (function(window, Calendar) {
     var cal, resizeThrottled;
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var useCreationPopup = true;
     var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
     Calendar.setTimezoneOffsetCallback(function(timestamp) {
@@ -131,20 +132,19 @@
         week: {
             daynames: daynames
         },
-        useWritePopup: true
+        useCreationPopup: useCreationPopup,
+        calendars: CalendarList
     });
-
-    cal.setCalendars(CalendarList);
 
     // event handlers
     cal.on({
         'clickSchedule': function(e) {
             var schedule = e.schedule;
-            console.log('click', e);
+            console.log('clickSchedule', e);
 
             if (lastClickSchedule) {
                 cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-                    color: findCalendar(lastClickSchedule.calendarId).textColor,
+                    color: findCalendar(lastClickSchedule.calendarId).color,
                     isFocused: false
                 });
             }
@@ -166,6 +166,9 @@
         },
         'beforeCreateSchedule': function(e) {
             console.log(e);
+            if (!useCreationPopup) {
+                createNewSchedule(e);
+            }
         },
         'beforeUpdateSchedule': function(e) {
             cal.updateSchedule(e.schedule.id, e.schedule.calendarId, {
@@ -178,8 +181,30 @@
         'beforeDeleteSchedule': function(e) {
             console.log('delete', e);
         },
-        'saveSchedule': function(e) {
-            console.log('saveSchedule', e);
+        'saveSchedule': function(scheduleData) {
+            var calendar = scheduleData.calendar;
+            var schedule = {
+                id: String(chance.guid()),
+                title: scheduleData.subject,
+                isAllDay: scheduleData.isAllDay,
+                start: scheduleData.startDate,
+                end: scheduleData.endDate,
+                category: scheduleData.isAllDay ? 'allday' : 'time',
+                dueDateClass: '',
+                raw: {
+                    'class': scheduleData.raw['private'] ? 'private' : '',
+                    location: scheduleData.raw.location
+                }
+            };
+            if (calendar) {
+                schedule.calendarId = calendar.id;
+                schedule.color = calendar.color;
+                schedule.bgColor = calendar.bgColor;
+                schedule.borderColor = calendar.borderColor;
+            }
+
+            cal.createSchedules([schedule]);
+            console.log('saveSchedule', scheduleData);
         }
     });
 
@@ -262,7 +287,7 @@
         if (!target.closest('.popover').length && lastClickPopover) {
             if (lastClickSchedule) {
                 cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-                    color: findCalendar(lastClickSchedule.calendarId).textColor,
+                    color: findCalendar(lastClickSchedule.calendarId).colors,
                     isFocused: false
                 });
             }
@@ -392,7 +417,7 @@
             end: end,
             category: isAllDay ? 'allday' : 'time',
             dueDateClass: '',
-            color: calendar.textColor,
+            color: calendar.color,
             bgColor: calendar.bgColor,
             borderColor: calendar.borderColor,
             raw: {

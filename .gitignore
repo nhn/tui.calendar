@@ -59,6 +59,8 @@ report
 # for local dev purpose
 demo-dev/
 build/
+markup
 
 # performance tester fixtures
 perf/**/*.json
+

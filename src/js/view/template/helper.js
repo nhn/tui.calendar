@@ -349,19 +349,19 @@ Handlebars.registerHelper({
         return '∧';
     },
 
-    'isAllday-tmpl': function() {
+    'popupIsAllDay-tmpl': function() {
         return 'All day';
     },
 
-    'freeState-tmpl': function() {
+    'popupStateFree-tmpl': function() {
         return 'Free';
     },
 
-    'busyState-tmpl': function() {
+    'popupStateBusy-tmpl': function() {
         return 'Busy';
     },
 
-    'subjectPlaceholder-tmpl': function() {
+    'titlePlaceholder-tmpl': function() {
         return 'Subject';
     },
 

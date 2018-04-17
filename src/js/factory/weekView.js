@@ -16,7 +16,8 @@ var Week = require('../view/week/week');
 var DayName = require('../view/week/dayname');
 var DayGrid = require('../view/week/dayGrid');
 var TimeGrid = require('../view/week/timeGrid');
-var PopupWrite = require('../view/popup/popupWrite');
+var ScheduleCreationPopup = require('../view/popup/scheduleCreationPopup');
+
 // Handlers
 var DayNameClick = require('../handler/time/clickDayname');
 var DayGridClick = require('../handler/daygrid/click');
@@ -85,7 +86,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var panels = options.week.panels || DEFAULT_PANELS,
         vpanels = [];
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
-    var writeView, onSetCalendars;
+    var createView, onShowCreationPopup, onSaveNewSchedule, onSetCalendars;
 
     util.extend(options.week, {panels: panels});
 
@@ -188,17 +189,28 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         });
     });
 
-    // binding write schedules
-    if (options.useWritePopup) {
-        writeView = createWritePopup(weekView, layoutContainer, weekView.handler.creation);
-        onSetCalendars = function(calendars) {
-            writeView.setCalendars(calendars);
+    // binding create schedules event
+    if (options.useCreationPopup) {
+        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+        onShowCreationPopup = function(eventData) {
+            createView.render(eventData);
         };
-        baseController.on('setCalendars', onSetCalendars);
-        writeView.on('saveSchedule', function(scheduleData) {
+        onSaveNewSchedule = function(scheduleData) {
             baseController.fire('saveSchedule', scheduleData);
-        });
+        };
+        weekView.handler.creation.allday.on('beforeCreateSchedule', onShowCreationPopup);
+        weekView.handler.creation.time.on('beforeCreateSchedule', onShowCreationPopup);
+        createView.on('saveSchedule', onSaveNewSchedule);
     }
+    onSetCalendars = function(calendars) {
+        if (createView) {
+            createView.setCalendars(calendars);
+        }
+    };
+
+    baseController.on('setCalendars', onSetCalendars);
+
+    baseController.on('setCalendars', onSetCalendars);
 
     weekView.on('afterRender', function() {
         vLayout.refresh();
@@ -215,6 +227,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                 handler.destroy();
             });
         });
+
+        if (options.useCreationPopup) {
+            createView.off('saveSchedule', onSaveNewSchedule);
+        }
 
         weekView.off();
     };
@@ -240,28 +256,3 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         }
     };
 };
-
-/**
- * @param {object} weekView - weekView
- * @param {HTMLElement} container - container element
- * @param {Array.<Object>} creationHandlers - event handler for creating new schedule
- * @returns {object} - write popup view
- */
-function createWritePopup(weekView, container, creationHandlers) {
-    var writeView = new PopupWrite(container);
-    var guide;
-
-    util.forEach(creationHandlers, function(handler) {
-        handler.on('beforeCreateSchedule', function(eventData) {
-            writeView.render(eventData);
-
-            guide = eventData.guide;
-        });
-    });
-
-    writeView.on('beforeHidePopup', function() {
-        guide.clearGuideElement();
-    });
-
-    return writeView;
-}
