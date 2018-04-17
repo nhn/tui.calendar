@@ -66,10 +66,10 @@ describe('handler/time.creation.guide', function() {
 
     describe('_getStyleDataFunc', function() {
         it('return function that available for calculate guide element styles from drag schedules', function() {
-            // 3시부터 렌더링하는 뷰
+            // View rendered from 3 o'clock
             var renderStart = new Date('2015-11-17T03:00:00+09:00');
             var func = inst._getStyleDataFunc(210, 21, Number(renderStart));
-            // 사용자가 4시를 클릭했다고 가정
+            // Assuming the user clicked on 4 o'clock
             var clicked = new Date(renderStart).setHours(4),
                 expected,
                 actual;
@@ -107,7 +107,7 @@ describe('handler/time.creation.guide', function() {
             };
             mockTimeView.getViewBound.and.returnValue({height: 240});
 
-            // 사용자가 4시를 클릭했다고 가정
+            // Assuming the user clicked on 4 o'clock
             startTime = new Date(renderStart);
             startTime.setHours(4);
 
@@ -123,7 +123,7 @@ describe('handler/time.creation.guide', function() {
         });
 
         it('calculate style properly when user dragging to before start time', function(done) {
-            // 사용자가 1시로 드래그함
+            // User dragged to 1 o'clock
             var time = new Date('2015-11-17T01:00:00+09:00');
             mockEventData = {
                 nearestGridY: 1,
@@ -143,7 +143,7 @@ describe('handler/time.creation.guide', function() {
         });
 
         it('calculate style properly2', function(done) {
-            // 사용자가 6시로 드래그함
+            // User dragged to 6 o'clock
             var time = new Date('2015-11-17T06:00:00+09:00');
             mockEventData = {
                 nearestGridY: 5,

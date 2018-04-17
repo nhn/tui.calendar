@@ -432,7 +432,7 @@ domutil = {
 
         if ((CSS_AUTO_REGEX.test(el.style.left) || CSS_AUTO_REGEX.test(el.style.top)) &&
             'getBoundingClientRect' in el) {
-            // 엘리먼트의 left또는 top이 'auto'일 때 수단
+            // When the element's left or top is 'auto'
             bound = el.getBoundingClientRect();
 
             left = bound.left;

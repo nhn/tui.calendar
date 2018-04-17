@@ -35,14 +35,12 @@ var Core = {
 
             forEachArr(previousScheduleList, function(previous) {
                 if (schedule.collidesWith(previous)) {
-                    // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
-                    // 찾아 이 일정을 추가한다
+                    // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
                     foundPrevCollisionSchedule = true;
 
                     forEachArr(collisionGroups.slice(0).reverse(), function(group) {
                         if (~util.inArray(util.stamp(previous.valueOf()), group)) {
-                            // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
-                            // Collision Group에 이 일정을 포함시킨다.
+                            // If you find a previous schedule that overlaps, include it in the Collision Group to which it belongs.
                             group.push(util.stamp(schedule.valueOf()));
 
                             return false; // returning false can stop this loop
@@ -58,8 +56,7 @@ var Core = {
             });
 
             if (!foundPrevCollisionSchedule) {
-                // 이 일정은 이전일정과 겹치지 않는 일정이므로
-                // 새 Collision Group을 구성한다.
+                // This schedule is a schedule that does not overlap with the previous schedule, so a new Collision Group is constructed.
                 collisionGroups.push([util.stamp(schedule.valueOf())]);
             }
         });

@@ -14,7 +14,7 @@ describe('Calendar', function() {
     beforeEach(function() {
         fixture.load('view.html');
 
-        // IE9 에서 scrollTop을 조정하려고 할 때 unspecified error발생하는 문제 해결용
+        // Fixed an unspecified error when trying to adjust scrollTop in IE9
         spyOn(TimeGrid.prototype, 'scrollToNow');
         spyOn(View.prototype, 'getViewBound').and.returnValue({height: 100});
 
@@ -79,13 +79,13 @@ describe('Calendar', function() {
     });
 
     it('getWeekDayRange() can calculate start, end date by supplied date', function() {
-        // 18(수)을 일요일 시작으로 계산하면 15(일) ~ 21(토)
+        // If you calculate 18(Wed) as the start of Sunday, it is 15(Sun) ~ 21(Sat)
         expect(inst._getWeekDayRange(new TZDate('2015-11-18'), 0)).toEqual([
             new TZDate('2015-11-15'),
             new TZDate('2015-11-21')
         ]);
 
-        // 17(화)를 수요일 기준으로 계산하면 한 주 빠른 11(수) ~ 17(화)
+        // 17(Tue) is calculated on Wednesday, and it is 11(Wed) ~ 17(Tue)
         expect(inst._getWeekDayRange(new TZDate('2015-11-17'), 3)).toEqual([
             new TZDate('2015-11-11'),
             new TZDate('2015-11-17')

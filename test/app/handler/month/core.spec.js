@@ -20,7 +20,7 @@ describe('handler:MonthCore', function() {
             theme: new Theme()
         };
 
-        // 2016년 1월 달력의 첫주, 둘째주
+        // January 2016 calendar first week, second week
         m = new Month(null, container, controller);
 
         // mock the container element

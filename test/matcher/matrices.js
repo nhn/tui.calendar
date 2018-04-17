@@ -35,12 +35,12 @@ module.exports = function() {
                 aMatrix, aLength, bMatrix, bLength,
                 aColumn, aViewModel, bValue,
                 result = {
-                    message: '매트릭스 일치',
+                    message: 'Matrix match',
                     pass: true
                 };
 
             if (actual.length !== expected.length) {
-                return fail('매트릭스 갯수 불일치\n' +
+                return fail('Matrix number mismatch\n' +
                             'actual: ' + actual + '\n' +
                             'expected: ' + expected);
             }
@@ -52,7 +52,7 @@ module.exports = function() {
                 bLength = bMatrix.length;
 
                 if (aLength !== bLength) {
-                    return fail(i + ' 번째 매트릭스 다름\n' +
+                    return fail(i + 'th matrix is different\n' +
                                 'actual: ' + pickTitle(aMatrix) + '\n' +
                                 'expected: ' + bMatrix);
                 }
@@ -68,7 +68,7 @@ module.exports = function() {
                     bValue = bMatrix[j];
 
                     if (!comparator(aViewModel, bValue)) {
-                        return fail('[' + i + '][' + j + '] 번째 매트릭스 다름\n' +
+                        return fail('[' + i + '][' + j + '] th matrix is different\n' +
                                     'actual: ' + aViewModel + '\n' +
                                     'expected: ' + bValue);
                     }

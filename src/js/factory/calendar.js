@@ -829,9 +829,9 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
  **********/
 
 /**
- * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
+ * A bridge-based event handler for connecting a click handler to a user click event handler for each view
  * @fires Calendar#clickSchedule
- * @param {object} clickScheduleData - 'clickSchedule' 핸들러의 이벤트 데이터
+ * @param {object} clickScheduleData - The event data of 'clickSchedule' handler
  * @private
  */
 Calendar.prototype._onClick = function(clickScheduleData) {
@@ -862,9 +862,9 @@ Calendar.prototype._onClick = function(clickScheduleData) {
 };
 
 /**
- * dayname 클릭 이벤트 핸들러
+ * dayname click event handler
  * @fires Calendar#clickDayname
- * @param {object} clickScheduleData - 'clickDayname' 핸들러의 이벤트 데이터
+ * @param {object} clickScheduleData - The event data of 'clickDayname' handler
  * @private
  */
 Calendar.prototype._onClickDayname = function(clickScheduleData) {
@@ -951,9 +951,9 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
 };
 
 /**
- * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
- * @param {boolean} isAttach - true면 이벤트 연결함.
- * @param {Week|Month} view - 주뷰 또는 월뷰
+ * Toggle calendar factory class, main view, wallview event connection
+ * @param {boolean} isAttach - attach events if true.
+ * @param {Week|Month} view - Weekly view or Monthly view
  * @private
  */
 Calendar.prototype._toggleViewSchedule = function(isAttach, view) {

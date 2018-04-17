@@ -12,21 +12,21 @@ var dirty = require('../common/dirty');
 var model = require('../common/model');
 
 /**
- * 일정 카테고리
+ * Schedule category
  * @readonly
  * @enum {string}
  */
 var SCHEDULE_CATEGORY = {
-    /** 마일스톤 */
+    /** milestone */
     MILESTONE: 'milestone',
 
-    /** 업무 */
+    /** task */
     TASK: 'task',
 
-    /** 종일일정 */
+    /** all-day schedule */
     ALLDAY: 'allday',
 
-    /** 시간별 일정 */
+    /** normal schedule */
     TIME: 'time'
 };
 
@@ -92,25 +92,25 @@ function Schedule() {
     this.borderColor = '#000';
 
     /**
-     * 캘린더 ID
+     * calendar ID
      * @type {string}
      */
     this.calendarId = '';
 
     /**
-     * 일정 카테고리 (마일스톤, 업무, 종일일정, 시간별일정)
+     * Schedule category(milestone, task, allday, time)
      * @type {string}
      */
     this.category = '';
 
     /**
-     * 업무 일정의 경우 구분 (출근전, 점심전, 퇴근전)
+     * Classification of work schedules (before work, before lunch, before work)
      * @type {string}
      */
     this.dueDateClass = '';
 
     /**
-     * 커스텀 스타일
+     * Custom style for schedule element
      * @type {string}
      */
     this.customStyle = '';
@@ -134,7 +134,7 @@ function Schedule() {
     this.isReadOnly = false;
 
     /**
-     * 렌더링과 관계 없는 별도 데이터 저장 공간.
+     * Separate data storage space independent of rendering.
      * @type {object}
      */
     this.raw = null;
@@ -209,7 +209,7 @@ Schedule.prototype.init = function(options) {
 };
 
 Schedule.prototype.setAllDayPeriod = function(start, end) {
-    // 종일일정인 경우 문자열의 날짜정보만 사용한다.
+    // If it is an all-day schedule, only the date information of the string is used.
     if (util.isString(start)) {
         start = datetime.parse(start.substring(0, 10));
     }

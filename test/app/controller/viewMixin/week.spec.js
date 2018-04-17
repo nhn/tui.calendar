@@ -123,8 +123,8 @@ describe('Base.Week', function() {
             });
 
             /*
-             * 실제 자료 구조와는 다름. 어떤
-             * 일정이 있다는 정도로만 참고할 것
+             * It is different from the actual data structure.
+             * Please only refer to the schedule.
              * matrix: {
              * '20150501': [id1],
              * '20150502': [id1, id4],
@@ -139,7 +139,7 @@ describe('Base.Week', function() {
 
             var result = ctrl.findByDateRange(start, end, panels);
 
-            // 5/1일의 충돌 블럭은 총 5개이다.
+            // There are 5 collision blocks on 5/1.
             expect(result.time['20150501'].length).toBe(5);
         });
 
@@ -147,10 +147,10 @@ describe('Base.Week', function() {
             var start = new Date('2015/04/30'),
                 end = new Date('2015/05/02');
 
-            // title이 J인 일정은 1개 뿐이므로
+            // Since there is only one event with title J
             var result = ctrl.findByDateRange(start, end, panels, function(model) {return model.title === 'J';});
 
-            // 시간별 일정 그룹 내 충돌 블럭은 1개
+            // One collision block in the timeline group
             expect(result.time['20150501'].length).toBe(1);
         });
     });

@@ -20,11 +20,11 @@ var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 var SIXTY_SECONDS = 60;
 
 /**
- * start~end 까지의 시간 레이블 목록을 반환한다.
- * 현재 시간과 가까운 레이블의 경우 hidden:true로 설정한다.
- * @param {number} start - 시작시간
- * @param {number} end - 끝시간
- * @param {boolean} hasHourMarker - 현재 시간이 표시되는지 여부
+ * Returns a list of time labels from start to end.
+ * For hidden labels near the current time, set to hidden: true.
+ * @param {number} start - start time
+ * @param {number} end - end time
+ * @param {boolean} hasHourMarker - Whether the current time is displayed
  * @returns {Array.<Object>}
  */
 function getHoursLabels(start, end, hasHourMarker) {

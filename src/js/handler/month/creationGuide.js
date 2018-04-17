@@ -69,7 +69,7 @@ MonthCreationGuide.prototype._onDrag = function(dragEvent) {
  * Drag end event handler
  */
 MonthCreationGuide.prototype._onDragEnd = function() {
-    // Do nothing. 사용자가 직접 destroy 호출
+    // Do nothing. User calls destroy directly.
     this.guide = null;
 };
 

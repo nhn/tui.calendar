@@ -101,13 +101,13 @@ describe('VLayout', function() {
             ]
         }, getDiv());
 
-        // 두 번째 스플리터 기준 위 아래 추가 드래그 제한 값은 50, 25
+        // The additional drag limits above and below the second splitter base are 50, 25
         baseSplitterItem = inst.panels[1];
         actual = inst._getMouseYAdditionalLimit(baseSplitterItem);
 
         expect(actual).toEqual([50, 25]);
 
-        // 네 번째 스플리터 기준 위 아래 추가 드래그 제한 값은 55, 20
+        // The additional drag limits above and below the fourth splitter base are 55, 20
         baseSplitterItem = inst.panels[3];
         actual = inst._getMouseYAdditionalLimit(baseSplitterItem);
 
@@ -121,7 +121,7 @@ describe('VLayout', function() {
             inst = new VLayout({}, getDiv());
 
             spyOn(VPanel.prototype, 'getHeight').and.callFake(function() {
-                // 테스트에서는 스플리터 사이즈는 무시한다
+                // Test ignores splitter size
                 if (this.options.isSplitter) {
                     return 0;
                 }
@@ -139,7 +139,7 @@ describe('VLayout', function() {
             spyOn(util, 'forEach');
             inst._resize(inst.panels[1], 100, 110);
 
-            // 첫 번째 패널은 10 증가, 두 번째 패널은 10 감소)
+            // The first panel increased by 10, and the second panel decreased by 10)
             allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
 
             expect(allArgs).toEqual([110, 90]);
@@ -155,14 +155,14 @@ describe('VLayout', function() {
             ], inst.container);
             spyOn(util, 'forEach');
 
-            // 첫 번째 스플리터를 마지막 패널까지 드래그 했다고 가정
+            // Assume you drag the first splitter to the last panel
             inst._resize(inst.panels[1], 100, 210);
             allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
 
             expect(allArgs).toEqual([210, 0, 20]);
         });
 
-        it('두 번째 스플리터를 30만큼 위로 드래그했다고 가정', function() {
+        it('Assuming you dragged the second splitter up by 30', function() {
             inst.addPanels([
                 {height: 100}, // 100,  100
                 {isSplitter: true}, //

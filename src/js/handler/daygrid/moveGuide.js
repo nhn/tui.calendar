@@ -23,7 +23,7 @@ function DayGridMoveGuide(daygridMove) {
     this.daygridMove = daygridMove;
 
     /**
-     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
+     * The element that actually contains the event element
      * @type {HTMLDIVElement}
      */
     this.scheduleContainer = null;
@@ -162,10 +162,6 @@ DayGridMoveGuide.prototype.refreshGuideElement = function(leftPercent, widthPerc
  * rendered block must be cut out to render properly. in this case, this method return
  * how many block are cut before rendering.
  *
- * 이벤트 데이터에서 이벤트 블록 엘리먼트 렌더링에 대한 필요 정보를 추출한다.
- *
- * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때
- * 좌 우로 몇 만큼 잘려있는지에 관한 정보를 반환함.
  * @param {object} dragStartEventData - schedule data from DayGrid.Move handler.
  * @returns {function} function that return schedule block information.
  */

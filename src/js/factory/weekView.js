@@ -125,14 +125,14 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 
     /**********
-     * 일자표기 (상단 일월화수...)
+     * Day name (top row(Mon, Tue, Wed...))
      **********/
     dayNameView = new DayName(options.week, dayNameContainer, baseController.theme);
     weekView.handler.dayname.date = new DayNameClick(dragHandler, dayNameView, baseController);
     weekView.addChild(dayNameView);
 
     /**********
-     * 수직 레이아웃 모듈 초기화
+     * Initialize vertical layout module
      **********/
     vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
     vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';

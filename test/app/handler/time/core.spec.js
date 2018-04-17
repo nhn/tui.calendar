@@ -4,10 +4,9 @@ var Time = require('view/week/time');
 
 describe('module:Time.Creation', function() {
     it('_calcGridYIndex()', function() {
-        // 24시간이 100px일 때  50px은 12시임
+        // 50px is 12 o'clock when 24 hours is 100px
         expect(core._calcGridYIndex(86400000, 100, 50)).toBe(12);
-        // 3시간이 100px일 때 50px는 1.5시간인데, 30분 단위로 반올림
-        // 처리를 하므로 1이 되고, 51px는 1.5가 된다.
+        // When 3 hours is 100px, 50px is 1.5 hours, which is rounded up to 30 minutes, so it becomes 1 and 51px becomes 1.5.
         expect(core._calcGridYIndex(10800000, 100, 50)).toBe(1);
         expect(core._calcGridYIndex(10800000, 100, 51)).toBe(1.5);
     });

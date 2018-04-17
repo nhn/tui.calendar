@@ -29,7 +29,7 @@ describe('module:domutil', function() {
         expect(document.getElementById('myspan')).toBe(null);
     });
 
-    it('문서 내 엘리먼트를 id를 이용하여 쉽게 탐색할 수 있다', function() {
+    it('The elements in the document can be easily navigated using id', function() {
         expect(map.id).toEqual('map');
         expect(map.tagName).toEqual('DIV');
 
@@ -37,25 +37,25 @@ describe('module:domutil', function() {
         expect(btn.tagName).toEqual('BUTTON');
     });
 
-    it('특정 엘리먼트의 스타일을 확인할 수 있다', function() {
+    it('You can check the style of a specific element', function() {
         var color = domutil.getStyle(map, 'backgroundColor');
 
         expect(color).toEqual('red');
     });
 
-    it('특정 엘리먼트의 class를 확인할 수 있다.', function() {
+    it('You can check the class of a specific element.', function() {
         var cls = domutil.getClass(btn);
 
         expect(cls).toEqual('btn-text');
     });
 
-    it('특정 엘리먼트의 class를 변경할 수 있다.', function() {
+    it('You can change the class of a specific element.', function() {
         domutil.setClass(btn, 'btn btn-text');
 
         expect(domutil.getClass(btn)).toEqual('btn btn-text');
     });
 
-    it('특정 엘리먼트의 class를 추가할 수 있다.', function() {
+    it('You can add classes for specific elements.', function() {
         domutil.addClass(map, 'my-map');
         domutil.addClass(btn, 'btn');
 
@@ -64,17 +64,17 @@ describe('module:domutil', function() {
 
     });
 
-    it('특정 엘리먼트의 class를 제거할 수 있다', function() {
+    it('You can remove a class from a specific element', function() {
         domutil.removeClass(btn, 'btn-text');
 
         expect(btn.className).toEqual('');
     });
 
-    it('엘리먼트가 특정 클래스를 가지고 있는지 확인할 수 있다.', function() {
+    it('You can check if an element has a particular class.', function() {
         expect(domutil.hasClass(btn, 'btn-text')).toBeTruthy();
     });
 
-    it('setPosition메서드를 통해 엘리먼트의 position을 지정할 수 있다.', function() {
+    it('You can specify the element\'s position through the setPosition method.', function() {
         domutil.setPosition(map, 25, 100);
 
         expect(map.style.left).toEqual('25px');
@@ -83,12 +83,12 @@ describe('module:domutil', function() {
         expect(domutil.getPosition(map)).toEqual([25, 100]);
     });
 
-    it('getPosition메서드를 통해 엘리먼트의 위치를 계산할 수 있다', function() {
+    it('You can use the getPosition method to calculate the position of an element.', function() {
         var mapPosition = domutil.getPosition(document.getElementById('getPos'));
         expect(mapPosition).toEqual([50, 50]);
     });
 
-    it('getSize() 메서드로 엘리먼트의 크기를 Rect로 받을 수 있다', function() {
+    it('The getSize() method accepts the element size as a Rect', function() {
         map.style.width = '200px';
         map.style.height = '100px';
 
@@ -99,22 +99,22 @@ describe('module:domutil', function() {
     });
 
     describe('closest()', function() {
-        it('첫번째 인자가 조건에 만족할때는 첫번째 인자를 그냥 반환함.', function() {
+        it('If the first argument satisfies the condition, it just returns the first argument.', function() {
             var li = document.getElementById('list-item');
             expect(domutil.closest(li, '#list-item')).toBe(li);
         });
 
-        it('selector에 해당하는 부모 엘리먼트가 나올때까지 찾는다', function() {
+        it('Find until the parent element corresponding to selector is found', function() {
             var li = document.getElementById('list-item');
             expect(domutil.closest(li, '#parent')).toBe(document.getElementById('parent'));
         });
 
-        it('selector에 해당하는 부모 엘리먼트가 없으면 null을 반환한다', function() {
+        it('Returns null if selector has no parent element', function() {
             var li = document.getElementById('list-item');
             expect(domutil.closest(li, '#notexist')).toBeNull();
         });
 
-        it('렌더링 되지 않은 엘리먼트에 대해서도 동작함', function() {
+        it('Works for non-rendered elements', function() {
             var div = document.createElement('div');
             div.setAttribute('id', 'good');
             div.innerHTML = '<ul><li id="testtest">123</li></ul>';
@@ -124,14 +124,14 @@ describe('module:domutil', function() {
             expect(domutil.closest(li, '#good')).toBe(div);
         });
 
-        it('parentNode가 null일 경우 반환함.', function() {
+        it('Returns if parentNode is null.', function() {
             var div = document.createElement('div');
             expect(domutil.closest(div, '#good')).toBeNull();
         });
     });
 
     describe('text()', function() {
-        it('dom내부의 모든 텍스트를 태그 없이 볼 수 있다', function() {
+        it('You can see all the text inside dom without tags', function() {
             var div = domutil.find('#test');
 
             expect(domutil.text(div)).toBe('goodspan tag');
@@ -139,7 +139,7 @@ describe('module:domutil', function() {
     });
 
     describe('find()', function() {
-        it('find() 메서드로 문서 내 dom을 id, className, tagName으로 탐색할 수 있다', function() {
+        it('The find() method allows you to navigate the dom in the document with id, className, and tagName', function() {
             var div = domutil.find('#test'),
                 span = domutil.find('span', div),
                 textarea = domutil.find('.my-textarea', div),
@@ -151,29 +151,29 @@ describe('module:domutil', function() {
             expect(strong.innerHTML).toBe('tag');
         });
 
-        it('두 번째 인자가 없으면 document.body부터 찾기 시작한다', function() {
+        it('If there is no second argument, the search starts from document.body', function() {
             var span = domutil.find('#myspan');
 
             expect(span.getAttribute('id')).toBe('myspan');
         });
 
-        it('두 번째 엘리먼트에 root엘리먼트의 id를 넣어도 사용가능하다', function() {
+        it('You can also use the root element\'s id in the second element', function() {
             var span = domutil.find('span', 'test');
 
             expect(span.getAttribute('id')).toBe('myspan');
         });
 
-        it('엘리먼트가 없을 경우 null 반환', function() {
+        it('Returns null if element is missing', function() {
             var firstCheckedInput = domutil.find('form', document.getElementById('find-test'));
             expect(firstCheckedInput).toBe(null);
         });
 
-        it('세 번째 인자를 설정하지 않으면 조건을 만족하는 첫 번째 엘리먼트만 반환한다.', function() {
+        it('If the third argument is not set, only the first element that satisfies the condition is returned.', function() {
             var firstCheckedInput = domutil.find('input', document.getElementById('find-test'));
             expect(firstCheckedInput).toBe(document.getElementById('find-test-first'));
         });
 
-        it('세 번째 인자를 true로 설정하면 조건에 맞는 모든 엘리먼트를 반환한다.', function() {
+        it('If you set the third argument to true, it returns all the elements that match the condition.', function() {
             var inputs = domutil.find('input', document.getElementById('find-test'), true);
             expect(inputs.length).toBe(3);
             expect(inputs).toEqual([
@@ -183,7 +183,7 @@ describe('module:domutil', function() {
             ]);
         });
 
-        it('세 번째 인자에 함수를 전달하면 필터로 사용한다.', function() {
+        it('Pass the function to the third argument and use it as a filter.', function() {
             var inputs = domutil.find('input', document.getElementById('find-test'), function(el) {
                 return el.checked;
             });
@@ -214,7 +214,7 @@ describe('module:domutil', function() {
 
     describe('createElement()', function() {
 
-        it('엘리먼트를 생성하여 문서에 바로 추가한다', function() {
+        it('Create an element and add it directly to the document', function() {
             var div = domutil.appendHTMLElement('div');
             var image = domutil.appendHTMLElement('img');
 
@@ -225,7 +225,7 @@ describe('module:domutil', function() {
             expect(document.getElementById('freshDiv')).toBe(div);
         });
 
-        it('엘리먼트를 특정 엘리먼트의 자식으로 바로 생성할 수 있다', function() {
+        it('You can instantiate an element as a child of a specific element', function() {
             var wrap = domutil.appendHTMLElement('div');
 
             wrap.id = 'freshWrapDiv';
@@ -235,7 +235,7 @@ describe('module:domutil', function() {
             expect(document.getElementById('freshWrapDiv').childNodes[0]).toBe(img);
         });
 
-        it('엘리먼트 생성과 동시에 cssClass를 할당할 수 있다', function() {
+        it('You can assign a cssClass at the same time as creating an element', function() {
             var el = domutil.appendHTMLElement('div', null, 'my-wrap');
 
             expect(domutil.getClass(el)).toBe('my-wrap');
@@ -243,7 +243,7 @@ describe('module:domutil', function() {
     });
 
     describe('getFormData()', function() {
-        it('폼 엘리먼트 내의 입력값을 객체로 출력한다', function() {
+        it('You can assign a cssClass at the same time as creating an element', function() {
             var actual = domutil.getFormData(document.getElementById('testform1'));
 
             var expected = {
@@ -258,12 +258,12 @@ describe('module:domutil', function() {
             expect(actual).toEqual(expected);
         });
 
-        it('selectbox 이면서 option 이 하나도 없으면 emptyString', function() {
+        it('If there is no option but a selectbox, empty String', function() {
             var actual = domutil.getFormData(document.getElementById('testform1'));
             expect(actual['type3']).toBe('');
         });
 
-        it('disabled인 엘리먼트는 뺌', function() {
+        it('Remove elements that are disabled', function() {
             var actual = domutil.getFormData(document.getElementById('testform1'));
             expect(actual['type2']).not.toBeDefined();
             expect(actual['name2']).not.toBeDefined();

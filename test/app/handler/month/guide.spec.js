@@ -19,7 +19,7 @@ describe('handler:month/guide', function() {
             }
         };
 
-        // 1, 1 에서 2, 2 로 드래그 시 드래그 시작 주 의 가이드 엘리먼트 계산
+        // Drag from (1, 1) to (2, 2)Start Dragging Note Guide element calculation
         expected = {
             left: 20,
             width: 80,
@@ -30,7 +30,7 @@ describe('handler:month/guide', function() {
 
         expect(actual).toEqual(expected);
 
-        // 2,3 ~ 5,3 드래그 시 계산
+        // 2,3 ~ 5,3 Calculations at Drag
         expected = {
             left: 40,
             width: 80,
@@ -61,7 +61,7 @@ describe('handler:month/guide', function() {
             }
         };
 
-        // 0,2 ~ 1,4 드래그 시 마우스 커서가 위치한 주 의 가이드 엘리먼트 계산
+        // 0,2 ~ 1,4 Principal guide element calculation with mouse cursor at drag
         expected = {
             left: 0,
             width: 40,
@@ -114,7 +114,7 @@ describe('handler:month/guide', function() {
             mockInst._getExcludesInRange = proto._getExcludesInRange;
             mockInst._getGuideElement.and.returnValue(true);
 
-            // 가이드 엘리먼트가 0, 1 에 존재하는 상태에서
+            // When the guide element is present at 0, 1
             mockInst.options = {
                 isResizeMode: false
             };
@@ -123,15 +123,15 @@ describe('handler:month/guide', function() {
                 1: true
             };
 
-            // 1, 1 부터 2, 2까지 드래그 하면
+            // Dragging from 1, 1 to 2, 2
             mockInst.startCoord = [1, 1];
             mockInst._getLimitedCoord.and.returnValue([2, 2]);
             proto.update.call(mockInst, 2, 2);
 
-            // 0의 가이드 엘리먼트를 제거하고
+            // Remove the guide element of 0
             expect(mockInst._removeGuideElements).toHaveBeenCalledWith([0]);
 
-            // 1, 2 번째 가이드 엘리먼트를 업데이트 함
+            // Update 1st and 2nd guide elements
             expect(mockInst._updateGuides).toHaveBeenCalledWith({
                 1: jasmine.any(Object),
                 2: jasmine.any(Object)
