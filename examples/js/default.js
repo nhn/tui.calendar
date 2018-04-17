@@ -142,20 +142,14 @@
             var schedule = e.schedule;
             console.log('clickSchedule', e);
 
-            if (lastClickSchedule) {
-                cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-                    color: findCalendar(lastClickSchedule.calendarId).color,
-                    isFocused: false
-                });
-            }
-            if (lastClickPopover) {
-                lastClickPopover.popover('hide');
+            if (lastClickSchedule && lastClickSchedule.id === schedule.id) {
+                return;
             }
 
-            cal.updateSchedule(schedule.id, schedule.calendarId, {
-                color: findCalendar(schedule.calendarId).color,
-                isFocused: true
-            });
+            if (lastClickPopover) {
+                lastClickPopover.popover('hide');
+                lastClickPopover = null;
+            }
 
             lastClickSchedule = schedule;
 
@@ -261,15 +255,13 @@
 
     function closePopover(e) {
         var target = $(e.target);
-        if (!target.closest('.popover').length && lastClickPopover) {
+        if (!target.closest('.popover').length && lastClickPopover && !lastClickPopover.find(target).length && lastClickPopover[0] !== target[0]) {
             if (lastClickSchedule) {
-                cal.updateSchedule(lastClickSchedule.id, lastClickSchedule.calendarId, {
-                    color: findCalendar(lastClickSchedule.calendarId).color,
-                    isFocused: false
-                });
+                lastClickSchedule = null;
             }
 
             lastClickPopover.popover('hide');
+            lastClickPopover = null;
         }
     }
 
