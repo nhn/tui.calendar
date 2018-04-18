@@ -213,7 +213,15 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         model = dragStartEvent.model,
         x = dragStartEvent.x,
         y = dragStartEvent.y,
+        renderMonth = datetime.parse(this.view.options.renderMonth + '-01'),
         temp;
+
+    if (!datetime.isSameMonth(renderMonth, model.start)) {
+        model.start.setMonth(renderMonth.getMonth());
+        model.start.setDate(1);
+        model.end.setMonth(renderMonth.getMonth());
+        model.end.setDate(1);
+    }
 
     if (opt.isResizeMode) {
         temp = this._getCoordByDate(model.getStarts());

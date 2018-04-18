@@ -79,7 +79,7 @@ var dayGridCore = {
     _retriveScheduleDataFromDate: function(view, startDate) {
         var weekdayView = view.children.single(),
             datesInRange,
-            dragStartXIndex,
+            dragStartXIndex = 0,
             grids,
             range;
 
@@ -102,7 +102,7 @@ var dayGridCore = {
          * @returns {object} schedule data.
          */
         return function(targetDate) {
-            var xIndex;
+            var xIndex = 0;
 
             util.forEach(range, function(date, index) {
                 if (datetime.isSameDate(date, targetDate)) {

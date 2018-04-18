@@ -357,6 +357,11 @@ TimeCreation.prototype.invokeCreationClick = function(schedule) {
         }
     }, this);
 
+    // If start date is not in current date, set start date as first date.
+    if (!timeView) {
+        timeView = this.timeGridView.children.toArray()[0];
+    }
+
     getScheduleDataFunc = this._retriveScheduleDataFromDate(timeView);
     eventData = getScheduleDataFunc(schedule.start, schedule.end);
 
