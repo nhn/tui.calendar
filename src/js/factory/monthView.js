@@ -16,6 +16,7 @@ var config = require('../config'),
     MonthMove = require('../handler/month/move'),
     More = require('../view/month/more'),
     ScheduleCreationPopup = require('../view/popup/scheduleCreationPopup'),
+    ScheduleDetailPopup = require('../view/popup/scheduleDetailPopup'),
     Schedule = require('../model/schedule');
 
 /**
@@ -48,7 +49,8 @@ function getViewModelForMoreLayer(date, target, schedules) {
 function createMonthView(baseController, layoutContainer, dragHandler, options) {
     var monthViewContainer, monthView, moreView, createView;
     var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler, onUpdateSchedule;
-    var onShowCreationPopup, onSaveNewSchedule, onSetCalendars;
+    var onShowCreationPopup, onSaveNewSchedule, onShowEditPopup;
+    var detailView, onShowDetailPopup, onDeleteSchedule, onEditSchedule;
 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
@@ -71,12 +73,6 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     onUpdateSchedule = function() {
         if (moreView) {
             moreView.refresh();
-        }
-    };
-
-    onSetCalendars = function(calendars) {
-        if (createView) {
-            createView.setCalendars(calendars);
         }
     };
 
@@ -107,7 +103,41 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
                 useCreationPopup: true
             }));
         };
-        createView.on('saveSchedule', onSaveNewSchedule);
+        createView.on('beforeCreateSchedule', onSaveNewSchedule);
+    }
+
+    // binding popup for schedule detail
+    if (options.useDetailPopup) {
+        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+        onShowDetailPopup = function(eventData) {
+            var scheduleId = eventData.schedule.calendarId;
+            eventData.calendar = baseController.calendars.find(function(calendar) {
+                return calendar.id === scheduleId;
+            });
+
+            detailView.render(eventData);
+        };
+        onDeleteSchedule = function(eventData) {
+            creationHandler.fire('beforeDeleteSchedule', eventData);
+        };
+        onEditSchedule = function(eventData) {
+            moveHandler.fire('beforeUpdateSchedule', eventData);
+        };
+
+        clickHandler.on('clickSchedule', onShowDetailPopup);
+
+        detailView.on('beforeDeleteSchedule', onDeleteSchedule);
+
+        if (options.useCreationPopup) {
+            onShowEditPopup = function(eventData) {
+                createView.setCalendars(baseController.calendars);
+                createView.render(eventData);
+            };
+            createView.on('beforeUpdateSchedule', onEditSchedule);
+            detailView.on('beforeUpdateSchedule', onShowEditPopup);
+        } else {
+            detailView.on('beforeUpdateSchedule', onEditSchedule);
+        }
     }
 
     // binding clear schedules
@@ -115,9 +145,6 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // bind update schedule event
     baseController.on('updateSchedule', onUpdateSchedule);
-
-    // bind set calendar list event
-    baseController.on('setCalendars', onSetCalendars);
 
     moveHandler.on('monthMoveStart_from_morelayer', function() {
         moreView.hide();
@@ -142,7 +169,6 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         moreView.destroy();
         baseController.off('clearSchedules', clearSchedulesHandler);
         baseController.off('updateSchedule', onUpdateSchedule);
-        baseController.off('setCalendars', onSetCalendars);
 
         util.forEach(monthView.handler, function(type) {
             util.forEach(type, function(handler) {
@@ -151,9 +177,21 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             });
         });
 
+        if (options.useCreationPopup && options.useDetailPopup) {
+            createView.off('beforeUpdateSchedule', onUpdateSchedule);
+        }
+
         if (options.useCreationPopup) {
             creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
             createView.off('saveSchedule', onSaveNewSchedule);
+            createView.destroy();
+        }
+
+        if (options.useDetailPopup) {
+            clickHandler.off('clickSchedule', onShowDetailPopup);
+            detailView.off('beforeUpdateSchedule', onUpdateSchedule);
+            detailView.off('beforeDeleteSchedule', onDeleteSchedule);
+            detailView.destroy();
         }
     };
 

@@ -9,6 +9,7 @@
     var cal, resizeThrottled;
     var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var useCreationPopup = true;
+    var useDetailPopup = true;
     var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
     Calendar.setTimezoneOffsetCallback(function(timestamp) {
@@ -133,6 +134,7 @@
             daynames: daynames
         },
         useCreationPopup: useCreationPopup,
+        useDetailPopup: useDetailPopup,
         calendars: CalendarList
     });
 
@@ -140,7 +142,11 @@
     cal.on({
         'clickSchedule': function(e) {
             var schedule = e.schedule;
-            console.log('clickSchedule', e);
+
+            console.log('clickSchedule', ' useCreationPopup: ' + useCreationPopup, e);
+            if (useCreationPopup) {
+                return;
+            }
 
             if (lastClickSchedule && lastClickSchedule.id === schedule.id) {
                 return;
@@ -167,14 +173,14 @@
             }
         },
         'beforeUpdateSchedule': function(e) {
-            cal.updateSchedule(e.schedule.id, e.schedule.calendarId, {
-                start: e.start,
-                end: e.end
-            });
+            e.schedule.start = e.start;
+            e.schedule.end = e.end;
+            cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
 
-            console.log('update', e);
+            console.log('update', ' useCreationPopup: ' + useCreationPopup, e);
         },
         'beforeDeleteSchedule': function(e) {
+            cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
             console.log('delete', e);
         }
     });
@@ -391,7 +397,8 @@
             borderColor: calendar.borderColor,
             raw: {
                 location: location
-            }
+            },
+            state: 'Busy'
         }]);
 
         $('#modal-new-schedule').modal('hide');
@@ -469,9 +476,10 @@
             category: scheduleData.isAllDay ? 'allday' : 'time',
             dueDateClass: '',
             raw: {
-                'class': scheduleData.raw['private'] ? 'private' : '',
+                'class': scheduleData.raw['class'],
                 location: scheduleData.raw.location
-            }
+            },
+            state: scheduleData.state
         };
         if (calendar) {
             schedule.calendarId = calendar.id;

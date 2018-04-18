@@ -1,0 +1,30 @@
+<div class="{{CSS_PREFIX}}popup {{CSS_PREFIX}}popup-detail">
+  <div class="{{CSS_PREFIX}}popup-container">
+    <div class="{{CSS_PREFIX}}popup-section {{CSS_PREFIX}}section-header">
+      <div>
+        <span class="{{CSS_PREFIX}}schedule-private icon private"></span>
+        <span class="{{CSS_PREFIX}}schedule-title">{{schedule.title}}</span>
+      </div>
+      <div class="{{CSS_PREFIX}}popup-detail-date content">{{popupDetailDate-tmpl schedule.start schedule.end}}</div>
+    </div>
+    <div class="{{CSS_PREFIX}}section-detail">
+        <div class="{{CSS_PREFIX}}popup-detail-item"><span class="icon ic-location-b"></span><span class="content">{{popupDetailLocation-tmpl schedule}}</span></div>
+        <div class="{{CSS_PREFIX}}popup-detail-item"><span class="icon ic-user-b"></span><span class="content">{{popupDetailUser-tmpl schedule}}</span></div>
+        <div class="{{CSS_PREFIX}}popup-detail-item"><span class="icon ic-state-b"></span><span class="content">{{popupDetailState-tmpl schedule}}</span></div>
+        {{#if calendar}}
+        <div class="{{CSS_PREFIX}}popup-detail-item"><span class="icon calendar-dot" style="background-color: {{schedule.bgColor}}"></span><span class="content">{{calendar.name}}</span></div>
+        {{/if}}
+    </div>
+    <div class="{{CSS_PREFIX}}section-button">
+      <button class="{{CSS_PREFIX}}popup-edit"><span class="icon ic-edit"></span><span class="content">{{popupEdit-tmpl}}</span></button>
+      <div class="{{CSS_PREFIX}}popup-vertical-line"></div>
+      <button class="{{CSS_PREFIX}}popup-delete"><span class="icon ic-delete"></span><span class="content">{{popupDelete-tmpl}}</span></button>
+    </div>
+  </div>
+  <div class="{{CSS_PREFIX}}popup-top-line" style="background-color: {{schedule.bgColor}}"></div>
+  <div id="{{CSS_PREFIX}}popup-arrow" class="{{CSS_PREFIX}}popup-arrow left">
+    <div class="{{CSS_PREFIX}}popup-arrow-border">
+        <div class="{{CSS_PREFIX}}popup-arrow-fill"></div>
+    </div>
+  </div>
+</div>

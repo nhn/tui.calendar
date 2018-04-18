@@ -113,7 +113,8 @@ var mmin = Math.min;
  * @property {WeekOptions} [week={}] - options for week view
  * @property {MonthOptions} [month={}] - options for month view
  * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
- * @property {boolean} [useCreationPopup=true] - whether use creation popup or not
+ * @property {boolean} [useCreationPopup=false] - whether use default creation popup or not
+ * @property {boolean} [useDetailPopup=false] - whether use default detail popup or not
  */
 
 /**
@@ -329,7 +330,8 @@ Calendar.prototype._initialize = function(options) {
         week: util.extend({}, util.pick(options, 'week') || {}),
         month: util.extend({}, util.pick(options, 'month') || {}),
         calendars: [],
-        useCreationPopup: true
+        useCreationPopup: false,
+        useDetailPopup: false
     }, options);
 
     this._options.week = util.extend({
@@ -453,7 +455,6 @@ Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleDat
 
 /**
  * Delete a schedule.
- * @fires Calendar#beforeDeleteSchedule
  * @param {string} scheduleId - ID of schedule to delete
  * @param {string} calendarId - calendarId of the schedule to delete
  */
@@ -467,20 +468,6 @@ Calendar.prototype.deleteSchedule = function(scheduleId, calendarId) {
     if (!schedule) {
         return;
     }
-
-    /**
-     * Fire this event when delete a schedule.
-     * @event Calendar#beforeDeleteSchedule
-     * @type {object}
-     * @property {Schedule} schedule - schedule instance to delete
-     * @example
-     * calendar.on('beforeDeleteSchedule', function() {
-     *     alert('The schedule is removed.');
-     * });
-     */
-    this.fire('beforeDeleteSchedule', {
-        schedule: schedule
-    });
 
     ctrl.deleteSchedule(schedule);
     this.render();
@@ -978,6 +965,25 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
 };
 
 /**
+ * @fires Calendar#beforeDeleteSchedule
+ * @param {object} deleteScheduleData - delete schedule data
+ * @private
+ */
+Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
+    /**
+     * Fire this event when delete a schedule.
+     * @event Calendar#beforeDeleteSchedule
+     * @type {object}
+     * @property {Schedule} schedule - schedule instance to delete
+     * @example
+     * calendar.on('beforeDeleteSchedule', function() {
+     *     alert('The schedule is removed.');
+     * });
+     */
+    this.fire('beforeDeleteSchedule', deleteScheduleData);
+};
+
+/**
  * Toggle calendar factory class, main view, wallview event connection
  * @param {boolean} isAttach - attach events if true.
  * @param {Week|Month} view - Weekly view or Monthly view
@@ -998,6 +1004,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
 
     util.forEach(handler.creation, function(creationHandler) {
         creationHandler[method]('beforeCreateSchedule', self._onBeforeCreate, self);
+        creationHandler[method]('beforeDeleteSchedule', self._onBeforeDelete, self);
     });
 
     util.forEach(handler.move, function(moveHandler) {
