@@ -7,7 +7,7 @@
                 <span class="icon {{CSS_PREFIX}}dropdown-arrow"></span>
                 </span>
             </button>
-            <ul class="{{CSS_PREFIX}}dropdown-menu" style="z-index: {{floatingZIndex}}">
+            <ul class="{{CSS_PREFIX}}dropdown-menu" style="z-index: {{zIndex}}">
                 {{#each calendars}}
                     <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item" data-calendar-id="{{id}}">
                         <span class="icon calendar-dot" style="background-color: {{bgColor}}"></span>
@@ -19,16 +19,16 @@
         <div class="{{CSS_PREFIX}}popup-section">
             <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-title">
             <span class="icon ic-title"></span>
-            <input id="{{CSS_PREFIX}}schedule-title" class="content" placeholder="{{titlePlaceholder-tmpl}}"></span>
+            <input id="{{CSS_PREFIX}}schedule-title" class="content" placeholder="{{titlePlaceholder-tmpl}}" value="{{title}}"></span>
             </div>
-            <button id="{{CSS_PREFIX}}schedule-private" class="{{CSS_PREFIX}}button {{CSS_PREFIX}}section-private {{CSS_PREFIX}}public">
+            <button id="{{CSS_PREFIX}}schedule-private" class="{{CSS_PREFIX}}button {{CSS_PREFIX}}section-private{{#unless isPrivate}} public{{/unless}}">
             <span class="icon private"></span>
             </button>
         </div>
         <div class="{{CSS_PREFIX}}popup-section">
             <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-location">
             <span class="icon ic-location"></span>
-            <input id="{{CSS_PREFIX}}schedule-location" class="content" placeholder="{{locationPlaceholder-tmpl}}"></span>
+                <input id="{{CSS_PREFIX}}schedule-location" class="content" placeholder="{{locationPlaceholder-tmpl}}" value="{{location}}"></span>
             </div>
         </div>
         <div class="{{CSS_PREFIX}}popup-section">
@@ -52,10 +52,10 @@
         <div class="{{CSS_PREFIX}}popup-section {{CSS_PREFIX}}dropdown {{CSS_PREFIX}}close {{CSS_PREFIX}}section-state">
             <button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}dropdown-button {{CSS_PREFIX}}popup-section-item">
                 <span class="icon ic-state"></span>
-                <span id="{{CSS_PREFIX}}schedule-state" class="content">{{popupStateBusy-tmpl}}</span>
+                <span id="{{CSS_PREFIX}}schedule-state" class="content">{{#if state}}{{state}}{{else}}{{popupStateBusy-tmpl}}{{/if}}</span>
                 <span class="icon right {{CSS_PREFIX}}dropdown-arrow"></span>
             </button>
-            <ul class="{{CSS_PREFIX}}dropdown-menu" style="z-index: {{floatingZIndex}}">
+            <ul class="{{CSS_PREFIX}}dropdown-menu" style="z-index: {{zIndex}}">
                 <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item">
                 <span class="icon none"></span>
                 <span class="content">{{popupStateBusy-tmpl}}</span>
@@ -67,7 +67,7 @@
             </ul>
         </div>
         <button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}popup-close"><span class="icon ic-close"></span></button>
-        <div class="{{CSS_PREFIX}}section-button-save"><button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}confirm {{CSS_PREFIX}}popup-save"><span>Save</span></button></div>
+        <div class="{{CSS_PREFIX}}section-button-save"><button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}confirm {{CSS_PREFIX}}popup-save"><span>{{#if isEditMode}}{{popupUpdate-tmpl}}{{else}}{{popupSave-tmpl}}{{/if}}</span></button></div>
     </div>
     <div id="{{CSS_PREFIX}}popup-arrow" class="{{CSS_PREFIX}}popup-arrow bottom">
         <div class="{{CSS_PREFIX}}popup-arrow-border">

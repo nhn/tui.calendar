@@ -35,6 +35,7 @@ function ScheduleCreationPopup(container, calendars) {
      */
     this._viewModel = null;
     this._selectedCal = null;
+    this._scheduleId = '';
     this.calendars = calendars;
     this._focusedDropdown = null;
     this._onClickListeners = [
@@ -237,6 +238,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
     var title, isPrivate, location, isAllDay, startDate, endDate, state;
+    var start, end;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
@@ -259,9 +261,9 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     isPrivate = domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), 'private');
     location = domutil.get(cssPrefix + 'schedule-location');
     state = domutil.get(cssPrefix + 'schedule-state');
-    isAllDay = domutil.get(cssPrefix + 'schedule-allday');
+    isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
 
-    if (isAllDay.checked) {
+    if (isAllDay) {
         startDate.setHours(0);
         startDate.setMinutes(0);
         startDate.setSeconds(0);
@@ -270,23 +272,49 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
         endDate.setSeconds(59);
     }
 
-    /**
-     * @event ScheduleCreationPopup#saveSchedule
-     * @type {object}
-     * @property {Schedule} schedule - new schedule instance to be added
-     */
-    this.fire('saveSchedule', {
-        calendarId: this._selectedCal.id,
-        title: title.value,
-        start: new TZDate(startDate),
-        end: new TZDate(endDate),
-        isAllDay: isAllDay.checked,
-        state: state.innerText,
-        raw: {
-            private: isPrivate,
-            location: location.value
-        }
-    });
+    start = new TZDate(startDate);
+    end = new TZDate(endDate);
+
+    if (this._isEditMode) {
+        this.fire('beforeUpdateSchedule', {
+            schedule: {
+                calendarId: this._selectedCal.id,
+                title: title.value,
+                raw: {
+                    class: isPrivate ? 'private' : 'public',
+                    location: location.value
+                },
+                start: start,
+                end: end,
+                isAllDay: isAllDay,
+                state: state.innerText,
+                triggerEventName: 'click',
+                id: this._scheduleId
+            },
+            start: start,
+            end: end,
+            calendar: this._selectedCal,
+            triggerEventName: 'click'
+        });
+    } else {
+        /**
+         * @event ScheduleCreationPopup#beforeCreateSchedule
+         * @type {object}
+         * @property {Schedule} schedule - new schedule instance to be added
+         */
+        this.fire('beforeCreateSchedule', {
+            calendarId: this._selectedCal.id,
+            title: title.value,
+            raw: {
+                class: isPrivate ? 'private' : 'public',
+                location: location.value
+            },
+            start: new TZDate(startDate),
+            end: new TZDate(endDate),
+            isAllDay: isAllDay,
+            state: state.innerText
+        });
+    }
 
     this.hide();
 
@@ -301,17 +329,28 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
     var calendars = this.calendars;
     var layer = this.layer;
     var self = this;
+    var boxElement, guideElements;
 
-    viewModel.floatingZIndex = this.layer.zIndex + 5;
+    viewModel.zIndex = this.layer.zIndex + 5;
     viewModel.calendars = calendars;
     if (calendars.length) {
         viewModel.selectedCal = this._selectedCal = calendars[0];
     }
 
+    this._isEditMode = viewModel.schedule && viewModel.schedule.id;
+    if (this._isEditMode) {
+        boxElement = viewModel.target;
+        viewModel = this._makeEditModeData(viewModel);
+    } else {
+        this.guide = viewModel.guide;
+        guideElements = this._getGuideElements(this.guide);
+        boxElement = guideElements.length ? guideElements[0] : null;
+    }
     layer.setContent(tmpl(viewModel));
     this._createDatepicker(viewModel.start, viewModel.end);
     layer.show();
-    this._setPopupPositionAndArrowDirection(viewModel.guide);
+
+    this._setPopupPositionAndArrowDirection(boxElement.getBoundingClientRect());
 
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
@@ -319,10 +358,59 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
 };
 
 /**
- * Set popup position and arrow direction to apear near guide element
- * @param {MonthCreationGuide|TimeCreationGuide|DayGridCreationGuide} guide - creation guide element
+ * Make view model for edit mode
+ * @param {object} viewModel - original view model from 'beforeCreateEditPopup'
+ * @returns {object} - edit mode view model
  */
-ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(guide) {
+ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
+    var schedule = viewModel.schedule;
+    var title, isPrivate, location, startDate, endDate, isAllDay, state;
+    var raw = schedule.raw || {};
+    var calendars = this.calendars;
+    var calendarIndex;
+
+    var id = schedule.id;
+    title = schedule.title;
+    isPrivate = raw['class'] === 'private';
+    location = raw.location;
+    startDate = schedule.start;
+    endDate = schedule.end;
+    isAllDay = schedule.isAllDay;
+    state = schedule.state;
+
+    calendarIndex = calendars.findIndex(function(calendar) {
+        return calendar.id === viewModel.schedule.calendarId;
+    });
+    calendarIndex = calendarIndex < 0 ? 0 : calendarIndex;
+
+    viewModel.selectedCal = this._selectedCal = calendars[calendarIndex];
+    this._scheduleId = id;
+
+    return {
+        id: id,
+        selectedCal: this._selectedCal,
+        calendars: calendars,
+        title: title,
+        isPrivate: isPrivate,
+        location: location,
+        isAllDay: isAllDay,
+        state: state,
+        start: startDate,
+        end: endDate,
+        raw: {
+            location: location,
+            'class': isPrivate ? 'private' : 'public'
+        },
+        zIndex: this.layer.zIndex + 5,
+        isEditMode: this._isEditMode
+    };
+};
+
+/**
+ * Set popup position and arrow direction to apear near guide element
+ * @param {MonthCreationGuide|TimeCreationGuide|DayGridCreationGuide} guideBound - creation guide element
+ */
+ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(guideBound) {
     var layer = domutil.find(config.classname('.popup'), this.layer.container);
     var layerSize = {
         width: layer.offsetWidth,
@@ -337,11 +425,8 @@ ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(gu
         left: parentRect.left,
         top: parentRect.top
     };
-    var guideElements, guideBound, pos;
+    var pos;
 
-    this.guide = guide;
-    guideElements = this._getGuideElements(guide);
-    guideBound = this._getBoundOfFirstRowGuideElement(guideElements);
     pos = this._calcRenderingData(layerSize, windowSize, guideBound);
     pos.x -= parentBounds.left;
     pos.y -= (parentBounds.top + 6);

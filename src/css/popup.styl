@@ -34,8 +34,6 @@
 .{css-prefix}button.{css-prefix}section-private
     height: 32px
     padding: 8px
-    position: relative
-    top: 1px
     font-size: 0
     margin-left: 4px
 
@@ -317,6 +315,7 @@
   background-color: #d95614
   color: #ffffff
 
+/* icon styles */
 .icon {
   width: 14px;
   height: 14px;
@@ -358,6 +357,22 @@
 .icon.ic-close
     background: url('image/ic-close.png') no-repeat
 
+
+.ic-location-b
+  background: url('./image/ic-location-b.png')
+
+.ic-state-b
+  background: url('./image/ic-state-b.png')
+
+.icon.ic-user-b
+  background-image: url('./image/ic-user-b.png')
+
+.icon.ic-edit
+  background-image: url('./image/ic-edit.png')
+
+.icon.ic-delete
+  background-image: url('./image/ic-delete.png')
+
 input[type='checkbox'].checkbox-square
   display: none
 
@@ -389,6 +404,98 @@ input[type='checkbox'].checkbox-round + span
   border-radius: 8px
   border: solid 2px
   background: transparent
+
+.{css-prefix}popup-top-line
+  position: absolute
+  border-radius: 2px 2px 0 0
+  width: 100%
+  height: 4px
+  border: none
+  top: 0
+
+.{css-prefix}popup-detail .{css-prefix}popup-container
+  width: 301px
+  min-width: 301px
+  padding-bottom: 0
+
+.{css-prefix}popup-detail .icon
+  width: 12px
+  height: 12px
+  background-size: 12px
+  position: relative
+
+.{css-prefix}popup-detail .icon
+  margin-right: 8px
+
+.{css-prefix}popup-detail .icon.ic-location-b
+  top: -2px
+
+.{css-prefix}popup-detail .icon.ic-user-b
+  top: -2px
+
+.{css-prefix}popup-detail .icon.ic-state-b
+  top: -1px
+
+.{css-prefix}popup-detail .icon.calendar-dot
+  width: 10px
+  height: 10px
+  margin-right: 8px
+  top: -1px
+
+.{css-prefix}popup-detail .content
+  line-height: 24px
+  height: 24px
+  font-size: 12px
+  line-height: 2
+
+.{css-prefix}popup-detail .{css-prefix}section-header
+  margin-bottom: 12px
+
+.{css-prefix}popup-detail .{css-prefix}schedule-title
+  font-size: 15px
+  font-weight: bold
+  line-height: 1.6
+
+.{css-prefix}popup-detail .{css-prefix}schedule-private
+  display: none
+  width: 16px
+  height: 16px
+  background: url('image/ic-lock.png') no-repeat 16px
+
+.{css-prefix}popup-detail .{css-prefix}schedule-private .private
+  display: block
+
+.{css-prefix}popup-detail .{css-prefix}section-detail
+  margin-bottom: 16px
+
+.{css-prefix}popup-detail .{css-prefix}section-button
+  border-top: 1px solid #e5e5e5
+  font-size: 0
+
+.{css-prefix}section-button .icon
+  margin-right: 4px
+  top: -3px
+
+.{css-prefix}section-button .content
+  position: relative
+  top: 2px
+
+.{css-prefix}popup-edit, .{css-prefix}popup-delete
+  display: inline-block
+  padding: 7px 9px 11px 9px
+  width: calc(50% - 1px)
+  outline: none
+  background: none
+  border: none
+  cursor: pointer
+
+.{css-prefix}popup-vertical-line
+  background: #e5e5e5
+  width: 1px
+  height: 14px
+  vertical-align: middle
+  display: inline-block
+  margin-top: -7px
 
 /* override tui-date-picker */
 .tui-datepicker

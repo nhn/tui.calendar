@@ -375,5 +375,34 @@ Handlebars.registerHelper({
 
     'endDatePlaceholder-tmpl': function() {
         return 'End date';
+    },
+    'popupSave-tmpl': function() {
+        return 'Save';
+    },
+    'popupUpdate-tmpl': function() {
+        return 'Update';
+    },
+    'popupDetailDate-tmpl': function(start, end) {
+        var isDateDifferent = start.getDate() !== end.getDate();
+        var endFormat = (isDateDifferent ? 'YYYY.MM.DD ' : '') + 'hh:mm tt';
+
+        return (datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat));
+    },
+    'popupDetailLocation-tmpl': function(schedule) {
+        return schedule.raw.location;
+    },
+    'popupDetailUser-tmpl': function(schedule) {
+        var creator = schedule.raw.creator;
+
+        return creator ? creator.name : '';
+    },
+    'popupDetailState-tmpl': function(schedule) {
+        return schedule.state || 'Busy';
+    },
+    'popupEdit-tmpl': function() {
+        return 'Edit';
+    },
+    'popupDelete-tmpl': function() {
+        return 'Delete';
     }
 });
