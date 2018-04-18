@@ -277,6 +277,7 @@ function Calendar(container, options) {
     /**
      * Unique id for requestAnimFrame()
      * @type {number}
+     * @private
      */
     this._requestRender = 0;
 
