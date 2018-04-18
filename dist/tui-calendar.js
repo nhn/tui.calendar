@@ -1,19 +1,19 @@
 /*!
  * tui-calendar
- * @version 0.10.0 | Mon Apr 09 2018
+ * @version 1.0.0 | Wed Apr 18 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("tui-code-snippet"));
+		module.exports = factory(require("tui-code-snippet"), require("tui-date-picker"));
 	else if(typeof define === 'function' && define.amd)
-		define(["tui-code-snippet"], factory);
+		define(["tui-code-snippet", "tui-date-picker"], factory);
 	else if(typeof exports === 'object')
-		exports["Calendar"] = factory(require("tui-code-snippet"));
+		exports["Calendar"] = factory(require("tui-code-snippet"), require("tui-date-picker"));
 	else
-		root["tui"] = root["tui"] || {}, root["tui"]["Calendar"] = factory((root["tui"] && root["tui"]["util"]));
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
+		root["tui"] = root["tui"] || {}, root["tui"]["Calendar"] = factory((root["tui"] && root["tui"]["util"]), (root["tui"] && root["tui"]["DatePicker"]));
+})(this, function(__WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_72__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -345,7 +345,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'milestoneTitle-tmpl': function() {
-	        return '마일스톤';
+	        return 'Milestone';
 	    },
 	
 	    'task-tmpl': function(model) {
@@ -358,11 +358,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'taskTitle-tmpl': function() {
-	        return '업무';
+	        return 'Task';
 	    },
 	
 	    'alldayTitle-tmpl': function() {
-	        return '종일';
+	        return 'AllDay';
 	    },
 	
 	    'alldayCollapseBtnTitle-tmpl': function() {
@@ -435,6 +435,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    'collapseBtnTitle-tmpl': function() {
 	        return '∧';
+	    },
+	
+	    'popupIsAllDay-tmpl': function() {
+	        return 'All day';
+	    },
+	
+	    'popupStateFree-tmpl': function() {
+	        return 'Free';
+	    },
+	
+	    'popupStateBusy-tmpl': function() {
+	        return 'Busy';
+	    },
+	
+	    'titlePlaceholder-tmpl': function() {
+	        return 'Subject';
+	    },
+	
+	    'locationPlaceholder-tmpl': function() {
+	        return 'Location';
+	    },
+	
+	    'startDatePlaceholder-tmpl': function() {
+	        return 'Start date';
+	    },
+	
+	    'endDatePlaceholder-tmpl': function() {
+	        return 'End date';
+	    },
+	    'popupSave-tmpl': function() {
+	        return 'Save';
+	    },
+	    'popupUpdate-tmpl': function() {
+	        return 'Update';
+	    },
+	    'popupDetailDate-tmpl': function(start, end) {
+	        var isDateDifferent = start.getDate() !== end.getDate();
+	        var endFormat = (isDateDifferent ? 'YYYY.MM.DD ' : '') + 'hh:mm tt';
+	
+	        return (datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat));
+	    },
+	    'popupDetailLocation-tmpl': function(schedule) {
+	        return schedule.raw.location;
+	    },
+	    'popupDetailUser-tmpl': function(schedule) {
+	        var creator = schedule.raw.creator;
+	
+	        return creator ? creator.name : '';
+	    },
+	    'popupDetailState-tmpl': function(schedule) {
+	        return schedule.state || 'Busy';
+	    },
+	    'popupEdit-tmpl': function() {
+	        return 'Edit';
+	    },
+	    'popupDelete-tmpl': function() {
+	        return 'Delete';
 	    }
 	});
 
@@ -1723,6 +1780,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        return datetime.leadingZero(hour, 2) + ':' +
 	            datetime.leadingZero(minutes, 2);
+	    },
+	
+	    /**
+	     * @param {TZDate} date date object
+	     * @returns {string} hh:mm
+	     */
+	    'hh:mm': function(date) {
+	        var hour = Math.floor(date.getHours() / 12),
+	            minutes = date.getMinutes();
+	
+	        return datetime.leadingZero(hour, 2) + ':' +
+	            datetime.leadingZero(minutes, 2);
+	    },
+	
+	    /**
+	     * @param {TZDate} date date object
+	     * @returns {string} tt
+	     */
+	    'tt': function(date) {
+	        var hour = date.getHours();
+	
+	        return hour < 12 ? 'am' : 'pm';
 	    }
 	};
 	
@@ -2251,6 +2330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Get the timezone offset by timestampe
 	 * @param {number} timestamp - timestamp
 	 * @returns {number} timezone offset
+	 * @private
 	 */
 	function getTimezoneOffset(timestamp) {
 	    timestamp = timestamp || Date.now();
@@ -2262,6 +2342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Get the custome timezone offset by timestampe
 	 * @param {number} timestamp - timestamp
 	 * @returns {number} timezone offset
+	 * @private
 	 */
 	function getCustomTimezoneOffset(timestamp) {
 	    if (timezoneOffsetCallback) {
@@ -2275,6 +2356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Create a Date instance with multiple arguments
 	 * @param {Array} args - arguments
 	 * @returns {Date}
+	 * @private
 	 */
 	function createDateWithMultipleArgs(args) {
 	    var utc = Date.UTC.apply(null, args);
@@ -2286,6 +2368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Create a Date instance with argument
 	 * @param {Date|TZDate|string|number} arg - arguments
 	 * @returns {Date}
+	 * @private
 	 */
 	function createDateWithSingleArg(arg) {
 	    var time;
@@ -2306,7 +2389,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	/**
-	 * Date Class
+	 * Timezone Date Class
+	 * @constructor
 	 */
 	function TZDate() {
 	    var date;
@@ -2325,10 +2409,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._date = date;
 	}
 	
-	TZDate.prototype.setTime = function(time) {
-	    return this._date.setTime(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
-	};
-	
+	/**
+	 * Get milliseconds which is converted by timezone
+	 * @returns {number} milliseconds
+	 */
 	TZDate.prototype.getTime = function() {
 	    var time = this._date.getTime();
 	
@@ -2672,6 +2756,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	        util.forEach(domutil.find(selector, container, true), function(el) {
 	            if (force || el.offsetWidth < el.scrollWidth) {
 	                el.setAttribute('title', domutil.getData(el, 'title'));
+	            }
+	        });
+	    },
+	
+	    /**
+	     * Set the value at path of object.
+	     * @param {object} object - the object to modify
+	     * @param {string} path -the path of property to set
+	     * @param {*} value - the value to set
+	     */
+	    set: function(object, path, value) {
+	        var names = path.split('.');
+	        var store = object;
+	
+	        util.forEach(names, function(name, index) {
+	            store[name] = store[name] || {};
+	
+	            if (index === names.length - 1) {
+	                store[name] = value;
+	            } else {
+	                store = store[name];
 	            }
 	        });
 	    }
@@ -3117,7 +3222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if ((CSS_AUTO_REGEX.test(el.style.left) || CSS_AUTO_REGEX.test(el.style.top)) &&
 	            'getBoundingClientRect' in el) {
-	            // 엘리먼트의 left또는 top이 'auto'일 때 수단
+	            // When the element's left or top is 'auto'
 	            bound = el.getBoundingClientRect();
 	
 	            left = bound.left;
@@ -4291,22 +4396,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Layout = __webpack_require__(36),
 	    Drag = __webpack_require__(38),
 	    controllerFactory = __webpack_require__(39),
-	    weekViewFactory = __webpack_require__(49),
-	    monthViewFactory = __webpack_require__(86),
+	    weekViewFactory = __webpack_require__(52),
+	    monthViewFactory = __webpack_require__(94),
 	    TZDate = __webpack_require__(28).Date,
 	    config = __webpack_require__(34),
 	    timezone = __webpack_require__(28),
-	    reqAnimFrame = __webpack_require__(52);
+	    reqAnimFrame = __webpack_require__(55);
 	
 	var mmin = Math.min;
 	
 	/**
+	 * Schedule information
 	 * @typedef {object} Schedule
 	 * @property {string} id - unique schedule id depends on calendar id
 	 * @property {string} calendarId - unique calendar id
 	 * @property {string} title - schedule title
-	 * @property {string} start - start time
-	 * @property {string} end - end time
+	 * @property {string|TZDate} start - start time. It's 'string' for input. It's 'TZDate' for output like event handler.
+	 * @property {string|TZDate} end - end time. It's 'string' for input. It's 'TZDate' for output like event handler.
 	 * @property {boolean} isAllDay - all day schedule
 	 * @property {string} category - schedule type('milestone', 'task', allday', 'time')
 	 * @property {string} dueDateClass - task schedule type string
@@ -4317,76 +4423,88 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {boolean} isReadOnly - schedule read-only flag
 	 * @property {string} [color] - schedule text color
 	 * @property {string} [bgColor] - schedule background color
+	 * @property {string} [dragBgColor] - schedule background color when dragging it
 	 * @property {string} [borderColor] - schedule left border color
 	 * @property {string} customStyle - schedule's custom css class
 	 * @property {any} raw - user data
 	 */
 	
 	/**
-	 * @typedef {object} RenderRange - rendered range
-	 * @property {Date} start - start date
-	 * @property {Date} end - end date
+	 * Template functions to support customer renderer
+	 * @typedef {object} Template
+	 * @property {function} [milestoneTitle] - milestone title(at left column) template function
+	 * @property {function} [milestone] - milestone template function
+	   @property {function} [taskTitle] - task title(at left column) template function
+	 * @property {function} [task] - task template function
+	 * @property {function} [alldayTitle] - allday title(at left column) template function
+	 * @property {function} [allday] - allday template function
+	 * @property {function} [time] - time template function
+	 * @property {function} [monthMoreTitleDate] - month more layer title template function
+	 * @property {function} [monthMoreClose] - month more layer close button template function
+	 * @property {function} [monthGridHeader] - month grid header(date, decorator, title) template function
+	 * @property {function} [monthGridFooter] - month grid footer(date, decorator, title) template function
+	 * @property {function} [monthGridHeaderExceed] - month grid header(exceed schedule count) template function
+	 * @property {function} [monthGridFooterExceed] - month grid footer(exceed schedule count) template function
+	 * @property {function} [weekDayname] - weekly dayname template function
+	 *  @property {function} [monthDayname] - monthly dayname template function
+	 */
+	
+	/**
+	 * Options for daily, weekly view.
+	 * @typedef {object} WeekOptions
+	 * @property {number} [startDayOfWeek=0] - start day of week
+	 * @property {Array.<string>} [daynames] - day names in weekly and daily.
+	 *                    Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+	 * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
+	 * @property {boolean} [workweek=false] - show only 5 days except for weekend
+	 */
+	
+	/**
+	 * Options for monthly view.
+	 * @typedef {object} MonthOptions
+	 * @property {Array.<string>} [daynames] - day names in monthly.
+	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+	 * @property {number} [startDayOfWeek=0] - start day of week
+	 * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
+	 * @property {boolean} [visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+	 * @property {boolean} [workweek=false] - show only 5 days except for weekend
+	 * @property {number} [visibleScheduleCount] - visible schedule count in monthly grid
+	 * @property {object} [moreLayerSize] - more layer size
+	 * @property {object} [moreLayerSize.width=null] - css width value(px, 'auto').
+	 *                                                       The default value 'null' is to fit a grid cell.
+	 * @property {object} [moreLayerSize.height=null] - css height value(px, 'auto').
+	 *                                                        The default value 'null' is to fit a grid cell.
+	 * @property {object} [grid] - grid's header and footer information
+	 *  @property {object} [grid.header] - grid's header informatioin
+	 *   @property {number} [grid.header.height=34] - grid's header height
+	 *  @property {object} [grid.footer] - grid's footer informatioin
+	 *   @property {number} [grid.footer.height=34] - grid's footer height
+	 */
+	
+	/**
+	 * @typedef {object} CalendarColor
+	 * @property {string} [CalendarColor.color] - calendar color
+	 * @property {string} [CalendarColor.bgColor] - calendar background color
+	 * @property {string} [CalendarColor.borderColor] - calendar left border color
 	 */
 	
 	/**
 	 * @typedef {object} Options - calendar option object
-	 * @property {string} [cssPrefix] - CSS classname prefix
-	 *  @property {string} [defaultView='week'] - default view of calendar
-	 *  @property {string} [defaultDate=null] - default date to render calendar. if not supplied, use today.
-	 *  @property {object} [calendarColor] - preset calendar colors
-	 *   @property {string} [calendarColor.color] - calendar color
-	 *   @property {string} [calendarColor.bgColor] - calendar background color
-	 *   @property {string} [calendarColor.borderColor] - calendar left border color
-	 *   @property {boolean} [calendarColor.render] - immediately apply colors when setCalendarColor called.
-	 *  @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
+	 * @property {string} [defaultView='week'] - default view of calendar
+	 * @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
 	 * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
-	 *  @property {object} [template] - template option
-	 *   @property {function} [template.milestoneTitle] - milestone title(at left column) template function
-	 *   @property {function} [template.milestone] - milestone template function
-	 *   @property {function} [template.taskTitle] - task title(at left column) template function
-	 *   @property {function} [template.task] - task template function
-	 *   @property {function} [template.alldayTitle] - allday title(at left column) template function
-	 *   @property {function} [template.allday] - allday template function
-	 *   @property {function} [template.time] - time template function
-	 *   @property {function} [template.monthMoreTitleDate] - month more layer title template function
-	 *   @property {function} [template.monthMoreClose] - month more layer close button template function
-	 *   @property {function} [template.monthGridHeader] - month grid header(date, decorator, title) template function
-	 *   @property {function} [template.monthGridFooter] - month grid footer(date, decorator, title) template function
-	 *   @property {function} [template.monthGridHeaderExceed] - month grid header(exceed schedule count) template function
-	 *   @property {function} [template.monthGridFooterExceed] - month grid footer(exceed schedule count) template function
-	 *   @property {function} [template.weekDayname] - weekly dayname template function
-	 *   @property {function} [template.monthDayname] - monthly dayname template function
-	 *  @property {object} [week] - options for week view
-	 *   @property {number} [week.startDayOfWeek=0] - start day of week
-	 *   @deprecated @property {Array.<number>} [week.panelHeights] - each panel height px(Milestone, Task, Allday View Panel)
-	 *   @property {Array.<string>} [week.daynames] - day names in weekly and daily.
-	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-	 *   @property {boolean} [week.narrowWeekend=false] - make weekend column narrow(1/2 width)
-	 *   @property {boolean} [week.workweek=false] - show only 5 days except for weekend
-	 *   @property {string} [week.alldayViewType='scroll'] - set view type of allday panel. ('scroll'|'toggle')
-	 *  @property {object} [month] - options for month view
-	 *   @property {Array.<string>} [month.daynames] - day names in monthly.
-	 * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-	 *   @property {number} [month.startDayOfWeek=0] - start day of week
-	 *   @property {boolean} [month.narrowWeekend=false] - make weekend column narrow(1/2 width)
-	 *   @property {boolean} [month.visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
-	 *   @property {number} [month.visibleScheduleCount] - visible schedule count in monthly grid
-	 *   @property {object} [month.moreLayerSize] - more layer size
-	 *    @property {object} [month.moreLayerSize.width=null] - css width value(px, 'auto').
-	 *                                                           The default value 'null' is to fit a grid cell.
-	 *    @property {object} [month.moreLayerSize.height=null] - css height value(px, 'auto').
-	 *                                                            The default value 'null' is to fit a grid cell.
-	 *   @property {object} [month.grid] - grid's header and footer information
-	 *    @property {object} [month.grid.header] - grid's header informatioin
-	 *     @property {number} [month.grid.header.height=34] - grid's header height
-	 *    @property {object} [month.grid.footer] - grid's footer informatioin
-	 *     @property {number} [month.grid.footer.height=34] - grid's footer height
-	 *  @property {Array.<Schedule>} [schedules] - array of Schedule data for add calendar after initialize.
+	 * @property {themeConfig} [theme=themeConfig] - custom theme options
+	 * @property {Template} [template={}] - template options
+	 * @property {WeekOptions} [week={}] - options for week view
+	 * @property {MonthOptions} [month={}] - options for month view
+	 * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
+	 * @property {boolean} [useCreationPopup=false] - whether use default creation popup or not
+	 * @property {boolean} [useDetailPopup=false] - whether use default detail popup or not
 	 */
 	
 	/**
 	 * @typedef {class} CustomEvents
-	 * https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html
+	 * {@link https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhnent/tui.code-snippet tui-code-snippet}
 	 */
 	
 	/**
@@ -4447,86 +4565,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *     },
 	 *     week: {
 	 *         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-	 *         panelHeights: [80, 80, 120],
 	 *         startDayOfWeek: 0,
 	 *         narrowWeekend: true
 	 *     }
 	 * });
 	 */
 	function Calendar(container, options) {
-	    var opt;
+	    var opt = options;
 	
 	    if (util.isString(container)) {
 	        container = document.querySelector(container);
 	    }
 	
 	    /**
-	     * calendar options
-	     * @type {Options}
-	     */
-	    this.options = opt = util.extend({
-	        calendarColor: {},
-	        groupFunc: function(viewModel) {
-	            var model = viewModel.model;
-	
-	            if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
-	                return 'allday';
-	            }
-	
-	            return model.category;
-	        },
-	        controller: null,
-	        defaultView: 'week',
-	        taskView: true,
-	        scheduleView: true,
-	        defaultDate: new TZDate(),
-	        template: util.extend({
-	            allday: null,
-	            time: null
-	        }, util.pick(options, 'template') || {}),
-	        week: util.extend({}, util.pick(options, 'week') || {}),
-	        month: util.extend({}, util.pick(options, 'month') || {}),
-	        schedules: []
-	    }, options);
-	
-	    this.options.week = util.extend({
-	        startDayOfWeek: 0,
-	        workweek: false
-	    }, util.pick(this.options, 'week') || {});
-	
-	    this.options.month = util.extend({
-	        scheduleFilter: function(schedule) {
-	            return Boolean(schedule.isVisible) &&
-	                (schedule.category === 'allday' || schedule.category === 'time');
-	        }
-	    }, util.pick(options, 'month') || {});
-	
-	    /**
 	     * Calendar color map
 	     * @type {object}
 	     * @private
 	     */
-	    this.calendarColor = opt.calendarColor;
-	
-	    /**
-	     * @type {HTMLElement}
-	     * @private
-	     */
-	    this.container = container;
+	    this._calendarColor = {};
 	
 	    /**
 	     * Current rendered date
-	     * @type {Date}
-	     * @readonly
+	     * @type {TZDate}
+	     * @private
 	     */
-	    this.renderDate = opt.defaultDate;
+	    this._renderDate = new TZDate();
 	
 	    /**
 	     * start and end date of weekly, monthly
-	     * @type {RenderRange}
-	     * @readonly
+	     * @type {object}
+	     * @private
 	     */
-	    this.renderRange = {
+	    this._renderRange = {
 	        start: null,
 	        end: null
 	    };
@@ -4536,141 +4606,143 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {Base}
 	     * @private
 	     */
-	    this.controller = opt.controller || this.createController();
+	    this._controller = _createController(options);
+	    this._controller.setCalendars(options.calendars);
 	
 	    /**
 	     * layout view (layout manager)
 	     * @type {Layout}
 	     * @private
 	     */
-	    this.layout = new Layout(container);
+	    this._layout = new Layout(container, this._controller.theme);
 	
 	    /**
 	     * global drag handler
 	     * @type {Drag}
 	     * @private
 	     */
-	    this.dragHandler = new Drag({distance: 10}, this.layout.container);
+	    this._dragHandler = new Drag({distance: 10}, this._layout.container);
 	
 	    /**
 	     * current rendered view name. ('day', 'week', 'month')
 	     * @type {string}
 	     * @default 'week'
-	     * @readonly
-	     */
-	    this.viewName = opt.defaultView;
-	
-	    /**
-	     * previous rendered view name
-	     * @type {string}
 	     * @private
 	     */
-	    this.prevViewName = this.viewName;
+	    this._viewName = opt.defaultView || 'week';
 	
 	    /**
 	     * Refresh method. it can be ref different functions for each view modes.
 	     * @type {function}
 	     * @private
 	     */
-	    this.refreshMethod = null;
+	    this._refreshMethod = null;
 	
 	    /**
 	     * Scroll to now. It can be called for 'week', 'day' view modes.
 	     * @type {function}
 	     * @private
 	     */
-	    this.scrollToNowMethod = null;
+	    this._scrollToNowMethod = null;
 	
-	    this.initialize();
+	    /**
+	     * Open schedule creation popup
+	     * @type {function}
+	     * @private
+	     */
+	    this._openCreationPopup = null;
+	
+	    /**
+	     * Hide the more view
+	     * @type {function}
+	     * @private
+	     */
+	    this._hideMoreView = null;
+	
+	    /**
+	     * Unique id for requestAnimFrame()
+	     * @type {number}
+	     * @private
+	     */
+	    this._requestRender = 0;
+	
+	    /**
+	     * calendar options
+	     * @type {Options}
+	     * @private
+	     */
+	    this._options = {};
+	
+	    this._initialize(options);
 	}
-	
-	/**
-	 * Create controller instance
-	 * @returns {Base} controller instance
-	 * @private
-	 */
-	Calendar.prototype.createController = function() {
-	    return controllerFactory(this.options);
-	};
-	
-	/**
-	 * Create week view instance by dependent module instances
-	 * @param {Base} controller - controller
-	 * @param {HTMLElement} container - container element
-	 * @param {Drag} dragHandler - global drag handler
-	 * @param {object} options - options for week view
-	 * @returns {Week} week view instance
-	 * @private
-	 */
-	Calendar.prototype.createWeekView = function(controller, container, dragHandler, options) {
-	    return weekViewFactory(
-	        controller,
-	        container,
-	        dragHandler,
-	        options
-	    );
-	};
-	
-	/**
-	 * Create week view instance by dependent module instances
-	 * @param {Base} controller - controller
-	 * @param {HTMLElement} container - container element
-	 * @param {Drag} dragHandler - global drag handler
-	 * @param {object} options - options for week view
-	 * @returns {Month} month view instance
-	 * @private
-	 */
-	Calendar.prototype.createMonthView = function(controller, container, dragHandler, options) {
-	    return monthViewFactory(
-	        controller,
-	        container,
-	        dragHandler,
-	        options
-	    );
-	};
 	
 	/**
 	 * destroy calendar instance.
 	 */
 	Calendar.prototype.destroy = function() {
-	    this.dragHandler.destroy();
-	    this.controller.off();
-	    this.layout.clear();
-	    this.layout.destroy();
+	    this._dragHandler.destroy();
+	    this._controller.off();
+	    this._layout.clear();
+	    this._layout.destroy();
 	
-	    util.forEach(this.options.template, function(func, name) {
+	    util.forEach(this._options.template, function(func, name) {
 	        if (func) {
 	            Handlebars.unregisterHelper(name + '-tmpl');
 	        }
 	    });
 	
-	    this.options = this.renderDate = this.controller =
-	        this.layout = this.dragHandler = this.viewName = this.prevViewName =
-	        this.refreshMethod = this.scrollToNowMethod = null;
+	    this._options = this._renderDate = this._controller =
+	        this._layout = this._dragHandler = this._viewName =
+	        this._refreshMethod = this._scrollToNowMethod = null;
 	};
 	
 	/**
 	 * Initialize calendar
+	 * @param {Options} options - calendar options
 	 * @private
 	 */
-	Calendar.prototype.initialize = function() {
-	    var controller = this.controller,
-	        viewName = this.viewName,
-	        opt = this.options;
+	Calendar.prototype._initialize = function(options) {
+	    var controller = this._controller,
+	        viewName = this._viewName;
 	
-	    this.layout.controller = controller;
+	    this._options = util.extend({
+	        defaultView: viewName,
+	        taskView: true,
+	        scheduleView: true,
+	        template: util.extend({
+	            allday: null,
+	            time: null
+	        }, util.pick(options, 'template') || {}),
+	        week: util.extend({}, util.pick(options, 'week') || {}),
+	        month: util.extend({}, util.pick(options, 'month') || {}),
+	        calendars: [],
+	        useCreationPopup: false,
+	        useDetailPopup: false
+	    }, options);
 	
-	    if (opt.schedules && opt.schedules.length) {
-	        this.createSchedules(opt.schedules, true);
-	    }
+	    this._options.week = util.extend({
+	        startDayOfWeek: 0,
+	        workweek: false
+	    }, util.pick(this._options, 'week') || {});
 	
-	    util.forEach(opt.template, function(func, name) {
+	    this._options.month = util.extend({
+	        startDayOfWeek: 0,
+	        workweek: false,
+	        scheduleFilter: function(schedule) {
+	            return Boolean(schedule.isVisible) &&
+	                (schedule.category === 'allday' || schedule.category === 'time');
+	        }
+	    }, util.pick(options, 'month') || {});
+	
+	    this._layout.controller = controller;
+	
+	    util.forEach(this._options.template, function(func, name) {
 	        if (func) {
 	            Handlebars.registerHelper(name + '-tmpl', func);
 	        }
 	    });
 	
-	    this.toggleView(viewName, true);
+	    this.changeView(viewName, true);
 	};
 	
 	/**********
@@ -4704,7 +4776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ]);
 	 */
 	Calendar.prototype.createSchedules = function(schedules, silent) {
-	    var calColor = this.calendarColor;
+	    var calColor = this._calendarColor;
 	
 	    util.forEach(schedules, function(obj) {
 	        var color = calColor[obj.calendarId];
@@ -4716,7 +4788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	
-	    this.controller.createSchedules(schedules, silent);
+	    this._controller.createSchedules(schedules, silent);
 	
 	    if (!silent) {
 	        this.render();
@@ -4724,24 +4796,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Get schedule by schedule id and calendar id.
-	 * @param {string} id - ID of schedule
-	 * @param {string} calendarId - calendarId of schedule
+	 * Get a schedule object by schedule id and calendar id.
+	 * @param {string} scheduleId - ID of schedule
+	 * @param {string} calendarId - calendarId of the schedule
 	 * @returns {Schedule} schedule object
 	 * @example
 	 * var schedule = calendar.getSchedule(scheduleId, calendarId);
 	 * console.log(schedule.title);
 	 */
-	Calendar.prototype.getSchedule = function(id, calendarId) {
-	    return this.controller.schedules.single(function(model) {
-	        return model.id === id && model.calendarId === calendarId;
+	Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
+	    return this._controller.schedules.single(function(model) {
+	        return model.id === scheduleId && model.calendarId === calendarId;
 	    });
 	};
 	
 	/**
 	 * Update the schedule
-	 * @param {string} id - ID of schedule to update
-	 * @param {string} calendarId - calendarId of schedule to update
+	 * @param {string} scheduleId - ID of a schedule to update
+	 * @param {string} calendarId - calendarId of the schedule to update
 	 * @param {Schedule} scheduleData - schedule data to update
 	 * @example
 	 * calendar.on('beforeUpdateSchedule', function(event) {
@@ -4754,11 +4826,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *     });
 	 * });
 	 */
-	Calendar.prototype.updateSchedule = function(id, calendarId, scheduleData) {
-	    var ctrl = this.controller,
+	Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData) {
+	    var ctrl = this._controller,
 	        ownSchedules = ctrl.schedules,
 	        schedule = ownSchedules.single(function(model) {
-	            return model.id === id && model.calendarId === calendarId;
+	            return model.id === scheduleId && model.calendarId === calendarId;
 	        });
 	
 	    if (schedule) {
@@ -4768,35 +4840,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Delete schedule.
-	 * @fires Calendar#beforeDeleteSchedule
-	 * @param {string} id - ID of schedule to delete
-	 * @param {string} calendarId - calendarId of schedule to delete
+	 * Delete a schedule.
+	 * @param {string} scheduleId - ID of schedule to delete
+	 * @param {string} calendarId - calendarId of the schedule to delete
 	 */
-	Calendar.prototype.deleteSchedule = function(id, calendarId) {
-	    var ctrl = this.controller,
+	Calendar.prototype.deleteSchedule = function(scheduleId, calendarId) {
+	    var ctrl = this._controller,
 	        ownSchedules = ctrl.schedules,
 	        schedule = ownSchedules.single(function(model) {
-	            return model.id === id && model.calendarId === calendarId;
+	            return model.id === scheduleId && model.calendarId === calendarId;
 	        });
 	
 	    if (!schedule) {
 	        return;
 	    }
-	
-	    /**
-	     * Fire this event when delete a schedule.
-	     * @event Calendar#beforeDeleteSchedule
-	     * @type {object}
-	     * @property {Schedule} schedule - schedule instance to delete
-	     * @example
-	     * calendar.on('beforeDeleteSchedule', function() {
-	     *     alert('The schedule is removed.');
-	     * });
-	     */
-	    this.fire('beforeDeleteSchedule', {
-	        schedule: schedule
-	    });
 	
 	    ctrl.deleteSchedule(schedule);
 	    this.render();
@@ -4807,31 +4864,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 **********/
 	
 	/**
-	 * Set child view's options recursively
-	 * @param {View} view - parent view
-	 * @param {function} func - option manipulate function
-	 * @private
-	 */
-	Calendar.prototype.setOptionRecurseively = function(view, func) {
-	    view.recursive(function(childView) {
-	        var opt = childView.options;
-	
-	        if (!opt) {
-	            return;
-	        }
-	
-	        func(opt);
-	    });
-	};
-	
-	/**
 	 * @param {string|Date} date - date to show in calendar
 	 * @param {number} [startDayOfWeek=0] - start day of week
 	 * @param {boolean} [workweek=false] - only show work week
 	 * @returns {array} render range
 	 * @private
 	 */
-	Calendar.prototype.getWeekDayRange = function(date, startDayOfWeek, workweek) {
+	Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
 	    var day, start, end, range,
 	        msFrom = datetime.millisecondsFrom;
 	
@@ -4872,15 +4911,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Toggle schedules visibility by calendar ID
+	 * Toggle schedules' visibility by calendar ID
 	 * @param {string} calendarId - calendar id value
 	 * @param {boolean} toHide - set true to hide schedules
-	 * @param {boolean} render - set true then render after change visible property each models
-	 * @private
+	 * @param {boolean} [render=true] - set true then render after change visible property each models
 	 */
-	Calendar.prototype._toggleSchedulesByCalendarID = function(calendarId, toHide, render) {
-	    var ownSchedules = this.controller.schedules;
+	Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
+	    var ownSchedules = this._controller.schedules;
 	
+	    render = util.isExisty(render) ? render : true;
 	    calendarId = util.isArray(calendarId) ? calendarId : [calendarId];
 	
 	    ownSchedules.each(function(schedule) {
@@ -4905,19 +4944,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.clear();
 	 * calendar.createSchedules(schedules, silent);
 	 * calendar.render();
+	 * @example
+	 * // Render a calendar when resizing a window.
+	 * window.addEventListener('resize', function() {
+	 *     calendar.render();
+	 * });
 	 */
 	Calendar.prototype.render = function() {
 	    var renderFunc = function() {
-	        if (this.layout) {
-	            this.layout.render();
+	        if (this._layout) {
+	            this._layout.render();
 	        }
-	        this.requestRender = null;
+	        if (this._refreshMethod) {
+	            this._refreshMethod();
+	        }
+	
+	        this._requestRender = null;
 	    };
 	
-	    if (this.requestRender) {
-	        reqAnimFrame.cancelAnimFrame(this.requestRender);
+	    if (this._requestRender) {
+	        reqAnimFrame.cancelAnimFrame(this._requestRender);
 	    }
-	    this.requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
+	    this._requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
 	};
 	
 	/**
@@ -4928,58 +4976,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.render();
 	 */
 	Calendar.prototype.clear = function() {
-	    this.controller.clearSchedules();
+	    this._controller.clearSchedules();
 	    this.render();
 	};
 	
 	/**
-	 * Scroll to now in daily, weekly view
+	 * Scroll to current time on today in case of daily, weekly view
 	 * @example
 	 * function onNewSchedules(schedules) {
 	 *     calendar.createSchedules(schedules);
-	 *     if (calendar.viewName !== 'month') {
+	 *     if (calendar.getViewName() !== 'month') {
 	 *         calendar.scrollToNow();
 	 *     }
 	 * }
 	 */
 	Calendar.prototype.scrollToNow = function() {
-	    if (this.scrollToNowMethod) {
-	        this.scrollToNowMethod();
+	    if (this._scrollToNowMethod) {
+	        this._scrollToNowMethod();
 	    }
-	};
-	
-	/**
-	 * Refresh the calendar layout.
-	 * @example
-	 * window.addEventListener('resize', function() {
-	 *     calendar.refresh();
-	 * });
-	 */
-	Calendar.prototype.refresh = function() {
-	    if (this.refreshMethod) {
-	        this.refreshMethod();
-	    }
-	
-	    this.render();
-	};
-	
-	/**
-	 * Refresh child views
-	 * @param {string} [viewName] - the name of view to render. if not supplied then refresh all.
-	 * @private
-	 */
-	Calendar.prototype.refreshChildView = function(viewName) {
-	    if (!viewName) {
-	        this.render();
-	
-	        return;
-	    }
-	
-	    if (viewName === 'day') {
-	        viewName = 'week';
-	    }
-	
-	    this.layout.children.items[viewName].render();
 	};
 	
 	/**
@@ -4990,9 +5004,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * }
 	 */
 	Calendar.prototype.today = function() {
-	    this.renderDate = new TZDate();
+	    this._renderDate = new TZDate();
 	
-	    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
+	    this._setViewName(this._viewName);
 	    this.move();
 	    this.render();
 	};
@@ -5007,19 +5021,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.move(-1);
 	 */
 	Calendar.prototype.move = function(offset) {
-	    var renderDate = dw(this.renderDate),
-	        viewName = this.viewName,
-	        view = this.getCurrentView(),
-	        recursiveSet = this.setOptionRecurseively,
+	    var renderDate = dw(this._renderDate),
+	        viewName = this._viewName,
+	        view = this._getCurrentView(),
+	        recursiveSet = _setOptionRecurseively,
 	        startDate, endDate, tempDate,
 	        startDayOfWeek, visibleWeeksCount, workweek, datetimeOptions;
 	
 	    offset = util.isExisty(offset) ? offset : 0;
 	
 	    if (viewName === 'month') {
-	        startDayOfWeek = util.pick(this.options, 'month', 'startDayOfWeek') || 0;
-	        visibleWeeksCount = mmin(util.pick(this.options, 'month', 'visibleWeeksCount') || 0, 6);
-	        workweek = util.pick(this.options, 'month', 'workweek') || false;
+	        startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 0;
+	        visibleWeeksCount = mmin(util.pick(this._options, 'month', 'visibleWeeksCount') || 0, 6);
+	        workweek = util.pick(this._options, 'month', 'workweek') || false;
 	
 	        if (visibleWeeksCount) {
 	            datetimeOptions = {
@@ -5030,7 +5044,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	
 	            renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
-	            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+	            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 	
 	            recursiveSet(view, function(opt) {
 	                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
@@ -5043,7 +5057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	
 	            renderDate.addMonth(offset);
-	            tempDate = datetime.arr2dCalendar(this.renderDate, datetimeOptions);
+	            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 	
 	            recursiveSet(view, function(opt) {
 	                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
@@ -5054,9 +5068,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        endDate = tempDate[tempDate.length - 1][tempDate[tempDate.length - 1].length - 1];
 	    } else if (viewName === 'week') {
 	        renderDate.addDate(offset * 7);
-	        startDayOfWeek = util.pick(this.options, 'week', 'startDayOfWeek') || 0;
-	        workweek = util.pick(this.options, 'week', 'workweek') || false;
-	        tempDate = this.getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
+	        startDayOfWeek = util.pick(this._options, 'week', 'startDayOfWeek') || 0;
+	        workweek = util.pick(this._options, 'week', 'workweek') || false;
+	        tempDate = this._getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
 	
 	        startDate = tempDate[0];
 	        endDate = tempDate[1];
@@ -5075,8 +5089,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    }
 	
-	    this.renderDate = renderDate.d;
-	    this.renderRange = {
+	    this._renderDate = renderDate.d;
+	    this._renderRange = {
 	        start: startDate,
 	        end: endDate
 	    };
@@ -5087,9 +5101,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {(Date|string)} date - date to move
 	 * @example
 	 * calendar.on('clickDayname', function(event) {
-	 *     if (calendar.viewName === 'week') {
+	 *     if (calendar.getViewName() === 'week') {
 	 *         calendar.setDate(new Date(event.date));
-	 *         calendar.toggleView('day', true);
+	 *         calendar.changeView('day', true);
 	 *     }
 	 * });
 	 */
@@ -5098,17 +5112,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        date = datetime.parse(date);
 	    }
 	
-	    this.renderDate = new TZDate(Number(date));
-	    this._setViewName(this.viewName); // see Calendar.move if (viewName === 'day') case using prevViewName 'week'se
+	    this._renderDate = new TZDate(Number(date));
+	    this._setViewName(this._viewName);
 	    this.move(0);
 	    this.render();
 	};
 	
 	/**
-	 * Move the calendar forward a day, a week, a month
+	 * Move the calendar forward a day, a week, a month, 2 weeks, 3 weeks.
 	 * @example
 	 * function moveToNextOrPrevRange(val) {
-	    calendar.clear();
 	    if (val === -1) {
 	        calendar.prev();
 	    } else if (val === 1) {
@@ -5122,10 +5135,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Move the calendar backward a day, a week, a month
+	 * Move the calendar backward a day, a week, a month, 2 weeks, 3 weeks.
 	 * @example
 	 * function moveToNextOrPrevRange(val) {
-	    calendar.clear();
 	    if (val === -1) {
 	        calendar.prev();
 	    } else if (val === 1) {
@@ -5143,44 +5155,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {View} current view instance
 	 * @private
 	 */
-	Calendar.prototype.getCurrentView = function() {
-	    var viewName = this.viewName;
+	Calendar.prototype._getCurrentView = function() {
+	    var viewName = this._viewName;
 	
 	    if (viewName === 'day') {
 	        viewName = 'week';
 	    }
 	
-	    return util.pick(this.layout.children.items, viewName);
+	    return util.pick(this._layout.children.items, viewName);
 	};
 	
 	/**
 	 * Change calendar's schedule color with option
 	 * @param {string} calendarId - calendar ID
-	 * @param {object} option - color data object
-	 *  @param {string} option.color - text color of schedule element
-	 *  @param {string} option.bgColor - bg color of schedule element
-	 *  @param {string} option.borderColor - border color of schedule element
-	 *  @param {boolean} [option.render=true] - set false then does not auto render.
+	 * @param {CalendarColor} option - color data object
+	 * @param {boolean} [silent=false] - no auto render after creation when set true
 	 * @example
 	 * calendar.setCalendarColor('1', {
 	 *     color: '#e8e8e8',
 	 *     bgColor: '#585858',
-	 *     render: false
+	 *     borderColor: '#a1b56c'
 	 * });
 	 * calendar.setCalendarColor('2', {
 	 *     color: '#282828',
 	 *     bgColor: '#dc9656',
-	 *     render: false
+	 *     borderColor: '#a1b56c'
 	 * });
 	 * calendar.setCalendarColor('3', {
 	 *     color: '#a16946',
 	 *     bgColor: '#ab4642',
-	 *     render: true
+	 *     borderColor: '#a1b56c'
 	 * });
 	 */
-	Calendar.prototype.setCalendarColor = function(calendarId, option) {
-	    var calColor = this.calendarColor,
-	        ownSchedules = this.controller.schedules,
+	Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
+	    var calColor = this._calendarColor,
+	        ownSchedules = this._controller.schedules,
 	        ownColor = calColor[calendarId];
 	
 	    if (!util.isObject(option)) {
@@ -5190,8 +5199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ownColor = calColor[calendarId] = util.extend({
 	        color: '#000',
 	        bgColor: '#a1b56c',
-	        borderColor: '#a1b56c',
-	        render: true
+	        borderColor: '#a1b56c'
 	    }, option);
 	
 	    ownSchedules.each(function(model) {
@@ -5204,31 +5212,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        model.borderColor = ownColor.borderColor;
 	    });
 	
-	    if (ownColor.render) {
+	    if (silent) {
 	        this.render();
 	    }
-	};
-	
-	/**
-	 * Show schedules visibility by calendar ID
-	 * @param {string|string[]} calendarId - calendar id value
-	 * @param {boolean} [render=true] - set false then doesn't render after change model's property.
-	 * @private
-	 */
-	Calendar.prototype.showSchedulesByCalendarID = function(calendarId, render) {
-	    render = util.isExisty(render) ? render : true;
-	    this._toggleSchedulesByCalendarID(calendarId, false, render);
-	};
-	
-	/**
-	 * Hide schedules visibility by calendar ID
-	 * @param {string|string[]} calendarId - calendar id value
-	 * @param {boolean} [render=true] - set false then doesn't render after change model's property.
-	 * @private
-	 */
-	Calendar.prototype.hideSchedulesByCalendarID = function(calendarId, render) {
-	    render = util.isExisty(render) ? render : true;
-	    this._toggleSchedulesByCalendarID(calendarId, true, render);
 	};
 	
 	/**********
@@ -5236,9 +5222,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 **********/
 	
 	/**
-	 * 각 뷰의 클릭 핸들러와 사용자 클릭 이벤트 핸들러를 잇기 위한 브릿지 개념의 이벤트 핸들러
+	 * A bridge-based event handler for connecting a click handler to a user click event handler for each view
 	 * @fires Calendar#clickSchedule
-	 * @param {object} clickScheduleData - 'clickSchedule' 핸들러의 이벤트 데이터
+	 * @param {object} clickScheduleData - The event data of 'clickSchedule' handler
 	 * @private
 	 */
 	Calendar.prototype._onClick = function(clickScheduleData) {
@@ -5269,9 +5255,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * dayname 클릭 이벤트 핸들러
+	 * dayname click event handler
 	 * @fires Calendar#clickDayname
-	 * @param {object} clickScheduleData - 'clickDayname' 핸들러의 이벤트 데이터
+	 * @param {object} clickScheduleData - The event data of 'clickDayname' handler
 	 * @private
 	 */
 	Calendar.prototype._onClickDayname = function(clickScheduleData) {
@@ -5282,9 +5268,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @property {string} date - date string by format 'YYYY-MM-DD'
 	     * @example
 	     * calendar.on('clickDayname', function(event) {
-	     *     if (calendar.viewName === 'week') {
+	     *     if (calendar.getViewName() === 'week') {
 	     *         calendar.setDate(new Date(event.date));
-	     *         calendar.toggleView('day', true);
+	     *         calendar.changeView('day', true);
 	     *     }
 	     * });
 	     */
@@ -5292,11 +5278,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * @fires {Calendar#beforeCreateSchedule}
+	 * @fires {Calendar#n('beforeCreateSchedule', function}
 	 * @param {object} createScheduleData - select schedule data from allday, time
 	 * @private
 	 */
 	Calendar.prototype._onBeforeCreate = function(createScheduleData) {
+	    if (this._options.useCreationPopup && !createScheduleData.useCreationPopup) {
+	        if (this._showCreationPopup) {
+	            this._showCreationPopup(createScheduleData);
+	
+	            return;
+	        }
+	    }
 	    /**
 	     * Fire this event when select time period in daily, weekly, monthly.
 	     * @event Calendar#beforeCreateSchedule
@@ -5358,35 +5351,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * @fires Calendar#resizePanel
-	 * @param {object} resizeScheduleData - resize schedule data object
+	 * @fires Calendar#beforeDeleteSchedule
+	 * @param {object} deleteScheduleData - delete schedule data
 	 * @private
 	 */
-	Calendar.prototype._onResizePanel = function(resizeScheduleData) {
+	Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
 	    /**
-	     * Fire this event when resize view panels(milestone, task, allday).
-	     * @event Calendar#resizePanel
+	     * Fire this event when delete a schedule.
+	     * @event Calendar#beforeDeleteSchedule
 	     * @type {object}
-	     * @property {number[]} layoutData - layout data after resized
+	     * @property {Schedule} schedule - schedule instance to delete
 	     * @example
-	     * calendar.on('resizePanel', function(layoutData) {
-	     *     console.log(layoutData);
-	     *     // do something to resize your UI if necessary.
+	     * calendar.on('beforeDeleteSchedule', function() {
+	     *     alert('The schedule is removed.');
 	     * });
 	     */
-	    this.fire('resizePanel', resizeScheduleData);
+	    this.fire('beforeDeleteSchedule', deleteScheduleData);
 	};
 	
 	/**
-	 * 캘린더 팩토리 클래스와 주뷰, 월뷰의 이벤트 연결을 토글한다
-	 * @param {boolean} isAttach - true면 이벤트 연결함.
-	 * @param {Week|Month} view - 주뷰 또는 월뷰
+	 * Toggle calendar factory class, main view, wallview event connection
+	 * @param {boolean} isAttach - attach events if true.
+	 * @param {Week|Month} view - Weekly view or Monthly view
 	 * @private
 	 */
 	Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
 	    var self = this,
 	        handler = view.handler,
-	        isMonthView = view.viewName === 'month',
 	        method = isAttach ? 'on' : 'off';
 	
 	    util.forEach(handler.click, function(clickHandler) {
@@ -5394,11 +5385,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    util.forEach(handler.dayname, function(clickHandler) {
-	        clickHandler[method]('clickDayname', self._onClickDayname, self);
+	        clickHandler[method]('clickDayname', self._onClickDaynOame, self);
 	    });
 	
 	    util.forEach(handler.creation, function(creationHandler) {
 	        creationHandler[method]('beforeCreateSchedule', self._onBeforeCreate, self);
+	        creationHandler[method]('beforeDeleteSchedule', self._onBeforeDelete, self);
 	    });
 	
 	    util.forEach(handler.move, function(moveHandler) {
@@ -5408,52 +5400,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	    util.forEach(handler.resize, function(resizeHandler) {
 	        resizeHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
 	    });
-	
-	    if (!isMonthView) {
-	        view.vLayout[method]('resize', self._onResizePanel, self);
-	    }
 	};
 	
 	/**
-	 * Toggle current view
+	 * Change current view with view name('day', 'week', 'month')
 	 * @param {string} newViewName - new view name to render
 	 * @param {boolean} force - force render despite of current view and new view are equal
 	 * @example
 	 * // daily view
-	 * calendar.toggleView('day', true);
+	 * calendar.changeView('day', true);
 	 *
 	 * // weekly view
-	 * calendar.toggleView('week', true);
+	 * calendar.changeView('week', true);
 	 *
 	 * // monthly view(default 6 weeks view)
-	 * calendar.options.month.visibleWeeksCount = 6; // or null
-	 * calendar.toggleView('month', true);
+	 * calendar.setOptions({month: {visibleWeeksCount: 6}}, true); // or null
+	 * calendar.changeView('month', true);
 	 *
 	 * // 2 weeks monthly view
-	 * calendar.options.month.visibleWeeksCount = 2;
-	 * calendar.toggleView('month', true);
+	 * calendar.setOptions({month: {visibleWeeksCount: 2}}, true);
+	 * calendar.changeView('month', true);
 	 *
 	 * // 3 weeks monthly view
-	 * calendar.options.month.visibleWeeksCount = 3;
-	 * calendar.toggleView('month', true);
+	 * calendar.setOptions({month: {visibleWeeksCount: 3}}, true);
+	 * calendar.changeView('month', true);
 	 *
 	 * // narrow weekend
-	 * calendar.options.month.narrowWeekend = true;
-	 * calendar.options.week.narrowWeekend = true;
-	 * calendar.toggleView(calendar.viewName, true);
+	 * calendar.setOptions({month: {narrowWeekend: true}}, true);
+	 * calendar.setOptions({week: {narrowWeekend: true}}, true);
+	 * calendar.changeView(calendar.getViewName(), true);
 	 *
 	 * // change start day of week(from monday)
-	 * calendar.options.month.startDayOfWeek = 1;
-	 * calendar.options.week.startDayOfWeek = 1;
-	 * calendar.toggleView(calendar.viewName, true);
+	 * calendar.setOptions({week: {startDayOfWeek: 1}}, true);
+	 * calendar.setOptions({month: {startDayOfWeek: 1}}, true);
+	 * calendar.changeView(calendar.getViewName(), true);
+	 * 
+	 * // work week
+	 * calendar.setOptions({week: {workweek: true}}, true);
+	 * calendar.setOptions({month: {workweek: true}}, true);
+	 * calendar.changeView(calendar.getViewName(), true);
 	 */
-	Calendar.prototype.toggleView = function(newViewName, force) {
+	Calendar.prototype.changeView = function(newViewName, force) {
 	    var self = this,
-	        layout = this.layout,
-	        controller = this.controller,
-	        dragHandler = this.dragHandler,
-	        options = this.options,
-	        viewName = this.viewName,
+	        layout = this._layout,
+	        controller = this._controller,
+	        dragHandler = this._dragHandler,
+	        options = this._options,
+	        viewName = this._viewName,
 	        created;
 	
 	    if (!force && viewName === newViewName) {
@@ -5477,14 +5470,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    layout.clear();
 	
 	    if (newViewName === 'month') {
-	        created = this.createMonthView(
+	        created = _createMonthView(
 	            controller,
 	            layout.container,
 	            dragHandler,
 	            options
 	        );
 	    } else if (newViewName === 'week' || newViewName === 'day') {
-	        created = this.createWeekView(
+	        created = _createWeekView(
 	            controller,
 	            layout.container,
 	            dragHandler,
@@ -5498,8 +5491,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        self._toggleViewSchedule(true, view);
 	    });
 	
-	    this.refreshMethod = created.refresh;
-	    this.scrollToNowMethod = created.scrollToNow;
+	    this._refreshMethod = created.refresh;
+	    this._scrollToNowMethod = created.scrollToNow;
+	    this._openCreationPopup = created.openCreationPopup;
+	    this._showCreationPopup = created.showCreationPopup;
+	    this._hideMoreView = created.hideMoreView;
 	
 	    this.move();
 	    this.render();
@@ -5517,12 +5513,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.toggleTaskView(true);
 	 */
 	Calendar.prototype.toggleTaskView = function(enabled) {
-	    var viewName = this.viewName,
-	        options = this.options;
+	    var viewName = this._viewName,
+	        options = this._options;
 	
 	    options.taskView = enabled;
 	
-	    this.toggleView(viewName, true);
+	    this.changeView(viewName, true);
 	};
 	
 	/**
@@ -5537,12 +5533,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * calendar.toggleScheduleView(true);
 	 */
 	Calendar.prototype.toggleScheduleView = function(enabled) {
-	    var viewName = this.viewName,
-	        options = this.options;
+	    var viewName = this._viewName,
+	        options = this._options;
 	
 	    options.scheduleView = enabled;
 	
-	    this.toggleView(viewName, true);
+	    this.changeView(viewName, true);
 	};
 	
 	/**
@@ -5551,12 +5547,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 	Calendar.prototype._setViewName = function(viewName) {
-	    this.prevViewName = this.viewName;
-	    this.viewName = viewName;
+	    this._viewName = viewName;
 	};
 	
 	/**
-	 * Get schedule by schedule id and calendar id.
+	 * Get a schedule element by schedule id and calendar id.
 	 * @param {string} scheduleId - ID of schedule
 	 * @param {string} calendarId - calendarId of schedule
 	 * @returns {HTMLElement} schedule element if found or null
@@ -5571,6 +5566,110 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    return null;
+	};
+	
+	/**
+	 * Set a theme. If some keys are not defined in the preset, will be return.
+	 * @param {object} theme - multiple styles map
+	 * @returns {Array.<string>} keys - error keys not predefined.
+	 * @example
+	 * cal.setTheme({
+	    'month.dayname.height': '31px',
+	    'month.dayname.borderTop': '1px solid #e5e5e5',
+	    'month.dayname.borderBottom': '1px solid #e5e5e5',
+	 * });
+	 */
+	Calendar.prototype.setTheme = function(theme) {
+	    return this._controller.setTheme(theme);
+	};
+	
+	/**
+	 * Set options of calendar
+	 * @param {Options} options - options to set
+	 * @param {boolean} [silent=false] - no auto render after creation when set true
+	 */
+	Calendar.prototype.setOptions = function(options, silent) {
+	    util.forEach(options, function(value, name) {
+	        if (util.isObject(value)) {
+	            util.forEach(value, function(innerValue, innerName) {
+	                this._options[name][innerName] = innerValue;
+	            }, this);
+	        } else {
+	            this._options[name] = value;
+	        }
+	    }, this);
+	
+	    if (!silent) {
+	        this.changeView(this._viewName, true);
+	    }
+	};
+	
+	/**
+	 * Get current options.
+	 * @returns {Options} options
+	 */
+	Calendar.prototype.getOptions = function() {
+	    return this._options;
+	};
+	
+	/**
+	 * Current rendered date
+	 * @returns {TZDate}
+	 */
+	Calendar.prototype.getDate = function() {
+	    return this._renderDate;
+	};
+	
+	/**
+	 * Start time of rendered date range
+	 * @returns {TZDate}
+	 */
+	Calendar.prototype.getDateRangeStart = function() {
+	    return this._renderRange.start;
+	};
+	
+	/**
+	 * End time of rendered date range
+	 * @returns {TZDate}
+	 */
+	Calendar.prototype.getDateRangeEnd = function() {
+	    return this._renderRange.end;
+	};
+	
+	/**
+	 * Get current view name('day', 'week', 'month')
+	 * @returns {string} view name
+	 */
+	Calendar.prototype.getViewName = function() {
+	    return this._viewName;
+	};
+	
+	/**
+	 * Set calendar list
+	 * @param {Array.<Object>} calendars - calendar list
+	 */
+	Calendar.prototype.setCalendars = function(calendars) {
+	    this._controller.setCalendars(calendars);
+	    this.render();
+	};
+	
+	/**
+	 * Open schedule creation popup
+	 * @param {Schedule} schedule - preset schedule data
+	 */
+	Calendar.prototype.openCreationPopup = function(schedule) {
+	    if (this._openCreationPopup) {
+	        this._openCreationPopup(schedule);
+	    }
+	};
+	
+	/**
+	 * Hide the more view
+	 */
+	Calendar.prototype.hideMoreView = function() {
+	    if (this._hideMoreView) {
+	        this._hideMoreView();
+	    }
 	};
 	
 	/**
@@ -5599,6 +5698,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	    timezone.setOffsetCallback(callback);
 	};
 	
+	/**
+	 * Create controller instance
+	 * @returns {Base} controller instance
+	 * @param {Options} options - calendar options
+	 * @private
+	 */
+	function _createController(options) {
+	    return controllerFactory(options);
+	}
+	
+	/**
+	 * Create week view instance by dependent module instances
+	 * @param {Base} controller - controller
+	 * @param {HTMLElement} container - container element
+	 * @param {Drag} dragHandler - global drag handler
+	 * @param {object} options - options for week view
+	 * @returns {Week} week view instance
+	 * @private
+	 */
+	function _createWeekView(controller, container, dragHandler, options) {
+	    return weekViewFactory(
+	        controller,
+	        container,
+	        dragHandler,
+	        options
+	    );
+	}
+	
+	/**
+	 * Create week view instance by dependent module instances
+	 * @param {Base} controller - controller
+	 * @param {HTMLElement} container - container element
+	 * @param {Drag} dragHandler - global drag handler
+	 * @param {object} options - options for week view
+	 * @returns {Month} month view instance
+	 * @private
+	 */
+	function _createMonthView(controller, container, dragHandler, options) {
+	    return monthViewFactory(
+	        controller,
+	        container,
+	        dragHandler,
+	        options
+	    );
+	}
+	
+	/**
+	 * Set child view's options recursively
+	 * @param {View} view - parent view
+	 * @param {function} func - option manipulate function
+	 * @private
+	 */
+	function _setOptionRecurseively(view, func) {
+	    view.recursive(function(childView) {
+	        var opt = childView.options;
+	
+	        if (!opt) {
+	            return;
+	        }
+	
+	        func(opt);
+	    });
+	}
+	
 	util.CustomEvents.mixin(Calendar);
 	
 	module.exports = Calendar;
@@ -5625,8 +5788,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @constructor
 	 * @extends {View}
 	 * @param {HTMLElement} container Container element to use layout view.
+	 * @param {Theme} theme - theme instance
 	 */
-	function Layout(container) {
+	function Layout(container, theme) {
 	    container = domutil.appendHTMLElement('div', container, config.classname('layout'));
 	
 	    /**
@@ -5642,6 +5806,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return childView.viewName;
 	    });
 	    /* eslint-enable*/
+	
+	    /**
+	     * @type {Theme}
+	     */
+	    this.theme = theme;
+	
+	    this.applyTheme();
 	}
 	
 	util.inherit(Layout, View);
@@ -5681,6 +5852,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        flag = Number(childView.viewName === viewName);
 	        domutil[prefix[flag] + 'Class'](container, config.classname('hidden'));
 	    });
+	};
+	
+	Layout.prototype.applyTheme = function() {
+	    var style = this.container.style;
+	    var theme = this.theme.common;
+	
+	    // background color
+	    style.backgroundColor = theme.backgroundColor;
 	};
 	
 	module.exports = Layout;
@@ -6163,9 +6342,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var util = __webpack_require__(6);
 	var Base = __webpack_require__(40),
-	    Core = __webpack_require__(45),
-	    Week = __webpack_require__(46),
-	    Month = __webpack_require__(48);
+	    Core = __webpack_require__(48),
+	    Week = __webpack_require__(49),
+	    Month = __webpack_require__(51);
 	
 	/**
 	 * Mixin object. create object property to target and mix to that
@@ -6193,9 +6372,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    mixin(Week, controller, 'Week');
 	    mixin(Month, controller, 'Month');
 	
+	    // for Theme
+	    controller.Core.theme = controller.theme;
+	    controller.Week.theme = controller.theme;
+	    controller.Month.theme = controller.theme;
+	
 	    return controller;
 	};
-	
 
 
 /***/ },
@@ -6213,11 +6396,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ScheduleViewModel = __webpack_require__(44);
 	var datetime = __webpack_require__(27);
 	var common = __webpack_require__(30);
+	var Theme = __webpack_require__(45);
 	
 	/**
 	 * @constructor
 	 * @param {object} options - options for base controller
 	 * @param {function} [options.groupFunc] - function for group each models {@see Collection#groupBy}
+	 * @param {themeConfig} [options.theme] - theme object
 	 * @mixes util.CustomEvents
 	 */
 	function Base(options) {
@@ -6230,11 +6415,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {string} group key
 	     */
 	    this.groupFunc = options.groupFunc || function(viewModel) {
+	        var model = viewModel.model;
+	
 	        if (viewModel.model.isAllDay) {
 	            return 'allday';
 	        }
 	
-	        return 'time';
+	        if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
+	            return 'allday';
+	        }
+	
+	        return model.category;
 	    };
 	
 	    /**
@@ -6248,6 +6439,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object.<string, array>}
 	     */
 	    this.dateMatrix = {};
+	
+	    /**
+	     * Theme
+	     * @type {Theme}
+	     */
+	    this.theme = new Theme(options.theme);
+	
+	    /**
+	     * Calendar list
+	     * @type {Array.<Calendar>}
+	     */
+	    this.calendars = [];
 	}
 	
 	/**
@@ -6266,9 +6469,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return range;
 	};
 	
-	/**********
-	 * CRUD
-	 **********/
+	/****************
+	 * CRUD Schedule
+	 ****************/
 	
 	/**
 	 * Create an schedule instance from raw data.
@@ -6533,11 +6736,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.fire('clearSchedules');
 	};
 	
+	/**
+	 * Set a theme.
+	 * @param {themeConfig} theme - theme keys, styles
+	 * @returns {Array.<string>} keys - error keys not predefined.
+	 */
+	Base.prototype.setTheme = function(theme) {
+	    this.theme.clear();
+	
+	    return this.theme.setStyles(theme);
+	};
+	
+	/**
+	 * @typedef {Calendar}
+	 * @property {string|number} id - calendar id
+	 * @property {string} name - calendar name
+	 * @property {string} color - text color when schedule is displayed
+	 * @property {string} bgColor - background color schedule is displayed 
+	 * @property {string} borderColor - color of left border or bullet point when schedule is displayed
+	 * @property {boolean} [checked] - whether to show calendar's schedules or not
+	 */
+	
+	/**
+	 * Set calendar list
+	 * @param {Array.<Calendar>} calendars - calendar list
+	 */
+	Base.prototype.setCalendars = function(calendars) {
+	    this.calendars = calendars;
+	};
+	
 	// mixin
 	util.CustomEvents.mixin(Base);
 	
 	module.exports = Base;
-	
 
 
 /***/ },
@@ -6558,21 +6789,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	var model = __webpack_require__(43);
 	
 	/**
-	 * 일정 카테고리
+	 * Schedule category
 	 * @readonly
 	 * @enum {string}
 	 */
 	var SCHEDULE_CATEGORY = {
-	    /** 마일스톤 */
+	    /** milestone */
 	    MILESTONE: 'milestone',
 	
-	    /** 업무 */
+	    /** task */
 	    TASK: 'task',
 	
-	    /** 종일일정 */
+	    /** all-day schedule */
 	    ALLDAY: 'allday',
 	
-	    /** 시간별 일정 */
+	    /** normal schedule */
 	    TIME: 'time'
 	};
 	
@@ -6632,31 +6863,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.bgColor = '#a1b56c';
 	
 	    /**
+	     * schedule background color when dragging it
+	     * @type {string}
+	     */
+	    this.dragBgColor = '#a1b56c';
+	
+	    /**
 	     * schedule left border color
 	     * @type {string}
 	     */
 	    this.borderColor = '#000';
 	
 	    /**
-	     * 캘린더 ID
+	     * calendar ID
 	     * @type {string}
 	     */
 	    this.calendarId = '';
 	
 	    /**
-	     * 일정 카테고리 (마일스톤, 업무, 종일일정, 시간별일정)
+	     * Schedule category(milestone, task, allday, time)
 	     * @type {string}
 	     */
 	    this.category = '';
 	
 	    /**
-	     * 업무 일정의 경우 구분 (출근전, 점심전, 퇴근전)
+	     * Classification of work schedules (before work, before lunch, before work)
 	     * @type {string}
 	     */
 	    this.dueDateClass = '';
 	
 	    /**
-	     * 커스텀 스타일
+	     * Custom style for schedule element
 	     * @type {string}
 	     */
 	    this.customStyle = '';
@@ -6680,7 +6917,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.isReadOnly = false;
 	
 	    /**
-	     * 렌더링과 관계 없는 별도 데이터 저장 공간.
+	     * Separate data storage space independent of rendering.
 	     * @type {object}
 	     */
 	    this.raw = null;
@@ -6731,6 +6968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.color = options.color || this.color;
 	    this.bgColor = options.bgColor || this.bgColor;
+	    this.dragBgColor = options.dragBgColor || this.dragBgColor;
 	    this.borderColor = options.borderColor || this.borderColor;
 	    this.calendarId = options.calendarId || '';
 	    this.category = options.category || '';
@@ -6755,7 +6993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	Schedule.prototype.setAllDayPeriod = function(start, end) {
-	    // 종일일정인 경우 문자열의 날짜정보만 사용한다.
+	    // If it is an all-day schedule, only the date information of the string is used.
 	    if (util.isString(start)) {
 	        start = datetime.parse(start.substring(0, 10));
 	    }
@@ -6830,6 +7068,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    if (this.bgColor !== schedule.bgColor) {
+	        return false;
+	    }
+	
+	    if (this.dragBgColor !== schedule.dragBgColor) {
 	        return false;
 	    }
 	
@@ -7453,6 +7695,436 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
+	 * @fileoverview The all configuration of a theme
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var themeStandard = __webpack_require__(46);
+	var themeConfig = __webpack_require__(47);
+	var common = __webpack_require__(30);
+	
+	/**
+	 * Theme manager
+	 * @param {object} customTheme - custom theme
+	 */
+	function Theme(customTheme) {
+	    var theme = customTheme || themeStandard;
+	
+	    /**
+	     * @type {util.HashMap}
+	     */
+	    this._map = new util.HashMap();
+	
+	    this.setStyles(theme);
+	}
+	
+	/**
+	 * Get a style with key
+	 * @param {string} key - key for getting a style
+	 * @returns {string|undefined} style  
+	 */
+	Theme.prototype.getStyle = function(key) {
+	    return this._map.get(key);
+	};
+	
+	/**
+	 * Set a style
+	 * @param {string} key - key for setting a style
+	 * @param {string} style - style value
+	 * @returns {boolean} true if the give key is valid or false
+	 */
+	Theme.prototype.setStyle = function(key, style) {
+	    var styles = {};
+	    styles[key] = style;
+	
+	    return this.setStyles(styles).length === 0;
+	};
+	
+	/**
+	 * Set styles
+	 * @param {object} styles - multiple styles map
+	 * @returns {Array.<string>} error keys
+	 */
+	Theme.prototype.setStyles = function(styles) {
+	    var errors = [];
+	
+	    util.forEach(styles, function(style, key) {
+	        if (util.isUndefined(themeConfig[key])) {
+	            errors.push(key);
+	        } else {
+	            this._map.set(key, style);
+	            common.set(this, key, style);
+	        }
+	    }, this);
+	
+	    return errors;
+	};
+	
+	/**
+	 * Delete all styles
+	 */
+	Theme.prototype.clear = function() {
+	    var keys = this._map.keys();
+	    var categories = {};
+	    util.forEach(keys, function(key) {
+	        var category = key.split('.')[0];
+	        if (!categories[category]) {
+	            categories[category] = category;
+	        }
+	    });
+	
+	    util.forEach(categories, function(child) {
+	        delete this[child];
+	    }, this);
+	
+	    this._map.removeAll();
+	};
+	
+	module.exports = Theme;
+
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+
+	/**
+	 * @fileoverview The standard theme
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	/**
+	 * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".
+	 * "week" prefix is for weekly and daily view.
+	 * "month" prefix is for monthly view.
+	 */
+	var theme = {
+	    'common.border': '1px solid #e5e5e5',
+	    'common.backgroundColor': 'white',
+	    'common.holiday.color': '#ff4040',
+	    'common.saturday.color': '#333',
+	    'common.dayname.color': '#333',
+	    'common.today.color': '#333',
+	
+	    // creation guide style
+	    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+	    'common.creationGuide.border': '1px solid #515ce6',
+	
+	    // month header 'dayname'
+	    'month.dayname.height': '31px',
+	    'month.dayname.borderLeft': 'none',
+	    'month.dayname.paddingLeft': '10px',
+	    'month.dayname.paddingRight': '0',
+	    'month.dayname.fontSize': '12px',
+	    'month.dayname.backgroundColor': 'inherit',
+	    'month.dayname.fontWeight': 'normal',
+	    'month.dayname.textAlign': 'left',
+	
+	    // month day grid cell 'day'
+	    'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
+	    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+	    'month.weekend.backgroundColor': 'none',
+	    'month.day.fontSize': '14px',
+	
+	    // month schedule style
+	    'month.schedule.borderRadius': '2px',
+	    'month.schedule.height': '24px',
+	    'month.schedule.marginTop': '2px',
+	    'month.schedule.marginLeft': '8px',
+	    'month.schedule.marginRight': '8px',
+	
+	    // week header 'dayname'
+	    'week.dayname.height': '42px',
+	    'week.dayname.borderTop': '1px solid #e5e5e5',
+	    'week.dayname.borderBottom': '1px solid #e5e5e5',
+	    'week.dayname.borderLeft': 'none',
+	    'week.dayname.paddingLeft': '0',
+	    'week.dayname.backgroundColor': 'inherit',
+	    'week.dayname.textAlign': 'left',
+	    'week.today.color': 'inherit',
+	
+	    // week vertical panel 'vpanel'
+	    'week.vpanelSplitter.border': '1px solid #e5e5e5',
+	    'week.vpanelSplitter.height': '3px',
+	
+	    // week daygrid 'daygrid'
+	    'week.daygrid.borderRight': '1px solid #e5e5e5',
+	    'week.daygrid.backgroundColor': 'inherit',
+	
+	    'week.daygridLeft.width': '72px',
+	    'week.daygridLeft.backgroundColor': 'inherit',
+	    'week.daygridLeft.paddingRight': '8px',
+	    'week.daygridLeft.borderRight': '1px solid #e5e5e5',
+	
+	    'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+	    'week.weekend.backgroundColor': 'inherit',
+	
+	    // week timegrid 'timegrid'
+	    'week.timegridLeft.width': '72px',
+	    'week.timegridLeft.backgroundColor': 'inherit',
+	    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+	    'week.timegridLeft.fontSize': '11px',
+	
+	    'week.timegridOneHour.height': '52px',
+	    'week.timegridHalfHour.height': '26px',
+	    'week.timegridHalfHour.borderBottom': 'none',
+	    'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
+	
+	    'week.timegrid.paddingRight': '8px',
+	    'week.timegrid.borderRight': '1px solid #e5e5e5',
+	    'week.timegridSchedule.borderRadius': '2px',
+	    'week.timegridSchedule.paddingLeft': '2px',
+	
+	    'week.currentTime.color': '#515ce6',
+	    'week.currentTime.fontSize': '11px',
+	    'week.currentTime.fontWeight': 'normal',
+	    'week.currentTimeLinePast.border': '1px dashed #515ce6',
+	    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
+	    'week.currentTimeLineToday.border': '1px solid #515ce6',
+	    'week.currentTimeLineFuture.border': 'none',
+	
+	    // week creation guide style
+	    'week.creationGuide.color': '#515ce6',
+	    'week.creationGuide.fontSize': '11px',
+	    'week.creationGuide.fontWeight': 'bold',
+	
+	    // week daygrid schedule style
+	    'week.dayGridSchedule.borderRadius': '2px',
+	    'week.dayGridSchedule.height': '24px',
+	    'week.dayGridSchedule.marginTop': '2px',
+	    'week.dayGridSchedule.marginLeft': '8px',
+	    'week.dayGridSchedule.marginRight': '8px'
+	};
+	
+	module.exports = theme;
+
+
+/***/ },
+/* 47 */
+/***/ function(module, exports) {
+
+	/**
+	 * @fileoverview The all configuration of a theme
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	/**
+	 * @typedef {object} themeConfig
+	 * Full configuration for theme.<br>
+	 * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".<br>
+	 * "week" prefix is for weekly and daily view.<br>
+	 * "month" prefix is for monthly view.
+	 * @example
+	 // default keys and styles
+	 var themeConfig = {
+	    'common.border': '1px solid #e5e5e5',
+	    'common.backgroundColor': 'white',
+	    'common.holiday.color': '#ff4040',
+	    'common.saturday.color': '#135de6',
+	    'common.dayname.color': '#333',
+	    'common.today.color': '#135de6',
+	
+	    // creation guide style
+	    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+	    'common.creationGuide.border': '1px solid #515ce6',
+	
+	    // month header 'dayname'
+	    'month.dayname.height': '31px',
+	    'month.dayname.borderTop': '1px solid #e5e5e5',
+	    'month.dayname.borderLeft': '1px solid #e5e5e5',
+	    'month.dayname.paddingLeft': '10px',
+	    'month.dayname.paddingRight': '10px',
+	    'month.dayname.backgroundColor': 'inherit',
+	    'month.dayname.fontSize': '12px',
+	    'month.dayname.fontWeight': 'normal',
+	    'month.dayname.textAlign': 'left',
+	
+	    // month day grid cell 'day'
+	    'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
+	    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+	    'month.weekend.backgroundColor': 'inherit',
+	    'month.day.fontSize': '14px',
+	
+	    // month schedule style
+	    'month.schedule.borderRadius': '2px',
+	    'month.schedule.height': '24px',
+	    'month.schedule.marginTop': '2px',
+	    'month.schedule.marginLeft': '8px',
+	    'month.schedule.marginRight': '8px',
+	
+	    // week header 'dayname'
+	    'week.dayname.height': '42px',
+	    'week.dayname.borderTop': '1px solid #e5e5e5',
+	    'week.dayname.borderBottom': '1px solid #e5e5e5',
+	    'week.dayname.borderLeft': 'inherit',
+	    'week.dayname.paddingLeft': '0',
+	    'week.dayname.backgroundColor': 'inherit',
+	    'week.dayname.textAlign': 'left',
+	    'week.today.color': '#333',
+	
+	    // week vertical panel 'vpanel'
+	    'week.vpanelSplitter.border': '1px solid #e5e5e5',
+	    'week.vpanelSplitter.height': '3px',
+	
+	    // week daygrid 'daygrid'
+	    'week.daygrid.borderRight': '1px solid #e5e5e5',
+	    'week.daygrid.backgroundColor': 'inherit',
+	
+	    'week.daygridLeft.width': '72px',
+	    'week.daygridLeft.backgroundColor': 'inherit',
+	    'week.daygridLeft.paddingRight': '8px',
+	    'week.daygridLeft.borderRight': '1px solid #e5e5e5',
+	
+	    'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+	    'week.weekend.backgroundColor': 'inherit',
+	
+	    // week timegrid 'timegrid'
+	    'week.timegridLeft.width': '72px',
+	    'week.timegridLeft.backgroundColor': 'inherit',
+	    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+	    'week.timegridLeft.fontSize': '11px',
+	
+	    'week.timegridOneHour.height': '52px',
+	    'week.timegridHalfHour.height': '26px',
+	    'week.timegridHalfHour.borderBottom': 'none',
+	    'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
+	
+	    'week.timegrid.paddingRight': '8px',
+	    'week.timegrid.borderRight': '1px solid #e5e5e5',
+	    'week.timegridSchedule.borderRadius': '2px',
+	    'week.timegridSchedule.paddingLeft': '2px',
+	
+	    'week.currentTime.color': '#515ce6',
+	    'week.currentTime.fontSize': '11px',
+	    'week.currentTime.fontWeight': 'normal',
+	    'week.currentTimeLinePast.border': '1px dashed #515ce6',
+	    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
+	    'week.currentTimeLineToday.border': '1px solid #515ce6',
+	    'week.currentTimeLineFuture.border': 'none',
+	
+	    // week creation guide style
+	    'week.creationGuide.color': '#515ce6',
+	    'week.creationGuide.fontSize': '11px',
+	    'week.creationGuide.fontWeight': 'bold',
+	
+	    // week daygrid schedule style
+	    'week.dayGridSchedule.borderRadius': '2px',
+	    'week.dayGridSchedule.height': '24px',
+	    'week.dayGridSchedule.marginTop': '2px',
+	    'week.dayGridSchedule.marginLeft': '8px',
+	    'week.dayGridSchedule.marginRight': '8px'
+	};
+	 */
+	var themeConfig = {
+	    'common.border': '1px solid #e5e5e5',
+	    'common.backgroundColor': 'white',
+	    'common.holiday.color': '#ff4040',
+	    'common.saturday.color': '#135de6',
+	    'common.dayname.color': '#333',
+	    'common.today.color': '#135de6',
+	
+	    // creation guide style
+	    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+	    'common.creationGuide.border': '1px solid #515ce6',
+	
+	    // month header 'dayname'
+	    'month.dayname.height': '31px',
+	    'month.dayname.borderTop': '1px solid #e5e5e5',
+	    'month.dayname.borderLeft': '1px solid #e5e5e5',
+	    'month.dayname.paddingLeft': '10px',
+	    'month.dayname.paddingRight': '10px',
+	    'month.dayname.backgroundColor': 'inherit',
+	    'month.dayname.fontSize': '12px',
+	    'month.dayname.fontWeight': 'normal',
+	    'month.dayname.textAlign': 'left',
+	
+	    // month day grid cell 'day'
+	    'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
+	    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+	    'month.weekend.backgroundColor': 'inherit',
+	    'month.day.fontSize': '14px',
+	
+	    // month schedule style
+	    'month.schedule.borderRadius': '2px',
+	    'month.schedule.height': '24px',
+	    'month.schedule.marginTop': '2px',
+	    'month.schedule.marginLeft': '8px',
+	    'month.schedule.marginRight': '8px',
+	
+	    // week header 'dayname'
+	    'week.dayname.height': '42px',
+	    'week.dayname.borderTop': '1px solid #e5e5e5',
+	    'week.dayname.borderBottom': '1px solid #e5e5e5',
+	    'week.dayname.borderLeft': 'inherit',
+	    'week.dayname.paddingLeft': '0',
+	    'week.dayname.backgroundColor': 'inherit',
+	    'week.dayname.textAlign': 'left',
+	    'week.today.color': '#333',
+	
+	    // week vertical panel 'vpanel'
+	    'week.vpanelSplitter.border': '1px solid #e5e5e5',
+	    'week.vpanelSplitter.height': '3px',
+	
+	    // week daygrid 'daygrid'
+	    'week.daygrid.borderRight': '1px solid #e5e5e5',
+	    'week.daygrid.backgroundColor': 'inherit',
+	
+	    'week.daygridLeft.width': '72px',
+	    'week.daygridLeft.backgroundColor': 'inherit',
+	    'week.daygridLeft.paddingRight': '8px',
+	    'week.daygridLeft.borderRight': '1px solid #e5e5e5',
+	
+	    'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+	    'week.weekend.backgroundColor': 'inherit',
+	
+	    // week timegrid 'timegrid'
+	    'week.timegridLeft.width': '72px',
+	    'week.timegridLeft.backgroundColor': 'inherit',
+	    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+	    'week.timegridLeft.fontSize': '11px',
+	
+	    'week.timegridOneHour.height': '52px',
+	    'week.timegridHalfHour.height': '26px',
+	    'week.timegridHalfHour.borderBottom': 'none',
+	    'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
+	
+	    'week.timegrid.paddingRight': '8px',
+	    'week.timegrid.borderRight': '1px solid #e5e5e5',
+	    'week.timegridSchedule.borderRadius': '2px',
+	    'week.timegridSchedule.paddingLeft': '2px',
+	
+	    'week.currentTime.color': '#515ce6',
+	    'week.currentTime.fontSize': '11px',
+	    'week.currentTime.fontWeight': 'normal',
+	    'week.currentTimeLinePast.border': '1px dashed #515ce6',
+	    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
+	    'week.currentTimeLineToday.border': '1px solid #515ce6',
+	    'week.currentTimeLineFuture.border': 'none',
+	
+	    // week creation guide style
+	    'week.creationGuide.color': '#515ce6',
+	    'week.creationGuide.fontSize': '11px',
+	    'week.creationGuide.fontWeight': 'bold',
+	
+	    // week daygrid schedule style
+	    'week.dayGridSchedule.borderRadius': '2px',
+	    'week.dayGridSchedule.height': '24px',
+	    'week.dayGridSchedule.marginTop': '2px',
+	    'week.dayGridSchedule.marginLeft': '8px',
+	    'week.dayGridSchedule.marginRight': '8px'
+	};
+	
+	module.exports = themeConfig;
+
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
 	 * @fileoverview Core methods for schedule block placing
 	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
 	 */
@@ -7489,14 +8161,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            forEachArr(previousScheduleList, function(previous) {
 	                if (schedule.collidesWith(previous)) {
-	                    // 이전 일정들과 겹치는 경우 겹치는 일정의 Collision Group을
-	                    // 찾아 이 일정을 추가한다
+	                    // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
 	                    foundPrevCollisionSchedule = true;
 	
 	                    forEachArr(collisionGroups.slice(0).reverse(), function(group) {
 	                        if (~util.inArray(util.stamp(previous.valueOf()), group)) {
-	                            // 겹치는 이전 일정을 찾은 경우 그 일정이 속한
-	                            // Collision Group에 이 일정을 포함시킨다.
+	                            // If you find a previous schedule that overlaps, include it in the Collision Group to which it belongs.
 	                            group.push(util.stamp(schedule.valueOf()));
 	
 	                            return false; // returning false can stop this loop
@@ -7512,8 +8182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	
 	            if (!foundPrevCollisionSchedule) {
-	                // 이 일정은 이전일정과 겹치지 않는 일정이므로
-	                // 새 Collision Group을 구성한다.
+	                // This schedule is a schedule that does not overlap with the previous schedule, so a new Collision Group is constructed.
 	                collisionGroups.push([util.stamp(schedule.valueOf())]);
 	            }
 	        });
@@ -7713,7 +8382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 46 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-shadow: 0 */
@@ -7726,7 +8395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	
 	var Collection = __webpack_require__(33);
-	var array = __webpack_require__(47);
+	var array = __webpack_require__(50);
 	var datetime = __webpack_require__(27);
 	
 	/**
@@ -8034,7 +8703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 47 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8327,7 +8996,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 48 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8337,7 +9006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var util = __webpack_require__(6);
-	var array = __webpack_require__(47),
+	var array = __webpack_require__(50),
 	    datetime = __webpack_require__(27),
 	    Collection = __webpack_require__(33);
 	var mmax = Math.max;
@@ -8545,7 +9214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 49 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8557,25 +9226,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var VLayout = __webpack_require__(50);
-	var reqAnimFrame = __webpack_require__(52);
+	var VLayout = __webpack_require__(53);
+	var reqAnimFrame = __webpack_require__(55);
+	var Schedule = __webpack_require__(41);
 	// Parent views
-	var Week = __webpack_require__(53);
+	var Week = __webpack_require__(56);
 	
 	// Sub views
-	var DayName = __webpack_require__(54);
-	var DayGrid = __webpack_require__(56);
-	var TimeGrid = __webpack_require__(61);
+	var DayName = __webpack_require__(57);
+	var DayGrid = __webpack_require__(59);
+	var TimeGrid = __webpack_require__(64);
+	var ScheduleCreationPopup = __webpack_require__(70);
+	var ScheduleDetailPopup = __webpack_require__(74);
+	
 	// Handlers
-	var DayNameClick = __webpack_require__(67);
-	var DayGridClick = __webpack_require__(68);
-	var DayGridCreation = __webpack_require__(72);
-	var DayGridMove = __webpack_require__(69);
-	var DayGridResize = __webpack_require__(74);
-	var TimeClick = __webpack_require__(76);
-	var TimeCreation = __webpack_require__(77);
-	var TimeMove = __webpack_require__(80);
-	var TimeResize = __webpack_require__(84);
+	var DayNameClick = __webpack_require__(76);
+	var DayGridClick = __webpack_require__(77);
+	var DayGridCreation = __webpack_require__(81);
+	var DayGridMove = __webpack_require__(78);
+	var DayGridResize = __webpack_require__(83);
+	var TimeClick = __webpack_require__(85);
+	var TimeCreation = __webpack_require__(86);
+	var TimeMove = __webpack_require__(89);
+	var TimeResize = __webpack_require__(92);
 	
 	var DAYGRID_HANDLDERS = {
 	    'click': DayGridClick,
@@ -8634,6 +9307,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var panels = options.week.panels || DEFAULT_PANELS,
 	        vpanels = [];
 	    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
+	    var createView, onSaveNewSchedule, onSetCalendars;
+	    var detailView, onShowDetailPopup, onDeleteSchedule, onShowEditPopup, onEditSchedule;
 	
 	    util.extend(options.week, {panels: panels});
 	
@@ -8675,14 +9350,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 	
 	    /**********
-	     * 일자표기 (상단 일월화수...)
+	     * Day name (top row(Mon, Tue, Wed...))
 	     **********/
-	    dayNameView = new DayName(options.week, dayNameContainer);
+	    dayNameView = new DayName(options.week, dayNameContainer, baseController.theme);
 	    weekView.handler.dayname.date = new DayNameClick(dragHandler, dayNameView, baseController);
 	    weekView.addChild(dayNameView);
 	
 	    /**********
-	     * 수직 레이아웃 모듈 초기화
+	     * Initialize vertical layout module
 	     **********/
 	    vLayoutContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('vlayout-area'));
 	    vLayoutContainer.style.height = (domutil.getSize(weekView.container)[1] - dayNameView.container.offsetHeight) + 'px';
@@ -8690,7 +9365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    vLayout = new VLayout({
 	        panels: vpanels,
 	        panelHeights: options.week.panelHeights || []
-	    }, vLayoutContainer);
+	    }, vLayoutContainer, baseController.theme);
 	
 	    weekView.vLayout = vLayout;
 	
@@ -8707,7 +9382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            /**********
 	             * Schedule panel by Grid
 	             **********/
-	            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container);
+	            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container, baseController.theme);
 	            view.on('afterRender', function(viewModel) {
 	                vLayout.getPanelByName(name).setHeight(null, viewModel.height);
 	            });
@@ -8736,6 +9411,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    });
 	
+	    // binding create schedules event
+	    if (options.useCreationPopup) {
+	        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+	
+	        onSaveNewSchedule = function(scheduleData) {
+	            util.extend(scheduleData, {
+	                useCreationPopup: true
+	            });
+	            if (scheduleData.isAllDay) {
+	                weekView.handler.creation.allday.fire('beforeCreateSchedule', scheduleData);
+	            } else {
+	                weekView.handler.creation.time.fire('beforeCreateSchedule', scheduleData);
+	            }
+	        };
+	        createView.on('beforeCreateSchedule', onSaveNewSchedule);
+	    }
+	
+	    onSetCalendars = function(calendars) {
+	        if (createView) {
+	            createView.setCalendars(calendars);
+	        }
+	    };
+	
+	    baseController.on('setCalendars', onSetCalendars);
+	
+	    // binding popup for schedule detail
+	    if (options.useDetailPopup) {
+	        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+	        onShowDetailPopup = function(eventData) {
+	            var scheduleId = eventData.schedule.calendarId;
+	            eventData.calendar = baseController.calendars.find(function(calendar) {
+	                return calendar.id === scheduleId;
+	            });
+	
+	            detailView.render(eventData);
+	        };
+	        onDeleteSchedule = function(eventData) {
+	            if (eventData.isAllDay) {
+	                weekView.handler.creation.allday.fire('beforeDeleteSchedule', eventData);
+	            } else {
+	                weekView.handler.creation.time.fire('beforeDeleteSchedule', eventData);
+	            }
+	        };
+	        onEditSchedule = function(eventData) {
+	            if (eventData.isAllDay) {
+	                weekView.handler.move.allday.fire('beforeUpdateSchedule', eventData);
+	            } else {
+	                weekView.handler.move.time.fire('beforeUpdateSchedule', eventData);
+	            }
+	        };
+	
+	        util.forEach(weekView.handler.click, function(panel) {
+	            panel.on('clickSchedule', onShowDetailPopup);
+	        });
+	        if (options.useCreationPopup) {
+	            onShowEditPopup = function(eventData) {
+	                var calendars = baseController.calendars;
+	                eventData.isEditMode = true;
+	                createView.setCalendars(calendars);
+	                createView.render(eventData);
+	            };
+	            createView.on('beforeUpdateSchedule', onEditSchedule);
+	            detailView.on('beforeUpdateSchedule', onShowEditPopup);
+	        } else {
+	            detailView.on('beforeUpdateSchedule', onEditSchedule);
+	        }
+	        detailView.on('beforeDeleteSchedule', onDeleteSchedule);
+	    }
+	
 	    weekView.on('afterRender', function() {
 	        vLayout.refresh();
 	    });
@@ -8751,6 +9495,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                handler.destroy();
 	            });
 	        });
+	
+	        if (options.useCreationPopup) {
+	            createView.off('beforeCreateSchedule', onSaveNewSchedule);
+	            createView.destroy();
+	        }
+	
+	        if (options.useDetailPopup) {
+	            detailView.off('beforeDeleteSchedule', onDeleteSchedule);
+	            detailView.destroy();
+	        }
 	
 	        weekView.off();
 	    };
@@ -8773,13 +9527,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    childView.scrollToNow();
 	                }
 	            });
+	        },
+	        openCreationPopup: function(schedule) {
+	            if (createView) {
+	                if (schedule.isAllDay) {
+	                    weekView.handler.creation.allday.invokeCreationClick(Schedule.create(schedule));
+	                } else {
+	                    weekView.handler.creation.time.invokeCreationClick(Schedule.create(schedule));
+	                }
+	            }
+	        },
+	        showCreationPopup: function(eventData) {
+	            if (createView) {
+	                createView.setCalendars(baseController.calendars);
+	                createView.render(eventData);
+	            }
 	        }
 	    };
 	};
 
 
 /***/ },
-/* 50 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8794,7 +9563,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32),
 	    View = __webpack_require__(37),
-	    VPanel = __webpack_require__(51),
+	    VPanel = __webpack_require__(54),
 	    Drag = __webpack_require__(38);
 	
 	var mAbs = Math.abs;
@@ -8816,8 +9585,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *  @param {PanelOptions[]} [options.panels] - panels to add layout when initialize
 	 *  @param {number[]} [options.panelHeights] - panel height list
 	 * @param {HTMLElement} container - container element
+	 * @param {Theme} theme - theme instance
 	 */
-	function VLayout(options, container) {
+	function VLayout(options, container, theme) {
 	    var opt, tempHeights;
 	
 	    if (!(this instanceof VLayout)) {
@@ -8861,6 +9631,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object}
 	     */
 	    this._dragData = null;
+	
+	    /**
+	     * @type {Theme}
+	     */
+	    this.theme = theme;
 	
 	    if (opt.panels.length) {
 	        if (opt.panelHeights.length) {
@@ -9165,7 +9940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        index: index
 	    }, options);
 	
-	    panels.push(new VPanel(options, element));
+	    panels.push(new VPanel(options, element, this.theme));
 	
 	    container.appendChild(element);
 	};
@@ -9206,7 +9981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 51 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9232,8 +10007,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *  @param {boolean} [options.autoHeight=false] - set true then this panel use remain height after other panel resized.
 	 *  @param {string} [options.className] - additional class name to add element
 	 * @param {HTMLElement} container - container element
+	 * @param {Theme} theme - theme instance
 	 */
-	function VPanel(options, container) {
+	function VPanel(options, container, theme) {
 	    View.call(this, container);
 	
 	    /**
@@ -9261,6 +10037,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.name = this.options.name || String(this.index);
 	
 	    this.isHeightForcedSet = false;
+	
+	    /**
+	     * @type {Theme}
+	     */
+	    this.theme = theme;
 	
 	    this._initPanel(this.options, container);
 	}
@@ -9375,6 +10156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (options.isSplitter) {
 	        domutil.addClass(container, config.classname('splitter'));
+	        this.applyTheme();
 	
 	        return;
 	    }
@@ -9396,12 +10178,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	VPanel.prototype.applyTheme = function() {
+	    var style = this.container.style;
+	    var theme = this.theme;
+	
+	    if (!theme) {
+	        return;
+	    }
+	
+	    style.borderTop = theme.week.vpanelSplitter.border || theme.common.border;
+	    style.borderBottom = theme.week.vpanelSplitter.border || theme.common.border;
+	    style.height = theme.week.vpanelSplitter.height;
+	};
+	
 	module.exports = VPanel;
 	
 
 
 /***/ },
-/* 52 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -9466,7 +10261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 53 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9483,8 +10278,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var View = __webpack_require__(37);
 	
 	/**
-	 * FullCalendar 에서는 날짜 정보만 사용(YYYY-MM-DD) 하고,
-	 * SplitTimeCalendar 에서는 타임존 정보까지 포함된 문자열을 사용하기 때문에 분기처리함.
+	 * FullCalendar uses only date information (YYYY-MM-DD)
+	 * SplitTimeCalendar uses a string containing time zone information, so it branches.
 	 * @param {String} dateString - date string
 	 * @returns {TZDate}
 	 */
@@ -9563,7 +10358,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleFilter = options.scheduleFilter,
 	        narrowWeekend = options.narrowWeekend,
 	        startDayOfWeek = options.startDayOfWeek,
-	        workweek = options.workweek;
+	        workweek = options.workweek,
+	        theme = this.controller.theme || {};
 	    var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 	
 	    renderStartDate = parseRangeDateString(options.renderStartDate);
@@ -9603,7 +10399,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        renderStartDate: renderStartDate,
 	        renderEndDate: renderEndDate,
 	        grids: grids,
-	        range: range
+	        range: range,
+	        theme: theme
 	    };
 	
 	    this.children.each(function(childView) {
@@ -9648,7 +10445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 54 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9663,15 +10460,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TZDate = __webpack_require__(28).Date;
 	var domutil = __webpack_require__(31);
 	var View = __webpack_require__(37);
-	var daynameTmpl = __webpack_require__(55);
+	var daynameTmpl = __webpack_require__(58);
 	
 	/**
 	 * @constructor
 	 * @param {object} options - options for dayname view
 	 * @param {HTMLElement} container Container element to use.
+	 * @param {Theme} theme - theme instance
 	 * @extends {View}
 	 */
-	function DayName(options, container) {
+	function DayName(options, container, theme) {
 	    container = domutil.appendHTMLElement(
 	        'div',
 	        container,
@@ -9682,7 +10480,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 	    }, options);
 	
+	    /**
+	     * @type {Theme}
+	     */
+	    this.theme = theme;
+	
 	    View.call(this, container);
+	
+	    this.applyTheme();
 	}
 	
 	util.inherit(DayName, View);
@@ -9696,6 +10501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DayName.prototype._getBaseViewModel = function(start, end, grids) {
 	    var daynames = this.options.daynames,
+	        theme = this.theme,
 	        viewModel;
 	
 	    viewModel = util.map(datetime.range(
@@ -9704,17 +10510,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        datetime.MILLISECONDS_PER_DAY
 	    ), function(d, i) {
 	        var day = d.getDay();
+	        var isToday = datetime.isSameDate(d, new TZDate());
 	
 	        return {
 	            day: day,
 	            dayName: daynames[day],
-	            isToday: datetime.isSameDate(d, new TZDate()),
+	            isToday: isToday,
 	            date: d.getDate(),
 	            left: grids[i] ? grids[i].left : 0,
 	            width: grids[i] ? grids[i].width : 0,
-	            renderDate: datetime.format(d, 'YYYY-MM-DD')
+	            renderDate: datetime.format(d, 'YYYY-MM-DD'),
+	            color: this._getDayNameColor(theme, day, isToday)
 	        };
-	    });
+	    }, this);
 	
 	    return viewModel;
 	};
@@ -9724,25 +10532,89 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} viewModel View model from parent (WeekView)
 	 */
 	DayName.prototype.render = function(viewModel) {
-	    var _viewModel = this._getBaseViewModel(
+	    var dayNames = this._getBaseViewModel(
 	        viewModel.renderStartDate,
 	        viewModel.renderEndDate,
 	        viewModel.grids
 	    );
+	    var styles = this._getStyles(this.theme);
+	    var baseViewModel = util.extend({}, {
+	        dayNames: dayNames,
+	        styles: styles
+	    });
 	
-	    this.container.innerHTML = daynameTmpl(_viewModel);
+	    this.container.innerHTML = daynameTmpl(baseViewModel);
+	};
+	
+	/**
+	 * Get a day name color
+	 * @param {Theme} theme - theme instance
+	 * @param {number} day - day number
+	 * @param {boolean} isToday - today flag
+	 * @returns {string} style - color style
+	 */
+	DayName.prototype._getDayNameColor = function(theme, day, isToday) {
+	    var color = '';
+	
+	    if (theme) {
+	        if (day === 0) {
+	            color = theme.common.holiday.color;
+	        } else if (day === 6) {
+	            color = theme.common.saturday.color;
+	        } else if (isToday) {
+	            color = theme.week.today.color || theme.common.today.color;
+	        } else {
+	            color = theme.common.dayname.color;
+	        }
+	    }
+	
+	    return color;
+	};
+	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	DayName.prototype._getStyles = function(theme) {
+	    var styles = {};
+	
+	    if (theme) {
+	        styles.borderTop = theme.week.dayname.borderTop || theme.common.border;
+	        styles.borderBottom = theme.week.dayname.borderBottom || theme.common.border;
+	        styles.borderLeft = theme.week.dayname.borderLeft || theme.common.border;
+	        styles.paddingLeft = theme.week.dayname.paddingLeft;
+	        styles.backgroundColor = theme.week.dayname.backgroundColor;
+	        styles.height = theme.week.dayname.height;
+	        styles.textAlign = theme.week.dayname.textAlign;
+	    }
+	
+	    return styles;
+	};
+	
+	DayName.prototype.applyTheme = function() {
+	    var styles = this._getStyles(this.theme);
+	    var style = this.container.style;
+	
+	    style.borderTop = styles.borderTop;
+	    style.borderBottom = styles.borderBottom;
+	    style.height = styles.height;
+	    style.backgroundColor = styles.backgroundColor;
+	    style.textAlign = styles.textAlign;
+	
+	    return style;
 	};
 	
 	module.exports = DayName;
 
 
 /***/ },
-/* 55 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -9756,9 +10628,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4((helpers["common-width"] || (depth0 && depth0["common-width"]) || alias2).call(alias1,(depth0 != null ? depth0.width : depth0),{"name":"common-width","hash":{},"data":data}))
 	    + ";left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%\">\n    <span class=\""
+	    + "%; line-height: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.height), depth0))
+	    + "; border-left: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderLeft), depth0))
+	    + "; padding-left: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.paddingLeft), depth0))
+	    + ";\">\n    <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "dayname-date-area\">\n        "
+	    + "dayname-date-area\" style=\"color: "
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + ";\">\n        "
 	    + ((stack1 = (helpers["weekDayname-tmpl"] || (depth0 && depth0["weekDayname-tmpl"]) || alias2).call(alias1,depth0,{"name":"weekDayname-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n    </span>\n</div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
@@ -9772,12 +10652,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return "<div class=\""
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "dayname-leftmargin\">\n"
-	    + ((stack1 = helpers.each.call(alias1,depth0,{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dayNames : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 56 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9792,9 +10672,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    TZDate = __webpack_require__(28).Date,
 	    View = __webpack_require__(37),
-	    DayGridSchedule = __webpack_require__(57),
-	    baseTmpl = __webpack_require__(60),
-	    reqAnimFrame = __webpack_require__(52);
+	    DayGridSchedule = __webpack_require__(60),
+	    baseTmpl = __webpack_require__(63),
+	    reqAnimFrame = __webpack_require__(55);
 	var mmax = Math.max,
 	    mmin = Math.min;
 	
@@ -9810,8 +10690,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
 	 * @param {HTMLDIVElement} container - DOM element to use container for this
 	 *  view.
+	 * @param {Theme} theme - theme instance
 	 */
-	function DayGrid(name, options, container) {
+	function DayGrid(name, options, container, theme) {
 	    container = domutil.appendHTMLElement(
 	        'div',
 	        container,
@@ -9827,8 +10708,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        renderStartDate: '',
 	        renderEndDate: '',
 	        containerBottomGutter: 18,
-	        scheduleHeight: 18,
-	        scheduleGutter: 2,
+	        scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
+	        scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
 	        scheduleContainerTop: 1,
 	        getViewModelFunc: function(viewModel) {
 	            return viewModel.schedulesInDateRange[name];
@@ -9862,7 +10743,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        panel = getPanel(opt.panels, opt.viewName),
 	        panelHeight = this.getViewBound().height,
 	        collapsed = this.state.collapsed,
-	        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false;
+	        heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false,
+	        styles = this._getStyles(viewModel.theme);
 	
 	    var baseViewModel, visibleScheduleCount;
 	
@@ -9893,22 +10775,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        days: util.map(viewModel.range, function(d, index) {
 	            var day = d.getDay();
 	            var ymd = datetime.format(d, 'YYYYMMDD');
+	            var isToday = datetime.isSameDate(d, new TZDate());
 	
 	            return {
 	                day: day,
 	                dayName: daynames[day],
-	                isToday: datetime.isSameDate(d, new TZDate()),
+	                isToday: isToday,
 	                date: d.getDate(),
 	                renderDate: datetime.format(d, 'YYYY-MM-DD'),
 	                hiddenSchedules: exceedDate[ymd] || 0,
 	                width: grids[index] ? grids[index].width : 0,
-	                left: grids[index] ? grids[index].left : 0
+	                left: grids[index] ? grids[index].left : 0,
+	                backgroundColor: viewModel.range.length > 1 ?
+	                    getWeekBackgroundColor(day, isToday, styles) : styles.backgroundColor
 	            };
 	        }),
 	        exceedDate: exceedDate,
 	        showExpandableButton: panel.showExpandableButton,
 	        collapsed: collapsed,
-	        collapseBtnIndex: this.state.clickedExpandBtnIndex
+	        collapseBtnIndex: this.state.clickedExpandBtnIndex,
+	        styles: styles
 	    };
 	
 	    return baseViewModel;
@@ -9982,6 +10868,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	DayGrid.prototype._getStyles = function(theme) {
+	    var styles = {};
+	
+	    if (theme) {
+	        styles.borderRight = theme.week.daygrid.borderRight || theme.common.border;
+	        styles.todayBackgroundColor = theme.week.today.backgroundColor;
+	        styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
+	        styles.backgroundColor = theme.week.daygrid.backgroundColor;
+	        styles.leftWidth = theme.week.daygridLeft.width;
+	        styles.leftBackgroundColor = theme.week.daygridLeft.backgroundColor;
+	        styles.leftPaddingRight = theme.week.daygridLeft.paddingRight;
+	        styles.leftBorderRight = theme.week.daygridLeft.borderRight;
+	    }
+	
+	    return styles;
+	};
+	
+	/**
+	 * Get a background color based on day.
+	 * @param {number} day - day number
+	 * @param {boolean} isToday - today flag
+	 * @param {object} styles - style object
+	 * @returns {string} backgroundColor
+	 */
+	function getWeekBackgroundColor(day, isToday, styles) {
+	    var backgroundColor = '';
+	
+	    if (day === 0 || day === 6) {
+	        backgroundColor = styles.weekendBackgroundColor;
+	    } else if (isToday) {
+	        backgroundColor = styles.todayBackgroundColor;
+	    } else {
+	        backgroundColor = styles.backgroundColor;
+	    }
+	
+	    return backgroundColor;
+	}
+	
+	/**
 	 * get a panel infomation
 	 * @param {Array.<object[]>} panels - panel infomations
 	 * @param {string} name - panel name
@@ -10003,7 +10932,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 57 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10013,16 +10942,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var util = __webpack_require__(6);
-	var Weekday = __webpack_require__(58),
-	    tmpl = __webpack_require__(59);
+	var Weekday = __webpack_require__(61),
+	    tmpl = __webpack_require__(62);
 	var mmax = Math.max;
 	
 	/**
 	 * @constructor
 	 * @extends {Weekday}
 	 * @param {object} options - options for DayGridSchedule view
-	 * @param {number} [options.containerHeight=40] - minimum height of schedule
-	 *  container element.
 	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
 	 *  make create easy.
 	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
@@ -10095,6 +11022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var matrices = opt.getViewModelFunc(viewModel);
 	    var maxScheduleInDay = this._getMaxScheduleInDay(matrices);
 	    var baseViewModel;
+	    var styles = this._getStyles(viewModel.theme);
 	
 	    baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
 	
@@ -10102,17 +11030,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	        minHeight: this._getMinHeight(maxScheduleInDay),
 	        matrices: matrices,
 	        scheduleContainerTop: this.options.scheduleContainerTop,
-	        maxScheduleInDay: maxScheduleInDay
+	        maxScheduleInDay: maxScheduleInDay,
+	        styles: styles
 	    }, baseViewModel);
 	
 	    return baseViewModel;
+	};
+	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	DayGridSchedule.prototype._getStyles = function(theme) {
+	    var styles = {};
+	
+	    if (theme) {
+	        styles.borderRadius = theme.week.dayGridSchedule.borderRadius;
+	    }
+	
+	    return styles;
 	};
 	
 	module.exports = DayGridSchedule;
 
 
 /***/ },
-/* 58 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10132,8 +11076,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @constructor
 	 * @extends {View}
 	 * @param {object} options - view options.
-	 * @param {number} [options.containerHeight=40] - minimum height of schedule
-	 *  container element.
 	 * @param {number} [options.containerButtonGutter=8] - free space at bottom to
 	 *  make create easy.
 	 * @param {number} [options.scheduleHeight=18] - height of each schedule block.
@@ -10152,7 +11094,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object}
 	     */
 	    this.options = util.extend({
-	        containerHeight: 40,
 	        containerBottomGutter: 8,
 	        scheduleHeight: 18,
 	        scheduleGutter: 2,
@@ -10200,6 +11141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var gridWidth = (100 / range.length);
 	    var grids = viewModel.grids;
 	    var exceedDate = viewModel.exceedDate || {};
+	    var theme = viewModel.theme;
 	
 	    this._cacheParentViewModel = viewModel;
 	
@@ -10211,18 +11153,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dates: util.map(range, function(date, index) {
 	            var day = date.getDay();
 	            var ymd = datetime.format(date, 'YYYYMMDD');
+	            var isToday = ymd === today;
 	
 	            return {
 	                date: datetime.format(date, 'YYYY-MM-DD'),
 	                month: date.getMonth() + 1,
 	                day: day,
-	                isToday: ymd === today,
+	                isToday: isToday,
 	                ymd: ymd,
 	                hiddenSchedules: exceedDate[ymd] || 0,
 	                width: grids[index] ? grids[index].width : 0,
-	                left: grids[index] ? grids[index].left : 0
+	                left: grids[index] ? grids[index].left : 0,
+	                color: this._getDayNameColor(theme, day, isToday),
+	                backgroundColor: this._getDayBackgroundColor(theme, day)
 	            };
-	        })
+	        }, this)
 	    };
 	};
 	
@@ -10278,11 +11223,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return exceedDate;
 	};
 	
+	/**
+	 * Get a day name color
+	 * @param {Theme} theme - theme instance
+	 * @param {number} day - day number
+	 * @param {boolean} isToday - today flag
+	 * @param {boolean} isOtherMonth - not this month flag
+	 * @returns {string} style - color style
+	 */
+	Weekday.prototype._getDayNameColor = function(theme, day, isToday, isOtherMonth) {
+	    var color = '';
+	
+	    if (theme) {
+	        if (day === 0) {
+	            color = isOtherMonth ? theme.month.holidayExceptThisMonth.color : theme.common.holiday.color;
+	        } else if (day === 6) {
+	            color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.saturday.color;
+	        } else if (isToday) {
+	            color = theme.common.today.color;
+	        } else {
+	            color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.dayname.color;
+	        }
+	    }
+	
+	    return color;
+	};
+	
+	/**
+	 * Get a day background color
+	 * @param {Theme} theme - theme instance
+	 * @param {number} day - day number
+	 * @returns {string} style - color style
+	 */
+	Weekday.prototype._getDayBackgroundColor = function(theme, day) {
+	    var color = '';
+	
+	    if (theme) {
+	        if (day === 0 || day === 6) {
+	            color = theme.month.weekend.backgroundColor;
+	        } else {
+	            color = 'inherit';
+	        }
+	    }
+	
+	    return color;
+	};
+	
 	module.exports = Weekday;
 
 
 /***/ },
-/* 59 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -10327,7 +11318,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n            style=\"height:"
 	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
-	    + "px;\n"
+	    + "px; line-height:"
+	    + alias3(alias5(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; border-radius: "
+	    + alias3(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderRadius), depth0))
+	    + ";\n"
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.program(13, data, 0),"data":data})) != null ? stack1 : "")
 	    + "            "
 	    + alias3(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
@@ -10376,11 +11371,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
 	},"15":function(container,depth0,helpers,partials,data) {
-	    var helper;
+	    var stack1, helper, alias1=container.escapeExpression;
 	
 	  return "<span class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
+	    + alias1(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-resize-handle handle-y\" style=\"line-height:"
+	    + alias1(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px;\">&nbsp;</span>";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -10396,33 +11393,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 60 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-grid-line\" style=\"left:"
+	    + "weekday-grid-line\"\n                style=\"left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%; width:"
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%;\"></div>\n";
-	},"3":function(container,depth0,helpers,partials,data) {
+	    + "%; background-color: "
+	    + alias4(((helper = (helper = helpers.backgroundColor || (depth0 != null ? depth0.backgroundColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"backgroundColor","hash":{},"data":data}) : helper)))
+	    + ";\n"
+	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "            \"></div>\n";
+	},"2":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.days : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	  return "                    border-right: "
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderRight), depth0))
+	    + ";\n";
 	},"4":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (data && data.root)) && stack1.collapsed),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "");
+	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.days : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"5":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (data && data.root)) && stack1.collapsed),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "");
 	},"6":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"7":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "                    <span class=\""
@@ -10434,11 +11441,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\">"
 	    + alias4((helpers["weekGridFooterExceed-tmpl"] || (depth0 && depth0["weekGridFooterExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"weekGridFooterExceed-tmpl","hash":{},"data":data}))
 	    + "</span>\n";
-	},"8":function(container,depth0,helpers,partials,data) {
+	},"9":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.collapseBtnIndex),{"name":"fi","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-	},"9":function(container,depth0,helpers,partials,data) {
+	  return ((stack1 = (helpers.fi || (depth0 && depth0.fi) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.key),"===",((stack1 = (data && data.root)) && stack1.collapseBtnIndex),{"name":"fi","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"10":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "                    <span class=\""
@@ -10449,14 +11456,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = ((helper = (helper = helpers["collapseBtnTitle-tmpl"] || (depth0 != null ? depth0["collapseBtnTitle-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"collapseBtnTitle-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
 	    + "</span>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + alias4(((helper = (helper = helpers.viewName || (depth0 != null ? depth0.viewName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"viewName","hash":{},"data":data}) : helper)))
 	    + "-left "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "left\">\n    "
+	    + "left\" style=\"border-right: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftBorderRight : stack1), depth0))
+	    + "; width: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftWidth : stack1), depth0))
+	    + "; background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftBackgroundColor : stack1), depth0))
+	    + "; padding-right: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftPaddingRight : stack1), depth0))
+	    + ";\">\n    "
 	    + ((stack1 = (helpers["dayGridTitle-tmpl"] || (depth0 && depth0["dayGridTitle-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.viewName : depth0),{"name":"dayGridTitle-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -10469,12 +11484,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-grid\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.days : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showExpandableButton),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showExpandableButton),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "        </div>\n    </div>\n</div>";
 	},"useData":true});
 
 /***/ },
-/* 61 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10489,21 +11504,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
 	var TZDate = __webpack_require__(28).Date;
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	var View = __webpack_require__(37);
-	var Time = __webpack_require__(62);
-	var AutoScroll = __webpack_require__(64);
-	var mainTmpl = __webpack_require__(66);
+	var Time = __webpack_require__(65);
+	var AutoScroll = __webpack_require__(67);
+	var mainTmpl = __webpack_require__(69);
 	
 	var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 	var SIXTY_SECONDS = 60;
 	
 	/**
-	 * start~end 까지의 시간 레이블 목록을 반환한다.
-	 * 현재 시간과 가까운 레이블의 경우 hidden:true로 설정한다.
-	 * @param {number} start - 시작시간
-	 * @param {number} end - 끝시간
-	 * @param {boolean} hasHourMarker - 현재 시간이 표시되는지 여부
+	 * Returns a list of time labels from start to end.
+	 * For hidden labels near the current time, set to hidden: true.
+	 * @param {number} start - start time
+	 * @param {number} end - end time
+	 * @param {boolean} hasHourMarker - Whether the current time is displayed
 	 * @returns {Array.<Object>}
 	 */
 	function getHoursLabels(start, end, hasHourMarker) {
@@ -10647,10 +11662,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {Date} now - now
 	 * @param {object} grids grid information(width, left, day)
 	 * @param {Array.<TZDate>} range render range
+	 * @param {Theme} theme - theme instance
 	 * @returns {object} ViewModel of hourmarker.
 	 */
-	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
+	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range, theme) {
 	    var todaymarkerLeft = -1,
+	        todaymarkerWidth = -1,
+	        styles = this._getStyles(theme),
 	        viewModel;
 	
 	    now = now || new TZDate();
@@ -10658,6 +11676,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    util.forEach(range, function(date, index) {
 	        if (datetime.isSameDate(now, date)) {
 	            todaymarkerLeft = grids[index] ? grids[index].left : 0;
+	            todaymarkerWidth = grids[index] ? grids[index].width : 0;
 	        }
 	    });
 	
@@ -10665,7 +11684,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        currentHours: now.getHours(),
 	        hourmarkerTop: this._getTopPercentByTime(now),
 	        hourmarkerText: datetime.format(now, 'HH:mm'),
-	        todaymarkerLeft: todaymarkerLeft
+	        todaymarkerLeft: todaymarkerLeft,
+	        todaymarkerWidth: todaymarkerWidth,
+	        todaymarkerRight: todaymarkerLeft + todaymarkerWidth,
+	        styles: styles
 	    };
 	
 	    return viewModel;
@@ -10673,16 +11695,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Get base viewModel.
-	 * @param {object} grids grid information(width, left, day)
-	 * @param {Array.<TZDate>} range render range
+	 * @param {object} viewModel - view model
 	 * @returns {object} ViewModel
 	 */
-	TimeGrid.prototype._getBaseViewModel = function(grids, range) {
+	TimeGrid.prototype._getBaseViewModel = function(viewModel) {
+	    var grids = viewModel.grids;
+	    var range = viewModel.range;
 	    var opt = this.options;
-	    var viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
-	    viewModel.hoursLabels = getHoursLabels(opt.hourStart, opt.hourEnd, viewModel.todaymarkerLeft >= 0);
+	    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range, viewModel.theme);
 	
-	    return viewModel;
+	    return util.extend(baseViewModel, {
+	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0),
+	        styles: this._getStyles(viewModel.theme)
+	    });
 	};
 	
 	/**
@@ -10690,8 +11715,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} viewModels Viewmodel
 	 * @param {object} grids grid information(width, left, day)
 	 * @param {HTMLElement} container Container element for each time view.
+	 * @param {Theme} theme - theme instance
 	 */
-	TimeGrid.prototype._renderChildren = function(viewModels, grids, container) {
+	TimeGrid.prototype._renderChildren = function(viewModels, grids, container, theme) {
 	    var self = this,
 	        options = this.options,
 	        childOption,
@@ -10725,7 +11751,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        child = new Time(
 	            childOption,
-	            domutil.appendHTMLElement('div', container, config.classname('time-date'))
+	            domutil.appendHTMLElement('div', container, config.classname('time-date')),
+	            theme
 	        );
 	        child.render(ymd, schedules, containerHeight);
 	
@@ -10744,8 +11771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        timeViewModel = viewModel.schedulesInDateRange[opt.viewName],
 	        container = this.container,
 	        grids = viewModel.grids,
-	        range = viewModel.range,
-	        baseViewModel = this._getBaseViewModel(grids, range),
+	        baseViewModel = this._getBaseViewModel(viewModel),
 	        scheduleLen = util.keys(timeViewModel).length;
 	
 	    this._cacheParentViewModel = viewModel;
@@ -10764,7 +11790,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._renderChildren(
 	        timeViewModel,
 	        grids,
-	        domutil.find(config.classname('.timegrid-schedules-container'), container)
+	        domutil.find(config.classname('.timegrid-schedules-container'), container),
+	        viewModel.theme
 	    );
 	
 	    this._hourLabels = domutil.find('ul', container);
@@ -10873,11 +11900,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.refreshHourmarker();
 	};
 	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	TimeGrid.prototype._getStyles = function(theme) {
+	    var styles = {};
+	
+	    if (theme) {
+	        styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
+	        styles.halfHourBorderBottom = theme.week.timegridHalfHour.borderBottom || theme.common.border;
+	
+	        styles.todayBackgroundColor = theme.week.today.backgroundColor;
+	        styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
+	        styles.backgroundColor = theme.week.daygrid.backgroundColor;
+	        styles.leftWidth = theme.week.timegridLeft.width;
+	        styles.leftBackgroundColor = theme.week.timegridLeft.backgroundColor;
+	        styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
+	        styles.leftFontSize = theme.week.timegridLeft.fontSize;
+	
+	        styles.oneHourHeight = theme.week.timegridOneHour.height;
+	        styles.halfHourHeight = theme.week.timegridHalfHour.height;
+	
+	        styles.currentTimeColor = theme.week.currentTime.color;
+	        styles.currentTimeFontSize = theme.week.currentTime.fontSize;
+	        styles.currentTimeFontWeight = theme.week.currentTime.fontWeight;
+	
+	        styles.currentTimeLeftBorderTop = theme.week.currentTimeLinePast.border;
+	        styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
+	        styles.currentTimeTodayBorderTop = theme.week.currentTimeLineToday.border;
+	        styles.currentTimeRightBorderTop = theme.week.currentTimeLineFuture.border;
+	    }
+	
+	    return styles;
+	};
+	
 	module.exports = TimeGrid;
 
 
 /***/ },
-/* 62 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10892,7 +11955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
 	var View = __webpack_require__(37);
-	var timeTmpl = __webpack_require__(63);
+	var timeTmpl = __webpack_require__(66);
 	
 	var forEachArr = util.forEachArray;
 	
@@ -10907,8 +11970,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {number} options.hourStart Can limit of render hour start.
 	 * @param {number} options.hourEnd Can limit of render hour end.
 	 * @param {HTMLElement} container Element to use container for this view.
+	 * @param {Theme} theme - theme instance
 	 */
-	function Time(options, container) {
+	function Time(options, container, theme) {
 	    View.call(this, container);
 	
 	    this.options = util.extend({
@@ -10924,12 +11988,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, options);
 	
 	    this.timeTmpl = timeTmpl;
+	
+	    /**
+	     * @type {Theme}
+	     */
+	    this.theme = theme;
+	
 	    container.style.width = options.width + '%';
 	    container.style.left = options.left + '%';
 	
 	    if (this.options.isToday) {
 	        domutil.addClass(this.container, config.classname('today'));
 	    }
+	
+	    this.applyTheme();
 	}
 	
 	util.inherit(Time, View);
@@ -11075,15 +12147,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	Time.prototype.render = function(ymd, matrices, containerHeight) {
 	    this._getBaseViewModel(ymd, matrices, containerHeight);
 	    this.container.innerHTML = this.timeTmpl({
-	        matrices: matrices
+	        matrices: matrices,
+	        styles: this._getStyles(this.theme)
 	    });
+	};
+	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	Time.prototype._getStyles = function(theme) {
+	    var styles = {};
+	    var options = this.options;
+	
+	    if (theme) {
+	        styles.borderRight = theme.week.timegrid.borderRight || theme.common.border;
+	        styles.marginRight = theme.week.timegrid.paddingRight;
+	        styles.borderRadius = theme.week.timegridSchedule.borderRadius;
+	        styles.paddingLeft = theme.week.timegridSchedule.paddingLeft;
+	        styles.backgroundColor = options.isToday ? theme.week.today.backgroundColor : 'inherit';
+	    }
+	
+	    return styles;
+	};
+	
+	Time.prototype.applyTheme = function() {
+	    var style = this.container.style;
+	    var styles = this._getStyles(this.theme);
+	
+	    style.borderRight = styles.borderRight;
+	    style.backgroundColor = styles.backgroundColor;
 	};
 	
 	module.exports = Time;
 
 
 /***/ },
-/* 63 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -11108,24 +12209,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isPending : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\" data-id=\""
 	    + alias4((helpers.stamp || (depth0 && depth0.stamp) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"stamp","hash":{},"data":data}))
-	    + "\" style=\""
+	    + "\"\n            style=\""
 	    + alias4((helpers["time-scheduleBlock"] || (depth0 && depth0["time-scheduleBlock"]) || alias2).call(alias1,depth0,{"name":"time-scheduleBlock","hash":{},"data":data}))
-	    + "\">\n            <div data-schedule-id=\""
+	    + ";\n"
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.left : depth0),"!==",0,{"name":"fi","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "            \">\n            <div data-schedule-id=\""
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.id : stack1), depth0))
 	    + "\" data-calendar-id=\""
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.calendarId : stack1), depth0))
 	    + "\" class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-schedule "
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\"\n                style=\"\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\"\n                style=\"border-radius: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderRadius), depth0))
+	    + ";\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.program(13, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                 "
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\"\n            >"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n            "
-	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n        </div>\n";
 	},"5":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -11134,11 +12239,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-date-schedule-block-pending";
 	},"7":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "                    padding-left: "
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.paddingLeft), depth0))
+	    + ";\n";
+	},"9":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
 	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-schedule-focused ";
-	},"9":function(container,depth0,helpers,partials,data) {
+	},"11":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 	
 	  return "                    color: #ffffff; background-color:"
@@ -11146,7 +12257,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";\n";
-	},"11":function(container,depth0,helpers,partials,data) {
+	},"13":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 	
 	  return "                    color:"
@@ -11156,24 +12267,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
-	},"13":function(container,depth0,helpers,partials,data) {
-	    var helper;
+	},"15":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-resize-handle handle-x\">&nbsp;</div>";
+	    + alias1(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-resize-handle handle-x\" style=\"margin-left: "
+	    + alias1(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.paddingLeft), depth0))
+	    + ";\">&nbsp;</div>";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "time-date-schedule-block-wrap\">\n"
+	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-schedule-block-wrap\" style=\"margin-right: "
+	    + alias2(container.lambda(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.marginRight : stack1), depth0))
+	    + ";\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.matrices : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 64 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -11185,11 +12300,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var domevent = __webpack_require__(32);
 	var domutil = __webpack_require__(31);
-	var Point = __webpack_require__(65);
+	var Point = __webpack_require__(68);
 	
 	var SCROLL_INTERVAL = 30;
 	var SCROLL_MAX = 15;
-	var SCROLL_CLICK_INCREASED = 2; // IE에서 스크롤 바 클릭 시 실제 UI pixel 보다 넓게 잡히는 현상 offset.
+	var SCROLL_CLICK_INCREASED = 2; // In IE, the offset of the actual UI pixel when the scroll bar is clicked is offset.
 	
 	/**
 	 * Add autoscroll feature to elements that prevented text selection.
@@ -11426,7 +12541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11773,7 +12888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 66 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -11786,7 +12901,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-hour-"
 	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
-	    + "\">\n            <span style=\""
+	    + "\" style=\"height: "
+	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
+	    + ";\">\n            <span style=\""
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">"
 	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
@@ -11794,13 +12911,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"2":function(container,depth0,helpers,partials,data) {
 	    return "display:none";
 	},"4":function(container,depth0,helpers,partials,data) {
-	    var helper;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-gridline\"></div>\n";
-	},"6":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-gridline\" style=\"height: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
+	    + ";\n"
+	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "        \">\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-gridline-half\" style=\"height: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.halfHourHeight), depth0))
+	    + "; border-bottom: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.halfHourBorderBottom), depth0))
+	    + ";\"></div>\n        </div>\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "            border-bottom: "
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderBottom), depth0))
+	    + ";\n";
+	},"7":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -11810,31 +12943,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-hourmarker-wrap\" \">\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hourmarker-time\">"
+	    + "timegrid-hourmarker-time\" style=\"color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeColor : stack1), depth0))
+	    + "; font-size: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeFontSize : stack1), depth0))
+	    + "; font-weight: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeFontWeight : stack1), depth0))
+	    + "\">"
 	    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
 	    + "</div>\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-hourmarker-line-left\" style=\"width:"
 	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
-	    + "%;\"></div>\n            <div class=\""
+	    + "%; border-top: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeLeftBorderTop : stack1), depth0))
+	    + ";\"></div>\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-todaymarker\" style=\"left:"
 	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
-	    + "%;\">today</div>\n            <div class=\""
+	    + "%; background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeBulletBackgroundColor : stack1), depth0))
+	    + "; \">today</div>\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker-line-today\" style=\"left:"
+	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
+	    + "%; width: "
+	    + alias4(((helper = (helper = helpers.todaymarkerWidth || (depth0 != null ? depth0.todaymarkerWidth : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerWidth","hash":{},"data":data}) : helper)))
+	    + "%; border-top: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeTodayBorderTop : stack1), depth0))
+	    + ";\"></div>\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-hourmarker-line-right\" style=\"left:"
-	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
-	    + "%;\"></div>\n        </div>\n    </div>\n";
+	    + alias4(((helper = (helper = helpers.todaymarkerRight || (depth0 != null ? depth0.todaymarkerRight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerRight","hash":{},"data":data}) : helper)))
+	    + "%; border-top: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeRightBorderTop : stack1), depth0))
+	    + ";\"></div>\n        </div>\n    </div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-left\">\n"
+	    + "timegrid-left\" style=\"width: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftWidth : stack1), depth0))
+	    + "; border-right: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftBorderRight : stack1), depth0))
+	    + "; font-size: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftFontSize : stack1), depth0))
+	    + "; background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftBackgroundColor : stack1), depth0))
+	    + ";\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-right\">\n    <div class=\""
+	    + "timegrid-right\" style=\"margin-left: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftWidth), depth0))
+	    + ";\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-h-grid\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
@@ -11843,12 +13006,1378 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "timegrid-schedules\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-schedules-container\"></div>\n    </div>\n\n"
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showHourMarker : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showHourMarker : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 67 */
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Floating layer for writing new schedules
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var View = __webpack_require__(37);
+	var FloatingLayer = __webpack_require__(71);
+	var util = __webpack_require__(6);
+	var DatePicker = __webpack_require__(72);
+	var TZDate = __webpack_require__(28).Date;
+	var config = __webpack_require__(34),
+	    domevent = __webpack_require__(32),
+	    domutil = __webpack_require__(31);
+	var tmpl = __webpack_require__(73);
+	var MAX_WEEK_OF_MONTH = 6;
+	var ARROW_WIDTH_HALF = 8;
+	
+	/**
+	 * @constructor
+	 * @extends {View}
+	 * @param {HTMLElement} container - container element
+	 * @param {Array.<Calendar>} calendars - calendar list used to create new schedule
+	 */
+	function ScheduleCreationPopup(container, calendars) {
+	    View.call(this, container);
+	    /**
+	     * @type {FloatingLayer}
+	     */
+	    this.layer = new FloatingLayer(null, container);
+	
+	    /**
+	     * cached view model
+	     * @type {object}
+	     */
+	    this._viewModel = null;
+	    this._selectedCal = null;
+	    this._scheduleId = '';
+	    this.calendars = calendars;
+	    this._focusedDropdown = null;
+	    this._onClickListeners = [
+	        this._selectDropdownMenuItem.bind(this),
+	        this._closeDropdownMenuView.bind(this, null),
+	        this._closePopup.bind(this),
+	        this._toggleDropdownMenuView.bind(this),
+	        this._toggleIsAllday.bind(this),
+	        this._toggleIsPrivate.bind(this),
+	        this._onClickSaveSchedule.bind(this)
+	    ];
+	
+	    domevent.on(container, 'click', this._onClick, this);
+	}
+	
+	util.inherit(ScheduleCreationPopup, View);
+	
+	/**
+	 * Mousedown event handler for hiding popup layer when user mousedown outside of
+	 * layer
+	 * @param {MouseEvent} mouseDownEvent - mouse event object
+	 */
+	ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
+	    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+	        popupLayer = domutil.closest(target, config.classname('.floating-layer'));
+	
+	    if (popupLayer) {
+	        return;
+	    }
+	
+	    this.hide();
+	};
+	
+	/**
+	 * @override
+	 */
+	ScheduleCreationPopup.prototype.destroy = function() {
+	    this.layer.destroy();
+	    this.layer = null;
+	    domevent.off(this.container, 'click', this._onClick, this);
+	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+	    View.prototype.destroy.call(this);
+	};
+	
+	/**
+	 * @override
+	 * Click event handler for close button
+	 * @param {MouseEvent} clickEvent - mouse event object
+	 */
+	ScheduleCreationPopup.prototype._onClick = function(clickEvent) {
+	    var target = (clickEvent.target || clickEvent.srcElement);
+	
+	    util.forEach(this._onClickListeners, function(listener) {
+	        return !listener(target);
+	    });
+	};
+	
+	/**
+	 * Test click event target is close button, and return layer is closed(hidden)
+	 * @param {HTMLElement} target click event target
+	 * @returns {boolean} whether popup layer is closed or not
+	 */
+	ScheduleCreationPopup.prototype._closePopup = function(target) {
+	    var className = config.classname('popup-close');
+	
+	    if (domutil.hasClass(target, className) || domutil.closest(target, '.' + className)) {
+	        this.hide();
+	
+	        return true;
+	    }
+	
+	    return false;
+	};
+	
+	/**
+	 * Toggle dropdown menu view, when user clicks dropdown button
+	 * @param {HTMLElement} target click event target
+	 * @returns {boolean} whether user clicked dropdown button or not
+	 */
+	ScheduleCreationPopup.prototype._toggleDropdownMenuView = function(target) {
+	    var className = config.classname('dropdown-button');
+	    var dropdownBtn = domutil.hasClass(target, className) ? target : domutil.closest(target, '.' + className);
+	
+	    if (!dropdownBtn) {
+	        return false;
+	    }
+	
+	    if (domutil.hasClass(config.classname('open'))) {
+	        this._closeDropdownMenuView(dropdownBtn.parentNode);
+	    } else {
+	        this._openDropdownMenuView(dropdownBtn.parentNode);
+	    }
+	
+	    return true;
+	};
+	
+	/**
+	 * Close drop down menu
+	 * @param {HTMLElement} dropdown - dropdown element that has a opened dropdown menu
+	 */
+	ScheduleCreationPopup.prototype._closeDropdownMenuView = function(dropdown) {
+	    dropdown = dropdown || this._focusedDropdown;
+	    if (dropdown) {
+	        domutil.removeClass(dropdown, config.classname('open'));
+	        this._focusedDropdown = null;
+	    }
+	};
+	
+	/**
+	 * Open drop down menu
+	 * @param {HTMLElement} dropdown - dropdown element that has a closed dropdown menu
+	 */
+	ScheduleCreationPopup.prototype._openDropdownMenuView = function(dropdown) {
+	    domutil.addClass(dropdown, config.classname('open'));
+	    this._focusedDropdown = dropdown;
+	};
+	
+	/**
+	 * If click dropdown menu item, close dropdown menu
+	 * @param {HTMLElement} target click event target
+	 * @returns {boolean} whether 
+	 */
+	ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
+	    var className = config.classname('dropdown-menu-item');
+	    var selectedItem = domutil.hasClass(target, className) ? target : domutil.closest(target, '.' + className);
+	    var bgColor, title, dropdown, dropdownBtn;
+	
+	    if (!selectedItem) {
+	        return false;
+	    }
+	
+	    bgColor = domutil.find('.icon', selectedItem).style.backgroundColor || 'transparent';
+	    title = domutil.find('.content', selectedItem).innerHTML;
+	
+	    dropdown = domutil.closest(selectedItem, config.classname('.dropdown'));
+	    dropdownBtn = domutil.find(config.classname('.dropdown-button'), dropdown);
+	    domutil.find('.content', dropdownBtn).innerText = title;
+	
+	    if (domutil.hasClass(dropdown, config.classname('section-calendar'))) {
+	        domutil.find('.icon', dropdownBtn).style.backgroundColor = bgColor;
+	        this._selectedCal = this.calendars.find(function(cal) {
+	            return cal.id === domutil.getData(selectedItem, 'calendarId');
+	        });
+	    }
+	
+	    domutil.removeClass(dropdown, config.classname('open'));
+	
+	    return true;
+	};
+	
+	/**
+	 * Toggle allday checkbox state
+	 * @param {HTMLElement} target click event target
+	 * @returns {boolean} whether event target is allday section or not
+	 */
+	ScheduleCreationPopup.prototype._toggleIsAllday = function(target) {
+	    var className = config.classname('section-allday');
+	    var alldaySection = domutil.hasClass(target, className) ? target : domutil.closest(target, '.' + className);
+	    var checkbox;
+	
+	    if (alldaySection) {
+	        checkbox = domutil.find('.checkbox-square', alldaySection);
+	        checkbox.checked = !checkbox.checked;
+	
+	        return true;
+	    }
+	
+	    return false;
+	};
+	
+	/**
+	 * Toggle private button
+	 * @param {HTMLElement} target click event target
+	 * @returns {boolean} whether event target is private section or not
+	 */
+	ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
+	    var className = config.classname('section-private');
+	    var privateSection = domutil.hasClass(target, className) ? target : domutil.closest(target, '.' + className);
+	
+	    if (privateSection) {
+	        if (domutil.hasClass(privateSection, config.classname('public'))) {
+	            domutil.removeClass(privateSection, config.classname('public'));
+	        } else {
+	            domutil.addClass(privateSection, config.classname('public'));
+	        }
+	
+	        return true;
+	    }
+	
+	    return false;
+	};
+	
+	/**
+	 * Save new schedule if user clicked save button
+	 * @emits ScheduleCreationPopup#saveSchedule
+	 * @param {HTMLElement} target click event target
+	 * @returns {boolean} whether save button is clicked or not
+	 */
+	ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
+	    var className = config.classname('popup-save');
+	    var cssPrefix = config.cssPrefix;
+	    var title, isPrivate, location, isAllDay, startDate, endDate, state;
+	    var start, end;
+	
+	    if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
+	        return false;
+	    }
+	
+	    title = domutil.get(cssPrefix + 'schedule-title');
+	    startDate = this.rangePicker.getStartDate();
+	    endDate = this.rangePicker.getEndDate();
+	
+	    if (!title.value) {
+	        title.focus();
+	
+	        return true;
+	    }
+	
+	    if (!startDate && !endDate) {
+	        return true;
+	    }
+	
+	    isPrivate = domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), 'private');
+	    location = domutil.get(cssPrefix + 'schedule-location');
+	    state = domutil.get(cssPrefix + 'schedule-state');
+	    isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
+	
+	    if (isAllDay) {
+	        startDate.setHours(0);
+	        startDate.setMinutes(0);
+	        startDate.setSeconds(0);
+	        endDate.setHours(23);
+	        endDate.setMinutes(59);
+	        endDate.setSeconds(59);
+	    }
+	
+	    start = new TZDate(startDate);
+	    end = new TZDate(endDate);
+	
+	    if (this._isEditMode) {
+	        this.fire('beforeUpdateSchedule', {
+	            schedule: {
+	                calendarId: this._selectedCal.id,
+	                title: title.value,
+	                raw: {
+	                    class: isPrivate ? 'private' : 'public',
+	                    location: location.value
+	                },
+	                start: start,
+	                end: end,
+	                isAllDay: isAllDay,
+	                state: state.innerText,
+	                triggerEventName: 'click',
+	                id: this._scheduleId
+	            },
+	            start: start,
+	            end: end,
+	            calendar: this._selectedCal,
+	            triggerEventName: 'click'
+	        });
+	    } else {
+	        /**
+	         * @event ScheduleCreationPopup#beforeCreateSchedule
+	         * @type {object}
+	         * @property {Schedule} schedule - new schedule instance to be added
+	         */
+	        this.fire('beforeCreateSchedule', {
+	            calendarId: this._selectedCal.id,
+	            title: title.value,
+	            raw: {
+	                class: isPrivate ? 'private' : 'public',
+	                location: location.value
+	            },
+	            start: new TZDate(startDate),
+	            end: new TZDate(endDate),
+	            isAllDay: isAllDay,
+	            state: state.innerText
+	        });
+	    }
+	
+	    this.hide();
+	
+	    return true;
+	};
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - view model from factory/monthView
+	 */
+	ScheduleCreationPopup.prototype.render = function(viewModel) {
+	    var calendars = this.calendars;
+	    var layer = this.layer;
+	    var self = this;
+	    var boxElement, guideElements;
+	
+	    viewModel.zIndex = this.layer.zIndex + 5;
+	    viewModel.calendars = calendars;
+	    if (calendars.length) {
+	        viewModel.selectedCal = this._selectedCal = calendars[0];
+	    }
+	
+	    this._isEditMode = viewModel.schedule && viewModel.schedule.id;
+	    if (this._isEditMode) {
+	        boxElement = viewModel.target;
+	        viewModel = this._makeEditModeData(viewModel);
+	    } else {
+	        this.guide = viewModel.guide;
+	        guideElements = this._getGuideElements(this.guide);
+	        boxElement = guideElements.length ? guideElements[0] : null;
+	    }
+	    layer.setContent(tmpl(viewModel));
+	    this._createDatepicker(viewModel.start, viewModel.end);
+	    layer.show();
+	
+	    this._setPopupPositionAndArrowDirection(boxElement.getBoundingClientRect());
+	
+	    util.debounce(function() {
+	        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
+	    })();
+	};
+	
+	/**
+	 * Make view model for edit mode
+	 * @param {object} viewModel - original view model from 'beforeCreateEditPopup'
+	 * @returns {object} - edit mode view model
+	 */
+	ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
+	    var schedule = viewModel.schedule;
+	    var title, isPrivate, location, startDate, endDate, isAllDay, state;
+	    var raw = schedule.raw || {};
+	    var calendars = this.calendars;
+	    var calendarIndex;
+	
+	    var id = schedule.id;
+	    title = schedule.title;
+	    isPrivate = raw['class'] === 'private';
+	    location = raw.location;
+	    startDate = schedule.start;
+	    endDate = schedule.end;
+	    isAllDay = schedule.isAllDay;
+	    state = schedule.state;
+	
+	    calendarIndex = calendars.findIndex(function(calendar) {
+	        return calendar.id === viewModel.schedule.calendarId;
+	    });
+	    calendarIndex = calendarIndex < 0 ? 0 : calendarIndex;
+	
+	    viewModel.selectedCal = this._selectedCal = calendars[calendarIndex];
+	    this._scheduleId = id;
+	
+	    return {
+	        id: id,
+	        selectedCal: this._selectedCal,
+	        calendars: calendars,
+	        title: title,
+	        isPrivate: isPrivate,
+	        location: location,
+	        isAllDay: isAllDay,
+	        state: state,
+	        start: startDate,
+	        end: endDate,
+	        raw: {
+	            location: location,
+	            'class': isPrivate ? 'private' : 'public'
+	        },
+	        zIndex: this.layer.zIndex + 5,
+	        isEditMode: this._isEditMode
+	    };
+	};
+	
+	/**
+	 * Set popup position and arrow direction to apear near guide element
+	 * @param {MonthCreationGuide|TimeCreationGuide|DayGridCreationGuide} guideBound - creation guide element
+	 */
+	ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(guideBound) {
+	    var layer = domutil.find(config.classname('.popup'), this.layer.container);
+	    var layerSize = {
+	        width: layer.offsetWidth,
+	        height: layer.offsetHeight
+	    };
+	    var windowSize = {
+	        right: window.innerWidth,
+	        bottom: window.innerHeight
+	    };
+	    var parentRect = this.layer.parent.getBoundingClientRect();
+	    var parentBounds = {
+	        left: parentRect.left,
+	        top: parentRect.top
+	    };
+	    var pos;
+	
+	    pos = this._calcRenderingData(layerSize, windowSize, guideBound);
+	    pos.x -= parentBounds.left;
+	    pos.y -= (parentBounds.top + 6);
+	    this.layer.setPosition(pos.x, pos.y);
+	    this._setArrowDirection(pos.arrow);
+	};
+	
+	/**
+	 * Get guide elements from creation guide object
+	 * It is used to calculate rendering position of popup
+	 * It will be disappeared when hiding popup
+	 * @param {MonthCreationGuide|TimeCreationGuide|AlldayCreationGuide} guide - creation guide
+	 * @returns {Array.<HTMLElement>} creation guide element
+	 */
+	ScheduleCreationPopup.prototype._getGuideElements = function(guide) {
+	    var guideElements = [];
+	    var i = 0;
+	
+	    if (guide.guideElement) {
+	        guideElements.push(guide.guideElement);
+	    } else if (guide.guideElements) {
+	        for (; i < MAX_WEEK_OF_MONTH; i += 1) {
+	            if (guide.guideElements[i]) {
+	                guideElements.push(guide.guideElements[i]);
+	            }
+	        }
+	    }
+	
+	    return guideElements;
+	};
+	
+	/**
+	 * Get guide element's bound data which only includes top, right, bottom, left
+	 * @param {Array.<HTMLElement>} guideElements - creation guide elements
+	 * @returns {Object} - popup bound data
+	 */
+	ScheduleCreationPopup.prototype._getBoundOfFirstRowGuideElement = function(guideElements) {
+	    var bound;
+	
+	    if (!guideElements.length) {
+	        return null;
+	    }
+	
+	    bound = guideElements[0].getBoundingClientRect();
+	
+	    return {
+	        top: bound.top,
+	        left: bound.left,
+	        bottom: bound.bottom,
+	        right: bound.right
+	    };
+	};
+	
+	/**
+	 * Calculate rendering position usering guide elements
+	 * @param {{width: {number}, height: {number}}} layerSize - popup layer's width and height
+	 * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} parentSize - width and height of the upper layer, that acts as a border of popup
+	 * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} guideBound - guide element bound data
+	 * @returns {PopupRenderingData} rendering position of popup and popup arrow
+	 */
+	ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentSize, guideBound) {
+	    var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
+	    var x = guideHorizontalCenter - (layerSize.width / 2);
+	    var y = guideBound.top - layerSize.height + 3;
+	    var arrowDirection = 'bottom';
+	    var arrowLeft;
+	
+	    if (y < 0) {
+	        y = guideBound.bottom + 9;
+	        arrowDirection = 'top';
+	    }
+	
+	    if (x > 0 && (x + layerSize.width > parentSize.right)) {
+	        x = parentSize.right - layerSize.width;
+	    }
+	
+	    if (x < 0) {
+	        x = 0;
+	    }
+	
+	    if (guideHorizontalCenter - x !== layerSize.width / 2) {
+	        arrowLeft = guideHorizontalCenter - x - ARROW_WIDTH_HALF;
+	    }
+	
+	    /**
+	     * @typedef {Object} PopupRenderingData
+	     * @property {number} x - left position
+	     * @property {number} y - top position
+	     * @property {string} arrow.direction - direction of popup arrow
+	     * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
+	     */
+	    return {
+	        x: x,
+	        y: y,
+	        arrow: {
+	            direction: arrowDirection,
+	            position: arrowLeft
+	        }
+	    };
+	};
+	
+	/**
+	 * Set arrow's direction and position
+	 * @param {Object} arrow rendering data for popup arrow
+	 */
+	ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
+	    var direction = arrow.direction || 'bottom';
+	    var arrowEl = domutil.get(config.classname('popup-arrow'));
+	    var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
+	
+	    if (direction !== 'bottom') {
+	        domutil.removeClass(arrowEl, 'bottom');
+	        domutil.addClass(arrowEl, direction);
+	    }
+	
+	    if (arrow.position) {
+	        borderElement.style.left = arrow.position + 'px';
+	    }
+	};
+	
+	/**
+	 * Create date range picker using start date and end date
+	 * @param {TZDate} start - start date
+	 * @param {TZDate} end - end date
+	 */
+	ScheduleCreationPopup.prototype._createDatepicker = function(start, end) {
+	    var cssPrefix = config.cssPrefix;
+	    this.rangePicker = DatePicker.createRangePicker({
+	        startpicker: {
+	            date: new Date(start.getTime()),
+	            input: '#' + cssPrefix + 'schedule-start-date',
+	            container: '#' + cssPrefix + 'startpicker-container'
+	        },
+	        endpicker: {
+	            date: new Date(end.getTime()),
+	            input: '#' + cssPrefix + 'schedule-end-date',
+	            container: '#' + cssPrefix + 'endpicker-container'
+	        },
+	        format: 'yyyy-MM-dd HH:mm',
+	        timepicker: {
+	            showMeridiem: false
+	        },
+	        usageStatistics: true
+	    });
+	};
+	
+	/**
+	 * Hide layer
+	 */
+	ScheduleCreationPopup.prototype.hide = function() {
+	    this.layer.hide();
+	
+	    if (this.guide) {
+	        this.guide.clearGuideElement();
+	        this.guide = null;
+	    }
+	
+	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+	};
+	
+	/**
+	 * refresh layer
+	 */
+	ScheduleCreationPopup.prototype.refresh = function() {
+	    if (this._viewModel) {
+	        this.layer.setContent(this.tmpl(this._viewModel));
+	    }
+	};
+	
+	/**
+	 * Set calendar list
+	 * @param {Array.<Calendar>} calendars - calendar list
+	 */
+	ScheduleCreationPopup.prototype.setCalendars = function(calendars) {
+	    this.calendars = calendars || [];
+	};
+	
+	module.exports = ScheduleCreationPopup;
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Floating layer module
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domutil = __webpack_require__(31),
+	    View = __webpack_require__(37);
+	
+	/**
+	 * @constructor
+	 * @extends {View}
+	 * @param {object} options - options for floating layer module
+	 * @param {HTMLElement} container - parent continer for floating layer
+	 */
+	function FloatingLayer(options, container) {
+	    var sibling = container[FloatingLayer.PROP_KEY],
+	        layerContainer;
+	
+	    if (!sibling) {
+	        sibling = container[FloatingLayer.PROP_KEY] = [];
+	    }
+	
+	    sibling.push(this);
+	
+	    /**
+	     * @type {Collection}
+	     */
+	    this.sibling = sibling;
+	
+	    /**
+	     * @type {number}
+	     */
+	    this.zIndex = this.getLargestZIndex() || FloatingLayer.INIT_ZINDEX;
+	
+	    layerContainer = document.createElement('div');
+	    layerContainer.style.display = 'none';
+	    layerContainer.style.position = 'absolute';
+	    domutil.addClass(layerContainer, config.classname('floating-layer'));
+	    container.appendChild(layerContainer);
+	
+	    View.call(this, layerContainer);
+	
+	    /**
+	     * @type {HTMLElement}
+	     */
+	    this.parent = container;
+	}
+	
+	util.inherit(FloatingLayer, View);
+	
+	/**
+	 * @const
+	 */
+	FloatingLayer.PROP_KEY = '__fe_floating_layer';
+	
+	/**
+	 * @const
+	 */
+	FloatingLayer.INIT_ZINDEX = 999;
+	
+	/**
+	 * Destroy floating layer instance. if there no instnace in parent container
+	 *
+	 * remove instance cache property in container element
+	 */
+	FloatingLayer.prototype.destroy = function() {
+	    var parent = this.parent,
+	        sibling = this.sibling,
+	        i = 0, cnt = sibling.length;
+	
+	    for (; i < cnt; i += 1) {
+	        if (sibling[i] === this) {
+	            sibling.splice(i, 1);
+	            break;
+	        }
+	    }
+	
+	    if (!sibling.length) {
+	        try {
+	            delete parent[FloatingLayer.PROP_KEY];
+	        } catch (e) {
+	            parent[FloatingLayer.PROP_KEY] = null;
+	        }
+	
+	        parent.style.position = '';
+	    }
+	
+	    domutil.remove(this.container);
+	
+	    this.sibling = null;
+	
+	    View.prototype.destroy.call(this);
+	};
+	
+	/**
+	 * @returns {boolean} whether layer is visible?
+	 */
+	FloatingLayer.prototype.isVisible = function() {
+	    return this.container.style.display !== 'none';
+	};
+	
+	/**
+	 * Set layer position
+	 * @param {number} x - x coordinate of layer
+	 * @param {number} y - y coordinate of layer
+	 */
+	FloatingLayer.prototype.setPosition = function(x, y) {
+	    domutil.setPosition(this.container, x, y);
+	};
+	
+	/**
+	 * Set layer left, top, right, bottom position
+	 * @param {object} ltrb object of left, top, right, bottom
+	 * @param {number} [ltrb.left] left pixel value.
+	 * @param {number} [ltrb.top] top pixel value.
+	 * @param {number} [ltrb.right] right pixel value.
+	 * @param {number} [ltrb.bottom] bottom pixel value.
+	 */
+	FloatingLayer.prototype.setLTRB = function(ltrb) {
+	    domutil.setLTRB(this.container, ltrb);
+	};
+	
+	/**
+	 * Set layer size
+	 * @param {number|string} w - layer width
+	 * @param {number|string} h - layer height
+	 */
+	FloatingLayer.prototype.setSize = function(w, h) {
+	    var container = this.container;
+	
+	    w = util.isNumber(w) ? w + 'px' : w;
+	    h = util.isNumber(h) ? h + 'px' : h;
+	
+	    container.style.width = w;
+	    container.style.height = h;
+	};
+	
+	/**
+	 * Set layer content
+	 * @param {string} html - html string
+	 */
+	FloatingLayer.prototype.setContent = function(html) {
+	    this.container.innerHTML = html;
+	};
+	
+	/**
+	 * Get largest z-index from sibling layers
+	 * @returns {number} largest z-index value
+	 */
+	FloatingLayer.prototype.getLargestZIndex = function() {
+	    var zIndexes = util.map(this.sibling, function(layer) {
+	        return layer.zIndex;
+	    });
+	
+	    return Math.max.apply(null, zIndexes);
+	};
+	
+	/**
+	 * Set focus to layer
+	 */
+	FloatingLayer.prototype.focus = function() {
+	    var zIndexForShow = this.getLargestZIndex() + 1;
+	    this.container.style.zIndex = this.zIndex = zIndexForShow;
+	};
+	
+	/**
+	 * Show layer
+	 */
+	FloatingLayer.prototype.show = function() {
+	    this.focus();
+	    this.container.style.display = 'block';
+	};
+	
+	/**
+	 * Hide layer
+	 */
+	FloatingLayer.prototype.hide = function() {
+	    this.container.style.display = 'none';
+	};
+	
+	module.exports = FloatingLayer;
+	
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_72__;
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(8);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "hide";
+	},"3":function(container,depth0,helpers,partials,data) {
+	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "                    <li class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-menu-item\" data-calendar-id=\""
+	    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+	    + "\">\n                        <span class=\"icon calendar-dot\" style=\"background-color: "
+	    + alias4(((helper = (helper = helpers.bgColor || (depth0 != null ? depth0.bgColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bgColor","hash":{},"data":data}) : helper)))
+	    + "\"></span>\n                        <span class=\"content\">"
+	    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
+	    + "</span>\n                    </li>\n";
+	},"5":function(container,depth0,helpers,partials,data) {
+	    return " public";
+	},"7":function(container,depth0,helpers,partials,data) {
+	    return " checked";
+	},"9":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return container.escapeExpression(((helper = (helper = helpers.state || (depth0 != null ? depth0.state : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"state","hash":{},"data":data}) : helper)));
+	},"11":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return container.escapeExpression(((helper = (helper = helpers["popupStateBusy-tmpl"] || (depth0 != null ? depth0["popupStateBusy-tmpl"] : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"popupStateBusy-tmpl","hash":{},"data":data}) : helper)));
+	},"13":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return container.escapeExpression(((helper = (helper = helpers["popupUpdate-tmpl"] || (depth0 != null ? depth0["popupUpdate-tmpl"] : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"popupUpdate-tmpl","hash":{},"data":data}) : helper)));
+	},"15":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return container.escapeExpression(((helper = (helper = helpers["popupSave-tmpl"] || (depth0 != null ? depth0["popupSave-tmpl"] : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"popupSave-tmpl","hash":{},"data":data}) : helper)));
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup\">\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-container\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "close "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-calendar"
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.calendars : depth0)) != null ? stack1.length : stack1),{"name":"unless","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n            <button class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item\">\n                <span class=\"icon calendar-dot\" style=\"background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.selectedCal : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "\"></span>\n                <span id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-calendar\" class=\"content\">"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.selectedCal : depth0)) != null ? stack1.name : stack1), depth0))
+	    + "</span>\n                <span class=\"icon "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-arrow\"></span>\n                </span>\n            </button>\n            <ul class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-menu\" style=\"z-index: "
+	    + alias4(((helper = (helper = helpers.zIndex || (depth0 != null ? depth0.zIndex : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"zIndex","hash":{},"data":data}) : helper)))
+	    + "\">\n"
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.calendars : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "            </ul>\n        </div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section\">\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-title\">\n            <span class=\"icon ic-title\"></span>\n            <input id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-title\" class=\"content\" placeholder=\""
+	    + alias4(((helper = (helper = helpers["titlePlaceholder-tmpl"] || (depth0 != null ? depth0["titlePlaceholder-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"titlePlaceholder-tmpl","hash":{},"data":data}) : helper)))
+	    + "\" value=\""
+	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+	    + "\"></span>\n            </div>\n            <button id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-private\" class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-private"
+	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isPrivate : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n            <span class=\"icon private\"></span>\n            </button>\n        </div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section\">\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-location\">\n            <span class=\"icon ic-location\"></span>\n                <input id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-location\" class=\"content\" placeholder=\""
+	    + alias4(((helper = (helper = helpers["locationPlaceholder-tmpl"] || (depth0 != null ? depth0["locationPlaceholder-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"locationPlaceholder-tmpl","hash":{},"data":data}) : helper)))
+	    + "\" value=\""
+	    + alias4(((helper = (helper = helpers.location || (depth0 != null ? depth0.location : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"location","hash":{},"data":data}) : helper)))
+	    + "\"></span>\n            </div>\n        </div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section\">\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-start-date\">\n                <span class=\"icon ic-date\"></span>\n                <input id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-start-date\" class=\"content\" placeholder=\""
+	    + alias4(((helper = (helper = helpers["startDatePlaceholder-tmpl"] || (depth0 != null ? depth0["startDatePlaceholder-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"startDatePlaceholder-tmpl","hash":{},"data":data}) : helper)))
+	    + "\"></span>\n                <div id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "startpicker-container\" style=\"margin-left: -1px; position: relative\"></div>\n            </div>\n            <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-date-dash\">-</span>\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-end-date\">\n                <span class=\"icon ic-date\"></span>\n                <input id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-end-date\" class=\"content\" placeholder=\""
+	    + alias4(((helper = (helper = helpers["endDatePlaceholder-tmpl"] || (depth0 != null ? depth0["endDatePlaceholder-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"endDatePlaceholder-tmpl","hash":{},"data":data}) : helper)))
+	    + "\"></span>\n                <div id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "endpicker-container\" style=\"margin-left: -1px; position: relative\"></div>\n            </div>\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-allday\">\n                <input id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-allday\" type=\"checkbox\" class=\"checkbox-square\""
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isAllDay : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "></input>\n                <span class=\"icon checkbox\"></span>\n                <span class=\"content\">"
+	    + alias4(((helper = (helper = helpers["popupIsAllDay-tmpl"] || (depth0 != null ? depth0["popupIsAllDay-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"popupIsAllDay-tmpl","hash":{},"data":data}) : helper)))
+	    + "</span>\n            </div>\n        </div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "close "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-state\">\n            <button class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item\">\n                <span class=\"icon ic-state\"></span>\n                <span id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-state\" class=\"content\">"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.state : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
+	    + "</span>\n                <span class=\"icon right "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-arrow\"></span>\n            </button>\n            <ul class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-menu\" style=\"z-index: "
+	    + alias4(((helper = (helper = helpers.zIndex || (depth0 != null ? depth0.zIndex : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"zIndex","hash":{},"data":data}) : helper)))
+	    + "\">\n                <li class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-menu-item\">\n                <span class=\"icon none\"></span>\n                <span class=\"content\">"
+	    + alias4(((helper = (helper = helpers["popupStateBusy-tmpl"] || (depth0 != null ? depth0["popupStateBusy-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"popupStateBusy-tmpl","hash":{},"data":data}) : helper)))
+	    + "</span>\n                </li>\n                <li class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section-item "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dropdown-menu-item\">\n                <span class=\"icon none\"></span>\n                <span class=\"content\">"
+	    + alias4(((helper = (helper = helpers["popupStateFree-tmpl"] || (depth0 != null ? depth0["popupStateFree-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"popupStateFree-tmpl","hash":{},"data":data}) : helper)))
+	    + "</span>\n                </li>\n            </ul>\n        </div>\n        <button class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-close\"><span class=\"icon ic-close\"></span></button>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-button-save\"><button class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "button "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "confirm "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-save\"><span>"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isEditMode : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(15, data, 0),"data":data})) != null ? stack1 : "")
+	    + "</span></button></div>\n    </div>\n    <div id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow\" class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow bottom\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow-border\">\n            <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow-fill\"></div>\n        </div>\n    </div>\n</div>\n";
+	},"useData":true});
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @fileoverview Floating layer for  showing detail schedule
+	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+	 */
+	'use strict';
+	
+	var View = __webpack_require__(37);
+	var FloatingLayer = __webpack_require__(71);
+	var util = __webpack_require__(6);
+	var config = __webpack_require__(34),
+	    domevent = __webpack_require__(32),
+	    domutil = __webpack_require__(31);
+	var tmpl = __webpack_require__(75);
+	var ARROW_WIDTH_HALF = 8;
+	
+	/**
+	 * @constructor
+	 * @extends {View}
+	 * @param {HTMLElement} container - container element
+	 */
+	function ScheduleDetailPopup(container) {
+	    View.call(this, container);
+	    /**
+	     * @type {FloatingLayer}
+	     */
+	    this.layer = new FloatingLayer(null, container);
+	
+	    /**
+	     * cached view model
+	     * @type {object}
+	     */
+	    this._viewModel = null;
+	    this._schedule = null;
+	    this._calendar = null;
+	
+	    domevent.on(container, 'click', this._onClick, this);
+	}
+	
+	util.inherit(ScheduleDetailPopup, View);
+	
+	/**
+	 * Mousedown event handler for hiding popup layer when user mousedown outside of
+	 * layer
+	 * @param {MouseEvent} mouseDownEvent - mouse event object
+	 */
+	ScheduleDetailPopup.prototype._onMouseDown = function(mouseDownEvent) {
+	    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+	        popupLayer = domutil.closest(target, config.classname('.floating-layer'));
+	
+	    if (popupLayer) {
+	        return;
+	    }
+	
+	    this.hide();
+	};
+	
+	/**
+	 * @override
+	 */
+	ScheduleDetailPopup.prototype.destroy = function() {
+	    this.layer.destroy();
+	    this.layer = null;
+	    domevent.off(this.container, 'click', this._onClick, this);
+	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+	    View.prototype.destroy.call(this);
+	};
+	
+	/**
+	 * @override
+	 * Click event handler for close button
+	 * @param {MouseEvent} clickEvent - mouse event object
+	 */
+	ScheduleDetailPopup.prototype._onClick = function(clickEvent) {
+	    var target = (clickEvent.target || clickEvent.srcElement);
+	
+	    this._onClickEditSchedule(target);
+	
+	    this._onClickDeleteSchedule(target);
+	};
+	
+	/**
+	 * @fires ScheduleDetailPopup#clickEditSchedule
+	 * @param {HTMLElement} target - event target
+	 */
+	ScheduleDetailPopup.prototype._onClickEditSchedule = function(target) {
+	    var className = config.classname('popup-edit');
+	
+	    if (domutil.hasClass(target, className) || domutil.closest(target, '.' + className)) {
+	        this.fire('beforeUpdateSchedule', {
+	            schedule: this._schedule,
+	            triggerEventName: 'click',
+	            target: this._scheduleEl
+	        });
+	
+	        this.hide();
+	    }
+	};
+	
+	/**
+	 * @fires ScheduleDetailPopup#clickEditSchedule
+	 * @param {HTMLElement} target - event target
+	 */
+	ScheduleDetailPopup.prototype._onClickDeleteSchedule = function(target) {
+	    var className = config.classname('popup-delete');
+	
+	    if (domutil.hasClass(target, className) || domutil.closest(target, '.' + className)) {
+	        this.fire('beforeDeleteSchedule', {
+	            schedule: this._schedule
+	        });
+	
+	        this.hide();
+	    }
+	};
+	
+	/**
+	 * @override
+	 * @param {object} viewModel - view model from factory/monthView
+	 */
+	ScheduleDetailPopup.prototype.render = function(viewModel) {
+	    var layer = this.layer;
+	    var self = this;
+	
+	    layer.setContent(tmpl({
+	        schedule: viewModel.schedule,
+	        calendar: viewModel.calendar
+	    }));
+	    layer.show();
+	    this._setPopupPositionAndArrowDirection(viewModel.event);
+	
+	    this._schedule = viewModel.schedule;
+	    this._calendar = viewModel.calendar;
+	
+	    util.debounce(function() {
+	        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
+	    })();
+	};
+	
+	/**
+	 * Set popup position and arrow direction to apear near guide element
+	 * @param {Event} event - creation guide element
+	 */
+	ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(event) {
+	    var layer = domutil.find(config.classname('.popup'), this.layer.container);
+	    var layerSize = {
+	        width: layer.offsetWidth,
+	        height: layer.offsetHeight
+	    };
+	    var windowSize = {
+	        right: window.innerWidth,
+	        bottom: window.innerHeight
+	    };
+	    var parentRect = this.layer.parent.getBoundingClientRect();
+	    var parentBounds = {
+	        left: parentRect.left,
+	        top: parentRect.top
+	    };
+	    var scheduleEl = event.target || event.srcElement;
+	    var scheduleBound = scheduleEl.getBoundingClientRect();
+	    var pos;
+	
+	    this._scheduleEl = scheduleEl;
+	
+	    pos = this._calcRenderingData(layerSize, windowSize, scheduleBound);
+	    pos.x -= parentBounds.left + 4;
+	    pos.y -= (parentBounds.top + ARROW_WIDTH_HALF);
+	    this.layer.setPosition(pos.x, pos.y);
+	    this._setArrowDirection(pos.arrow);
+	};
+	
+	/**
+	 * Calculate rendering position usering guide elements
+	 * @param {{width: {number}, height: {number}}} layerSize - popup layer's width and height
+	 * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} parentSize - width and height of the upper layer, that acts as a border of popup
+	 * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} guideBound - guide element bound data
+	 * @returns {PopupRenderingData} rendering position of popup and popup arrow
+	 */
+	ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, parentSize, guideBound) {
+	    var guideVerticalCenter = (guideBound.top + guideBound.bottom) / 2;
+	    var x = guideBound.right;
+	    var y = guideVerticalCenter;
+	    var arrowDirection = 'left';
+	    var arrowTop;
+	
+	    if (y < 0) {
+	        y = y + (layerSize.height / 2) - guideVerticalCenter;
+	    }
+	
+	    if (x > 0 && (x + layerSize.width > parentSize.right)) {
+	        x = guideBound.left - layerSize.width - ARROW_WIDTH_HALF - 3;
+	        arrowDirection = 'right';
+	    }
+	
+	    if (x < 0) {
+	        x = 0;
+	    }
+	
+	    if (guideBound.right > x + layerSize.width) {
+	        arrowDirection = 'right';
+	    }
+	
+	    /**
+	     * @typedef {Object} PopupRenderingData
+	     * @property {number} x - left position
+	     * @property {number} y - top position
+	     * @property {string} arrow.direction - direction of popup arrow
+	     * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
+	     */
+	    return {
+	        x: x + ARROW_WIDTH_HALF,
+	        y: y - (layerSize.height / 2) + ARROW_WIDTH_HALF,
+	        arrow: {
+	            direction: arrowDirection,
+	            position: arrowTop
+	        }
+	    };
+	};
+	
+	/**
+	 * Set arrow's direction and position
+	 * @param {Object} arrow rendering data for popup arrow
+	 */
+	ScheduleDetailPopup.prototype._setArrowDirection = function(arrow) {
+	    var direction = arrow.direction || 'left';
+	    var arrowEl = domutil.get(config.classname('popup-arrow'));
+	    var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
+	
+	    if (direction !== 'left') {
+	        domutil.removeClass(arrowEl, 'left');
+	        domutil.addClass(arrowEl, direction);
+	    }
+	
+	    if (arrow.position) {
+	        borderElement.style.top = arrow.position + 'px';
+	    }
+	};
+	
+	/**
+	 * Hide layer
+	 */
+	ScheduleDetailPopup.prototype.hide = function() {
+	    this.layer.hide();
+	
+	    if (this.guide) {
+	        this.guide.clearGuideElement();
+	        this.guide = null;
+	    }
+	
+	    domevent.off(document.body, 'mousedown', this._onMouseDown, this);
+	};
+	
+	/**
+	 * refresh layer
+	 */
+	ScheduleDetailPopup.prototype.refresh = function() {
+	    if (this._viewModel) {
+	        this.layer.setContent(this.tmpl(this._viewModel));
+	    }
+	};
+	
+	module.exports = ScheduleDetailPopup;
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(8);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
+	
+	  return "        <div class=\""
+	    + alias1(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-detail-item\"><span class=\"icon calendar-dot\" style=\"background-color: "
+	    + alias1(alias2(((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "\"></span><span class=\"content\">"
+	    + alias1(alias2(((stack1 = (depth0 != null ? depth0.calendar : depth0)) != null ? stack1.name : stack1), depth0))
+	    + "</span></div>\n";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-detail\">\n  <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-container\">\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-section "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-header\">\n      <div>\n        <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-private icon private\"></span>\n        <span class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "schedule-title\">"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.title : stack1), depth0))
+	    + "</span>\n      </div>\n      <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-detail-date content\">"
+	    + alias4((helpers["popupDetailDate-tmpl"] || (depth0 && depth0["popupDetailDate-tmpl"]) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.start : stack1),((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.end : stack1),{"name":"popupDetailDate-tmpl","hash":{},"data":data}))
+	    + "</div>\n    </div>\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-detail\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-detail-item\"><span class=\"icon ic-location-b\"></span><span class=\"content\">"
+	    + alias4((helpers["popupDetailLocation-tmpl"] || (depth0 && depth0["popupDetailLocation-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailLocation-tmpl","hash":{},"data":data}))
+	    + "</span></div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-detail-item\"><span class=\"icon ic-user-b\"></span><span class=\"content\">"
+	    + alias4((helpers["popupDetailUser-tmpl"] || (depth0 && depth0["popupDetailUser-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailUser-tmpl","hash":{},"data":data}))
+	    + "</span></div>\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-detail-item\"><span class=\"icon ic-state-b\"></span><span class=\"content\">"
+	    + alias4((helpers["popupDetailState-tmpl"] || (depth0 && depth0["popupDetailState-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailState-tmpl","hash":{},"data":data}))
+	    + "</span></div>\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.calendar : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "    </div>\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "section-button\">\n      <button class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-edit\"><span class=\"icon ic-edit\"></span><span class=\"content\">"
+	    + alias4(((helper = (helper = helpers["popupEdit-tmpl"] || (depth0 != null ? depth0["popupEdit-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"popupEdit-tmpl","hash":{},"data":data}) : helper)))
+	    + "</span></button>\n      <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-vertical-line\"></div>\n      <button class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-delete\"><span class=\"icon ic-delete\"></span><span class=\"content\">"
+	    + alias4(((helper = (helper = helpers["popupDelete-tmpl"] || (depth0 != null ? depth0["popupDelete-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"popupDelete-tmpl","hash":{},"data":data}) : helper)))
+	    + "</span></button>\n    </div>\n  </div>\n  <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-top-line\" style=\"background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.bgColor : stack1), depth0))
+	    + "\"></div>\n  <div id=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow\" class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow left\">\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow-border\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "popup-arrow-fill\"></div>\n    </div>\n  </div>\n</div>\n";
+	},"useData":true});
+
+/***/ },
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11945,7 +14474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 68 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11957,7 +14486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var DayGridMove = __webpack_require__(69);
+	var DayGridMove = __webpack_require__(78);
 	
 	/**
 	 * @constructor
@@ -12082,7 +14611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 69 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12095,8 +14624,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
-	var dayGridCore = __webpack_require__(70);
-	var DayGridMoveGuide = __webpack_require__(71);
+	var dayGridCore = __webpack_require__(79);
+	var DayGridMoveGuide = __webpack_require__(80);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -12364,7 +14893,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 70 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-shadow: 0 */
@@ -12374,9 +14903,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
+	var util = __webpack_require__(6);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
 	var common = __webpack_require__(30);
+	var datetime = __webpack_require__(27);
 	
 	var mmax = Math.max,
 	    mmin = Math.min;
@@ -12436,6 +14967,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	                range: range
 	            };
 	        };
+	    },
+	
+	    /**
+	     * @param {view} view - view instance.
+	     * @param {TZDate} startDate - start date
+	     * @returns {function|boolean} function that return schedule data by mouse events.
+	     */
+	    _retriveScheduleDataFromDate: function(view, startDate) {
+	        var weekdayView = view.children.single(),
+	            datesInRange,
+	            dragStartXIndex = 0,
+	            grids,
+	            range;
+	
+	        if (!weekdayView) {
+	            return false;
+	        }
+	
+	        range = weekdayView.getRenderDateRange();
+	        datesInRange = range.length;
+	        grids = weekdayView.getRenderDateGrids();
+	
+	        util.forEach(range, function(date, index) {
+	            if (datetime.isSameDate(date, startDate)) {
+	                dragStartXIndex = index;
+	            }
+	        });
+	
+	        /**
+	         * @param {TZDate} targetDate - target date
+	         * @returns {object} schedule data.
+	         */
+	        return function(targetDate) {
+	            var xIndex = 0;
+	
+	            util.forEach(range, function(date, index) {
+	                if (datetime.isSameDate(date, targetDate)) {
+	                    xIndex = index;
+	                }
+	            });
+	
+	            // apply limitation of creation schedule X index.
+	            xIndex = mmax(xIndex, 0);
+	            xIndex = mmin(xIndex, datesInRange - 1);
+	
+	            return {
+	                relatedView: view,
+	                dragStartXIndex: dragStartXIndex,
+	                datesInRange: datesInRange,
+	                xIndex: xIndex,
+	                triggerEvent: 'manual',
+	                grids: grids,
+	                range: range
+	            };
+	        };
 	    }
 	};
 	
@@ -12468,7 +15054,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 71 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -12481,7 +15067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -12496,7 +15082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.daygridMove = daygridMove;
 	
 	    /**
-	     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
+	     * The element that actually contains the event element
 	     * @type {HTMLDIVElement}
 	     */
 	    this.scheduleContainer = null;
@@ -12593,8 +15179,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        el.style.margin = '0';
 	
 	        if (!model.isFocused) {
-	            el.style.backgroundColor = el.style.color;
-	            el.style.borderLeftColor = el.style.color;
+	            el.style.backgroundColor = model.dragBgColor;
+	            el.style.borderLeftColor = model.borderColor;
 	            el.style.color = '#ffffff';
 	        }
 	    });
@@ -12635,10 +15221,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * rendered block must be cut out to render properly. in this case, this method return
 	 * how many block are cut before rendering.
 	 *
-	 * 이벤트 데이터에서 이벤트 블록 엘리먼트 렌더링에 대한 필요 정보를 추출한다.
-	 *
-	 * ex) 렌더링 된 블록의 길이는 5지만 실제 이 이벤트는 10의 길이를 가지고 있을 때
-	 * 좌 우로 몇 만큼 잘려있는지에 관한 정보를 반환함.
 	 * @param {object} dragStartEventData - schedule data from DayGrid.Move handler.
 	 * @returns {function} function that return schedule block information.
 	 */
@@ -12681,7 +15263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._hideOriginScheduleBlocks(String(dragStartEventData.model.cid()));
 	
 	    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
-	    domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+	    domutil.appendHTMLElement('div', guideElement, config.classname('weekday-schedule-cover'));
 	    scheduleContainer.appendChild(guideElement);
 	
 	    this._dragStartXIndex = dragStartEventData.xIndex;
@@ -12754,7 +15336,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 72 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12769,8 +15351,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var dayGridCore = __webpack_require__(70);
-	var DayGridCreationGuide = __webpack_require__(73);
+	var dayGridCore = __webpack_require__(79);
+	var DayGridCreationGuide = __webpack_require__(82);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -13060,6 +15642,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._requestOnClick = false;
 	};
 	
+	/**
+	 * Invoke creation click
+	 * @param {Schedule} schedule - schedule instance
+	 */
+	DayGridCreation.prototype.invokeCreationClick = function(schedule) {
+	    var getScheduleDataFunc, scheduleData;
+	
+	    getScheduleDataFunc = this._retriveScheduleDataFromDate(this.view, schedule.start);
+	    scheduleData = getScheduleDataFunc(schedule.start);
+	
+	    this.fire('click', scheduleData);
+	
+	    this._createSchedule(scheduleData);
+	};
+	
 	common.mixin(dayGridCore, DayGridCreation);
 	util.CustomEvents.mixin(DayGridCreation);
 	
@@ -13067,7 +15664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 73 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13078,7 +15675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	
 	/**
 	 * Class for DayGrid.Creation dragging effect.
@@ -13102,6 +15699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.guideElement = document.createElement('div');
 	
 	    this.initializeGuideElement();
+	    this.applyTheme(creation.controller.theme);
 	
 	    creation.on({
 	        dragstart: this._createGuideElement,
@@ -13216,11 +15814,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._refreshGuideElement(dragEventData);
 	};
 	
+	DayGridCreationGuide.prototype.applyTheme = function(theme) {
+	    var style = this.guideElement.style;
+	
+	    style.backgroundColor = theme.common.creationGuide.backgroundColor;
+	    style.border = theme.common.creationGuide.border;
+	};
+	
 	module.exports = DayGridCreationGuide;
 
 
 /***/ },
-/* 74 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13234,8 +15839,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var common = __webpack_require__(30);
-	var dayGridCore = __webpack_require__(70);
-	var DayGridResizeGuide = __webpack_require__(75);
+	var dayGridCore = __webpack_require__(79);
+	var DayGridResizeGuide = __webpack_require__(84);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -13495,7 +16100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 75 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -13508,7 +16113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -13522,7 +16127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.resizeHandler = resizeHandler;
 	
 	    /**
-	     * 실제로 이벤트 엘리먼트를 담는 엘리먼트
+	     * The element that actually contains the event element
 	     * @type {HTMLDIVElement}
 	     */
 	    this.scheduleContainer = null;
@@ -13536,6 +16141,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {HTMLDIVElement}
 	     */
 	    this.guideElement = null;
+	
+	    /**
+	     * @type {HTMLDIVElement}
+	     */
+	    this.scheduleBlockElement = null;
 	
 	    resizeHandler.on({
 	        'dragstart': this._onDragStart,
@@ -13552,7 +16162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._clearGuideElement();
 	    this.resizeHandler.off(this);
 	    this.resizeHandler = this.scheduleContainer = this.getScheduleDataFunc =
-	        this.guideElement = null;
+	        this.guideElement = this.scheduleBlockElement = null;
 	};
 	
 	/**
@@ -13563,6 +16173,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (!util.browser.msie) {
 	        domutil.removeClass(global.document.body, config.classname('resizing-x'));
+	    }
+	
+	    if (this.scheduleBlockElement) {
+	        domutil.removeClass(this.scheduleBlockElement, config.classname('weekday-schedule-block-dragging-dim'));
 	    }
 	
 	    this.getScheduleDataFunc = null;
@@ -13588,9 +16202,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	DayGridResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
 	    var model = dragStartEventData.model,
 	        viewOptions = this.resizeHandler.view.options,
-	        fromLeft = (new TZDate(
+	        fromLeft = parseInt((new TZDate(
 	            model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
-	        )) / datetime.MILLISECONDS_PER_DAY || 0,
+	        )) / datetime.MILLISECONDS_PER_DAY, 10) || 0,
 	        grids = dragStartEventData.grids;
 	
 	    return function(xIndex) {
@@ -13615,7 +16229,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DayGridResizeGuide.prototype._onDragStart = function(dragStartEventData) {
 	    var container = this.resizeHandler.view.container,
-	        guideElement = this.guideElement = dragStartEventData.scheduleBlockElement.cloneNode(true),
+	        scheduleBlockElement = this.scheduleBlockElement = dragStartEventData.scheduleBlockElement,
+	        guideElement = this.guideElement = scheduleBlockElement.cloneNode(true),
 	        scheduleContainer;
 	
 	    if (!util.browser.msie) {
@@ -13624,6 +16239,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
 	    domutil.addClass(guideElement, config.classname('daygrid-guide-move'));
+	    domutil.addClass(scheduleBlockElement, config.classname('weekday-schedule-block-dragging-dim'));
+	
 	    scheduleContainer.appendChild(guideElement);
 	
 	    this.getScheduleDataFunc = this.getGuideElementWidthFunc(dragStartEventData);
@@ -13649,7 +16266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13760,7 +16377,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 77 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13771,13 +16388,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
-	var array = __webpack_require__(47);
+	var array = __webpack_require__(50);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var TimeCreationGuide = __webpack_require__(78);
+	var TimeCreationGuide = __webpack_require__(87);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(79);
+	var timeCore = __webpack_require__(88);
 	
 	var CLICK_DELAY = 300;
 	
@@ -13963,6 +16580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var relatedView = eventData.relatedView,
 	        createRange = eventData.createRange,
 	        nearestGridTimeY = eventData.nearestGridTimeY,
+	        nearestGridEndTimeY = eventData.nearestGridEndTimeY ? eventData.nearestGridEndTimeY : nearestGridTimeY + datetime.millisecondsFrom('minutes', 30),
 	        baseDate,
 	        dateStart,
 	        dateEnd,
@@ -13972,7 +16590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!createRange) {
 	        createRange = [
 	            nearestGridTimeY,
-	            nearestGridTimeY + datetime.millisecondsFrom('minutes', 30)
+	            nearestGridEndTimeY
 	        ];
 	    }
 	
@@ -14102,6 +16720,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._requestOnClick = false;
 	};
 	
+	/**
+	 * Invoke creation click
+	 * @param {Schedule} schedule - schedule instance
+	 */
+	TimeCreation.prototype.invokeCreationClick = function(schedule) {
+	    var opt = this.timeGridView.options,
+	        range = datetime.range(
+	            datetime.parse(opt.renderStartDate),
+	            datetime.parse(opt.renderEndDate),
+	            datetime.MILLISECONDS_PER_DAY),
+	        targetDate = schedule.start;
+	    var getScheduleDataFunc, eventData, timeView;
+	
+	    util.forEach(range, function(date, index) {
+	        if (datetime.isSameDate(date, targetDate)) {
+	            timeView = this.timeGridView.children.toArray()[index];
+	        }
+	    }, this);
+	
+	    // If start date is not in current date, set start date as first date.
+	    if (!timeView) {
+	        timeView = this.timeGridView.children.toArray()[0];
+	    }
+	
+	    getScheduleDataFunc = this._retriveScheduleDataFromDate(timeView);
+	    eventData = getScheduleDataFunc(schedule.start, schedule.end);
+	
+	    this.fire('timeCreationClick', eventData);
+	
+	    this._createSchedule(eventData);
+	};
+	
 	timeCore.mixin(TimeCreation);
 	util.CustomEvents.mixin(TimeCreation);
 	
@@ -14109,7 +16759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 78 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14122,10 +16772,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	var ratio = __webpack_require__(30).ratio;
 	var TZDate = __webpack_require__(28).Date;
 	var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
+	var MIN60 = (datetime.MILLISECONDS_PER_MINUTES * 60);
 	
 	/**
 	 * Class for Time.Creation dragging effect.
@@ -14175,6 +16826,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        timeCreationDrag: this._onDrag,
 	        timeCreationClick: this._createGuideElement
 	    }, this);
+	
+	    this.applyTheme(timeCreation.baseController.theme);
 	}
 	
 	/**
@@ -14296,12 +16949,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function getStyleData(scheduleData) {
 	        var gridY = scheduleData.nearestGridY,
 	            gridTimeY = scheduleData.nearestGridTimeY,
-	            top, time;
+	            gridEndTimeY = scheduleData.nearestGridEndTimeY || gridTimeY,
+	            top, startTime, endTime;
 	
 	        top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);
-	        time = common.limit(gridTimeY, [todayStart], [todayEnd]);
+	        startTime = common.limit(gridTimeY, [todayStart], [todayEnd]);
+	        endTime = common.limit(gridEndTimeY, [todayStart], [todayEnd]);
 	
-	        return [top, time];
+	        return [top, startTime, endTime];
 	    }
 	
 	    return getStyleData;
@@ -14313,17 +16968,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
 	    var relatedView = dragStartEventData.relatedView,
-	        unitData, styleFunc, styleData, result;
+	        unitData, styleFunc, styleData, result, top, height, start, end;
 	
 	    unitData = this._styleUnit = this._getUnitData(relatedView);
 	    styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
 	    styleData = this._styleStart = styleFunc(dragStartEventData);
 	
+	    start = styleData[1];
+	    end = styleData[2] || (styleData[1] + MIN30);
+	    top = styleData[0];
+	    height = (unitData[4] * (end - start) / MIN60);
+	
 	    result = this._limitStyleData(
-	        styleData[0],
-	        (unitData[4] / 2),
-	        styleData[1],
-	        (styleData[1] + MIN30)
+	        top,
+	        height,
+	        start,
+	        end
 	    );
 	
 	    this._refreshGuideElement.apply(this, result);
@@ -14373,12 +17033,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	};
 	
+	TimeCreationGuide.prototype.applyTheme = function(theme) {
+	    var style = this.guideElement.style;
+	    var timeStyle = this.guideTimeElement.style;
+	
+	    // block
+	    style.backgroundColor = theme.common.creationGuide.backgroundColor;
+	    style.border = theme.common.creationGuide.border;
+	
+	    // label
+	    timeStyle.color = theme.week.creationGuide.color;
+	    timeStyle.fontSize = theme.week.creationGuide.fontSize;
+	    timeStyle.fontWeight = theme.week.creationGuide.fontWeight;
+	};
+	
 	module.exports = TimeCreationGuide;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 79 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14391,7 +17065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common = __webpack_require__(30);
 	var datetime = __webpack_require__(27);
 	var domevent = __webpack_require__(32);
-	var Point = __webpack_require__(65);
+	var Point = __webpack_require__(68);
 	
 	/**
 	 * @mixin Time.Core
@@ -14455,6 +17129,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    /**
+	     * Get function to makes event data from Time and mouseEvent
+	     * @param {Time} timeView - Instance of time view.
+	     * @param {number} xIndex - Time view index
+	     * @returns {function} - Function that return event data from mouse event.
+	     */
+	    _retriveScheduleDataFromDate: function(timeView) {
+	        var viewTime = Number(timeView.getDate());
+	
+	        /**
+	         * @param {TZDate} startDate - start date
+	         * @param {TZDate} endDate - end date
+	         * @returns {object} - common event data for time.*
+	         */
+	        return util.bind(function(startDate, endDate) {
+	            var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
+	
+	            gridY = startDate.getHours() + getNearestHour(startDate.getMinutes());
+	            timeY = viewTime + datetime.millisecondsFrom('hour', gridY);
+	            nearestGridY = gridY;
+	            nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY);
+	            nearestGridEndY = endDate.getHours() + getNearestHour(endDate.getMinutes());
+	            nearestGridEndTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridEndY);
+	
+	            return util.extend({
+	                target: timeView,
+	                relatedView: timeView,
+	                gridY: gridY,
+	                timeY: timeY,
+	                nearestGridY: nearestGridY,
+	                nearestGridTimeY: nearestGridTimeY,
+	                nearestGridEndY: nearestGridEndY,
+	                nearestGridEndTimeY: nearestGridEndTimeY,
+	                triggerEvent: 'manual'
+	            });
+	        }, this);
+	    },
+	
+	    /**
 	     * Mixin method.
 	     * @param {(TimeCreation|TimeMove)} obj - Constructor functions
 	     */
@@ -14470,12 +17182,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	/**
+	 * Get the nearest hour
+	 * @param {number} minutes - minutes
+	 * @returns {number} hour
+	 */
+	function getNearestHour(minutes) {
+	    var nearestHour;
+	    if (minutes === 0) {
+	        nearestHour = 0;
+	    } else if (minutes > 30) {
+	        nearestHour = 1;
+	    } else if (minutes <= 30) {
+	        nearestHour = 0.5;
+	    }
+	
+	    return nearestHour;
+	}
+	
 	module.exports = timeCore;
 	
 
 
 /***/ },
-/* 80 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14489,8 +17219,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(79);
-	var TimeMoveGuide = __webpack_require__(81);
+	var timeCore = __webpack_require__(88);
+	var TimeMoveGuide = __webpack_require__(90);
 	
 	/**
 	 * @constructor
@@ -14843,7 +17573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 81 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -14855,10 +17585,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	var ratio = __webpack_require__(30).ratio;
-	var FloatingLayer = __webpack_require__(82);
-	var tmpl = __webpack_require__(83);
+	var FloatingLayer = __webpack_require__(71);
+	var tmpl = __webpack_require__(91);
 	var TZDate = __webpack_require__(28).Date;
 	var Schedule = __webpack_require__(41);
 	
@@ -14972,12 +17702,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
-	TimeMoveGuide.prototype._getHighlightColorModel = function(model) {
-	    return {
-	        bgColor: model.color
-	    };
-	};
-	
 	/**
 	 * Refresh guide element
 	 * @param {string} top - guide element's style top.
@@ -15016,8 +17740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this._model = util.extend(
 	        Schedule.create(dragStartEventData.model),
-	        dragStartEventData.model,
-	        this._getHighlightColorModel(dragStartEventData.model)
+	        dragStartEventData.model
 	    );
 	    this._lastDrag = dragStartEventData;
 	
@@ -15081,198 +17804,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @fileoverview Floating layer module
-	 * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
-	 */
-	'use strict';
-	
-	var util = __webpack_require__(6);
-	var config = __webpack_require__(34),
-	    domutil = __webpack_require__(31),
-	    View = __webpack_require__(37);
-	
-	/**
-	 * @constructor
-	 * @extends {View}
-	 * @param {object} options - options for floating layer module
-	 * @param {HTMLElement} container - parent continer for floating layer
-	 */
-	function FloatingLayer(options, container) {
-	    var sibling = container[FloatingLayer.PROP_KEY],
-	        layerContainer;
-	
-	    if (!sibling) {
-	        sibling = container[FloatingLayer.PROP_KEY] = [];
-	    }
-	
-	    sibling.push(this);
-	
-	    /**
-	     * @type {Collection}
-	     */
-	    this.sibling = sibling;
-	
-	    /**
-	     * @type {number}
-	     */
-	    this.zIndex = this.getLargestZIndex() || FloatingLayer.INIT_ZINDEX;
-	
-	    layerContainer = document.createElement('div');
-	    layerContainer.style.display = 'none';
-	    layerContainer.style.position = 'absolute';
-	    domutil.addClass(layerContainer, config.classname('floating-layer'));
-	    container.appendChild(layerContainer);
-	
-	    View.call(this, layerContainer);
-	
-	    /**
-	     * @type {HTMLElement}
-	     */
-	    this.parent = container;
-	}
-	
-	util.inherit(FloatingLayer, View);
-	
-	/**
-	 * @const
-	 */
-	FloatingLayer.PROP_KEY = '__fe_floating_layer';
-	
-	/**
-	 * @const
-	 */
-	FloatingLayer.INIT_ZINDEX = 999;
-	
-	/**
-	 * Destroy floating layer instance. if there no instnace in parent container
-	 *
-	 * remove instance cache property in container element
-	 */
-	FloatingLayer.prototype.destroy = function() {
-	    var parent = this.parent,
-	        sibling = this.sibling,
-	        i = 0, cnt = sibling.length;
-	
-	    for (; i < cnt; i += 1) {
-	        if (sibling[i] === this) {
-	            sibling.splice(i, 1);
-	            break;
-	        }
-	    }
-	
-	    if (!sibling.length) {
-	        try {
-	            delete parent[FloatingLayer.PROP_KEY];
-	        } catch (e) {
-	            parent[FloatingLayer.PROP_KEY] = null;
-	        }
-	
-	        parent.style.position = '';
-	    }
-	
-	    domutil.remove(this.container);
-	
-	    this.sibling = null;
-	
-	    View.prototype.destroy.call(this);
-	};
-	
-	/**
-	 * @returns {boolean} whether layer is visible?
-	 */
-	FloatingLayer.prototype.isVisible = function() {
-	    return this.container.style.display !== 'none';
-	};
-	
-	/**
-	 * Set layer position
-	 * @param {number} x - x coordinate of layer
-	 * @param {number} y - y coordinate of layer
-	 */
-	FloatingLayer.prototype.setPosition = function(x, y) {
-	    domutil.setPosition(this.container, x, y);
-	};
-	
-	/**
-	 * Set layer left, top, right, bottom position
-	 * @param {object} ltrb object of left, top, right, bottom
-	 * @param {number} [ltrb.left] left pixel value.
-	 * @param {number} [ltrb.top] top pixel value.
-	 * @param {number} [ltrb.right] right pixel value.
-	 * @param {number} [ltrb.bottom] bottom pixel value.
-	 */
-	FloatingLayer.prototype.setLTRB = function(ltrb) {
-	    domutil.setLTRB(this.container, ltrb);
-	};
-	
-	/**
-	 * Set layer size
-	 * @param {number|string} w - layer width
-	 * @param {number|string} h - layer height
-	 */
-	FloatingLayer.prototype.setSize = function(w, h) {
-	    var container = this.container;
-	
-	    w = util.isNumber(w) ? w + 'px' : w;
-	    h = util.isNumber(h) ? h + 'px' : h;
-	
-	    container.style.width = w;
-	    container.style.height = h;
-	};
-	
-	/**
-	 * Set layer content
-	 * @param {string} html - html string
-	 */
-	FloatingLayer.prototype.setContent = function(html) {
-	    this.container.innerHTML = html;
-	};
-	
-	/**
-	 * Get largest z-index from sibling layers
-	 * @returns {number} largest z-index value
-	 */
-	FloatingLayer.prototype.getLargestZIndex = function() {
-	    var zIndexes = util.map(this.sibling, function(layer) {
-	        return layer.zIndex;
-	    });
-	
-	    return Math.max.apply(null, zIndexes);
-	};
-	
-	/**
-	 * Set focus to layer
-	 */
-	FloatingLayer.prototype.focus = function() {
-	    var zIndexForShow = this.getLargestZIndex() + 1;
-	    this.container.style.zIndex = this.zIndex = zIndexForShow;
-	};
-	
-	/**
-	 * Show layer
-	 */
-	FloatingLayer.prototype.show = function() {
-	    this.focus();
-	    this.container.style.display = 'block';
-	};
-	
-	/**
-	 * Hide layer
-	 */
-	FloatingLayer.prototype.hide = function() {
-	    this.container.style.display = 'none';
-	};
-	
-	module.exports = FloatingLayer;
-	
-
-
-/***/ },
-/* 83 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -15294,18 +17826,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "time-schedule "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "time-date-schedule-block-focused\" style=\"color: #ffffff; background-color:"
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.dragBgColor : stack1), depth0))
 	    + "; border-color:"
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</div>\n    "
 	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.cropped : depth0),{"name":"unless","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\n</div>\n";
+	    + "\n    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "time-date-schedule-block-cover\"></div>\n</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 84 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15319,8 +17853,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(79);
-	var TimeResizeGuide = __webpack_require__(85);
+	var timeCore = __webpack_require__(88);
+	var TimeResizeGuide = __webpack_require__(93);
 	
 	/**
 	 * @constructor
@@ -15614,7 +18148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 85 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15626,7 +18160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var reqAnimFrame = __webpack_require__(52);
+	var reqAnimFrame = __webpack_require__(55);
 	var ratio = __webpack_require__(30).ratio;
 	
 	/**
@@ -15794,7 +18328,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 86 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15805,15 +18339,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var util = __webpack_require__(6);
 	var config = __webpack_require__(34),
-	    array = __webpack_require__(47),
+	    array = __webpack_require__(50),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    Month = __webpack_require__(87),
-	    MonthClick = __webpack_require__(92),
-	    MonthCreation = __webpack_require__(93),
-	    MonthResize = __webpack_require__(98),
-	    MonthMove = __webpack_require__(100),
-	    More = __webpack_require__(103);
+	    Month = __webpack_require__(95),
+	    MonthClick = __webpack_require__(100),
+	    MonthCreation = __webpack_require__(101),
+	    MonthResize = __webpack_require__(106),
+	    MonthMove = __webpack_require__(108),
+	    More = __webpack_require__(111),
+	    ScheduleCreationPopup = __webpack_require__(70),
+	    ScheduleDetailPopup = __webpack_require__(74),
+	    Schedule = __webpack_require__(41);
 	
 	/**
 	 * Get the view model for more layer
@@ -15843,14 +18380,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {object} view instance and refresh method
 	 */
 	function createMonthView(baseController, layoutContainer, dragHandler, options) {
-	    var monthViewContainer, monthView, moreView;
+	    var monthViewContainer, monthView, moreView, createView;
 	    var clickHandler, creationHandler, resizeHandler, moveHandler, clearSchedulesHandler, onUpdateSchedule;
+	    var onShowCreationPopup, onSaveNewSchedule, onShowEditPopup;
+	    var detailView, onShowDetailPopup, onDeleteSchedule, onEditSchedule;
 	
 	    monthViewContainer = domutil.appendHTMLElement(
 	        'div', layoutContainer, config.classname('month'));
 	
 	    monthView = new Month(options.month, monthViewContainer, baseController.Month);
-	    moreView = new More(options.month, layoutContainer);
+	    moreView = new More(options.month, layoutContainer, baseController.theme);
 	
 	    // handlers
 	    clickHandler = new MonthClick(dragHandler, monthView, baseController);
@@ -15888,6 +18427,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	
+	    // binding popup for schedules creation
+	    if (options.useCreationPopup) {
+	        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+	
+	        onSaveNewSchedule = function(scheduleData) {
+	            creationHandler.fire('beforeCreateSchedule', util.extend(scheduleData, {
+	                useCreationPopup: true
+	            }));
+	        };
+	        createView.on('beforeCreateSchedule', onSaveNewSchedule);
+	    }
+	
+	    // binding popup for schedule detail
+	    if (options.useDetailPopup) {
+	        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+	        onShowDetailPopup = function(eventData) {
+	            var scheduleId = eventData.schedule.calendarId;
+	            eventData.calendar = baseController.calendars.find(function(calendar) {
+	                return calendar.id === scheduleId;
+	            });
+	
+	            detailView.render(eventData);
+	        };
+	        onDeleteSchedule = function(eventData) {
+	            creationHandler.fire('beforeDeleteSchedule', eventData);
+	        };
+	        onEditSchedule = function(eventData) {
+	            moveHandler.fire('beforeUpdateSchedule', eventData);
+	        };
+	
+	        clickHandler.on('clickSchedule', onShowDetailPopup);
+	
+	        detailView.on('beforeDeleteSchedule', onDeleteSchedule);
+	
+	        if (options.useCreationPopup) {
+	            onShowEditPopup = function(eventData) {
+	                createView.setCalendars(baseController.calendars);
+	                createView.render(eventData);
+	            };
+	            createView.on('beforeUpdateSchedule', onEditSchedule);
+	            detailView.on('beforeUpdateSchedule', onShowEditPopup);
+	        } else {
+	            detailView.on('beforeUpdateSchedule', onEditSchedule);
+	        }
+	    }
+	
 	    // binding clear schedules
 	    baseController.on('clearSchedules', clearSchedulesHandler);
 	
@@ -15924,6 +18509,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	                handler.destroy();
 	            });
 	        });
+	
+	        if (options.useCreationPopup && options.useDetailPopup) {
+	            createView.off('beforeUpdateSchedule', onUpdateSchedule);
+	        }
+	
+	        if (options.useCreationPopup) {
+	            creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
+	            createView.off('saveSchedule', onSaveNewSchedule);
+	            createView.destroy();
+	        }
+	
+	        if (options.useDetailPopup) {
+	            clickHandler.off('clickSchedule', onShowDetailPopup);
+	            detailView.off('beforeUpdateSchedule', onUpdateSchedule);
+	            detailView.off('beforeDeleteSchedule', onDeleteSchedule);
+	            detailView.destroy();
+	        }
 	    };
 	
 	    // add controller
@@ -15933,6 +18535,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        view: monthView,
 	        refresh: function() {
 	            monthView.vLayout.refresh();
+	        },
+	        openCreationPopup: function(schedule) {
+	            if (createView) {
+	                creationHandler.invokeCreationClick(Schedule.create(schedule));
+	            }
+	        },
+	        showCreationPopup: function(eventData) {
+	            if (createView) {
+	                createView.setCalendars(baseController.calendars);
+	                createView.render(eventData);
+	            }
+	        },
+	        hideMoreView: function() {
+	            if (moreView) {
+	                moreView.hide();
+	            }
 	        }
 	    };
 	}
@@ -15942,7 +18560,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 87 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15956,10 +18574,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
 	    TZDate = __webpack_require__(28).Date,
-	    tmpl = __webpack_require__(88),
+	    tmpl = __webpack_require__(96),
 	    View = __webpack_require__(37),
-	    VLayout = __webpack_require__(50),
-	    WeekdayInMonth = __webpack_require__(89);
+	    VLayout = __webpack_require__(53),
+	    WeekdayInMonth = __webpack_require__(97);
 	var mmin = Math.min;
 	
 	/**
@@ -15974,6 +18592,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {Base.Month} controller - controller instance
 	 */
 	function Month(options, container, controller) {
+	    var theme = controller ? controller.theme : null;
+	
 	    View.call(this, container);
 	
 	    /**
@@ -15986,10 +18606,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this.vLayout = new VLayout({
 	        panels: [
-	            {height: 42},
+	            {height: parseInt(controller.theme.month.dayname.height, 10) || 42},
 	            {autoHeight: true}
 	        ]
-	    }, container);
+	    }, container, theme);
 	
 	    /**
 	     * @type {string}
@@ -16074,8 +18694,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Create children view (week) and add children
 	 * @param {HTMLElement} container - container element to render weeks
 	 * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
+	 * @param {Theme} theme - theme instance
 	 */
-	Month.prototype._renderChildren = function(container, calendar) {
+	Month.prototype._renderChildren = function(container, calendar, theme) {
 	    var self = this;
 	    var weekCount = calendar.length;
 	    var heightPercent = 100 / weekCount;
@@ -16108,7 +18729,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            startDayOfWeek: startDayOfWeek,
 	            visibleWeeksCount: visibleWeeksCount,
 	            visibleScheduleCount: visibleScheduleCount,
-	            grid: gridOption
+	            grid: gridOption,
+	            scheduleHeight: parseInt(theme.month.schedule.height, 10),
+	            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10)
 	        }, weekdayViewContainer);
 	
 	        self.addChild(weekdayView);
@@ -16127,6 +18750,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        workweek = opt.workweek,
 	        calendar = this._getMonthCalendar(opt.renderMonth),
 	        scheduleFilter = opt.scheduleFilter,
+	        theme = controller ? controller.theme : null,
+	        styles = this._getStyles(theme),
 	        grids,
 	        daynameViewModel,
 	        baseViewModel;
@@ -16144,9 +18769,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                day: day,
 	                label: daynames[day],
 	                width: grids[index] ? grids[index].width : 0,
-	                left: grids[index] ? grids[index].left : 0
+	                left: grids[index] ? grids[index].left : 0,
+	                color: this._getDayNameColor(theme, day)
 	            };
-	        }
+	        },
+	        this
 	    );
 	
 	    if (workweek) {
@@ -16163,12 +18790,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    baseViewModel = {
-	        daynames: daynameViewModel
+	        daynames: daynameViewModel,
+	        styles: styles
 	    };
 	
 	    vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 	
-	    this._renderChildren(vLayout.panels[1].container, calendar);
+	    this._renderChildren(vLayout.panels[1].container, calendar, theme);
 	
 	    baseViewModel.panelHeight = vLayout.panels[1].getHeight();
 	
@@ -16188,11 +18816,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	            eventsInDateRange: eventsInDateRange,
 	            range: dateRange.slice(0, grids.length),
 	            grids: grids,
-	            panelHeight: baseViewModel.panelHeight
+	            panelHeight: baseViewModel.panelHeight,
+	            theme: theme
 	        };
 	
 	        childView.render(viewModel);
 	    });
+	};
+	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	Month.prototype._getStyles = function(theme) {
+	    var styles = {};
+	    var dayname;
+	
+	    if (theme) {
+	        dayname = theme.month.dayname;
+	
+	        styles.borderTop = dayname.borderTop || theme.common.border;
+	        styles.borderLeft = dayname.borderLeft || theme.common.border;
+	        styles.height = dayname.height;
+	        styles.paddingLeft = dayname.paddingLeft;
+	        styles.paddingRight = dayname.paddingRight;
+	        styles.fontSize = dayname.fontSize;
+	        styles.backgroundColor = dayname.backgroundColor;
+	        styles.fontWeight = dayname.fontWeight;
+	        styles.textAlign = dayname.textAlign;
+	    }
+	
+	    return styles;
+	};
+	
+	/**
+	 * Get a day name color
+	 * @param {Theme} theme - theme instance
+	 * @param {number} day - day number
+	 * @returns {string} style - color style
+	 */
+	Month.prototype._getDayNameColor = function(theme, day) {
+	    var color = '';
+	
+	    if (theme) {
+	        if (day === 0) {
+	            color = theme.common.holiday.color;
+	        } else if (day === 6) {
+	            color = theme.common.saturday.color;
+	        } else {
+	            color = theme.common.dayname.color;
+	        }
+	    }
+	
+	    return color;
 	};
 	
 	module.exports = Month;
@@ -16200,12 +18877,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 88 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -16213,25 +18890,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%;\n                left: "
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%\">\n        <span class=\""
+	    + "%;\n                padding-left: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.paddingLeft), depth0))
+	    + ";\n                padding-right: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.paddingRight), depth0))
+	    + ";\n                line-height: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.height), depth0))
+	    + ";\n"
+	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "                \">\n        <span class=\""
 	    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
-	    + "\">\n            "
+	    + "\" style=\"color: "
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + ";\">\n            "
 	    + ((stack1 = (helpers["monthDayname-tmpl"] || (depth0 && depth0["monthDayname-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthDayname-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n        </span>\n    </div>\n";
+	},"2":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "                border-right: "
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderLeft), depth0))
+	    + ";\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression, alias3=container.lambda;
 	
 	  return "<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-dayname\">\n"
+	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-dayname\"\n    style=\"border-top: "
+	    + alias2(alias3(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.borderTop : stack1), depth0))
+	    + "; height: "
+	    + alias2(alias3(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.height : stack1), depth0))
+	    + "; font-size: "
+	    + alias2(alias3(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.fontSize : stack1), depth0))
+	    + "; background-color: "
+	    + alias2(alias3(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.backgroundColor : stack1), depth0))
+	    + "; text-align: "
+	    + alias2(alias3(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.textAlign : stack1), depth0))
+	    + "; font-weight: "
+	    + alias2(alias3(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.fontWeight : stack1), depth0))
+	    + ";\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.daynames : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</div>\n<div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-weeks\"></div>\n";
+	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
-/* 89 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16245,9 +18948,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
-	    Weekday = __webpack_require__(58),
-	    baseTmpl = __webpack_require__(90),
-	    scheduleTmpl = __webpack_require__(91);
+	    Weekday = __webpack_require__(61),
+	    baseTmpl = __webpack_require__(98),
+	    scheduleTmpl = __webpack_require__(99);
 	var mfloor = Math.floor,
 	    mmin = Math.min;
 	
@@ -16315,7 +19018,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
 	        gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
 	        renderLimitIdx = this._getRenderLimitIndex() + 1,
-	        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range);
+	        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range),
+	        styles = this._getStyles(viewModel.theme);
 	    var baseViewModel;
 	
 	    viewModel = util.extend({
@@ -16328,7 +19032,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        matrices: viewModel.eventsInDateRange,
 	        gridHeaderHeight: gridHeaderHeight,
 	        gridFooterHeight: gridFooterHeight,
-	        renderLimitIdx: renderLimitIdx
+	        renderLimitIdx: renderLimitIdx,
+	        styles: styles
 	    }, baseViewModel);
 	
 	    return baseViewModel;
@@ -16344,7 +19049,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleContainer;
 	
 	    if (!this.options.visibleWeeksCount) {
-	        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth);
+	        setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
 	    }
 	
 	    container.innerHTML = baseTmpl(baseViewModel);
@@ -16371,15 +19076,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	WeekdayInMonth.prototype._getStyles = function(theme) {
+	    var styles = {};
+	
+	    if (theme) {
+	        styles.borderTop = theme.common.border;
+	        styles.borderLeft = theme.common.border;
+	        styles.fontSize = theme.month.day.fontSize;
+	        styles.borderRadius = theme.month.schedule.borderRadius;
+	        styles.marginLeft = theme.month.schedule.marginLeft;
+	        styles.marginRight = theme.month.schedule.marginRight;
+	        styles.scheduleBulletTop = this.options.scheduleHeight / 3;
+	    }
+	
+	    return styles;
+	};
+	
+	/**
 	 * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
 	 * @param {Array} dates - 날짜정보 배열
 	 * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+	 * @param {Theme} theme - theme instance
 	 */
-	function setIsOtherMonthFlag(dates, renderMonthStr) {
+	function setIsOtherMonthFlag(dates, renderMonthStr, theme) {
 	    var renderMonth = Number(renderMonthStr.substring(5));
 	
 	    util.forEach(dates, function(dateObj) {
-	        dateObj.isOtherMonth = dateObj.month !== renderMonth;
+	        var isOtherMonth = dateObj.month !== renderMonth;
+	        dateObj.isOtherMonth = isOtherMonth;
+	
+	        if (isOtherMonth) {
+	            dateObj.color = Weekday.prototype._getDayNameColor(theme, dateObj.day, dateObj.isToday, isOtherMonth);
+	        }
 	    });
 	}
 	
@@ -16387,7 +19119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 90 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16398,33 +19130,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-grid-line "
 	    + alias4((helpers.holiday || (depth0 && depth0.holiday) || alias2).call(alias1,(depth0 != null ? depth0.day : depth0),{"name":"holiday","hash":{},"data":data}))
-	    + " "
 	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,(depth0 != null ? depth0.date : depth0),"!==",1,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + " "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isToday : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + " "
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isOtherMonth : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n        style=\"width:"
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
 	    + "%; left:"
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
-	    + "%;\">\n        <div class=\""
+	    + "%; background-color: "
+	    + alias4(((helper = (helper = helpers.backgroundColor || (depth0 != null ? depth0.backgroundColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"backgroundColor","hash":{},"data":data}) : helper)))
+	    + "; font-size: "
+	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.fontSize), depth0))
+	    + ";\n"
+	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "        \">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-grid-header\">\n            "
+	    + "weekday-grid-header\">\n            <span style=\"color: "
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + ";\">"
 	    + ((stack1 = (helpers["monthGridHeader-tmpl"] || (depth0 && depth0["monthGridHeader-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthGridHeader-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "\n"
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</span>\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "        </div>\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-grid-footer\">\n            "
+	    + "weekday-grid-footer\">\n            <span style=\"color: "
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + ";\">"
 	    + ((stack1 = (helpers["monthGridFooter-tmpl"] || (depth0 && depth0["monthGridFooter-tmpl"]) || alias2).call(alias1,depth0,{"name":"monthGridFooter-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "\n"
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</span>\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "        </div>\n    </div>\n";
 	},"2":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
-	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "near-month-day";
 	},"4":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -16435,9 +19175,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"6":function(container,depth0,helpers,partials,data) {
 	    var helper;
 	
-	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	  return " "
+	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "extra-date";
 	},"8":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "        border-right:"
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderLeft), depth0))
+	    + ";\n";
+	},"10":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "                <span class=\""
@@ -16447,7 +19194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\">"
 	    + ((stack1 = (helpers["monthGridHeaderExceed-tmpl"] || (depth0 && depth0["monthGridHeaderExceed-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.hiddenSchedules : depth0),{"name":"monthGridHeaderExceed-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n";
-	},"10":function(container,depth0,helpers,partials,data) {
+	},"12":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "                <span class=\""
@@ -16462,7 +19209,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-border\"></div>\n<div class=\""
+	    + "weekday-border\"\n    style=\"\n    border-top: "
+	    + alias4(container.lambda(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.borderTop : stack1), depth0))
+	    + ";\n\"></div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-grid\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dates : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
@@ -16472,7 +19221,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 91 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -16515,7 +19264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ";\n                margin-top:"
 	    + alias3(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleBlockGutter), depth0))
 	    + "px\">\n"
-	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(10, data, 0),"inverse":container.program(19, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers.fi || (depth0 && depth0.fi) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),"||",(depth0 != null ? depth0.hasMultiDates : depth0),{"name":"fi","hash":{},"fn":container.program(10, data, 0),"inverse":container.program(23, data, 0),"data":data})) != null ? stack1 : "")
 	    + "    </div>\n";
 	},"6":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -16542,8 +19291,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\"\n             style=\"height:"
 	    + alias2(alias1(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
-	    + "px;\n"
-	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(15, data, 0),"data":data})) != null ? stack1 : "")
+	    + "px; line-height:"
+	    + alias2(alias1(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; border-radius: "
+	    + alias2(alias1(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderRadius), depth0))
+	    + ";\n"
+	    + ((stack1 = helpers.unless.call(alias3,(depth0 != null ? depth0.exceedLeft : depth0),{"name":"unless","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias3,(depth0 != null ? depth0.exceedRight : depth0),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(17, data, 0),"inverse":container.program(19, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                    "
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n            <span class=\""
@@ -16553,7 +19308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "\">"
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n            "
-	    + ((stack1 = helpers.unless.call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(21, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\n        </div>\n";
 	},"11":function(container,depth0,helpers,partials,data) {
 	    var helper;
@@ -16561,6 +19316,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-focused ";
 	},"13":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "                    margin-left: "
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.marginLeft), depth0))
+	    + ";\n";
+	},"15":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "                    margin-right: "
+	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.marginRight), depth0))
+	    + ";\n";
+	},"17":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 	
 	  return "                    color: #ffffff; background-color:"
@@ -16568,7 +19335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + ";\n";
-	},"15":function(container,depth0,helpers,partials,data) {
+	},"19":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 	
 	  return "                    color:"
@@ -16578,13 +19345,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-color:"
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n";
-	},"17":function(container,depth0,helpers,partials,data) {
-	    var helper;
+	},"21":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=container.escapeExpression;
 	
 	  return "<span class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle handle-y\">&nbsp;</span>";
-	},"19":function(container,depth0,helpers,partials,data) {
+	    + alias1(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-resize-handle handle-y\" style=\"line-height: "
+	    + alias1(container.lambda(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px;\">&nbsp;</span>";
+	},"23":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {}), alias4=helpers.helperMissing, alias5="function";
 	
 	  return "<div data-schedule-id=\""
@@ -16595,38 +19364,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule "
 	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-time\" style=\"height:"
+	    + "weekday-schedule-time\"\n            style=\"height:"
+	    + alias2(alias1(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; line-height:"
 	    + alias2(alias1(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
 	    + "px; "
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n            <span class=\""
 	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-bullet\"\n                  style=\"\n"
-	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(20, data, 0),"inverse":container.program(22, data, 0),"data":data})) != null ? stack1 : "")
+	    + "weekday-schedule-bullet\"\n                  style=\"top: "
+	    + alias2(alias1(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.scheduleBulletTop), depth0))
+	    + "px;\n"
+	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(24, data, 0),"inverse":container.program(26, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                    \"\n            ></span>\n            <span class=\""
 	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title\"\n                  style=\"\n"
-	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(24, data, 0),"inverse":container.program(26, data, 0),"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(28, data, 0),"inverse":container.program(30, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                    \"\n                  data-title=\""
 	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
 	    + "\">"
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n        </div>\n";
-	},"20":function(container,depth0,helpers,partials,data) {
+	},"24":function(container,depth0,helpers,partials,data) {
 	    return "                        background: #ffffff\n";
-	},"22":function(container,depth0,helpers,partials,data) {
+	},"26":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "                        background:"
 	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + "\n";
-	},"24":function(container,depth0,helpers,partials,data) {
+	},"28":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "                        color: #ffffff;\n                        background-color: "
 	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
 	    + "\n";
-	},"26":function(container,depth0,helpers,partials,data) {
+	},"30":function(container,depth0,helpers,partials,data) {
 	    return "                        color:#333;\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
@@ -16635,7 +19408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 92 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16733,7 +19506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 93 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16746,11 +19519,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
-	var array = __webpack_require__(47);
+	var array = __webpack_require__(50);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var getMousePosDate = __webpack_require__(94);
-	var Guide = __webpack_require__(95);
+	var getMousePosDate = __webpack_require__(102);
+	var Guide = __webpack_require__(103);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -17041,6 +19814,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
+	 * Invoke creation click
+	 * @param {Schedule} schedule - schedule instance
+	 */
+	MonthCreation.prototype.invokeCreationClick = function(schedule) {
+	    var eventData = {
+	        model: schedule
+	    };
+	
+	    this.fire('monthCreationClick', eventData);
+	
+	    this._createSchedule({
+	        start: schedule.start,
+	        end: schedule.end,
+	        isAllDay: schedule.isAllDay,
+	        triggerEvent: 'manual'
+	    });
+	};
+	
+	/**
 	 * Returns whether the given element is Weekday-Schedule.
 	 * @param {HTMLElement} el - target element
 	 * @returns {boolean}
@@ -17056,7 +19848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 94 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17148,7 +19940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 95 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17157,7 +19949,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var MonthGuide = __webpack_require__(96);
+	var MonthGuide = __webpack_require__(104);
 	
 	/**
 	 * @constructor
@@ -17222,7 +20014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Drag end event handler
 	 */
 	MonthCreationGuide.prototype._onDragEnd = function() {
-	    // Do nothing. 사용자가 직접 destroy 호출
+	    // Do nothing. User calls destroy directly.
 	    this.guide = null;
 	};
 	
@@ -17230,7 +20022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 96 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17245,7 +20037,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
 	    dw = __webpack_require__(29),
-	    tmpl = __webpack_require__(97);
+	    tmpl = __webpack_require__(105);
 	var mmax = Math.max,
 	    mmin = Math.min,
 	    mabs = Math.abs,
@@ -17269,9 +20061,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        top: 0,
 	        height: '20px',
 	        bgColor: '#f7ca88',
-	        label: '새 일정',
+	        label: 'New event',
 	        isResizeMode: false,
-	        isCreationMode: false
+	        isCreationMode: false,
+	        styles: this._getStyles(monthView.controller.theme)
 	    }, options);
 	
 	    /**
@@ -17447,7 +20240,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        model = dragStartEvent.model,
 	        x = dragStartEvent.x,
 	        y = dragStartEvent.y,
+	        renderMonth = datetime.parse(this.view.options.renderMonth + '-01'),
 	        temp;
+	
+	    if (model && !datetime.isSameMonth(renderMonth, model.start)) {
+	        model.start.setMonth(renderMonth.getMonth());
+	        model.start.setDate(1);
+	        model.end.setMonth(renderMonth.getMonth());
+	        model.end.setDate(1);
+	    }
 	
 	    if (opt.isResizeMode) {
 	        temp = this._getCoordByDate(model.getStarts());
@@ -17457,10 +20258,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        util.extend(this.options, {
 	            top: parseInt(target.style.top, 10) + 'px',
 	            height: parseInt(target.style.height, 10) + 'px',
-	            bgColor: model.bgColor,
-	            borderColor: model.borderColor,
 	            label: model.title
-	        });
+	        }, model);
+	    }
+	
+	    if (util.isUndefined(x) || util.isUndefined(y)) {
+	        temp = this._getCoordByDate(model.getStarts());
+	        x = temp[0];
+	        y = temp[1];
 	    }
 	
 	    this.startCoord = [x, y];
@@ -17670,41 +20475,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.guideElements = {};
 	};
 	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	MonthGuide.prototype._getStyles = function(theme) {
+	    var styles = {};
+	
+	    if (theme) {
+	        styles.border = theme.common.creationGuide.border;
+	        styles.backgroundColor = theme.common.creationGuide.backgroundColor;
+	        styles.scheduleHeight = theme.month.schedule.height;
+	        styles.scheduleGutter = theme.month.schedule.marginTop;
+	        styles.marginLeft = theme.month.schedule.marginLeft;
+	        styles.marginRight = theme.month.schedule.marginRight;
+	        styles.borderRadius = theme.month.schedule.borderRadius;
+	    }
+	
+	    return styles;
+	};
+	
 	module.exports = MonthGuide;
 	
 
 
 /***/ },
-/* 97 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var helper;
+	    var stack1, helper, alias1=container.escapeExpression, alias2=container.lambda;
 	
 	  return "<div class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-creation-guide\"></div>\n";
+	    + alias1(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "month-creation-guide\" style=\"border: "
+	    + alias1(alias2(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.border : stack1), depth0))
+	    + "; background-color: "
+	    + alias1(alias2(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.backgroundColor : stack1), depth0))
+	    + ";\"></div>\n";
 	},"3":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule\" style=\"border-color:"
+	    + "weekday-schedule\"\n        style=\"height: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleHeight : stack1), depth0))
+	    + "; line-height: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleHeight : stack1), depth0))
+	    + "; margin-top: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleGutter : stack1), depth0))
+	    + "; border-radius:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.borderRadius : stack1), depth0))
+	    + "; margin-left: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.marginLeft : stack1), depth0))
+	    + "; margin-right: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.marginRight : stack1), depth0))
+	    + ";\n            color:"
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + ";border-color:"
 	    + alias4(((helper = (helper = helpers.borderColor || (depth0 != null ? depth0.borderColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"borderColor","hash":{},"data":data}) : helper)))
 	    + ";background-color:"
 	    + alias4(((helper = (helper = helpers.bgColor || (depth0 != null ? depth0.bgColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"bgColor","hash":{},"data":data}) : helper)))
 	    + "\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title\">"
-	    + alias4(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"label","hash":{},"data":data}) : helper)))
-	    + "</div>\n        <div class=\""
+	    + "weekday-schedule-title\">\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isAllDay : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.program(6, data, 0),"data":data})) != null ? stack1 : "")
+	    + "        </div>\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-resize-handle Chandle-y\"\n             style="
-	    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.isResizeMode : depth0),{"name":"unless","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "\">&nbsp;</div>\n    </div>\n";
+	    + "weekday-resize-handle handle-y\" style=\"line-height: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleHeight : stack1), depth0))
+	    + ";\">&nbsp;</div>\n    </div>\n";
 	},"4":function(container,depth0,helpers,partials,data) {
-	    return "display:none";
+	    var stack1;
+	
+	  return "                "
+	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n";
+	},"6":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "                "
+	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -17720,7 +20574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 98 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17734,8 +20588,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    getMousePosData = __webpack_require__(94),
-	    MonthResizeGuide = __webpack_require__(99),
+	    getMousePosData = __webpack_require__(102),
+	    MonthResizeGuide = __webpack_require__(107),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -17794,8 +20648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *  session.
 	 */
 	MonthResize.prototype._updateSchedule = function(scheduleCache) {
-	    // 일정의 시작 일자를 변경할 순 없음.
-	    // 종료시간만 변경 가능.
+	    // You can not change the start date of the event. Only the end time can be changed.
 	    var newEnd = datetime.end(new TZDate(Number(scheduleCache.end))),
 	        schedule = scheduleCache.schedule;
 	
@@ -17934,7 +20787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 99 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17947,7 +20800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
-	    MonthGuide = __webpack_require__(96);
+	    MonthGuide = __webpack_require__(104);
 	
 	/**
 	 * @constructor
@@ -18057,7 +20910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 100 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18071,8 +20924,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
-	    getMousePosData = __webpack_require__(94),
-	    MonthMoveGuide = __webpack_require__(101),
+	    getMousePosData = __webpack_require__(102),
+	    MonthMoveGuide = __webpack_require__(109),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -18335,7 +21188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 101 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18349,8 +21202,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32),
-	    FloatingLayer = __webpack_require__(82),
-	    tmpl = __webpack_require__(102),
+	    FloatingLayer = __webpack_require__(71),
+	    tmpl = __webpack_require__(110),
 	    Schedule = __webpack_require__(41);
 	
 	/**
@@ -18427,12 +21280,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	};
 	
-	MonthMoveGuide.prototype._getHighlightColorModel = function(model) {
-	    return {
-	        bgColor: model.color
-	    };
-	};
-	
 	/**
 	 * Clear background color for filled grid element.
 	 */
@@ -18488,9 +21335,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    layer.setContent(tmpl({
 	        model: util.extend(
 	            Schedule.create(model),
-	            model,
-	            this._getHighlightColorModel(model)
-	        )
+	            model
+	        ),
+	        styles: {
+	            scheduleHeight: weekdayOptions.scheduleHeight,
+	            scheduleBulletTop: weekdayOptions.scheduleHeight / 3,
+	            borderRadius: monthView.controller.theme.month.schedule.borderRadius
+	        }
 	    }));
 	    layer.show();
 	
@@ -18540,7 +21391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 102 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18551,34 +21402,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.borderColor : stack1), depth0))
 	    + ";\n            ";
 	},"3":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "    <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-bullet "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-bullet-focused\"></span>\n";
+	    + "weekday-schedule-bullet-focused\" style=\"top: "
+	    + alias4(container.lambda(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleBulletTop : stack1), depth0))
+	    + "px;\"></span>\n";
 	},"5":function(container,depth0,helpers,partials,data) {
+	    var helper;
+	
+	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "weekday-schedule-title-focused\"";
+	},"7":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "            "
 	    + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n";
-	},"7":function(container,depth0,helpers,partials,data) {
+	},"9":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "            "
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-guide "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-guide-focused\"\n     style=\"top: -50%;\n            left: -50%;\n            width: 100%;\n            color: #ffffff;\n            background-color:"
-	    + alias4(container.lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.color : stack1), depth0))
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.dragBgColor : stack1), depth0))
+	    + ";\n            height:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleHeight : stack1), depth0))
+	    + "px;\n            line-height:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleHeight : stack1), depth0))
+	    + "px;\n            border-radius: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.borderRadius : stack1), depth0))
 	    + ";\n"
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">\n"
@@ -18588,14 +21452,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "month-move-guide "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule-title "
+	    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ">\n"
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "")
+	    + "    </div>\n</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title-focused\">\n"
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isAllDay : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
-	    + "        </div>\n    </div>\n</div>\n";
+	    + "month-guide-cover\" style=\"height:"
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.scheduleHeight : stack1), depth0))
+	    + "px; border-radius: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.borderRadius : stack1), depth0))
+	    + ";\"></div>\n";
 	},"useData":true});
 
 /***/ },
-/* 103 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18610,9 +21480,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domevent = __webpack_require__(32),
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
-	    FloatingLayer = __webpack_require__(82),
+	    FloatingLayer = __webpack_require__(71),
 	    common = __webpack_require__(30),
-	    tmpl = __webpack_require__(104);
+	    tmpl = __webpack_require__(112);
 	
 	/**
 	 * @constructor
@@ -18624,8 +21494,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} [options.moreLayerSize.height=null] - css height value(px, auto).
 	 *                                                            The default value 'null' is to fit a grid cell.
 	 * @param {HTMLElement} container = container element
+	 * @param {Theme} theme - theme instance
 	 */
-	function More(options, container) {
+	function More(options, container, theme) {
 	    View.call(this, container);
 	
 	    /**
@@ -18646,7 +21517,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        moreLayerSize: {
 	            width: null,
 	            height: null
-	        }
+	        },
+	        scheduleHeight: parseInt(theme.month.schedule.height, 10) || 18,
+	        scheduleGutter: parseInt(theme.month.schedule.marginTop, 10) || 2,
+	        scheduleBulletTop: (parseInt(theme.month.schedule.height, 10) || 18) / 3,
+	        borderRadius: theme.month.schedule.borderRadius
 	    }, options);
 	
 	    domevent.on(container, 'click', this._onClick, this);
@@ -18729,8 +21604,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var pos = this._getRenderPosition(target, weekItem);
 	    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
 	    var width = target.offsetWidth + (OUT_PADDING * 2);
-	    var optMoreLayerSize = this.options.moreLayerSize;
-	    this._viewModel = viewModel;
+	    var opt = this.options;
+	    var optMoreLayerSize = opt.moreLayerSize;
+	    this._viewModel = util.extend(viewModel, {
+	        scheduleGutter: opt.scheduleGutter,
+	        scheduleHeight: opt.scheduleHeight,
+	        scheduleBulletTop: opt.scheduleBulletTop,
+	        borderRadius: opt.borderRadius
+	    });
 	
 	    if (optMoreLayerSize.width) {
 	        width = optMoreLayerSize.width;
@@ -18780,7 +21661,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 104 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18803,7 +21684,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-allday "
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-title\"\n             style=\"\n"
+	    + "weekday-schedule-title\"\n             style=\"height: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; line-height: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; margin-top: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleGutter), depth0))
+	    + "px; border-radius: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.borderRadius), depth0))
+	    + ";\n"
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
 	    + "                \n                "
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
@@ -18843,11 +21732,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "weekday-schedule "
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-time\"\n             style=\""
+	    + "weekday-schedule-time\"\n             style=\"height: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; line-height: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleHeight), depth0))
+	    + "px; margin-top: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleGutter), depth0))
+	    + "px;"
 	    + alias3(alias4(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.customStyle : stack1), depth0))
 	    + "\">\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "weekday-schedule-bullet\"\n                style=\""
+	    + "weekday-schedule-bullet\"\n                style=\"top: "
+	    + alias3(alias4(((stack1 = (data && data.root)) && stack1.scheduleBulletTop), depth0))
+	    + "px;\n"
 	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isFocused : stack1),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
 	    + "\"></span>\n            <span class=\""
 	    + alias3(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias5 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -18857,7 +21754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ((stack1 = (helpers["time-tmpl"] || (depth0 && depth0["time-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"time-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n        </div>\n";
 	},"8":function(container,depth0,helpers,partials,data) {
-	    return "\n                        background: #ffffff\n";
+	    return "                        background: #ffffff\n";
 	},"10":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
