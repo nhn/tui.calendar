@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: theme/themeConfig.js | Calendar</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 13px">
+        
+            <a href="https://github.com/nhnent/tui.jsdoc-template" rel="noopener noreferrer" target="_blank">
+                <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Calendar</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-example01-basic.html">example01-basic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example01-basic_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Calendar.html">Calendar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Calendar_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Calendar.html#.setTimezoneOffset">setTimezoneOffset</a></li><li><a href="Calendar.html#.setTimezoneOffsetCallback">setTimezoneOffsetCallback</a></li><li><a href="Calendar.html#changeView">changeView</a></li><li><a href="Calendar.html#clear">clear</a></li><li><a href="Calendar.html#createSchedules">createSchedules</a></li><li><a href="Calendar.html#deleteSchedule">deleteSchedule</a></li><li><a href="Calendar.html#destroy">destroy</a></li><li><a href="Calendar.html#getDate">getDate</a></li><li><a href="Calendar.html#getDateRangeEnd">getDateRangeEnd</a></li><li><a href="Calendar.html#getDateRangeStart">getDateRangeStart</a></li><li><a href="Calendar.html#getElement">getElement</a></li><li><a href="Calendar.html#getOptions">getOptions</a></li><li><a href="Calendar.html#getSchedule">getSchedule</a></li><li><a href="Calendar.html#getViewName">getViewName</a></li><li><a href="Calendar.html#hideMoreView">hideMoreView</a></li><li><a href="Calendar.html#next">next</a></li><li><a href="Calendar.html#openCreationPopup">openCreationPopup</a></li><li><a href="Calendar.html#prev">prev</a></li><li><a href="Calendar.html#render">render</a></li><li><a href="Calendar.html#scrollToNow">scrollToNow</a></li><li><a href="Calendar.html#setCalendarColor">setCalendarColor</a></li><li><a href="Calendar.html#setCalendars">setCalendars</a></li><li><a href="Calendar.html#setDate">setDate</a></li><li><a href="Calendar.html#setOptions">setOptions</a></li><li><a href="Calendar.html#setTheme">setTheme</a></li><li><a href="Calendar.html#today">today</a></li><li><a href="Calendar.html#toggleSchedules">toggleSchedules</a></li><li><a href="Calendar.html#toggleScheduleView">toggleScheduleView</a></li><li><a href="Calendar.html#toggleTaskView">toggleTaskView</a></li><li><a href="Calendar.html#updateSchedule">updateSchedule</a></li></ul><div class="member-type">Events</div><ul class="inner"><li><a href="Calendar.html#event:beforeCreateSchedule">beforeCreateSchedule</a></li><li><a href="Calendar.html#event:beforeDeleteSchedule">beforeDeleteSchedule</a></li><li><a href="Calendar.html#event:beforeUpdateSchedule">beforeUpdateSchedule</a></li><li><a href="Calendar.html#event:clickDayname">clickDayname</a></li><li><a href="Calendar.html#event:clickSchedule">clickSchedule</a></li></ul></div></li><li><a href="TZDate.html">TZDate</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="TZDate_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="TZDate.html#getTime">getTime</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3><a href="global.html">Global</a></h3></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview The all configuration of a theme
+ * @author NHN Ent. FE Development Team &lt;dl_javascript@nhnent.com>
+ */
+'use strict';
+
+/**
+ * @typedef {object} themeConfig
+ * Full configuration for theme.&lt;br>
+ * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".&lt;br>
+ * "week" prefix is for weekly and daily view.&lt;br>
+ * "month" prefix is for monthly view.
+ * @example
+ // default keys and styles
+ var themeConfig = {
+    'common.border': '1px solid #e5e5e5',
+    'common.backgroundColor': 'white',
+    'common.holiday.color': '#ff4040',
+    'common.saturday.color': '#135de6',
+    'common.dayname.color': '#333',
+    'common.today.color': '#135de6',
+
+    // creation guide style
+    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'common.creationGuide.border': '1px solid #515ce6',
+
+    // month header 'dayname'
+    'month.dayname.height': '31px',
+    'month.dayname.borderTop': '1px solid #e5e5e5',
+    'month.dayname.borderLeft': '1px solid #e5e5e5',
+    'month.dayname.paddingLeft': '10px',
+    'month.dayname.paddingRight': '10px',
+    'month.dayname.backgroundColor': 'inherit',
+    'month.dayname.fontSize': '12px',
+    'month.dayname.fontWeight': 'normal',
+    'month.dayname.textAlign': 'left',
+
+    // month day grid cell 'day'
+    'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
+    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+    'month.weekend.backgroundColor': 'inherit',
+    'month.day.fontSize': '14px',
+
+    // month schedule style
+    'month.schedule.borderRadius': '2px',
+    'month.schedule.height': '24px',
+    'month.schedule.marginTop': '2px',
+    'month.schedule.marginLeft': '8px',
+    'month.schedule.marginRight': '8px',
+
+    // week header 'dayname'
+    'week.dayname.height': '42px',
+    'week.dayname.borderTop': '1px solid #e5e5e5',
+    'week.dayname.borderBottom': '1px solid #e5e5e5',
+    'week.dayname.borderLeft': 'inherit',
+    'week.dayname.paddingLeft': '0',
+    'week.dayname.backgroundColor': 'inherit',
+    'week.dayname.textAlign': 'left',
+    'week.today.color': '#333',
+
+    // week vertical panel 'vpanel'
+    'week.vpanelSplitter.border': '1px solid #e5e5e5',
+    'week.vpanelSplitter.height': '3px',
+
+    // week daygrid 'daygrid'
+    'week.daygrid.borderRight': '1px solid #e5e5e5',
+    'week.daygrid.backgroundColor': 'inherit',
+
+    'week.daygridLeft.width': '72px',
+    'week.daygridLeft.backgroundColor': 'inherit',
+    'week.daygridLeft.paddingRight': '8px',
+    'week.daygridLeft.borderRight': '1px solid #e5e5e5',
+
+    'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'week.weekend.backgroundColor': 'inherit',
+
+    // week timegrid 'timegrid'
+    'week.timegridLeft.width': '72px',
+    'week.timegridLeft.backgroundColor': 'inherit',
+    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+    'week.timegridLeft.fontSize': '11px',
+
+    'week.timegridOneHour.height': '52px',
+    'week.timegridHalfHour.height': '26px',
+    'week.timegridHalfHour.borderBottom': 'none',
+    'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
+
+    'week.timegrid.paddingRight': '8px',
+    'week.timegrid.borderRight': '1px solid #e5e5e5',
+    'week.timegridSchedule.borderRadius': '2px',
+    'week.timegridSchedule.paddingLeft': '2px',
+
+    'week.currentTime.color': '#515ce6',
+    'week.currentTime.fontSize': '11px',
+    'week.currentTime.fontWeight': 'normal',
+    'week.currentTimeLinePast.border': '1px dashed #515ce6',
+    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
+    'week.currentTimeLineToday.border': '1px solid #515ce6',
+    'week.currentTimeLineFuture.border': 'none',
+
+    // week creation guide style
+    'week.creationGuide.color': '#515ce6',
+    'week.creationGuide.fontSize': '11px',
+    'week.creationGuide.fontWeight': 'bold',
+
+    // week daygrid schedule style
+    'week.dayGridSchedule.borderRadius': '2px',
+    'week.dayGridSchedule.height': '24px',
+    'week.dayGridSchedule.marginTop': '2px',
+    'week.dayGridSchedule.marginLeft': '8px',
+    'week.dayGridSchedule.marginRight': '8px'
+};
+ */
+var themeConfig = {
+    'common.border': '1px solid #e5e5e5',
+    'common.backgroundColor': 'white',
+    'common.holiday.color': '#ff4040',
+    'common.saturday.color': '#135de6',
+    'common.dayname.color': '#333',
+    'common.today.color': '#135de6',
+
+    // creation guide style
+    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'common.creationGuide.border': '1px solid #515ce6',
+
+    // month header 'dayname'
+    'month.dayname.height': '31px',
+    'month.dayname.borderTop': '1px solid #e5e5e5',
+    'month.dayname.borderLeft': '1px solid #e5e5e5',
+    'month.dayname.paddingLeft': '10px',
+    'month.dayname.paddingRight': '10px',
+    'month.dayname.backgroundColor': 'inherit',
+    'month.dayname.fontSize': '12px',
+    'month.dayname.fontWeight': 'normal',
+    'month.dayname.textAlign': 'left',
+
+    // month day grid cell 'day'
+    'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
+    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+    'month.weekend.backgroundColor': 'inherit',
+    'month.day.fontSize': '14px',
+
+    // month schedule style
+    'month.schedule.borderRadius': '2px',
+    'month.schedule.height': '24px',
+    'month.schedule.marginTop': '2px',
+    'month.schedule.marginLeft': '8px',
+    'month.schedule.marginRight': '8px',
+
+    // week header 'dayname'
+    'week.dayname.height': '42px',
+    'week.dayname.borderTop': '1px solid #e5e5e5',
+    'week.dayname.borderBottom': '1px solid #e5e5e5',
+    'week.dayname.borderLeft': 'inherit',
+    'week.dayname.paddingLeft': '0',
+    'week.dayname.backgroundColor': 'inherit',
+    'week.dayname.textAlign': 'left',
+    'week.today.color': '#333',
+
+    // week vertical panel 'vpanel'
+    'week.vpanelSplitter.border': '1px solid #e5e5e5',
+    'week.vpanelSplitter.height': '3px',
+
+    // week daygrid 'daygrid'
+    'week.daygrid.borderRight': '1px solid #e5e5e5',
+    'week.daygrid.backgroundColor': 'inherit',
+
+    'week.daygridLeft.width': '72px',
+    'week.daygridLeft.backgroundColor': 'inherit',
+    'week.daygridLeft.paddingRight': '8px',
+    'week.daygridLeft.borderRight': '1px solid #e5e5e5',
+
+    'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'week.weekend.backgroundColor': 'inherit',
+
+    // week timegrid 'timegrid'
+    'week.timegridLeft.width': '72px',
+    'week.timegridLeft.backgroundColor': 'inherit',
+    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+    'week.timegridLeft.fontSize': '11px',
+
+    'week.timegridOneHour.height': '52px',
+    'week.timegridHalfHour.height': '26px',
+    'week.timegridHalfHour.borderBottom': 'none',
+    'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
+
+    'week.timegrid.paddingRight': '8px',
+    'week.timegrid.borderRight': '1px solid #e5e5e5',
+    'week.timegridSchedule.borderRadius': '2px',
+    'week.timegridSchedule.paddingLeft': '2px',
+
+    'week.currentTime.color': '#515ce6',
+    'week.currentTime.fontSize': '11px',
+    'week.currentTime.fontWeight': 'normal',
+    'week.currentTimeLinePast.border': '1px dashed #515ce6',
+    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
+    'week.currentTimeLineToday.border': '1px solid #515ce6',
+    'week.currentTimeLineFuture.border': 'none',
+
+    // week creation guide style
+    'week.creationGuide.color': '#515ce6',
+    'week.creationGuide.fontSize': '11px',
+    'week.creationGuide.fontWeight': 'bold',
+
+    // week daygrid schedule style
+    'week.dayGridSchedule.borderRadius': '2px',
+    'week.dayGridSchedule.height': '24px',
+    'week.dayGridSchedule.marginTop': '2px',
+    'week.dayGridSchedule.marginLeft': '8px',
+    'week.dayGridSchedule.marginRight': '8px'
+};
+
+module.exports = themeConfig;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px; height: 13px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

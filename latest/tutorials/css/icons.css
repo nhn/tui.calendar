@@ -1,0 +1,32 @@
+.icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.img-bi {
+  background: url('../images/img-bi.png') no-repeat;
+  width: 215px;
+  height: 16px;
+}
+
+.ic_view_month {
+  background: url('../images/ic-view-month.png') no-repeat;
+}
+
+.ic_view_week {
+  background: url('../images/ic-view-week.png') no-repeat;
+}
+
+.ic_view_day {
+  background: url('../images/ic-view-day.png') no-repeat;
+}
+
+.ic-arrow-line-left {
+  background: url('../images/ic-arrow-line-left.png') no-repeat;
+}
+
+.ic-arrow-line-right {
+  background: url('../images/ic-arrow-line-right.png') no-repeat;
+}
