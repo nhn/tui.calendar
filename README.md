@@ -35,13 +35,14 @@
 | Yes | +9 | Yes | Yes | Yes |
 
 ## 🎨 Features
-![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/36890790-8ede0bc4-1e42-11e8-8046-f90290f3e1bf.gif)
+![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/38919146-bc596f28-432a-11e8-8bbd-b561911067c7.gif)
 * Supports various view types: daily, weekly, monthly(6 weeks, 2 weeks, 3 weeks)
 * Supports efficient management of milestone and task schedules
 * Supports the narrow width of weekend
 * Supports changing start day of week
 * Supports customizing the date and schedule information UI(including a header and a footer of grid cell)
 * Supports adjusting a schedule by mouse dragging
+* Supports customizing UI by theme
 
 ## 🐾 Examples
 
@@ -93,7 +94,7 @@ tui-calendar/
 │  └─ tui-calendar.min.js
 │  └─ tui-calendar.css
 │  └─ tui-calendar.min.css
-├─ v1.1.0/
+├─ v1.0.0/
 │  ├─ ...
 ```
 
