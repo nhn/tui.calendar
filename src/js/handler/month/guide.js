@@ -216,7 +216,7 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         renderMonth = datetime.parse(this.view.options.renderMonth + '-01'),
         temp;
 
-    if (!datetime.isSameMonth(renderMonth, model.start)) {
+    if (model && !datetime.isSameMonth(renderMonth, model.start)) {
         model.start.setMonth(renderMonth.getMonth());
         model.start.setDate(1);
         model.end.setMonth(renderMonth.getMonth());
