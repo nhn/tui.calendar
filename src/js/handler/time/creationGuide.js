@@ -185,7 +185,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
     function getStyleData(scheduleData) {
         var gridY = scheduleData.nearestGridY,
             gridTimeY = scheduleData.nearestGridTimeY,
-            gridEndTimeY = scheduleData.nearestGridEndTimeY,
+            gridEndTimeY = scheduleData.nearestGridEndTimeY || gridTimeY,
             top, startTime, endTime;
 
         top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);

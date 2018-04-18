@@ -78,7 +78,7 @@ describe('handler/time.creation.guide', function() {
                 nearestGridTimeY: Number(clicked)
             };
 
-            expected = [10, Number(clicked)];
+            expected = [10, Number(clicked), Number(clicked)];
             actual = func(mockEventData);
 
             expect(expected).toEqual(actual);
