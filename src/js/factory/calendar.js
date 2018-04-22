@@ -1000,7 +1000,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     });
 
     util.forEach(handler.dayname, function(clickHandler) {
-        clickHandler[method]('clickDayname', self._onClickDaynOame, self);
+        clickHandler[method]('clickDayname', self._onClickDayname, self);
     });
 
     util.forEach(handler.creation, function(creationHandler) {
