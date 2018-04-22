@@ -661,7 +661,7 @@ Calendar.prototype.move = function(offset) {
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
             tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 
-            recursiveSet(view, function(opt) {
+            recursiveSet(view, function(childView, opt) {
                 opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
             });
         } else {
@@ -674,7 +674,7 @@ Calendar.prototype.move = function(offset) {
             renderDate.addMonth(offset);
             tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 
-            recursiveSet(view, function(opt) {
+            recursiveSet(view, function(childView, opt) {
                 opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
             });
         }
@@ -690,17 +690,25 @@ Calendar.prototype.move = function(offset) {
         startDate = tempDate[0];
         endDate = tempDate[1];
 
-        recursiveSet(view, function(opt) {
+        recursiveSet(view, function(childView, opt) {
             opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
             opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+
+            childView.setState({
+                collapsed: true
+            });
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
         startDate = endDate = renderDate.d;
 
-        recursiveSet(view, function(opt) {
+        recursiveSet(view, function(childView, opt) {
             opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
             opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+
+            childView.setState({
+                collapsed: true
+            });
         });
     }
 
@@ -1373,7 +1381,7 @@ function _setOptionRecurseively(view, func) {
             return;
         }
 
-        func(opt);
+        func(childView, opt);
     });
 }
 
