@@ -567,11 +567,11 @@ Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
  */
 Calendar.prototype.render = function() {
     var renderFunc = function() {
-        if (this._layout) {
-            this._layout.render();
-        }
         if (this._refreshMethod) {
             this._refreshMethod();
+        }
+        if (this._layout) {
+            this._layout.render();
         }
 
         this._requestRender = null;
