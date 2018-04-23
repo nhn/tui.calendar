@@ -17,7 +17,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
         expect(posData.x).toBe(150);
         expect(posData.y).toBe(23);
-        expect(posData.arrow.direction).toBe('bottom');
+        expect(posData.arrow.direction).toBe('arrow-bottom');
         expect(posData.arrow.position).toBeUndefined();
     });
 
@@ -27,7 +27,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
         expect(posData.x).toBe(150);
         expect(posData.y).toBe(129);
-        expect(posData.arrow.direction).toBe('top');
+        expect(posData.arrow.direction).toBe('arrow-top');
         expect(posData.arrow.position).toBeUndefined();
     });
 
@@ -37,7 +37,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
         expect(posData.x).toBe(300);
         expect(posData.y).toBe(23);
-        expect(posData.arrow.direction).toBe('bottom');
+        expect(posData.arrow.direction).toBe('arrow-bottom');
         expect(posData.arrow.position).toBe(142);
     });
 
@@ -50,7 +50,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
         expect(posData.x).toBe(0);
         expect(posData.y).toBe(23);
-        expect(posData.arrow.direction).toBe('bottom');
+        expect(posData.arrow.direction).toBe('arrow-bottom');
         expect(posData.arrow.position).toBe(242);
     });
 });
