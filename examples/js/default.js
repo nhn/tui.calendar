@@ -99,7 +99,7 @@
                 return template;
             },
             monthGridHeaderExceed: function(hiddenSchedules) {
-                return '<span class="calendar-more-schedules">+' + hiddenSchedules + '</span>';
+                return '<span class="calendar-more-schedules">' + hiddenSchedules + ' more</span>';
             },
 
             monthGridFooter: function() {
