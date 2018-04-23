@@ -159,23 +159,25 @@ ScheduleCreationPopup.prototype._openDropdownMenuView = function(dropdown) {
  * @returns {boolean} whether 
  */
 ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
-    var className = config.classname('dropdown-menu-item');
-    var selectedItem = domutil.hasClass(target, className) ? target : domutil.closest(target, '.' + className);
+    var itemClassName = config.classname('dropdown-menu-item');
+    var iconClassName = config.classname('icon');
+    var contentClassName = config.classname('content');
+    var selectedItem = domutil.hasClass(target, itemClassName) ? target : domutil.closest(target, '.' + itemClassName);
     var bgColor, title, dropdown, dropdownBtn;
 
     if (!selectedItem) {
         return false;
     }
 
-    bgColor = domutil.find('.icon', selectedItem).style.backgroundColor || 'transparent';
-    title = domutil.find('.content', selectedItem).innerHTML;
+    bgColor = domutil.find('.' + iconClassName, selectedItem).style.backgroundColor || 'transparent';
+    title = domutil.find('.' + contentClassName, selectedItem).innerHTML;
 
     dropdown = domutil.closest(selectedItem, config.classname('.dropdown'));
     dropdownBtn = domutil.find(config.classname('.dropdown-button'), dropdown);
-    domutil.find('.content', dropdownBtn).innerText = title;
+    domutil.find('.' + contentClassName, dropdownBtn).innerText = title;
 
     if (domutil.hasClass(dropdown, config.classname('section-calendar'))) {
-        domutil.find('.icon', dropdownBtn).style.backgroundColor = bgColor;
+        domutil.find('.' + iconClassName, dropdownBtn).style.backgroundColor = bgColor;
         this._selectedCal = this.calendars.find(function(cal) {
             return cal.id === domutil.getData(selectedItem, 'calendarId');
         });
@@ -197,7 +199,7 @@ ScheduleCreationPopup.prototype._toggleIsAllday = function(target) {
     var checkbox;
 
     if (alldaySection) {
-        checkbox = domutil.find('.checkbox-square', alldaySection);
+        checkbox = domutil.find(config.classname('.checkbox-square'), alldaySection);
         checkbox.checked = !checkbox.checked;
 
         return true;
@@ -258,7 +260,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
         return true;
     }
 
-    isPrivate = domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), 'private');
+    isPrivate = !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'));
     location = domutil.get(cssPrefix + 'schedule-location');
     state = domutil.get(cssPrefix + 'schedule-state');
     isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
@@ -491,12 +493,12 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentS
     var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
     var x = guideHorizontalCenter - (layerSize.width / 2);
     var y = guideBound.top - layerSize.height + 3;
-    var arrowDirection = 'bottom';
+    var arrowDirection = 'arrow-bottom';
     var arrowLeft;
 
     if (y < 0) {
         y = guideBound.bottom + 9;
-        arrowDirection = 'top';
+        arrowDirection = 'arrow-top';
     }
 
     if (x > 0 && (x + layerSize.width > parentSize.right)) {
@@ -533,13 +535,13 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentS
  * @param {Object} arrow rendering data for popup arrow
  */
 ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
-    var direction = arrow.direction || 'bottom';
+    var direction = arrow.direction || 'arrow-bottom';
     var arrowEl = domutil.get(config.classname('popup-arrow'));
     var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
 
-    if (direction !== 'bottom') {
-        domutil.removeClass(arrowEl, 'bottom');
-        domutil.addClass(arrowEl, direction);
+    if (direction !== config.classname('arrow-bottom')) {
+        domutil.removeClass(arrowEl, config.classname('arrow-bottom'));
+        domutil.addClass(arrowEl, config.classname(direction));
     }
 
     if (arrow.position) {

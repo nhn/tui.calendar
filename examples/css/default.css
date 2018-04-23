@@ -80,7 +80,7 @@ body {
 }
 /** custom fontawesome - end */
 
-.icon {
+.tui-full-calendar-icon {
   width: 14px;
   height: 14px;
 }
@@ -212,7 +212,7 @@ body {
   vertical-align: middle;
 }
 
-.dropdown-menu-title .icon {
+.dropdown-menu-title .tui-full-calendar-icon {
   margin-right: 8px;
 }
 

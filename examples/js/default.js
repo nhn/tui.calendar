@@ -553,19 +553,19 @@
 
         if (type === 'day') {
             type = 'Daily';
-            iconClassName = 'icon ic_view_day';
+            iconClassName = 'tui-full-calendar-icon ic_view_day';
         } else if (type === 'week') {
             type = 'Weekly';
-            iconClassName = 'icon ic_view_week';
+            iconClassName = 'tui-full-calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 2) {
             type = '2 weeks';
-            iconClassName = 'icon ic_view_week';
+            iconClassName = 'tui-full-calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 3) {
             type = '3 weeks';
-            iconClassName = 'icon ic_view_week';
+            iconClassName = 'tui-full-calendar-icon ic_view_week';
         } else {
             type = 'Monthly';
-            iconClassName = 'icon ic_view_month';
+            iconClassName = 'tui-full-calendar-icon ic_view_month';
         }
 
         calendarTypeName.innerHTML = type;
@@ -635,7 +635,7 @@
     var html = [];
     CalendarList.forEach(function(calendar) {
         html.push('<div class="lnb-calendars-item"><label>' +
-            '<input type="checkbox" class="checkbox-round" value="' + calendar.id + '" checked>' +
+            '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' + calendar.id + '" checked>' +
             '<span style="border-color: ' + calendar.borderColor + '; background-color: ' + calendar.borderColor + ';"></span>' +
             '<span>' + calendar.name + '</span>' +
             '</label></div>'

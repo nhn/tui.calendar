@@ -37,10 +37,7 @@
     font-size: 0
     margin-left: 4px
 
-.{css-prefix}section-private .private
-    background: url('image/ic-lock.png') no-repeat
-
-.{css-prefix}section-private.{css-prefix}public .private
+.{css-prefix}section-private.{css-prefix}public .{css-prefix}ic-private
     background: url('image/ic-unlock.png') no-repeat
 
 .{css-prefix}section-start-date
@@ -78,16 +75,16 @@
         input
             width: 400px
 
-.{css-prefix}section-allday .icon.checkbox
+.{css-prefix}section-allday .{css-prefix}icon.{css-prefix}ic-checkbox
     margin: 0
 
-.{css-prefix}popup-section-item.{css-prefix}section-allday .content
+.{css-prefix}popup-section-item.{css-prefix}section-allday .{css-prefix}content
     padding-left: 4px
 
 .{css-prefix}section-state
     width: 109px
 
-.{css-prefix}section-state .content
+.{css-prefix}section-state .{css-prefix}content
     width: 58px
     text-overflow: ellipsis
     overflow: hidden
@@ -106,13 +103,13 @@
 .{css-prefix}popup-section-item:focus
     border-color: #bbbbbb
 
-.{css-prefix}popup-section-item .icon
+.{css-prefix}popup-section-item .{css-prefix}icon
     position: relative
 
-.icon.ic-title
+.{css-prefix}icon.{css-prefix}ic-title
     top: 2px
 
-.{css-prefix}popup-section-item .content
+.{css-prefix}popup-section-item .{css-prefix}content
     text-align: left
     display: inline-block
     font-size: 12px
@@ -120,7 +117,7 @@
     position: relative
     padding-left: 8px
 
-.{css-prefix}section-calendar .{css-prefix}dropdown-button .content
+.{css-prefix}section-calendar .{css-prefix}dropdown-button .{css-prefix}content
     width: 125px
     text-overflow: ellipsis
     overflow: hidden
@@ -190,7 +187,7 @@
 .{css-prefix}dropdown-menu-item:hover
     background-color: rgba(81, 92, 230, 0.05)
 
-.{css-prefix}dropdown-menu-item .content
+.{css-prefix}dropdown-menu-item .{css-prefix}content
     line-height: 30px
 
 .{css-prefix}button.{css-prefix}popup-close
@@ -210,7 +207,7 @@
 .{css-prefix}popup-arrow-border, .{css-prefix}popup-arrow-fill
     position: absolute
 
-.top .{css-prefix}popup-arrow-border
+.{css-prefix}arrow-top .{css-prefix}popup-arrow-border
     border-top: none
     border-right: 8px solid transparent
     border-bottom: 8px solid #d5d5d5
@@ -218,7 +215,7 @@
     left: calc(50% - 8px)
     top: -7px
 
-.right .{css-prefix}popup-arrow-border
+.{css-prefix}arrow-right .{css-prefix}popup-arrow-border
     border-top: 8px solid transparent
     border-right: none
     border-bottom: 8px solid transparent
@@ -226,7 +223,7 @@
     top: calc(50% - 8px)
     right: -7px
 
-.bottom .{css-prefix}popup-arrow-border
+.{css-prefix}arrow-bottom .{css-prefix}popup-arrow-border
     border-top: 8px solid #d5d5d5
     border-right: 8px solid transparent
     border-bottom: none
@@ -234,7 +231,7 @@
     left: calc(50% - 8px)
     bottom: -7px
 
-.left .{css-prefix}popup-arrow-border
+.{css-prefix}arrow-left .{css-prefix}popup-arrow-border
     border-top: 8px solid transparent
     border-right: 8px solid #d5d5d5
     border-bottom: 8px solid transparent
@@ -242,7 +239,7 @@
     top: calc(50% - 8px)
     left: -7px
 
-.top .{css-prefix}popup-arrow-fill
+.{css-prefix}arrow-top .{css-prefix}popup-arrow-fill
     border-top: none
     border-right: 7px solid transparent
     border-bottom: 7px solid #ffffff
@@ -250,7 +247,7 @@
     left: -7px
     top: 1px
 
-.right .{css-prefix}popup-arrow-fill
+.{css-prefix}arrow-right .{css-prefix}popup-arrow-fill
     border-top: 7px solid transparent
     border-right: none
     border-bottom: 7px solid transparent
@@ -258,7 +255,7 @@
     top: -7px
     right: 1px
 
-.bottom .{css-prefix}popup-arrow-fill
+.{css-prefix}arrow-bottom .{css-prefix}popup-arrow-fill
     border-top: 7px solid #ffffff
     border-right: 7px solid transparent
     border-bottom: none
@@ -266,7 +263,7 @@
     left: -7px
     bottom: 1px
 
-.left .{css-prefix}popup-arrow-fill
+.{css-prefix}arrow-left .{css-prefix}popup-arrow-fill
     border-top: 7px solid transparent
     border-right: 7px solid #ffffff
     border-bottom: 7px solid transparent
@@ -316,67 +313,67 @@
   color: #ffffff
 
 /* icon styles */
-.icon {
+.{css-prefix}icon {
   width: 14px;
   height: 14px;
   display: inline-block;
   vertical-align: middle;
 }
 
-.icon.right
+.{css-prefix}icon.{css-prefix}right
   float: right
   top: 1px
 
-.icon .none
+.{css-prefix}icon .{css-prefix}none
   display: none
 
-.icon.calendar-dot
+.{css-prefix}icon.{css-prefix}calendar-dot
   border-radius: 8px;
   width: 12px;
   height: 12px;
   margin: 1px;
 
-.icon.ic-title
+.{css-prefix}icon.{css-prefix}ic-title
   background: url('image/ic-subject.png') no-repeat
 
-.icon.ic-location
+.{css-prefix}icon.{css-prefix}ic-location
     background: url('image/ic-location.png') no-repeat
 
-.icon.ic-date
+.{css-prefix}icon.{css-prefix}ic-date
     background: url('image/ic-date.png') no-repeat
 
-.icon.ic-state
+.{css-prefix}icon.{css-prefix}ic-state
     background: url('image/ic-state.png') no-repeat
 
-.icon.ic-private
+.{css-prefix}icon.{css-prefix}ic-private
     background: url('image/ic-lock.png') no-repeat
 
-.icon.ic-public
+.{css-prefix}icon.{css-prefix}ic-public
     background: url('image/ic-unlock.png') no-repeat
 
-.icon.ic-close
+.{css-prefix}icon.{css-prefix}ic-close
     background: url('image/ic-close.png') no-repeat
 
 
-.ic-location-b
+.{css-prefix}ic-location-b
   background: url('./image/ic-location-b.png')
 
-.ic-state-b
+.{css-prefix}ic-state-b
   background: url('./image/ic-state-b.png')
 
-.icon.ic-user-b
+.{css-prefix}icon.{css-prefix}ic-user-b
   background-image: url('./image/ic-user-b.png')
 
-.icon.ic-edit
+.{css-prefix}icon.{css-prefix}ic-edit
   background-image: url('./image/ic-edit.png')
 
-.icon.ic-delete
+.{css-prefix}icon.{css-prefix}ic-delete
   background-image: url('./image/ic-delete.png')
 
-input[type='checkbox'].checkbox-square
+input[type='checkbox'].{css-prefix}checkbox-square
   display: none
 
-input[type='checkbox'].checkbox-square + span
+input[type='checkbox'].{css-prefix}checkbox-square + span
   display: inline-block
   cursor: pointer
   line-height: 14px
@@ -386,14 +383,14 @@ input[type='checkbox'].checkbox-square + span
   background: url('image/ic-checkbox-normal.png') no-repeat
   vertical-align: middle
 
-input[type='checkbox'].checkbox-square:checked + span {
+input[type='checkbox'].{css-prefix}checkbox-square:checked + span {
   background: url('image/ic-checkbox-checked.png') no-repeat;
 }
 
-input[type='checkbox'].checkbox-round
+input[type='checkbox'].{css-prefix}checkbox-round
   display: none
 
-input[type='checkbox'].checkbox-round + span
+input[type='checkbox'].{css-prefix}checkbox-round + span
   display: inline-block
   cursor: pointer
   width: 14px
@@ -418,31 +415,31 @@ input[type='checkbox'].checkbox-round + span
   min-width: 301px
   padding-bottom: 0
 
-.{css-prefix}popup-detail .icon
+.{css-prefix}popup-detail .{css-prefix}icon
   width: 12px
   height: 12px
   background-size: 12px
   position: relative
 
-.{css-prefix}popup-detail .icon
+.{css-prefix}popup-detail .{css-prefix}icon
   margin-right: 8px
 
-.{css-prefix}popup-detail .icon.ic-location-b
+.{css-prefix}popup-detail .{css-prefix}icon.{css-prefix}ic-location-b
   top: -2px
 
-.{css-prefix}popup-detail .icon.ic-user-b
+.{css-prefix}popup-detail .{css-prefix}icon.{css-prefix}ic-user-b
   top: -2px
 
-.{css-prefix}popup-detail .icon.ic-state-b
+.{css-prefix}popup-detail .{css-prefix}icon.{css-prefix}ic-state-b
   top: -1px
 
-.{css-prefix}popup-detail .icon.calendar-dot
+.{css-prefix}popup-detail .{css-prefix}icon.{css-prefix}calendar-dot
   width: 10px
   height: 10px
   margin-right: 8px
   top: -1px
 
-.{css-prefix}popup-detail .content
+.{css-prefix}popup-detail .{css-prefix}content
   line-height: 24px
   height: 24px
   font-size: 12px
@@ -462,7 +459,7 @@ input[type='checkbox'].checkbox-round + span
   height: 16px
   background: url('image/ic-lock.png') no-repeat 16px
 
-.{css-prefix}popup-detail .{css-prefix}schedule-private .private
+.{css-prefix}popup-detail .{css-prefix}schedule-private .{css-prefix}ic-private
   display: block
 
 .{css-prefix}popup-detail .{css-prefix}section-detail
@@ -472,11 +469,11 @@ input[type='checkbox'].checkbox-round + span
   border-top: 1px solid #e5e5e5
   font-size: 0
 
-.{css-prefix}section-button .icon
+.{css-prefix}section-button .{css-prefix}icon
   margin-right: 4px
   top: -3px
 
-.{css-prefix}section-button .content
+.{css-prefix}section-button .{css-prefix}content
   position: relative
   top: 2px
 
