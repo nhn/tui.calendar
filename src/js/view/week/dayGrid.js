@@ -201,7 +201,9 @@ DayGrid.prototype._expand = function() {
     vPanel.setHeight(null, panel.maxExpandableHeight);
 
     reqAnimFrame.requestAnimFrame(function() {
-        this.parent.render();
+        if (this.parent) {
+            this.parent.render();
+        }
     }, this);
 };
 
@@ -215,7 +217,9 @@ DayGrid.prototype._collapse = function() {
     vPanel.setHeight(null, panel.minHeight);
 
     reqAnimFrame.requestAnimFrame(function() {
-        this.parent.render();
+        if (this.parent) {
+            this.parent.render();
+        }
     }, this);
 };
 

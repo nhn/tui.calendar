@@ -3,6 +3,7 @@
 var datetime = require('common/datetime');
 var TimeCreationGuide = require('handler/time/creationGuide');
 var Theme = require('theme/theme');
+var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 
 describe('handler/time.creation.guide', function() {
     var mockTimeCreation,
@@ -78,7 +79,7 @@ describe('handler/time.creation.guide', function() {
                 nearestGridTimeY: Number(clicked)
             };
 
-            expected = [10, Number(clicked), Number(clicked)];
+            expected = [10, Number(clicked), Number(clicked + MIN30)];
             actual = func(mockEventData);
 
             expect(expected).toEqual(actual);
