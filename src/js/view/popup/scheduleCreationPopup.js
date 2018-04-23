@@ -159,23 +159,25 @@ ScheduleCreationPopup.prototype._openDropdownMenuView = function(dropdown) {
  * @returns {boolean} whether 
  */
 ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
-    var className = config.classname('dropdown-menu-item');
-    var selectedItem = domutil.hasClass(target, className) ? target : domutil.closest(target, '.' + className);
+    var itemClassName = config.classname('dropdown-menu-item');
+    var iconClassName = config.classname('icon');
+    var contentClassName = config.classname('content');
+    var selectedItem = domutil.hasClass(target, itemClassName) ? target : domutil.closest(target, '.' + itemClassName);
     var bgColor, title, dropdown, dropdownBtn;
 
     if (!selectedItem) {
         return false;
     }
 
-    bgColor = domutil.find('.icon', selectedItem).style.backgroundColor || 'transparent';
-    title = domutil.find('.content', selectedItem).innerHTML;
+    bgColor = domutil.find('.' + iconClassName, selectedItem).style.backgroundColor || 'transparent';
+    title = domutil.find('.' + contentClassName, selectedItem).innerHTML;
 
     dropdown = domutil.closest(selectedItem, config.classname('.dropdown'));
     dropdownBtn = domutil.find(config.classname('.dropdown-button'), dropdown);
-    domutil.find('.content', dropdownBtn).innerText = title;
+    domutil.find('.' + contentClassName, dropdownBtn).innerText = title;
 
     if (domutil.hasClass(dropdown, config.classname('section-calendar'))) {
-        domutil.find('.icon', dropdownBtn).style.backgroundColor = bgColor;
+        domutil.find('.' + iconClassName, dropdownBtn).style.backgroundColor = bgColor;
         this._selectedCal = this.calendars.find(function(cal) {
             return cal.id === domutil.getData(selectedItem, 'calendarId');
         });
