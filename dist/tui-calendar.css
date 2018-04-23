@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 1.0.0 | Wed Apr 18 2018
+ * @version 1.0.1 | Mon Apr 23 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -628,10 +628,7 @@
   font-size: 0;
   margin-left: 4px;
 }
-.tui-full-calendar-section-private .private {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC") no-repeat;
-}
-.tui-full-calendar-section-private.tui-full-calendar-public .private {
+.tui-full-calendar-section-private.tui-full-calendar-public .tui-full-calendar-ic-private {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKdJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDq4TmREaGvofhJHFcLHhfgwLC9sKNNULl0KQODCgtq1atcobxIY7lZAmkGJkNXCNIAlSwIjSCApqIgJnK0wNALoOPwSpOcq0AAAAAElFTkSuQmCC") no-repeat;
 }
 .tui-full-calendar-section-start-date,
@@ -673,16 +670,16 @@
 .tui-full-calendar-popup-section-item.tui-full-calendar-section-location input {
   width: 400px;
 }
-.tui-full-calendar-section-allday .icon.checkbox {
+.tui-full-calendar-section-allday .tui-full-calendar-icon.tui-full-calendar-ic-checkbox {
   margin: 0;
 }
-.tui-full-calendar-popup-section-item.tui-full-calendar-section-allday .content {
+.tui-full-calendar-popup-section-item.tui-full-calendar-section-allday .tui-full-calendar-content {
   padding-left: 4px;
 }
 .tui-full-calendar-section-state {
   width: 109px;
 }
-.tui-full-calendar-section-state .content {
+.tui-full-calendar-section-state .tui-full-calendar-content {
   width: 58px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -701,13 +698,13 @@
 .tui-full-calendar-popup-section-item:focus {
   border-color: #bbb;
 }
-.tui-full-calendar-popup-section-item .icon {
+.tui-full-calendar-popup-section-item .tui-full-calendar-icon {
   position: relative;
 }
-.icon.ic-title {
+.tui-full-calendar-icon.tui-full-calendar-ic-title {
   top: 2px;
 }
-.tui-full-calendar-popup-section-item .content {
+.tui-full-calendar-popup-section-item .tui-full-calendar-content {
   text-align: left;
   display: inline-block;
   font-size: 12px;
@@ -715,7 +712,7 @@
   position: relative;
   padding-left: 8px;
 }
-.tui-full-calendar-section-calendar .tui-full-calendar-dropdown-button .content {
+.tui-full-calendar-section-calendar .tui-full-calendar-dropdown-button .tui-full-calendar-content {
   width: 125px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -783,7 +780,7 @@
 .tui-full-calendar-dropdown-menu-item:hover {
   background-color: rgba(81,92,230,0.05);
 }
-.tui-full-calendar-dropdown-menu-item .content {
+.tui-full-calendar-dropdown-menu-item .tui-full-calendar-content {
   line-height: 30px;
 }
 .tui-full-calendar-button.tui-full-calendar-popup-close {
@@ -804,7 +801,7 @@
 .tui-full-calendar-popup-arrow-fill {
   position: absolute;
 }
-.top .tui-full-calendar-popup-arrow-border {
+.tui-full-calendar-arrow-top .tui-full-calendar-popup-arrow-border {
   border-top: none;
   border-right: 8px solid transparent;
   border-bottom: 8px solid #d5d5d5;
@@ -812,7 +809,7 @@
   left: calc(50% - 8px);
   top: -7px;
 }
-.right .tui-full-calendar-popup-arrow-border {
+.tui-full-calendar-arrow-right .tui-full-calendar-popup-arrow-border {
   border-top: 8px solid transparent;
   border-right: none;
   border-bottom: 8px solid transparent;
@@ -820,7 +817,7 @@
   top: calc(50% - 8px);
   right: -7px;
 }
-.bottom .tui-full-calendar-popup-arrow-border {
+.tui-full-calendar-arrow-bottom .tui-full-calendar-popup-arrow-border {
   border-top: 8px solid #d5d5d5;
   border-right: 8px solid transparent;
   border-bottom: none;
@@ -828,7 +825,7 @@
   left: calc(50% - 8px);
   bottom: -7px;
 }
-.left .tui-full-calendar-popup-arrow-border {
+.tui-full-calendar-arrow-left .tui-full-calendar-popup-arrow-border {
   border-top: 8px solid transparent;
   border-right: 8px solid #d5d5d5;
   border-bottom: 8px solid transparent;
@@ -836,7 +833,7 @@
   top: calc(50% - 8px);
   left: -7px;
 }
-.top .tui-full-calendar-popup-arrow-fill {
+.tui-full-calendar-arrow-top .tui-full-calendar-popup-arrow-fill {
   border-top: none;
   border-right: 7px solid transparent;
   border-bottom: 7px solid #fff;
@@ -844,7 +841,7 @@
   left: -7px;
   top: 1px;
 }
-.right .tui-full-calendar-popup-arrow-fill {
+.tui-full-calendar-arrow-right .tui-full-calendar-popup-arrow-fill {
   border-top: 7px solid transparent;
   border-right: none;
   border-bottom: 7px solid transparent;
@@ -852,7 +849,7 @@
   top: -7px;
   right: 1px;
 }
-.bottom .tui-full-calendar-popup-arrow-fill {
+.tui-full-calendar-arrow-bottom .tui-full-calendar-popup-arrow-fill {
   border-top: 7px solid #fff;
   border-right: 7px solid transparent;
   border-bottom: none;
@@ -860,7 +857,7 @@
   left: -7px;
   bottom: 1px;
 }
-.left .tui-full-calendar-popup-arrow-fill {
+.tui-full-calendar-arrow-left .tui-full-calendar-popup-arrow-fill {
   border-top: 7px solid transparent;
   border-right: 7px solid #fff;
   border-bottom: 7px solid transparent;
@@ -907,65 +904,65 @@
   background-color: #d95614;
   color: #fff;
 }
-.icon {
+.tui-full-calendar-icon {
   width: 14px;
   height: 14px;
   display: inline-block;
   vertical-align: middle;
 }
-.icon.right {
+.tui-full-calendar-icon.tui-full-calendar-right {
   float: right;
   top: 1px;
 }
-.icon .none {
+.tui-full-calendar-icon .tui-full-calendar-none {
   display: none;
 }
-.icon.calendar-dot {
+.tui-full-calendar-icon.tui-full-calendar-calendar-dot {
   border-radius: 8px;
   width: 12px;
   height: 12px;
   margin: 1px;
 }
-.icon.ic-title {
+.tui-full-calendar-icon.tui-full-calendar-ic-title {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAO5JREFUKBVjYCATMOLSFxkZqfHnz5+1QHktNDVbV69e7cOCJgjmQjXtB3IksMh7g8SY0CXQNTEyMlYD1fBCabhyFI3omkCq/v//PwnotC8gGq4LyIBrxKYJpBBoU15oaCgPiEbWCPYjUEIFGBBY/QS0qRWooRVIg/UBDXgMYoBtBHJSgWxsAQFWjET8BBqQBuLDNM4Can6GpAAb8ydQMADo3x0gSbDGlStX3gVqdMSjGUUTSCNKAggPD1cDOmU/EEuBJKEAQxNIHEUjSABNM1ZNIHXMIAIZXL169a2+vv5moK18QKeXAv20B1meYjYAr7xrljpOzc0AAAAASUVORK5CYII=") no-repeat;
 }
-.icon.ic-location {
+.tui-full-calendar-icon.tui-full-calendar-ic-location {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAR1JREFUKBWdUTtPg1AUBiT8CydHJtv/0MTJRWAgcTK1bq0/pO3k4E4IYLo2Me46tS4wumjSpV07kAb6HXLPzaGPRZLL+c73uE/D+OdnHuaCIOhVVTUEf620pWVZ0yRJ3qW3FfR9f1zX9UgaGJumOUnT9Fn3DDzPuwPOuD9TvSzL3kizhOFJ4LnjOJc0wM0FP2Asgx0mEehHUfRHgzDzqF3GOogzbJg8V6XHFqYv4Cvqy7J8DcOwWYmw8Hwy1kHMRjcaKuEGgV82caWbZay3indagJyxcKLOlKeRdJA627YfUVaN0v6tlKbZVjCO4zW2cw91px3AxJEmOONCNoTzPP9xXZfOd6u0Bzz60RGOgmQuiuIb4S3gB0IvaoJW2QMDs1bBoH1CAQAAAABJRU5ErkJggg==") no-repeat;
 }
-.icon.ic-date {
+.tui-full-calendar-icon.tui-full-calendar-ic-date {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAGpJREFUKBVjYKAGCA0N/Q/C6GZhE2cEKQoLC9v6//9/L3QN2PiMjIzbVq1a5c0EkiRWE7JasEZsJhMSI1sjC7LJq1evBvsZWQyZjRxwZNs4hDSiBA6y55EDBRsb7EdQasAmiUNsKw5x4oQBkUAeDPJ53KsAAAAASUVORK5CYII=") no-repeat;
 }
-.icon.ic-state {
+.tui-full-calendar-icon.tui-full-calendar-ic-state {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIxJREFUKBVjYCATMKLrCw8P9/z3798soLgMVO4JExNT2sqVK7cjq2VC5oDYME2MjIyNIAwUkoGKoShlQeFBOGCbVq1a1QDihoaG1gMpmO0gITAAOzUsLGzr////vWCC+GigK7YBDfUGO5VYTSADYWox/IjPNmS5UY3IoYHGBgcOKG7QxPFxt+KTJCgHAGcZJbGLRuJ2AAAAAElFTkSuQmCC") no-repeat;
 }
-.icon.ic-private {
+.tui-full-calendar-icon.tui-full-calendar-ic-private {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC") no-repeat;
 }
-.icon.ic-public {
+.tui-full-calendar-icon.tui-full-calendar-ic-public {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKdJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDq4TmREaGvofhJHFcLHhfgwLC9sKNNULl0KQODCgtq1atcobxIY7lZAmkGJkNXCNIAlSwIjSCApqIgJnK0wNALoOPwSpOcq0AAAAAElFTkSuQmCC") no-repeat;
 }
-.icon.ic-close {
+.tui-full-calendar-icon.tui-full-calendar-ic-close {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAJRJREFUKBXFkNERhCAMREUbuEKohzq0Eq2DDq6Da4B60KezDORkxj+ZwchmX0IYhtdWCGFl9y5g82NtzDnPdzAaudo76ZBS+nrvPxiInMkJcs5tMcZFfqcfxdqIRiELof+BiIJPg+mExmpmvKRn3zKj7OrG9Y79szPL14A1xEP0Hgy4gBZS5R7czHj3ehSgOzkVeyfuGrBw/WLm0hsAAAAASUVORK5CYII=") no-repeat;
 }
-.ic-location-b {
+.tui-full-calendar-ic-location-b {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAOZJREFUKBWVUT0KwjAUbkzGTuJWPYNDpV0cXD2ETuIRBK+gs4ubp3BwcXBp6eINBKWDgydoid9X8oKCggYeee/7S9IGwZ9LverTNO3Wdb2y1o6IK6WOWutFlmU30XmDE58hbgvpTA+Y+mJqCemS20jdG2N6LPYMICc6b5BrIG3ONBZ7CoVj7w0cfllGRDj+gKQpjt/iPU0ye/LkROcNANaoCUzjqqquIsBuHddAWoiyLO9RFHUwJ4JxR/qmKIqdYG9vCMNwCeIiJHuHecj/B0GSJBng7ifO+ErDPM8L4b7ucRzPWJ8ET1E7YC7tmi9qAAAAAElFTkSuQmCC");
 }
-.ic-state-b {
+.tui-full-calendar-ic-state-b {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAHlJREFUKBVjYCARMCKrNzEx8QTyZ/3//18GJM7IyPgESKWdOXNmO4gPAkwQCk6CFQMVNoIwVOMsuCw6w9jY+D8Iw8TR+SBxsJOATtkKNM0LphAbDbRxG9Bp3mAnEVIMMgCmBt0P2AxHERusGkAhgOJQ7Jyt2IUJiAIAwwIn24FgmhkAAAAASUVORK5CYII=");
 }
-.icon.ic-user-b {
+.tui-full-calendar-icon.tui-full-calendar-ic-user-b {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAJpJREFUKBVjYKA1YES3wMTExBMoNgsqnnbmzJntyGqYkDlQ9qz////LgDCQD9MIV4ZNA1wSGwObhjRGRsYnIAzUkIZNE0licE+bm5tr/fnzJx1osjPQBFmoKY+BftnLwsIy8+TJk9dAYmANxsbGoUD2YiBmBwliAT+BYrFnz55dDfNDO1AAl2KQfpAcSA0DTIMyiEMAEKMG0wgAolIjcM7Tjm8AAAAASUVORK5CYII=");
 }
-.icon.ic-edit {
+.tui-full-calendar-icon.tui-full-calendar-ic-edit {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAMdJREFUKBVjYCARMOJTb2xsLMfIyBjLysq64Pjx409BapnwaQDKzf7//3/L79+/D1tbW0uB1LJg02BmZqYIVPgdKBf/79+//UC2xs+fP8OB/H4MG0CK//79ewCkEGQYExOTI5DawMnJuQTER/EDTDFQXA4kCQQ3QBpOnz79AsJF8gMWxTA1KDTYBhyKMUwH6WSysrKSB7kZyIY5AySOVTFIggno+5VAmijFYA1AwhzEgAKcJsMUwIMVGKPH2NnZ7ZFDBKYImQYAuO5YIMgk39gAAAAASUVORK5CYII=");
 }
-.icon.ic-delete {
+.tui-full-calendar-icon.tui-full-calendar-ic-delete {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAFhJREFUKBVjYCARMKKrNzEx2fr//38vkDgjI+O2M2fOeCOrAWtAVoQsicyGaWZCFsTHBtr6H588Tjm4H4yNjfGacPbsWbBaop0Es3JYaQBFDMxjWOitMDEA3EEZfFEISwUAAAAASUVORK5CYII=");
 }
-input[type='checkbox'].checkbox-square {
+input[type='checkbox'].tui-full-calendar-checkbox-square {
   display: none;
 }
-input[type='checkbox'].checkbox-square + span {
+input[type='checkbox'].tui-full-calendar-checkbox-square + span {
   display: inline-block;
   cursor: pointer;
   line-height: 14px;
@@ -975,13 +972,13 @@ input[type='checkbox'].checkbox-square + span {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAADpJREFUKBVjPHfu3O5///65MJAAmJiY9jCcOXPmP6kApIeJBItQlI5qRAkOVM5o4KCGBwqPkcxEvhsAbzRE+Jhb9IwAAAAASUVORK5CYII=") no-repeat;
   vertical-align: middle;
 }
-input[type='checkbox'].checkbox-square:checked + span {
+input[type='checkbox'].tui-full-calendar-checkbox-square:checked + span {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAMBJREFUKBWVkjEOwjAMRe2WgZW7IIHEDdhghhuwcQ42rlJugAQS54Cxa5cq1QM5TUpByZfS2j9+dlJVt/tX5ZxbS4ZU9VLkQvSHKTIGRaVJYFmKrBbTCJxE2UgCdDzMZDkHrOV6b95V0US6UmgKodujEZbJg0B0ZgEModO5lrY1TMQf1TpyJGBEjD+E2NPN7ukIUDiF/BfEXgRiGEw8NgkffYGYwCi808fpn/6OvfUfsDr/Vc1IfRf8sKnFVqeiVQfDu0tf/nWH9gAAAABJRU5ErkJggg==") no-repeat;
 }
-input[type='checkbox'].checkbox-round {
+input[type='checkbox'].tui-full-calendar-checkbox-round {
   display: none;
 }
-input[type='checkbox'].checkbox-round + span {
+input[type='checkbox'].tui-full-calendar-checkbox-round + span {
   display: inline-block;
   cursor: pointer;
   width: 14px;
@@ -1006,31 +1003,31 @@ input[type='checkbox'].checkbox-round + span {
   min-width: 301px;
   padding-bottom: 0;
 }
-.tui-full-calendar-popup-detail .icon {
+.tui-full-calendar-popup-detail .tui-full-calendar-icon {
   width: 12px;
   height: 12px;
   background-size: 12px;
   position: relative;
 }
-.tui-full-calendar-popup-detail .icon {
+.tui-full-calendar-popup-detail .tui-full-calendar-icon {
   margin-right: 8px;
 }
-.tui-full-calendar-popup-detail .icon.ic-location-b {
+.tui-full-calendar-popup-detail .tui-full-calendar-icon.tui-full-calendar-ic-location-b {
   top: -2px;
 }
-.tui-full-calendar-popup-detail .icon.ic-user-b {
+.tui-full-calendar-popup-detail .tui-full-calendar-icon.tui-full-calendar-ic-user-b {
   top: -2px;
 }
-.tui-full-calendar-popup-detail .icon.ic-state-b {
+.tui-full-calendar-popup-detail .tui-full-calendar-icon.tui-full-calendar-ic-state-b {
   top: -1px;
 }
-.tui-full-calendar-popup-detail .icon.calendar-dot {
+.tui-full-calendar-popup-detail .tui-full-calendar-icon.tui-full-calendar-calendar-dot {
   width: 10px;
   height: 10px;
   margin-right: 8px;
   top: -1px;
 }
-.tui-full-calendar-popup-detail .content {
+.tui-full-calendar-popup-detail .tui-full-calendar-content {
   line-height: 24px;
   height: 24px;
   font-size: 12px;
@@ -1050,7 +1047,7 @@ input[type='checkbox'].checkbox-round + span {
   height: 16px;
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC") no-repeat 16px;
 }
-.tui-full-calendar-popup-detail .tui-full-calendar-schedule-private .private {
+.tui-full-calendar-popup-detail .tui-full-calendar-schedule-private .tui-full-calendar-ic-private {
   display: block;
 }
 .tui-full-calendar-popup-detail .tui-full-calendar-section-detail {
@@ -1060,11 +1057,11 @@ input[type='checkbox'].checkbox-round + span {
   border-top: 1px solid #e5e5e5;
   font-size: 0;
 }
-.tui-full-calendar-section-button .icon {
+.tui-full-calendar-section-button .tui-full-calendar-icon {
   margin-right: 4px;
   top: -3px;
 }
-.tui-full-calendar-section-button .content {
+.tui-full-calendar-section-button .tui-full-calendar-content {
   position: relative;
   top: 2px;
 }
