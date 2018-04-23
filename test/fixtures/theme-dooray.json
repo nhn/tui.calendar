@@ -10,7 +10,6 @@
     "common.creationGuide.border": "1px solid #135de6",
 
     "month.dayname.height": "42px",
-    "month.dayname.borderTop": "1px solid #ddd",
     "month.dayname.borderLeft": "1px solid #ddd",
     "month.dayname.paddingLeft": "8px",
     "month.dayname.fontSize": "13px",
