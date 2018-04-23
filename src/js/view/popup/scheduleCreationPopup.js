@@ -199,7 +199,7 @@ ScheduleCreationPopup.prototype._toggleIsAllday = function(target) {
     var checkbox;
 
     if (alldaySection) {
-        checkbox = domutil.find('.checkbox-square', alldaySection);
+        checkbox = domutil.find(config.classname('.checkbox-square'), alldaySection);
         checkbox.checked = !checkbox.checked;
 
         return true;
@@ -260,7 +260,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
         return true;
     }
 
-    isPrivate = domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), 'private');
+    isPrivate = !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'));
     location = domutil.get(cssPrefix + 'schedule-location');
     state = domutil.get(cssPrefix + 'schedule-state');
     isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
@@ -493,12 +493,12 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentS
     var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
     var x = guideHorizontalCenter - (layerSize.width / 2);
     var y = guideBound.top - layerSize.height + 3;
-    var arrowDirection = 'bottom';
+    var arrowDirection = 'arrow-bottom';
     var arrowLeft;
 
     if (y < 0) {
         y = guideBound.bottom + 9;
-        arrowDirection = 'top';
+        arrowDirection = 'arrow-top';
     }
 
     if (x > 0 && (x + layerSize.width > parentSize.right)) {
@@ -535,13 +535,13 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentS
  * @param {Object} arrow rendering data for popup arrow
  */
 ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
-    var direction = arrow.direction || 'bottom';
+    var direction = arrow.direction || 'arrow-bottom';
     var arrowEl = domutil.get(config.classname('popup-arrow'));
     var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
 
-    if (direction !== 'bottom') {
-        domutil.removeClass(arrowEl, 'bottom');
-        domutil.addClass(arrowEl, direction);
+    if (direction !== config.classname('arrow-bottom')) {
+        domutil.removeClass(arrowEl, config.classname('arrow-bottom'));
+        domutil.addClass(arrowEl, config.classname(direction));
     }
 
     if (arrow.position) {

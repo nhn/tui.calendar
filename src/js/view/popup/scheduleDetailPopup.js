@@ -178,7 +178,7 @@ ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, parentSiz
     var guideVerticalCenter = (guideBound.top + guideBound.bottom) / 2;
     var x = guideBound.right;
     var y = guideVerticalCenter;
-    var arrowDirection = 'left';
+    var arrowDirection = 'arrow-left';
     var arrowTop;
 
     if (y < 0) {
@@ -187,7 +187,7 @@ ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, parentSiz
 
     if (x > 0 && (x + layerSize.width > parentSize.right)) {
         x = guideBound.left - layerSize.width - ARROW_WIDTH_HALF - 3;
-        arrowDirection = 'right';
+        arrowDirection = 'arrow-right';
     }
 
     if (x < 0) {
@@ -195,7 +195,7 @@ ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, parentSiz
     }
 
     if (guideBound.right > x + layerSize.width) {
-        arrowDirection = 'right';
+        arrowDirection = 'arrow-right';
     }
 
     /**
@@ -220,13 +220,13 @@ ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, parentSiz
  * @param {Object} arrow rendering data for popup arrow
  */
 ScheduleDetailPopup.prototype._setArrowDirection = function(arrow) {
-    var direction = arrow.direction || 'left';
+    var direction = arrow.direction || 'arrow-left';
     var arrowEl = domutil.get(config.classname('popup-arrow'));
     var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
 
-    if (direction !== 'left') {
-        domutil.removeClass(arrowEl, 'left');
-        domutil.addClass(arrowEl, direction);
+    if (direction !== config.classname('arrow-left')) {
+        domutil.removeClass(arrowEl, config.classname('arrow-left'));
+        domutil.addClass(arrowEl, config.classname(direction));
     }
 
     if (arrow.position) {

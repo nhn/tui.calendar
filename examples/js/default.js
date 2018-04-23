@@ -635,7 +635,7 @@
     var html = [];
     CalendarList.forEach(function(calendar) {
         html.push('<div class="lnb-calendars-item"><label>' +
-            '<input type="checkbox" class="checkbox-round" value="' + calendar.id + '" checked>' +
+            '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' + calendar.id + '" checked>' +
             '<span style="border-color: ' + calendar.borderColor + '; background-color: ' + calendar.borderColor + ';"></span>' +
             '<span>' + calendar.name + '</span>' +
             '</label></div>'
