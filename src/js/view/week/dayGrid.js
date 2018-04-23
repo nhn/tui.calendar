@@ -60,9 +60,7 @@ function DayGrid(name, options, container, theme) {
     this.handler = {};
     this.vPanel = null;
 
-    this.setState({
-        collapsed: true
-    });
+    this.state.collapsed = true;
 }
 
 util.inherit(DayGrid, View);
@@ -174,34 +172,68 @@ DayGrid.prototype._beforeDestroy = function() {
 };
 
 DayGrid.prototype.addHandler = function(type, handler, vPanel) {
-    var opt = this.options;
+    var self = this;
 
     this.handler[type] = handler;
     this.vPanel = vPanel;
 
     if (type === 'click') {
         handler.on('expand', function() {
-            var panel = getPanel(opt.panels, opt.viewName);
-            vPanel.setMaxHeight(panel.maxExpandableHeight);
-            vPanel.setHeightForcedSet(false);
-            vPanel.setHeight(null, panel.maxExpandableHeight);
-
-            this.setState({collapsed: false});
-            reqAnimFrame.requestAnimFrame(function() {
-                this.parent.render();
-            }, this);
+            self.setState({
+                collapsed: false
+            });
         }, this);
         handler.on('collapse', function() {
-            var panel = getPanel(opt.panels, opt.viewName);
-            vPanel.setMaxHeight(panel.maxHeight);
-            vPanel.setHeightForcedSet(false);
-            vPanel.setHeight(null, panel.minHeight);
-
-            this.setState({collapsed: true});
-            reqAnimFrame.requestAnimFrame(function() {
-                this.parent.render();
-            }, this);
+            self.setState({
+                collapsed: true
+            });
         }, this);
+    }
+};
+
+DayGrid.prototype._expand = function() {
+    var vPanel = this.vPanel;
+    var opt = this.options;
+    var panel = getPanel(opt.panels, opt.viewName);
+
+    vPanel.setMaxHeight(panel.maxExpandableHeight);
+    vPanel.setHeightForcedSet(false);
+    vPanel.setHeight(null, panel.maxExpandableHeight);
+
+    reqAnimFrame.requestAnimFrame(function() {
+        if (this.parent) {
+            this.parent.render();
+        }
+    }, this);
+};
+
+DayGrid.prototype._collapse = function() {
+    var vPanel = this.vPanel;
+    var opt = this.options;
+    var panel = getPanel(opt.panels, opt.viewName);
+
+    vPanel.setMaxHeight(panel.maxHeight);
+    vPanel.setHeightForcedSet(false);
+    vPanel.setHeight(null, panel.minHeight);
+
+    reqAnimFrame.requestAnimFrame(function() {
+        if (this.parent) {
+            this.parent.render();
+        }
+    }, this);
+};
+
+/**
+ * set state
+ * @param {object} state - state
+ */
+DayGrid.prototype.setState = function(state) {
+    View.prototype.setState.call(this, state);
+
+    if (this.state.collapsed) {
+        this._collapse();
+    } else {
+        this._expand();
     }
 };
 

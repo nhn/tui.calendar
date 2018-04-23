@@ -50,7 +50,7 @@ var DEFAULT_PANELS = [
         minHeight: 20,
         maxHeight: 80,
         showExpandableButton: true,
-        maxExpandableHeight: 230,
+        maxExpandableHeight: 210,
         handlers: ['click'],
         show: true
     },
@@ -60,7 +60,7 @@ var DEFAULT_PANELS = [
         minHeight: 40,
         maxHeight: 120,
         showExpandableButton: true,
-        maxExpandableHeight: 230,
+        maxExpandableHeight: 210,
         handlers: ['click', 'move'],
         show: true
     },
@@ -70,7 +70,7 @@ var DEFAULT_PANELS = [
         minHeight: 20,
         maxHeight: 80,
         showExpandableButton: true,
-        maxExpandableHeight: 230,
+        maxExpandableHeight: 210,
         handlers: ['click', 'creation', 'move', 'resize'],
         show: true
     },

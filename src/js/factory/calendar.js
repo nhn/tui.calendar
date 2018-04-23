@@ -567,11 +567,11 @@ Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
  */
 Calendar.prototype.render = function() {
     var renderFunc = function() {
-        if (this._layout) {
-            this._layout.render();
-        }
         if (this._refreshMethod) {
             this._refreshMethod();
+        }
+        if (this._layout) {
+            this._layout.render();
         }
 
         this._requestRender = null;
@@ -661,7 +661,7 @@ Calendar.prototype.move = function(offset) {
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
             tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 
-            recursiveSet(view, function(opt) {
+            recursiveSet(view, function(childView, opt) {
                 opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
             });
         } else {
@@ -674,7 +674,7 @@ Calendar.prototype.move = function(offset) {
             renderDate.addMonth(offset);
             tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
 
-            recursiveSet(view, function(opt) {
+            recursiveSet(view, function(childView, opt) {
                 opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
             });
         }
@@ -690,17 +690,25 @@ Calendar.prototype.move = function(offset) {
         startDate = tempDate[0];
         endDate = tempDate[1];
 
-        recursiveSet(view, function(opt) {
+        recursiveSet(view, function(childView, opt) {
             opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
             opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+
+            childView.setState({
+                collapsed: true
+            });
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
         startDate = endDate = renderDate.d;
 
-        recursiveSet(view, function(opt) {
+        recursiveSet(view, function(childView, opt) {
             opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
             opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+
+            childView.setState({
+                collapsed: true
+            });
         });
     }
 
@@ -1000,7 +1008,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     });
 
     util.forEach(handler.dayname, function(clickHandler) {
-        clickHandler[method]('clickDayname', self._onClickDaynOame, self);
+        clickHandler[method]('clickDayname', self._onClickDayname, self);
     });
 
     util.forEach(handler.creation, function(creationHandler) {
@@ -1373,7 +1381,7 @@ function _setOptionRecurseively(view, func) {
             return;
         }
 
-        func(opt);
+        func(childView, opt);
     });
 }
 

@@ -157,16 +157,10 @@ MonthMove.prototype.hasPermissionToHandle = function(target) {
 MonthMove.prototype._onDragStart = function(dragStartEvent) {
     var target = dragStartEvent.target,
         modelID = this.hasPermissionToHandle(target),
-        model,
+        model = this.baseController.schedules.items[modelID],
         scheduleData;
 
-    if (!modelID) {
-        return;
-    }
-
-    model = this.baseController.schedules.items[modelID];
-
-    if (model.isReadOnly) {
+    if (!modelID || !model || model.isReadOnly || model.isPending) {
         return;
     }
 
