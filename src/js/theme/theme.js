@@ -63,6 +63,14 @@ Theme.prototype.setStyles = function(styles) {
         }
     }, this);
 
+    // apply missing styles which have to be default
+    util.forEach(themeConfig, function(style, key) {
+        if (!this.getStyle(key)) {
+            this._map.set(key, style);
+            common.set(this, key, style);
+        }
+    }, this);
+
     return errors;
 };
 

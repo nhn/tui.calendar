@@ -1198,12 +1198,15 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  * @example
  * cal.setTheme({
     'month.dayname.height': '31px',
-    'month.dayname.borderTop': '1px solid #e5e5e5',
-    'month.dayname.borderBottom': '1px solid #e5e5e5',
+    'common.dayname.color': '#333',
+    'month.dayname.borderBottom': '1px solid #e5e5e5' // Not valid key  will be return.
  * });
  */
 Calendar.prototype.setTheme = function(theme) {
-    return this._controller.setTheme(theme);
+    var result = this._controller.setTheme(theme);
+    this.changeView(this.getViewName(), true);
+
+    return result;
 };
 
 /**
