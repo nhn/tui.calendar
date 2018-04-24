@@ -10,6 +10,7 @@ var Handlebars = require('handlebars-template-loader/runtime');
 var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
+var mmax = Math.max;
 
 /**
  * Get CSS syntax for element size
@@ -232,7 +233,7 @@ Handlebars.registerHelper({
     },
 
     'getRight': function(a, b) {
-        return 100 - (a + b);
+        return mmax(0, 100 - (a + b));
     },
 
     /**
