@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 1.0.1 | Mon Apr 23 2018
+ * @version 1.0.2 | Tue Apr 24 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -98,6 +98,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var common = __webpack_require__(30);
 	var config = __webpack_require__(34);
+	var mmax = Math.max;
 	
 	/**
 	 * Get CSS syntax for element size
@@ -320,7 +321,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'getRight': function(a, b) {
-	        return 100 - (a + b);
+	        return mmax(0, 100 - (a + b));
 	    },
 	
 	    /**
@@ -5583,12 +5584,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * cal.setTheme({
 	    'month.dayname.height': '31px',
-	    'month.dayname.borderTop': '1px solid #e5e5e5',
-	    'month.dayname.borderBottom': '1px solid #e5e5e5',
+	    'common.dayname.color': '#333',
+	    'month.dayname.borderBottom': '1px solid #e5e5e5' // Not valid key  will be return.
 	 * });
 	 */
 	Calendar.prototype.setTheme = function(theme) {
-	    return this._controller.setTheme(theme);
+	    var result = this._controller.setTheme(theme);
+	    this.changeView(this.getViewName(), true);
+	
+	    return result;
 	};
 	
 	/**
@@ -7767,6 +7771,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, this);
 	
+	    // apply missing styles which have to be default
+	    util.forEach(themeConfig, function(style, key) {
+	        if (!this.getStyle(key)) {
+	            this._map.set(key, style);
+	            common.set(this, key, style);
+	        }
+	    }, this);
+	
 	    return errors;
 	};
 	
@@ -7825,8 +7837,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'month.dayname.borderLeft': 'none',
 	    'month.dayname.paddingLeft': '10px',
 	    'month.dayname.paddingRight': '0',
-	    'month.dayname.fontSize': '12px',
 	    'month.dayname.backgroundColor': 'inherit',
+	    'month.dayname.fontSize': '12px',
 	    'month.dayname.fontWeight': 'normal',
 	    'month.dayname.textAlign': 'left',
 	
@@ -7941,7 +7953,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // month header 'dayname'
 	    'month.dayname.height': '31px',
-	    'month.dayname.borderTop': '1px solid #e5e5e5',
 	    'month.dayname.borderLeft': '1px solid #e5e5e5',
 	    'month.dayname.paddingLeft': '10px',
 	    'month.dayname.paddingRight': '10px',
@@ -8030,9 +8041,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'common.border': '1px solid #e5e5e5',
 	    'common.backgroundColor': 'white',
 	    'common.holiday.color': '#ff4040',
-	    'common.saturday.color': '#135de6',
+	    'common.saturday.color': '#333',
 	    'common.dayname.color': '#333',
-	    'common.today.color': '#135de6',
+	    'common.today.color': '#333',
 	
 	    // creation guide style
 	    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
@@ -8040,7 +8051,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // month header 'dayname'
 	    'month.dayname.height': '31px',
-	    'month.dayname.borderTop': '1px solid #e5e5e5',
 	    'month.dayname.borderLeft': '1px solid #e5e5e5',
 	    'month.dayname.paddingLeft': '10px',
 	    'month.dayname.paddingRight': '10px',
@@ -10069,7 +10079,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {number} maxHeight - maxHeight
 	 */
 	VPanel.prototype.setMaxHeight = function(maxHeight) {
-	    this.options.maxHeight = maxHeight;
+	    if (!this.options.autoHeight) {
+	        this.options.maxHeight = maxHeight;
+	    }
 	};
 	
 	/**
