@@ -26,8 +26,8 @@ var theme = {
     'month.dayname.borderLeft': 'none',
     'month.dayname.paddingLeft': '10px',
     'month.dayname.paddingRight': '0',
-    'month.dayname.fontSize': '12px',
     'month.dayname.backgroundColor': 'inherit',
+    'month.dayname.fontSize': '12px',
     'month.dayname.fontWeight': 'normal',
     'month.dayname.textAlign': 'left',
 

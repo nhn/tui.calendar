@@ -26,7 +26,6 @@
 
     // month header 'dayname'
     'month.dayname.height': '31px',
-    'month.dayname.borderTop': '1px solid #e5e5e5',
     'month.dayname.borderLeft': '1px solid #e5e5e5',
     'month.dayname.paddingLeft': '10px',
     'month.dayname.paddingRight': '10px',
@@ -115,9 +114,9 @@ var themeConfig = {
     'common.border': '1px solid #e5e5e5',
     'common.backgroundColor': 'white',
     'common.holiday.color': '#ff4040',
-    'common.saturday.color': '#135de6',
+    'common.saturday.color': '#333',
     'common.dayname.color': '#333',
-    'common.today.color': '#135de6',
+    'common.today.color': '#333',
 
     // creation guide style
     'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
@@ -125,7 +124,6 @@ var themeConfig = {
 
     // month header 'dayname'
     'month.dayname.height': '31px',
-    'month.dayname.borderTop': '1px solid #e5e5e5',
     'month.dayname.borderLeft': '1px solid #e5e5e5',
     'month.dayname.paddingLeft': '10px',
     'month.dayname.paddingRight': '10px',
