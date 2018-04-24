@@ -75,7 +75,9 @@ VPanel.prototype.isSplitter = function() {
  * @param {number} maxHeight - maxHeight
  */
 VPanel.prototype.setMaxHeight = function(maxHeight) {
-    this.options.maxHeight = maxHeight;
+    if (!this.options.autoHeight) {
+        this.options.maxHeight = maxHeight;
+    }
 };
 
 /**
