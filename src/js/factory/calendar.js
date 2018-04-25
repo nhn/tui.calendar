@@ -696,8 +696,10 @@ Calendar.prototype.move = function(offset) {
 
             childView.setState({
                 collapsed: true
-            });
+            }, true);
         });
+
+        view.render();
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
         startDate = endDate = renderDate.d;
@@ -708,8 +710,10 @@ Calendar.prototype.move = function(offset) {
 
             childView.setState({
                 collapsed: true
-            });
+            }, true);
         });
+
+        view.render();
     }
 
     this._renderDate = renderDate.d;

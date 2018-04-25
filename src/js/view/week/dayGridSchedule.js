@@ -49,6 +49,10 @@ DayGridSchedule.prototype.render = function(viewModel) {
  * @returns {number} maximum schedule count in day
  */
 DayGridSchedule.prototype._getMaxScheduleInDay = function(matrices) {
+    if (!matrices.length) {
+        return 0;
+    }
+
     return mmax.apply(
         null,
         util.map(matrices, function(matrix) {
@@ -113,6 +117,14 @@ DayGridSchedule.prototype._getStyles = function(theme) {
     }
 
     return styles;
+};
+
+DayGridSchedule.prototype.getHeight = function(viewModel) {
+    var matrices = this.options.getViewModelFunc(viewModel);
+    var maxScheduleInDay = this._getMaxScheduleInDay(matrices);
+    var height = this._getMinHeight(maxScheduleInDay);
+
+    return height;
 };
 
 module.exports = DayGridSchedule;
