@@ -1,4 +1,4 @@
-# TOAST UI Calendar
+# ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
 > A JavaScript schedule calendar with full featured. Now your service just got the customizable calendar.
 
@@ -7,6 +7,8 @@
 [![GitHub license](https://img.shields.io/github/license/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/blob/master/LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.project-name/labels/help%20wanted)
 [![code with hearth by NHN Entertainment](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN%20Entertainment-ff1414.svg)](https://github.com/nhnent)
+
+![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/38919146-bc596f28-432a-11e8-8bbd-b561911067c7.gif)
 
 ## 🚩 Table of Contents
 
@@ -34,8 +36,31 @@
 | :---------: | :---------: | :---------: | :---------: | :---------: |
 | Yes | +9 | Yes | Yes | Yes |
 
+## What a cool: Monthly, Weekly, Daily and various view types.
+
+| Monthly | Weekly |
+| --- | --- |
+| ![image](https://user-images.githubusercontent.com/26706716/39230396-4d79a592-48a1-11e8-9849-08e80f1bedf6.png) | ![image](https://user-images.githubusercontent.com/26706716/39230459-83beac38-48a1-11e8-8cd4-11b97817f1f8.png) |
+
+| Daily | 2 Weeks |
+| --- | --- |
+| ![image](https://user-images.githubusercontent.com/26706716/39230685-60a2a1d6-48a2-11e8-9d46-ce5693277a64.png) | ![image](https://user-images.githubusercontent.com/26706716/39230638-281d5266-48a2-11e8-84d8-ab289f372051.png) |
+
+## Very easy to use: Dragging and Resizing a schedule
+
+| Dragging | Resizing |
+| --- | --- |
+| ![image](https://user-images.githubusercontent.com/26706716/39230930-591031f8-48a3-11e8-8f62-e12e6c19920c.gif) | ![image](https://user-images.githubusercontent.com/26706716/39231671-c926d0da-48a5-11e8-959d-35fd32f2c522.gif) |
+
+
+## Ready to use it right now: Default Popups
+
+| Creation Popup | Detail Popup |
+| --- | --- |
+| ![image](https://user-images.githubusercontent.com/26706716/39230798-d151a9ae-48a2-11e8-842d-b19b40432f48.png) | ![image](https://user-images.githubusercontent.com/26706716/39230820-e73fa11c-48a2-11e8-9348-8e3d81979a78.png) |
+
 ## 🎨 Features
-![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/38919146-bc596f28-432a-11e8-8bbd-b561911067c7.gif)
+
 * Supports various view types: daily, weekly, monthly(6 weeks, 2 weeks, 3 weeks)
 * Supports efficient management of milestone and task schedules
 * Supports the narrow width of weekend
