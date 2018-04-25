@@ -200,7 +200,7 @@ DayGrid.prototype._expand = function() {
     var opt = this.options;
     var panel = getPanel(opt.panels, opt.viewName);
     var height = panel.maxExpandableHeight;
-    var childrenHeights = this.getChildrenHeight(true);
+    var childrenHeights = this.getChildrenHeight(false);
 
     if (childrenHeights) {
         height = mmin(height, mmax(childrenHeights));
