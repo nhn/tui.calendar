@@ -586,14 +586,4 @@
         );
     });
     calendarList.innerHTML = html.join('\n');
-
-    calendarList = document.getElementById('dropdownMenu-calendars-list');
-    html = [];
-    CalendarList.forEach(function(calendar) {
-        html.push('<li><a role="menuitem" data-action="' + calendar.id + '">');
-        html.push('<span class="calendar-bar" style="background-color: ' + calendar.bgColor + '; border-color:' + calendar.borderColor + ';"></span>');
-        html.push('<span class="calendar-name">' + calendar.name + '</span>');
-        html.push('</a></li>');
-    });
-    calendarList.innerHTML = html.join('\n');
 })();
