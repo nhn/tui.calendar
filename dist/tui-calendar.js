@@ -1,6 +1,6 @@
 /*!
  * tui-calendar
- * @version 1.0.2 | Tue Apr 24 2018
+ * @version 1.1.0 | Fri Apr 27 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license undefined
  */
@@ -13,7 +13,7 @@
 		exports["Calendar"] = factory(require("tui-code-snippet"), require("tui-date-picker"));
 	else
 		root["tui"] = root["tui"] || {}, root["tui"]["Calendar"] = factory((root["tui"] && root["tui"]["util"]), (root["tui"] && root["tui"]["DatePicker"]));
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_72__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_72__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -67,8 +67,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	'use strict';
 	
-	__webpack_require__(1);
-	__webpack_require__(5);
+	var util = __webpack_require__(1);
+	
+	__webpack_require__(2);
+	__webpack_require__(6);
+	
+	if (util.sendHostname) {
+	    util.sendHostname('calendar');
+	}
 	
 	module.exports = __webpack_require__(35);
 
@@ -77,13 +83,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports) {
 
+	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 2 */,
 /* 3 */,
 /* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint complexity: 0 */
@@ -93,7 +105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var Handlebars = __webpack_require__(7);
 	var datetime = __webpack_require__(27);
 	var common = __webpack_require__(30);
@@ -337,37 +349,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	     **********/
 	
 	    'milestone-tmpl': function(model) {
-	        return '<span class="' +
-	            config.classname('dot') +
-	            '" style="background-color:' +
-	            model.bgColor +
-	            '"></span> ' +
-	            common.stripTags(model.title);
+	        var icon = config.classname('icon');
+	        var iconName = config.classname('ic-milestone');
+	
+	        return '<span class="' + icon + ' ' + iconName + '"></span><span style="background-color: ' + model.bgColor + '">' + common.stripTags(model.title) + '</span>';
 	    },
 	
 	    'milestoneTitle-tmpl': function() {
-	        return 'Milestone';
+	        var className = config.classname('left-content');
+	
+	        return '<span class="' + className + '">Milestone</span></div>';
 	    },
 	
 	    'task-tmpl': function(model) {
-	        return '<span class="' +
-	            config.classname('dot') +
-	            '" style="background-color:' +
-	            model.bgColor +
-	            '"></span> ' +
-	            common.stripTags(model.title);
+	        return '#' + model.title;
 	    },
 	
 	    'taskTitle-tmpl': function() {
-	        return 'Task';
+	        var className = config.classname('left-content');
+	
+	        return '<span class="' + className + '">Task</span></div>';
 	    },
 	
 	    'alldayTitle-tmpl': function() {
-	        return 'AllDay';
-	    },
+	        var className = config.classname('left-content');
 	
-	    'alldayCollapseBtnTitle-tmpl': function() {
-	        return '∧';
+	        return '<span class="' + className + '">All Day</span></div>';
 	    },
 	
 	    'allday-tmpl': function(model) {
@@ -383,16 +390,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'monthMoreClose-tmpl': function() {
-	        return 'close';
+	        var iconName = config.classname('icon');
+	        var closeIconName = config.classname('ic-close');
+	
+	        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
 	    },
 	
 	    'monthGridHeader-tmpl': function(model) {
-	        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
+	        var date = parseInt(model.date.split('-')[2], 10);
+	        var classNames = [];
+	
+	        classNames.push(config.classname('weekday-grid-date'));
+	        if (model.isToday) {
+	            classNames.push(config.classname('weekday-grid-date-decorator'));
+	        }
+	
+	        return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
 	    },
 	
-	    /* eslint no-unused-vars: 0 */
 	    'monthGridHeaderExceed-tmpl': function(hiddenSchedules) {
-	        return '';
+	        var className = config.classname('weekday-grid-more-schedules');
+	
+	        return '<span class="' + className + '">' + hiddenSchedules + ' more</span>';
 	    },
 	
 	    'monthGridFooter-tmpl': function() {
@@ -405,7 +424,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'weekDayname-tmpl': function(model) {
-	        return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span> ' + model.dayName;
+	        var classDate = config.classname('dayname-date');
+	        var className = config.classname('dayname-name');
+	
+	        return '<span class="' + classDate + '">' + model.date + '</span>&nbsp;&nbsp;<span class="' + className + '">' + model.dayName + '</span>';
 	    },
 	
 	    'monthDayname-tmpl': function(model) {
@@ -435,7 +457,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    'collapseBtnTitle-tmpl': function() {
-	        return '∧';
+	        var iconName = config.classname('icon');
+	        var closeIconName = config.classname('ic-arrow-solid-top');
+	
+	        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
 	    },
 	
 	    'popupIsAllDay-tmpl': function() {
@@ -496,12 +521,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	});
 
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
 
 /***/ },
 /* 7 */
@@ -1725,7 +1744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var TZDate = __webpack_require__(28).Date,
 	    dw = __webpack_require__(29);
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	/* eslint-disable no-useless-escape */
 	var dateFormatRx = /^(\d{4}[-|\/]*\d{2}[-|\/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 	var datetime, tokenFunc;
@@ -2588,7 +2607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var aps = Array.prototype.slice;
 	
 	var domutil = __webpack_require__(31),
@@ -2798,7 +2817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var domevent = __webpack_require__(32);
 	var Collection = __webpack_require__(33);
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var posKey = '_pos',
 	    domutil;
@@ -3449,7 +3468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var browser = util.browser,
 	    eventKey = '_evt',
 	    DRAG = {
@@ -3890,7 +3909,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var forEachProp = util.forEachOwnProperties,
 	    forEachArr = util.forEachArray,
 	    isFunc = util.isFunction,
@@ -4390,7 +4409,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6),
+	var util = __webpack_require__(1),
 	    Handlebars = __webpack_require__(7);
 	var dw = __webpack_require__(29),
 	    datetime = __webpack_require__(27),
@@ -4418,10 +4437,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {string} category - schedule type('milestone', 'task', allday', 'time')
 	 * @property {string} dueDateClass - task schedule type string
 	 *                                   (any string value is ok and mandatory if category is 'task')
+	 * @property {string} location - location
+	 * @property {Array.<string>} attendees - attendees
+	 * @property {any} recurrenceRule - recurrence rule
 	 * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
 	 * @property {boolean} isFocused - focused schedule flag
 	 * @property {boolean} isVisible - schedule visibility flag
 	 * @property {boolean} isReadOnly - schedule read-only flag
+	 * @property {boolean} isPrivate - private schedule
 	 * @property {string} [color] - schedule text color
 	 * @property {string} [bgColor] - schedule background color
 	 * @property {string} [dragBgColor] - schedule background color when dragging it
@@ -5789,7 +5812,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var Collection = __webpack_require__(33);
@@ -5888,7 +5911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var domutil = __webpack_require__(31);
 	var Collection = __webpack_require__(33);
 	
@@ -6109,7 +6132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
 	
@@ -6352,7 +6375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var Base = __webpack_require__(40),
 	    Core = __webpack_require__(48),
 	    Week = __webpack_require__(49),
@@ -6403,7 +6426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var Schedule = __webpack_require__(41);
 	var ScheduleViewModel = __webpack_require__(44);
 	var datetime = __webpack_require__(27);
@@ -6794,7 +6817,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var TZDate = __webpack_require__(28).Date;
 	var datetime = __webpack_require__(27);
 	var dirty = __webpack_require__(42);
@@ -6929,6 +6952,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.isReadOnly = false;
 	
 	    /**
+	     * private schedule
+	     * @type {boolean}
+	     */
+	    this.isPrivate = false;
+	
+	    /**
+	     * location
+	     * @type {string}
+	     */
+	    this.location = '';
+	
+	    /**
+	     * attendees
+	     * @type {Array.<string>}
+	     */
+	    this.attendees = [];
+	
+	    /**
+	     * recurrence rule
+	     * @type {any}
+	     */
+	    this.recurrenceRule = '';
+	
+	    /**
 	     * Separate data storage space independent of rendering.
 	     * @type {object}
 	     */
@@ -6986,6 +7033,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.category = options.category || '';
 	    this.dueDateClass = options.dueDateClass || '';
 	    this.customStyle = options.customStyle || '';
+	    this.location = options.location || '';
+	    this.attendees = options.attendees || [];
+	    this.recurrenceRule = options.recurrenceRule || '';
+	    this.isPrivate = options.isPrivate || false;
 	    this.isPending = options.isPending || false;
 	    this.isFocused = options.isFocused || false;
 	    this.isReadOnly = options.isReadOnly || false;
@@ -7149,7 +7200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var common = __webpack_require__(6);
+	var common = __webpack_require__(1);
 	var existy = common.isExisty,
 	    pick = common.pick,
 	    isFunc = common.isFunction;
@@ -7361,7 +7412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var TZDate = __webpack_require__(28).Date;
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var spaceRx = /^\s*|\s*$/g,
 	    model;
 	
@@ -7518,7 +7569,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	/**
 	 * Schedule ViewModel
@@ -7712,7 +7763,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var themeStandard = __webpack_require__(46);
 	var themeConfig = __webpack_require__(47);
 	var common = __webpack_require__(30);
@@ -8148,7 +8199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var forEachArr = util.forEachArray,
 	    aps = Array.prototype.slice;
 	
@@ -8410,7 +8461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var Collection = __webpack_require__(33);
 	var array = __webpack_require__(50);
@@ -8730,7 +8781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var datetime = __webpack_require__(27);
 	
 	/**
@@ -9023,7 +9074,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var array = __webpack_require__(50),
 	    datetime = __webpack_require__(27),
 	    Collection = __webpack_require__(33);
@@ -9241,7 +9292,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var VLayout = __webpack_require__(53);
@@ -9575,7 +9626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
@@ -10008,7 +10059,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
@@ -10225,7 +10276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var requestFn,
 	    cancelFn;
 	
@@ -10290,7 +10341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
@@ -10474,7 +10525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var TZDate = __webpack_require__(28).Date;
@@ -10686,7 +10737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
@@ -10993,7 +11044,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var Weekday = __webpack_require__(61),
 	    tmpl = __webpack_require__(62);
 	var mmax = Math.max;
@@ -11117,7 +11168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
@@ -11550,7 +11601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
@@ -12001,7 +12052,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
@@ -12349,7 +12400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var domevent = __webpack_require__(32);
 	var domutil = __webpack_require__(31);
 	var Point = __webpack_require__(68);
@@ -12614,7 +12665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	/**
 	 * Class for represent two dimentional x, y coordinates.
@@ -13074,7 +13125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var View = __webpack_require__(37);
 	var FloatingLayer = __webpack_require__(71);
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var DatePicker = __webpack_require__(72);
 	var TZDate = __webpack_require__(28).Date;
 	var config = __webpack_require__(34),
@@ -13687,7 +13738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37);
@@ -14140,7 +14191,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "popup-close\"><span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "icon ic-close\"></span></button>\n        <div class=\""
+	    + "icon "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "ic-close\"></span></button>\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "section-button-save\"><button class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -14175,7 +14228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var View = __webpack_require__(37);
 	var FloatingLayer = __webpack_require__(71);
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    domevent = __webpack_require__(32),
 	    domutil = __webpack_require__(31);
@@ -14564,7 +14617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	
@@ -14661,7 +14714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var DayGridMove = __webpack_require__(78);
@@ -14798,7 +14851,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
@@ -15081,7 +15134,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
 	var common = __webpack_require__(30);
@@ -15241,7 +15294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
@@ -15523,7 +15576,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var common = __webpack_require__(30);
@@ -16012,7 +16065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
@@ -16287,7 +16340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
@@ -16453,7 +16506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	
@@ -16564,7 +16617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var array = __webpack_require__(50);
 	var datetime = __webpack_require__(27);
@@ -17239,7 +17292,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var common = __webpack_require__(30);
 	var datetime = __webpack_require__(27);
 	var domevent = __webpack_require__(32);
@@ -17392,7 +17445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
@@ -17760,7 +17813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var reqAnimFrame = __webpack_require__(55);
@@ -18026,7 +18079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
@@ -18335,7 +18388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
 	var reqAnimFrame = __webpack_require__(55);
@@ -18515,7 +18568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    array = __webpack_require__(50),
 	    datetime = __webpack_require__(27),
@@ -18747,7 +18800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
@@ -18806,7 +18859,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                height: 34
 	            },
 	            footer: {
-	                height: 34
+	                height: 3
 	            }
 	        }
 	    }, options);
@@ -18815,7 +18868,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        height: 34
 	    }, util.pick(options, 'grid', 'header'));
 	    this.options.grid.footer = util.extend({
-	        height: 34
+	        height: 3
 	    }, util.pick(options, 'grid', 'footer'));
 	
 	    /**
@@ -19121,7 +19174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
@@ -19595,7 +19648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31);
@@ -19693,7 +19746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var config = __webpack_require__(34);
 	var datetime = __webpack_require__(27);
@@ -20035,7 +20088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32);
@@ -20209,7 +20262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    common = __webpack_require__(30),
 	    domutil = __webpack_require__(31),
@@ -20761,7 +20814,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
@@ -20974,7 +21027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
@@ -21097,7 +21150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
@@ -21369,7 +21422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
@@ -21647,7 +21700,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var OUT_PADDING = 5;
-	var util = __webpack_require__(6);
+	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    domevent = __webpack_require__(32),
 	    domutil = __webpack_require__(31),
