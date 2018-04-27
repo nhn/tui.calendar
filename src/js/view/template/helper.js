@@ -299,12 +299,21 @@ Handlebars.registerHelper({
     },
 
     'monthGridHeader-tmpl': function(model) {
-        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
+        var date = parseInt(model.date.split('-')[2], 10);
+        var classNames = [];
+
+        classNames.push(config.classname('weekday-grid-date'));
+        if (model.isToday) {
+            classNames.push(config.classname('weekday-grid-date-decorator'));
+        }
+
+        return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
     },
 
-    /* eslint no-unused-vars: 0 */
     'monthGridHeaderExceed-tmpl': function(hiddenSchedules) {
-        return '';
+        var className = config.classname('weekday-grid-more-schedules');
+
+        return '<span class="' + className + '">' + hiddenSchedules + ' more</span>';
     },
 
     'monthGridFooter-tmpl': function() {
@@ -317,7 +326,10 @@ Handlebars.registerHelper({
     },
 
     'weekDayname-tmpl': function(model) {
-        return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span>&nbsp;&nbsp;<span class="tui-full-calendar-dayname-name">' + model.dayName + '</span>';
+        var classDate = config.classname('dayname-date');
+        var className = config.classname('dayname-name');
+
+        return '<span class="' + classDate + '">' + model.date + '</span>&nbsp;&nbsp;<span class="' + className + '">' + model.dayName + '</span>';
     },
 
     'monthDayname-tmpl': function(model) {

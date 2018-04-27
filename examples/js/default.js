@@ -88,30 +88,7 @@
             monthMoreClose: function() {
                 return '<i class="fa fa-close"></i>';
             },
-            monthGridHeader: function(model) {
-                var date = parseInt(model.date.split('-')[2], 10);
-                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date + '</span>';
-                var today = model.isToday ? 'TDY' : '';
-                if (today) {
-                    template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
-                }
 
-                return template;
-            },
-            monthGridHeaderExceed: function(hiddenSchedules) {
-                return '<span class="calendar-more-schedules">' + hiddenSchedules + ' more</span>';
-            },
-
-            monthGridFooter: function() {
-                return '';
-            },
-
-            monthGridFooterExceed: function() {
-                return '';
-            },
-            monthDayname: function(dayname) {
-                return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
-            },
             collapseBtnTitle: function() {
                 return '<i class="fa fa-chevron-up"></i>';
             }
