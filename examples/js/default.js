@@ -9,7 +9,7 @@
     var cal, resizeThrottled;
     var useCreationPopup = true;
     var useDetailPopup = true;
-    var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
+    var guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
     Calendar.setTimezoneOffsetCallback(function(timestamp) {
         return new Date(timestamp).getTimezoneOffset();
@@ -17,185 +17,72 @@
 
     cal = new Calendar('#calendar', {
         defaultView: 'month',
-        template: {
-            allday: function(schedule) {
-                var html = [];
-                if (schedule.raw['class'] === 'private') {
-                    html.push('<i class="fa fa-lock"></i>');
-                    html.push(' Private');
-                } else {
-                    if (schedule.isReadOnly) {
-                        html.push('<i class="fa fa-ban"></i>');
-                    } else if (schedule.raw.hasRecurrenceRule) {
-                        html.push('<i class="fa fa-repeat"></i>');
-                    } else if (schedule.raw.hasToOrCc) {
-                        html.push('<i class="fa fa-group"></i>');
-                    } else if (schedule.raw.location) {
-                        html.push('<i class="fa fa-map-marker"></i>');
-                    }
-                    html.push(' ' + schedule.title);
-                }
-
-                return html.join('');
-            },
-            time: function(schedule) {
-                var html = [];
-                html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
-                if (schedule.raw['class'] === 'private') {
-                    html.push('<i class="fa fa-lock"></i>');
-                    html.push(' Private');
-                } else {
-                    if (schedule.isReadOnly) {
-                        html.push('<i class="fa fa-ban"></i>');
-                    } else if (schedule.raw.hasRecurrenceRule) {
-                        html.push('<i class="fa fa-repeat"></i>');
-                    } else if (schedule.raw.hasToOrCc) {
-                        html.push('<i class="fa fa-group"></i>');
-                    } else if (schedule.raw.location) {
-                        html.push('<i class="fa fa-map-marker"></i>');
-                    }
-                    html.push(' ' + schedule.title);
-                }
-
-                return html.join('');
-            }
-        },
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
-        calendars: CalendarList
+        calendars: CalendarList,
+        template: {
+            allday: function(schedule) {
+                return getTimeTemplate(schedule, true);
+            },
+            time: function(schedule) {
+                return getTimeTemplate(schedule, false);
+            }
+        }
     });
 
     // event handlers
     cal.on({
         'clickSchedule': function(e) {
-            var schedule = e.schedule;
-
-            console.log('clickSchedule', ' useCreationPopup: ' + useCreationPopup, e);
-            if (useCreationPopup) {
-                return;
-            }
-
-            if (lastClickSchedule && lastClickSchedule.id === schedule.id) {
-                return;
-            }
-
-            if (lastClickPopover) {
-                lastClickPopover.popover('hide');
-                lastClickPopover = null;
-            }
-
-            lastClickSchedule = schedule;
-
-            lastClickPopover = toggleSchedulePopover(cal.getElement(schedule.id, schedule.calendarId), schedule);
+            console.log('clickSchedule', e);
         },
         'clickDayname': function(date) {
             console.log('clickDayname', date);
         },
         'beforeCreateSchedule': function(e) {
-            console.log(e);
-            if (useCreationPopup) {
-                saveNewSchedule(e);
-            } else {
-                createNewSchedule(e);
-            }
+            console.log('beforeCreateSchedule', e);
+            saveNewSchedule(e);
         },
         'beforeUpdateSchedule': function(e) {
+            console.log('beforeUpdateSchedule', e);
             e.schedule.start = e.start;
             e.schedule.end = e.end;
             cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
-
-            console.log('update', ' useCreationPopup: ' + useCreationPopup, e);
         },
         'beforeDeleteSchedule': function(e) {
+            console.log('beforeDeleteSchedule', e);
             cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
-            console.log('delete', e);
         }
     });
 
-    function toggleSchedulePopover(selector, schedule) {
-        var element = $(selector);
-        var $document = $(document);
-        var options = {
-            html: true,
-            trigger: 'focus',
-            container: 'body'
-        };
-        var calendar = findCalendar(schedule.calendarId);
-        if (!element) {
-            return null;
+    /**
+     * Get time template for time and all-day
+     * @param {Schedule} schedule - schedule
+     * @param {boolean} isAllDay - isAllDay or hasMultiDates
+     * @returns {string}
+     */
+    function getTimeTemplate(schedule, isAllDay) {
+        var html = [];
+    
+        if (!isAllDay) {
+            html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
+        }
+        if (schedule.isPrivate) {
+            html.push('<i class="fa fa-lock"></i>');
+            html.push(' Private');
+        } else {
+            if (schedule.isReadOnly) {
+                html.push('<i class="fa fa-ban"></i>');
+            } else if (schedule.recurrenceRule) {
+                html.push('<i class="fa fa-repeat"></i>');
+            } else if (schedule.attendees.length) {
+                html.push('<i class="fa fa-group"></i>');
+            } else if (schedule.location) {
+                html.push('<i class="fa fa-map-marker"></i>');
+            }
+            html.push(' ' + schedule.title);
         }
 
-        tui.util.extend(options, {
-            placement: function() {
-                var offset = element.offset();
-                var docWidth = $document.width();
-                if (offset.left + (element.width() / 2) < docWidth / 2) {
-                    return 'right';
-                }
-
-                return 'left';
-            },
-            content: function() {
-                var html = [];
-                // calendar name
-                html.push('<p>');
-                html.push('<span class="calendar-bar" style="background-color: ' + calendar.bgColor + '; border-color:' + calendar.borderColor + ';"></span>');
-                html.push('<span class="calendar-name">' + calendar.name + '</span>');
-                html.push('</p>');
-
-                // schedule name
-                html.push('<p>');
-                html.push('<span class="schedule-title">' + schedule.title + '</span>');
-                html.push('</p>');
-
-                // schedule time
-                html.push('<p>');
-                html.push('<i class="fa fa-clock-o"></i>');
-                if (schedule.raw.hasRecurrenceRule) {
-                    html.push('<i class="fa fa-repeat"></i>');
-                }
-                html.push('<span class="schedule-time"> ');
-                if (schedule.isAllDay && !moment(schedule.start.getTime()).isSame(moment(schedule.end.getTime()), 'days')) {
-                    html.push(moment(schedule.start.getTime()).format('YYYY MM-DD') + ' ~ ' + moment(schedule.end.getTime()).format('YYYY MM-DD'));
-                } else {
-                    html.push(moment(schedule.start.getTime()).format('MM-DD HH:mm') + ' ~ ' + moment(schedule.end.getTime()).format('HH:mm'));
-                }
-                html.push('</span>');
-                html.push('</p>');
-
-                // schedule location
-                if (schedule.raw.location) {
-                    html.push('<p>');
-                    html.push('<i class="fa fa-map-marker"></i> ' + schedule.raw.location);
-                    html.push('</p>');
-                }
-
-                // schedule creator
-                if (schedule.raw.creator) {
-                    html.push('<p>');
-                    html.push('<i class="fa fa-user"></i> <a>' + schedule.raw.creator.name + '</a>');
-                    html.push('</p>');
-                }
-
-                return html.join('');
-            }
-        });
-        element.popover(options);
-        element.popover('show');
-
-        return element;
-    }
-
-    function closePopover(e) {
-        var target = $(e.target);
-        if (!target.closest('.popover').length && lastClickPopover && !lastClickPopover.find(target).length && lastClickPopover[0] !== target[0]) {
-            if (lastClickSchedule) {
-                lastClickSchedule = null;
-            }
-
-            lastClickPopover.popover('hide');
-            lastClickPopover = null;
-        }
+        return html.join('');
     }
 
     /**
@@ -537,7 +424,6 @@
         $('#dropdownMenu-calendars-list').on('click', onChangeNewScheduleCalendar);
 
         window.addEventListener('resize', resizeThrottled);
-        document.addEventListener('click', closePopover);
     }
 
     function getDataAction(target) {

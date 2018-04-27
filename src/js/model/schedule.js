@@ -140,6 +140,30 @@ function Schedule() {
     this.isReadOnly = false;
 
     /**
+     * private schedule
+     * @type {boolean}
+     */
+    this.isPrivate = false;
+
+    /**
+     * location
+     * @type {string}
+     */
+    this.location = '';
+
+    /**
+     * attendees
+     * @type {Array.<string>}
+     */
+    this.attendees = [];
+
+    /**
+     * recurrence rule
+     * @type {any}
+     */
+    this.recurrenceRule = '';
+
+    /**
      * Separate data storage space independent of rendering.
      * @type {object}
      */
@@ -197,6 +221,10 @@ Schedule.prototype.init = function(options) {
     this.category = options.category || '';
     this.dueDateClass = options.dueDateClass || '';
     this.customStyle = options.customStyle || '';
+    this.location = options.location || '';
+    this.attendees = options.attendees || [];
+    this.recurrenceRule = options.recurrenceRule || '';
+    this.isPrivate = options.isPrivate || false;
     this.isPending = options.isPending || false;
     this.isFocused = options.isFocused || false;
     this.isReadOnly = options.isReadOnly || false;
