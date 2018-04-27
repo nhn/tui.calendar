@@ -7,7 +7,6 @@
 
 (function(window, Calendar) {
     var cal, resizeThrottled;
-    var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var useCreationPopup = true;
     var useDetailPopup = true;
     var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
@@ -18,8 +17,6 @@
 
     cal = new Calendar('#calendar', {
         defaultView: 'month',
-        taskView: true,
-        scheduleView: true,
         template: {
             allday: function(schedule) {
                 var html = [];
@@ -62,20 +59,6 @@
 
                 return html.join('');
             }
-        },
-        month: {
-            daynames: daynames,
-            moreLayerSize: {
-                height: 'auto'
-            },
-            grid: {
-                footer: {
-                    height: 10
-                }
-            }
-        },
-        week: {
-            daynames: daynames
         },
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
