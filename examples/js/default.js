@@ -24,14 +24,8 @@
             milestone: function(schedule) {
                 return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
             },
-            milestoneTitle: function() {
-                return '<div class="weekly-left-title"><span class="weekly-left-content">Milestone</span></div>';
-            },
             task: function(schedule) {
                 return '#' + schedule.title;
-            },
-            taskTitle: function() {
-                return '<div class="weekly-left-title"><span class="weekly-left-content">Task</span></div>';
             },
             allday: function(schedule) {
                 var html = [];
@@ -52,12 +46,6 @@
                 }
 
                 return html.join('');
-            },
-            alldayTitle: function() {
-                return '<div class="weekly-left-title"><span class="weekly-left-content">All Day</span></div>';
-            },
-            alldayCollapseBtnTitle: function() {
-                return '∧';
             },
             time: function(schedule) {
                 var html = [];

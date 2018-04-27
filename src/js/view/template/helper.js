@@ -258,7 +258,9 @@ Handlebars.registerHelper({
     },
 
     'milestoneTitle-tmpl': function() {
-        return 'Milestone';
+        var className = config.classname('left-content');
+
+        return '<span class="' + className + '">Milestone</span></div>';
     },
 
     'task-tmpl': function(model) {
@@ -271,15 +273,15 @@ Handlebars.registerHelper({
     },
 
     'taskTitle-tmpl': function() {
-        return 'Task';
+        var className = config.classname('left-content');
+
+        return '<span class="' + className + '">Task</span></div>';
     },
 
     'alldayTitle-tmpl': function() {
-        return 'AllDay';
-    },
+        var className = config.classname('left-content');
 
-    'alldayCollapseBtnTitle-tmpl': function() {
-        return '∧';
+        return '<span class="' + className + '">All Day</span></div>';
     },
 
     'allday-tmpl': function(model) {
