@@ -297,7 +297,10 @@ Handlebars.registerHelper({
     },
 
     'monthMoreClose-tmpl': function() {
-        return 'close';
+        var iconName = config.classname('icon');
+        var closeIconName = config.classname('ic-close');
+
+        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
     },
 
     'monthGridHeader-tmpl': function(model) {
@@ -361,7 +364,10 @@ Handlebars.registerHelper({
     },
 
     'collapseBtnTitle-tmpl': function() {
-        return '∧';
+        var iconName = config.classname('icon');
+        var closeIconName = config.classname('ic-arrow-solid-top');
+
+        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
     },
 
     'popupIsAllDay-tmpl': function() {
