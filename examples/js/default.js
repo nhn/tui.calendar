@@ -67,13 +67,6 @@
                 }
 
                 return html.join('');
-            },
-            monthMoreClose: function() {
-                return '<i class="fa fa-close"></i>';
-            },
-
-            collapseBtnTitle: function() {
-                return '<i class="fa fa-chevron-up"></i>';
             }
         },
         month: {
@@ -510,19 +503,19 @@
 
         if (type === 'day') {
             type = 'Daily';
-            iconClassName = 'tui-full-calendar-icon ic_view_day';
+            iconClassName = 'calendar-icon ic_view_day';
         } else if (type === 'week') {
             type = 'Weekly';
-            iconClassName = 'tui-full-calendar-icon ic_view_week';
+            iconClassName = 'calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 2) {
             type = '2 weeks';
-            iconClassName = 'tui-full-calendar-icon ic_view_week';
+            iconClassName = 'calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 3) {
             type = '3 weeks';
-            iconClassName = 'tui-full-calendar-icon ic_view_week';
+            iconClassName = 'calendar-icon ic_view_week';
         } else {
             type = 'Monthly';
-            iconClassName = 'tui-full-calendar-icon ic_view_month';
+            iconClassName = 'calendar-icon ic_view_month';
         }
 
         calendarTypeName.innerHTML = type;
