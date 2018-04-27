@@ -193,7 +193,7 @@ Clone it to local computer. Install node modules.
 Before starting development, you should check to haveany errors.
 
 ``` sh
-$ git clone https://github.com/{your-personal-repo}/tui.calendar.git
+$ git clone https://github.com/{username}/tui.calendar.git
 $ cd tui.calendar
 $ npm install
 $ npm run test
@@ -209,7 +209,6 @@ Don't miss adding test cases and then make green rights.
 
 ``` sh
 $ npm run serve
-$ npm run serve:ie8 # Run on Internet Explorer 8
 ```
 
 #### Run karma test
