@@ -249,12 +249,10 @@ Handlebars.registerHelper({
      **********/
 
     'milestone-tmpl': function(model) {
-        return '<span class="' +
-            config.classname('dot') +
-            '" style="background-color:' +
-            model.bgColor +
-            '"></span> ' +
-            common.stripTags(model.title);
+        var icon = config.classname('icon');
+        var iconName = config.classname('ic-milestone');
+
+        return '<span class="' + icon + ' ' + iconName + '"></span><span style="background-color: ' + model.bgColor + '">' + common.stripTags(model.title) + '</span>';
     },
 
     'milestoneTitle-tmpl': function() {
@@ -264,12 +262,7 @@ Handlebars.registerHelper({
     },
 
     'task-tmpl': function(model) {
-        return '<span class="' +
-            config.classname('dot') +
-            '" style="background-color:' +
-            model.bgColor +
-            '"></span> ' +
-            common.stripTags(model.title);
+        return '#' + model.title;
     },
 
     'taskTitle-tmpl': function() {

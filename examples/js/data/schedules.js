@@ -98,6 +98,7 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.borderColor = calendar.borderColor;
 
     if (schedule.category === 'milestone') {
+        schedule.color = schedule.bgColor;
         schedule.bgColor = 'transparent';
         schedule.dragBgColor = 'transparent';
         schedule.borderColor = 'transparent';

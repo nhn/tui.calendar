@@ -21,12 +21,6 @@
         taskView: true,
         scheduleView: true,
         template: {
-            milestone: function(schedule) {
-                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
-            },
-            task: function(schedule) {
-                return '#' + schedule.title;
-            },
             allday: function(schedule) {
                 var html = [];
                 if (schedule.raw['class'] === 'private') {
