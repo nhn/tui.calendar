@@ -1,28 +1,33 @@
 +prefix-classes(css-prefix)
     .layout
-        height: 100%;
+        height: 100%
+        position: relative
+        box-sizing: border-box
+
+        *
+            box-sizing: border-box
 
     // Related with user interaction
     .dragging
-        cursor: move;
+        cursor: move
 
     .resizing
-        cursor: row-resize;
+        cursor: row-resize
 
     .resizing-x
-        cursor: col-resize;
+        cursor: col-resize
 
     .hidden
-        display: none !important;
+        display: none !important
 
     .invisible span
-        visibility: hidden;
+        visibility: hidden
 
     .clear
         clearfix()
 
     .scroll-y
-        overflow-y: scroll;
+        overflow-y: scroll
 
     .dot
         display: inline-block
@@ -41,21 +46,21 @@
 
 // Drag handle
 .handle-x
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-image: url(handle-x.png);
+    background-position: center center
+    background-repeat: no-repeat
+    background-image: url(handle-x.png)
 
 .handle-y
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-image: url(handle-y.png);
+    background-position: center center
+    background-repeat: no-repeat
+    background-image: url(handle-y.png)
 
 // For Retina display
 @media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-devicepixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx)
     .handle-x
-        background-image: url(handle-x@2x.png);
-        background-size: 8px 4px;
+        background-image: url(handle-x@2x.png)
+        background-size: 8px 4px
 
     .handle-y
-        background-image: url(handle-y@2x.png);
-        background-size: 4px 8px;
+        background-image: url(handle-y@2x.png)
+        background-size: 4px 8px

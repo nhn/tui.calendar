@@ -7,10 +7,9 @@
 
 (function(window, Calendar) {
     var cal, resizeThrottled;
-    var daynames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var useCreationPopup = true;
     var useDetailPopup = true;
-    var lastClickSchedule, lastClickPopover, guideElement, datePicker, selectedCalendar;
+    var guideElement, datePicker, selectedCalendar;
     // Calendar.setTimezoneOffset(540);
     Calendar.setTimezoneOffsetCallback(function(timestamp) {
         return new Date(timestamp).getTimezoneOffset();
@@ -18,257 +17,72 @@
 
     cal = new Calendar('#calendar', {
         defaultView: 'month',
-        taskView: true,
-        scheduleView: true,
-        template: {
-            milestone: function(schedule) {
-                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
-            },
-            milestoneTitle: function() {
-                return '<div class="weekly-left-title"><span class="weekly-left-content">Milestone</span></div>';
-            },
-            task: function(schedule) {
-                return '#' + schedule.title;
-            },
-            taskTitle: function() {
-                return '<div class="weekly-left-title"><span class="weekly-left-content">Task</span></div>';
-            },
-            allday: function(schedule) {
-                var html = [];
-                if (schedule.raw['class'] === 'private') {
-                    html.push('<i class="fa fa-lock"></i>');
-                    html.push(' Private');
-                } else {
-                    if (schedule.isReadOnly) {
-                        html.push('<i class="fa fa-ban"></i>');
-                    } else if (schedule.raw.hasRecurrenceRule) {
-                        html.push('<i class="fa fa-repeat"></i>');
-                    } else if (schedule.raw.hasToOrCc) {
-                        html.push('<i class="fa fa-group"></i>');
-                    } else if (schedule.raw.location) {
-                        html.push('<i class="fa fa-map-marker"></i>');
-                    }
-                    html.push(' ' + schedule.title);
-                }
-
-                return html.join('');
-            },
-            alldayTitle: function() {
-                return '<div class="weekly-left-title"><span class="weekly-left-content">All Day</span></div>';
-            },
-            alldayCollapseBtnTitle: function() {
-                return '∧';
-            },
-            time: function(schedule) {
-                var html = [];
-                html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
-                if (schedule.raw['class'] === 'private') {
-                    html.push('<i class="fa fa-lock"></i>');
-                    html.push(' Private');
-                } else {
-                    if (schedule.isReadOnly) {
-                        html.push('<i class="fa fa-ban"></i>');
-                    } else if (schedule.raw.hasRecurrenceRule) {
-                        html.push('<i class="fa fa-repeat"></i>');
-                    } else if (schedule.raw.hasToOrCc) {
-                        html.push('<i class="fa fa-group"></i>');
-                    } else if (schedule.raw.location) {
-                        html.push('<i class="fa fa-map-marker"></i>');
-                    }
-                    html.push(' ' + schedule.title);
-                }
-
-                return html.join('');
-            },
-            monthMoreTitleDate: function(date) {
-                date = new Date(date);
-
-                return tui.util.formatDate('MM-DD', date) + '(' + daynames[date.getDay()] + ')';
-            },
-            monthMoreClose: function() {
-                return '<i class="fa fa-close"></i>';
-            },
-            monthGridHeader: function(model) {
-                var date = parseInt(model.date.split('-')[2], 10);
-                var template = '<span class="tui-full-calendar-weekday-grid-date">' + date + '</span>';
-                var today = model.isToday ? 'TDY' : '';
-                if (today) {
-                    template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
-                }
-
-                return template;
-            },
-            monthGridHeaderExceed: function(hiddenSchedules) {
-                return '<span class="calendar-more-schedules">' + hiddenSchedules + ' more</span>';
-            },
-
-            monthGridFooter: function() {
-                return '';
-            },
-
-            monthGridFooterExceed: function() {
-                return '';
-            },
-            weekDayname: function(dayname) {
-                return '<span class="calendar-week-dayname-date">' + dayname.date + '</span>&nbsp;&nbsp;<span class="calendar-week-dayname-name">' + dayname.dayName + '</span>';
-            },
-            monthDayname: function(dayname) {
-                return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
-            },
-            collapseBtnTitle: function() {
-                return '<i class="fa fa-chevron-up"></i>';
-            }
-        },
-        month: {
-            daynames: daynames,
-            moreLayerSize: {
-                height: 'auto'
-            },
-            grid: {
-                footer: {
-                    height: 10
-                }
-            }
-        },
-        week: {
-            daynames: daynames
-        },
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
-        calendars: CalendarList
+        calendars: CalendarList,
+        template: {
+            allday: function(schedule) {
+                return getTimeTemplate(schedule, true);
+            },
+            time: function(schedule) {
+                return getTimeTemplate(schedule, false);
+            }
+        }
     });
 
     // event handlers
     cal.on({
         'clickSchedule': function(e) {
-            var schedule = e.schedule;
-
-            console.log('clickSchedule', ' useCreationPopup: ' + useCreationPopup, e);
-            if (useCreationPopup) {
-                return;
-            }
-
-            if (lastClickSchedule && lastClickSchedule.id === schedule.id) {
-                return;
-            }
-
-            if (lastClickPopover) {
-                lastClickPopover.popover('hide');
-                lastClickPopover = null;
-            }
-
-            lastClickSchedule = schedule;
-
-            lastClickPopover = toggleSchedulePopover(cal.getElement(schedule.id, schedule.calendarId), schedule);
+            console.log('clickSchedule', e);
         },
         'clickDayname': function(date) {
             console.log('clickDayname', date);
         },
         'beforeCreateSchedule': function(e) {
-            console.log(e);
-            if (useCreationPopup) {
-                saveNewSchedule(e);
-            } else {
-                createNewSchedule(e);
-            }
+            console.log('beforeCreateSchedule', e);
+            saveNewSchedule(e);
         },
         'beforeUpdateSchedule': function(e) {
+            console.log('beforeUpdateSchedule', e);
             e.schedule.start = e.start;
             e.schedule.end = e.end;
             cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
-
-            console.log('update', ' useCreationPopup: ' + useCreationPopup, e);
         },
         'beforeDeleteSchedule': function(e) {
+            console.log('beforeDeleteSchedule', e);
             cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
-            console.log('delete', e);
         }
     });
 
-    function toggleSchedulePopover(selector, schedule) {
-        var element = $(selector);
-        var $document = $(document);
-        var options = {
-            html: true,
-            trigger: 'focus',
-            container: 'body'
-        };
-        var calendar = findCalendar(schedule.calendarId);
-        if (!element) {
-            return null;
+    /**
+     * Get time template for time and all-day
+     * @param {Schedule} schedule - schedule
+     * @param {boolean} isAllDay - isAllDay or hasMultiDates
+     * @returns {string}
+     */
+    function getTimeTemplate(schedule, isAllDay) {
+        var html = [];
+    
+        if (!isAllDay) {
+            html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
+        }
+        if (schedule.isPrivate) {
+            html.push('<i class="fa fa-lock"></i>');
+            html.push(' Private');
+        } else {
+            if (schedule.isReadOnly) {
+                html.push('<i class="fa fa-ban"></i>');
+            } else if (schedule.recurrenceRule) {
+                html.push('<i class="fa fa-repeat"></i>');
+            } else if (schedule.attendees.length) {
+                html.push('<i class="fa fa-group"></i>');
+            } else if (schedule.location) {
+                html.push('<i class="fa fa-map-marker"></i>');
+            }
+            html.push(' ' + schedule.title);
         }
 
-        tui.util.extend(options, {
-            placement: function() {
-                var offset = element.offset();
-                var docWidth = $document.width();
-                if (offset.left + (element.width() / 2) < docWidth / 2) {
-                    return 'right';
-                }
-
-                return 'left';
-            },
-            content: function() {
-                var html = [];
-                // calendar name
-                html.push('<p>');
-                html.push('<span class="calendar-bar" style="background-color: ' + calendar.bgColor + '; border-color:' + calendar.borderColor + ';"></span>');
-                html.push('<span class="calendar-name">' + calendar.name + '</span>');
-                html.push('</p>');
-
-                // schedule name
-                html.push('<p>');
-                html.push('<span class="schedule-title">' + schedule.title + '</span>');
-                html.push('</p>');
-
-                // schedule time
-                html.push('<p>');
-                html.push('<i class="fa fa-clock-o"></i>');
-                if (schedule.raw.hasRecurrenceRule) {
-                    html.push('<i class="fa fa-repeat"></i>');
-                }
-                html.push('<span class="schedule-time"> ');
-                if (schedule.isAllDay && !moment(schedule.start.getTime()).isSame(moment(schedule.end.getTime()), 'days')) {
-                    html.push(moment(schedule.start.getTime()).format('YYYY MM-DD') + ' ~ ' + moment(schedule.end.getTime()).format('YYYY MM-DD'));
-                } else {
-                    html.push(moment(schedule.start.getTime()).format('MM-DD HH:mm') + ' ~ ' + moment(schedule.end.getTime()).format('HH:mm'));
-                }
-                html.push('</span>');
-                html.push('</p>');
-
-                // schedule location
-                if (schedule.raw.location) {
-                    html.push('<p>');
-                    html.push('<i class="fa fa-map-marker"></i> ' + schedule.raw.location);
-                    html.push('</p>');
-                }
-
-                // schedule creator
-                if (schedule.raw.creator) {
-                    html.push('<p>');
-                    html.push('<i class="fa fa-user"></i> <a>' + schedule.raw.creator.name + '</a>');
-                    html.push('</p>');
-                }
-
-                return html.join('');
-            }
-        });
-        element.popover(options);
-        element.popover('show');
-
-        return element;
-    }
-
-    function closePopover(e) {
-        var target = $(e.target);
-        if (!target.closest('.popover').length && lastClickPopover && !lastClickPopover.find(target).length && lastClickPopover[0] !== target[0]) {
-            if (lastClickSchedule) {
-                lastClickSchedule = null;
-            }
-
-            lastClickPopover.popover('hide');
-            lastClickPopover = null;
-        }
+        return html.join('');
     }
 
     /**
@@ -553,19 +367,19 @@
 
         if (type === 'day') {
             type = 'Daily';
-            iconClassName = 'tui-full-calendar-icon ic_view_day';
+            iconClassName = 'calendar-icon ic_view_day';
         } else if (type === 'week') {
             type = 'Weekly';
-            iconClassName = 'tui-full-calendar-icon ic_view_week';
+            iconClassName = 'calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 2) {
             type = '2 weeks';
-            iconClassName = 'tui-full-calendar-icon ic_view_week';
+            iconClassName = 'calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 3) {
             type = '3 weeks';
-            iconClassName = 'tui-full-calendar-icon ic_view_week';
+            iconClassName = 'calendar-icon ic_view_week';
         } else {
             type = 'Monthly';
-            iconClassName = 'tui-full-calendar-icon ic_view_month';
+            iconClassName = 'calendar-icon ic_view_month';
         }
 
         calendarTypeName.innerHTML = type;
@@ -610,7 +424,6 @@
         $('#dropdownMenu-calendars-list').on('click', onChangeNewScheduleCalendar);
 
         window.addEventListener('resize', resizeThrottled);
-        document.addEventListener('click', closePopover);
     }
 
     function getDataAction(target) {
@@ -640,16 +453,6 @@
             '<span>' + calendar.name + '</span>' +
             '</label></div>'
         );
-    });
-    calendarList.innerHTML = html.join('\n');
-
-    calendarList = document.getElementById('dropdownMenu-calendars-list');
-    html = [];
-    CalendarList.forEach(function(calendar) {
-        html.push('<li><a role="menuitem" data-action="' + calendar.id + '">');
-        html.push('<span class="calendar-bar" style="background-color: ' + calendar.bgColor + '; border-color:' + calendar.borderColor + ';"></span>');
-        html.push('<span class="calendar-name">' + calendar.name + '</span>');
-        html.push('</a></li>');
     });
     calendarList.innerHTML = html.join('\n');
 })();

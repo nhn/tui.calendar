@@ -249,37 +249,32 @@ Handlebars.registerHelper({
      **********/
 
     'milestone-tmpl': function(model) {
-        return '<span class="' +
-            config.classname('dot') +
-            '" style="background-color:' +
-            model.bgColor +
-            '"></span> ' +
-            common.stripTags(model.title);
+        var icon = config.classname('icon');
+        var iconName = config.classname('ic-milestone');
+
+        return '<span class="' + icon + ' ' + iconName + '"></span><span style="background-color: ' + model.bgColor + '">' + common.stripTags(model.title) + '</span>';
     },
 
     'milestoneTitle-tmpl': function() {
-        return 'Milestone';
+        var className = config.classname('left-content');
+
+        return '<span class="' + className + '">Milestone</span></div>';
     },
 
     'task-tmpl': function(model) {
-        return '<span class="' +
-            config.classname('dot') +
-            '" style="background-color:' +
-            model.bgColor +
-            '"></span> ' +
-            common.stripTags(model.title);
+        return '#' + model.title;
     },
 
     'taskTitle-tmpl': function() {
-        return 'Task';
+        var className = config.classname('left-content');
+
+        return '<span class="' + className + '">Task</span></div>';
     },
 
     'alldayTitle-tmpl': function() {
-        return 'AllDay';
-    },
+        var className = config.classname('left-content');
 
-    'alldayCollapseBtnTitle-tmpl': function() {
-        return '∧';
+        return '<span class="' + className + '">All Day</span></div>';
     },
 
     'allday-tmpl': function(model) {
@@ -295,16 +290,28 @@ Handlebars.registerHelper({
     },
 
     'monthMoreClose-tmpl': function() {
-        return 'close';
+        var iconName = config.classname('icon');
+        var closeIconName = config.classname('ic-close');
+
+        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
     },
 
     'monthGridHeader-tmpl': function(model) {
-        return '<span class="tui-full-calendar-weekday-grid-date">' + model.date + '</span>';
+        var date = parseInt(model.date.split('-')[2], 10);
+        var classNames = [];
+
+        classNames.push(config.classname('weekday-grid-date'));
+        if (model.isToday) {
+            classNames.push(config.classname('weekday-grid-date-decorator'));
+        }
+
+        return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
     },
 
-    /* eslint no-unused-vars: 0 */
     'monthGridHeaderExceed-tmpl': function(hiddenSchedules) {
-        return '';
+        var className = config.classname('weekday-grid-more-schedules');
+
+        return '<span class="' + className + '">' + hiddenSchedules + ' more</span>';
     },
 
     'monthGridFooter-tmpl': function() {
@@ -317,7 +324,10 @@ Handlebars.registerHelper({
     },
 
     'weekDayname-tmpl': function(model) {
-        return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span> ' + model.dayName;
+        var classDate = config.classname('dayname-date');
+        var className = config.classname('dayname-name');
+
+        return '<span class="' + classDate + '">' + model.date + '</span>&nbsp;&nbsp;<span class="' + className + '">' + model.dayName + '</span>';
     },
 
     'monthDayname-tmpl': function(model) {
@@ -347,7 +357,10 @@ Handlebars.registerHelper({
     },
 
     'collapseBtnTitle-tmpl': function() {
-        return '∧';
+        var iconName = config.classname('icon');
+        var closeIconName = config.classname('ic-arrow-solid-top');
+
+        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
     },
 
     'popupIsAllDay-tmpl': function() {

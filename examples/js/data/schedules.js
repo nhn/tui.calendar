@@ -92,22 +92,24 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.isReadOnly = chance.bool({likelihood: 20});
     generateTime(schedule, renderStart, renderEnd);
 
+    schedule.isPrivate = chance.bool({likelihood: 10});
+    schedule.location = chance.address();
+    schedule.attendees = chance.bool({likelihood: 70}) ? ['anyone']: [];
+    schedule.recurrenceRule = chance.bool({likelihood: 20});
+
     schedule.color = calendar.color;
     schedule.bgColor = calendar.bgColor;
     schedule.dragBgColor = calendar.dragBgColor;
     schedule.borderColor = calendar.borderColor;
 
     if (schedule.category === 'milestone') {
+        schedule.color = schedule.bgColor;
         schedule.bgColor = 'transparent';
         schedule.dragBgColor = 'transparent';
         schedule.borderColor = 'transparent';
     }
 
     schedule.raw.memo = chance.sentence();
-    schedule.raw.hasToOrCc = chance.bool({likelihood: 70});
-    schedule.raw.hasRecurrenceRule = chance.bool({likelihood: 20});
-    schedule.raw.location = chance.address();
-    schedule.raw.class = chance.bool({likelihood: 10}) ? 'private' : 'public';
     schedule.raw.creator.name = chance.name();
     schedule.raw.creator.avatar = chance.avatar();
     schedule.raw.creator.company = chance.company();

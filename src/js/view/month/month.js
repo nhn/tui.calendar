@@ -63,7 +63,7 @@ function Month(options, container, controller) {
                 height: 34
             },
             footer: {
-                height: 34
+                height: 3
             }
         }
     }, options);
@@ -72,7 +72,7 @@ function Month(options, container, controller) {
         height: 34
     }, util.pick(options, 'grid', 'header'));
     this.options.grid.footer = util.extend({
-        height: 34
+        height: 3
     }, util.pick(options, 'grid', 'footer'));
 
     /**

@@ -32,10 +32,14 @@ var mmin = Math.min;
  * @property {string} category - schedule type('milestone', 'task', allday', 'time')
  * @property {string} dueDateClass - task schedule type string
  *                                   (any string value is ok and mandatory if category is 'task')
+ * @property {string} location - location
+ * @property {Array.<string>} attendees - attendees
+ * @property {any} recurrenceRule - recurrence rule
  * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
  * @property {boolean} isFocused - focused schedule flag
  * @property {boolean} isVisible - schedule visibility flag
  * @property {boolean} isReadOnly - schedule read-only flag
+ * @property {boolean} isPrivate - private schedule
  * @property {string} [color] - schedule text color
  * @property {string} [bgColor] - schedule background color
  * @property {string} [dragBgColor] - schedule background color when dragging it

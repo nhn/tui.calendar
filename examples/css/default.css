@@ -54,33 +54,13 @@ body {
   color: #333;
 }
 
-.modal-dialog {
-  width: 500px;
-}
-
-.modal-body > .input-group {
-  margin-bottom: 8px;
-}
-
-.modal-body-allday {
-  line-height: 33px;
-}
-
-.modal-body-allday > label {
-  margin-bottom: 0;
-}
-
-.input-group .tui-datepicker-input {
-  height: 34px;
-}
-
 .bi15 {
   width: 15px;
   height: 15px;
 }
 /** custom fontawesome - end */
 
-.tui-full-calendar-icon {
+.calendar-icon {
   width: 14px;
   height: 14px;
 }
@@ -212,7 +192,7 @@ body {
   vertical-align: middle;
 }
 
-.dropdown-menu-title .tui-full-calendar-icon {
+.dropdown-menu-title .calendar-icon {
   margin-right: 8px;
 }
 
@@ -243,108 +223,7 @@ body {
     top: 64px;
 }
 
-.calendar-more-schedules {
-    display: inline-block;
-    height: 24px;
-    line-height: 24px;
-    padding: 0 5px;
-    text-align: center;
-    font-size: 11px;
-    font-weight: bold;
-    color: #aaaaaa;
-}
-
-.calendar-footer-more-schedules {
-    font-size: 14px;
-}
-
-.calendar-week-dayname-name {
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.calendar-week-dayname-date {
-    font-size: 26px;
-}
-
-.calendar-week-dayname-date:hover {
-    cursor: pointer;
-    border-bottom: 2px solid;
-}
-
-.tui-full-calendar-month-more-close {
-    cursor: pointer;
-}
-
-.tui-full-calendar-month-week-item .tui-full-calendar-today .tui-full-calendar-weekday-grid-date-decorator {
-    width: auto;
-    border-radius: 27px;
-    padding: 0 5px;
-}
-
-.tui-full-calendar-month-week-item .tui-full-calendar-weekday-grid-date-title {
-    color: red;
-}
-
-.tui-full-calendar-weekday-exceed-in-month {
-    float: right;
-    margin-top: 4px;
-    margin-right: 5px;
-}
-
-.tui-full-calendar-month-week-item > .tui-full-calendar-weekday-grid-line:hover {
-    background-color: #f0f1f5;
-}
-
-.tui-full-calendar-weekday-grid-footer {
-    left: 0;
-    right: 0;
-    height: 50px;
-}
-
-.tui-full-calendar-weekday-grid-footer .tui-full-calendar-weekday-exceed-in-month {
-    float: none;
-    margin-left: 10px;
-    color: #7eb9e7;
-}
-
-.tui-full-calendar-weekday-grid-line:hover .calendar-new-schedule-button {
-    visibility: visible;
-}
-
-.calendar-new-schedule-button {
-    cursor: pointer;
-    visibility: hidden;
-    border: 1px dashed #ddd;
-    margin: 0 10px;
-    padding: 3px 0;
-    text-align: center;
-    color: #999;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.more-title-day {
-    vertical-align: baseline;
-}
-
-.weekly-left-title {
-    height: 100%;
-    text-align: right;
-    display: table;
-    width: 100%;
-    font-size: 11px;
-}
-
-.weekly-left-content {
-    vertical-align: middle;
-    display: table-cell;
-}
-
 /** custom fontawesome */
-
 .fa {
     width: 12px;
     height: 12px;
