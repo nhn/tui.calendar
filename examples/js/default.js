@@ -80,11 +80,6 @@
 
                 return html.join('');
             },
-            monthMoreTitleDate: function(date) {
-                date = new Date(date);
-
-                return tui.util.formatDate('MM-DD', date) + '(' + daynames[date.getDay()] + ')';
-            },
             monthMoreClose: function() {
                 return '<i class="fa fa-close"></i>';
             },
