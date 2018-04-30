@@ -85,26 +85,18 @@ var DEFAULT_PANELS = [
 
 /* eslint-disable complexity*/
 module.exports = function(baseController, layoutContainer, dragHandler, options) {
-    var panels = options.week.panels || DEFAULT_PANELS,
+    var panels = [],
         vpanels = [];
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
-    var createView, onSaveNewSchedule, onSetCalendars;
+    var createView, onSaveNewSchedule, onSetCalendars, lastVPanel;
     var detailView, onShowDetailPopup, onDeleteSchedule, onShowEditPopup, onEditSchedule;
 
-    util.extend(options.week, {panels: panels});
-
-    weekView = new Week(null, options.week, layoutContainer, panels);
-    weekView.handler = {
-        click: {},
-        dayname: {},
-        creation: {},
-        move: {},
-        resize: {}
-    };
-
     // Make panels by view sequence and visibilities
-    util.forEach(panels, function(panel) {
+    util.forEach(DEFAULT_PANELS, function(panel) {
         var name = panel.name;
+
+        panel = util.extend({}, panel);
+        panels.push(panel);
 
         // Change visibilities
         if (name === 'milestone' || name === 'task') {
@@ -124,9 +116,32 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     });
 
     if (vpanels.length) {
-        vpanels[vpanels.length - 1].autoHeight = true;
-        vpanels[vpanels.length - 1].maxHeight = null;
+        lastVPanel = vpanels[vpanels.length - 1];
+        lastVPanel.autoHeight = true;
+        lastVPanel.maxHeight = null;
+        lastVPanel.showExpandableButton = false;
+
+        util.forEach(panels, function(panel) {
+            if (panel.name === lastVPanel.name) {
+                panel.showExpandableButton = false;
+
+                return false;
+            }
+
+            return true;
+        });
     }
+
+    util.extend(options.week, {panels: panels});
+
+    weekView = new Week(null, options.week, layoutContainer, panels);
+    weekView.handler = {
+        click: {},
+        dayname: {},
+        creation: {},
+        move: {},
+        resize: {}
+    };
 
     dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 
