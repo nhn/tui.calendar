@@ -241,7 +241,9 @@ You can also see the older versions of API page on the [releases page](https://g
 
 ## 🔩 Dependency
 
-* [tui-code-snippet](https://github.com/nhnent/tui.code-snippet) >=1.2.9
+* [tui-code-snippet](https://github.com/nhnent/tui.code-snippet) >= 1.4.0
+* [tui-date-picker](https://github.com/nhnent/tui.date-picker) >= 3.0.0 is optional.
+* [tui-time-picker](https://github.com/nhnent/tui.time-picker) >= 1.0.0 is optional.
 
 ## 📜 License
 
