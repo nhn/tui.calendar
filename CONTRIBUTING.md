@@ -5,7 +5,7 @@ First off, thanks for taking the time to contribute! 🎉 😘 ✨
 The following is a set of guidelines for contributing to TOAST UI. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 ## Reporting Bugs
-Bugs are tracked as GitHub issues. Search the list and try reproduce on [demo](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html) before you create an issue. When you create an issue, please provide the following information by filling in the template.
+Bugs are tracked as GitHub issues. Search the list and try to reproduce on [demo](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html) before you create an issue. When you create an issue, please provide the following information by filling in the template.
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
