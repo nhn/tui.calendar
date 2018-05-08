@@ -93,7 +93,10 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
             }
         }
 
-        visibleScheduleCount = Math.floor(panelHeight / (opt.scheduleHeight + opt.scheduleGutter));
+        visibleScheduleCount = Math.floor(
+            (panelHeight + opt.scheduleContainerTop) / (opt.scheduleHeight + opt.scheduleGutter)
+        );
+
         if (collapsed) {
             exceedDate = this.parent.controller.getExceedDate(visibleScheduleCount,
                 matrices,
@@ -178,8 +181,9 @@ DayGrid.prototype.addHandler = function(type, handler, vPanel) {
     this.vPanel = vPanel;
 
     if (type === 'click') {
-        handler.on('expand', function() {
+        handler.on('expand', function(clickedExpandBtnIndex) {
             self.setState({
+                clickedExpandBtnIndex: clickedExpandBtnIndex,
                 collapsed: false
             });
         }, this);
@@ -195,45 +199,81 @@ DayGrid.prototype._expand = function() {
     var vPanel = this.vPanel;
     var opt = this.options;
     var panel = getPanel(opt.panels, opt.viewName);
+    var height = panel.maxExpandableHeight;
+    var childrenHeights = this.getChildrenHeight(false);
+
+    if (childrenHeights) {
+        height = mmin(height, mmax(childrenHeights));
+    }
 
     vPanel.setMaxHeight(panel.maxExpandableHeight);
     vPanel.setHeightForcedSet(false);
-    vPanel.setHeight(null, panel.maxExpandableHeight);
-
-    reqAnimFrame.requestAnimFrame(function() {
-        if (this.parent) {
-            this.parent.render();
-        }
-    }, this);
+    vPanel.setHeight(null, height + opt.scheduleContainerTop);
 };
 
 DayGrid.prototype._collapse = function() {
     var vPanel = this.vPanel;
     var opt = this.options;
     var panel = getPanel(opt.panels, opt.viewName);
+    var height = panel.minHeight;
+    var childrenHeights = this.getChildrenHeight(true);
+
+    if (childrenHeights) {
+        height = mmax(childrenHeights);
+    }
 
     vPanel.setMaxHeight(panel.maxHeight);
     vPanel.setHeightForcedSet(false);
-    vPanel.setHeight(null, panel.minHeight);
+    vPanel.setHeight(null, height + opt.scheduleContainerTop);
+};
 
-    reqAnimFrame.requestAnimFrame(function() {
-        if (this.parent) {
-            this.parent.render();
-        }
-    }, this);
+DayGrid.prototype.getChildrenHeight = function(collapsed) {
+    var opt = this.options;
+    var panel = getPanel(opt.panels, opt.viewName);
+    var viewModel = this.parent.getBaseViewModel();
+    var matrices = opt.getViewModelFunc(viewModel);
+    var heights = [];
+    var visibleScheduleCount;
+
+    if (collapsed) {
+        visibleScheduleCount = Math.floor(
+            (panel.maxHeight + opt.scheduleContainerTop) / (opt.scheduleHeight + opt.scheduleGutter)
+        );
+
+        matrices = this.parent.controller.excludeExceedSchedules(matrices, visibleScheduleCount);
+        opt.setViewModelFunc(viewModel, matrices);
+        viewModel.matrices = matrices;
+    }
+
+    if (this.children.length) {
+        this.children.each(function(childView) {
+            heights.push(childView.getHeight(viewModel));
+        });
+    }
+
+    return heights;
 };
 
 /**
  * set state
  * @param {object} state - state
+ * @param {boolean} [silent=false] - whether refresh parent view or not
  */
-DayGrid.prototype.setState = function(state) {
+DayGrid.prototype.setState = function(state, silent) {
     View.prototype.setState.call(this, state);
 
     if (this.state.collapsed) {
         this._collapse();
     } else {
         this._expand();
+    }
+
+    if (!silent) {
+        reqAnimFrame.requestAnimFrame(function() {
+            if (this.parent) {
+                this.parent.renderChildsFrom(this);
+            }
+        }, this);
     }
 };
 

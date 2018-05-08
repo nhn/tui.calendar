@@ -10,6 +10,7 @@ var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
+var reqAnimFrame = require('../../common/reqAnimFrame');
 
 /**
  * FullCalendar uses only date information (YYYY-MM-DD)
@@ -88,6 +89,44 @@ util.inherit(Week, View);
  * @override
  */
 Week.prototype.render = function() {
+    var viewModel = this.getBaseViewModel();
+
+    this.children.each(function(childView) {
+        childView.render(viewModel);
+    });
+
+    /**
+     * @event Week#afterRender
+     */
+    this.fire('afterRender');
+};
+
+/**********
+ * Prototype props
+ **********/
+
+Week.prototype.viewName = 'week';
+
+/**
+ * Calculate default render date range from supplied date.
+ * @param {Date} baseDate base date.
+ * @returns {object} date range.
+ */
+Week.prototype._getRenderDateRange = function(baseDate) {
+    var base = datetime.start(baseDate),
+        start = new TZDate(Number(base)),
+        end = new TZDate(Number(base));
+
+    start.setDate(start.getDate() - 3);
+    end.setDate(end.getDate() + 3);
+
+    return {
+        start: start,
+        end: end
+    };
+};
+
+Week.prototype.getBaseViewModel = function() {
     var options = this.options,
         scheduleFilter = options.scheduleFilter,
         narrowWeekend = options.narrowWeekend,
@@ -137,39 +176,29 @@ Week.prototype.render = function() {
         theme: theme
     };
 
+    return viewModel;
+};
+
+Week.prototype.renderChildsFrom = function(start) {
+    var viewModel = this.getBaseViewModel();
+    var render = false;
+
     this.children.each(function(childView) {
-        childView.render(viewModel);
+        reqAnimFrame.requestAnimFrame(function() {
+            if (childView === start) {
+                render = true;
+            }
+
+            if (render) {
+                childView.render(viewModel);
+            }
+        });
     });
 
     /**
      * @event Week#afterRender
      */
     this.fire('afterRender');
-};
-
-/**********
- * Prototype props
- **********/
-
-Week.prototype.viewName = 'week';
-
-/**
- * Calculate default render date range from supplied date.
- * @param {Date} baseDate base date.
- * @returns {object} date range.
- */
-Week.prototype._getRenderDateRange = function(baseDate) {
-    var base = datetime.start(baseDate),
-        start = new TZDate(Number(base)),
-        end = new TZDate(Number(base));
-
-    start.setDate(start.getDate() - 3);
-    end.setDate(end.getDate() + 3);
-
-    return {
-        start: start,
-        end: end
-    };
 };
 
 util.CustomEvents.mixin(Week);

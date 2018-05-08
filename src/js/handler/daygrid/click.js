@@ -91,15 +91,11 @@ DayGridClick.prototype._onClick = function(clickEvent) {
     }
 
     if (expandBtnElement) {
-        this.view.setState({
-            clickedExpandBtnIndex: parseInt(domutil.getData(expandBtnElement, 'index'), 10)
-        });
-
         /**
          * click expand btn event
          * @events DayGridClick#expand
          */
-        self.fire('expand');
+        self.fire('expand', parseInt(domutil.getData(expandBtnElement, 'index'), 10));
 
         return;
     }
