@@ -1,6 +1,6 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
-> A JavaScript schedule calendar with full featured. Now your service just got the customizable calendar.
+> A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
 
 [![GitHub release](https://img.shields.io/github/release/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/releases/latest)
 [![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/tui-calendar)
