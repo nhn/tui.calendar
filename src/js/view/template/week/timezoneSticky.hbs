@@ -1,0 +1,5 @@
+{{#each timezones ~}}
+    <div title="{{tooltip}}" class="{{CSS_PREFIX}}timegrid-timezone" data-timezone="{{displayLabel}}" style="background-color: {{@root.styles.displayTimezoneLableBackgroundColor}}; position: absolute; top: 0; height: 100%; width: {{width}}%; left: {{left}}%; border-right: {{@root.styles.leftBorderRight}};">
+        {{{timezoneDisplayLabel-tmpl timezoneOffset displayLabel}}}
+    </div>
+{{/each ~}}

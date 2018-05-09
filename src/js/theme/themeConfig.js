@@ -176,6 +176,7 @@ var themeConfig = {
     'week.timegridLeft.backgroundColor': 'inherit',
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
+    'week.timegridLeftTimezoneLabel.height': '20px',
 
     'week.timegridOneHour.height': '52px',
     'week.timegridHalfHour.height': '26px',

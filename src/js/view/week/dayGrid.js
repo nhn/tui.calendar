@@ -6,6 +6,7 @@
 
 var util = require('tui-code-snippet');
 var config = require('../../config'),
+    common = require('../../common/common'),
     datetime = require('../../common/datetime'),
     domutil = require('../../common/domutil'),
     TZDate = require('../../common/timezone').Date,
@@ -49,13 +50,14 @@ function DayGrid(name, options, container, theme) {
         scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
         scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
         scheduleContainerTop: 1,
+        timezones: options.timezones,
         getViewModelFunc: function(viewModel) {
             return viewModel.schedulesInDateRange[name];
         },
         setViewModelFunc: function(viewModel, matrices) {
             viewModel.schedulesInDateRange[name] = matrices;
         }
-    }, options);
+    }, options.week);
 
     this.handler = {};
     this.vPanel = null;
@@ -244,6 +246,8 @@ DayGrid.prototype.setState = function(state) {
  */
 DayGrid.prototype._getStyles = function(theme) {
     var styles = {};
+    var timezonesLength = this.options.timezones.length;
+    var numberAndUnit;
 
     if (theme) {
         styles.borderRight = theme.week.daygrid.borderRight || theme.common.border;
@@ -254,6 +258,11 @@ DayGrid.prototype._getStyles = function(theme) {
         styles.leftBackgroundColor = theme.week.daygridLeft.backgroundColor;
         styles.leftPaddingRight = theme.week.daygridLeft.paddingRight;
         styles.leftBorderRight = theme.week.daygridLeft.borderRight;
+
+        if (timezonesLength > 1) {
+            numberAndUnit = common.parseUnit(styles.leftWidth);
+            styles.leftWidth = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+        }
     }
 
     return styles;

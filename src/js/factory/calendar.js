@@ -108,6 +108,26 @@ var mmin = Math.min;
  */
 
 /**
+ * @typedef {object} Timezone
+ * @property {number} [timezoneOffset] - minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
+ * @property {string} [displayLabel] -  display label of your timezone at weekly/daily view(ex> 'GMT+09:00')
+ * @property {string} [tooltip] -  tooltip(ex> 'Seoul')
+ * @example
+ * var timezoneName = moment.tz.guess();
+ * var cal = new Calendar('#calendar', {
+ *  timezones: [{
+ *      timezoneOffset: 540,
+ *      displayLabel: 'GMT+09:00',
+ *      tooltip: 'Seoul'
+ *  }, {
+ *      timezoneOffset: -420,
+ *      displayLabel: 'GMT-08:00',
+ *      tooltip: 'Los Angeles'
+ *  }]
+ * });
+ */
+
+/**
  * @typedef {object} Options - calendar option object
  * @property {string} [defaultView='week'] - default view of calendar
  * @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
@@ -119,6 +139,9 @@ var mmin = Math.min;
  * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
  * @property {boolean} [useCreationPopup=false] - whether use default creation popup or not
  * @property {boolean} [useDetailPopup=false] - whether use default detail popup or not
+ * @property {Array.<Timezone>} [timezones] - timezone array. 
+ *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
+ *  The rest timezone elements are shown in left timegrid of weekly/daily view.
  */
 
 /**
@@ -322,7 +345,8 @@ Calendar.prototype.destroy = function() {
  */
 Calendar.prototype._initialize = function(options) {
     var controller = this._controller,
-        viewName = this._viewName;
+        viewName = this._viewName,
+        timezones = options.timezones || [];
 
     this._options = util.extend({
         defaultView: viewName,
@@ -336,7 +360,12 @@ Calendar.prototype._initialize = function(options) {
         month: util.extend({}, util.pick(options, 'month') || {}),
         calendars: [],
         useCreationPopup: false,
-        useDetailPopup: false
+        useDetailPopup: false,
+        timezones: options.timezones || [{
+            timezoneOffset: 0,
+            displayLabel: '',
+            tooltip: ''
+        }]
     }, options);
 
     this._options.week = util.extend({
@@ -360,6 +389,11 @@ Calendar.prototype._initialize = function(options) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
+
+    // set by primary timezone
+    if (timezones.length) {
+        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
+    }
 
     this.changeView(viewName, true);
 };
@@ -1306,6 +1340,7 @@ Calendar.prototype.hideMoreView = function() {
  * Set timezone offset
  * @param {number} offset - offset (min)
  * @static
+ * @deprecated
  * @example
  * var timezoneName = moment.tz.guess();
  * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
@@ -1318,6 +1353,7 @@ Calendar.setTimezoneOffset = function(offset) {
  * Set a callback function to get timezone offset by timestamp
  * @param {function} callback - callback function
  * @static
+ * @deprecated
  * @example
  * var timezoneName = moment.tz.guess();
  * tui.Calendar.setTimezoneOffsetCallback(function(timestamp) {

@@ -9,11 +9,7 @@
     var cal, resizeThrottled;
     var useCreationPopup = true;
     var useDetailPopup = true;
-    var guideElement, datePicker, selectedCalendar;
-    // Calendar.setTimezoneOffset(540);
-    Calendar.setTimezoneOffsetCallback(function(timestamp) {
-        return new Date(timestamp).getTimezoneOffset();
-    });
+    var datePicker, selectedCalendar;
 
     cal = new Calendar('#calendar', {
         defaultView: 'month',
@@ -62,9 +58,9 @@
      */
     function getTimeTemplate(schedule, isAllDay) {
         var html = [];
-    
+        var start = moment(schedule.start.toUTCString());
         if (!isAllDay) {
-            html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
+            html.push('<strong>' + start.format('HH:mm') + '</strong> ');
         }
         if (schedule.isPrivate) {
             html.push('<i class="fa fa-lock"></i>');
@@ -170,21 +166,6 @@
         setSchedules();
     }
 
-    function onShowNewSchedule() {
-        $('#new-schedule-title').focus();
-    }
-
-    function onHideNewSchedule() {
-        if (guideElement) {
-            guideElement.clearGuideElement();
-            guideElement = null;
-        }
-
-        $('#new-schedule-title').val('');
-        $('#new-schedule-location').val('');
-        document.getElementById('new-schedule-allday').checked = false;
-    }
-
     function onNewSchedule() {
         var title = $('#new-schedule-title').val();
         var location = $('#new-schedule-location').val();
@@ -208,6 +189,7 @@
             dueDateClass: '',
             color: calendar.color,
             bgColor: calendar.bgColor,
+            dragBgColor: calendar.bgColor,
             borderColor: calendar.borderColor,
             raw: {
                 location: location
@@ -237,28 +219,6 @@
         selectedCalendar = calendar;
     }
 
-    function createDatePicker(start, end) {
-        if (datePicker) {
-            datePicker.destroy();
-        }
-        datePicker = tui.DatePicker.createRangePicker({
-            startpicker: {
-                date: start,
-                input: '#startpicker-input',
-                container: '#startpicker-container'
-            },
-            endpicker: {
-                date: end,
-                input: '#endpicker-input',
-                container: '#endpicker-container'
-            },
-            format: 'yyyy-MM-dd HH:mm',
-            timepicker: {
-                showMeridiem: false
-            }
-        });
-    }
-
     function createNewSchedule(event) {
         var start = event.start ? new Date(event.start.getTime()) : new Date();
         var end = event.end ? new Date(event.end.getTime()) : moment().add(1, 'hours').toDate();
@@ -268,17 +228,8 @@
                 start: start,
                 end: end
             });
-        } else {
-            createDatePicker(start, end, event.isAllDay);
-            changeNewScheduleCalendar(CalendarList[0].id);
-
-            document.getElementById('new-schedule-allday').checked = event.isAllDay;
-
-            guideElement = event.guide;
-            $('#modal-new-schedule').modal();
         }
     }
-
     function saveNewSchedule(scheduleData) {
         var calendar = scheduleData.calendar || findCalendar(scheduleData.calendarId);
         var schedule = {
@@ -289,6 +240,10 @@
             end: scheduleData.end,
             category: scheduleData.isAllDay ? 'allday' : 'time',
             dueDateClass: '',
+            color: calendar.color,
+            bgColor: calendar.bgColor,
+            dragBgColor: calendar.bgColor,
+            borderColor: calendar.borderColor,
             raw: {
                 'class': scheduleData.raw['class'],
                 location: scheduleData.raw.location
@@ -417,8 +372,6 @@
         $('#lnb-calendars').on('change', onChangeCalendars);
 
         $('#btn-save-schedule').on('click', onNewSchedule);
-        $('#modal-new-schedule').on('show.bs.modal', onShowNewSchedule);
-        $('#modal-new-schedule').on('hide.bs.modal', onHideNewSchedule);
         $('#btn-new-schedule').on('click', createNewSchedule);
 
         $('#dropdownMenu-calendars-list').on('click', onChangeNewScheduleCalendar);
