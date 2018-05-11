@@ -412,12 +412,12 @@ Handlebars.registerHelper({
         return (datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat));
     },
     'popupDetailLocation-tmpl': function(schedule) {
-        return schedule.raw.location;
+        return schedule.location;
     },
     'popupDetailUser-tmpl': function(schedule) {
-        var creator = schedule.raw.creator;
+        var creator = util.pick(schedule, 'raw', 'creator', 'name');
 
-        return creator ? creator.name : '';
+        return creator;
     },
     'popupDetailState-tmpl': function(schedule) {
         return schedule.state || 'Busy';
