@@ -114,7 +114,7 @@ var Week = {
                         return;
                     }
 
-                    startTime = viewModel.getStarts().getTime() + 1;
+                    startTime = viewModel.getStarts().getTime();
                     endTime = viewModel.getEnds().getTime() - 1;
 
                     for (i = (col + 1); i < maxRowLength; i += 1) {
