@@ -196,6 +196,78 @@ module.exports = {
                 store = store[name];
             }
         });
+    },
+
+    /**
+     * shift a array
+     * @param {Array.<any>} array - array
+     * @param {number} shift - positive or negative integer to shift
+     * @returns {Array.<any>} shifted array
+     */
+    shiftArray: function(array, shift) {
+        var length = Math.abs(shift);
+        var i;
+
+        if (shift > 0) {
+            for (i = 0; i < length; i += 1) {
+                array.push(array.shift());
+            }
+        } else if (shift < 0) {
+            for (i = 0; i < length; i += 1) {
+                array.unshift(array.pop());
+            }
+        }
+
+        return array;
+    },
+
+    /**
+     * take elements from array between start and end.
+     * @param {Array.<any>} array - array
+     * @param {number} start - start index
+     * @param {number} end - end index
+     * @returns {Array.<any>}
+     */
+    takeArray: function(array, start, end) {
+        var length = array.length;
+        var rightCount = length - end;
+        var leftCount = start;
+
+        // remove right
+        array.splice(end, rightCount);
+        // remove left
+        array.splice(0, leftCount);
+
+        return array;
+    },
+
+    /**
+     * shift hours
+     * @param {number} hours - hours
+     * @param {number} shift - positive or negative integer to shift
+     * @returns {number} shifted hours
+     */
+    shiftHours: function(hours, shift) {
+        if (shift > 0) {
+            hours = (hours + shift) % 24;
+        } else if (shift < 0) {
+            hours += shift;
+            hours = hours > 0 ? hours : 24 + hours;
+        }
+
+        return hours;
+    },
+
+    /**
+     * Parse css value into number and units
+     * @param {string} cssValue - css value like '72px'
+     * @returns {Array} [number, unit]
+     */
+    parseUnit: function(cssValue) {
+        var number = parseFloat(cssValue, 10);
+        var unit = cssValue.match(/[\d.\-+]*\s*(.*)/)[1] || '';
+
+        return [number, unit];
     }
 };
 

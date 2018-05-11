@@ -7,6 +7,7 @@
 var MIN_TO_MS = 60 * 1000;
 var customOffsetMs = getTimezoneOffset();
 var timezoneOffsetCallback = null;
+var setByTimezoneOption = false;
 
 var getterMethods = [
     'getDate',
@@ -48,7 +49,7 @@ function getTimezoneOffset(timestamp) {
  * @private
  */
 function getCustomTimezoneOffset(timestamp) {
-    if (timezoneOffsetCallback) {
+    if (!setByTimezoneOption && timezoneOffsetCallback) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
     }
 
@@ -122,6 +123,22 @@ TZDate.prototype.getTime = function() {
     return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
 };
 
+/**
+ * toUTCString
+ * @returns {Date}
+ */
+TZDate.prototype.toUTCString = function() {
+    return this._date.toUTCString();
+};
+
+/**
+ * to Date
+ * @returns {Date}
+ */
+TZDate.prototype.toDate = function() {
+    return this._date;
+};
+
 TZDate.prototype.valueOf = function() {
     return this.getTime();
 };
@@ -149,6 +166,27 @@ module.exports = {
      */
     setOffset: function(offset) {
         customOffsetMs = offset * MIN_TO_MS;
+    },
+
+    /**
+     * Set offset
+     * @param {number} offset - timezone offset based on minutes
+     */
+    setOffsetByTimezoneOption: function(offset) {
+        this.setOffset(-offset);
+        setByTimezoneOption = true;
+    },
+
+    /**
+     * Get offset in case of `setByTimezoneOption`. Or return 0.
+     * @returns {number} timezone offset offset minutes
+     */
+    getOffset: function() {
+        if (setByTimezoneOption) {
+            return customOffsetMs / MIN_TO_MS;
+        }
+
+        return 0;
     },
 
     /**

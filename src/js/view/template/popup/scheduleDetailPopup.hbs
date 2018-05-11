@@ -5,7 +5,7 @@
         <span class="{{CSS_PREFIX}}schedule-private {{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-private"></span>
         <span class="{{CSS_PREFIX}}schedule-title">{{schedule.title}}</span>
       </div>
-      <div class="{{CSS_PREFIX}}popup-detail-date {{CSS_PREFIX}}content">{{popupDetailDate-tmpl schedule.start schedule.end}}</div>
+      <div class="{{CSS_PREFIX}}popup-detail-date {{CSS_PREFIX}}content">{{popupDetailDate-tmpl schedule.isAllDay schedule.start schedule.end}}</div>
     </div>
     <div class="{{CSS_PREFIX}}section-detail">
         <div class="{{CSS_PREFIX}}popup-detail-item"><span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-location-b"></span><span class="{{CSS_PREFIX}}content">{{popupDetailLocation-tmpl schedule}}</span></div>

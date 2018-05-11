@@ -6,6 +6,7 @@
 
 var util = require('tui-code-snippet');
 var config = require('../../config');
+var common = require('../../common/common');
 var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
 var domutil = require('../../common/domutil');
@@ -27,8 +28,9 @@ function DayName(options, container, theme) {
     );
 
     this.options = util.extend({
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    }, options);
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        timezones: options.timezones
+    }, options.week);
 
     /**
      * @type {Theme}
@@ -128,6 +130,8 @@ DayName.prototype._getDayNameColor = function(theme, day, isToday) {
  */
 DayName.prototype._getStyles = function(theme) {
     var styles = {};
+    var timezonesLength = this.options.timezones.length;
+    var numberAndUnit;
 
     if (theme) {
         styles.borderTop = theme.week.dayname.borderTop || theme.common.border;
@@ -137,6 +141,12 @@ DayName.prototype._getStyles = function(theme) {
         styles.backgroundColor = theme.week.dayname.backgroundColor;
         styles.height = theme.week.dayname.height;
         styles.textAlign = theme.week.dayname.textAlign;
+        styles.marginLeft = theme.week.daygridLeft.width;
+
+        if (timezonesLength > 1) {
+            numberAndUnit = common.parseUnit(styles.marginLeft);
+            styles.marginLeft = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+        }
     }
 
     return styles;

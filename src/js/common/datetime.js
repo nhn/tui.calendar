@@ -69,7 +69,7 @@ tokenFunc = {
      * @returns {string} hh:mm
      */
     'hh:mm': function(date) {
-        var hour = Math.floor(date.getHours() / 12),
+        var hour = Math.floor(date.getHours() % 12),
             minutes = date.getMinutes();
 
         return datetime.leadingZero(hour, 2) + ':' +

@@ -9,15 +9,17 @@ var config = require('../../config');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var datetime = require('../../common/datetime');
-var TZDate = require('../../common/timezone').Date;
+var Timezone = require('../../common/timezone');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var View = require('../view');
 var Time = require('./time');
 var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
-
+var timezoneStickyTmpl = require('../template/week/timezoneSticky.hbs');
+var TZDate = Timezone.Date;
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 var SIXTY_SECONDS = 60;
+var SIXTY_MINUTES = 60;
 
 /**
  * Returns a list of time labels from start to end.
@@ -25,14 +27,21 @@ var SIXTY_SECONDS = 60;
  * @param {number} start - start time
  * @param {number} end - end time
  * @param {boolean} hasHourMarker - Whether the current time is displayed
+ * @param {number} timezoneOffset - timezone offset
  * @returns {Array.<Object>}
  */
-function getHoursLabels(start, end, hasHourMarker) {
+function getHoursLabels(start, end, hasHourMarker, timezoneOffset) {
+    var shiftByOffset = timezoneOffset / SIXTY_MINUTES;
+    var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
     var now = new TZDate();
     var nowMinutes = now.getMinutes();
-    var nowHours = now.getHours();
-    var hoursRange = util.range(start, end);
+    var nowHours = common.shiftHours(now.getHours(), shiftByOffset);
+    var hoursRange = util.range(0, 24);
     var nowAroundHours = null;
+
+    // shift the array and take elements between start and end
+    common.shiftArray(hoursRange, shiftByOffset);
+    common.takeArray(hoursRange, start, end);
 
     if (hasHourMarker) {
         if (nowMinutes < 20) {
@@ -42,10 +51,11 @@ function getHoursLabels(start, end, hasHourMarker) {
         }
     }
 
-    return hoursRange.map(function(hours) {
+    return util.map(hoursRange, function(hour, index) {
         return {
-            hours: hours,
-            hidden: nowAroundHours === hours
+            hour: hour,
+            minutes: shiftMinutes,
+            hidden: nowAroundHours === hour || index === 0
         };
     });
 }
@@ -58,14 +68,22 @@ function getHoursLabels(start, end, hasHourMarker) {
  * @param {string} options.renderEndDate - render end date. YYYY-MM-DD
  * @param {number} [options.hourStart=0] You can change view's start hours.
  * @param {number} [options.hourEnd=0] You can change view's end hours.
- * @param {HTMLElement} container Container element.
+ * @param {HTMLElement} panelElement panel element.
  */
-function TimeGrid(name, options, container) {
-    container = domutil.appendHTMLElement(
+function TimeGrid(name, options, panelElement) {
+    var container = domutil.appendHTMLElement(
         'div',
-        container,
+        panelElement,
         config.classname('timegrid-container')
     );
+    var stickyContainer = domutil.appendHTMLElement(
+        'div',
+        panelElement,
+        config.classname('timegrid-sticky-container')
+    );
+
+    panelElement.style.position = 'relative'; // for stickyContainer
+
     name = name || 'time';
 
     View.call(this, container);
@@ -77,6 +95,8 @@ function TimeGrid(name, options, container) {
         this._autoScroll = new AutoScroll(container);
     }
 
+    this.stickyContainer = stickyContainer;
+
     /**
      * Time view options.
      * @type {object}
@@ -86,8 +106,9 @@ function TimeGrid(name, options, container) {
         renderStartDate: '',
         renderEndDate: '',
         hourStart: 0,
-        hourEnd: 24
-    }, options);
+        hourEnd: 24,
+        timezones: options.timezones
+    }, options.week);
 
     /**
      * Interval id for hourmarker animation.
@@ -200,6 +221,41 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range, theme) 
 };
 
 /**
+ * Get timezone view model
+ * @param {number} currentHours - current hour
+ * @returns {object} ViewModel
+ */
+TimeGrid.prototype._getTimezoneViewModel = function(currentHours) {
+    var opt = this.options;
+    var hourStart = opt.hourStart;
+    var hourEnd = opt.hourEnd;
+    var primaryOffset = Timezone.getOffset();
+    var timezones = opt.timezones;
+    var timezonesLength = timezones.length;
+    var timezoneViewModel = [];
+    var width = 100 / timezonesLength;
+
+    util.forEach(timezones, function(timezone, index) {
+        var timeSlots;
+
+        timezone = timezones[timezones.length - index - 1];
+        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezone.timezoneOffset + primaryOffset);
+
+        timezoneViewModel.unshift({
+            timeSlots: timeSlots,
+            displayLabel: timezone.displayLabel,
+            timezoneOffset: timezone.timezoneOffset,
+            tooltip: timezone.tooltip || '',
+            width: width,
+            left: index * width,
+            isPrimary: index === timezonesLength - 1
+        });
+    });
+
+    return timezoneViewModel;
+};
+
+/**
  * Get base viewModel.
  * @param {object} viewModel - view model
  * @returns {object} ViewModel
@@ -211,7 +267,8 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range, viewModel.theme);
 
     return util.extend(baseViewModel, {
-        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0),
+        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft),
+        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0),
         styles: this._getStyles(viewModel.theme)
     });
 };
@@ -291,6 +348,11 @@ TimeGrid.prototype.render = function(viewModel) {
     container.innerHTML = mainTmpl(baseViewModel);
 
     /**********
+     * Render sticky container for timezone display label
+     **********/
+    this.renderStickyContainer(baseViewModel);
+
+    /**********
      * Render children
      **********/
     this._renderChildren(
@@ -311,6 +373,22 @@ TimeGrid.prototype.render = function(viewModel) {
         this._scrolled = true;
         this.scrollToNow();
     }
+};
+
+TimeGrid.prototype.renderStickyContainer = function(baseViewModel) {
+    var stickyContainer = this.stickyContainer;
+
+    stickyContainer.innerHTML = timezoneStickyTmpl(baseViewModel);
+
+    stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'table' : 'none';
+    stickyContainer.style.position = 'absolute';
+    stickyContainer.style.top = 0;
+    stickyContainer.style.width = baseViewModel.styles.leftWidth;
+    stickyContainer.style.height = baseViewModel.styles.displayTimezoneLableHeight;
+    stickyContainer.style.lineHeight = baseViewModel.styles.displayTimezoneLableHeight;
+    stickyContainer.style.textAlign = 'right';
+    stickyContainer.style.borderBottom = baseViewModel.styles.leftBorderRight;
+    stickyContainer.style.zIndex = 99; // higher than 'timegrid-hourmarker' which is 98
 };
 
 /**
@@ -413,6 +491,8 @@ TimeGrid.prototype.onTick = function() {
  */
 TimeGrid.prototype._getStyles = function(theme) {
     var styles = {};
+    var timezonesLength = this.options.timezones.length;
+    var numberAndUnit;
 
     if (theme) {
         styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
@@ -425,6 +505,10 @@ TimeGrid.prototype._getStyles = function(theme) {
         styles.leftBackgroundColor = theme.week.timegridLeft.backgroundColor;
         styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
         styles.leftFontSize = theme.week.timegridLeft.fontSize;
+        styles.timezoneWidth = theme.week.timegridLeft.width;
+
+        styles.displayTimezoneLableHeight = theme.week.timegridLeftTimezoneLabel.height;
+        styles.displayTimezoneLableBackgroundColor = theme.week.timegridLeft.backgroundColor === 'inherit' ? 'white' : theme.week.timegridLeft.backgroundColor;
 
         styles.oneHourHeight = theme.week.timegridOneHour.height;
         styles.halfHourHeight = theme.week.timegridHalfHour.height;
@@ -437,6 +521,11 @@ TimeGrid.prototype._getStyles = function(theme) {
         styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
         styles.currentTimeTodayBorderTop = theme.week.currentTimeLineToday.border;
         styles.currentTimeRightBorderTop = theme.week.currentTimeLineFuture.border;
+
+        if (timezonesLength > 1) {
+            numberAndUnit = common.parseUnit(styles.leftWidth);
+            styles.leftWidth = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+        }
     }
 
     return styles;

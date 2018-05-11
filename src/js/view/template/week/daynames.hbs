@@ -1,4 +1,4 @@
-<div class="{{CSS_PREFIX}}dayname-leftmargin">
+<div class="{{CSS_PREFIX}}dayname-leftmargin" style="margin-left: {{@root.styles.marginLeft}};">
 {{#each dayNames}}
 <div class="{{CSS_PREFIX}}dayname {{#if isToday}}{{CSS_PREFIX}}today{{/if}} {{holiday day}}"
      data-date="{{renderDate}}"

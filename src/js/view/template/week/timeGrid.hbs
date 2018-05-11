@@ -1,7 +1,19 @@
-<div class="{{CSS_PREFIX}}timegrid-left" style="width: {{styles.leftWidth}}; border-right: {{styles.leftBorderRight}}; font-size: {{styles.leftFontSize}}; background-color: {{styles.leftBackgroundColor}};">
-    {{#each hoursLabels ~}}
-        <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hours}}" style="height: {{@root.styles.oneHourHeight}};">
-            <span style="{{#if hidden}}display:none{{/if}}">{{hours}}</span>
+<div class="{{CSS_PREFIX}}timegrid-left" style="width: {{styles.leftWidth}}; font-size: {{styles.leftFontSize}};">
+    {{#each timezones ~}}
+        <div class="{{CSS_PREFIX}}timegrid-timezone" data-timezone="{{displayLabel}}" style="position: absolute; top: 0; width: {{width}}%; left: {{left}}%; border-right: {{@root.styles.leftBorderRight}}; background-color: {{@root.styles.leftBackgroundColor}};" >
+        {{#if isPrimary}}
+            {{#each timeSlots ~}}
+                <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hours}}" style="height: {{@root.styles.oneHourHeight}};">
+                    <span style="{{#if hidden}}display:none{{/if}}">{{{timegridDisplayPrimayTime-tmpl this}}}</span>
+                </div>
+            {{/each ~}}
+        {{else}}
+            {{#each timeSlots ~}}
+                <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hours}}" style="height: {{@root.styles.oneHourHeight}};">
+                    <span style="{{#if hidden}}display:none{{/if}}">{{{timegridDisplayTime-tmpl this}}}</span>
+                </div>
+            {{/each ~}}
+        {{/if}}
         </div>
     {{/each ~}}
 </div>
@@ -23,7 +35,7 @@
 
     {{#if showHourMarker}}
     <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{hourmarkerTop}}%">
-        <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap" ">
+        <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
             <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{styles.currentTimeColor}}; font-size: {{styles.currentTimeFontSize}}; font-weight: {{styles.currentTimeFontWeight}}">{{hourmarkerText}}</div>
             <div class="{{CSS_PREFIX}}timegrid-hourmarker-line-left" style="width:{{todaymarkerLeft}}%; border-top: {{styles.currentTimeLeftBorderTop}};"></div>
             <div class="{{CSS_PREFIX}}timegrid-todaymarker" style="left:{{todaymarkerLeft}}%; background-color: {{styles.currentTimeBulletBackgroundColor}}; ">today</div>

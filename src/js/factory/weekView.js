@@ -148,7 +148,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     /**********
      * Day name (top row(Mon, Tue, Wed...))
      **********/
-    dayNameView = new DayName(options.week, dayNameContainer, baseController.theme);
+    dayNameView = new DayName(options, dayNameContainer, baseController.theme);
     weekView.handler.dayname.date = new DayNameClick(dragHandler, dayNameView, baseController);
     weekView.addChild(dayNameView);
 
@@ -178,7 +178,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             /**********
              * Schedule panel by Grid
              **********/
-            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container, baseController.theme);
+            view = new DayGrid(name, options, vLayout.getPanelByName(panel.name).container, baseController.theme);
             view.on('afterRender', function(viewModel) {
                 vLayout.getPanelByName(name).setHeight(null, viewModel.height);
             });
@@ -193,7 +193,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             /**********
              * Schedule panel by TimeGrid
              **********/
-            view = new TimeGrid(name, options.week, vLayout.getPanelByName(name).container);
+            view = new TimeGrid(name, options, vLayout.getPanelByName(name).container);
             weekView.addChild(view);
             util.forEach(handlers, function(type) {
                 weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController);

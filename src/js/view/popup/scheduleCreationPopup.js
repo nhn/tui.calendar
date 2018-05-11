@@ -247,8 +247,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = this.rangePicker.getStartDate();
-    endDate = this.rangePicker.getEndDate();
+    startDate = new TZDate(this.rangePicker.getStartDate());
+    endDate = new TZDate(this.rangePicker.getEndDate());
 
     if (!title.value) {
         title.focus();
@@ -558,12 +558,12 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end) {
     var cssPrefix = config.cssPrefix;
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
-            date: new Date(start.getTime()),
+            date: new TZDate(start.getTime()).toDate(),
             input: '#' + cssPrefix + 'schedule-start-date',
             container: '#' + cssPrefix + 'startpicker-container'
         },
         endpicker: {
-            date: new Date(end.getTime()),
+            date: new TZDate(end.getTime()).toDate(),
             input: '#' + cssPrefix + 'schedule-end-date',
             container: '#' + cssPrefix + 'endpicker-container'
         },

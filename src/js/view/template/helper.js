@@ -11,6 +11,7 @@ var datetime = require('../../common/datetime');
 var common = require('../../common/common');
 var config = require('../../config');
 var mmax = Math.max;
+var SIXTY_MINUTES = 60;
 
 /**
  * Get CSS syntax for element size
@@ -244,6 +245,10 @@ Handlebars.registerHelper({
         return config.cssPrefix;
     },
 
+    'reverse': function(array) {
+        return array.slice().reverse();
+    },
+
     /**********
      * Default schedule template
      **********/
@@ -396,9 +401,13 @@ Handlebars.registerHelper({
     'popupUpdate-tmpl': function() {
         return 'Update';
     },
-    'popupDetailDate-tmpl': function(start, end) {
-        var isDateDifferent = start.getDate() !== end.getDate();
-        var endFormat = (isDateDifferent ? 'YYYY.MM.DD ' : '') + 'hh:mm tt';
+    'popupDetailDate-tmpl': function(isAllDay, start, end) {
+        var isSameDate = datetime.isSameDate(start, end);
+        var endFormat = (isSameDate ? '' : 'YYYY.MM.DD ') + 'hh:mm tt';
+
+        if (isAllDay) {
+            return datetime.format(start, 'YYYY.MM.DD') + (isSameDate ? '' : ' - ' + datetime.format(end, 'YYYY.MM.DD'));
+        }
 
         return (datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat));
     },
@@ -418,5 +427,25 @@ Handlebars.registerHelper({
     },
     'popupDelete-tmpl': function() {
         return 'Delete';
+    },
+    'timezoneDisplayLabel-tmpl': function(timezoneOffset, displayLabel) {
+        var gmt, hour, minutes;
+
+        if (util.isUndefined(displayLabel)) {
+            gmt = timezoneOffset < 0 ? '-' : '+';
+            hour = Math.abs(parseInt(timezoneOffset / SIXTY_MINUTES, 10));
+            minutes = Math.abs(timezoneOffset % 60);
+            displayLabel = gmt + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+        }
+
+        return displayLabel;
+    },
+    'timegridDisplayPrimayTime-tmpl': function(time) {
+        var meridiem = time.hour < 12 ? 'am' : 'pm';
+
+        return time.hour + ' ' + meridiem;
+    },
+    'timegridDisplayTime-tmpl': function(time) {
+        return datetime.leadingZero(time.hour, 2) + ':' + datetime.leadingZero(time.minutes, 2);
     }
 });
