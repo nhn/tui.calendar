@@ -245,6 +245,10 @@ Handlebars.registerHelper({
         return config.cssPrefix;
     },
 
+    'reverse': function(array) {
+        return array.slice().reverse();
+    },
+
     /**********
      * Default schedule template
      **********/
@@ -428,7 +432,7 @@ Handlebars.registerHelper({
         var gmt, hour, minutes;
 
         if (util.isUndefined(displayLabel)) {
-            gmt = 'GMT' + (timezoneOffset > 0 ? '-' : '+');
+            gmt = timezoneOffset < 0 ? '-' : '+';
             hour = Math.abs(parseInt(timezoneOffset / SIXTY_MINUTES, 10));
             minutes = Math.abs(timezoneOffset % 60);
             displayLabel = gmt + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);

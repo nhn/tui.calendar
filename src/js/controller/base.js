@@ -355,8 +355,6 @@ Base.prototype.clearSchedules = function() {
  * @returns {Array.<string>} keys - error keys not predefined.
  */
 Base.prototype.setTheme = function(theme) {
-    this.theme.clear();
-
     return this.theme.setStyles(theme);
 };
 

@@ -380,14 +380,15 @@ TimeGrid.prototype.renderStickyContainer = function(baseViewModel) {
 
     stickyContainer.innerHTML = timezoneStickyTmpl(baseViewModel);
 
-    stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'block' : 'none';
+    stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'table' : 'none';
     stickyContainer.style.position = 'absolute';
     stickyContainer.style.top = 0;
     stickyContainer.style.width = baseViewModel.styles.leftWidth;
     stickyContainer.style.height = baseViewModel.styles.displayTimezoneLableHeight;
     stickyContainer.style.lineHeight = baseViewModel.styles.displayTimezoneLableHeight;
-    stickyContainer.style.textAlign = 'center';
+    stickyContainer.style.textAlign = 'right';
     stickyContainer.style.borderBottom = baseViewModel.styles.leftBorderRight;
+    stickyContainer.style.zIndex = 99; // higher than 'timegrid-hourmarker' which is 98
 };
 
 /**

@@ -1,5 +1,5 @@
-{{#each timezones ~}}
-    <div title="{{tooltip}}" class="{{CSS_PREFIX}}timegrid-timezone" data-timezone="{{displayLabel}}" style="background-color: {{@root.styles.displayTimezoneLableBackgroundColor}}; position: absolute; top: 0; height: 100%; width: {{width}}%; left: {{left}}%; border-right: {{@root.styles.leftBorderRight}};">
+{{#each (reverse timezones) ~}}
+    <div title="{{tooltip}}" class="{{CSS_PREFIX}}timegrid-timezone-label" data-timezone="{{displayLabel}}" style="background-color: {{@root.styles.displayTimezoneLableBackgroundColor}}; height: 100%; width: {{width}}%; border-right: {{@root.styles.leftBorderRight}}; font-size: {{@root.styles.leftFontSize}};">
         {{{timezoneDisplayLabel-tmpl timezoneOffset displayLabel}}}
     </div>
 {{/each ~}}
