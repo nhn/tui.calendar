@@ -130,8 +130,8 @@ var mmin = Math.min;
 /**
  * @typedef {object} Options - calendar option object
  * @property {string} [defaultView='week'] - default view of calendar
- * @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
- * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
+ * @property {boolean|Array.<string>} [taskView=true] - show the milestone and task in weekly, daily view. If the value is array, it can be <b>['milestone', 'task']</b>.
+ * @property {boolean|Array.<string>} [scheduleView=true] - show the all day and time grid in weekly, daily view.  If the value is array, it can be <b>['allday', 'time']</b>.
  * @property {themeConfig} [theme=themeConfig] - custom theme options
  * @property {Template} [template={}] - template options
  * @property {WeekOptions} [week={}] - options for week view
@@ -175,8 +175,8 @@ var mmin = Math.min;
  * @example
  * var calendar = new tui.Calendar(document.getElementById('calendar'), {
  *     defaultView: 'week',
- *     taskView: true,
- *     scheduleView: true,
+ *     taskView: true,    // can be also ['milestone', 'task']
+ *     scheduleView: true,  // can be also ['allday', 'time']
  *     template: {
  *         milestone: function(schedule) {
  *             return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
@@ -1254,7 +1254,7 @@ Calendar.prototype.setTheme = function(theme) {
  */
 Calendar.prototype.setOptions = function(options, silent) {
     util.forEach(options, function(value, name) {
-        if (util.isObject(value)) {
+        if (util.isObject(value) && !util.isArray(value)) {
             util.forEach(value, function(innerValue, innerName) {
                 this._options[name][innerName] = innerValue;
             }, this);

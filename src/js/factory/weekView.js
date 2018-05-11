@@ -90,6 +90,14 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
     var createView, onSaveNewSchedule, onSetCalendars, lastVPanel;
     var detailView, onShowDetailPopup, onDeleteSchedule, onShowEditPopup, onEditSchedule;
+    var taskView = options.taskView;
+    var scheduleView = options.scheduleView;
+    var viewVisibilities = {
+        'milestone': util.isArray(taskView) ? util.inArray('milestone', taskView) >= 0 : taskView,
+        'task': util.isArray(taskView) ? util.inArray('task', taskView) >= 0 : taskView,
+        'allday': util.isArray(scheduleView) ? util.inArray('allday', scheduleView) >= 0 : scheduleView,
+        'time': util.isArray(scheduleView) ? util.inArray('time', scheduleView) >= 0 : scheduleView
+    };
 
     // Make panels by view sequence and visibilities
     util.forEach(DEFAULT_PANELS, function(panel) {
@@ -99,11 +107,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         panels.push(panel);
 
         // Change visibilities
-        if (name === 'milestone' || name === 'task') {
-            panel.show = options.taskView;
-        } else if (name === 'allday' || name === 'time') {
-            panel.show = options.scheduleView;
-        }
+        panel.show = viewVisibilities[name];
 
         if (panel.show) {
             if (vpanels.length) {
