@@ -10,7 +10,7 @@ var SafeUmdPlugin = require('safe-umd-webpack-plugin');
 var isProduction = process.env.NODE_ENV === 'production';
 var FILENAME = pkg.name + (isProduction ? '.min' : '');
 var BANNER = [
-    FILENAME,
+    'TOAST UI Calendar',
     '@version ' + pkg.version + ' | ' + new Date().toDateString(),
     '@author ' + pkg.author,
     '@license ' + pkg.license
