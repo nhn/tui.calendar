@@ -194,15 +194,15 @@ DayGrid.prototype.addHandler = function(type, handler, vPanel) {
 };
 
 DayGrid.prototype._expand = function() {
-    var vPanel = this.vPanel;
-    var opt = this.options;
-    var panel = getPanel(opt.panels, opt.viewName);
-
-    vPanel.setMaxHeight(panel.maxExpandableHeight);
-    vPanel.setHeightForcedSet(false);
-    vPanel.setHeight(null, panel.maxExpandableHeight);
-
     reqAnimFrame.requestAnimFrame(function() {
+        var vPanel = this.vPanel;
+        var opt = this.options;
+        var panel = getPanel(opt.panels, opt.viewName);
+
+        vPanel.setMaxHeight(panel.maxExpandableHeight);
+        vPanel.setHeightForcedSet(false);
+        vPanel.setHeight(null, panel.maxExpandableHeight);
+
         if (this.parent) {
             this.parent.render();
         }
@@ -210,15 +210,15 @@ DayGrid.prototype._expand = function() {
 };
 
 DayGrid.prototype._collapse = function() {
-    var vPanel = this.vPanel;
-    var opt = this.options;
-    var panel = getPanel(opt.panels, opt.viewName);
-
-    vPanel.setMaxHeight(panel.maxHeight);
-    vPanel.setHeightForcedSet(false);
-    vPanel.setHeight(null, panel.minHeight);
-
     reqAnimFrame.requestAnimFrame(function() {
+        var vPanel = this.vPanel;
+        var opt = this.options;
+        var panel = getPanel(opt.panels, opt.viewName);
+
+        vPanel.setMaxHeight(panel.maxHeight);
+        vPanel.setHeightForcedSet(false);
+        vPanel.setHeight(null, panel.minHeight);
+
         if (this.parent) {
             this.parent.render();
         }
@@ -230,7 +230,12 @@ DayGrid.prototype._collapse = function() {
  * @param {object} state - state
  */
 DayGrid.prototype.setState = function(state) {
+    var collapsed = this.state.collapsed;
     View.prototype.setState.call(this, state);
+
+    if (this.state.collapsed === collapsed) {
+        return;
+    }
 
     if (this.state.collapsed) {
         this._collapse();
