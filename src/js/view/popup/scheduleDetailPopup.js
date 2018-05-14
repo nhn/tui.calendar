@@ -221,7 +221,7 @@ ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, parentSiz
  */
 ScheduleDetailPopup.prototype._setArrowDirection = function(arrow) {
     var direction = arrow.direction || 'arrow-left';
-    var arrowEl = domutil.get(config.classname('popup-arrow'));
+    var arrowEl = domutil.find(config.classname('.popup-arrow'), this.layer.container);
     var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
 
     if (direction !== config.classname('arrow-left')) {
