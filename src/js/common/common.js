@@ -268,6 +268,26 @@ module.exports = {
         var unit = cssValue.match(/[\d.\-+]*\s*(.*)/)[1] || '';
 
         return [number, unit];
+    },
+
+    find: function(array, iteratee, contextopt) {
+        var found;
+
+        util.forEach(array, function(item) {
+            if (iteratee) {
+                found = iteratee(item);
+            }
+
+            if (found) {
+                found = item;
+
+                return false;
+            }
+
+            return true;
+        }, contextopt);
+
+        return found;
     }
 };
 
