@@ -7,6 +7,7 @@
 var util = require('tui-code-snippet');
 var config = require('../config');
 var domutil = require('../common/domutil');
+var common = require('../common/common');
 var VLayout = require('../common/vlayout');
 var reqAnimFrame = require('../common/reqAnimFrame');
 var Schedule = require('../model/schedule');
@@ -241,7 +242,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
         detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
         onShowDetailPopup = function(eventData) {
             var scheduleId = eventData.schedule.calendarId;
-            eventData.calendar = baseController.calendars.find(function(calendar) {
+            eventData.calendar = common.find(baseController.calendars, function(calendar) {
                 return calendar.id === scheduleId;
             });
 

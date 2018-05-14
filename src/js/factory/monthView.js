@@ -9,6 +9,7 @@ var config = require('../config'),
     array = require('../common/array'),
     datetime = require('../common/datetime'),
     domutil = require('../common/domutil'),
+    common = require('../common/common'),
     Month = require('../view/month/month'),
     MonthClick = require('../handler/month/click'),
     MonthCreation = require('../handler/month/creation'),
@@ -111,7 +112,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
         onShowDetailPopup = function(eventData) {
             var scheduleId = eventData.schedule.calendarId;
-            eventData.calendar = baseController.calendars.find(function(calendar) {
+            eventData.calendar = common.find(baseController.calendars, function(calendar) {
                 return calendar.id === scheduleId;
             });
 

@@ -11,7 +11,8 @@ var DatePicker = require('tui-date-picker');
 var TZDate = require('../../common/timezone').Date;
 var config = require('../../config'),
     domevent = require('../../common/domevent'),
-    domutil = require('../../common/domutil');
+    domutil = require('../../common/domutil'),
+    common = require('../../common/common');
 var tmpl = require('../template/popup/scheduleCreationPopup.hbs');
 var MAX_WEEK_OF_MONTH = 6;
 var ARROW_WIDTH_HALF = 8;
@@ -178,7 +179,7 @@ ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
 
     if (domutil.hasClass(dropdown, config.classname('section-calendar'))) {
         domutil.find('.' + iconClassName, dropdownBtn).style.backgroundColor = bgColor;
-        this._selectedCal = this.calendars.find(function(cal) {
+        this._selectedCal = common.find(this.calendars, function(cal) {
             return cal.id === domutil.getData(selectedItem, 'calendarId');
         });
     }
