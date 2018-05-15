@@ -178,7 +178,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
  * @override
  */
 Month.prototype.render = function() {
-    var opt = this.options,
+    var self = this,
+        opt = this.options,
         vLayout = this.vLayout,
         controller = this.controller,
         daynames = opt.daynames,
@@ -256,6 +257,29 @@ Month.prototype.render = function() {
         };
 
         childView.render(viewModel);
+
+        self._invokeAfterRenderSchedule(eventsInDateRange);
+    });
+};
+
+/**
+ * Fire 'afterRenderSchedule' event
+ * @param {Array} matrices - schedule matrices from view model
+ * @fires Month#afterRenderSchedule
+ */
+Month.prototype._invokeAfterRenderSchedule = function(matrices) {
+    var self = this;
+    util.forEachArray(matrices, function(matrix) {
+        util.forEachArray(matrix, function(column) {
+            util.forEachArray(column, function(scheduleViewModel) {
+                if (scheduleViewModel) {
+                    /**
+                     * @event Month#afterRenderSchedule
+                     */
+                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+                }
+            });
+        });
     });
 };
 

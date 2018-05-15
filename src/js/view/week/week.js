@@ -88,7 +88,8 @@ util.inherit(Week, View);
  * @override
  */
 Week.prototype.render = function() {
-    var options = this.options,
+    var self = this,
+        options = this.options,
         scheduleFilter = options.scheduleFilter,
         narrowWeekend = options.narrowWeekend,
         startDayOfWeek = options.startDayOfWeek,
@@ -138,13 +139,48 @@ Week.prototype.render = function() {
     };
 
     this.children.each(function(childView) {
+        var matrices;
+
         childView.render(viewModel);
+
+        if (childView.options.viewName) {
+            matrices = viewModel.schedulesInDateRange[childView.options.viewName]; // DayGrid limits schedule count by visibleScheduleCount after rendering it.
+
+            if (util.isArray(matrices)) {
+                self._invokeAfterRenderSchedule(matrices);
+            } else {
+                util.forEach(matrices, function(matricesOfDay) {
+                    self._invokeAfterRenderSchedule(matricesOfDay);
+                });
+            }
+        }
     });
 
     /**
      * @event Week#afterRender
      */
     this.fire('afterRender');
+};
+
+/**
+ * Fire 'afterRenderSchedule' event
+ * @param {Array} matrices - schedule matrices from view model
+ * @fires Week#afterRenderSchedule
+ */
+Week.prototype._invokeAfterRenderSchedule = function(matrices) {
+    var self = this;
+    util.forEachArray(matrices, function(matrix) {
+        util.forEachArray(matrix, function(column) {
+            util.forEachArray(column, function(scheduleViewModel) {
+                if (scheduleViewModel) {
+                    /**
+                     * @event Week#afterRenderSchedule
+                     */
+                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+                }
+            });
+        });
+    });
 };
 
 /**********

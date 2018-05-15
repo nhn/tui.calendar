@@ -1030,11 +1030,34 @@ Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
      * @type {object}
      * @property {Schedule} schedule - schedule instance to delete
      * @example
-     * calendar.on('beforeDeleteSchedule', function() {
-     *     alert('The schedule is removed.');
+     * calendar.on('beforeDeleteSchedule', function(event) {
+     *     var schedule = event.schedule;
+     *     alert('The schedule is removed.', schedle);
      * });
      */
     this.fire('beforeDeleteSchedule', deleteScheduleData);
+};
+
+/**
+ * @fires Calendar#afterRenderSchedule
+ * @param {Schedule} scheduleData - schedule data
+ * @private
+ */
+Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
+    /**
+     * Fire this event by every single schedule after rendering whole calendar.
+     * @event Calendar#afterRenderSchedule
+     * @type {object}
+     * @property {Schedule} schedule - a rendered schedule instance 
+     * @example
+     * calendar.on('afterRenderSchedule', function(event) {
+     *     var schedule = event.schedule;
+     *     var element = calendar.getElement(schedule.id, schedule.calendarId);
+     *     // use the element
+     *     console.log(element);
+     * });
+     */
+    this.fire('afterRenderSchedule', scheduleData);
 };
 
 /**
@@ -1068,6 +1091,9 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     util.forEach(handler.resize, function(resizeHandler) {
         resizeHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
     });
+
+    // bypass events from view
+    view[method]('afterRenderSchedule', self._onAfterRenderSchedule, self);
 };
 
 /**
