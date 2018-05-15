@@ -17,6 +17,9 @@
         useDetailPopup: useDetailPopup,
         calendars: CalendarList,
         template: {
+            milestone: function(model) {
+                return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + model.bgColor + '">' + model.title + '</span>';
+            },
             allday: function(schedule) {
                 return getTimeTemplate(schedule, true);
             },
@@ -68,17 +71,17 @@
             html.push('<strong>' + start.format('HH:mm') + '</strong> ');
         }
         if (schedule.isPrivate) {
-            html.push('<i class="fa fa-lock"></i>');
+            html.push('<span class="calendar-font-icon ic-lock-b"></span>');
             html.push(' Private');
         } else {
             if (schedule.isReadOnly) {
-                html.push('<i class="fa fa-ban"></i>');
+                html.push('<span class="calendar-font-icon ic-readonly-b"></span>');
             } else if (schedule.recurrenceRule) {
-                html.push('<i class="fa fa-repeat"></i>');
+                html.push('<span class="calendar-font-icon ic-repeat-b"></span>');
             } else if (schedule.attendees.length) {
-                html.push('<i class="fa fa-group"></i>');
+                html.push('<span class="calendar-font-icon ic-user-b"></span>');
             } else if (schedule.location) {
-                html.push('<i class="fa fa-map-marker"></i>');
+                html.push('<span class="calendar-font-icon ic-location-b"></span>');
             }
             html.push(' ' + schedule.title);
         }
