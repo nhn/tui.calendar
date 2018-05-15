@@ -1,5 +1,20 @@
+# test
+test
+
 # documentations
 docs
+doc
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
 
 # Exmaples
 examples
+
+# code analysis
+report
+coverage
+
+# configuration files
+jsdoc.conf.json
+karma.conf.js
+webpack.config.js
