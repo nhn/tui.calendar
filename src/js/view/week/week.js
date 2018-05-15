@@ -140,11 +140,11 @@ Week.prototype.render = function() {
 
     this.children.each(function(childView) {
         var matrices;
-
+        var viewName = util.pick(childView.options, 'viewName');
         childView.render(viewModel);
 
-        if (childView.options.viewName) {
-            matrices = viewModel.schedulesInDateRange[childView.options.viewName]; // DayGrid limits schedule count by visibleScheduleCount after rendering it.
+        if (viewName) {
+            matrices = viewModel.schedulesInDateRange[viewName]; // DayGrid limits schedule count by visibleScheduleCount after rendering it.
 
             if (util.isArray(matrices)) {
                 self._invokeAfterRenderSchedule(matrices);
