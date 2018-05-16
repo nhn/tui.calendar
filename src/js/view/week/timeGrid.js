@@ -31,7 +31,7 @@ var SIXTY_MINUTES = 60;
  * @returns {Array.<Object>}
  */
 function getHoursLabels(start, end, hasHourMarker, timezoneOffset) {
-    var shiftByOffset = timezoneOffset / SIXTY_MINUTES;
+    var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
     var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
     var now = new TZDate();
     var nowMinutes = now.getMinutes();
