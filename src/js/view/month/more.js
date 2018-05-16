@@ -54,6 +54,11 @@ function More(options, container, theme) {
         borderRadius: theme.month.schedule.borderRadius
     }, options);
 
+    /**
+     * @type {Theme}
+     */
+    this.theme = theme;
+
     domevent.on(container, 'click', this._onClick, this);
 }
 
@@ -132,16 +137,31 @@ More.prototype.render = function(viewModel) {
     var layer = this.layer;
     var self = this;
     var pos = this._getRenderPosition(target, weekItem);
-    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
+    var minHeight = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
     var width = target.offsetWidth + (OUT_PADDING * 2);
     var opt = this.options;
     var optMoreLayerSize = opt.moreLayerSize;
+    var styles = this._getStyles(this.theme);
+    var maxVisibleSchedulesInLayer = 10;
+    var height = '';
+
     this._viewModel = util.extend(viewModel, {
         scheduleGutter: opt.scheduleGutter,
         scheduleHeight: opt.scheduleHeight,
         scheduleBulletTop: opt.scheduleBulletTop,
-        borderRadius: opt.borderRadius
+        borderRadius: opt.borderRadius,
+        styles: styles
     });
+
+    height = parseInt(styles.titleHeight, 10);
+    height += parseInt(styles.titleMarginBottom, 10);
+    if (viewModel.schedules.length <= maxVisibleSchedulesInLayer) {
+        height += (opt.scheduleGutter + opt.scheduleHeight) * viewModel.schedules.length;
+    } else {
+        height += (opt.scheduleGutter + opt.scheduleHeight) * maxVisibleSchedulesInLayer;
+    }
+    height += parseInt(styles.paddingBottom, 10);
+    height += OUT_PADDING; // for border
 
     if (optMoreLayerSize.width) {
         width = optMoreLayerSize.width;
@@ -151,17 +171,20 @@ More.prototype.render = function(viewModel) {
         height = optMoreLayerSize.height;
     }
 
+    if (isNaN(height) || height < minHeight) {
+        height = minHeight;
+    }
+
     layer.setContent(tmpl(viewModel));
     if (weekItem.parentElement.lastElementChild === weekItem) {
         layer.setLTRB({
             left: pos[0],
             bottom: 0
         });
-        layer.setSize(width, '');
     } else {
         layer.setPosition(pos[0], pos[1]);
-        layer.setSize(width, height);
     }
+    layer.setSize(width, height);
 
     layer.show();
 
@@ -185,6 +208,41 @@ More.prototype.refresh = function() {
     if (this._viewModel) {
         this.layer.setContent(tmpl(this._viewModel));
     }
+};
+
+/**
+ * Get the styles from theme
+ * @param {Theme} theme - theme instance
+ * @returns {object} styles - styles object
+ */
+More.prototype._getStyles = function(theme) {
+    var styles = {};
+    var listHeight = '';
+
+    if (theme) {
+        styles.border = theme.month.moreView.border || theme.common.border;
+        styles.boxShadow = theme.month.moreView.boxShadow;
+        styles.backgroundColor = theme.month.moreView.backgroundColor || theme.common.backgroundColor;
+        styles.paddingBottom = theme.month.moreView.paddingBottom;
+        styles.titleHeight = theme.month.moreViewTitle.height;
+        styles.titleMarginBottom = theme.month.moreViewTitle.marginBottom;
+        styles.titleBackgroundColor = theme.month.moreViewTitle.backgroundColor;
+        styles.titleBorderBottom = theme.month.moreViewTitle.borderBottom;
+        styles.titlePadding = theme.month.moreViewTitle.padding;
+        styles.listPadding = theme.month.moreViewList.padding;
+        listHeight = 'calc(100%';
+
+        if (parseInt(styles.titleHeight, 10)) {
+            listHeight += ' - ' + styles.titleHeight;
+        }
+        if (parseInt(styles.titleMarginBottom, 10)) {
+            listHeight += ' - ' + styles.titleMarginBottom;
+        }
+        listHeight += ')';
+        styles.listHeight = listHeight;
+    }
+
+    return styles;
 };
 
 module.exports = More;

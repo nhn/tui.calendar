@@ -34,6 +34,16 @@ var THEME_DOORAY = {
     'month.schedule.marginLeft': '10px',
     'month.schedule.marginRight': '10px',
 
+    // month more view
+    'month.moreView.boxShadow': 'none',
+    'month.moreView.paddingBottom': '0',
+    'month.moreViewTitle.height': '28px',
+    'month.moreViewTitle.marginBottom': '0',
+    'month.moreViewTitle.backgroundColor': '#f4f4f4',
+    'month.moreViewTitle.borderBottom': '1px solid #ddd',
+    'month.moreViewTitle.padding': '0 10px',
+    'month.moreViewList.padding': '10px',
+
     // week header 'dayname'
     'week.dayname.height': '41px',
     'week.dayname.borderTop': '1px solid #ddd',
