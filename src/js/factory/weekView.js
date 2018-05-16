@@ -68,7 +68,7 @@ var DEFAULT_PANELS = [
     {
         name: 'allday',
         type: 'daygrid',
-        minHeight: 20,
+        minHeight: 30,
         maxHeight: 80,
         showExpandableButton: true,
         maxExpandableHeight: 210,
