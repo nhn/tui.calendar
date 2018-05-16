@@ -263,7 +263,7 @@ Handlebars.registerHelper({
     'milestoneTitle-tmpl': function() {
         var className = config.classname('left-content');
 
-        return '<span class="' + className + '">Milestone</span></div>';
+        return '<span class="' + className + '">Milestone</span>';
     },
 
     'task-tmpl': function(model) {
@@ -273,13 +273,13 @@ Handlebars.registerHelper({
     'taskTitle-tmpl': function() {
         var className = config.classname('left-content');
 
-        return '<span class="' + className + '">Task</span></div>';
+        return '<span class="' + className + '">Task</span>';
     },
 
     'alldayTitle-tmpl': function() {
         var className = config.classname('left-content');
 
-        return '<span class="' + className + '">All Day</span></div>';
+        return '<span class="' + className + '">All Day</span>';
     },
 
     'allday-tmpl': function(model) {
@@ -290,15 +290,16 @@ Handlebars.registerHelper({
         return common.stripTags(model.title);
     },
 
-    'monthMoreTitleDate-tmpl': function(date) {
-        return date;
+    'monthMoreTitleDate-tmpl': function(date, dayname) {
+        var classDay = config.classname('month-more-title-day');
+        var classDayLabel = config.classname('month-more-title-day-label');
+        var day = util.pick(date.split('.'), 2);
+
+        return '<span class="' + classDay + '">' + day + '</span> <span class="' + classDayLabel + '">' + dayname + '</span>';
     },
 
     'monthMoreClose-tmpl': function() {
-        var iconName = config.classname('icon');
-        var closeIconName = config.classname('ic-close');
-
-        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
+        return '';
     },
 
     'monthGridHeader-tmpl': function(model) {

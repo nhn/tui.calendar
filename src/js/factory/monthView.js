@@ -25,9 +25,10 @@ var config = require('../config'),
  * @param {TZDate} date - date has more schedules
  * @param {HTMLElement} target - target element
  * @param {Collection} schedules - schedule collection
+ * @param {string[]} daynames - daynames to use upside of month more view
  * @returns {object} view model
  */
-function getViewModelForMoreLayer(date, target, schedules) {
+function getViewModelForMoreLayer(date, target, schedules, daynames) {
     schedules.each(function(schedule) {
         var model = schedule.model;
         schedule.hasMultiDates = !datetime.isSameDate(model.start, model.end);
@@ -36,6 +37,7 @@ function getViewModelForMoreLayer(date, target, schedules) {
     return {
         target: target,
         date: datetime.format(date, 'YYYY.MM.DD'),
+        dayname: daynames[date.getDay()],
         schedules: schedules.sort(array.compare.schedule.asc)
     };
 }
@@ -91,7 +93,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         });
 
         if (schedules && schedules.length) {
-            moreView.render(getViewModelForMoreLayer(date, target, schedules));
+            moreView.render(getViewModelForMoreLayer(date, target, schedules, monthView.options.daynames));
 
             schedules.each(function(scheduleViewModel) {
                 if (scheduleViewModel) {
