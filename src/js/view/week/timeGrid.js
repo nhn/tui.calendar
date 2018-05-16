@@ -388,7 +388,6 @@ TimeGrid.prototype.renderStickyContainer = function(baseViewModel) {
     stickyContainer.style.lineHeight = baseViewModel.styles.displayTimezoneLableHeight;
     stickyContainer.style.textAlign = 'right';
     stickyContainer.style.borderBottom = baseViewModel.styles.leftBorderRight;
-    stickyContainer.style.zIndex = 99; // higher than 'timegrid-hourmarker' which is 98
 };
 
 /**
