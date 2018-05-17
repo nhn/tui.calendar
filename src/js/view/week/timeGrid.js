@@ -468,7 +468,7 @@ TimeGrid.prototype.scrollToNow = function() {
         scrollBy,
         scrollFn;
 
-    if (!self.hourmarker) {
+    if (!self.hourmarkers) {
         return;
     }
 
