@@ -60,7 +60,6 @@
     "stylus-loader": "^2.1.2",
     "tui-jsdoc-template": "^1.2.2",
     "tui-release-notes": "git+https://github.com/nhnent/tui.release-notes.git",
-    "underscore": "^1.8.3",
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.3"
   },

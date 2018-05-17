@@ -118,7 +118,6 @@ module.exports = function(config) {
             'jasmine'
         ],
         files: [
-            'node_modules/underscore/underscore.js',
             'node_modules/tui-code-snippet/dist/tui-code-snippet.js',
             'test/fixtures/**/*',
             'test/index.js'
