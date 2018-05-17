@@ -96,7 +96,7 @@ describe('common/array', function() {
 
                 schedules.sort(array.compare.schedule.asc);
 
-                expect(_.pluck(schedules, 'title')).toEqual([
+                expect(util.pluck(schedules, 'title')).toEqual([
                     'hunting',
                     '평가기간',
                     'drawing study',
@@ -128,7 +128,7 @@ describe('common/array', function() {
 
                 schedules.sort(array.compare.schedule.asc);
 
-                expect(_.pluck(schedules, 'title')).toEqual(expected);
+                expect(util.pluck(schedules, 'title')).toEqual(expected);
             });
         });
     });

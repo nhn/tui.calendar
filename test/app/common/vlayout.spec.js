@@ -140,7 +140,7 @@ describe('VLayout', function() {
             inst._resize(inst.panels[1], 100, 110);
 
             // The first panel increased by 10, and the second panel decreased by 10)
-            allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
+            allArgs = util.pluck(util.forEach.calls.argsFor(0)[0], 1);
 
             expect(allArgs).toEqual([110, 90]);
         });
@@ -157,7 +157,7 @@ describe('VLayout', function() {
 
             // Assume you drag the first splitter to the last panel
             inst._resize(inst.panels[1], 100, 210);
-            allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
+            allArgs = util.pluck(util.forEach.calls.argsFor(0)[0], 1);
 
             expect(allArgs).toEqual([210, 0, 20]);
         });
@@ -173,7 +173,7 @@ describe('VLayout', function() {
             spyOn(util, 'forEach');
 
             inst._resize(inst.panels[3], 200, 170);
-            allArgs = _.pluck(util.forEach.calls.argsFor(0)[0], 1);
+            allArgs = util.pluck(util.forEach.calls.argsFor(0)[0], 1);
 
             expect(allArgs).toEqual([60, 70, 100]);
         });
