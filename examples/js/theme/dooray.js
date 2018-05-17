@@ -88,6 +88,13 @@ var THEME_DOORAY = {
     'week.currentTime.color': '#135de6',
     'week.currentTime.fontSize': '13px',
     'week.currentTime.fontWeight': 'bold',
+
+    'week.pastTime.color': '#555',
+    'week.pastTime.fontWeight': 'normal',
+
+    'week.futureTime.color': '#555',
+    'week.futureTime.fontWeight': 'normal',
+
     'week.currentTimeLinePast.border': '1px solid rgba(19, 93, 230, 0.3)',
     'week.currentTimeLineBullet.backgroundColor': '#135de6',
     'week.currentTimeLineToday.border': '1px solid #135de6',

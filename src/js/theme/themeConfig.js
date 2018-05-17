@@ -105,6 +105,13 @@
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
     'week.currentTime.fontWeight': 'normal',
+
+    'week.pastTime.color': '#333',
+    'week.pastTime.fontWeight': 'normal',
+
+    'week.futureTime.color': '#333',
+    'week.futureTime.fontWeight': 'normal',
+
     'week.currentTimeLinePast.border': '1px dashed #515ce6',
     'week.currentTimeLineBullet.backgroundColor': '#515ce6',
     'week.currentTimeLineToday.border': '1px solid #515ce6',
@@ -216,6 +223,13 @@ var themeConfig = {
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
     'week.currentTime.fontWeight': 'normal',
+
+    'week.pastTime.color': '#333',
+    'week.pastTime.fontWeight': 'normal',
+
+    'week.futureTime.color': '#333',
+    'week.futureTime.fontWeight': 'normal',
+
     'week.currentTimeLinePast.border': '1px dashed #515ce6',
     'week.currentTimeLineBullet.backgroundColor': '#515ce6',
     'week.currentTimeLineToday.border': '1px solid #515ce6',

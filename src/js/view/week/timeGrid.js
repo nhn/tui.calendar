@@ -28,26 +28,28 @@ var SIXTY_MINUTES = 60;
  * @param {number} end - end time
  * @param {boolean} hasHourMarker - Whether the current time is displayed
  * @param {number} timezoneOffset - timezone offset
+ * @param {object} styles - styles
  * @returns {Array.<Object>}
  */
-function getHoursLabels(start, end, hasHourMarker, timezoneOffset) {
+function getHoursLabels(start, end, hasHourMarker, timezoneOffset, styles) {
     var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
     var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
     var now = new TZDate();
     var nowMinutes = now.getMinutes();
     var hoursRange = util.range(0, 24);
     var nowAroundHours = null;
-    var nowHours;
+    var nowHours, nowHoursIndex;
 
     if (shiftByOffset < 0 && shiftMinutes > 0) {
         shiftByOffset -= 1;
     }
 
-    nowHours = common.shiftHours(now.getHours(), shiftByOffset);
-
     // shift the array and take elements between start and end
     common.shiftArray(hoursRange, shiftByOffset);
     common.takeArray(hoursRange, start, end);
+
+    nowHours = common.shiftHours(now.getHours(), shiftByOffset);
+    nowHoursIndex = util.inArray(nowHours, hoursRange);
 
     if (hasHourMarker) {
         if (nowMinutes < 20) {
@@ -58,10 +60,28 @@ function getHoursLabels(start, end, hasHourMarker, timezoneOffset) {
     }
 
     return util.map(hoursRange, function(hour, index) {
+        var color;
+        var fontWeight;
+
+        if (!hasHourMarker) {
+            color = 'inherit';
+            fontWeight = 'inherit';
+        } else if (index <= nowHoursIndex) {
+            // past
+            color = styles.pastTimeColor;
+            fontWeight = styles.pastTimeFontWeight;
+        } else {
+            // future
+            color = styles.futureTimeColor;
+            fontWeight = styles.futureTimeFontWeight;
+        }
+
         return {
             hour: hour,
             minutes: shiftMinutes,
-            hidden: nowAroundHours === hour || index === 0
+            hidden: nowAroundHours === hour || index === 0,
+            color: color,
+            fontWeight: fontWeight
         };
     });
 }
@@ -238,9 +258,10 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 /**
  * Get timezone view model
  * @param {number} currentHours - current hour
+ * @param {object} styles - styles
  * @returns {object} ViewModel
  */
-TimeGrid.prototype._getTimezoneViewModel = function(currentHours) {
+TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
     var opt = this.options;
     var hourStart = opt.hourStart;
     var hourEnd = opt.hourEnd;
@@ -258,7 +279,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours) {
 
         timezone = timezones[timezones.length - index - 1];
         timezoneDifference = timezone.timezoneOffset + primaryOffset;
-        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezoneDifference);
+        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
 
@@ -287,11 +308,12 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var range = viewModel.range;
     var opt = this.options;
     var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
+    var styles = this._getStyles(viewModel.theme);
 
     return util.extend(baseViewModel, {
-        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft),
-        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0),
-        styles: this._getStyles(viewModel.theme)
+        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, styles),
+        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0, styles),
+        styles: styles
     });
 };
 
@@ -543,6 +565,12 @@ TimeGrid.prototype._getStyles = function(theme) {
         styles.currentTimeColor = theme.week.currentTime.color;
         styles.currentTimeFontSize = theme.week.currentTime.fontSize;
         styles.currentTimeFontWeight = theme.week.currentTime.fontWeight;
+
+        styles.pastTimeColor = theme.week.pastTime.color;
+        styles.pastTimeFontWeight = theme.week.pastTime.fontWeight;
+
+        styles.futureTimeColor = theme.week.futureTime.color;
+        styles.futureTimeFontWeight = theme.week.futureTime.fontWeight;
 
         styles.currentTimeLeftBorderTop = theme.week.currentTimeLinePast.border;
         styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
