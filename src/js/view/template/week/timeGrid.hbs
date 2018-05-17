@@ -3,7 +3,7 @@
         <div class="{{CSS_PREFIX}}timegrid-timezone" data-timezone-index="{{@index}}" style="position: absolute; top: 0; width: {{width}}%; left: {{left}}%; border-right: {{@root.styles.leftBorderRight}}; background-color: {{@root.styles.leftBackgroundColor}};" >
         {{#if isPrimary}}
             {{#each timeSlots ~}}
-                <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hours}}" style="height: {{@root.styles.oneHourHeight}};">
+                <div class="{{CSS_PREFIX}}timegrid-hour" style="height: {{@root.styles.oneHourHeight}}; color: {{color}}; font-weight: {{fontWeight}};">
                     <span style="{{#if hidden}}display:none{{/if}}">{{{timegridDisplayPrimayTime-tmpl this}}}</span>
                 </div>
             {{/each ~}}
@@ -16,14 +16,14 @@
             {{/if}}
         {{else}}
             {{#each timeSlots ~}}
-                <div class="{{CSS_PREFIX}}timegrid-hour {{CSS_PREFIX}}timegrid-hour-{{hours}}" style="height: {{@root.styles.oneHourHeight}};">
+                <div class="{{CSS_PREFIX}}timegrid-hour" style="height: {{@root.styles.oneHourHeight}}; color: {{color}}; font-weight: {{fontWeight}};">
                     <span style="{{#if hidden}}display:none{{/if}}">{{{timegridDisplayTime-tmpl this}}}</span>
                 </div>
             {{/each ~}}
             {{#if @root.showHourMarker}}
                 <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{@root.hourmarkerTop}}%">
                     <div class="{{CSS_PREFIX}}timegrid-hourmarker-wrap">
-                        <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{@root.styles.currentTimeColor}}; font-size: {{@root.styles.currentTimeFontSize}}; font-weight: {{@root.styles.currentTimeFontWeight}}">{{hourmarkerText}}</div>
+                        <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{@root.styles.currentTimeColor}}; font-size: {{@root.styles.currentTimeFontSize}};">{{hourmarkerText}}</div>
                     </div>
                 </div>
             {{/if}}

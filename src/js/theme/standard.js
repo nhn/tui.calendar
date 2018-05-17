@@ -100,6 +100,7 @@ var theme = {
     'week.currentTime.color': '#515ce6',
     'week.currentTime.fontSize': '11px',
     'week.currentTime.fontWeight': 'normal',
+
     'week.currentTimeLinePast.border': '1px dashed #515ce6',
     'week.currentTimeLineBullet.backgroundColor': '#515ce6',
     'week.currentTimeLineToday.border': '1px solid #515ce6',
