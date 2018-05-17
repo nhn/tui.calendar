@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.2.0 | Thu May 17 2018
+ * @version 1.2.1 | Fri May 18 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -8189,6 +8189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.currentTime.color': '#515ce6',
 	    'week.currentTime.fontSize': '11px',
 	    'week.currentTime.fontWeight': 'normal',
+	
 	    'week.currentTimeLinePast.border': '1px dashed #515ce6',
 	    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
 	    'week.currentTimeLineToday.border': '1px solid #515ce6',
@@ -8321,6 +8322,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.currentTime.color': '#515ce6',
 	    'week.currentTime.fontSize': '11px',
 	    'week.currentTime.fontWeight': 'normal',
+	
+	    'week.pastTime.color': '#333',
+	    'week.pastTime.fontWeight': 'normal',
+	
+	    'week.futureTime.color': '#333',
+	    'week.futureTime.fontWeight': 'normal',
+	
 	    'week.currentTimeLinePast.border': '1px dashed #515ce6',
 	    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
 	    'week.currentTimeLineToday.border': '1px solid #515ce6',
@@ -8432,6 +8440,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.currentTime.color': '#515ce6',
 	    'week.currentTime.fontSize': '11px',
 	    'week.currentTime.fontWeight': 'normal',
+	
+	    'week.pastTime.color': '#333',
+	    'week.pastTime.fontWeight': 'normal',
+	
+	    'week.futureTime.color': '#333',
+	    'week.futureTime.fontWeight': 'normal',
+	
 	    'week.currentTimeLinePast.border': '1px dashed #515ce6',
 	    'week.currentTimeLineBullet.backgroundColor': '#515ce6',
 	    'week.currentTimeLineToday.border': '1px solid #515ce6',
@@ -11971,26 +11986,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {number} end - end time
 	 * @param {boolean} hasHourMarker - Whether the current time is displayed
 	 * @param {number} timezoneOffset - timezone offset
+	 * @param {object} styles - styles
 	 * @returns {Array.<Object>}
 	 */
-	function getHoursLabels(start, end, hasHourMarker, timezoneOffset) {
+	function getHoursLabels(start, end, hasHourMarker, timezoneOffset, styles) {
 	    var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
 	    var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
 	    var now = new TZDate();
 	    var nowMinutes = now.getMinutes();
 	    var hoursRange = util.range(0, 24);
 	    var nowAroundHours = null;
-	    var nowHours;
+	    var nowHours, nowHoursIndex;
 	
 	    if (shiftByOffset < 0 && shiftMinutes > 0) {
 	        shiftByOffset -= 1;
 	    }
 	
-	    nowHours = common.shiftHours(now.getHours(), shiftByOffset);
-	
 	    // shift the array and take elements between start and end
 	    common.shiftArray(hoursRange, shiftByOffset);
 	    common.takeArray(hoursRange, start, end);
+	
+	    nowHours = common.shiftHours(now.getHours(), shiftByOffset);
+	    nowHoursIndex = util.inArray(nowHours, hoursRange);
 	
 	    if (hasHourMarker) {
 	        if (nowMinutes < 20) {
@@ -12001,10 +12018,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    return util.map(hoursRange, function(hour, index) {
+	        var color;
+	        var fontWeight;
+	
+	        if (!hasHourMarker) {
+	            color = 'inherit';
+	            fontWeight = 'inherit';
+	        } else if (index <= nowHoursIndex) {
+	            // past
+	            color = styles.pastTimeColor;
+	            fontWeight = styles.pastTimeFontWeight;
+	        } else {
+	            // future
+	            color = styles.futureTimeColor;
+	            fontWeight = styles.futureTimeFontWeight;
+	        }
+	
 	        return {
 	            hour: hour,
 	            minutes: shiftMinutes,
-	            hidden: nowAroundHours === hour || index === 0
+	            hidden: nowAroundHours === hour || index === 0,
+	            color: color,
+	            fontWeight: fontWeight
 	        };
 	    });
 	}
@@ -12181,9 +12216,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Get timezone view model
 	 * @param {number} currentHours - current hour
+	 * @param {object} styles - styles
 	 * @returns {object} ViewModel
 	 */
-	TimeGrid.prototype._getTimezoneViewModel = function(currentHours) {
+	TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
 	    var opt = this.options;
 	    var hourStart = opt.hourStart;
 	    var hourEnd = opt.hourEnd;
@@ -12201,7 +12237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        timezone = timezones[timezones.length - index - 1];
 	        timezoneDifference = timezone.timezoneOffset + primaryOffset;
-	        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezoneDifference);
+	        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezoneDifference, styles);
 	
 	        hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
 	
@@ -12230,11 +12266,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var range = viewModel.range;
 	    var opt = this.options;
 	    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
+	    var styles = this._getStyles(viewModel.theme);
 	
 	    return util.extend(baseViewModel, {
-	        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft),
-	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0),
-	        styles: this._getStyles(viewModel.theme)
+	        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, styles),
+	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0, styles),
+	        styles: styles
 	    });
 	};
 	
@@ -12411,7 +12448,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scrollBy,
 	        scrollFn;
 	
-	    if (!self.hourmarker) {
+	    if (!self.hourmarkers) {
 	        return;
 	    }
 	
@@ -12486,6 +12523,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        styles.currentTimeColor = theme.week.currentTime.color;
 	        styles.currentTimeFontSize = theme.week.currentTime.fontSize;
 	        styles.currentTimeFontWeight = theme.week.currentTime.fontWeight;
+	
+	        styles.pastTimeColor = theme.week.pastTime.color;
+	        styles.pastTimeFontWeight = theme.week.pastTime.fontWeight;
+	
+	        styles.futureTimeColor = theme.week.futureTime.color;
+	        styles.futureTimeFontWeight = theme.week.futureTime.fontWeight;
 	
 	        styles.currentTimeLeftBorderTop = theme.week.currentTimeLinePast.border;
 	        styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
@@ -13485,12 +13528,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hour "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hour-"
-	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
-	    + "\" style=\"height: "
+	    + "timegrid-hour\" style=\"height: "
 	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
+	    + "; color: "
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + "; font-weight: "
+	    + alias4(((helper = (helper = helpers.fontWeight || (depth0 != null ? depth0.fontWeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"fontWeight","hash":{},"data":data}) : helper)))
 	    + ";\">\n                    <span style=\""
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">"
@@ -13522,18 +13565,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 	
 	  return ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.timeSlots : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showHourMarker),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showHourMarker),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 	},"9":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hour "
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hour-"
-	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
-	    + "\" style=\"height: "
+	    + "timegrid-hour\" style=\"height: "
 	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
+	    + "; color: "
+	    + alias4(((helper = (helper = helpers.color || (depth0 != null ? depth0.color : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data}) : helper)))
+	    + "; font-weight: "
+	    + alias4(((helper = (helper = helpers.fontWeight || (depth0 != null ? depth0.fontWeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"fontWeight","hash":{},"data":data}) : helper)))
 	    + ";\">\n                    <span style=\""
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">"
@@ -13542,12 +13585,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"11":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
+	  return "                <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker\" style=\"top:"
+	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.hourmarkerTop), depth0))
+	    + "%\">\n                    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker-wrap\">\n                        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker-time\" style=\"color: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeColor), depth0))
+	    + "; font-size: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeFontSize), depth0))
+	    + ";\">"
+	    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
+	    + "</div>\n                    </div>\n                </div>\n";
+	},"13":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-gridline\" style=\"height: "
 	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
 	    + ";\n"
-	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "        \">\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-gridline-half\" style=\"height: "
@@ -13555,13 +13616,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-bottom: "
 	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.halfHourBorderBottom), depth0))
 	    + ";\"></div>\n        </div>\n";
-	},"12":function(container,depth0,helpers,partials,data) {
+	},"14":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "            border-bottom: "
 	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderBottom), depth0))
 	    + ";\n";
-	},"14":function(container,depth0,helpers,partials,data) {
+	},"16":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "    <div class=\""
@@ -13615,13 +13676,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ";\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-h-grid\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-schedules\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-schedules-container\"></div>\n    </div>\n\n"
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showHourMarker : depth0),{"name":"if","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showHourMarker : depth0),{"name":"if","hash":{},"fn":container.program(16, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
 
