@@ -134,41 +134,43 @@ describe('View/TimeGrid', function() {
                 tooltip: 'Seoul',
                 width: width,
                 left: 1 * width,
-                isPrimary: true
+                isPrimary: true,
+                hourmarkerText: '09:00'
             }, {
-                // GMT-07:00
+                // GMT-09:30
                 timeSlots: [
-                    {hour: 8, minutes: 0, hidden: true},
-                    {hour: 9, minutes: 0, hidden: false},
-                    {hour: 10, minutes: 0, hidden: false},
-                    {hour: 11, minutes: 0, hidden: false},
-                    {hour: 12, minutes: 0, hidden: false},
-                    {hour: 13, minutes: 0, hidden: false},
-                    {hour: 14, minutes: 0, hidden: false},
-                    {hour: 15, minutes: 0, hidden: false},
-                    {hour: 16, minutes: 0, hidden: false},
-                    {hour: 17, minutes: 0, hidden: true},
-                    {hour: 18, minutes: 0, hidden: false},
-                    {hour: 19, minutes: 0, hidden: false},
-                    {hour: 20, minutes: 0, hidden: false},
-                    {hour: 21, minutes: 0, hidden: false},
-                    {hour: 22, minutes: 0, hidden: false},
-                    {hour: 23, minutes: 0, hidden: false},
-                    {hour: 0, minutes: 0, hidden: false},
-                    {hour: 1, minutes: 0, hidden: false},
-                    {hour: 2, minutes: 0, hidden: false},
-                    {hour: 3, minutes: 0, hidden: false},
-                    {hour: 4, minutes: 0, hidden: false},
-                    {hour: 5, minutes: 0, hidden: false},
-                    {hour: 6, minutes: 0, hidden: false},
-                    {hour: 7, minutes: 0, hidden: false}
+                    {hour: 5, minutes: 30, hidden: true},
+                    {hour: 6, minutes: 30, hidden: false},
+                    {hour: 7, minutes: 30, hidden: false},
+                    {hour: 8, minutes: 30, hidden: false},
+                    {hour: 9, minutes: 30, hidden: false},
+                    {hour: 10, minutes: 30, hidden: false},
+                    {hour: 11, minutes: 30, hidden: false},
+                    {hour: 12, minutes: 30, hidden: false},
+                    {hour: 13, minutes: 30, hidden: false},
+                    {hour: 14, minutes: 30, hidden: true},
+                    {hour: 15, minutes: 30, hidden: false},
+                    {hour: 16, minutes: 30, hidden: false},
+                    {hour: 17, minutes: 30, hidden: false},
+                    {hour: 18, minutes: 30, hidden: false},
+                    {hour: 19, minutes: 30, hidden: false},
+                    {hour: 20, minutes: 30, hidden: false},
+                    {hour: 21, minutes: 30, hidden: false},
+                    {hour: 22, minutes: 30, hidden: false},
+                    {hour: 23, minutes: 30, hidden: false},
+                    {hour: 0, minutes: 30, hidden: false},
+                    {hour: 1, minutes: 30, hidden: false},
+                    {hour: 2, minutes: 30, hidden: false},
+                    {hour: 3, minutes: 30, hidden: false},
+                    {hour: 4, minutes: 30, hidden: false}
                 ],
-                displayLabel: 'GMT-07:00',
-                timezoneOffset: -420,
-                tooltip: 'Los Angeles',
+                displayLabel: 'GMT-09:30',
+                timezoneOffset: -570,
+                tooltip: 'Marquesas Islands',
                 width: width,
                 left: 0 * width,
-                isPrimary: false
+                isPrimary: false,
+                hourmarkerText: '14:30'
             }];
 
             var obj = {
@@ -182,9 +184,9 @@ describe('View/TimeGrid', function() {
                             tooltip: 'Seoul'
                         },
                         {
-                            timezoneOffset: -420,
-                            displayLabel: 'GMT-07:00',
-                            tooltip: 'Los Angeles'
+                            timezoneOffset: -570,
+                            displayLabel: 'GMT-09:30',
+                            tooltip: 'Marquesas Islands'
                         }
                     ]
                 },
