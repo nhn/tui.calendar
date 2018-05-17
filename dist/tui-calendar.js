@@ -1,8 +1,8 @@
 /*!
- * tui-calendar
- * @version 1.1.0 | Fri Apr 27 2018
+ * TOAST UI Calendar
+ * @version 1.2.0 | Thu May 17 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
- * @license undefined
+ * @license MIT
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -13,7 +13,7 @@
 		exports["Calendar"] = factory(require("tui-code-snippet"), require("tui-date-picker"));
 	else
 		root["tui"] = root["tui"] || {}, root["tui"]["Calendar"] = factory((root["tui"] && root["tui"]["util"]), (root["tui"] && root["tui"]["DatePicker"]));
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_72__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_73__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -111,6 +111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common = __webpack_require__(30);
 	var config = __webpack_require__(34);
 	var mmax = Math.max;
+	var SIXTY_MINUTES = 60;
 	
 	/**
 	 * Get CSS syntax for element size
@@ -344,6 +345,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return config.cssPrefix;
 	    },
 	
+	    'reverse': function(array) {
+	        return array.slice().reverse();
+	    },
+	
 	    /**********
 	     * Default schedule template
 	     **********/
@@ -358,7 +363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'milestoneTitle-tmpl': function() {
 	        var className = config.classname('left-content');
 	
-	        return '<span class="' + className + '">Milestone</span></div>';
+	        return '<span class="' + className + '">Milestone</span>';
 	    },
 	
 	    'task-tmpl': function(model) {
@@ -368,13 +373,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'taskTitle-tmpl': function() {
 	        var className = config.classname('left-content');
 	
-	        return '<span class="' + className + '">Task</span></div>';
+	        return '<span class="' + className + '">Task</span>';
 	    },
 	
 	    'alldayTitle-tmpl': function() {
 	        var className = config.classname('left-content');
 	
-	        return '<span class="' + className + '">All Day</span></div>';
+	        return '<span class="' + className + '">All Day</span>';
 	    },
 	
 	    'allday-tmpl': function(model) {
@@ -385,15 +390,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return common.stripTags(model.title);
 	    },
 	
-	    'monthMoreTitleDate-tmpl': function(date) {
-	        return date;
+	    'monthMoreTitleDate-tmpl': function(date, dayname) {
+	        var classDay = config.classname('month-more-title-day');
+	        var classDayLabel = config.classname('month-more-title-day-label');
+	        var day = util.pick(date.split('.'), 2);
+	
+	        return '<span class="' + classDay + '">' + day + '</span> <span class="' + classDayLabel + '">' + dayname + '</span>';
 	    },
 	
 	    'monthMoreClose-tmpl': function() {
-	        var iconName = config.classname('icon');
-	        var closeIconName = config.classname('ic-close');
-	
-	        return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
+	        return '';
 	    },
 	
 	    'monthGridHeader-tmpl': function(model) {
@@ -496,19 +502,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'popupUpdate-tmpl': function() {
 	        return 'Update';
 	    },
-	    'popupDetailDate-tmpl': function(start, end) {
-	        var isDateDifferent = start.getDate() !== end.getDate();
-	        var endFormat = (isDateDifferent ? 'YYYY.MM.DD ' : '') + 'hh:mm tt';
+	    'popupDetailDate-tmpl': function(isAllDay, start, end) {
+	        var isSameDate = datetime.isSameDate(start, end);
+	        var endFormat = (isSameDate ? '' : 'YYYY.MM.DD ') + 'hh:mm tt';
+	
+	        if (isAllDay) {
+	            return datetime.format(start, 'YYYY.MM.DD') + (isSameDate ? '' : ' - ' + datetime.format(end, 'YYYY.MM.DD'));
+	        }
 	
 	        return (datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat));
 	    },
 	    'popupDetailLocation-tmpl': function(schedule) {
-	        return schedule.raw.location;
+	        return schedule.location;
 	    },
 	    'popupDetailUser-tmpl': function(schedule) {
-	        var creator = schedule.raw.creator;
+	        var creator = util.pick(schedule, 'raw', 'creator', 'name');
 	
-	        return creator ? creator.name : '';
+	        return creator;
 	    },
 	    'popupDetailState-tmpl': function(schedule) {
 	        return schedule.state || 'Busy';
@@ -518,6 +528,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    'popupDelete-tmpl': function() {
 	        return 'Delete';
+	    },
+	    'timezoneDisplayLabel-tmpl': function(timezoneOffset, displayLabel) {
+	        var gmt, hour, minutes;
+	
+	        if (util.isUndefined(displayLabel)) {
+	            gmt = timezoneOffset < 0 ? '-' : '+';
+	            hour = Math.abs(parseInt(timezoneOffset / SIXTY_MINUTES, 10));
+	            minutes = Math.abs(timezoneOffset % 60);
+	            displayLabel = gmt + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+	        }
+	
+	        return displayLabel;
+	    },
+	    'timegridDisplayPrimayTime-tmpl': function(time) {
+	        var meridiem = time.hour < 12 ? 'am' : 'pm';
+	
+	        return time.hour + ' ' + meridiem;
+	    },
+	    'timegridDisplayTime-tmpl': function(time) {
+	        return datetime.leadingZero(time.hour, 2) + ':' + datetime.leadingZero(time.minutes, 2);
 	    }
 	});
 
@@ -1807,7 +1837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {string} hh:mm
 	     */
 	    'hh:mm': function(date) {
-	        var hour = Math.floor(date.getHours() / 12),
+	        var hour = Math.floor(date.getHours() % 12),
 	            minutes = date.getMinutes();
 	
 	        return datetime.leadingZero(hour, 2) + ':' +
@@ -2324,6 +2354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var MIN_TO_MS = 60 * 1000;
 	var customOffsetMs = getTimezoneOffset();
 	var timezoneOffsetCallback = null;
+	var setByTimezoneOption = false;
 	
 	var getterMethods = [
 	    'getDate',
@@ -2365,7 +2396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 */
 	function getCustomTimezoneOffset(timestamp) {
-	    if (timezoneOffsetCallback) {
+	    if (!setByTimezoneOption && timezoneOffsetCallback) {
 	        return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
 	    }
 	
@@ -2439,6 +2470,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
 	};
 	
+	/**
+	 * toUTCString
+	 * @returns {Date}
+	 */
+	TZDate.prototype.toUTCString = function() {
+	    return this._date.toUTCString();
+	};
+	
+	/**
+	 * to Date
+	 * @returns {Date}
+	 */
+	TZDate.prototype.toDate = function() {
+	    return this._date;
+	};
+	
 	TZDate.prototype.valueOf = function() {
 	    return this.getTime();
 	};
@@ -2466,6 +2513,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    setOffset: function(offset) {
 	        customOffsetMs = offset * MIN_TO_MS;
+	    },
+	
+	    /**
+	     * Set offset
+	     * @param {number} offset - timezone offset based on minutes
+	     */
+	    setOffsetByTimezoneOption: function(offset) {
+	        this.setOffset(-offset);
+	        setByTimezoneOption = true;
+	    },
+	
+	    /**
+	     * Get offset in case of `setByTimezoneOption`. Or return 0.
+	     * @returns {number} timezone offset offset minutes
+	     */
+	    getOffset: function() {
+	        if (setByTimezoneOption) {
+	            return customOffsetMs / MIN_TO_MS;
+	        }
+	
+	        return 0;
 	    },
 	
 	    /**
@@ -2799,6 +2867,98 @@ return /******/ (function(modules) { // webpackBootstrap
 	                store = store[name];
 	            }
 	        });
+	    },
+	
+	    /**
+	     * shift a array
+	     * @param {Array.<any>} array - array
+	     * @param {number} shift - positive or negative integer to shift
+	     * @returns {Array.<any>} shifted array
+	     */
+	    shiftArray: function(array, shift) {
+	        var length = Math.abs(shift);
+	        var i;
+	
+	        if (shift > 0) {
+	            for (i = 0; i < length; i += 1) {
+	                array.push(array.shift());
+	            }
+	        } else if (shift < 0) {
+	            for (i = 0; i < length; i += 1) {
+	                array.unshift(array.pop());
+	            }
+	        }
+	
+	        return array;
+	    },
+	
+	    /**
+	     * take elements from array between start and end.
+	     * @param {Array.<any>} array - array
+	     * @param {number} start - start index
+	     * @param {number} end - end index
+	     * @returns {Array.<any>}
+	     */
+	    takeArray: function(array, start, end) {
+	        var length = array.length;
+	        var rightCount = length - end;
+	        var leftCount = start;
+	
+	        // remove right
+	        array.splice(end, rightCount);
+	        // remove left
+	        array.splice(0, leftCount);
+	
+	        return array;
+	    },
+	
+	    /**
+	     * shift hours
+	     * @param {number} hours - hours
+	     * @param {number} shift - positive or negative integer to shift
+	     * @returns {number} shifted hours
+	     */
+	    shiftHours: function(hours, shift) {
+	        if (shift > 0) {
+	            hours = (hours + shift) % 24;
+	        } else if (shift < 0) {
+	            hours += shift;
+	            hours = hours > 0 ? hours : 24 + hours;
+	        }
+	
+	        return hours;
+	    },
+	
+	    /**
+	     * Parse css value into number and units
+	     * @param {string} cssValue - css value like '72px'
+	     * @returns {Array} [number, unit]
+	     */
+	    parseUnit: function(cssValue) {
+	        var number = parseFloat(cssValue, 10);
+	        var unit = cssValue.match(/[\d.\-+]*\s*(.*)/)[1] || '';
+	
+	        return [number, unit];
+	    },
+	
+	    find: function(array, iteratee, contextopt) {
+	        var found;
+	
+	        util.forEach(array, function(item) {
+	            if (iteratee) {
+	                found = iteratee(item);
+	            }
+	
+	            if (found) {
+	                found = item;
+	
+	                return false;
+	            }
+	
+	            return true;
+	        }, contextopt);
+	
+	        return found;
 	    }
 	};
 	
@@ -4417,7 +4577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Drag = __webpack_require__(38),
 	    controllerFactory = __webpack_require__(39),
 	    weekViewFactory = __webpack_require__(52),
-	    monthViewFactory = __webpack_require__(94),
+	    monthViewFactory = __webpack_require__(95),
 	    TZDate = __webpack_require__(28).Date,
 	    config = __webpack_require__(34),
 	    timezone = __webpack_require__(28),
@@ -4513,10 +4673,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	/**
+	 * @typedef {object} Timezone
+	 * @property {number} [timezoneOffset] - minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
+	 * @property {string} [displayLabel] -  display label of your timezone at weekly/daily view(ex> 'GMT+09:00')
+	 * @property {string} [tooltip] -  tooltip(ex> 'Seoul')
+	 * @example
+	 * var timezoneName = moment.tz.guess();
+	 * var cal = new Calendar('#calendar', {
+	 *  timezones: [{
+	 *      timezoneOffset: 540,
+	 *      displayLabel: 'GMT+09:00',
+	 *      tooltip: 'Seoul'
+	 *  }, {
+	 *      timezoneOffset: -420,
+	 *      displayLabel: 'GMT-08:00',
+	 *      tooltip: 'Los Angeles'
+	 *  }]
+	 * });
+	 */
+	
+	/**
 	 * @typedef {object} Options - calendar option object
 	 * @property {string} [defaultView='week'] - default view of calendar
-	 * @property {boolean} [taskView=true] - show the milestone and task in weekly, daily view
-	 * @property {boolean} [scheduleView=true] - show the all day and time grid in weekly, daily view
+	 * @property {boolean|Array.<string>} [taskView=true] - show the milestone and task in weekly, daily view. If the value is array, it can be <b>['milestone', 'task']</b>.
+	 * @property {boolean|Array.<string>} [scheduleView=true] - show the all day and time grid in weekly, daily view.  If the value is array, it can be <b>['allday', 'time']</b>.
 	 * @property {themeConfig} [theme=themeConfig] - custom theme options
 	 * @property {Template} [template={}] - template options
 	 * @property {WeekOptions} [week={}] - options for week view
@@ -4524,6 +4704,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
 	 * @property {boolean} [useCreationPopup=false] - whether use default creation popup or not
 	 * @property {boolean} [useDetailPopup=false] - whether use default detail popup or not
+	 * @property {Array.<Timezone>} [timezones] - timezone array. 
+	 *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
+	 *  The rest timezone elements are shown in left timegrid of weekly/daily view.
 	 */
 	
 	/**
@@ -4557,8 +4740,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * var calendar = new tui.Calendar(document.getElementById('calendar'), {
 	 *     defaultView: 'week',
-	 *     taskView: true,
-	 *     scheduleView: true,
+	 *     taskView: true,    // can be also ['milestone', 'task']
+	 *     scheduleView: true,  // can be also ['allday', 'time']
 	 *     template: {
 	 *         milestone: function(schedule) {
 	 *             return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
@@ -4727,7 +4910,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Calendar.prototype._initialize = function(options) {
 	    var controller = this._controller,
-	        viewName = this._viewName;
+	        viewName = this._viewName,
+	        timezones = options.timezones || [];
 	
 	    this._options = util.extend({
 	        defaultView: viewName,
@@ -4741,7 +4925,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        month: util.extend({}, util.pick(options, 'month') || {}),
 	        calendars: [],
 	        useCreationPopup: false,
-	        useDetailPopup: false
+	        useDetailPopup: false,
+	        timezones: options.timezones || [{
+	            timezoneOffset: 0,
+	            displayLabel: '',
+	            tooltip: ''
+	        }]
 	    }, options);
 	
 	    this._options.week = util.extend({
@@ -4765,6 +4954,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Handlebars.registerHelper(name + '-tmpl', func);
 	        }
 	    });
+	
+	    // set by primary timezone
+	    if (timezones.length) {
+	        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
+	    }
 	
 	    this.changeView(viewName, true);
 	};
@@ -4839,6 +5033,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {string} scheduleId - ID of a schedule to update
 	 * @param {string} calendarId - calendarId of the schedule to update
 	 * @param {Schedule} scheduleData - schedule data to update
+	 * @param {boolean} [silent=false] - no auto render after creation when set true
 	 * @example
 	 * calendar.on('beforeUpdateSchedule', function(event) {
 	 *     var schedule = event.schedule;
@@ -4850,7 +5045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *     });
 	 * });
 	 */
-	Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData) {
+	Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData, silent) {
 	    var ctrl = this._controller,
 	        ownSchedules = ctrl.schedules,
 	        schedule = ownSchedules.single(function(model) {
@@ -4859,7 +5054,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (schedule) {
 	        ctrl.updateSchedule(schedule, scheduleData);
-	        this.render();
+	
+	        if (!silent) {
+	            this.render();
+	        }
 	    }
 	};
 	
@@ -4867,8 +5065,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Delete a schedule.
 	 * @param {string} scheduleId - ID of schedule to delete
 	 * @param {string} calendarId - calendarId of the schedule to delete
+	 * @param {boolean} [silent=false] - no auto render after creation when set true
 	 */
-	Calendar.prototype.deleteSchedule = function(scheduleId, calendarId) {
+	Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
 	    var ctrl = this._controller,
 	        ownSchedules = ctrl.schedules,
 	        schedule = ownSchedules.single(function(model) {
@@ -4880,7 +5079,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    ctrl.deleteSchedule(schedule);
-	    this.render();
+	    if (!silent) {
+	        this.render();
+	    }
 	};
 	
 	/**********
@@ -5394,11 +5595,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @type {object}
 	     * @property {Schedule} schedule - schedule instance to delete
 	     * @example
-	     * calendar.on('beforeDeleteSchedule', function() {
-	     *     alert('The schedule is removed.');
+	     * calendar.on('beforeDeleteSchedule', function(event) {
+	     *     var schedule = event.schedule;
+	     *     alert('The schedule is removed.', schedle);
 	     * });
 	     */
 	    this.fire('beforeDeleteSchedule', deleteScheduleData);
+	};
+	
+	/**
+	 * @fires Calendar#afterRenderSchedule
+	 * @param {Schedule} scheduleData - schedule data
+	 * @private
+	 */
+	Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
+	    /**
+	     * Fire this event by every single schedule after rendering whole calendar.
+	     * @event Calendar#afterRenderSchedule
+	     * @type {object}
+	     * @property {Schedule} schedule - a rendered schedule instance 
+	     * @example
+	     * calendar.on('afterRenderSchedule', function(event) {
+	     *     var schedule = event.schedule;
+	     *     var element = calendar.getElement(schedule.id, schedule.calendarId);
+	     *     // use the element
+	     *     console.log(element);
+	     * });
+	     */
+	    this.fire('afterRenderSchedule', scheduleData);
 	};
 	
 	/**
@@ -5432,6 +5656,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    util.forEach(handler.resize, function(resizeHandler) {
 	        resizeHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
 	    });
+	
+	    // bypass events from view
+	    view[method]('afterRenderSchedule', self._onAfterRenderSchedule, self);
 	};
 	
 	/**
@@ -5625,7 +5852,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Calendar.prototype.setOptions = function(options, silent) {
 	    util.forEach(options, function(value, name) {
-	        if (util.isObject(value)) {
+	        if (util.isObject(value) && !util.isArray(value)) {
 	            util.forEach(value, function(innerValue, innerName) {
 	                this._options[name][innerName] = innerValue;
 	            }, this);
@@ -5711,6 +5938,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Set timezone offset
 	 * @param {number} offset - offset (min)
 	 * @static
+	 * @deprecated
 	 * @example
 	 * var timezoneName = moment.tz.guess();
 	 * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
@@ -5723,6 +5951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Set a callback function to get timezone offset by timestamp
 	 * @param {function} callback - callback function
 	 * @static
+	 * @deprecated
 	 * @example
 	 * var timezoneName = moment.tz.guess();
 	 * tui.Calendar.setTimezoneOffsetCallback(function(timestamp) {
@@ -6777,8 +7006,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Array.<string>} keys - error keys not predefined.
 	 */
 	Base.prototype.setTheme = function(theme) {
-	    this.theme.clear();
-	
 	    return this.theme.setStyles(theme);
 	};
 	
@@ -7906,6 +8133,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'month.schedule.marginLeft': '8px',
 	    'month.schedule.marginRight': '8px',
 	
+	    // month more view
+	    'month.moreView.border': '1px solid #d5d5d5',
+	    'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
+	    'month.moreView.backgroundColor': 'white',
+	    'month.moreView.paddingBottom': '17px',
+	    'month.moreViewTitle.height': '44px',
+	    'month.moreViewTitle.marginBottom': '12px',
+	    'month.moreViewTitle.borderBottom': 'none',
+	    'month.moreViewTitle.padding': '12px 17px 0 17px',
+	    'month.moreViewList.padding': '0 17px',
+	
 	    // week header 'dayname'
 	    'week.dayname.height': '42px',
 	    'week.dayname.borderTop': '1px solid #e5e5e5',
@@ -8025,6 +8263,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'month.schedule.marginLeft': '8px',
 	    'month.schedule.marginRight': '8px',
 	
+	    // month more view
+	    'month.moreView.border': '1px solid #d5d5d5',
+	    'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
+	    'month.moreView.backgroundColor': 'white',
+	    'month.moreView.paddingBottom': '17px',
+	    'month.moreViewTitle.height': '44px',
+	    'month.moreViewTitle.marginBottom': '12px',
+	    'month.moreViewTitle.backgroundColor': 'white',
+	    'month.moreViewTitle.borderBottom': 'none',
+	    'month.moreViewTitle.padding': '12px 17px 0 17px',
+	    'month.moreViewList.padding': '0 17px 17px 17px',
+	
 	    // week header 'dayname'
 	    'week.dayname.height': '42px',
 	    'week.dayname.borderTop': '1px solid #e5e5e5',
@@ -8056,6 +8306,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.timegridLeft.backgroundColor': 'inherit',
 	    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
 	    'week.timegridLeft.fontSize': '11px',
+	    'week.timegridLeftTimezoneLabel.height': '20px',
 	
 	    'week.timegridOneHour.height': '52px',
 	    'week.timegridHalfHour.height': '26px',
@@ -8123,6 +8374,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'month.schedule.marginLeft': '8px',
 	    'month.schedule.marginRight': '8px',
 	
+	    // month more view
+	    'month.moreView.border': '1px solid #d5d5d5',
+	    'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
+	    'month.moreView.backgroundColor': 'white',
+	    'month.moreView.paddingBottom': '17px',
+	    'month.moreViewTitle.height': '44px',
+	    'month.moreViewTitle.marginBottom': '12px',
+	    'month.moreViewTitle.backgroundColor': 'inherit',
+	    'month.moreViewTitle.borderBottom': 'none',
+	    'month.moreViewTitle.padding': '12px 17px 0 17px',
+	    'month.moreViewList.padding': '0 17px',
+	
 	    // week header 'dayname'
 	    'week.dayname.height': '42px',
 	    'week.dayname.borderTop': '1px solid #e5e5e5',
@@ -8154,6 +8417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.timegridLeft.backgroundColor': 'inherit',
 	    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
 	    'week.timegridLeft.fontSize': '11px',
+	    'week.timegridLeftTimezoneLabel.height': '20px',
 	
 	    'week.timegridOneHour.height': '52px',
 	    'week.timegridHalfHour.height': '26px',
@@ -8570,7 +8834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        return;
 	                    }
 	
-	                    startTime = viewModel.getStarts().getTime() + 1;
+	                    startTime = viewModel.getStarts().getTime();
 	                    endTime = viewModel.getEnds().getTime() - 1;
 	
 	                    for (i = (col + 1); i < maxRowLength; i += 1) {
@@ -9295,6 +9559,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
+	var common = __webpack_require__(30);
 	var VLayout = __webpack_require__(53);
 	var reqAnimFrame = __webpack_require__(55);
 	var Schedule = __webpack_require__(41);
@@ -9305,19 +9570,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	var DayName = __webpack_require__(57);
 	var DayGrid = __webpack_require__(59);
 	var TimeGrid = __webpack_require__(64);
-	var ScheduleCreationPopup = __webpack_require__(70);
-	var ScheduleDetailPopup = __webpack_require__(74);
+	var ScheduleCreationPopup = __webpack_require__(71);
+	var ScheduleDetailPopup = __webpack_require__(75);
 	
 	// Handlers
-	var DayNameClick = __webpack_require__(76);
-	var DayGridClick = __webpack_require__(77);
-	var DayGridCreation = __webpack_require__(81);
-	var DayGridMove = __webpack_require__(78);
-	var DayGridResize = __webpack_require__(83);
-	var TimeClick = __webpack_require__(85);
-	var TimeCreation = __webpack_require__(86);
-	var TimeMove = __webpack_require__(89);
-	var TimeResize = __webpack_require__(92);
+	var DayNameClick = __webpack_require__(77);
+	var DayGridClick = __webpack_require__(78);
+	var DayGridCreation = __webpack_require__(82);
+	var DayGridMove = __webpack_require__(79);
+	var DayGridResize = __webpack_require__(84);
+	var TimeClick = __webpack_require__(86);
+	var TimeCreation = __webpack_require__(87);
+	var TimeMove = __webpack_require__(90);
+	var TimeResize = __webpack_require__(93);
 	
 	var DAYGRID_HANDLDERS = {
 	    'click': DayGridClick,
@@ -9355,7 +9620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    {
 	        name: 'allday',
 	        type: 'daygrid',
-	        minHeight: 20,
+	        minHeight: 30,
 	        maxHeight: 80,
 	        showExpandableButton: true,
 	        maxExpandableHeight: 210,
@@ -9373,33 +9638,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/* eslint-disable complexity*/
 	module.exports = function(baseController, layoutContainer, dragHandler, options) {
-	    var panels = options.week.panels || DEFAULT_PANELS,
+	    var panels = [],
 	        vpanels = [];
 	    var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
-	    var createView, onSaveNewSchedule, onSetCalendars;
+	    var createView, onSaveNewSchedule, onSetCalendars, lastVPanel;
 	    var detailView, onShowDetailPopup, onDeleteSchedule, onShowEditPopup, onEditSchedule;
-	
-	    util.extend(options.week, {panels: panels});
-	
-	    weekView = new Week(null, options.week, layoutContainer, panels);
-	    weekView.handler = {
-	        click: {},
-	        dayname: {},
-	        creation: {},
-	        move: {},
-	        resize: {}
+	    var taskView = options.taskView;
+	    var scheduleView = options.scheduleView;
+	    var viewVisibilities = {
+	        'milestone': util.isArray(taskView) ? util.inArray('milestone', taskView) >= 0 : taskView,
+	        'task': util.isArray(taskView) ? util.inArray('task', taskView) >= 0 : taskView,
+	        'allday': util.isArray(scheduleView) ? util.inArray('allday', scheduleView) >= 0 : scheduleView,
+	        'time': util.isArray(scheduleView) ? util.inArray('time', scheduleView) >= 0 : scheduleView
 	    };
 	
 	    // Make panels by view sequence and visibilities
-	    util.forEach(panels, function(panel) {
+	    util.forEach(DEFAULT_PANELS, function(panel) {
 	        var name = panel.name;
 	
+	        panel = util.extend({}, panel);
+	        panels.push(panel);
+	
 	        // Change visibilities
-	        if (name === 'milestone' || name === 'task') {
-	            panel.show = options.taskView;
-	        } else if (name === 'allday' || name === 'time') {
-	            panel.show = options.scheduleView;
-	        }
+	        panel.show = viewVisibilities[name];
 	
 	        if (panel.show) {
 	            if (vpanels.length) {
@@ -9412,16 +9673,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    if (vpanels.length) {
-	        vpanels[vpanels.length - 1].autoHeight = true;
-	        vpanels[vpanels.length - 1].maxHeight = null;
+	        lastVPanel = vpanels[vpanels.length - 1];
+	        lastVPanel.autoHeight = true;
+	        lastVPanel.maxHeight = null;
+	        lastVPanel.showExpandableButton = false;
+	
+	        util.forEach(panels, function(panel) {
+	            if (panel.name === lastVPanel.name) {
+	                panel.showExpandableButton = false;
+	
+	                return false;
+	            }
+	
+	            return true;
+	        });
 	    }
+	
+	    util.extend(options.week, {panels: panels});
+	
+	    weekView = new Week(null, options.week, layoutContainer, panels);
+	    weekView.handler = {
+	        click: {},
+	        dayname: {},
+	        creation: {},
+	        move: {},
+	        resize: {}
+	    };
 	
 	    dayNameContainer = domutil.appendHTMLElement('div', weekView.container, config.classname('dayname-layout'));
 	
 	    /**********
 	     * Day name (top row(Mon, Tue, Wed...))
 	     **********/
-	    dayNameView = new DayName(options.week, dayNameContainer, baseController.theme);
+	    dayNameView = new DayName(options, dayNameContainer, baseController.theme);
 	    weekView.handler.dayname.date = new DayNameClick(dragHandler, dayNameView, baseController);
 	    weekView.addChild(dayNameView);
 	
@@ -9451,7 +9735,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            /**********
 	             * Schedule panel by Grid
 	             **********/
-	            view = new DayGrid(name, options.week, vLayout.getPanelByName(panel.name).container, baseController.theme);
+	            view = new DayGrid(name, options, vLayout.getPanelByName(panel.name).container, baseController.theme);
 	            view.on('afterRender', function(viewModel) {
 	                vLayout.getPanelByName(name).setHeight(null, viewModel.height);
 	            });
@@ -9466,7 +9750,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            /**********
 	             * Schedule panel by TimeGrid
 	             **********/
-	            view = new TimeGrid(name, options.week, vLayout.getPanelByName(name).container);
+	            view = new TimeGrid(name, options, vLayout.getPanelByName(name).container);
 	            weekView.addChild(view);
 	            util.forEach(handlers, function(type) {
 	                weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController);
@@ -9510,7 +9794,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
 	        onShowDetailPopup = function(eventData) {
 	            var scheduleId = eventData.schedule.calendarId;
-	            eventData.calendar = baseController.calendars.find(function(calendar) {
+	            eventData.calendar = common.find(baseController.calendars, function(calendar) {
 	                return calendar.id === scheduleId;
 	            });
 	
@@ -10425,7 +10709,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @override
 	 */
 	Week.prototype.render = function() {
-	    var options = this.options,
+	    var self = this,
+	        options = this.options,
 	        scheduleFilter = options.scheduleFilter,
 	        narrowWeekend = options.narrowWeekend,
 	        startDayOfWeek = options.startDayOfWeek,
@@ -10475,13 +10760,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	
 	    this.children.each(function(childView) {
+	        var matrices;
+	        var viewName = util.pick(childView.options, 'viewName');
 	        childView.render(viewModel);
+	
+	        if (viewName) {
+	            matrices = viewModel.schedulesInDateRange[viewName]; // DayGrid limits schedule count by visibleScheduleCount after rendering it.
+	
+	            if (util.isArray(matrices)) {
+	                self._invokeAfterRenderSchedule(matrices);
+	            } else {
+	                util.forEach(matrices, function(matricesOfDay) {
+	                    self._invokeAfterRenderSchedule(matricesOfDay);
+	                });
+	            }
+	        }
 	    });
 	
 	    /**
 	     * @event Week#afterRender
 	     */
 	    this.fire('afterRender');
+	};
+	
+	/**
+	 * Fire 'afterRenderSchedule' event
+	 * @param {Array} matrices - schedule matrices from view model
+	 * @fires Week#afterRenderSchedule
+	 */
+	Week.prototype._invokeAfterRenderSchedule = function(matrices) {
+	    var self = this;
+	    util.forEachArray(matrices, function(matrix) {
+	        util.forEachArray(matrix, function(column) {
+	            util.forEachArray(column, function(scheduleViewModel) {
+	                if (scheduleViewModel) {
+	                    /**
+	                     * @event Week#afterRenderSchedule
+	                     */
+	                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+	                }
+	            });
+	        });
+	    });
 	};
 	
 	/**********
@@ -10527,6 +10847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
+	var common = __webpack_require__(30);
 	var datetime = __webpack_require__(27);
 	var TZDate = __webpack_require__(28).Date;
 	var domutil = __webpack_require__(31);
@@ -10548,8 +10869,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    );
 	
 	    this.options = util.extend({
-	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-	    }, options);
+	        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	        timezones: options.timezones
+	    }, options.week);
 	
 	    /**
 	     * @type {Theme}
@@ -10649,6 +10971,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DayName.prototype._getStyles = function(theme) {
 	    var styles = {};
+	    var timezonesLength = this.options.timezones.length;
+	    var numberAndUnit;
 	
 	    if (theme) {
 	        styles.borderTop = theme.week.dayname.borderTop || theme.common.border;
@@ -10658,6 +10982,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        styles.backgroundColor = theme.week.dayname.backgroundColor;
 	        styles.height = theme.week.dayname.height;
 	        styles.textAlign = theme.week.dayname.textAlign;
+	        styles.marginLeft = theme.week.daygridLeft.width;
+	
+	        if (timezonesLength > 1) {
+	            numberAndUnit = common.parseUnit(styles.marginLeft);
+	            styles.marginLeft = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+	        }
 	    }
 	
 	    return styles;
@@ -10718,11 +11048,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "today";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 	
 	  return "<div class=\""
-	    + container.escapeExpression(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "dayname-leftmargin\">\n"
+	    + alias2(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "dayname-leftmargin\" style=\"margin-left: "
+	    + alias2(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.marginLeft), depth0))
+	    + ";\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.dayNames : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
@@ -10739,6 +11071,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
+	    common = __webpack_require__(30),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
 	    TZDate = __webpack_require__(28).Date,
@@ -10782,13 +11115,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
 	        scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
 	        scheduleContainerTop: 1,
+	        timezones: options.timezones,
 	        getViewModelFunc: function(viewModel) {
 	            return viewModel.schedulesInDateRange[name];
 	        },
 	        setViewModelFunc: function(viewModel, matrices) {
 	            viewModel.schedulesInDateRange[name] = matrices;
 	        }
-	    }, options);
+	    }, options.week);
 	
 	    this.handler = {};
 	    this.vPanel = null;
@@ -10925,15 +11259,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	DayGrid.prototype._expand = function() {
-	    var vPanel = this.vPanel;
-	    var opt = this.options;
-	    var panel = getPanel(opt.panels, opt.viewName);
-	
-	    vPanel.setMaxHeight(panel.maxExpandableHeight);
-	    vPanel.setHeightForcedSet(false);
-	    vPanel.setHeight(null, panel.maxExpandableHeight);
-	
 	    reqAnimFrame.requestAnimFrame(function() {
+	        var vPanel = this.vPanel;
+	        var opt = this.options;
+	        var panel = getPanel(opt.panels, opt.viewName);
+	
+	        vPanel.setMaxHeight(panel.maxExpandableHeight);
+	        vPanel.setHeightForcedSet(false);
+	        vPanel.setHeight(null, panel.maxExpandableHeight);
+	
 	        if (this.parent) {
 	            this.parent.render();
 	        }
@@ -10941,15 +11275,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	DayGrid.prototype._collapse = function() {
-	    var vPanel = this.vPanel;
-	    var opt = this.options;
-	    var panel = getPanel(opt.panels, opt.viewName);
-	
-	    vPanel.setMaxHeight(panel.maxHeight);
-	    vPanel.setHeightForcedSet(false);
-	    vPanel.setHeight(null, panel.minHeight);
-	
 	    reqAnimFrame.requestAnimFrame(function() {
+	        var vPanel = this.vPanel;
+	        var opt = this.options;
+	        var panel = getPanel(opt.panels, opt.viewName);
+	
+	        vPanel.setMaxHeight(panel.maxHeight);
+	        vPanel.setHeightForcedSet(false);
+	        vPanel.setHeight(null, panel.minHeight);
+	
 	        if (this.parent) {
 	            this.parent.render();
 	        }
@@ -10961,7 +11295,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {object} state - state
 	 */
 	DayGrid.prototype.setState = function(state) {
+	    var collapsed = this.state.collapsed;
 	    View.prototype.setState.call(this, state);
+	
+	    if (this.state.collapsed === collapsed) {
+	        return;
+	    }
 	
 	    if (this.state.collapsed) {
 	        this._collapse();
@@ -10977,6 +11316,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	DayGrid.prototype._getStyles = function(theme) {
 	    var styles = {};
+	    var timezonesLength = this.options.timezones.length;
+	    var numberAndUnit;
 	
 	    if (theme) {
 	        styles.borderRight = theme.week.daygrid.borderRight || theme.common.border;
@@ -10987,6 +11328,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        styles.leftBackgroundColor = theme.week.daygridLeft.backgroundColor;
 	        styles.leftPaddingRight = theme.week.daygridLeft.paddingRight;
 	        styles.leftBorderRight = theme.week.daygridLeft.borderRight;
+	
+	        if (timezonesLength > 1) {
+	            numberAndUnit = common.parseUnit(styles.leftWidth);
+	            styles.leftWidth = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+	        }
 	    }
 	
 	    return styles;
@@ -11606,15 +11952,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
 	var datetime = __webpack_require__(27);
-	var TZDate = __webpack_require__(28).Date;
+	var Timezone = __webpack_require__(28);
 	var reqAnimFrame = __webpack_require__(55);
 	var View = __webpack_require__(37);
 	var Time = __webpack_require__(65);
 	var AutoScroll = __webpack_require__(67);
 	var mainTmpl = __webpack_require__(69);
-	
+	var timezoneStickyTmpl = __webpack_require__(70);
+	var TZDate = Timezone.Date;
 	var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 	var SIXTY_SECONDS = 60;
+	var SIXTY_MINUTES = 60;
 	
 	/**
 	 * Returns a list of time labels from start to end.
@@ -11622,14 +11970,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {number} start - start time
 	 * @param {number} end - end time
 	 * @param {boolean} hasHourMarker - Whether the current time is displayed
+	 * @param {number} timezoneOffset - timezone offset
 	 * @returns {Array.<Object>}
 	 */
-	function getHoursLabels(start, end, hasHourMarker) {
+	function getHoursLabels(start, end, hasHourMarker, timezoneOffset) {
+	    var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
+	    var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
 	    var now = new TZDate();
 	    var nowMinutes = now.getMinutes();
-	    var nowHours = now.getHours();
-	    var hoursRange = util.range(start, end);
+	    var hoursRange = util.range(0, 24);
 	    var nowAroundHours = null;
+	    var nowHours;
+	
+	    if (shiftByOffset < 0 && shiftMinutes > 0) {
+	        shiftByOffset -= 1;
+	    }
+	
+	    nowHours = common.shiftHours(now.getHours(), shiftByOffset);
+	
+	    // shift the array and take elements between start and end
+	    common.shiftArray(hoursRange, shiftByOffset);
+	    common.takeArray(hoursRange, start, end);
 	
 	    if (hasHourMarker) {
 	        if (nowMinutes < 20) {
@@ -11639,10 +12000,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	
-	    return hoursRange.map(function(hours) {
+	    return util.map(hoursRange, function(hour, index) {
 	        return {
-	            hours: hours,
-	            hidden: nowAroundHours === hours
+	            hour: hour,
+	            minutes: shiftMinutes,
+	            hidden: nowAroundHours === hour || index === 0
 	        };
 	    });
 	}
@@ -11655,14 +12017,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {string} options.renderEndDate - render end date. YYYY-MM-DD
 	 * @param {number} [options.hourStart=0] You can change view's start hours.
 	 * @param {number} [options.hourEnd=0] You can change view's end hours.
-	 * @param {HTMLElement} container Container element.
+	 * @param {HTMLElement} panelElement panel element.
 	 */
-	function TimeGrid(name, options, container) {
-	    container = domutil.appendHTMLElement(
+	function TimeGrid(name, options, panelElement) {
+	    var container = domutil.appendHTMLElement(
 	        'div',
-	        container,
+	        panelElement,
 	        config.classname('timegrid-container')
 	    );
+	    var stickyContainer = domutil.appendHTMLElement(
+	        'div',
+	        panelElement,
+	        config.classname('timegrid-sticky-container')
+	    );
+	
+	    panelElement.style.position = 'relative'; // for stickyContainer
+	
 	    name = name || 'time';
 	
 	    View.call(this, container);
@@ -11674,6 +12044,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._autoScroll = new AutoScroll(container);
 	    }
 	
+	    this.stickyContainer = stickyContainer;
+	
 	    /**
 	     * Time view options.
 	     * @type {object}
@@ -11683,8 +12055,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        renderStartDate: '',
 	        renderEndDate: '',
 	        hourStart: 0,
-	        hourEnd: 24
-	    }, options);
+	        hourEnd: 24,
+	        timezones: options.timezones
+	    }, options.week);
 	
 	    /**
 	     * Interval id for hourmarker animation.
@@ -11735,7 +12108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._autoScroll.destroy();
 	    }
 	
-	    this._autoScroll = this.hourmarker = this.intervalID = this.timerID = this._cacheParentViewModel = null;
+	    this._autoScroll = this.hourmarkers = this.intervalID = this.timerID = this._cacheParentViewModel = null;
 	};
 	
 	/**
@@ -11762,17 +12135,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Get Hourmarker viewmodel.
-	 * @param {Date} now - now
+	 * @param {TZDate} now - now
 	 * @param {object} grids grid information(width, left, day)
 	 * @param {Array.<TZDate>} range render range
-	 * @param {Theme} theme - theme instance
 	 * @returns {object} ViewModel of hourmarker.
 	 */
-	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range, theme) {
-	    var todaymarkerLeft = -1,
-	        todaymarkerWidth = -1,
-	        styles = this._getStyles(theme),
-	        viewModel;
+	TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
+	    var todaymarkerLeft = -1;
+	    var todaymarkerWidth = -1;
+	    var hourmarkerTexts = [];
+	    var opt = this.options;
+	    var primaryOffset = Timezone.getOffset();
+	    var timezones = opt.timezones;
+	    var viewModel;
 	
 	    now = now || new TZDate();
 	
@@ -11783,17 +12158,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	
+	    util.forEach(timezones, function(timezone) {
+	        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
+	        var hourmarker = new TZDate(now);
+	
+	        hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
+	        hourmarkerTexts.push(datetime.format(hourmarker, 'HH:mm'));
+	    });
+	
 	    viewModel = {
 	        currentHours: now.getHours(),
 	        hourmarkerTop: this._getTopPercentByTime(now),
-	        hourmarkerText: datetime.format(now, 'HH:mm'),
+	        hourmarkerTexts: hourmarkerTexts,
 	        todaymarkerLeft: todaymarkerLeft,
 	        todaymarkerWidth: todaymarkerWidth,
-	        todaymarkerRight: todaymarkerLeft + todaymarkerWidth,
-	        styles: styles
+	        todaymarkerRight: todaymarkerLeft + todaymarkerWidth
 	    };
 	
 	    return viewModel;
+	};
+	
+	/**
+	 * Get timezone view model
+	 * @param {number} currentHours - current hour
+	 * @returns {object} ViewModel
+	 */
+	TimeGrid.prototype._getTimezoneViewModel = function(currentHours) {
+	    var opt = this.options;
+	    var hourStart = opt.hourStart;
+	    var hourEnd = opt.hourEnd;
+	    var primaryOffset = Timezone.getOffset();
+	    var timezones = opt.timezones;
+	    var timezonesLength = timezones.length;
+	    var timezoneViewModel = [];
+	    var width = 100 / timezonesLength;
+	    var now = new TZDate();
+	
+	    util.forEach(timezones, function(timezone, index) {
+	        var hourmarker = new TZDate(now);
+	        var timezoneDifference;
+	        var timeSlots;
+	
+	        timezone = timezones[timezones.length - index - 1];
+	        timezoneDifference = timezone.timezoneOffset + primaryOffset;
+	        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezoneDifference);
+	
+	        hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
+	
+	        timezoneViewModel.unshift({
+	            timeSlots: timeSlots,
+	            displayLabel: timezone.displayLabel,
+	            timezoneOffset: timezone.timezoneOffset,
+	            tooltip: timezone.tooltip || '',
+	            width: width,
+	            left: index * width,
+	            isPrimary: index === timezonesLength - 1,
+	            hourmarkerText: datetime.format(hourmarker, 'HH:mm')
+	        });
+	    });
+	
+	    return timezoneViewModel;
 	};
 	
 	/**
@@ -11805,10 +12229,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var grids = viewModel.grids;
 	    var range = viewModel.range;
 	    var opt = this.options;
-	    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range, viewModel.theme);
+	    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
 	
 	    return util.extend(baseViewModel, {
-	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0),
+	        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft),
+	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0),
 	        styles: this._getStyles(viewModel.theme)
 	    });
 	};
@@ -11888,6 +12313,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    container.innerHTML = mainTmpl(baseViewModel);
 	
 	    /**********
+	     * Render sticky container for timezone display label
+	     **********/
+	    this.renderStickyContainer(baseViewModel);
+	
+	    /**********
 	     * Render children
 	     **********/
 	    this._renderChildren(
@@ -11902,7 +12332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**********
 	     * Render hourmarker
 	     **********/
-	    this.hourmarker = domutil.find(config.classname('.timegrid-hourmarker'), container);
+	    this.hourmarkers = domutil.find(config.classname('.timegrid-hourmarker'), container, true);
 	
 	    if (!this._scrolled) {
 	        this._scrolled = true;
@@ -11910,29 +12340,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	TimeGrid.prototype.renderStickyContainer = function(baseViewModel) {
+	    var stickyContainer = this.stickyContainer;
+	
+	    stickyContainer.innerHTML = timezoneStickyTmpl(baseViewModel);
+	
+	    stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'table' : 'none';
+	    stickyContainer.style.position = 'absolute';
+	    stickyContainer.style.top = 0;
+	    stickyContainer.style.width = baseViewModel.styles.leftWidth;
+	    stickyContainer.style.height = baseViewModel.styles.displayTimezoneLableHeight;
+	    stickyContainer.style.lineHeight = baseViewModel.styles.displayTimezoneLableHeight;
+	    stickyContainer.style.textAlign = 'right';
+	    stickyContainer.style.borderBottom = baseViewModel.styles.leftBorderRight;
+	};
+	
 	/**
 	 * Refresh hourmarker element.
 	 */
 	TimeGrid.prototype.refreshHourmarker = function() {
-	    var hourmarker = this.hourmarker,
+	    var hourmarkers = this.hourmarkers,
 	        grids = this._cacheParentViewModel ? this._cacheParentViewModel.grids : null,
 	        range = this._cacheParentViewModel ? this._cacheParentViewModel.range : null,
-	        viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range),
-	        todaymarker,
-	        hourmarkerText;
+	        viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
 	
-	    if (!hourmarker || !viewModel) {
+	    if (!hourmarkers || !viewModel) {
 	        return;
 	    }
 	
-	    todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
-	    hourmarkerText = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
-	
 	    reqAnimFrame.requestAnimFrame(function() {
-	        hourmarker.style.display = 'block';
-	        hourmarker.style.top = viewModel.hourmarkerTop + '%';
-	        todaymarker.style.display = (viewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
-	        hourmarkerText.innerHTML = viewModel.hourmarkerText;
+	        util.forEach(hourmarkers, function(hourmarker) {
+	            var todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
+	            var hourmarkerText = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
+	            var timezone = domutil.closest(hourmarker, config.classname('.timegrid-timezone'));
+	            var timezoneIndex = timezone ? domutil.getData(timezone, 'timezoneIndex') : 0;
+	
+	            hourmarker.style.top = viewModel.hourmarkerTop + '%';
+	
+	            if (todaymarker) {
+	                todaymarker.style.display = (viewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
+	            }
+	            if (hourmarkerText) {
+	                hourmarkerText.innerHTML = viewModel.hourmarkerTexts[timezoneIndex];
+	            }
+	        });
 	    });
 	};
 	
@@ -11964,7 +12415,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	    }
 	
-	    offsetTop = this.hourmarker.offsetTop;
+	    offsetTop = this.hourmarkers[0].offsetTop;
 	    viewBound = this.getViewBound();
 	    scrollTop = offsetTop;
 	    scrollAmount = viewBound.height / 4;
@@ -12010,6 +12461,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	TimeGrid.prototype._getStyles = function(theme) {
 	    var styles = {};
+	    var timezonesLength = this.options.timezones.length;
+	    var numberAndUnit;
 	
 	    if (theme) {
 	        styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
@@ -12022,6 +12475,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        styles.leftBackgroundColor = theme.week.timegridLeft.backgroundColor;
 	        styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
 	        styles.leftFontSize = theme.week.timegridLeft.fontSize;
+	        styles.timezoneWidth = theme.week.timegridLeft.width;
+	
+	        styles.displayTimezoneLableHeight = theme.week.timegridLeftTimezoneLabel.height;
+	        styles.displayTimezoneLableBackgroundColor = theme.week.timegridLeft.backgroundColor === 'inherit' ? 'white' : theme.week.timegridLeft.backgroundColor;
 	
 	        styles.oneHourHeight = theme.week.timegridOneHour.height;
 	        styles.halfHourHeight = theme.week.timegridHalfHour.height;
@@ -12034,6 +12491,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        styles.currentTimeBulletBackgroundColor = theme.week.currentTimeLineBullet.backgroundColor;
 	        styles.currentTimeTodayBorderTop = theme.week.currentTimeLineToday.border;
 	        styles.currentTimeRightBorderTop = theme.week.currentTimeLineFuture.border;
+	
+	        if (timezonesLength > 1) {
+	            numberAndUnit = common.parseUnit(styles.leftWidth);
+	            styles.leftWidth = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+	        }
 	    }
 	
 	    return styles;
@@ -12996,6 +13458,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-timezone\" data-timezone-index=\""
+	    + alias4(((helper = (helper = helpers.index || (data && data.index)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"index","hash":{},"data":data}) : helper)))
+	    + "\" style=\"position: absolute; top: 0; width: "
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
+	    + "%; left: "
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
+	    + "%; border-right: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBorderRight), depth0))
+	    + "; background-color: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBackgroundColor), depth0))
+	    + ";\" >\n"
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPrimary : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "")
+	    + "        </div>\n";
+	},"2":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+	
+	  return ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.timeSlots : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showHourMarker),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"3":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
@@ -13006,14 +13491,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
 	    + "\" style=\"height: "
 	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
-	    + ";\">\n            <span style=\""
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ";\">\n                    <span style=\""
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "\">"
-	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
-	    + "</span>\n        </div>\n";
-	},"2":function(container,depth0,helpers,partials,data) {
-	    return "display:none";
+	    + ((stack1 = (helpers["timegridDisplayPrimayTime-tmpl"] || (depth0 && depth0["timegridDisplayPrimayTime-tmpl"]) || alias2).call(alias1,depth0,{"name":"timegridDisplayPrimayTime-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n                </div>\n";
 	},"4":function(container,depth0,helpers,partials,data) {
+	    return "display:none";
+	},"6":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
+	  return "                <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker\" style=\"top:"
+	    + alias4(alias5(((stack1 = (data && data.root)) && stack1.hourmarkerTop), depth0))
+	    + "%\">\n                    <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker-wrap\">\n                        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hourmarker-time\" style=\"color: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeColor), depth0))
+	    + "; font-size: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeFontSize), depth0))
+	    + "; font-weight: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeFontWeight), depth0))
+	    + "\">"
+	    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
+	    + "</div>\n                    </div>\n                </div>\n";
+	},"8":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+	
+	  return ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.timeSlots : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,((stack1 = (data && data.root)) && stack1.showHourMarker),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"9":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hour "
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-hour-"
+	    + alias4(((helper = (helper = helpers.hours || (depth0 != null ? depth0.hours : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hours","hash":{},"data":data}) : helper)))
+	    + "\" style=\"height: "
+	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
+	    + ";\">\n                    <span style=\""
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "\">"
+	    + ((stack1 = (helpers["timegridDisplayTime-tmpl"] || (depth0 && depth0["timegridDisplayTime-tmpl"]) || alias2).call(alias1,depth0,{"name":"timegridDisplayTime-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "</span>\n                </div>\n";
+	},"11":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
@@ -13021,7 +13547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "timegrid-gridline\" style=\"height: "
 	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.oneHourHeight), depth0))
 	    + ";\n"
-	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.unless.call(alias1,(data && data.last),{"name":"unless","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "        \">\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-gridline-half\" style=\"height: "
@@ -13029,13 +13555,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "; border-bottom: "
 	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.halfHourBorderBottom), depth0))
 	    + ";\"></div>\n        </div>\n";
-	},"5":function(container,depth0,helpers,partials,data) {
+	},"12":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "            border-bottom: "
 	    + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.borderBottom), depth0))
 	    + ";\n";
-	},"7":function(container,depth0,helpers,partials,data) {
+	},"14":function(container,depth0,helpers,partials,data) {
 	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "    <div class=\""
@@ -13044,17 +13570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.hourmarkerTop || (depth0 != null ? depth0.hourmarkerTop : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerTop","hash":{},"data":data}) : helper)))
 	    + "%\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hourmarker-wrap\" \">\n            <div class=\""
-	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-hourmarker-time\" style=\"color: "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeColor : stack1), depth0))
-	    + "; font-size: "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeFontSize : stack1), depth0))
-	    + "; font-weight: "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeFontWeight : stack1), depth0))
-	    + "\">"
-	    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
-	    + "</div>\n            <div class=\""
+	    + "timegrid-hourmarker-wrap\">\n            <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-hourmarker-line-left\" style=\"width:"
 	    + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
@@ -13088,14 +13604,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-left\" style=\"width: "
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftWidth : stack1), depth0))
-	    + "; border-right: "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftBorderRight : stack1), depth0))
 	    + "; font-size: "
 	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftFontSize : stack1), depth0))
-	    + "; background-color: "
-	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.leftBackgroundColor : stack1), depth0))
 	    + ";\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.timezones : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-right\" style=\"margin-left: "
@@ -13103,18 +13615,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + ";\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-h-grid\">\n"
-	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.hoursLabels : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-schedules\">\n        <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "timegrid-schedules-container\"></div>\n    </div>\n\n"
-	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showHourMarker : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showHourMarker : depth0),{"name":"if","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</div>\n";
 	},"useData":true});
 
 /***/ },
 /* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(8);
+	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	
+	  return "<div title=\""
+	    + alias4(((helper = (helper = helpers.tooltip || (depth0 != null ? depth0.tooltip : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"tooltip","hash":{},"data":data}) : helper)))
+	    + "\" class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-timezone-label\" data-timezone=\""
+	    + alias4(((helper = (helper = helpers.displayLabel || (depth0 != null ? depth0.displayLabel : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"displayLabel","hash":{},"data":data}) : helper)))
+	    + "\" style=\"background-color: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.displayTimezoneLableBackgroundColor), depth0))
+	    + "; height: 100%; width: "
+	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
+	    + "%; border-right: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBorderRight), depth0))
+	    + "; font-size: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftFontSize), depth0))
+	    + ";\">\n        "
+	    + ((stack1 = (helpers["timezoneDisplayLabel-tmpl"] || (depth0 && depth0["timezoneDisplayLabel-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.timezoneOffset : depth0),(depth0 != null ? depth0.displayLabel : depth0),{"name":"timezoneDisplayLabel-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + "\n    </div>\n";
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+	
+	  return ((stack1 = helpers.each.call(alias1,(helpers.reverse || (depth0 && depth0.reverse) || helpers.helperMissing).call(alias1,(depth0 != null ? depth0.timezones : depth0),{"name":"reverse","hash":{},"data":data}),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"useData":true});
+
+/***/ },
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13124,14 +13667,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var View = __webpack_require__(37);
-	var FloatingLayer = __webpack_require__(71);
+	var FloatingLayer = __webpack_require__(72);
 	var util = __webpack_require__(1);
-	var DatePicker = __webpack_require__(72);
+	var DatePicker = __webpack_require__(73);
 	var TZDate = __webpack_require__(28).Date;
 	var config = __webpack_require__(34),
 	    domevent = __webpack_require__(32),
-	    domutil = __webpack_require__(31);
-	var tmpl = __webpack_require__(73);
+	    domutil = __webpack_require__(31),
+	    common = __webpack_require__(30);
+	var tmpl = __webpack_require__(74);
 	var MAX_WEEK_OF_MONTH = 6;
 	var ARROW_WIDTH_HALF = 8;
 	
@@ -13297,7 +13841,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (domutil.hasClass(dropdown, config.classname('section-calendar'))) {
 	        domutil.find('.' + iconClassName, dropdownBtn).style.backgroundColor = bgColor;
-	        this._selectedCal = this.calendars.find(function(cal) {
+	        this._selectedCal = common.find(this.calendars, function(cal) {
 	            return cal.id === domutil.getData(selectedItem, 'calendarId');
 	        });
 	    }
@@ -13366,8 +13910,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    title = domutil.get(cssPrefix + 'schedule-title');
-	    startDate = this.rangePicker.getStartDate();
-	    endDate = this.rangePicker.getEndDate();
+	    startDate = new TZDate(this.rangePicker.getStartDate());
+	    endDate = new TZDate(this.rangePicker.getEndDate());
 	
 	    if (!title.value) {
 	        title.focus();
@@ -13677,12 +14221,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var cssPrefix = config.cssPrefix;
 	    this.rangePicker = DatePicker.createRangePicker({
 	        startpicker: {
-	            date: new Date(start.getTime()),
+	            date: new TZDate(start.getTime()).toDate(),
 	            input: '#' + cssPrefix + 'schedule-start-date',
 	            container: '#' + cssPrefix + 'startpicker-container'
 	        },
 	        endpicker: {
-	            date: new Date(end.getTime()),
+	            date: new TZDate(end.getTime()).toDate(),
 	            input: '#' + cssPrefix + 'schedule-end-date',
 	            container: '#' + cssPrefix + 'endpicker-container'
 	        },
@@ -13729,7 +14273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13920,13 +14464,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_72__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_73__;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -14217,7 +14761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14227,12 +14771,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	var View = __webpack_require__(37);
-	var FloatingLayer = __webpack_require__(71);
+	var FloatingLayer = __webpack_require__(72);
 	var util = __webpack_require__(1);
 	var config = __webpack_require__(34),
 	    domevent = __webpack_require__(32),
 	    domutil = __webpack_require__(31);
-	var tmpl = __webpack_require__(75);
+	var tmpl = __webpack_require__(76);
 	var ARROW_WIDTH_HALF = 8;
 	
 	/**
@@ -14443,7 +14987,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	ScheduleDetailPopup.prototype._setArrowDirection = function(arrow) {
 	    var direction = arrow.direction || 'arrow-left';
-	    var arrowEl = domutil.get(config.classname('popup-arrow'));
+	    var arrowEl = domutil.find(config.classname('.popup-arrow'), this.layer.container);
 	    var borderElement = domutil.find(config.classname('.popup-arrow-border', arrowEl));
 	
 	    if (direction !== config.classname('arrow-left')) {
@@ -14483,7 +15027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -14531,7 +15075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "popup-detail-date "
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "content\">"
-	    + alias4((helpers["popupDetailDate-tmpl"] || (depth0 && depth0["popupDetailDate-tmpl"]) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.start : stack1),((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.end : stack1),{"name":"popupDetailDate-tmpl","hash":{},"data":data}))
+	    + alias4((helpers["popupDetailDate-tmpl"] || (depth0 && depth0["popupDetailDate-tmpl"]) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.isAllDay : stack1),((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.start : stack1),((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.end : stack1),{"name":"popupDetailDate-tmpl","hash":{},"data":data}))
 	    + "</div>\n    </div>\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "section-detail\">\n        <div class=\""
@@ -14608,7 +15152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14705,7 +15249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14717,7 +15261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var util = __webpack_require__(1);
 	var config = __webpack_require__(34);
 	var domutil = __webpack_require__(31);
-	var DayGridMove = __webpack_require__(78);
+	var DayGridMove = __webpack_require__(79);
 	
 	/**
 	 * @constructor
@@ -14842,7 +15386,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14855,8 +15399,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34);
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
-	var dayGridCore = __webpack_require__(79);
-	var DayGridMoveGuide = __webpack_require__(80);
+	var dayGridCore = __webpack_require__(80);
+	var DayGridMoveGuide = __webpack_require__(81);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -15124,7 +15668,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint no-shadow: 0 */
@@ -15285,7 +15829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -15567,7 +16111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15582,8 +16126,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var common = __webpack_require__(30);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var dayGridCore = __webpack_require__(79);
-	var DayGridCreationGuide = __webpack_require__(82);
+	var dayGridCore = __webpack_require__(80);
+	var DayGridCreationGuide = __webpack_require__(83);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -15895,7 +16439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16056,7 +16600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16070,8 +16614,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var common = __webpack_require__(30);
-	var dayGridCore = __webpack_require__(79);
-	var DayGridResizeGuide = __webpack_require__(84);
+	var dayGridCore = __webpack_require__(80);
+	var DayGridResizeGuide = __webpack_require__(85);
 	var TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -16331,7 +16875,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -16497,7 +17041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16608,7 +17152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16623,9 +17167,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var TimeCreationGuide = __webpack_require__(87);
+	var TimeCreationGuide = __webpack_require__(88);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(88);
+	var timeCore = __webpack_require__(89);
 	
 	var CLICK_DELAY = 300;
 	
@@ -16990,7 +17534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17283,7 +17827,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17436,7 +17980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17450,8 +17994,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(88);
-	var TimeMoveGuide = __webpack_require__(90);
+	var timeCore = __webpack_require__(89);
+	var TimeMoveGuide = __webpack_require__(91);
 	
 	/**
 	 * @constructor
@@ -17804,7 +18348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -17818,8 +18362,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var domutil = __webpack_require__(31);
 	var reqAnimFrame = __webpack_require__(55);
 	var ratio = __webpack_require__(30).ratio;
-	var FloatingLayer = __webpack_require__(71);
-	var tmpl = __webpack_require__(91);
+	var FloatingLayer = __webpack_require__(72);
+	var tmpl = __webpack_require__(92);
 	var TZDate = __webpack_require__(28).Date;
 	var Schedule = __webpack_require__(41);
 	
@@ -18035,7 +18579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -18070,7 +18614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18084,8 +18628,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var datetime = __webpack_require__(27);
 	var domutil = __webpack_require__(31);
 	var TZDate = __webpack_require__(28).Date;
-	var timeCore = __webpack_require__(88);
-	var TimeResizeGuide = __webpack_require__(93);
+	var timeCore = __webpack_require__(89);
+	var TimeResizeGuide = __webpack_require__(94);
 	
 	/**
 	 * @constructor
@@ -18379,7 +18923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -18559,7 +19103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18573,14 +19117,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    array = __webpack_require__(50),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    Month = __webpack_require__(95),
-	    MonthClick = __webpack_require__(100),
-	    MonthCreation = __webpack_require__(101),
-	    MonthResize = __webpack_require__(106),
-	    MonthMove = __webpack_require__(108),
-	    More = __webpack_require__(111),
-	    ScheduleCreationPopup = __webpack_require__(70),
-	    ScheduleDetailPopup = __webpack_require__(74),
+	    common = __webpack_require__(30),
+	    Month = __webpack_require__(96),
+	    MonthClick = __webpack_require__(101),
+	    MonthCreation = __webpack_require__(102),
+	    MonthResize = __webpack_require__(107),
+	    MonthMove = __webpack_require__(109),
+	    More = __webpack_require__(112),
+	    ScheduleCreationPopup = __webpack_require__(71),
+	    ScheduleDetailPopup = __webpack_require__(75),
 	    Schedule = __webpack_require__(41);
 	
 	/**
@@ -18588,9 +19133,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {TZDate} date - date has more schedules
 	 * @param {HTMLElement} target - target element
 	 * @param {Collection} schedules - schedule collection
+	 * @param {string[]} daynames - daynames to use upside of month more view
 	 * @returns {object} view model
 	 */
-	function getViewModelForMoreLayer(date, target, schedules) {
+	function getViewModelForMoreLayer(date, target, schedules, daynames) {
 	    schedules.each(function(schedule) {
 	        var model = schedule.model;
 	        schedule.hasMultiDates = !datetime.isSameDate(model.start, model.end);
@@ -18599,6 +19145,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return {
 	        target: target,
 	        date: datetime.format(date, 'YYYY.MM.DD'),
+	        dayname: daynames[date.getDay()],
 	        schedules: schedules.sort(array.compare.schedule.asc)
 	    };
 	}
@@ -18654,7 +19201,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	
 	        if (schedules && schedules.length) {
-	            moreView.render(getViewModelForMoreLayer(date, target, schedules));
+	            moreView.render(getViewModelForMoreLayer(date, target, schedules, monthView.options.daynames));
+	
+	            schedules.each(function(scheduleViewModel) {
+	                if (scheduleViewModel) {
+	                    /**
+	                     * @event More#afterRenderSchedule
+	                     */
+	                    monthView.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+	                }
+	            });
 	        }
 	    });
 	
@@ -18675,7 +19231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
 	        onShowDetailPopup = function(eventData) {
 	            var scheduleId = eventData.schedule.calendarId;
-	            eventData.calendar = baseController.calendars.find(function(calendar) {
+	            eventData.calendar = common.find(baseController.calendars, function(calendar) {
 	                return calendar.id === scheduleId;
 	            });
 	
@@ -18791,7 +19347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18805,10 +19361,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
 	    TZDate = __webpack_require__(28).Date,
-	    tmpl = __webpack_require__(96),
+	    tmpl = __webpack_require__(97),
 	    View = __webpack_require__(37),
 	    VLayout = __webpack_require__(53),
-	    WeekdayInMonth = __webpack_require__(97);
+	    WeekdayInMonth = __webpack_require__(98);
 	var mmin = Math.min;
 	
 	/**
@@ -18974,7 +19530,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @override
 	 */
 	Month.prototype.render = function() {
-	    var opt = this.options,
+	    var self = this,
+	        opt = this.options,
 	        vLayout = this.vLayout,
 	        controller = this.controller,
 	        daynames = opt.daynames,
@@ -19052,6 +19609,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	
 	        childView.render(viewModel);
+	
+	        self._invokeAfterRenderSchedule(eventsInDateRange);
+	    });
+	};
+	
+	/**
+	 * Fire 'afterRenderSchedule' event
+	 * @param {Array} matrices - schedule matrices from view model
+	 * @fires Month#afterRenderSchedule
+	 */
+	Month.prototype._invokeAfterRenderSchedule = function(matrices) {
+	    var self = this;
+	    util.forEachArray(matrices, function(matrix) {
+	        util.forEachArray(matrix, function(column) {
+	            util.forEachArray(column, function(scheduleViewModel) {
+	                if (scheduleViewModel) {
+	                    /**
+	                     * @event Month#afterRenderSchedule
+	                     */
+	                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+	                }
+	            });
+	        });
 	    });
 	};
 	
@@ -19108,7 +19688,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -19165,7 +19745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19180,8 +19760,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
 	    Weekday = __webpack_require__(61),
-	    baseTmpl = __webpack_require__(98),
-	    scheduleTmpl = __webpack_require__(99);
+	    baseTmpl = __webpack_require__(99),
+	    scheduleTmpl = __webpack_require__(100);
 	var mfloor = Math.floor,
 	    mmin = Math.min;
 	
@@ -19350,7 +19930,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -19452,7 +20032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -19639,7 +20219,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19737,7 +20317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19753,8 +20333,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var array = __webpack_require__(50);
 	var domutil = __webpack_require__(31);
 	var domevent = __webpack_require__(32);
-	var getMousePosDate = __webpack_require__(102);
-	var Guide = __webpack_require__(103);
+	var getMousePosDate = __webpack_require__(103);
+	var Guide = __webpack_require__(104);
 	var TZDate = __webpack_require__(28).Date;
 	
 	var CLICK_DELAY = 300;
@@ -20079,7 +20659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20171,7 +20751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20180,7 +20760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	'use strict';
 	
-	var MonthGuide = __webpack_require__(104);
+	var MonthGuide = __webpack_require__(105);
 	
 	/**
 	 * @constructor
@@ -20253,7 +20833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20268,7 +20848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
 	    dw = __webpack_require__(29),
-	    tmpl = __webpack_require__(105);
+	    tmpl = __webpack_require__(106);
 	var mmax = Math.max,
 	    mmin = Math.min,
 	    mabs = Math.abs,
@@ -20732,7 +21312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -20805,7 +21385,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20819,8 +21399,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    datetime = __webpack_require__(27),
 	    domutil = __webpack_require__(31),
-	    getMousePosData = __webpack_require__(102),
-	    MonthResizeGuide = __webpack_require__(107),
+	    getMousePosData = __webpack_require__(103),
+	    MonthResizeGuide = __webpack_require__(108),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -21018,7 +21598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -21031,7 +21611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
-	    MonthGuide = __webpack_require__(104);
+	    MonthGuide = __webpack_require__(105);
 	
 	/**
 	 * @constructor
@@ -21141,7 +21721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21155,8 +21735,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    datetime = __webpack_require__(27),
-	    getMousePosData = __webpack_require__(102),
-	    MonthMoveGuide = __webpack_require__(109),
+	    getMousePosData = __webpack_require__(103),
+	    MonthMoveGuide = __webpack_require__(110),
 	    TZDate = __webpack_require__(28).Date;
 	
 	/**
@@ -21413,7 +21993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -21427,8 +22007,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var config = __webpack_require__(34),
 	    domutil = __webpack_require__(31),
 	    domevent = __webpack_require__(32),
-	    FloatingLayer = __webpack_require__(71),
-	    tmpl = __webpack_require__(110),
+	    FloatingLayer = __webpack_require__(72),
+	    tmpl = __webpack_require__(111),
 	    Schedule = __webpack_require__(41);
 	
 	/**
@@ -21616,7 +22196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -21690,7 +22270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"useData":true});
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21705,9 +22285,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    domevent = __webpack_require__(32),
 	    domutil = __webpack_require__(31),
 	    View = __webpack_require__(37),
-	    FloatingLayer = __webpack_require__(71),
+	    FloatingLayer = __webpack_require__(72),
 	    common = __webpack_require__(30),
-	    tmpl = __webpack_require__(112);
+	    tmpl = __webpack_require__(113);
 	
 	/**
 	 * @constructor
@@ -21748,6 +22328,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleBulletTop: (parseInt(theme.month.schedule.height, 10) || 18) / 3,
 	        borderRadius: theme.month.schedule.borderRadius
 	    }, options);
+	
+	    /**
+	     * @type {Theme}
+	     */
+	    this.theme = theme;
 	
 	    domevent.on(container, 'click', this._onClick, this);
 	}
@@ -21827,16 +22412,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var layer = this.layer;
 	    var self = this;
 	    var pos = this._getRenderPosition(target, weekItem);
-	    var height = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
+	    var minHeight = domutil.getSize(weekItem)[1] + (OUT_PADDING * 2);
 	    var width = target.offsetWidth + (OUT_PADDING * 2);
 	    var opt = this.options;
 	    var optMoreLayerSize = opt.moreLayerSize;
+	    var styles = this._getStyles(this.theme);
+	    var maxVisibleSchedulesInLayer = 10;
+	    var height = '';
+	
 	    this._viewModel = util.extend(viewModel, {
 	        scheduleGutter: opt.scheduleGutter,
 	        scheduleHeight: opt.scheduleHeight,
 	        scheduleBulletTop: opt.scheduleBulletTop,
-	        borderRadius: opt.borderRadius
+	        borderRadius: opt.borderRadius,
+	        styles: styles
 	    });
+	
+	    height = parseInt(styles.titleHeight, 10);
+	    height += parseInt(styles.titleMarginBottom, 10);
+	    if (viewModel.schedules.length <= maxVisibleSchedulesInLayer) {
+	        height += (opt.scheduleGutter + opt.scheduleHeight) * viewModel.schedules.length;
+	    } else {
+	        height += (opt.scheduleGutter + opt.scheduleHeight) * maxVisibleSchedulesInLayer;
+	    }
+	    height += parseInt(styles.paddingBottom, 10);
+	    height += OUT_PADDING; // for border
 	
 	    if (optMoreLayerSize.width) {
 	        width = optMoreLayerSize.width;
@@ -21846,17 +22446,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        height = optMoreLayerSize.height;
 	    }
 	
+	    if (isNaN(height) || height < minHeight) {
+	        height = minHeight;
+	    }
+	
 	    layer.setContent(tmpl(viewModel));
 	    if (weekItem.parentElement.lastElementChild === weekItem) {
 	        layer.setLTRB({
 	            left: pos[0],
 	            bottom: 0
 	        });
-	        layer.setSize(width, '');
 	    } else {
 	        layer.setPosition(pos[0], pos[1]);
-	        layer.setSize(width, height);
 	    }
+	    layer.setSize(width, height);
 	
 	    layer.show();
 	
@@ -21882,11 +22485,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
+	/**
+	 * Get the styles from theme
+	 * @param {Theme} theme - theme instance
+	 * @returns {object} styles - styles object
+	 */
+	More.prototype._getStyles = function(theme) {
+	    var styles = {};
+	    var listHeight = '';
+	
+	    if (theme) {
+	        styles.border = theme.month.moreView.border || theme.common.border;
+	        styles.boxShadow = theme.month.moreView.boxShadow;
+	        styles.backgroundColor = theme.month.moreView.backgroundColor || theme.common.backgroundColor;
+	        styles.paddingBottom = theme.month.moreView.paddingBottom;
+	        styles.titleHeight = theme.month.moreViewTitle.height;
+	        styles.titleMarginBottom = theme.month.moreViewTitle.marginBottom;
+	        styles.titleBackgroundColor = theme.month.moreViewTitle.backgroundColor;
+	        styles.titleBorderBottom = theme.month.moreViewTitle.borderBottom;
+	        styles.titlePadding = theme.month.moreViewTitle.padding;
+	        styles.listPadding = theme.month.moreViewList.padding;
+	        listHeight = 'calc(100%';
+	
+	        if (parseInt(styles.titleHeight, 10)) {
+	            listHeight += ' - ' + styles.titleHeight;
+	        }
+	        if (parseInt(styles.titleMarginBottom, 10)) {
+	            listHeight += ' - ' + styles.titleMarginBottom;
+	        }
+	        listHeight += ')';
+	        styles.listHeight = listHeight;
+	    }
+	
+	    return styles;
+	};
+	
 	module.exports = More;
 
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(8);
@@ -21995,23 +22633,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	},"14":function(container,depth0,helpers,partials,data) {
 	    return "                        color:#333;\n                    ";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more\" style=\"width:100%\">\n    <div class=\""
+	    + "month-more\" style=\"padding-bottom: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.paddingBottom : stack1), depth0))
+	    + "; border: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.border : stack1), depth0))
+	    + "; box-shadow: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.boxShadow : stack1), depth0))
+	    + "; background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.backgroundColor : stack1), depth0))
+	    + ";\">\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-title\">\n        <span class=\""
+	    + "month-more-title\"\n        style=\"height: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.titleHeight : stack1), depth0))
+	    + "; margin-bottom: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.titleMarginBottom : stack1), depth0))
+	    + "; background-color: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.titleBackgroundColor : stack1), depth0))
+	    + "; border-bottom: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.titleBorderBottom : stack1), depth0))
+	    + "; padding: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.titlePadding : stack1), depth0))
+	    + ";\">\n        <span class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-title-date\">"
-	    + ((stack1 = (helpers["monthMoreTitleDate-tmpl"] || (depth0 && depth0["monthMoreTitleDate-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.date : depth0),{"name":"monthMoreTitleDate-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+	    + ((stack1 = (helpers["monthMoreTitleDate-tmpl"] || (depth0 && depth0["monthMoreTitleDate-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.date : depth0),(depth0 != null ? depth0.dayname : depth0),{"name":"monthMoreTitleDate-tmpl","hash":{},"data":data})) != null ? stack1 : "")
 	    + "</span>\n        <button type=\"button\" class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
 	    + "month-more-close\">"
 	    + ((stack1 = ((helper = (helper = helpers["monthMoreClose-tmpl"] || (depth0 != null ? depth0["monthMoreClose-tmpl"] : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"monthMoreClose-tmpl","hash":{},"data":data}) : helper))) != null ? stack1 : "")
 	    + "</button>\n    </div>\n    <div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "month-more-list\">\n"
+	    + "month-more-list\" style=\"padding: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.listPadding : stack1), depth0))
+	    + "; height: "
+	    + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.listHeight : stack1), depth0))
+	    + ";\">\n"
 	    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.schedules : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "    </div>\n</div>\n";
 	},"useData":true});

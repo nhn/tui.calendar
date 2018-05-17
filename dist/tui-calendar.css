@@ -1,8 +1,8 @@
 /*!
- * tui-calendar
- * @version 1.1.0 | Fri Apr 27 2018
+ * TOAST UI Calendar
+ * @version 1.2.0 | Thu May 17 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
- * @license undefined
+ * @license MIT
  */
 .tui-full-calendar-layout {
   height: 100%;
@@ -302,7 +302,6 @@
 .tui-full-calendar-dayname-leftmargin {
   position: relative;
   height: 100%;
-  margin-left: 77px;
 }
 .tui-full-calendar-dayname-date {
   font-size: 26px;
@@ -377,7 +376,6 @@
 .tui-full-calendar-timegrid-hourmarker {
   position: absolute;
   width: 100%;
-  z-index: 98;
 }
 .tui-full-calendar-timegrid-hourmarker-wrap {
   position: relative;
@@ -398,8 +396,7 @@
 }
 .tui-full-calendar-timegrid-hourmarker-time {
   position: absolute;
-  width: 52px;
-  left: -60px;
+  right: 7px;
   top: -6px;
   line-height: 12px;
   text-align: right;
@@ -412,7 +409,17 @@
   background-color: #135de6;
   margin: -4px 0 0 -5px;
   border-radius: 50%;
-  z-index: 99;
+}
+.tui-full-calendar-timegrid-sticky-container {
+  position: absolute;
+  top: 0;
+  text-align: right;
+  display: table;
+}
+.tui-full-calendar-timegrid-timezone-label {
+  display: table-cell;
+  vertical-align: middle;
+  padding-right: 7px;
 }
 .tui-full-calendar-time-date {
   position: absolute;
@@ -514,21 +521,20 @@
   height: 100%;
 }
 .tui-full-calendar-month-more {
-  background-color: #fff;
   height: inherit;
-  min-width: 200px;
+  min-width: 280px;
   min-height: 150px;
-  border: 1px solid #ddd;
 }
 .tui-full-calendar-month-more-title {
-  padding: 0 10px;
-  height: 28px;
-  line-height: 28px;
-  font-weight: bold;
-  font-size: 14px;
-  background: #f4f4f4;
-  border-bottom: 1px solid #ddd;
   position: relative;
+}
+.tui-full-calendar-month-more-title-day {
+  font-size: 23px;
+  color: #333;
+}
+.tui-full-calendar-month-more-title-day-label {
+  font-size: 12px;
+  color: #333;
 }
 .tui-full-calendar-month-more-close {
   position: absolute;
@@ -542,8 +548,6 @@
   cursor: pointer;
 }
 .tui-full-calendar-month-more-list {
-  height: calc(100% - 29px);
-  padding: 10px;
   overflow-y: auto;
 }
 .tui-full-calendar-month-more-schedule {
