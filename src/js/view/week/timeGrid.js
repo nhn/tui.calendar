@@ -481,8 +481,7 @@ TimeGrid.prototype.attachEvent = function() {
  * Scroll time grid to current hourmarker.
  */
 TimeGrid.prototype.scrollToNow = function() {
-    var self = this,
-        container = this.container;
+    var container = this.container;
     var offsetTop,
         viewBound,
         scrollTop,
@@ -490,7 +489,7 @@ TimeGrid.prototype.scrollToNow = function() {
         scrollBy,
         scrollFn;
 
-    if (!self.hourmarkers) {
+    if (!this.hourmarkers || !this.hourmarkers.length) {
         return;
     }
 
