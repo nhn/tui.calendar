@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.2.1 | Fri May 18 2018
+ * @version 1.2.2 | Fri May 18 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -4853,6 +4853,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._scrollToNowMethod = null;
 	
 	    /**
+	     * It's true if Calendar.prototype.scrollToNow() is called.
+	     * @type {boolean}
+	     * @private
+	     */
+	    this._requestScrollToNow = false;
+	
+	    /**
 	     * Open schedule creation popup
 	     * @type {function}
 	     * @private
@@ -5183,7 +5190,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (this._layout) {
 	            this._layout.render();
 	        }
+	        if (this._scrollToNowMethod && this._requestScrollToNow) {
+	            this._scrollToNowMethod();
+	        }
 	
+	        this._requestScrollToNow = false;
 	        this._requestRender = null;
 	    };
 	
@@ -5217,7 +5228,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Calendar.prototype.scrollToNow = function() {
 	    if (this._scrollToNowMethod) {
-	        this._scrollToNowMethod();
+	        this._requestScrollToNow = true;
+	        // this._scrollToNowMethod() will be called at next frame rendering.
 	    }
 	};
 	
@@ -12439,8 +12451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Scroll time grid to current hourmarker.
 	 */
 	TimeGrid.prototype.scrollToNow = function() {
-	    var self = this,
-	        container = this.container;
+	    var container = this.container;
 	    var offsetTop,
 	        viewBound,
 	        scrollTop,
@@ -12448,7 +12459,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scrollBy,
 	        scrollFn;
 	
-	    if (!self.hourmarkers) {
+	    if (!this.hourmarkers || !this.hourmarkers.length) {
 	        return;
 	    }
 	
