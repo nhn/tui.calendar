@@ -186,6 +186,7 @@ var themeConfig = {
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#333',
+    'week.pastDay.color': '#bbb',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',
@@ -208,7 +209,8 @@ var themeConfig = {
     'week.timegridLeft.backgroundColor': 'inherit',
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
-    'week.timegridLeftTimezoneLabel.height': '20px',
+    'week.timegridLeftTimezoneLabel.height': '40px',
+    'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
     'week.timegridOneHour.height': '52px',
     'week.timegridHalfHour.height': '26px',
@@ -224,7 +226,7 @@ var themeConfig = {
     'week.currentTime.fontSize': '11px',
     'week.currentTime.fontWeight': 'normal',
 
-    'week.pastTime.color': '#333',
+    'week.pastTime.color': '#bbb',
     'week.pastTime.fontWeight': 'normal',
 
     'week.futureTime.color': '#333',

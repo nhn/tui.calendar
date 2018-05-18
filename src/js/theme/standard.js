@@ -64,6 +64,7 @@ var theme = {
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': 'inherit',
+    'week.pastDay.color': '#bbb',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',

@@ -54,6 +54,7 @@ util.inherit(DayName, View);
 DayName.prototype._getBaseViewModel = function(start, end, grids) {
     var daynames = this.options.daynames,
         theme = this.theme,
+        now = new TZDate(),
         viewModel;
 
     viewModel = util.map(datetime.range(
@@ -62,7 +63,8 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
         datetime.MILLISECONDS_PER_DAY
     ), function(d, i) {
         var day = d.getDay();
-        var isToday = datetime.isSameDate(d, new TZDate());
+        var isToday = datetime.isSameDate(d, now);
+        var isPastDay = d < now && !isToday;
 
         return {
             day: day,
@@ -72,7 +74,7 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
             left: grids[i] ? grids[i].left : 0,
             width: grids[i] ? grids[i].width : 0,
             renderDate: datetime.format(d, 'YYYY-MM-DD'),
-            color: this._getDayNameColor(theme, day, isToday)
+            color: this._getDayNameColor(theme, day, isToday, isPastDay)
         };
     }, this);
 
@@ -103,14 +105,17 @@ DayName.prototype.render = function(viewModel) {
  * @param {Theme} theme - theme instance
  * @param {number} day - day number
  * @param {boolean} isToday - today flag
+ * @param {boolean} isPastDay - is past day flag
  * @returns {string} style - color style
  */
-DayName.prototype._getDayNameColor = function(theme, day, isToday) {
+DayName.prototype._getDayNameColor = function(theme, day, isToday, isPastDay) {
     var color = '';
 
     if (theme) {
         if (day === 0) {
             color = theme.common.holiday.color;
+        } else if (isPastDay) {
+            color = theme.week.pastDay.color || theme.common.dayname.color;
         } else if (day === 6) {
             color = theme.common.saturday.color;
         } else if (isToday) {
