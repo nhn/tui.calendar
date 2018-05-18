@@ -288,6 +288,13 @@ function Calendar(container, options) {
     this._scrollToNowMethod = null;
 
     /**
+     * It's true if Calendar.prototype.scrollToNow() is called.
+     * @type {boolean}
+     * @private
+     */
+    this._requestScrollToNow = false;
+
+    /**
      * Open schedule creation popup
      * @type {function}
      * @private
@@ -618,7 +625,11 @@ Calendar.prototype.render = function() {
         if (this._layout) {
             this._layout.render();
         }
+        if (this._scrollToNowMethod && this._requestScrollToNow) {
+            this._scrollToNowMethod();
+        }
 
+        this._requestScrollToNow = false;
         this._requestRender = null;
     };
 
@@ -652,7 +663,8 @@ Calendar.prototype.clear = function() {
  */
 Calendar.prototype.scrollToNow = function() {
     if (this._scrollToNowMethod) {
-        this._scrollToNowMethod();
+        this._requestScrollToNow = true;
+        // this._scrollToNowMethod() will be called at next frame rendering.
     }
 };
 
