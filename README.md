@@ -16,9 +16,9 @@
 ## 🚩 Table of Contents
 
 * [Browser Support](#-browser-support)
-* [What a cool: Monthly, Weekly, Daily and various view types.](#what-a-cool-monthly-weekly-daily-and-various-view-types)
-* [Very easy to use: Dragging and Resizing a schedule](#very-easy-to-use-dragging-and-resizing-a-schedule)
-* [Ready to use it right now: Default Popups](#ready-to-use-it-right-now-default-popups)
+* [How Cool: Monthly, Weekly, Daily and Various View Types.](#how-cool-monthly-weekly-daily-and-various-view-types)
+* [Easy to use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
+* [Ready to Use: Default Popups](#ready-to-use-default-popups)
 * [Features](#-features)
 * [Examples](#-examples)
 * [Install](#-install)
@@ -42,7 +42,7 @@
 | :---------: | :---------: | :---------: | :---------: | :---------: |
 | Yes | +9 | Yes | Yes | Yes |
 
-## What a cool: Monthly, Weekly, Daily and various view types.
+## How Cool: Monthly, Weekly, Daily and Various View Types.
 
 | Monthly | Weekly |
 | --- | --- |
@@ -52,14 +52,14 @@
 | --- | --- |
 | ![image](https://user-images.githubusercontent.com/26706716/39230685-60a2a1d6-48a2-11e8-9d46-ce5693277a64.png) | ![image](https://user-images.githubusercontent.com/26706716/39230638-281d5266-48a2-11e8-84d8-ab289f372051.png) |
 
-## Very easy to use: Dragging and Resizing a schedule
+## Easy to Use: Dragging and Resizing a Schedule
 
 | Dragging | Resizing |
 | --- | --- |
 | ![image](https://user-images.githubusercontent.com/26706716/39230930-591031f8-48a3-11e8-8f62-e12e6c19920c.gif) | ![image](https://user-images.githubusercontent.com/26706716/39231671-c926d0da-48a5-11e8-959d-35fd32f2c522.gif) |
 
 
-## Ready to use it right now: Default Popups
+## Ready to Use: Default Popups
 
 | Creation Popup | Detail Popup |
 | --- | --- |
