@@ -336,3 +336,40 @@ var calendar = new Calendar('#calendar', {
     }
 });
 ```
+
+### Customize Popups
+You can use your own popup to display and create schedules.
+To disable default popup, use the options `useCreationPopup=false`, `useDetailPopup=false`.
+```js
+var cal = new Calendar('#calendar', {
+    useCreationPopup: false,
+    useDetailPopup: false,
+...
+});
+```
+
+And when you get the event `beforeCreateSchedule`, you would display a popup for creating a schedule.
+And when you get the event 'clickSchedule', you would display a popup for displaying a schedule.
+
+```js
+// event handlers
+cal.on({
+    'clickSchedule': function(e) {
+        console.log('clickSchedule', e);
+    },
+    'beforeCreateSchedule': function(e) {
+        console.log('beforeCreateSchedule', e);
+        // open a creation popup
+    },
+    'beforeUpdateSchedule': function(e) {
+        console.log('beforeUpdateSchedule', e);
+        e.schedule.start = e.start;
+        e.schedule.end = e.end;
+        cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
+    },
+    'beforeDeleteSchedule': function(e) {
+        console.log('beforeDeleteSchedule', e);
+        cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
+    }
+});
+```
