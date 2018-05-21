@@ -17,7 +17,7 @@
 
 * [Browser Support](#-browser-support)
 * [How Cool: Monthly, Weekly, Daily and Various View Types.](#how-cool-monthly-weekly-daily-and-various-view-types)
-* [Easy to use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
+* [Easy to Use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
 * [Ready to Use: Default Popups](#ready-to-use-default-popups)
 * [Features](#-features)
 * [Examples](#-examples)
