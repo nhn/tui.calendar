@@ -15,14 +15,14 @@ describe('View/TimeGrid', function() {
         var expected = {
             todaymarkerLeft: 1,
             hoursLabels: [
-                {hour: 3, minutes: 0, hidden: true},
-                {hour: 4, minutes: 0, hidden: false},
-                {hour: 5, minutes: 0, hidden: false},
-                {hour: 6, minutes: 0, hidden: false},
-                {hour: 7, minutes: 0, hidden: false},
-                {hour: 8, minutes: 0, hidden: false},
-                {hour: 9, minutes: 0, hidden: false},
-                {hour: 10, minutes: 0, hidden: false}
+                {hour: 3, minutes: 0, hidden: true, color: '', fontWeight: ''},
+                {hour: 4, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                {hour: 5, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                {hour: 6, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                {hour: 7, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                {hour: 8, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                {hour: 9, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                {hour: 10, minutes: 0, hidden: false, color: '', fontWeight: ''}
             ],
             styles: {},
             timezones: []
@@ -31,7 +31,8 @@ describe('View/TimeGrid', function() {
         var obj = {
             options: {
                 hourStart: 3,
-                hourEnd: 11
+                hourEnd: 11,
+                renderEndDate: '2018-05-23'
             },
             _getHourmarkerViewModel: function() {
                 return {todaymarkerLeft: 1};
@@ -104,30 +105,30 @@ describe('View/TimeGrid', function() {
             var expected = [{
                 // GMT+09:00
                 timeSlots: [
-                    {hour: 0, minutes: 0, hidden: true},
-                    {hour: 1, minutes: 0, hidden: false},
-                    {hour: 2, minutes: 0, hidden: false},
-                    {hour: 3, minutes: 0, hidden: false},
-                    {hour: 4, minutes: 0, hidden: false},
-                    {hour: 5, minutes: 0, hidden: false},
-                    {hour: 6, minutes: 0, hidden: false},
-                    {hour: 7, minutes: 0, hidden: false},
-                    {hour: 8, minutes: 0, hidden: false},
-                    {hour: 9, minutes: 0, hidden: true},
-                    {hour: 10, minutes: 0, hidden: false},
-                    {hour: 11, minutes: 0, hidden: false},
-                    {hour: 12, minutes: 0, hidden: false},
-                    {hour: 13, minutes: 0, hidden: false},
-                    {hour: 14, minutes: 0, hidden: false},
-                    {hour: 15, minutes: 0, hidden: false},
-                    {hour: 16, minutes: 0, hidden: false},
-                    {hour: 17, minutes: 0, hidden: false},
-                    {hour: 18, minutes: 0, hidden: false},
-                    {hour: 19, minutes: 0, hidden: false},
-                    {hour: 20, minutes: 0, hidden: false},
-                    {hour: 21, minutes: 0, hidden: false},
-                    {hour: 22, minutes: 0, hidden: false},
-                    {hour: 23, minutes: 0, hidden: false},
+                    {hour: 0, minutes: 0, hidden: true, color: '', fontWeight: ''},
+                    {hour: 1, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 2, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 3, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 4, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 5, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 6, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 7, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 8, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 9, minutes: 0, hidden: true, color: '', fontWeight: ''},
+                    {hour: 10, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 11, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 12, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 13, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 14, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 15, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 16, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 17, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 18, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 19, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 20, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 21, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 22, minutes: 0, hidden: false, color: '', fontWeight: ''},
+                    {hour: 23, minutes: 0, hidden: false, color: '', fontWeight: ''},
                 ],
                 displayLabel: 'GMT+09:00',
                 timezoneOffset: 540,
@@ -135,34 +136,35 @@ describe('View/TimeGrid', function() {
                 width: width,
                 left: 1 * width,
                 isPrimary: true,
-                hourmarkerText: '09:00'
+                hourmarkerText: '09:00',
+                backgroundColor: ''
             }, {
                 // GMT-09:30
                 timeSlots: [
-                    {hour: 5, minutes: 30, hidden: true},
-                    {hour: 6, minutes: 30, hidden: false},
-                    {hour: 7, minutes: 30, hidden: false},
-                    {hour: 8, minutes: 30, hidden: false},
-                    {hour: 9, minutes: 30, hidden: false},
-                    {hour: 10, minutes: 30, hidden: false},
-                    {hour: 11, minutes: 30, hidden: false},
-                    {hour: 12, minutes: 30, hidden: false},
-                    {hour: 13, minutes: 30, hidden: false},
-                    {hour: 14, minutes: 30, hidden: true},
-                    {hour: 15, minutes: 30, hidden: false},
-                    {hour: 16, minutes: 30, hidden: false},
-                    {hour: 17, minutes: 30, hidden: false},
-                    {hour: 18, minutes: 30, hidden: false},
-                    {hour: 19, minutes: 30, hidden: false},
-                    {hour: 20, minutes: 30, hidden: false},
-                    {hour: 21, minutes: 30, hidden: false},
-                    {hour: 22, minutes: 30, hidden: false},
-                    {hour: 23, minutes: 30, hidden: false},
-                    {hour: 0, minutes: 30, hidden: false},
-                    {hour: 1, minutes: 30, hidden: false},
-                    {hour: 2, minutes: 30, hidden: false},
-                    {hour: 3, minutes: 30, hidden: false},
-                    {hour: 4, minutes: 30, hidden: false}
+                    {hour: 5, minutes: 30, hidden: true, color: '', fontWeight: ''},
+                    {hour: 6, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 7, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 8, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 9, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 10, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 11, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 12, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 13, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 14, minutes: 30, hidden: true, color: '', fontWeight: ''},
+                    {hour: 15, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 16, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 17, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 18, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 19, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 20, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 21, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 22, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 23, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 0, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 1, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 2, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 3, minutes: 30, hidden: false, color: '', fontWeight: ''},
+                    {hour: 4, minutes: 30, hidden: false, color: '', fontWeight: ''}
                 ],
                 displayLabel: 'GMT-09:30',
                 timezoneOffset: -570,
@@ -170,13 +172,15 @@ describe('View/TimeGrid', function() {
                 width: width,
                 left: 0 * width,
                 isPrimary: false,
-                hourmarkerText: '14:30'
+                hourmarkerText: '[-1]14:30',
+                backgroundColor: ''
             }];
 
             var obj = {
                 options: {
                     hourStart: 0,
                     hourEnd: 24,
+                    renderEndDate: '2018-05-23',
                     timezones: [
                         {
                             timezoneOffset: 540,
@@ -198,7 +202,7 @@ describe('View/TimeGrid', function() {
                 }
             };
 
-            var result = proto._getTimezoneViewModel.call(obj, currentHours);
+            var result = proto._getTimezoneViewModel.call(obj, currentHours, {});
 
             expect(result).toEqual(expected);
 

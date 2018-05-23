@@ -3,7 +3,7 @@
 var THEME_DOORAY = {
     'common.border': '1px solid #ddd',
     'common.backgroundColor': 'white',
-    'common.holiday.color': '#f44336',
+    'common.holiday.color': '#f54f3d',
     'common.saturday.color': '#333',
     'common.dayname.color': '#333',
     'common.today.color': '#135de6',
@@ -53,6 +53,7 @@ var THEME_DOORAY = {
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#135de6',
+    'week.pastDay.color': '#999',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #ddd',
@@ -74,6 +75,8 @@ var THEME_DOORAY = {
     'week.timegridLeft.backgroundColor': '#fafafa',
     'week.timegridLeft.borderRight': '1px solid #ddd',
     'week.timegridLeft.fontSize': '12px',
+    'week.timegridLeftTimezoneLabel.height': '51px',
+    'week.timegridLeftAdditionalTimezone.backgroundColor': '#fdfdfd',
 
     'week.timegridOneHour.height': '48px',
     'week.timegridHalfHour.height': '24px',
@@ -86,13 +89,13 @@ var THEME_DOORAY = {
     'week.timegridSchedule.paddingLeft': '0',
 
     'week.currentTime.color': '#135de6',
-    'week.currentTime.fontSize': '13px',
+    'week.currentTime.fontSize': '12px',
     'week.currentTime.fontWeight': 'bold',
 
-    'week.pastTime.color': '#555',
+    'week.pastTime.color': '#999',
     'week.pastTime.fontWeight': 'normal',
 
-    'week.futureTime.color': '#555',
+    'week.futureTime.color': '#333',
     'week.futureTime.fontWeight': 'normal',
 
     'week.currentTimeLinePast.border': '1px solid rgba(19, 93, 230, 0.3)',
