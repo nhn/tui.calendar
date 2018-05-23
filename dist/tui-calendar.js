@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.2.2 | Fri May 18 2018
+ * @version 1.2.3 | Wed May 23 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -8165,6 +8165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.dayname.backgroundColor': 'inherit',
 	    'week.dayname.textAlign': 'left',
 	    'week.today.color': 'inherit',
+	    'week.pastDay.color': '#bbb',
 	
 	    // week vertical panel 'vpanel'
 	    'week.vpanelSplitter.border': '1px solid #e5e5e5',
@@ -8415,6 +8416,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.dayname.backgroundColor': 'inherit',
 	    'week.dayname.textAlign': 'left',
 	    'week.today.color': '#333',
+	    'week.pastDay.color': '#bbb',
 	
 	    // week vertical panel 'vpanel'
 	    'week.vpanelSplitter.border': '1px solid #e5e5e5',
@@ -8437,7 +8439,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.timegridLeft.backgroundColor': 'inherit',
 	    'week.timegridLeft.borderRight': '1px solid #e5e5e5',
 	    'week.timegridLeft.fontSize': '11px',
-	    'week.timegridLeftTimezoneLabel.height': '20px',
+	    'week.timegridLeftTimezoneLabel.height': '40px',
+	    'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 	
 	    'week.timegridOneHour.height': '52px',
 	    'week.timegridHalfHour.height': '26px',
@@ -8453,7 +8456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'week.currentTime.fontSize': '11px',
 	    'week.currentTime.fontWeight': 'normal',
 	
-	    'week.pastTime.color': '#333',
+	    'week.pastTime.color': '#bbb',
 	    'week.pastTime.fontWeight': 'normal',
 	
 	    'week.futureTime.color': '#333',
@@ -10922,6 +10925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	DayName.prototype._getBaseViewModel = function(start, end, grids) {
 	    var daynames = this.options.daynames,
 	        theme = this.theme,
+	        now = new TZDate(),
 	        viewModel;
 	
 	    viewModel = util.map(datetime.range(
@@ -10930,7 +10934,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        datetime.MILLISECONDS_PER_DAY
 	    ), function(d, i) {
 	        var day = d.getDay();
-	        var isToday = datetime.isSameDate(d, new TZDate());
+	        var isToday = datetime.isSameDate(d, now);
+	        var isPastDay = d < now && !isToday;
 	
 	        return {
 	            day: day,
@@ -10940,7 +10945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            left: grids[i] ? grids[i].left : 0,
 	            width: grids[i] ? grids[i].width : 0,
 	            renderDate: datetime.format(d, 'YYYY-MM-DD'),
-	            color: this._getDayNameColor(theme, day, isToday)
+	            color: this._getDayNameColor(theme, day, isToday, isPastDay)
 	        };
 	    }, this);
 	
@@ -10971,14 +10976,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {Theme} theme - theme instance
 	 * @param {number} day - day number
 	 * @param {boolean} isToday - today flag
+	 * @param {boolean} isPastDay - is past day flag
 	 * @returns {string} style - color style
 	 */
-	DayName.prototype._getDayNameColor = function(theme, day, isToday) {
+	DayName.prototype._getDayNameColor = function(theme, day, isToday, isPastDay) {
 	    var color = '';
 	
 	    if (theme) {
 	        if (day === 0) {
 	            color = theme.common.holiday.color;
+	        } else if (isPastDay) {
+	            color = theme.week.pastDay.color || theme.common.dayname.color;
 	        } else if (day === 6) {
 	            color = theme.common.saturday.color;
 	        } else if (isToday) {
@@ -11994,14 +12002,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns a list of time labels from start to end.
 	 * For hidden labels near the current time, set to hidden: true.
-	 * @param {number} start - start time
-	 * @param {number} end - end time
+	 * @param {object} opt - TimeGrid.options
 	 * @param {boolean} hasHourMarker - Whether the current time is displayed
 	 * @param {number} timezoneOffset - timezone offset
 	 * @param {object} styles - styles
 	 * @returns {Array.<Object>}
 	 */
-	function getHoursLabels(start, end, hasHourMarker, timezoneOffset, styles) {
+	function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
+	    var hourStart = opt.hourStart;
+	    var hourEnd = opt.hourEnd;
+	    var renderEndDate = datetime.parse(opt.renderEndDate);
 	    var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
 	    var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
 	    var now = new TZDate();
@@ -12016,9 +12026,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // shift the array and take elements between start and end
 	    common.shiftArray(hoursRange, shiftByOffset);
-	    common.takeArray(hoursRange, start, end);
+	    common.takeArray(hoursRange, hourStart, hourEnd);
 	
-	    nowHours = common.shiftHours(now.getHours(), shiftByOffset);
+	    nowHours = common.shiftHours(now.getHours(), shiftByOffset) % 24;
 	    nowHoursIndex = util.inArray(nowHours, hoursRange);
 	
 	    if (hasHourMarker) {
@@ -12027,16 +12037,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else if (nowMinutes > 40) {
 	            nowAroundHours = nowHours + 1;
 	        }
+	
+	        if (util.isNumber(nowAroundHours)) {
+	            nowAroundHours %= 24;
+	        }
 	    }
 	
 	    return util.map(hoursRange, function(hour, index) {
 	        var color;
 	        var fontWeight;
+	        var isPast = (hasHourMarker && index <= nowHoursIndex) ||
+	                     (renderEndDate < now && !datetime.isSameDate(renderEndDate, now));
 	
-	        if (!hasHourMarker) {
-	            color = 'inherit';
-	            fontWeight = 'inherit';
-	        } else if (index <= nowHoursIndex) {
+	        if (isPast) {
 	            // past
 	            color = styles.pastTimeColor;
 	            fontWeight = styles.pastTimeFontWeight;
@@ -12050,8 +12063,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            hour: hour,
 	            minutes: shiftMinutes,
 	            hidden: nowAroundHours === hour || index === 0,
-	            color: color,
-	            fontWeight: fontWeight
+	            color: color || '',
+	            fontWeight: fontWeight || ''
 	        };
 	    });
 	}
@@ -12106,6 +12119,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        timezones: options.timezones
 	    }, options.week);
 	
+	    if (this.options.timezones.length < 1) {
+	        this.options.timezones = [{
+	            timezoneOffset: Timezone.getOffset()
+	        }];
+	    }
+	
 	    /**
 	     * Interval id for hourmarker animation.
 	     * @type {number}
@@ -12123,11 +12142,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this._scrolled = false;
 	
-	    /*
+	    /**
 	     * cache parent's view model
 	     * @type {object}
 	     */
 	    this._cacheParentViewModel = null;
+	
+	    /**
+	     * cache hoursLabels view model to render again TimeGrid
+	     * @type {object}
+	     */
+	    this._cacheHoursLabels = null;
 	
 	    this.attachEvent();
 	}
@@ -12208,9 +12233,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    util.forEach(timezones, function(timezone) {
 	        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
 	        var hourmarker = new TZDate(now);
+	        var texts = [];
+	        var dateDifference;
 	
 	        hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
-	        hourmarkerTexts.push(datetime.format(hourmarker, 'HH:mm'));
+	
+	        dateDifference = hourmarker.getDate() - now.getDate();
+	        if (dateDifference < 0) {
+	            texts.push('[-' + Math.abs(dateDifference) + ']');
+	        } else if (dateDifference > 0) {
+	            texts.push('[+' + Math.abs(dateDifference) + ']');
+	        }
+	
+	        texts.push(datetime.format(hourmarker, 'HH:mm'));
+	        hourmarkerTexts.push(texts.join(''));
 	    });
 	
 	    viewModel = {
@@ -12233,35 +12269,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
 	    var opt = this.options;
-	    var hourStart = opt.hourStart;
-	    var hourEnd = opt.hourEnd;
 	    var primaryOffset = Timezone.getOffset();
 	    var timezones = opt.timezones;
 	    var timezonesLength = timezones.length;
 	    var timezoneViewModel = [];
 	    var width = 100 / timezonesLength;
 	    var now = new TZDate();
+	    var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 	
 	    util.forEach(timezones, function(timezone, index) {
 	        var hourmarker = new TZDate(now);
+	        var texts = [];
 	        var timezoneDifference;
 	        var timeSlots;
+	        var dateDifference;
 	
-	        timezone = timezones[timezones.length - index - 1];
 	        timezoneDifference = timezone.timezoneOffset + primaryOffset;
-	        timeSlots = getHoursLabels(hourStart, hourEnd, currentHours >= 0, timezoneDifference, styles);
+	        timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 	
 	        hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
 	
-	        timezoneViewModel.unshift({
+	        dateDifference = hourmarker.getDate() - now.getDate();
+	        if (dateDifference < 0) {
+	            texts.push('[-' + Math.abs(dateDifference) + ']');
+	        } else if (dateDifference > 0) {
+	            texts.push('[+' + Math.abs(dateDifference) + ']');
+	        }
+	
+	        texts.push(datetime.format(hourmarker, 'HH:mm'));
+	
+	        if (index > 0) {
+	            backgroundColor = styles.additionalTimezoneBackgroundColor;
+	        }
+	
+	        timezoneViewModel.push({
 	            timeSlots: timeSlots,
 	            displayLabel: timezone.displayLabel,
 	            timezoneOffset: timezone.timezoneOffset,
 	            tooltip: timezone.tooltip || '',
 	            width: width,
-	            left: index * width,
-	            isPrimary: index === timezonesLength - 1,
-	            hourmarkerText: datetime.format(hourmarker, 'HH:mm')
+	            left: (timezones.length - index - 1) * width,
+	            isPrimary: index === 0,
+	            hourmarkerText: texts.join(''),
+	            backgroundColor: backgroundColor || ''
 	        });
 	    });
 	
@@ -12282,7 +12332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return util.extend(baseViewModel, {
 	        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, styles),
-	        hoursLabels: getHoursLabels(opt.hourStart, opt.hourEnd, baseViewModel.todaymarkerLeft >= 0, 0, styles),
+	        hoursLabels: getHoursLabels(opt, baseViewModel.todaymarkerLeft >= 0, 0, styles),
 	        styles: styles
 	    });
 	};
@@ -12352,6 +12402,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scheduleLen = util.keys(timeViewModel).length;
 	
 	    this._cacheParentViewModel = viewModel;
+	    this._cacheHoursLabels = baseViewModel.hoursLabels;
 	
 	    if (!scheduleLen) {
 	        return;
@@ -12394,13 +12445,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    stickyContainer.innerHTML = timezoneStickyTmpl(baseViewModel);
 	
-	    stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'table' : 'none';
-	    stickyContainer.style.position = 'absolute';
-	    stickyContainer.style.top = 0;
+	    stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'block' : 'none';
 	    stickyContainer.style.width = baseViewModel.styles.leftWidth;
-	    stickyContainer.style.height = baseViewModel.styles.displayTimezoneLableHeight;
-	    stickyContainer.style.lineHeight = baseViewModel.styles.displayTimezoneLableHeight;
-	    stickyContainer.style.textAlign = 'right';
+	    stickyContainer.style.height = baseViewModel.styles.displayTimezoneLabelHeight;
 	    stickyContainer.style.borderBottom = baseViewModel.styles.leftBorderRight;
 	};
 	
@@ -12408,32 +12455,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Refresh hourmarker element.
 	 */
 	TimeGrid.prototype.refreshHourmarker = function() {
-	    var hourmarkers = this.hourmarkers,
-	        grids = this._cacheParentViewModel ? this._cacheParentViewModel.grids : null,
-	        range = this._cacheParentViewModel ? this._cacheParentViewModel.range : null,
-	        viewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
+	    var hourmarkers = this.hourmarkers;
+	    var viewModel = this._cacheParentViewModel;
+	    var hoursLabels = this._cacheHoursLabels;
+	    var baseViewModel;
 	
 	    if (!hourmarkers || !viewModel) {
 	        return;
 	    }
 	
+	    baseViewModel = this._getBaseViewModel(viewModel);
+	
 	    reqAnimFrame.requestAnimFrame(function() {
-	        util.forEach(hourmarkers, function(hourmarker) {
-	            var todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
-	            var hourmarkerText = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
-	            var timezone = domutil.closest(hourmarker, config.classname('.timegrid-timezone'));
-	            var timezoneIndex = timezone ? domutil.getData(timezone, 'timezoneIndex') : 0;
+	        var needsRender = false;
 	
-	            hourmarker.style.top = viewModel.hourmarkerTop + '%';
+	        util.forEach(hoursLabels, function(hoursLabel, index) {
+	            if (hoursLabel.hidden !== baseViewModel.hoursLabels[index].hidden) {
+	                needsRender = true;
 	
-	            if (todaymarker) {
-	                todaymarker.style.display = (viewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
+	                return false;
 	            }
-	            if (hourmarkerText) {
-	                hourmarkerText.innerHTML = viewModel.hourmarkerTexts[timezoneIndex];
-	            }
+	
+	            return true;
 	        });
-	    });
+	
+	        if (needsRender) {
+	            this.render(viewModel);
+	        } else {
+	            util.forEach(hourmarkers, function(hourmarker) {
+	                var todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
+	                var hourmarkerText = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
+	                var timezone = domutil.closest(hourmarker, config.classname('.timegrid-timezone'));
+	                var timezoneIndex = timezone ? domutil.getData(timezone, 'timezoneIndex') : 0;
+	
+	                hourmarker.style.top = baseViewModel.hourmarkerTop + '%';
+	
+	                if (todaymarker) {
+	                    todaymarker.style.display = (baseViewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
+	                }
+	                if (hourmarkerText) {
+	                    hourmarkerText.innerHTML = baseViewModel.hourmarkerTexts[timezoneIndex];
+	                }
+	            });
+	        }
+	    }, this);
 	};
 	
 	/**
@@ -12524,9 +12589,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
 	        styles.leftFontSize = theme.week.timegridLeft.fontSize;
 	        styles.timezoneWidth = theme.week.timegridLeft.width;
+	        styles.additionalTimezoneBackgroundColor = theme.week.timegridLeftAdditionalTimezone.backgroundColor
+	                                                || styles.leftBackgroundColor;
 	
-	        styles.displayTimezoneLableHeight = theme.week.timegridLeftTimezoneLabel.height;
-	        styles.displayTimezoneLableBackgroundColor = theme.week.timegridLeft.backgroundColor === 'inherit' ? 'white' : theme.week.timegridLeft.backgroundColor;
+	        styles.displayTimezoneLabelHeight = theme.week.timegridLeftTimezoneLabel.height;
+	        styles.displayTimezoneLabelBackgroundColor = theme.week.timegridLeft.backgroundColor === 'inherit' ? 'white' : theme.week.timegridLeft.backgroundColor;
 	
 	        styles.oneHourHeight = theme.week.timegridOneHour.height;
 	        styles.halfHourHeight = theme.week.timegridHalfHour.height;
@@ -13512,7 +13579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Handlebars = __webpack_require__(8);
 	module.exports = (Handlebars['default'] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
+	    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
 	  return "<div class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
@@ -13523,9 +13590,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + "%; left: "
 	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
 	    + "%; border-right: "
-	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBorderRight), depth0))
+	    + alias4(container.lambda(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBorderRight), depth0))
 	    + "; background-color: "
-	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBackgroundColor), depth0))
+	    + alias4(((helper = (helper = helpers.backgroundColor || (depth0 != null ? depth0.backgroundColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"backgroundColor","hash":{},"data":data}) : helper)))
 	    + ";\" >\n"
 	    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPrimary : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "")
 	    + "        </div>\n";
@@ -13709,19 +13776,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    + alias4(((helper = (helper = helpers.tooltip || (depth0 != null ? depth0.tooltip : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"tooltip","hash":{},"data":data}) : helper)))
 	    + "\" class=\""
 	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-	    + "timegrid-timezone-label\" data-timezone=\""
+	    + "timegrid-timezone-label-cell\" data-timezone=\""
 	    + alias4(((helper = (helper = helpers.displayLabel || (depth0 != null ? depth0.displayLabel : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"displayLabel","hash":{},"data":data}) : helper)))
 	    + "\" style=\"background-color: "
-	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.displayTimezoneLableBackgroundColor), depth0))
+	    + alias4(((helper = (helper = helpers.backgroundColor || (depth0 != null ? depth0.backgroundColor : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"backgroundColor","hash":{},"data":data}) : helper)))
 	    + "; height: 100%; width: "
 	    + alias4(((helper = (helper = helpers.width || (depth0 != null ? depth0.width : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data}) : helper)))
-	    + "%; border-right: "
-	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBorderRight), depth0))
-	    + "; font-size: "
+	    + "%; left: "
+	    + alias4(((helper = (helper = helpers.left || (depth0 != null ? depth0.left : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data}) : helper)))
+	    + "%; font-size: "
 	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftFontSize), depth0))
-	    + ";\">\n        "
+	    + ";\">\n        <div class=\""
+	    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+	    + "timegrid-timezone-label\" style=\"border-right: "
+	    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.leftBorderRight), depth0))
+	    + ";\">"
 	    + ((stack1 = (helpers["timezoneDisplayLabel-tmpl"] || (depth0 && depth0["timezoneDisplayLabel-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.timezoneOffset : depth0),(depth0 != null ? depth0.displayLabel : depth0),{"name":"timezoneDisplayLabel-tmpl","hash":{},"data":data})) != null ? stack1 : "")
-	    + "\n    </div>\n";
+	    + "</div>\n    </div>\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 	
@@ -13975,7 +14046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var className = config.classname('popup-save');
 	    var cssPrefix = config.cssPrefix;
 	    var title, isPrivate, location, isAllDay, startDate, endDate, state;
-	    var start, end;
+	    var start, end, calendarId;
 	
 	    if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
 	        return false;
@@ -14012,10 +14083,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    start = new TZDate(startDate);
 	    end = new TZDate(endDate);
 	
+	    if (this._selectedCal) {
+	        calendarId = this._selectedCal.id;
+	    }
+	
 	    if (this._isEditMode) {
 	        this.fire('beforeUpdateSchedule', {
 	            schedule: {
-	                calendarId: this._selectedCal.id,
+	                calendarId: calendarId,
 	                title: title.value,
 	                raw: {
 	                    class: isPrivate ? 'private' : 'public',
@@ -14040,7 +14115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @property {Schedule} schedule - new schedule instance to be added
 	         */
 	        this.fire('beforeCreateSchedule', {
-	            calendarId: this._selectedCal.id,
+	            calendarId: calendarId,
 	            title: title.value,
 	            raw: {
 	                class: isPrivate ? 'private' : 'public',

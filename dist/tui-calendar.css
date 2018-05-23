@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.2.2 | Fri May 18 2018
+ * @version 1.2.3 | Wed May 23 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -351,7 +351,7 @@
   position: absolute;
   top: -11px;
   left: 0;
-  right: 7px;
+  right: 5px;
   text-align: right;
   line-height: 25px;
 }
@@ -396,7 +396,7 @@
 }
 .tui-full-calendar-timegrid-hourmarker-time {
   position: absolute;
-  right: 7px;
+  right: 5px;
   top: -6px;
   line-height: 12px;
   text-align: right;
@@ -413,13 +413,16 @@
 .tui-full-calendar-timegrid-sticky-container {
   position: absolute;
   top: 0;
-  text-align: right;
+}
+.tui-full-calendar-timegrid-timezone-label-cell {
+  position: absolute;
   display: table;
 }
 .tui-full-calendar-timegrid-timezone-label {
   display: table-cell;
   vertical-align: middle;
-  padding-right: 7px;
+  padding-right: 5px;
+  text-align: right;
 }
 .tui-full-calendar-time-date {
   position: absolute;
