@@ -241,7 +241,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
     var title, isPrivate, location, isAllDay, startDate, endDate, state;
-    var start, end;
+    var start, end, calendarId;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
@@ -278,10 +278,14 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     start = new TZDate(startDate);
     end = new TZDate(endDate);
 
+    if (this._selectedCal) {
+        calendarId = this._selectedCal.id;
+    }
+
     if (this._isEditMode) {
         this.fire('beforeUpdateSchedule', {
             schedule: {
-                calendarId: this._selectedCal.id,
+                calendarId: calendarId,
                 title: title.value,
                 raw: {
                     class: isPrivate ? 'private' : 'public',
@@ -306,7 +310,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
          * @property {Schedule} schedule - new schedule instance to be added
          */
         this.fire('beforeCreateSchedule', {
-            calendarId: this._selectedCal.id,
+            calendarId: calendarId,
             title: title.value,
             raw: {
                 class: isPrivate ? 'private' : 'public',
