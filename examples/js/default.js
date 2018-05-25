@@ -12,7 +12,7 @@
     var datePicker, selectedCalendar;
 
     cal = new Calendar('#calendar', {
-        defaultView: 'month',
+        defaultView: 'year',
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
         calendars: CalendarList,
@@ -107,6 +107,9 @@
                 break;
             case 'toggle-weekly':
                 viewName = 'week';
+                break;
+            case 'toggle-yearly':
+                viewName = 'year';
                 break;
             case 'toggle-monthly':
                 options.month.visibleWeeksCount = 0;
@@ -334,6 +337,9 @@
         } else if (type === 'week') {
             type = 'Weekly';
             iconClassName = 'calendar-icon ic_view_week';
+        } else if (type === 'year') {
+            type = 'Yearly';
+            iconClassName = 'calendar-icon ic_view_year';
         } else if (options.month.visibleWeeksCount === 2) {
             type = '2 weeks';
             iconClassName = 'calendar-icon ic_view_week';
@@ -359,6 +365,8 @@
         } else if (viewName === 'month' &&
             (!options.month.visibleWeeksCount || options.month.visibleWeeksCount > 4)) {
             html.push(moment(cal.getDate().getTime()).format('YYYY.MM'));
+        } else if (viewName === 'year') {
+            html.push(moment(cal.getDate().getTime()).format('YYYY'));
         } else {
             html.push(moment(cal.getDateRangeStart().getTime()).format('YYYY.MM.DD'));
             html.push(' ~ ');
