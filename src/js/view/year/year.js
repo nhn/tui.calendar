@@ -27,7 +27,7 @@ function Year(props) {
 
 util.inherit(Year, View);
 
-Year.prototype.viewName = 'Year';
+Year.prototype.viewName = 'year';
 
 /**
  * Append month containers

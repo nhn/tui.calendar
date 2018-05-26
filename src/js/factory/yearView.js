@@ -31,6 +31,33 @@ function createYearView(baseController, layoutContainer, dragHandler, options) {
     // add controller
     yearView.controller = baseController.Year;
 
+    yearView.handler = {
+        click: {
+            'default': {
+                on: function() {},
+                off: function() {}
+            }
+        },
+        creation: {
+            'default': {
+                on: function() {},
+                off: function() {}
+            }
+        },
+        resize: {
+            'default': {
+                on: function() {},
+                off: function() {}
+            }
+        },
+        move: {
+            'default': {
+                on: function() {},
+                off: function() {}
+            }
+        }
+    };
+
     return {
         view: yearView
     };
