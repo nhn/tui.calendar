@@ -8,7 +8,8 @@ var util = require('tui-code-snippet');
 var Base = require('../controller/base'),
     Core = require('../controller/viewMixin/core'),
     Week = require('../controller/viewMixin/week'),
-    Month = require('../controller/viewMixin/month');
+    Month = require('../controller/viewMixin/month'),
+    Year = require('../controller/viewMixin/year');
 
 /**
  * Mixin object. create object property to target and mix to that
@@ -35,6 +36,7 @@ module.exports = function(options) {
     mixin(Core, controller, 'Core');
     mixin(Week, controller, 'Week');
     mixin(Month, controller, 'Month');
+    mixin(Year, controller, 'Year');
 
     // for Theme
     controller.Core.theme = controller.theme;

@@ -13,6 +13,7 @@ var dw = require('../common/dw'),
     controllerFactory = require('./controller'),
     weekViewFactory = require('./weekView'),
     monthViewFactory = require('./monthView'),
+    yearViewFactory = require('./yearView'),
     TZDate = require('../common/timezone').Date,
     config = require('../config'),
     timezone = require('../common/timezone'),
@@ -1189,6 +1190,13 @@ Calendar.prototype.changeView = function(newViewName, force) {
             dragHandler,
             options
         );
+    } else {
+        created = _createYearView(
+            controller,
+            layout.container,
+            dragHandler,
+            options
+        );
     }
 
     layout.addChild(created.view);
@@ -1448,6 +1456,24 @@ function _createWeekView(controller, container, dragHandler, options) {
  */
 function _createMonthView(controller, container, dragHandler, options) {
     return monthViewFactory(
+        controller,
+        container,
+        dragHandler,
+        options
+    );
+}
+
+/**
+ * Create year view instance by dependent module instances
+ * @param {Base} controller - controller
+ * @param {HTMLElement} container - container element
+ * @param {Drag} dragHandler - global drag handler
+ * @param {object} options - options for week view
+ * @returns {Week} week view instance
+ * @private
+ */
+function _createYearView(controller, container, dragHandler, options) {
+    return yearViewFactory(
         controller,
         container,
         dragHandler,

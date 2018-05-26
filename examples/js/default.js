@@ -13,6 +13,9 @@
 
     cal = new Calendar('#calendar', {
         defaultView: 'year',
+        year: {
+            startYear: 2018
+        },
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
         calendars: CalendarList,
