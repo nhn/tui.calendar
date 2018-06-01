@@ -64,14 +64,7 @@ DW.prototype.addDate = function(day) {
  */
 DW.prototype.addMonth = function(m) {
     var prevMonth = this.d.getMonth();
-    var prevYear = this.d.getFullYear();
-    this.d.setMonth(prevMonth + m);
-
-    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
-    // Don't do it on different year(Because december + 1month is ok)
-    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
-        this.d.setMonth(prevMonth + m, 1);
-    }
+    this.d.setMonth(prevMonth + m, 1);
 
     return this;
 };
