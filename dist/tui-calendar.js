@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.2.3 | Wed May 23 2018
+ * @version 1.2.4 | Thu Jun 07 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -2618,22 +2618,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * Add month. If month value is changed, date set to 1.
+	 * Add month.
 	 * @param {number} m - month to add
 	 * @returns {DW} wrapper object
 	 */
 	DW.prototype.addMonth = function(m) {
-	    var prevMonth = this.d.getMonth();
-	    var prevYear = this.d.getFullYear();
-	    this.d.setMonth(prevMonth + m);
+	    var currentMonth = this.d.getMonth();
+	    var currentDay = this.d.getDate();
+	    var leapYear = this._isLeapYear();
+	    var targetMonth = currentMonth + m;
+	    var clone = this.clone();
+	    var targetDaysOfMonth = currentDay;
 	
-	    // move to first day on the month because plus 1 month on '2017-01-31' means '2017-03-01'
-	    // Don't do it on different year(Because december + 1month is ok)
-	    if (this.d.getFullYear() === prevYear && this.d.getMonth() !== prevMonth) {
-	        this.d.setMonth(prevMonth + m, 1);
+	    if (m) {
+	        if (targetMonth === 1) {
+	            targetDaysOfMonth = leapYear ? 29 : 28;
+	        } else {
+	            if (m > 0) {
+	                clone.d.setMonth(targetMonth + 1, 0);
+	            } else {
+	                clone.d.setMonth(currentMonth, 0);
+	            }
+	            targetDaysOfMonth = clone.d.getDate();
+	        }
 	    }
 	
+	    this.d.setMonth(targetMonth, Math.min(currentDay, targetDaysOfMonth));
+	
 	    return this;
+	};
+	
+	/**
+	 * Is leap year or not
+	 * @returns {boolean}
+	 */
+	DW.prototype._isLeapYear = function() {
+	    var year = this.d.getFullYear();
+	
+	    return ((year % 4 === 0) && (year % 100 !== 0)) || !(year % 400);
 	};
 	
 	/**
