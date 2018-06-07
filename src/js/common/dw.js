@@ -58,15 +58,44 @@ DW.prototype.addDate = function(day) {
 };
 
 /**
- * Add month. If month value is changed, date set to 1.
+ * Add month.
  * @param {number} m - month to add
  * @returns {DW} wrapper object
  */
 DW.prototype.addMonth = function(m) {
-    var prevMonth = this.d.getMonth();
-    this.d.setMonth(prevMonth + m, 1);
+    var currentMonth = this.d.getMonth();
+    var currentDay = this.d.getDate();
+    var leapYear = this._isLeapYear();
+    var targetMonth = currentMonth + m;
+    var clone = this.clone();
+    var targetDaysOfMonth = currentDay;
+
+    if (m) {
+        if (targetMonth === 1) {
+            targetDaysOfMonth = leapYear ? 29 : 28;
+        } else {
+            if (m > 0) {
+                clone.d.setMonth(targetMonth + 1, 0);
+            } else {
+                clone.d.setMonth(currentMonth, 0);
+            }
+            targetDaysOfMonth = clone.d.getDate();
+        }
+    }
+
+    this.d.setMonth(targetMonth, Math.min(currentDay, targetDaysOfMonth));
 
     return this;
+};
+
+/**
+ * Is leap year or not
+ * @returns {boolean}
+ */
+DW.prototype._isLeapYear = function() {
+    var year = this.d.getFullYear();
+
+    return ((year % 4 === 0) && (year % 100 !== 0)) || !(year % 400);
 };
 
 /**
