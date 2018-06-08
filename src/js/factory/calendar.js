@@ -633,6 +633,7 @@ Calendar.prototype.render = function(immediately) {
 
 /**
  * Render and refresh all layout and process requests.
+ * @private
  */
 Calendar.prototype._renderFunc = function() {
     if (this._refreshMethod) {
