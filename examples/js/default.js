@@ -313,7 +313,7 @@
             cal.toggleSchedules(calendar.id, !calendar.checked, false);
         });
 
-        cal.render();
+        cal.render(true);
 
         calendarElements.forEach(function(input) {
             var span = input.nextElementSibling;
