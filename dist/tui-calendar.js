@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.2.4 | Thu Jun 07 2018
+ * @version 1.3.0 | Fri Jun 08 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -5192,7 +5192,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 **********/
 	
 	/**
-	 * Render the calendar.
+	 * Render the calendar. The real rendering occurs after requestAnimationFrame.
+	 * If you have to render immediately, use the 'immediately' parameter as true.
+	 * @param {boolean} [immediately=false] - Render it immediately
 	 * @example
 	 * var silent = true;
 	 * calendar.clear();
@@ -5204,38 +5206,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *     calendar.render();
 	 * });
 	 */
-	Calendar.prototype.render = function() {
-	    var renderFunc = function() {
-	        if (this._refreshMethod) {
-	            this._refreshMethod();
-	        }
-	        if (this._layout) {
-	            this._layout.render();
-	        }
-	        if (this._scrollToNowMethod && this._requestScrollToNow) {
-	            this._scrollToNowMethod();
-	        }
-	
-	        this._requestScrollToNow = false;
-	        this._requestRender = null;
-	    };
-	
+	Calendar.prototype.render = function(immediately) {
 	    if (this._requestRender) {
 	        reqAnimFrame.cancelAnimFrame(this._requestRender);
 	    }
-	    this._requestRender = reqAnimFrame.requestAnimFrame(renderFunc, this);
+	
+	    if (immediately) {
+	        this._renderFunc();
+	    } else {
+	        this._requestRender = reqAnimFrame.requestAnimFrame(this._renderFunc, this);
+	    }
 	};
 	
 	/**
-	 * Delete all schedules and clear view.
+	 * Render and refresh all layout and process requests.
+	 * @private
+	 */
+	Calendar.prototype._renderFunc = function() {
+	    if (this._refreshMethod) {
+	        this._refreshMethod();
+	    }
+	    if (this._layout) {
+	        this._layout.render();
+	    }
+	    if (this._scrollToNowMethod && this._requestScrollToNow) {
+	        this._scrollToNowMethod();
+	    }
+	
+	    this._requestScrollToNow = false;
+	    this._requestRender = null;
+	};
+	
+	/**
+	 * Delete all schedules and clear view. The real rendering occurs after requestAnimationFrame.
+	 * If you have to render immediately, use the 'immediately' parameter as true.
+	 * @param {boolean} [immediately=false] - Render it immediately
 	 * @example
 	 * calendar.clear();
 	 * calendar.createSchedules(schedules, true);
 	 * calendar.render();
 	 */
-	Calendar.prototype.clear = function() {
+	Calendar.prototype.clear = function(immediately) {
 	    this._controller.clearSchedules();
-	    this.render();
+	    this.render(immediately);
 	};
 	
 	/**
