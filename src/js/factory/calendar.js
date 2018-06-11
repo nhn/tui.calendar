@@ -1044,7 +1044,7 @@ Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
      * @example
      * calendar.on('beforeDeleteSchedule', function(event) {
      *     var schedule = event.schedule;
-     *     alert('The schedule is removed.', schedle);
+     *     alert('The schedule is removed.', schedule);
      * });
      */
     this.fire('beforeDeleteSchedule', deleteScheduleData);
