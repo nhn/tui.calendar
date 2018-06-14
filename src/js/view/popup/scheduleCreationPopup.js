@@ -374,7 +374,6 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     var title, isPrivate, location, startDate, endDate, isAllDay, state;
     var raw = schedule.raw || {};
     var calendars = this.calendars;
-    var calendarIndex;
 
     var id = schedule.id;
     title = schedule.title;
@@ -385,12 +384,10 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     isAllDay = schedule.isAllDay;
     state = schedule.state;
 
-    calendarIndex = calendars.findIndex(function(calendar) {
-        return calendar.id === viewModel.schedule.calendarId;
+    viewModel.selectedCal = this._selectedCal = common.find(this.calendars, function(cal) {
+        return cal.id === viewModel.schedule.calendarId;
     });
-    calendarIndex = calendarIndex < 0 ? 0 : calendarIndex;
 
-    viewModel.selectedCal = this._selectedCal = calendars[calendarIndex];
     this._scheduleId = id;
 
     return {

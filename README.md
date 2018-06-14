@@ -198,7 +198,7 @@ Clone it to local computer. Install node modules.
 Before starting development, you should check to haveany errors.
 
 ``` sh
-$ git clone https://github.com/{username}/tui.calendar.git
+$ git clone https://github.com/{owner}/tui.calendar.git
 $ cd tui.calendar
 $ npm install
 $ npm run test
