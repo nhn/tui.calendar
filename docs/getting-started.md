@@ -360,6 +360,11 @@ cal.on({
     'beforeCreateSchedule': function(e) {
         console.log('beforeCreateSchedule', e);
         // open a creation popup
+        
+        // If you dont' want to show any popup, just use `e.guide.clearGuideElement()`
+        
+        // then close guide element(blue box from dragging or clicking days)
+        e.guide.clearGuideElement();
     },
     'beforeUpdateSchedule': function(e) {
         console.log('beforeUpdateSchedule', e);
