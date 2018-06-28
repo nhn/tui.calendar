@@ -207,6 +207,10 @@ calendar.changeView('day', true);
 // weekly view
 calendar.changeView('week', true);
 
+// monthly view with 5 weeks or 6 weeks based on the month
+calendar.setOptions({month: {isAlways6Week: false}}, true);
+calendar.changeView('month', true);
+
 // monthly view(default 6 weeks view)
 calendar.setOptions({month: {visibleWeeksCount: 6}}, true); // or null
 calendar.changeView('month', true);
