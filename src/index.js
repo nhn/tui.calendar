@@ -26,7 +26,7 @@ if (global.$) {
         if (el) {
             options = util.pick(args, 0) || {};
 
-            instance = $.data(el, 'tuiCalendar');
+            instance = global.$.data(el, 'tuiCalendar');
 
             if (instance) {
                 if (typeof options === 'string' && instance[options]) {
@@ -34,7 +34,7 @@ if (global.$) {
                 }
             } else {
                 instance = new Calendar(el, options);
-                $.data(el, 'tuiCalendar', instance);
+                global.$.data(el, 'tuiCalendar', instance);
             }
         }
 
