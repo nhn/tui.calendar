@@ -58,6 +58,7 @@ function Month(options, container, controller) {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         narrowWeekend: false,
         visibleWeeksCount: null,
+        isAlways6Week: true,
         grid: {
             header: {
                 height: 34
@@ -115,7 +116,7 @@ Month.prototype._getMonthCalendar = function(renderMonthStr) {
     } else {
         datetimeOptions = {
             startDayOfWeek: startDayOfWeek,
-            isAlways6Week: true,
+            isAlways6Week: this.options.isAlways6Week,
             workweek: workweek
         };
     }

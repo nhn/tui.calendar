@@ -86,6 +86,7 @@ var mmin = Math.min;
  * @property {number} [startDayOfWeek=0] - start day of week
  * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
  * @property {boolean} [visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ * @property {boolean} [isAlways6Week=true] - Always show 6 weeks. If false, show 5 weeks or 6 weeks based on the month.
  * @property {boolean} [workweek=false] - show only 5 days except for weekend
  * @property {number} [visibleScheduleCount] - visible schedule count in monthly grid
  * @property {object} [moreLayerSize] - more layer size
@@ -711,7 +712,7 @@ Calendar.prototype.move = function(offset) {
         view = this._getCurrentView(),
         recursiveSet = _setOptionRecurseively,
         startDate, endDate, tempDate,
-        startDayOfWeek, visibleWeeksCount, workweek, datetimeOptions;
+        startDayOfWeek, visibleWeeksCount, workweek, isAlways6Week, datetimeOptions;
 
     offset = util.isExisty(offset) ? offset : 0;
 
@@ -719,6 +720,7 @@ Calendar.prototype.move = function(offset) {
         startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 0;
         visibleWeeksCount = mmin(util.pick(this._options, 'month', 'visibleWeeksCount') || 0, 6);
         workweek = util.pick(this._options, 'month', 'workweek') || false;
+        isAlways6Week = util.pick(this._options, 'month', 'isAlways6Week');
 
         if (visibleWeeksCount) {
             datetimeOptions = {
@@ -737,7 +739,7 @@ Calendar.prototype.move = function(offset) {
         } else {
             datetimeOptions = {
                 startDayOfWeek: startDayOfWeek,
-                isAlways6Week: true,
+                isAlways6Week: isAlways6Week,
                 workweek: workweek
             };
 
