@@ -137,6 +137,17 @@ calendar.on('beforeCreateSchedule', function(event) {
 });
 ```
 
+And you can disable double clicking on calendar to create a schedule. Use `disableDblClick` option.
+
+```js
+calendar.setOptions({disableDblClick: true}, true);
+
+// or
+var calendar = new Calendar('#calendar', {
+  disableDblClick: true
+});
+```
+
 #### 'beforeUpdateSchedule'
 
 Update the schedule when dragging it.

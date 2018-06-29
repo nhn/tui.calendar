@@ -142,6 +142,7 @@ var mmin = Math.min;
  * @property {Array.<Timezone>} [timezones] - timezone array. 
  *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
  *  The rest timezone elements are shown in left timegrid of weekly/daily view.
+ * @property {boolean} [disableDblClick=false] - disable double click to create a schedule
  */
 
 /**
@@ -372,7 +373,8 @@ Calendar.prototype._initialize = function(options) {
             timezoneOffset: 0,
             displayLabel: '',
             tooltip: ''
-        }]
+        }],
+        disableDblClick: false
     }, options);
 
     this._options.week = util.extend({

@@ -24,8 +24,9 @@ var CLICK_DELAY = 300;
  * @param {Drag} [dragHandler] - Drag handler instance.
  * @param {DayGrid} [view] - DayGrid view instance.
  * @param {Base} [controller] - Base controller instance.
+ * @param {Options} [options] - calendar Options
  */
-function DayGridCreation(dragHandler, view, controller) {
+function DayGridCreation(dragHandler, view, controller, options) {
     /**
      * Drag handler instance.
      * @type {Drag}
@@ -61,7 +62,12 @@ function DayGridCreation(dragHandler, view, controller) {
 
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
-    domevent.on(view.container, 'dblclick', this._onDblClick, this);
+
+    if (options.disableDblClick) {
+        CLICK_DELAY = 0;
+    } else {
+        domevent.on(view.container, 'dblclick', this._onDblClick, this);
+    }
 }
 
 /**

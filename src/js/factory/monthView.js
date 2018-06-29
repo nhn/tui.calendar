@@ -63,7 +63,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // handlers
     clickHandler = new MonthClick(dragHandler, monthView, baseController);
-    creationHandler = new MonthCreation(dragHandler, monthView, baseController);
+    creationHandler = new MonthCreation(dragHandler, monthView, baseController, options);
     resizeHandler = new MonthResize(dragHandler, monthView, baseController);
     moveHandler = new MonthMove(dragHandler, monthView, baseController);
 

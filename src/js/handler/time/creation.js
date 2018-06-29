@@ -24,8 +24,9 @@ var CLICK_DELAY = 300;
  * @param {Drag} [dragHandler] - Drag handler instance.
  * @param {TimeGrid} [timeGridView] - TimeGrid view instance.
  * @param {Base} [baseController] - Base controller instance.
+ * @param {Options} [options] - calendar Options
  */
-function TimeCreation(dragHandler, timeGridView, baseController) {
+function TimeCreation(dragHandler, timeGridView, baseController, options) {
     /**
      * Drag handler instance.
      * @type {Drag}
@@ -68,7 +69,12 @@ function TimeCreation(dragHandler, timeGridView, baseController) {
 
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
-    domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+
+    if (options.disableDblClick) {
+        CLICK_DELAY = 0;
+    } else {
+        domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
+    }
 }
 
 /**
