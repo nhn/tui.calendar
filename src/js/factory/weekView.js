@@ -191,7 +191,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             weekView.addChild(view);
 
             util.forEach(handlers, function(type) {
-                weekView.handler[type][name] = new DAYGRID_HANDLDERS[type](dragHandler, view, baseController);
+                weekView.handler[type][name] = new DAYGRID_HANDLDERS[type](dragHandler, view, baseController, options);
                 view.addHandler(type, weekView.handler[type][name], vLayout.getPanelByName(name));
             });
         } else if (panel.type === 'timegrid') {
@@ -201,7 +201,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             view = new TimeGrid(name, options, vLayout.getPanelByName(name).container);
             weekView.addChild(view);
             util.forEach(handlers, function(type) {
-                weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController);
+                weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController, options);
             });
         }
     });

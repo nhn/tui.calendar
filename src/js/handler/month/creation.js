@@ -22,8 +22,9 @@ var CLICK_DELAY = 300;
  * @param {Drag} dragHandler - Drag handler instance.
  * @param {Month} monthView - Month view instance.
  * @param {Base} baseController - Base controller instance.
+ * @param {Options} [options] - calendar Options
  */
-function MonthCreation(dragHandler, monthView, baseController) {
+function MonthCreation(dragHandler, monthView, baseController, options) {
     /**
      * @type {Drag}
      */
@@ -62,7 +63,12 @@ function MonthCreation(dragHandler, monthView, baseController) {
 
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
-    domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
+
+    if (options.disableDblClick) {
+        CLICK_DELAY = 0;
+    } else {
+        domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
+    }
 }
 
 /**
