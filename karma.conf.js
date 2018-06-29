@@ -10,7 +10,7 @@ var webdriverConfig = {
 };
 
 var context = JSON.stringify({
-    CSS_PREFIX: 'tui-calendar-',
+    CSS_PREFIX: 'tui-full-calendar-',
     BUNDLE_TYPE: 'Debug'
 });
 
@@ -65,6 +65,7 @@ function setConfig(defaultConfig, server) {
             'Firefox-WebDriver',
             'Safari-WebDriver'
         ];
+        defaultConfig.concurrency = 1;
         defaultConfig.reporters.push('coverage');
         // defaultConfig.reporters.push('junit');
         defaultConfig.coverageReporter = {
@@ -132,37 +133,30 @@ module.exports = function(config) {
             variableName: '__json__'
         },
         webpack: {
+            mode: 'development',
             devtool: 'inline-source-map',
             module: {
-                preLoaders: [
-                    {
-                        test: /\.js$/,
-                        include: 'src',
-                        exclude: /(test|bower_components|node_modules)/,
-                        loader: 'istanbul-instrumenter'
-                    }
-                    // {
-                    //     test: /\.js$/,
-                    //     include: /src/,
-                    //     exclude: /(bower_components|node_modules)/,
-                    //     loader: 'eslint-loader'
-                    // }
-                ],
-                loaders: [
+                rules: [
                     {
                         test: /\.hbs$/,
-                        loader: 'handlebars-template',
+                        loader: 'handlebars-template-loader',
                         exclude: /node_modules|bower_components/
                     },
                     {
                         test: /\.js$/,
-                        loader: 'preprocess?' + context,
+                        loader: 'istanbul-instrumenter-loader',
+                        enforce: 'pre',
+                        exclude: /test|node_modules|bower_components/
+                    },
+                    {
+                        test: /\.js$/,
+                        loader: 'preprocess-loader?' + context,
                         exclude: /node_modules|bower_components/
                     }
                 ]
             },
             resolve: {
-                root: path.resolve('./src/js')
+                modules: [path.resolve('./src/js'), 'node_modules']
             }
         },
         reporters: ['spec', 'coverage'],

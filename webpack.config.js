@@ -4,8 +4,9 @@
 var pkg = require('./package.json');
 var path = require('path');
 var webpack = require('webpack');
-var stylus = require('stylus');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var OptimizaeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 var SafeUmdPlugin = require('safe-umd-webpack-plugin');
 var isProduction = process.env.NODE_ENV === 'production';
 var FILENAME = pkg.name + (isProduction ? '.min' : '');
@@ -19,14 +20,10 @@ var context = JSON.stringify({
     CSS_PREFIX: 'tui-full-calendar-',
     BUNDLE_TYPE: (isProduction ? 'Release' : 'Debug')
 });
-var stylusLoader = ExtractTextPlugin.extract('style', `preprocess?${context}!css?sourceMap!stylus?sourceMap!`);
-var jsLoader = `preprocess?${context}`;
-var devtool = '#source-map';
+var preprocessLoader = `preprocess-loader?${context}`;
+var devtool = 'source-map';
 
 module.exports = {
-    eslint: {
-        failOnError: isProduction
-    },
     entry: './src/index.js',
     output: {
         library: ['tui', 'Calendar'],
@@ -56,33 +53,72 @@ module.exports = {
         }
     },
     module: {
-        loaders: [{
+        rules: [{
             test: /\.hbs$/,
-            loader: 'handlebars-template'
+            use: 'handlebars-template-loader'
         }, {
             test: /\.styl$/,
-            loader: stylusLoader
+            use: [
+                MiniCssExtractPlugin.loader,
+                preprocessLoader,
+                {
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                },
+                {
+                    loader: 'stylus-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                }
+            ]
         }, {
             test: /\.js$/,
-            loader: jsLoader,
+            use: [
+                preprocessLoader,
+                {
+                    loader: 'eslint-loader',
+                    options: {
+                        failOnError: isProduction,
+                        cache: !isProduction
+                    }
+                }
+            ],
             exclude: /node_modules|bower_components/
         }, {
-            test: /\.css$/,
-            loader: stylusLoader,
-            include: path.join(__dirname, 'src/css/main.styl')
+            test: /\.(gif|png|jpe?g)$/,
+            use: 'url-loader'
         }]
-    },
-    stylus: {
-        define: {
-            url: stylus.url({paths: [path.join(__dirname, 'src/css/image')]})
-        }
     },
     devtool,
     plugins: [
-        new ExtractTextPlugin(FILENAME + '.css'),
-        new webpack.BannerPlugin(BANNER, {entryOnly: true}),
+        new MiniCssExtractPlugin({
+            filename: FILENAME + '.css'
+        }),
+        new webpack.BannerPlugin({
+            banner: BANNER,
+            entryOnly: true
+        }),
         new SafeUmdPlugin()
     ],
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
+                sourceMap: true
+            }),
+            new OptimizaeCSSAssetsPlugin({
+                cssProcessorOptions: {
+                    map: {
+                        inline: false
+                    }
+                }
+            })
+        ]
+    },
     devServer: {
         historyApiFallback: false,
         progress: true,
