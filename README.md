@@ -186,6 +186,22 @@ var calendar = new Calendar('#calendar', {
 });
 ```
 
+Or you can use jquery plugin. You must include jquery before using this jquery plugin.
+
+```js
+$('#calendar').tuiCalendar({
+  defaultView: 'month',
+  taskView: true,
+  template: {
+    monthGridHeader: function(model) {
+      var date = new Date(model.date);
+      var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
+      return template;
+    }
+  }
+});
+```
+
 ## 🔧 Pull Request Steps
 
 TOAST UI products are open source, so you can create a pull request(PR) after you fix issues.
