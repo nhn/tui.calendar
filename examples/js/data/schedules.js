@@ -127,6 +127,8 @@ function generateSchedule(viewName, renderStart, renderEnd) {
             length = 15;
         } else if (viewName === 'day') {
             length = 4;
+        } else {
+            length = 0;
         }
         for (; i < length; i += 1) {
             generateRandomSchedule(calendar, renderStart, renderEnd);

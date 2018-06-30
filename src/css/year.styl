@@ -1,0 +1,30 @@
+.{css-prefix}year
+    height: 100%
+    display: flex
+    flex-wrap: wrap
+    font-size: 16px;
+    
+    .{css-prefix}month-container
+      width: 25%
+      padding: 10px
+      box-sizing: border-box
+
+      h2
+        margin: 0
+        height: 1em
+        font-size: 1em
+        cursor: pointer
+      
+      .{css-prefix}month
+        height: 250px;
+
+@media only screen and (max-width: 1200px) 
+  .{css-prefix}year
+      .{css-prefix}month-container
+        width: 33%
+
+@media only screen and (max-width: 900px) 
+  .{css-prefix}year
+      .{css-prefix}month-container
+        width: 50%
+    

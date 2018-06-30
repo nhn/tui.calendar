@@ -3,5 +3,10 @@
     "globals": {
         "chance": true,
         "moment": true
+    },
+    "rules": {
+        "linebreak-style": "off",
+        "complexity": "off",
+        "no-console": "off"
     }
 }
