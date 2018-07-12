@@ -400,6 +400,10 @@ Calendar.prototype._initialize = function(options) {
         }
     });
 
+    util.forEach(this._options.calendars || [], function(calendar) {
+        this.setCalendarColor(calendar.id, calendar, true);
+    }, this);
+
     // set by primary timezone
     if (timezones.length) {
         timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
@@ -909,7 +913,7 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
         model.borderColor = ownColor.borderColor;
     });
 
-    if (silent) {
+    if (!silent) {
         this.render();
     }
 };
