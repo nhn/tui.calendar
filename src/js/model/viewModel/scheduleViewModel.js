@@ -5,6 +5,9 @@
 'use strict';
 
 var util = require('tui-code-snippet');
+var datetime = require('../../common/datetime');
+
+var MILLISECONDS_SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
  * Schedule ViewModel
@@ -178,6 +181,10 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     if ((start > ownStarts && start < ownEnds) ||
         (end > ownStarts && end < ownEnds) ||
         (start <= ownStarts && end >= ownEnds)) {
+        return true;
+    }
+
+    if (Math.abs(start - ownStarts) < MILLISECONDS_SCHEDULE_MIN_DURATION) {
         return true;
     }
 
