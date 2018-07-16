@@ -137,6 +137,12 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
     this._dragStartEventData = this._getEventData(mouseDownEvent);
 
     this._toggleDragEvent(true);
+
+    // EventTarget.target is not changed in mousemove event even if mouse is over the other element.
+    // It's different with other browsers(IE, Chrome, Safari)
+    if (util.browser.firefox) {
+        domevent.preventDefault(mouseDownEvent);
+    }
 };
 
 /**
