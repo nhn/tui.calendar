@@ -129,6 +129,9 @@ Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
                     return;
                 }
 
+                // check that this schedule block is not visible after rendered.
+                viewModel.hidden = true;
+
                 period = datetime.range(
                     viewModel.getStarts(),
                     viewModel.getEnds(),

@@ -273,7 +273,7 @@ Month.prototype._invokeAfterRenderSchedule = function(matrices) {
     util.forEachArray(matrices, function(matrix) {
         util.forEachArray(matrix, function(column) {
             util.forEachArray(column, function(scheduleViewModel) {
-                if (scheduleViewModel) {
+                if (scheduleViewModel && !scheduleViewModel.hidden) {
                     /**
                      * @event Month#afterRenderSchedule
                      */
