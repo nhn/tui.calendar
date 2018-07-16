@@ -252,9 +252,9 @@
             bgColor: calendar.bgColor,
             dragBgColor: calendar.bgColor,
             borderColor: calendar.borderColor,
+            location: scheduleData.location,
             raw: {
-                'class': scheduleData.raw['class'],
-                location: scheduleData.raw.location
+                class: scheduleData.raw['class']
             },
             state: scheduleData.state
         };
