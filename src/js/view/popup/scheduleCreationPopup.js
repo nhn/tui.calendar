@@ -157,7 +157,7 @@ ScheduleCreationPopup.prototype._openDropdownMenuView = function(dropdown) {
 /**
  * If click dropdown menu item, close dropdown menu
  * @param {HTMLElement} target click event target
- * @returns {boolean} whether 
+ * @returns {boolean} whether
  */
 ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
     var itemClassName = config.classname('dropdown-menu-item');
@@ -287,9 +287,9 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
             schedule: {
                 calendarId: calendarId,
                 title: title.value,
+                location: location.value,
                 raw: {
-                    class: isPrivate ? 'private' : 'public',
-                    location: location.value
+                    class: isPrivate ? 'private' : 'public'
                 },
                 start: start,
                 end: end,
@@ -312,9 +312,9 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
         this.fire('beforeCreateSchedule', {
             calendarId: calendarId,
             title: title.value,
+            location: location.value,
             raw: {
-                class: isPrivate ? 'private' : 'public',
-                location: location.value
+                class: isPrivate ? 'private' : 'public'
             },
             start: new TZDate(startDate),
             end: new TZDate(endDate),
@@ -378,7 +378,7 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     var id = schedule.id;
     title = schedule.title;
     isPrivate = raw['class'] === 'private';
-    location = raw.location;
+    location = schedule.location;
     startDate = schedule.start;
     endDate = schedule.end;
     isAllDay = schedule.isAllDay;
@@ -402,8 +402,7 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         start: startDate,
         end: endDate,
         raw: {
-            location: location,
-            'class': isPrivate ? 'private' : 'public'
+            class: isPrivate ? 'private' : 'public'
         },
         zIndex: this.layer.zIndex + 5,
         isEditMode: this._isEditMode

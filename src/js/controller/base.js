@@ -189,6 +189,14 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('isFocused', options.isFocused);
     }
 
+    if (options.location) {
+        schedule.set('location', options.location);
+    }
+
+    if (options.state) {
+        schedule.set('state', options.state);
+    }
+
     this._removeFromMatrix(schedule);
     this._addToMatrix(schedule);
 
@@ -363,7 +371,7 @@ Base.prototype.setTheme = function(theme) {
  * @property {string|number} id - calendar id
  * @property {string} name - calendar name
  * @property {string} color - text color when schedule is displayed
- * @property {string} bgColor - background color schedule is displayed 
+ * @property {string} bgColor - background color schedule is displayed
  * @property {string} borderColor - color of left border or bullet point when schedule is displayed
  * @property {boolean} [checked] - whether to show calendar's schedules or not
  */
