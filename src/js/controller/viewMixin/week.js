@@ -11,6 +11,8 @@ var Collection = require('../../common/collection');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 
+var MILLISECONDS_SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
+
 /**
  * @mixin Base.Week
  */
@@ -115,7 +117,13 @@ var Week = {
                     }
 
                     startTime = viewModel.getStarts().getTime();
-                    endTime = viewModel.getEnds().getTime() - 1;
+                    endTime = viewModel.getEnds().getTime();
+
+                    if (Math.abs(endTime - startTime) < MILLISECONDS_SCHEDULE_MIN_DURATION) {
+                        endTime += MILLISECONDS_SCHEDULE_MIN_DURATION;
+                    }
+
+                    endTime -= 1;
 
                     for (i = (col + 1); i < maxRowLength; i += 1) {
                         hasCollide = Week.hasCollide(binaryMap[i - 1], startTime, endTime);
