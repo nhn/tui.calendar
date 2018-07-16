@@ -104,6 +104,7 @@ ScheduleCreationPopup.prototype._closePopup = function(target) {
 
     if (domutil.hasClass(target, className) || domutil.closest(target, '.' + className)) {
         this.hide();
+        domutil.find(config.classname('.screen')).style.display = 'none';// hide screen
 
         return true;
     }

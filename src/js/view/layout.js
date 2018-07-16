@@ -18,6 +18,11 @@ var View = require('./view');
  * @param {Theme} theme - theme instance
  */
 function Layout(container, theme) {
+    domutil.appendHTMLElement('div', container, config.classname('screen')).addEventListener('click', function() {
+        domutil.find(config.classname('.screen'), container.parentNode).style.display = 'none';// disappear when clicked 
+
+        return false;
+    });
     container = domutil.appendHTMLElement('div', container, config.classname('layout'));
 
     /**

@@ -987,6 +987,7 @@ Calendar.prototype._onBeforeCreate = function(createScheduleData) {
     if (this._options.useCreationPopup && !createScheduleData.useCreationPopup) {
         if (this._showCreationPopup) {
             this._showCreationPopup(createScheduleData);
+            document.getElementsByClassName(config.classname('screen'))[0].style.display = 'block';// show screen 
 
             return;
         }
