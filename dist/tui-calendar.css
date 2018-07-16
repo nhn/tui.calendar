@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.4.0 | Fri Jun 29 2018
+ * @version 1.5.0 | Mon Jul 16 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -56,20 +56,20 @@
 .handle-x {
   background-position: center center;
   background-repeat: no-repeat;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAECAMAAACEE47CAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMrQJG5H4EIAAAAEUlEQVR4AWNgYoRABhjEFAEAArQAIcHQcPsAAAAASUVORK5CYII=");
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAECAMAAACEE47CAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMrQJG5H4EIAAAAEUlEQVR4AWNgYoRABhjEFAEAArQAIcHQcPsAAAAASUVORK5CYII=);
 }
 .handle-y {
   background-position: center center;
   background-repeat: no-repeat;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAICAMAAADp7a43AAAACVBMVEX///////////+OSuX+AAAAA3RSTlMrQJG5H4EIAAAAEUlEQVR4AWNgYmRiZABB/CwAAtgAIUTUNkMAAAAASUVORK5CYII=");
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAICAMAAADp7a43AAAACVBMVEX///////////+OSuX+AAAAA3RSTlMrQJG5H4EIAAAAEUlEQVR4AWNgYmRiZABB/CwAAtgAIUTUNkMAAAAASUVORK5CYII=);
 }
 @media only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-devicepixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx) {
   .handle-x {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAMAAADHqI+lAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMZK5EY+QKaAAAAGUlEQVR4AWNgYmJAwegCIMDIiIwxBKhhBgAcSABh8gN42gAAAABJRU5ErkJggg==");
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAMAAADHqI+lAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMZK5EY+QKaAAAAGUlEQVR4AWNgYmJAwegCIMDIiIwxBKhhBgAcSABh8gN42gAAAABJRU5ErkJggg==);
     background-size: 8px 4px;
   }
   .handle-y {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAQCAMAAAAcVM5PAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMEK5EMBzK5AAAAGElEQVR4AWNgYmIAYxgDBBgZQRjOoKcaABzQAGGjsIM/AAAAAElFTkSuQmCC");
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAQCAMAAAAcVM5PAAAACVBMVEX///////////+OSuX+AAAAA3RSTlMEK5EMBzK5AAAAGElEQVR4AWNgYmIAYxgDBBgZQRjOoKcaABzQAGGjsIM/AAAAAElFTkSuQmCC);
     background-size: 4px 8px;
   }
 }
@@ -672,7 +672,7 @@
   margin-left: 4px;
 }
 .tui-full-calendar-section-private.tui-full-calendar-public .tui-full-calendar-ic-private {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKdJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDq4TmREaGvofhJHFcLHhfgwLC9sKNNULl0KQODCgtq1atcobxIY7lZAmkGJkNXCNIAlSwIjSCApqIgJnK0wNALoOPwSpOcq0AAAAAElFTkSuQmCC") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKdJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDq4TmREaGvofhJHFcLHhfgwLC9sKNNULl0KQODCgtq1atcobxIY7lZAmkGJkNXCNIAlSwIjSCApqIgJnK0wNALoOPwSpOcq0AAAAAElFTkSuQmCC) no-repeat;
 }
 .tui-full-calendar-section-start-date,
 .tui-full-calendar-section-end-date {
@@ -783,11 +783,11 @@
   top: -1;
 }
 .tui-full-calendar-dropdown-arrow {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAHlJREFUKBVjYBgFOEOAEVkmPDxc89+/f6eAYjzI4kD2FyYmJrOVK1deh4kzwRggGiQBVJCELAZig8SQNYHEmEEEMrh69eo1HR0dfqCYJUickZGxf9WqVf3IakBsFBthklpaWmVA9mEQhrJhUoTp0NBQCRAmrHL4qgAAuu4cWZOZIGsAAAAASUVORK5CYII=") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAHlJREFUKBVjYBgFOEOAEVkmPDxc89+/f6eAYjzI4kD2FyYmJrOVK1deh4kzwRggGiQBVJCELAZig8SQNYHEmEEEMrh69eo1HR0dfqCYJUickZGxf9WqVf3IakBsFBthklpaWmVA9mEQhrJhUoTp0NBQCRAmrHL4qgAAuu4cWZOZIGsAAAAASUVORK5CYII=) no-repeat;
 }
 .dropdown.open .tui-full-calendar-dropdown-arrow,
 .tui-full-calendar-open .tui-full-calendar-dropdown-arrow {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIFJREFUKBVjYBj+gBmXF2NiYiTV1dV5rl279gWbGiZsgg0NDSw/f/5cCZRbBWJjU4PVRjExsR6g4nAgln/z5g3v1atXd6JrxtAYHh4e+v///z4khZa6urrXgJqvIYkxMCJzgJo0//37dwooxoMsDmR/YWJiMlu5cuV1NPFRLrYQAADMVCaUtbG7XwAAAABJRU5ErkJggg==") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIFJREFUKBVjYBj+gBmXF2NiYiTV1dV5rl279gWbGiZsgg0NDSw/f/5cCZRbBWJjU4PVRjExsR6g4nAgln/z5g3v1atXd6JrxtAYHh4e+v///z4khZa6urrXgJqvIYkxMCJzgJo0//37dwooxoMsDmR/YWJiMlu5cuV1NPFRLrYQAADMVCaUtbG7XwAAAABJRU5ErkJggg==) no-repeat;
 }
 .tui-full-calendar-dropdown-menu {
   position: absolute;
@@ -970,11 +970,11 @@ input[type='checkbox'].tui-full-calendar-checkbox-square + span {
   margin-right: 8px;
   width: 14px;
   height: 14px;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAADpJREFUKBVjPHfu3O5///65MJAAmJiY9jCcOXPmP6kApIeJBItQlI5qRAkOVM5o4KCGBwqPkcxEvhsAbzRE+Jhb9IwAAAAASUVORK5CYII=") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAADpJREFUKBVjPHfu3O5///65MJAAmJiY9jCcOXPmP6kApIeJBItQlI5qRAkOVM5o4KCGBwqPkcxEvhsAbzRE+Jhb9IwAAAAASUVORK5CYII=) no-repeat;
   vertical-align: middle;
 }
 input[type='checkbox'].tui-full-calendar-checkbox-square:checked + span {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAMBJREFUKBWVkjEOwjAMRe2WgZW7IIHEDdhghhuwcQ42rlJugAQS54Cxa5cq1QM5TUpByZfS2j9+dlJVt/tX5ZxbS4ZU9VLkQvSHKTIGRaVJYFmKrBbTCJxE2UgCdDzMZDkHrOV6b95V0US6UmgKodujEZbJg0B0ZgEModO5lrY1TMQf1TpyJGBEjD+E2NPN7ukIUDiF/BfEXgRiGEw8NgkffYGYwCi808fpn/6OvfUfsDr/Vc1IfRf8sKnFVqeiVQfDu0tf/nWH9gAAAABJRU5ErkJggg==") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAMBJREFUKBWVkjEOwjAMRe2WgZW7IIHEDdhghhuwcQ42rlJugAQS54Cxa5cq1QM5TUpByZfS2j9+dlJVt/tX5ZxbS4ZU9VLkQvSHKTIGRaVJYFmKrBbTCJxE2UgCdDzMZDkHrOV6b95V0US6UmgKodujEZbJg0B0ZgEModO5lrY1TMQf1TpyJGBEjD+E2NPN7ukIUDiF/BfEXgRiGEw8NgkffYGYwCi808fpn/6OvfUfsDr/Vc1IfRf8sKnFVqeiVQfDu0tf/nWH9gAAAABJRU5ErkJggg==) no-repeat;
 }
 input[type='checkbox'].tui-full-calendar-checkbox-round {
   display: none;
@@ -1046,7 +1046,7 @@ input[type='checkbox'].tui-full-calendar-checkbox-round + span {
   display: none;
   width: 16px;
   height: 16px;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC") no-repeat 16px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC) no-repeat 16px;
 }
 .tui-full-calendar-popup-detail .tui-full-calendar-schedule-private .tui-full-calendar-ic-private {
   display: block;
@@ -1096,46 +1096,47 @@ input[type='checkbox'].tui-full-calendar-checkbox-round + span {
   vertical-align: middle;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-title {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAO5JREFUKBVjYCATMOLSFxkZqfHnz5+1QHktNDVbV69e7cOCJgjmQjXtB3IksMh7g8SY0CXQNTEyMlYD1fBCabhyFI3omkCq/v//PwnotC8gGq4LyIBrxKYJpBBoU15oaCgPiEbWCPYjUEIFGBBY/QS0qRWooRVIg/UBDXgMYoBtBHJSgWxsAQFWjET8BBqQBuLDNM4Can6GpAAb8ydQMADo3x0gSbDGlStX3gVqdMSjGUUTSCNKAggPD1cDOmU/EEuBJKEAQxNIHEUjSABNM1ZNIHXMIAIZXL169a2+vv5moK18QKeXAv20B1meYjYAr7xrljpOzc0AAAAASUVORK5CYII=") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAO5JREFUKBVjYCATMOLSFxkZqfHnz5+1QHktNDVbV69e7cOCJgjmQjXtB3IksMh7g8SY0CXQNTEyMlYD1fBCabhyFI3omkCq/v//PwnotC8gGq4LyIBrxKYJpBBoU15oaCgPiEbWCPYjUEIFGBBY/QS0qRWooRVIg/UBDXgMYoBtBHJSgWxsAQFWjET8BBqQBuLDNM4Can6GpAAb8ydQMADo3x0gSbDGlStX3gVqdMSjGUUTSCNKAggPD1cDOmU/EEuBJKEAQxNIHEUjSABNM1ZNIHXMIAIZXL169a2+vv5moK18QKeXAv20B1meYjYAr7xrljpOzc0AAAAASUVORK5CYII=) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-location {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAR1JREFUKBWdUTtPg1AUBiT8CydHJtv/0MTJRWAgcTK1bq0/pO3k4E4IYLo2Me46tS4wumjSpV07kAb6HXLPzaGPRZLL+c73uE/D+OdnHuaCIOhVVTUEf620pWVZ0yRJ3qW3FfR9f1zX9UgaGJumOUnT9Fn3DDzPuwPOuD9TvSzL3kizhOFJ4LnjOJc0wM0FP2Asgx0mEehHUfRHgzDzqF3GOogzbJg8V6XHFqYv4Cvqy7J8DcOwWYmw8Hwy1kHMRjcaKuEGgV82caWbZay3indagJyxcKLOlKeRdJA627YfUVaN0v6tlKbZVjCO4zW2cw91px3AxJEmOONCNoTzPP9xXZfOd6u0Bzz60RGOgmQuiuIb4S3gB0IvaoJW2QMDs1bBoH1CAQAAAABJRU5ErkJggg==") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAR1JREFUKBWdUTtPg1AUBiT8CydHJtv/0MTJRWAgcTK1bq0/pO3k4E4IYLo2Me46tS4wumjSpV07kAb6HXLPzaGPRZLL+c73uE/D+OdnHuaCIOhVVTUEf620pWVZ0yRJ3qW3FfR9f1zX9UgaGJumOUnT9Fn3DDzPuwPOuD9TvSzL3kizhOFJ4LnjOJc0wM0FP2Asgx0mEehHUfRHgzDzqF3GOogzbJg8V6XHFqYv4Cvqy7J8DcOwWYmw8Hwy1kHMRjcaKuEGgV82caWbZay3indagJyxcKLOlKeRdJA627YfUVaN0v6tlKbZVjCO4zW2cw91px3AxJEmOONCNoTzPP9xXZfOd6u0Bzz60RGOgmQuiuIb4S3gB0IvaoJW2QMDs1bBoH1CAQAAAABJRU5ErkJggg==) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-date {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAGpJREFUKBVjYKAGCA0N/Q/C6GZhE2cEKQoLC9v6//9/L3QN2PiMjIzbVq1a5c0EkiRWE7JasEZsJhMSI1sjC7LJq1evBvsZWQyZjRxwZNs4hDSiBA6y55EDBRsb7EdQasAmiUNsKw5x4oQBkUAeDPJ53KsAAAAASUVORK5CYII=") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAGpJREFUKBVjYKAGCA0N/Q/C6GZhE2cEKQoLC9v6//9/L3QN2PiMjIzbVq1a5c0EkiRWE7JasEZsJhMSI1sjC7LJq1evBvsZWQyZjRxwZNs4hDSiBA6y55EDBRsb7EdQasAmiUNsKw5x4oQBkUAeDPJ53KsAAAAASUVORK5CYII=) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-state {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIxJREFUKBVjYCATMKLrCw8P9/z3798soLgMVO4JExNT2sqVK7cjq2VC5oDYME2MjIyNIAwUkoGKoShlQeFBOGCbVq1a1QDihoaG1gMpmO0gITAAOzUsLGzr////vWCC+GigK7YBDfUGO5VYTSADYWox/IjPNmS5UY3IoYHGBgcOKG7QxPFxt+KTJCgHAGcZJbGLRuJ2AAAAAElFTkSuQmCC") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIxJREFUKBVjYCATMKLrCw8P9/z3798soLgMVO4JExNT2sqVK7cjq2VC5oDYME2MjIyNIAwUkoGKoShlQeFBOGCbVq1a1QDihoaG1gMpmO0gITAAOzUsLGzr////vWCC+GigK7YBDfUGO5VYTSADYWox/IjPNmS5UY3IoYHGBgcOKG7QxPFxt+KTJCgHAGcZJbGLRuJ2AAAAAElFTkSuQmCC) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-private {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKpJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDqYTRSNQUBIkgewkJDZYDqYR7sewsLCtQFO9YBLYaGBAbVu1apU3SA5uIyFNIMXIauAaQRKkgBGlERTURATOVpgaABRQQOK46wEAAAAAAElFTkSuQmCC) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-public {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKdJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDq4TmREaGvofhJHFcLHhfgwLC9sKNNULl0KQODCgtq1atcobxIY7lZAmkGJkNXCNIAlSwIjSCApqIgJnK0wNALoOPwSpOcq0AAAAAElFTkSuQmCC") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAKdJREFUKBVjYCATMKLri46Olvn9+3fX////HUByjIyMB1hZWcuWLl36BFktikaQpl+/fl0EKhBCVgRkv2NjY9NH1syErABkE1TTdqBCWRAG8reDxKBycOUoGmHOA2pIA5kOwiA2SDVMDq4TmREaGvofhJHFcLHhfgwLC9sKNNULl0KQODCgtq1atcobxIY7lZAmkGJkNXCNIAlSwIjSCApqIgJnK0wNALoOPwSpOcq0AAAAAElFTkSuQmCC) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-close {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAJRJREFUKBXFkNERhCAMREUbuEKohzq0Eq2DDq6Da4B60KezDORkxj+ZwchmX0IYhtdWCGFl9y5g82NtzDnPdzAaudo76ZBS+nrvPxiInMkJcs5tMcZFfqcfxdqIRiELof+BiIJPg+mExmpmvKRn3zKj7OrG9Y79szPL14A1xEP0Hgy4gBZS5R7czHj3ehSgOzkVeyfuGrBw/WLm0hsAAAAASUVORK5CYII=") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAJRJREFUKBXFkNERhCAMREUbuEKohzq0Eq2DDq6Da4B60KezDORkxj+ZwchmX0IYhtdWCGFl9y5g82NtzDnPdzAaudo76ZBS+nrvPxiInMkJcs5tMcZFfqcfxdqIRiELof+BiIJPg+mExmpmvKRn3zKj7OrG9Y79szPL14A1xEP0Hgy4gBZS5R7czHj3ehSgOzkVeyfuGrBw/WLm0hsAAAAASUVORK5CYII=) no-repeat;
 }
 .tui-full-calendar-ic-location-b {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAOZJREFUKBWVUT0KwjAUbkzGTuJWPYNDpV0cXD2ETuIRBK+gs4ubp3BwcXBp6eINBKWDgydoid9X8oKCggYeee/7S9IGwZ9LverTNO3Wdb2y1o6IK6WOWutFlmU30XmDE58hbgvpTA+Y+mJqCemS20jdG2N6LPYMICc6b5BrIG3ONBZ7CoVj7w0cfllGRDj+gKQpjt/iPU0ye/LkROcNANaoCUzjqqquIsBuHddAWoiyLO9RFHUwJ4JxR/qmKIqdYG9vCMNwCeIiJHuHecj/B0GSJBng7ifO+ErDPM8L4b7ucRzPWJ8ET1E7YC7tmi9qAAAAAElFTkSuQmCC");
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAOZJREFUKBWVUT0KwjAUbkzGTuJWPYNDpV0cXD2ETuIRBK+gs4ubp3BwcXBp6eINBKWDgydoid9X8oKCggYeee/7S9IGwZ9LverTNO3Wdb2y1o6IK6WOWutFlmU30XmDE58hbgvpTA+Y+mJqCemS20jdG2N6LPYMICc6b5BrIG3ONBZ7CoVj7w0cfllGRDj+gKQpjt/iPU0ye/LkROcNANaoCUzjqqquIsBuHddAWoiyLO9RFHUwJ4JxR/qmKIqdYG9vCMNwCeIiJHuHecj/B0GSJBng7ifO+ErDPM8L4b7ucRzPWJ8ET1E7YC7tmi9qAAAAAElFTkSuQmCC);
 }
 .tui-full-calendar-ic-state-b {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAHlJREFUKBVjYCARMCKrNzEx8QTyZ/3//18GJM7IyPgESKWdOXNmO4gPAkwQCk6CFQMVNoIwVOMsuCw6w9jY+D8Iw8TR+SBxsJOATtkKNM0LphAbDbRxG9Bp3mAnEVIMMgCmBt0P2AxHERusGkAhgOJQ7Jyt2IUJiAIAwwIn24FgmhkAAAAASUVORK5CYII=");
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAHlJREFUKBVjYCARMCKrNzEx8QTyZ/3//18GJM7IyPgESKWdOXNmO4gPAkwQCk6CFQMVNoIwVOMsuCw6w9jY+D8Iw8TR+SBxsJOATtkKNM0LphAbDbRxG9Bp3mAnEVIMMgCmBt0P2AxHERusGkAhgOJQ7Jyt2IUJiAIAwwIn24FgmhkAAAAASUVORK5CYII=);
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-user-b {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAJpJREFUKBVjYKA1YES3wMTExBMoNgsqnnbmzJntyGqYkDlQ9qz////LgDCQD9MIV4ZNA1wSGwObhjRGRsYnIAzUkIZNE0licE+bm5tr/fnzJx1osjPQBFmoKY+BftnLwsIy8+TJk9dAYmANxsbGoUD2YiBmBwliAT+BYrFnz55dDfNDO1AAl2KQfpAcSA0DTIMyiEMAEKMG0wgAolIjcM7Tjm8AAAAASUVORK5CYII=");
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAJpJREFUKBVjYKA1YES3wMTExBMoNgsqnnbmzJntyGqYkDlQ9qz////LgDCQD9MIV4ZNA1wSGwObhjRGRsYnIAzUkIZNE0licE+bm5tr/fnzJx1osjPQBFmoKY+BftnLwsIy8+TJk9dAYmANxsbGoUD2YiBmBwliAT+BYrFnz55dDfNDO1AAl2KQfpAcSA0DTIMyiEMAEKMG0wgAolIjcM7Tjm8AAAAASUVORK5CYII=);
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-edit {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAMdJREFUKBVjYCARMOJTb2xsLMfIyBjLysq64Pjx409BapnwaQDKzf7//3/L79+/D1tbW0uB1LJg02BmZqYIVPgdKBf/79+//UC2xs+fP8OB/H4MG0CK//79ewCkEGQYExOTI5DawMnJuQTER/EDTDFQXA4kCQQ3QBpOnz79AsJF8gMWxTA1KDTYBhyKMUwH6WSysrKSB7kZyIY5AySOVTFIggno+5VAmijFYA1AwhzEgAKcJsMUwIMVGKPH2NnZ7ZFDBKYImQYAuO5YIMgk39gAAAAASUVORK5CYII=");
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAMdJREFUKBVjYCARMOJTb2xsLMfIyBjLysq64Pjx409BapnwaQDKzf7//3/L79+/D1tbW0uB1LJg02BmZqYIVPgdKBf/79+//UC2xs+fP8OB/H4MG0CK//79ewCkEGQYExOTI5DawMnJuQTER/EDTDFQXA4kCQQ3QBpOnz79AsJF8gMWxTA1KDTYBhyKMUwH6WSysrKSB7kZyIY5AySOVTFIggno+5VAmijFYA1AwhzEgAKcJsMUwIMVGKPH2NnZ7ZFDBKYImQYAuO5YIMgk39gAAAAASUVORK5CYII=);
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-delete {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAFhJREFUKBVjYCARMKKrNzEx2fr//38vkDgjI+O2M2fOeCOrAWtAVoQsicyGaWZCFsTHBtr6H588Tjm4H4yNjfGacPbsWbBaop0Es3JYaQBFDMxjWOitMDEA3EEZfFEISwUAAAAASUVORK5CYII=");
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAFhJREFUKBVjYCARMKKrNzEx2fr//38vkDgjI+O2M2fOeCOrAWtAVoQsicyGaWZCFsTHBtr6H588Tjm4H4yNjfGacPbsWbBaop0Es3JYaQBFDMxjWOitMDEA3EEZfFEISwUAAAAASUVORK5CYII=);
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-arrow-solid-top {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIFJREFUKBVjYBj+gBmXF2NiYiTV1dV5rl279gWbGiZsgg0NDSw/f/5cCZRbBWJjU4PVRjExsR6g4nAgln/z5g3v1atXd6JrxtAYHh4e+v///z4khZa6urrXgJqvIYkxMCJzgJo0//37dwooxoMsDmR/YWJiMlu5cuV1NPFRLrYQAADMVCaUtbG7XwAAAABJRU5ErkJggg==") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAIFJREFUKBVjYBj+gBmXF2NiYiTV1dV5rl279gWbGiZsgg0NDSw/f/5cCZRbBWJjU4PVRjExsR6g4nAgln/z5g3v1atXd6JrxtAYHh4e+v///z4khZa6urrXgJqvIYkxMCJzgJo0//37dwooxoMsDmR/YWJiMlu5cuV1NPFRLrYQAADMVCaUtbG7XwAAAABJRU5ErkJggg==) no-repeat;
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-milestone {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAGFJREFUKBVjYCARMILU/3dw+I+hj5FxG+P+/d7o4rg1IKtE0syELI6T/f+/F0yOOA0w1UCa9hpYkGxjYDxwABwIILH/jo5bGWBuZ2TcClOHogEmCKKxBSlInPZ+ANlCEgAA37EU4AHbBQUAAAAASUVORK5CYII=") no-repeat;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAGFJREFUKBVjYCARMILU/3dw+I+hj5FxG+P+/d7o4rg1IKtE0syELI6T/f+/F0yOOA0w1UCa9hpYkGxjYDxwABwIILH/jo5bGWBuZ2TcClOHogEmCKKxBSlInPZ+ANlCEgAA37EU4AHbBQUAAAAASUVORK5CYII=) no-repeat;
 }
 /*# sourceMappingURL=src/css/main.css.map */
+
 /*# sourceMappingURL=tui-calendar.css.map*/
