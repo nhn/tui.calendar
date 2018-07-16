@@ -245,7 +245,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             eventData.calendar = common.find(baseController.calendars, function(calendar) {
                 return calendar.id === scheduleId;
             });
-
+            domutil.find(config.classname('.screen')).style.display = 'block';// show screen
             detailView.render(eventData);
         };
         onDeleteSchedule = function(eventData) {
