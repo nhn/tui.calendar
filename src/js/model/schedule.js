@@ -164,6 +164,12 @@ function Schedule() {
     this.recurrenceRule = '';
 
     /**
+     * state. 'Busy' is default.
+     * @type {string}
+     */
+    this.state = '';
+
+    /**
      * Separate data storage space independent of rendering.
      * @type {object}
      */
