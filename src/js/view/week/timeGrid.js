@@ -138,7 +138,8 @@ function TimeGrid(name, options, panelElement) {
         renderEndDate: '',
         hourStart: 0,
         hourEnd: 24,
-        timezones: options.timezones
+        timezones: options.timezones,
+        isReadOnly: options.isReadOnly
     }, options.week);
 
     if (this.options.timezones.length < 1) {
@@ -394,6 +395,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
             isToday: isToday,
             isPending: options.isPending,
             isFocused: options.isFocused,
+            isReadOnly: options.isReadOnly,
             hourStart: options.hourStart,
             hourEnd: options.hourEnd
         };

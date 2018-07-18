@@ -19,7 +19,7 @@
                 {{/if}}
             {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-schedule-title" title="{{model.title}}">{{{schedule-tmpl model}}}</span>
-            {{#unless model.isReadOnly}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y" style="line-height:{{@root.scheduleHeight}}px;">&nbsp;</span>{{/unless}}
+            {{#unless (or @root.isReadOnly model.isReadOnly)}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y" style="line-height:{{@root.scheduleHeight}}px;">&nbsp;</span>{{/unless}}
         </div>
     </div>
     {{/if ~}}
