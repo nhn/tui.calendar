@@ -39,7 +39,8 @@ function Time(options, container, theme) {
         hourStart: 0,
         hourEnd: 24,
         defaultMarginBottom: 2,
-        minHeight: 18.5
+        minHeight: 18.5,
+        isReadOnly: false
     }, options);
 
     this.timeTmpl = timeTmpl;
@@ -110,7 +111,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
         cropped = true;
     }
 
-    if (isReadOnly) {
+    if (isReadOnly || options.isReadOnly) {
         cropped = true;
     }
 
@@ -134,6 +135,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
+        isReadOnly = options.isReadOnly,
         todayStart,
         baseMS;
 
@@ -177,7 +179,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     baseLeft: leftPercents,
                     baseWidth: widthPercent,
                     baseHeight: containerHeight,
-                    columnIndex: col
+                    columnIndex: col,
+                    isReadOnly: isReadOnly
                 });
 
                 util.extend(viewModel, viewBound);

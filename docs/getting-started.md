@@ -393,3 +393,12 @@ cal.on({
     }
 });
 ```
+
+### Read-Only Calendar
+You can make a calendar read-only. A user can't create and modify schedules, but only can be created and modified by API.
+
+```js
+var cal = new Calendar('#calendar', {
+    isReadOnly: true
+});
+```

@@ -28,6 +28,10 @@ var mmin = Math.min;
  */
 function Month(options, container, controller) {
     var theme = controller ? controller.theme : null;
+    var monthOption;
+
+    options = options || {};
+    monthOption = options ? options.month : {};
 
     View.call(this, container);
 
@@ -59,6 +63,7 @@ function Month(options, container, controller) {
         narrowWeekend: false,
         visibleWeeksCount: null,
         isAlways6Week: true,
+        isReadOnly: options.isReadOnly,
         grid: {
             header: {
                 height: 34
@@ -67,14 +72,14 @@ function Month(options, container, controller) {
                 height: 3
             }
         }
-    }, options);
+    }, monthOption);
 
     this.options.grid.header = util.extend({
         height: 34
-    }, util.pick(options, 'grid', 'header'));
+    }, util.pick(monthOption, 'grid', 'header'));
     this.options.grid.footer = util.extend({
         height: 3
-    }, util.pick(options, 'grid', 'footer'));
+    }, util.pick(monthOption, 'grid', 'footer'));
 
     /**
      * horizontal grid information
@@ -143,6 +148,7 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     var visibleWeeksCount = opt.visibleWeeksCount;
     var visibleScheduleCount = opt.visibleScheduleCount;
     var gridOption = opt.grid;
+    var isReadOnly = opt.isReadOnly;
 
     container.innerHTML = '';
     this.children.clear();
@@ -167,7 +173,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
             visibleScheduleCount: visibleScheduleCount,
             grid: gridOption,
             scheduleHeight: parseInt(theme.month.schedule.height, 10),
-            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10)
+            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10),
+            isReadOnly: isReadOnly
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);

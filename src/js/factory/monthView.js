@@ -58,14 +58,16 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
 
-    monthView = new Month(options.month, monthViewContainer, baseController.Month);
+    monthView = new Month(options, monthViewContainer, baseController.Month);
     moreView = new More(options.month, layoutContainer, baseController.theme);
 
     // handlers
     clickHandler = new MonthClick(dragHandler, monthView, baseController);
-    creationHandler = new MonthCreation(dragHandler, monthView, baseController, options);
-    resizeHandler = new MonthResize(dragHandler, monthView, baseController);
-    moveHandler = new MonthMove(dragHandler, monthView, baseController);
+    if (!options.isReadOnly) {
+        creationHandler = new MonthCreation(dragHandler, monthView, baseController, options);
+        resizeHandler = new MonthResize(dragHandler, monthView, baseController);
+        moveHandler = new MonthMove(dragHandler, monthView, baseController);
+    }
 
     clearSchedulesHandler = function() {
         if (moreView) {
@@ -127,10 +129,16 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
                 return calendar.id === scheduleId;
             });
 
+            if (options.isReadOnly) {
+                eventData.schedule = util.extend({}, eventData.schedule, {isReadOnly: true});
+            }
+
             detailView.render(eventData);
         };
         onDeleteSchedule = function(eventData) {
-            creationHandler.fire('beforeDeleteSchedule', eventData);
+            if (creationHandler) {
+                creationHandler.fire('beforeDeleteSchedule', eventData);
+            }
         };
         onEditSchedule = function(eventData) {
             moveHandler.fire('beforeUpdateSchedule', eventData);
@@ -158,24 +166,31 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     // bind update schedule event
     baseController.on('updateSchedule', onUpdateSchedule);
 
-    moveHandler.on('monthMoveStart_from_morelayer', function() {
-        moreView.hide();
-    });
+    if (moveHandler) {
+        moveHandler.on('monthMoveStart_from_morelayer', function() {
+            moreView.hide();
+        });
+    }
 
     monthView.handler = {
         click: {
             'default': clickHandler
-        },
-        creation: {
-            'default': creationHandler
-        },
-        resize: {
-            'default': resizeHandler
-        },
-        move: {
-            'default': moveHandler
         }
     };
+
+    if (!options.isReadOnly) {
+        monthView.handler = util.extend(monthView.handler, {
+            creation: {
+                'default': creationHandler
+            },
+            resize: {
+                'default': resizeHandler
+            },
+            move: {
+                'default': moveHandler
+            }
+        });
+    }
 
     monthView._beforeDestroy = function() {
         moreView.destroy();
@@ -194,7 +209,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
 
         if (options.useCreationPopup) {
-            creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
+            if (creationHandler) {
+                creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
+            }
             createView.off('saveSchedule', onSaveNewSchedule);
             createView.destroy();
         }
@@ -216,7 +233,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             monthView.vLayout.refresh();
         },
         openCreationPopup: function(schedule) {
-            if (createView) {
+            if (createView && creationHandler) {
                 creationHandler.invokeCreationClick(Schedule.create(schedule));
             }
         },
