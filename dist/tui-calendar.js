@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.5.0 | Mon Jul 16 2018
+ * @version 1.6.0 | Wed Jul 25 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -8007,6 +8007,7 @@ var mmin = Math.min;
  *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
  *  The rest timezone elements are shown in left timegrid of weekly/daily view.
  * @property {boolean} [disableDblClick=false] - disable double click to create a schedule
+ * @property {boolean} [isReadOnly=false] - Calendar is read-only mode and a user can't create and modify any schedule.
  */
 
 /**
@@ -8238,7 +8239,8 @@ Calendar.prototype._initialize = function(options) {
             displayLabel: '',
             tooltip: ''
         }],
-        disableDblClick: false
+        disableDblClick: false,
+        isReadOnly: false
     }, options);
 
     this._options.week = util.extend({
@@ -8254,6 +8256,10 @@ Calendar.prototype._initialize = function(options) {
                 (schedule.category === 'allday' || schedule.category === 'time');
         }
     }, util.pick(options, 'month') || {});
+
+    if (this._options.isReadOnly) {
+        this._options.useCreationPopup = false;
+    }
 
     this._layout.controller = controller;
 
@@ -9489,14 +9495,16 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     monthViewContainer = domutil.appendHTMLElement(
         'div', layoutContainer, config.classname('month'));
 
-    monthView = new Month(options.month, monthViewContainer, baseController.Month);
+    monthView = new Month(options, monthViewContainer, baseController.Month);
     moreView = new More(options.month, layoutContainer, baseController.theme);
 
     // handlers
     clickHandler = new MonthClick(dragHandler, monthView, baseController);
-    creationHandler = new MonthCreation(dragHandler, monthView, baseController, options);
-    resizeHandler = new MonthResize(dragHandler, monthView, baseController);
-    moveHandler = new MonthMove(dragHandler, monthView, baseController);
+    if (!options.isReadOnly) {
+        creationHandler = new MonthCreation(dragHandler, monthView, baseController, options);
+        resizeHandler = new MonthResize(dragHandler, monthView, baseController);
+        moveHandler = new MonthMove(dragHandler, monthView, baseController);
+    }
 
     clearSchedulesHandler = function() {
         if (moreView) {
@@ -9558,10 +9566,16 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
                 return calendar.id === scheduleId;
             });
 
+            if (options.isReadOnly) {
+                eventData.schedule = util.extend({}, eventData.schedule, {isReadOnly: true});
+            }
+
             detailView.render(eventData);
         };
         onDeleteSchedule = function(eventData) {
-            creationHandler.fire('beforeDeleteSchedule', eventData);
+            if (creationHandler) {
+                creationHandler.fire('beforeDeleteSchedule', eventData);
+            }
         };
         onEditSchedule = function(eventData) {
             moveHandler.fire('beforeUpdateSchedule', eventData);
@@ -9589,24 +9603,31 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
     // bind update schedule event
     baseController.on('updateSchedule', onUpdateSchedule);
 
-    moveHandler.on('monthMoveStart_from_morelayer', function() {
-        moreView.hide();
-    });
+    if (moveHandler) {
+        moveHandler.on('monthMoveStart_from_morelayer', function() {
+            moreView.hide();
+        });
+    }
 
     monthView.handler = {
         click: {
             'default': clickHandler
-        },
-        creation: {
-            'default': creationHandler
-        },
-        resize: {
-            'default': resizeHandler
-        },
-        move: {
-            'default': moveHandler
         }
     };
+
+    if (!options.isReadOnly) {
+        monthView.handler = util.extend(monthView.handler, {
+            creation: {
+                'default': creationHandler
+            },
+            resize: {
+                'default': resizeHandler
+            },
+            move: {
+                'default': moveHandler
+            }
+        });
+    }
 
     monthView._beforeDestroy = function() {
         moreView.destroy();
@@ -9625,7 +9646,9 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
         }
 
         if (options.useCreationPopup) {
-            creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
+            if (creationHandler) {
+                creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
+            }
             createView.off('saveSchedule', onSaveNewSchedule);
             createView.destroy();
         }
@@ -9647,7 +9670,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             monthView.vLayout.refresh();
         },
         openCreationPopup: function(schedule) {
-            if (createView) {
+            if (createView && creationHandler) {
                 creationHandler.invokeCreationClick(Schedule.create(schedule));
             }
         },
@@ -9872,8 +9895,11 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             weekView.addChild(view);
 
             util.forEach(handlers, function(type) {
-                weekView.handler[type][name] = new DAYGRID_HANDLDERS[type](dragHandler, view, baseController, options);
-                view.addHandler(type, weekView.handler[type][name], vLayout.getPanelByName(name));
+                if (!options.isReadOnly || type === 'click') {
+                    weekView.handler[type][name] =
+                        new DAYGRID_HANDLDERS[type](dragHandler, view, baseController, options);
+                    view.addHandler(type, weekView.handler[type][name], vLayout.getPanelByName(name));
+                }
             });
         } else if (panel.type === 'timegrid') {
             /**********
@@ -9882,7 +9908,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             view = new TimeGrid(name, options, vLayout.getPanelByName(name).container);
             weekView.addChild(view);
             util.forEach(handlers, function(type) {
-                weekView.handler[type][name] = new TIMEGRID_HANDLERS[type](dragHandler, view, baseController, options);
+                if (!options.isReadOnly || type === 'click') {
+                    weekView.handler[type][name] =
+                        new TIMEGRID_HANDLERS[type](dragHandler, view, baseController, options);
+                }
             });
         }
     });
@@ -9926,6 +9955,10 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
             eventData.calendar = common.find(baseController.calendars, function(calendar) {
                 return calendar.id === scheduleId;
             });
+
+            if (options.isReadOnly) {
+                eventData.schedule = util.extend({}, eventData.schedule, {isReadOnly: true});
+            }
 
             detailView.render(eventData);
         };
@@ -12024,6 +12057,12 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
     this._dragStartEventData = this._getEventData(mouseDownEvent);
 
     this._toggleDragEvent(true);
+
+    // EventTarget.target is not changed in mousemove event even if mouse is over the other element.
+    // It's different with other browsers(IE, Chrome, Safari)
+    if (util.browser.firefox) {
+        domevent.preventDefault(mouseDownEvent);
+    }
 };
 
 /**
@@ -17686,6 +17725,10 @@ var mmin = Math.min;
  */
 function Month(options, container, controller) {
     var theme = controller ? controller.theme : null;
+    var monthOption;
+
+    options = options || {};
+    monthOption = options ? options.month : {};
 
     View.call(this, container);
 
@@ -17717,6 +17760,7 @@ function Month(options, container, controller) {
         narrowWeekend: false,
         visibleWeeksCount: null,
         isAlways6Week: true,
+        isReadOnly: options.isReadOnly,
         grid: {
             header: {
                 height: 34
@@ -17725,14 +17769,14 @@ function Month(options, container, controller) {
                 height: 3
             }
         }
-    }, options);
+    }, monthOption);
 
     this.options.grid.header = util.extend({
         height: 34
-    }, util.pick(options, 'grid', 'header'));
+    }, util.pick(monthOption, 'grid', 'header'));
     this.options.grid.footer = util.extend({
         height: 3
-    }, util.pick(options, 'grid', 'footer'));
+    }, util.pick(monthOption, 'grid', 'footer'));
 
     /**
      * horizontal grid information
@@ -17801,6 +17845,7 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     var visibleWeeksCount = opt.visibleWeeksCount;
     var visibleScheduleCount = opt.visibleScheduleCount;
     var gridOption = opt.grid;
+    var isReadOnly = opt.isReadOnly;
 
     container.innerHTML = '';
     this.children.clear();
@@ -17825,7 +17870,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
             visibleScheduleCount: visibleScheduleCount,
             grid: gridOption,
             scheduleHeight: parseInt(theme.month.schedule.height, 10),
-            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10)
+            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10),
+            isReadOnly: isReadOnly
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);
@@ -17931,7 +17977,7 @@ Month.prototype._invokeAfterRenderSchedule = function(matrices) {
     util.forEachArray(matrices, function(matrix) {
         util.forEachArray(matrix, function(column) {
             util.forEachArray(column, function(scheduleViewModel) {
-                if (scheduleViewModel) {
+                if (scheduleViewModel && !scheduleViewModel.hidden) {
                     /**
                      * @event Month#afterRenderSchedule
                      */
@@ -18360,6 +18406,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
         gridHeaderHeight: gridHeaderHeight,
         gridFooterHeight: gridFooterHeight,
         renderLimitIdx: renderLimitIdx,
+        isReadOnly: opt.isReadOnly,
         styles: styles
     }, baseViewModel);
 
@@ -20223,7 +20270,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "\">"
     + ((stack1 = (helpers["allday-tmpl"] || (depth0 && depth0["allday-tmpl"]) || alias4).call(alias3,(depth0 != null ? depth0.model : depth0),{"name":"allday-tmpl","hash":{},"data":data})) != null ? stack1 : "")
     + "</span>\n            "
-    + ((stack1 = helpers.unless.call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(21, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias3,(helpers.or || (depth0 && depth0.or) || alias4).call(alias3,((stack1 = (data && data.root)) && stack1.isReadOnly),((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(21, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n        </div>\n";
 },"11":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -20933,7 +20980,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "\">"
     + ((stack1 = (helpers["schedule-tmpl"] || (depth0 && depth0["schedule-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.model : depth0),{"name":"schedule-tmpl","hash":{},"data":data})) != null ? stack1 : "")
     + "</span>\n            "
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,(helpers.or || (depth0 && depth0.or) || alias2).call(alias1,((stack1 = (data && data.root)) && stack1.isReadOnly),((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n        </div>\n    </div>\n";
 },"5":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -21722,6 +21769,7 @@ function DayGrid(name, options, container, theme) {
         scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
         scheduleContainerTop: 1,
         timezones: options.timezones,
+        isReadOnly: options.isReadOnly,
         getViewModelFunc: function(viewModel) {
             return viewModel.schedulesInDateRange[name];
         },
@@ -22092,6 +22140,7 @@ DayGridSchedule.prototype.getBaseViewModel = function(viewModel) {
         matrices: matrices,
         scheduleContainerTop: this.options.scheduleContainerTop,
         maxScheduleInDay: maxScheduleInDay,
+        isReadOnly: opt.isReadOnly,
         styles: styles
     }, baseViewModel);
 
@@ -22352,7 +22401,8 @@ function Time(options, container, theme) {
         hourStart: 0,
         hourEnd: 24,
         defaultMarginBottom: 2,
-        minHeight: 18.5
+        minHeight: 18.5,
+        isReadOnly: false
     }, options);
 
     this.timeTmpl = timeTmpl;
@@ -22423,7 +22473,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
         cropped = true;
     }
 
-    if (isReadOnly) {
+    if (isReadOnly || options.isReadOnly) {
         cropped = true;
     }
 
@@ -22447,6 +22497,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         options = this.options,
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
+        isReadOnly = options.isReadOnly,
         todayStart,
         baseMS;
 
@@ -22490,7 +22541,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     baseLeft: leftPercents,
                     baseWidth: widthPercent,
                     baseHeight: containerHeight,
-                    columnIndex: col
+                    columnIndex: col,
+                    isReadOnly: isReadOnly
                 });
 
                 util.extend(viewModel, viewBound);
@@ -22701,7 +22753,8 @@ function TimeGrid(name, options, panelElement) {
         renderEndDate: '',
         hourStart: 0,
         hourEnd: 24,
-        timezones: options.timezones
+        timezones: options.timezones,
+        isReadOnly: options.isReadOnly
     }, options.week);
 
     if (this.options.timezones.length < 1) {
@@ -22957,6 +23010,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
             isToday: isToday,
             isPending: options.isPending,
             isFocused: options.isFocused,
+            isReadOnly: options.isReadOnly,
             hourStart: options.hourStart,
             hourEnd: options.hourEnd
         };
@@ -23576,6 +23630,9 @@ Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
                 if (!viewModel || viewModel.top < maxCount) {
                     return;
                 }
+
+                // check that this schedule block is not visible after rendered.
+                viewModel.hidden = true;
 
                 period = datetime.range(
                     viewModel.getStarts(),
