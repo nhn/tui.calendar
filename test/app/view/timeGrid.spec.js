@@ -172,7 +172,7 @@ describe('View/TimeGrid', function() {
                 width: width,
                 left: 0 * width,
                 isPrimary: false,
-                hourmarkerText: '[-1]14:30',
+                hourmarkerText: '[-1]<br>14:30',
                 backgroundColor: ''
             }];
 

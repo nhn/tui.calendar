@@ -49,9 +49,7 @@
     .hourmarker
         position: absolute
         width: 100%
-
-    .hourmarker-wrap
-        position: relative
+        display: table
 
     .hourmarker-line-left
         position: absolute
@@ -68,11 +66,11 @@
         right: 0
 
     .hourmarker-time
-        position: absolute
-        right: 5px
-        top: -6px
+        padding-right: 5px
         line-height: 12px
         text-align: right
+        display: table-cell
+        vertical-align: middle
 
     // Todaymarker
     .todaymarker

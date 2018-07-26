@@ -263,9 +263,9 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 
         dateDifference = hourmarker.getDate() - now.getDate();
         if (dateDifference < 0) {
-            texts.push('[-' + Math.abs(dateDifference) + ']');
+            texts.push('[-' + Math.abs(dateDifference) + ']<br>');
         } else if (dateDifference > 0) {
-            texts.push('[+' + Math.abs(dateDifference) + ']');
+            texts.push('[+' + Math.abs(dateDifference) + ']<br>');
         }
 
         texts.push(datetime.format(hourmarker, 'HH:mm'));
@@ -314,9 +314,9 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
 
         dateDifference = hourmarker.getDate() - now.getDate();
         if (dateDifference < 0) {
-            texts.push('[-' + Math.abs(dateDifference) + ']');
+            texts.push('[-' + Math.abs(dateDifference) + ']<br>');
         } else if (dateDifference > 0) {
-            texts.push('[+' + Math.abs(dateDifference) + ']');
+            texts.push('[+' + Math.abs(dateDifference) + ']<br>');
         }
 
         texts.push(datetime.format(hourmarker, 'HH:mm'));
@@ -621,6 +621,7 @@ TimeGrid.prototype._getStyles = function(theme) {
 
         styles.oneHourHeight = theme.week.timegridOneHour.height;
         styles.halfHourHeight = theme.week.timegridHalfHour.height;
+        styles.quaterHourHeight = (parseInt(styles.halfHourHeight, 10) / 2) + 'px';
 
         styles.currentTimeColor = theme.week.currentTime.color;
         styles.currentTimeFontSize = theme.week.currentTime.fontSize;
