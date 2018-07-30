@@ -1,6 +1,6 @@
 <div class="{{CSS_PREFIX}}timegrid-left" style="width: {{styles.leftWidth}}; font-size: {{styles.leftFontSize}};">
     {{#each timezones ~}}
-        <div class="{{CSS_PREFIX}}timegrid-timezone" data-timezone-index="{{@index}}" style="position: absolute; top: 0; width: {{width}}%; left: {{left}}%; border-right: {{@root.styles.leftBorderRight}}; background-color: {{backgroundColor}};" >
+        <div class="{{CSS_PREFIX}}timegrid-timezone" data-timezone-index="{{@index}}" style="{{#if hidden}}display:none;{{/if}}position: absolute; top: 0; width: {{width}}%; left: {{left}}%; border-right: {{@root.styles.leftBorderRight}}; background-color: {{backgroundColor}};" >
         {{#if isPrimary}}
             {{#each timeSlots ~}}
                 <div class="{{CSS_PREFIX}}timegrid-hour" style="height: {{@root.styles.oneHourHeight}}; color: {{color}}; font-weight: {{fontWeight}};">

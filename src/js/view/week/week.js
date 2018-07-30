@@ -60,7 +60,9 @@ function Week(controller, options, container, panels) {
         renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
         narrowWeekend: false,
         startDayOfWeek: 0,
-        workweek: false
+        workweek: false,
+        showTimezoneCollapseButton: false,
+        timezonesCollapsed: false
     }, options);
 
     /**
@@ -74,6 +76,14 @@ function Week(controller, options, container, panels) {
      * @type {Array.<object>}
      */
     this.panels = panels;
+
+    /**
+     * Week view states
+     * @type {object}
+     */
+    this.state = {
+        timezonesCollapsed: this.options.timezonesCollapsed
+    };
 }
 
 util.inherit(Week, View);
@@ -94,7 +104,8 @@ Week.prototype.render = function() {
         narrowWeekend = options.narrowWeekend,
         startDayOfWeek = options.startDayOfWeek,
         workweek = options.workweek,
-        theme = this.controller.theme || {};
+        theme = this.controller.theme || {},
+        state = this.state;
     var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 
     renderStartDate = parseRangeDateString(options.renderStartDate);
@@ -135,7 +146,8 @@ Week.prototype.render = function() {
         renderEndDate: renderEndDate,
         grids: grids,
         range: range,
-        theme: theme
+        theme: theme,
+        state: state
     };
 
     this.children.each(function(childView) {

@@ -209,6 +209,19 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                         new TIMEGRID_HANDLERS[type](dragHandler, view, baseController, options);
                 }
             });
+
+            view.on('clickTimezonesCollapsedBtn', function() {
+                var timezonesCollapsed = !weekView.state.timezonesCollapsed;
+
+                weekView.setState({
+                    timezonesCollapsed: timezonesCollapsed
+                });
+                reqAnimFrame.requestAnimFrame(function() {
+                    weekView.render();
+
+                    weekView.fire('clickTimezonesCollapseBtn', timezonesCollapsed);
+                });
+            });
         }
     });
 
