@@ -217,9 +217,9 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
                     timezonesCollapsed: timezonesCollapsed
                 });
                 reqAnimFrame.requestAnimFrame(function() {
-                    weekView.render();
-
-                    weekView.fire('clickTimezonesCollapseBtn', timezonesCollapsed);
+                    if (!weekView.invoke('clickTimezonesCollapseBtn', timezonesCollapsed)) {
+                        weekView.render();
+                    }
                 });
             });
         }

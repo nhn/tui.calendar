@@ -1337,7 +1337,7 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  */
 Calendar.prototype.setTheme = function(theme) {
     var result = this._controller.setTheme(theme);
-    this.changeView(this.getViewName(), true);
+    this.render(true);
 
     return result;
 };

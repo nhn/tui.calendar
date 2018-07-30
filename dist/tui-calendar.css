@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.6.0 | Thu Jul 26 2018
+ * @version 1.6.0 | Mon Jul 30 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -412,8 +412,10 @@
   position: absolute;
   top: 0;
 }
-.tui-full-calendar-timegrid-timezone-label-cell {
+.tui-full-calendar-timegrid-timezone-label-container {
   position: absolute;
+}
+.tui-full-calendar-timegrid-timezone-label-cell {
   display: table;
 }
 .tui-full-calendar-timegrid-timezone-label {
@@ -421,6 +423,16 @@
   vertical-align: middle;
   padding-right: 5px;
   text-align: right;
+}
+.tui-full-calendar-timegrid-timezone-close-btn {
+  cursor: pointer;
+  position: absolute;
+  text-align: center;
+  background-color: #fff;
+}
+.tui-full-calendar-timegrid-timezone-close-btn .tui-full-calendar-icon {
+  width: 5px;
+  height: 10px;
 }
 .tui-full-calendar-time-date {
   position: absolute;
@@ -1134,6 +1146,12 @@ input[type='checkbox'].tui-full-calendar-checkbox-round + span {
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-milestone {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAGFJREFUKBVjYCARMILU/3dw+I+hj5FxG+P+/d7o4rg1IKtE0syELI6T/f+/F0yOOA0w1UCa9hpYkGxjYDxwABwIILH/jo5bGWBuZ2TcClOHogEmCKKxBSlInPZ+ANlCEgAA37EU4AHbBQUAAAAASUVORK5CYII=) no-repeat;
+}
+.tui-full-calendar-icon.tui-full-calendar-ic-arrow-left {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAHCAYAAAAvZezQAAAAAXNSR0IArs4c6QAAAFZJREFUCB1jZICCyspK83///hUxgvhVVVV6f//+3c3ExJTMVFNTowqU2cHMzJzf3t6+hen379/zgIp2t7W1rQCpZmJlZU0C0q5AbREgAQwzwAIgGZgtADMCJqH/QyvhAAAAAElFTkSuQmCC) no-repeat;
+}
+.tui-full-calendar-icon.tui-full-calendar-ic-arrow-right {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAHCAYAAAAvZezQAAAAAXNSR0IArs4c6QAAAFxJREFUCB1jKC8vX1lZWWnOAAVMQLD4379/m6qqqvRAYowgAsiJAAr2sbCw2IMFQIIVFRUL////r8SCpMKVlZXVnhFooA9Q+VxmZmbXtra2S0xATizQYD8QB6QaAJMLJ9BqE9yTAAAAAElFTkSuQmCC) no-repeat;
 }
 /*# sourceMappingURL=src/css/main.css.map */
 
