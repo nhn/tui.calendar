@@ -22419,7 +22419,8 @@ DayName.prototype.render = function(viewModel) {
         viewModel.renderEndDate,
         viewModel.grids
     );
-    var styles = this._getStyles(this.theme);
+    var timezonesCollapsed = viewModel.state.timezonesCollapsed;
+    var styles = this._getStyles(this.theme, timezonesCollapsed);
     var baseViewModel = util.extend({}, {
         dayNames: dayNames,
         styles: styles
@@ -22459,11 +22460,13 @@ DayName.prototype._getDayNameColor = function(theme, day, isToday, isPastDay) {
 /**
  * Get the styles from theme
  * @param {Theme} theme - theme instance
+ * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
-DayName.prototype._getStyles = function(theme) {
+DayName.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
+    var collapsed = timezonesCollapsed;
     var numberAndUnit;
 
     if (theme) {
@@ -22476,7 +22479,7 @@ DayName.prototype._getStyles = function(theme) {
         styles.textAlign = theme.week.dayname.textAlign;
         styles.marginLeft = theme.week.daygridLeft.width;
 
-        if (timezonesLength > 1) {
+        if (!collapsed && timezonesLength > 1) {
             numberAndUnit = common.parseUnit(styles.marginLeft);
             styles.marginLeft = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
         }
