@@ -94,6 +94,16 @@ Handlebars.registerHelper({
     },
 
     /**
+     * AND
+     * @param {*} a - a
+     * @param {*} b - b
+     * @returns {boolean} or
+     */
+    'and': function(a, b) {
+        return a && b;
+    },
+
+    /**
      * Compare object or apply logical operation by customizable oper parameter
      * @param {*} a - a
      * @param {string} oper - operator ex) '==', '<'

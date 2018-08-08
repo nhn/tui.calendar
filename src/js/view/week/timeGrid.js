@@ -8,6 +8,7 @@ var util = require('tui-code-snippet');
 var config = require('../../config');
 var common = require('../../common/common');
 var domutil = require('../../common/domutil');
+var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
 var Timezone = require('../../common/timezone');
 var reqAnimFrame = require('../../common/reqAnimFrame');
@@ -139,7 +140,8 @@ function TimeGrid(name, options, panelElement) {
         hourStart: 0,
         hourEnd: 24,
         timezones: options.timezones,
-        isReadOnly: options.isReadOnly
+        isReadOnly: options.isReadOnly,
+        showTimezoneCollapseButton: false
     }, options.week);
 
     if (this.options.timezones.length < 1) {
@@ -203,7 +205,10 @@ TimeGrid.prototype._beforeDestroy = function() {
         this._autoScroll.destroy();
     }
 
-    this._autoScroll = this.hourmarkers = this.intervalID = this.timerID = this._cacheParentViewModel = null;
+    domevent.off(this.stickyContainer, 'click', this._onClickStickyContainer, this);
+
+    this._autoScroll = this.hourmarkers = this.intervalID =
+    this.timerID = this._cacheParentViewModel = this.stickyContainer = null;
 };
 
 /**
@@ -287,16 +292,18 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 /**
  * Get timezone view model
  * @param {number} currentHours - current hour
+ * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @param {object} styles - styles
  * @returns {object} ViewModel
  */
-TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
+TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesCollapsed, styles) {
     var opt = this.options;
     var primaryOffset = Timezone.getOffset();
     var timezones = opt.timezones;
     var timezonesLength = timezones.length;
     var timezoneViewModel = [];
-    var width = 100 / timezonesLength;
+    var collapsed = timezonesCollapsed;
+    var width = collapsed ? 100 : 100 / timezonesLength;
     var now = new TZDate();
     var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 
@@ -331,10 +338,11 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
             timezoneOffset: timezone.timezoneOffset,
             tooltip: timezone.tooltip || '',
             width: width,
-            left: (timezones.length - index - 1) * width,
+            left: collapsed ? 0 : (timezones.length - index - 1) * width,
             isPrimary: index === 0,
             hourmarkerText: texts.join(''),
-            backgroundColor: backgroundColor || ''
+            backgroundColor: backgroundColor || '',
+            hidden: index !== 0 && collapsed
         });
     });
 
@@ -351,12 +359,15 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var range = viewModel.range;
     var opt = this.options;
     var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
-    var styles = this._getStyles(viewModel.theme);
+    var timezonesCollapsed = util.pick(viewModel, 'state', 'timezonesCollapsed');
+    var styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     return util.extend(baseViewModel, {
-        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, styles),
+        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, timezonesCollapsed, styles),
         hoursLabels: getHoursLabels(opt, baseViewModel.todaymarkerLeft >= 0, 0, styles),
-        styles: styles
+        styles: styles,
+        showTimezoneCollapseButton: util.pick(opt, 'showTimezoneCollapseButton'),
+        timezonesCollapsed: timezonesCollapsed
     });
 };
 
@@ -534,6 +545,8 @@ TimeGrid.prototype.attachEvent = function() {
     this.intervalID = this.timerID = null;
 
     this.timerID = setTimeout(util.bind(this.onTick, this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
+
+    domevent.on(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 };
 
 /**
@@ -594,11 +607,13 @@ TimeGrid.prototype.onTick = function() {
 /**
  * Get the styles from theme
  * @param {Theme} theme - theme instance
+ * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
-TimeGrid.prototype._getStyles = function(theme) {
+TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
+    var collapsed = timezonesCollapsed;
     var numberAndUnit;
 
     if (theme) {
@@ -638,13 +653,27 @@ TimeGrid.prototype._getStyles = function(theme) {
         styles.currentTimeTodayBorderTop = theme.week.currentTimeLineToday.border;
         styles.currentTimeRightBorderTop = theme.week.currentTimeLineFuture.border;
 
-        if (timezonesLength > 1) {
+        if (!collapsed && timezonesLength > 1) {
             numberAndUnit = common.parseUnit(styles.leftWidth);
             styles.leftWidth = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
         }
     }
 
     return styles;
+};
+
+/**
+ * @param {MouseEvent} event - mouse event object
+ */
+TimeGrid.prototype._onClickStickyContainer = function(event) {
+    var target = event.target || event.srcElement;
+    var closeBtn = domutil.closest(target, config.classname('.timegrid-timezone-close-btn'));
+
+    if (!closeBtn) {
+        return;
+    }
+
+    this.fire('clickTimezonesCollapsedBtn');
 };
 
 module.exports = TimeGrid;

@@ -25,14 +25,18 @@ describe('View/TimeGrid', function() {
                 {hour: 10, minutes: 0, hidden: false, color: '', fontWeight: ''}
             ],
             styles: {},
-            timezones: []
+            timezones: [],
+            showTimezoneCollapseButton: false,
+            timezonesCollapsed: false
         };
 
         var obj = {
             options: {
                 hourStart: 3,
                 hourEnd: 11,
-                renderEndDate: '2018-05-23'
+                renderEndDate: '2018-05-23',
+                showTimezoneCollapseButton: false,
+                timezonesCollapsed: false
             },
             _getHourmarkerViewModel: function() {
                 return {todaymarkerLeft: 1};
@@ -45,7 +49,9 @@ describe('View/TimeGrid', function() {
             }
         };
 
-        var result = proto._getBaseViewModel.call(obj, {});
+        var result = proto._getBaseViewModel.call(obj, {
+            state: {timezonesCollapsed: false}
+        });
 
         expect(result).toEqual(expected);
 
@@ -137,7 +143,8 @@ describe('View/TimeGrid', function() {
                 left: 1 * width,
                 isPrimary: true,
                 hourmarkerText: '09:00',
-                backgroundColor: ''
+                backgroundColor: '',
+                hidden: false
             }, {
                 // GMT-09:30
                 timeSlots: [
@@ -173,7 +180,8 @@ describe('View/TimeGrid', function() {
                 left: 0 * width,
                 isPrimary: false,
                 hourmarkerText: '[-1]<br>14:30',
-                backgroundColor: ''
+                backgroundColor: '',
+                hidden: false
             }];
 
             var obj = {
@@ -202,7 +210,7 @@ describe('View/TimeGrid', function() {
                 }
             };
 
-            var result = proto._getTimezoneViewModel.call(obj, currentHours, {});
+            var result = proto._getTimezoneViewModel.call(obj, currentHours, false, {});
 
             expect(result).toEqual(expected);
 

@@ -83,7 +83,8 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         panelHeight = this.getViewBound().height,
         collapsed = this.state.collapsed,
         heightForcedSet = this.vPanel ? this.vPanel.getHeightForcedSet() : false,
-        styles = this._getStyles(viewModel.theme);
+        timezonesCollapsed = viewModel.state.timezonesCollapsed,
+        styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     var baseViewModel, visibleScheduleCount;
 
@@ -248,11 +249,13 @@ DayGrid.prototype.setState = function(state) {
 /**
  * Get the styles from theme
  * @param {Theme} theme - theme instance
+ * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
-DayGrid.prototype._getStyles = function(theme) {
+DayGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
+    var collapsed = timezonesCollapsed;
     var numberAndUnit;
 
     if (theme) {
@@ -265,7 +268,7 @@ DayGrid.prototype._getStyles = function(theme) {
         styles.leftPaddingRight = theme.week.daygridLeft.paddingRight;
         styles.leftBorderRight = theme.week.daygridLeft.borderRight;
 
-        if (timezonesLength > 1) {
+        if (!collapsed && timezonesLength > 1) {
             numberAndUnit = common.parseUnit(styles.leftWidth);
             styles.leftWidth = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
         }

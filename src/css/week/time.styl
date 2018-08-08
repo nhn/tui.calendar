@@ -85,8 +85,10 @@
         position: absolute
         top: 0
     
-    .timezone-label-cell
+    .timezone-label-container
         position: absolute
+    
+    .timezone-label-cell
         display: table
     
     .timezone-label
@@ -94,6 +96,17 @@
         vertical-align: middle
         padding-right: 5px
         text-align: right
+    
+    .timezone-close-btn
+        cursor: pointer
+        position: absolute
+        text-align: center
+        background-color: #ffffff
+
+.{css-prefix}timegrid-timezone-close-btn
+    .{css-prefix}icon
+        width: 5px
+        height: 10px
 
 +prefix-classes(time)
     .date

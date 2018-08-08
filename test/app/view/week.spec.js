@@ -36,7 +36,8 @@ describe('View/Week', function() {
                 renderEndDate: jasmine.any(TZDate),
                 grids: jasmine.any(Array),
                 range: jasmine.any(Array),
-                theme: jasmine.anything()
+                theme: jasmine.anything(),
+                state: jasmine.anything()
             });
         });
     });

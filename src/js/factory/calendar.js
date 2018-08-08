@@ -76,6 +76,8 @@ var mmin = Math.min;
  *                    Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
  * @property {boolean} [workweek=false] - show only 5 days except for weekend
+ * @property {boolean} [showTimezoneCollapseButton=false] - show a collapse button to close multiple timezones
+ * @property {boolean} [timezonesCollapsed=false] - An initial multiple timezones collapsed state
  */
 
 /**
@@ -1101,6 +1103,25 @@ Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
 };
 
 /**
+ * @fires Calendar#clickTimezonesCollapseBtn
+ * @param {boolean} timezonesCollapsed - timezones collapsed flag
+ * @private
+ */
+Calendar.prototype._onClickTimezonesCollapseBtn = function(timezonesCollapsed) {
+    /**
+     * Fire this event by clicking timezones collapse button
+     * @event Calendar#clickTimezonesCollapseBtn
+     * @type {object}
+     * @property {boolean} timezonesCollapsed - timezones collapes flag
+     * @example
+     * calendar.on('clickTimezonesCollapseBtn', function(timezonesCollapsed) {
+     *     console.log(timezonesCollapsed);
+     * });
+     */
+    this.fire('clickTimezonesCollapseBtn', timezonesCollapsed);
+};
+
+/**
  * Toggle calendar factory class, main view, wallview event connection
  * @param {boolean} isAttach - attach events if true.
  * @param {Week|Month} view - Weekly view or Monthly view
@@ -1134,6 +1155,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
 
     // bypass events from view
     view[method]('afterRenderSchedule', self._onAfterRenderSchedule, self);
+    view[method]('clickTimezonesCollapseBtn', self._onClickTimezonesCollapseBtn, self);
 };
 
 /**
@@ -1315,7 +1337,7 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
  */
 Calendar.prototype.setTheme = function(theme) {
     var result = this._controller.setTheme(theme);
-    this.changeView(this.getViewName(), true);
+    this.render(true);
 
     return result;
 };

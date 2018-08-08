@@ -217,8 +217,8 @@ body {
 
 #calendar {
     position: absolute;
-    left: 5px;
-    right: 5px;
+    left: 0;
+    right: 0;
     bottom: 5px;
     top: 64px;
 }
