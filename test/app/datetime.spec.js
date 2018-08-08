@@ -285,7 +285,8 @@ describe('datetime', function() {
         it('2015/12 will be rendered from 11/30 to 2013/1/3 as of Monday.', function() {
             var month = new TZDate('2015-12-01T00:00:00+09:00');
             var actual = dt.arr2dCalendar(month, {
-                startDayOfWeek: 1
+                startDayOfWeek: 1,
+                isAlways6Week: false
             });
             var expected = [
                 [createDate(2015, 11, 30),
