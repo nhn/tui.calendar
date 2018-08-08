@@ -251,7 +251,7 @@ For more information on PR's step, please see links of Contributing section.
 
 * [Getting Started](https://github.com/nhnent/tui.calendar/blob/master/docs/getting-started.md)
 * [Tutorials](https://github.com/nhnent/tui.calendar/tree/master/docs)
-* [APIs](https://nhnent.github.io/tui.calendar/latest)
+* [APIs](https://nhnent.github.io/tui.calendar/latest/Calendar.html)
 
 You can also see the older versions of API page on the [releases page](https://github.com/nhnent/tui.calendar/releases).
 
