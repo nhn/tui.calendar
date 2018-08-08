@@ -54,11 +54,10 @@ function generateTime(schedule, renderStart, renderEnd) {
     var endDate = moment(renderEnd.getTime());
     var diffDate = endDate.diff(startDate, 'days');
 
-
-    schedule.isAllday = chance.bool({likelihood: 10});
+    schedule.isAllday = chance.bool({likelihood: 30});
     if (schedule.isAllday) {
         schedule.category = 'allday';
-    } else if (chance.bool({likelihood: 80})) {
+    } else if (chance.bool({likelihood: 30})) {
         schedule.category = SCHEDULE_CATEGORY[chance.integer({min: 0, max: 1})];
         if (schedule.category === SCHEDULE_CATEGORY[1]) {
             schedule.dueDateClass = 'morning';

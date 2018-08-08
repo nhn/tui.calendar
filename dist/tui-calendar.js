@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.6.0 | Wed Jul 25 2018
+ * @version 1.6.0 | Thu Jul 26 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -21326,9 +21326,11 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker\" style=\"top:"
     + alias4(alias5(((stack1 = (data && data.root)) && stack1.hourmarkerTop), depth0))
-    + "%\">\n                    <div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker-wrap\">\n                        <div class=\""
+    + "%; margin-top: -"
+    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.quaterHourHeight), depth0))
+    + "; height: "
+    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.halfHourHeight), depth0))
+    + ";\">\n                    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker-time\" style=\"color: "
     + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeColor), depth0))
@@ -21337,8 +21339,8 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "; font-weight: "
     + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeFontWeight), depth0))
     + "\">"
-    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
-    + "</div>\n                    </div>\n                </div>\n";
+    + ((stack1 = ((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "</div>\n                </div>\n";
 },"8":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
@@ -21367,17 +21369,19 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker\" style=\"top:"
     + alias4(alias5(((stack1 = (data && data.root)) && stack1.hourmarkerTop), depth0))
-    + "%\">\n                    <div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker-wrap\">\n                        <div class=\""
+    + "%; margin-top: -"
+    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.quaterHourHeight), depth0))
+    + "; height: "
+    + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.halfHourHeight), depth0))
+    + ";\">\n                    <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker-time\" style=\"color: "
     + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeColor), depth0))
     + "; font-size: "
     + alias4(alias5(((stack1 = ((stack1 = (data && data.root)) && stack1.styles)) && stack1.currentTimeFontSize), depth0))
     + ";\">"
-    + alias4(((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper)))
-    + "</div>\n                    </div>\n                </div>\n";
+    + ((stack1 = ((helper = (helper = helpers.hourmarkerText || (depth0 != null ? depth0.hourmarkerText : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerText","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "</div>\n                </div>\n";
 },"13":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
@@ -21409,19 +21413,17 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias4(((helper = (helper = helpers.hourmarkerTop || (depth0 != null ? depth0.hourmarkerTop : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"hourmarkerTop","hash":{},"data":data}) : helper)))
     + "%\">\n        <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "timegrid-hourmarker-wrap\">\n            <div class=\""
-    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker-line-left\" style=\"width:"
     + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
     + "%; border-top: "
     + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeLeftBorderTop : stack1), depth0))
-    + ";\"></div>\n            <div class=\""
+    + ";\"></div>\n        <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-todaymarker\" style=\"left:"
     + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
     + "%; background-color: "
     + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeBulletBackgroundColor : stack1), depth0))
-    + "; \">today</div>\n            <div class=\""
+    + "; \">today</div>\n        <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker-line-today\" style=\"left:"
     + alias4(((helper = (helper = helpers.todaymarkerLeft || (depth0 != null ? depth0.todaymarkerLeft : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerLeft","hash":{},"data":data}) : helper)))
@@ -21429,13 +21431,13 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias4(((helper = (helper = helpers.todaymarkerWidth || (depth0 != null ? depth0.todaymarkerWidth : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerWidth","hash":{},"data":data}) : helper)))
     + "%; border-top: "
     + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeTodayBorderTop : stack1), depth0))
-    + ";\"></div>\n            <div class=\""
+    + ";\"></div>\n        <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "timegrid-hourmarker-line-right\" style=\"left:"
     + alias4(((helper = (helper = helpers.todaymarkerRight || (depth0 != null ? depth0.todaymarkerRight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"todaymarkerRight","hash":{},"data":data}) : helper)))
     + "%; border-top: "
     + alias4(alias5(((stack1 = (depth0 != null ? depth0.styles : depth0)) != null ? stack1.currentTimeRightBorderTop : stack1), depth0))
-    + ";\"></div>\n        </div>\n    </div>\n";
+    + ";\"></div>\n    </div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
@@ -22943,9 +22945,9 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 
         dateDifference = hourmarker.getDate() - now.getDate();
         if (dateDifference < 0) {
-            texts.push('[-' + Math.abs(dateDifference) + ']');
+            texts.push('[-' + Math.abs(dateDifference) + ']<br>');
         } else if (dateDifference > 0) {
-            texts.push('[+' + Math.abs(dateDifference) + ']');
+            texts.push('[+' + Math.abs(dateDifference) + ']<br>');
         }
 
         texts.push(datetime.format(hourmarker, 'HH:mm'));
@@ -22994,9 +22996,9 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, styles) {
 
         dateDifference = hourmarker.getDate() - now.getDate();
         if (dateDifference < 0) {
-            texts.push('[-' + Math.abs(dateDifference) + ']');
+            texts.push('[-' + Math.abs(dateDifference) + ']<br>');
         } else if (dateDifference > 0) {
-            texts.push('[+' + Math.abs(dateDifference) + ']');
+            texts.push('[+' + Math.abs(dateDifference) + ']<br>');
         }
 
         texts.push(datetime.format(hourmarker, 'HH:mm'));
@@ -23301,6 +23303,7 @@ TimeGrid.prototype._getStyles = function(theme) {
 
         styles.oneHourHeight = theme.week.timegridOneHour.height;
         styles.halfHourHeight = theme.week.timegridHalfHour.height;
+        styles.quaterHourHeight = (parseInt(styles.halfHourHeight, 10) / 2) + 'px';
 
         styles.currentTimeColor = theme.week.currentTime.color;
         styles.currentTimeFontSize = theme.week.currentTime.fontSize;
