@@ -347,6 +347,14 @@ var calendar = new Calendar('#calendar', {
         },
         monthDayname: function(dayname) {
             return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
+        },
+        timegridDisplayPrimayTime: function(time) {
+            var meridiem = time.hour < 12 ? 'am' : 'pm';
+
+            return time.hour + ' ' + meridiem;
+        },
+        timegridDisplayTime: function(time) {
+            return time.hour + ':' + time.minutes;
         }
     }
 });
