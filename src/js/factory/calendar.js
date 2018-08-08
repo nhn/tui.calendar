@@ -99,6 +99,7 @@ var mmin = Math.min;
  *   @property {number} [grid.header.height=34] - grid's header height
  *  @property {object} [grid.footer] - grid's footer informatioin
  *   @property {number} [grid.footer.height=34] - grid's footer height
+ * @property {function} [scheduleFilter=null] - Filter schedules on month view. A parameter is {Schedule} object.
  */
 
 /**
