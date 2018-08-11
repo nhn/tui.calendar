@@ -16,8 +16,8 @@ if (util.sendHostname) {
 }
 
 // for jquery
-if (global.$) {
-    global.$.fn.tuiCalendar = function() {
+if (global.jQuery) {
+    global.jQuery.fn.tuiCalendar = function() {
         var options, instance;
 
         var el = this.get(0);
@@ -26,7 +26,7 @@ if (global.$) {
         if (el) {
             options = util.pick(args, 0) || {};
 
-            instance = global.$.data(el, 'tuiCalendar');
+            instance = global.jQuery.data(el, 'tuiCalendar');
 
             if (instance) {
                 if (typeof options === 'string' && instance[options]) {
@@ -34,7 +34,7 @@ if (global.$) {
                 }
             } else {
                 instance = new Calendar(el, options);
-                global.$.data(el, 'tuiCalendar', instance);
+                global.jQuery.data(el, 'tuiCalendar', instance);
             }
         }
 
