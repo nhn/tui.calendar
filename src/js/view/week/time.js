@@ -76,6 +76,61 @@ Time.prototype._parseDateGroup = function(str) {
 };
 
 /**
+ * calculate left and width
+ * @param {ScheduleViewModel} viewModel - view model instance to calculate bound.
+ * @param {object} options - options for calculating schedule element's bound.
+ * @returns {object} - left and width
+ */
+Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
+    var width = options.baseWidth * (viewModel.extraSpace + 1);
+
+    // set width auto when has no collisions.
+    if (!viewModel.hasCollide) {
+        width = null;
+    }
+
+    return {
+        left: options.baseLeft[options.columnIndex],
+        width: width
+    };
+};
+
+/**
+ * calculate top, height, croppedStart and croppedEnd
+ * @param {ScheduleViewModel} viewModel - view model instance to calculate bound.
+ * @param {object} options - options for calculating schedule element's bound.
+ * @returns {object} - left and width
+ */
+Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
+    var baseMS = options.baseMS;
+    var baseHeight = options.baseHeight;
+    var croppedStart = false;
+    var croppedEnd = false;
+    var offsetStart = viewModel.valueOf().start - options.todayStart;
+    // containerHeight : milliseconds in day = x : schedule's milliseconds
+    var top = (baseHeight * offsetStart) / baseMS;
+    var height = (baseHeight * viewModel.duration()) / baseMS;
+
+    if (offsetStart < 0) {
+        top = 0;
+        height += ((baseHeight * offsetStart) / baseMS);
+        croppedStart = true;
+    }
+
+    if (height + top > baseHeight) {
+        height = baseHeight - top;
+        croppedEnd = true;
+    }
+
+    return {
+        top: top,
+        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
+        croppedStart: croppedStart,
+        croppedEnd: croppedEnd
+    };
+};
+
+/**
  * @param {ScheduleViewModel} viewModel - view model instance to calculate bound.
  * @param {object} options - options for calculating schedule element's bound.
  * @param {Date} options.todayStart - date object represent schedule date's start (00:00:00)
@@ -88,39 +143,18 @@ Time.prototype._parseDateGroup = function(str) {
  * @returns {object} bound object for supplied view model.
  */
 Time.prototype.getScheduleViewBound = function(viewModel, options) {
-    var baseMS = options.baseMS;
-    var baseHeight = options.baseHeight;
-    var cropped = false;
-    var offsetStart, width, height, top;
+    var boundX = this._getScheduleViewBoundX(viewModel, options);
+    var boundY = this._getScheduleViewBoundY(viewModel, options);
     var isReadOnly = util.pick(viewModel, 'model', 'isReadOnly') || false;
 
-    offsetStart = viewModel.valueOf().start - options.todayStart;
-
-    // containerHeight : milliseconds in day = x : schedule's milliseconds
-    top = (baseHeight * offsetStart) / baseMS;
-    height = (baseHeight * viewModel.duration()) / baseMS;
-    width = options.baseWidth * (viewModel.extraSpace + 1);
-
-    // set width auto when has no collisions.
-    if (!viewModel.hasCollide) {
-        width = null;
-    }
-
-    if (height + top > baseHeight) {
-        height = baseHeight - top;
-        cropped = true;
-    }
-
-    if (isReadOnly || options.isReadOnly) {
-        cropped = true;
-    }
-
     return {
-        top: top,
-        left: options.baseLeft[options.columnIndex],
-        width: width,
-        height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
-        cropped: cropped
+        top: boundY.top,
+        left: boundX.left,
+        width: boundX.width,
+        height: boundY.height,
+        croppedEnd: boundY.croppedEnd,
+        croppedStart: boundY.croppedStart,
+        isReadOnly: isReadOnly
     };
 };
 

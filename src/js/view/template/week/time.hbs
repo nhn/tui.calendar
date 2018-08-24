@@ -10,7 +10,15 @@
                 {{/fi}}
             ">
             <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}time-schedule {{#if model.isFocused}}{{CSS_PREFIX}}time-schedule-focused {{/if}}"
-                style="border-radius: {{@root.styles.borderRadius}};
+                style="
+                {{#unless croppedEnd}}
+                    border-bottom-left-radius: {{@root.styles.borderRadius}};
+                    border-bottom-right-radius: {{@root.styles.borderRadius}};
+                {{/unless}}
+                {{#unless croppedStart}}
+                    border-top-left-radius: {{@root.styles.borderRadius}};
+                    border-top-right-radius: {{@root.styles.borderRadius}};
+                {{/unless}}
                 {{#if model.isFocused}}
                     color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};
                 {{else}}
@@ -18,7 +26,7 @@
                 {{/if}}
                  {{model.customStyle}}"
             >{{{time-tmpl model}}}</div>
-            {{#unless cropped}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x" style="margin-left: {{@root.styles.paddingLeft}};">&nbsp;</div>{{/unless}}
+            {{#unless croppedEnd}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x" style="margin-left: {{@root.styles.paddingLeft}};">&nbsp;</div>{{/unless}}
         </div>
         {{/if ~}}
         {{/each}}

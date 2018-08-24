@@ -6,6 +6,7 @@ var ControllerFactory = require('factory/controller');
 var Schedule = require('model/schedule');
 var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
 var datetime = require('common/datetime');
+var TZDate = require('common/timezone').Date;
 
 describe('Base.Week', function() {
     var stamp = util.stamp;
@@ -137,7 +138,7 @@ describe('Base.Week', function() {
             var start = new Date('2015/04/30'),
                 end = new Date('2015/05/02');
 
-            var result = ctrl.findByDateRange(start, end, panels);
+            var result = ctrl.findByDateRange(start, end, panels, [], {hourStart: 0, hourEnd: 24});
 
             // There are 5 collision blocks on 5/1.
             expect(result.time['20150501'].length).toBe(5);
@@ -148,10 +149,67 @@ describe('Base.Week', function() {
                 end = new Date('2015/05/02');
 
             // Since there is only one event with title J
-            var result = ctrl.findByDateRange(start, end, panels, function(model) {return model.title === 'J';});
+            var result = ctrl.findByDateRange(start, end, panels, function(model) {return model.title === 'J';}, {hourStart: 0, hourEnd: 24});
 
             // One collision block in the timeline group
             expect(result.time['20150501'].length).toBe(1);
+        });
+    });
+
+    describe('_getHourRangeFilter()', function() {
+        var hourRangeFilter;
+        var schedule = {};
+
+        beforeEach(function() {
+            // 8:00 ~ 20:00
+            hourRangeFilter = ctrl._makeHourRangeFilter(10, 12);
+            schedule.model = {};
+        });
+
+        it('filter schedule by start, end date visible', function() {
+            schedule.model.start = new TZDate('2018-05-02T09:30:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T13:30:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T00:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T10:30:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T10:30:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T11:30:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T11:30:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T00:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T10:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(false);
+
+            schedule.model.start = new TZDate('2018-05-02T10:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T12:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T12:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(false);
+
+            schedule.model.start = new TZDate('2018-05-02T09:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T09:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
+
+            schedule.model.start = new TZDate('2018-05-02T09:00:00+09:00');
+            schedule.model.end = new TZDate('2018-05-03T09:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true); // true, false??
+
+            schedule.model.start = new TZDate('2018-05-02T11:00:00+15:00');
+            schedule.model.end = new TZDate('2018-05-03T09:00:00+09:00');
+            expect(hourRangeFilter(schedule)).toBe(true);
         });
     });
 
