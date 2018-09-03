@@ -965,6 +965,27 @@ Calendar.prototype._onClick = function(clickScheduleData) {
 };
 
 /**
+ * A bridge-based event handler for connecting a click handler to a user click event handler for each view
+ * @fires Calendar#clickMore
+ * @param {object} clickMoreSchedule - The event data of 'clickMore' handler
+ * @private
+ */
+Calendar.prototype._onClickMore = function(clickMoreSchedule) {
+    /**
+     * Fire this event when click a schedule.
+     * @event Calendar#clickMore
+     * @type {object}
+     * @property {Date} date - clicked date
+     * @property {HTMLElement} target - more element
+     * @example
+     * calendar.on('clickMore', function(event) {
+     *     console.log('clickMore', event.date, event.target);
+     * });
+     */
+    this.fire('clickMore', clickMoreSchedule);
+};
+
+/**
  * dayname click event handler
  * @fires Calendar#clickDayname
  * @param {object} clickScheduleData - The event data of 'clickDayname' handler
@@ -1156,6 +1177,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
     // bypass events from view
     view[method]('afterRenderSchedule', self._onAfterRenderSchedule, self);
     view[method]('clickTimezonesCollapseBtn', self._onClickTimezonesCollapseBtn, self);
+    view[method]('clickMore', self._onClickMore, self);
 };
 
 /**

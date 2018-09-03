@@ -105,6 +105,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
                     monthView.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
                 }
             });
+
+            monthView.fire('clickMore', {
+                date: clickMoreSchedule.date,
+                target: moreView.getMoreViewElement()
+            });
         }
     });
 

@@ -211,6 +211,14 @@ More.prototype.refresh = function() {
 };
 
 /**
+ * Return more layer root element
+ * @returns {HTMLElement} root element
+ */
+More.prototype.getMoreViewElement = function() {
+    return domutil.find(config.classname('.month-more'), this.layer.container);
+};
+
+/**
  * Get the styles from theme
  * @param {Theme} theme - theme instance
  * @returns {object} styles - styles object
