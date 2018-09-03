@@ -189,6 +189,16 @@ calendar.on('clickSchedule', function(event) {
 });
 ```
 
+#### 'clickMore'
+
+A callback after shown up 'more view'
+
+```javascript
+calendar.on('clickMore', function(event) {
+    console.log('clickMore', event.date, event.target);
+});
+```
+
 ### Move to today/prev/next
 
 #### Today

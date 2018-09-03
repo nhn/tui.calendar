@@ -12,7 +12,7 @@
     var datePicker, selectedCalendar;
 
     cal = new Calendar('#calendar', {
-        defaultView: 'week',
+        defaultView: 'month',
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
         calendars: CalendarList,
@@ -48,6 +48,9 @@
 
     // event handlers
     cal.on({
+        'clickMore': function(e) {
+            console.log('clickMore', e);
+        },
         'clickSchedule': function(e) {
             console.log('clickSchedule', e);
         },
@@ -90,6 +93,10 @@
 
             return true;
         }
+    });
+
+    document.getElementById('calendar').addEventListener('keydown', e => {
+        console.log('keydown', e);
     });
 
     /**
