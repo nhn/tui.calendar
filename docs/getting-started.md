@@ -420,3 +420,24 @@ var cal = new Calendar('#calendar', {
     isReadOnly: true
 });
 ```
+
+### Support timezone
+Show multiple timezones in weekly and daily view. The `showTimezoneCollapseButton` can collapse mutiple timezones. The `timezonesCollapsed` is for initial collapsed state.
+
+```js
+var cal = new Calendar('#calendar', {
+    timezones: [{
+        timezoneOffset: 540,	
+        // displayLabel: 'GMT+09:00',	
+        tooltip: 'Seoul'	
+    }, {	
+        timezoneOffset: -420,	
+        // displayLabel: 'GMT-08:00',	
+        tooltip: 'Los Angeles'	
+    }],	
+    week: {	
+        showTimezoneCollapseButton: true,	
+        timezonesCollapsed: false	
+    }
+});
+```
