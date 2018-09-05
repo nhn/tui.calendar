@@ -1,5 +1,5 @@
 <div class="{{CSS_PREFIX}}time-date-schedule-block" data-id="{{stamp model}}" style="width: 100%; height: 100%;">
     <div class="{{CSS_PREFIX}}time-schedule {{CSS_PREFIX}}time-date-schedule-block-focused" style="color: #ffffff; background-color:{{model.dragBgColor}}; border-color:{{model.borderColor}};">{{{time-tmpl model}}}</div>
-    {{#unless cropped}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x">&nbsp;</div>{{/unless}}
+    {{#unless croppedEnd}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x">&nbsp;</div>{{/unless}}
     <div class="{{CSS_PREFIX}}time-date-schedule-block-cover"></div>
 </div>

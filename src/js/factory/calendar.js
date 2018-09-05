@@ -78,6 +78,8 @@ var mmin = Math.min;
  * @property {boolean} [workweek=false] - show only 5 days except for weekend
  * @property {boolean} [showTimezoneCollapseButton=false] - show a collapse button to close multiple timezones
  * @property {boolean} [timezonesCollapsed=false] - An initial multiple timezones collapsed state
+ * @property {number} [hourStart=0] - Can limit of render hour start.
+ * @property {number} [hourEnd=24] - Can limit of render hour end.
  */
 
 /**
