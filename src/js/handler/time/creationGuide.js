@@ -204,14 +204,15 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
  */
 TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var relatedView = dragStartEventData.relatedView,
+        hourStart = datetime.millisecondsFrom('hour', dragStartEventData.hourStart),
         unitData, styleFunc, styleData, result, top, height, start, end;
 
     unitData = this._styleUnit = this._getUnitData(relatedView);
     styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
     styleData = this._styleStart = styleFunc(dragStartEventData);
 
-    start = styleData[1];
-    end = styleData[2] || (styleData[1] + MIN30);
+    start = styleData[1] + hourStart;
+    end = styleData[2] + hourStart || (start + MIN30);
     top = styleData[0];
     height = (unitData[4] * (end - start) / MIN60);
 

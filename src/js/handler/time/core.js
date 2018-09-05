@@ -83,16 +83,17 @@ var timeCore = {
         /**
          * @param {TZDate} startDate - start date
          * @param {TZDate} endDate - end date
+         * @param {number} hourStart Can limit of render hour start.
          * @returns {object} - common event data for time.*
          */
-        return util.bind(function(startDate, endDate) {
+        return util.bind(function(startDate, endDate, hourStart) {
             var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
 
-            gridY = startDate.getHours() + getNearestHour(startDate.getMinutes());
+            gridY = startDate.getHours() - hourStart + getNearestHour(startDate.getMinutes());
             timeY = viewTime + datetime.millisecondsFrom('hour', gridY);
             nearestGridY = gridY;
             nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY);
-            nearestGridEndY = endDate.getHours() + getNearestHour(endDate.getMinutes());
+            nearestGridEndY = endDate.getHours() - hourStart + getNearestHour(endDate.getMinutes());
             nearestGridEndTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridEndY);
 
             return util.extend({
@@ -104,7 +105,8 @@ var timeCore = {
                 nearestGridTimeY: nearestGridTimeY,
                 nearestGridEndY: nearestGridEndY,
                 nearestGridEndTimeY: nearestGridEndTimeY,
-                triggerEvent: 'manual'
+                triggerEvent: 'manual',
+                hourStart: hourStart
             });
         }, this);
     },

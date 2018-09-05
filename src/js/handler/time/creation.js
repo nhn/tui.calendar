@@ -354,6 +354,7 @@ TimeCreation.prototype.invokeCreationClick = function(schedule) {
             datetime.parse(opt.renderStartDate),
             datetime.parse(opt.renderEndDate),
             datetime.MILLISECONDS_PER_DAY),
+        hourStart = opt.hourStart,
         targetDate = schedule.start;
     var getScheduleDataFunc, eventData, timeView;
 
@@ -369,7 +370,7 @@ TimeCreation.prototype.invokeCreationClick = function(schedule) {
     }
 
     getScheduleDataFunc = this._retriveScheduleDataFromDate(timeView);
-    eventData = getScheduleDataFunc(schedule.start, schedule.end);
+    eventData = getScheduleDataFunc(schedule.start, schedule.end, hourStart);
 
     this.fire('timeCreationClick', eventData);
 
