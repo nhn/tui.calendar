@@ -11,6 +11,8 @@ var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
 
+var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
+
 /**
  * Schedule category
  * @readonly
@@ -170,6 +172,18 @@ function Schedule() {
     this.state = '';
 
     /**
+     * travelTime: going-Duration minutes
+     * @type {number}
+     */
+    this.goingDuration = 0;
+
+    /**
+     * travelTime: coming-Duration minutes
+     * @type {number}
+     */
+    this.comingDuration = 0;
+
+    /**
      * Separate data storage space independent of rendering.
      * @type {object}
      */
@@ -234,6 +248,8 @@ Schedule.prototype.init = function(options) {
     this.isPending = options.isPending || false;
     this.isFocused = options.isFocused || false;
     this.isReadOnly = options.isReadOnly || false;
+    this.goingDuration = options.goingDuration || 0;
+    this.comingDuration = options.comingDuration || 0;
 
     if (this.isAllDay) {
         this.setAllDayPeriod(options.start, options.end);
@@ -368,6 +384,23 @@ Schedule.prototype.collidesWith = function(schedule) {
         ownEnds = this.getEnds(),
         start = schedule.getStarts(),
         end = schedule.getEnds();
+    var ownGoingDuration = datetime.millisecondsFrom('minutes', this.goingDuration),
+        ownComingDuration = datetime.millisecondsFrom('minutes', this.comingDuration),
+        goingDuration = datetime.millisecondsFrom('minutes', schedule.goingDuration),
+        comingDuration = datetime.millisecondsFrom('minutes', schedule.comingDuration);
+
+    if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
+        ownEnds += SCHEDULE_MIN_DURATION;
+    }
+
+    if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
+        end += SCHEDULE_MIN_DURATION;
+    }
+
+    ownStarts -= ownGoingDuration;
+    ownEnds += ownComingDuration;
+    start -= goingDuration;
+    end += comingDuration;
 
     if ((start > ownStarts && start < ownEnds) ||
         (end > ownStarts && end < ownEnds) ||

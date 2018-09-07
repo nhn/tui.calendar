@@ -28,6 +28,8 @@ var mmin = Math.min;
  * @property {string} title - schedule title
  * @property {string|TZDate} start - start time. It's 'string' for input. It's 'TZDate' for output like event handler.
  * @property {string|TZDate} end - end time. It's 'string' for input. It's 'TZDate' for output like event handler.
+ * @property {number} goingDuration - travel time:  going duration
+ * @property {number} comingDuration - travel time: coming duration
  * @property {boolean} isAllDay - all day schedule
  * @property {string} category - schedule type('milestone', 'task', allday', 'time')
  * @property {string} dueDateClass - task schedule type string

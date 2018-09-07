@@ -30,6 +30,8 @@ function ScheduleInfo() {
     this.isPending = false;
     this.isVisible = true;
     this.isReadOnly = false;
+    this.goingDuration = 0;
+    this.comingDuration = 0;
 
     this.raw = {
         memo: '',
@@ -79,6 +81,15 @@ function generateTime(schedule, renderStart, renderEnd) {
     schedule.end = endDate
         .add(chance.integer({min: 1, max: 4}), 'hour')
         .toDate();
+
+    if (!schedule.isAllday && chance.bool({likelihood: 20})) {
+        schedule.goingDuration = chance.integer({min: 30, max: 120});
+        schedule.comingDuration = chance.integer({min: 30, max: 120});;
+
+        if (chance.bool({likelihood: 50})) {
+            schedule.end = schedule.start;
+        }
+    }
 }
 
 function generateRandomSchedule(calendar, renderStart, renderEnd) {

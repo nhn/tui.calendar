@@ -13,6 +13,10 @@ var FloatingLayer = require('../../common/floatingLayer');
 var tmpl = require('../../view/template/week/timeMoveGuide.hbs');
 var TZDate = require('../../common/timezone').Date;
 var Schedule = require('../../model/schedule');
+var datetime = require('../../common/datetime');
+var common = require('../../common/common');
+
+var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
  * Class for Time.Move effect.
@@ -29,6 +33,11 @@ function TimeMoveGuide(timeMove) {
      * @Type {Schedule}
      */
     this._model = null;
+
+    /**
+     * @type {object}
+     */
+    this._viewModel = null;
 
     /**
      * @type {object}
@@ -83,7 +92,7 @@ TimeMoveGuide.prototype.destroy = function() {
         this._guideLayer.destroy();
     }
     this.guideElement = this.timeMove = this._container = this._guideLayer = this._lastDrag =
-        this._getTopFunc = this._startGridY = this._startTopPixel = null;
+        this._getTopFunc = this._startGridY = this._startTopPixel = this._viewModel = null;
 };
 
 /**
@@ -100,7 +109,7 @@ TimeMoveGuide.prototype._clearGuideElement = function() {
     this._showOriginScheduleBlocks();
 
     this.guideElement = this._getTopFunc = this._guideLayer = this._model = this._lastDrag =
-        this._startGridY = this._startTopPixel = null;
+        this._startGridY = this._startTopPixel = this._viewModel = null;
 };
 
 /**
@@ -128,8 +137,9 @@ TimeMoveGuide.prototype._showOriginScheduleBlocks = function() {
  * Refresh guide element
  * @param {string} top - guide element's style top.
  * @param {Schedule} model - updated model
+ * @param {object} viewModel - view model
  */
-TimeMoveGuide.prototype._refreshGuideElement = function(top, model) {
+TimeMoveGuide.prototype._refreshGuideElement = function(top, model, viewModel) {
     var self = this;
 
     reqAnimFrame.requestAnimFrame(function() {
@@ -137,7 +147,7 @@ TimeMoveGuide.prototype._refreshGuideElement = function(top, model) {
             return;
         }
         self._guideLayer.setPosition(0, top);
-        self._guideLayer.setContent(tmpl({model: model}));
+        self._guideLayer.setContent(tmpl(util.extend({model: model}, viewModel)));
     });
 };
 
@@ -150,6 +160,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         dragStartEventData.target,
         config.classname('.time-date-schedule-block')
     );
+    var duration, modelDuration, goingDuration, comingDuration;
 
     if (!guideElement) {
         return;
@@ -164,7 +175,21 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         Schedule.create(dragStartEventData.model),
         dragStartEventData.model
     );
+
+    modelDuration = this._model.duration().getTime();
+    modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
+    goingDuration = datetime.millisecondsFrom('minutes', this._model.goingDuration);
+    comingDuration = datetime.millisecondsFrom('minutes', this._model.comingDuration);
+    duration = goingDuration + modelDuration + comingDuration;
+
     this._lastDrag = dragStartEventData;
+    this._viewModel = {
+        hasGoingDuration: goingDuration > 0,
+        hasComingDuration: comingDuration > 0,
+        goingDurationHeight: common.ratio(duration, goingDuration, 100),
+        modelDurationHeight: common.ratio(duration, modelDuration, 100),
+        comingDurationHeight: common.ratio(duration, comingDuration, 100)
+    };
 
     this._resetGuideLayer();
     this._hideOriginScheduleBlocks();
@@ -206,7 +231,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     this._model.end = new TZDate(this._model.getEnds().getTime() + timeDiff);
     this._lastDrag = dragEventData;
 
-    this._refreshGuideElement(top, this._model);
+    this._refreshGuideElement(top, this._model, this._viewModel);
 };
 
 TimeMoveGuide.prototype._resetGuideLayer = function() {
@@ -217,7 +242,7 @@ TimeMoveGuide.prototype._resetGuideLayer = function() {
     this._guideLayer = new FloatingLayer(null, this._container);
     this._guideLayer.setSize(this._container.getBoundingClientRect().width, this.guideElement.style.height);
     this._guideLayer.setPosition(0, this.guideElement.style.top);
-    this._guideLayer.setContent(tmpl({model: this._model}));
+    this._guideLayer.setContent(tmpl(util.extend({model: this._model}, this._viewModel)));
     this._guideLayer.show();
 };
 

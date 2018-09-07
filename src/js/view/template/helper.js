@@ -300,6 +300,22 @@ Handlebars.registerHelper({
         return common.stripTags(model.title);
     },
 
+    'goingDuration-tmpl': function(model) {
+        var goingDuration = model.goingDuration;
+        var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
+        var minutes = goingDuration % SIXTY_MINUTES;
+
+        return 'Travel Time ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+    },
+
+    'comingDuration-tmpl': function(model) {
+        var goingDuration = model.goingDuration;
+        var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
+        var minutes = goingDuration % SIXTY_MINUTES;
+
+        return 'Travel Time ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+    },
+
     'monthMoreTitleDate-tmpl': function(date, dayname) {
         var classDay = config.classname('month-more-title-day');
         var classDayLabel = config.classname('month-more-title-day-label');
@@ -445,7 +461,7 @@ Handlebars.registerHelper({
         if (util.isUndefined(displayLabel)) {
             gmt = timezoneOffset < 0 ? '-' : '+';
             hour = Math.abs(parseInt(timezoneOffset / SIXTY_MINUTES, 10));
-            minutes = Math.abs(timezoneOffset % 60);
+            minutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
             displayLabel = gmt + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
         }
 

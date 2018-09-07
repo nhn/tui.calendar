@@ -9,6 +9,7 @@ var config = require('../../config');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var ratio = require('../../common/common').ratio;
+var datetime = require('../../common/datetime');
 
 /**
  * Class for Time.Resize effect.
@@ -50,6 +51,11 @@ function TimeResizeGuide(timeResize) {
      * @type {number}
      */
     this._startGridY = 0;
+
+    /**
+     * @type {Schedule}
+     */
+    this._schedule = null;
 
     timeResize.on({
         'timeResizeDragstart': this._onDragStart,
@@ -93,18 +99,28 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
 
 /**
  * Refresh guide element
- * @param {string} height - guide element's style height.
+ * @param {number} guideHeight - guide element's style height.
+ * @param {number} minTimeHeight - time element's min height
+ * @param {number} timeHeight - time element's height.
  */
-TimeResizeGuide.prototype._refreshGuideElement = function(height) {
+TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight) {
     var guideElement = this.guideElement;
+    var timeElement;
 
     if (!guideElement) {
         return;
     }
 
+    timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
+
     reqAnimFrame.requestAnimFrame(function() {
-        guideElement.style.height = height + 'px';
+        guideElement.style.height = guideHeight + 'px';
         guideElement.style.display = 'block';
+
+        if (timeElement) {
+            timeElement.style.height = timeHeight + 'px';
+            timeElement.style.minHeight = minTimeHeight + 'px';
+        }
     });
 };
 
@@ -117,13 +133,14 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
             dragStartEventData.target,
             config.classname('.time-date-schedule-block')
         ),
+        schedule = dragStartEventData.schedule,
         guideElement;
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('resizing'));
     }
 
-    if (!originElement) {
+    if (!originElement || !schedule) {
         return;
     }
 
@@ -132,6 +149,8 @@ TimeResizeGuide.prototype._onDragStart = function(dragStartEventData) {
     this._startTopPixel = parseFloat(originElement.style.top);
 
     this._originScheduleElement = originElement;
+    this._schedule = schedule;
+
     guideElement = this.guideElement = originElement.cloneNode(true);
     domutil.addClass(guideElement, config.classname('time-guide-resize'));
 
@@ -152,6 +171,12 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
         // hourLength : viewHeight = gridYOffset : X;
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
+        goingDuration = this._schedule.goingDuration,
+        modelDuration = this._schedule.duration().getTime() / datetime.MILLISECONDS_PER_MINUTES,
+        comingDuration = this._schedule.comingDuration,
+        minutesLength = hourLength * 60,
+        timeHeight,
+        timeMinHeight,
         minHeight,
         maxHeight,
         height;
@@ -160,13 +185,17 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
     // at least large than 30min from schedule start time.
     minHeight = guideTop + ratio(hourLength, viewHeight, 0.5);
     minHeight -= this._startTopPixel;
+    timeMinHeight = minHeight;
+    minHeight += ratio(minutesLength, viewHeight, goingDuration) + ratio(minutesLength, viewHeight, comingDuration);
     // smaller than 24h
     maxHeight = viewHeight - guideTop;
 
     height = Math.max(height, minHeight);
     height = Math.min(height, maxHeight);
 
-    this._refreshGuideElement(height);
+    timeHeight = ratio(minutesLength, viewHeight, modelDuration) + gridYOffsetPixel;
+
+    this._refreshGuideElement(height, timeMinHeight, timeHeight);
 };
 
 module.exports = TimeResizeGuide;

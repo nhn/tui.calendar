@@ -11,7 +11,14 @@ describe('handler/time.resize.guide', function() {
             guideElement: document.createElement('div'),
             _startGridY: 0,
             _startHeightPixel: 10,    // 1 hour
-            _startTopPixel: 0
+            _startTopPixel: 0,
+            _schedule: {
+                goingDuration: 0,
+                comingDuration: 0,
+                duration: function() {
+                    return new Date();
+                }
+            }
         });
 
         mockInstance.guideElement.style.top = '0px';
