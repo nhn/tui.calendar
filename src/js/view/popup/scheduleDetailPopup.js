@@ -155,10 +155,13 @@ ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(even
         top: parentRect.top
     };
     var scheduleEl = event.target || event.srcElement;
-    var scheduleBound = scheduleEl.getBoundingClientRect();
+    var blockEl = domutil.closest(scheduleEl, config.classname('.time-date-schedule-block'))
+        || domutil.closest(scheduleEl, config.classname('.weekday-schedule'))
+        || scheduleEl;
+    var scheduleBound = blockEl.getBoundingClientRect();
     var pos;
 
-    this._scheduleEl = scheduleEl;
+    this._scheduleEl = blockEl;
 
     pos = this._calcRenderingData(layerSize, windowSize, scheduleBound);
     pos.x -= parentBounds.left + 4;
