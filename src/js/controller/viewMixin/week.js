@@ -12,7 +12,7 @@ var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
 
-var MILLISECONDS_SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
+var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
  * @mixin Base.Week
@@ -32,6 +32,8 @@ var Week = {
         var row,
             col,
             schedule,
+            start,
+            end,
             map = [],
             cursor = [],
             maxColLen = Math.max.apply(null, util.map(matrix, function(col) {
@@ -43,7 +45,14 @@ var Week = {
             schedule = util.pick(matrix, row, col);
 
             while (schedule) {
-                cursor.push([schedule.getStarts().getTime(), schedule.getEnds().getTime()]);
+                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', schedule.valueOf().goingDuration);
+                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', schedule.valueOf().comingDuration);
+
+                if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
+                    end += SCHEDULE_MIN_DURATION;
+                }
+
+                cursor.push([start, end]);
 
                 row += 1;
                 schedule = util.pick(matrix, row, col);
@@ -120,9 +129,12 @@ var Week = {
                     startTime = viewModel.getStarts().getTime();
                     endTime = viewModel.getEnds().getTime();
 
-                    if (Math.abs(endTime - startTime) < MILLISECONDS_SCHEDULE_MIN_DURATION) {
-                        endTime += MILLISECONDS_SCHEDULE_MIN_DURATION;
+                    if (Math.abs(endTime - startTime) < SCHEDULE_MIN_DURATION) {
+                        endTime += SCHEDULE_MIN_DURATION;
                     }
+
+                    startTime -= datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
+                    endTime += datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
 
                     endTime -= 1;
 

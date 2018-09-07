@@ -100,6 +100,8 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
     var target = dragStartEventData.target,
         timeView = this.checkExpectCondition(target),
         blockElement = domutil.closest(target, config.classname('.time-date-schedule-block')),
+        ctrl = this.baseController,
+        targetModelID,
         getScheduleDataFunc,
         scheduleData;
 
@@ -107,10 +109,12 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
         return;
     }
 
+    targetModelID = domutil.getData(blockElement, 'id');
     getScheduleDataFunc = this._getScheduleDataFunc = this._retriveScheduleData(timeView);
     scheduleData = this._dragStart = getScheduleDataFunc(
         dragStartEventData.originEvent, {
-            targetModelID: domutil.getData(blockElement, 'id')
+            targetModelID: targetModelID,
+            schedule: ctrl.schedules.items[targetModelID]
         }
     );
 
@@ -132,6 +136,7 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} nearestGridY - nearest grid index related with mouseY value.
      * @property {number} nearestGridTimeY - time value for nearestGridY.
      * @property {string} targetModelID - The model unique id emitted move schedule.
+     * @property {Schedule} schedule - schedule data
      */
     this.fire('timeResizeDragstart', scheduleData);
 };

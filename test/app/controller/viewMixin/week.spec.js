@@ -7,6 +7,7 @@ var Schedule = require('model/schedule');
 var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
 var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
+var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 describe('Base.Week', function() {
     var stamp = util.stamp;
@@ -92,7 +93,7 @@ describe('Base.Week', function() {
             ];
 
             expected = [
-                [[1, 2], [5, 6]]
+                [[1, 2 + SCHEDULE_MIN_DURATION], [5, 6 + SCHEDULE_MIN_DURATION]]
             ];
         });
 

@@ -13,6 +13,7 @@ var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
 
 var forEachArr = util.forEachArray;
+var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
  * @constructor
@@ -106,10 +107,25 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     var baseHeight = options.baseHeight;
     var croppedStart = false;
     var croppedEnd = false;
-    var offsetStart = viewModel.valueOf().start - options.todayStart;
+    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
+    var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+    var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
     // containerHeight : milliseconds in day = x : schedule's milliseconds
     var top = (baseHeight * offsetStart) / baseMS;
-    var height = (baseHeight * viewModel.duration()) / baseMS;
+    var modelDuration = viewModel.duration().getTime();
+    var height;
+    var duration;
+    var goingDurationHeight;
+    var modelDurationHeight;
+    var comingDurationHeight;
+
+    modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
+    duration = modelDuration + goingDuration + comingDuration;
+    height = (baseHeight * duration) / baseMS;
+
+    goingDurationHeight = (baseHeight * goingDuration) / baseMS; // common.ratio(duration, goingDuration, 100);
+    modelDurationHeight = (baseHeight * modelDuration) / baseMS; // common.ratio(duration, modelDuration, 100);
+    comingDurationHeight = (baseHeight * comingDuration) / baseMS; // common.ratio(duration, comingDuration, 100);
 
     if (offsetStart < 0) {
         top = 0;
@@ -125,6 +141,11 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     return {
         top: top,
         height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
+        modelDurationHeight: modelDurationHeight,
+        goingDurationHeight: goingDurationHeight,
+        comingDurationHeight: comingDurationHeight,
+        hasGoingDuration: goingDuration > 0,
+        hasComingDuration: comingDuration > 0,
         croppedStart: croppedStart,
         croppedEnd: croppedEnd
     };
@@ -145,17 +166,17 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
 Time.prototype.getScheduleViewBound = function(viewModel, options) {
     var boundX = this._getScheduleViewBoundX(viewModel, options);
     var boundY = this._getScheduleViewBoundY(viewModel, options);
-    var isReadOnly = util.pick(viewModel, 'model', 'isReadOnly') || false;
+    var schedule = viewModel.model;
+    var isReadOnly = util.pick(schedule, 'isReadOnly') || false;
+    var travelBorderColor = schedule.isFocused ? '#ffffff' : schedule.borderColor;
+    if (travelBorderColor === schedule.bgColor) {
+        travelBorderColor = null; // follow text color
+    }
 
-    return {
-        top: boundY.top,
-        left: boundX.left,
-        width: boundX.width,
-        height: boundY.height,
-        croppedEnd: boundY.croppedEnd,
-        croppedStart: boundY.croppedStart,
-        isReadOnly: isReadOnly
-    };
+    return util.extend({
+        isReadOnly: isReadOnly,
+        travelBorderColor: travelBorderColor
+    }, boundX, boundY);
 };
 
 /**
