@@ -365,6 +365,20 @@ var calendar = new Calendar('#calendar', {
         },
         timegridDisplayTime: function(time) {
             return time.hour + ':' + time.minutes;
+        },
+        goingDuration: function(model) {
+            var goingDuration = model.goingDuration;
+            var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
+            var minutes = goingDuration % SIXTY_MINUTES;
+
+            return 'GoingTime ' + hour + ':' + minutes;
+        },
+        comingDuration: function(model) {
+            var goingDuration = model.goingDuration;
+            var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
+            var minutes = goingDuration % SIXTY_MINUTES;
+
+            return 'ComingTime ' + hour + ':' + minutes;
         }
     }
 });

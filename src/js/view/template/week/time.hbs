@@ -27,13 +27,13 @@
                  {{model.customStyle}}"
             >
             {{#if hasGoingDuration}}
-                <div class="{{CSS_PREFIX}}time-schedule-content" style="height: {{goingDurationHeight}}px;
+                <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-travel-time" style="height: {{goingDurationHeight}}px;
                 {{#if model.isFocused}}
                     border-color:{{model.color}};
                 {{else}}
                     border-color:{{model.borderColor}};
                 {{/if}}
-                border-bottom: 1px solid {{travelBorderColor}};">{{{goingDuration-tmpl model}}}</div>
+                border-bottom: 1px dashed {{travelBorderColor}};">{{{goingDuration-tmpl model}}}</div>
             {{/if}}
                 <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time" style="height: {{modelDurationHeight}}px;
                 {{#if model.isFocused}}
@@ -41,11 +41,11 @@
                 {{else}}
                     border-color:{{model.borderColor}};
                 {{/if}}
-                {{#if hasComingDuration}}border-bottom: 1px solid {{travelBorderColor}};{{/if}}">
+                {{#if hasComingDuration}}border-bottom: 1px dashed {{travelBorderColor}};{{/if}}">
                     {{{time-tmpl model}}}
                 </div>
             {{#if hasComingDuration}}
-                <div class="{{CSS_PREFIX}}time-schedule-content" style="height: {{comingDurationHeight}}px;
+                <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-travel-time" style="height: {{comingDurationHeight}}px;
                 {{#if model.isFocused}}
                     border-color:{{model.color}};
                 {{else}}

@@ -305,7 +305,7 @@ Handlebars.registerHelper({
         var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
         var minutes = goingDuration % SIXTY_MINUTES;
 
-        return 'Travel Time ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+        return 'GoingTime ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
     },
 
     'comingDuration-tmpl': function(model) {
@@ -313,7 +313,7 @@ Handlebars.registerHelper({
         var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
         var minutes = goingDuration % SIXTY_MINUTES;
 
-        return 'Travel Time ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+        return 'ComingTime ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
     },
 
     'monthMoreTitleDate-tmpl': function(date, dayname) {
