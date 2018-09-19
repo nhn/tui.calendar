@@ -212,35 +212,19 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
         schedule = ctrl.schedules.items[modelID],
         relatedView = scheduleData.relatedView,
         currentView = scheduleData.currentView,
-        scheduleDuration,
-        dateStart,
-        dateEnd,
         newStarts,
-        newEnds,
-        baseDate;
+        newEnds;
 
     if (!schedule || !currentView) {
         return;
     }
 
     timeDiff -= datetime.millisecondsFrom('minutes', 30);
-    baseDate = new TZDate(relatedView.getDate());
-    dateStart = datetime.start(baseDate);
-    dateEnd = datetime.end(baseDate);
     newStarts = new TZDate(schedule.getStarts().getTime() + timeDiff);
     newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
-    scheduleDuration = schedule.duration();
 
     if (currentView) {
         dateDiff = currentView.getDate() - relatedView.getDate();
-    }
-
-    if (newStarts < dateStart) {
-        newStarts = new TZDate(dateStart.getTime());
-        newEnds = new TZDate(newStarts.getTime() + scheduleDuration.getTime());
-    } else if (newEnds > dateEnd) {
-        newEnds = new TZDate(dateEnd.getTime());
-        newStarts = new TZDate(newEnds.getTime() - scheduleDuration.getTime());
     }
 
     newStarts = new TZDate(newStarts.getTime() + dateDiff);
