@@ -153,10 +153,6 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('title', options.title);
     }
 
-    if (options.isAllDay) {
-        schedule.set('isAllDay', options.isAllDay);
-    }
-
     if (options.start || options.end) {
         if (schedule.isAllDay) {
             schedule.setAllDayPeriod(start, end);
@@ -179,6 +175,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     if (options.origin) {
         schedule.set('origin', options.origin);
+    }
+
+    if (!util.isUndefined(options.isAllDay)) {
+        schedule.set('isAllDay', options.isAllDay);
     }
 
     if (!util.isUndefined(options.isPending)) {
