@@ -108,9 +108,9 @@ var mmin = Math.min;
 
 /**
  * @typedef {object} CalendarColor
- * @property {string} [CalendarColor.color] - calendar color
- * @property {string} [CalendarColor.bgColor] - calendar background color
- * @property {string} [CalendarColor.borderColor] - calendar left border color
+ * @property {string} [color] - calendar color
+ * @property {string} [bgColor] - calendar background color
+ * @property {string} [borderColor] - calendar left border color
  */
 
 /**
@@ -145,7 +145,7 @@ var mmin = Math.min;
  * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
  * @property {boolean} [useCreationPopup=false] - whether use default creation popup or not
  * @property {boolean} [useDetailPopup=false] - whether use default detail popup or not
- * @property {Array.<Timezone>} [timezones] - timezone array. 
+ * @property {Array.<Timezone>} [timezones] - timezone array.
  *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
  *  The rest timezone elements are shown in left timegrid of weekly/daily view.
  * @property {boolean} [disableDblClick=false] - disable double click to create a schedule
@@ -153,8 +153,8 @@ var mmin = Math.min;
  */
 
 /**
- * @typedef {class} CustomEvents
  * {@link https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhnent/tui.code-snippet tui-code-snippet}
+ * @typedef {class} CustomEvents
  */
 
 /**
@@ -1113,7 +1113,7 @@ Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
      * Fire this event by every single schedule after rendering whole calendar.
      * @event Calendar#afterRenderSchedule
      * @type {object}
-     * @property {Schedule} schedule - a rendered schedule instance 
+     * @property {Schedule} schedule - a rendered schedule instance
      * @example
      * calendar.on('afterRenderSchedule', function(event) {
      *     var schedule = event.schedule;
@@ -1214,7 +1214,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
  * calendar.setOptions({week: {startDayOfWeek: 1}}, true);
  * calendar.setOptions({month: {startDayOfWeek: 1}}, true);
  * calendar.changeView(calendar.getViewName(), true);
- * 
+ *
  * // work week
  * calendar.setOptions({week: {workweek: true}}, true);
  * calendar.setOptions({month: {workweek: true}}, true);

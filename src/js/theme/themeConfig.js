@@ -5,11 +5,11 @@
 'use strict';
 
 /**
- * @typedef {object} themeConfig
- * Full configuration for theme.<br>
- * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".<br>
- * "week" prefix is for weekly and daily view.<br>
+ * Full configuration for theme.
+ * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".
+ * "week" prefix is for weekly and daily view.
  * "month" prefix is for monthly view.
+ * @typedef {object} themeConfig
  * @example
  // default keys and styles
  var themeConfig = {
