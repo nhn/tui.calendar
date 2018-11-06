@@ -26,7 +26,7 @@ function findCalendar(id) {
         }
     });
 
-    return found;
+    return found || CalendarList[0];
 }
 
 function hexToRGBA(hex) {
