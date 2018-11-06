@@ -250,6 +250,7 @@ Schedule.prototype.init = function(options) {
     this.isReadOnly = options.isReadOnly || false;
     this.goingDuration = options.goingDuration || 0;
     this.comingDuration = options.comingDuration || 0;
+    this.state = options.state || '';
 
     if (this.isAllDay) {
         this.setAllDayPeriod(options.start, options.end);
