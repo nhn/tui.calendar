@@ -36,7 +36,7 @@ function ScheduleCreationPopup(container, calendars) {
      */
     this._viewModel = null;
     this._selectedCal = null;
-    this._scheduleId = '';
+    this._schedule = null;
     this.calendars = calendars;
     this._focusedDropdown = null;
     this._onClickListeners = [
@@ -285,7 +285,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     if (this._isEditMode) {
         this.fire('beforeUpdateSchedule', {
             schedule: {
-                calendarId: calendarId,
+                calendarId: calendarId || this._schedule.calendarId,
                 title: title.value,
                 location: location.value,
                 raw: {
@@ -296,7 +296,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
                 isAllDay: isAllDay,
                 state: state.innerText,
                 triggerEventName: 'click',
-                id: this._scheduleId
+                id: this._schedule.id
             },
             start: start,
             end: end,
@@ -388,7 +388,7 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         return cal.id === viewModel.schedule.calendarId;
     });
 
-    this._scheduleId = id;
+    this._schedule = schedule;
 
     return {
         id: id,
