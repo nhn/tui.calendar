@@ -26,12 +26,16 @@
     "jquery-plugin"
   ],
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-tui": "^1.0.3",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
+    "eslint-plugin-react": "^7.10.0",
     "extract-loader": "^2.0.1",
     "handlebars": "^4.0.11",
     "handlebars-template-loader": "^1.0.0",
@@ -75,13 +79,15 @@
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
     "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production",
-    "serve": "webpack-dev-server --mode development --progress --inline --hot",
+    "serve": "webpack-dev-server --mode development --progress --inline --hot --https",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc",
     "release-note": "tuie",
     "eslint": "eslint ./src"
   },
   "dependencies": {
+    "snabbdom": "^0.7.1",
+    "snabbdom-pragma": "^2.7.0",
     "tui-code-snippet": "^1.4.0",
     "tui-date-picker": "~3.0.0",
     "tui-time-picker": "^1.4.0"

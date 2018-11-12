@@ -5,13 +5,11 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var config = require('../../config'),
-    common = require('../../common/common.js'),
-    domutil = require('../../common/domutil'),
-    View = require('../../view/view'),
+var View = require('../../view/view'),
     Weekday = require('../weekday'),
     baseTmpl = require('../template/month/weekdayInMonth.hbs'),
-    scheduleTmpl = require('../template/month/weekdayInMonthSchedule.hbs');
+    baseTmplJsx = require('../template/month/weekdayInMonth.jsx'),
+    Renderer = require('../template/Renderer');
 var mfloor = Math.floor,
     mmin = Math.min;
 
@@ -28,8 +26,10 @@ var mfloor = Math.floor,
  *  view.
  */
 function WeekdayInMonth(options, container) {
+    this.weekdayViewContainer = container;
     Weekday.call(this, options, container);
-    container.style.height = options.heightPercent + '%';
+
+    this.weekdayRenderer = new Renderer(this.container, baseTmpl, baseTmplJsx);
 }
 
 util.inherit(WeekdayInMonth, Weekday);
@@ -107,31 +107,13 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
  */
 WeekdayInMonth.prototype.render = function(viewModel) {
     var container = this.container,
-        baseViewModel = this.getBaseViewModel(viewModel),
-        scheduleContainer;
+        baseViewModel = this.getBaseViewModel(viewModel);
 
     if (!this.options.visibleWeeksCount) {
         setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
     }
 
-    container.innerHTML = baseTmpl(baseViewModel);
-
-    scheduleContainer = domutil.find(
-        config.classname('.weekday-schedules'),
-        container
-    );
-
-    if (!scheduleContainer) {
-        return;
-    }
-
-    scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
-
-    common.setAutoEllipsis(
-        config.classname('.weekday-schedule-title'),
-        container,
-        true
-    );
+    this.weekdayRenderer.draw(baseViewModel, container.className);
 };
 
 WeekdayInMonth.prototype._beforeDestroy = function() {

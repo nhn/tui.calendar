@@ -1,7 +1,13 @@
 {
-    "extends": "tui",
+    "extends": ["tui", "plugin:react/recommended"],
     "globals": {
         "chance": true,
         "moment": true
+    },
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "object-property-newline": "off",
+        "complexity": "off"
     }
 }

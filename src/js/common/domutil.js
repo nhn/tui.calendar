@@ -33,12 +33,11 @@ domutil = {
      * @returns {HTMLElement} HTML element created.
      */
     appendHTMLElement: function(tagName, container, className) {
-        var el;
+        var el = document.createElement(tagName);
 
-        className = className || '';
-
-        el = document.createElement(tagName);
-        el.className = className;
+        if (className) {
+            el.className = className;
+        }
 
         if (container) {
             container.appendChild(el);

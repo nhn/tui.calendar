@@ -18,6 +18,8 @@ var dw = require('../common/dw'),
     timezone = require('../common/timezone'),
     reqAnimFrame = require('../common/reqAnimFrame');
 
+var Templates = require('../view/template/templateFactory');
+
 var mmin = Math.min;
 
 /**
@@ -410,6 +412,8 @@ Calendar.prototype._initialize = function(options) {
     util.forEach(this._options.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
+
+            Templates.set(name, func);
         }
     });
 

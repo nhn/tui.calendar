@@ -95,6 +95,8 @@ View.prototype.removeChild = function(id, fn) {
     }
 
     this.children.remove(id);
+
+    domutil.remove(view.container);
 };
 
 /**

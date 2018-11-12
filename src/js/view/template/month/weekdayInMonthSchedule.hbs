@@ -26,7 +26,7 @@
                 {{/if}}
                     {{model.customStyle}}">
             <span class="{{CSS_PREFIX}}weekday-schedule-title"
-                  data-title="{{model.title}}">{{{allday-tmpl model}}}</span>
+                  title="{{model.title}}">{{{allday-tmpl model}}}</span>
             {{#unless (or @root.isReadOnly model.isReadOnly)}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y" style="line-height: {{@root.scheduleHeight}}px;">&nbsp;</span>{{/unless}}
         </div>
         {{else ~}}

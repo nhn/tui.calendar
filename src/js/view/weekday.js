@@ -32,20 +32,15 @@ function Weekday(options, container) {
     /**
      * @type {object}
      */
-    this.options = util.extend({
-        containerBottomGutter: 8,
-        scheduleHeight: 18,
-        scheduleGutter: 2,
-        narrowWeekend: false,
-        startDayOfWeek: 0,
-        workweek: false
-    }, options);
+    this.options = {};
 
     /*
      * cache parent's view model
      * @type {object}
      */
     this._cacheParentViewModel = null;
+
+    this.updateOptions(options);
 
     View.call(this, container);
 }
@@ -147,6 +142,21 @@ Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
     });
 
     return exceedDate;
+};
+
+/**
+ * Set options
+ * @param {object} options - view options.
+ */
+Weekday.prototype.updateOptions = function(options) {
+    this.options = util.extend({
+        containerBottomGutter: 8,
+        scheduleHeight: 18,
+        scheduleGutter: 2,
+        narrowWeekend: false,
+        startDayOfWeek: 0,
+        workweek: false
+    }, options);
 };
 
 /**

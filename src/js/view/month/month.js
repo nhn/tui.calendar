@@ -10,9 +10,11 @@ var config = require('../../config'),
     domutil = require('../../common/domutil'),
     TZDate = require('../../common/timezone').Date,
     tmpl = require('../template/month/month.hbs'),
+    tmplJsx = require('../template/month/month.jsx'),
     View = require('../view'),
     VLayout = require('../..//common/vlayout'),
-    WeekdayInMonth = require('./weekdayInMonth');
+    WeekdayInMonth = require('./weekdayInMonth'),
+    Renderer = require('../template/Renderer');
 var mmin = Math.min;
 
 /**
@@ -89,6 +91,8 @@ function Month(options, container, controller) {
         this.options.daynames.length,
         this.options.narrowWeekend,
         this.options.startDayOfWeek);
+
+    this.dayNameRenderer = new Renderer(this.vLayout.panels[0].container, tmpl, tmplJsx);
 }
 
 util.inherit(Month, View);
@@ -149,20 +153,24 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     var visibleScheduleCount = opt.visibleScheduleCount;
     var gridOption = opt.grid;
     var isReadOnly = opt.isReadOnly;
+    var children = this.children.toArray();
 
-    container.innerHTML = '';
-    this.children.clear();
+    util.forEach(children, function(child, index) {
+        if (index >= weekCount && children.length > weekCount) {
+            this.removeChild(child.id);
+            domutil.remove(child.weekdayViewContainer);
+        }
+    }, this);
 
-    util.forEach(calendar, function(weekArr) {
+    children = this.children.toArray();
+
+    util.forEach(calendar, function(weekArr, index) {
         var start = new TZDate(Number(weekArr[0])),
             end = new TZDate(Number(weekArr[weekArr.length - 1])),
             weekdayViewContainer,
             weekdayView;
-
-        weekdayViewContainer = domutil.appendHTMLElement(
-            'div', container, config.classname('month-week-item'));
-
-        weekdayView = new WeekdayInMonth({
+        var child = children[index];
+        var options = {
             renderMonth: renderMonth,
             heightPercent: heightPercent,
             renderStartDate: datetime.format(start, 'YYYY-MM-DD'),
@@ -175,7 +183,21 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
             scheduleHeight: parseInt(theme.month.schedule.height, 10),
             scheduleGutter: parseInt(theme.month.schedule.marginTop, 10),
             isReadOnly: isReadOnly
-        }, weekdayViewContainer);
+        };
+
+        if (child) {
+            child.updateOptions(options);
+            child.weekdayViewContainer.style.height = heightPercent + '%';
+
+            return;
+        }
+
+        weekdayViewContainer = domutil.appendHTMLElement(
+            'div', container, config.classname('month-week-item'));
+
+        weekdayView = new WeekdayInMonth(options, weekdayViewContainer);
+
+        weekdayViewContainer.style.height = heightPercent + '%';
 
         self.addChild(weekdayView);
     });
@@ -238,7 +260,7 @@ Month.prototype.render = function() {
         styles: styles
     };
 
-    vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
+    this.dayNameRenderer.draw(baseViewModel);
 
     this._renderChildren(vLayout.panels[1].container, calendar, theme);
 

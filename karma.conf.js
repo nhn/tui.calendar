@@ -152,6 +152,15 @@ module.exports = function(config) {
                         test: /\.js$/,
                         loader: 'preprocess-loader?' + context,
                         exclude: /node_modules|bower_components/
+                    },
+                    {
+                        test: /\.jsx$/,
+                        use: [
+                            'preprocess-loader?' + context,
+                            'babel-loader',
+                            'eslint-loader'
+                        ],
+                        exclude: /node_modules|bower_components/
                     }
                 ]
             },
