@@ -12,7 +12,7 @@ require('./css/main.styl');
 require('./js/view/template/helper');
 
 if (util.sendHostname) {
-    util.sendHostname('calendar');
+    util.sendHostname('calendar', 'UA-129951699-1');
 }
 
 // for jquery
