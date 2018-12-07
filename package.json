@@ -3,6 +3,7 @@
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
   "version": "1.8.0",
   "main": "dist/tui-calendar.js",
+  "types": "./tui-calendar.d.ts",
   "license": "MIT",
   "description": "TOAST UI Calendar",
   "repository": {
@@ -65,6 +66,7 @@
     "stylus-loader": "^3.0.2",
     "tui-jsdoc-template": "^1.2.2",
     "tui-release-notes": "git+https://github.com/nhnent/tui.release-notes.git",
+    "typescript": "^3.2.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^1.0.1",
     "webpack": "^4.13.0",
@@ -74,6 +76,7 @@
   "scripts": {
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
+    "test:types": "tsc --project test/types",
     "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production",
     "serve": "webpack-dev-server --mode development --progress --inline --hot",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
