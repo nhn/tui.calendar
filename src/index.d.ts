@@ -1,6 +1,8 @@
 // Type definitions for tui.calendar v1.8.0
 // TypeScript Version: 3.2
 
+type templateFunc = (...args: Array<any>) => string;
+
 declare class TZDate {
     getTime(): number;
     toDate(): Date;
@@ -133,21 +135,45 @@ interface ThemeConfig {
 }
 
 interface TemplateConfig {
-    milestoneTitle?: () => string;
-    milestone?: (schedule: Schedule) => string;
-    taskTitle?: () => string;
-    task?: (schedule: Schedule) => string;
-    alldayTitle?: () => string;
-    allday?: (schedule: Schedule) => string;
-    time?: (schedule: Schedule) => string;
-    monthMoreTitleDate?: (date: any) => string;
-    monthMoreClose?: () => string;
-    monthGridHeader?: (model: object) => string;
-    monthGridFooter?: () => string;
-    monthGridHeaderExceed?: (hiddenSchedules?: string) => string;
-    monthGridFooterExceed?: (hiddenSchedules?: string) => string;
-    weekDayname?: (dayname: object) => string;
-    monthDayname?: (dayname: object) => string;
+    milestoneTitle?: templateFunc;
+    milestone?: templateFunc;
+    taskTitle?: templateFunc;
+    task?: templateFunc;
+    alldayTitle?: templateFunc;
+    allday?: templateFunc;
+    time?: templateFunc;
+    goingDuration?: templateFunc;
+    comingDuration?: templateFunc;
+    monthMoreTitleDate?: templateFunc;
+    monthMoreClose?: templateFunc;
+    monthGridHeader?: templateFunc;
+    monthGridHeaderExceed?: templateFunc;
+    monthGridFooter?: templateFunc;
+    monthGridFooterExceed?: templateFunc;
+    weekDayname?: templateFunc;
+    monthDayname?: templateFunc;
+    weekGridFooterExceed?: templateFunc;
+    dayGridTitle?: templateFunc;
+    schedule?: templateFunc;
+    collapseBtnTitle?: templateFunc;
+    popupIsAllDay?: templateFunc;
+    popupStateFree?: templateFunc;
+    popupStateBusy?: templateFunc;
+    titlePlaceholder?: templateFunc;
+    locationPlaceholder?: templateFunc;
+    startDatePlaceholder?: templateFunc;
+    endDatePlaceholder?: templateFunc;
+    popupSave?: templateFunc;
+    popupUpdate?: templateFunc;
+    popupDetailDate?: templateFunc;
+    popupDetailLocation?: templateFunc;
+    popupDetailUser?: templateFunc;
+    popupDetailState?: templateFunc;
+    popupEdit?: templateFunc;
+    popupDelete?: templateFunc;
+    timezoneDisplayLabel?: templateFunc
+    timegridDisplayPrimayTime?: templateFunc
+    timegridDisplayTime?: templateFunc
 }
 
 interface WeekOptions {
@@ -188,8 +214,8 @@ interface Schedule {
     id: string;
     calendarId: string;
     title: string;
-    start: string | TZDate;
-    end: string | TZDate;
+    start: string | TZDate | Date;
+    end: string | TZDate | Date;
     goingDuration?: number;
     comingDuration?: number;
     isAllDay?: boolean;
@@ -247,7 +273,7 @@ declare class Calendar {
     constructor(container: Element | string, options?: Options);
 
     static setTimezoneOffset(offset: number): void;
-    static setTimezoneOffsetCallback(callback: (...args: Array<any>) => any):void;
+    static setTimezoneOffsetCallback(callback: (timestamp: number) => any):void;
 
     changeView(newViewName: string, force?: boolean): void;
     clear(immediately?: boolean): void;

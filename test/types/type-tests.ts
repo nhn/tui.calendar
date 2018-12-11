@@ -5,7 +5,7 @@ const elementByIdEl = document.getElementById('div');
 const createEl = document.createElement('div');
 const stringEl = '#div';
 
-const calendar = new Calendar(stringEl, {
+const calendar = new Calendar(querySelectorEl, {
     defaultView: 'week',
     taskView: true,
     scheduleView: ['allday', 'time'],
@@ -30,6 +30,14 @@ const calendar = new Calendar(stringEl, {
         },
         time(schedule) {
             return `${schedule.title}(${schedule.start})`;
+        },
+        goingDuration(model) {
+            const SIXTY_MINUTES:number = 60;
+            const goingDuration = model.goingDuration;
+            const hour = parseInt('1000', 10);
+            const minutes = goingDuration % SIXTY_MINUTES;
+
+            return `GoingTime ${hour}:${minutes}`;
         }
     },
     week: {
