@@ -3,7 +3,7 @@
   "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
   "version": "1.8.0",
   "main": "dist/tui-calendar.js",
-  "types": "./tui-calendar.d.ts",
+  "types": "dist/tui-calendar.d.ts",
   "license": "MIT",
   "description": "TOAST UI Calendar",
   "repository": {
@@ -77,7 +77,7 @@
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
     "test:types": "tsc --project test/types",
-    "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production",
+    "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production && cp ./src/index.d.ts ./dist/tui-calendar.d.ts",
     "serve": "webpack-dev-server --mode development --progress --inline --hot",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc",
@@ -85,7 +85,7 @@
     "eslint": "eslint ./src"
   },
   "dependencies": {
-    "tui-code-snippet": "^1.4.0",
+    "tui-code-snippet": "^1.5.0",
     "tui-date-picker": "~3.0.0",
     "tui-time-picker": "^1.4.0"
   }

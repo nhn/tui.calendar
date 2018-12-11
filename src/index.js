@@ -7,12 +7,13 @@
 
 var util = require('tui-code-snippet');
 var Calendar = require('./js/factory/calendar');
+var GA_TRACKING_ID = 'UA-129951699-1';
 
 require('./css/main.styl');
 require('./js/view/template/helper');
 
 if (util.sendHostname) {
-    util.sendHostname('calendar', 'UA-129951699-1');
+    util.sendHostname('calendar', GA_TRACKING_ID);
 }
 
 // for jquery
