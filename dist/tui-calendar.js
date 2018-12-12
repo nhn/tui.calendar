@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.8.0 | Tue Nov 06 2018
+ * @version 1.8.1 | Wed Dec 12 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -1489,12 +1489,13 @@ module.exports = g;
 
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var Calendar = __webpack_require__(/*! ./js/factory/calendar */ "./src/js/factory/calendar.js");
+var GA_TRACKING_ID = 'UA-129951699-1';
 
 __webpack_require__(/*! ./css/main.styl */ "./src/css/main.styl");
 __webpack_require__(/*! ./js/view/template/helper */ "./src/js/view/template/helper.js");
 
 if (util.sendHostname) {
-    util.sendHostname('calendar');
+    util.sendHostname('calendar', GA_TRACKING_ID);
 }
 
 // for jquery

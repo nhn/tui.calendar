@@ -1,4 +1,4 @@
-// Type definitions for tui.calendar v1.8.0
+// Type definitions for tui.calendar v1.8.1
 // TypeScript Version: 3.2
 
 type templateFunc = (...args: Array<any>) => string;
