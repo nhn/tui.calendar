@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true
   },
   "files": [
-    "../../tui-calendar.d.ts",
+    "../../index.d.ts",
     "./type-tests.ts"
   ]
 }
