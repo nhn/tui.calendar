@@ -169,6 +169,8 @@ interface TemplateConfig {
     popupDetailLocation?: templateFunc;
     popupDetailUser?: templateFunc;
     popupDetailState?: templateFunc;
+    popupDetailRepeat?: templateFunc;
+    popupDetailBody?: templateFunc;
     popupEdit?: templateFunc;
     popupDelete?: templateFunc;
     timezoneDisplayLabel?: templateFunc
@@ -214,6 +216,7 @@ interface Schedule {
     id: string;
     calendarId: string;
     title: string;
+    body?: string;
     start: string | TZDate | Date;
     end: string | TZDate | Date;
     goingDuration?: number;
@@ -223,7 +226,7 @@ interface Schedule {
     dueDateClass?: string;
     location?: string;
     attendees?: Array<string>;
-    recurrenceRule?: any;
+    recurrenceRule?: string;
     isPending?: boolean;
     isFocused?: boolean;
     isVisible?: boolean;

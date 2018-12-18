@@ -14,6 +14,7 @@ function ScheduleInfo() {
     this.calendarId = null;
 
     this.title = null;
+    this.body = null;
     this.isAllday = false;
     this.start = null;
     this.end = null;
@@ -32,6 +33,7 @@ function ScheduleInfo() {
     this.isReadOnly = false;
     this.goingDuration = 0;
     this.comingDuration = 0;
+    this.recurrenceRule = '';
 
     this.raw = {
         memo: '',
@@ -99,13 +101,14 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.calendarId = calendar.id;
 
     schedule.title = chance.sentence({words: 3});
+    schedule.body = chance.bool({likelihood: 20}) ? chance.sentence({words: 10}) : '';
     schedule.isReadOnly = chance.bool({likelihood: 20});
     generateTime(schedule, renderStart, renderEnd);
 
     schedule.isPrivate = chance.bool({likelihood: 10});
     schedule.location = chance.address();
     schedule.attendees = chance.bool({likelihood: 70}) ? ['anyone']: [];
-    schedule.recurrenceRule = chance.bool({likelihood: 20});
+    schedule.recurrenceRule = chance.bool({likelihood: 20}) ? 'repeated events' : '';
 
     schedule.color = calendar.color;
     schedule.bgColor = calendar.bgColor;

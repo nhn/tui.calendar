@@ -153,6 +153,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('title', options.title);
     }
 
+    if (options.body) {
+        schedule.set('body', options.body);
+    }
+
     if (options.start || options.end) {
         if (schedule.isAllDay) {
             schedule.setAllDayPeriod(start, end);

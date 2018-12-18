@@ -379,6 +379,12 @@ var calendar = new Calendar('#calendar', {
             var minutes = goingDuration % SIXTY_MINUTES;
 
             return 'ComingTime ' + hour + ':' + minutes;
+        },
+        popupDetailRepeat: function(model) {
+            return model.recurrenceRule;
+        },
+        popupDetailBody: function(model) {
+            return model.body;
         }
     }
 });
