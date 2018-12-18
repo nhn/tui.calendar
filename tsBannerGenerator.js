@@ -8,7 +8,7 @@ var declareRows = fs.readFileSync(declareFilePath).toString().split('\n');
 var tsVersion = (/[0-9.]+/).exec(pkg.devDependencies.typescript)[0];
 
 var TS_BANNER = [
-    '// Type definitions for tui.calendar v' + pkg.version,
+    '// Type definitions for TOAST UI Calendar v' + pkg.version,
     '// TypeScript Version: ' + tsVersion
 ].join('\n');
 
