@@ -76,7 +76,7 @@
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
     "test:types": "tsc --project test/types",
-    "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production",
+    "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production && node tsBannerGenerator.js",
     "serve": "webpack-dev-server --mode development --progress --inline --hot",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc",
