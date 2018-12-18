@@ -26,6 +26,7 @@ var mmin = Math.min;
  * @property {string} id - unique schedule id depends on calendar id
  * @property {string} calendarId - unique calendar id
  * @property {string} title - schedule title
+ * @property {string} body - schedule body text which is text/plain
  * @property {string|TZDate} start - start time. It's 'string' for input. It's 'TZDate' for output like event handler.
  * @property {string|TZDate} end - end time. It's 'string' for input. It's 'TZDate' for output like event handler.
  * @property {number} goingDuration - travel time:  going duration
@@ -36,7 +37,7 @@ var mmin = Math.min;
  *                                   (any string value is ok and mandatory if category is 'task')
  * @property {string} location - location
  * @property {Array.<string>} attendees - attendees
- * @property {any} recurrenceRule - recurrence rule
+ * @property {string} recurrenceRule - recurrence rule
  * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
  * @property {boolean} isFocused - focused schedule flag
  * @property {boolean} isVisible - schedule visibility flag
@@ -67,7 +68,9 @@ var mmin = Math.min;
  * @property {function} [monthGridHeaderExceed] - month grid header(exceed schedule count) template function
  * @property {function} [monthGridFooterExceed] - month grid footer(exceed schedule count) template function
  * @property {function} [weekDayname] - weekly dayname template function
- *  @property {function} [monthDayname] - monthly dayname template function
+ * @property {function} [monthDayname] - monthly dayname template function
+ * @property {function} [popupDetailRepeat] - schedule repeat information's template function on the default detail popup 
+ * @property {function} [popupDetailBody] - schedule body text information's template function on the default detail popup 
  */
 
 /**
