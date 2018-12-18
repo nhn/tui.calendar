@@ -449,6 +449,12 @@ Handlebars.registerHelper({
     'popupDetailState-tmpl': function(schedule) {
         return schedule.state || 'Busy';
     },
+    'popupDetailRepeat-tmpl': function(schedule) {
+        return schedule.recurrenceRule;
+    },
+    'popupDetailBody-tmpl': function(schedule) {
+        return schedule.body;
+    },
     'popupEdit-tmpl': function() {
         return 'Edit';
     },

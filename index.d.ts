@@ -169,6 +169,8 @@ interface TemplateConfig {
     popupDetailLocation?: templateFunc;
     popupDetailUser?: templateFunc;
     popupDetailState?: templateFunc;
+    popupDetailRepeat?: templateFunc;
+    popupDetailBody?: templateFunc;
     popupEdit?: templateFunc;
     popupDelete?: templateFunc;
     timezoneDisplayLabel?: templateFunc

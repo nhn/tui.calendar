@@ -52,6 +52,12 @@ function Schedule() {
     this.title = '';
 
     /**
+     * body for schedule.
+     * @type {string}
+     */
+    this.body = '';
+
+    /**
      * is schedule is all day schedule?
      * @type {boolean}
      */
@@ -230,6 +236,7 @@ Schedule.prototype.init = function(options) {
 
     this.id = options.id || '';
     this.title = options.title || '';
+    this.body = options.body || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
     this.isVisible = util.isExisty(options.isVisible) ? options.isVisible : true;
 
@@ -322,6 +329,10 @@ Schedule.prototype.equals = function(schedule) {
     }
 
     if (this.title !== schedule.title) {
+        return false;
+    }
+
+    if (this.body !== schedule.body) {
         return false;
     }
 
