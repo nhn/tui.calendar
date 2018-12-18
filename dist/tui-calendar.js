@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.8.1 | Wed Dec 12 2018
+ * @version 1.9.0 | Tue Dec 18 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -6789,6 +6789,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('title', options.title);
     }
 
+    if (options.body) {
+        schedule.set('body', options.body);
+    }
+
     if (options.start || options.end) {
         if (schedule.isAllDay) {
             schedule.setAllDayPeriod(start, end);
@@ -7954,6 +7958,7 @@ var mmin = Math.min;
  * @property {string} id - unique schedule id depends on calendar id
  * @property {string} calendarId - unique calendar id
  * @property {string} title - schedule title
+ * @property {string} body - schedule body text which is text/plain
  * @property {string|TZDate} start - start time. It's 'string' for input. It's 'TZDate' for output like event handler.
  * @property {string|TZDate} end - end time. It's 'string' for input. It's 'TZDate' for output like event handler.
  * @property {number} goingDuration - travel time:  going duration
@@ -7964,7 +7969,7 @@ var mmin = Math.min;
  *                                   (any string value is ok and mandatory if category is 'task')
  * @property {string} location - location
  * @property {Array.<string>} attendees - attendees
- * @property {any} recurrenceRule - recurrence rule
+ * @property {string} recurrenceRule - recurrence rule
  * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
  * @property {boolean} isFocused - focused schedule flag
  * @property {boolean} isVisible - schedule visibility flag
@@ -7995,7 +8000,9 @@ var mmin = Math.min;
  * @property {function} [monthGridHeaderExceed] - month grid header(exceed schedule count) template function
  * @property {function} [monthGridFooterExceed] - month grid footer(exceed schedule count) template function
  * @property {function} [weekDayname] - weekly dayname template function
- *  @property {function} [monthDayname] - monthly dayname template function
+ * @property {function} [monthDayname] - monthly dayname template function
+ * @property {function} [popupDetailRepeat] - schedule repeat information's template function on the default detail popup 
+ * @property {function} [popupDetailBody] - schedule body text information's template function on the default detail popup 
  */
 
 /**
@@ -16711,6 +16718,12 @@ function Schedule() {
     this.title = '';
 
     /**
+     * body for schedule.
+     * @type {string}
+     */
+    this.body = '';
+
+    /**
      * is schedule is all day schedule?
      * @type {boolean}
      */
@@ -16889,6 +16902,7 @@ Schedule.prototype.init = function(options) {
 
     this.id = options.id || '';
     this.title = options.title || '';
+    this.body = options.body || '';
     this.isAllDay = util.isExisty(options.isAllDay) ? options.isAllDay : false;
     this.isVisible = util.isExisty(options.isVisible) ? options.isVisible : true;
 
@@ -16981,6 +16995,10 @@ Schedule.prototype.equals = function(schedule) {
     }
 
     if (this.title !== schedule.title) {
+        return false;
+    }
+
+    if (this.body !== schedule.body) {
         return false;
     }
 
@@ -20084,6 +20102,12 @@ Handlebars.registerHelper({
     'popupDetailState-tmpl': function(schedule) {
         return schedule.state || 'Busy';
     },
+    'popupDetailRepeat-tmpl': function(schedule) {
+        return schedule.recurrenceRule;
+    },
+    'popupDetailBody-tmpl': function(schedule) {
+        return schedule.body;
+    },
     'popupEdit-tmpl': function() {
         return 'Edit';
     },
@@ -21098,12 +21122,26 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "icon "
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "ic-repeat-b\"></span><span class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "content\">"
+    + alias4((helpers["popupDetailRepeat-tmpl"] || (depth0 && depth0["popupDetailRepeat-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailRepeat-tmpl","hash":{},"data":data}))
+    + "</span></div>";
+},"5":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "popup-detail-item\"><span class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "icon "
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "ic-user-b\"></span><span class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "content\">"
     + alias4((helpers["popupDetailUser-tmpl"] || (depth0 && depth0["popupDetailUser-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailUser-tmpl","hash":{},"data":data}))
     + "</span></div>";
-},"5":function(container,depth0,helpers,partials,data) {
+},"7":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<div class=\""
@@ -21117,7 +21155,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "content\">"
     + alias4((helpers["popupDetailState-tmpl"] || (depth0 && depth0["popupDetailState-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailState-tmpl","hash":{},"data":data}))
     + "</span></div>";
-},"7":function(container,depth0,helpers,partials,data) {
+},"9":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
   return "        <div class=\""
@@ -21133,9 +21171,21 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "content\">"
     + alias4(alias5(((stack1 = (depth0 != null ? depth0.calendar : depth0)) != null ? stack1.name : stack1), depth0))
     + "</span></div>\n";
-},"9":function(container,depth0,helpers,partials,data) {
-    return "";
 },"11":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "popup-detail-item "
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "popup-detail-item-separate\"><span class=\""
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "content\">"
+    + alias4((helpers["popupDetailBody-tmpl"] || (depth0 && depth0["popupDetailBody-tmpl"]) || alias2).call(alias1,(depth0 != null ? depth0.schedule : depth0),{"name":"popupDetailBody-tmpl","hash":{},"data":data}))
+    + "</span></div>";
+},"13":function(container,depth0,helpers,partials,data) {
+    return "";
+},"15":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "    <div class=\""
@@ -21197,13 +21247,17 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "section-detail\">\n        "
     + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.location : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n        "
-    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.attendees : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.recurrenceRule : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n        "
-    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.state : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.attendees : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n        "
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.state : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.calendar : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "    </div>\n"
-    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.calendar : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        "
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.body : stack1),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n    </div>\n"
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.schedule : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(15, data, 0),"data":data})) != null ? stack1 : "")
     + "  </div>\n  <div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "popup-top-line\" style=\"background-color: "

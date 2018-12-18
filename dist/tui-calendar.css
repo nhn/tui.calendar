@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.8.1 | Wed Dec 12 2018
+ * @version 1.9.0 | Tue Dec 18 2018
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -664,9 +664,8 @@
   border-radius: 2px;
 }
 .tui-full-calendar-popup-section {
-  padding-bottom: 8px;
   font-size: 0;
-  height: 40px;
+  min-height: 40px;
 }
 .tui-full-calendar-section-calendar {
   width: 176px;
@@ -1052,12 +1051,16 @@ input[type='checkbox'].tui-full-calendar-checkbox-round + span {
   line-height: 2;
 }
 .tui-full-calendar-popup-detail .tui-full-calendar-section-header {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+}
+.tui-full-calendar-popup-detail .tui-full-calendar-popup-detail-item-separate {
+  margin-top: 4px;
 }
 .tui-full-calendar-popup-detail .tui-full-calendar-schedule-title {
   font-size: 15px;
   font-weight: bold;
   line-height: 1.6;
+  word-break: break-all;
 }
 .tui-full-calendar-popup-detail .tui-full-calendar-schedule-private {
   display: none;
@@ -1159,6 +1162,9 @@ input[type='checkbox'].tui-full-calendar-checkbox-round + span {
 }
 .tui-full-calendar-icon.tui-full-calendar-ic-arrow-right {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAHCAYAAAAvZezQAAAAAXNSR0IArs4c6QAAAFxJREFUCB1jKC8vX1lZWWnOAAVMQLD4379/m6qqqvRAYowgAsiJAAr2sbCw2IMFQIIVFRUL////r8SCpMKVlZXVnhFooA9Q+VxmZmbXtra2S0xATizQYD8QB6QaAJMLJ9BqE9yTAAAAAElFTkSuQmCC) no-repeat;
+}
+.tui-full-calendar-ic-repeat-b {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAQpJREFUKBVjYCARMCKrNzU1tf/3718lUMwQiP8yMjKeYWJi6j516tRhExOThjNnzjTANQAFqv///98CVHQPSO8A0ixATa5AtjyQPgDETmfPngULMpiZmbn//fu3BSg4B6ggCyjxG8hm8PT0ZH/9+vUJoJgTiA8CTCACqDgXaOJ9Xl7eTJhikDhQcSVQsQGITT8A9rSxsfF/mJVApzWCQgPGd3BwYPny5cstoNOuAZ3rAwoJOAAqviAqKtoOEwAaxPr58+dpQL4iEGeAxJFt2AfkOwA1PQTSu4Em/gGyPYC0EpCuAdraCtIADiWgQCPQOmdmZmYHoNgVoCJfIB0CpG8DI84BphgoRjoAAAzgdELI91E5AAAAAElFTkSuQmCC);
 }
 /*# sourceMappingURL=src/css/main.css.map */
 
