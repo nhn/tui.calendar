@@ -1,22 +1,40 @@
 // Type definitions for TOAST UI Calendar v1.9.0
 // TypeScript Version: 3.2.1
 
-type templateFunc = (...args: Array<any>) => string;
+type DateType = string | TZDate | Date;
+type EventHandlerFunc = (event: any) => void;
+type TimezonesCollapseEventFunc = (timezonesCollapsed: boolean) => void;
+type EventHandlerType = EventHandlerFunc | TimezonesCollapseEventFunc;
+type ViewType = 'month' | 'week' | 'day';
+type CustomEventType = 'afterRenderSchedule' | 'beforeCreateSchedule' |
+    'beforeDeleteSchedule' | 'beforeUpdateSchedule' | 'clickDayname' |
+    'clickMore' | 'clickSchedule' | 'clickTimezonesCollapseBtn';
 
-declare class TZDate {
-    getTime(): number;
-    toDate(): Date;
-    toUTCString(): Date;
+interface IEvents {
+    'afterRenderSchedule'?: EventHandlerFunc;
+    'beforeCreateSchedule'?: EventHandlerFunc;
+    'beforeDeleteSchedule'?: EventHandlerFunc;
+    'beforeUpdateSchedule'?: EventHandlerFunc;
+    'clickDayname'?: EventHandlerFunc;
+    'clickMore'?: EventHandlerFunc;
+    'clickSchedule'?: EventHandlerFunc;
+    'clickTimezonesCollapseBtn'?: TimezonesCollapseEventFunc;
 }
 
-interface CalendarColor {
+declare class TZDate {
+    public getTime(): number;
+    public toDate(): Date;
+    public toUTCString(): Date;
+}
+
+interface ICalendarColor {
     color?: string;
     bgColor?: string;
     dragBgColor?: string;
     borderColor?: string;
 }
 
-interface ThemeConfig {
+interface IThemeConfig {
     'common.border'?: string;
     'common.backgroundColor'?: string;
     'common.holiday.color'?: string;
@@ -134,53 +152,94 @@ interface ThemeConfig {
     'week.dayGridSchedule.marginRight'?: string;
 }
 
-interface TemplateConfig {
-    milestoneTitle?: templateFunc;
-    milestone?: templateFunc;
-    taskTitle?: templateFunc;
-    task?: templateFunc;
-    alldayTitle?: templateFunc;
-    allday?: templateFunc;
-    time?: templateFunc;
-    goingDuration?: templateFunc;
-    comingDuration?: templateFunc;
-    monthMoreTitleDate?: templateFunc;
-    monthMoreClose?: templateFunc;
-    monthGridHeader?: templateFunc;
-    monthGridHeaderExceed?: templateFunc;
-    monthGridFooter?: templateFunc;
-    monthGridFooterExceed?: templateFunc;
-    weekDayname?: templateFunc;
-    monthDayname?: templateFunc;
-    weekGridFooterExceed?: templateFunc;
-    dayGridTitle?: templateFunc;
-    schedule?: templateFunc;
-    collapseBtnTitle?: templateFunc;
-    popupIsAllDay?: templateFunc;
-    popupStateFree?: templateFunc;
-    popupStateBusy?: templateFunc;
-    titlePlaceholder?: templateFunc;
-    locationPlaceholder?: templateFunc;
-    startDatePlaceholder?: templateFunc;
-    endDatePlaceholder?: templateFunc;
-    popupSave?: templateFunc;
-    popupUpdate?: templateFunc;
-    popupDetailDate?: templateFunc;
-    popupDetailLocation?: templateFunc;
-    popupDetailUser?: templateFunc;
-    popupDetailState?: templateFunc;
-    popupDetailRepeat?: templateFunc;
-    popupDetailBody?: templateFunc;
-    popupEdit?: templateFunc;
-    popupDelete?: templateFunc;
-    timezoneDisplayLabel?: templateFunc
-    timegridDisplayPrimayTime?: templateFunc
-    timegridDisplayTime?: templateFunc
+interface ITimeGridHourLabel {
+    color: string;
+    fontWeight: string;
+    hidden: boolean;
+    hour: number;
+    minutes: number;
 }
 
-interface WeekOptions {
+interface IGridDateModel {
+    backgroundColor: string;
+    color: string;
+    date: string;
+    day: number;
+    hiddenSchedules: number;
+    isOtherMonth: boolean;
+    isToday: boolean;
+    left: number;
+    month: number;
+    width: number;
+    ymd: string;
+}
+
+interface IWeekDayNameInfo {
+    color: string;
+    date: number;
+    day: number;
+    dayName: string;
+    isToday: boolean;
+    left: number;
+    renderDate: string;
+    width: number;
+}
+
+interface IMonthDayNameInfo {
+    color: string;
+    day: number;
+    label: string;
+    left: number;
+    width: number;
+}
+
+interface ITemplateConfig {
+    milestoneTitle?: (title?: string) => string;
+    milestone?: (schedule: ISchedule) => string;
+    taskTitle?: (title?: string) => string;
+    task?: (schedule?: ISchedule) => string;
+    alldayTitle?: (title?: string) => string;
+    allday?: (schedule?: ISchedule) => string;
+    time?: (schedule?: ISchedule) => string;
+    goingDuration?: (schedule?: ISchedule) => string;
+    comingDuration?: (schedule?: ISchedule) => string;
+    monthMoreTitleDate?: (date?: string, dayname?: string) => string;
+    monthMoreClose?: () => string;
+    monthGridHeader?: (model?: IGridDateModel) => string;
+    monthGridHeaderExceed?: (hiddenSchedules: number) => string;
+    monthGridFooter?: (model?: IGridDateModel) => string;
+    monthGridFooterExceed?: (hiddenSchedules: number) => string;
+    weekDayname?: (model?: IWeekDayNameInfo) => string;
+    monthDayname?: (model?: IMonthDayNameInfo) => string;
+    weekGridFooterExceed?: (hiddenSchedules?: number) => string;
+    dayGridTitle?: (viewName?: string) => string;
+    schedule?: (schedule?: ISchedule) => string;
+    collapseBtnTitle?: () => string;
+    popupIsAllDay?: () => string;
+    popupStateFree?: () => string;
+    popupStateBusy?: () => string;
+    titlePlaceholder?: () => string;
+    locationPlaceholder?: () => string;
+    startDatePlaceholder?: () => string;
+    endDatePlaceholder?: () => string;
+    popupSave?: () => string;
+    popupUpdate?: () => string;
+    popupDetailDate?: (isAllDay?: boolean, start?: DateType, end?: DateType) => string;
+    popupDetailLocation?: (schedule?: ISchedule) => string;
+    popupDetailUser?: (schedule?: ISchedule) => string;
+    popupDetailState?: (schedule?: ISchedule) => string;
+    popupDetailRepeat?: (schedule?: ISchedule) => string;
+    popupDetailBody?: (schedule?: ISchedule) => string;
+    popupEdit?: () => void;
+    popupDelete?: () => void;
+    timezoneDisplayLabel?: (timezoneOffset?: number, displayLabel?: string) => string;
+    timegridDisplayPrimayTime?: (time?: ITimeGridHourLabel) => string;
+    timegridDisplayTime?: (time?: ITimeGridHourLabel) => string;
+}
+
+interface IWeekOptions {
     startDayOfWeek?: number;
-    daynames?: Array<string>;
+    daynames?: string[];
     narrowWeekend?: boolean;
     workweek?: boolean;
     showTimezoneCollapseButton?: boolean;
@@ -189,8 +248,8 @@ interface WeekOptions {
     hourEnd?: number;
 }
 
-interface MonthOptions {
-    daynames?: Array<string>;
+interface IMonthOptions {
+    daynames?: string[];
     startDayOfWeek?: number;
     narrowWeekend?: boolean;
     visibleWeeksCount?: boolean;
@@ -198,34 +257,38 @@ interface MonthOptions {
     workweek?: boolean;
     visibleScheduleCount?: number;
     moreLayerSize?: {
-        width?: string | null,
-        height?: string | null
+        width?: string | null;
+        height?: string | null;
     };
     grid?: {
         header?: {
-            height?: number
+            height?: number;
         },
         footer?: {
-            height?: number
+            height?: number;
         }
     };
-    scheduleFilter?: (...args:Array<any>) => any;
+    scheduleFilter?: (schedule: ISchedule | null) => boolean;
 }
 
-interface Schedule {
-    id: string;
-    calendarId: string;
-    title: string;
+interface IRaw {
+    [propName: string]: string | number | boolean | object | null;
+}
+
+interface ISchedule {
+    id?: string;
+    calendarId?: string;
+    title?: string;
     body?: string;
-    start: string | TZDate | Date;
-    end: string | TZDate | Date;
+    start?: DateType;
+    end?: DateType;
     goingDuration?: number;
     comingDuration?: number;
     isAllDay?: boolean;
-    category: string;
+    category?: string;
     dueDateClass?: string;
     location?: string;
-    attendees?: Array<string>;
+    attendees?: string[];
     recurrenceRule?: string;
     isPending?: boolean;
     isFocused?: boolean;
@@ -237,17 +300,17 @@ interface Schedule {
     dragBgColor?: string;
     borderColor?: string;
     customStyle?: string;
-    raw?: any;
+    raw?: IRaw | null;
     state?: string;
 }
 
-interface Timezone {
+interface ITimezone {
     timezoneOffset?: number;
     displayLabel?: string;
     tooltip?: string;
 }
 
-interface CalendarInfo {
+interface ICalendarInfo {
     id: string;
     name: string;
     color?: string;
@@ -256,60 +319,60 @@ interface CalendarInfo {
     borderColor?: string;
 }
 
-interface Options {
+interface IOptions {
     defaultView?: string;
-    taskView?: boolean | Array<string>;
-    scheduleView?: boolean | Array<string>;
-    theme?: ThemeConfig;
-    template?: TemplateConfig;
-    week?: WeekOptions;
-    month?: MonthOptions;
-    calendars?: Array<Calendar>;
+    taskView?: boolean | string[];
+    scheduleView?: boolean | string[];
+    theme?: IThemeConfig;
+    template?: ITemplateConfig;
+    week?: IWeekOptions;
+    month?: IMonthOptions;
+    calendars?: Calendar[];
     useCreationPopup?: boolean;
     useDetailPopup?: boolean;
-    timezones?: Array<Timezone>;
+    timezones?: ITimezone[];
     disableDblClick?: boolean;
     isReadOnly?: boolean;
 }
 
 declare class Calendar {
-    constructor(container: Element | string, options?: Options);
+    public static setTimezoneOffset(offset: number): void;
+    public static setTimezoneOffsetCallback(callback: (timestamp: number) => void): void;
 
-    static setTimezoneOffset(offset: number): void;
-    static setTimezoneOffsetCallback(callback: (timestamp: number) => any):void;
+    constructor(container: Element | string, options?: IOptions);
 
-    changeView(newViewName: string, force?: boolean): void;
-    clear(immediately?: boolean): void;
-    createSchedules(schedules: Array<Schedule>, silent?: boolean): void;
-    deleteSchedule(scheduleId: string, calendarId: string, silent?: boolean): void;
-    destroy(): void;
-    getDate(): TZDate;
-    getDateRangeEnd(): TZDate;
-    getDateRangeStart(): TZDate;
-    getElement(scheduleId: string, calendarId:string): Element;
-    getOptions(): Options;
-    getSchedule(scheduleId: string, calendarId: string): Schedule;
-    getViewName(): string;
-    hideMoreView(): void;
-    next(): void;
-    openCreationPopup(schedule: Schedule): void;
-    prev(): void;
-    render(immediately?: boolean): void;
-    scrollToNow(): void;
-    setCalendarColor(calendarId: string, option: CalendarColor, silent?: boolean): void;
-    setCalendars(calendars: Array<CalendarInfo>): void;
-    setDate(date: Date | string): void;
-    setOptions(options: any, silent?: boolean): void;
-    setTheme(theme: ThemeConfig): Array<string>;
-    today(): void;
-    toggleSchedules(calendarId: string, toHide: boolean, render?: boolean): void;
-    toggleScheduleView(enabled: boolean): void;
-    toggleTaskView(enabled: boolean): void;
-    updateSchedule(scheduleId: string, calendarId: string, scheduleData: any, silent?: boolean): void;
-    on(...arg: Array<any>): void;
-    off(...arg: Array<any>): void;
+    public changeView(newViewName: ViewType, force?: boolean): void;
+    public clear(immediately?: boolean): void;
+    public createSchedules(schedules: ISchedule[], silent?: boolean): void;
+    public deleteSchedule(scheduleId: string, calendarId: string, silent?: boolean): void;
+    public destroy(): void;
+    public getDate(): TZDate;
+    public getDateRangeEnd(): TZDate;
+    public getDateRangeStart(): TZDate;
+    public getElement(scheduleId: string, calendarId: string): Element;
+    public getOptions(): IOptions;
+    public getSchedule(scheduleId: string, calendarId: string): ISchedule;
+    public getViewName(): string;
+    public hideMoreView(): void;
+    public next(): void;
+    public openCreationPopup(schedule: ISchedule): void;
+    public prev(): void;
+    public render(immediately?: boolean): void;
+    public scrollToNow(): void;
+    public setCalendarColor(calendarId: string, option: ICalendarColor, silent?: boolean): void;
+    public setCalendars(calendars: ICalendarInfo[]): void;
+    public setDate(date: Date | string): void;
+    public setOptions(options: IOptions, silent?: boolean): void;
+    public setTheme(theme: IThemeConfig): string[];
+    public today(): void;
+    public toggleSchedules(calendarId: string, toHide: boolean, render?: boolean): void;
+    public toggleScheduleView(enabled: boolean): void;
+    public toggleTaskView(enabled: boolean): void;
+    public updateSchedule(scheduleId: string, calendarId: string, scheduleData: ISchedule, silent?: boolean): void;
+    public off(eventName?: string | object | EventHandlerType, handler?: EventHandlerType | string): void;
+    public on(event: CustomEventType | IEvents, handler?: EventHandlerType): void;
 }
 
-declare module "tui-calendar" {
+declare module 'tui-calendar' {
     export = Calendar;
 }

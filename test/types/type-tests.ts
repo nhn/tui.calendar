@@ -61,7 +61,7 @@ const calendar = new Calendar(querySelectorEl, {
             }
         },
         scheduleFilter(schedule) {
-            return schedule.title;
+            return Boolean(schedule.title);
         }
     },
     useCreationPopup: false,
@@ -79,7 +79,8 @@ calendar.createSchedules([
         title: 'Data Structure',
         category: 'time',
         start: '2018-10-31T10:30:00+09:00',
-        end: '2018-10-31T12:30:00+09:00'
+        end: '2018-10-31T12:30:00+09:00',
+        raw: {}
     },
     {
         id: '2',
