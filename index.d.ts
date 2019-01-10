@@ -1,9 +1,7 @@
 // Type definitions for TOAST UI Calendar v1.9.0
 // TypeScript Version: 3.2.1
 
-declare module 'tui-calendar' {
-    export = Calendar;
-
+declare namespace tuiCalendar {
     type DateType = string | TZDate | Date;
     type AfterRenderScheduleEventHandlerFunc = (eventObj: {schedule: ISchedule}) => void;
     type BeforeCreateScheduleEventHandlerFunc = (schedule: ISchedule) => void;
@@ -399,4 +397,7 @@ declare module 'tui-calendar' {
         public off(eventName?: string | object | EventHandlerType, handler?: EventHandlerType | string): void;
         public on(event: CustomEventType | IEvents, handler?: EventHandlerType): void;
     }
+}
+declare module 'tui-calendar' {
+    export = tuiCalendar.Calendar;
 }
