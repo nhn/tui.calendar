@@ -63,6 +63,7 @@
     "style-loader": "^0.21.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "tslint": "^5.12.0",
     "tui-jsdoc-template": "^1.2.2",
     "tui-release-notes": "git+https://github.com/nhnent/tui.release-notes.git",
     "typescript": "^3.2.1",
@@ -81,7 +82,8 @@
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc",
     "release-note": "tuie",
-    "eslint": "eslint ./src"
+    "eslint": "eslint ./src",
+    "tslint": "tslint index.d.ts"
   },
   "dependencies": {
     "tui-code-snippet": "^1.5.0",
