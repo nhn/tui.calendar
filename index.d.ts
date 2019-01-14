@@ -70,124 +70,6 @@ declare namespace tuiCalendar {
         borderColor?: string;
     }
 
-    interface IThemeConfig {
-        'common.border'?: string;
-        'common.backgroundColor'?: string;
-        'common.holiday.color'?: string;
-        'common.saturday.color'?: string;
-        'common.dayname.color'?: string;
-        'common.today.color'?: string;
-
-        // creation guide style
-        'common.creationGuide.backgroundColor'?: string;
-        'common.creationGuide.border'?: string;
-
-        // month header 'dayname'
-        'month.dayname.height'?: string;
-        'month.dayname.borderLeft'?: string;
-        'month.dayname.paddingLeft'?: string;
-        'month.dayname.paddingRight'?: string;
-        'month.dayname.backgroundColor'?: string;
-        'month.dayname.fontSize'?: string;
-        'month.dayname.fontWeight'?: string;
-        'month.dayname.textAlign'?: string;
-
-        // month day grid cell 'day'
-        'month.holidayExceptThisMonth.color'?: string;
-        'month.dayExceptThisMonth.color'?: string;
-        'month.weekend.backgroundColor'?: string;
-        'month.day.fontSize'?: string;
-
-        // month schedule style
-        'month.schedule.borderRadius'?: string;
-        'month.schedule.height'?: string;
-        'month.schedule.marginTop'?: string;
-        'month.schedule.marginLeft'?: string;
-        'month.schedule.marginRight'?: string;
-
-        // month more view
-        'month.moreView.border'?: string;
-        'month.moreView.boxShadow'?: string;
-        'month.moreView.backgroundColor'?: string;
-        'month.moreView.paddingBottom'?: string;
-        'month.moreViewTitle.height'?: string;
-        'month.moreViewTitle.marginBottom'?: string;
-        'month.moreViewTitle.backgroundColor'?: string;
-        'month.moreViewTitle.borderBottom'?: string;
-        'month.moreViewTitle.padding'?: string;
-        'month.moreViewList.padding'?: string;
-
-        // week header 'dayname'
-        'week.dayname.height'?: string;
-        'week.dayname.borderTop'?: string;
-        'week.dayname.borderBottom'?: string;
-        'week.dayname.borderLeft'?: string;
-        'week.dayname.paddingLeft'?: string;
-        'week.dayname.backgroundColor'?: string;
-        'week.dayname.textAlign'?: string;
-        'week.today.color'?: string;
-
-        // week vertical panel 'vpanel'
-        'week.vpanelSplitter.border'?: string;
-        'week.vpanelSplitter.height'?: string;
-
-        // week daygrid 'daygrid'
-        'week.daygrid.borderRight'?: string;
-        'week.daygrid.backgroundColor'?: string;
-
-        'week.daygridLeft.width'?: string;
-        'week.daygridLeft.backgroundColor'?: string;
-        'week.daygridLeft.paddingRight'?: string;
-        'week.daygridLeft.borderRight'?: string;
-
-        'week.today.backgroundColor'?: string;
-        'week.weekend.backgroundColor'?: string;
-
-        // week timegrid 'timegrid'
-        'week.timegridLeft.width'?: string;
-        'week.timegridLeft.backgroundColor'?: string;
-        'week.timegridLeft.borderRight'?: string;
-        'week.timegridLeft.fontSize'?: string;
-        'week.timegridLeftTimezoneLabel.height'?: string;
-
-        'week.timegridOneHour.height'?: string;
-        'week.timegridHalfHour.height'?: string;
-        'week.timegridHalfHour.borderBottom'?: string;
-        'week.timegridHorizontalLine.borderBottom'?: string;
-
-        'week.timegrid.paddingRight'?: string;
-        'week.timegrid.borderRight'?: string;
-        'week.timegridSchedule.borderRadius'?: string;
-        'week.timegridSchedule.paddingLeft'?: string;
-
-        'week.currentTime.color'?: string;
-        'week.currentTime.fontSize'?: string;
-        'week.currentTime.fontWeight'?: string;
-
-        'week.pastTime.color'?: string;
-        'week.pastTime.fontWeight'?: string;
-
-        'week.futureTime.color'?: string;
-        'week.futureTime.fontWeight'?: string;
-
-        'week.currentTimeLinePast.border'?: string;
-        'week.currentTimeLineBullet.backgroundColor'?: string;
-        'week.currentTimeLineToday.border'?: string;
-        'week.currentTimeLineFuture.border'?: string;
-
-        // week creation guide style
-        'week.creationGuide.color'?: string;
-        'week.creationGuide.fontSize'?: string;
-        'week.creationGuide.fontWeight'?: string;
-
-        // week daygrid schedule style
-        'week.dayGridSchedule.borderRadius'?: string;
-        'week.dayGridSchedule.height'?: string;
-        'week.dayGridSchedule.marginTop'?: string;
-        'week.dayGridSchedule.marginLeft'?: string;
-        'week.dayGridSchedule.marginRight'?: string;
-    }
-
     interface ITimeGridHourLabel {
         hidden: boolean;
         hour: number;
@@ -348,7 +230,7 @@ declare namespace tuiCalendar {
         defaultView?: string;
         taskView?: boolean | string[];
         scheduleView?: boolean | string[];
-        theme?: IThemeConfig;
+        theme?: object;
         template?: ITemplateConfig;
         week?: IWeekOptions;
         month?: IMonthOptions;
@@ -388,7 +270,7 @@ declare namespace tuiCalendar {
         public setCalendars(calendars: ICalendarInfo[]): void;
         public setDate(date: Date | string): void;
         public setOptions(options: IOptions, silent?: boolean): void;
-        public setTheme(theme: IThemeConfig): string[];
+        public setTheme(theme: object): string[];
         public today(): void;
         public toggleSchedules(calendarId: string, toHide: boolean, render?: boolean): void;
         public toggleScheduleView(enabled: boolean): void;
