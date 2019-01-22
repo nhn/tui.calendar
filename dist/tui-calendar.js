@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.9.1 | Fri Jan 11 2019
+ * @version 1.9.2-alpha | Tue Jan 22 2019
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -12461,7 +12461,7 @@ function getMousePosDate(monthView) {
             }
         }
 
-        return i;
+        return left < 0 ? -1 : i;
     }
 
     /**
@@ -12473,7 +12473,16 @@ function getMousePosDate(monthView) {
         var pos = domevent.getMousePosition(mouseEvent, relativeContainer),
             x = getX(common.ratio(size[0], 100, pos[0])),
             y = mfloor(common.ratio(size[1], weekCount, pos[1])),
-            weekdayView, date;
+            weekdayView,
+            date,
+            dateRange;
+
+        if (y < 0) {
+            y = 0;
+        }
+        if (y >= weeks.length) {
+            y = weeks.length - 1;
+        }
 
         weekdayView = util.pick(weeks, y);
 
@@ -12481,7 +12490,15 @@ function getMousePosDate(monthView) {
             return null;
         }
 
-        date = util.pick(weekdayView.getRenderDateRange(), x);
+        dateRange = weekdayView.getRenderDateRange();
+        if (x < 0) {
+            x = 0;
+        }
+        if (x >= dateRange.length) {
+            x = dateRange.length - 1;
+        }
+
+        date = util.pick(dateRange, x);
 
         if (!date) {
             return null;
