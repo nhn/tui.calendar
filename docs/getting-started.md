@@ -148,6 +148,17 @@ var calendar = new Calendar('#calendar', {
 });
 ```
 
+Or you can disable single clicking on calendar to create a schedule. use `disableClick` option.
+
+```js
+calendar.setOptions({disableClick: true}, true);
+
+// or
+var calendar = new Calendar('#calendar', {
+  disableClick: true
+});
+```
+
 #### 'beforeUpdateSchedule'
 
 Update the schedule when dragging it.

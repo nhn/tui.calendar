@@ -239,6 +239,7 @@ declare namespace tuiCalendar {
         useDetailPopup?: boolean;
         timezones?: ITimezone[];
         disableDblClick?: boolean;
+        disableClick?: boolean;
         isReadOnly?: boolean;
     }
 
