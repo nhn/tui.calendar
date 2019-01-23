@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.9.2-alpha | Tue Jan 22 2019
+ * @version 1.9.2-alpha.1 | Wed Jan 23 2019
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -8086,6 +8086,7 @@ var mmin = Math.min;
  *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
  *  The rest timezone elements are shown in left timegrid of weekly/daily view.
  * @property {boolean} [disableDblClick=false] - disable double click to create a schedule
+ * @property {boolean} [disableClick=false] - disable click to create a schedule
  * @property {boolean} [isReadOnly=false] - Calendar is read-only mode and a user can't create and modify any schedule.
  */
 
@@ -8319,6 +8320,7 @@ Calendar.prototype._initialize = function(options) {
             tooltip: ''
         }],
         disableDblClick: false,
+        disableClick: false,
         isReadOnly: false
     }, options);
 
@@ -10583,10 +10585,20 @@ function DayGridCreation(dragHandler, view, controller, options) {
      */
     this._requestOnClick = false;
 
+    /**
+     * @type {boolean}
+     */
+    this._disableDblClick = options.disableDblClick;
+
+    /**
+     * @type {boolean}
+     */
+    this._disableClick = options.disableClick;
+
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
 
-    if (options.disableDblClick) {
+    if (this._disableDblClick) {
         CLICK_DELAY = 0;
     } else {
         domevent.on(view.container, 'dblclick', this._onDblClick, this);
@@ -10791,7 +10803,7 @@ DayGridCreation.prototype._onClick = function(clickEventData) {
     var self = this;
     var getScheduleDataFunc, scheduleData;
 
-    if (!this.checkExpectedCondition(clickEventData.target)) {
+    if (!this.checkExpectedCondition(clickEventData.target) || this._disableClick) {
         return;
     }
 
@@ -12197,11 +12209,14 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
 
     this._toggleDragEvent(true);
 
-    // EventTarget.target is not changed in mousemove event even if mouse is over the other element.
-    // It's different with other browsers(IE, Chrome, Safari)
-    if (util.browser.firefox) {
-        domevent.preventDefault(mouseDownEvent);
-    }
+    /**
+     * mouse down event for firefox bug. cancelable.
+     * @event Drag#mouseDown
+     * @type {object}
+     * @property {HTMLElement} target - target element in this event.
+     * @property {MouseEvent} originEvent - original mouse event object.
+     */
+    this.fire('mousedown', this._dragStartEventData);
 };
 
 /**
@@ -12594,10 +12609,20 @@ function MonthCreation(dragHandler, monthView, baseController, options) {
      */
     this._requestOnClick = false;
 
+    /**
+     * @type {boolean}
+     */
+    this._disableDblClick = options.disableDblClick;
+
+    /**
+     * @type {boolean}
+     */
+    this._disableClick = options.disableClick;
+
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
 
-    if (options.disableDblClick) {
+    if (this._disableDblClick) {
         CLICK_DELAY = 0;
     } else {
         domevent.on(monthView.container, 'dblclick', this._onDblClick, this);
@@ -12791,7 +12816,7 @@ MonthCreation.prototype._onClick = function(e) {
     var self = this;
     var eventData, range;
 
-    if (!isElementWeekdayGrid(e.target)) {
+    if (!isElementWeekdayGrid(e.target) || this._disableClick) {
         return;
     }
 
@@ -14900,10 +14925,20 @@ function TimeCreation(dragHandler, timeGridView, baseController, options) {
      */
     this._requestOnClick = false;
 
+    /**
+     * @type {boolean}
+     */
+    this._disableDblClick = options.disableDblClick;
+
+    /**
+     * @type {boolean}
+     */
+    this._disableClick = options.disableClick;
+
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
 
-    if (options.disableDblClick) {
+    if (this._disableDblClick) {
         CLICK_DELAY = 0;
     } else {
         domevent.on(timeGridView.container, 'dblclick', this._onDblClick, this);
@@ -15137,7 +15172,7 @@ TimeCreation.prototype._onClick = function(clickEventData) {
     }, this);
 
     condResult = this.checkExpectedCondition(clickEventData.target);
-    if (!condResult) {
+    if (!condResult || this._disableClick) {
         return;
     }
 
@@ -15536,6 +15571,7 @@ var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
+var domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
 var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 var timeCore = __webpack_require__(/*! ./core */ "./src/js/handler/time/core.js");
 var TimeMoveGuide = __webpack_require__(/*! ./moveGuide */ "./src/js/handler/time/moveGuide.js");
@@ -15581,6 +15617,7 @@ function TimeMove(dragHandler, timeGridView, baseController) {
     this._guide = new TimeMoveGuide(this);
 
     dragHandler.on('dragStart', this._onDragStart, this);
+    dragHandler.on('mousedown', this._onMouseDown, this);
 }
 
 /**
@@ -15626,6 +15663,26 @@ TimeMove.prototype._getTimeView = function(target) {
     }
 
     return util.pick(this.timeGridView.children.items, Number(matches[1]));
+};
+
+/**
+ * @emits TimeMove#mousedown
+ * @param {object} mouseDownEventData - Drag#mousedown schedule data.
+ */
+TimeMove.prototype._onMouseDown = function(mouseDownEventData) {
+    var target = mouseDownEventData.target,
+        timeView = this.checkExpectCondition(target),
+        blockElement = domutil.closest(target, config.classname('.time-date-schedule-block'));
+
+    if (!timeView || !blockElement) {
+        return;
+    }
+
+    // EventTarget.target is not changed in mousemove event even if mouse is over the other element.
+    // It's different with other browsers(IE, Chrome, Safari)
+    if (util.browser.firefox) {
+        domevent.preventDefault(mouseDownEventData.originEvent);
+    }
 };
 
 /**
@@ -17378,7 +17435,7 @@ var theme = {
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-    'month.weekend.backgroundColor': 'none',
+    'month.weekend.backgroundColor': 'unset',
     'month.day.fontSize': '14px',
 
     // month schedule style
@@ -18814,9 +18871,9 @@ function ScheduleCreationPopup(container, calendars) {
     this._focusedDropdown = null;
     this._onClickListeners = [
         this._selectDropdownMenuItem.bind(this),
+        this._toggleDropdownMenuView.bind(this),
         this._closeDropdownMenuView.bind(this, null),
         this._closePopup.bind(this),
-        this._toggleDropdownMenuView.bind(this),
         this._toggleIsAllday.bind(this),
         this._toggleIsPrivate.bind(this),
         this._onClickSaveSchedule.bind(this)
@@ -18897,7 +18954,7 @@ ScheduleCreationPopup.prototype._toggleDropdownMenuView = function(target) {
         return false;
     }
 
-    if (domutil.hasClass(config.classname('open'))) {
+    if (domutil.hasClass(dropdownBtn.parentNode, config.classname('open'))) {
         this._closeDropdownMenuView(dropdownBtn.parentNode);
     } else {
         this._openDropdownMenuView(dropdownBtn.parentNode);
@@ -20112,9 +20169,9 @@ Handlebars.registerHelper({
         return schedule.location;
     },
     'popupDetailUser-tmpl': function(schedule) {
-        var creator = util.pick(schedule, 'raw', 'creator', 'name');
+        var attendees = schedule.attendees || [];
 
-        return creator;
+        return attendees.join(', ');
     },
     'popupDetailState-tmpl': function(schedule) {
         return schedule.state || 'Busy';
@@ -21149,7 +21206,9 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
 
   return "<div class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
-    + "popup-detail-item\"><span class=\""
+    + "popup-detail-item "
+    + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
+    + "popup-detail-item-indent\"><span class=\""
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
     + "icon "
     + alias4(((helper = (helper = helpers.CSS_PREFIX || (depth0 != null ? depth0.CSS_PREFIX : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data}) : helper)))
