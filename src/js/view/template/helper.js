@@ -442,9 +442,7 @@ Handlebars.registerHelper({
         return schedule.location;
     },
     'popupDetailUser-tmpl': function(schedule) {
-        var attendees = schedule.attendees || [];
-
-        return attendees.join(', ');
+        return (schedule.attendees || []).join(', ');
     },
     'popupDetailState-tmpl': function(schedule) {
         return schedule.state || 'Busy';

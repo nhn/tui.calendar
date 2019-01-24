@@ -172,8 +172,7 @@ MonthResize.prototype._onDrag = function(dragEvent) {
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache;
     var scheduleData;
-    var start;
-    var end;
+    var start, end;
 
     this.dragHandler.off({
         drag: this._onDrag,

@@ -139,7 +139,7 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
     this._toggleDragEvent(true);
 
     /**
-     * mouse down event for firefox bug. cancelable.
+     * mousedown event for firefox bug. cancelable.
      * @event Drag#mouseDown
      * @type {object}
      * @property {HTMLElement} target - target element in this event.
