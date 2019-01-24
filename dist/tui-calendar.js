@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.9.2-dooray-sp88 | Thu Jan 24 2019
+ * @version 1.10.0 | Thu Jan 24 2019
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -12210,7 +12210,7 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
     this._toggleDragEvent(true);
 
     /**
-     * mouse down event for firefox bug. cancelable.
+     * mousedown event for firefox bug. cancelable.
      * @event Drag#mouseDown
      * @type {object}
      * @property {HTMLElement} target - target element in this event.
@@ -13229,41 +13229,25 @@ MonthGuide.prototype._getGuideElement = function(y) {
  * @returns {number[]} coordinate (x, y)
  */
 MonthGuide.prototype._getCoordByDate = function(date) {
-    var opt = this.options,
-        weeks = this.weeks,
+    var weeks = this.weeks,
         days = this.days,
         getIdxFromDiff = function(d1, d2) {
             return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
         },
         monthStart = datetime.parse(weeks[0].options.renderStartDate),
-        isBefore = opt.isCreationMode ? date < monthStart : false,
+        isBefore = date < monthStart,
         dateDW = dw(date),
         startDW = dw(monthStart),
         endDW = startDW.clone().addDate(isBefore ? -days : days),
         x = getIdxFromDiff(dateDW.d, startDW.d),
-        y = 0,
-        weekLength = weeks.length,
-        weekIndex = 1;
+        y = 0;
 
-    // while (!dateDW.isBetween(startDW, endDW)) {
-    //     startDW.addDate(isBefore ? -days : days);
-    //     endDW = startDW.clone().addDate(days);
-    //     x = getIdxFromDiff(dateDW.d, startDW.d);
-    //     y += (isBefore ? -1 : 1);
-    // }
-
-    // while (!dateDW.isBetween(startDW, endDW) && weekIndex < weekLength) {
-    while (dateDW.d > endDW.d && weekIndex < weekLength) {
-        startDW = dw(datetime.parse(weeks[weekIndex].options.renderStartDate));
-        // startDW.addDate(isBefore ? -days : days);
+    while (!dateDW.isBetween(startDW, endDW)) {
+        startDW.addDate(isBefore ? -days : days);
         endDW = startDW.clone().addDate(days);
         x = getIdxFromDiff(dateDW.d, startDW.d);
         y += (isBefore ? -1 : 1);
-        weekIndex += 1;
-        console.log(startDW, dateDW, endDW);
     }
-
-    console.log('_getCoordByDate', [x, y]);
 
     return [x, y];
 };
@@ -13293,8 +13277,6 @@ MonthGuide.prototype._getLimitedCoord = function(coord, min, max) {
         x = mmin(max[0], x);
         result = [x, y];
     }
-
-    console.log('_getLimitedCoord', result);
 
     return result;
 };
@@ -14319,8 +14301,7 @@ MonthResize.prototype._onDrag = function(dragEvent) {
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     var cache = this._cache;
     var scheduleData;
-    var start;
-    var end;
+    var start, end;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -17460,7 +17441,7 @@ var theme = {
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
     'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
-    'month.weekend.backgroundColor': 'unset',
+    'month.weekend.backgroundColor': 'inherit',
     'month.day.fontSize': '14px',
 
     // month schedule style
@@ -20194,9 +20175,7 @@ Handlebars.registerHelper({
         return schedule.location;
     },
     'popupDetailUser-tmpl': function(schedule) {
-        var attendees = schedule.attendees || [];
-
-        return attendees.join(', ');
+        return (schedule.attendees || []).join(', ');
     },
     'popupDetailState-tmpl': function(schedule) {
         return schedule.state || 'Busy';
