@@ -67,6 +67,7 @@ const calendar = new Calendar(querySelectorEl, {
     useCreationPopup: false,
     useDetailPopup: false,
     disableDblClick: true,
+    disableClick: false,
     isReadOnly: true
 });
 

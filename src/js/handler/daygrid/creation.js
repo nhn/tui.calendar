@@ -60,10 +60,20 @@ function DayGridCreation(dragHandler, view, controller, options) {
      */
     this._requestOnClick = false;
 
+    /**
+     * @type {boolean}
+     */
+    this._disableDblClick = options.disableDblClick;
+
+    /**
+     * @type {boolean}
+     */
+    this._disableClick = options.disableClick;
+
     dragHandler.on('dragStart', this._onDragStart, this);
     dragHandler.on('click', this._onClick, this);
 
-    if (options.disableDblClick) {
+    if (this._disableDblClick) {
         CLICK_DELAY = 0;
     } else {
         domevent.on(view.container, 'dblclick', this._onDblClick, this);
@@ -268,7 +278,7 @@ DayGridCreation.prototype._onClick = function(clickEventData) {
     var self = this;
     var getScheduleDataFunc, scheduleData;
 
-    if (!this.checkExpectedCondition(clickEventData.target)) {
+    if (!this.checkExpectedCondition(clickEventData.target) || this._disableClick) {
         return;
     }
 

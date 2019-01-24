@@ -41,9 +41,9 @@ function ScheduleCreationPopup(container, calendars) {
     this._focusedDropdown = null;
     this._onClickListeners = [
         this._selectDropdownMenuItem.bind(this),
+        this._toggleDropdownMenuView.bind(this),
         this._closeDropdownMenuView.bind(this, null),
         this._closePopup.bind(this),
-        this._toggleDropdownMenuView.bind(this),
         this._toggleIsAllday.bind(this),
         this._toggleIsPrivate.bind(this),
         this._onClickSaveSchedule.bind(this)
@@ -124,7 +124,7 @@ ScheduleCreationPopup.prototype._toggleDropdownMenuView = function(target) {
         return false;
     }
 
-    if (domutil.hasClass(config.classname('open'))) {
+    if (domutil.hasClass(dropdownBtn.parentNode, config.classname('open'))) {
         this._closeDropdownMenuView(dropdownBtn.parentNode);
     } else {
         this._openDropdownMenuView(dropdownBtn.parentNode);

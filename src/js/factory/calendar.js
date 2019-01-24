@@ -154,6 +154,7 @@ var mmin = Math.min;
  *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
  *  The rest timezone elements are shown in left timegrid of weekly/daily view.
  * @property {boolean} [disableDblClick=false] - disable double click to create a schedule
+ * @property {boolean} [disableClick=false] - disable click to create a schedule
  * @property {boolean} [isReadOnly=false] - Calendar is read-only mode and a user can't create and modify any schedule.
  */
 
@@ -387,6 +388,7 @@ Calendar.prototype._initialize = function(options) {
             tooltip: ''
         }],
         disableDblClick: false,
+        disableClick: false,
         isReadOnly: false
     }, options);
 

@@ -1,4 +1,4 @@
-// Type definitions for TOAST UI Calendar v1.9.1
+// Type definitions for TOAST UI Calendar v1.9.2-dooray-sp88
 // TypeScript Version: 3.2.1
 
 declare namespace tuiCalendar {
@@ -239,6 +239,7 @@ declare namespace tuiCalendar {
         useDetailPopup?: boolean;
         timezones?: ITimezone[];
         disableDblClick?: boolean;
+        disableClick?: boolean;
         isReadOnly?: boolean;
     }
 

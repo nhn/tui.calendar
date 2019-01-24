@@ -170,8 +170,9 @@ MonthResize.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - drag end event data
  */
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        scheduleData;
+    var cache = this._cache;
+    var scheduleData;
+    var start, end;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -185,8 +186,13 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        cache.end = new TZDate(Number(scheduleData.date));
-        this._updateSchedule(cache);
+        start = new TZDate(Number(cache.schedule.getStarts()));
+        end = new TZDate(Number(scheduleData.date));
+        cache.end = end;
+
+        if (start <= cache.end) {
+            this._updateSchedule(cache);
+        }
     }
 
     /**
