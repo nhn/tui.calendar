@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.9.2-alpha.1 | Wed Jan 23 2019
+ * @version 1.9.2-dooray-sp88 | Thu Jan 24 2019
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -13229,25 +13229,41 @@ MonthGuide.prototype._getGuideElement = function(y) {
  * @returns {number[]} coordinate (x, y)
  */
 MonthGuide.prototype._getCoordByDate = function(date) {
-    var weeks = this.weeks,
+    var opt = this.options,
+        weeks = this.weeks,
         days = this.days,
         getIdxFromDiff = function(d1, d2) {
             return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
         },
         monthStart = datetime.parse(weeks[0].options.renderStartDate),
-        isBefore = date < monthStart,
+        isBefore = opt.isCreationMode ? date < monthStart : false,
         dateDW = dw(date),
         startDW = dw(monthStart),
         endDW = startDW.clone().addDate(isBefore ? -days : days),
         x = getIdxFromDiff(dateDW.d, startDW.d),
-        y = 0;
+        y = 0,
+        weekLength = weeks.length,
+        weekIndex = 1;
 
-    while (!dateDW.isBetween(startDW, endDW)) {
-        startDW.addDate(isBefore ? -days : days);
+    // while (!dateDW.isBetween(startDW, endDW)) {
+    //     startDW.addDate(isBefore ? -days : days);
+    //     endDW = startDW.clone().addDate(days);
+    //     x = getIdxFromDiff(dateDW.d, startDW.d);
+    //     y += (isBefore ? -1 : 1);
+    // }
+
+    // while (!dateDW.isBetween(startDW, endDW) && weekIndex < weekLength) {
+    while (dateDW.d > endDW.d && weekIndex < weekLength) {
+        startDW = dw(datetime.parse(weeks[weekIndex].options.renderStartDate));
+        // startDW.addDate(isBefore ? -days : days);
         endDW = startDW.clone().addDate(days);
         x = getIdxFromDiff(dateDW.d, startDW.d);
         y += (isBefore ? -1 : 1);
+        weekIndex += 1;
+        console.log(startDW, dateDW, endDW);
     }
+
+    console.log('_getCoordByDate', [x, y]);
 
     return [x, y];
 };
@@ -13277,6 +13293,8 @@ MonthGuide.prototype._getLimitedCoord = function(coord, min, max) {
         x = mmin(max[0], x);
         result = [x, y];
     }
+
+    console.log('_getLimitedCoord', result);
 
     return result;
 };
@@ -14299,8 +14317,10 @@ MonthResize.prototype._onDrag = function(dragEvent) {
  * @param {object} dragEndEvent - drag end event data
  */
 MonthResize.prototype._onDragEnd = function(dragEndEvent) {
-    var cache = this._cache,
-        scheduleData;
+    var cache = this._cache;
+    var scheduleData;
+    var start;
+    var end;
 
     this.dragHandler.off({
         drag: this._onDrag,
@@ -14314,8 +14334,13 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        cache.end = new TZDate(Number(scheduleData.date));
-        this._updateSchedule(cache);
+        start = new TZDate(Number(cache.schedule.getStarts()));
+        end = new TZDate(Number(scheduleData.date));
+        cache.end = end;
+
+        if (start <= cache.end) {
+            this._updateSchedule(cache);
+        }
     }
 
     /**
