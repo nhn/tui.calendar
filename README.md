@@ -178,10 +178,12 @@ var Calendar = tui.Calendar;
 
 ```javascript
 var Calendar = require('tui-calendar'); /* CommonJS */
+require("tui-calendar/dist/tui-calendar.css");
 ```
 
 ```javascript
 import Calendar from 'tui-calendar'; /* ES6 */
+import "tui-calendar/dist/tui-calendar.css";
 ```
 
 Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options) to set configuration.
