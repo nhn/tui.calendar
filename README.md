@@ -47,10 +47,13 @@
 ## Collect statistics on the use of open source
 
 TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage.
-To disable GA, include tui-code-snippet.js and then immediately write the options as follows:
+
+To disable GA use the [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options):
 
 ```js
-tui.usageStatistics = false;
+var calendar = new Calendar('#calendar', {
+  usageStatistics: false
+});
 ```
 
 ## 🌏 Browser Support
