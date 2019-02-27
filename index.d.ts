@@ -282,5 +282,5 @@ declare namespace tuiCalendar {
     }
 }
 declare module 'tui-calendar' {
-    export = tuiCalendar.Calendar;
+    export default tuiCalendar.Calendar;
 }

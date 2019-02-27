@@ -1,0 +1,47 @@
+{
+  "header": {
+    "logo": {
+      "src": "https://uicdn.toast.com/toastui/img/tui-calendar-bi-white.png"
+    },
+    "title": {
+      "text": "repo",
+      "linkUrl": "https://github.com/nhnent/tui.calendar"
+    }
+  },
+  "footer": [
+    {
+      "title": "NHN Entertainment",
+      "linkUrl": "https://github.com/nhnent"
+    },
+    {
+      "title": "FE Development Lab",
+      "linkUrl": "https://github.com/nhnent/fe.javascript"
+    }
+  ],
+  "main": {
+    "filePath": "README.md"
+  },
+  "api": {
+    "filePath": [
+      "src/js/factory/calendar.js",
+      "src/js/theme/themeConfig.js",
+      "src/js/common/timezone.js"
+    ]
+  },
+  "examples": {
+    "filePath": "examples",
+    "titles": {
+      "example01-basic": "1. Basic",
+      "example02-daily": "2. Daily",
+      "example03-weekly": "3. Weekly",
+      "example04-month": "4. Month",
+      "example05-2weeks": "5. 2 Weeks",
+      "example06-3weeks": "6. 3 Weeks",
+      "example07-template": "7. Templates",
+      "example08-theme-month": "8. Theme for Month",
+      "example09-theme-week": "9. Theme for Week",
+      "example10-event": "10. Events"
+    }
+  },
+  "pathPrefix": "tui.calendar"
+}

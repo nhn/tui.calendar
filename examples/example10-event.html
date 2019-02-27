@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>Calendar DEMO</title>
+    <title>Calendar Event DEMO</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
@@ -119,7 +119,83 @@
     <script src="../dist/tui-calendar.js"></script>
     <script src="./js/data/calendars.js"></script>
     <script src="./js/data/schedules.js"></script>
-    <!-- <script src="./js/theme/dooray.js"></script> -->
-    <script src="./js/default.js"></script>
+    <script type="text/javascript" class="code-js">
+    var calendarList = document.getElementById('calendarList');
+    var html = [];
+    CalendarList.forEach(function(calendar) {
+      html.push('<div class="lnb-calendars-item"><label>' +
+        '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' + calendar.id + '" checked>' +
+        '<span style="border-color: ' + calendar.borderColor + '; background-color: ' + calendar.borderColor + ';"></span>' +
+        '<span>' + calendar.name + '</span>' +
+        '</label></div>'
+      );
+    });
+
+    calendarList.innerHTML = html.join('\n');
+    </script>
+    <script type="text/javascript" class="code-js">
+      var cal = new tui.Calendar('#calendar', {
+        defaultView: 'week',
+        calendars: CalendarList,
+        useCreationPopup: true,
+        useDetailPopup: true,
+      });
+
+      // Event Handlers
+      cal.on({
+      'clickMore': function(e) {
+        console.log('clickMore', e);
+      },
+      'clickSchedule': function(e) {
+        console.log('clickSchedule', e);
+      },
+      'clickDayname': function(date) {
+        console.log('clickDayname', date);
+      },
+      'beforeCreateSchedule': function(e) {
+        console.log('beforeCreateSchedule', e);
+      },
+      'beforeUpdateSchedule': function(e) {
+        console.log('beforeUpdateSchedule', e);
+        e.schedule.start = e.start;
+        e.schedule.end = e.end;
+        cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
+      },
+      'beforeDeleteSchedule': function(e) {
+        console.log('beforeDeleteSchedule', e);
+        cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
+      },
+      'afterRenderSchedule': function(e) {
+        var schedule = e.schedule;
+        var element = cal.getElement(schedule.id, schedule.calendarId);
+        console.log('afterRenderSchedule', element);
+      },
+      'clickTimezonesCollapseBtn': function(timezonesCollapsed) {
+        console.log('timezonesCollapsed', timezonesCollapsed);
+
+        if (timezonesCollapsed) {
+            cal.setTheme({
+                'week.daygridLeft.width': '77px',
+                'week.timegridLeft.width': '77px'
+            });
+        } else {
+            cal.setTheme({
+                'week.daygridLeft.width': '60px',
+                'week.timegridLeft.width': '60px'
+            });
+        }
+
+        return true;
+      }
+    });
+    </script>
+    <script>
+    function setSchedules() {
+      generateSchedule(cal.getViewName(), cal.getDateRangeStart(), cal.getDateRangeEnd());
+      cal.createSchedules(ScheduleList);
+    }
+
+    setSchedules();
+    </script>
 </body>
 </html>
