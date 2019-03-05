@@ -65,7 +65,7 @@ function getCustomTimezoneOffset(timestamp) {
 function createDateWithMultipleArgs(args) {
     var utc = Date.UTC.apply(null, args);
 
-    return new Date(utc + getTimezoneOffset(utc));
+    return new Date(utc + getCustomTimezoneOffset(utc));
 }
 
 /**
