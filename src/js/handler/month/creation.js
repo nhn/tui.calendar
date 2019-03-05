@@ -142,7 +142,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     eventData = this.getScheduleData(dragStartEvent.originEvent);
 
     this._cache = {
-        start: new TZDate(Number(eventData.date))
+        start: new TZDate(eventData.date)
     };
 
     /**
@@ -205,16 +205,16 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.end = new TZDate(Number(eventData.date));
+        cache.end = new TZDate(eventData.date);
         cache.isAllDay = true;
 
         times = [
-            Number(cache.start),
-            Number(cache.end)
+            cache.start,
+            cache.end
         ].sort(array.compare.num.asc);
 
         cache.start = new TZDate(times[0]);
-        cache.end = datetime.end(new TZDate(times[1]));
+        cache.end = datetime.end(times[1]);
 
         this._createSchedule(cache);
     }
@@ -247,7 +247,7 @@ MonthCreation.prototype._onDblClick = function(e) {
 
     this.fire('monthCreationClick', eventData);
 
-    range = this._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+    range = this._adjustStartAndEndTime(new TZDate(eventData.date), new TZDate(eventData.date));
 
     this._createSchedule({
         start: range.start,
@@ -279,7 +279,7 @@ MonthCreation.prototype._onClick = function(e) {
         if (self._requestOnClick) {
             self.fire('monthCreationClick', eventData);
 
-            range = self._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+            range = self._adjustStartAndEndTime(new TZDate(eventData.date), new TZDate(eventData.date));
 
             self._createSchedule({
                 start: range.start,

@@ -123,10 +123,11 @@ describe('datetime', function() {
     });
 
     it('toUTC() convert non UTC date to UTC.', function() {
+        var timezoneOffset = Math.abs(new Date().getTimezoneOffset());
         var d = new TZDate('1970-01-01T00:00:00Z'),
             utc = dt.toUTC(d);
 
-        expect(Math.abs(utc - d)).toBe(9 * 60 * 60 * 1000);
+        expect(Math.abs(utc - d)).toBe(timezoneOffset * 60 * 1000);
         expect(d).not.toEqual(utc);
     });
 
@@ -188,7 +189,7 @@ describe('datetime', function() {
 
     describe('format()', function() {
         it('return formatted date string as basis of supplied string.', function() {
-            var birth = new TZDate('1988-09-25T15:30:00+09:00');
+            var birth = new TZDate('1988-09-25T15:30:00');
             expect(dt.format(birth, '')).toBe('');
             expect(dt.format(birth, 'YYYY')).toBe('1988');
             expect(dt.format(birth, 'MM')).toBe('09');
@@ -201,8 +202,8 @@ describe('datetime', function() {
 
             // expect(new TZDate(dt.format(birth, 'LOCAL'))).toEqual(birth);
 
-            // var d2 = new TZDate('2015-05-01T09:30:00+09:00');
-            // var d3 = new TZDate('2015-05-01T10:00:00+09:00');
+            // var d2 = new TZDate('2015-05-01T09:30:00');
+            // var d3 = new TZDate('2015-05-01T10:00:00');
             // expect(new TZDate(dt.format(d2, 'LOCAL'))).not.toEqual(d3);
         });
     });
@@ -215,7 +216,7 @@ describe('datetime', function() {
         M.length < 2 && (M = '0' + M);
         d.length < 2 && (d = '0' + d);
 
-        return new TZDate([y, M, d].join('-') + 'T00:00:00+09:00');
+        return new TZDate([y, M, d].join('-') + 'T00:00:00');
     }
 
     describe('arr2dCalendar()', function() {
@@ -225,17 +226,17 @@ describe('datetime', function() {
         };
 
         it('Providing iteratee allows you to manipulate each date element.', function() {
-            var month = new TZDate('2014-10-01T00:00:00+09:00');
+            var month = new TZDate('2014-10-01T00:00:00');
             
             var actual = dt.arr2dCalendar(month, options, function(date) {
                 return { customize: true, date: date };
             });
 
-            expect(actual[0][0]).toEqual({ customize: true, date: new TZDate('2014-09-28T00:00:00+09:00') });
+            expect(actual[0][0]).toEqual({ customize: true, date: new TZDate('2014-09-28T00:00:00') });
         });
 
         it('2014/10 will be rendered on 9/28 - 11/1 at Sunday time.', function() {
-            var month = new TZDate('2014-10-01T00:00:00+09:00');
+            var month = new TZDate('2014-10-01T00:00:00');
             var actual = dt.arr2dCalendar(month, options);
             var expected = [
                 [createDate(2014, 9, 28),
@@ -283,7 +284,7 @@ describe('datetime', function() {
         });
 
         it('2015/12 will be rendered from 11/30 to 2013/1/3 as of Monday.', function() {
-            var month = new TZDate('2015-12-01T00:00:00+09:00');
+            var month = new TZDate('2015-12-01T00:00:00');
             var actual = dt.arr2dCalendar(month, {
                 startDayOfWeek: 1,
                 isAlways6Week: false
@@ -334,7 +335,7 @@ describe('datetime', function() {
         });
 
         it('2016/8 will be rendered from 7/26 to 9/5 on Tuesday.', function() {
-            var month = new TZDate('2016-08-01T00:00:00+09:00');
+            var month = new TZDate('2016-08-01T00:00:00');
             var actual = dt.arr2dCalendar(month, {
                 startDayOfWeek: 2
             });
@@ -392,7 +393,7 @@ describe('datetime', function() {
         });
 
         it('2015/11 will be rendered until 11/1 to 12/5 on Sunday.', function() {
-            var month = new TZDate('2015-11-01T00:00:00+09:00');
+            var month = new TZDate('2015-11-01T00:00:00');
             var actual = dt.arr2dCalendar(month, options);
             var expected = [
                 [createDate(2015, 11, 1),
@@ -441,36 +442,36 @@ describe('datetime', function() {
     });
 
     it('isSameMonth', function() {
-        var d1 = new TZDate('2015-06-12T09:30:00+09:00');
-        var d2 = new TZDate('2015-06-13T09:30:00+09:00');
-        var d3 = new TZDate('2015-07-12T09:30:00+09:00');
+        var d1 = new TZDate('2015-06-12T09:30:00');
+        var d2 = new TZDate('2015-06-13T09:30:00');
+        var d3 = new TZDate('2015-07-12T09:30:00');
 
         expect(dt.isSameMonth(d1, d2)).toBe(true);
         expect(dt.isSameMonth(d1, d3)).toBe(false);
     });
 
     it('isSameDate', function() {
-        var d1 = new TZDate('2015-06-12T09:30:00+09:00');
-        var d2 = new TZDate('2015-06-13T09:30:00+09:00');
-        var d3 = new TZDate('2015-07-12T09:30:00+09:00');
+        var d1 = new TZDate('2015-06-12T09:30:00');
+        var d2 = new TZDate('2015-06-13T09:30:00');
+        var d3 = new TZDate('2015-07-12T09:30:00');
 
         expect(dt.isSameDate(d1, d2)).toBe(false);
         expect(dt.isSameDate(d1, d3)).toBe(false);
     });
 
     it('startDateOfMonth', function() {
-        var month = new TZDate('2015-11-24T09:30:00+09:00');
-        expect(dt.startDateOfMonth(month)).toEqual(new TZDate('2015-11-01T00:00:00+09:00'));
+        var month = new TZDate('2015-11-24T09:30:00');
+        expect(dt.startDateOfMonth(month)).toEqual(new TZDate('2015-11-01T00:00:00'));
 
-        month = new TZDate('2015-06-24T00:00:00+09:00');
-        expect(dt.startDateOfMonth(month)).toEqual(new TZDate('2015-06-01T00:00:00+09:00'));
+        month = new TZDate('2015-06-24T00:00:00');
+        expect(dt.startDateOfMonth(month)).toEqual(new TZDate('2015-06-01T00:00:00'));
     });
 
     it('endDateOfMonth', function() {
-        var month = new TZDate('2015-11-24T09:30:00+09:00');
-        expect(dt.endDateOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59+09:00'));
+        var month = new TZDate('2015-11-24T09:30:00');
+        expect(dt.endDateOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59'));
 
-        var month = new TZDate('2015-07-15T00:00:00+09:00');
-        expect(dt.endDateOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59+09:00'));
+        var month = new TZDate('2015-07-15T00:00:00');
+        expect(dt.endDateOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59'));
     });
 });

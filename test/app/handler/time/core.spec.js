@@ -1,5 +1,6 @@
 /*eslint-disable*/
 var core = require('handler/time/core');
+var TZDate = require('common/timezone').Date;
 var Time = require('view/week/time');
 
 describe('module:Time.Creation', function() {
@@ -23,7 +24,7 @@ describe('module:Time.Creation', function() {
 
         var time = new Time({ width: 100 }, container);
 
-        spyOn(time, 'getDate').and.returnValue(new Date('2015-05-05T00:00:00+09:00'));
+        spyOn(time, 'getDate').and.returnValue(new Date('2015-05-05T00:00:00'));
         spyOn(time, 'getViewBound').and.returnValue({
             height: 230
         });
@@ -44,9 +45,9 @@ describe('module:Time.Creation', function() {
             originEvent: vMouseEvent,
             mouseY: 115,
             gridY: 12,
-            timeY: (new Date('2015-05-05T12:00:00+09:00').getTime()),
+            timeY: new TZDate('2015-05-05T12:00:00'),
             nearestGridY: 12,
-            nearestGridTimeY: (new Date('2015-05-05T12:00:00+09:00').getTime()),
+            nearestGridTimeY: new TZDate('2015-05-05T12:00:00'),
             triggerEvent: 'click'
         };
 

@@ -188,11 +188,11 @@ DayGridMove.prototype._onDrag = function(dragEventData) {
 DayGridMove.prototype._updateSchedule = function(scheduleData) {
     var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-        newStarts = new TZDate(schedule.start.getTime()),
-        newEnds = new TZDate(schedule.end.getTime());
+        newStarts = new TZDate(schedule.start),
+        newEnds = new TZDate(schedule.end);
 
-    newStarts = new TZDate(newStarts.setDate(newStarts.getDate() + dateOffset));
-    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
+    newStarts = newStarts.addDate(dateOffset);
+    newEnds = newEnds.addDate(dateOffset);
 
     /**
      * @event DayGridMove#beforeUpdateSchedule

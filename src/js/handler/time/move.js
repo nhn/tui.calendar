@@ -242,15 +242,15 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
     }
 
     timeDiff -= datetime.millisecondsFrom('minutes', 30);
-    newStarts = new TZDate(schedule.getStarts().getTime() + timeDiff);
-    newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
+    newStarts = new TZDate(schedule.getStarts()).addMilliseconds(timeDiff);
+    newEnds = new TZDate(schedule.getEnds()).addMilliseconds(timeDiff);
 
     if (currentView) {
         dateDiff = currentView.getDate() - relatedView.getDate();
     }
 
-    newStarts = new TZDate(newStarts.getTime() + dateDiff);
-    newEnds = new TZDate(newEnds.getTime() + dateDiff);
+    newStarts.addMilliseconds(dateDiff);
+    newEnds.addMilliseconds(dateDiff);
 
     /**
      * @event TimeMove#beforeUpdateSchedule
@@ -293,12 +293,12 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        scheduleData.timeY + datetime.millisecondsFrom('hour', 0.5)
+        new TZDate(scheduleData.timeY).addMinutes(30)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+        new TZDate(scheduleData.nearestGridTimeY).addMinutes(30)
     ];
 
     this._updateSchedule(scheduleData);

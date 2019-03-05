@@ -2,6 +2,7 @@
 
 var common = require('common/common');
 var domutil = require('common/domutil');
+var TZDate = require('common/timezone').Date;
 var MonthGuide = require('handler/month/guide');
 
 describe('handler:month/guide', function() {
@@ -142,14 +143,14 @@ describe('handler:month/guide', function() {
     describe('_getCoordByDate()', function() {
         var w1 = {
                 options: {
-                    renderStartDate: '2015-12-27',
-                    renderEndDate: '2016-01-02'
+                    renderStartDate: new TZDate('2015-12-27'),
+                    renderEndDate: new TZDate('2016-01-02')
                 }
             },
             w2 = {
                 options: {
-                    renderStartDate: '2016-01-03',
-                    renderEndDate: '2016-01-09'
+                    renderStartDate: new TZDate('2016-01-03'),
+                    renderEndDate: new TZDate('2016-01-09')
                 }
             },
             date;
@@ -162,28 +163,28 @@ describe('handler:month/guide', function() {
         });
 
         it('should calculate coordinate by date properly.', function() {
-            date = new Date('2015-12-29T09:30:00+09:00');
+            date = new TZDate('2015-12-29T09:30:00');
 
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, 0]);
 
-            date = new Date('2016-01-06T00:00:00+09:00');
+            date = new TZDate('2016-01-06T00:00:00');
 
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([3, 1]);
 
-            date = new Date('2016-01-13T09:30:00+09:00');
+            date = new TZDate('2016-01-13T09:30:00');
 
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([3, 2]);
 
-            date = new Date('2015-12-15T00:00:00+09:00');
+            date = new TZDate('2015-12-15T00:00:00');
 
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, -2]);
 
             mockInst.days = 5;
-            w1.options.renderEndDate = '2015-12-31';
-            w2.options.renderStartDate = '2016-01-01';
-            w2.options.renderEndDate = '2016-01-05';
+            w1.options.renderEndDate = new TZDate('2015-12-31');
+            w2.options.renderStartDate = new TZDate('2016-01-01');
+            w2.options.renderEndDate = new TZDate('2016-01-05');
 
-            date = new Date('2015-12-24T00:00:00+09:00');
+            date = new TZDate('2015-12-24T00:00:00');
 
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, -1]);
         });

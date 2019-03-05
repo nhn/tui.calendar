@@ -9,6 +9,7 @@ var common = require('../../common/common');
 var datetime = require('../../common/datetime');
 var domevent = require('../../common/domevent');
 var Point = require('../../common/point');
+var TZDate = require('../../common/timezone').Date;
 
 /**
  * @mixin Time.Core
@@ -41,7 +42,7 @@ var timeCore = {
             container = timeView.container,
             options = timeView.options,
             viewHeight = timeView.getViewBound().height,
-            viewTime = Number(timeView.getDate()),
+            viewTime = timeView.getDate(),
             hourLength = options.hourEnd - options.hourStart,
             baseMil = datetime.millisecondsFrom('hour', hourLength);
 
@@ -53,9 +54,11 @@ var timeCore = {
         return util.bind(function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
-                timeY = viewTime + datetime.millisecondsFrom('hour', gridY),
+                timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
                 nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY),
-                nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);
+                nearestGridTimeY = new TZDate(viewTime).addMinutes(
+                    datetime.minutesFromHours(nearestGridY + options.hourStart)
+                );
 
             return util.extend({
                 target: mouseEvent.target || mouseEvent.srcElement,
@@ -78,7 +81,7 @@ var timeCore = {
      * @returns {function} - Function that return event data from mouse event.
      */
     _retriveScheduleDataFromDate: function(timeView) {
-        var viewTime = Number(timeView.getDate());
+        var viewTime = timeView.getDate();
 
         /**
          * @param {TZDate} startDate - start date
@@ -90,11 +93,11 @@ var timeCore = {
             var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
 
             gridY = startDate.getHours() - hourStart + getNearestHour(startDate.getMinutes());
-            timeY = viewTime + datetime.millisecondsFrom('hour', gridY);
+            timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY));
             nearestGridY = gridY;
-            nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY);
+            nearestGridTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridY));
             nearestGridEndY = endDate.getHours() - hourStart + getNearestHour(endDate.getMinutes());
-            nearestGridEndTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridEndY);
+            nearestGridEndTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridEndY));
 
             return util.extend({
                 target: timeView,

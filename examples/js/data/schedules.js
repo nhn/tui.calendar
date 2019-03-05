@@ -52,8 +52,6 @@ function ScheduleInfo() {
 }
 
 function generateTime(schedule, renderStart, renderEnd) {
-    var baseDate = new Date(renderStart);
-    var singleday = chance.bool({likelihood: 70});
     var startDate = moment(renderStart.getTime())
     var endDate = moment(renderEnd.getTime());
     var diffDate = endDate.diff(startDate, 'days');

@@ -6,7 +6,7 @@ describe('dw', function() {
     var date;
 
     beforeEach(function() {
-        date = new Date('2015-05-01T09:30:00+09:00');
+        date = new Date('2015-05-01T09:30:00');
     });
 
     it('should add days by addDate method.', function() {
