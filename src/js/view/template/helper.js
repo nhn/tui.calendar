@@ -489,11 +489,11 @@ Handlebars.registerHelper({
         var templates = [];
 
         if (timezone.dateDifference) {
-        templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
+            templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
         }
 
         templates.push(datetime.format(timezone.hourmarker, 'HH:mm'));
 
-        return templates.join('')
+        return templates.join('');
     }
 });
