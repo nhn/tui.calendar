@@ -69,8 +69,9 @@ var mmin = Math.min;
  * @property {function} [monthGridFooterExceed] - month grid footer(exceed schedule count) template function
  * @property {function} [weekDayname] - weekly dayname template function
  * @property {function} [monthDayname] - monthly dayname template function
- * @property {function} [popupDetailRepeat] - schedule repeat information's template function on the default detail popup 
- * @property {function} [popupDetailBody] - schedule body text information's template function on the default detail popup 
+ * @property {function} [popupDetailRepeat] - schedule repeat information's template function on the default detail popup
+ * @property {function} [popupDetailBody] - schedule body text information's template function on the default detail popup
+ * @property {function} [timegridCurrentTime] - Set the current time template in Time Grid (weekly view, daily view)
  */
 
 /**

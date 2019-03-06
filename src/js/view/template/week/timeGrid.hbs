@@ -9,7 +9,7 @@
             {{/each ~}}
             {{#if @root.showHourMarker}}
                 <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{@root.hourmarkerTop}}%; margin-top: calc(6px - {{@root.styles.halfHourHeight}}); height: {{@root.styles.halfHourHeight}};">
-                    <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{@root.styles.currentTimeColor}}; font-size: {{@root.styles.currentTimeFontSize}}; font-weight: {{@root.styles.currentTimeFontWeight}}">{{{hourmarkerText}}}</div>
+                    <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{@root.styles.currentTimeColor}}; font-size: {{@root.styles.currentTimeFontSize}}; font-weight: {{@root.styles.currentTimeFontWeight}}">{{{timegridCurrentTime-tmpl this}}}</div>
                 </div>
             {{/if}}
         {{else}}
@@ -20,7 +20,7 @@
             {{/each ~}}
             {{#if @root.showHourMarker}}
                 <div class="{{CSS_PREFIX}}timegrid-hourmarker" style="top:{{@root.hourmarkerTop}}%; margin-top: calc(6px - {{@root.styles.halfHourHeight}}); height: {{@root.styles.halfHourHeight}};">
-                    <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{@root.styles.currentTimeColor}}; font-size: {{@root.styles.currentTimeFontSize}};">{{{hourmarkerText}}}</div>
+                    <div class="{{CSS_PREFIX}}timegrid-hourmarker-time" style="color: {{@root.styles.currentTimeColor}}; font-size: {{@root.styles.currentTimeFontSize}};">{{{timegridCurrentTime-tmpl this}}}</div>
                 </div>
             {{/if}}
         {{/if}}

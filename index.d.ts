@@ -76,6 +76,12 @@ declare namespace tuiCalendar {
         minutes: number;
     }
 
+    interface ITimezoneHourMarker {
+        hourmarker: TZDate;
+        dateDifferenceSign: string;
+        dateDifference: number;
+    }
+
     interface IGridDateModel {
         date: string;
         day: number;
@@ -141,6 +147,7 @@ declare namespace tuiCalendar {
         timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
         timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
         timegridDisplayTime?: (time: ITimeGridHourLabel) => string;
+        timegridCurrentTime?: (hourMarker: ITimezoneHourMarker) => string;
     }
 
     interface IWeekOptions {
