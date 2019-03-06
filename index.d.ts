@@ -146,6 +146,7 @@ declare namespace tuiCalendar {
         popupDelete?: () => string;
         timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
         timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
+        timegridDisplayPrimaryTime?: (time: ITimeGridHourLabel) => string;
         timegridDisplayTime?: (time: ITimeGridHourLabel) => string;
         timegridCurrentTime?: (hourMarker: ITimezoneHourMarker) => string;
     }
