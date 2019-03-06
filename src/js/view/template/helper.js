@@ -484,5 +484,16 @@ Handlebars.registerHelper({
     },
     'timegridDisplayTime-tmpl': function(time) {
         return datetime.leadingZero(time.hour, 2) + ':' + datetime.leadingZero(time.minutes, 2);
+    },
+    'timegridCurrentTime-tmpl': function(timezone) {
+        var templates = [];
+
+        if (timezone.dateDifference) {
+        templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
+        }
+
+        templates.push(datetime.format(timezone.hourmarker, 'HH:mm'));
+
+        return templates.join('')
     }
 });
