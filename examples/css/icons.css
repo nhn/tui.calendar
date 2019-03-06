@@ -46,6 +46,10 @@
   background: url('../images/ic-arrow-line-right.png') no-repeat;
 }
 
+.ic-travel-time {
+  background: url('../images/ic-traveltime-w.png') no-repeat;
+}
+
 /* font icons */
 .ic-location-b:before {
   content: '\e900';
