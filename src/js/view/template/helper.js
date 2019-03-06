@@ -480,15 +480,14 @@ Handlebars.registerHelper({
         return datetime.leadingZero(time.hour, 2) + ':' + datetime.leadingZero(time.minutes, 2);
     },
     'timegridCurrentTime-tmpl': function(timezone) {
-        var diffDates = '';
+        var templates = [];
 
         if (timezone.dateDifference) {
-            diffDates = '[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>';
+        templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
         }
 
-        return [
-            diffDates,
-            datetime.format(timezone.hourmarker, 'HH:mm')
-        ].join('');
+        templates.push(datetime.format(timezone.hourmarker, 'HH:mm'));
+
+        return templates.join('')
     }
 });
