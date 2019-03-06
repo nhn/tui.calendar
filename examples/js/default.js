@@ -25,33 +25,8 @@
             },
             time: function(schedule) {
                 return getTimeTemplate(schedule, false);
-            },
-            timegridCurrentTime: function(timezone) {
-                var diffDates = '';
-                var currentHour = moment(timezone.hourmarker.toUTCString());
-
-                if (timezone.dateDifference) {
-                    diffDates = '(' + timezone.dateDifferenceSign + timezone.dateDifference + ')<br>';
-                }
-
-                return [
-                    diffDates,
-                    currentHour.format('HH:mm a')
-                ].join('');
             }
-        },
-        timezones: [
-            {
-                timezoneOffset: 540,
-                displayLabel: 'GMT+09:00',
-                tooltip: 'Seoul'
-            },
-            {
-                timezoneOffset: -420,
-                displayLabel: 'GMT-08:00',
-                tooltip: 'Los Angeles'
-            }
-        ]
+        }
     });
 
     // event handlers
