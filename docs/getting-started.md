@@ -371,7 +371,7 @@ var calendar = new Calendar('#calendar', {
         monthDayname: function(dayname) {
             return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
         },
-        timegridDisplayPrimayTime: function(time) {
+        timegridDisplayPrimaryTime: function(time) {
             var meridiem = time.hour < 12 ? 'am' : 'pm';
 
             return time.hour + ' ' + meridiem;
@@ -426,9 +426,9 @@ cal.on({
     'beforeCreateSchedule': function(e) {
         console.log('beforeCreateSchedule', e);
         // open a creation popup
-        
+
         // If you dont' want to show any popup, just use `e.guide.clearGuideElement()`
-        
+
         // then close guide element(blue box from dragging or clicking days)
         e.guide.clearGuideElement();
     },
@@ -460,17 +460,17 @@ Show multiple timezones in weekly and daily view. The `showTimezoneCollapseButto
 ```js
 var cal = new Calendar('#calendar', {
     timezones: [{
-        timezoneOffset: 540,	
-        // displayLabel: 'GMT+09:00',	
-        tooltip: 'Seoul'	
-    }, {	
-        timezoneOffset: -420,	
-        // displayLabel: 'GMT-08:00',	
-        tooltip: 'Los Angeles'	
-    }],	
-    week: {	
-        showTimezoneCollapseButton: true,	
-        timezonesCollapsed: false	
+        timezoneOffset: 540,
+        // displayLabel: 'GMT+09:00',
+        tooltip: 'Seoul'
+    }, {
+        timezoneOffset: -420,
+        // displayLabel: 'GMT-08:00',
+        tooltip: 'Los Angeles'
+    }],
+    week: {
+        showTimezoneCollapseButton: true,
+        timezonesCollapsed: false
     }
 });
 ```
