@@ -229,3 +229,17 @@ body {
     height: 12px;
     margin-right: 2px;
 }
+
+.weekday-grid-more-schedules {
+  float: right;
+  margin-top: 4px;
+  margin-right: 6px;
+  height: 18px;
+  line-height: 17px;
+  padding: 0 5px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  font-size: 12px;
+  text-align: center;
+  color: #000;
+}

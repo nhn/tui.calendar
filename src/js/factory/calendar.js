@@ -23,66 +23,296 @@ var mmin = Math.min;
 /**
  * Schedule information
  * @typedef {object} Schedule
- * @property {string} id - unique schedule id depends on calendar id
- * @property {string} calendarId - unique calendar id
- * @property {string} title - schedule title
- * @property {string} body - schedule body text which is text/plain
- * @property {string|TZDate} start - start time. It's 'string' for input. It's 'TZDate' for output like event handler.
- * @property {string|TZDate} end - end time. It's 'string' for input. It's 'TZDate' for output like event handler.
- * @property {number} goingDuration - travel time:  going duration
- * @property {number} comingDuration - travel time: coming duration
- * @property {boolean} isAllDay - all day schedule
- * @property {string} category - schedule type('milestone', 'task', allday', 'time')
- * @property {string} dueDateClass - task schedule type string
+ * @property {string} [id] - The unique schedule id depends on calendar id
+ * @property {string} calendarId - The unique calendar id
+ * @property {string} [title] - The schedule title
+ * @property {string} [body] - The schedule body text which is text/plain
+ * @property {string|TZDate} [start] - The start time. It's 'string' for input. It's 'TZDate' for output like event handler.
+ * @property {string|TZDate} [end] - The end time. It's 'string' for input. It's 'TZDate' for output like event handler.
+ * @property {number} [goingDuration] - The travel time: Going duration minutes
+ * @property {number} [comingDuration] - The travel time: Coming duration minutes
+ * @property {boolean} [isAllDay] - The all day schedule
+ * @property {string} [category] - The schedule type('milestone', 'task', allday', 'time')
+ * @property {string} [dueDateClass] - The task schedule type string
  *                                   (any string value is ok and mandatory if category is 'task')
- * @property {string} location - location
- * @property {Array.<string>} attendees - attendees
- * @property {string} recurrenceRule - recurrence rule
- * @property {boolean} isPending - in progress flag to do something like network job(The schedule will be transparent.)
- * @property {boolean} isFocused - focused schedule flag
- * @property {boolean} isVisible - schedule visibility flag
- * @property {boolean} isReadOnly - schedule read-only flag
- * @property {boolean} isPrivate - private schedule
- * @property {string} [color] - schedule text color
- * @property {string} [bgColor] - schedule background color
- * @property {string} [dragBgColor] - schedule background color when dragging it
- * @property {string} [borderColor] - schedule left border color
- * @property {string} customStyle - schedule's custom css class
- * @property {any} raw - user data
+ * @property {string} [location] - The location
+ * @property {Array.<string>} [attendees] - The attendees
+ * @property {string} [recurrenceRule] - The recurrence rule
+ * @property {boolean} [isPending] - The in progress flag to do something like network job(The schedule will be transparent.)
+ * @property {boolean} [isFocused] - The focused schedule flag
+ * @property {boolean} [isVisible] - The schedule visibility flag
+ * @property {boolean} [isReadOnly] - The schedule read-only flag
+ * @property {boolean} [isPrivate] - The private schedule
+ * @property {string} [color] - The schedule text color
+ * @property {string} [bgColor] - The schedule background color
+ * @property {string} [dragBgColor] - The schedule background color when dragging it
+ * @property {string} [borderColor] - The schedule left border color
+ * @property {string} [customStyle] - The schedule's custom css class
+ * @property {any} [raw] - The user data
+ * @property {string} [state] - The schedule's state ('busy', 'free')
  */
 
 /**
  * Template functions to support customer renderer
  * @typedef {object} Template
- * @property {function} [milestoneTitle] - milestone title(at left column) template function
- * @property {function} [milestone] - milestone template function
-   @property {function} [taskTitle] - task title(at left column) template function
- * @property {function} [task] - task template function
- * @property {function} [alldayTitle] - allday title(at left column) template function
- * @property {function} [allday] - allday template function
- * @property {function} [time] - time template function
- * @property {function} [monthMoreTitleDate] - month more layer title template function
- * @property {function} [monthMoreClose] - month more layer close button template function
- * @property {function} [monthGridHeader] - month grid header(date, decorator, title) template function
- * @property {function} [monthGridFooter] - month grid footer(date, decorator, title) template function
- * @property {function} [monthGridHeaderExceed] - month grid header(exceed schedule count) template function
- * @property {function} [monthGridFooterExceed] - month grid footer(exceed schedule count) template function
- * @property {function} [weekDayname] - weekly dayname template function
- * @property {function} [monthDayname] - monthly dayname template function
- * @property {function} [popupDetailRepeat] - schedule repeat information's template function on the default detail popup
- * @property {function} [popupDetailBody] - schedule body text information's template function on the default detail popup
- * @property {function} [timegridCurrentTime] - Set the current time template in Time Grid (weekly view, daily view)
+ * @property {function} [milestoneTitle] - The milestone title(at left column) template function
+ * @property {function} [milestone] - The milestone template function
+ * @property {function} [taskTitle] - The task title(at left column) template function
+ * @property {function} [task] - The task template function
+ * @property {function} [alldayTitle] - The allday title(at left column) template function
+ * @property {function} [allday] - The allday template function
+ * @property {function} [time] - The time template function
+ * @property {function} [goingDuration] - The travel time(going duration) template function
+ * @property {function} [comingDuration] - The travel time(coming duration) template function
+ * @property {function} [monthMoreTitleDate] - The month more layer title template function
+ * @property {function} [monthMoreClose] - The month more layer close button template function
+ * @property {function} [monthGridHeader] - The month grid header(date, decorator, title) template function
+ * @property {function} [monthGridHeaderExceed] - The month grid header(exceed schedule count) template function
+ * @property {function} [monthGridFooter] - The month grid footer(date, decorator, title) template function
+ * @property {function} [monthGridFooterExceed] - The month grid footer(exceed schedule count) template function
+ * @property {function} [monthDayname] - The monthly dayname template function
+ * @property {function} [weekDayname] - The weekly dayname template function
+ * @property {function} [weekGridFooterExceed] - The week/day grid footer(exceed schedule count) template function
+ * @property {function} [dayGridTitle] - The week/day grid title template function(e.g. milestone, task, allday)
+ * @property {function} [schedule] - The week/day schedule template function(When the schedule category attribute is milestone, task, or all day)
+ * @property {function} [collapseBtnTitle] - The week/day (exceed schedule more view) collapse button title template function
+ * @property {function} [timezoneDisplayLabel] - The timezone display label template function in time grid
+ * @property {function} [timegridDisplayPrimaryTime] - The display label template function of primary timezone in time grid
+ * @property {function} [timegridDisplayTime] - The display time template function in time grid
+ * @property {function} [timegridCurrentTime] - The current time template function in time grid
+ * @property {function} [popupIsAllDay] - The all day checkbox label text template function in the default creation popup
+ * @property {function} [popupStateFree] - The free option template function in the state select box of the default creation popup
+ * @property {function} [popupStateBusy] - The busy option template function in the state select box of the default creation popup
+ * @property {function} [titlePlaceholder] - The title input placeholder text template function in the default creation popup
+ * @property {function} [locationPlaceholder] - The location input placeholder text template function in the default creation popup
+ * @property {function} [startDatePlaceholder] - The start date input placeholder text template function in the default creation popup
+ * @property {function} [endDatePlaceholder] - The end date input placeholder text template function in the default creation popup
+ * @property {function} [popupSave] - The 'Save' button text template function in the default creation popup
+ * @property {function} [popupUpdate] - The 'Update' button text template function in the default creation popup when in edit mode
+ * @property {function} [popupDetailDate] - The schedule date information's template function on the default detail popup
+ * @property {function} [popupDetailLocation] - The schedule location text information's template function on the default detail popup
+ * @property {function} [popupDetailUser] - The schedule user text information's template function on the default detail popup
+ * @property {function} [popupDetailState] - The schedule state(busy or free) text information's template function on the default detail popup
+ * @property {function} [popupDetailRepeat] - The schedule repeat information's template function on the default detail popup
+ * @property {function} [popupDetailBody] - The schedule body text information's template function on the default detail popup
+ * @property {function} [popupEdit] - The 'Edit' button text template function on the default detail popup
+ * @property {function} [popupDelete] - The 'Delete' button text template function on the default detail popup
+ * @example
+ * var calendar = new tui.Calendar(document.getElementById('calendar'), {
+ *     ...
+ *     template: {
+ *         milestone: function(schedule) {
+ *             return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + schedule.bgColor + '">' + schedule.title + '</span>';
+ *         },
+ *         milestoneTitle: function() {
+ *             return '<span class="tui-full-calendar-left-content">MILESTONE</span>';
+ *         },
+ *         task: function(schedule) {
+ *             return '#' + schedule.title;
+ *         },
+ *         taskTitle: function() {
+ *             return '<span class="tui-full-calendar-left-content">TASK</span>';
+ *         },
+ *         allday: function(schedule) {
+ *             return getTimeTemplate(schedule, true);
+ *         },
+ *         alldayTitle: function() {
+ *             return '<span class="tui-full-calendar-left-content">ALL DAY</span>';
+ *         },
+ *         time: function(schedule) {
+ *             return '<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ' + schedule.title;
+ *         },
+ *         goingDuration: function(schedule) {
+ *             return '<span class="calendar-icon ic-travel-time"></span>' + schedule.goingDuration + 'min.';
+ *         },
+ *         comingDuration: function(schedule) {
+ *             return '<span class="calendar-icon ic-travel-time"></span>' + schedule.comingDuration + 'min.';
+ *         },
+ *         monthMoreTitleDate: function(date, dayname) {
+ *             var day = date.split('.')[2];
+ *
+ *             return '<span class="tui-full-calendar-month-more-title-day">' + day + '</span> <span class="tui-full-calendar-month-more-title-day-label">' + dayname + '</span>';
+ *         },
+ *         monthMoreClose: function() {
+ *             return '<span class="tui-full-calendar-icon tui-full-calendar-ic-close"></span>';
+ *         },
+ *         monthGridHeader: function(dayModel) {
+ *             var date = parseInt(dayModel.date.split('-')[2], 10);
+ *             var classNames = ['tui-full-calendar-weekday-grid-date '];
+ *
+ *             if (dayModel.isToday) {
+ *                 classNames.push('tui-full-calendar-weekday-grid-date-decorator');
+ *             }
+ *
+ *             return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+ *         },
+ *         monthGridHeaderExceed: function(hiddenSchedules) {
+ *             return '<span class="weekday-grid-more-schedules">+' + hiddenSchedules + '</span>';
+ *         },
+ *         monthGridFooter: function() {
+ *             return '';
+ *         },
+ *         monthGridFooterExceed: function(hiddenSchedules) {
+ *             return '';
+ *         },
+ *         monthDayname: function(model) {
+ *             return (model.label).toString().toLocaleUpperCase();
+ *         },
+ *         weekDayname: function(model) {
+ *             return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span>&nbsp;&nbsp;<span class="tui-full-calendar-dayname-name">' + model.dayName + '</span>';
+ *         },
+ *         weekGridFooterExceed: function(hiddenSchedules) {
+ *             return '+' + hiddenSchedules;
+ *         },
+ *         dayGridTitle: function(viewName) {
+ *
+ *             // use another functions instead of 'dayGridTitle'
+ *             // milestoneTitle: function() {...}
+ *             // taskTitle: function() {...}
+ *             // alldayTitle: function() {...}
+ *
+ *             var title = '';
+ *             switch(viewName) {
+ *                 case 'milestone':
+ *                     title = '<span class="tui-full-calendar-left-content">MILESTONE</span>';
+ *                     break;
+ *                 case 'task':
+ *                     title = '<span class="tui-full-calendar-left-content">TASK</span>';
+ *                     break;
+ *                 case 'allday':
+ *                     title = '<span class="tui-full-calendar-left-content">ALL DAY</span>';
+ *                     break;
+ *             }
+ *
+ *             return title;
+ *         },
+ *         schedule: function(schedule) {
+ *
+ *             // use another functions instead of 'schedule'
+ *             // milestone: function() {...}
+ *             // task: function() {...}
+ *             // allday: function() {...}
+ *
+ *             var tpl;
+ *
+ *             switch(category) {
+ *                 case 'milestone':
+ *                     tpl = '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + schedule.bgColor + '">' + schedule.title + '</span>';
+ *                     break;
+ *                 case 'task':
+ *                     tpl = '#' + schedule.title;
+ *                     break;
+ *                 case 'allday':
+ *                     tpl = getTimeTemplate(schedule, true);
+ *                     break;
+ *             }
+ *
+ *             return tpl;
+ *         },
+ *         collapseBtnTitle: function() { // ??? 어떤 템플릿인가요??
+ *             return '<span class="tui-full-calendar-icon tui-full-calendar-ic-arrow-solid-top"></span>';
+ *         },
+ *         timezoneDisplayLabel: function(timezoneOffset, displayLabel) {
+ *             var gmt, hour, minutes;
+ *
+ *             if (!displayLabel) {
+ *                 gmt = timezoneOffset < 0 ? '-' : '+';
+ *                 hour = Math.abs(parseInt(timezoneOffset / 60, 10));
+ *                 minutes = Math.abs(timezoneOffset % 60);
+ *                 displayLabel = gmt + getPadStart(hour) + ':' + getPadStart(minutes);
+ *             }
+ *
+ *             return displayLabel;
+ *         },
+ *         timegridDisplayPrimaryTime: function(time) {
+ *             var meridiem = time.hour < 12 ? 'am' : 'pm';
+ *
+ *             return time.hour + ' ' + meridiem;
+ *         },
+ *         timegridDisplayTime: function(time) {
+ *             return getPadStart(time.hour) + ':' + getPadStart(time.hour);
+ *         },
+ *         timegridCurrentTime: function(timezone) {
+ *             var templates = [];
+ *
+ *             if (timezone.dateDifference) {
+ *                 templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
+ *             }
+ *
+ *             templates.push(moment(timezone.hourmarker).format('HH:mm a'));
+ *
+ *             return templates.join('');
+ *         },
+ *         popupIsAllDay: function() {
+ *             return 'All Day';
+ *         },
+ *         popupStateFree: function() {
+ *             return 'Free';
+ *         },
+ *         popupStateBusy: function() {
+ *             return 'Busy';
+ *         },
+ *         titlePlaceholder: function() {
+ *             return 'Subject';
+ *         },
+ *         locationPlaceholder: function() {
+ *             return 'Location';
+ *         },
+ *         startDatePlaceholder: function() {
+ *             return 'Start date';
+ *         },
+ *         endDatePlaceholder: function() {
+ *             return 'End date';
+ *         },
+ *         popupSave: function() {
+ *             return 'Save';
+ *         },
+ *         popupUpdate: function() {
+ *             return 'Update';
+ *         },
+ *         popupDetailDate: function(isAllDay, start, end) {
+ *             var isSameDate = moment(start).isSame(end);
+ *             var endFormat = (isSameDate ? '' : 'YYYY.MM.DD ') + 'hh:mm a';
+ *
+ *             if (isAllDay) {
+ *                 return moment(start).format('YYYY.MM.DD') + (isSameDate ? '' : ' - ' + moment(end).format('YYYY.MM.DD'));
+ *             }
+ *
+ *             return (moment(start).format('YYYY.MM.DD hh:mm a') + ' - ' + moment(end).format(endFormat));
+ *         },
+ *         popupDetailLocation: function(schedule) {
+ *             return 'Location : ' + schedule.location;
+ *         },
+ *         popupDetailUser: function(schedule) {
+ *             return 'User : ' + (schedule.attendees || []).join(', ');
+ *         },
+ *         popupDetailState: function(schedule) {
+ *             return 'State : ' + schedule.state || 'Busy';
+ *         },
+ *         popupDetailRepeat: function(schedule) {
+ *             return 'Repeat : ' + schedule.recurrenceRule;
+ *         },
+ *         popupDetailBody: function(schedule) {
+ *             return 'Body : ' + schedule.body;
+ *         },
+ *         popupEdit: function() {
+ *             return 'Edit';
+ *         },
+ *         popupDelete: function() {
+ *             return 'Delete';
+ *         }
+ *     }
+ * }
  */
 
 /**
  * Options for daily, weekly view.
  * @typedef {object} WeekOptions
- * @property {number} [startDayOfWeek=0] - start day of week
- * @property {Array.<string>} [daynames] - day names in weekly and daily.
- *                    Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
- * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
- * @property {boolean} [workweek=false] - show only 5 days except for weekend
- * @property {boolean} [showTimezoneCollapseButton=false] - show a collapse button to close multiple timezones
+ * @property {number} [startDayOfWeek=0] - The start day of week,
+ * @property {Array.<string>} [daynames] - The day names in weekly and daily. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+ * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
+ * @property {boolean} [workweek=false] - Show only 5 days except for weekend
+ * @property {boolean} [showTimezoneCollapseButton=false] - Show a collapse button to close multiple timezones
  * @property {boolean} [timezonesCollapsed=false] - An initial multiple timezones collapsed state
  * @property {number} [hourStart=0] - Can limit of render hour start.
  * @property {number} [hourEnd=24] - Can limit of render hour end.
@@ -91,41 +321,39 @@ var mmin = Math.min;
 /**
  * Options for monthly view.
  * @typedef {object} MonthOptions
- * @property {Array.<string>} [daynames] - day names in monthly.
- * Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
- * @property {number} [startDayOfWeek=0] - start day of week
- * @property {boolean} [narrowWeekend=false] - make weekend column narrow(1/2 width)
- * @property {boolean} [visibleWeeksCount=6] - visible week count in monthly(0 or null are same with 6)
+ * @property {Array.<string>} [daynames] - The day names in monthly. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+ * @property {number} [startDayOfWeek=0] - The start day of week
+ * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
+ * @property {boolean} [visibleWeeksCount=6] - The visible week count in monthly(0 or null are same with 6)
  * @property {boolean} [isAlways6Week=true] - Always show 6 weeks. If false, show 5 weeks or 6 weeks based on the month.
- * @property {boolean} [workweek=false] - show only 5 days except for weekend
- * @property {number} [visibleScheduleCount] - visible schedule count in monthly grid
- * @property {object} [moreLayerSize] - more layer size
- * @property {object} [moreLayerSize.width=null] - css width value(px, 'auto').
- *                                                       The default value 'null' is to fit a grid cell.
- * @property {object} [moreLayerSize.height=null] - css height value(px, 'auto').
- *                                                        The default value 'null' is to fit a grid cell.
- * @property {object} [grid] - grid's header and footer information
- *  @property {object} [grid.header] - grid's header informatioin
- *   @property {number} [grid.header.height=34] - grid's header height
- *  @property {object} [grid.footer] - grid's footer informatioin
- *   @property {number} [grid.footer.height=34] - grid's footer height
- * @property {function} [scheduleFilter=null] - Filter schedules on month view. A parameter is {Schedule} object.
+ * @property {boolean} [workweek=false] - Show only 5 days except for weekend
+ * @property {number} [visibleScheduleCount] - The visible schedule count in monthly grid
+ * @property {object} [moreLayerSize] - The more layer size
+ * @property {object} [moreLayerSize.width=null] - The css width value(px, 'auto').
+*                                                  The default value 'null' is to fit a grid cell.
+ * @property {object} [moreLayerSize.height=null] - The css height value(px, 'auto').
+*                                                   The default value 'null' is to fit a grid cell.
+ * @property {object} [grid] - The grid's header and footer information
+ *  @property {object} [grid.header] - The grid's header informatioin
+ *   @property {number} [grid.header.height=34] - The grid's header height
+ *  @property {object} [grid.footer] - The grid's footer informatioin
+ *   @property {number} [grid.footer.height=34] - The grid's footer height
+ * @property {function} [scheduleFilter=null] - The filter schedules on month view. A parameter is {Schedule} object.
  */
 
 /**
  * @typedef {object} CalendarColor
- * @property {string} [color] - calendar color
- * @property {string} [bgColor] - calendar background color
- * @property {string} [borderColor] - calendar left border color
+ * @property {string} [color] - The calendar color
+ * @property {string} [bgColor] - The calendar background color
+ * @property {string} [borderColor] - The calendar left border color
  */
 
 /**
  * @typedef {object} Timezone
- * @property {number} [timezoneOffset] - minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
- * @property {string} [displayLabel] -  display label of your timezone at weekly/daily view(ex> 'GMT+09:00')
- * @property {string} [tooltip] -  tooltip(ex> 'Seoul')
+ * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
+ * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
+ * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
  * @example
- * var timezoneName = moment.tz.guess();
  * var cal = new Calendar('#calendar', {
  *  timezones: [{
  *      timezoneOffset: 540,
@@ -140,23 +368,54 @@ var mmin = Math.min;
  */
 
 /**
- * @typedef {object} Options - calendar option object
- * @property {string} [defaultView='week'] - default view of calendar
- * @property {boolean|Array.<string>} [taskView=true] - show the milestone and task in weekly, daily view. If the value is array, it can be <b>['milestone', 'task']</b>.
- * @property {boolean|Array.<string>} [scheduleView=true] - show the all day and time grid in weekly, daily view.  If the value is array, it can be <b>['allday', 'time']</b>.
- * @property {themeConfig} [theme=themeConfig] - custom theme options
- * @property {Template} [template={}] - template options
- * @property {WeekOptions} [week={}] - options for week view
- * @property {MonthOptions} [month={}] - options for month view
- * @property {Array.<Calendar>} [calendars=[]] - list of Calendars that can be used to add new schedule
- * @property {boolean} [useCreationPopup=false] - whether use default creation popup or not
- * @property {boolean} [useDetailPopup=false] - whether use default detail popup or not
- * @property {Array.<Timezone>} [timezones] - timezone array.
- *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function.
- *  The rest timezone elements are shown in left timegrid of weekly/daily view.
- * @property {boolean} [disableDblClick=false] - disable double click to create a schedule
- * @property {boolean} [disableClick=false] - disable click to create a schedule
- * @property {boolean} [isReadOnly=false] - Calendar is read-only mode and a user can't create and modify any schedule.
+ * @typedef {object} CalendarProps
+ * @property {string|number} id - The calendar id
+ * @property {string} name - The calendar name
+ * @property {string} color - The text color when schedule is displayed
+ * @property {string} bgColor - The background color schedule is displayed
+ * @property {string} borderColor - The color of left border or bullet point when schedule is displayed
+ * @example
+ * var cal = new Calendar('#calendar', {
+ *   ...
+ *   calendars: [
+ *     {
+ *       id: '1',
+ *       name: 'My Calendar',
+ *       color: '#ffffff',
+ *       bgColor: '#9e5fff',
+ *       dragBgColor: '#9e5fff',
+ *       borderColor: '#9e5fff'
+ *     },
+ *     {
+ *       id: '2',
+ *       name: 'Company',
+ *       color: '#00a9ff',
+ *       bgColor: '#00a9ff',
+ *       dragBgColor: '#00a9ff',
+ *       borderColor: '#00a9ff'
+ *     },
+ *   ]
+ * });
+ */
+
+/**
+ * @typedef {object} Options - Calendar option object
+ * @property {string} [defaultView='week'] - Default view of calendar. The default value is 'week'.
+ * @property {boolean|Array.<string>} [taskView=true] - Show the milestone and task in weekly, daily view. The default value is true. If the value is array, it can be &#91;'milestone', 'task'&#93;.
+ * @property {boolean|Array.<string>} [scheduleView=true] - Show the all day and time grid in weekly, daily view. The default value is false. If the value is array, it can be &#91;'allday', 'time'&#93;.
+ * @property {themeConfig} [theme=themeConfig] - {@link themeConfig} for custom style.
+ * @property {Template} [template={}] - {@link Template} for further informatio
+ * @property {WeekOptions} [week={}] - {@link WeekOptions} for week view
+ * @property {MonthOptions} [month={}] - {@link MonthOptions} for month view
+ * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
+ * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
+ * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
+ * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
+ *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function
+ *  The rest timezone elements are shown in left timegrid of weekly/daily view
+ * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
+ * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
+ * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
  */
 
 /**
@@ -165,18 +424,18 @@ var mmin = Math.min;
  */
 
 /**
- * @typedef {object} TimeCreationGuide - time creation guide instance to present selected time period
- * @property {HTMLElement} guideElement - guide element
- * @property {Object.<string, HTMLElement>} guideElements - map by key. It can be used in monthly view
- * @property {function} clearGuideElement - hide the creation guide
+ * @typedef {object} TimeCreationGuide - Time creation guide instance to present selected time period
+ * @property {HTMLElement} guideElement - Guide element
+ * @property {Object.<string, HTMLElement>} guideElements - Map by key. It can be used in monthly view
+ * @property {function} clearGuideElement - Hide the creation guide
  * @example
  * calendar.on('beforeCreateSchedule', function(event) {
  *     var guide = event.guide;
- *     // use guideEl$'s left, top to locate your schedule creation popup
+ *     // Use guideEl$'s left, top to locate your schedule creation popup
  *     var guideEl$ = guide.guideElement ?
  *          guide.guideElement : guide.guideElements[Object.keys(guide.guideElements)[0]];
  *
- *     // after that call this to hide the creation guide
+ *     // After that call this to hide the creation guide
  *     guide.clearGuideElement();
  * });
  */
@@ -185,13 +444,13 @@ var mmin = Math.min;
  * Calendar class
  * @constructor
  * @mixes CustomEvents
- * @param {HTMLElement|string} container - container element or selector id
- * @param {Options} options - calendar options
+ * @param {HTMLElement|string} container - The container element or selector id
+ * @param {Options} options - The calendar {@link Options} object
  * @example
  * var calendar = new tui.Calendar(document.getElementById('calendar'), {
  *     defaultView: 'week',
- *     taskView: true,    // can be also ['milestone', 'task']
- *     scheduleView: true,  // can be also ['allday', 'time']
+ *     taskView: true,    // Can be also ['milestone', 'task']
+ *     scheduleView: true,  // Can be also ['allday', 'time']
  *     template: {
  *         milestone: function(schedule) {
  *             return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
@@ -437,7 +696,7 @@ Calendar.prototype._initialize = function(options) {
 
 /**
  * Create schedules and render calendar.
- * @param {Array.<Schedule>} schedules - schedule data list
+ * @param {Array.<Schedule>} schedules - {@link Schedule} data list
  * @param {boolean} [silent=false] - no auto render after creation when set true
  * @example
  * calendar.createSchedules([
@@ -482,7 +741,7 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
 };
 
 /**
- * Get a schedule object by schedule id and calendar id.
+ * Get a {@link Schedule} object by schedule id and calendar id.
  * @param {string} scheduleId - ID of schedule
  * @param {string} calendarId - calendarId of the schedule
  * @returns {Schedule} schedule object
@@ -499,9 +758,9 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
 /**
  * Update the schedule
  * @param {string} scheduleId - ID of a schedule to update
- * @param {string} calendarId - calendarId of the schedule to update
- * @param {Schedule} scheduleData - schedule data to update
- * @param {boolean} [silent=false] - no auto render after creation when set true
+ * @param {string} calendarId - The calendarId of the schedule to update
+ * @param {Schedule} scheduleData - The {@link Schedule} data to update
+ * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
  * calendar.on('beforeUpdateSchedule', function(event) {
  *     var schedule = event.schedule;
@@ -532,8 +791,8 @@ Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleDat
 /**
  * Delete a schedule.
  * @param {string} scheduleId - ID of schedule to delete
- * @param {string} calendarId - calendarId of the schedule to delete
- * @param {boolean} [silent=false] - no auto render after creation when set true
+ * @param {string} calendarId - The CalendarId of the schedule to delete
+ * @param {boolean} [silent=false] - No auto render after creation when set true
  */
 Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
     var ctrl = this._controller,
@@ -557,9 +816,9 @@ Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
  **********/
 
 /**
- * @param {string|Date} date - date to show in calendar
- * @param {number} [startDayOfWeek=0] - start day of week
- * @param {boolean} [workweek=false] - only show work week
+ * @param {string|Date} date - The Date to show in calendar
+ * @param {number} [startDayOfWeek=0] - The Start day of week
+ * @param {boolean} [workweek=false] - The only show work week
  * @returns {array} render range
  * @private
  */
@@ -605,8 +864,8 @@ Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
 
 /**
  * Toggle schedules' visibility by calendar ID
- * @param {string} calendarId - calendar id value
- * @param {boolean} toHide - set true to hide schedules
+ * @param {string} calendarId - The calendar id value
+ * @param {boolean} toHide - Set true to hide schedules
  * @param {boolean} [render=true] - set true then render after change visible property each models
  */
 Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
@@ -724,7 +983,7 @@ Calendar.prototype.today = function() {
 
 /**
  * Move the calendar amount of offset value
- * @param {number} offset - offset value.
+ * @param {number} offset - The offset value.
  * @private
  * @example
  * // move previous week when "week" view.
@@ -818,7 +1077,7 @@ Calendar.prototype.move = function(offset) {
 
 /**
  * Move to specific date
- * @param {(Date|string)} date - date to move
+ * @param {(Date|string)} date - The date to move
  * @example
  * calendar.on('clickDayname', function(event) {
  *     if (calendar.getViewName() === 'week') {
@@ -887,9 +1146,9 @@ Calendar.prototype._getCurrentView = function() {
 
 /**
  * Change calendar's schedule color with option
- * @param {string} calendarId - calendar ID
- * @param {CalendarColor} option - color data object
- * @param {boolean} [silent=false] - no auto render after creation when set true
+ * @param {string} calendarId - The calendar ID
+ * @param {CalendarColor} option - The {@link CalendarColor} object
+ * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
  * calendar.setCalendarColor('1', {
  *     color: '#e8e8e8',
@@ -952,7 +1211,7 @@ Calendar.prototype._onClick = function(clickScheduleData) {
      * Fire this event when click a schedule.
      * @event Calendar#clickSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance
+     * @property {Schedule} schedule - The {@link Schedule} instance
      * @property {MouseEvent} event - MouseEvent
      * @example
      * calendar.on('clickSchedule', function(event) {
@@ -985,8 +1244,8 @@ Calendar.prototype._onClickMore = function(clickMoreSchedule) {
      * Fire this event when click a schedule.
      * @event Calendar#clickMore
      * @type {object}
-     * @property {Date} date - clicked date
-     * @property {HTMLElement} target - more element
+     * @property {Date} date - The Clicked date
+     * @property {HTMLElement} target - The more element
      * @example
      * calendar.on('clickMore', function(event) {
      *     console.log('clickMore', event.date, event.target);
@@ -1006,7 +1265,7 @@ Calendar.prototype._onClickDayname = function(clickScheduleData) {
      * Fire this event when click a day name in weekly.
      * @event Calendar#clickDayname
      * @type {object}
-     * @property {string} date - date string by format 'YYYY-MM-DD'
+     * @property {string} date - The date string by format 'YYYY-MM-DD'
      * @example
      * calendar.on('clickDayname', function(event) {
      *     if (calendar.getViewName() === 'week') {
@@ -1035,11 +1294,11 @@ Calendar.prototype._onBeforeCreate = function(createScheduleData) {
      * Fire this event when select time period in daily, weekly, monthly.
      * @event Calendar#beforeCreateSchedule
      * @type {object}
-     * @property {boolean} isAllDay - allday schedule
-     * @property {Date} start - selected start time
-     * @property {Date} end - selected end time
-     * @property {TimeCreationGuide} guide - TimeCreationGuide instance
-     * @property {string} triggerEventName - event name like 'click', 'dblclick'
+     * @property {boolean} isAllDay - The allday schedule
+     * @property {Date} start - The selected start time
+     * @property {Date} end - The selected end time
+     * @property {TimeCreationGuide} guide - {@link TimeCreationGuide} instance
+     * @property {string} triggerEventName - The event name like 'click', 'dblclick'
      * @example
      * calendar.on('beforeCreateSchedule', function(event) {
      *     var startTime = event.start;
@@ -1065,7 +1324,7 @@ Calendar.prototype._onBeforeCreate = function(createScheduleData) {
 
 /**
  * @fires Calendar#beforeUpdateSchedule
- * @param {object} updateScheduleData - update schedule data
+ * @param {object} updateScheduleData - update {@link Schedule} data
  * @private
  */
 Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
@@ -1073,9 +1332,9 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
      * Fire this event when drag a schedule to change time in daily, weekly, monthly.
      * @event Calendar#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The {@link Schedule} instance to update
+     * @property {Date} start - The start time to update
+     * @property {Date} end - The end time to update
      * @example
      * calendar.on('beforeUpdateSchedule', function(event) {
      *     var schedule = event.schedule;
@@ -1101,7 +1360,7 @@ Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
      * Fire this event when delete a schedule.
      * @event Calendar#beforeDeleteSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to delete
+     * @property {Schedule} schedule - The {@link Schedule} instance to delete
      * @example
      * calendar.on('beforeDeleteSchedule', function(event) {
      *     var schedule = event.schedule;
@@ -1113,7 +1372,7 @@ Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
 
 /**
  * @fires Calendar#afterRenderSchedule
- * @param {Schedule} scheduleData - schedule data
+ * @param {Schedule} scheduleData - The schedule data
  * @private
  */
 Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
@@ -1121,7 +1380,7 @@ Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
      * Fire this event by every single schedule after rendering whole calendar.
      * @event Calendar#afterRenderSchedule
      * @type {object}
-     * @property {Schedule} schedule - a rendered schedule instance
+     * @property {Schedule} schedule - A rendered {@link Schedule} instance
      * @example
      * calendar.on('afterRenderSchedule', function(event) {
      *     var schedule = event.schedule;
@@ -1143,7 +1402,7 @@ Calendar.prototype._onClickTimezonesCollapseBtn = function(timezonesCollapsed) {
      * Fire this event by clicking timezones collapse button
      * @event Calendar#clickTimezonesCollapseBtn
      * @type {object}
-     * @property {boolean} timezonesCollapsed - timezones collapes flag
+     * @property {boolean} timezonesCollapsed - The timezones collapes flag
      * @example
      * calendar.on('clickTimezonesCollapseBtn', function(timezonesCollapsed) {
      *     console.log(timezonesCollapsed);
@@ -1192,8 +1451,8 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
 
 /**
  * Change current view with view name('day', 'week', 'month')
- * @param {string} newViewName - new view name to render
- * @param {boolean} force - force render despite of current view and new view are equal
+ * @param {string} newViewName - The New view name to render
+ * @param {boolean} force - Force render despite of current view and new view are equal
  * @example
  * // daily view
  * calendar.changeView('day', true);
@@ -1376,7 +1635,7 @@ Calendar.prototype.setTheme = function(theme) {
 
 /**
  * Set options of calendar
- * @param {Options} options - options to set
+ * @param {Options} options - set {@link Options}
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
 Calendar.prototype.setOptions = function(options, silent) {
@@ -1396,7 +1655,7 @@ Calendar.prototype.setOptions = function(options, silent) {
 };
 
 /**
- * Get current options.
+ * Get current {@link Options}.
  * @returns {Options} options
  */
 Calendar.prototype.getOptions = function() {
@@ -1404,7 +1663,7 @@ Calendar.prototype.getOptions = function() {
 };
 
 /**
- * Current rendered date
+ * Current rendered date ({@link TZDate} for further information)
  * @returns {TZDate}
  */
 Calendar.prototype.getDate = function() {
@@ -1412,7 +1671,7 @@ Calendar.prototype.getDate = function() {
 };
 
 /**
- * Start time of rendered date range
+ * Start time of rendered date range ({@link TZDate} for further information)
  * @returns {TZDate}
  */
 Calendar.prototype.getDateRangeStart = function() {
@@ -1420,7 +1679,7 @@ Calendar.prototype.getDateRangeStart = function() {
 };
 
 /**
- * End time of rendered date range
+ * End time of rendered date range ({@link TZDate} for further information)
  * @returns {TZDate}
  */
 Calendar.prototype.getDateRangeEnd = function() {
@@ -1446,7 +1705,7 @@ Calendar.prototype.setCalendars = function(calendars) {
 
 /**
  * Open schedule creation popup
- * @param {Schedule} schedule - preset schedule data
+ * @param {Schedule} schedule - The preset {@link Schedule} data
  */
 Calendar.prototype.openCreationPopup = function(schedule) {
     if (this._openCreationPopup) {
@@ -1465,7 +1724,7 @@ Calendar.prototype.hideMoreView = function() {
 
 /**
  * Set timezone offset
- * @param {number} offset - offset (min)
+ * @param {number} offset - The offset (min)
  * @static
  * @deprecated
  * @example
@@ -1478,7 +1737,7 @@ Calendar.setTimezoneOffset = function(offset) {
 
 /**
  * Set a callback function to get timezone offset by timestamp
- * @param {function} callback - callback function
+ * @param {function} callback - The callback function
  * @static
  * @deprecated
  * @example

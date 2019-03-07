@@ -16,9 +16,9 @@
     'common.border': '1px solid #e5e5e5',
     'common.backgroundColor': 'white',
     'common.holiday.color': '#ff4040',
-    'common.saturday.color': '#135de6',
+    'common.saturday.color': '#333',
     'common.dayname.color': '#333',
-    'common.today.color': '#135de6',
+    'common.today.color': '#333',
 
     // creation guide style
     'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
@@ -54,10 +54,10 @@
     'month.moreView.paddingBottom': '17px',
     'month.moreViewTitle.height': '44px',
     'month.moreViewTitle.marginBottom': '12px',
-    'month.moreViewTitle.backgroundColor': 'white',
+    'month.moreViewTitle.backgroundColor': 'inherit',
     'month.moreViewTitle.borderBottom': 'none',
     'month.moreViewTitle.padding': '12px 17px 0 17px',
-    'month.moreViewList.padding': '0 17px 17px 17px',
+    'month.moreViewList.padding': '0 17px',
 
     // week header 'dayname'
     'week.dayname.height': '42px',
@@ -68,6 +68,7 @@
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#333',
+    'week.pastDay.color': '#bbb',
 
     // week vertical panel 'vpanel'
     'week.vpanelSplitter.border': '1px solid #e5e5e5',
@@ -90,7 +91,8 @@
     'week.timegridLeft.backgroundColor': 'inherit',
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
-    'week.timegridLeftTimezoneLabel.height': '20px',
+    'week.timegridLeftTimezoneLabel.height': '40px',
+    'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
     'week.timegridOneHour.height': '52px',
     'week.timegridHalfHour.height': '26px',
@@ -106,7 +108,7 @@
     'week.currentTime.fontSize': '11px',
     'week.currentTime.fontWeight': 'normal',
 
-    'week.pastTime.color': '#333',
+    'week.pastTime.color': '#bbb',
     'week.pastTime.fontWeight': 'normal',
 
     'week.futureTime.color': '#333',

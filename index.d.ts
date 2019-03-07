@@ -121,12 +121,17 @@ declare namespace tuiCalendar {
         monthGridHeaderExceed?: (hiddenSchedules: number) => string;
         monthGridFooter?: (model: IGridDateModel) => string;
         monthGridFooterExceed?: (hiddenSchedules: number) => string;
-        weekDayname?: (model: IWeekDayNameInfo) => string;
         monthDayname?: (model: IMonthDayNameInfo) => string;
+        weekDayname?: (model: IWeekDayNameInfo) => string;
         weekGridFooterExceed?: (hiddenSchedules: number) => string;
         dayGridTitle?: (viewName: string) => string;
         schedule?: (schedule: ISchedule) => string;
         collapseBtnTitle?: () => string;
+        timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
+        timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
+        timegridDisplayPrimaryTime?: (time: ITimeGridHourLabel) => string;
+        timegridDisplayTime?: (time: ITimeGridHourLabel) => string;
+        timegridCurrentTime?: (hourMarker: ITimezoneHourMarker) => string;
         popupIsAllDay?: () => string;
         popupStateFree?: () => string;
         popupStateBusy?: () => string;
@@ -144,10 +149,6 @@ declare namespace tuiCalendar {
         popupDetailBody?: (schedule: ISchedule) => string;
         popupEdit?: () => string;
         popupDelete?: () => string;
-        timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
-        timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
-        timegridDisplayTime?: (time: ITimeGridHourLabel) => string;
-        timegridCurrentTime?: (hourMarker: ITimezoneHourMarker) => string;
     }
 
     interface IWeekOptions {
@@ -230,7 +231,6 @@ declare namespace tuiCalendar {
         bgColor?: string;
         dragBgColor?: string;
         borderColor?: string;
-        checked?: boolean;
     }
 
     interface IOptions {
@@ -289,5 +289,5 @@ declare namespace tuiCalendar {
     }
 }
 declare module 'tui-calendar' {
-    export = tuiCalendar.Calendar;
+    export default tuiCalendar.Calendar;
 }

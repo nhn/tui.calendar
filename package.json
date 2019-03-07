@@ -80,10 +80,11 @@
     "bundle": "webpack --mode development && NODE_ENV=production webpack --mode production && node tsBannerGenerator.js",
     "serve": "webpack-dev-server --mode development --progress --inline --hot",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
-    "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc",
     "release-note": "tuie",
     "eslint": "eslint ./src",
-    "tslint": "tslint index.d.ts"
+    "tslint": "tslint index.d.ts",
+    "doc:dev" : "tuidoc --dev",
+    "doc" : "tuidoc"
   },
   "dependencies": {
     "tui-code-snippet": "^1.5.0",

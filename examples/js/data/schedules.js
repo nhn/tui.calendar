@@ -141,6 +141,12 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.raw.creator.email = chance.email();
     schedule.raw.creator.phone = chance.phone();
 
+    if (chance.bool({ likelihood: 20 })) {
+        var travelTime = chance.minute();
+        schedule.goingDuration = travelTime;
+        schedule.comingDuration = travelTime;
+    }
+
     ScheduleList.push(schedule);
 }
 
