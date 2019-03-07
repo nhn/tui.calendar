@@ -408,9 +408,6 @@ Handlebars.registerHelper({
         return displayLabel;
     },
 
-    /**
-     * @deprecated
-     */
     'timegridDisplayPrimayTime-tmpl': function(time) {
         /* TODO: 1.11.0 이후 버전부터 삭제 필요 (will be deprecate) */
         var meridiem = time.hour < 12 ? 'am' : 'pm';

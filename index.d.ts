@@ -231,7 +231,6 @@ declare namespace tuiCalendar {
         bgColor?: string;
         dragBgColor?: string;
         borderColor?: string;
-        checked?: boolean;
     }
 
     interface IOptions {

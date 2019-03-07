@@ -1,4 +1,6 @@
 function init() {
+  cal.setCalendars(CalendarList);
+
   setRenderRangeText();
   setSchedules();
   setEventListener();
@@ -168,19 +170,19 @@ function setEventListener() {
 
 cal.on({
   'clickTimezonesCollapseBtn': function(timezonesCollapsed) {
-      if (timezonesCollapsed) {
-          cal.setTheme({
-              'week.daygridLeft.width': '77px',
-              'week.timegridLeft.width': '77px'
-          });
-      } else {
-          cal.setTheme({
-              'week.daygridLeft.width': '60px',
-              'week.timegridLeft.width': '60px'
-          });
-      }
+    if (timezonesCollapsed) {
+      cal.setTheme({
+        'week.daygridLeft.width': '77px',
+        'week.timegridLeft.width': '77px'
+      });
+    } else {
+      cal.setTheme({
+        'week.daygridLeft.width': '60px',
+        'week.timegridLeft.width': '60px'
+      });
+    }
 
-      return true;
+    return true;
   }
 });
 

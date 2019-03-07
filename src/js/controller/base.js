@@ -371,16 +371,6 @@ Base.prototype.setTheme = function(theme) {
 };
 
 /**
- * @typedef {Calendar}
- * @property {string|number} id - calendar id
- * @property {string} name - calendar name
- * @property {string} color - text color when schedule is displayed
- * @property {string} bgColor - background color schedule is displayed
- * @property {string} borderColor - color of left border or bullet point when schedule is displayed
- * @property {boolean} [checked] - whether to show calendar's schedules or not
- */
-
-/**
  * Set calendar list
  * @param {Array.<Calendar>} calendars - calendar list
  */

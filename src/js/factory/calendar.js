@@ -367,14 +367,13 @@ var mmin = Math.min;
  * });
  */
 
- /**
- * @typedef {object} CalendarConfig
- * @property {string} id - The calendar Id
- * @property {string} name -  The calendar name
- * @property {string} [color] -  The background text color
- * @property {string} [bgColor] -  The schedule background color
- * @property {string} [dragBgColor] -  The schedule drag background color
- * @property {string} [borderColor] -  The schedule border color
+/**
+ * @typedef {object} CalendarProps
+ * @property {string|number} id - The calendar id
+ * @property {string} name - The calendar name
+ * @property {string} color - The text color when schedule is displayed
+ * @property {string} bgColor - The background color schedule is displayed
+ * @property {string} borderColor - The color of left border or bullet point when schedule is displayed
  * @example
  * var cal = new Calendar('#calendar', {
  *   ...
@@ -408,7 +407,7 @@ var mmin = Math.min;
  * @property {Template} [template={}] - {@link Template} for further informatio
  * @property {WeekOptions} [week={}] - {@link WeekOptions} for week view
  * @property {MonthOptions} [month={}] - {@link MonthOptions} for month view
- * @property {Array.<CalendarConfig>} [calendars=[]] - {@link CalendarConfig} List that can be used to add new schedule. The default value is [].
+ * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
  * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
