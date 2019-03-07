@@ -42,71 +42,10 @@
   <script src="./js/data/calendars.js"></script>
   <script src="./js/data/schedules.js"></script>
   <script type="text/javascript" class="code-js">
-  function getTimeTemplate(schedule, isAllDay) {
-    var html = [];
-
-    if (!isAllDay) {
-      html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
-    }
-    if (schedule.isPrivate) {
-      html.push('<span class="calendar-font-icon ic-lock-b"></span>');
-      html.push(' Private');
-    } else {
-      if (schedule.isReadOnly) {
-        html.push('<span class="calendar-font-icon ic-readonly-b"></span>');
-      } else if (schedule.recurrenceRule) {
-        html.push('<span class="calendar-font-icon ic-repeat-b"></span>');
-      } else if (schedule.attendees.length) {
-        html.push('<span class="calendar-font-icon ic-user-b"></span>');
-      } else if (schedule.location) {
-        html.push('<span class="calendar-font-icon ic-location-b"></span>');
-      }
-      html.push(' ' + schedule.title);
-    }
-
-    return html.join('');
-  }
-
-  function getGridTitleTemplate(type) {
-    var title = '';
-
-    switch(type) {
-      case 'milestone':
-        title = '<span class="tui-full-calendar-left-content">MILESTONE</span>';
-        break;
-      case 'task':
-        title = '<span class="tui-full-calendar-left-content">TASK</span>';
-        break;
-      case 'allday':
-        title = '<span class="tui-full-calendar-left-content">ALL DAY</span>';
-        break;
-    }
-
-    return title;
-  }
-
-  function getGridCategoryTemplate(category, schedule) {
-    var tpl;
-
-    switch(category) {
-      case 'milestone':
-        tpl = '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + schedule.bgColor + '">' + schedule.title + '</span>';
-        break;
-      case 'task':
-        tpl = '#' + schedule.title;
-        break;
-      case 'allday':
-        tpl = getTimeTemplate(schedule, true);
-        break;
-    }
-
-    return tpl;
-  }
-
   // register templates
   const templates = {
     popupIsAllDay: function() {
-      return 'All day';
+      return 'All Day';
     },
     popupStateFree: function() {
       return 'Free';
@@ -143,19 +82,19 @@
       return (moment(start).format('YYYY.MM.DD hh:mm a') + ' - ' + moment(end).format(endFormat));
     },
     popupDetailLocation: function(schedule) {
-      return schedule.location;
+      return 'Location : ' + schedule.location;
     },
     popupDetailUser: function(schedule) {
-      return (schedule.attendees || []).join(', ');
+      return 'User : ' + (schedule.attendees || []).join(', ');
     },
     popupDetailState: function(schedule) {
-      return schedule.state || 'Busy';
+      return 'State : ' + schedule.state || 'Busy';
     },
     popupDetailRepeat: function(schedule) {
-      return schedule.recurrenceRule;
+      return 'Repeat : ' + schedule.recurrenceRule;
     },
     popupDetailBody: function(schedule) {
-      return schedule.body;
+      return 'Body : ' + schedule.body;
     },
     popupEdit: function() {
       return 'Edit';
