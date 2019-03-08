@@ -93,7 +93,7 @@ tui.usageStatistics = false;
 
 ## 🐾 Examples
 
-* [Basic](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html) : Example of using default options.
+* [Basic](https://nhnent.github.io/tui.calendar/latest/tutorial-example00-basic) : Example of using default options.
 
 ## 💾 Install
 
@@ -187,7 +187,7 @@ import Calendar from 'tui-calendar'; /* ES6 */
 import "tui-calendar/dist/tui-calendar.css";
 ```
 
-Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options) to set configuration.
+Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/Options) to set configuration.
 
 ```javascript
 var calendar = new Calendar('#calendar', {
@@ -266,7 +266,7 @@ For more information on PR's step, please see links of Contributing section.
 
 * [Getting Started](https://github.com/nhnent/tui.calendar/blob/master/docs/getting-started.md)
 * [Tutorials](https://github.com/nhnent/tui.calendar/tree/master/docs)
-* [APIs](https://nhnent.github.io/tui.calendar/latest/Calendar.html)
+* [APIs](https://nhnent.github.io/tui.calendar/latest/Calendar)
 
 You can also see the older versions of API page on the [releases page](https://github.com/nhnent/tui.calendar/releases).
 
