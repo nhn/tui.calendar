@@ -410,15 +410,27 @@ Handlebars.registerHelper({
 
     'timegridDisplayPrimayTime-tmpl': function(time) {
         /* TODO: 1.11.0 이후 버전부터 삭제 필요 (will be deprecate) */
-        var meridiem = time.hour < 12 ? 'am' : 'pm';
+        var meridiem = 'am';
+        var hour = time.hour;
 
-        return time.hour + ' ' + meridiem;
+        if (time.hour > 12) {
+            meridiem = 'pm';
+            hour = time.hour - 12;
+        }
+
+        return hour + ' ' + meridiem;
     },
 
     'timegridDisplayPrimaryTime-tmpl': function(time) {
-        var meridiem = time.hour < 12 ? 'am' : 'pm';
+        var meridiem = 'am';
+        var hour = time.hour;
 
-        return time.hour + ' ' + meridiem;
+        if (time.hour > 12) {
+            meridiem = 'pm';
+            hour = time.hour - 12;
+        }
+
+        return hour + ' ' + meridiem;
     },
 
     'timegridDisplayTime-tmpl': function(time) {

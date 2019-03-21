@@ -153,9 +153,15 @@
       return displayLabel;
     },
     timegridDisplayPrimaryTime: function(time) {
-      var meridiem = time.hour < 12 ? 'am' : 'pm';
+      var meridiem = 'am';
+      var hour = time.hour;
 
-      return time.hour + ' ' + meridiem;
+      if (time.hour > 12) {
+        meridiem = 'pm';
+        hour = time.hour - 12;
+      }
+
+      return hour + ' ' + meridiem;
     },
     timegridDisplayTime: function(time) {
       return getPadStart(time.hour) + ':' + getPadStart(time.hour);
@@ -167,8 +173,7 @@
           templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
       }
 
-      templates.push(moment(timezone.hourmarker).format('HH:mm a'));
-
+      templates.push(moment(timezone.hourmarker.toUTCString()).format('HH:mm'));
       return templates.join('');
     }
   };

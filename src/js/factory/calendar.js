@@ -225,9 +225,15 @@ var mmin = Math.min;
  *             return displayLabel;
  *         },
  *         timegridDisplayPrimaryTime: function(time) {
- *             var meridiem = time.hour < 12 ? 'am' : 'pm';
+ *             var meridiem = 'am';
+ *             var hour = time.hour;
  *
- *             return time.hour + ' ' + meridiem;
+ *             if (time.hour > 12) {
+ *                 meridiem = 'pm';
+ *                 hour = time.hour - 12;
+ *             }
+ *
+ *             return hour + ' ' + meridiem;
  *         },
  *         timegridDisplayTime: function(time) {
  *             return getPadStart(time.hour) + ':' + getPadStart(time.hour);
