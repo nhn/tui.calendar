@@ -1,6 +1,6 @@
 /**
  * @fileoverview Effect module for DayGrid.Move
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -109,7 +109,7 @@ DayGridMoveGuide.prototype._showOriginScheduleBlocks = function() {
 };
 
 /**
- * Highlight element blocks 
+ * Highlight element blocks
  * @param {Schedule} model - model
  * @param {HTMLElement} parent - parent element
  */
@@ -272,4 +272,3 @@ function getScheduleBlockWidth(left, size, grids) {
 }
 
 module.exports = DayGridMoveGuide;
-

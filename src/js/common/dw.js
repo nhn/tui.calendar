@@ -1,6 +1,6 @@
 /**
  * @fileoverview Wrapper module for easy calc date object
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

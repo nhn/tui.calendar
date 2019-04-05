@@ -1,6 +1,6 @@
 /**
  * @fileoverview Module for modification of guide element for move in month view
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -193,4 +193,3 @@ MonthMoveGuide.prototype._onDragEnd = function() {
 };
 
 module.exports = MonthMoveGuide;
-

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Click handler for month view
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -89,4 +89,3 @@ MonthClick.prototype._onClick = function(clickEvent) {
 util.CustomEvents.mixin(MonthClick);
 
 module.exports = MonthClick;
-

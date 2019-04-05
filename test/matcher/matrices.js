@@ -1,6 +1,6 @@
 /**
  * @fileoverview jasmine custom matcher for test
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -100,4 +100,3 @@ module.exports = function() {
         }
     };
 };
-

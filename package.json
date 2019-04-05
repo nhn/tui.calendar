@@ -1,6 +1,6 @@
 {
   "name": "tui-calendar",
-  "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
+  "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
   "version": "1.11.0",
   "main": "dist/tui-calendar.js",
   "license": "MIT",
@@ -10,6 +10,7 @@
     "url": "https://github.com/nhnent/tui.calendar.git"
   },
   "keywords": [
+    "nhn",
     "nhnent",
     "toast",
     "tui",

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Resize Guide module.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -156,4 +156,3 @@ DayGridResizeGuide.prototype._onDrag = function(dragEventData) {
 };
 
 module.exports = DayGridResizeGuide;
-

@@ -1,7 +1,7 @@
 /* eslint no-shadow: 0 */
 /**
  * @fileoverview Controller mixin modules for day views.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -384,4 +384,3 @@ var Week = {
 };
 
 module.exports = Week;
-

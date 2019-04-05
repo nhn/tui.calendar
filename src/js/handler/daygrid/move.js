@@ -1,6 +1,6 @@
 /**
  * @fileoverview Move handler for DayGrid view.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -273,4 +273,3 @@ common.mixin(dayGridCore, DayGridMove);
 util.CustomEvents.mixin(DayGridMove);
 
 module.exports = DayGridMove;
-

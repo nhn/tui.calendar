@@ -1,6 +1,6 @@
 /**
  * @fileoverview Dayname click event hander module
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -88,4 +88,3 @@ DayNameClick.prototype._onClick = function(clickEvent) {
 util.CustomEvents.mixin(DayNameClick);
 
 module.exports = DayNameClick;
-

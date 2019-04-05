@@ -1,6 +1,6 @@
 /**
  * @fileoverview Controller mixin for Month View
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -209,4 +209,3 @@ var Month = {
 };
 
 module.exports = Month;
-
