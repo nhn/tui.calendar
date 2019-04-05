@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var GA_TRACKING_ID = 'UA-129951699-1';
+
 var util = require('tui-code-snippet'),
     Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw'),
@@ -422,6 +424,7 @@ var mmin = Math.min;
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
+ * @property {boolean} [usageStatistics=true] - Let us know the hostname. If you don't want to send the hostname, please set to false.
  */
 
 /**
@@ -493,7 +496,13 @@ var mmin = Math.min;
  * });
  */
 function Calendar(container, options) {
-    var opt = options;
+    var opt = util.extend({
+        usageStatistics: true
+    }, options);
+
+    if (opt.usageStatistics === true && util.sendHostname) {
+        util.sendHostname('calendar', GA_TRACKING_ID);
+    }
 
     if (util.isString(container)) {
         container = document.querySelector(container);
