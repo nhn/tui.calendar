@@ -15,6 +15,7 @@
 * [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhnent/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
 * [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhnent/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
 
+![calendar_demo_nhn](https://user-images.githubusercontent.com/43128697/55602766-221aa200-57a2-11e9-9b92-d2d0f1d8cf2a.gif)
 ![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/38919146-bc596f28-432a-11e8-8bbd-b561911067c7.gif)
 
 ## 🚩 Table of Contents
@@ -290,6 +291,7 @@ You can also see the older versions of API page on the [releases page](https://g
 * [TOAST UI Grid](https://github.com/nhnent/tui.grid)
 * [TOAST UI Chart](https://github.com/nhnent/tui.chart)
 * [TOAST UI Editor](https://github.com/nhnent/tui.editor)
+* [TOAST UI Image-Editor](https://github.com/nhnent/tui.image-editor)
 * [TOAST UI Components](https://github.com/nhnent?q=tui)
 
 ## 🚀 Used By
