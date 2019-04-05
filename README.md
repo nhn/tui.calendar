@@ -15,6 +15,7 @@
 * [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhnent/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
 * [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhnent/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
 
+![tui-calendar-demo-nhn](https://user-images.githubusercontent.com/43128697/55608682-e7bcff00-57b9-11e9-8889-27acda6251e1.gif)
 ![calendar_demo_nhn](https://user-images.githubusercontent.com/43128697/55602766-221aa200-57a2-11e9-9b92-d2d0f1d8cf2a.gif)
 ![tui-calendar-demo](https://user-images.githubusercontent.com/26706716/38919146-bc596f28-432a-11e8-8bbd-b561911067c7.gif)
 
