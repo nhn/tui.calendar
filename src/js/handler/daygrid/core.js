@@ -1,7 +1,7 @@
 /* eslint no-shadow: 0 */
 /**
  * @fileoverview Base mixin object for handler/daygrid
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

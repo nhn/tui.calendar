@@ -1,6 +1,6 @@
 /**
  * @fileoverview Module for modification of guide element in schedule resize
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

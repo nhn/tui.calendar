@@ -1,6 +1,6 @@
 /**
  * @fileoverview Module for modification of guide element for move in month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

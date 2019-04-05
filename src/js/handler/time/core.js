@@ -1,6 +1,6 @@
 /**
  * @fileoverview Core methods for dragging actions
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

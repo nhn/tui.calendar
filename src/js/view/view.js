@@ -1,6 +1,6 @@
 /**
  * @fileoverview The base class of views.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

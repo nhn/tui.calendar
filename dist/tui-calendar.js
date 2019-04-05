@@ -1482,7 +1482,7 @@ module.exports = g;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview The entry file of fullcalendar
- * @author NHN FE Development Team
+ * @author NHN FE Development Lab
  */
 
 
@@ -1536,7 +1536,7 @@ module.exports = Calendar;
 "use strict";
 /**
  * @fileoverview Utility module for array sort, binary search.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -1834,7 +1834,7 @@ module.exports = {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Add autoscroll feature to elements that prevented text selection.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -2092,7 +2092,7 @@ module.exports = AutoScroll;
 "use strict";
 /**
  * @fileoverview Common collections.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -2546,7 +2546,7 @@ module.exports = Collection;
 "use strict";
 /**
  * @fileoverview common/general utilities.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -2850,7 +2850,7 @@ module.exports = {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview datetime utility module
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -3440,7 +3440,7 @@ module.exports = datetime;
 "use strict";
 /**
  * @fileoverview Dirty flagging module for objects.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -3657,7 +3657,7 @@ module.exports = dirty;
 /* eslint complexity: 0 */
 /**
  * @fileoverview Utility module for handling DOM events.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -4104,7 +4104,7 @@ module.exports = domevent;
 /* eslint complexity: 0, no-shadow: 0, max-nested-callbacks: 0  */
 /**
  * @fileoverview Utility modules for manipulate DOM elements.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -4762,7 +4762,7 @@ module.exports = domutil;
 "use strict";
 /**
  * @fileoverview Wrapper module for easy calc date object
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -4901,7 +4901,7 @@ module.exports = DW;
 "use strict";
 /**
  * @fileoverview Floating layer module
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -5097,7 +5097,7 @@ module.exports = FloatingLayer;
 "use strict";
 /**
  * @fileoverview Mixin module for models.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -5263,7 +5263,7 @@ module.exports = model;
  * Class for represent two dimensional x, y coordinates.
  *
  * It suppliy a group of functions for manipulate coordinates.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @example
  * var p = point(10, 10);
  * var r1 = p.add(Point(5, 5));
@@ -5612,7 +5612,7 @@ module.exports = Point;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview RequestAnimFrame
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -5901,7 +5901,7 @@ module.exports = {
 "use strict";
 /**
  * @fileoverview Layout module that supplied split height, resize height features.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -6340,7 +6340,7 @@ module.exports = VLayout;
 "use strict";
 /**
  * @fileoverview Panel class for VLayout module
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -6562,7 +6562,7 @@ module.exports = VPanel;
 "use strict";
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -6618,7 +6618,7 @@ module.exports = config;
 "use strict";
 /**
  * @fileoverview Base calendar controller
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -7014,7 +7014,7 @@ module.exports = Base;
 "use strict";
 /**
  * @fileoverview Core methods for schedule block placing
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -7280,7 +7280,7 @@ module.exports = Core;
 "use strict";
 /**
  * @fileoverview Controller mixin for Month View
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -7504,7 +7504,7 @@ module.exports = Month;
 /* eslint no-shadow: 0 */
 /**
  * @fileoverview Controller mixin modules for day views.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -7901,7 +7901,7 @@ module.exports = Week;
 "use strict";
 /**
  * @fileoverview Factory module for control all other factory.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -9747,7 +9747,7 @@ module.exports = Calendar;
 "use strict";
 /**
  * @fileoverview Controller factory module.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -9804,7 +9804,7 @@ module.exports = function(options) {
 "use strict";
 /**
  * @fileoverview Month view factory module
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -10075,7 +10075,7 @@ module.exports = createMonthView;
 "use strict";
 /**
  * @fileoverview Factory module for WeekView
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -10458,7 +10458,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 "use strict";
 /**
  * @fileoverview Click handle module for daygrid schedules
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -10602,7 +10602,7 @@ module.exports = DayGridClick;
 /* eslint no-shadow: 0 */
 /**
  * @fileoverview Base mixin object for handler/daygrid
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -10767,7 +10767,7 @@ module.exports = dayGridCore;
 "use strict";
 /**
  * @fileoverview Handler module for WeekdayInWeek view's creation actions.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -11117,7 +11117,7 @@ module.exports = DayGridCreation;
 "use strict";
 /**
  * @fileoverview Guide element for DayGrid.Creation
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -11284,7 +11284,7 @@ module.exports = DayGridCreationGuide;
 "use strict";
 /**
  * @fileoverview Move handler for DayGrid view.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -11571,7 +11571,7 @@ module.exports = DayGridMove;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Effect module for DayGrid.Move
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -11858,7 +11858,7 @@ module.exports = DayGridMoveGuide;
 "use strict";
 /**
  * @fileoverview Resize handler module for DayGrid view.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -12138,7 +12138,7 @@ module.exports = DayGridResize;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Resize Guide module.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -12309,7 +12309,7 @@ module.exports = DayGridResizeGuide;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Drag handler for calendar.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -12567,7 +12567,7 @@ module.exports = Drag;
 "use strict";
 /**
  * @fileoverview Click handler for month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -12670,7 +12670,7 @@ module.exports = MonthClick;
 "use strict";
 /**
  * @fileoverview Module for calculate date by month view and mouse event object
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -12785,7 +12785,7 @@ module.exports = getMousePosDate;
 "use strict";
 /**
  * @fileoverview Creation handler for month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -13149,7 +13149,7 @@ module.exports = MonthCreation;
 "use strict";
 /**
  * @fileoverview Creation guide module for month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -13315,7 +13315,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
 "use strict";
 /**
  * @fileoverview Guide element controller for creation, resize in month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -13799,7 +13799,7 @@ module.exports = MonthGuide;
 "use strict";
 /**
  * @fileoverview Move handler for month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -14155,7 +14155,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Module for modification of guide element for move in month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -14363,7 +14363,7 @@ module.exports = MonthMoveGuide;
 "use strict";
 /**
  * @fileoverview Module for resize schedule in month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -14587,7 +14587,7 @@ module.exports = MonthResize;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Module for modification of guide element in schedule resize
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -14715,7 +14715,7 @@ module.exports = MonthResizeGuide;
 "use strict";
 /**
  * @fileoverview Allday event click event hander module
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -14831,7 +14831,7 @@ module.exports = TimeClick;
 "use strict";
 /**
  * @fileoverview Dayname click event hander module
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -14933,7 +14933,7 @@ module.exports = DayNameClick;
 "use strict";
 /**
  * @fileoverview Core methods for dragging actions
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -15093,7 +15093,7 @@ module.exports = timeCore;
 "use strict";
 /**
  * @fileoverview Handling creation events from drag handler and time grid view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -15498,7 +15498,7 @@ module.exports = TimeCreation;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Module for Time.Creation effect while dragging.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -15798,7 +15798,7 @@ module.exports = TimeCreationGuide;
 "use strict";
 /**
  * @fileoverview Handling move schedules from drag handler and time grid view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -16177,7 +16177,7 @@ module.exports = TimeMove;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Module for Time.Move effect while dragging.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -16439,7 +16439,7 @@ module.exports = TimeMoveGuide;
 "use strict";
 /**
  * @fileoverview Handling resize schedules from drag handler and time grid view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -16758,7 +16758,7 @@ module.exports = TimeResize;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview Module for Time.Resize effect while dragging.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -16973,7 +16973,7 @@ module.exports = TimeResizeGuide;
 /* eslint complexity: 0 */
 /**
  * @fileoverview Model of schedule.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -17413,7 +17413,7 @@ module.exports = Schedule;
 "use strict";
 /**
  * @fileoverview Model for views
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -17632,7 +17632,7 @@ module.exports = ScheduleViewModel;
 "use strict";
 /**
  * @fileoverview The standard theme
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -17767,7 +17767,7 @@ module.exports = theme;
 "use strict";
 /**
  * @fileoverview The all configuration of a theme
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -17876,7 +17876,7 @@ module.exports = Theme;
 "use strict";
 /**
  * @fileoverview The all configuration of a theme
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -18143,7 +18143,7 @@ module.exports = themeConfig;
 "use strict";
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -18247,7 +18247,7 @@ module.exports = Layout;
 "use strict";
 /**
  * @fileoverview Month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -18601,7 +18601,7 @@ module.exports = Month;
 "use strict";
 /**
  * @fileoverview Floating layer for displaying schedule in specific date
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -18869,7 +18869,7 @@ module.exports = More;
 "use strict";
 /**
  * @fileoverview Monthday in month view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -19061,7 +19061,7 @@ module.exports = WeekdayInMonth;
 "use strict";
 /**
  * @fileoverview Floating layer for writing new schedules
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -19683,7 +19683,7 @@ module.exports = ScheduleCreationPopup;
 "use strict";
 /**
  * @fileoverview Floating layer for  showing detail schedule
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -19959,7 +19959,7 @@ module.exports = ScheduleDetailPopup;
 /* eslint complexity: 0 */
 /**
  * @fileoverview Helpers for handlebar templates.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -22471,7 +22471,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
 "use strict";
 /**
  * @fileoverview The base class of views.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -22697,7 +22697,7 @@ module.exports = View;
 "use strict";
 /**
  * @fileoverview DayGrid in weekly view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -23028,7 +23028,7 @@ module.exports = DayGrid;
 "use strict";
 /**
  * @fileoverview Weekday view for week
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -23159,7 +23159,7 @@ module.exports = DayGridSchedule;
 "use strict";
 /**
  * @fileoverview View for rendering daynames
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -23347,7 +23347,7 @@ module.exports = DayName;
 "use strict";
 /**
  * @fileoverview View of time.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -23655,7 +23655,7 @@ module.exports = Time;
 "use strict";
 /**
  * @fileoverview View for rendered schedules by times.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -24338,7 +24338,7 @@ module.exports = TimeGrid;
 "use strict";
 /**
  * @fileoverview View of days UI.
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
@@ -24578,7 +24578,7 @@ module.exports = Week;
 "use strict";
 /**
  * @fileoverview Weekday view
- * @author NHN FE Development Team <dl_javascript@nhn.com>
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
 
