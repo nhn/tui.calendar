@@ -1,6 +1,6 @@
 /**
  * @fileoverview View of days UI.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -226,4 +226,3 @@ Week.prototype._getRenderDateRange = function(baseDate) {
 util.CustomEvents.mixin(Week);
 
 module.exports = Week;
-

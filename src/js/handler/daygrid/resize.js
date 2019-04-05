@@ -1,6 +1,6 @@
 /**
  * @fileoverview Resize handler module for DayGrid view.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -266,4 +266,3 @@ common.mixin(dayGridCore, DayGridResize);
 util.CustomEvents.mixin(DayGridResize);
 
 module.exports = DayGridResize;
-

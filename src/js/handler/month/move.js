@@ -1,6 +1,6 @@
 /**
  * @fileoverview Move handler for month view
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -263,4 +263,3 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
 util.CustomEvents.mixin(MonthMove);
 
 module.exports = MonthMove;
-

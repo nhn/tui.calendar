@@ -1,6 +1,6 @@
 /**
  * @fileoverview Handling move schedules from drag handler and time grid view
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -365,4 +365,3 @@ timeCore.mixin(TimeMove);
 util.CustomEvents.mixin(TimeMove);
 
 module.exports = TimeMove;
-

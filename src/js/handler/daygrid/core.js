@@ -1,7 +1,7 @@
 /* eslint no-shadow: 0 */
 /**
  * @fileoverview Base mixin object for handler/daygrid
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -152,4 +152,3 @@ function getX(grids, left) {
 }
 
 module.exports = dayGridCore;
-

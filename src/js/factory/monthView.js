@@ -1,6 +1,6 @@
 /**
  * @fileoverview Month view factory module
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -257,4 +257,3 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 }
 
 module.exports = createMonthView;
-

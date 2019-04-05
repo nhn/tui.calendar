@@ -1,6 +1,6 @@
 /**
  * @fileoverview Add autoscroll feature to elements that prevented text selection.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -243,4 +243,3 @@ AutoScroll.prototype._onTick = function() {
 };
 
 module.exports = AutoScroll;
-

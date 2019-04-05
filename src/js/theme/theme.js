@@ -1,6 +1,6 @@
 /**
  * @fileoverview The all configuration of a theme
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -27,7 +27,7 @@ function Theme(customTheme) {
 /**
  * Get a style with key
  * @param {string} key - key for getting a style
- * @returns {string|undefined} style  
+ * @returns {string|undefined} style
  */
 Theme.prototype.getStyle = function(key) {
     return this._map.get(key);

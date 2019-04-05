@@ -1,6 +1,6 @@
 /**
  * @fileoverview Handling resize schedules from drag handler and time grid view
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -305,4 +305,3 @@ timeCore.mixin(TimeResize);
 util.CustomEvents.mixin(TimeResize);
 
 module.exports = TimeResize;
-

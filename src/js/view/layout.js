@@ -1,6 +1,6 @@
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -90,4 +90,3 @@ Layout.prototype.applyTheme = function() {
 };
 
 module.exports = Layout;
-

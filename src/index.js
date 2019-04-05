@@ -1,6 +1,6 @@
 /**
  * @fileoverview The entry file of fullcalendar
- * @author NHN Ent. FE Development Team
+ * @author NHN FE Development Team
  */
 
 'use strict';

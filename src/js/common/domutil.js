@@ -1,7 +1,7 @@
 /* eslint complexity: 0, no-shadow: 0, max-nested-callbacks: 0  */
 /**
  * @fileoverview Utility modules for manipulate DOM elements.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 

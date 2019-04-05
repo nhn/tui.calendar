@@ -1,6 +1,6 @@
 /**
  * @fileoverview Panel class for VLayout module
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -208,4 +208,3 @@ VPanel.prototype.applyTheme = function() {
 };
 
 module.exports = VPanel;
-

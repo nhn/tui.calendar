@@ -1,6 +1,6 @@
 /**
  * @fileoverview Drag handler for calendar.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 

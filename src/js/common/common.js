@@ -1,6 +1,6 @@
 /**
  * @fileoverview common/general utilities.
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -290,4 +290,3 @@ module.exports = {
         return found;
     }
 };
-

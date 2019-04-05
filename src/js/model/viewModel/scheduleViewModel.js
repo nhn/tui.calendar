@@ -1,6 +1,6 @@
 /**
  * @fileoverview Model for views
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -205,4 +205,3 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
 };
 
 module.exports = ScheduleViewModel;
-

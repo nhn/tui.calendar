@@ -1,6 +1,6 @@
 /**
  * @fileoverview Module for calculate date by month view and mouse event object
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 

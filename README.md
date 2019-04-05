@@ -6,11 +6,11 @@
 [![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/tui-calendar)
 [![GitHub license](https://img.shields.io/github/license/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/blob/master/LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.project-name/labels/help%20wanted)
-[![code with hearth by NHN Entertainment](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN%20Entertainment-ff1414.svg)](https://github.com/nhnent)
+[![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN%20Entertainment-ff1414.svg)](https://github.com/nhnent)
 
 ## Wrappers
-* [toast-ui.vue-calendar](https://github.com/nhnent/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN Entertainment](https://github.com/nhnent).
-* [toast-ui.react-calendar](https://github.com/nhnent/toast-ui.react-calendar) **React** wrapper component is powered by [NHN Entertainment](https://github.com/nhnent).
+* [toast-ui.vue-calendar](https://github.com/nhnent/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhnent).
+* [toast-ui.react-calendar](https://github.com/nhnent/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhnent).
 * [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhnent/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
 * [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhnent/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
 * [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhnent/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
@@ -298,4 +298,4 @@ You can also see the older versions of API page on the [releases page](https://g
 
 ## 📜 License
 
-This software is licensed under the [MIT](https://github.com/nhnent/tui.calendar/blob/master/LICENSE) © [NHN Entertainment](https://github.com/nhnent).
+This software is licensed under the [MIT](https://github.com/nhnent/tui.calendar/blob/master/LICENSE) © [NHN](https://github.com/nhnent).

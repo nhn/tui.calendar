@@ -1,6 +1,6 @@
 /**
  * @fileoverview Floating layer for displaying schedule in specific date
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 

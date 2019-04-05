@@ -1,6 +1,6 @@
 /**
  * @fileoverview Module for modification of guide element in schedule resize
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -113,4 +113,3 @@ MonthResizeGuide.prototype._onDragEnd = function() {
 };
 
 module.exports = MonthResizeGuide;
-

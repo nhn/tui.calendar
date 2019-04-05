@@ -1,6 +1,6 @@
 /**
  * @fileoverview Factory module for WeekView
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 

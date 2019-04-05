@@ -1,6 +1,6 @@
 /**
  * @fileoverview Allday event click event hander module
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -102,4 +102,3 @@ TimeClick.prototype._onClick = function(clickEvent) {
 util.CustomEvents.mixin(TimeClick);
 
 module.exports = TimeClick;
-

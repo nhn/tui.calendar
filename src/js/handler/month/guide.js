@@ -1,6 +1,6 @@
 /**
  * @fileoverview Guide element controller for creation, resize in month view
- * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
+ * @author NHN FE Development Team <dl_javascript@nhn.com>
  */
 'use strict';
 
@@ -470,4 +470,3 @@ MonthGuide.prototype._getStyles = function(theme) {
 };
 
 module.exports = MonthGuide;
-
