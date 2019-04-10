@@ -2,18 +2,18 @@
 
 > A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
 
-[![GitHub release](https://img.shields.io/github/release/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/releases/latest)
 [![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/tui-calendar)
-[![GitHub license](https://img.shields.io/github/license/nhnent/tui.calendar.svg)](https://github.com/nhnent/tui.calendar/blob/master/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.project-name/labels/help%20wanted)
-[![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhnent)
+[![GitHub license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/master/LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.project-name/labels/help%20wanted)
+[![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 ## Wrappers
-* [toast-ui.vue-calendar](https://github.com/nhnent/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhnent).
-* [toast-ui.react-calendar](https://github.com/nhnent/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhnent).
-* [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhnent/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
-* [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhnent/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
-* [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhnent/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
+* [toast-ui.vue-calendar](https://github.com/nhn/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhn).
+* [toast-ui.react-calendar](https://github.com/nhn/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhn).
+* [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhn/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
+* [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhn/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
+* [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhn/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
 
 ![tui-calendar-demo-nhn-corp](https://user-images.githubusercontent.com/43128697/55609612-0c19db00-57bc-11e9-849b-f42a9bd8c591.gif)
 
@@ -48,7 +48,7 @@
 
 TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage.
 
-To disable GA use the [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options):
+To disable GA use the [options](https://nhn.github.io/tui.calendar/latest/global.html#Options):
 
 ```js
 var calendar = new Calendar('#calendar', {
@@ -96,7 +96,7 @@ var calendar = new Calendar('#calendar', {
 
 ## 🐾 Examples
 
-* [Basic](https://nhnent.github.io/tui.calendar/latest/tutorial-example00-basic) : Example of using default options.
+* [Basic](https://nhn.github.io/tui.calendar/latest/tutorial-example00-basic) : Example of using default options.
 
 ## 💾 Install
 
@@ -152,8 +152,8 @@ tui-calendar/
 
 ### Download Source Files
 
-* [Download bundle files](https://github.com/nhnent/tui.calendar/tree/master/dist)
-* [Download all sources for each version](https://github.com/nhnent/tui.calendar/releases)
+* [Download bundle files](https://github.com/nhn/tui.calendar/tree/master/dist)
+* [Download all sources for each version](https://github.com/nhn/tui.calendar/releases)
 
 
 ## 🔨 Usage
@@ -190,7 +190,7 @@ import Calendar from 'tui-calendar'; /* ES6 */
 import "tui-calendar/dist/tui-calendar.css";
 ```
 
-Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/Options) to set configuration.
+Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/latest/Options) to set configuration.
 
 ```javascript
 var calendar = new Calendar('#calendar', {
@@ -267,31 +267,31 @@ For more information on PR's step, please see links of Contributing section.
 
 ## 📙 Documents
 
-* [Getting Started](https://github.com/nhnent/tui.calendar/blob/master/docs/getting-started.md)
-* [Tutorials](https://github.com/nhnent/tui.calendar/tree/master/docs)
-* [APIs](https://nhnent.github.io/tui.calendar/latest/Calendar)
+* [Getting Started](https://github.com/nhn/tui.calendar/blob/master/docs/getting-started.md)
+* [Tutorials](https://github.com/nhn/tui.calendar/tree/master/docs)
+* [APIs](https://nhn.github.io/tui.calendar/latest/Calendar)
 
-You can also see the older versions of API page on the [releases page](https://github.com/nhnent/tui.calendar/releases).
+You can also see the older versions of API page on the [releases page](https://github.com/nhn/tui.calendar/releases).
 
 ## 💬 Contributing
 
-* [Code of Conduct](https://github.com/nhnent/tui.calendar/blob/master/CODE_OF_CONDUCT.md)
-* [Contributing guideline](https://github.com/nhnent/tui.calendar/blob/master/CONTRIBUTING.md)
-* [Issue guideline](https://github.com/nhnent/tui.calendar/blob/master/docs/ISSUE_TEMPLATE.md)
-* [Commit convention](https://github.com/nhnent/tui.calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
+* [Code of Conduct](https://github.com/nhn/tui.calendar/blob/master/CODE_OF_CONDUCT.md)
+* [Contributing guideline](https://github.com/nhn/tui.calendar/blob/master/CONTRIBUTING.md)
+* [Issue guideline](https://github.com/nhn/tui.calendar/blob/master/docs/ISSUE_TEMPLATE.md)
+* [Commit convention](https://github.com/nhn/tui.calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
 
 ## 🔩 Dependency
 
-* [tui-code-snippet](https://github.com/nhnent/tui.code-snippet) >= 1.5.0
-* [tui-date-picker](https://github.com/nhnent/tui.date-picker) >= 3.0.0 is optional.
-* [tui-time-picker](https://github.com/nhnent/tui.time-picker) >= 1.0.0 is optional.
+* [tui-code-snippet](https://github.com/nhn/tui.code-snippet) >= 1.5.0
+* [tui-date-picker](https://github.com/nhn/tui.date-picker) >= 3.0.0 is optional.
+* [tui-time-picker](https://github.com/nhn/tui.time-picker) >= 1.0.0 is optional.
 
 ## 🍞 TOAST UI Family
-* [TOAST UI Grid](https://github.com/nhnent/tui.grid)
-* [TOAST UI Chart](https://github.com/nhnent/tui.chart)
-* [TOAST UI Editor](https://github.com/nhnent/tui.editor)
-* [TOAST UI Image-Editor](https://github.com/nhnent/tui.image-editor)
-* [TOAST UI Components](https://github.com/nhnent?q=tui)
+* [TOAST UI Grid](https://github.com/nhn/tui.grid)
+* [TOAST UI Chart](https://github.com/nhn/tui.chart)
+* [TOAST UI Editor](https://github.com/nhn/tui.editor)
+* [TOAST UI Image-Editor](https://github.com/nhn/tui.image-editor)
+* [TOAST UI Components](https://github.com/nhn?q=tui)
 
 ## 🚀 Used By
 * [TOAST Dooray! - Collaboration Service (Project, Messenger, Mail, Calendar, Drive, Wiki, Contacts)](https://dooray.com)
@@ -299,4 +299,4 @@ You can also see the older versions of API page on the [releases page](https://g
 
 ## 📜 License
 
-This software is licensed under the [MIT](https://github.com/nhnent/tui.calendar/blob/master/LICENSE) © [NHN](https://github.com/nhnent).
+This software is licensed under the [MIT](https://github.com/nhn/tui.calendar/blob/master/LICENSE) © [NHN](https://github.com/nhn).
