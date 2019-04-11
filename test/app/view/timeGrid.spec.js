@@ -1,6 +1,7 @@
 /*eslint-disable*/
 var TimeGrid = require('view/week/timeGrid');
 var timezone = require('common/timezone');
+var TZDate = timezone.Date;
 
 describe('View/TimeGrid', function() {
     var proto;
@@ -34,7 +35,7 @@ describe('View/TimeGrid', function() {
             options: {
                 hourStart: 3,
                 hourEnd: 11,
-                renderEndDate: '2018-05-23',
+                renderEndDate: new TZDate('2018-05-23'),
                 showTimezoneCollapseButton: false,
                 timezonesCollapsed: false
             },
@@ -75,14 +76,14 @@ describe('View/TimeGrid', function() {
 
         it('calculate related CSS top pixel value by time object.', function() {
             // 12:00:00 is middle time of one days. return 50%
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T12:00:00+09:00'))).toBe(50);
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T00:00:00+09:00'))).toBe(0);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T12:00:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T00:00:00'))).toBe(0);
 
             mock.options.hourStart = 21;
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00'))).toBe(50);
 
             mock.options.hourStart = 21;
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00'))).toBe(50);
         });
 
         it('calculate properly when hourStart, hourEnd is changed.', function() {
@@ -90,7 +91,7 @@ describe('View/TimeGrid', function() {
             mock.options.hourEnd = 14;
             mock._getBaseViewModel = function() { return {hour: {length: 5}}; };
 
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(40);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00'))).toBe(40);
         });
     });
 
@@ -142,7 +143,9 @@ describe('View/TimeGrid', function() {
                 width: width,
                 left: 1 * width,
                 isPrimary: true,
-                hourmarkerText: '09:00',
+                hourmarker: new TZDate(2018, 4, 30, 9),
+                dateDifferenceSign: '+',
+                dateDifference: 0,
                 backgroundColor: '',
                 hidden: false
             }, {
@@ -179,7 +182,9 @@ describe('View/TimeGrid', function() {
                 width: width,
                 left: 0 * width,
                 isPrimary: false,
-                hourmarkerText: '[-1]<br>14:30',
+                hourmarker: new TZDate(2018, 4, 29, 14, 30),
+                dateDifferenceSign: '-',
+                dateDifference: 1,
                 backgroundColor: '',
                 hidden: false
             }];
@@ -188,7 +193,7 @@ describe('View/TimeGrid', function() {
                 options: {
                     hourStart: 0,
                     hourEnd: 24,
-                    renderEndDate: '2018-05-23',
+                    renderEndDate: new TZDate('2018-05-23'),
                     timezones: [
                         {
                             timezoneOffset: 540,

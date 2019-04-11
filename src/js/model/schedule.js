@@ -277,9 +277,13 @@ Schedule.prototype.setAllDayPeriod = function(start, end) {
     // If it is an all-day schedule, only the date information of the string is used.
     if (util.isString(start)) {
         start = datetime.parse(start.substring(0, 10));
+    } else {
+        start = new TZDate(start || Date.now());
     }
     if (util.isString(end)) {
         end = datetime.parse(end.substring(0, 10));
+    } else {
+        end = new TZDate(end || this.start);
     }
 
     this.start = start;
@@ -377,9 +381,9 @@ Schedule.prototype.duration = function() {
         duration;
 
     if (this.isAllDay) {
-        duration = new TZDate(datetime.end(end) - datetime.start(start));
+        duration = datetime.end(end) - datetime.start(start);
     } else {
-        duration = new TZDate(end - start);
+        duration = end - start;
     }
 
     return duration;

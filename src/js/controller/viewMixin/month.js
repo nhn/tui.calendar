@@ -44,8 +44,8 @@ var Month = {
      * Limit start, end for each allday schedules and expand start, end for
      * each time schedules
      * @this Base
-     * @param {Date} start - render start date
-     * @param {Date} end - render end date
+     * @param {TZDate} start - render start date
+     * @param {TZDate} end - render end date
      * @param {Collection} vColl - view model collection
      * property.
      */
@@ -171,8 +171,8 @@ var Month = {
     /**
      * Find schedule and get view model for specific month
      * @this Base
-     * @param {Date} start - start date to find schedules
-     * @param {Date} end - end date to find schedules
+     * @param {TZDate} start - start date to find schedules
+     * @param {TZDate} end - end date to find schedules
      * @param {function[]} [andFilters] - optional filters to applying search query
      * @param {boolean} [alldayFirstMode=false] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
      * @returns {object} view model data

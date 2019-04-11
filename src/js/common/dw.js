@@ -4,11 +4,11 @@
  */
 'use strict';
 
-var TZDate = require('../common/timezone').Date;
+var TZDate = require('./timezone').Date;
 
 /**
  * @constructor
- * @param {Date} date to wrapping DW class
+ * @param {TZDate} date to wrapping DW class
  */
 function DW(date) {
     if (!(this instanceof DW)) {
@@ -20,7 +20,7 @@ function DW(date) {
     }
 
     /**
-     * @type {Date}
+     * @type {TZDate}
      */
     this.d = date;
 }
@@ -28,7 +28,7 @@ function DW(date) {
 /**
  * Return d property when supplied object is DW. else return itself
  * @param {*} obj - object
- * @returns {Date} date
+ * @returns {TZDate} date
  */
 DW.prototype.safe = function(obj) {
     if (obj.constructor === DW) {
@@ -43,7 +43,7 @@ DW.prototype.safe = function(obj) {
  * @returns {DW} cloned dwrap object
  */
 DW.prototype.clone = function() {
-    return new DW(new TZDate(Number(this.d)));
+    return new DW(new TZDate(this.d));
 };
 
 /**
@@ -114,8 +114,8 @@ DW.prototype.setHours = function(h, m, s, ms) {
 
 /**
  * Whether date is between supplied dates?
- * @param {Date|DW} d1 - from date
- * @param {Date|DW} d2 - to date
+ * @param {TZDate|DW} d1 - from date
+ * @param {TZDate|DW} d2 - to date
  * @returns {boolean} is between?
  */
 DW.prototype.isBetween = function(d1, d2) {

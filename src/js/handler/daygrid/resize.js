@@ -182,10 +182,10 @@ DayGridResize.prototype._onDrag = function(dragEventData) {
 DayGridResize.prototype._updateSchedule = function(scheduleData) {
     var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-        newEnds = new TZDate(schedule.end.getTime());
+        newEnds = new TZDate(schedule.end);
 
-    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
-    newEnds = new TZDate(Math.max(datetime.end(schedule.start).getTime(), newEnds.getTime()));
+    newEnds = newEnds.addDate(dateOffset);
+    newEnds = new TZDate(common.maxDate(datetime.end(schedule.start), newEnds));
 
     /**
      * @event DayGridResize#beforeUpdateSchedule

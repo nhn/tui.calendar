@@ -35,7 +35,7 @@ var SIXTY_MINUTES = 60;
 function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     var hourStart = opt.hourStart;
     var hourEnd = opt.hourEnd;
-    var renderEndDate = datetime.parse(opt.renderEndDate);
+    var renderEndDate = new TZDate(opt.renderEndDate);
     var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
     var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
     var now = new TZDate();
@@ -250,8 +250,6 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     var timezones = opt.timezones;
     var viewModel;
 
-    now = now || new TZDate();
-
     util.forEach(range, function(date, index) {
         if (datetime.isSameDate(now, date)) {
             todaymarkerLeft = grids[index] ? grids[index].left : 0;
@@ -348,7 +346,7 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var grids = viewModel.grids;
     var range = viewModel.range;
     var opt = this.options;
-    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
+    var baseViewModel = this._getHourmarkerViewModel(new TZDate().toLocalTime(), grids, range);
     var timezonesCollapsed = util.pick(viewModel, 'state', 'timezonesCollapsed');
     var styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 

@@ -63,7 +63,7 @@ describe('handler/time.move', function() {
                         start: new TZDate(2015, 4, 1, 9, 30),
                         end: new TZDate(2015, 4, 1, 10, 30),
                         duration: function() {
-                            return new TZDate(datetime.millisecondsFrom('hour', 1));
+                            return datetime.millisecondsFrom('hour', 1);
                         }
                     }
                 }
@@ -97,22 +97,21 @@ describe('handler/time.move', function() {
         });
 
         it('limit updatable start and end.', function() {
-            var oneHour = datetime.millisecondsFrom('hour', 1);
             baseControllerMock.schedules.items['20'].start = new TZDate(2015, 4, 1);
-            baseControllerMock.schedules.items['20'].start = new TZDate(2015, 4, 1, 0, 30);
+            baseControllerMock.schedules.items['20'].end = new TZDate(2015, 4, 1, 0, 30);
             baseControllerMock.schedules.items['20'].getStarts = function() {
-                return new TZDate(2015, 4, 1)
+                return new TZDate(2015, 4, 1);
             };
             baseControllerMock.schedules.items['20'].getEnds = function() {
-                return new TZDate(2015, 4, 1, 0, 30)
+                return new TZDate(2015, 4, 1, 0, 30);
             };
             baseControllerMock.schedules.items['20'].duration = function() {
-                return new TZDate(30 * 60 * 1000);
+                return 30 * 60 * 1000;
             };
 
             var scheduleData = {
                 targetModelID: 20,
-                nearestRange: [oneHour, 0],
+                nearestRange: [new TZDate(2015, 4, 1), new TZDate(2015, 4, 1).addMinutes(30)],
                 relatedView: {
                     getDate: function() { return new TZDate(2015, 4, 1); }
                 },
@@ -135,8 +134,8 @@ describe('handler/time.move', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
-                start: new TZDate(2015, 4, 1, 23, 29, 59),
-                end: new TZDate(2015, 4, 1, 23, 59, 59)
+                start: new TZDate(2015, 4, 2, 0, 30),
+                end: new TZDate(2015, 4, 2, 1)
             });
         });
     });

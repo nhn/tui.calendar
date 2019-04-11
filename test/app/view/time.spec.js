@@ -9,15 +9,15 @@ describe('View/Time', function() {
     it('_parseDateGroup()', function() {
         var str = '20150501';
         var actual = Time.prototype._parseDateGroup(str).getTime();
-        var expected = (new Date('2015-05-01T00:00:00+09:00')).getTime();
+        var expected = (new TZDate('2015-05-01T00:00:00')).getTime();
 
         expect(actual).toEqual(expected);
     });
 
     it('_getScheduleViewBoundX()', function() {
         var schedule = Schedule.create({
-            start: '2015-05-01T09:00:00+09:00',
-            end: '2015-05-01T10:00:00+09:00'
+            start: '2015-05-01T09:00:00',
+            end: '2015-05-01T10:00:00'
         });
         var mock = {
             options: {
@@ -28,7 +28,7 @@ describe('View/Time', function() {
         var viewModel = ScheduleViewModel.create(schedule);
 
         var result = Time.prototype._getScheduleViewBoundX.call(mock, viewModel, {
-            todayStart: new Date('2015-05-01T00:00:00+09:00'),
+            todayStart: new TZDate('2015-05-01T00:00:00'),
             baseMS: datetime.millisecondsFrom('hour', 24),
             baseHeight: 230,
             baseLeft: [0, 50],
@@ -42,8 +42,8 @@ describe('View/Time', function() {
 
     it('_getScheduleViewBoundY()', function() {
         var schedule = Schedule.create({
-            start: '2015-05-01T09:00:00+09:00',
-            end: '2015-05-01T10:00:00+09:00'
+            start: '2015-05-01T09:00:00',
+            end: '2015-05-01T10:00:00'
         });
         var mock = {
             options: {
@@ -54,7 +54,7 @@ describe('View/Time', function() {
         var viewModel = ScheduleViewModel.create(schedule);
 
         var result = Time.prototype._getScheduleViewBoundY.call(mock, viewModel, {
-            todayStart: new Date('2015-05-01T00:00:00+09:00'),
+            todayStart: new TZDate('2015-05-01T00:00:00'),
             baseMS: datetime.millisecondsFrom('hour', 24),
             baseHeight: 230,
             baseLeft: [0, 50],

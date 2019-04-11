@@ -1,9 +1,10 @@
 'use strict';
 
 var datetime = require('common/datetime');
+var TZDate = require('common/timezone').Date;
 var TimeCreationGuide = require('handler/time/creationGuide');
 var Theme = require('theme/theme');
-var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
+var MIN30 = 30;
 
 describe('handler/time.creation.guide', function() {
     var mockTimeCreation,
@@ -24,8 +25,8 @@ describe('handler/time.creation.guide', function() {
             },
             getViewBound: jasmine.createSpy('TimeView#getViewBound')
         };
-        var renderStart = Number(new Date('2015-11-17T03:00:00+09:00'));
-        var renderEnd = Number(new Date('2015-11-17T23:59:59+09:00'));
+        var renderStart = new TZDate('2015-11-17T03:00:00');
+        var renderEnd = new TZDate('2015-11-17T23:59:59');
         var expected,
             actual;
 
@@ -42,24 +43,24 @@ describe('handler/time.creation.guide', function() {
             renderEnd;
 
         beforeEach(function() {
-            renderStart = Number(new Date('2015-11-17T03:00:00+09:00'));
-            renderEnd = Number(new Date('2015-11-17T23:59:59+09:00'));
+            renderStart = new TZDate('2015-11-17T03:00:00');
+            renderEnd = new TZDate('2015-11-17T23:59:59');
             inst._styleUnit = [210, 21, renderStart, renderEnd, 10];
         });
 
         it('limit guide style data base on unit data', function() {
             // top pixel can not be negative value
-            var expected = [0, 30, Number(renderStart), Number(renderEnd)];
-            var actual = inst._limitStyleData(-30, 30, Number(renderStart), Number(renderEnd));
-            var yesterday = new Date(Number(renderStart));
+            var expected = [0, 30, renderStart, renderEnd];
+            var actual = inst._limitStyleData(-30, 30, renderStart, renderEnd);
+            var yesterday = new TZDate(renderStart);
 
             expect(expected).toEqual(actual);
 
             // renderstart can not be other date
             yesterday.setDate(yesterday.getDate() - 1);
 
-            expected = [0, 30, Number(renderStart), Number(renderEnd)];
-            actual = inst._limitStyleData(-30, 30, Number(yesterday), Number(renderEnd));
+            expected = [0, 30, renderStart, renderEnd];
+            actual = inst._limitStyleData(-30, 30, yesterday, renderEnd);
 
             expect(expected).toEqual(actual);
         });
@@ -68,18 +69,19 @@ describe('handler/time.creation.guide', function() {
     describe('_getStyleDataFunc', function() {
         it('return function that available for calculate guide element styles from drag schedules', function() {
             // View rendered from 3 o'clock
-            var renderStart = new Date('2015-11-17T03:00:00+09:00');
-            var func = inst._getStyleDataFunc(210, 21, Number(renderStart));
+            var renderStart = new TZDate('2015-11-17T03:00:00');
+            var func = inst._getStyleDataFunc(210, 21, renderStart);
             // Assuming the user clicked on 4 o'clock
-            var clicked = new Date(renderStart).setHours(4),
+            var clicked = new TZDate(renderStart),
                 expected,
                 actual;
             var mockEventData = {
                 nearestGridY: 1,
-                nearestGridTimeY: Number(clicked)
+                nearestGridTimeY: clicked
             };
 
-            expected = [10, Number(clicked), Number(clicked + MIN30)];
+            clicked.setHours(4);
+            expected = [10, clicked, new TZDate(clicked).addMinutes(MIN30)];
             actual = func(mockEventData);
 
             expect(expected).toEqual(actual);
@@ -89,13 +91,10 @@ describe('handler/time.creation.guide', function() {
     describe('_onDrag()', function() {
         var mockTimeView,
             startTime,
-            min30,
             mockEventData;
 
         beforeEach(function() {
-            var renderStart = new Date('2015-11-17T00:00:00+09:00');
-
-            min30 = datetime.MILLISECONDS_PER_MINUTES * 30;
+            var renderStart = new TZDate('2015-11-17T00:00:00');
 
             mockTimeView = {
                 options: {
@@ -109,7 +108,7 @@ describe('handler/time.creation.guide', function() {
             mockTimeView.getViewBound.and.returnValue({height: 240});
 
             // Assuming the user clicked on 4 o'clock
-            startTime = new Date(renderStart);
+            startTime = new TZDate(renderStart);
             startTime.setHours(4);
 
             mockEventData = {
@@ -125,10 +124,10 @@ describe('handler/time.creation.guide', function() {
 
         it('calculate style properly when user dragging to before start time', function(done) {
             // User dragged to 1 o'clock
-            var time = new Date('2015-11-17T01:00:00+09:00');
+            var time = new TZDate('2015-11-17T01:00:00');
             mockEventData = {
                 nearestGridY: 1,
-                nearestGridTimeY: Number(time),
+                nearestGridTimeY: time,
                 relatedView: mockTimeView
             };
 
@@ -136,8 +135,8 @@ describe('handler/time.creation.guide', function() {
 
             setTimeout(function() {
                 expect(
-                    inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, Number(time),
-                    (Number(startTime) + min30),
+                    inst._refreshGuideElement).toHaveBeenCalledWith(10, 25, time,
+                    startTime.addMinutes(MIN30),
                     true);
                 done();
             }, 100);
@@ -145,17 +144,17 @@ describe('handler/time.creation.guide', function() {
 
         it('calculate style properly2', function(done) {
             // User dragged to 6 o'clock
-            var time = new Date('2015-11-17T06:00:00+09:00');
+            var time = new TZDate('2015-11-17T06:00:00');
             mockEventData = {
                 nearestGridY: 5,
-                nearestGridTimeY: Number(time),
+                nearestGridTimeY: time,
                 relatedView: mockTimeView
             };
 
             inst._onDrag(mockEventData);
 
             setTimeout(function() {
-                expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, Number(startTime), Number(time) + min30);
+                expect(inst._refreshGuideElement).toHaveBeenCalledWith(30, 25, startTime, time.addMinutes(MIN30));
                 done();
             }, 200);
         });
