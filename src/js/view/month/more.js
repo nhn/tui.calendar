@@ -5,6 +5,7 @@
 'use strict';
 
 var OUT_PADDING = 5;
+var VIEW_MIN_WIDTH = 280;
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     domevent = require('../../common/domevent'),
@@ -146,7 +147,6 @@ More.prototype.render = function(viewModel) {
     var height = '';
     var isLastRow = weekItem.parentElement.lastElementChild === weekItem;
     var isLastCol = target.parentElement.lastElementChild === target;
-    var minWidth = 280;
 
     this._viewModel = util.extend(viewModel, {
         scheduleGutter: opt.scheduleGutter,
@@ -156,7 +156,7 @@ More.prototype.render = function(viewModel) {
         styles: styles
     });
 
-    width = Math.max(width, minWidth);
+    width = Math.max(width, VIEW_MIN_WIDTH);
     height = parseInt(styles.titleHeight, 10);
     height += parseInt(styles.titleMarginBottom, 10);
     if (viewModel.schedules.length <= maxVisibleSchedulesInLayer) {
