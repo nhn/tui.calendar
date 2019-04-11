@@ -249,8 +249,8 @@ function scheduleASC(a, b) {
         return startsCompare;
     }
 
-    durationA = a.duration().getTime();
-    durationB = b.duration().getTime();
+    durationA = a.duration();
+    durationB = b.duration();
 
     if (durationA < durationB) {
         return 1;

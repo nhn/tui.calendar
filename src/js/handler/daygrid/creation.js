@@ -148,7 +148,7 @@ DayGridCreation.prototype._createSchedule = function(scheduleData) {
         startXIndex = startXIndex - xIndex;
     }
 
-    start = new TZDate(dateRange[startXIndex].getTime());
+    start = new TZDate(dateRange[startXIndex]);
     end = datetime.end(dateRange[xIndex]);
 
     /**

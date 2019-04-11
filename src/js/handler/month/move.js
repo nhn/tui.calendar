@@ -71,9 +71,9 @@ MonthMove.prototype.destroy = function() {
  */
 MonthMove.prototype.updateSchedule = function(scheduleCache) {
     var schedule = scheduleCache.model;
-    var duration = schedule.duration().getTime();
+    var duration = schedule.duration();
     var startDateRaw = datetime.raw(schedule.start);
-    var dragEndTime = Number(scheduleCache.end);
+    var dragEndTime = new TZDate(scheduleCache.end);
     var newStartDate = new TZDate(dragEndTime);
 
     newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
@@ -88,7 +88,7 @@ MonthMove.prototype.updateSchedule = function(scheduleCache) {
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
         start: newStartDate,
-        end: new TZDate(newStartDate.getTime() + duration)
+        end: new TZDate(newStartDate).addMilliseconds(duration)
     });
 };
 
@@ -244,7 +244,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        cache.end = new TZDate(Number(scheduleData.date));
+        cache.end = new TZDate(scheduleData.date);
         this.updateSchedule(cache);
     }
 

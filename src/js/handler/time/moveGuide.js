@@ -176,7 +176,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         dragStartEventData.model
     );
 
-    modelDuration = this._model.duration().getTime();
+    modelDuration = this._model.duration();
     modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
     goingDuration = datetime.millisecondsFrom('minutes', this._model.goingDuration);
     comingDuration = datetime.millisecondsFrom('minutes', this._model.comingDuration);
@@ -207,7 +207,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         hourLength = viewOptions.hourEnd - viewOptions.hourStart,
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
-        timeDiff = dragEventData.nearestGridTimeY - this._lastDrag.nearestGridTimeY,
+        gridDiff = dragEventData.nearestGridY - this._lastDrag.nearestGridY,
         bottomLimit,
         top;
 
@@ -227,8 +227,8 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.min(top, bottomLimit);
 
     // update time
-    this._model.start = new TZDate(this._model.getStarts().getTime() + timeDiff);
-    this._model.end = new TZDate(this._model.getEnds().getTime() + timeDiff);
+    this._model.start = new TZDate(this._model.getStarts()).addMinutes(datetime.minutesFromHours(gridDiff));
+    this._model.end = new TZDate(this._model.getEnds()).addMinutes(datetime.minutesFromHours(gridDiff));
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model, this._viewModel);

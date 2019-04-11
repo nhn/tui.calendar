@@ -9,7 +9,6 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var reqAnimFrame = require('../../common/reqAnimFrame');
-var TZDate = require('../../common/timezone').Date;
 
 /**
  * Class for DayGrid.Move dragging effect.
@@ -174,10 +173,10 @@ DayGridMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventDa
         originScheduleEnds = datetime.end(model.end),
         renderStartDate = datetime.start(range[0]),
         renderEndDate = datetime.end(range[range.length - 1]),
-        fromLeft = (new TZDate(originScheduleStarts.getTime() -
-            renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY || 0,
-        fromRight = (new TZDate(originScheduleEnds.getTime() -
-            renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY || 0;
+        fromLeft = Math.ceil((originScheduleStarts.getTime() -
+            renderStartDate.getTime()) / datetime.MILLISECONDS_PER_DAY) || 0,
+        fromRight = Math.ceil((originScheduleEnds.getTime() -
+            renderEndDate.getTime()) / datetime.MILLISECONDS_PER_DAY) || 0;
 
     return function(indexOffset) {
         return {

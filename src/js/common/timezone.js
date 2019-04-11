@@ -4,8 +4,11 @@
  */
 'use strict';
 
+var util = require('tui-code-snippet');
+
 var MIN_TO_MS = 60 * 1000;
-var customOffsetMs = getTimezoneOffset();
+var nativeOffsetMs = getTimezoneOffset();
+var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
 
@@ -57,6 +60,20 @@ function getCustomTimezoneOffset(timestamp) {
 }
 
 /**
+ * Convert to local time
+ * @param {number} time - time
+ * @returns {number} local time
+ */
+function getLocalTime(time) {
+    var timezoneOffset = getTimezoneOffset(time);
+    var customTimezoneOffset = getCustomTimezoneOffset(time);
+    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
+    var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+
+    return localTime;
+}
+
+/**
  * Create a Date instance with multiple arguments
  * @param {Array} args - arguments
  * @returns {Date}
@@ -65,22 +82,19 @@ function getCustomTimezoneOffset(timestamp) {
 function createDateWithMultipleArgs(args) {
     var utc = Date.UTC.apply(null, args);
 
-    return new Date(utc + getCustomTimezoneOffset(utc));
+    return new Date(utc + getTimezoneOffset(utc));
 }
 
 /**
- * Create a Date instance with argument
- * @param {Date|TZDate|string|number} arg - arguments
+ * To convert a Date to TZDate as it is.
+ * @param {TZDate|number|null} arg - date
  * @returns {Date}
- * @private
  */
-function createDateWithSingleArg(arg) {
+function createDateWithUTCTime(arg) {
     var time;
 
-    if (arg instanceof Date || arg instanceof TZDate) {
-        time = arg.getTime();
-    } else if ((typeof arg) === 'string') {
-        time = Date.parse(arg);
+    if (arg instanceof TZDate) {
+        time = arg.getUTCTime();
     } else if ((typeof arg) === 'number') {
         time = arg;
     } else if (arg === null) {
@@ -89,28 +103,60 @@ function createDateWithSingleArg(arg) {
         throw new Error('Invalid Type');
     }
 
-    return new Date(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
+    return new Date(time);
+}
+
+/**
+ * Convert time to local time. Those times are only from API and not from inner source code.
+ * @param {Date|string} arg - date
+ * @returns {Date}
+ */
+function createDateAsLocalTime(arg) {
+    var time;
+
+    if (arg instanceof Date) {
+        time = arg.getTime();
+    } else if ((typeof arg) === 'string') {
+        time = Date.parse(arg);
+    } else {
+        throw new Error('Invalid Type');
+    }
+
+    time = getLocalTime(time);
+
+    return new Date(time);
+}
+
+/**
+ * is it for local time? These type can be used from Calendar API.
+ * @param {Date|string} arg - date 
+ * @returns {boolean}
+ */
+function useLocalTimeConverter(arg) {
+    return arg instanceof Date || (typeof arg) === 'string';
 }
 
 /**
  * Timezone Date Class
+ * @param {number|TZDate|Date|string} date - date to be converted
  * @constructor
  */
-function TZDate() {
-    var date;
+function TZDate(date) {
+    var nativeDate;
 
-    switch (arguments.length) {
-        case 0:
-            date = createDateWithSingleArg(Date.now());
-            break;
-        case 1:
-            date = createDateWithSingleArg(arguments[0]);
-            break;
-        default:
-            date = createDateWithMultipleArgs(arguments);
+    if (util.isUndefined(date)) {
+        date = Date.now();
     }
 
-    this._date = date;
+    if (arguments.length > 1) {
+        nativeDate = createDateWithMultipleArgs(arguments);
+    } else if (useLocalTimeConverter(date)) {
+        nativeDate = createDateAsLocalTime(date);
+    } else {
+        nativeDate = createDateWithUTCTime(date);
+    }
+
+    this._date = nativeDate;
 }
 
 /**
@@ -121,6 +167,14 @@ TZDate.prototype.getTime = function() {
     var time = this._date.getTime();
 
     return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
+};
+
+/**
+ * Get UTC milliseconds
+ * @returns {number} milliseconds
+ */
+TZDate.prototype.getUTCTime = function() {
+    return this._date.getTime();
 };
 
 /**
@@ -141,6 +195,42 @@ TZDate.prototype.toDate = function() {
 
 TZDate.prototype.valueOf = function() {
     return this.getTime();
+};
+
+TZDate.prototype.addDate = function(day) {
+    this.setDate(this.getDate() + day);
+
+    return this;
+};
+
+TZDate.prototype.addMinutes = function(minutes) {
+    this.setMinutes(this.getMinutes() + minutes);
+
+    return this;
+};
+
+TZDate.prototype.addMilliseconds = function(milliseconds) {
+    this.setMilliseconds(this.getMilliseconds() + milliseconds);
+
+    return this;
+};
+
+/* eslint-disable max-params*/
+TZDate.prototype.setWithRaw = function(y, M, d, h, m, s, ms) {
+    this.setFullYear(y, M, d);
+    this.setHours(h, m, s, ms);
+
+    return this;
+};
+
+/**
+ * @returns {TZDate} local time
+ */
+TZDate.prototype.toLocalTime = function() {
+    var time = this.getTime();
+    var diff = time - this.getUTCTime();
+
+    return new TZDate(time + diff);
 };
 
 getterMethods.forEach(function(methodName) {

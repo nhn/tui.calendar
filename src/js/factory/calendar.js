@@ -520,7 +520,7 @@ function Calendar(container, options) {
      * @type {TZDate}
      * @private
      */
-    this._renderDate = new TZDate();
+    this._renderDate = datetime.start();
 
     /**
      * start and end date of weekly, monthly
@@ -838,25 +838,23 @@ Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
  * @private
  */
 Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
-    var day, start, end, range,
-        msFrom = datetime.millisecondsFrom;
+    var day;
+    var start;
+    var end;
+    var range;
 
     startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
     date = util.isDate(date) ? date : new TZDate(date);
     day = date.getDay();
 
     // calculate default render range first.
-    start = new TZDate(
-        Number(date) -
-        msFrom('day', day) +
-        msFrom('day', startDayOfWeek)
-    );
+    start = new TZDate(date).addDate(-day + startDayOfWeek);
 
-    end = new TZDate(Number(start) + msFrom('day', 6));
+    end = new TZDate(start).addDate(6);
 
     if (day < startDayOfWeek) {
-        start = new TZDate(Number(start) - msFrom('day', 7));
-        end = new TZDate(Number(end) - msFrom('day', 7));
+        start = new TZDate(start).addDate(-7);
+        end = new TZDate(end).addDate(-7);
     }
 
     if (workweek) {
@@ -873,6 +871,9 @@ Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
         start = range[0];
         end = range[range.length - 1];
     }
+
+    start = datetime.start(start);
+    end = datetime.start(end);
 
     return [start, end];
 };
@@ -989,7 +990,7 @@ Calendar.prototype.scrollToNow = function() {
  * }
  */
 Calendar.prototype.today = function() {
-    this._renderDate = new TZDate();
+    this._renderDate = datetime.start();
 
     this._setViewName(this._viewName);
     this.move();
@@ -1006,7 +1007,7 @@ Calendar.prototype.today = function() {
  * calendar.move(-1);
  */
 Calendar.prototype.move = function(offset) {
-    var renderDate = dw(this._renderDate),
+    var renderDate = dw(datetime.start(this._renderDate)),
         viewName = this._viewName,
         view = this._getCurrentView(),
         recursiveSet = _setOptionRecurseively,
@@ -1030,10 +1031,10 @@ Calendar.prototype.move = function(offset) {
             };
 
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
-            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
+            tempDate = datetime.arr2dCalendar(renderDate.d, datetimeOptions);
 
             recursiveSet(view, function(childView, opt) {
-                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
+                opt.renderMonth = new TZDate(renderDate.d);
             });
         } else {
             datetimeOptions = {
@@ -1043,10 +1044,10 @@ Calendar.prototype.move = function(offset) {
             };
 
             renderDate.addMonth(offset);
-            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
+            tempDate = datetime.arr2dCalendar(renderDate.d, datetimeOptions);
 
             recursiveSet(view, function(childView, opt) {
-                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+                opt.renderMonth = new TZDate(renderDate.d);
             });
         }
 
@@ -1062,8 +1063,8 @@ Calendar.prototype.move = function(offset) {
         endDate = tempDate[1];
 
         recursiveSet(view, function(childView, opt) {
-            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+            opt.renderStartDate = new TZDate(startDate);
+            opt.renderEndDate = new TZDate(endDate);
 
             childView.setState({
                 collapsed: true
@@ -1071,11 +1072,12 @@ Calendar.prototype.move = function(offset) {
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
-        startDate = endDate = renderDate.d;
+        startDate = datetime.start(renderDate.d);
+        endDate = datetime.end(renderDate.d);
 
         recursiveSet(view, function(childView, opt) {
-            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+            opt.renderStartDate = new TZDate(startDate);
+            opt.renderEndDate = new TZDate(endDate);
 
             childView.setState({
                 collapsed: true
@@ -1106,7 +1108,7 @@ Calendar.prototype.setDate = function(date) {
         date = datetime.parse(date);
     }
 
-    this._renderDate = new TZDate(Number(date));
+    this._renderDate = new TZDate(date);
     this._setViewName(this._viewName);
     this.move(0);
     this.render();
