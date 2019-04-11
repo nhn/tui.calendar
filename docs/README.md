@@ -1,5 +1,5 @@
 ## Demo
-[Here is our demo page](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html)
+[Here is our demo page](https://nhn.github.io/tui.calendar/latest/tutorial-example01-basic.html)
 
 ## Tutorials
 * [Getting Started](getting-started.md)
@@ -10,4 +10,4 @@
 * [Code of Conduct](../CODE_OF_CONDUCT.md)
 * [Contributing Guide](../CONTRIBUTING.md)
 * [Commit Message Convention](COMMIT_MESSAGE_CONVENTION.md)
-* [API & Examples](https://nhnent.github.io/tui.calendar/latest)
+* [API & Examples](https://nhn.github.io/tui.calendar/latest)

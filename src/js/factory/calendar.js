@@ -428,7 +428,7 @@ var mmin = Math.min;
  */
 
 /**
- * {@link https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhnent/tui.code-snippet tui-code-snippet}
+ * {@link https://nhn.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhn/tui.code-snippet tui-code-snippet}
  * @typedef {class} CustomEvents
  */
 

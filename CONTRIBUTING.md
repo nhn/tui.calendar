@@ -5,7 +5,7 @@ First off, thanks for taking the time to contribute! 🎉 😘 ✨
 The following is a set of guidelines for contributing to TOAST UI. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 ## Reporting Bugs
-Bugs are tracked as GitHub issues. Search the list and try to reproduce on [demo](https://nhnent.github.io/tui.calendar/latest/tutorial-example01-basic.html) before you create an issue. When you create an issue, please provide the following information by filling in the template.
+Bugs are tracked as GitHub issues. Search the list and try to reproduce on [demo](https://nhn.github.io/tui.calendar/latest/tutorial-example00-basic) before you create an issue. When you create an issue, please provide the following information by filling in the template.
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
@@ -18,7 +18,7 @@ Explain the problem and include additional details to help maintainers reproduce
 
 ## Suggesting Enhancements
 In case you want to suggest for TOAST UI Calendar, please follow this guideline to help maintainers and the community understand your suggestion.
-Before creating suggestions, please check [issue list](https://github.com/nhnent/tui.calendar/labels/feature%20request) if there's already a request.
+Before creating suggestions, please check [issue list](https://github.com/nhn/tui.calendar/labels/Type:%20Enhancement) if there's already a request.
 
 Create an issue and provide the following information:
 
@@ -89,4 +89,4 @@ This project and everyone participating in it is governed by the [Code of Conduc
 
 > This Guide is base on [atom contributing guide](https://github.com/atom/atom/blob/master/CONTRIBUTING.md), [CocoaPods](http://guides.cocoapods.org/contributing/contribute-to-cocoapods.html) and [ESLint](http://eslint.org/docs/developer-guide/contributing/pull-requests)
 
-[demo]:https://nhnent.github.io/tui.calendar/
+[demo]:https://nhn.github.io/tui.calendar/
