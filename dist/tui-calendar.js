@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.11.0 | Fri Apr 05 2019
+ * @version 1.11.1-rc | Thu Apr 11 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -1785,8 +1785,8 @@ function scheduleASC(a, b) {
         return startsCompare;
     }
 
-    durationA = a.duration().getTime();
-    durationB = b.duration().getTime();
+    durationA = a.duration();
+    durationB = b.duration();
 
     if (durationA < durationB) {
         return 1;
@@ -2683,6 +2683,38 @@ module.exports = {
         return v;
     },
 
+    /**
+     * Limit supplied date base on `min`, `max`
+     * @param {TZDate} date - date
+     * @param {TZDate} min - min
+     * @param {TZDate} max - max
+     * @returns {TZDate} limited value
+     */
+    limitDate: function(date, min, max) {
+        if (date < min) {
+            return min;
+        }
+        if (date > max) {
+            return max;
+        }
+
+        return date;
+    },
+
+    /**
+     * Max value with TZDate type for timezone calculation
+     * @param {TZDate} d1 - date 1
+     * @param {TZDate} d2 - date 2
+     * @returns {TZDate}
+     */
+    maxDate: function(d1, d2) {
+        if (d1 > d2) {
+            return d1;
+        }
+
+        return d2;
+    },
+
     stripTags: function(str) {
         return str.replace(/<([^>]+)>/ig, '');
     },
@@ -3029,21 +3061,30 @@ datetime = {
     },
 
     /**
+     * Convert hours to minutes
+     * @param {number} hours - hours
+     * @returns {number} minutes
+     */
+    minutesFromHours: function(hours) {
+        return hours * 60;
+    },
+
+    /**
      * Make date array from supplied paramters.
      * @param {TZDate} start Start date.
      * @param {TZDate} end End date.
      * @param {number} step The number of milliseconds to use increment.
-     * @returns {array} Date array.
+     * @returns {TZDate[]} TZDate array.
      */
     range: function(start, end, step) {
         var startTime = start.getTime();
         var endTime = end.getTime();
         var cursor = startTime;
-        var date = dw(startTime);
+        var date = dw(new TZDate(start));
         var result = [];
 
         while (cursor <= endTime && endTime >= date.d.getTime()) {
-            result.push(new TZDate(date.d));
+            result.push(datetime.start(date.d));
             cursor = cursor + step;
             date.addDate(1);
         }
@@ -3057,7 +3098,7 @@ datetime = {
      * @returns {TZDate} Cloned date object
      */
     clone: function(date) {
-        return new TZDate(date.getTime());
+        return new TZDate(date);
     },
 
     /**
@@ -3164,7 +3205,7 @@ datetime = {
      *
      * @param {string} str Formatted string.
      * @param {number} [fixMonth=-1] - number for fix month calculating.
-     * @returns {(Date|boolean)} Converted Date object. when supplied str is not available then return false.
+     * @returns {(TZDate|boolean)} Converted Date object. when supplied str is not available then return false.
      */
     parse: function(str, fixMonth) {
         var separator,
@@ -3197,13 +3238,14 @@ datetime = {
             hms = [0, 0, 0];
         }
 
-        return new TZDate(
+        return new TZDate().setWithRaw(
             Number(ymd[0]),
             Number(ymd[1]) + fixMonth,
             Number(ymd[2]),
             Number(hms[0]),
             Number(hms[1]),
-            Number(hms[2])
+            Number(hms[2]),
+            0
         );
     },
 
@@ -3226,11 +3268,11 @@ datetime = {
 
     /**
      * Return 00:00:00 supplied date.
-     * @param {TZDate} date date.
+     * @param {TZDate} date date. if undefined, use now.
      * @returns {TZDate} start date.
      */
     start: function(date) {
-        var d = new TZDate(date.getTime());
+        var d = date ? new TZDate(date) : new TZDate();
         d.setHours(0, 0, 0, 0);
 
         return d;
@@ -3238,11 +3280,11 @@ datetime = {
 
     /**
      * Return 23:59:59 supplied date.
-     * @param {TZDate} date date.
+     * @param {TZDate} date date. if undefined, use now.
      * @returns {TZDate} end date.
      */
     end: function(date) {
-        var d = new TZDate(date.getTime());
+        var d = date ? new TZDate(date) : new TZDate();
         d.setHours(23, 59, 59, 0);
 
         return d;
@@ -3276,7 +3318,7 @@ datetime = {
      * @returns {TZDate} start date of supplied month
      */
     startDateOfMonth: function(date) {
-        var startDate = new TZDate(Number(date));
+        var startDate = new TZDate(date);
 
         startDate.setDate(1);
         startDate.setHours(0, 0, 0, 0);
@@ -3310,7 +3352,7 @@ datetime = {
      * @param {number} options.visibleWeeksCount visible weeks count
      * @param {boolean} options.workweek - only show work week
      * @param {function} [iteratee] - iteratee for customizing calendar object
-     * @returns {Array.<string[]>} calendar 2d array
+     * @returns {Array.<TZDate[]>} calendar 2d array
      */
     arr2dCalendar: function(month, options, iteratee) {
         var weekArr,
@@ -3348,7 +3390,7 @@ datetime = {
         } else {
             totalDate = isAlways6Week ? (7 * 6) : (startIndex + end.getDate() + afterDates);
         }
-        cursor = new TZDate(new TZDate(start).setDate(start.getDate() - startIndex));
+        cursor = datetime.start(start).addDate(-startIndex);
         // iteratee all dates to render
         util.forEachArray(util.range(totalDate), function(i) {
             var date;
@@ -3358,7 +3400,7 @@ datetime = {
                 week = calendar[i / 7] = [];
             }
 
-            date = new TZDate(cursor);
+            date = datetime.start(cursor);
             date = iteratee ? iteratee(date) : date;
             if (!workweek || !datetime.isWeekend(date.getDay())) {
                 week.push(date);
@@ -3421,6 +3463,22 @@ datetime = {
      */
     isWeekend: function(day) {
         return day === 0 || day === 6;
+    },
+
+    /**
+     * Whether date is between supplied dates with date value?
+     * @param {TZDate} d - target date
+     * @param {TZDate} d1 - from date
+     * @param {TZDate} d2 - to date
+     * @returns {boolean} is between?
+     */
+    isBetweenWithDate: function(d, d1, d2) {
+        var format = 'YYYYMMDD';
+        d = parseInt(datetime.format(d, format), 10);
+        d1 = parseInt(datetime.format(d1, format), 10);
+        d2 = parseInt(datetime.format(d2, format), 10);
+
+        return d1 <= d && d <= d2;
     }
 };
 
@@ -4766,11 +4824,11 @@ module.exports = domutil;
  */
 
 
-var TZDate = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js").Date;
+var TZDate = __webpack_require__(/*! ./timezone */ "./src/js/common/timezone.js").Date;
 
 /**
  * @constructor
- * @param {Date} date to wrapping DW class
+ * @param {TZDate} date to wrapping DW class
  */
 function DW(date) {
     if (!(this instanceof DW)) {
@@ -4782,7 +4840,7 @@ function DW(date) {
     }
 
     /**
-     * @type {Date}
+     * @type {TZDate}
      */
     this.d = date;
 }
@@ -4790,7 +4848,7 @@ function DW(date) {
 /**
  * Return d property when supplied object is DW. else return itself
  * @param {*} obj - object
- * @returns {Date} date
+ * @returns {TZDate} date
  */
 DW.prototype.safe = function(obj) {
     if (obj.constructor === DW) {
@@ -4805,7 +4863,7 @@ DW.prototype.safe = function(obj) {
  * @returns {DW} cloned dwrap object
  */
 DW.prototype.clone = function() {
-    return new DW(new TZDate(Number(this.d)));
+    return new DW(new TZDate(this.d));
 };
 
 /**
@@ -4876,8 +4934,8 @@ DW.prototype.setHours = function(h, m, s, ms) {
 
 /**
  * Whether date is between supplied dates?
- * @param {Date|DW} d1 - from date
- * @param {Date|DW} d2 - to date
+ * @param {TZDate|DW} d1 - from date
+ * @param {TZDate|DW} d2 - to date
  * @returns {boolean} is between?
  */
 DW.prototype.isBetween = function(d1, d2) {
@@ -5686,8 +5744,11 @@ module.exports = {
  */
 
 
+var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
+
 var MIN_TO_MS = 60 * 1000;
-var customOffsetMs = getTimezoneOffset();
+var nativeOffsetMs = getTimezoneOffset();
+var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
 
@@ -5739,6 +5800,20 @@ function getCustomTimezoneOffset(timestamp) {
 }
 
 /**
+ * Convert to local time
+ * @param {number} time - time
+ * @returns {number} local time
+ */
+function getLocalTime(time) {
+    var timezoneOffset = getTimezoneOffset(time);
+    var customTimezoneOffset = getCustomTimezoneOffset(time);
+    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
+    var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+
+    return localTime;
+}
+
+/**
  * Create a Date instance with multiple arguments
  * @param {Array} args - arguments
  * @returns {Date}
@@ -5747,22 +5822,19 @@ function getCustomTimezoneOffset(timestamp) {
 function createDateWithMultipleArgs(args) {
     var utc = Date.UTC.apply(null, args);
 
-    return new Date(utc + getCustomTimezoneOffset(utc));
+    return new Date(utc + getTimezoneOffset(utc));
 }
 
 /**
- * Create a Date instance with argument
- * @param {Date|TZDate|string|number} arg - arguments
+ * To convert a Date to TZDate as it is.
+ * @param {TZDate|number|null} arg - date
  * @returns {Date}
- * @private
  */
-function createDateWithSingleArg(arg) {
+function createDateWithUTCTime(arg) {
     var time;
 
-    if (arg instanceof Date || arg instanceof TZDate) {
-        time = arg.getTime();
-    } else if ((typeof arg) === 'string') {
-        time = Date.parse(arg);
+    if (arg instanceof TZDate) {
+        time = arg.getUTCTime();
     } else if ((typeof arg) === 'number') {
         time = arg;
     } else if (arg === null) {
@@ -5771,28 +5843,60 @@ function createDateWithSingleArg(arg) {
         throw new Error('Invalid Type');
     }
 
-    return new Date(time - getCustomTimezoneOffset(time) + getTimezoneOffset(time));
+    return new Date(time);
+}
+
+/**
+ * Convert time to local time. Those times are only from API and not from inner source code.
+ * @param {Date|string} arg - date
+ * @returns {Date}
+ */
+function createDateAsLocalTime(arg) {
+    var time;
+
+    if (arg instanceof Date) {
+        time = arg.getTime();
+    } else if ((typeof arg) === 'string') {
+        time = Date.parse(arg);
+    } else {
+        throw new Error('Invalid Type');
+    }
+
+    time = getLocalTime(time);
+
+    return new Date(time);
+}
+
+/**
+ * is it for local time? These type can be used from Calendar API.
+ * @param {Date|string} arg - date 
+ * @returns {boolean}
+ */
+function useLocalTimeConverter(arg) {
+    return arg instanceof Date || (typeof arg) === 'string';
 }
 
 /**
  * Timezone Date Class
+ * @param {number|TZDate|Date|string} date - date to be converted
  * @constructor
  */
-function TZDate() {
-    var date;
+function TZDate(date) {
+    var nativeDate;
 
-    switch (arguments.length) {
-        case 0:
-            date = createDateWithSingleArg(Date.now());
-            break;
-        case 1:
-            date = createDateWithSingleArg(arguments[0]);
-            break;
-        default:
-            date = createDateWithMultipleArgs(arguments);
+    if (util.isUndefined(date)) {
+        date = Date.now();
     }
 
-    this._date = date;
+    if (arguments.length > 1) {
+        nativeDate = createDateWithMultipleArgs(arguments);
+    } else if (useLocalTimeConverter(date)) {
+        nativeDate = createDateAsLocalTime(date);
+    } else {
+        nativeDate = createDateWithUTCTime(date);
+    }
+
+    this._date = nativeDate;
 }
 
 /**
@@ -5803,6 +5907,14 @@ TZDate.prototype.getTime = function() {
     var time = this._date.getTime();
 
     return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
+};
+
+/**
+ * Get UTC milliseconds
+ * @returns {number} milliseconds
+ */
+TZDate.prototype.getUTCTime = function() {
+    return this._date.getTime();
 };
 
 /**
@@ -5823,6 +5935,42 @@ TZDate.prototype.toDate = function() {
 
 TZDate.prototype.valueOf = function() {
     return this.getTime();
+};
+
+TZDate.prototype.addDate = function(day) {
+    this.setDate(this.getDate() + day);
+
+    return this;
+};
+
+TZDate.prototype.addMinutes = function(minutes) {
+    this.setMinutes(this.getMinutes() + minutes);
+
+    return this;
+};
+
+TZDate.prototype.addMilliseconds = function(milliseconds) {
+    this.setMilliseconds(this.getMilliseconds() + milliseconds);
+
+    return this;
+};
+
+/* eslint-disable max-params*/
+TZDate.prototype.setWithRaw = function(y, M, d, h, m, s, ms) {
+    this.setFullYear(y, M, d);
+    this.setHours(h, m, s, ms);
+
+    return this;
+};
+
+/**
+ * @returns {TZDate} local time
+ */
+TZDate.prototype.toLocalTime = function() {
+    var time = this.getTime();
+    var diff = time - this.getUTCTime();
+
+    return new TZDate(time + diff);
 };
 
 getterMethods.forEach(function(methodName) {
@@ -6935,8 +7083,8 @@ Base.prototype.splitScheduleByDateRange = function(start, end, scheduleCollectio
  * Return schedules in supplied date range.
  *
  * available only YMD.
- * @param {Date} start start date.
- * @param {Date} end end date.
+ * @param {TZDate} start start date.
+ * @param {TZDate} end end date.
  * @returns {object.<string, Collection>} schedule collection grouped by dates.
  */
 Base.prototype.findByDateRange = function(start, end) {
@@ -7209,8 +7357,8 @@ var Core = {
 
     /**
      * Limit start, end date each view model for render properly
-     * @param {Date} start - start date to render
-     * @param {Date} end - end date to render
+     * @param {TZDate} start - start date to render
+     * @param {TZDate} end - end date to render
      * @param {Collection|ScheduleViewModel} viewModelColl - schedule view
      *  model collection or ScheduleViewModel
      * @returns {ScheduleViewModel} return view model when third parameter is
@@ -7225,12 +7373,12 @@ var Core = {
         function limit(viewModel) {
             if (viewModel.getStarts() < start) {
                 viewModel.exceedLeft = true;
-                viewModel.renderStarts = new TZDate(start.getTime());
+                viewModel.renderStarts = new TZDate(start);
             }
 
             if (viewModel.getEnds() > end) {
                 viewModel.exceedRight = true;
-                viewModel.renderEnds = new TZDate(end.getTime());
+                viewModel.renderEnds = new TZDate(end);
             }
 
             return viewModel;
@@ -7324,8 +7472,8 @@ var Month = {
      * Limit start, end for each allday schedules and expand start, end for
      * each time schedules
      * @this Base
-     * @param {Date} start - render start date
-     * @param {Date} end - render end date
+     * @param {TZDate} start - render start date
+     * @param {TZDate} end - render end date
      * @param {Collection} vColl - view model collection
      * property.
      */
@@ -7451,8 +7599,8 @@ var Month = {
     /**
      * Find schedule and get view model for specific month
      * @this Base
-     * @param {Date} start - start date to find schedules
-     * @param {Date} end - end date to find schedules
+     * @param {TZDate} start - start date to find schedules
+     * @param {TZDate} end - end date to find schedules
      * @param {function[]} [andFilters] - optional filters to applying search query
      * @param {boolean} [alldayFirstMode=false] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
      * @returns {object} view model data
@@ -8329,7 +8477,7 @@ var mmin = Math.min;
  */
 
 /**
- * {@link https://nhnent.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhnent/tui.code-snippet tui-code-snippet}
+ * {@link https://nhn.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhn/tui.code-snippet tui-code-snippet}
  * @typedef {class} CustomEvents
  */
 
@@ -8421,7 +8569,7 @@ function Calendar(container, options) {
      * @type {TZDate}
      * @private
      */
-    this._renderDate = new TZDate();
+    this._renderDate = datetime.start();
 
     /**
      * start and end date of weekly, monthly
@@ -8739,25 +8887,23 @@ Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
  * @private
  */
 Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
-    var day, start, end, range,
-        msFrom = datetime.millisecondsFrom;
+    var day;
+    var start;
+    var end;
+    var range;
 
     startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
     date = util.isDate(date) ? date : new TZDate(date);
     day = date.getDay();
 
     // calculate default render range first.
-    start = new TZDate(
-        Number(date) -
-        msFrom('day', day) +
-        msFrom('day', startDayOfWeek)
-    );
+    start = new TZDate(date).addDate(-day + startDayOfWeek);
 
-    end = new TZDate(Number(start) + msFrom('day', 6));
+    end = new TZDate(start).addDate(6);
 
     if (day < startDayOfWeek) {
-        start = new TZDate(Number(start) - msFrom('day', 7));
-        end = new TZDate(Number(end) - msFrom('day', 7));
+        start = new TZDate(start).addDate(-7);
+        end = new TZDate(end).addDate(-7);
     }
 
     if (workweek) {
@@ -8774,6 +8920,9 @@ Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
         start = range[0];
         end = range[range.length - 1];
     }
+
+    start = datetime.start(start);
+    end = datetime.start(end);
 
     return [start, end];
 };
@@ -8890,7 +9039,7 @@ Calendar.prototype.scrollToNow = function() {
  * }
  */
 Calendar.prototype.today = function() {
-    this._renderDate = new TZDate();
+    this._renderDate = datetime.start();
 
     this._setViewName(this._viewName);
     this.move();
@@ -8907,7 +9056,7 @@ Calendar.prototype.today = function() {
  * calendar.move(-1);
  */
 Calendar.prototype.move = function(offset) {
-    var renderDate = dw(this._renderDate),
+    var renderDate = dw(datetime.start(this._renderDate)),
         viewName = this._viewName,
         view = this._getCurrentView(),
         recursiveSet = _setOptionRecurseively,
@@ -8931,10 +9080,10 @@ Calendar.prototype.move = function(offset) {
             };
 
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
-            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
+            tempDate = datetime.arr2dCalendar(renderDate.d, datetimeOptions);
 
             recursiveSet(view, function(childView, opt) {
-                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM-DD');
+                opt.renderMonth = new TZDate(renderDate.d);
             });
         } else {
             datetimeOptions = {
@@ -8944,10 +9093,10 @@ Calendar.prototype.move = function(offset) {
             };
 
             renderDate.addMonth(offset);
-            tempDate = datetime.arr2dCalendar(this._renderDate, datetimeOptions);
+            tempDate = datetime.arr2dCalendar(renderDate.d, datetimeOptions);
 
             recursiveSet(view, function(childView, opt) {
-                opt.renderMonth = datetime.format(renderDate.d, 'YYYY-MM');
+                opt.renderMonth = new TZDate(renderDate.d);
             });
         }
 
@@ -8963,8 +9112,8 @@ Calendar.prototype.move = function(offset) {
         endDate = tempDate[1];
 
         recursiveSet(view, function(childView, opt) {
-            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+            opt.renderStartDate = new TZDate(startDate);
+            opt.renderEndDate = new TZDate(endDate);
 
             childView.setState({
                 collapsed: true
@@ -8972,11 +9121,12 @@ Calendar.prototype.move = function(offset) {
         });
     } else if (viewName === 'day') {
         renderDate.addDate(offset);
-        startDate = endDate = renderDate.d;
+        startDate = datetime.start(renderDate.d);
+        endDate = datetime.end(renderDate.d);
 
         recursiveSet(view, function(childView, opt) {
-            opt.renderStartDate = datetime.format(startDate, 'YYYY-MM-DD');
-            opt.renderEndDate = datetime.format(endDate, 'YYYY-MM-DD');
+            opt.renderStartDate = new TZDate(startDate);
+            opt.renderEndDate = new TZDate(endDate);
 
             childView.setState({
                 collapsed: true
@@ -9007,7 +9157,7 @@ Calendar.prototype.setDate = function(date) {
         date = datetime.parse(date);
     }
 
-    this._renderDate = new TZDate(Number(date));
+    this._renderDate = new TZDate(date);
     this._setViewName(this._viewName);
     this.move(0);
     this.render();
@@ -10915,7 +11065,7 @@ DayGridCreation.prototype._createSchedule = function(scheduleData) {
         startXIndex = startXIndex - xIndex;
     }
 
-    start = new TZDate(dateRange[startXIndex].getTime());
+    start = new TZDate(dateRange[startXIndex]);
     end = datetime.end(dateRange[xIndex]);
 
     /**
@@ -11472,11 +11622,11 @@ DayGridMove.prototype._onDrag = function(dragEventData) {
 DayGridMove.prototype._updateSchedule = function(scheduleData) {
     var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-        newStarts = new TZDate(schedule.start.getTime()),
-        newEnds = new TZDate(schedule.end.getTime());
+        newStarts = new TZDate(schedule.start),
+        newEnds = new TZDate(schedule.end);
 
-    newStarts = new TZDate(newStarts.setDate(newStarts.getDate() + dateOffset));
-    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
+    newStarts = newStarts.addDate(dateOffset);
+    newEnds = newEnds.addDate(dateOffset);
 
     /**
      * @event DayGridMove#beforeUpdateSchedule
@@ -11580,7 +11730,6 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var reqAnimFrame = __webpack_require__(/*! ../../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
-var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 
 /**
  * Class for DayGrid.Move dragging effect.
@@ -11745,10 +11894,10 @@ DayGridMoveGuide.prototype._getScheduleBlockDataFunc = function(dragStartEventDa
         originScheduleEnds = datetime.end(model.end),
         renderStartDate = datetime.start(range[0]),
         renderEndDate = datetime.end(range[range.length - 1]),
-        fromLeft = (new TZDate(originScheduleStarts.getTime() -
-            renderStartDate.getTime())) / datetime.MILLISECONDS_PER_DAY || 0,
-        fromRight = (new TZDate(originScheduleEnds.getTime() -
-            renderEndDate.getTime())) / datetime.MILLISECONDS_PER_DAY || 0;
+        fromLeft = Math.ceil((originScheduleStarts.getTime() -
+            renderStartDate.getTime()) / datetime.MILLISECONDS_PER_DAY) || 0,
+        fromRight = Math.ceil((originScheduleEnds.getTime() -
+            renderEndDate.getTime()) / datetime.MILLISECONDS_PER_DAY) || 0;
 
     return function(indexOffset) {
         return {
@@ -12040,10 +12189,10 @@ DayGridResize.prototype._onDrag = function(dragEventData) {
 DayGridResize.prototype._updateSchedule = function(scheduleData) {
     var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
-        newEnds = new TZDate(schedule.end.getTime());
+        newEnds = new TZDate(schedule.end);
 
-    newEnds = new TZDate(newEnds.setDate(newEnds.getDate() + dateOffset));
-    newEnds = new TZDate(Math.max(datetime.end(schedule.start).getTime(), newEnds.getTime()));
+    newEnds = newEnds.addDate(dateOffset);
+    newEnds = new TZDate(common.maxDate(datetime.end(schedule.start), newEnds));
 
     /**
      * @event DayGridResize#beforeUpdateSchedule
@@ -12147,7 +12296,6 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var reqAnimFrame = __webpack_require__(/*! ../../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
-var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 
 /**
  * @constructor
@@ -12235,9 +12383,9 @@ DayGridResizeGuide.prototype.refreshGuideElement = function(newWidth) {
 DayGridResizeGuide.prototype.getGuideElementWidthFunc = function(dragStartEventData) {
     var model = dragStartEventData.model,
         viewOptions = this.resizeHandler.view.options,
-        fromLeft = parseInt((new TZDate(
-            model.start.getTime() - datetime.parse(viewOptions.renderStartDate)
-        )) / datetime.MILLISECONDS_PER_DAY, 10) || 0,
+        fromLeft = Math.ceil(
+            (model.start - viewOptions.renderStartDate) / datetime.MILLISECONDS_PER_DAY
+        ) || 0,
         grids = dragStartEventData.grids;
 
     return function(xIndex) {
@@ -12927,7 +13075,7 @@ MonthCreation.prototype._onDragStart = function(dragStartEvent) {
     eventData = this.getScheduleData(dragStartEvent.originEvent);
 
     this._cache = {
-        start: new TZDate(Number(eventData.date))
+        start: new TZDate(eventData.date)
     };
 
     /**
@@ -12990,16 +13138,16 @@ MonthCreation.prototype._onDragEnd = function(dragEndEvent) {
     eventData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (eventData) {
-        cache.end = new TZDate(Number(eventData.date));
+        cache.end = new TZDate(eventData.date);
         cache.isAllDay = true;
 
         times = [
-            Number(cache.start),
-            Number(cache.end)
+            cache.start,
+            cache.end
         ].sort(array.compare.num.asc);
 
         cache.start = new TZDate(times[0]);
-        cache.end = datetime.end(new TZDate(times[1]));
+        cache.end = datetime.end(times[1]);
 
         this._createSchedule(cache);
     }
@@ -13032,7 +13180,7 @@ MonthCreation.prototype._onDblClick = function(e) {
 
     this.fire('monthCreationClick', eventData);
 
-    range = this._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+    range = this._adjustStartAndEndTime(new TZDate(eventData.date), new TZDate(eventData.date));
 
     this._createSchedule({
         start: range.start,
@@ -13064,7 +13212,7 @@ MonthCreation.prototype._onClick = function(e) {
         if (self._requestOnClick) {
             self.fire('monthCreationClick', eventData);
 
-            range = self._adjustStartAndEndTime(new TZDate(Number(eventData.date)), new TZDate(Number(eventData.date)));
+            range = self._adjustStartAndEndTime(new TZDate(eventData.date), new TZDate(eventData.date));
 
             self._createSchedule({
                 start: range.start,
@@ -13324,7 +13472,7 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js"),
     domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js"),
     datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js"),
-    dw = __webpack_require__(/*! ../../common/dw */ "./src/js/common/dw.js"),
+    TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date,
     tmpl = __webpack_require__(/*! ./guide.hbs */ "./src/js/handler/month/guide.hbs");
 var mmax = Math.max,
     mmin = Math.min,
@@ -13462,7 +13610,7 @@ MonthGuide.prototype._getGuideElement = function(y) {
 
 /**
  * Get coordinate by supplied date in month
- * @param {Date} date - date to find coordinate
+ * @param {TZDate} date - date to find coordinate
  * @returns {number[]} coordinate (x, y)
  */
 MonthGuide.prototype._getCoordByDate = function(date) {
@@ -13471,18 +13619,17 @@ MonthGuide.prototype._getCoordByDate = function(date) {
         getIdxFromDiff = function(d1, d2) {
             return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
         },
-        monthStart = datetime.parse(weeks[0].options.renderStartDate),
+        monthStart = datetime.start(weeks[0].options.renderStartDate),
         isBefore = date < monthStart,
-        dateDW = dw(date),
-        startDW = dw(monthStart),
-        endDW = startDW.clone().addDate(isBefore ? -days : days),
-        x = getIdxFromDiff(dateDW.d, startDW.d),
+        start = new TZDate(monthStart),
+        end = new TZDate(monthStart).addDate(isBefore ? -days : days).addDate(-1),
+        x = getIdxFromDiff(date, start),
         y = 0;
 
-    while (!dateDW.isBetween(startDW, endDW)) {
-        startDW.addDate(isBefore ? -days : days);
-        endDW = startDW.clone().addDate(days);
-        x = getIdxFromDiff(dateDW.d, startDW.d);
+    while (!datetime.isBetweenWithDate(date, start, end)) {
+        start.addDate(isBefore ? -days : days);
+        end = new TZDate(start).addDate(days - 1);
+        x = getIdxFromDiff(date, start);
         y += (isBefore ? -1 : 1);
     }
 
@@ -13528,7 +13675,7 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         model = dragStartEvent.model,
         x = dragStartEvent.x,
         y = dragStartEvent.y,
-        renderMonth = datetime.parse(this.view.options.renderMonth + '-01'),
+        renderMonth = new TZDate(this.view.options.renderMonth),
         temp;
 
     if (opt.isCreationMode) {
@@ -13870,9 +14017,9 @@ MonthMove.prototype.destroy = function() {
  */
 MonthMove.prototype.updateSchedule = function(scheduleCache) {
     var schedule = scheduleCache.model;
-    var duration = schedule.duration().getTime();
+    var duration = schedule.duration();
     var startDateRaw = datetime.raw(schedule.start);
-    var dragEndTime = Number(scheduleCache.end);
+    var dragEndTime = new TZDate(scheduleCache.end);
     var newStartDate = new TZDate(dragEndTime);
 
     newStartDate.setHours(startDateRaw.h, startDateRaw.m, startDateRaw.s, startDateRaw.ms);
@@ -13887,7 +14034,7 @@ MonthMove.prototype.updateSchedule = function(scheduleCache) {
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
         start: newStartDate,
-        end: new TZDate(newStartDate.getTime() + duration)
+        end: new TZDate(newStartDate).addMilliseconds(duration)
     });
 };
 
@@ -14043,7 +14190,7 @@ MonthMove.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        cache.end = new TZDate(Number(scheduleData.date));
+        cache.end = new TZDate(scheduleData.date);
         this.updateSchedule(cache);
     }
 
@@ -14433,7 +14580,7 @@ MonthResize.prototype.destroy = function() {
  */
 MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // You can not change the start date of the event. Only the end time can be changed.
-    var newEnd = datetime.end(new TZDate(Number(scheduleCache.end))),
+    var newEnd = datetime.end(new TZDate(scheduleCache.end)),
         schedule = scheduleCache.schedule;
 
     /**
@@ -14445,7 +14592,7 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
-        start: new TZDate(Number(schedule.getStarts())),
+        start: new TZDate(schedule.getStarts()),
         end: newEnd
     });
 };
@@ -14486,7 +14633,7 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         schedule: schedule,
         target: target,
-        start: new TZDate(Number(scheduleData.date))
+        start: new TZDate(scheduleData.date)
     };
 
     /**
@@ -14549,8 +14696,8 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        start = new TZDate(Number(cache.schedule.getStarts()));
-        end = new TZDate(Number(scheduleData.date));
+        start = new TZDate(cache.schedule.getStarts());
+        end = new TZDate(scheduleData.date);
         cache.end = end;
 
         if (start <= cache.end) {
@@ -14668,9 +14815,9 @@ MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
         isResizeMode: true
     }, this.monthResize.monthView);
 
-    this._hideScheduleBlocks(dragStartEvent.model.cid());
-
     this.guide.start(dragStartEvent);
+
+    this._hideScheduleBlocks(dragStartEvent.model.cid());
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('resizing-x'));
@@ -14942,6 +15089,7 @@ var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/com
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
 var Point = __webpack_require__(/*! ../../common/point */ "./src/js/common/point.js");
+var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 
 /**
  * @mixin Time.Core
@@ -14974,7 +15122,7 @@ var timeCore = {
             container = timeView.container,
             options = timeView.options,
             viewHeight = timeView.getViewBound().height,
-            viewTime = Number(timeView.getDate()),
+            viewTime = timeView.getDate(),
             hourLength = options.hourEnd - options.hourStart,
             baseMil = datetime.millisecondsFrom('hour', hourLength);
 
@@ -14986,9 +15134,11 @@ var timeCore = {
         return util.bind(function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
-                timeY = viewTime + datetime.millisecondsFrom('hour', gridY),
+                timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
                 nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY),
-                nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY + options.hourStart);
+                nearestGridTimeY = new TZDate(viewTime).addMinutes(
+                    datetime.minutesFromHours(nearestGridY + options.hourStart)
+                );
 
             return util.extend({
                 target: mouseEvent.target || mouseEvent.srcElement,
@@ -15011,7 +15161,7 @@ var timeCore = {
      * @returns {function} - Function that return event data from mouse event.
      */
     _retriveScheduleDataFromDate: function(timeView) {
-        var viewTime = Number(timeView.getDate());
+        var viewTime = timeView.getDate();
 
         /**
          * @param {TZDate} startDate - start date
@@ -15023,11 +15173,11 @@ var timeCore = {
             var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
 
             gridY = startDate.getHours() - hourStart + getNearestHour(startDate.getMinutes());
-            timeY = viewTime + datetime.millisecondsFrom('hour', gridY);
+            timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY));
             nearestGridY = gridY;
-            nearestGridTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridY);
+            nearestGridTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridY));
             nearestGridEndY = endDate.getHours() - hourStart + getNearestHour(endDate.getMinutes());
-            nearestGridEndTimeY = viewTime + datetime.millisecondsFrom('hour', nearestGridEndY);
+            nearestGridEndTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridEndY));
 
             return util.extend({
                 target: timeView,
@@ -15103,6 +15253,7 @@ var array = __webpack_require__(/*! ../../common/array */ "./src/js/common/array
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
+var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
 var TimeCreationGuide = __webpack_require__(/*! ./creationGuide */ "./src/js/handler/time/creationGuide.js");
 var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 var timeCore = __webpack_require__(/*! ./core */ "./src/js/handler/time/core.js");
@@ -15307,7 +15458,9 @@ TimeCreation.prototype._createSchedule = function(eventData) {
     var relatedView = eventData.relatedView,
         createRange = eventData.createRange,
         nearestGridTimeY = eventData.nearestGridTimeY,
-        nearestGridEndTimeY = eventData.nearestGridEndTimeY ? eventData.nearestGridEndTimeY : nearestGridTimeY + datetime.millisecondsFrom('minutes', 30),
+        nearestGridEndTimeY = eventData.nearestGridEndTimeY
+            ? eventData.nearestGridEndTimeY
+            : new TZDate(nearestGridTimeY).addMinutes(30),
         baseDate,
         dateStart,
         dateEnd,
@@ -15324,8 +15477,8 @@ TimeCreation.prototype._createSchedule = function(eventData) {
     baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
     dateEnd = datetime.end(baseDate);
-    start = Math.max(dateStart.getTime(), createRange[0]);
-    end = Math.min(dateEnd.getTime(), createRange[1]);
+    start = common.limitDate(createRange[0], dateStart, dateEnd);
+    end = common.limitDate(createRange[1], dateStart, dateEnd);
 
     /**
      * @event TimeCreation#beforeCreateSchedule
@@ -15368,7 +15521,7 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
             dragStart.nearestGridTimeY,
             eventData.nearestGridTimeY
         ].sort(array.compare.num.asc);
-        range[1] += datetime.millisecondsFrom('hour', 0.5);
+        range[1].addMinutes(30);
 
         eventData.createRange = range;
 
@@ -15454,8 +15607,8 @@ TimeCreation.prototype._onDblClick = function(e) {
 TimeCreation.prototype.invokeCreationClick = function(schedule) {
     var opt = this.timeGridView.options,
         range = datetime.range(
-            datetime.parse(opt.renderStartDate),
-            datetime.parse(opt.renderEndDate),
+            opt.renderStartDate,
+            opt.renderEndDate,
             datetime.MILLISECONDS_PER_DAY),
         hourStart = opt.hourStart,
         targetDate = schedule.start;
@@ -15509,7 +15662,6 @@ var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/d
 var reqAnimFrame = __webpack_require__(/*! ../../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
 var ratio = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js").ratio;
 var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
-var MIN30 = (datetime.MILLISECONDS_PER_MINUTES * 30);
 var MIN60 = (datetime.MILLISECONDS_PER_MINUTES * 60);
 
 /**
@@ -15595,8 +15747,8 @@ TimeCreationGuide.prototype.clearGuideElement = function() {
  * Refresh guide element
  * @param {number} top - The number of guide element's style top
  * @param {number} height - The number of guide element's style height
- * @param {Date} start - start time of schedule to create
- * @param {Date} end - end time of schedule to create
+ * @param {TZDate} start - start time of schedule to create
+ * @param {TZDate} end - end time of schedule to create
  * @param {boolean} bottomLabel - is label need to render bottom of guide element?
  */
 TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
@@ -15607,8 +15759,8 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
     guideElement.style.height = height + 'px';
     guideElement.style.display = 'block';
 
-    timeElement.innerHTML = datetime.format(new TZDate(start), 'HH:mm') +
-        ' - ' + datetime.format(new TZDate(end), 'HH:mm');
+    timeElement.innerHTML = datetime.format(start, 'HH:mm') +
+        ' - ' + datetime.format(end, 'HH:mm');
 
     if (bottomLabel) {
         domutil.removeClass(timeElement, config.classname('time-guide-bottom'));
@@ -15640,8 +15792,8 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
     return [
         viewHeight,
         hourLength,
-        Number(todayStart),
-        Number(todayEnd),
+        todayStart,
+        todayEnd,
         viewHeight / hourLength
     ];
 };
@@ -15650,8 +15802,8 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
  * Applying limitation to supplied data and return it.
  * @param {number} top - top pixel of guide element
  * @param {number} height - height pixel of guide element
- * @param {number} start - relative time value of dragstart point
- * @param {number} end - relative time value of dragend point
+ * @param {TZDate} start - relative time value of dragstart point
+ * @param {TZDate} end - relative time value of dragend point
  * @returns {array} limited style data
  */
 TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) {
@@ -15659,8 +15811,8 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
 
     top = common.limit(top, [0], [unitData[0]]);
     height = common.limit(top + height, [0], [unitData[0]]) - top;
-    start = common.limit(start, [unitData[2]], [unitData[3]]);
-    end = common.limit(end, [unitData[2]], [unitData[3]]);
+    start = common.limitDate(start, unitData[2], unitData[3]);
+    end = common.limitDate(end, unitData[2], unitData[3]);
 
     return [top, height, start, end];
 };
@@ -15669,26 +15821,28 @@ TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) 
  * Get function to calculate guide element UI data from supplied units
  * @param {number} viewHeight - total height of view's container element
  * @param {number} hourLength - hour length that rendered in time view
- * @param {number} todayStart - time for view's start date
+ * @param {TZDate} todayStart - time for view's start date
  * @returns {function} UI data calculator function
  */
 TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength, todayStart) {
-    var todayEnd = Number(datetime.end(new TZDate(Number(todayStart))));
+    var todayStartTime = todayStart;
+    var todayEndTime = datetime.end(todayStart);
 
     /**
-     * Get top, time value from schedule dat
+     * Get top, time value from schedule data
      * @param {object} scheduleData - schedule data object
      * @returns {number[]} top, time
      */
     function getStyleData(scheduleData) {
+        var minMinutes = 30;
         var gridY = scheduleData.nearestGridY,
             gridTimeY = scheduleData.nearestGridTimeY,
-            gridEndTimeY = scheduleData.nearestGridEndTimeY || gridTimeY + MIN30,
+            gridEndTimeY = scheduleData.nearestGridEndTimeY || new TZDate(gridTimeY).addMinutes(minMinutes),
             top, startTime, endTime;
 
         top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);
-        startTime = common.limit(gridTimeY, [todayStart], [todayEnd]);
-        endTime = common.limit(gridEndTimeY, [todayStart], [todayEnd]);
+        startTime = common.limitDate(gridTimeY, todayStartTime, todayEndTime);
+        endTime = common.limitDate(gridEndTimeY, todayStartTime, todayEndTime);
 
         return [top, startTime, endTime];
     }
@@ -15702,15 +15856,15 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
  */
 TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
     var relatedView = dragStartEventData.relatedView,
-        hourStart = datetime.millisecondsFrom('hour', dragStartEventData.hourStart),
+        hourStart = datetime.millisecondsFrom('hour', dragStartEventData.hourStart) || 0,
         unitData, styleFunc, styleData, result, top, height, start, end;
 
     unitData = this._styleUnit = this._getUnitData(relatedView);
     styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
     styleData = this._styleStart = styleFunc(dragStartEventData);
 
-    start = styleData[1] + hourStart;
-    end = styleData[2] + hourStart || (start + MIN30);
+    start = new TZDate(styleData[1]).addMinutes(datetime.minutesFromHours(hourStart));
+    end = new TZDate(styleData[2]).addMinutes(datetime.minutesFromHours(hourStart));
     top = styleData[0];
     height = (unitData[4] * (end - start) / MIN60);
 
@@ -15731,6 +15885,7 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
  * @param {object} dragEventData - drag schedule data.
  */
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
+    var minutes30 = 30;
     var styleFunc = this._styleFunc,
         unitData = this._styleUnit,
         startStyle = this._styleStart,
@@ -15751,14 +15906,14 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
             startStyle[0],
             (endStyle[0] - startStyle[0]) + heightOfHalfHour,
             startStyle[1],
-            (endStyle[1] + MIN30)
+            new TZDate(endStyle[1]).addMinutes(minutes30)
         );
     } else {
         result = this._limitStyleData(
             endStyle[0],
             (startStyle[0] - endStyle[0]) + heightOfHalfHour,
             endStyle[1],
-            (startStyle[1] + MIN30)
+            new TZDate(startStyle[1]).addMinutes(minutes30)
         );
         result.push(true);
     }
@@ -16040,15 +16195,15 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
     }
 
     timeDiff -= datetime.millisecondsFrom('minutes', 30);
-    newStarts = new TZDate(schedule.getStarts().getTime() + timeDiff);
-    newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
+    newStarts = new TZDate(schedule.getStarts()).addMilliseconds(timeDiff);
+    newEnds = new TZDate(schedule.getEnds()).addMilliseconds(timeDiff);
 
     if (currentView) {
         dateDiff = currentView.getDate() - relatedView.getDate();
     }
 
-    newStarts = new TZDate(newStarts.getTime() + dateDiff);
-    newEnds = new TZDate(newEnds.getTime() + dateDiff);
+    newStarts.addMilliseconds(dateDiff);
+    newEnds.addMilliseconds(dateDiff);
 
     /**
      * @event TimeMove#beforeUpdateSchedule
@@ -16091,12 +16246,12 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        scheduleData.timeY + datetime.millisecondsFrom('hour', 0.5)
+        new TZDate(scheduleData.timeY).addMinutes(30)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+        new TZDate(scheduleData.nearestGridTimeY).addMinutes(30)
     ];
 
     this._updateSchedule(scheduleData);
@@ -16353,7 +16508,7 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         dragStartEventData.model
     );
 
-    modelDuration = this._model.duration().getTime();
+    modelDuration = this._model.duration();
     modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
     goingDuration = datetime.millisecondsFrom('minutes', this._model.goingDuration);
     comingDuration = datetime.millisecondsFrom('minutes', this._model.comingDuration);
@@ -16384,7 +16539,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         hourLength = viewOptions.hourEnd - viewOptions.hourStart,
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
-        timeDiff = dragEventData.nearestGridTimeY - this._lastDrag.nearestGridTimeY,
+        gridDiff = dragEventData.nearestGridY - this._lastDrag.nearestGridY,
         bottomLimit,
         top;
 
@@ -16404,8 +16559,8 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.min(top, bottomLimit);
 
     // update time
-    this._model.start = new TZDate(this._model.getStarts().getTime() + timeDiff);
-    this._model.end = new TZDate(this._model.getEnds().getTime() + timeDiff);
+    this._model.start = new TZDate(this._model.getStarts()).addMinutes(datetime.minutesFromHours(gridDiff));
+    this._model.end = new TZDate(this._model.getEnds()).addMinutes(datetime.minutesFromHours(gridDiff));
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model, this._viewModel);
@@ -16644,14 +16799,14 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
 
     baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
-    newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
+    newEnds = new TZDate(schedule.getEnds()).addMilliseconds(timeDiff);
 
     if (newEnds > dateEnd) {
-        newEnds = new TZDate(dateEnd.getTime());
+        newEnds = new TZDate(dateEnd);
     }
 
     if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new TZDate(schedule.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
+        newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
     }
 
     /**
@@ -16694,12 +16849,12 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        scheduleData.timeY + datetime.millisecondsFrom('hour', 0.5)
+        new TZDate(scheduleData.timeY).addMinutes(30)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+        scheduleData.nearestGridTimeY.addMinutes(30)
     ];
 
     this._updateSchedule(scheduleData);
@@ -16930,7 +17085,7 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         // hourLength : viewHeight = gridYOffset : X;
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
         goingDuration = this._schedule.goingDuration,
-        modelDuration = this._schedule.duration().getTime() / datetime.MILLISECONDS_PER_MINUTES,
+        modelDuration = this._schedule.duration() / datetime.MILLISECONDS_PER_MINUTES,
         comingDuration = this._schedule.comingDuration,
         minutesLength = hourLength * 60,
         timeHeight,
@@ -17249,9 +17404,13 @@ Schedule.prototype.setAllDayPeriod = function(start, end) {
     // If it is an all-day schedule, only the date information of the string is used.
     if (util.isString(start)) {
         start = datetime.parse(start.substring(0, 10));
+    } else {
+        start = new TZDate(start || Date.now());
     }
     if (util.isString(end)) {
         end = datetime.parse(end.substring(0, 10));
+    } else {
+        end = new TZDate(end || this.start);
     }
 
     this.start = start;
@@ -17349,9 +17508,9 @@ Schedule.prototype.duration = function() {
         duration;
 
     if (this.isAllDay) {
-        duration = new TZDate(datetime.end(end) - datetime.start(start));
+        duration = datetime.end(end) - datetime.start(start);
     } else {
-        duration = new TZDate(end - start);
+        duration = end - start;
     }
 
     return duration;
@@ -18348,11 +18507,11 @@ Month.prototype.viewName = 'month';
 
 /**
  * Get calendar array by supplied date
- * @param {string} renderMonthStr - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
+ * @param {string} renderMonth - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
  * @returns {array.<Date[]>} calendar array
  */
-Month.prototype._getMonthCalendar = function(renderMonthStr) {
-    var date = datetime.parse(renderMonthStr) || datetime.parse(renderMonthStr + '-01');
+Month.prototype._getMonthCalendar = function(renderMonth) {
+    var date = new TZDate(renderMonth);
     var startDayOfWeek = this.options.startDayOfWeek || 0;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
     var workweek = this.options.workweek || false;
@@ -18401,8 +18560,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     this.children.clear();
 
     util.forEach(calendar, function(weekArr) {
-        var start = new TZDate(Number(weekArr[0])),
-            end = new TZDate(Number(weekArr[weekArr.length - 1])),
+        var start = new TZDate(weekArr[0]),
+            end = new TZDate(weekArr[weekArr.length - 1]),
             weekdayViewContainer,
             weekdayView;
 
@@ -18412,8 +18571,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
         weekdayView = new WeekdayInMonth({
             renderMonth: renderMonth,
             heightPercent: heightPercent,
-            renderStartDate: datetime.format(start, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(end, 'YYYY-MM-DD'),
+            renderStartDate: start,
+            renderEndDate: end,
             narrowWeekend: narrowWeekend,
             startDayOfWeek: startDayOfWeek,
             visibleWeeksCount: visibleWeeksCount,
@@ -18492,8 +18651,8 @@ Month.prototype.render = function() {
     baseViewModel.panelHeight = vLayout.panels[1].getHeight();
 
     this.children.each(function(childView) {
-        var start = datetime.parse(childView.options.renderStartDate);
-        var end = datetime.parse(childView.options.renderEndDate);
+        var start = datetime.start(childView.options.renderStartDate);
+        var end = datetime.start(childView.options.renderEndDate);
         var eventsInDateRange = controller.findByDateRange(
             datetime.start(start),
             datetime.end(end),
@@ -18606,6 +18765,7 @@ module.exports = Month;
 
 
 var OUT_PADDING = 5;
+var VIEW_MIN_WIDTH = 280;
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js"),
@@ -18745,6 +18905,8 @@ More.prototype.render = function(viewModel) {
     var styles = this._getStyles(this.theme);
     var maxVisibleSchedulesInLayer = 10;
     var height = '';
+    var isLastRow = weekItem.parentElement.lastElementChild === weekItem;
+    var isLastCol = target.parentElement.lastElementChild === target;
 
     this._viewModel = util.extend(viewModel, {
         scheduleGutter: opt.scheduleGutter,
@@ -18754,6 +18916,7 @@ More.prototype.render = function(viewModel) {
         styles: styles
     });
 
+    width = Math.max(width, VIEW_MIN_WIDTH);
     height = parseInt(styles.titleHeight, 10);
     height += parseInt(styles.titleMarginBottom, 10);
     if (viewModel.schedules.length <= maxVisibleSchedulesInLayer) {
@@ -18777,14 +18940,26 @@ More.prototype.render = function(viewModel) {
     }
 
     layer.setContent(tmpl(viewModel));
-    if (weekItem.parentElement.lastElementChild === weekItem) {
+
+    if (isLastRow && isLastCol) {
+        layer.setLTRB({
+            right: 0,
+            bottom: 0
+        });
+    } else if (isLastRow && !isLastCol) {
         layer.setLTRB({
             left: pos[0],
             bottom: 0
         });
+    } else if (!isLastRow && isLastCol) {
+        layer.setLTRB({
+            right: 0,
+            top: pos[1]
+        });
     } else {
         layer.setPosition(pos[0], pos[1]);
     }
+
     layer.setSize(width, height);
 
     layer.show();
@@ -18848,6 +19023,7 @@ More.prototype._getStyles = function(theme) {
             listHeight += ' - ' + styles.titleMarginBottom;
         }
         listHeight += ')';
+
         styles.listHeight = listHeight;
     }
 
@@ -19030,14 +19206,14 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
 /**
  * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
  * @param {Array} dates - 날짜정보 배열
- * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+ * @param {TZDate} renderMonth - 현재 렌더링중인 월 (YYYYMM)
  * @param {Theme} theme - theme instance
  */
-function setIsOtherMonthFlag(dates, renderMonthStr, theme) {
-    var renderMonth = Number(renderMonthStr.substring(5));
+function setIsOtherMonthFlag(dates, renderMonth, theme) {
+    var month = renderMonth.getMonth() + 1;
 
     util.forEach(dates, function(dateObj) {
-        var isOtherMonth = dateObj.month !== renderMonth;
+        var isOtherMonth = dateObj.month !== month;
         dateObj.isOtherMonth = isOtherMonth;
 
         if (isOtherMonth) {
@@ -19069,12 +19245,13 @@ var View = __webpack_require__(/*! ../../view/view */ "./src/js/view/view.js");
 var FloatingLayer = __webpack_require__(/*! ../../common/floatingLayer */ "./src/js/common/floatingLayer.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var DatePicker = __webpack_require__(/*! tui-date-picker */ "tui-date-picker");
-var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
-var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
-    domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js"),
-    domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js"),
-    common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
+var timezone = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js");
+var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
+var domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
+var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
+var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
 var tmpl = __webpack_require__(/*! ../template/popup/scheduleCreationPopup.hbs */ "./src/js/view/template/popup/scheduleCreationPopup.hbs");
+var TZDate = timezone.Date;
 var MAX_WEEK_OF_MONTH = 6;
 var ARROW_WIDTH_HALF = 8;
 
@@ -19309,8 +19486,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = new TZDate(this.rangePicker.getStartDate());
-    endDate = new TZDate(this.rangePicker.getEndDate());
+    startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
+    endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
 
     if (!title.value) {
         title.focus();
@@ -19328,12 +19505,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
 
     if (isAllDay) {
-        startDate.setHours(0);
-        startDate.setMinutes(0);
-        startDate.setSeconds(0);
-        endDate.setHours(23);
-        endDate.setMinutes(59);
-        endDate.setSeconds(59);
+        startDate.setHours(0, 0, 0);
+        endDate.setHours(23, 59, 59);
     }
 
     start = new TZDate(startDate);
@@ -19377,8 +19550,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
             raw: {
                 class: isPrivate ? 'private' : 'public'
             },
-            start: new TZDate(startDate),
-            end: new TZDate(endDate),
+            start: start,
+            end: end,
             isAllDay: isAllDay,
             state: state.innerText
         });
@@ -19415,10 +19588,12 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
         boxElement = guideElements.length ? guideElements[0] : null;
     }
     layer.setContent(tmpl(viewModel));
-    this._createDatepicker(viewModel.start, viewModel.end);
+    this._createDatepicker(viewModel.start, viewModel.end, viewModel.isAllDay);
     layer.show();
 
-    this._setPopupPositionAndArrowDirection(boxElement.getBoundingClientRect());
+    if (boxElement) {
+        this._setPopupPositionAndArrowDirection(boxElement.getBoundingClientRect());
+    }
 
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
@@ -19615,22 +19790,24 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
  * Create date range picker using start date and end date
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
+ * @param {boolean} isAllDay - isAllDay
  */
-ScheduleCreationPopup.prototype._createDatepicker = function(start, end) {
+ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDay) {
     var cssPrefix = config.cssPrefix;
+
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
-            date: new TZDate(start.getTime()).toDate(),
+            date: new TZDate(start).toDate(),
             input: '#' + cssPrefix + 'schedule-start-date',
             container: '#' + cssPrefix + 'startpicker-container'
         },
         endpicker: {
-            date: new TZDate(end.getTime()).toDate(),
+            date: new TZDate(end).toDate(),
             input: '#' + cssPrefix + 'schedule-end-date',
             container: '#' + cssPrefix + 'endpicker-container'
         },
-        format: 'yyyy-MM-dd HH:mm',
-        timepicker: {
+        format: isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm',
+        timepicker: isAllDay ? null : {
             showMeridiem: false
         },
         usageStatistics: true
@@ -23355,7 +23532,6 @@ var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
-var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 var View = __webpack_require__(/*! ../view */ "./src/js/view/view.js");
 var timeTmpl = __webpack_require__(/*! ../template/week/time.hbs */ "./src/js/view/template/week/time.hbs");
 
@@ -23419,8 +23595,13 @@ Time.prototype._parseDateGroup = function(str) {
     var y = parseInt(str.substr(0, 4), 10),
         m = parseInt(str.substr(4, 2), 10),
         d = parseInt(str.substr(6, 2), 10);
+    var date = datetime.start();
 
-    return new TZDate(y, m - 1, d);
+    date.setFullYear(y);
+    date.setMonth(m - 1);
+    date.setDate(d);
+
+    return datetime.start(date);
 };
 
 /**
@@ -23459,7 +23640,7 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
     // containerHeight : milliseconds in day = x : schedule's milliseconds
     var top = (baseHeight * offsetStart) / baseMS;
-    var modelDuration = viewModel.duration().getTime();
+    var modelDuration = viewModel.duration();
     var height;
     var duration;
     var goingDurationHeight;
@@ -23690,7 +23871,7 @@ var SIXTY_MINUTES = 60;
 function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     var hourStart = opt.hourStart;
     var hourEnd = opt.hourEnd;
-    var renderEndDate = datetime.parse(opt.renderEndDate);
+    var renderEndDate = new TZDate(opt.renderEndDate);
     var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
     var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
     var now = new TZDate();
@@ -23905,8 +24086,6 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     var timezones = opt.timezones;
     var viewModel;
 
-    now = now || new TZDate();
-
     util.forEach(range, function(date, index) {
         if (datetime.isSameDate(now, date)) {
             todaymarkerLeft = grids[index] ? grids[index].left : 0;
@@ -24003,7 +24182,7 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var grids = viewModel.grids;
     var range = viewModel.range;
     var opt = this.options;
-    var baseViewModel = this._getHourmarkerViewModel(new TZDate(), grids, range);
+    var baseViewModel = this._getHourmarkerViewModel(new TZDate().toLocalTime(), grids, range);
     var timezonesCollapsed = util.pick(viewModel, 'state', 'timezonesCollapsed');
     var styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
@@ -24350,20 +24529,6 @@ var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/t
 var View = __webpack_require__(/*! ../view */ "./src/js/view/view.js");
 
 /**
- * FullCalendar uses only date information (YYYY-MM-DD)
- * SplitTimeCalendar uses a string containing time zone information, so it branches.
- * @param {String} dateString - date string
- * @returns {TZDate}
- */
-function parseRangeDateString(dateString) {
-    if (dateString.length === 10) {
-        return datetime.parse(dateString);
-    }
-
-    return new TZDate(dateString);
-}
-
-/**
  * @constructor
  * @param {Base.Week} controller The controller mixin part.
  * @param {object} options View options
@@ -24448,8 +24613,8 @@ Week.prototype.render = function() {
         state = this.state;
     var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 
-    renderStartDate = parseRangeDateString(options.renderStartDate);
-    renderEndDate = parseRangeDateString(options.renderEndDate);
+    renderStartDate = new TZDate(options.renderStartDate);
+    renderEndDate = new TZDate(options.renderEndDate);
 
     range = datetime.range(
         datetime.start(renderStartDate),
