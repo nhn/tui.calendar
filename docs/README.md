@@ -1,5 +1,5 @@
 ## Demo
-[Here is our demo page](https://nhn.github.io/tui.calendar/latest/tutorial-example01-basic.html)
+[Here is our demo page](https://nhn.github.io/tui.calendar/latest/tutorial-example00-basic)
 
 ## Tutorials
 * [Getting Started](getting-started.md)
