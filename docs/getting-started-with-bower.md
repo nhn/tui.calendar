@@ -35,7 +35,7 @@ Place a `<div></div>` where you want TOAST UI Calendar rendered.
 
 ### javascript
 
-Initialize a calendar with options you want. Find out more options in [here](https://nhnent.github.io/tui.calendar/latest/global.html#Options)
+Initialize a calendar with options you want. Find out more options in [here](https://nhn.github.io/tui.calendar/latest/Options)
 
 ```javascript
 var cal = new tui.Calendar('#calendar', {

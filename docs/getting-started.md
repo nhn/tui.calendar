@@ -34,7 +34,7 @@ import Calendar from 'tui-calendar'; /* ES6 */
 import "tui-calendar/dist/tui-calendar.css";
 ```
 
-Then you can create a calendar instance with [options](https://nhnent.github.io/tui.calendar/latest/global.html#Options) to set configuration.
+Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/latest/Options) to set configuration.
 
 ```javascript
 var calendar = new Calendar('#calendar', {
@@ -56,7 +56,7 @@ var calendar = new Calendar('#calendar', {
 
 Create schedules. Update a schedule, Delete a schedule.
 
-Find out `Schedule` object in [here](https://nhnent.github.io/tui.calendar/latest/global.html#Schedule)
+Find out `Schedule` object in [here](https://nhn.github.io/tui.calendar/latest/Schedule)
 
 #### Create schedules
 
@@ -275,7 +275,7 @@ calendar.changeView(calendar.getViewName(), true);
 
 ### Calendar options
 
-Find out more options in [here](https://nhnent.github.io/tui.calendar/latest/global.html#Options)
+Find out more options in [here](https://nhn.github.io/tui.calendar/latest/Options)
 
 ```js
 var calendar = new Calendar('#calendar', {
