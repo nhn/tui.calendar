@@ -5,6 +5,7 @@
 'use strict';
 
 var OUT_PADDING = 5;
+var VIEW_MIN_WIDTH = 280;
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     domevent = require('../../common/domevent'),
@@ -144,6 +145,8 @@ More.prototype.render = function(viewModel) {
     var styles = this._getStyles(this.theme);
     var maxVisibleSchedulesInLayer = 10;
     var height = '';
+    var isLastRow = weekItem.parentElement.lastElementChild === weekItem;
+    var isLastCol = target.parentElement.lastElementChild === target;
 
     this._viewModel = util.extend(viewModel, {
         scheduleGutter: opt.scheduleGutter,
@@ -153,6 +156,7 @@ More.prototype.render = function(viewModel) {
         styles: styles
     });
 
+    width = Math.max(width, VIEW_MIN_WIDTH);
     height = parseInt(styles.titleHeight, 10);
     height += parseInt(styles.titleMarginBottom, 10);
     if (viewModel.schedules.length <= maxVisibleSchedulesInLayer) {
@@ -176,14 +180,26 @@ More.prototype.render = function(viewModel) {
     }
 
     layer.setContent(tmpl(viewModel));
-    if (weekItem.parentElement.lastElementChild === weekItem) {
+
+    if (isLastRow && isLastCol) {
+        layer.setLTRB({
+            right: 0,
+            bottom: 0
+        });
+    } else if (isLastRow && !isLastCol) {
         layer.setLTRB({
             left: pos[0],
             bottom: 0
         });
+    } else if (!isLastRow && isLastCol) {
+        layer.setLTRB({
+            right: 0,
+            top: pos[1]
+        });
     } else {
         layer.setPosition(pos[0], pos[1]);
     }
+
     layer.setSize(width, height);
 
     layer.show();
@@ -247,6 +263,7 @@ More.prototype._getStyles = function(theme) {
             listHeight += ' - ' + styles.titleMarginBottom;
         }
         listHeight += ')';
+
         styles.listHeight = listHeight;
     }
 
