@@ -79,6 +79,7 @@ var mmin = Math.min;
  * @property {function} [schedule] - The week/day schedule template function(When the schedule category attribute is milestone, task, or all day)
  * @property {function} [collapseBtnTitle] - The week/day (exceed schedule more view) collapse button title template function
  * @property {function} [timezoneDisplayLabel] - The timezone display label template function in time grid
+ * @property {function} [timegridDisplayPrimayTime] - Deprecated: use 'timegridDisplayPrimaryTime'
  * @property {function} [timegridDisplayPrimaryTime] - The display label template function of primary timezone in time grid
  * @property {function} [timegridDisplayTime] - The display time template function in time grid
  * @property {function} [timegridCurrentTime] - The current time template function in time grid
@@ -211,7 +212,7 @@ var mmin = Math.min;
  *
  *             return tpl;
  *         },
- *         collapseBtnTitle: function() { // ??? 어떤 템플릿인가요??
+ *         collapseBtnTitle: function() {
  *             return '<span class="tui-full-calendar-icon tui-full-calendar-ic-arrow-solid-top"></span>';
  *         },
  *         timezoneDisplayLabel: function(timezoneOffset, displayLabel) {
@@ -225,6 +226,18 @@ var mmin = Math.min;
  *             }
  *
  *             return displayLabel;
+ *         },
+ *         timegridDisplayPrimayTime: function(time) {
+ *             // will be deprecated. use 'timegridDisplayPrimaryTime'
+ *             var meridiem = 'am';
+ *             var hour = time.hour;
+ *
+ *             if (time.hour > 12) {
+ *                 meridiem = 'pm';
+ *                 hour = time.hour - 12;
+ *             }
+ *
+ *             return hour + ' ' + meridiem;
  *         },
  *         timegridDisplayPrimaryTime: function(time) {
  *             var meridiem = 'am';
