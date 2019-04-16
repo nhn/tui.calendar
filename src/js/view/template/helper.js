@@ -409,16 +409,8 @@ Handlebars.registerHelper({
     },
 
     'timegridDisplayPrimayTime-tmpl': function(time) {
-        /* TODO: 1.11.0 이후 버전부터 삭제 필요 (will be deprecate) */
-        var meridiem = 'am';
-        var hour = time.hour;
-
-        if (time.hour > 12) {
-            meridiem = 'pm';
-            hour = time.hour - 12;
-        }
-
-        return hour + ' ' + meridiem;
+        /* TODO: 삭제 필요 (will be deprecate) */
+        return this['timegridDisplayPrimaryTime-tmpl']();
     },
 
     'timegridDisplayPrimaryTime-tmpl': function(time) {
