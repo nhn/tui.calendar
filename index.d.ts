@@ -248,6 +248,7 @@ declare namespace tuiCalendar {
         disableDblClick?: boolean;
         disableClick?: boolean;
         isReadOnly?: boolean;
+        usageStatistics?: boolean;
     }
 
     class Calendar {
