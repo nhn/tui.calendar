@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.0-rc | Tue Apr 16 2019
+ * @version 1.12.0-rc.1 | Wed Apr 17 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -8128,6 +8128,7 @@ var mmin = Math.min;
  * @property {function} [schedule] - The week/day schedule template function(When the schedule category attribute is milestone, task, or all day)
  * @property {function} [collapseBtnTitle] - The week/day (exceed schedule more view) collapse button title template function
  * @property {function} [timezoneDisplayLabel] - The timezone display label template function in time grid
+ * @property {function} [timegridDisplayPrimayTime] - Deprecated: use 'timegridDisplayPrimaryTime'
  * @property {function} [timegridDisplayPrimaryTime] - The display label template function of primary timezone in time grid
  * @property {function} [timegridDisplayTime] - The display time template function in time grid
  * @property {function} [timegridCurrentTime] - The current time template function in time grid
@@ -8260,7 +8261,7 @@ var mmin = Math.min;
  *
  *             return tpl;
  *         },
- *         collapseBtnTitle: function() { // ??? 어떤 템플릿인가요??
+ *         collapseBtnTitle: function() {
  *             return '<span class="tui-full-calendar-icon tui-full-calendar-ic-arrow-solid-top"></span>';
  *         },
  *         timezoneDisplayLabel: function(timezoneOffset, displayLabel) {
@@ -8274,6 +8275,18 @@ var mmin = Math.min;
  *             }
  *
  *             return displayLabel;
+ *         },
+ *         timegridDisplayPrimayTime: function(time) {
+ *             // will be deprecated. use 'timegridDisplayPrimaryTime'
+ *             var meridiem = 'am';
+ *             var hour = time.hour;
+ *
+ *             if (time.hour > 12) {
+ *                 meridiem = 'pm';
+ *                 hour = time.hour - 12;
+ *             }
+ *
+ *             return hour + ' ' + meridiem;
  *         },
  *         timegridDisplayPrimaryTime: function(time) {
  *             var meridiem = 'am';
@@ -20544,16 +20557,8 @@ Handlebars.registerHelper({
     },
 
     'timegridDisplayPrimayTime-tmpl': function(time) {
-        /* TODO: 1.11.0 이후 버전부터 삭제 필요 (will be deprecate) */
-        var meridiem = 'am';
-        var hour = time.hour;
-
-        if (time.hour > 12) {
-            meridiem = 'pm';
-            hour = time.hour - 12;
-        }
-
-        return hour + ' ' + meridiem;
+        /* TODO: 삭제 필요 (will be deprecate) */
+        return this['timegridDisplayPrimaryTime-tmpl']();
     },
 
     'timegridDisplayPrimaryTime-tmpl': function(time) {
@@ -22316,7 +22321,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + ";\">\n                    <span style=\""
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hidden : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">"
-    + ((stack1 = (helpers["timegridDisplayPrimaryTime-tmpl"] || (depth0 && depth0["timegridDisplayPrimaryTime-tmpl"]) || alias2).call(alias1,depth0,{"name":"timegridDisplayPrimaryTime-tmpl","hash":{},"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers["timegridDisplayPrimayTime-tmpl"] || (depth0 && depth0["timegridDisplayPrimayTime-tmpl"]) || alias2).call(alias1,depth0,{"name":"timegridDisplayPrimayTime-tmpl","hash":{},"data":data})) != null ? stack1 : "")
     + "</span>\n                </div>\n";
 },"6":function(container,depth0,helpers,partials,data) {
     return "display:none";
