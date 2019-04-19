@@ -228,9 +228,10 @@ TZDate.prototype.setWithRaw = function(y, M, d, h, m, s, ms) {
  */
 TZDate.prototype.toLocalTime = function() {
     var time = this.getTime();
-    var diff = time - this.getUTCTime();
+    var utcTime = this.getUTCTime();
+    var diff = time - utcTime;
 
-    return new TZDate(time + diff);
+    return new TZDate(utcTime + diff);
 };
 
 getterMethods.forEach(function(methodName) {

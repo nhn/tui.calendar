@@ -38,7 +38,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     var renderEndDate = new TZDate(opt.renderEndDate);
     var shiftByOffset = parseInt(timezoneOffset / SIXTY_MINUTES, 10);
     var shiftMinutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
-    var now = new TZDate();
+    var now = new TZDate().toLocalTime();
     var nowMinutes = now.getMinutes();
     var hoursRange = util.range(0, 24);
     var nowAroundHours = null;
@@ -299,7 +299,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
     var timezoneViewModel = [];
     var collapsed = timezonesCollapsed;
     var width = collapsed ? 100 : 100 / timezonesLength;
-    var now = new TZDate();
+    var now = new TZDate().toLocalTime();
     var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 
     util.forEach(timezones, function(timezone, index) {
