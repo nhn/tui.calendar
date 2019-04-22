@@ -231,7 +231,7 @@ TZDate.prototype.toLocalTime = function() {
     var utcTime = this.getUTCTime();
     var diff = time - utcTime;
 
-    return new TZDate(utcTime + diff);
+    return new TZDate(utcTime - diff);
 };
 
 getterMethods.forEach(function(methodName) {
