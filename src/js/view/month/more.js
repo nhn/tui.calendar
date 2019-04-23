@@ -111,8 +111,8 @@ More.prototype._getRenderPosition = function(target, weekItem) {
     var left = pos[0] - OUT_PADDING;
     var top = pos[1] - OUT_PADDING;
 
-    left = common.ratio(containerSize[0], 100, left) + '%';
-    top = common.ratio(containerSize[1], 100, top) + '%';
+    left = common.ratio(containerSize[0], 100, left);
+    top = common.ratio(containerSize[1], 100, top);
 
     return [left, top];
 };
@@ -150,6 +150,8 @@ More.prototype.render = function(viewModel) {
     var calHeight = 0;
     var isOverWidth = false;
     var isOverHeight = false;
+    var leftPos = pos[0];
+    var topPos = pos[1];
 
     this._viewModel = util.extend(viewModel, {
         scheduleGutter: opt.scheduleGutter,
@@ -184,10 +186,12 @@ More.prototype.render = function(viewModel) {
 
     layer.setContent(tmpl(viewModel));
 
-    calWidth = Number(pos[0].split('%')[0]) * containerSize[0] / 100;
-    calHeight = Number(pos[1].split('%')[0]) * containerSize[1] / 100;
+    calWidth = leftPos * containerSize[0] / 100;
+    calHeight = topPos * containerSize[1] / 100;
     isOverWidth = calWidth + width >= containerSize[0];
     isOverHeight = calHeight + height >= containerSize[1];
+    leftPos = leftPos + '%';
+    topPos = topPos + '%';
 
     if (isOverWidth && isOverHeight) {
         layer.setLTRB({
@@ -196,16 +200,16 @@ More.prototype.render = function(viewModel) {
         });
     } else if (!isOverWidth && isOverHeight) {
         layer.setLTRB({
-            left: pos[0],
+            left: leftPos,
             bottom: 0
         });
     } else if (isOverWidth && !isOverHeight) {
         layer.setLTRB({
             right: 0,
-            top: pos[1]
+            top: topPos
         });
     } else {
-        layer.setPosition(pos[0], pos[1]);
+        layer.setPosition(leftPos, topPos);
     }
 
     layer.setSize(width, height);
