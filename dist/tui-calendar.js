@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.0-rc.3 | Mon Apr 22 2019
+ * @version 1.12.0-rc.3 | Tue Apr 23 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -18919,8 +18919,13 @@ More.prototype.render = function(viewModel) {
     var styles = this._getStyles(this.theme);
     var maxVisibleSchedulesInLayer = 10;
     var height = '';
-    var isLastRow = weekItem.parentElement.lastElementChild === weekItem;
-    var isLastCol = target.parentElement.lastElementChild === target;
+    // var isLastRow = weekItem.parentElement.lastElementChild === weekItem;
+    // var isLastCol = target.parentElement.lastElementChild === target;
+    var containerSize = domutil.getSize(this.container);
+    var calWidth = 0;
+    var calHeight = 0;
+    var isOverWidth = false;
+    var isOverHeight = false;
 
     this._viewModel = util.extend(viewModel, {
         scheduleGutter: opt.scheduleGutter,
@@ -18955,17 +18960,22 @@ More.prototype.render = function(viewModel) {
 
     layer.setContent(tmpl(viewModel));
 
-    if (isLastRow && isLastCol) {
+    calWidth = Number(pos[0].split('%')[0]) * containerSize[0] / 100;
+    calHeight = Number(pos[1].split('%')[0]) * containerSize[1] / 100;
+    isOverWidth = calWidth + width >= containerSize[0];
+    isOverHeight = calHeight + height >= containerSize[1];
+
+    if (isOverWidth && isOverHeight) {
         layer.setLTRB({
             right: 0,
             bottom: 0
         });
-    } else if (isLastRow && !isLastCol) {
+    } else if (!isOverWidth && isOverHeight) {
         layer.setLTRB({
             left: pos[0],
             bottom: 0
         });
-    } else if (!isLastRow && isLastCol) {
+    } else if (isOverWidth && !isOverHeight) {
         layer.setLTRB({
             right: 0,
             top: pos[1]
