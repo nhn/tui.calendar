@@ -81,14 +81,14 @@ describe('Calendar', function() {
     it('getWeekDayRange() can calculate start, end date by supplied date', function() {
         // If you calculate 18(Wed) as the start of Sunday, it is 15(Sun) ~ 21(Sat)
         expect(inst._getWeekDayRange(new TZDate('2015-11-18'), 0)).toEqual([
-            new TZDate('2015-11-15'),
-            new TZDate('2015-11-21')
+            new TZDate(2015, 10, 15),
+            new TZDate(2015, 10, 21)
         ]);
 
         // 17(Tue) is calculated on Wednesday, and it is 11(Wed) ~ 17(Tue)
         expect(inst._getWeekDayRange(new TZDate('2015-11-17'), 3)).toEqual([
-            new TZDate('2015-11-11'),
-            new TZDate('2015-11-17')
+            new TZDate(2015, 10, 11),
+            new TZDate(2015, 10, 17)
         ]);
     });
 
@@ -96,7 +96,7 @@ describe('Calendar', function() {
         it('can change render date range for calendar.', function() {
             inst.setDate('2015-11-01');
 
-            expect(inst.getDate()).toEqual(new TZDate('2015-11-01T00:00:00+09:00'));
+            expect(inst.getDate().getTime()).toEqual(new TZDate('2015-11-01T00:00:00').getTime());
         });
     });
 

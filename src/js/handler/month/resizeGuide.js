@@ -81,9 +81,9 @@ MonthResizeGuide.prototype._onDragStart = function(dragStartEvent) {
         isResizeMode: true
     }, this.monthResize.monthView);
 
-    this._hideScheduleBlocks(dragStartEvent.model.cid());
-
     this.guide.start(dragStartEvent);
+
+    this._hideScheduleBlocks(dragStartEvent.model.cid());
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('resizing-x'));

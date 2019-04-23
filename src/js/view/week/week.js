@@ -12,20 +12,6 @@ var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 
 /**
- * FullCalendar uses only date information (YYYY-MM-DD)
- * SplitTimeCalendar uses a string containing time zone information, so it branches.
- * @param {String} dateString - date string
- * @returns {TZDate}
- */
-function parseRangeDateString(dateString) {
-    if (dateString.length === 10) {
-        return datetime.parse(dateString);
-    }
-
-    return new TZDate(dateString);
-}
-
-/**
  * @constructor
  * @param {Base.Week} controller The controller mixin part.
  * @param {object} options View options
@@ -110,8 +96,8 @@ Week.prototype.render = function() {
         state = this.state;
     var renderStartDate, renderEndDate, schedulesInDateRange, viewModel, grids, range;
 
-    renderStartDate = parseRangeDateString(options.renderStartDate);
-    renderEndDate = parseRangeDateString(options.renderEndDate);
+    renderStartDate = new TZDate(options.renderStartDate);
+    renderEndDate = new TZDate(options.renderEndDate);
 
     range = datetime.range(
         datetime.start(renderStartDate),

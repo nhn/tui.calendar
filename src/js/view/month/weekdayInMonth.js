@@ -161,14 +161,14 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
 /**
  * 현재 달이 아닌 날짜에 대해 isOtherMonth = true 플래그를 추가한다.
  * @param {Array} dates - 날짜정보 배열
- * @param {string} renderMonthStr - 현재 렌더링중인 월 (YYYYMM)
+ * @param {TZDate} renderMonth - 현재 렌더링중인 월 (YYYYMM)
  * @param {Theme} theme - theme instance
  */
-function setIsOtherMonthFlag(dates, renderMonthStr, theme) {
-    var renderMonth = Number(renderMonthStr.substring(5));
+function setIsOtherMonthFlag(dates, renderMonth, theme) {
+    var month = renderMonth.getMonth() + 1;
 
     util.forEach(dates, function(dateObj) {
-        var isOtherMonth = dateObj.month !== renderMonth;
+        var isOtherMonth = dateObj.month !== month;
         dateObj.isOtherMonth = isOtherMonth;
 
         if (isOtherMonth) {

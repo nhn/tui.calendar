@@ -8,7 +8,6 @@ var util = require('tui-code-snippet');
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
-var TZDate = require('../../common/timezone').Date;
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
 
@@ -72,8 +71,13 @@ Time.prototype._parseDateGroup = function(str) {
     var y = parseInt(str.substr(0, 4), 10),
         m = parseInt(str.substr(4, 2), 10),
         d = parseInt(str.substr(6, 2), 10);
+    var date = datetime.start();
 
-    return new TZDate(y, m - 1, d);
+    date.setFullYear(y);
+    date.setMonth(m - 1);
+    date.setDate(d);
+
+    return datetime.start(date);
 };
 
 /**
@@ -112,7 +116,7 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
     // containerHeight : milliseconds in day = x : schedule's milliseconds
     var top = (baseHeight * offsetStart) / baseMS;
-    var modelDuration = viewModel.duration().getTime();
+    var modelDuration = viewModel.duration();
     var height;
     var duration;
     var goingDurationHeight;

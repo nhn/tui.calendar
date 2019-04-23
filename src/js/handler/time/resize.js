@@ -205,14 +205,14 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
 
     baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
-    newEnds = new TZDate(schedule.getEnds().getTime() + timeDiff);
+    newEnds = new TZDate(schedule.getEnds()).addMilliseconds(timeDiff);
 
     if (newEnds > dateEnd) {
-        newEnds = new TZDate(dateEnd.getTime());
+        newEnds = new TZDate(dateEnd);
     }
 
     if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new TZDate(schedule.getStarts().getTime() + datetime.millisecondsFrom('minutes', 30));
+        newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
     }
 
     /**
@@ -255,12 +255,12 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        scheduleData.timeY + datetime.millisecondsFrom('hour', 0.5)
+        new TZDate(scheduleData.timeY).addMinutes(30)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY + datetime.millisecondsFrom('hour', 0.5)
+        scheduleData.nearestGridTimeY.addMinutes(30)
     ];
 
     this._updateSchedule(scheduleData);

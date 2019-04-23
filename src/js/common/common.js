@@ -137,6 +137,38 @@ module.exports = {
         return v;
     },
 
+    /**
+     * Limit supplied date base on `min`, `max`
+     * @param {TZDate} date - date
+     * @param {TZDate} min - min
+     * @param {TZDate} max - max
+     * @returns {TZDate} limited value
+     */
+    limitDate: function(date, min, max) {
+        if (date < min) {
+            return min;
+        }
+        if (date > max) {
+            return max;
+        }
+
+        return date;
+    },
+
+    /**
+     * Max value with TZDate type for timezone calculation
+     * @param {TZDate} d1 - date 1
+     * @param {TZDate} d2 - date 2
+     * @returns {TZDate}
+     */
+    maxDate: function(d1, d2) {
+        if (d1 > d2) {
+            return d1;
+        }
+
+        return d2;
+    },
+
     stripTags: function(str) {
         return str.replace(/<([^>]+)>/ig, '');
     },

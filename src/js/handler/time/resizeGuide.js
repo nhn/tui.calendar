@@ -172,7 +172,7 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         // hourLength : viewHeight = gridYOffset : X;
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
         goingDuration = this._schedule.goingDuration,
-        modelDuration = this._schedule.duration().getTime() / datetime.MILLISECONDS_PER_MINUTES,
+        modelDuration = this._schedule.duration() / datetime.MILLISECONDS_PER_MINUTES,
         comingDuration = this._schedule.comingDuration,
         minutesLength = hourLength * 60,
         timeHeight,

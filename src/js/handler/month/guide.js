@@ -9,7 +9,7 @@ var config = require('../../config'),
     common = require('../../common/common'),
     domutil = require('../../common/domutil'),
     datetime = require('../../common/datetime'),
-    dw = require('../../common/dw'),
+    TZDate = require('../../common/timezone').Date,
     tmpl = require('./guide.hbs');
 var mmax = Math.max,
     mmin = Math.min,
@@ -147,7 +147,7 @@ MonthGuide.prototype._getGuideElement = function(y) {
 
 /**
  * Get coordinate by supplied date in month
- * @param {Date} date - date to find coordinate
+ * @param {TZDate} date - date to find coordinate
  * @returns {number[]} coordinate (x, y)
  */
 MonthGuide.prototype._getCoordByDate = function(date) {
@@ -156,18 +156,17 @@ MonthGuide.prototype._getCoordByDate = function(date) {
         getIdxFromDiff = function(d1, d2) {
             return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
         },
-        monthStart = datetime.parse(weeks[0].options.renderStartDate),
+        monthStart = datetime.start(weeks[0].options.renderStartDate),
         isBefore = date < monthStart,
-        dateDW = dw(date),
-        startDW = dw(monthStart),
-        endDW = startDW.clone().addDate(isBefore ? -days : days),
-        x = getIdxFromDiff(dateDW.d, startDW.d),
+        start = new TZDate(monthStart),
+        end = new TZDate(monthStart).addDate(isBefore ? -days : days).addDate(-1),
+        x = getIdxFromDiff(date, start),
         y = 0;
 
-    while (!dateDW.isBetween(startDW, endDW)) {
-        startDW.addDate(isBefore ? -days : days);
-        endDW = startDW.clone().addDate(days);
-        x = getIdxFromDiff(dateDW.d, startDW.d);
+    while (!datetime.isBetweenWithDate(date, start, end)) {
+        start.addDate(isBefore ? -days : days);
+        end = new TZDate(start).addDate(days - 1);
+        x = getIdxFromDiff(date, start);
         y += (isBefore ? -1 : 1);
     }
 
@@ -213,7 +212,7 @@ MonthGuide.prototype.start = function(dragStartEvent) {
         model = dragStartEvent.model,
         x = dragStartEvent.x,
         y = dragStartEvent.y,
-        renderMonth = datetime.parse(this.view.options.renderMonth + '-01'),
+        renderMonth = new TZDate(this.view.options.renderMonth),
         temp;
 
     if (opt.isCreationMode) {

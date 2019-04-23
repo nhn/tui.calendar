@@ -8,12 +8,13 @@ var View = require('../../view/view');
 var FloatingLayer = require('../../common/floatingLayer');
 var util = require('tui-code-snippet');
 var DatePicker = require('tui-date-picker');
-var TZDate = require('../../common/timezone').Date;
-var config = require('../../config'),
-    domevent = require('../../common/domevent'),
-    domutil = require('../../common/domutil'),
-    common = require('../../common/common');
+var timezone = require('../../common/timezone');
+var config = require('../../config');
+var domevent = require('../../common/domevent');
+var domutil = require('../../common/domutil');
+var common = require('../../common/common');
 var tmpl = require('../template/popup/scheduleCreationPopup.hbs');
+var TZDate = timezone.Date;
 var MAX_WEEK_OF_MONTH = 6;
 var ARROW_WIDTH_HALF = 8;
 
@@ -248,8 +249,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = new TZDate(this.rangePicker.getStartDate());
-    endDate = new TZDate(this.rangePicker.getEndDate());
+    startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
+    endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
 
     if (!title.value) {
         title.focus();
@@ -267,12 +268,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
 
     if (isAllDay) {
-        startDate.setHours(0);
-        startDate.setMinutes(0);
-        startDate.setSeconds(0);
-        endDate.setHours(23);
-        endDate.setMinutes(59);
-        endDate.setSeconds(59);
+        startDate.setHours(0, 0, 0);
+        endDate.setHours(23, 59, 59);
     }
 
     start = new TZDate(startDate);
@@ -316,8 +313,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
             raw: {
                 class: isPrivate ? 'private' : 'public'
             },
-            start: new TZDate(startDate),
-            end: new TZDate(endDate),
+            start: start,
+            end: end,
             isAllDay: isAllDay,
             state: state.innerText
         });
@@ -354,10 +351,12 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
         boxElement = guideElements.length ? guideElements[0] : null;
     }
     layer.setContent(tmpl(viewModel));
-    this._createDatepicker(viewModel.start, viewModel.end);
+    this._createDatepicker(viewModel.start, viewModel.end, viewModel.isAllDay);
     layer.show();
 
-    this._setPopupPositionAndArrowDirection(boxElement.getBoundingClientRect());
+    if (boxElement) {
+        this._setPopupPositionAndArrowDirection(boxElement.getBoundingClientRect());
+    }
 
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
@@ -554,22 +553,24 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
  * Create date range picker using start date and end date
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
+ * @param {boolean} isAllDay - isAllDay
  */
-ScheduleCreationPopup.prototype._createDatepicker = function(start, end) {
+ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDay) {
     var cssPrefix = config.cssPrefix;
+
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
-            date: new TZDate(start.getTime()).toDate(),
+            date: new TZDate(start).toDate(),
             input: '#' + cssPrefix + 'schedule-start-date',
             container: '#' + cssPrefix + 'startpicker-container'
         },
         endpicker: {
-            date: new TZDate(end.getTime()).toDate(),
+            date: new TZDate(end).toDate(),
             input: '#' + cssPrefix + 'schedule-end-date',
             container: '#' + cssPrefix + 'endpicker-container'
         },
-        format: 'yyyy-MM-dd HH:mm',
-        timepicker: {
+        format: isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm',
+        timepicker: isAllDay ? null : {
             showMeridiem: false
         },
         usageStatistics: true

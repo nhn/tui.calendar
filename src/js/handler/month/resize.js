@@ -70,7 +70,7 @@ MonthResize.prototype.destroy = function() {
  */
 MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // You can not change the start date of the event. Only the end time can be changed.
-    var newEnd = datetime.end(new TZDate(Number(scheduleCache.end))),
+    var newEnd = datetime.end(new TZDate(scheduleCache.end)),
         schedule = scheduleCache.schedule;
 
     /**
@@ -82,7 +82,7 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
-        start: new TZDate(Number(schedule.getStarts())),
+        start: new TZDate(schedule.getStarts()),
         end: newEnd
     });
 };
@@ -123,7 +123,7 @@ MonthResize.prototype._onDragStart = function(dragStartEvent) {
     this._cache = {
         schedule: schedule,
         target: target,
-        start: new TZDate(Number(scheduleData.date))
+        start: new TZDate(scheduleData.date)
     };
 
     /**
@@ -186,8 +186,8 @@ MonthResize.prototype._onDragEnd = function(dragEndEvent) {
     scheduleData = this.getScheduleData(dragEndEvent.originEvent);
 
     if (scheduleData) {
-        start = new TZDate(Number(cache.schedule.getStarts()));
-        end = new TZDate(Number(scheduleData.date));
+        start = new TZDate(cache.schedule.getStarts());
+        end = new TZDate(scheduleData.date);
         cache.end = end;
 
         if (start <= cache.end) {

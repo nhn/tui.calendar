@@ -101,11 +101,11 @@ Month.prototype.viewName = 'month';
 
 /**
  * Get calendar array by supplied date
- * @param {string} renderMonthStr - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
+ * @param {string} renderMonth - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
  * @returns {array.<Date[]>} calendar array
  */
-Month.prototype._getMonthCalendar = function(renderMonthStr) {
-    var date = datetime.parse(renderMonthStr) || datetime.parse(renderMonthStr + '-01');
+Month.prototype._getMonthCalendar = function(renderMonth) {
+    var date = new TZDate(renderMonth);
     var startDayOfWeek = this.options.startDayOfWeek || 0;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
     var workweek = this.options.workweek || false;
@@ -154,8 +154,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     this.children.clear();
 
     util.forEach(calendar, function(weekArr) {
-        var start = new TZDate(Number(weekArr[0])),
-            end = new TZDate(Number(weekArr[weekArr.length - 1])),
+        var start = new TZDate(weekArr[0]),
+            end = new TZDate(weekArr[weekArr.length - 1]),
             weekdayViewContainer,
             weekdayView;
 
@@ -165,8 +165,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
         weekdayView = new WeekdayInMonth({
             renderMonth: renderMonth,
             heightPercent: heightPercent,
-            renderStartDate: datetime.format(start, 'YYYY-MM-DD'),
-            renderEndDate: datetime.format(end, 'YYYY-MM-DD'),
+            renderStartDate: start,
+            renderEndDate: end,
             narrowWeekend: narrowWeekend,
             startDayOfWeek: startDayOfWeek,
             visibleWeeksCount: visibleWeeksCount,
@@ -245,8 +245,8 @@ Month.prototype.render = function() {
     baseViewModel.panelHeight = vLayout.panels[1].getHeight();
 
     this.children.each(function(childView) {
-        var start = datetime.parse(childView.options.renderStartDate);
-        var end = datetime.parse(childView.options.renderEndDate);
+        var start = datetime.start(childView.options.renderStartDate);
+        var end = datetime.start(childView.options.renderEndDate);
         var eventsInDateRange = controller.findByDateRange(
             datetime.start(start),
             datetime.end(end),

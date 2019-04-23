@@ -168,48 +168,48 @@ describe('Base.Week', function() {
         });
 
         it('filter schedule by start, end date visible', function() {
-            schedule.model.start = new TZDate('2018-05-02T09:30:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T13:30:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T09:30:00');
+            schedule.model.end = new TZDate('2018-05-02T13:30:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T00:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T10:30:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T00:00:00');
+            schedule.model.end = new TZDate('2018-05-02T10:30:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T10:30:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T11:30:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T10:30:00');
+            schedule.model.end = new TZDate('2018-05-02T11:30:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T11:30:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T11:30:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T00:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T10:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T00:00:00');
+            schedule.model.end = new TZDate('2018-05-02T10:00:00');
             expect(hourRangeFilter(schedule)).toBe(false);
 
-            schedule.model.start = new TZDate('2018-05-02T10:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T12:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T10:00:00');
+            schedule.model.end = new TZDate('2018-05-02T12:00:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T12:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T12:00:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00');
             expect(hourRangeFilter(schedule)).toBe(false);
 
-            schedule.model.start = new TZDate('2018-05-02T09:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T09:00:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T09:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-02T15:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T09:00:00');
+            schedule.model.end = new TZDate('2018-05-02T15:00:00');
             expect(hourRangeFilter(schedule)).toBe(true);
 
-            schedule.model.start = new TZDate('2018-05-02T09:00:00+09:00');
-            schedule.model.end = new TZDate('2018-05-03T09:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T09:00:00');
+            schedule.model.end = new TZDate('2018-05-03T09:00:00');
             expect(hourRangeFilter(schedule)).toBe(true); // true, false??
 
-            schedule.model.start = new TZDate('2018-05-02T11:00:00+15:00');
-            schedule.model.end = new TZDate('2018-05-03T09:00:00+09:00');
+            schedule.model.start = new TZDate('2018-05-02T11:00:00');
+            schedule.model.end = new TZDate('2018-05-03T09:00:00');
             expect(hourRangeFilter(schedule)).toBe(true);
         });
     });
