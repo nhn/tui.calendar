@@ -166,7 +166,7 @@ declare namespace tuiCalendar {
         daynames?: string[];
         startDayOfWeek?: number;
         narrowWeekend?: boolean;
-        visibleWeeksCount?: boolean;
+        visibleWeeksCount?: number;
         isAlways6Week?: boolean;
         workweek?: boolean;
         visibleScheduleCount?: number;

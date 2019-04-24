@@ -345,7 +345,7 @@ var mmin = Math.min;
  * @property {Array.<string>} [daynames] - The day names in monthly. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  * @property {number} [startDayOfWeek=0] - The start day of week
  * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
- * @property {boolean} [visibleWeeksCount=6] - The visible week count in monthly(0 or null are same with 6)
+ * @property {number} [visibleWeeksCount=6] - The visible week count in monthly(0 or null are same with 6)
  * @property {boolean} [isAlways6Week=true] - Always show 6 weeks. If false, show 5 weeks or 6 weeks based on the month.
  * @property {boolean} [workweek=false] - Show only 5 days except for weekend
  * @property {number} [visibleScheduleCount] - The visible schedule count in monthly grid
