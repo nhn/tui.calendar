@@ -48,7 +48,7 @@ const calendar = new Calendar(querySelectorEl, {
     month: {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         startDayOfWeek: 0,
-        visibleWeeksCount: true,
+        visibleWeeksCount: 6,
         isAlways6Week: true,
         workweek: true,
         moreLayerSize: {
