@@ -365,12 +365,11 @@ var helpers = {
     },
 
     'timegridDisplayPrimaryTime-tmpl': function(time) {
-        var meridiem = 'am';
         var hour = time.hour;
+        var meridiem = hour >= 12 ? 'pm' : 'am';
 
-        if (time.hour > 12) {
-            meridiem = 'pm';
-            hour = time.hour - 12;
+        if (hour > 12) {
+            hour = hour - 12;
         }
 
         return hour + ' ' + meridiem;
