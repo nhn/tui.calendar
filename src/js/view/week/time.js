@@ -73,9 +73,7 @@ Time.prototype._parseDateGroup = function(str) {
         d = parseInt(str.substr(6, 2), 10);
     var date = datetime.start();
 
-    date.setFullYear(y);
-    date.setMonth(m - 1);
-    date.setDate(d);
+    date.setFullYear(y, m - 1, d);
 
     return datetime.start(date);
 };
