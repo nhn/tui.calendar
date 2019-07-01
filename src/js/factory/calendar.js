@@ -429,6 +429,7 @@ var mmin = Math.min;
  * @property {WeekOptions} [week={}] - {@link WeekOptions} for week view
  * @property {MonthOptions} [month={}] - {@link MonthOptions} for month view
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
+ * @property {Array.<Schedule>} [schedules=[]] - {@link Schedule} A list of schedule to be added to the calendars data in the calendars property defined in Options. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
  * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
