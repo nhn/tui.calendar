@@ -23,6 +23,7 @@ var ARROW_WIDTH_HALF = 8;
  * @extends {View}
  * @param {HTMLElement} container - container element
  * @param {Array.<Calendar>} calendars - calendar list used to create new schedule
+ * @param {boolean} usageStatistics - GA tracking options in Calendar
  */
 function ScheduleCreationPopup(container, calendars, usageStatistics) {
     View.call(this, container);
