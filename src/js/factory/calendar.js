@@ -509,11 +509,9 @@ var mmin = Math.min;
  * });
  */
 function Calendar(container, options) {
-    options = options || {};
-
-    if (options && typeof options.usageStatistics !== 'boolean') {
-        options.usageStatistics = true;
-    }
+    options = util.extend({
+        usageStatistics: true
+    }, options);
 
     if (options.usageStatistics === true && util.sendHostname) {
         util.sendHostname('calendar', GA_TRACKING_ID);
