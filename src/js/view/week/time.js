@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @fileoverview View of time.
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
@@ -10,6 +11,7 @@ var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
+var RENDERER_TYPE = require('../../common/const').RENDERER_TYPE;
 
 var forEachArr = util.forEachArray;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
@@ -85,15 +87,16 @@ Time.prototype._parseDateGroup = function(str) {
  * @returns {object} - left and width
  */
 Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
-    var width = options.baseWidth * (viewModel.extraSpace + 1);
+    var rendererType = options.rendererType,
+        width = viewModel.hasCollide ? options.baseWidth * (viewModel.extraSpace + 1) : null,
+        left = options.baseLeft[options.columnIndex];
 
-    // set width auto when has no collisions.
-    if (!viewModel.hasCollide) {
-        width = null;
+    if (rendererType === RENDERER_TYPE.SHRINK) {
+        width = viewModel.width;
     }
 
     return {
-        left: options.baseLeft[options.columnIndex],
+        left: left,
         width: width
     };
 };
@@ -193,6 +196,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
         isReadOnly = options.isReadOnly,
+        rendererType = options.rendererType,
         todayStart,
         baseMS;
 
@@ -209,7 +213,9 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         var maxRowLength,
             widthPercent,
             leftPercents,
-            i;
+            i,
+            a1,
+            beforeWidth;
 
         maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
             return row.length;
@@ -223,6 +229,56 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         }
 
         forEachArr(matrix, function(row) {
+            if (rendererType === RENDERER_TYPE.SHRINK) {
+                row = self._getRowsByDuplicate(row);
+
+                row.forEach(function(viewModel, idx) {
+                    var width = 0,
+                        beforeDuplicateWidth = 0,
+                        afterElementWidth = 0,
+                        a1Value = 0;
+
+                    if (viewModel.isDuplicate) {
+                        if (idx === 0 || row[idx - 1].model.id !== viewModel.model.id) {
+                            viewModel.duplicateIdx = 0;
+                        } else { // idx > 0
+                            viewModel.duplicateIdx = row[idx - 1].duplicateIdx + 1;
+                        }
+
+                        if (viewModel.duplicateIdx === 0) {
+                            a1 = leftPercents[idx];
+                        } else { // viewModel.duplicateIdx > 0
+                            a1Value = (a1 ? a1 + '% + ' : '');
+                            leftPercents[idx] = 'calc(' + a1Value + (12 * viewModel.duplicateIdx) + 'px)';
+                        }
+
+                        if (viewModel.duplicateIdx >= 0) {
+                            width = '12px';
+
+                            if (viewModel.duplicateIdx === 0 && idx !== 0) {
+                              beforeWidth = (widthPercent * idx);
+                            }
+
+                            if (viewModel.isMajor) {
+                                width = 'auto';
+
+                                if (viewModel.hasCollide) {
+                                    beforeDuplicateWidth = viewModel.duplicateIdx * 12;
+                                    afterElementWidth = (row.length - 1 - idx) * widthPercent;
+                                    beforeWidth = beforeWidth ? beforeWidth + '% + ' : '';
+                                    width = 'calc(100% - (' + beforeWidth + beforeDuplicateWidth + 'px + ' + afterElementWidth + '%))';
+                                }
+                            }
+
+
+                            viewModel.width = width;
+                        }
+                    } else {
+                        viewModel.width = widthPercent;
+                    }
+                });
+            }
+
             forEachArr(row, function(viewModel, col) {
                 var viewBound;
 
@@ -237,10 +293,13 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     baseWidth: widthPercent,
                     baseHeight: containerHeight,
                     columnIndex: col,
-                    isReadOnly: isReadOnly
+                    isReadOnly: isReadOnly,
+                    rendererType: rendererType
                 });
 
-                util.extend(viewModel, viewBound);
+                util.extend(viewModel, viewBound, {
+                    rendererType: rendererType
+                });
             });
         });
     });
@@ -293,6 +352,65 @@ Time.prototype.applyTheme = function() {
 
     style.borderRight = styles.borderRight;
     style.backgroundColor = styles.backgroundColor;
+};
+
+Time.prototype._getRowsByDuplicate = function(row) {
+    var arr = [],
+        rowLen = row.length,
+        k = 0,
+        idx = -1,
+        viewModel = null,
+        scheduleId = '';
+    console.log(row)
+
+    for (; k < rowLen; k += 1) {
+        viewModel = row[k];
+
+        if (!viewModel) {
+            continue;
+        }
+
+        scheduleId = viewModel.model.id;
+        idx = this._getExistIndex(arr, scheduleId);
+        viewModel.isDuplicate = idx > -1;
+        viewModel.isMajor = viewModel.model.isMajor;
+
+        if (viewModel.isMajor) {
+          viewModel.isDuplicate = true;
+        }
+
+        if (idx < 0) {
+            arr.push(viewModel);
+            continue;
+        }
+
+        if (!arr[idx].isDuplicate) {
+            arr[idx].isDuplicate = true;
+        }
+
+        if (arr[idx].isMajor - viewModel.isMajor === -1) {
+            arr.splice(idx + 1, 0, viewModel);
+        } else {
+            arr.splice(idx, 0, viewModel);
+        }
+    }
+
+    return arr;
+};
+
+Time.prototype._getExistIndex = function(arr, modelId) {
+    var i = 0,
+        len = arr.length,
+        idx = -1;
+
+    for (; i < len; i += 1) {
+        if (arr[i].model.id === modelId) {
+            idx = i;
+            break;
+        }
+    }
+
+    return idx;
 };
 
 module.exports = Time;

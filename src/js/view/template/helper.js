@@ -128,7 +128,20 @@ var helpers = {
             width = getElSize(viewModel.width, '%', 'width'),
             height = getElSize(viewModel.height, 'px', 'height');
 
+        if (viewModel.rendererType === 'shrink') {
+            left = typeof viewModel.left === 'string' ? 'left:' + viewModel.left : left;
+            width = typeof viewModel.width === 'string' ? 'width:' + viewModel.width : width;
+        }
+
         return [top, left, width, height].join(';');
+    },
+
+    'time-scheduleBlock-rendererType-className': function(viewModel) {
+        if (viewModel.rendererType === 'shrink' && viewModel.isSameSchedule) {
+            return config.cssPrefix + 'shrink-schedule';
+        }
+
+        return '';
     },
 
     'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {

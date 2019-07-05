@@ -112,7 +112,7 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
 
     schedule.title = chance.sentence({words: 3});
     schedule.body = chance.bool({likelihood: 20}) ? chance.sentence({words: 10}) : '';
-    schedule.isReadOnly = chance.bool({likelihood: 20});
+    schedule.isReadOnly = false; // chance.bool({likelihood: 20});
     generateTime(schedule, renderStart, renderEnd);
 
     schedule.isPrivate = chance.bool({likelihood: 10});
@@ -151,7 +151,7 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
 function generateSchedule(viewName, renderStart, renderEnd) {
     ScheduleList = [];
     CalendarList.forEach(function(calendar) {
-        var i = 0, length = 10;
+        var i = 0, length = 5;
         if (viewName === 'month') {
             length = 3;
         } else if (viewName === 'day') {

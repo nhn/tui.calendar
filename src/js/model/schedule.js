@@ -195,6 +195,18 @@ function Schedule() {
      */
     this.raw = null;
 
+    /**
+     * Whether or not duplicate
+     * @type {boolean}
+     */
+    this.isDuplicate = false;
+
+    /**
+     * It becomes main schedule in duplicate schedule.
+     * @type {boolean}
+     */
+    this.isMajor = false;
+
     // initialize model id
     util.stamp(this);
 }
@@ -271,6 +283,7 @@ Schedule.prototype.init = function(options) {
     }
 
     this.raw = options.raw || null;
+    this.isMajor = options.isMajor || false;
 };
 
 Schedule.prototype.setAllDayPeriod = function(start, end) {

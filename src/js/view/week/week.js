@@ -136,7 +136,8 @@ Week.prototype.render = function() {
         grids: grids,
         range: range,
         theme: theme,
-        state: state
+        state: state,
+        rendererType: this.options.rendererType || 'spread'
     };
 
     this.children.each(function(childView) {
