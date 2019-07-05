@@ -1,7 +1,7 @@
 {
   "name": "tui-calendar",
   "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "main": "dist/tui-calendar.js",
   "license": "MIT",
   "description": "TOAST UI Calendar",
@@ -25,6 +25,11 @@
     "task",
     "allday",
     "jquery-plugin"
+  ],
+  "files": [
+    "src",
+    "dist",
+    "index.d.ts"
   ],
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",

@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.1 | Fri May 31 2019
+ * @version 1.12.2 | Fri Jul 05 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -8559,11 +8559,11 @@ var mmin = Math.min;
  * });
  */
 function Calendar(container, options) {
-    var opt = util.extend({
+    options = util.extend({
         usageStatistics: true
     }, options);
 
-    if (opt.usageStatistics === true && util.sendHostname) {
+    if (options.usageStatistics === true && util.sendHostname) {
         util.sendHostname('calendar', GA_TRACKING_ID);
     }
 
@@ -8623,7 +8623,7 @@ function Calendar(container, options) {
      * @default 'week'
      * @private
      */
-    this._viewName = opt.defaultView || 'week';
+    this._viewName = options.defaultView || 'week';
 
     /**
      * Refresh method. it can be ref different functions for each view modes.
@@ -10083,7 +10083,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // binding popup for schedules creation
     if (options.useCreationPopup) {
-        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars, options.usageStatistics);
 
         onSaveNewSchedule = function(scheduleData) {
             creationHandler.fire('beforeCreateSchedule', util.extend(scheduleData, {
@@ -10472,7 +10472,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     // binding create schedules event
     if (options.useCreationPopup) {
-        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars);
+        createView = new ScheduleCreationPopup(layoutContainer, baseController.calendars, options.usageStatistics);
 
         onSaveNewSchedule = function(scheduleData) {
             util.extend(scheduleData, {
@@ -19286,8 +19286,9 @@ var ARROW_WIDTH_HALF = 8;
  * @extends {View}
  * @param {HTMLElement} container - container element
  * @param {Array.<Calendar>} calendars - calendar list used to create new schedule
+ * @param {boolean} usageStatistics - GA tracking options in Calendar
  */
-function ScheduleCreationPopup(container, calendars) {
+function ScheduleCreationPopup(container, calendars, usageStatistics) {
     View.call(this, container);
     /**
      * @type {FloatingLayer}
@@ -19303,6 +19304,7 @@ function ScheduleCreationPopup(container, calendars) {
     this._schedule = null;
     this.calendars = calendars;
     this._focusedDropdown = null;
+    this._usageStatistics = usageStatistics;
     this._onClickListeners = [
         this._selectDropdownMenuItem.bind(this),
         this._toggleDropdownMenuView.bind(this),
@@ -19836,7 +19838,10 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDa
         timepicker: isAllDay ? null : {
             showMeridiem: false
         },
-        usageStatistics: true
+        usageStatistics: this._usageStatistics,
+        timePicker: {
+            usageStatistics: this._usageStatistics
+        }
     });
 };
 
