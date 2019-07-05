@@ -23,8 +23,9 @@ var ARROW_WIDTH_HALF = 8;
  * @extends {View}
  * @param {HTMLElement} container - container element
  * @param {Array.<Calendar>} calendars - calendar list used to create new schedule
+ * @param {boolean} usageStatistics - GA tracking options in Calendar
  */
-function ScheduleCreationPopup(container, calendars) {
+function ScheduleCreationPopup(container, calendars, usageStatistics) {
     View.call(this, container);
     /**
      * @type {FloatingLayer}
@@ -40,6 +41,7 @@ function ScheduleCreationPopup(container, calendars) {
     this._schedule = null;
     this.calendars = calendars;
     this._focusedDropdown = null;
+    this._usageStatistics = usageStatistics;
     this._onClickListeners = [
         this._selectDropdownMenuItem.bind(this),
         this._toggleDropdownMenuView.bind(this),
@@ -573,7 +575,10 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDa
         timepicker: isAllDay ? null : {
             showMeridiem: false
         },
-        usageStatistics: true
+        usageStatistics: this._usageStatistics,
+        timePicker: {
+            usageStatistics: this._usageStatistics
+        }
     });
 };
 
