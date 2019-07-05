@@ -573,12 +573,10 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDa
         },
         format: isAllDay ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm',
         timepicker: isAllDay ? null : {
-            showMeridiem: false
-        },
-        usageStatistics: this._usageStatistics,
-        timePicker: {
+            showMeridiem: false,
             usageStatistics: this._usageStatistics
-        }
+        },
+        usageStatistics: this._usageStatistics
     });
 };
 
