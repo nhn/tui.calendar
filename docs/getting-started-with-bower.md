@@ -17,6 +17,10 @@ TOAST UI Calendar requires tui-code-snippet as dependencies to work.
 ...
 <script src="../bower_components/tui-code-snippet/dist/tui-code-snippet.js"></script>
 <link rel="stylesheet" href="../bower_components/tui-calendar/dist/tui-calendar.css">
+
+<!-- If you use the default popups, use this. -->
+<link rel="stylesheet" href="../bower_components/tui-date-picker/dist/tui-date-picker.css">
+<link rel="stylesheet" href="../bower_components/tui-time-picker/dist/tui-time-picker.css">
 ...
 </head>
 ```
