@@ -482,3 +482,16 @@ var cal = new Calendar('#calendar', {
     }
 });
 ```
+
+### Fit the calendar size for parent element
+TOAST UI Calendar's default height is 600px. If you want this calendar to fit to parent element, write container element's css like this. 
+
+```css
+#calendar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    top: 64px;
+}
+```
