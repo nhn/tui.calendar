@@ -69,8 +69,12 @@ tokenFunc = {
      * @returns {string} hh:mm
      */
     'hh:mm': function(date) {
-        var hour = Math.floor(date.getHours() % 12),
-            minutes = date.getMinutes();
+        var hour = date.getHours();
+        var minutes = date.getMinutes();
+
+        if (hour > 12) {
+            hour = hour % 12;
+        }
 
         return datetime.leadingZero(hour, 2) + ':' +
             datetime.leadingZero(minutes, 2);
