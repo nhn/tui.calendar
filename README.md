@@ -132,6 +132,10 @@ You can use the CDN as below.
 <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
 <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
 <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
+
+<!-- If you use the default popups, use this. -->
+<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
 ```
 
 If you want to use a specific version, use the tag name instead of `latest` in the url's path.
@@ -183,11 +187,19 @@ var Calendar = tui.Calendar;
 ```javascript
 var Calendar = require('tui-calendar'); /* CommonJS */
 require("tui-calendar/dist/tui-calendar.css");
+
+// If you use the default popups, use this.
+require("tui-date-picker/dist/tui-date-picker.css");
+require("tui-time-picker/dist/tui-time-picker.css");
 ```
 
 ```javascript
 import Calendar from 'tui-calendar'; /* ES6 */
 import "tui-calendar/dist/tui-calendar.css";
+
+// If you use the default popups, use this.
+import 'tui-date-picker/dist/tui-date-picker.css';
+import 'tui-time-picker/dist/tui-time-picker.css';
 ```
 
 Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/latest/Options) to set configuration.
