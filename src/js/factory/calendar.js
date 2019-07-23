@@ -18,7 +18,8 @@ var dw = require('../common/dw'),
     TZDate = require('../common/timezone').Date,
     config = require('../config'),
     timezone = require('../common/timezone'),
-    reqAnimFrame = require('../common/reqAnimFrame');
+    reqAnimFrame = require('../common/reqAnimFrame'),
+    customRendererMap = require('../common/customRenderer');
 
 var mmin = Math.min;
 
@@ -682,7 +683,8 @@ Calendar.prototype._initialize = function(options) {
 
     this._options.week = util.extend({
         startDayOfWeek: 0,
-        workweek: false
+        workweek: false,
+        customRenderer: false
     }, util.pick(this._options, 'week') || {});
 
     this._options.month = util.extend({
@@ -691,7 +693,8 @@ Calendar.prototype._initialize = function(options) {
         scheduleFilter: function(schedule) {
             return Boolean(schedule.isVisible) &&
                 (schedule.category === 'allday' || schedule.category === 'time');
-        }
+        },
+        customRenderer: false
     }, util.pick(options, 'month') || {});
 
     if (this._options.isReadOnly) {
@@ -1843,6 +1846,19 @@ function _setOptionRecurseively(view, func) {
         func(childView, opt);
     });
 }
+
+/**
+ * register another renderer handler
+ * @param {string} rendererName - renderer name
+ * @param {function} handler - handler to be registered for rendering
+ */
+Calendar.registerRenderer = function(rendererName, handler) {
+    if (typeof handler !== 'function') {
+        return;
+    }
+
+    customRendererMap.set(rendererName, handler);
+};
 
 util.CustomEvents.mixin(Calendar);
 

@@ -42,6 +42,7 @@ function getViewModelForMoreLayer(date, target, schedules, daynames) {
     };
 }
 
+/* eslint-disable complexity*/
 /**
  * @param {Base} baseController - controller instance
  * @param {HTMLElement} layoutContainer - container element for month view

@@ -149,6 +149,22 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     var visibleScheduleCount = opt.visibleScheduleCount;
     var gridOption = opt.grid;
     var isReadOnly = opt.isReadOnly;
+    console.log(opt);
+
+    if (opt.customRenderer) {
+        if (util.isString(opt.customRenderer)) {
+            opt.customRenderer = {
+                use: true,
+                name: opt.customRenderer
+            };
+        }
+
+        if (util.isObject(opt.customRenderer)) {
+            util.extend({
+                use: true
+            }, opt.customRenderer);
+        }
+    }
 
     container.innerHTML = '';
     this.children.clear();
@@ -174,7 +190,8 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
             grid: gridOption,
             scheduleHeight: parseInt(theme.month.schedule.height, 10),
             scheduleGutter: parseInt(theme.month.schedule.marginTop, 10),
-            isReadOnly: isReadOnly
+            isReadOnly: isReadOnly,
+            customRenderer: opt.customRenderer
         }, weekdayViewContainer);
 
         self.addChild(weekdayView);

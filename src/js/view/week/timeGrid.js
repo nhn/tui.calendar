@@ -382,6 +382,21 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
 
     containerHeight = domutil.getSize(container.parentElement)[1];
 
+    if (options.customRenderer) {
+        if (util.isString(options.customRenderer)) {
+            options.customRenderer = {
+                use: true,
+                name: options.customRenderer
+            };
+        }
+
+        if (util.isObject(options.customRenderer)) {
+            util.extend({
+                use: true
+            }, options.customRenderer);
+        }
+    }
+
     // reconcilation of child views
     util.forEach(viewModels, function(schedules, ymd) {
         isToday = ymd === today;
@@ -396,7 +411,8 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
             isFocused: options.isFocused,
             isReadOnly: options.isReadOnly,
             hourStart: options.hourStart,
-            hourEnd: options.hourEnd
+            hourEnd: options.hourEnd,
+            customRenderer: options.customRenderer
         };
 
         child = new Time(

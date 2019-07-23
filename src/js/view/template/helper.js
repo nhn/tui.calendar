@@ -140,6 +140,23 @@ var helpers = {
         return [top, left, width, height].join(';');
     },
 
+    /**
+     * get custom renderer class name
+     * @param {object} viewModel - view model
+     * @returns {string} custom renderer class name
+     */
+    'schedule-customRenderer-className': function(viewModel) {
+        if (util.isString(viewModel.customClassName)) {
+            return viewModel.customRenderer.customClassName;
+        }
+
+        if (util.isFunction(viewModel.customRenderer.customClassName)) {
+            return viewModel.customRenderer.customClassName(viewModel);
+        }
+
+        return '';
+    },
+
     'holiday': function(day) {
         var cssClass = '';
 
@@ -467,7 +484,13 @@ var helpers = {
 function getElSize(value, postfix, prefix) {
     prefix = prefix || '';
     if (util.isNumber(value)) {
+        postfix = value ? postfix : '';
+
         return prefix + ':' + value + postfix;
+    }
+
+    if (util.isString(value)) {
+        return prefix + ':' + value;
     }
 
     return prefix + ':auto';

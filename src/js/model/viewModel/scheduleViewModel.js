@@ -167,6 +167,7 @@ ScheduleViewModel.prototype.duration = function() {
     return this.model.duration();
 };
 
+/* eslint-disable complexity*/
 /**
  * Link collidesWith method
  * @param {Schedule|ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.

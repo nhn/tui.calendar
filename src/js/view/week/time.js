@@ -10,6 +10,7 @@ var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
+var customRendererMap = require('../../common/customRenderer');
 
 var forEachArr = util.forEachArray;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
@@ -40,7 +41,8 @@ function Time(options, container, theme) {
         hourEnd: 24,
         defaultMarginBottom: 2,
         minHeight: 18.5,
-        isReadOnly: false
+        isReadOnly: false,
+        customRenderer: false
     }, options);
 
     this.timeTmpl = timeTmpl;
@@ -85,16 +87,9 @@ Time.prototype._parseDateGroup = function(str) {
  * @returns {object} - left and width
  */
 Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
-    var width = options.baseWidth * (viewModel.extraSpace + 1);
-
-    // set width auto when has no collisions.
-    if (!viewModel.hasCollide) {
-        width = null;
-    }
-
     return {
         left: options.baseLeft[options.columnIndex],
-        width: width
+        width: viewModel.width
     };
 };
 
@@ -193,8 +188,10 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         hourStart = options.hourStart,
         hourEnd = options.hourEnd,
         isReadOnly = options.isReadOnly,
+        customRenderer = options.customRenderer || false,
         todayStart,
-        baseMS;
+        baseMS,
+        renderingHandler;
 
     /**
      * Calculate each schedule element bounds relative with rendered hour milliseconds and
@@ -204,6 +201,21 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
     todayStart = this._parseDateGroup(ymd);
     todayStart.setHours(hourStart);
     baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
+
+    if (customRenderer && customRenderer.use) {
+        if (customRendererMap.has(customRenderer.name)) {
+            renderingHandler = customRendererMap.get(customRenderer.name);
+            matrices = renderingHandler(matrices,
+                self.getScheduleViewBound.bind(this),
+                customRenderer,
+                todayStart,
+                baseMS,
+                containerHeight,
+                isReadOnly);
+
+            return;
+        }
+    }
 
     forEachArr(matrices, function(matrix) {
         var maxRowLength,
@@ -230,6 +242,10 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     return;
                 }
 
+                if (!customRenderer) {
+                    viewModel.width = viewModel.hasCollide ? widthPercent * (viewModel.extraSpace + 1) : null;
+                }
+
                 viewBound = self.getScheduleViewBound(viewModel, {
                     todayStart: todayStart,
                     baseMS: baseMS,
@@ -240,7 +256,9 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     isReadOnly: isReadOnly
                 });
 
-                util.extend(viewModel, viewBound);
+                util.extend(viewModel, viewBound, {
+                    customRenderer: customRenderer
+                });
             });
         });
     });
