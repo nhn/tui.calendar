@@ -207,7 +207,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
     todayStart = this._parseDateGroup(ymd);
     todayStart.setHours(hourStart);
     baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
-    // console.log(matrices);
+
     forEachArr(matrices, function(matrix) {
         var maxRowLength,
             widthPercent,

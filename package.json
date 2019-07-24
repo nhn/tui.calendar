@@ -1,7 +1,7 @@
 {
   "name": "tui-calendar",
   "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
-  "version": "1.12.3",
+  "version": "1.13.0-dooray-sp93-qa",
   "main": "dist/tui-calendar.js",
   "license": "MIT",
   "description": "TOAST UI Calendar",
