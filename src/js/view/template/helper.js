@@ -140,6 +140,24 @@ var helpers = {
         return [top, left, width, height].join(';');
     },
 
+    /**
+     * get custom renderer class name
+     * @param {object} customScheduleLayout - custom schedule layout
+     * @param {object} viewModel - view model
+     * @returns {string} custom renderer class name
+     */
+    'customLayout-scheduleBlock-className': function(customScheduleLayout, viewModel) {
+        if (util.isString(customScheduleLayout.className)) {
+            return customScheduleLayout.className;
+        }
+
+        if (util.isFunction(customScheduleLayout.className)) {
+            return customScheduleLayout.className(viewModel.model);
+        }
+
+        return '';
+    },
+
     'holiday': function(day) {
         var cssClass = '';
 
@@ -466,8 +484,14 @@ var helpers = {
  */
 function getElSize(value, postfix, prefix) {
     prefix = prefix || '';
+    postfix = value ? postfix : '';
+
     if (util.isNumber(value)) {
         return prefix + ':' + value + postfix;
+    }
+
+    if (util.isString(value)) {
+        return prefix + ':' + value;
     }
 
     return prefix + ':auto';

@@ -320,5 +320,21 @@ module.exports = {
         }, contextopt);
 
         return found;
+    },
+
+    findIndex: function(array, predi) {
+        var foundIndex = -1;
+
+        util.forEachArray(array, function(item, idx) {
+            if (predi(item)) {
+                foundIndex = idx;
+
+                return false;
+            }
+
+            return true;
+        });
+
+        return foundIndex;
     }
 };

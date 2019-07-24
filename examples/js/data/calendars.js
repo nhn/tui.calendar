@@ -48,8 +48,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'My Calendar';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#9e5fff';
+    calendar.color = '#000';
+    calendar.bgColor = '#9e5fff33';
     calendar.dragBgColor = '#9e5fff';
     calendar.borderColor = '#9e5fff';
     addCalendar(calendar);
@@ -58,8 +58,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Company';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#00a9ff';
+    calendar.color = '#000';
+    calendar.bgColor = '#00a9ff33';
     calendar.dragBgColor = '#00a9ff';
     calendar.borderColor = '#00a9ff';
     addCalendar(calendar);
@@ -68,8 +68,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Family';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#ff5583';
+    calendar.color = '#000';
+    calendar.bgColor = '#ff558333';
     calendar.dragBgColor = '#ff5583';
     calendar.borderColor = '#ff5583';
     addCalendar(calendar);
@@ -78,8 +78,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Friend';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#03bd9e';
+    calendar.color = '#000';
+    calendar.bgColor = '#03bd9e33';
     calendar.dragBgColor = '#03bd9e';
     calendar.borderColor = '#03bd9e';
     addCalendar(calendar);
@@ -88,8 +88,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Travel';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#bbdc00';
+    calendar.color = '#000';
+    calendar.bgColor = '#bbdc0033';
     calendar.dragBgColor = '#bbdc00';
     calendar.borderColor = '#bbdc00';
     addCalendar(calendar);
@@ -98,8 +98,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'etc';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#9d9d9d';
+    calendar.color = '#000';
+    calendar.bgColor = '#9d9d9d33';
     calendar.dragBgColor = '#9d9d9d';
     calendar.borderColor = '#9d9d9d';
     addCalendar(calendar);
@@ -108,8 +108,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'Birthdays';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#ffbb3b';
+    calendar.color = '#000';
+    calendar.bgColor = '#ffbb3b33';
     calendar.dragBgColor = '#ffbb3b';
     calendar.borderColor = '#ffbb3b';
     addCalendar(calendar);
@@ -118,8 +118,8 @@ function hexToRGBA(hex) {
     id += 1;
     calendar.id = String(id);
     calendar.name = 'National Holidays';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#ff4040';
+    calendar.color = '#000';
+    calendar.bgColor = '#ff404033';
     calendar.dragBgColor = '#ff4040';
     calendar.borderColor = '#ff4040';
     addCalendar(calendar);
