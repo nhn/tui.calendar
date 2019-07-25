@@ -271,8 +271,11 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
 
                 if (rearrangeDataSchedules) {
                     customViewModelData = rearrangeDataSchedules[col];
-                    viewModel.width = customViewModelData.width;
-                    viewModel.left = customViewModelData.left;
+
+                    if (customViewModelData) {
+                        viewModel.width = customViewModelData.width;
+                        viewModel.left = customViewModelData.left;
+                    }
                 } else {
                     viewModel.width = viewModel.hasCollide ? widthPercent * (viewModel.extraSpace + 1) : null;
                 }
