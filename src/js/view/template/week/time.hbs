@@ -3,7 +3,7 @@
     {{#each this}}
         {{#each this}}
         {{#if this ~}}
-        <div class="{{CSS_PREFIX}}time-date-schedule-block {{#if @root.customScheduleLayout}} {{customLayout-scheduleBlock-className @root.customScheduleLayout this}}{{/if}}{{#if model.isPending}} {{CSS_PREFIX}}time-date-schedule-block-pending{{/if}}" data-id="{{stamp model}}"
+        <div class="{{CSS_PREFIX}}time-date-schedule-block {{model.customClass}}{{#if model.isPending}} {{CSS_PREFIX}}time-date-schedule-block-pending{{/if}}" data-id="{{stamp model}}"
             style="{{time-scheduleBlock this}};
                 {{#fi left '!==' 0}}
                     padding-left: {{@root.styles.paddingLeft}};

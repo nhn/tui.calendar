@@ -50,6 +50,7 @@ var mmin = Math.min;
  * @property {string} [dragBgColor] - The schedule background color when dragging it
  * @property {string} [borderColor] - The schedule left border color
  * @property {string} [customStyle] - The schedule's custom css class
+ * @property {string} [customClass] - The schedule's custom class name
  * @property {any} [raw] - The user data
  * @property {string} [state] - The schedule's state ('busy', 'free')
  */
