@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>TEST : Extended register</title>
+    <title>TOAST UI Calendar Custom Schedule Layout For Timegrid(Week, Day) DEMO</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
@@ -96,6 +96,10 @@
               <label><input type="radio" name="rendererMode" value="custom" checked> Custom</label>
           </div>
         </div>
+
+        <div>
+          <label><input type="checkbox" id="useRandomSchedule"> Use random schedule</label>
+        </div>
       </div>
 
       <div id="calendar"></div>
@@ -112,7 +116,7 @@
     <script src="../dist/tui-calendar.js"></script>
     <script src="./js/data/calendars.js"></script>
     <script src="./js/data/schedules.js"></script>
-    <script src="./js/test.js"></script>
+    <script src="./js/data/duplicate-schedules.js"></script>
     <script src="./js/theme/dooray.js"></script>
     <script>
       function _rest(arrayLike, num = 1) {
@@ -167,10 +171,9 @@
         }, {});
       });
 
-    </script>
-    <script type="text/javascript" class="code-js">
     var calendarList = document.getElementById('calendarList');
     var html = [];
+
     CalendarList.forEach(function(calendar) {
         html.push('<div class="lnb-calendars-item"><label>' +
             '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' + calendar.id + '" checked>' +
@@ -179,9 +182,12 @@
             '</label></div>'
         );
     });
-    calendarList.innerHTML = html.join('\n');
 
-    function customScheduleLayoutPositionHandlerfunction2({schedulesForRow, leftPercents, widthPercent}) {
+    calendarList.innerHTML = html.join('\n');
+    </script>
+
+    <script type="text/javascript" class="code-js">
+    function customScheduleLayoutPositionHandler({schedulesForRow, leftPercents, widthPercent}) {
       const groupBySId = _groupBy(schedulesForRow, s => s && s.model && s.model.id);
       const scheduleCount = Object.keys(groupBySId).length;
 
@@ -220,11 +226,11 @@
 
           // 중복 데이터 isMajor 맨 뒤로 재배열
           schedules.sort((a, b) => {
-            if (a && a.model.raw.isMajor) {
+            if (a && a.model.customClass === 'major-schedule') {
               return 1;
             }
 
-            else if (b && b.model.raw.isMajor) {
+            else if (b && b.model.customClass === 'major-schedule') {
               return -1;
             }
 
@@ -233,7 +239,7 @@
             }
           });
 
-          const DEFAULT_DUPLICATE_SCHEDULE_WIDTH = 8;
+          const DEFAULT_DUPLICATE_SCHEDULE_WIDTH = 9;
 
           schedules.forEach((s, dIdx) => {
             if (dIdx === 0) {
@@ -279,16 +285,7 @@
       calendars: CalendarList,
       week: {
         customScheduleLayout: {
-          className: function(scheduleModel) {
-            return !scheduleModel.raw.isMajor && scheduleModel.raw.isDuplicate ?
-            'duplicate-schedule' : scheduleModel.raw.isMajor ? 'major-schedule' : '';
-          },
-          positionHandler: customScheduleLayoutPositionHandlerfunction2
-        }
-      },
-      month: {
-        customScheduleLayout: {
-          className: 'my-month-schedule'
+          positionHandler: customScheduleLayoutPositionHandler
         }
       },
       theme: THEME_DOORAY,
@@ -306,6 +303,9 @@
           }
       }
     });
+    </script>
+
+    <script>
     function getTimeTemplate(schedule, isAllDay) {
         var html = [];
         var start = moment(schedule.start.toUTCString());
@@ -330,17 +330,17 @@
         return html.join('');
     }
     cal.createSchedules([
-      data1,
-      data2_1,
-      data2,
-      data3,
-      data4,
-      data5,
-      data6,
-      goingComingData2,
-      goingComingData1,
-      goingComingData3,
-      goingComingData4
+      duplicateSchedules1,
+      duplicateSchedules2,
+      duplicateSchedules3,
+      duplicateSchedules4,
+      duplicateSchedules5,
+      duplicateSchedules6,
+      duplicateSchedules7,
+      duplicateSchedules8,
+      duplicateSchedules9,
+      duplicateSchedules10,
+      duplicateSchedules11
     ]);
 
     // event handlers
@@ -418,7 +418,11 @@
       }
     });
     setRenderRangeText();
-    // setSchedules();
+
+    if (document.getElementById('useRandomSchedule').checked) {
+      setSchedules();
+    }
+
     setEventListener();
     function setRenderRangeText() {
           var renderRange = document.getElementById('renderRange');
@@ -480,7 +484,10 @@
                   return;
           }
           setRenderRangeText();
-          //setSchedules();
+
+          if (document.getElementById('useRandomSchedule').checked) {
+            setSchedules();
+          }
       }
       function onNewSchedule() {
           var title = $('#new-schedule-title').val();
@@ -605,7 +612,6 @@
               span.style.backgroundColor = input.checked ? span.style.borderColor : 'transparent';
           });
       }
-    </script>
-
+      </script>
   </body>
 </html>

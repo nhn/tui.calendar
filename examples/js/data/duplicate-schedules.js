@@ -1,5 +1,5 @@
 /* eslint-disable */
-var data1 = {
+var duplicateSchedules1 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd",
   "calendarId":"1",
   "title":"Vihev ivani nutefhag.",
@@ -33,16 +33,14 @@ var data1 = {
       "company":"Hughes Supply Inc.",
       "email":"ziifeho@fialu.ht",
       "phone":"(887) 567-2526"
-    },
-    "isMajor":true,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1944 Riri Extension",
   "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
-  "customStyle": "left:0"
+  "customClass": "major-schedule"
 };
-var data2 = {
+var duplicateSchedules2 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd",
   "calendarId":"2",
   "title":"Vihev ivani nutefhag.",
@@ -76,17 +74,15 @@ var data2 = {
       "company":"Hughes Supply Inc.",
       "email":"ziifeho@fialu.ht",
       "phone":"(887) 567-2526"
-    },
-    "isMajor": false,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1944 Riri Extension",
   "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
-  "customStyle": "left:0"
-};
+  "customClass": ""
+}
 
-var data3 = {
+var duplicateSchedules3 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd",
   "calendarId":"3",
   "title":"Vihev ivani nutefhag.",
@@ -120,16 +116,14 @@ var data3 = {
       "company":"Hughes Supply Inc.",
       "email":"ziifeho@fialu.ht",
       "phone":"(887) 567-2526"
-    },
-    "isMajor":false,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1944 Riri Extension",
   "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
-  "customStyle": "left:0"
+  "customClass": ""
 };
-var goingComingData1 = {
+var duplicateSchedules4 = {
   "id":"75e590d1-ce31-5c67-aec4-90dd090c8115",
   "calendarId":"1",
   "title":"Tohbiz vepa wicpab.",
@@ -163,9 +157,7 @@ var goingComingData1 = {
       "company":"Spherion Corp",
       "email":"kus@te.lc",
       "phone":"(885) 451-3012"
-    },
-    "isMajor":true,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1084 Opoub Loop",
@@ -178,9 +170,9 @@ var goingComingData1 = {
     "Christina Peterson",
     "Herbert Carson"
   ],
-  "customStyle": "left:0"
+  "customClass": "major-schedule"
 };
-var goingComingData2 = {
+var duplicateSchedules5 = {
   "id":"75e590d1-ce31-5c67-aec4-90dd090c8115",
   "calendarId":"2",
   "title":"Tohbiz vepa wicpab.",
@@ -214,9 +206,7 @@ var goingComingData2 = {
       "company":"Spherion Corp",
       "email":"kus@te.lc",
       "phone":"(885) 451-3012"
-    },
-    "isMajor":false,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1084 Opoub Loop",
@@ -228,10 +218,11 @@ var goingComingData2 = {
     "Christine Richardson",
     "Christina Peterson",
     "Herbert Carson"
-  ]
+  ],
+  "customClass": ""
 };
 
-var data2_1 = {
+var duplicateSchedules6 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd1",
   "calendarId":"1",
   "title":"꼽사리",
@@ -266,15 +257,15 @@ var data2_1 = {
       "email":"ziifeho@fialu.ht",
       "phone":"(887) 567-2526"
     },
-    "isMajor":false
   },
   "isPrivate":false,
   "location":"1944 Riri Extension",
-  "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"]
+  "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
+  "customClass": "major-schedule"
 };
 
 
-var data4 = {
+var duplicateSchedules7 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd",
   "calendarId":"4",
   "title":"Vihev ivani nutefhag.",
@@ -315,9 +306,9 @@ var data4 = {
   "isPrivate":false,
   "location":"1944 Riri Extension",
   "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
-  "customStyle": "left:0"
+  "customClass": ""
 };
-var data5 = {
+var duplicateSchedules8 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd",
   "calendarId":"5",
   "title":"Vihev ivani nutefhag.",
@@ -358,10 +349,11 @@ var data5 = {
   "isPrivate":false,
   "location":"1944 Riri Extension",
   "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
-  "customStyle": "left:0"
+  "customStyle": "",
+  "customClass": ""
 };
 
-var data6 = {
+var duplicateSchedules9 = {
   "id":"a9c8aa27-2085-5a50-ad4c-832ec8f272bd",
   "calendarId":"6",
   "title":"Vihev ivani nutefhag.",
@@ -395,17 +387,15 @@ var data6 = {
       "company":"Hughes Supply Inc.",
       "email":"ziifeho@fialu.ht",
       "phone":"(887) 567-2526"
-    },
-    "isMajor":false,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1944 Riri Extension",
   "attendees":["Daniel Bowman","Bettie Medina","Mattie Garcia","Jesse Watts"],
-  "customStyle": "left:0"
+  "customClass": ""
 };
 
-var goingComingData3 = {
+var duplicateSchedules10 = {
   "id":"75e590d1-ce31-5c67-aec4-90dd090c81156",
   "calendarId":"3",
   "title":"똑같은 시간 중복 일정",
@@ -439,9 +429,7 @@ var goingComingData3 = {
       "company":"Spherion Corp",
       "email":"kus@te.lc",
       "phone":"(885) 451-3012"
-    },
-    "isMajor":true,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1084 Opoub Loop",
@@ -454,9 +442,9 @@ var goingComingData3 = {
     "Christina Peterson",
     "Herbert Carson"
   ],
-  "customStyle": "left:0"
+  "customClass": "major-schedule"
 };
-var goingComingData4 = {
+var duplicateSchedules11 = {
   "id":"75e590d1-ce31-5c67-aec4-90dd090c81156",
   "calendarId":"4",
   "title":"똑같은 시간 중복 일정",
@@ -490,9 +478,7 @@ var goingComingData4 = {
       "company":"Spherion Corp",
       "email":"kus@te.lc",
       "phone":"(885) 451-3012"
-    },
-    "isMajor":false,
-    "isDuplicate": true
+    }
   },
   "isPrivate":false,
   "location":"1084 Opoub Loop",
@@ -504,5 +490,6 @@ var goingComingData4 = {
     "Christine Richardson",
     "Christina Peterson",
     "Herbert Carson"
-  ]
+  ],
+  "customClass": ""
 };
