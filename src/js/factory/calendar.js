@@ -50,6 +50,7 @@ var mmin = Math.min;
  * @property {string} [dragBgColor] - The schedule background color when dragging it
  * @property {string} [borderColor] - The schedule left border color
  * @property {string} [customStyle] - The schedule's custom css class
+ * @property {string} [customClass] - The schedule's custom class name
  * @property {any} [raw] - The user data
  * @property {string} [state] - The schedule's state ('busy', 'free')
  */
@@ -647,6 +648,7 @@ Calendar.prototype.destroy = function() {
         this._refreshMethod = this._scrollToNowMethod = null;
 };
 
+/* eslint-disable complexity*/
 /**
  * Initialize calendar
  * @param {Options} options - calendar options
@@ -682,7 +684,8 @@ Calendar.prototype._initialize = function(options) {
 
     this._options.week = util.extend({
         startDayOfWeek: 0,
-        workweek: false
+        workweek: false,
+        customScheduleLayout: false
     }, util.pick(this._options, 'week') || {});
 
     this._options.month = util.extend({
@@ -691,7 +694,8 @@ Calendar.prototype._initialize = function(options) {
         scheduleFilter: function(schedule) {
             return Boolean(schedule.isVisible) &&
                 (schedule.category === 'allday' || schedule.category === 'time');
-        }
+        },
+        customScheduleLayout: false
     }, util.pick(options, 'month') || {});
 
     if (this._options.isReadOnly) {

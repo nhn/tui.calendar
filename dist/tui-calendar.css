@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3 | Fri Jul 05 2019
+ * @version 1.12.3-dooray-sp93-190725 | Thu Jul 25 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -283,6 +283,7 @@
   height: inherit;
   display: inline-block;
   font-size: 10px;
+  min-height: 600px;
 }
 .tui-full-calendar-week-container .tui-full-calendar-today {
   background: none;
@@ -485,7 +486,7 @@
   overflow: hidden;
   border-left-width: 3px;
   border-left-style: solid;
-  padding: 1px 0 0 3px;
+  padding: 1px 0 0 5px;
 }
 .tui-full-calendar-time-schedule-content-travel-time {
   font-weight: normal;
@@ -524,6 +525,7 @@
 }
 .tui-full-calendar-month {
   height: 100%;
+  min-height: 600px;
 }
 .tui-full-calendar-month-dayname {
   width: 100%;

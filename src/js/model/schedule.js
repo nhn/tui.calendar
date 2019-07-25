@@ -130,6 +130,12 @@ function Schedule() {
     this.customStyle = '';
 
     /**
+     * Custom Class for schedule element
+     * @type {string}
+     */
+    this.customClass = '';
+
+    /**
      * in progress flag to do something
      * @type {boolean}
      */
@@ -248,6 +254,7 @@ Schedule.prototype.init = function(options) {
     this.category = options.category || '';
     this.dueDateClass = options.dueDateClass || '';
     this.customStyle = options.customStyle || '';
+    this.customClass = options.customClass || '';
     this.location = options.location || '';
     this.attendees = options.attendees || [];
     this.recurrenceRule = options.recurrenceRule || '';

@@ -6,6 +6,7 @@
     <div data-id="{{stamp model}}"
          class="{{CSS_PREFIX}}weekday-schedule-block
                 {{CSS_PREFIX}}weekday-schedule-block-{{stamp model}}
+            {{#if model.customScheduleLayout}} {{customLayout-scheduleBlock-className this}}{{/if}}
             {{#if exceedLeft}} {{CSS_PREFIX}}weekday-exceed-left{{/if}}
             {{#if exceedRight}} {{CSS_PREFIX}}weekday-exceed-right{{/if}}"
          style="{{month-scheduleBlock this @root.dates @root.scheduleBlockHeight @root.gridHeaderHeight}};
