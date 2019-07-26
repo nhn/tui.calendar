@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3-dooray-sp93-190725 | Thu Jul 25 2019
+ * @version 1.12.3-dooray-sp93-190726 | Fri Jul 26 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -9632,7 +9632,8 @@ Calendar.prototype.changeView = function(newViewName, force) {
             controller,
             layout.container,
             dragHandler,
-            options
+            options,
+            this.getViewName()
         );
     }
 
@@ -9870,15 +9871,21 @@ function _createController(options) {
  * @param {HTMLElement} container - container element
  * @param {Drag} dragHandler - global drag handler
  * @param {object} options - options for week view
+ * @param {string} viewName - 'week', 'day'
  * @returns {Week} week view instance
  * @private
  */
-function _createWeekView(controller, container, dragHandler, options) {
+function _createWeekView(controller, container, dragHandler, options, viewName) {
+    if (viewName === 'day') {
+        _disableDayOptions(options.week);
+    }
+
     return weekViewFactory(
         controller,
         container,
         dragHandler,
-        options
+        options,
+        viewName
     );
 }
 
@@ -9916,6 +9923,18 @@ function _setOptionRecurseively(view, func) {
 
         func(childView, opt);
     });
+}
+
+/**
+ * disable options for day view
+ * @param {WeekOptions} weekOptions - week options to disable
+ */
+function _disableDayOptions(weekOptions) {
+    if (!weekOptions) {
+        return;
+    }
+
+    weekOptions.workweek = false;
 }
 
 util.CustomEvents.mixin(Calendar);
