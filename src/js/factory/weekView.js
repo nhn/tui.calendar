@@ -85,7 +85,7 @@ var DEFAULT_PANELS = [
 ];
 
 /* eslint-disable complexity*/
-module.exports = function(baseController, layoutContainer, dragHandler, options) {
+module.exports = function(baseController, layoutContainer, dragHandler, options, viewName) {
     var panels = [],
         vpanels = [];
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
@@ -139,7 +139,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     util.extend(options.week, {panels: panels});
 
-    weekView = new Week(null, options.week, layoutContainer, panels);
+    weekView = new Week(null, options.week, layoutContainer, panels, viewName);
     weekView.handler = {
         click: {},
         dayname: {},

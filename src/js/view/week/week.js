@@ -22,9 +22,10 @@ var View = require('../view');
  * @param {string} [options.cssPrefix] - CSS classname prefix
  * @param {HTMLElement} container The element to use container for this view.
  * @param {object} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
+ * @param {string} viewName - 'week', 'day'
  * @extends {View}
  */
-function Week(controller, options, container, panels) {
+function Week(controller, options, container, panels, viewName) {
     var range;
 
     container = domutil.appendHTMLElement('div', container);
@@ -72,6 +73,10 @@ function Week(controller, options, container, panels) {
     this.state = {
         timezonesCollapsed: this.options.timezonesCollapsed
     };
+
+    if (viewName === 'day') {
+        _disableDayOptions(this.options);
+    }
 }
 
 util.inherit(Week, View);
@@ -208,6 +213,14 @@ Week.prototype._getRenderDateRange = function(baseDate) {
         end: end
     };
 };
+
+/**
+ * disable options for day view
+ * @param {WeekOptions} options - week options to disable
+ */
+function _disableDayOptions(options) {
+    options.workweek = false;
+}
 
 util.CustomEvents.mixin(Week);
 
