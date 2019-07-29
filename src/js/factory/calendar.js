@@ -1806,10 +1806,6 @@ function _createController(options) {
  * @private
  */
 function _createWeekView(controller, container, dragHandler, options, viewName) {
-    if (viewName === 'day') {
-        _disableDayOptions(options.week);
-    }
-
     return weekViewFactory(
         controller,
         container,
@@ -1853,18 +1849,6 @@ function _setOptionRecurseively(view, func) {
 
         func(childView, opt);
     });
-}
-
-/**
- * disable options for day view
- * @param {WeekOptions} weekOptions - week options to disable
- */
-function _disableDayOptions(weekOptions) {
-    if (!weekOptions) {
-        return;
-    }
-
-    weekOptions.workweek = false;
 }
 
 util.CustomEvents.mixin(Calendar);
