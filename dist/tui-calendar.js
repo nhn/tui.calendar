@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3 | Fri Jul 05 2019
+ * @version 1.12.4 | Wed Jul 31 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -2951,8 +2951,12 @@ tokenFunc = {
      * @returns {string} hh:mm
      */
     'hh:mm': function(date) {
-        var hour = Math.floor(date.getHours() % 12),
-            minutes = date.getMinutes();
+        var hour = date.getHours();
+        var minutes = date.getMinutes();
+
+        if (hour > 12) {
+            hour = hour % 12;
+        }
 
         return datetime.leadingZero(hour, 2) + ':' +
             datetime.leadingZero(minutes, 2);
@@ -9608,7 +9612,8 @@ Calendar.prototype.changeView = function(newViewName, force) {
             controller,
             layout.container,
             dragHandler,
-            options
+            options,
+            this.getViewName()
         );
     }
 
@@ -9846,15 +9851,17 @@ function _createController(options) {
  * @param {HTMLElement} container - container element
  * @param {Drag} dragHandler - global drag handler
  * @param {object} options - options for week view
+ * @param {string} viewName - 'week', 'day'
  * @returns {Week} week view instance
  * @private
  */
-function _createWeekView(controller, container, dragHandler, options) {
+function _createWeekView(controller, container, dragHandler, options, viewName) {
     return weekViewFactory(
         controller,
         container,
         dragHandler,
-        options
+        options,
+        viewName
     );
 }
 
@@ -10324,7 +10331,7 @@ var DEFAULT_PANELS = [
 ];
 
 /* eslint-disable complexity*/
-module.exports = function(baseController, layoutContainer, dragHandler, options) {
+module.exports = function(baseController, layoutContainer, dragHandler, options, viewName) {
     var panels = [],
         vpanels = [];
     var weekView, dayNameContainer, dayNameView, vLayoutContainer, vLayout;
@@ -10378,7 +10385,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options)
 
     util.extend(options.week, {panels: panels});
 
-    weekView = new Week(null, options.week, layoutContainer, panels);
+    weekView = new Week(null, options.week, layoutContainer, panels, viewName);
     weekView.handler = {
         click: {},
         dayname: {},
@@ -22159,7 +22166,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + "\n                </div>\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasComingDuration : depth0),{"name":"if","hash":{},"fn":container.program(26, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </div>\n            "
-    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.croppedEnd : depth0),{"name":"unless","hash":{},"fn":container.program(29, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,(helpers.or || (depth0 && depth0.or) || alias2).call(alias1,(depth0 != null ? depth0.croppedEnd : depth0),((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.isReadOnly : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(29, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\n        </div>\n";
 },"5":function(container,depth0,helpers,partials,data) {
     var helper;
@@ -24558,9 +24565,10 @@ var View = __webpack_require__(/*! ../view */ "./src/js/view/view.js");
  * @param {string} [options.cssPrefix] - CSS classname prefix
  * @param {HTMLElement} container The element to use container for this view.
  * @param {object} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
+ * @param {string} viewName - 'week', 'day'
  * @extends {View}
  */
-function Week(controller, options, container, panels) {
+function Week(controller, options, container, panels, viewName) {
     var range;
 
     container = domutil.appendHTMLElement('div', container);
@@ -24608,6 +24616,10 @@ function Week(controller, options, container, panels) {
     this.state = {
         timezonesCollapsed: this.options.timezonesCollapsed
     };
+
+    if (viewName === 'day') {
+        _disableDayOptions(this.options);
+    }
 }
 
 util.inherit(Week, View);
@@ -24744,6 +24756,14 @@ Week.prototype._getRenderDateRange = function(baseDate) {
         end: end
     };
 };
+
+/**
+ * disable options for day view
+ * @param {WeekOptions} options - week options to disable
+ */
+function _disableDayOptions(options) {
+    options.workweek = false;
+}
 
 util.CustomEvents.mixin(Week);
 
