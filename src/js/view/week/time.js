@@ -8,12 +8,10 @@ var util = require('tui-code-snippet');
 var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
-var common = require('../../common/common');
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
 
 var forEachArr = util.forEachArray;
-var findIndex = common.findIndex;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
@@ -182,7 +180,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
     }, boundX, boundY);
 };
 
-/* eslint-disable max-nested-callbacks */
+/* eslint-disable */
 /**
  * Set viewmodels for rendering.
  * @param {string} ymd The date of schedules. YYYYMMDD format.
@@ -229,37 +227,71 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
 
         forEachArr(matrix, function(row) {
             if (customPositionHandler && typeof customPositionHandler === 'function') {
+                var j = 0;
+                for(j = 0; j < row.length; j += 1) {
+                    if (row[j]) {
+                        row[j].idx = j;
+                    } else {
+                        /*
+                        row[j] = {
+                            idx: j
+                        }
+                        */
+                    }
+                }
                 rearrangeData = customPositionHandler({
                     leftPercents: leftPercents,
                     widthPercent: widthPercent,
-                    schedulesForRow: JSON.parse(JSON.stringify(row.map(function(vm, idx) {
-                        if (vm) {
-                            vm.idx = idx;
-                        } else {
-                            vm = {
-                                idx: idx
-                            };
-                        }
-
-                        return vm;
-                    })))
+                    schedulesForRow: JSON.parse(JSON.stringify(row))
                 });
 
                 rearrangeDataSchedules = rearrangeData.schedules;
                 widthPercent = rearrangeData.widthPercent;
                 leftPercents = rearrangeData.leftPercents;
 
+                //console.log(row[0], row[1], row[2], rearrangeDataSchedules)
+                //row.forEach(function (el) {console.log(el)})
+                var m = 0, newRowArr = [];
+                for (; m < rearrangeDataSchedules.length; m += 1) {
+                  var data = rearrangeDataSchedules[m];
+
+                  if (!data) {
+                    newRowArr.push(null);
+                    continue;
+                  }
+
+                  var rowItem = row.find(function(rowItem) {
+                    return rowItem && rowItem.model && rowItem.model.id === data.model.id && rowItem.model.calendarId === data.model.calendarId;
+                  });
+
+                  if (rowItem) {
+                    newRowArr.push(rowItem);
+                  }
+                }
+                /*
                 row.sort(function(a, b) {
-                    var aIdx = findIndex(rearrangeDataSchedules, function(data) {
-                        return data.idx === a.idx;
-                    });
+                    if (!a && !b) {
+                        return -1;
+                    } else if (!a && b) {
+                        return -1;
+                    } else if (a && !b) {
+                        return 1;
+                    } else {
+                        var aIdx = findIndex(rearrangeDataSchedules, function(data) {
+                            return data && data.idx === a.idx;
+                        });
 
-                    var bIdx = findIndex(rearrangeDataSchedules, function(data) {
-                        return data.idx === b.idx;
-                    });
+                        var bIdx = findIndex(rearrangeDataSchedules, function(data) {
+                            return data && data.idx === b.idx;
+                        });
 
-                    return aIdx - bIdx;
+                        return aIdx - bIdx;
+                    }
                 });
+                */
+
+                //console.log(row, newRowArr)
+                row = newRowArr;
             }
 
             forEachArr(row, function(viewModel, col) {
@@ -270,12 +302,18 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                 }
 
                 if (rearrangeDataSchedules) {
-                    customViewModelData = rearrangeDataSchedules[col];
+                    customViewModelData = rearrangeDataSchedules.find(function (data) {
+                      return data && data.model.id === viewModel.model.id && data.model.calendarId === viewModel.model.calendarId;
+                    });
+
+                    //customViewModelData = rearrangeDataSchedules[col];
 
                     if (customViewModelData) {
                         viewModel.width = customViewModelData.width;
                         viewModel.left = customViewModelData.left;
                     }
+
+                    console.log(viewModel, col, rearrangeDataSchedules, customViewModelData, customViewModelData.model.calendarId);
                 } else {
                     viewModel.width = viewModel.hasCollide ? widthPercent * (viewModel.extraSpace + 1) : null;
                 }

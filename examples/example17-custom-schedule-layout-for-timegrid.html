@@ -12,14 +12,17 @@
     <style>
       #lnb {
         position: absolute;
-        width: 100px;
+        width: 205px;
         border-right: 1px solid salmon;
         top: 0;
         bottom: 0;
       }
+      #btn-new-schedule {
+        display: none;
+      }
       .code-html {
         position: absolute;
-        left: 100px;
+        left: 205px;
         right: 0;
         bottom: 0;
         top: 0;
@@ -47,8 +50,14 @@
         pointer-events: none;
       }
 
-      .major-schedule {
-        min-width: 20px;
+      .duplicate-schedule.is-focus .tui-full-calendar-time-resize-handle{
+        display: block;
+        pointer-events: auto;
+      }
+
+      .major-schedule.is-not-focus .tui-full-calendar-time-resize-handle {
+        display: none;
+        pointer-events: none;
       }
     </style>
   </head>
@@ -113,6 +122,7 @@
     <script type="text/javascript" src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
     <script src="../dist/tui-calendar.js"></script>
     <script src="./js/data/calendars.js"></script>
     <script src="./js/data/schedules.js"></script>
@@ -186,100 +196,119 @@
     calendarList.innerHTML = html.join('\n');
     </script>
 
-    <script type="text/javascript" class="code-js">
-    function customScheduleLayoutPositionHandler({schedulesForRow, leftPercents, widthPercent}) {
+<script>
+  const DEFAULT_DUPLICATE_SCHEDULE_WIDTH = 9;
+
+  function permuteSchedules(schedules) {
+    // 중복 데이터 isMajor 맨 뒤로 재배열
+    return schedules.sort((a, b) => {
+      // console.log(_.includes(_.get(a, 'model.customClass'), 'major-schedule'), _.includes(_.get(b, 'model.customClass'), 'major-schedule'))
+        if (a && _.includes(_.get(a, 'model.customClass'), 'major-schedule')) {
+            return 1;
+        }
+
+        else if (b && _.includes(_.get(b, 'model.customClass'), 'major-schedule')) {
+            return -1;
+        }
+
+        else {
+            return 0;
+        }
+    });
+  }
+
+  function _hasForcusedSchedule(schedules) {
+    return schedules.some(schedule => _.get(schedule, 'model.isFocused'));
+  }
+
+  function customScheduleLayoutPositionHandler({schedulesForRow, leftPercents, widthPercent}) {
+      const includeEmptyMatrix = schedulesForRow.some(el => !el);
       const groupBySId = _groupBy(schedulesForRow, s => s && s.model && s.model.id);
-      const scheduleCount = Object.keys(groupBySId).length;
 
-      widthPercent = (schedulesForRow.length === scheduleCount && scheduleCount === 1) ? widthPercent : 100 / scheduleCount;
-      leftPercents = [...Array(scheduleCount).keys()].map(i => widthPercent * i);
+      const newArrs = [];
+      for(let m = 0; m < schedulesForRow.length; m++) {
+        const schedule = schedulesForRow[m];
 
-      const newArr = Object.values(groupBySId);
-
-      const newSchedules = [];
-      for (let i = 0; i < newArr.length; i += 1) {
-        const schedules = newArr[i];
-
-        if (!schedules) {
-          newSchedules.push(schedules);
+        if (!schedule) {
+          newArrs.push(schedule);
           continue;
         }
 
-        if (schedules.length === 1) {
-          let s = schedules[0];
+        const scheduleModelId = schedule.model.id;
+        const scheduleCount = groupBySId[scheduleModelId].length;
 
-          if (s) {
-            s.left = leftPercents[i];
-            s.width = s.hasCollide ? Math.min(widthPercent, widthPercent * (s.extraSpace + 1)) : null;
-
-            if (s.hasCollide) {
-              console.log(newArr, s.model.title, s,Math.min(widthPercent, widthPercent * (s.extraSpace + 1)), widthPercent * (s.extraSpace + 1));
-            }
-          }
-
-          newSchedules.push(s);
+        if (scheduleCount === 1) {
+          newArrs.push(schedule);
           continue;
         }
 
-        if (schedules.length > 1) {
-          let a1Left, beforeDuplicateWidth, afterScheduleWidth, beforeWidth;
+        const hasSchedule = newArrs.some(schedule => {
+          const isArraySchedule = Array.isArray(schedule);
 
-          // 중복 데이터 isMajor 맨 뒤로 재배열
-          schedules.sort((a, b) => {
-            if (a && a.model.customClass === 'major-schedule') {
-              return 1;
-            }
+          return isArraySchedule && schedule.some(s => s && s.model && s.model.id === scheduleModelId);
+        });
 
-            else if (b && b.model.customClass === 'major-schedule') {
-              return -1;
-            }
-
-            else {
-              return 0;
-            }
-          });
-
-          const DEFAULT_DUPLICATE_SCHEDULE_WIDTH = 9;
-
-          schedules.forEach((s, dIdx) => {
-            if (dIdx === 0) {
-              a1Left = leftPercents[i];
-              s.left = a1Left;
-              s.width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
-              newSchedules.push(s);
-            } else {
-              let a1LeftValue = a1Left ? a1Left + '% + ' : 0;
-              beforeWidth = `${a1LeftValue + (DEFAULT_DUPLICATE_SCHEDULE_WIDTH * dIdx)}px`;
-              s.left = `calc(${beforeWidth})`;
-
-              if (schedules.length - 1 === dIdx) {
-                if (s.hasCollide) {
-                  afterScheduleWidth = `${(newArr.length - 1 - i) * widthPercent}%`;
-                  s.width = `calc(100% - (${beforeWidth} + ${afterScheduleWidth}))`;
-                } else {
-                  s.width = null;
-                }
-              } else {
-                s.width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
-              }
-
-              newSchedules.push(s);
-            }
-          });
+        if (scheduleCount > 1 && !hasSchedule) {
+          newArrs.push(groupBySId[scheduleModelId]);
         }
       }
 
-      leftPercents = newSchedules.map((s, idx) => {
-        return s ? s.left : leftPercents[idx];
+      // 중복 일정을 하나로 취급
+      const scheduleCount = newArrs.length;
+
+      widthPercent = includeEmptyMatrix || (schedulesForRow.length === scheduleCount && scheduleCount === 1) ? widthPercent : 100 / scheduleCount;
+      leftPercents = includeEmptyMatrix ? leftPercents : [...Array(scheduleCount).keys()].map(i => widthPercent * i);
+
+
+      const newSchedules1 = [];
+
+      for (let i = 0; i < newArrs.length; i++) {
+        let schedules = newArrs[i];
+
+        if (!schedules) {
+          newSchedules1.push(schedules);
+          continue;
+        }
+
+        const isArraySchedule = Array.isArray(schedules);
+
+        if (isArraySchedule) {
+          schedules = permuteSchedules(schedules);
+          console.log(schedules)
+          const hasForcusedSchedule = _hasForcusedSchedule(schedules);
+          const afterScheduleWidth = `${(newArrs.length - 1 - i) * widthPercent}%`;
+
+          schedules.forEach((schedule, dIdx) => {
+            const {left, width} = _getScheduleWidthAndLeft(dIdx, schedule, leftPercents[i], widthPercent, afterScheduleWidth, hasForcusedSchedule);
+            // console.log(left, width);
+            schedule.left = left;
+            schedule.width = width;
+
+            newSchedules1.push(schedule);
+          });
+        } else {
+          // 중복이 아닌 스케줄
+          schedules.left = leftPercents[i];
+          schedules.width = schedules.hasCollide ? Math.min(widthPercent, widthPercent * (schedules.extraSpace + 1)) : null;
+
+          newSchedules1.push(schedules);
+        }
+      }
+
+      leftPercents = newSchedules1.map((s, idx) => {
+          return s ? s.left : leftPercents[idx];
       });
 
       return {
-        schedules: newSchedules,
-        widthPercent: widthPercent,
-        leftPercents: leftPercents
+          schedules: newSchedules1,
+          widthPercent: widthPercent,
+          leftPercents: leftPercents
       };
-    }
+  }
 
+  </script>
+
+    <script type="text/javascript" class="code-js">
     var cal = new tui.Calendar('#calendar', {
       defaultView: 'week',
       calendars: CalendarList,
@@ -290,7 +319,7 @@
       },
       theme: THEME_DOORAY,
       useCreationPopup: true,
-      useDetailPopup: true,
+      useDetailPopup: false,
       template: {
           milestone: function(model) {
               return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + model.bgColor + '">' + model.title + '</span>';
@@ -305,7 +334,27 @@
     });
     </script>
 
+
     <script>
+
+    var defaultSchedules = [
+      duplicateSchedules1,
+      duplicateSchedules2,
+      duplicateSchedules4,
+      duplicateSchedules5,
+      duplicateSchedules10,
+      duplicateSchedules11,
+      data12,
+      data13,
+      data14,
+      data15,
+      data16,
+      data17,
+      data18,
+      data19,
+      data20
+    ];
+
     function getTimeTemplate(schedule, isAllDay) {
         var html = [];
         var start = moment(schedule.start.toUTCString());
@@ -329,27 +378,17 @@
         }
         return html.join('');
     }
-    cal.createSchedules([
-      duplicateSchedules1,
-      duplicateSchedules2,
-      duplicateSchedules3,
-      duplicateSchedules4,
-      duplicateSchedules5,
-      duplicateSchedules6,
-      duplicateSchedules7,
-      duplicateSchedules8,
-      duplicateSchedules9,
-      duplicateSchedules10,
-      duplicateSchedules11
-    ]);
+
+    cal.createSchedules(defaultSchedules);
 
     // event handlers
     cal.on({
         'clickMore': function(e) {
             console.log('clickMore', e);
         },
-        'clickSchedule': function(e) {
-            console.log('clickSchedule', e);
+        'clickSchedule': function({event, schedule}) {
+            console.log('clickSchedule', event, schedule);
+            _highlightSchedule(schedule);
         },
         'clickDayname': function(date) {
             console.log('clickDayname', date);
@@ -401,11 +440,7 @@
         customScheduleLayout = false;
       } else { // custom
         customScheduleLayout = {
-          className: function(scheduleModel) {
-            return !scheduleModel.raw.isMajor && scheduleModel.raw.isDuplicate ?
-            'duplicate-schedule' : scheduleModel.raw.isMajor ? 'major-schedule' : '';
-          },
-          positionHandler: customScheduleLayoutPositionHandlerfunction2
+          positionHandler: customScheduleLayoutPositionHandler
         }
       }
 
@@ -458,6 +493,7 @@
           $('#btn-save-schedule').on('click', onNewSchedule);
           $('#btn-new-schedule').on('click', createNewSchedule);
           $('#dropdownMenu-calendars-list').on('click', onChangeNewScheduleCalendar);
+          $('#useRandomSchedule').on('click', onChangeUseRandomSchedule);
           window.addEventListener('resize', resizeThrottled);
       }
       function getDataAction(target) {
@@ -572,6 +608,18 @@
           cal.createSchedules([schedule]);
           refreshScheduleVisibility();
       }
+
+      function onChangeUseRandomSchedule(e) {
+        var checked = e.target.checked;
+
+        if (checked) {
+          setSchedules();
+        } else {
+          cal.clear();
+          cal.createSchedules(defaultSchedules);
+        }
+      }
+
       function onChangeCalendars(e) {
           var calendarId = e.target.value;
           var checked = e.target.checked;
@@ -612,6 +660,136 @@
               span.style.backgroundColor = input.checked ? span.style.borderColor : 'transparent';
           });
       }
+      </script>
+
+      <script>
+        function _getScheduleWidthAndLeft(idx, schedule, leftPercent, widthPercent, afterScheduleWidth = 0, hasForcusedSchedule = false) {
+          const isFocused = _.get(schedule, 'model.isFocused');
+          let left = leftPercent, width = 0;
+
+          let beforeScheduleWidth = 0;
+
+          if (idx === 0) {
+            beforeScheduleWidth = `${leftPercent}%`;
+
+            if (hasForcusedSchedule && isFocused) {
+              width = `calc(100% - (${beforeScheduleWidth} + ${afterScheduleWidth} + 9px))`;
+            } else {
+              width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
+            }
+          } else {
+            let firstLeftValue = leftPercent ? `${leftPercent}% + ` : 0;
+            beforeScheduleWidth = `${firstLeftValue ? firstLeftValue : ''}${DEFAULT_DUPLICATE_SCHEDULE_WIDTH * idx}px`;
+
+            if (hasForcusedSchedule && !isFocused) {
+              beforeScheduleWidth = `${firstLeftValue ? firstLeftValue : ''}(${widthPercent}% - ${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px)`;
+              width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
+            } else {
+              if (schedule.hasCollide) {
+                width = `calc(100% - (${beforeScheduleWidth} + ${afterScheduleWidth}))`;
+              } else {
+                width = null;
+              }
+            }
+
+            left = `calc(${beforeScheduleWidth})`;
+          }
+
+          return {
+            left,
+            width
+          }
+        }
+        var currViewItemEventModel;
+
+        function _updateEventToHighlight(schedule, focus) {
+            if (!schedule) {
+                return;
+            }
+
+            const calendar = _.find(CalendarList, {id: schedule.calendarId});
+            const isDuplicateSchedule = _.includes(schedule.customClass, 'duplicate-schedule');
+            const isMajorSchedule = _.includes(schedule.customClass, 'major-schedule');
+            let customClass = isDuplicateSchedule ? (focus ? 'duplicate-schedule is-focus' : 'duplicate-schedule') : schedule.customClass;
+            //console.log(calendar, schedule)
+            _setScheduleColors(schedule, calendar, cal.viewName, focus);
+            cal.updateSchedule(schedule.id, schedule.calendarId, {
+                isFocused: focus,
+                color: schedule.color,
+                customClass
+            }, true);
+            cal.render(true);
+        }
+
+        function _highlightSchedule(model) {
+            _updateEventToHighlight(currViewItemEventModel, false);
+            currViewItemEventModel = model;
+            if (!model || _.includes(['milestone', 'task'], model.category)) {
+                return;
+            }
+
+            _updateEventToHighlight(model, true);
+        }
+
+        function _setScheduleColors(schedule, calendar, viewName, useTextColor) {
+          //const calendarColor = _.get(calendar, 'me.color', '#f8cf14');
+
+          const calendarColor = _.get(calendar, 'borderColor', '#f8cf14');
+
+          schedule.bgColor = _.get(calendar, 'bgColor', _getBgColor('#f8cf14'));
+          schedule.dragBgColor = calendarColor;
+          schedule.borderColor = calendarColor;
+          schedule.color = calendarColor;
+          /*
+          if (!useTextColor && (viewName !== 'month' || _isAllDaySchedule(schedule))) {
+              schedule.color = DOORAY_CALENDAR_TEXT_COLOR_MAP[calendarColor] || calendarColor;
+          }
+          */
+
+          if (schedule.category === 'task') {
+              schedule.borderColor = 'transparent';
+              schedule.color = '#555';
+          }
+
+          if (schedule.category === 'milestone') {
+              schedule.bgColor = 'transparent';
+              schedule.dragBgColor = 'transparent';
+              schedule.borderColor = 'transparent';
+              schedule.color = calendarColor;
+          }
+        }
+
+
+
+        function _getRGBA(color, opacity) {
+          return color ? _getRgbaFromHexColor(color, opacity) : '#000';
+        }
+
+        function _getBgColor(color) {
+          return _getRGBA(color, 0.2);
+        }
+
+        function _getRgbaFromHexColor(hex, alpha) {
+            if (!hex) { return ''; }
+            const [red, green, blue] = _hexToRgb(hex);
+
+            return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+        }
+
+        function _hexToRgb(hex) {
+          hex = _.startsWith(hex, '#') ? hex.substr(1) : hex;
+          return hex.length === 3 ? [
+              _.parseInt(hex.substr(0, 1) + hex.substr(0, 1), 16),
+              _.parseInt(hex.substr(1, 1) + hex.substr(1, 1), 16),
+              _.parseInt(hex.substr(2, 1) + hex.substr(2, 1), 16)
+          ] : [
+              _.parseInt(hex.substr(0, 2), 16),
+              _.parseInt(hex.substr(2, 2), 16),
+              _.parseInt(hex.substr(4, 2), 16)
+          ];
+        }
+
+
       </script>
   </body>
 </html>
