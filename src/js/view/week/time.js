@@ -313,7 +313,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                         viewModel.left = customViewModelData.left;
                     }
 
-                    console.log(viewModel, col, rearrangeDataSchedules, customViewModelData, customViewModelData.model.calendarId);
+                    // console.log(viewModel, col, rearrangeDataSchedules, customViewModelData, customViewModelData.model.calendarId);
                 } else {
                     viewModel.width = viewModel.hasCollide ? widthPercent * (viewModel.extraSpace + 1) : null;
                 }
