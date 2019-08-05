@@ -222,9 +222,9 @@
   }
 
   function customScheduleLayoutPositionHandler({schedulesForRow, leftPercents, widthPercent}) {
-      const includeEmptyMatrix = schedulesForRow.some(el => !el);
+    console.log(schedulesForRow)
+    const includeEmptyMatrix = schedulesForRow.some(el => !el);
       const groupBySId = _groupBy(schedulesForRow, s => s && s.model && s.model.id);
-
       const newArrs = [];
       for(let m = 0; m < schedulesForRow.length; m++) {
         const schedule = schedulesForRow[m];
@@ -253,8 +253,17 @@
         }
       }
 
+      //console.log(newArrs, schedulesForRow)
+
       // 중복 일정을 하나로 취급
       const scheduleCount = newArrs.length;
+      if (newArrs.length === schedulesForRow.length) {
+        leftPercents = [...Array(schedulesForRow.length).keys()].map(i => widthPercent * i);
+      } else {
+        console.log('중복이 존재해!!', newArrs,leftPercents);
+      }
+
+      //console.log(leftPercents);
 
       // customWidthPercent = includeEmptyMatrix ? widthPercent : 100 / scheduleCount;
       // leftPercents = includeEmptyMatrix ? leftPercents : [...Array(scheduleCount).keys()].map(i => widthPercent * i);
@@ -276,8 +285,23 @@
           schedules = permuteSchedules(schedules);
           //console.log(schedules)
           const hasForcusedSchedule = _hasForcusedSchedule(schedules);
-          const afterScheduleWidth = `${(leftPercents.length - 2 - newSchedules1.length) * widthPercent}%`;
-          //console.log(afterScheduleWidth, leftPercents);
+          let afterScheduleIdx = leftPercents.length - 2 - newSchedules1.length;
+          let afterScheduleWidth = `${afterScheduleIdx * widthPercent}%`;
+          //const afterScheduleWidth = `${afterScheduleIdx * widthPercent}%`;
+          // `${(Math.min(newSchedules1.length + 2, leftPercents.length - 1)) * widthPercent}%`;
+          if (true) {
+            let test = 100 - leftPercents[newSchedules1.length + 1];
+            console.log(test);
+            //afterScheduleWidth = `${test}%`;
+          }
+          /*
+          if (i === 0) {
+            afterScheduleIdx = i + 1;
+          }
+          */
+
+
+          console.log(afterScheduleWidth, widthPercent, leftPercents);
 
           schedules.forEach((schedule, dIdx) => {
             let leftPercent = 0;
@@ -360,7 +384,10 @@
       data17,
       data18,
       data19,
-      data20
+      data20,
+      data21,
+      data22,
+      data23
     ];
 
     function getTimeTemplate(schedule, isAllDay) {

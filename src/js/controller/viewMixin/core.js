@@ -83,6 +83,7 @@ var Core = {
         return false;
     },
 
+    /* eslint-disable */
     /**
      * Calculate matrix for appointment block element placing.
      * @param {Collection} collection model collection.
@@ -95,17 +96,18 @@ var Core = {
 
         forEachArr(collisionGroups, function(group) {
             var matrix = [[]];
-
             forEachArr(group, function(scheduleID) {
                 var schedule = collection.items[scheduleID],
                     col = 0,
                     found = false,
                     nextRow,
-                    lastRowInColumn;
+                    lastRowInColumn,
+                    findDuplicateSvm;
 
                 while (!found) {
                     lastRowInColumn = getLastRowInColumn(matrix, col);
 
+                    /*
                     if (lastRowInColumn === false) {
                         matrix[0].push(schedule);
                         found = true;
@@ -117,11 +119,40 @@ var Core = {
                         matrix[nextRow][col] = schedule;
                         found = true;
                     }
+                    */
+
+
+                    if (lastRowInColumn === false) {
+                        matrix[0].push(schedule);
+                        found = true;
+                    } else {
+                        findDuplicateSvm = matrix[lastRowInColumn].find(function(svm) {
+
+                            return svm && svm.model.id === schedule.model.id;
+                        });
+
+                        if (findDuplicateSvm && !lastRowInColumn) {
+                            console.log('같은 ID의 스케줄이 있어!', findDuplicateSvm, matrix[lastRowInColumn].length);
+
+                            matrix[lastRowInColumn].push(schedule);
+                            found = true;
+                        } else if (!lastRowInColumn){
+                            matrix[0].push(schedule);
+                            found = true;
+                        } else if (!schedule.collidesWith(matrix[lastRowInColumn][col])) {
+                            nextRow = lastRowInColumn + 1;
+                            if (util.isUndefined(matrix[nextRow])) {
+                                matrix[nextRow] = [];
+                            }
+                            matrix[nextRow][col] = schedule;
+                            found = true;
+                        }
+
+                    }
 
                     col += 1;
                 }
             });
-
             result.push(matrix);
         });
 
