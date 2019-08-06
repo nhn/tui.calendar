@@ -126,17 +126,16 @@ var Core = {
 
         forEachArr(collisionGroups, function(group) {
             var matrix = [[]];
+
             forEachArr(group, function(scheduleID) {
                 var schedule = collection.items[scheduleID],
                     col = 0,
                     found = false,
                     nextRow,
-                    lastRowInColumn,
-                    findDuplicateSvm;
+                    lastRowInColumn;
 
                 while (!found) {
                     lastRowInColumn = getLastRowInColumn(matrix, col);
-
 
                     if (lastRowInColumn === false) {
                         matrix[0].push(schedule);
