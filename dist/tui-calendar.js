@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3-dooray-sp94-190806 | Tue Aug 06 2019
+ * @version 1.12.3-dooray-sp94-190806-1 | Tue Aug 06 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -23967,17 +23967,19 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
  * @param {object} options - The options for bounding Y
  */
 Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, initLeft, initWidth, matirixRow, options) {
-    var self = this,
-        customDuplicateScheduleLayoutHandler = util.pick(self.duplicateScheduleLayout, 'layoutHandler'),
-        duplicateModels = viewModel.duplicateModels,
-        todayStart,
-        baseMS,
-        baseHeight,
-        layoutInfos,
-        viewModelBound,
-        subModelBounds;
+    var self = this;
+    var customDuplicateScheduleLayoutHandler = util.pick(self.duplicateScheduleLayout, 'layoutHandler');
+    var duplicateModels = util.map(viewModel.duplicateModels, function(vm) {
+        return vm.model;
+    });
+    var todayStart;
+    var baseMS;
+    var baseHeight;
+    var layoutInfos;
+    var viewModelBound;
+    var subModelBounds;
 
-    if (!duplicateModels ||
+    if (!duplicateModels || !duplicateModels.length ||
         !customDuplicateScheduleLayoutHandler) {
         return;
     }
@@ -23994,7 +23996,7 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
     viewModel.model.customClass = viewModelBound.customClass;
 
     forEachArr(subModelBounds, function(boundX, subIdx) {
-        var subModel = duplicateModels[subIdx],
+        var subModel = viewModel.duplicateModels[subIdx],
             boundY = self._getScheduleViewBoundY(subModel, {
                 todayStart: todayStart,
                 baseMS: baseMS,
