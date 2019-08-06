@@ -685,7 +685,7 @@ Calendar.prototype._initialize = function(options) {
     this._options.week = util.extend({
         startDayOfWeek: 0,
         workweek: false,
-        customScheduleLayout: false
+        duplicateScheduleLayout: false
     }, util.pick(this._options, 'week') || {});
 
     this._options.month = util.extend({
@@ -695,7 +695,7 @@ Calendar.prototype._initialize = function(options) {
             return Boolean(schedule.isVisible) &&
                 (schedule.category === 'allday' || schedule.category === 'time');
         },
-        customScheduleLayout: false
+        duplicateScheduleLayout: false
     }, util.pick(options, 'month') || {});
 
     if (this._options.isReadOnly) {

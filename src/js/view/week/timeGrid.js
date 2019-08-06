@@ -374,6 +374,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
         isToday,
         containerHeight,
         today = datetime.format(new TZDate(), 'YYYYMMDD'),
+        duplicateScheduleLayout = options.duplicateScheduleLayout,
         i = 0;
 
     // clear contents
@@ -403,7 +404,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
             childOption,
             domutil.appendHTMLElement('div', container, config.classname('time-date')),
             theme,
-            options.customScheduleLayout
+            duplicateScheduleLayout
         );
         child.render(ymd, schedules, containerHeight);
 

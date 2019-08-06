@@ -17,15 +17,42 @@ var Core = {
     /**
      * Calculate collision group.
      * @param {array} viewModels List of viewmodels.
+     * @param {array[]} duplicateGroups Duplicate groups for schedule set.
      * @returns {array} Collision Group.
      */
-    getCollisionGroup: function(viewModels) {
+    getCollisionGroup: function(viewModels, duplicateGroups) {
         var collisionGroups = [],
             foundPrevCollisionSchedule = false,
-            previousScheduleList;
+            duplicatedViewModels = [],
+            previousScheduleList, filterViewModels;
 
         if (!viewModels.length) {
             return collisionGroups;
+        }
+
+        if (duplicateGroups && duplicateGroups.length && viewModels.length > 1) {
+            filterViewModels = util.filter(viewModels, function(vm) {
+                if (duplicateGroups.indexOf(util.stamp(vm.valueOf())) < 0) {
+                    return true;
+                }
+
+                duplicatedViewModels.push(vm);
+
+                return false;
+            });
+
+            forEachArr(filterViewModels, function(vm) {
+                var modelId = vm.model.id;
+                var duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
+                    return dvm.model.id === modelId;
+                });
+
+                if (duplicateModels.length > 0) {
+                    vm.duplicateModels = duplicateModels;
+                }
+            });
+
+            viewModels = filterViewModels;
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
@@ -59,6 +86,8 @@ var Core = {
                 // This schedule is a schedule that does not overlap with the previous schedule, so a new Collision Group is constructed.
                 collisionGroups.push([util.stamp(schedule.valueOf())]);
             }
+
+            return true;
         });
 
         return collisionGroups;
@@ -121,7 +150,6 @@ var Core = {
                     col += 1;
                 }
             });
-
             result.push(matrix);
         });
 
@@ -248,6 +276,50 @@ var Core = {
         });
 
         return viewModelColl;
+    },
+
+    filterDuplicatedViewModel: function(modelColl, defaultCalendarId) {
+        var scheduleViewModels = modelColl.items;
+        var duplicatedViewModels = [];
+        var itemId;
+        var scheduleViewModel;
+        var scheduleId;
+        var calendarId;
+
+        for (itemId in scheduleViewModels) {
+            if (Object.prototype.hasOwnProperty.call(scheduleViewModels, itemId)) {
+                scheduleViewModel = scheduleViewModels[itemId];
+                scheduleId = scheduleViewModel.model.id;
+                calendarId = scheduleViewModel.model.calendarId;
+
+                if (Core.isDupliate(scheduleViewModels, itemId, scheduleId) &&
+                    defaultCalendarId !== calendarId &&
+                    !scheduleViewModel.model.isPending) {
+                    duplicatedViewModels.push(Number(itemId));
+                }
+            }
+        }
+
+        return duplicatedViewModels;
+    },
+
+    isDupliate: function(collItems, collectionItemId, schedulModelId) {
+        var result = false;
+        var itemId;
+        var scheduleId;
+
+        for (itemId in collItems) {
+            if (Object.prototype.hasOwnProperty.call(collItems, itemId)) {
+                scheduleId = collItems[itemId].model.id;
+
+                if (scheduleId === schedulModelId && itemId !== collectionItemId) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 };
 
