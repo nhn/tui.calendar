@@ -54,7 +54,7 @@ var duplicateSchedules2 = {
   "bgColor": "#00a9ff33",
   "dragBgColor": "#00a9ff",
   "borderColor": "#00a9ff",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -96,7 +96,7 @@ var duplicateSchedules3 = {
   "bgColor": "#ff558333",
   "dragBgColor": "#ff5583",
   "borderColor": "#ff5583",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -186,7 +186,7 @@ var duplicateSchedules5 = {
   "bgColor": "#00a9ff33",
   "dragBgColor": "#00a9ff",
   "borderColor": "#00a9ff",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -236,7 +236,7 @@ var duplicateSchedules6 = {
   "bgColor": "#9e5fff33",
   "dragBgColor": "#9e5fff",
   "borderColor": "#9e5fff",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -279,7 +279,7 @@ var duplicateSchedules7 = {
   "bgColor": "#03bd9e33",
   "dragBgColor": "#03bd9e",
   "borderColor": "#03bd9e",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -322,7 +322,7 @@ var duplicateSchedules8 = {
   "bgColor": "#bbdc0033",
   "dragBgColor": "#bbdc00",
   "borderColor": "#bbdc00",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -366,7 +366,7 @@ var duplicateSchedules9 = {
   "bgColor": "#9d9d9d33",
   "dragBgColor": "#9d9d9d",
   "borderColor": "#9d9d9d",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -457,7 +457,7 @@ var duplicateSchedules11 = {
   "bgColor": "#ff558333",
   "dragBgColor": "#ff5583",
   "borderColor": "#ff5583",
-  "customStyle": "",
+  "customStyle": "left:0;",
   "isFocused": false,
   "isPending": false,
   "isVisible": true,
@@ -502,6 +502,7 @@ var data17 = { "id": "e7608353-2065-5531-a69d-b31ee5f34a77", "title": "123", "bo
 var data18 = { "id": "c91b9c06-a42a-53c9-9c5f-423d3ab397ae", "title": "123", "body": "", "isAllDay": false, "start": "2019-08-09T07:30:00.000Z", "end": "2019-08-09T09:00:00.000Z", "color": "#000", "isVisible": true, "bgColor": "#9e5fff33", "dragBgColor": "#9e5fff33", "borderColor": "#9e5fff", "calendarId": "1", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "", "attendees": [], "recurrenceRule": "", "state": "Busy", "goingDuration": 0, "comingDuration": 0, "raw": { "class": "public" }, "__fe_id": 145 };
 var data19 = { "id": "e4bd1cf3-1f4f-571d-8867-fe487a58b429", "title": "123", "body": "", "isAllDay": false, "start": "2019-08-09T05:00:00.000Z", "end": "2019-08-09T12:00:00.000Z", "color": "#000", "isVisible": true, "bgColor": "#9e5fff33", "dragBgColor": "#9e5fff33", "borderColor": "#9e5fff", "calendarId": "1", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "", "attendees": [], "recurrenceRule": "", "state": "Busy", "goingDuration": 0, "comingDuration": 0, "raw": { "class": "public" }, "__fe_id": 63 };
 var data20 = { "id": "17df9914-4b30-5bda-8bd7-5bc954c7a66c", "title": "123", "body": "", "isAllDay": false, "start": "2019-08-09T09:00:00.000Z", "end": "2019-08-09T12:30:00.000Z", "color": "#000", "isVisible": true, "bgColor": "#9e5fff33", "dragBgColor": "#9e5fff33", "borderColor": "#9e5fff", "calendarId": "1", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "", "attendees": [], "recurrenceRule": "", "state": "Busy", "goingDuration": 0, "comingDuration": 0, "raw": { "class": "public" }, "__fe_id": 87 };
-var data21 = { "id": "5bb7ab22-8667-5b88-9470-59757f73f083", "title": "Udjoj zekfep tugluce.", "body": "", "isAllDay": false, "start": "2019-08-09T09:30:00.000Z", "end": "2019-08-09T09:30:00.000Z", "color": "#9d9d9d", "isVisible": true, "bgColor": "#9d9d9d33", "dragBgColor": "#9d9d9d", "borderColor": "#9d9d9d", "calendarId": "6", "category": "time", "dueDateClass": "", "customStyle": "", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "1147 Neldib Extension", "attendees": ["Bernice Berry", "Elmer Delgado", "Inez McKenzie", "Ricky Todd", "Virginia Norman", "Carlos Caldwell", "Shawn Graves", "Bernice Martinez"], "recurrenceRule": "repeated events", "state": "", "goingDuration": 67, "comingDuration": 44, "raw": { "memo": "Jer emeaw benabgu kej tik ru we ace hon lafnicid jave silvu.", "hasToOrCc": false, "hasRecurrenceRule": false, "location": null, "class": "public", "creator": { "name": "Roxie Lucas", "avatar": "//www.gravatar.com/avatar/4c484be30e62ae4f279bbc81fbbac3e3", "company": "J.C. Penny Co.", "email": "sut@teb.za", "phone": "(833) 979-8253" } } };
-var data22 = { "id": "baa09689-e59f-554e-849a-939e078667b1", "title": "Rugija fogbazbiz mu.", "body": "", "isAllDay": false, "start": "2019-08-04T18:30:00.000Z", "end": "2019-08-04T22:30:00.000Z", "color": "#00a9ff", "isVisible": true, "bgColor": "#00a9ff33", "dragBgColor": "#00a9ff", "borderColor": "#00a9ff", "calendarId": "2", "category": "time", "dueDateClass": "", "customStyle": "", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": true, "location": "89 Ejzu Drive", "attendees": [], "recurrenceRule": "", "state": "", "goingDuration": 0, "comingDuration": 0, "raw": { "memo": "We caacnab buzot wikcivdiv min zoeksu kunimsel fepfeoci opewi av daatu wirigmub bi aditu cu.", "hasToOrCc": false, "hasRecurrenceRule": false, "location": null, "class": "public", "creator": { "name": "Rosalie Dunn", "avatar": "//www.gravatar.com/avatar/ed0c8cffed9b31060d8988198b460e0b", "company": "Landstar System Inc.", "email": "elokuj@vufti.ly", "phone": "(688) 501-5783" } }};
-var data23 = { "id": "b4b55ee8-193c-5a82-aee3-4dee6394d6c7", "title": "Ij iz belhevod.", "body": "", "isAllDay": false, "start": "2019-08-04T18:00:00.000Z", "end": "2019-08-04T19:00:00.000Z", "color": "#ff4040", "isVisible": true, "bgColor": "#ff404033", "dragBgColor": "#ff4040", "borderColor": "#ff4040", "calendarId": "8", "category": "time", "dueDateClass": "", "customStyle": "", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "819 Umbad Loop", "attendees": ["Howard Young", "Ann Morales", "Lela Luna", "Lina Cain", "Hilda Sanders", "Steve Perez", "Anthony Hall"], "recurrenceRule": "", "state": "", "goingDuration": 0, "comingDuration": 0, "raw": { "memo": "Usleneho bevas wum tubewbuc goro lunhivcos re losvavum wa epwatu hit nekka issanse joceb varcouv.", "hasToOrCc": false, "hasRecurrenceRule": false, "location": null, "class": "public", "creator": { "name": "Juan Romero", "avatar": "//www.gravatar.com/avatar/c79a4ac74ec8e140b8fc3ff0c7e39cde", "company": "National Service Industries Inc", "email": "vatse@gekelcu.ps", "phone": "(789) 404-7482" }} };
+var data21 = { "id": "5bb7ab22-8667-5b88-9470-59757f73f083", "title": "Udjoj zekfep tugluce.", "body": "", "isAllDay": false, "start": "2019-08-09T09:30:00.000Z", "end": "2019-08-09T09:30:00.000Z", "color": "#9d9d9d", "isVisible": true, "bgColor": "#9d9d9d33", "dragBgColor": "#9d9d9d", "borderColor": "#9d9d9d", "calendarId": "6", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "1147 Neldib Extension", "attendees": ["Bernice Berry", "Elmer Delgado", "Inez McKenzie", "Ricky Todd", "Virginia Norman", "Carlos Caldwell", "Shawn Graves", "Bernice Martinez"], "recurrenceRule": "repeated events", "state": "", "goingDuration": 67, "comingDuration": 44, "raw": { "memo": "Jer emeaw benabgu kej tik ru we ace hon lafnicid jave silvu.", "hasToOrCc": false, "hasRecurrenceRule": false, "location": null, "class": "public", "creator": { "name": "Roxie Lucas", "avatar": "//www.gravatar.com/avatar/4c484be30e62ae4f279bbc81fbbac3e3", "company": "J.C. Penny Co.", "email": "sut@teb.za", "phone": "(833) 979-8253" } } };
+var data22 = { "id": "baa09689-e59f-554e-849a-939e078667b1", "title": "Rugija fogbazbiz mu.", "body": "", "isAllDay": false, "start": "2019-08-04T18:30:00.000Z", "end": "2019-08-04T22:30:00.000Z", "color": "#00a9ff", "isVisible": true, "bgColor": "#00a9ff33", "dragBgColor": "#00a9ff", "borderColor": "#00a9ff", "calendarId": "2", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": true, "location": "89 Ejzu Drive", "attendees": [], "recurrenceRule": "", "state": "", "goingDuration": 0, "comingDuration": 0, "raw": { "memo": "We caacnab buzot wikcivdiv min zoeksu kunimsel fepfeoci opewi av daatu wirigmub bi aditu cu.", "hasToOrCc": false, "hasRecurrenceRule": false, "location": null, "class": "public", "creator": { "name": "Rosalie Dunn", "avatar": "//www.gravatar.com/avatar/ed0c8cffed9b31060d8988198b460e0b", "company": "Landstar System Inc.", "email": "elokuj@vufti.ly", "phone": "(688) 501-5783" } } };
+var data23 = { "id": "b4b55ee8-193c-5a82-aee3-4dee6394d6c7", "title": "Ij iz belhevod.", "body": "", "isAllDay": false, "start": "2019-08-04T18:00:00.000Z", "end": "2019-08-04T19:00:00.000Z", "color": "#ff4040", "isVisible": true, "bgColor": "#ff404033", "dragBgColor": "#ff4040", "borderColor": "#ff4040", "calendarId": "8", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "819 Umbad Loop", "attendees": ["Howard Young", "Ann Morales", "Lela Luna", "Lina Cain", "Hilda Sanders", "Steve Perez", "Anthony Hall"], "recurrenceRule": "", "state": "", "goingDuration": 0, "comingDuration": 0, "raw": { "memo": "Usleneho bevas wum tubewbuc goro lunhivcos re losvavum wa epwatu hit nekka issanse joceb varcouv.", "hasToOrCc": false, "hasRecurrenceRule": false, "location": null, "class": "public", "creator": { "name": "Juan Romero", "avatar": "//www.gravatar.com/avatar/c79a4ac74ec8e140b8fc3ff0c7e39cde", "company": "National Service Industries Inc", "email": "vatse@gekelcu.ps", "phone": "(789) 404-7482" } } };
+var data24 = { "id": "a9c8aa27-2085-5a50-ad4c-832ec8f272bd", "title": "Vihev ivani nutefhag.", "body": "", "isAllDay": false, "start": "2019-08-04T19:00:00.000Z", "end": "2019-08-04T21:00:00.000Z", "color": "#ff5583", "isVisible": true, "bgColor": "#ff558333", "dragBgColor": "#ff5583", "borderColor": "#ff5583", "calendarId": "3", "category": "time", "dueDateClass": "", "customStyle": "left: 0;", "customClass": "duplicate-schedule", "isPending": false, "isFocused": false, "isReadOnly": false, "isPrivate": false, "location": "", "attendees": [], "recurrenceRule": "", "state": "Busy", "goingDuration": 0, "comingDuration": 0, "raw": { "class": "public" } };

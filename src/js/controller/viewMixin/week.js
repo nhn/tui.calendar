@@ -152,31 +152,39 @@ var Week = {
             });
         });
     },
-    /* eslint-disable */
+
     /**
      * create view model for time view part
      * @this Base
      * @param {Date} start - start date.
      * @param {Date} end - end date.
      * @param {Collection} time - view model collection.
-     * @param {number} hourStart - start hour to be shown
-     * @param {number} hourEnd - end hour to be shown
-     * @param {function} customLayoutPositionHandler - use custom layout position handler
+     * @param {object} options - for hourStart, hourEnd, duplicateScheduleLayout
+     *  @param {number} hourStart - start hour to be shown
+     *  @param {number} hourEnd - end hour to be shown
+     *  @param {object | false} duplicateScheduleLayout - The options for duplicate schedule layout
      * @returns {object} view model for time part.
      */
-    getViewModelForTimeView: function(start, end, time, hourStart, hourEnd, customLayoutPositionHandler) {
+    getViewModelForTimeView: function(start, end, time, options) {
         var self = this,
             ymdSplitted = this.splitScheduleByDateRange(start, end, time),
-            result = {};
+            result = {},
+            hourStart = util.pick(options, 'hourStart'),
+            hourEnd = util.pick(options, 'hourEnd'),
+            duplicateScheduleLayout = util.pick(options, 'duplicateScheduleLayout'),
+            defaultCalendarId = util.pick(duplicateScheduleLayout, 'defaultCalendarId');
 
         var _getViewModel = Week._makeGetViewModelFuncForTimeView(hourStart, hourEnd);
 
         util.forEach(ymdSplitted, function(collection, ymd) {
             var viewModels = _getViewModel(collection);
-            var collisionGroups, matrices;
+            var collisionGroups, matrices,
+                duplicateGroups = duplicateScheduleLayout ?
+                    self.Core.filterDuplicatedViewModel(collection, defaultCalendarId) : [];
 
-            collisionGroups = self.Core.getCollisionGroup(viewModels);
-            matrices = self.Core.getMatrices(collection, collisionGroups, customLayoutPositionHandler);
+            collisionGroups = self.Core.getCollisionGroup(viewModels, duplicateGroups);
+
+            matrices = self.Core.getMatrices(collection, collisionGroups);
             self.Week.getCollides(matrices);
 
             result[ymd] = matrices;
@@ -298,14 +306,8 @@ var Week = {
             ctrlWeek = this.Week,
             filter = ctrlCore.getScheduleInDateRangeFilter(start, end),
             scheduleTypes = util.pluck(panels, 'name'),
-            hourStart = util.pick(options, 'hourStart'),
-            hourEnd = util.pick(options, 'hourEnd'),
             modelColl,
-            group,
-            customScheduleLayout = util.pick(options, 'customScheduleLayout'),
-            positionHandler = util.pick(customScheduleLayout, 'positionHandler');
-
-        // console.log(customScheduleLayout, positionHandler, typeof positionHandler);
+            group;
 
         andFilters = andFilters || [];
         filter = Collection.and.apply(null, [filter].concat(andFilters));
@@ -319,7 +321,12 @@ var Week = {
             if (panel.type === 'daygrid') {
                 group[name] = ctrlWeek.getViewModelForAlldayView(start, end, group[name]);
             } else if (panel.type === 'timegrid') {
-                group[name] = ctrlWeek.getViewModelForTimeView(start, end, group[name], hourStart, hourEnd, positionHandler);
+                group[name] = ctrlWeek.getViewModelForTimeView(
+                    start,
+                    end,
+                    group[name],
+                    options
+                );
             }
         });
 

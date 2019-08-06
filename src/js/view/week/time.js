@@ -26,9 +26,9 @@ var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
  * @param {number} options.hourEnd Can limit of render hour end.
  * @param {HTMLElement} container Element to use container for this view.
  * @param {Theme} theme - theme instance
- * @param {CustomScheduleLayout} customScheduleLayout - custom schedule layout instance
+ * @param {duplicateScheduleLayout} duplicateScheduleLayout - use duplicate schedule layout
  */
-function Time(options, container, theme, customScheduleLayout) {
+function Time(options, container, theme, duplicateScheduleLayout) {
     View.call(this, container);
 
     this.options = util.extend({
@@ -52,9 +52,9 @@ function Time(options, container, theme, customScheduleLayout) {
     this.theme = theme;
 
     /**
-     * @type {customScheduleLayout}
+     * @type {duplicateScheduleLayout}
      */
-    this.customScheduleLayout = customScheduleLayout;
+    this.duplicateScheduleLayout = duplicateScheduleLayout;
 
     container.style.width = options.width + '%';
     container.style.left = options.left + '%';
@@ -91,9 +91,16 @@ Time.prototype._parseDateGroup = function(str) {
  * @returns {object} - left and width
  */
 Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
+    var width = options.baseWidth * (viewModel.extraSpace + 1);
+
+    // set width auto when has no collisions.
+    if (!viewModel.hasCollide) {
+        width = null;
+    }
+
     return {
         left: options.baseLeft[options.columnIndex],
-        width: viewModel.width
+        width: width
     };
 };
 
@@ -180,7 +187,6 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
     }, boundX, boundY);
 };
 
-/* eslint-disable */
 /**
  * Set viewmodels for rendering.
  * @param {string} ymd The date of schedules. YYYYMMDD format.
@@ -194,8 +200,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         hourEnd = options.hourEnd,
         isReadOnly = options.isReadOnly,
         todayStart,
-        baseMS,
-        customPositionHandler = self.customScheduleLayout.positionHandler || false;
+        baseMS;
 
     /**
      * Calculate each schedule element bounds relative with rendered hour milliseconds and
@@ -210,9 +215,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         var maxRowLength,
             widthPercent,
             leftPercents,
-            i,
-            rearrangeData,
-            rearrangeDataSchedules;
+            i;
 
         maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
             return row.length;
@@ -226,96 +229,11 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         }
 
         forEachArr(matrix, function(row) {
-            if (customPositionHandler && typeof customPositionHandler === 'function') {
-                var j = 0;
-                for(j = 0; j < row.length; j += 1) {
-                    if (row[j]) {
-                        row[j].idx = j;
-                    } else {
-                        /*
-                        row[j] = {
-                            idx: j
-                        }
-                        */
-                    }
-                }
-                rearrangeData = customPositionHandler({
-                    leftPercents: leftPercents,
-                    widthPercent: widthPercent,
-                    schedulesForRow: JSON.parse(JSON.stringify(row))
-                });
-
-                rearrangeDataSchedules = rearrangeData.schedules;
-                widthPercent = rearrangeData.widthPercent;
-                leftPercents = rearrangeData.leftPercents;
-
-                //console.log(row[0], row[1], row[2], rearrangeDataSchedules)
-                //row.forEach(function (el) {console.log(el)})
-                var m = 0, newRowArr = [];
-                for (; m < rearrangeDataSchedules.length; m += 1) {
-                  var data = rearrangeDataSchedules[m];
-
-                  if (!data) {
-                    newRowArr.push(null);
-                    continue;
-                  }
-
-                  var rowItem = row.find(function(rowItem) {
-                    return rowItem && rowItem.model && rowItem.model.id === data.model.id && rowItem.model.calendarId === data.model.calendarId;
-                  });
-
-                  if (rowItem) {
-                    newRowArr.push(rowItem);
-                  }
-                }
-                /*
-                row.sort(function(a, b) {
-                    if (!a && !b) {
-                        return -1;
-                    } else if (!a && b) {
-                        return -1;
-                    } else if (a && !b) {
-                        return 1;
-                    } else {
-                        var aIdx = findIndex(rearrangeDataSchedules, function(data) {
-                            return data && data.idx === a.idx;
-                        });
-
-                        var bIdx = findIndex(rearrangeDataSchedules, function(data) {
-                            return data && data.idx === b.idx;
-                        });
-
-                        return aIdx - bIdx;
-                    }
-                });
-                */
-
-                //console.log(row, newRowArr)
-                row = newRowArr;
-            }
-
             forEachArr(row, function(viewModel, col) {
-                var viewBound, customViewModelData;
+                var viewBound;
 
                 if (!viewModel) {
                     return;
-                }
-
-                if (rearrangeDataSchedules) {
-                    customViewModelData = rearrangeDataSchedules.find(function (data) {
-                      return data && data.model.id === viewModel.model.id && data.model.calendarId === viewModel.model.calendarId;
-                    });
-
-                    //customViewModelData = rearrangeDataSchedules[col];
-
-                    if (customViewModelData) {
-                        viewModel.width = customViewModelData.width;
-                        viewModel.left = customViewModelData.left;
-                    }
-
-                    // console.log(viewModel, col, rearrangeDataSchedules, customViewModelData, customViewModelData.model.calendarId);
-                } else {
-                    viewModel.width = viewModel.hasCollide ? widthPercent * (viewModel.extraSpace + 1) : null;
                 }
 
                 viewBound = self.getScheduleViewBound(viewModel, {
@@ -329,8 +247,68 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                 });
 
                 util.extend(viewModel, viewBound);
+
+                self._setDuplicateSchedulesWithCustomlayout(
+                    viewModel,
+                    viewModel.left,
+                    viewModel.width ? viewModel.width : widthPercent,
+                    row,
+                    {
+                        todayStart: todayStart,
+                        baseMS: baseMS,
+                        baseHeight: containerHeight
+                    }
+                );
             });
         });
+    });
+};
+
+/**
+ * Set duplicate schedules with using custom layout.
+ * @param {ViewModel} viewModel - The Schedule View Model Instance
+ * @param {number} initLeft - The left value of major schedule viewmodel (percent value)
+ * @param {number} initWidth - The width value of major schedule viewmodel (percent value)
+ * @param {array<ScheduleViewModel>} matirixRow - The shedule view models in the current matrix row
+ * @param {object} options - The options for bounding Y
+ */
+Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, initLeft, initWidth, matirixRow, options) {
+    var self = this,
+        customDuplicateScheduleLayoutHandler = util.pick(self.duplicateScheduleLayout, 'layoutHandler') || false,
+        subModels = viewModel.subModels,
+        todayStart,
+        baseMS,
+        baseHeight,
+        layoutInfos,
+        viewModelBound,
+        subModelBounds;
+
+    if (!subModels ||
+        !customDuplicateScheduleLayoutHandler ||
+        typeof customDuplicateScheduleLayoutHandler !== 'function') {
+        return;
+    }
+
+    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, subModels);
+    viewModelBound = layoutInfos.mainScheduleBound;
+    subModelBounds = layoutInfos.subScheduleBounds;
+    todayStart = options.todayStart;
+    baseMS = options.baseMS;
+    baseHeight = options.baseHeight;
+
+    util.extend(viewModel, viewModelBound);
+
+    forEachArr(subModelBounds, function(boundX, subIdx) {
+        var subModel = subModels[subIdx],
+            boundY = self._getScheduleViewBoundY(subModel, {
+                todayStart: todayStart,
+                baseMS: baseMS,
+                baseHeight: baseHeight
+            });
+
+        util.extend(subModel, boundX, boundY);
+
+        matirixRow.push(subModel);
     });
 };
 
@@ -351,8 +329,7 @@ Time.prototype.render = function(ymd, matrices, containerHeight) {
     this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
         matrices: matrices,
-        styles: this._getStyles(this.theme),
-        customScheduleLayout: this.customScheduleLayout
+        styles: this._getStyles(this.theme)
     });
 };
 

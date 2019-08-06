@@ -17,15 +17,42 @@ var Core = {
     /**
      * Calculate collision group.
      * @param {array} viewModels List of viewmodels.
+     * @param {array[]} duplicateGroups Duplicate groups for schedule set.
      * @returns {array} Collision Group.
      */
-    getCollisionGroup: function(viewModels) {
+    getCollisionGroup: function(viewModels, duplicateGroups) {
         var collisionGroups = [],
             foundPrevCollisionSchedule = false,
-            previousScheduleList;
+            previousScheduleList, filterViewModels, duplicatedViewModels = [];
 
         if (!viewModels.length) {
             return collisionGroups;
+        }
+
+        if (duplicateGroups && duplicateGroups.length) {
+            filterViewModels = util.filter(viewModels, function(vm) {
+                if (duplicateGroups.indexOf(util.stamp(vm.valueOf())) < 0) {
+                    return true;
+                }
+
+                duplicatedViewModels.push(vm);
+
+                return false;
+            });
+
+            forEachArr(filterViewModels, function(vm) {
+                var modelId = vm.model.id, subModels;
+
+                subModels = util.filter(duplicatedViewModels, function(dvm) {
+                    return dvm.model.id === modelId;
+                });
+
+                if (subModels.length > 0) {
+                    vm.subModels = subModels;
+                }
+            });
+
+            viewModels = filterViewModels;
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
@@ -59,6 +86,8 @@ var Core = {
                 // This schedule is a schedule that does not overlap with the previous schedule, so a new Collision Group is constructed.
                 collisionGroups.push([util.stamp(schedule.valueOf())]);
             }
+
+            return true;
         });
 
         return collisionGroups;
@@ -88,9 +117,10 @@ var Core = {
      * Calculate matrix for appointment block element placing.
      * @param {Collection} collection model collection.
      * @param {array[]} collisionGroups Collision groups for schedule set.
+     * @param {array[]} duplicateGroups Duplicate groups for schedule set.
      * @returns {array} matrices
      */
-    getMatrices: function(collection, collisionGroups) {
+    getMatrices: function(collection, collisionGroups, duplicateGroups) {
         var result = [],
             getLastRowInColumn = Core.getLastRowInColumn;
 
@@ -107,7 +137,7 @@ var Core = {
                 while (!found) {
                     lastRowInColumn = getLastRowInColumn(matrix, col);
 
-                    /*
+
                     if (lastRowInColumn === false) {
                         matrix[0].push(schedule);
                         found = true;
@@ -119,9 +149,9 @@ var Core = {
                         matrix[nextRow][col] = schedule;
                         found = true;
                     }
-                    */
 
 
+                    /*
                     if (lastRowInColumn === false) {
                         matrix[0].push(schedule);
                         found = true;
@@ -149,6 +179,7 @@ var Core = {
                         }
 
                     }
+                    */
 
                     col += 1;
                 }
@@ -279,6 +310,39 @@ var Core = {
         });
 
         return viewModelColl;
+    },
+
+    filterDuplicatedViewModel: function(modelColl, defaultCalendarId) {
+        var scheduleViewModels = modelColl.items,
+            duplicatedViewModels = [];
+
+        for(var itemId in scheduleViewModels) {
+            var scheduleViewModel = scheduleViewModels[itemId],
+                scheduleId = scheduleViewModel.model.id,
+                calendarId = scheduleViewModel.model.calendarId;
+
+            if (Core.isDupliate(scheduleViewModels, itemId, scheduleId) &&
+                defaultCalendarId !== calendarId) {
+                duplicatedViewModels.push(Number(itemId));
+            }
+        }
+
+        return duplicatedViewModels;
+    },
+
+    isDupliate: function(collItems, collectionItemId, schedulModelId) {
+        var i = 0, len = collItems.length, result = false;
+
+        for(var itemId in collItems) {
+            var scheduleId = collItems[itemId].model.id;
+
+            if (scheduleId === schedulModelId && itemId !== collectionItemId) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 };
 
