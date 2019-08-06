@@ -150,37 +150,6 @@ var Core = {
                         found = true;
                     }
 
-
-                    /*
-                    if (lastRowInColumn === false) {
-                        matrix[0].push(schedule);
-                        found = true;
-                    } else {
-                        findDuplicateSvm = matrix[lastRowInColumn].find(function(svm) {
-
-                            return svm && svm.model.id === schedule.model.id;
-                        });
-
-                        if (findDuplicateSvm && !lastRowInColumn) {
-                            console.log('같은 ID의 스케줄이 있어!', findDuplicateSvm, matrix[lastRowInColumn].length);
-
-                            matrix[lastRowInColumn].push(schedule);
-                            found = true;
-                        } else if (!lastRowInColumn){
-                            matrix[0].push(schedule);
-                            found = true;
-                        } else if (!schedule.collidesWith(matrix[lastRowInColumn][col])) {
-                            nextRow = lastRowInColumn + 1;
-                            if (util.isUndefined(matrix[nextRow])) {
-                                matrix[nextRow] = [];
-                            }
-                            matrix[nextRow][col] = schedule;
-                            found = true;
-                        }
-
-                    }
-                    */
-
                     col += 1;
                 }
             });
