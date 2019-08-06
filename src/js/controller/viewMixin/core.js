@@ -23,13 +23,14 @@ var Core = {
     getCollisionGroup: function(viewModels, duplicateGroups) {
         var collisionGroups = [],
             foundPrevCollisionSchedule = false,
-            previousScheduleList, filterViewModels, duplicatedViewModels = [];
+            duplicatedViewModels = [],
+            previousScheduleList, filterViewModels;
 
         if (!viewModels.length) {
             return collisionGroups;
         }
 
-        if (duplicateGroups && duplicateGroups.length) {
+        if (duplicateGroups && duplicateGroups.length && viewModels.length > 1) {
             filterViewModels = util.filter(viewModels, function(vm) {
                 if (duplicateGroups.indexOf(util.stamp(vm.valueOf())) < 0) {
                     return true;
@@ -41,14 +42,13 @@ var Core = {
             });
 
             forEachArr(filterViewModels, function(vm) {
-                var modelId = vm.model.id, subModels;
-
-                subModels = util.filter(duplicatedViewModels, function(dvm) {
+                var modelId = vm.model.id;
+                var duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
                     return dvm.model.id === modelId;
                 });
 
-                if (subModels.length > 0) {
-                    vm.subModels = subModels;
+                if (duplicateModels.length > 0) {
+                    vm.duplicateModels = duplicateModels;
                 }
             });
 
@@ -112,15 +112,13 @@ var Core = {
         return false;
     },
 
-    /* eslint-disable */
     /**
      * Calculate matrix for appointment block element placing.
      * @param {Collection} collection model collection.
      * @param {array[]} collisionGroups Collision groups for schedule set.
-     * @param {array[]} duplicateGroups Duplicate groups for schedule set.
      * @returns {array} matrices
      */
-    getMatrices: function(collection, collisionGroups, duplicateGroups) {
+    getMatrices: function(collection, collisionGroups) {
         var result = [],
             getLastRowInColumn = Core.getLastRowInColumn;
 
@@ -281,17 +279,24 @@ var Core = {
     },
 
     filterDuplicatedViewModel: function(modelColl, defaultCalendarId) {
-        var scheduleViewModels = modelColl.items,
-            duplicatedViewModels = [];
+        var scheduleViewModels = modelColl.items;
+        var duplicatedViewModels = [];
+        var itemId;
+        var scheduleViewModel;
+        var scheduleId;
+        var calendarId;
 
-        for(var itemId in scheduleViewModels) {
-            var scheduleViewModel = scheduleViewModels[itemId],
-                scheduleId = scheduleViewModel.model.id,
+        for (itemId in scheduleViewModels) {
+            if (Object.prototype.hasOwnProperty.call(scheduleViewModels, itemId)) {
+                scheduleViewModel = scheduleViewModels[itemId];
+                scheduleId = scheduleViewModel.model.id;
                 calendarId = scheduleViewModel.model.calendarId;
 
-            if (Core.isDupliate(scheduleViewModels, itemId, scheduleId) &&
-                defaultCalendarId !== calendarId) {
-                duplicatedViewModels.push(Number(itemId));
+                if (Core.isDupliate(scheduleViewModels, itemId, scheduleId) &&
+                    defaultCalendarId !== calendarId &&
+                    !scheduleViewModel.model.isPending) {
+                    duplicatedViewModels.push(Number(itemId));
+                }
             }
         }
 
@@ -299,14 +304,18 @@ var Core = {
     },
 
     isDupliate: function(collItems, collectionItemId, schedulModelId) {
-        var i = 0, len = collItems.length, result = false;
+        var result = false;
+        var itemId;
+        var scheduleId;
 
-        for(var itemId in collItems) {
-            var scheduleId = collItems[itemId].model.id;
+        for (itemId in collItems) {
+            if (Object.prototype.hasOwnProperty.call(collItems, itemId)) {
+                scheduleId = collItems[itemId].model.id;
 
-            if (scheduleId === schedulModelId && itemId !== collectionItemId) {
-                result = true;
-                break;
+                if (scheduleId === schedulModelId && itemId !== collectionItemId) {
+                    result = true;
+                    break;
+                }
             }
         }
 

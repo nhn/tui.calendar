@@ -274,8 +274,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
  */
 Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, initLeft, initWidth, matirixRow, options) {
     var self = this,
-        customDuplicateScheduleLayoutHandler = util.pick(self.duplicateScheduleLayout, 'layoutHandler') || false,
-        subModels = viewModel.subModels,
+        customDuplicateScheduleLayoutHandler = util.pick(self.duplicateScheduleLayout, 'layoutHandler'),
+        duplicateModels = viewModel.duplicateModels,
         todayStart,
         baseMS,
         baseHeight,
@@ -283,30 +283,35 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
         viewModelBound,
         subModelBounds;
 
-    if (!subModels ||
-        !customDuplicateScheduleLayoutHandler ||
-        typeof customDuplicateScheduleLayoutHandler !== 'function') {
+    if (!duplicateModels ||
+        !customDuplicateScheduleLayoutHandler) {
         return;
     }
 
-    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, subModels);
+    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, duplicateModels);
     viewModelBound = layoutInfos.mainScheduleBound;
     subModelBounds = layoutInfos.subScheduleBounds;
     todayStart = options.todayStart;
     baseMS = options.baseMS;
     baseHeight = options.baseHeight;
 
-    util.extend(viewModel, viewModelBound);
+    viewModel.left = viewModelBound.left;
+    viewModel.width = viewModelBound.width;
+    viewModel.model.customClass = viewModelBound.customClass;
 
     forEachArr(subModelBounds, function(boundX, subIdx) {
-        var subModel = subModels[subIdx],
+        var subModel = duplicateModels[subIdx],
             boundY = self._getScheduleViewBoundY(subModel, {
                 todayStart: todayStart,
                 baseMS: baseMS,
                 baseHeight: baseHeight
             });
 
-        util.extend(subModel, boundX, boundY);
+        subModel.left = boundX.left;
+        subModel.width = boundX.width;
+        subModel.model.customClass = boundX.customClass;
+
+        util.extend(subModel, boundY);
 
         matirixRow.push(subModel);
     });

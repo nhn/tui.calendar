@@ -157,8 +157,11 @@
         const isFocused = viewModel.model.isFocused;
         const subModelViewBound = {};
 
+        subModelViewBound.customClass = 'duplicate-schedule';
+
         if (isFocused) {
           hasFocusModel = true;
+          subModelViewBound.customClass = '';
         }
 
         subModelViewBound.width = isFocused ?
@@ -183,9 +186,9 @@
       if (hasFocusModel) {
         mainScheduleVm.left = `calc(${initLeft}% + (${initWidth}% - ${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px))`;
         mainScheduleVm.width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
-        mainScheduleVm.customClass = 'major-schedule duplicate-schedule';
+        mainScheduleVm.customClass = 'duplicate-schedule';
       } else {
-        mainScheduleVm.customClass = 'major-schedule';
+        mainScheduleVm.customClass = '';
       }
 
       return {
@@ -555,7 +558,7 @@
             if (!schedule) {
                 return;
             }
-
+            /*
             const calendar = _.find(CalendarList, {id: schedule.calendarId});
             const isDuplicateSchedule = _.includes(schedule.customClass, 'duplicate-schedule');
             const isMajorSchedule = _.includes(schedule.customClass, 'major-schedule');
@@ -578,12 +581,12 @@
             else {
               customClass = schedule.customClass;
             }
-
+            */
             _setScheduleColors(schedule, calendar, cal.viewName, focus);
             cal.updateSchedule(schedule.id, schedule.calendarId, {
                 isFocused: focus,
                 color: schedule.color,
-                customClass
+                // customClass
             }, true);
             cal.render(true);
         }
