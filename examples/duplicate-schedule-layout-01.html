@@ -148,7 +148,7 @@
     <script type="text/javascript" class="code-js">
 
     const DEFAULT_DUPLICATE_SCHEDULE_WIDTH = 9;
-    function duplicateScheduleLayoutHandler(initLeft, initWidth, subViewModels) {
+    function duplicateScheduleLayoutHandler(initLeft, initWidth, subViewModels, mainSchedule) {
       let hasFocusModel = false;
       const subModelBounds = [];
       const mainScheduleVm = {};
@@ -165,7 +165,7 @@
         }
 
         subModelViewBound.width = isFocused ?
-          `calc(${initWidth}% - ${(DEFAULT_DUPLICATE_SCHEDULE_WIDTH * subViewModels.length - 1)}px)` :
+          `calc(${initWidth}% - ${(DEFAULT_DUPLICATE_SCHEDULE_WIDTH * subViewModels.length)}px)` :
           `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
 
         if (initLeft === 0 && subIdx === 0) {
@@ -187,8 +187,10 @@
         mainScheduleVm.left = `calc(${initLeft}% + (${initWidth}% - ${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px))`;
         mainScheduleVm.width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
         mainScheduleVm.customClass = 'duplicate-schedule';
+        mainScheduleVm.borderColor = (mainSchedule.borderColor).substr(0, 7) + "00";
       } else {
         mainScheduleVm.customClass = '';
+        mainScheduleVm.borderColor = (mainSchedule.borderColor).substr(0, 7);
       }
 
       return {
@@ -558,35 +560,11 @@
             if (!schedule) {
                 return;
             }
-            /*
-            const calendar = _.find(CalendarList, {id: schedule.calendarId});
-            const isDuplicateSchedule = _.includes(schedule.customClass, 'duplicate-schedule');
-            const isMajorSchedule = _.includes(schedule.customClass, 'major-schedule');
-            let customClass = isDuplicateSchedule ? (focus ? 'duplicate-schedule is-focus' : 'duplicate-schedule') : schedule.customClass;
 
-            if (isMajorSchedule) {
-                if (!focus) {
-                    customClass = 'major-schedule';
-                }
-            }
-
-            else if (isDuplicateSchedule) {
-                if (focus) {
-                    customClass = 'duplicate-schedule is-focus';
-                } else {
-                    customClass = 'duplicate-schedule';
-                }
-            }
-
-            else {
-              customClass = schedule.customClass;
-            }
-            */
             _setScheduleColors(schedule, calendar, cal.viewName, focus);
             cal.updateSchedule(schedule.id, schedule.calendarId, {
                 isFocused: focus,
-                color: schedule.color,
-                // customClass
+                color: schedule.color
             }, true);
             cal.render(true);
         }
