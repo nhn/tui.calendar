@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3-dooray-sp94-190806-1 | Tue Aug 06 2019
+ * @version 1.12.3-dooray-sp94-190807 | Wed Aug 07 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -23984,7 +23984,7 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
         return;
     }
 
-    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, duplicateModels);
+    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, duplicateModels, viewModel.model);
     viewModelBound = layoutInfos.mainScheduleBound;
     subModelBounds = layoutInfos.subScheduleBounds;
     todayStart = options.todayStart;
@@ -23994,6 +23994,10 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
     viewModel.left = viewModelBound.left;
     viewModel.width = viewModelBound.width;
     viewModel.model.customClass = viewModelBound.customClass;
+
+    if (viewModelBound.borderColor) {
+        viewModel.model.borderColor = viewModelBound.borderColor;
+    }
 
     forEachArr(subModelBounds, function(boundX, subIdx) {
         var subModel = viewModel.duplicateModels[subIdx],
