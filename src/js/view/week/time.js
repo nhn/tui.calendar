@@ -290,7 +290,7 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
         return;
     }
 
-    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, duplicateModels);
+    layoutInfos = customDuplicateScheduleLayoutHandler(initLeft, initWidth, duplicateModels, viewModel.model);
     viewModelBound = layoutInfos.mainScheduleBound;
     subModelBounds = layoutInfos.subScheduleBounds;
     todayStart = options.todayStart;
@@ -300,6 +300,10 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
     viewModel.left = viewModelBound.left;
     viewModel.width = viewModelBound.width;
     viewModel.model.customClass = viewModelBound.customClass;
+
+    if (viewModelBound.borderColor) {
+        viewModel.model.borderColor = viewModelBound.borderColor;
+    }
 
     forEachArr(subModelBounds, function(boundX, subIdx) {
         var subModel = viewModel.duplicateModels[subIdx],
