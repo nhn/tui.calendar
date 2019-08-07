@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3-dooray-sp94-190807 | Wed Aug 07 2019
+ * @version 1.12.3-dooray-sp94-190807-1 | Wed Aug 07 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -23886,6 +23886,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
  * @param {string} ymd The date of schedules. YYYYMMDD format.
  * @param {array} matrices The matrices for schedule placing.
  * @param {number} containerHeight - container's height
+ * @returns {array} matrices - matrices ready to render
  */
 Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
     var self = this,
@@ -23895,6 +23896,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         isReadOnly = options.isReadOnly,
         todayStart,
         baseMS;
+
+    var matrixForRender = [];
 
     /**
      * Calculate each schedule element bounds relative with rendered hour milliseconds and
@@ -23910,6 +23913,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
             widthPercent,
             leftPercents,
             i;
+        var readyMatrix = [];
 
         maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
             return row.length;
@@ -23923,6 +23927,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
         }
 
         forEachArr(matrix, function(row) {
+            var readyRow = [];
+
             forEachArr(row, function(viewModel, col) {
                 var viewBound;
 
@@ -23942,11 +23948,13 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
 
                 util.extend(viewModel, viewBound);
 
+                readyRow.push(viewModel);
+
                 self._setDuplicateSchedulesWithCustomlayout(
                     viewModel,
                     viewModel.left,
                     viewModel.width ? viewModel.width : widthPercent,
-                    row,
+                    readyRow,
                     {
                         todayStart: todayStart,
                         baseMS: baseMS,
@@ -23954,8 +23962,14 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     }
                 );
             });
+
+            readyMatrix.push(readyRow);
         });
+
+        matrixForRender.push(readyMatrix);
     });
+
+    return matrixForRender;
 };
 
 /**
@@ -24031,9 +24045,9 @@ Time.prototype.getDate = function() {
  * @param {number} containerHeight - container's height
  */
 Time.prototype.render = function(ymd, matrices, containerHeight) {
-    this._getBaseViewModel(ymd, matrices, containerHeight);
+    var matrixForRender = this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
-        matrices: matrices,
+        matrices: matrixForRender,
         styles: this._getStyles(this.theme)
     });
 };
