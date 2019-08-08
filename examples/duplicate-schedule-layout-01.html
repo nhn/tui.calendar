@@ -102,7 +102,8 @@
           <span class="title">Select Schedule Layout : </span>
           <div class="renderer-mode-groups">
               <label><input type="radio" name="rendererMode" value="default"> Default</label>
-              <label><input type="radio" name="rendererMode" value="custom" checked> Custom</label>
+              <label><input type="radio" name="rendererMode" value="1" checked> 캘린더 1</label>
+              <label><input type="radio" name="rendererMode" value="2"> 캘린더 2</label>
           </div>
         </div>
 
@@ -188,6 +189,14 @@
         mainScheduleVm.width = `${DEFAULT_DUPLICATE_SCHEDULE_WIDTH}px`;
         mainScheduleVm.customClass = 'duplicate-schedule';
         mainScheduleVm.borderColor = (mainSchedule.borderColor).substr(0, 7) + "00";
+
+        subViewModels.forEach((schedule, subIdx) => {
+            const isFocused = schedule.isFocused;
+
+            if (!isFocused && subIdx) {
+                subModelBounds[subIdx].borderColor = `${mainSchedule.borderColor.substr(0, 7)}00`;
+            }
+        });
       } else {
         mainScheduleVm.customClass = '';
         mainScheduleVm.borderColor = (mainSchedule.borderColor).substr(0, 7);
@@ -335,9 +344,9 @@
 
       if (evt.target.value === 'default') {
         duplicateScheduleLayout = false;
-      } else { // custom
+      } else{ // custom
         duplicateScheduleLayout = {
-          defaultCalendarId: DEFAULT_CALENDAR_ID,
+          defaultCalendarId: evt.target.value,
           layoutHandler: duplicateScheduleLayoutHandler
         }
       }

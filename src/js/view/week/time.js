@@ -331,6 +331,10 @@ Time.prototype._setDuplicateSchedulesWithCustomlayout = function(viewModel, init
         subModel.width = boundX.width;
         subModel.model.customClass = boundX.customClass;
 
+        if (boundX.borderColor) {
+            subModel.model.borderColor = boundX.borderColor;
+        }
+
         util.extend(subModel, boundY);
 
         matirixRow.push(subModel);
