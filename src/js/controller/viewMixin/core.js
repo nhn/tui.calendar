@@ -24,7 +24,7 @@ var Core = {
         var collisionGroups = [],
             foundPrevCollisionSchedule = false,
             duplicatedViewModels = [],
-            previousScheduleList, filterViewModels;
+            previousScheduleList, filterViewModels = [];
 
         if (!viewModels.length) {
             return collisionGroups;
@@ -32,7 +32,9 @@ var Core = {
 
         if (duplicateGroups && duplicateGroups.length && viewModels.length > 1) {
             filterViewModels = util.filter(viewModels, function(vm) {
-                if (duplicateGroups.indexOf(util.stamp(vm.valueOf())) < 0) {
+                var itemId = util.stamp(vm.valueOf());
+
+                if (duplicateGroups.indexOf(itemId) < 0) {
                     return true;
                 }
 
@@ -278,29 +280,50 @@ var Core = {
         return viewModelColl;
     },
 
-    filterDuplicatedViewModel: function(modelColl, defaultCalendarId) {
-        var scheduleViewModels = modelColl.items;
-        var duplicatedViewModels = [];
-        var itemId;
-        var scheduleViewModel;
-        var scheduleId;
-        var calendarId;
+    groupByDuplicatedItem: function(collection) {
+        var key;
+        var duplicateCollections = [];
+        var groupBySchedules = collection.groupBy(collection.toArray(), function(item) {
+            return item.model.id;
+        });
 
-        for (itemId in scheduleViewModels) {
-            if (Object.prototype.hasOwnProperty.call(scheduleViewModels, itemId)) {
-                scheduleViewModel = scheduleViewModels[itemId];
-                scheduleId = scheduleViewModel.model.id;
-                calendarId = scheduleViewModel.model.calendarId;
-
-                if (Core.isDupliate(scheduleViewModels, itemId, scheduleId) &&
-                    defaultCalendarId !== calendarId &&
-                    !scheduleViewModel.model.isPending) {
-                    duplicatedViewModels.push(Number(itemId));
-                }
+        for (key in groupBySchedules) {
+            if (Object.prototype.hasOwnProperty.call(groupBySchedules, key) &&
+                groupBySchedules[key].length > 1) {
+                duplicateCollections.push(groupBySchedules[key]);
             }
         }
 
-        return duplicatedViewModels;
+        return duplicateCollections;
+    },
+
+    filterDuplicatedViewModel: function(duplicateCollections, defaultCalendarId) {
+        var duplicateIdsExceptMajor = [];
+        forEachArr(duplicateCollections, function(collection) {
+            var items = collection.toArray();
+            var majorSchedule;
+            var majorScheduleItemId;
+
+            var filteredMajorSchedules = util.filter(items, function(item) {
+                return item.model.calendarId === defaultCalendarId;
+            });
+
+            if (filteredMajorSchedules.length) {
+                majorSchedule = filteredMajorSchedules[0];
+            } else {
+                majorSchedule = items[items.length - 1];
+            }
+
+            majorScheduleItemId = collection.getItemID(majorSchedule);
+
+            forEachArr(items, function(item) {
+                if (collection.getItemID(item) !== majorScheduleItemId) {
+                    duplicateIdsExceptMajor.push(collection.getItemID(item));
+                }
+            });
+        });
+
+        return duplicateIdsExceptMajor;
     },
 
     isDupliate: function(collItems, collectionItemId, schedulModelId) {

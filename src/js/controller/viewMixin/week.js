@@ -178,9 +178,14 @@ var Week = {
 
         util.forEach(ymdSplitted, function(collection, ymd) {
             var viewModels = _getViewModel(collection);
-            var collisionGroups, matrices,
-                duplicateGroups = duplicateScheduleLayout ?
-                    self.Core.filterDuplicatedViewModel(collection, defaultCalendarId) : [];
+            var collisionGroups, matrices;
+            var duplicateCollections = [];
+            var duplicateGroups = [];
+
+            if (duplicateScheduleLayout) {
+                duplicateCollections = self.Core.groupByDuplicatedItem(collection);
+                duplicateGroups = self.Core.filterDuplicatedViewModel(duplicateCollections, defaultCalendarId);
+            }
 
             collisionGroups = self.Core.getCollisionGroup(viewModels, duplicateGroups);
 
