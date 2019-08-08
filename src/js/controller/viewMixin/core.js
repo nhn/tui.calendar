@@ -55,7 +55,7 @@ var Core = {
             viewModels = filterViewModels;
         }
 
-        collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
+        collisionGroups[0] = viewModels[0] ? [util.stamp(viewModels[0].valueOf())] : [];
         forEachArr(viewModels.slice(1), function(schedule, index) {
             foundPrevCollisionSchedule = false;
             previousScheduleList = aps.apply(viewModels, [0, index + 1]).reverse();
