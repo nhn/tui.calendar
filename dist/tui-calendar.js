@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.3-dooray-sp94-190808 | Thu Aug 08 2019
+ * @version 1.12.3-dooray-sp94-190808-1 | Thu Aug 08 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -7242,7 +7242,7 @@ var Core = {
             viewModels = filterViewModels;
         }
 
-        collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
+        collisionGroups[0] = viewModels[0] ? [util.stamp(viewModels[0].valueOf())] : [];
         forEachArr(viewModels.slice(1), function(schedule, index) {
             foundPrevCollisionSchedule = false;
             previousScheduleList = aps.apply(viewModels, [0, index + 1]).reverse();
