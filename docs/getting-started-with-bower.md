@@ -23,6 +23,13 @@ TOAST UI Calendar requires tui-code-snippet as dependencies to work.
 <link rel="stylesheet" href="../bower_components/tui-time-picker/dist/tui-time-picker.css">
 ...
 </head>
+<body>
+  ...
+  <script type="text/javascript" src="../bower_components/tui-dom/dist/tui-dom.min.js"></script>
+  <script type="text/javascript" src="../bower_components/tui-time-picker/dist/tui.time-picker/tui-time-picker.min.js"></script>
+  <script type="text/javascript" src="../bower_components/tui-date-picker/dist/tui-date-picker.min.js"></script>
+  <script type="text/javascript" src="../bower_components/tui-calendar/dist/tui-calendar.min.js"></script>
+  ...
 ```
 
 ### HTML
