@@ -128,14 +128,22 @@ TOAST UI products are available over the CDN powered by [TOAST Cloud](https://ww
 
 You can use the CDN as below.
 
+Insert style sheet files
 ```html
-<script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
-<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
 <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
 
 <!-- If you use the default popups, use this. -->
 <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
 <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+```
+
+Insert JavaScript file
+```html
+<script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
+<script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
 ```
 
 If you want to use a specific version, use the tag name instead of `latest` in the url's path.
