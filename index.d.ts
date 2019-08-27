@@ -1,29 +1,20 @@
 // Type definitions for TOAST UI Calendar v1.12.4
 // TypeScript Version: 3.2.1
 
-declare namespace tuiCalendar {
-    type DateType = string | TZDate | Date;
-    type AfterRenderScheduleEventHandlerFunc = (eventObj: {schedule: ISchedule}) => void;
-    type BeforeCreateScheduleEventHandlerFunc = (schedule: ISchedule) => void;
-    type BeforeDeleteScheduleEventHandlerFunc = (eventObj: IEventScheduleObject) => void;
-    type BeforeUpdateScheduleEventHandlerFunc = (eventObj: IEventObject) => void;
-    type ClickDayNameEventHandlerFunc = (eventObj: IEventDateObject) => void;
-    type ClickMoreEventHandlerFunc = (eventObj: IEventMoreObject) => void;
-    type ClickScheduleEventHandlerFunc = (eventObj: IEventScheduleObject) => void;
-    type TimezonesCollapseEventFunc = (timezonesCollapsed: boolean) => void;
-    type EventHandlerType = AfterRenderScheduleEventHandlerFunc |
-        BeforeCreateScheduleEventHandlerFunc |
-        BeforeDeleteScheduleEventHandlerFunc |
-        BeforeUpdateScheduleEventHandlerFunc |
-        ClickDayNameEventHandlerFunc |
-        ClickMoreEventHandlerFunc |
-        ClickScheduleEventHandlerFunc |
-        TimezonesCollapseEventFunc;
-    type CustomEventType = 'afterRenderSchedule' | 'beforeCreateSchedule' |
-        'beforeDeleteSchedule' | 'beforeUpdateSchedule' | 'clickDayname' |
-        'clickMore' | 'clickSchedule' | 'clickTimezonesCollapseBtn';
+declare module 'tui-calendar' {
+    export type DateType = string | Date | typeof TZDate;
+    export type AfterRenderScheduleEventHandlerFunc = (eventObj: {schedule: ISchedule}) => void;
+    export type BeforeCreateScheduleEventHandlerFunc = (schedule: ISchedule) => void;
+    export type BeforeDeleteScheduleEventHandlerFunc = (eventObj: IEventScheduleObject) => void;
+    export type BeforeUpdateScheduleEventHandlerFunc = (eventObj: IEventObject) => void;
+    export type ClickDayNameEventHandlerFunc = (eventObj: IEventDateObject) => void;
+    export type ClickMoreEventHandlerFunc = (eventObj: IEventMoreObject) => void;
+    export type ClickScheduleEventHandlerFunc = (eventObj: IEventScheduleObject) => void;
+    export type TimezonesCollapseEventFunc = (timezonesCollapsed: boolean) => void;
+    export type EventHandlerType = IEvents[keyof IEvents];
+    export type CustomEventType = keyof IEvents;
 
-    interface IEventObject {
+    export interface IEventObject {
         schedule: ISchedule;
         end: TZDate;
         start: TZDate;
@@ -31,22 +22,22 @@ declare namespace tuiCalendar {
         triggerEventName?: string;
     }
 
-    interface IEventDateObject {
+    export interface IEventDateObject {
         date: string;
     }
 
-    interface IEventMoreObject {
+    export interface IEventMoreObject {
         date: TZDate;
         target: Element;
     }
 
-    interface IEventScheduleObject {
+    export interface IEventScheduleObject {
         calendar: ICalendarInfo;
         event: MouseEvent;
         schedule: ISchedule;
-
     }
-    interface IEvents {
+
+    export interface IEvents {
         'afterRenderSchedule'?: AfterRenderScheduleEventHandlerFunc;
         'beforeCreateSchedule'?: BeforeCreateScheduleEventHandlerFunc;
         'beforeDeleteSchedule'?: BeforeDeleteScheduleEventHandlerFunc;
@@ -57,32 +48,32 @@ declare namespace tuiCalendar {
         'clickTimezonesCollapseBtn'?: TimezonesCollapseEventFunc;
     }
 
-    class TZDate {
+    export class TZDate {
         public getTime(): number;
         public toDate(): Date;
         public toUTCString(): Date;
     }
 
-    interface ICalendarColor {
+    export interface ICalendarColor {
         color?: string;
         bgColor?: string;
         dragBgColor?: string;
         borderColor?: string;
     }
 
-    interface ITimeGridHourLabel {
+    export interface ITimeGridHourLabel {
         hidden: boolean;
         hour: number;
         minutes: number;
     }
 
-    interface ITimezoneHourMarker {
+    export interface ITimezoneHourMarker {
         hourmarker: TZDate;
         dateDifferenceSign: string;
         dateDifference: number;
     }
 
-    interface IGridDateModel {
+    export interface IGridDateModel {
         date: string;
         day: number;
         hiddenSchedules: number;
@@ -92,7 +83,7 @@ declare namespace tuiCalendar {
         ymd: string;
     }
 
-    interface IWeekDayNameInfo {
+    export interface IWeekDayNameInfo {
         date: number;
         day: number;
         dayName: string;
@@ -100,12 +91,12 @@ declare namespace tuiCalendar {
         renderDate: string;
     }
 
-    interface IMonthDayNameInfo {
+    export interface IMonthDayNameInfo {
         day: number;
         label: string;
     }
 
-    interface ITemplateConfig {
+    export interface ITemplateConfig {
         milestoneTitle?: () => string;
         milestone?: (schedule: ISchedule) => string;
         taskTitle?: () => string;
@@ -151,18 +142,18 @@ declare namespace tuiCalendar {
         popupDelete?: () => string;
     }
 
-    interface IWeekOptions {
+    export interface IWeekOptions {
         startDayOfWeek?: number;
         daynames?: string[];
         narrowWeekend?: boolean;
         workweek?: boolean;
         showTimezoneCollapseButton?: boolean;
-        timezoneCollapsed?: boolean;
+        timezonesCollapsed?: boolean;
         hourStart?: number;
         hourEnd?: number;
     }
 
-    interface IMonthOptions {
+    export interface IMonthOptions {
         daynames?: string[];
         startDayOfWeek?: number;
         narrowWeekend?: boolean;
@@ -185,11 +176,11 @@ declare namespace tuiCalendar {
         scheduleFilter?: (schedule: ISchedule) => boolean;
     }
 
-    interface IRaw {
+    export interface IRaw {
         [propName: string]: string | number | boolean | object | null;
     }
 
-    interface ISchedule {
+    export interface ISchedule {
         id?: string;
         calendarId?: string;
         title?: string;
@@ -218,13 +209,13 @@ declare namespace tuiCalendar {
         state?: string;
     }
 
-    interface ITimezone {
+    export interface ITimezone {
         timezoneOffset?: number;
         displayLabel?: string;
         tooltip?: string;
     }
 
-    interface ICalendarInfo {
+    export interface ICalendarInfo {
         id: string;
         name: string;
         color?: string;
@@ -233,7 +224,7 @@ declare namespace tuiCalendar {
         borderColor?: string;
     }
 
-    interface IOptions {
+    export interface IOptions {
         defaultView?: string;
         taskView?: boolean | string[];
         scheduleView?: boolean | string[];
@@ -241,7 +232,7 @@ declare namespace tuiCalendar {
         template?: ITemplateConfig;
         week?: IWeekOptions;
         month?: IMonthOptions;
-        calendars?: Calendar[];
+        calendars?: ICalendarInfo[];
         useCreationPopup?: boolean;
         useDetailPopup?: boolean;
         timezones?: ITimezone[];
@@ -251,7 +242,7 @@ declare namespace tuiCalendar {
         usageStatistics?: boolean;
     }
 
-    class Calendar {
+    export default class Calendar {
         public static setTimezoneOffset(offset: number): void;
         public static setTimezoneOffsetCallback(callback: (timestamp: number) => void): void;
 
@@ -288,7 +279,4 @@ declare namespace tuiCalendar {
         public off(eventName?: string | object | EventHandlerType, handler?: EventHandlerType | string): void;
         public on(event: CustomEventType | IEvents, handler?: EventHandlerType): void;
     }
-}
-declare module 'tui-calendar' {
-    export default tuiCalendar.Calendar;
 }
