@@ -2,15 +2,7 @@
 // TypeScript Version: 3.2.1
 
 declare module 'tui-calendar' {
-    export type DateType = string | Date | typeof TZDate;
-    export type AfterRenderScheduleEventHandlerFunc = (eventObj: {schedule: ISchedule}) => void;
-    export type BeforeCreateScheduleEventHandlerFunc = (schedule: ISchedule) => void;
-    export type BeforeDeleteScheduleEventHandlerFunc = (eventObj: IEventScheduleObject) => void;
-    export type BeforeUpdateScheduleEventHandlerFunc = (eventObj: IEventObject) => void;
-    export type ClickDayNameEventHandlerFunc = (eventObj: IEventDateObject) => void;
-    export type ClickMoreEventHandlerFunc = (eventObj: IEventMoreObject) => void;
-    export type ClickScheduleEventHandlerFunc = (eventObj: IEventScheduleObject) => void;
-    export type TimezonesCollapseEventFunc = (timezonesCollapsed: boolean) => void;
+    export type DateType = string | Date | TZDate;
     export type EventHandlerType = IEvents[keyof IEvents];
     export type CustomEventType = keyof IEvents;
 
@@ -38,14 +30,14 @@ declare module 'tui-calendar' {
     }
 
     export interface IEvents {
-        'afterRenderSchedule'?: AfterRenderScheduleEventHandlerFunc;
-        'beforeCreateSchedule'?: BeforeCreateScheduleEventHandlerFunc;
-        'beforeDeleteSchedule'?: BeforeDeleteScheduleEventHandlerFunc;
-        'beforeUpdateSchedule'?: BeforeUpdateScheduleEventHandlerFunc;
-        'clickDayname'?: ClickDayNameEventHandlerFunc;
-        'clickMore'?: ClickMoreEventHandlerFunc;
-        'clickSchedule'?: ClickScheduleEventHandlerFunc;
-        'clickTimezonesCollapseBtn'?: TimezonesCollapseEventFunc;
+        'afterRenderSchedule'?: (eventObj: {schedule: ISchedule}) => void;
+        'beforeCreateSchedule'?: (schedule: ISchedule) => void;
+        'beforeDeleteSchedule'?: (eventObj: IEventScheduleObject) => void;
+        'beforeUpdateSchedule'?: (eventObj: IEventObject) => void;
+        'clickDayname'?: (eventObj: IEventDateObject) => void;
+        'clickMore'?: (eventObj: IEventMoreObject) => void;
+        'clickSchedule'?: (eventObj: IEventScheduleObject) => void;
+        'clickTimezonesCollapseBtn'?: (timezonesCollapsed: boolean) => void;
     }
 
     export class TZDate {
