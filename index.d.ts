@@ -216,11 +216,15 @@ declare module 'tui-calendar' {
         borderColor?: string;
     }
 
+    export interface ITheme {
+        [k: string]: string;
+    }
+
     export interface IOptions {
         defaultView?: string;
         taskView?: boolean | string[];
         scheduleView?: boolean | string[];
-        theme?: object;
+        theme?: ITheme;
         template?: ITemplateConfig;
         week?: IWeekOptions;
         month?: IMonthOptions;
@@ -262,7 +266,7 @@ declare module 'tui-calendar' {
         public setCalendars(calendars: ICalendarInfo[]): void;
         public setDate(date: Date | string): void;
         public setOptions(options: IOptions, silent?: boolean): void;
-        public setTheme(theme: object): string[];
+        public setTheme(theme: ITheme): string[];
         public today(): void;
         public toggleSchedules(calendarId: string, toHide: boolean, render?: boolean): void;
         public toggleScheduleView(enabled: boolean): void;
