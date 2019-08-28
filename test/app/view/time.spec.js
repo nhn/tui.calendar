@@ -37,7 +37,7 @@ describe('View/Time', function() {
         });
 
         expect(result.left).toBe(50);
-        expect(result.width).toBe(0); // change null value to 0 to fit width 100%
+        expect(result.width).toBe(null);
     });
 
     it('_getScheduleViewBoundY()', function() {
