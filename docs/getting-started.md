@@ -49,11 +49,10 @@ var calendar = new Calendar('#calendar', {
   defaultView: 'month',
   taskView: true,
   template: {
-    monthGridHeader: function(model) {
-      var date = new Date(model.date);
-      var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-      return template;
+    monthDayname: function(dayname) {
+      return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
     }
+    ...
   }
 });
 ```
@@ -351,7 +350,11 @@ var calendar = new Calendar('#calendar', {
             return '<i class="fa fa-close"></i>';
         },
         monthGridHeader: function(model) {
-            var date = new Date(model.date);
+            var modelDate = model.date.split('-');
+            var year = Number(modelDate[0]);
+            var month = Number(modelDate[1]) - 1;
+            var day = Number(modelDate[2]);
+            var date = new Date(year, month, day);
             var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
             var today = model.isToday ? 'TDY' : '';
             if (today) {
@@ -484,7 +487,7 @@ var cal = new Calendar('#calendar', {
 ```
 
 ### Fit the calendar size for parent element
-TOAST UI Calendar's default height is 600px. If you want this calendar to fit to parent element, write container element's css like this. 
+TOAST UI Calendar's default height is 600px. If you want this calendar to fit to parent element, write container element's css like this.
 
 ```css
 #calendar {
