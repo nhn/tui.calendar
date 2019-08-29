@@ -76,14 +76,14 @@ describe('View/TimeGrid', function() {
 
         it('calculate related CSS top pixel value by time object.', function() {
             // 12:00:00 is middle time of one days. return 50%
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T12:00:00'))).toBe(50);
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T00:00:00'))).toBe(0);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T12:00:00+09:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T00:00:00+09:00'))).toBe(0);
 
             mock.options.hourStart = 21;
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
 
             mock.options.hourStart = 21;
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00'))).toBe(50);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T22:30:00+09:00'))).toBe(50);
         });
 
         it('calculate properly when hourStart, hourEnd is changed.', function() {
@@ -91,7 +91,7 @@ describe('View/TimeGrid', function() {
             mock.options.hourEnd = 14;
             mock._getBaseViewModel = function() { return {hour: {length: 5}}; };
 
-            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00'))).toBe(40);
+            expect(proto._getTopPercentByTime.call(mock, new Date('2015-05-05T11:00:00+09:00'))).toBe(40);
         });
     });
 

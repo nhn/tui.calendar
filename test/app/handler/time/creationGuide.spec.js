@@ -25,8 +25,8 @@ describe('handler/time.creation.guide', function() {
             },
             getViewBound: jasmine.createSpy('TimeView#getViewBound')
         };
-        var renderStart = new TZDate('2015-11-17T03:00:00');
-        var renderEnd = new TZDate('2015-11-17T23:59:59');
+        var renderStart = new TZDate('2015-11-17T03:00:00+09:00');
+        var renderEnd = new TZDate('2015-11-17T23:59:59+09:00');
         var expected,
             actual;
 
@@ -69,7 +69,7 @@ describe('handler/time.creation.guide', function() {
     describe('_getStyleDataFunc', function() {
         it('return function that available for calculate guide element styles from drag schedules', function() {
             // View rendered from 3 o'clock
-            var renderStart = new TZDate('2015-11-17T03:00:00');
+            var renderStart = new TZDate('2015-11-17T03:00:00+09:00');
             var func = inst._getStyleDataFunc(210, 21, renderStart);
             // Assuming the user clicked on 4 o'clock
             var clicked = new TZDate(renderStart),

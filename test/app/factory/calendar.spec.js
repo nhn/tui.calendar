@@ -96,7 +96,7 @@ describe('Calendar', function() {
         it('can change render date range for calendar.', function() {
             inst.setDate('2015-11-01');
 
-            expect(inst.getDate().getTime()).toEqual(new TZDate('2015-11-01T00:00:00').getTime());
+            expect(inst.getDate().getTime()).toEqual(new TZDate('2015-11-01T00:00:00+09:00').getTime());
         });
     });
 
