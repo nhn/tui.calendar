@@ -237,7 +237,7 @@ export interface IOptions {
     usageStatistics?: boolean;
 }
 
-declare class Calendar {
+export default class Calendar {
     public static setTimezoneOffset(offset: number): void;
     public static setTimezoneOffsetCallback(callback: (timestamp: number) => void): void;
 
@@ -274,5 +274,3 @@ declare class Calendar {
     public off(eventName?: string | object | EventHandlerType, handler?: EventHandlerType | string): void;
     public on(event: CustomEventType | IEvents, handler?: EventHandlerType): void;
 }
-
-export default Calendar;
