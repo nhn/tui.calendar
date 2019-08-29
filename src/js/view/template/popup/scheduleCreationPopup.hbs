@@ -46,28 +46,28 @@
             <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-allday">
                 <input id="{{CSS_PREFIX}}schedule-allday" type="checkbox" class="{{CSS_PREFIX}}checkbox-square"{{#if isAllDay}} checked{{/if}}></input>
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-checkbox"></span>
-                <span class="{{CSS_PREFIX}}content">{{popupIsAllDay-tmpl}}</span>
+                <span class="{{CSS_PREFIX}}content">{{{popupIsAllDay-tmpl}}}</span>
             </div>
         </div>
         <div class="{{CSS_PREFIX}}popup-section {{CSS_PREFIX}}dropdown {{CSS_PREFIX}}close {{CSS_PREFIX}}section-state">
             <button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}dropdown-button {{CSS_PREFIX}}popup-section-item">
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-state"></span>
-                <span id="{{CSS_PREFIX}}schedule-state" class="{{CSS_PREFIX}}content">{{#if state}}{{state}}{{else}}{{popupStateBusy-tmpl}}{{/if}}</span>
+                <span id="{{CSS_PREFIX}}schedule-state" class="{{CSS_PREFIX}}content">{{#if state}}{{state}}{{else}}{{{popupStateBusy-tmpl}}}{{/if}}</span>
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}dropdown-arrow"></span>
             </button>
             <ul class="{{CSS_PREFIX}}dropdown-menu" style="z-index: {{zIndex}}">
                 <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item">
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}none"></span>
-                <span class="{{CSS_PREFIX}}content">{{popupStateBusy-tmpl}}</span>
+                <span class="{{CSS_PREFIX}}content">{{{popupStateBusy-tmpl}}}</span>
                 </li>
                 <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item">
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}none"></span>
-                <span class="{{CSS_PREFIX}}content">{{popupStateFree-tmpl}}</span>
+                <span class="{{CSS_PREFIX}}content">{{{popupStateFree-tmpl}}}</span>
                 </li>
             </ul>
         </div>
         <button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}popup-close"><span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-close"></span></button>
-        <div class="{{CSS_PREFIX}}section-button-save"><button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}confirm {{CSS_PREFIX}}popup-save"><span>{{#if isEditMode}}{{popupUpdate-tmpl}}{{else}}{{popupSave-tmpl}}{{/if}}</span></button></div>
+        <div class="{{CSS_PREFIX}}section-button-save"><button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}confirm {{CSS_PREFIX}}popup-save"><span>{{#if isEditMode}}{{{popupUpdate-tmpl}}}{{else}}{{{popupSave-tmpl}}}{{/if}}</span></button></div>
     </div>
     <div id="{{CSS_PREFIX}}popup-arrow" class="{{CSS_PREFIX}}popup-arrow {{CSS_PREFIX}}arrow-bottom">
         <div class="{{CSS_PREFIX}}popup-arrow-border">

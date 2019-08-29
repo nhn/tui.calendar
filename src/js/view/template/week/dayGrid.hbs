@@ -17,7 +17,7 @@
         {{#each days ~}}
             {{#if @root.collapsed}}
                 {{#if hiddenSchedules}}
-                    <span class="{{CSS_PREFIX}}weekday-exceed-in-week" style="z-index: 1; right:{{getRight left width}}%;" data-index="{{@key}}">{{weekGridFooterExceed-tmpl hiddenSchedules}}</span>
+                    <span class="{{CSS_PREFIX}}weekday-exceed-in-week" style="z-index: 1; right:{{getRight left width}}%;" data-index="{{@key}}">{{{weekGridFooterExceed-tmpl hiddenSchedules}}}</span>
                 {{/if}}
             {{else}}
                 {{#fi @key '===' @root.collapseBtnIndex}}
