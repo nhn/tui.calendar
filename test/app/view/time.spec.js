@@ -9,7 +9,7 @@ describe('View/Time', function() {
     it('_parseDateGroup()', function() {
         var str = '20150501';
         var actual = Time.prototype._parseDateGroup(str).getTime();
-        var expected = (new TZDate('2015-05-01T00:00:00')).getTime();
+        var expected = (new TZDate('2015-05-01T00:00:00+09:00')).getTime();
 
         expect(actual).toEqual(expected);
     });
@@ -37,7 +37,7 @@ describe('View/Time', function() {
         });
 
         expect(result.left).toBe(50);
-        expect(result.width).toBe(0); // change null value to 0 to fit width 100%
+        expect(result.width).toBe(null);
     });
 
     it('_getScheduleViewBoundY()', function() {
