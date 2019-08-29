@@ -62,8 +62,8 @@ function setConfig(defaultConfig, server) {
             'IE11',
             'Edge',
             'Chrome-WebDriver',
-            'Firefox-WebDriver',
-            'Safari-WebDriver'
+            'Firefox-WebDriver'
+            // 'Safari-WebDriver'
         ];
         defaultConfig.concurrency = 1;
         defaultConfig.reporters.push('coverage');
