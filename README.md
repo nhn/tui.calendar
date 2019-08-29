@@ -8,36 +8,22 @@
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.project-name/labels/help%20wanted)
 [![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
-## Wrappers
-* [toast-ui.vue-calendar](https://github.com/nhn/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhn).
-* [toast-ui.react-calendar](https://github.com/nhn/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhn).
-* [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhn/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
-* [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhn/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
-* [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhn/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
-
 ![tui-calendar-demo-nhn-corp](https://user-images.githubusercontent.com/43128697/55609612-0c19db00-57bc-11e9-849b-f42a9bd8c591.gif)
 
 ## 🚩 Table of Contents
 
 * [Collect statistics on the use of open source](#Collect-statistics-on-the-use-of-open-source)
-* [Browser Support](#-browser-support)
+* [Documents](#-documents)
 * [How Cool: Monthly, Weekly, Daily and Various View Types.](#how-cool-monthly-weekly-daily-and-various-view-types)
 * [Easy to Use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
 * [Ready to Use: Default Popups](#ready-to-use-default-popups)
 * [Features](#-features)
 * [Examples](#-examples)
 * [Install](#-install)
-  * [Via Package Manager](#via-package-manager)
-  * [Via Contents Delivery Network (CDN)](#via-contents-delivery-network-cdn)
-  * [Download Source Files](#download-source-files)
+* [Wrappers](#-wrappers)
 * [Usage](#-usage)
-  * [HTML](#html)
-  * [JavaScript](#javascript)
+* [Browser Support](#-browser-support)
 * [Pull Request Steps](#-pull-request-steps)
-  * [Setup](#setup)
-  * [Develop](#develop)
-  * [Pull Request Steps](#pull-request)
-* [Documents](#-documents)
 * [Contributing](#-contributing)
 * [Dependency](#-dependency)
 * [TOAST UI Family](#-toast-ui-family)
@@ -56,12 +42,15 @@ var calendar = new Calendar('#calendar', {
 });
 ```
 
-## 🌏 Browser Support
-| <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |
-| :---------: | :---------: | :---------: | :---------: | :---------: |
-| Yes | +9 | Yes | Yes | Yes |
+## 📙 Documents
 
-## How Cool: Monthly, Weekly, Daily and Various View Types.
+* [Getting Started](https://github.com/nhn/tui.calendar/blob/master/docs/getting-started.md)
+* [Tutorials](https://github.com/nhn/tui.calendar/tree/master/docs)
+* [APIs](https://nhn.github.io/tui.calendar/latest/Calendar)
+
+You can also see the older versions of API page on the [releases page](https://github.com/nhn/tui.calendar/releases).
+
+## ✨ How Cool: Monthly, Weekly, Daily and Various View Types.
 
 | Monthly | Weekly |
 | --- | --- |
@@ -161,12 +150,17 @@ tui-calendar/
 │  ├─ ...
 ```
 
-
 ### Download Source Files
 
 * [Download bundle files](https://github.com/nhn/tui.calendar/tree/master/dist)
 * [Download all sources for each version](https://github.com/nhn/tui.calendar/releases)
 
+## 🛍️ Wrappers
+* [toast-ui.vue-calendar](https://github.com/nhn/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhn).
+* [toast-ui.react-calendar](https://github.com/nhn/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhn).
+* [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhn/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
+* [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhn/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
+* [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhn/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
 
 ## 🔨 Usage
 
@@ -217,11 +211,10 @@ var calendar = new Calendar('#calendar', {
   defaultView: 'month',
   taskView: true,
   template: {
-    monthGridHeader: function(model) {
-      var date = new Date(model.date);
-      var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-      return template;
+    monthDayname: function(dayname) {
+      return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
     }
+    ...
   }
 });
 ```
@@ -233,14 +226,18 @@ $('#calendar').tuiCalendar({
   defaultView: 'month',
   taskView: true,
   template: {
-    monthGridHeader: function(model) {
-      var date = new Date(model.date);
-      var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-      return template;
+    monthDayname: function(dayname) {
+      return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
     }
+    ...
   }
 });
 ```
+
+## 🌏 Browser Support
+| <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |
+| :---------: | :---------: | :---------: | :---------: | :---------: |
+| Yes | +9 | Yes | Yes | Yes |
 
 ## 🔧 Pull Request Steps
 
@@ -284,14 +281,6 @@ Before PR, check to test lastly and then check any errors.
 If it has no error, commit and then push it!
 
 For more information on PR's step, please see links of Contributing section.
-
-## 📙 Documents
-
-* [Getting Started](https://github.com/nhn/tui.calendar/blob/master/docs/getting-started.md)
-* [Tutorials](https://github.com/nhn/tui.calendar/tree/master/docs)
-* [APIs](https://nhn.github.io/tui.calendar/latest/Calendar)
-
-You can also see the older versions of API page on the [releases page](https://github.com/nhn/tui.calendar/releases).
 
 ## 💬 Contributing
 
