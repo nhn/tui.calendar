@@ -1,9 +1,9 @@
-import Calendar from 'tui-calendar';
+import Calendar, { ISchedule, IEventObject } from 'tui-calendar';
 
-const querySelectorEl = document.querySelector('#div');
-const elementByIdEl = document.getElementById('div');
-const createEl = document.createElement('div');
-const stringEl = '#div';
+const querySelectorEl = document.querySelector('#div') ||
+  document.getElementById('div') ||
+  document.createElement('div') ||
+  '#cal';
 
 const calendar = new Calendar(querySelectorEl, {
     defaultView: 'week',
@@ -13,27 +13,27 @@ const calendar = new Calendar(querySelectorEl, {
         milestoneTitle() {
             return 'Milestone';
         },
-        milestone(schedule) {
+        milestone(schedule: ISchedule) {
             return `<span style="color: red;">${schedule.title}</span>`;
         },
         taskTitle() {
             return 'Task';
         },
-        task(schedule) {
+        task(schedule: ISchedule) {
             return `$nbsp;#${schedule.title}`;
         },
         alldayTitle() {
             return 'All Day';
         },
-        allday(schedule) {
+        allday(schedule: ISchedule) {
             return `<span style="color: blue;">${schedule.title}</span>`;
         },
-        time(schedule) {
+        time(schedule: ISchedule) {
             return `${schedule.title}(${schedule.start})`;
         },
-        goingDuration(model) {
+        goingDuration(model: ISchedule) {
             const SIXTY_MINUTES:number = 60;
-            const goingDuration = model.goingDuration;
+            const goingDuration = model.goingDuration || 0;
             const hour = parseInt('1000', 10);
             const minutes = goingDuration % SIXTY_MINUTES;
 
@@ -81,7 +81,14 @@ calendar.createSchedules([
         category: 'time',
         start: '2018-10-31T10:30:00+09:00',
         end: '2018-10-31T12:30:00+09:00',
-        raw: {}
+        raw: {
+          hasTest: true,
+          name: 'string name',
+          info: {
+            age: 10
+          },
+          child: 3
+        }
     },
     {
         id: '2',
@@ -262,13 +269,15 @@ calendar.updateSchedule('1', 'Major Lecture', {
     title: 'Digital Design'
 });
 
-calendar.on('beforeUpdateSchedule', scheduleData => {
+calendar.on('beforeUpdateSchedule', (scheduleData: IEventObject) => {
     const {schedule, start, end} = scheduleData;
 
-    calendar.updateSchedule(schedule.id, schedule.calendarId, {
-        start,
-        end
-    });
+    if (schedule.id && schedule.calendarId) {
+        calendar.updateSchedule(schedule.id, schedule.calendarId, {
+            start,
+            end
+        });
+    }
 });
 
 calendar.on({

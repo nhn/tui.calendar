@@ -129,7 +129,7 @@ function createDateAsLocalTime(arg) {
 
 /**
  * is it for local time? These type can be used from Calendar API.
- * @param {Date|string} arg - date 
+ * @param {Date|string} arg - date
  * @returns {boolean}
  */
 function useLocalTimeConverter(arg) {
@@ -179,7 +179,7 @@ TZDate.prototype.getUTCTime = function() {
 
 /**
  * toUTCString
- * @returns {Date}
+ * @returns {string}
  */
 TZDate.prototype.toUTCString = function() {
     return this._date.toUTCString();
