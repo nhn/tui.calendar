@@ -10,7 +10,7 @@ export interface IEventObject {
     end: TZDate;
     start: TZDate;
     calendar?: ICalendarInfo;
-    triggerEventName?: string;
+    triggerEventName?: 'click' | 'dblclick';
 }
 
 export interface IEventDateObject {
@@ -42,7 +42,7 @@ export interface IEvents {
 export class TZDate {
     public getTime(): number;
     public toDate(): Date;
-    public toUTCString(): Date;
+    public toUTCString(): string;
 }
 
 export interface ICalendarColor {
