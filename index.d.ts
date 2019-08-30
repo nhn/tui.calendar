@@ -167,10 +167,6 @@ export interface IMonthOptions {
     scheduleFilter?: (schedule: ISchedule) => boolean;
 }
 
-export interface IRaw {
-    [propName: string]: string | number | boolean | object | null;
-}
-
 export interface ISchedule {
     id?: string;
     calendarId?: string;
@@ -196,7 +192,9 @@ export interface ISchedule {
     dragBgColor?: string;
     borderColor?: string;
     customStyle?: string;
-    raw?: any;
+    raw?: {
+      [propName: string]: string | number | boolean | object | null;
+    }
     state?: string;
 }
 
