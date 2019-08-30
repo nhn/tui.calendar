@@ -350,20 +350,15 @@ var calendar = new Calendar('#calendar', {
             return '<i class="fa fa-close"></i>';
         },
         monthGridHeader: function(model) {
-            var modelDate = model.date.split('-');
-            var year = Number(modelDate[0]);
-            var month = Number(modelDate[1]) - 1;
-            var day = Number(modelDate[2]);
-            var date = new Date(year, month, day);
-            var template = '<span class="tui-full-calendar-weekday-grid-date">' + date.getDate() + '</span>';
-            var today = model.isToday ? 'TDY' : '';
-            if (today) {
-                template += '<span class="tui-full-calendar-weekday-grid-date-decorator">' + today + '</span>';
+            var date = parseInt(model.date.split('-')[2], 10);
+            var classNames = [];
+
+            classNames.push(config.classname('weekday-grid-date'));
+            if (model.isToday) {
+                classNames.push(config.classname('weekday-grid-date-decorator'));
             }
-            if (tempHolidays[date.getDate()]) {
-                template += '<span class="tui-full-calendar-weekday-grid-date-title">' + tempHolidays[date.getDate()] + '</span>';
-            }
-            return template;
+
+            return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
         },
         monthGridHeaderExceed: function(hiddenSchedules) {
             return '<span class="calendar-more-schedules">+' + hiddenSchedules + '</span>';
