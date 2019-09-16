@@ -155,7 +155,7 @@ tui-calendar/
 * [Download bundle files](https://github.com/nhn/tui.calendar/tree/master/dist)
 * [Download all sources for each version](https://github.com/nhn/tui.calendar/releases)
 
-## 🛍️ Wrappers
+## 🛍 Wrappers
 
 * [toast-ui.vue-calendar](https://github.com/nhn/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhn).
 * [toast-ui.react-calendar](https://github.com/nhn/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhn).
