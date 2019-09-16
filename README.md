@@ -43,7 +43,7 @@
 * [TOAST UI Family](#-toast-ui-family)
 * [Used By](#-used-by)
 * [License](#-license)
-* [Wrappers](#%EF%B8%8F-wrappers)
+* [Wrappers](#-wrappers)
 
 ## Collect statistics on the use of open source
 
