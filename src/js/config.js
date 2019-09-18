@@ -11,12 +11,7 @@ var cssPrefix = '/* @echo CSS_PREFIX */',
 
 var config = {
     throwError: function(msg) {
-        /* @if BUNDLE_TYPE='Release' */
-        alert(msg);
-        /* @endif */
-        /* @if BUNDLE_TYPE='Debug' */
         throw new Error(msg);
-        /* @endif */
     },
 
     cssPrefix: cssPrefix,

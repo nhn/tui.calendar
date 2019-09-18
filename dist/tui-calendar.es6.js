@@ -896,33 +896,31 @@ var e=/acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i,t=function(e){ret
 /*!************************!*\
   !*** ./src/ts/base.ts ***!
   \************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Base; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var preact_render_to_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact-render-to-string */ "./node_modules/preact-render-to-string/dist/index.mjs");
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
-var preact_render_to_string_1 = __importDefault(__webpack_require__(/*! preact-render-to-string */ "./node_modules/preact-render-to-string/dist/index.mjs"));
+
 /**
  * @class Base abstract base class
  */
-var Base = /** @class */ (function () {
-    function Base(container) {
+class Base {
+    constructor(container) {
         this.container = container;
     }
-    Base.prototype.render = function () {
-        this.base = preact_1.render(this.getComponent(), this.container, this.base);
-    };
-    Base.prototype.renderToString = function () {
-        return preact_render_to_string_1.default.render(this.getComponent());
-    };
-    return Base;
-}());
-exports.default = Base;
+    render() {
+        this.base = Object(preact__WEBPACK_IMPORTED_MODULE_0__["render"])(this.getComponent(), this.container, this.base);
+    }
+    renderToString() {
+        return preact_render_to_string__WEBPACK_IMPORTED_MODULE_1__["default"].render(this.getComponent());
+    }
+}
 
 
 /***/ }),
@@ -931,29 +929,24 @@ exports.default = Base;
 /*!****************************!*\
   !*** ./src/ts/calendar.ts ***!
   \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: Calendar */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Calendar", function() { return Calendar; });
+/* harmony import */ var _src_month__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/month */ "./src/ts/month.tsx");
+/* harmony import */ var _src_week__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @src/week */ "./src/ts/week.tsx");
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var month_1 = __importDefault(__webpack_require__(/*! @src/month */ "./src/ts/month.tsx"));
-var week_1 = __importDefault(__webpack_require__(/*! @src/week */ "./src/ts/week.tsx"));
-var Calendar = /** @class */ (function () {
-    function Calendar() {
-    }
-    Calendar.prototype.render = function () {
+
+class Calendar {
+    render() {
         // console.log('Calendar.prototype.render');
         return this;
-    };
-    Calendar.Month = month_1.default;
-    Calendar.Week = week_1.default;
-    return Calendar;
-}());
-exports.Calendar = Calendar;
+    }
+}
+Calendar.Month = _src_month__WEBPACK_IMPORTED_MODULE_0__["default"];
+Calendar.Week = _src_week__WEBPACK_IMPORTED_MODULE_1__["default"];
 
 
 /***/ }),
@@ -962,22 +955,24 @@ exports.Calendar = Calendar;
 /*!*************************!*\
   !*** ./src/ts/index.ts ***!
   \*************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default, Month, Week */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _src_calendar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/calendar */ "./src/ts/calendar.ts");
+/* harmony import */ var _src_month__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @src/month */ "./src/ts/month.tsx");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Month", function() { return _src_month__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+/* harmony import */ var _src_week__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @src/week */ "./src/ts/week.tsx");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Week", function() { return _src_week__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+
 /* eslint-disable global-require */
-var calendar_1 = __webpack_require__(/*! @src/calendar */ "./src/ts/calendar.ts");
-var month_1 = __importDefault(__webpack_require__(/*! @src/month */ "./src/ts/month.tsx"));
-exports.Month = month_1.default;
-var week_1 = __importDefault(__webpack_require__(/*! @src/week */ "./src/ts/week.tsx"));
-exports.Week = week_1.default;
-exports.default = calendar_1.Calendar;
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_src_calendar__WEBPACK_IMPORTED_MODULE_0__["Calendar"]);
+
 // [TODO]
 // // for jquery
 // if (global.jQuery) {
@@ -1006,44 +1001,25 @@ if (false) {}
 /*!**************************!*\
   !*** ./src/ts/month.tsx ***!
   \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Month; });
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _src_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @src/base */ "./src/ts/base.ts");
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
-var base_1 = __importDefault(__webpack_require__(/*! @src/base */ "./src/ts/base.ts"));
+
 /**
  * @class Month month view
  */
-var Month = /** @class */ (function (_super) {
-    __extends(Month, _super);
-    function Month() {
-        return _super !== null && _super.apply(this, arguments) || this;
+class Month extends _src_base__WEBPACK_IMPORTED_MODULE_1__["default"] {
+    getComponent() {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("h2", null, "Month View");
     }
-    Month.prototype.getComponent = function () {
-        return preact_1.h("h2", null, "Month View");
-    };
-    return Month;
-}(base_1.default));
-exports.default = Month;
+}
 
 
 /***/ }),
@@ -1052,44 +1028,25 @@ exports.default = Month;
 /*!*************************!*\
   !*** ./src/ts/week.tsx ***!
   \*************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Week; });
+/* harmony import */ var _src_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/base */ "./src/ts/base.ts");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_1__);
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var base_1 = __importDefault(__webpack_require__(/*! @src/base */ "./src/ts/base.ts"));
-var preact_1 = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.umd.js");
+
 /**
  * @class Month month view
  */
-var Week = /** @class */ (function (_super) {
-    __extends(Week, _super);
-    function Week() {
-        return _super !== null && _super.apply(this, arguments) || this;
+class Week extends _src_base__WEBPACK_IMPORTED_MODULE_0__["default"] {
+    getComponent() {
+        return Object(preact__WEBPACK_IMPORTED_MODULE_1__["h"])("h2", null, "Week View");
     }
-    Week.prototype.getComponent = function () {
-        return preact_1.h("h2", null, "Week View");
-    };
-    return Week;
-}(base_1.default));
-exports.default = Week;
+}
 
 
 /***/ }),
@@ -1109,4 +1066,4 @@ module.exports = __webpack_require__(/*! ./src/ts/index.ts */"./src/ts/index.ts"
 
 /******/ })["default"];
 });
-//# sourceMappingURL=tui-calendar.js.map
+//# sourceMappingURL=tui-calendar.es6.js.map

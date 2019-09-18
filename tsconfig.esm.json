@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es6",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "outDir": "dist/esm/",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/ts/*"]
+    },
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ]
+  },
+  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

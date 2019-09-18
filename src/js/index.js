@@ -6,10 +6,10 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var Calendar = require('./js/factory/calendar');
+var Calendar = require('./factory/calendar');
 
-require('./css/main.styl');
-require('./js/view/template/helper');
+require('../css/main.styl');
+require('./view/template/helper');
 
 // for jquery
 if (global.jQuery) {

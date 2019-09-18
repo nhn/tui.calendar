@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es5",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "dist/es5/",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/ts/*"]
+    }
+  },
+  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx"],
+  "exclude": ["node_modules"]
+}
