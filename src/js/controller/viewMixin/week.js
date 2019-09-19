@@ -39,14 +39,23 @@ var Week = {
             maxColLen = Math.max.apply(null, util.map(matrix, function(col) {
                 return col.length;
             }));
+        var goingDuration, comingDuration;
 
         for (col = 1; col < maxColLen; col += 1) {
             row = 0;
             schedule = util.pick(matrix, row, col);
 
             while (schedule) {
-                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', schedule.valueOf().goingDuration);
-                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', schedule.valueOf().comingDuration);
+                goingDuration = schedule.valueOf().goingDuration;
+                comingDuration = schedule.valueOf().comingDuration;
+
+                if (schedule.duplicateModels) {
+                    goingDuration = schedule.maxGoingDuration;
+                    comingDuration = schedule.maxComingDuration;
+                }
+
+                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', goingDuration);
+                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', comingDuration);
 
                 if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
                     end += SCHEDULE_MIN_DURATION;
@@ -120,7 +129,8 @@ var Week = {
                     var startTime,
                         endTime,
                         hasCollide,
-                        i;
+                        i,
+                        travelTime;
 
                     if (!viewModel) {
                         return;
@@ -133,8 +143,10 @@ var Week = {
                         endTime += SCHEDULE_MIN_DURATION;
                     }
 
-                    startTime -= datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-                    endTime += datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+                    travelTime = Week._getTravelTime(viewModel);
+
+                    startTime -= datetime.millisecondsFrom('minutes', travelTime.goingDuration);
+                    endTime += datetime.millisecondsFrom('minutes', travelTime.comingDuration);
 
                     endTime -= 1;
 
@@ -151,6 +163,26 @@ var Week = {
                 });
             });
         });
+    },
+
+    /**
+     * get travel time
+     * @param {ScheduleViewModel} viewModel - schedule view model instance
+     * @returns {object} goingDuration, comingDuration
+     */
+    _getTravelTime: function(viewModel) {
+        var goingDuration = viewModel.valueOf().goingDuration;
+        var comingDuration = viewModel.valueOf().comingDuration;
+
+        if (viewModel.duplicateModels) {
+            goingDuration = viewModel.maxGoingDuration;
+            comingDuration = viewModel.maxComingDuration;
+        }
+
+        return {
+            goingDuration: goingDuration,
+            comingDuration: comingDuration
+        };
     },
 
     /**

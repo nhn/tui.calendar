@@ -95,6 +95,29 @@ function ScheduleViewModel(schedule) {
      * @type {boolean}
      */
     this.exceedRight = false;
+
+    /**
+     * List of duplicate schedules
+     * @type {ScheduleViewModel[]}
+     */
+    this.duplicateModels = null;
+
+    /**
+     * Maximum value of going duration
+     *
+     * This value is used to calculate the height of the schedule layout.
+     * (e.g. for a main schedule with duplicate schedules)
+     * @type {number}
+     */
+    this.maxGoingDuration = 0;
+
+    /**
+     * Maximum value of coming duration
+     *
+     * This value is used to calculate the height of the schedule layout.
+     * (e.g. for a main schedule with duplicate schedules)
+     */
+    this.maxComingDuration = 0;
 }
 
 /**********
@@ -177,10 +200,26 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
         ownEnds = this.getEnds(),
         start = viewModel.getStarts(),
         end = viewModel.getEnds();
-    var ownGoingDuration = datetime.millisecondsFrom('minutes', this.valueOf().goingDuration),
-        ownComingDuration = datetime.millisecondsFrom('minutes', this.valueOf().comingDuration),
-        goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration),
-        comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+
+    var ownGoingDuration = this.valueOf().goingDuration;
+    var ownComingDuration = this.valueOf().comingDuration;
+    var maxGoingDuration = ownGoingDuration;
+    var maxComingDuration = ownComingDuration;
+    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
+    var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+
+    if (this.duplicateModels) {
+        this.duplicateModels.forEach(function(dvm) {
+            maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
+            maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
+        });
+
+        this.maxGoingDuration = maxGoingDuration;
+        this.maxComingDuration = maxComingDuration;
+    }
+
+    maxGoingDuration = datetime.millisecondsFrom('minutes', maxGoingDuration);
+    maxComingDuration = datetime.millisecondsFrom('minutes', maxComingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
         ownEnds += SCHEDULE_MIN_DURATION;
@@ -190,8 +229,8 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
         end += SCHEDULE_MIN_DURATION;
     }
 
-    ownStarts -= ownGoingDuration;
-    ownEnds += ownComingDuration;
+    ownStarts -= maxGoingDuration;
+    ownEnds += maxComingDuration;
     start -= goingDuration;
     end += comingDuration;
 
