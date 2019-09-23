@@ -34,13 +34,13 @@
   ],
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
-    "css-loader": "^0.28.11",
+    "css-loader": "^3.2.0",
     "eslint": "^4.19.1",
     "eslint-config-tui": "^1.0.3",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "extract-loader": "^2.0.1",
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.0.14",
     "handlebars-template-loader": "^1.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^2.99.1",
@@ -48,12 +48,12 @@
     "karma": "^2.0.2",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
-    "karma-coverage": "^1.1.2",
+    "karma-coverage": "^2.0.1",
     "karma-fixture": "^0.2.6",
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.2",
     "karma-jasmine-ajax": "^0.1.13",
-    "karma-jasmine-jquery": "^0.1.1",
+    "karma-jasmine-jquery-2": "^0.1.1",
     "karma-json-fixtures-preprocessor": "0.0.6",
     "karma-junit-reporter": "^1.2.0",
     "karma-preprocess-preprocessor": "^0.2.0",
@@ -64,8 +64,8 @@
     "karma-webdriver-launcher": "git+https://github.com/nhn/karma-webdriver-launcher.git#v1.2.0",
     "karma-webpack": "^3.0.0",
     "mini-css-extract-plugin": "^0.4.0",
-    "optimize-css-assets-webpack-plugin": "^4.0.2",
-    "preprocess-loader": "^0.2.2",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "preprocess-loader": "^0.3.0",
     "safe-umd-webpack-plugin": "^4.0.0",
     "style-loader": "^0.21.0",
     "stylus": "^0.54.5",
@@ -95,7 +95,7 @@
   },
   "dependencies": {
     "tui-code-snippet": "^1.5.0",
-    "tui-date-picker": "^3.2.1",
-    "tui-time-picker": "^1.5.0"
+    "tui-date-picker": "^4.0.2",
+    "tui-time-picker": "^2.0.1"
   }
 }
