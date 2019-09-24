@@ -12,8 +12,9 @@
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/ts/*"]
-    }
+    },
+    "sourceMap": true
   },
-  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx"],
+  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx", "test-ts/**/*.ts"],
   "exclude": ["node_modules"]
 }

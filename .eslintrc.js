@@ -3,14 +3,16 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
+    jasmine: true
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['prettier', 'react', '@typescript-eslint'],
+  plugins: ['prettier', 'react', '@typescript-eslint', 'jasmine'],
   extends: [
     'tui/es6',
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
+    'plugin:jasmine/recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended'
   ],
@@ -27,8 +29,6 @@ module.exports = {
     }
   },
   globals: {
-    chance: true,
-    moment: true,
-    jQuery: true
+    fixture: true
   }
 };

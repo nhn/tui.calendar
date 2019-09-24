@@ -1,7 +1,7 @@
 import Month from '@src/month';
 import Week from '@src/week';
 
-export class Calendar {
+export default class Calendar {
   public static Month = Month;
 
   public static Week = Week;

@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import { Calendar } from '@src/calendar';
+import Calendar from '@src/calendar';
 import Month from '@src/month';
 import Week from '@src/week';
 

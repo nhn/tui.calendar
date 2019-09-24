@@ -1,5 +1,5 @@
-import { h } from 'preact';
 import Base from '@src/base';
+import { h } from 'preact';
 
 /**
  * @class Month month view
