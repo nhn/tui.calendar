@@ -111,7 +111,8 @@ module.exports = function(config) {
           },
           {
             test: /\.tsx?$/,
-            loader: 'ts-loader'
+            loader: 'ts-loader',
+            exclude: path.resolve(__dirname, './stories')
           },
           {
             test: /\.tsx?$/,

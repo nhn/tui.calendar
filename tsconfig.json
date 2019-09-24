@@ -11,10 +11,11 @@
     "outDir": "dist/es5/",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/ts/*"]
+      "@src/*": ["src/ts/*"],
+      "@stories/*": ["stories/*"]
     },
     "sourceMap": true
   },
-  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx", "test-ts/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "exclude": ["node_modules", "src/js", "test"]
 }

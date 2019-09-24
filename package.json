@@ -35,11 +35,17 @@
     "index.d.ts"
   ],
   "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@storybook/addon-actions": "^5.2.1",
+    "@storybook/addon-links": "^5.2.1",
+    "@storybook/addons": "^5.2.1",
+    "@storybook/preact": "^5.2.1",
     "@types/jasmine": "^2.8.16",
     "@types/karma-fixture": "^0.2.5",
     "@types/webpack-env": "^1.14.0",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
+    "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.2.0",
     "eslint": "^6.4.0",
@@ -118,7 +124,9 @@
     "build:prod:es6": "TARGET=es6 NODE_ENV=production webpack --mode production",
     "build:esm": "ttsc -p tsconfig.esm.json",
     "build": "rm -rf dist && npm run build:dev && npm run build:prod && npm run build:esm",
-    "analyze": "NODE_ENV=production webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist"
+    "analyze": "NODE_ENV=production webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "preact": "^8.5.2",
