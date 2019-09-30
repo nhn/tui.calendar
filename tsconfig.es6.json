@@ -12,8 +12,10 @@
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/ts/*"]
-    }
+    },
+    "sourceMap": true,
+    "lib": ["esnext", "dom"]
   },
-  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx"],
+  "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"],
   "exclude": ["node_modules"]
 }

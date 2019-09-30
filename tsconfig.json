@@ -14,8 +14,17 @@
       "@src/*": ["src/ts/*"],
       "@stories/*": ["stories/*"]
     },
-    "sourceMap": true
+    "sourceMap": true,
+    "lib": ["esnext", "dom"]
   },
-  "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "src/js", "test"]
+  "include": [
+    "types",
+    "src/ts/**/*.ts",
+    "src/ts/**/*.tsx",
+    "stories/**/*.ts",
+    "stories/**/*.tsx",
+    "test-ts/**/*.ts",
+    "test-s/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
 }

@@ -122,8 +122,8 @@
     "build:prod": "NODE_ENV=production webpack --mode production",
     "build:dev:es6": "TARGET=es6 webpack --mode development",
     "build:prod:es6": "TARGET=es6 NODE_ENV=production webpack --mode production",
-    "build:esm": "ttsc -p tsconfig.esm.json",
-    "build": "rm -rf dist && npm run build:dev && npm run build:prod && npm run build:esm",
+    "build:esm": "ttsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
+    "build": "rm -rf dist && npm run build:dev && npm run build:prod && npm run build:dev:es6 && npm run build:prod:es6 && npm run build:esm",
     "analyze": "NODE_ENV=production webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
