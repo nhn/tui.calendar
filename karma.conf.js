@@ -129,10 +129,14 @@ module.exports = function(config) {
         }
       }
     },
-    reporters: ['spec', 'coverage-istanbul'],
+    reporters: ['spec', 'coverage-istanbul', 'jasmine-diff'],
     specReporter: {
       suppressSkipped: true,
       suppressPassed: true
+    },
+    jasmineDiffReporter: {
+      multiline: true,
+      pretty: true
     },
     port: 9876,
     colors: true,

@@ -69,6 +69,7 @@
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.2",
     "karma-jasmine-ajax": "^0.1.13",
+    "karma-jasmine-diff-reporter": "^2.0.0",
     "karma-jasmine-jquery": "^0.1.1",
     "karma-json-fixtures-preprocessor": "0.0.6",
     "karma-junit-reporter": "^1.2.0",

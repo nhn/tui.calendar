@@ -9,15 +9,15 @@ export default abstract class Base {
 
   private base?: Element;
 
-  public constructor(container: Element) {
+  constructor(container: Element) {
     this.container = container;
   }
 
-  public render(): void {
+  render(): void {
     this.base = render(this.getComponent(), this.container, this.base);
   }
 
-  public renderToString(): string {
+  renderToString(): string {
     return renderToString.render(this.getComponent());
   }
 
