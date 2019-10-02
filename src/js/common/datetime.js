@@ -614,8 +614,8 @@ datetime = {
         return isStartOfDay ? date.setDate(date.getDate() - 1) : date;
     },
 
-    getNextStartDay: function(d) {
-        var date = new TZDate(d);
+    getStartOfNextDay: function(d) {
+        var date = datetime.start(d);
         date.setHours(24);
 
         return date;
