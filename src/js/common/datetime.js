@@ -601,6 +601,24 @@ datetime = {
         d2 = parseInt(datetime.format(d2, format), 10);
 
         return d1 <= d && d <= d2;
+    },
+
+    isStartOfDay: function(d) {
+        return !datetime.compare(datetime.start(d), d);
+    },
+
+    convertStartDayToLastDay: function(d) {
+        var date = new TZDate(d);
+        var isStartOfDay = datetime.isStartOfDay(d);
+
+        return isStartOfDay ? date.setDate(date.getDate() - 1) : date;
+    },
+
+    getStartOfNextDay: function(d) {
+        var date = datetime.start(d);
+        date.setHours(24);
+
+        return date;
     }
 };
 
