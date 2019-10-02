@@ -163,7 +163,7 @@ var Month = {
 
             if (!model.isAllDay && viewModel.hasMultiDates) {
                 viewModel.renderStarts = datetime.start(start);
-                viewModel.renderEnds = datetime.end(end);
+                viewModel.renderEnds = datetime.convertStartDayToLastDay(end);
             }
         });
     },

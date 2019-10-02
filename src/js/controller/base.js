@@ -73,9 +73,15 @@ function Base(options) {
  * @returns {array} contain dates.
  */
 Base.prototype._getContainDatesInSchedule = function(schedule) {
+    var scheduleStart = schedule.getStarts();
+    var scheduleEnd = schedule.getEnds();
+    var start = datetime.start(scheduleStart);
+    var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
+    var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
+    var end = datetime.end(endDate);
     var range = datetime.range(
-        datetime.start(schedule.getStarts()),
-        datetime.end(schedule.getEnds()),
+        start,
+        end,
         datetime.MILLISECONDS_PER_DAY
     );
 
