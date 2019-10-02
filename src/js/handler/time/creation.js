@@ -233,7 +233,7 @@ TimeCreation.prototype._createSchedule = function(eventData) {
 
     baseDate = new TZDate(relatedView.getDate());
     dateStart = datetime.start(baseDate);
-    dateEnd = datetime.end(baseDate);
+    dateEnd = datetime.getStartOfNextDay(baseDate);
     start = common.limitDate(createRange[0], dateStart, dateEnd);
     end = common.limitDate(createRange[1], dateStart, dateEnd);
 

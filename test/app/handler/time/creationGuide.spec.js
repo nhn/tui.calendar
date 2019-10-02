@@ -26,7 +26,7 @@ describe('handler/time.creation.guide', function() {
             getViewBound: jasmine.createSpy('TimeView#getViewBound')
         };
         var renderStart = new TZDate('2015-11-17T03:00:00');
-        var renderEnd = new TZDate('2015-11-17T23:59:59');
+        var renderEnd = new TZDate('2015-11-18T00:00:00');
         var expected,
             actual;
 
