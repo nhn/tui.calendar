@@ -14,7 +14,9 @@
       "@src/*": ["src/ts/*"]
     },
     "sourceMap": true,
-    "lib": ["esnext", "dom"]
+    "lib": ["esnext", "dom"],
+    "typeRoots": ["types"],
+    "types": ["node", "webpack-env", "jasmine", "karma-fixture"]
   },
   "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"],
   "exclude": ["node_modules"]
