@@ -115,7 +115,7 @@
     "serve": "DEV_SERVER=true webpack-dev-server --mode development",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "release-note": "tuie",
-    "eslint": "eslint ./src",
+    "eslint": "eslint ./src/ts --ext ts --ext tsx",
     "tslint": "tslint index.d.ts",
     "doc:dev": "tuidoc --dev",
     "doc": "tuidoc",
