@@ -54,7 +54,7 @@ util.inherit(DayName, View);
 DayName.prototype._getBaseViewModel = function(start, end, grids) {
     var daynames = this.options.daynames,
         theme = this.theme,
-        now = new TZDate(),
+        now = new TZDate().toLocalTime(),
         viewModel;
 
     viewModel = util.map(datetime.range(

@@ -76,11 +76,11 @@ Weekday.prototype.getRenderDateGrids = function() {
 Weekday.prototype.getBaseViewModel = function(viewModel) {
     var opt = this.options;
     var range = viewModel.range;
-    var today = datetime.format(new TZDate(), 'YYYYMMDD');
     var gridWidth = (100 / range.length);
     var grids = viewModel.grids;
     var exceedDate = viewModel.exceedDate || {};
     var theme = viewModel.theme;
+    var now = new TZDate().toLocalTime();
 
     this._cacheParentViewModel = viewModel;
 
@@ -91,8 +91,8 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
         scheduleBlockGutter: opt.scheduleGutter,
         dates: util.map(range, function(date, index) {
             var day = date.getDay();
-            var ymd = datetime.format(date, 'YYYYMMDD');
-            var isToday = ymd === today;
+            var ymd = datetime.format(new TZDate(date), 'YYYYMMDD');
+            var isToday = datetime.isSameDate(now, date);
 
             return {
                 date: datetime.format(date, 'YYYY-MM-DD'),
