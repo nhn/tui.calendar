@@ -1,4 +1,4 @@
-import Month from '@src/month.tsx';
+import Month from '@src/factory/month';
 
 describe('View/Month', () => {
   it('Month view', () => {
@@ -9,6 +9,6 @@ describe('View/Month', () => {
     // import test
     const month = new Month(document.createElement('div'));
 
-    expect(month.renderToString()).toBe('<h2>Month View</h2>');
+    expect(month.render() instanceof Month).toBe(true);
   });
 });

@@ -1,4 +1,4 @@
-import Calendar from '@src/calendar';
+import Calendar from '@src/factory/calendar';
 
 describe('View/Calendar', () => {
   it('Calendar view', () => {
@@ -7,7 +7,7 @@ describe('View/Calendar', () => {
     expect(data).toBe(1);
 
     // import test
-    const calendar = new Calendar();
+    const calendar = new Calendar(document.createElement('div'));
 
     expect(calendar.render() instanceof Calendar).toBe(true);
   });
