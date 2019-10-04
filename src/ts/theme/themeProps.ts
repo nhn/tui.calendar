@@ -251,7 +251,7 @@ export const defaultProps = {
   'week.dayGridSchedule.marginRight': '8px'
 };
 
-export type IThemePropTypes = keyof typeof defaultProps;
-export type IThemeProps = {
-  [K in IThemePropTypes]?: string;
+export type ThemePropKeys = keyof typeof defaultProps;
+export type ThemeKeyValue = {
+  [K in ThemePropKeys]?: string;
 };

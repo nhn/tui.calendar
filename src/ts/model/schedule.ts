@@ -204,7 +204,7 @@ export default class Schedule {
     dateRange: ['start', 'end']
   };
 
-  static create(data: ScheduleData): Schedule {
+  static create(data: ScheduleData) {
     return new Schedule().init(data);
   }
 
@@ -212,7 +212,7 @@ export default class Schedule {
    * Initialize schedule instance.
    * @param {ScheduleData} schedule options.
    */
-  init(schedule: ScheduleData): Schedule {
+  init(schedule: ScheduleData) {
     schedule = extend({}, schedule);
     if (schedule.category === SCHEDULE_CATEGORY.ALLDAY) {
       schedule.isAllDay = true;
@@ -261,7 +261,7 @@ export default class Schedule {
     return this;
   }
 
-  setAllDayPeriod(start?: DateType, end?: DateType): void {
+  setAllDayPeriod(start?: DateType, end?: DateType) {
     // If it is an all-day schedule, only the date information of the string is used.
     let startedAt: TZDate;
     let endedAt: TZDate;
@@ -284,7 +284,7 @@ export default class Schedule {
     this.end.setHours(23, 59, 59);
   }
 
-  setTimePeriod(start?: DateType, end?: DateType): void {
+  setTimePeriod(start?: DateType, end?: DateType) {
     this.start = new TZDate(start || Date.now());
     this.end = new TZDate(end || this.start);
 
@@ -296,14 +296,14 @@ export default class Schedule {
   /**
    * @returns {TZDate} render start date.
    */
-  getStarts(): TZDate {
+  getStarts() {
     return this.start;
   }
 
   /**
    * @returns {TZDate} render end date.
    */
-  getEnds(): TZDate {
+  getEnds() {
     return this.end;
   }
 
@@ -319,7 +319,7 @@ export default class Schedule {
    * @param {Schedule} schedule Schedule model instance to compare.
    * @returns {boolean} Return false when not same.
    */
-  equals(schedule: Schedule): boolean {
+  equals(schedule: Schedule) {
     if (this.id !== schedule.id) {
       return false;
     }

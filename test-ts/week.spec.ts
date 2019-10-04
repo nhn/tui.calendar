@@ -1,4 +1,4 @@
-import Week from '@src/week';
+import Week from '@src/factory/week';
 
 describe('View/Week', () => {
   it('Week view', () => {

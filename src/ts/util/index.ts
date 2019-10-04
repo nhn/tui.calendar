@@ -20,7 +20,7 @@ let lastId = 0;
  * @param {string} path -the path of property to set
  * @param {*} value - the value to set
  */
-export function set(object: Record<string, any>, path: string, value: any): void {
+export function set(object: Record<string, any>, path: string, value: any) {
   const names = path.split('.');
   let store = object;
 
@@ -58,3 +58,6 @@ export function stamp(obj: StampObj): number {
 export function hasStamp(obj: StampObj): boolean {
   return isExisty(pick(obj, '__fe_id'));
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export function noop() {}
