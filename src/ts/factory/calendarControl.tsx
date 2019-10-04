@@ -12,7 +12,8 @@ import {
   ScheduleData,
   DateType,
   CalendarColor,
-  CalendarData
+  CalendarData,
+  ViewType
 } from '@src/model';
 import { contextPass } from '@src/components/hoc';
 import Theme from '@src/theme';
@@ -33,7 +34,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   protected _outerEvent: EventHandler<ExternalEventName>;
 
-  protected _viewName = 'month';
+  protected _viewName: ViewType = 'month';
 
   /**
    * Current rendered date
@@ -298,25 +299,11 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * });
    */
   render() {
-    // const main = this.getComponent();
-    // const App = contextPass(main, this._context);
     const App = this.getMainApp();
 
-    // if (this._base) {
-    //   rerender();
-    // } else {
-    //   this._base = render(<App context={this._context} />, this._container);
-    // }
-
-    // if (this._base) {
-    //   console.log('render()', this._base);
     if (this._container) {
       this._base = render(<App context={this._context} />, this._container, this._base);
     }
-    // } else {
-    //   this._base = render(<App context={this._context} />, this._container);
-    //   console.log('render()', this._base);
-    // }
 
     return this;
   }
@@ -627,12 +614,5 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    */
   openCreationPopup(schedule: ScheduleData) {
     console.log('openCreationPopup', schedule);
-  }
-
-  /**
-   * Hide the more view
-   */
-  hideMoreView() {
-    console.log('hideMoreView');
   }
 }

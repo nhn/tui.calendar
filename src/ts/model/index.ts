@@ -179,8 +179,10 @@ export interface CalendarData extends CalendarColor {
   name: string;
 }
 
+export type ViewType = 'month' | 'week' | 'day';
+
 export interface Option {
-  defaultView?: string;
+  defaultView?: ViewType;
   taskView?: boolean | string[];
   scheduleView?: boolean | string[];
   theme?: ThemeKeyValue;

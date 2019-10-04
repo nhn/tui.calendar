@@ -22,4 +22,11 @@ export default class Month extends CalendarControl {
   private onRender() {
     this.render();
   }
+
+  /**
+   * Hide the more view
+   */
+  hideMoreView() {
+    console.log('hideMoreView');
+  }
 }
