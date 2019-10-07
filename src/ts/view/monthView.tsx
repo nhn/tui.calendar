@@ -5,13 +5,13 @@ import { ContextComponent } from '@src/components/hoc';
 
 class Month extends ContextComponent {
   componentDidMount() {
-    const { event: events } = this.context;
+    const { internalEvent: events } = this.context;
 
     events.on('click', this.onYogaFire, this);
   }
 
   private onYogaFire(data: string) {
-    const { outerEvent: outerEvents } = this.context;
+    const { externalEvent: outerEvents } = this.context;
 
     outerEvents.fire('clickSchedule', data);
   }

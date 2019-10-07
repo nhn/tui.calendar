@@ -42,8 +42,8 @@ export interface AppContext {
   options: Option;
   theme: Theme;
   templates: Record<string, Function>;
-  event: EventHandler<InternalEventName>;
-  outerEvent: EventHandler<ExternalEventName>;
+  internalEvent: EventHandler<InternalEventName>;
+  externalEvent: EventHandler<ExternalEventName>;
 }
 
 export interface TemplateTimeGridHourLabel {

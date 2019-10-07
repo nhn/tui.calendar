@@ -30,9 +30,9 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   protected _context: AppContext;
 
-  protected _event: EventHandler<InternalEventName>;
+  protected _internalEvent: EventHandler<InternalEventName>;
 
-  protected _outerEvent: EventHandler<ExternalEventName>;
+  protected _externalEvent: EventHandler<ExternalEventName>;
 
   protected _viewName: ViewType = 'month';
 
@@ -60,8 +60,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this._container = isString(container) ? document.querySelector(container) : container;
     this._options = this.initOption(option);
-    this._event = new EventHandler<InternalEventName>();
-    this._outerEvent = this;
+    this._internalEvent = new EventHandler<InternalEventName>();
+    this._externalEvent = this;
     this._context = {
       options: {
         defaultView: 'month'
@@ -73,8 +73,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
         },
         pick(option, 'templates')
       ),
-      event: this._event,
-      outerEvent: this._outerEvent
+      internalEvent: this._internalEvent,
+      externalEvent: this._externalEvent
     };
   }
 
