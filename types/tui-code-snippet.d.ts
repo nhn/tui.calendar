@@ -5,7 +5,7 @@ declare module 'tui-code-snippet/type/isString' {
 }
 
 declare module 'tui-code-snippet/type/isUndefined' {
-  export default function isUndefined(obj: any): obj is boolean;
+  export default function isUndefined(obj: any): obj is undefined;
 }
 
 declare module 'tui-code-snippet/type/isBoolean' {
@@ -14,6 +14,22 @@ declare module 'tui-code-snippet/type/isBoolean' {
 
 declare module 'tui-code-snippet/type/isExisty' {
   export default function isExisty(obj: any): obj is boolean;
+}
+
+declare module 'tui-code-snippet/type/isFunction' {
+  export default function isFunction(obj: any): obj is Function;
+}
+
+declare module 'tui-code-snippet/type/isNumber' {
+  export default function isNumber(obj: any): obj is number;
+}
+
+declare module 'tui-code-snippet/type/isObject' {
+  export default function isObject(obj: any): obj is object;
+}
+
+declare module 'tui-code-snippet/type/isArray' {
+  export default function isArray(obj: any): obj is Array<any>;
 }
 
 // object
