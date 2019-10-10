@@ -7,10 +7,19 @@ import isExisty from 'tui-code-snippet/type/isExisty';
 import extend from 'tui-code-snippet/object/extend';
 import TZDate from '@src/time/date';
 import { DateType, ScheduleData } from '@src/model';
-import * as datetime from '@src/time/datetime';
 import { stamp } from '@src/util';
+import {
+  isSameDate,
+  MILLISECONDS_SCHEDULE_MIN_DURATION,
+  parse,
+  toEndOfDay,
+  toStartOfDay,
+  millisecondsFrom,
+  compare
+} from '@src/time/datetime';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
-const SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
+const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
  * Schedule category
@@ -182,6 +191,11 @@ export default class Schedule {
    */
   raw: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+  /**
+   * whether the schedule includes multiple dates
+   */
+  hasMultiDates = false;
+
   constructor() {
     // initialize model id
     stamp(this);
@@ -252,13 +266,13 @@ export default class Schedule {
     let endedAt: TZDate;
 
     if (isString(start)) {
-      startedAt = datetime.parse(start.substring(0, 10));
+      startedAt = parse(start.substring(0, 10));
     } else {
       startedAt = new TZDate(start || Date.now());
     }
 
     if (isString(end)) {
-      endedAt = datetime.parse(end.substring(0, 10));
+      endedAt = parse(end.substring(0, 10));
     } else {
       endedAt = new TZDate(end || this.start);
     }
@@ -276,6 +290,8 @@ export default class Schedule {
     if (!end) {
       this.end.setMinutes(this.end.getMinutes() + 30);
     }
+
+    this.hasMultiDates = !isSameDate(this.start, this.end);
   }
 
   /**
@@ -321,11 +337,11 @@ export default class Schedule {
       return false;
     }
 
-    if (datetime.compare(this.getStarts(), schedule.getStarts()) !== 0) {
+    if (compare(this.getStarts(), schedule.getStarts()) !== 0) {
       return false;
     }
 
-    if (datetime.compare(this.getEnds(), schedule.getEnds()) !== 0) {
+    if (compare(this.getEnds(), schedule.getEnds()) !== 0) {
       return false;
     }
 
@@ -358,7 +374,7 @@ export default class Schedule {
     let duration: number;
 
     if (this.isAllDay) {
-      duration = Number(datetime.toEndOfDay(end)) - Number(datetime.toStartOfDay(start));
+      duration = Number(toEndOfDay(end)) - Number(toStartOfDay(start));
     } else {
       duration = end - start;
     }
@@ -372,15 +388,17 @@ export default class Schedule {
    * @param {Schedule} schedule The other schedule to compare with this Schedule.
    * @returns {boolean} If the other schedule occurs within the same time as the first object.
    */
-  collidesWith(schedule: Schedule): boolean {
+  collidesWith(schedule: Schedule | ScheduleViewModel): boolean {
+    schedule = schedule instanceof ScheduleViewModel ? schedule.model : schedule;
+
     let ownStarts = Number(this.getStarts());
     let ownEnds = Number(this.getEnds());
     let start = Number(schedule.getStarts());
     let end = Number(schedule.getEnds());
-    const ownGoingDuration = datetime.millisecondsFrom('minutes', this.goingDuration);
-    const ownComingDuration = datetime.millisecondsFrom('minutes', this.comingDuration);
-    const goingDuration = datetime.millisecondsFrom('minutes', schedule.goingDuration);
-    const comingDuration = datetime.millisecondsFrom('minutes', schedule.comingDuration);
+    const ownGoingDuration = millisecondsFrom('minutes', this.goingDuration);
+    const ownComingDuration = millisecondsFrom('minutes', this.comingDuration);
+    const goingDuration = millisecondsFrom('minutes', schedule.goingDuration);
+    const comingDuration = millisecondsFrom('minutes', schedule.comingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
       ownEnds += SCHEDULE_MIN_DURATION;

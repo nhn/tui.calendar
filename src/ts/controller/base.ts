@@ -2,11 +2,13 @@
  * @fileoverview Base calendar controller
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
+import forEach from 'tui-code-snippet/collection/forEach';
+import inArray from 'tui-code-snippet/array/inArray';
 
 import { CalendarData, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { isSameSchedule, stamp } from '@src/util';
+import { isSameSchedule } from '@src/util';
 import Collection from '@src/util/collection';
 import TZDate from '@src/time/date';
 import {
@@ -16,14 +18,8 @@ import {
   format,
   makeDateRange
 } from '@src/time/datetime';
-import forEach from 'tui-code-snippet/collection/forEach';
-import inArray from 'tui-code-snippet/array/inArray';
 
-function createScheduleCollection() {
-  return new Collection<Schedule>((schedule: Schedule) => {
-    return String(schedule.cid());
-  });
-}
+export type IDS_OF_DAY = Record<string, number[]>;
 
 /**
  * Calculate contain dates in schedule.
@@ -40,7 +36,9 @@ export default class ModelController {
    * schedules collection.
    * @type {Collection}
    */
-  schedules = createScheduleCollection();
+  schedules = new Collection<Schedule>(schedule => {
+    return schedule.cid();
+  });
 
   /**
    * Calendar list
@@ -52,7 +50,7 @@ export default class ModelController {
    * Matrix for multidate schedules.
    * @type {object.<string, array>}
    */
-  idsOfDay: Record<string, number[]> = {};
+  idsOfDay: IDS_OF_DAY = {};
 
   /****************
    * CRUD Schedule
@@ -64,6 +62,16 @@ export default class ModelController {
    */
   createSchedule(scheduleData: ScheduleData) {
     const schedule = Schedule.create(scheduleData);
+
+    return this.addSchedule(schedule);
+  }
+
+  /**
+   * Add an schedule instance.
+   * @param {Schedule} schedule The instance of Schedule.
+   * @returns {Schedule} The instance of Schedule that added.
+   */
+  addSchedule(schedule: Schedule) {
     this.schedules.add(schedule);
     this._addToMatrix(schedule);
 
@@ -127,35 +135,6 @@ export default class ModelController {
   }
 
   /**
-   * split schedule model by ymd.
-   * @param {TZDate} start - start date
-   * @param {TZDate} end - end date
-   * @param {Collection} scheduleCollection - collection of schedule model.
-   * @returns {object.<string, Collection>} splitted schedule model collections.
-   */
-  splitScheduleByDateRange(start: TZDate, end: TZDate, scheduleCollection: Collection<Schedule>) {
-    const { idsOfDay } = this;
-    const result: Record<string, Collection<Schedule>> = {};
-    const range = getContainDatesInSchedule(start, end);
-
-    range.forEach((date: TZDate) => {
-      const ymd = format(date, 'YYYYMMDD');
-      const ids = idsOfDay[ymd];
-      const collection = (result[ymd] = createScheduleCollection());
-
-      if (ids && ids.length) {
-        ids.forEach(id => {
-          scheduleCollection.doWhenHas(id, schedule => {
-            collection.add(schedule);
-          });
-        });
-      }
-    }, {});
-
-    return result;
-  }
-
-  /**
    * Return schedules in supplied date range.
    *
    * available only YMD.
@@ -197,7 +176,7 @@ export default class ModelController {
       const ymd = format(date, 'YYYYMMDD');
       const matrix = (ownMatrix[ymd] = ownMatrix[ymd] || []);
 
-      matrix.push(stamp(schedule));
+      matrix.push(schedule.cid());
     });
   }
 
@@ -206,7 +185,7 @@ export default class ModelController {
    * @param {Schedule} schedule - instance of schedule
    */
   _removeFromMatrix(schedule: Schedule) {
-    const modelID = stamp(schedule);
+    const modelID = schedule.cid();
 
     forEach(this.idsOfDay, (ids: number[]) => {
       const index = inArray(modelID, ids);
@@ -223,7 +202,7 @@ export default class ModelController {
    * @param {ScheduleViewModel} viewModel - view model instance
    * @returns {string} group key
    */
-  _groupFunc(viewModel: ScheduleViewModel) {
+  groupFunc(viewModel: ScheduleViewModel) {
     const { model } = viewModel;
 
     if (viewModel.model.isAllDay) {

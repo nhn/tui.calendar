@@ -2,9 +2,7 @@ import ModelController, { getContainDatesInSchedule } from '@src/controller/base
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { ScheduleData } from '@src/model';
-import { stamp } from '@src/util';
 import forEach from 'tui-code-snippet/collection/forEach';
-import Collection from '@src/util/collection';
 
 describe('controller/base', function() {
   let ctrl: ModelController;
@@ -65,9 +63,9 @@ describe('controller/base', function() {
     });
 
     it('create schedule instance by raw schedule data.', function() {
-      const id = stamp(ctrl.createSchedule(set[0]));
-      const id2 = stamp(ctrl.createSchedule(set[1]));
-      const id3 = stamp(ctrl.createSchedule(set[3]));
+      const id = ctrl.createSchedule(set[0]).cid();
+      const id2 = ctrl.createSchedule(set[1]).cid();
+      const id3 = ctrl.createSchedule(set[3]).cid();
 
       expect(ctrl.schedules.length).toBe(3);
       expect(ctrl.idsOfDay).toEqual({
@@ -89,7 +87,7 @@ describe('controller/base', function() {
       set.forEach(data => {
         const item = ctrl.createSchedule(data);
         scheduleList.push(item);
-        idList.push(stamp(item));
+        idList.push(item.cid());
       });
 
       // Add returned viewmodel matcher.
@@ -181,7 +179,7 @@ describe('controller/base', function() {
         start: '2015/05/01 09:30:00',
         end: '2015/05/01 18:30:00'
       });
-      id = stamp(model);
+      id = model.cid();
 
       ctrl.updateSchedule(model.id, model.calendarId, {
         title: 'Go to work',
@@ -229,69 +227,6 @@ describe('controller/base', function() {
       expect(ctrl.idsOfDay).toEqual({
         '20150501': []
       });
-    });
-  });
-
-  describe('splitScheduleByDateRange()', function() {
-    let schedules: Schedule[];
-    let collection: Collection<Schedule>;
-
-    beforeEach(function() {
-      collection = new Collection(item => {
-        return String(stamp(item));
-      });
-
-      schedules = [
-        {
-          title: 'A',
-          isAllDay: false,
-          start: '2015/05/01 09:30:00',
-          end: '2015/05/01 18:30:00'
-        },
-        {
-          title: 'B',
-          isAllDay: false,
-          start: '2015/05/02 09:30:00',
-          end: '2015/05/02 18:30:00'
-        },
-        {
-          title: 'C',
-          isAllDay: true,
-          start: '2015/05/01 09:00:00',
-          end: '2015/05/02 09:00:00'
-        }
-      ].map(scheduleData => Schedule.create(scheduleData));
-
-      collection.add(...schedules);
-
-      schedules.forEach(schedule => {
-        ctrl.schedules.add(schedule);
-        ctrl._addToMatrix(schedule);
-      });
-    });
-
-    it('split schedule by ymd.', function() {
-      const result = ctrl.splitScheduleByDateRange(
-        new TZDate('2015-05-01T00:00:00+09:00'),
-        new TZDate('2015-05-03T23:59:59+09:00'),
-        collection
-      );
-
-      const getter = (item: Schedule) => String(stamp(item));
-      const expected = {
-        '20150501': new Collection(getter),
-        '20150502': new Collection(getter),
-        '20150503': new Collection(getter)
-      };
-
-      expected['20150501'].add(schedules[0]);
-      expected['20150501'].add(schedules[2]);
-      expected['20150502'].add(schedules[1]);
-      expected['20150502'].add(schedules[2]);
-
-      expect(result['20150501'].items).toEqual(expected['20150501'].items);
-      expect(result['20150502'].items).toEqual(expected['20150502'].items);
-      expect(result['20150503'].items).toEqual(expected['20150503'].items);
     });
   });
 });

@@ -11,6 +11,8 @@ import isObject from 'tui-code-snippet/type/isObject';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import isArray from 'tui-code-snippet/type/isArray';
 
+export type Filter<T> = (item: T) => boolean;
+
 /**
  * Common collection.
  *
@@ -24,7 +26,7 @@ export default class Collection<T extends Record<string | number, any>> {
 
   length = 0;
 
-  constructor(getItemIDFn?: (item: T) => string) {
+  constructor(getItemIDFn?: (item: T) => string | number) {
     if (isFunction(getItemIDFn)) {
       /**
        * @type {function}
@@ -39,10 +41,10 @@ export default class Collection<T extends Record<string | number, any>> {
 
   /**
    * Combind supplied function filters and condition.
-   * @param {...function} filters - function filters
+   * @param {...Filter} filters - function filters
    * @returns {function} combined filter
    */
-  static and<T>(...filters: Array<(item: T) => boolean>) {
+  static and<T>(...filters: Array<Filter<T>>) {
     const { length } = filters;
 
     return (item: T) => {
@@ -61,7 +63,7 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {...function} filters - function filters
    * @returns {function} combined filter
    */
-  static or<T>(...filters: Array<(item: T) => boolean>) {
+  static or<T>(...filters: Array<Filter<T>>) {
     const { length } = filters;
 
     if (!length) {
@@ -88,7 +90,7 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {object} item model instance.
    * @returns {string} model unique id.
    */
-  public getItemID(item: T) {
+  public getItemID(item: T): string | number {
     return String(item._id);
   }
 
@@ -162,7 +164,7 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {(object|string|number|function)} id model instance or id or filter function to check
    * @returns {boolean} is has model?
    */
-  has(id: T | string | number | Function) {
+  has(id: T | string | number | Filter<T>) {
     if (!this.length) {
       return false;
     }
@@ -176,7 +178,7 @@ export default class Collection<T extends Record<string | number, any>> {
         if (filterFunc(item) === true) {
           has = true;
 
-          return false;
+          return false; // returning false can stop this loop
         }
 
         return true;
@@ -226,7 +228,7 @@ export default class Collection<T extends Record<string | number, any>> {
    *
    * collection.find(Collection.or(filter1, filter2));
    */
-  find(filter: (item: T) => boolean) {
+  find(filter: Filter<T>) {
     const result = new Collection<T>();
 
     if (this.hasOwnProperty('getItemID')) {
@@ -328,7 +330,7 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {function} [filter] - function filter
    * @returns {object|null} item.
    */
-  single(filter?: (item: T) => boolean): T | null {
+  single(filter?: Filter<T>): T | null {
     const useFilter = isFunction(filter);
     let result: T | null = null;
 
@@ -336,12 +338,12 @@ export default class Collection<T extends Record<string | number, any>> {
       if (!useFilter) {
         result = item;
 
-        return false;
+        return false; // returning false can stop this loop
       }
       if (filter && filter(item)) {
         result = item;
 
-        return false;
+        return false; // returning false can stop this loop
       }
 
       return true;

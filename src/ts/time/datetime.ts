@@ -8,7 +8,7 @@ import inArray from 'tui-code-snippet/array/inArray';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
 
-type ConvType = 'day' | 'hour' | 'minutes' | 'seconds';
+export type ConvertUnit = 'day' | 'hour' | 'minutes' | 'seconds';
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
 }
@@ -174,12 +174,12 @@ export function format(date: TZDate, strFormat: string): string {
 
 /**
  * convert milliseconds
- * @param {ConvType} type - type of value.
+ * @param {ConvertUnit} type - type of value.
  * @param {number} value - value to convert.
  * @param {function} iteratee - iteratee function to use reduce.
  * @returns {number} converted value.
  */
-function _convMilliseconds(type: ConvType, value: number, iteratee: ReduceIteratee): number {
+function _convMilliseconds(type: ConvertUnit, value: number, iteratee: ReduceIteratee): number {
   const conv = [24, 60, 60, 1000];
   const index = {
     day: 0,
@@ -197,12 +197,15 @@ function _convMilliseconds(type: ConvType, value: number, iteratee: ReduceIterat
 
 /**
  * Convert milliseconds value to other type
- * @param {ConvType} type convert to type want to. support "day", "hour",
+ * @param {ConvertUnit} type convert to type want to. support "day", "hour",
  *  "minutes", "seconds" only.
  * @param {number} value - value to convert.
  * @returns {number} converted value.
  */
-export function millisecondsTo(type: ConvType, value: number): number {
+export function millisecondsTo(
+  type: 'day' | 'hour' | 'minutes' | 'seconds',
+  value: number
+): number {
   const cache = memo.millisecondsTo;
   const key = type + value;
 
@@ -225,11 +228,14 @@ export function millisecondsTo(type: ConvType, value: number): number {
 
 /**
  * Convert value to milliseconds
- * @param {ConvType} type - type of supplied value. support "hour", "minutes", "seconds" only.
+ * @param {ConvertUnit} type - type of supplied value. support "hour", "minutes", "seconds" only.
  * @param {number} value - value to convert.
  * @returns {number} converted value.
  */
-export function millisecondsFrom(type: ConvType, value: number): number {
+export function millisecondsFrom(
+  type: 'day' | 'hour' | 'minutes' | 'seconds',
+  value: number
+): number {
   const cache = memo.millisecondsFrom;
   const key = type + value;
 

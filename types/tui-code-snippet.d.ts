@@ -38,7 +38,7 @@ declare module 'tui-code-snippet/object/extend' {
 }
 
 declare module 'tui-code-snippet/object/pick' {
-  export default function pick(obj: any, ...paths: string[]): any;
+  export default function pick(obj: any, ...paths: string[] | number[]): any;
 }
 
 // collection
@@ -60,6 +60,10 @@ declare module 'tui-code-snippet/collection/forEachOwnProperties' {
 
 declare module 'tui-code-snippet/collection/forEachArray' {
   export default function forEachArray(arr: any[], iteratee: Function, context?: any): void;
+}
+
+declare module 'tui-code-snippet/collection/pluck' {
+  export default function pluck(arr: any[], property: string): any[];
 }
 
 // array
