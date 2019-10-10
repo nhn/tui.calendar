@@ -48,9 +48,20 @@ var Core = {
                 var duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
                     return dvm.model.id === modelId;
                 });
+                var ownGoingDuration = vm.valueOf().goingDuration;
+                var ownComingDuration = vm.valueOf().comingDuration;
+                var maxGoingDuration = ownGoingDuration;
+                var maxComingDuration = ownComingDuration;
 
                 if (duplicateModels.length > 0) {
+                    duplicateModels.forEach(function(dvm) {
+                        maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
+                        maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
+                    });
+
                     vm.duplicateModels = duplicateModels;
+                    vm.maxGoingDuration = maxGoingDuration;
+                    vm.maxComingDuration = maxComingDuration;
                 }
             });
 

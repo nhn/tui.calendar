@@ -1007,7 +1007,7 @@ Calendar.prototype.scrollToNow = function() {
  * }
  */
 Calendar.prototype.today = function() {
-    this._renderDate = datetime.start();
+    this._renderDate = datetime.start().toLocalTime();
 
     this._setViewName(this._viewName);
     this.move();
