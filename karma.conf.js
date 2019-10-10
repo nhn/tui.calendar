@@ -87,7 +87,11 @@ module.exports = function(config) {
   const defaultConfig = {
     basePath: '',
     frameworks: ['fixture', 'jasmine-ajax', 'jasmine'],
-    files: ['test-ts/index.ts', 'test/fixtures/**/*'],
+    files: [
+      'test-ts/index.ts',
+      'test/fixtures/**/*',
+      'node_modules/@babel/polyfill/dist/polyfill.js'
+    ],
     preprocessors: {
       'test-ts/index.ts': ['webpack', 'sourcemap'],
       'test/fixtures/**/*.html': ['html2js'],
@@ -98,7 +102,7 @@ module.exports = function(config) {
     },
     webpack: {
       mode: 'development',
-      devtool: 'source-map',
+      devtool: 'inline-source-map',
       module: {
         rules: [
           {
@@ -129,10 +133,14 @@ module.exports = function(config) {
         }
       }
     },
-    reporters: ['spec', 'coverage-istanbul'],
+    reporters: ['spec', 'coverage-istanbul', 'jasmine-diff'],
     specReporter: {
       suppressSkipped: true,
       suppressPassed: true
+    },
+    jasmineDiffReporter: {
+      multiline: true,
+      pretty: true
     },
     port: 9876,
     colors: true,
