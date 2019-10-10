@@ -2,14 +2,14 @@
  * @fileoverview The standard theme
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import { IThemeProps } from '@src/theme/themeProps';
+import { ThemeKeyValue } from '@src/theme/themeProps';
 
 /**
  * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".
  * "week" prefix is for weekly and daily view.
  * "month" prefix is for monthly view.
  */
-const theme: IThemeProps = {
+const theme: ThemeKeyValue = {
   'common.border': '1px solid #e5e5e5',
   'common.backgroundColor': 'white',
   'common.holiday.color': '#ff4040',

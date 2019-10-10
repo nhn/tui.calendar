@@ -18,7 +18,7 @@ declare module 'tui-code-snippet/type/isExisty' {
 
 // object
 declare module 'tui-code-snippet/object/extend' {
-  export default function extend(obj: any, ...objects: any[]): any;
+  export default function extend<T>(obj: T, ...objects: T[]): T;
 }
 
 declare module 'tui-code-snippet/object/pick' {
@@ -35,9 +35,9 @@ declare module 'tui-code-snippet/collection/forEach' {
 }
 
 declare module 'tui-code-snippet/collection/forEachOwnProperties' {
-  export default function forEachOwnProperties(
+  export default function forEachOwnProperties<T>(
     obj: object,
-    iteratee: Function,
+    iteratee: (value: T, key: string, obj: object) => boolean | void,
     context?: any
   ): void;
 }
@@ -53,4 +53,21 @@ declare module 'tui-code-snippet/array/range' {
 
 declare module 'tui-code-snippet/array/inArray' {
   export default function inArray(searchElement: any, array: any[], startIndex?: number): number;
+}
+
+// customEvents
+declare module 'tui-code-snippet/customEvents/customEvents' {
+  export default class CustomEvents {
+    public static mixin(func: Function): void;
+
+    public on(eventName: string, handler: Function, context?: object): void;
+
+    public once(eventName: string, handler: Function, context?: object): void;
+
+    public off(eventName?: string, handler?: Function): void;
+
+    public fire(eventName: string, ...args: any[]): void;
+
+    public invoke(eventName: string, ...args: any[]): boolean;
+  }
 }

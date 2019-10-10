@@ -225,7 +225,7 @@ export default class TZDate {
    * Set offset
    * @param {number} offset - timezone offset based on minutes
    */
-  static setOffset(offset: number): void {
+  static setOffset(offset: number) {
     customOffsetMs = offset * MIN_TO_MS;
   }
 
@@ -233,7 +233,7 @@ export default class TZDate {
    * Set offset
    * @param {number} offset - timezone offset based on minutes
    */
-  static setOffsetByTimezoneOption(offset: number): void {
+  static setOffsetByTimezoneOption(offset: number) {
     this.setOffset(-offset);
     isSetByTimezoneOption = true;
   }
@@ -254,7 +254,7 @@ export default class TZDate {
    * Set a callback function to get timezone offset by timestamp
    * @param {function} callback - callback function
    */
-  static setOffsetCallback(callback: Function): void {
+  static setOffsetCallback(callback: Function) {
     timezoneOffsetCallback = callback;
   }
 
@@ -262,7 +262,7 @@ export default class TZDate {
    * (Use this method only for testing)
    * Reset system timezone and custom timezone
    */
-  static restoreOffset(): void {
+  static restoreOffset() {
     customOffsetMs = getTimezoneOffset();
   }
 

@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
-import Calendar from '@src/calendar';
-import Month from '@src/month';
-import Week from '@src/week';
+import Calendar from '@src/factory/calendar';
+import Month from '@src/factory/month';
+import Week from '@src/factory/week';
 
 export default Calendar;
 

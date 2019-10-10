@@ -15,7 +15,9 @@
       "@stories/*": ["stories/*"]
     },
     "sourceMap": true,
-    "lib": ["esnext", "dom"]
+    "lib": ["esnext", "dom"],
+    "typeRoots": ["types"],
+    "types": ["node", "webpack-env", "jasmine", "karma-fixture"]
   },
   "include": [
     "types",
