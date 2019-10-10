@@ -205,8 +205,16 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     var ownComingDuration = this.valueOf().comingDuration;
     var maxGoingDuration = ownGoingDuration;
     var maxComingDuration = ownComingDuration;
-    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-    var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+    var vmGoingDuration = viewModel.valueOf().goingDuration;
+    var vmComingDuration = viewModel.valueOf().comingDuration;
+
+    if (viewModel.duplicateModels) {
+        vmGoingDuration = viewModel.maxGoingDuration;
+        vmComingDuration = viewModel.maxComingDuration;
+    }
+
+    vmGoingDuration = datetime.millisecondsFrom('minutes', vmGoingDuration);
+    vmComingDuration = datetime.millisecondsFrom('minutes', vmComingDuration);
 
     if (this.duplicateModels) {
         this.duplicateModels.forEach(function(dvm) {
@@ -231,8 +239,8 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
 
     ownStarts -= maxGoingDuration;
     ownEnds += maxComingDuration;
-    start -= goingDuration;
-    end += comingDuration;
+    start -= vmGoingDuration;
+    end += vmComingDuration;
 
     if ((start > ownStarts && start < ownEnds) ||
         (end > ownStarts && end < ownEnds) ||
