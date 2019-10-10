@@ -17,7 +17,7 @@ function getTimezoneOffset(timestamp: number = Date.now()): number {
 }
 
 const nativeOffsetMs = getTimezoneOffset();
-let setByTimezoneOption = false;
+let isSetByTimezoneOption = false;
 let customOffsetMs = nativeOffsetMs;
 let timezoneOffsetCallback: Function;
 
@@ -27,7 +27,7 @@ let timezoneOffsetCallback: Function;
  * @returns {number} timezone offset
  */
 function getCustomTimezoneOffset(timestamp?: number): number {
-  if (!setByTimezoneOption && timezoneOffsetCallback) {
+  if (!isSetByTimezoneOption && timezoneOffsetCallback) {
     return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
   }
 
@@ -235,7 +235,7 @@ export default class TZDate {
    */
   static setOffsetByTimezoneOption(offset: number): void {
     this.setOffset(-offset);
-    setByTimezoneOption = true;
+    isSetByTimezoneOption = true;
   }
 
   /**
@@ -243,7 +243,7 @@ export default class TZDate {
    * @returns {number} timezone offset offset minutes
    */
   static getOffset(): number {
-    if (setByTimezoneOption) {
+    if (isSetByTimezoneOption) {
       return customOffsetMs / MIN_TO_MS;
     }
 

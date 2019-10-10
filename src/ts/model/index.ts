@@ -1,4 +1,5 @@
 import TZDate from '@src/time/date';
+import { ScheduleCategory } from '@src/model/schedule';
 
 export type DateType = Date | string | number | TZDate;
 
@@ -12,7 +13,7 @@ export interface ScheduleData {
   goingDuration?: number;
   comingDuration?: number;
   isAllDay?: boolean;
-  category?: string;
+  category?: ScheduleCategory;
   dueDateClass?: string;
   location?: string;
   attendees?: string[];

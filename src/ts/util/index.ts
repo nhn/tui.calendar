@@ -24,7 +24,7 @@ export function set(object: Record<string, any>, path: string, value: any): void
   const names = path.split('.');
   let store = object;
 
-  forEach(names, function(name: string, index: number) {
+  forEach(names, (name: string, index: number) => {
     store[name] = store[name] || {};
 
     if (index === names.length - 1) {

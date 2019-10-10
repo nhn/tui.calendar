@@ -1,5 +1,6 @@
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
+import { ScheduleData } from '@src/model';
 
 describe('model/schedule basic', function() {
   let schedule: Schedule;
@@ -279,7 +280,7 @@ describe('model/schedule basic', function() {
 });
 
 describe('model/Schedule advanced', function() {
-  let jsonFixtures: Schedule[];
+  let jsonFixtures: ScheduleData[];
 
   beforeEach(function() {
     jsonFixtures = fixture.load('mock_tasks.json');
@@ -290,9 +291,11 @@ describe('model/Schedule advanced', function() {
   });
 
   it('factory function (create())', function() {
+    type CompatableSchedule = Record<string, any>;
+
     let e = Schedule.create(jsonFixtures[0]);
 
-    let expected = {
+    let expected: ScheduleData = {
       title: '스크럼',
       category: 'time',
       dueDateClass: '',
@@ -301,7 +304,7 @@ describe('model/Schedule advanced', function() {
       end: new TZDate('2015-10-26T10:00:00+09:00')
     };
 
-    expect(e).toEqual(jasmine.objectContaining(expected));
+    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
 
     e = Schedule.create(jsonFixtures[1]);
     expected = {
@@ -313,7 +316,7 @@ describe('model/Schedule advanced', function() {
       end: new TZDate(2015, 9, 26, 23, 59, 59)
     };
 
-    expect(e).toEqual(jasmine.objectContaining(expected));
+    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
 
     e = Schedule.create(jsonFixtures[2]);
     expected = {
@@ -325,7 +328,7 @@ describe('model/Schedule advanced', function() {
       end: new TZDate('2015-10-26T23:59:59+09:00')
     };
 
-    expect(e).toEqual(jasmine.objectContaining(expected));
+    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
 
     e = Schedule.create(jsonFixtures[3]);
     expected = {
@@ -337,7 +340,7 @@ describe('model/Schedule advanced', function() {
       end: new TZDate('2015-10-26T23:59:59+09:00')
     };
 
-    expect(e).toEqual(jasmine.objectContaining(expected));
+    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
   });
 
   it('raw data', function() {

@@ -17,19 +17,7 @@ const SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
  * @readonly
  * @enum {string}
  */
-const SCHEDULE_CATEGORY = {
-  /** milestone */
-  MILESTONE: 'milestone',
-
-  /** task */
-  TASK: 'task',
-
-  /** all-day schedule */
-  ALLDAY: 'allday',
-
-  /** normal schedule */
-  TIME: 'time'
-};
+export type ScheduleCategory = 'milestone' | 'task' | 'allday' | 'time';
 
 /**
  * The model of calendar schedules.
@@ -114,7 +102,7 @@ export default class Schedule {
    * Schedule category(milestone, task, allday, time)
    * @type {string}
    */
-  category = '';
+  category: ScheduleCategory = 'time';
 
   /**
    * Classification of work schedules (before work, before lunch, before work)
@@ -214,7 +202,7 @@ export default class Schedule {
    */
   init(schedule: ScheduleData): Schedule {
     schedule = extend({}, schedule);
-    if (schedule.category === SCHEDULE_CATEGORY.ALLDAY) {
+    if (schedule.category === 'allday') {
       schedule.isAllDay = true;
     }
 
@@ -229,7 +217,7 @@ export default class Schedule {
     this.dragBgColor = schedule.dragBgColor || this.dragBgColor;
     this.borderColor = schedule.borderColor || this.borderColor;
     this.calendarId = schedule.calendarId || '';
-    this.category = schedule.category || '';
+    this.category = schedule.category || 'time';
     this.dueDateClass = schedule.dueDateClass || '';
     this.customStyle = schedule.customStyle || '';
     this.location = schedule.location || '';
@@ -249,10 +237,7 @@ export default class Schedule {
       this.setTimePeriod(schedule.start, schedule.end);
     }
 
-    if (
-      schedule.category === SCHEDULE_CATEGORY.MILESTONE ||
-      schedule.category === SCHEDULE_CATEGORY.TASK
-    ) {
+    if (schedule.category === 'milestone' || schedule.category === 'task') {
       this.start = new TZDate(this.end);
     }
 
