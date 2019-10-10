@@ -7259,9 +7259,20 @@ var Core = {
                 var duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
                     return dvm.model.id === modelId;
                 });
+                var ownGoingDuration = vm.valueOf().goingDuration;
+                var ownComingDuration = vm.valueOf().comingDuration;
+                var maxGoingDuration = ownGoingDuration;
+                var maxComingDuration = ownComingDuration;
 
                 if (duplicateModels.length > 0) {
+                    duplicateModels.forEach(function(dvm) {
+                        maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
+                        maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
+                    });
+
                     vm.duplicateModels = duplicateModels;
+                    vm.maxGoingDuration = maxGoingDuration;
+                    vm.maxComingDuration = maxComingDuration;
                 }
             });
 
@@ -9249,7 +9260,7 @@ Calendar.prototype.scrollToNow = function() {
  * }
  */
 Calendar.prototype.today = function() {
-    this._renderDate = datetime.start();
+    this._renderDate = datetime.start().toLocalTime();
 
     this._setViewName(this._viewName);
     this.move();
@@ -17997,8 +18008,16 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     var ownComingDuration = this.valueOf().comingDuration;
     var maxGoingDuration = ownGoingDuration;
     var maxComingDuration = ownComingDuration;
-    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-    var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+    var vmGoingDuration = viewModel.valueOf().goingDuration;
+    var vmComingDuration = viewModel.valueOf().comingDuration;
+
+    if (viewModel.duplicateModels) {
+        vmGoingDuration = viewModel.maxGoingDuration;
+        vmComingDuration = viewModel.maxComingDuration;
+    }
+
+    vmGoingDuration = datetime.millisecondsFrom('minutes', vmGoingDuration);
+    vmComingDuration = datetime.millisecondsFrom('minutes', vmComingDuration);
 
     if (this.duplicateModels) {
         this.duplicateModels.forEach(function(dvm) {
@@ -18023,8 +18042,8 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
 
     ownStarts -= maxGoingDuration;
     ownEnds += maxComingDuration;
-    start -= goingDuration;
-    end += comingDuration;
+    start -= vmGoingDuration;
+    end += vmComingDuration;
 
     if ((start > ownStarts && start < ownEnds) ||
         (end > ownStarts && end < ownEnds) ||
