@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp95-191010 | Fri Oct 11 2019
+ * @version 1.12.5-dooray-sp95-191011-1 | Fri Oct 11 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -9260,7 +9260,7 @@ Calendar.prototype.scrollToNow = function() {
  * }
  */
 Calendar.prototype.today = function() {
-    this._renderDate = datetime.start().toLocalTime();
+    this._renderDate = new TZDate().toLocalTime();
 
     this._setViewName(this._viewName);
     this.move();
