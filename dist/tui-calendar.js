@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp95-191011-1 | Fri Oct 11 2019
+ * @version 1.12.5-dooray-sp95-191014 | Mon Oct 14 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -5338,6 +5338,30 @@ model = {
                 target[name] = method;
             }
         });
+    },
+
+    /**
+     * get Max value for Schedule Travel Time(going duration and coming duration)
+     * @param {ScheduleViewModel} viewModel ScheduleViewModel instance
+     * @returns {object} max travel time (going duration, coming duration)
+     */
+    getMaxTravelTime: function(viewModel) {
+        var goingDuration = viewModel.valueOf().goingDuration;
+        var comingDuration = viewModel.valueOf().comingDuration;
+        var maxGoingDuration = goingDuration;
+        var maxComingDuration = comingDuration;
+
+        if (viewModel.duplicateModels && viewModel.duplicateModels.length) {
+            viewModel.duplicateModels.forEach(function(dvm) {
+                maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
+                maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
+            });
+        }
+
+        return {
+            maxGoingDuration: maxGoingDuration,
+            maxComingDuration: maxComingDuration
+        };
     }
 };
 
@@ -7223,6 +7247,8 @@ var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common
 var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 var Collection = __webpack_require__(/*! ../../common/collection */ "./src/js/common/collection.js");
 var ScheduleViewModel = __webpack_require__(/*! ../../model/viewModel/scheduleViewModel */ "./src/js/model/viewModel/scheduleViewModel.js");
+var model = __webpack_require__(/*! ../../common/model */ "./src/js/common/model.js");
+var getMaxTravelTime = model.getMaxTravelTime;
 
 var Core = {
     /**
@@ -7256,24 +7282,15 @@ var Core = {
 
             forEachArr(filterViewModels, function(vm) {
                 var modelId = vm.model.id;
-                var duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
+                var ownMaxTravelTime;
+                vm.duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
                     return dvm.model.id === modelId;
                 });
-                var ownGoingDuration = vm.valueOf().goingDuration;
-                var ownComingDuration = vm.valueOf().comingDuration;
-                var maxGoingDuration = ownGoingDuration;
-                var maxComingDuration = ownComingDuration;
 
-                if (duplicateModels.length > 0) {
-                    duplicateModels.forEach(function(dvm) {
-                        maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
-                        maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
-                    });
+                ownMaxTravelTime = getMaxTravelTime(vm);
 
-                    vm.duplicateModels = duplicateModels;
-                    vm.maxGoingDuration = maxGoingDuration;
-                    vm.maxComingDuration = maxComingDuration;
-                }
+                vm.maxGoingDuration = ownMaxTravelTime.maxGoingDuration;
+                vm.maxComingDuration = ownMaxTravelTime.maxComingDuration;
             });
 
             viewModels = filterViewModels;
@@ -7387,9 +7404,9 @@ var Core = {
      * @returns {function} schedule filter function
      */
     getScheduleInDateRangeFilter: function(start, end) {
-        return function(model) {
-            var ownStarts = model.getStarts(),
-                ownEnds = model.getEnds();
+        return function(schedule) {
+            var ownStarts = schedule.getStarts(),
+                ownEnds = schedule.getEnds();
 
             // shorthand condition of
             //
@@ -7495,8 +7512,8 @@ var Core = {
             return viewModel.cid();
         });
 
-        modelColl.each(function(model) {
-            viewModelColl.add(ScheduleViewModel.create(model));
+        modelColl.each(function(schedule) {
+            viewModelColl.add(ScheduleViewModel.create(schedule));
         });
 
         return viewModelColl;
@@ -7817,7 +7834,8 @@ var Collection = __webpack_require__(/*! ../../common/collection */ "./src/js/co
 var array = __webpack_require__(/*! ../../common/array */ "./src/js/common/array.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
-
+var model = __webpack_require__(/*! ../../common/model */ "./src/js/common/model.js");
+var getMaxTravelTime = model.getMaxTravelTime;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
@@ -7844,24 +7862,17 @@ var Week = {
             cursor = [],
             maxColLen = Math.max.apply(null, util.map(matrix, function(col) {
                 return col.length;
-            }));
-        var goingDuration, comingDuration;
+            })),
+            maxTravelTime;
 
         for (col = 1; col < maxColLen; col += 1) {
             row = 0;
             schedule = util.pick(matrix, row, col);
 
             while (schedule) {
-                goingDuration = schedule.valueOf().goingDuration;
-                comingDuration = schedule.valueOf().comingDuration;
-
-                if (schedule.duplicateModels) {
-                    goingDuration = schedule.maxGoingDuration;
-                    comingDuration = schedule.maxComingDuration;
-                }
-
-                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', goingDuration);
-                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', comingDuration);
+                maxTravelTime = getMaxTravelTime(schedule);
+                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', maxTravelTime.maxGoingDuration);
+                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', maxTravelTime.maxComingDuration);
 
                 if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
                     end += SCHEDULE_MIN_DURATION;
@@ -7949,10 +7960,10 @@ var Week = {
                         endTime += SCHEDULE_MIN_DURATION;
                     }
 
-                    travelTime = Week._getTravelTime(viewModel);
+                    travelTime = getMaxTravelTime(viewModel);
 
-                    startTime -= datetime.millisecondsFrom('minutes', travelTime.goingDuration);
-                    endTime += datetime.millisecondsFrom('minutes', travelTime.comingDuration);
+                    startTime -= datetime.millisecondsFrom('minutes', travelTime.maxGoingDuration);
+                    endTime += datetime.millisecondsFrom('minutes', travelTime.maxComingDuration);
 
                     endTime -= 1;
 
@@ -7969,26 +7980,6 @@ var Week = {
                 });
             });
         });
-    },
-
-    /**
-     * get travel time
-     * @param {ScheduleViewModel} viewModel - schedule view model instance
-     * @returns {object} goingDuration, comingDuration
-     */
-    _getTravelTime: function(viewModel) {
-        var goingDuration = viewModel.valueOf().goingDuration;
-        var comingDuration = viewModel.valueOf().comingDuration;
-
-        if (viewModel.duplicateModels) {
-            goingDuration = viewModel.maxGoingDuration;
-            comingDuration = viewModel.maxComingDuration;
-        }
-
-        return {
-            goingDuration: goingDuration,
-            comingDuration: comingDuration
-        };
     },
 
     /**
@@ -17361,6 +17352,7 @@ var TZDate = __webpack_require__(/*! ../common/timezone */ "./src/js/common/time
 var datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/datetime.js");
 var dirty = __webpack_require__(/*! ../common/dirty */ "./src/js/common/dirty.js");
 var model = __webpack_require__(/*! ../common/model */ "./src/js/common/model.js");
+var getMaxTravelTime = model.getMaxTravelTime;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -17748,6 +17740,14 @@ Schedule.prototype.duration = function() {
 };
 
 /**
+ * Shadowing valueOf method for schedule.
+ * @returns {Schedule} The model of schedule.
+ */
+Schedule.prototype.valueOf = function() {
+    return this;
+};
+
+/**
  * Returns true if the given Schedule coincides with the same time as the
  * calling Schedule.
  * @param {Schedule} schedule The other schedule to compare with this Schedule.
@@ -17758,10 +17758,13 @@ Schedule.prototype.collidesWith = function(schedule) {
         ownEnds = this.getEnds(),
         start = schedule.getStarts(),
         end = schedule.getEnds();
-    var ownGoingDuration = datetime.millisecondsFrom('minutes', this.goingDuration),
-        ownComingDuration = datetime.millisecondsFrom('minutes', this.comingDuration),
-        goingDuration = datetime.millisecondsFrom('minutes', schedule.goingDuration),
-        comingDuration = datetime.millisecondsFrom('minutes', schedule.comingDuration);
+
+    var ownMaxTravelTime = getMaxTravelTime(this);
+    var vmMaxTravelTime = getMaxTravelTime(schedule);
+    var ownGoingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxGoingDuration),
+        ownComingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxComingDuration),
+        goingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxGoingDuration),
+        comingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxComingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
         ownEnds += SCHEDULE_MIN_DURATION;
@@ -17809,6 +17812,8 @@ module.exports = Schedule;
 
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
+var model = __webpack_require__(/*! ../../common/model */ "./src/js/common/model.js");
+var getMaxTravelTime = model.getMaxTravelTime;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -17998,39 +18003,19 @@ ScheduleViewModel.prototype.duration = function() {
  * @param {Schedule|ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.
  * @returns {boolean} Schedule#collidesWith result.
  */
+// eslint-disable-next-line complexity
 ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
         start = viewModel.getStarts(),
         end = viewModel.getEnds();
 
-    var ownGoingDuration = this.valueOf().goingDuration;
-    var ownComingDuration = this.valueOf().comingDuration;
-    var maxGoingDuration = ownGoingDuration;
-    var maxComingDuration = ownComingDuration;
-    var vmGoingDuration = viewModel.valueOf().goingDuration;
-    var vmComingDuration = viewModel.valueOf().comingDuration;
-
-    if (viewModel.duplicateModels) {
-        vmGoingDuration = viewModel.maxGoingDuration;
-        vmComingDuration = viewModel.maxComingDuration;
-    }
-
-    vmGoingDuration = datetime.millisecondsFrom('minutes', vmGoingDuration);
-    vmComingDuration = datetime.millisecondsFrom('minutes', vmComingDuration);
-
-    if (this.duplicateModels) {
-        this.duplicateModels.forEach(function(dvm) {
-            maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
-            maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
-        });
-
-        this.maxGoingDuration = maxGoingDuration;
-        this.maxComingDuration = maxComingDuration;
-    }
-
-    maxGoingDuration = datetime.millisecondsFrom('minutes', maxGoingDuration);
-    maxComingDuration = datetime.millisecondsFrom('minutes', maxComingDuration);
+    var ownMaxTravelTime = getMaxTravelTime(this);
+    var vmMaxTravelTime = getMaxTravelTime(viewModel);
+    var ownGoingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxGoingDuration);
+    var ownComingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxComingDuration);
+    var vmGoingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxGoingDuration);
+    var vmComingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxComingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
         ownEnds += SCHEDULE_MIN_DURATION;
@@ -18040,8 +18025,8 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
         end += SCHEDULE_MIN_DURATION;
     }
 
-    ownStarts -= maxGoingDuration;
-    ownEnds += maxComingDuration;
+    ownStarts -= ownGoingDuration;
+    ownEnds += ownComingDuration;
     start -= vmGoingDuration;
     end += vmComingDuration;
 
