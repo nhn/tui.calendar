@@ -6,6 +6,8 @@
 
 var util = require('tui-code-snippet');
 var datetime = require('../../common/datetime');
+var model = require('../../common/model');
+var getMaxTravelTime = model.getMaxTravelTime;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -195,39 +197,19 @@ ScheduleViewModel.prototype.duration = function() {
  * @param {Schedule|ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.
  * @returns {boolean} Schedule#collidesWith result.
  */
+// eslint-disable-next-line complexity
 ScheduleViewModel.prototype.collidesWith = function(viewModel) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
         start = viewModel.getStarts(),
         end = viewModel.getEnds();
 
-    var ownGoingDuration = this.valueOf().goingDuration;
-    var ownComingDuration = this.valueOf().comingDuration;
-    var maxGoingDuration = ownGoingDuration;
-    var maxComingDuration = ownComingDuration;
-    var vmGoingDuration = viewModel.valueOf().goingDuration;
-    var vmComingDuration = viewModel.valueOf().comingDuration;
-
-    if (viewModel.duplicateModels) {
-        vmGoingDuration = viewModel.maxGoingDuration;
-        vmComingDuration = viewModel.maxComingDuration;
-    }
-
-    vmGoingDuration = datetime.millisecondsFrom('minutes', vmGoingDuration);
-    vmComingDuration = datetime.millisecondsFrom('minutes', vmComingDuration);
-
-    if (this.duplicateModels) {
-        this.duplicateModels.forEach(function(dvm) {
-            maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
-            maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
-        });
-
-        this.maxGoingDuration = maxGoingDuration;
-        this.maxComingDuration = maxComingDuration;
-    }
-
-    maxGoingDuration = datetime.millisecondsFrom('minutes', maxGoingDuration);
-    maxComingDuration = datetime.millisecondsFrom('minutes', maxComingDuration);
+    var ownMaxTravelTime = getMaxTravelTime(this);
+    var vmMaxTravelTime = getMaxTravelTime(viewModel);
+    var ownGoingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxGoingDuration);
+    var ownComingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxComingDuration);
+    var vmGoingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxGoingDuration);
+    var vmComingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxComingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
         ownEnds += SCHEDULE_MIN_DURATION;
@@ -237,8 +219,8 @@ ScheduleViewModel.prototype.collidesWith = function(viewModel) {
         end += SCHEDULE_MIN_DURATION;
     }
 
-    ownStarts -= maxGoingDuration;
-    ownEnds += maxComingDuration;
+    ownStarts -= ownGoingDuration;
+    ownEnds += ownComingDuration;
     start -= vmGoingDuration;
     end += vmComingDuration;
 

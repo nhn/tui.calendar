@@ -145,6 +145,30 @@ model = {
                 target[name] = method;
             }
         });
+    },
+
+    /**
+     * get Max value for Schedule Travel Time(going duration and coming duration)
+     * @param {ScheduleViewModel} viewModel ScheduleViewModel instance
+     * @returns {object} max travel time (going duration, coming duration)
+     */
+    getMaxTravelTime: function(viewModel) {
+        var goingDuration = viewModel.valueOf().goingDuration;
+        var comingDuration = viewModel.valueOf().comingDuration;
+        var maxGoingDuration = goingDuration;
+        var maxComingDuration = comingDuration;
+
+        if (viewModel.duplicateModels && viewModel.duplicateModels.length) {
+            viewModel.duplicateModels.forEach(function(dvm) {
+                maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
+                maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
+            });
+        }
+
+        return {
+            maxGoingDuration: maxGoingDuration,
+            maxComingDuration: maxComingDuration
+        };
     }
 };
 

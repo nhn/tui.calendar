@@ -10,6 +10,7 @@ var TZDate = require('../common/timezone').Date;
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
+var getMaxTravelTime = model.getMaxTravelTime;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -397,6 +398,14 @@ Schedule.prototype.duration = function() {
 };
 
 /**
+ * Shadowing valueOf method for schedule.
+ * @returns {Schedule} The model of schedule.
+ */
+Schedule.prototype.valueOf = function() {
+    return this;
+};
+
+/**
  * Returns true if the given Schedule coincides with the same time as the
  * calling Schedule.
  * @param {Schedule} schedule The other schedule to compare with this Schedule.
@@ -407,10 +416,13 @@ Schedule.prototype.collidesWith = function(schedule) {
         ownEnds = this.getEnds(),
         start = schedule.getStarts(),
         end = schedule.getEnds();
-    var ownGoingDuration = datetime.millisecondsFrom('minutes', this.goingDuration),
-        ownComingDuration = datetime.millisecondsFrom('minutes', this.comingDuration),
-        goingDuration = datetime.millisecondsFrom('minutes', schedule.goingDuration),
-        comingDuration = datetime.millisecondsFrom('minutes', schedule.comingDuration);
+
+    var ownMaxTravelTime = getMaxTravelTime(this);
+    var vmMaxTravelTime = getMaxTravelTime(schedule);
+    var ownGoingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxGoingDuration),
+        ownComingDuration = datetime.millisecondsFrom('minutes', ownMaxTravelTime.maxComingDuration),
+        goingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxGoingDuration),
+        comingDuration = datetime.millisecondsFrom('minutes', vmMaxTravelTime.maxComingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
         ownEnds += SCHEDULE_MIN_DURATION;

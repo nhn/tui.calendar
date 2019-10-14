@@ -11,7 +11,8 @@ var Collection = require('../../common/collection');
 var array = require('../../common/array');
 var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
-
+var model = require('../../common/model');
+var getMaxTravelTime = model.getMaxTravelTime;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
@@ -38,24 +39,17 @@ var Week = {
             cursor = [],
             maxColLen = Math.max.apply(null, util.map(matrix, function(col) {
                 return col.length;
-            }));
-        var goingDuration, comingDuration;
+            })),
+            maxTravelTime;
 
         for (col = 1; col < maxColLen; col += 1) {
             row = 0;
             schedule = util.pick(matrix, row, col);
 
             while (schedule) {
-                goingDuration = schedule.valueOf().goingDuration;
-                comingDuration = schedule.valueOf().comingDuration;
-
-                if (schedule.duplicateModels) {
-                    goingDuration = schedule.maxGoingDuration;
-                    comingDuration = schedule.maxComingDuration;
-                }
-
-                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', goingDuration);
-                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', comingDuration);
+                maxTravelTime = getMaxTravelTime(schedule);
+                start = schedule.getStarts().getTime() - datetime.millisecondsFrom('minutes', maxTravelTime.maxGoingDuration);
+                end = schedule.getEnds().getTime() + datetime.millisecondsFrom('minutes', maxTravelTime.maxComingDuration);
 
                 if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
                     end += SCHEDULE_MIN_DURATION;
@@ -143,10 +137,10 @@ var Week = {
                         endTime += SCHEDULE_MIN_DURATION;
                     }
 
-                    travelTime = Week._getTravelTime(viewModel);
+                    travelTime = getMaxTravelTime(viewModel);
 
-                    startTime -= datetime.millisecondsFrom('minutes', travelTime.goingDuration);
-                    endTime += datetime.millisecondsFrom('minutes', travelTime.comingDuration);
+                    startTime -= datetime.millisecondsFrom('minutes', travelTime.maxGoingDuration);
+                    endTime += datetime.millisecondsFrom('minutes', travelTime.maxComingDuration);
 
                     endTime -= 1;
 
@@ -163,26 +157,6 @@ var Week = {
                 });
             });
         });
-    },
-
-    /**
-     * get travel time
-     * @param {ScheduleViewModel} viewModel - schedule view model instance
-     * @returns {object} goingDuration, comingDuration
-     */
-    _getTravelTime: function(viewModel) {
-        var goingDuration = viewModel.valueOf().goingDuration;
-        var comingDuration = viewModel.valueOf().comingDuration;
-
-        if (viewModel.duplicateModels) {
-            goingDuration = viewModel.maxGoingDuration;
-            comingDuration = viewModel.maxComingDuration;
-        }
-
-        return {
-            goingDuration: goingDuration,
-            comingDuration: comingDuration
-        };
     },
 
     /**

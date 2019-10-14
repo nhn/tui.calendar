@@ -12,6 +12,8 @@ var datetime = require('../../common/datetime');
 var TZDate = require('../../common/timezone').Date;
 var Collection = require('../../common/collection');
 var ScheduleViewModel = require('../../model/viewModel/scheduleViewModel');
+var model = require('../../common/model');
+var getMaxTravelTime = model.getMaxTravelTime;
 
 var Core = {
     /**
@@ -45,24 +47,15 @@ var Core = {
 
             forEachArr(filterViewModels, function(vm) {
                 var modelId = vm.model.id;
-                var duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
+                var ownMaxTravelTime;
+                vm.duplicateModels = util.filter(duplicatedViewModels, function(dvm) {
                     return dvm.model.id === modelId;
                 });
-                var ownGoingDuration = vm.valueOf().goingDuration;
-                var ownComingDuration = vm.valueOf().comingDuration;
-                var maxGoingDuration = ownGoingDuration;
-                var maxComingDuration = ownComingDuration;
 
-                if (duplicateModels.length > 0) {
-                    duplicateModels.forEach(function(dvm) {
-                        maxGoingDuration = Math.max(maxGoingDuration, dvm.valueOf().goingDuration);
-                        maxComingDuration = Math.max(maxComingDuration, dvm.valueOf().comingDuration);
-                    });
+                ownMaxTravelTime = getMaxTravelTime(vm);
 
-                    vm.duplicateModels = duplicateModels;
-                    vm.maxGoingDuration = maxGoingDuration;
-                    vm.maxComingDuration = maxComingDuration;
-                }
+                vm.maxGoingDuration = ownMaxTravelTime.maxGoingDuration;
+                vm.maxComingDuration = ownMaxTravelTime.maxComingDuration;
             });
 
             viewModels = filterViewModels;
@@ -176,9 +169,9 @@ var Core = {
      * @returns {function} schedule filter function
      */
     getScheduleInDateRangeFilter: function(start, end) {
-        return function(model) {
-            var ownStarts = model.getStarts(),
-                ownEnds = model.getEnds();
+        return function(schedule) {
+            var ownStarts = schedule.getStarts(),
+                ownEnds = schedule.getEnds();
 
             // shorthand condition of
             //
@@ -284,8 +277,8 @@ var Core = {
             return viewModel.cid();
         });
 
-        modelColl.each(function(model) {
-            viewModelColl.add(ScheduleViewModel.create(model));
+        modelColl.each(function(schedule) {
+            viewModelColl.add(ScheduleViewModel.create(schedule));
         });
 
         return viewModelColl;
