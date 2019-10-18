@@ -98,10 +98,10 @@ export function getMatrices<T extends Schedule | ScheduleViewModel>(
 ): ScheduleMatrix<T> {
   const result: ScheduleMatrix<T> = [];
 
-  collisionGroups.forEach(function(group) {
+  collisionGroups.forEach(group => {
     const matrix: Array<T[]> = [[]];
 
-    group.forEach(function(scheduleID) {
+    group.forEach(scheduleID => {
       const schedule: T = collection.items[scheduleID];
       let col = 0;
       let found = false;
@@ -224,7 +224,7 @@ function limit(start: TZDate, end: TZDate, viewModel: ScheduleViewModel) {
  * @param {TZDate} end - end date to render
  * @param {Collection<ScheduleViewModel>|ScheduleViewModel} viewModelColl - schedule view
  *  model collection or ScheduleViewModel
- * @returns {ScheduleViewModel} return view model when third parameter is
+ * @returns {?ScheduleViewModel} return view model when third parameter is
  *  view model
  */
 export function limitRenderRange(

@@ -35,10 +35,6 @@ export default class Collection<T extends Record<string | number, any>> {
     }
   }
 
-  /**********
-   * static methods
-   **********/
-
   /**
    * Combind supplied function filters and condition.
    * @param {...Filter} filters - function filters
@@ -81,16 +77,12 @@ export default class Collection<T extends Record<string | number, any>> {
     };
   }
 
-  /**********
-   * prototype methods
-   **********/
-
   /**
    * get model's unique id.
    * @param {object} item model instance.
    * @returns {string} model unique id.
    */
-  public getItemID(item: T): string | number {
+  getItemID(item: T): string | number {
     return String(item._id);
   }
 

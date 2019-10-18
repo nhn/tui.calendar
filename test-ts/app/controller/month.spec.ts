@@ -3,9 +3,9 @@ import { ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
+import { findByDateRange } from '@src/controller/month';
 
 import matricesMatcher from '../../matcher/matrices';
-import { findByDateRange } from '@src/controller/month';
 
 describe('Base.Month', function() {
   // eslint-disable-next-line no-undefined

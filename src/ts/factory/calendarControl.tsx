@@ -135,7 +135,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Destroys the instance.
    */
-  public destroy() {
+  destroy() {
     if (this._container) {
       render('', this._container, this._base);
     }
@@ -150,7 +150,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Move the calendar amount of offset value
    * @param {number} offset - The offset value.
-   * @private
+   * @todo implement this
    * @example
    * // move previous week when "week" view.
    * // move previous month when "month" view.
@@ -165,6 +165,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {number} offset - The offset (min)
    * @static
    * @deprecated
+   * @todo remove this
    * @example
    * var timezoneName = moment.tz.guess();
    * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
@@ -178,6 +179,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {function} callback - The callback function
    * @static
    * @deprecated
+   * @todo remove this
    * @example
    * var timezoneName = moment.tz.guess();
    * tui.Calendar.setTimezoneOffsetCallback(function(timestamp) {
@@ -196,6 +198,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * Create schedules and render calendar.
    * @param {Array.<Schedule>} schedules - {@link Schedule} data list
    * @param {boolean} [silent=false] - no auto render after creation when set true
+   * @todo implement this
    * @example
    * calendar.createSchedules([
    *     {
@@ -227,6 +230,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {string} scheduleId - ID of schedule
    * @param {string} calendarId - calendarId of the schedule
    * @returns {Schedule} schedule object
+   * @todo implement this
    * @example
    * var schedule = calendar.getSchedule(scheduleId, calendarId);
    * console.log(schedule.title);
@@ -241,6 +245,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {string} calendarId - The calendarId of the schedule to update
    * @param {Schedule} scheduleData - The {@link Schedule} data to update
    * @param {boolean} [silent=false] - No auto render after creation when set true
+   * @todo implement this
    * @example
    * calendar.on('beforeUpdateSchedule', function(event) {
    *     var schedule = event.schedule;
@@ -266,6 +271,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {string} scheduleId - ID of schedule to delete
    * @param {string} calendarId - The CalendarId of the schedule to delete
    * @param {boolean} [silent=false] - No auto render after creation when set true
+   * @todo implement this
    */
   deleteSchedule(scheduleId: string, calendarId: string, silent = false) {
     console.log('deleteSchedule', scheduleId, calendarId, silent);
@@ -280,6 +286,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {string} calendarId - The calendar id value
    * @param {boolean} toHide - Set true to hide schedules
    * @param {boolean} [renderImmediately=true] - set true then render after change visible property each models
+   * @todo implement this
    */
   toggleSchedules(calendarId: string, toHide: boolean, renderImmediately = true) {
     console.log('toggleSchedules', calendarId, toHide, renderImmediately);
@@ -324,6 +331,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * Delete all schedules and clear view.
+   * @todo implement this
    * @example
    * calendar.clear();
    * calendar.createSchedules(schedules, true);
@@ -335,6 +343,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * Scroll to current time on today in case of daily, weekly view
+   * @todo implement this
    * @example
    * function onNewSchedules(schedules) {
    *     calendar.createSchedules(schedules);
@@ -349,6 +358,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * Move to today.
+   * @todo implement this
    * @example
    * function onClickTodayBtn() {
    *     calendar.today();
@@ -361,6 +371,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Move to specific date
    * @param {DateType} date - The date to move
+   * @todo implement this
    * @example
    * calendar.on('clickDayname', function(event) {
    *     if (calendar.getViewName() === 'week') {
@@ -410,6 +421,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {string} calendarId - The calendar ID
    * @param {CalendarColor} option - The {@link CalendarColor} object
    * @param {boolean} [silent=false] - No auto render after creation when set true
+   * @todo implement this
    * @example
    * calendar.setCalendarColor('1', {
    *     color: '#e8e8e8',
@@ -439,6 +451,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * Change current view with view name('day', 'week', 'month')
    * @param {string} newViewName - The New view name to render
    * @param {boolean} [force=false] - Force render despite of current view and new view are equal
+   * @todo implement this
    * @example
    * // daily view
    * calendar.changeView('day', true);
@@ -484,6 +497,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @deprecated
    * Toggle task view('Milestone', 'Task') panel
    * @param {boolean} enabled - use task view
+   * @todo implement this
    * @example
    * // There is no milestone, task, so hide those view panel
    * calendar.toggleTaskView(false);
@@ -499,6 +513,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @deprecated
    * Toggle schedule view('AllDay', TimeGrid') panel
    * @param {boolean} enabled - use task view
+   * @todo remove this
    * @example
    * // hide those view panel to show only 'Milestone', 'Task'
    * calendar.toggleScheduleView(false);
@@ -515,6 +530,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {string} scheduleId - ID of schedule
    * @param {string} calendarId - calendarId of schedule
    * @returns {HTMLElement} schedule element if found or null
+   * @todo implement this
    * @example
    * var element = calendar.getElement(scheduleId, calendarId);
    * console.log(element);
@@ -529,6 +545,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
  * Set a theme. If some keys are not defined in the preset, will be return.
  * @param {object} theme - multiple styles map
  * @returns {Array.<string>} keys - error keys not predefined.
+ * @todo implement this
  * @example
  * cal.setTheme({
     'month.dayname.height': '31px',
@@ -547,6 +564,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * Set options of calendar
    * @param {Option} options - set {@link Option}
    * @param {boolean} [silent=false] - no auto render after creation when set true
+   * @todo implement this
    */
   setOptions(options: Option, silent = false) {
     console.log('setOptions', options, silent);
@@ -562,6 +580,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * Current rendered date ({@link TZDate} for further information)
+   * @todo implement this
    * @returns {TZDate}
    */
   getDate() {
@@ -573,6 +592,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Start time of rendered date range ({@link TZDate} for further information)
    * @returns {TZDate}
+   * @todo implement this
    */
   getDateRangeStart() {
     console.log('getDateRangeStart');
@@ -583,6 +603,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * End time of rendered date range ({@link TZDate} for further information)
    * @returns {TZDate}
+   * @todo implement this
    */
   getDateRangeEnd() {
     console.log('getDateRangeEnd');
@@ -593,6 +614,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Get current view name('day', 'week', 'month')
    * @returns {string} view name
+   * @todo implement this
    */
   getViewName() {
     console.log('getViewName');
@@ -603,6 +625,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Set calendar list
    * @param {Array.<Object>} calendars - calendar list
+   * @todo implement this
    */
   setCalendars(calendars: CalendarData[]) {
     console.log('setCalendars', calendars);
@@ -611,6 +634,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   /**
    * Open schedule creation popup
    * @param {Schedule} schedule - The preset {@link Schedule} data
+   * @todo implement this
    */
   openCreationPopup(schedule: ScheduleData) {
     console.log('openCreationPopup', schedule);

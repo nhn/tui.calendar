@@ -23,7 +23,7 @@ import { compare } from '@src/time/datetime';
  * @param {boolean} b The boolean to compare.
  * @returns {number} Result of comparison.
  */
-function booleanASC(a: boolean, b: boolean) {
+function compareBooleansASC(a: boolean, b: boolean) {
   if (a !== b) {
     return a ? -1 : 1;
   }
@@ -39,7 +39,7 @@ function booleanASC(a: boolean, b: boolean) {
  * @param {number} b The number to compare.
  * @returns {number} Result of comparison.
  */
-function numberASC(a: any, b: any) {
+function compareNumbersASC(a: any, b: any) {
   return Number(a) - Number(b);
 }
 
@@ -51,7 +51,7 @@ function numberASC(a: any, b: any) {
  * @param {string} _b The string to compare.
  * @returns {number} Result of comparison.
  */
-function stringASC(_a: any, _b: any) {
+function compareStringsASC(_a: any, _b: any) {
   const a = String(_a),
     b = String(_b);
 
@@ -76,10 +76,10 @@ function stringASC(_a: any, _b: any) {
  * @param {Schedule} b The object schedule instance.
  * @returns {number} Result of comparison.
  */
-function scheduleASC(a: Schedule | ScheduleViewModel, b: Schedule | ScheduleViewModel) {
+function compareSchedulesASC(a: Schedule | ScheduleViewModel, b: Schedule | ScheduleViewModel) {
   const modelA = a instanceof ScheduleViewModel ? a.model : a;
   const modelB = b instanceof ScheduleViewModel ? b.model : b;
-  const allDayCompare = booleanASC(
+  const allDayCompare = compareBooleansASC(
     modelA.isAllDay || modelA.hasMultiDates,
     modelB.isAllDay || modelB.hasMultiDates
   );
@@ -147,7 +147,7 @@ export function bsearch(
   let value;
   let comp;
 
-  compareFn = compareFn || stringASC;
+  compareFn = compareFn || compareStringsASC;
 
   while (minIndex <= maxIndex) {
     currentIndex = ((minIndex + maxIndex) / 2) | 0; // Math.floor
@@ -169,10 +169,10 @@ export default {
   bsearch,
   compare: {
     schedule: {
-      asc: scheduleASC
+      asc: compareSchedulesASC
     },
     num: {
-      asc: numberASC
+      asc: compareNumbersASC
     }
   }
 };

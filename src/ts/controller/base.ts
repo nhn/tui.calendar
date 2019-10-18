@@ -23,12 +23,23 @@ export type IDS_OF_DAY = Record<string, number[]>;
 
 /**
  * Calculate contain dates in schedule.
- * @private
  * @param {Schedule} schedule The instance of schedule.
  * @returns {array} contain dates.
  */
 export function getContainDatesInSchedule(start: TZDate, end: TZDate) {
   return makeDateRange(toStartOfDay(start), toEndOfDay(end), MILLISECONDS_PER_DAY);
+}
+
+function isAllDay(schedule: Schedule) {
+  if (
+    schedule.isAllDay ||
+    (schedule.category === 'time' &&
+      Number(schedule.end) - Number(schedule.start) > MILLISECONDS_PER_DAY)
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
 export default class ModelController {
@@ -84,18 +95,14 @@ export default class ModelController {
    * @returns {Schedule[]} The instance list of Schedule that created.
    */
   createSchedules(schedules: ScheduleData[] = []) {
-    return schedules.map(scheduleData => {
-      return this.createSchedule(scheduleData);
-    });
+    return schedules.map(scheduleData => this.createSchedule(scheduleData));
   }
 
   /**
    * Update an schedule.
    */
   updateSchedule(scheduleId: string, calendarId: string, scheduleData: ScheduleData) {
-    const schedule = this.schedules.single(item => {
-      return isSameSchedule(item, scheduleId, calendarId);
-    });
+    const schedule = this.schedules.single(item => isSameSchedule(item, scheduleId, calendarId));
 
     if (!schedule) {
       return false;
@@ -172,7 +179,7 @@ export default class ModelController {
     const ownMatrix = this.idsOfDay;
     const containDates = getContainDatesInSchedule(schedule.getStarts(), schedule.getEnds());
 
-    containDates.forEach(function(date) {
+    containDates.forEach(date => {
       const ymd = format(date, 'YYYYMMDD');
       const matrix = (ownMatrix[ymd] = ownMatrix[ymd] || []);
 
@@ -205,14 +212,7 @@ export default class ModelController {
   groupFunc(viewModel: ScheduleViewModel) {
     const { model } = viewModel;
 
-    if (viewModel.model.isAllDay) {
-      return 'allday';
-    }
-
-    if (
-      model.category === 'time' &&
-      Number(model.end) - Number(model.start) > MILLISECONDS_PER_DAY
-    ) {
+    if (isAllDay(model)) {
       return 'allday';
     }
 

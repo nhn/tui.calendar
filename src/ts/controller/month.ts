@@ -22,21 +22,21 @@ import ModelController, { IDS_OF_DAY } from './base';
 import array from '@src/util/array';
 
 /**
- * Filter function for find time schedule
- * @param {ScheduleViewModel} viewModel - schedule view model
- * @returns {boolean} whether model is time schedule?
- */
-function _onlyTimeFilter(viewModel: ScheduleViewModel) {
-  return !viewModel.model.isAllDay && !viewModel.model.hasMultiDates;
-}
-
-/**
  * Filter function for find allday schedule
  * @param {ScheduleViewModel} viewModel - schedule view model
  * @returns {boolean} whether model is allday schedule?
  */
-function _onlyAlldayFilter(viewModel: ScheduleViewModel) {
-  return viewModel.model.isAllDay || viewModel.model.hasMultiDates;
+function _isAllday({ model }: ScheduleViewModel) {
+  return model.isAllDay || model.hasMultiDates;
+}
+
+/**
+ * Filter function for find time schedule
+ * @param {ScheduleViewModel} viewModel - schedule view model
+ * @returns {boolean} whether model is time schedule?
+ */
+function _isNotAllday(viewModel: ScheduleViewModel) {
+  return !_isAllday(viewModel);
 }
 
 /**
@@ -55,11 +55,14 @@ function _weightTopValue(viewModel: ScheduleViewModel) {
  * each time schedules
  * @param {TZDate} start - render start date
  * @param {TZDate} end - render end date
- * @param {Collection} vColl - view model collection
- * property.
+ * @param {Collection} viewModelColl - view model collection property.
  */
-function _adjustRenderRange(start: TZDate, end: TZDate, vColl: Collection<ScheduleViewModel>) {
-  vColl.each(viewModel => {
+function _adjustRenderRange(
+  start: TZDate,
+  end: TZDate,
+  viewModelColl: Collection<ScheduleViewModel>
+) {
+  viewModelColl.each(viewModel => {
     if (viewModel.model.isAllDay || viewModel.model.hasMultiDates) {
       limitRenderRange(start, end, viewModel);
     }
@@ -69,18 +72,18 @@ function _adjustRenderRange(start: TZDate, end: TZDate, vColl: Collection<Schedu
 /**
  * Get max top index value for allday schedules in specific date (YMD)
  * @param {string} ymd - yyyymmdd formatted value
- * @param {Collection} vAlldayColl - collection of allday schedules
+ * @param {Collection} viewModelAlldayColl - collection of allday schedules
  * @returns {number} max top index value in date
  */
 function _getAlldayMaxTopIndexAtYMD(
   idsOfDay: IDS_OF_DAY,
   ymd: string,
-  vAlldayColl: Collection<ScheduleViewModel>
+  viewModelAlldayColl: Collection<ScheduleViewModel>
 ) {
   const topIndexesInDate: number[] = [];
 
   idsOfDay[ymd].forEach(cid => {
-    vAlldayColl.doWhenHas(cid, viewModel => {
+    viewModelAlldayColl.doWhenHas(cid, viewModel => {
       topIndexesInDate.push(viewModel.top);
     });
   });
@@ -94,11 +97,11 @@ function _getAlldayMaxTopIndexAtYMD(
 
 /**
  * Adjust time view model's top index value
- * @param {Collection} vColl - collection of schedule view model
+ * @param {Collection} viewModelColl - collection of schedule view model
  */
-function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, vColl: Collection<ScheduleViewModel>) {
-  const vAlldayColl = vColl.find(_onlyAlldayFilter);
-  const sortedTimeSchedules = vColl.find(_onlyTimeFilter).sort(array.compare.schedule.asc);
+function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<ScheduleViewModel>) {
+  const vAlldayColl = viewModelColl.find(_isAllday);
+  const sortedTimeSchedules = viewModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
   const maxIndexInYMD: Record<string, number> = {};
 
   sortedTimeSchedules.forEach(timeViewModel => {
@@ -118,31 +121,29 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, vColl: Collection<ScheduleVie
 
 /**
  * Adjust time view model's top index value
- * @param {Collection} vColl - collection of schedule view model
+ * @param {Collection} viewModelColl - collection of schedule view model
  */
-function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, vColl: Collection<ScheduleViewModel>) {
-  const vAlldayColl = vColl.find(_onlyAlldayFilter);
-  const sortedTimeSchedules = vColl.find(_onlyTimeFilter).sort(array.compare.schedule.asc);
+function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<ScheduleViewModel>) {
+  const viewModelAlldayColl = viewModelColl.find(_isAllday);
+  const sortedTimeSchedules = viewModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
   const indiceInYMD: Record<string, number[]> = {};
 
   sortedTimeSchedules.forEach(timeViewModel => {
     const scheduleYMD = format(timeViewModel.getStarts(), 'YYYYMMDD');
     let topArrayInYMD = indiceInYMD[scheduleYMD];
-    let maxTopInYMD;
-    let i;
 
     if (isUndefined(topArrayInYMD)) {
       topArrayInYMD = indiceInYMD[scheduleYMD] = [];
       idsOfDay[scheduleYMD].forEach(cid => {
-        vAlldayColl.doWhenHas(cid, viewModel => {
+        viewModelAlldayColl.doWhenHas(cid, viewModel => {
           topArrayInYMD.push(viewModel.top);
         });
       });
     }
 
     if (inArray(timeViewModel.top, topArrayInYMD) >= 0) {
-      maxTopInYMD = Math.max(...topArrayInYMD) + 1;
-      for (i = 1; i <= maxTopInYMD; i += 1) {
+      const maxTopInYMD = Math.max(...topArrayInYMD) + 1;
+      for (let i = 1; i <= maxTopInYMD; i += 1) {
         timeViewModel.top = i;
         if (inArray(timeViewModel.top, topArrayInYMD) < 0) {
           break;
@@ -155,11 +156,11 @@ function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, vColl: Collection<ScheduleViewM
 
 /**
  * Convert multi-date time schedule to all-day schedule
- * @param {Collection} vColl - view model collection
+ * @param {Collection} viewModelColl - view model collection
  * property.
  */
-function _addMultiDatesInfo(vColl: Collection<ScheduleViewModel>) {
-  vColl.each(viewModel => {
+function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
+  viewModelColl.each(viewModel => {
     const { model } = viewModel;
     const start = model.getStarts();
     const end = model.getEnds();
@@ -192,19 +193,19 @@ export function findByDateRange(
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
 
   const coll = controller.schedules.find(filter);
-  const vColl = convertToViewModel(coll);
-  _addMultiDatesInfo(vColl);
-  _adjustRenderRange(start, end, vColl);
-  const vList = vColl.sort(array.compare.schedule.asc);
+  const viewModelColl = convertToViewModel(coll);
+  _addMultiDatesInfo(viewModelColl);
+  _adjustRenderRange(start, end, viewModelColl);
+  const vList = viewModelColl.sort(array.compare.schedule.asc);
 
   const collisionGroup = getCollisionGroup(vList);
-  const matrices = getMatrices(vColl, collisionGroup);
+  const matrices = getMatrices(viewModelColl, collisionGroup);
   positionViewModels(start, end, matrices, _weightTopValue);
 
   if (alldayFirstMode) {
-    _adjustTimeTopIndex(controller.idsOfDay, vColl);
+    _adjustTimeTopIndex(controller.idsOfDay, viewModelColl);
   } else {
-    _stackTimeFromTop(controller.idsOfDay, vColl);
+    _stackTimeFromTop(controller.idsOfDay, viewModelColl);
   }
 
   return matrices;

@@ -8,13 +8,8 @@ import inArray from 'tui-code-snippet/array/inArray';
 describe('common/array', function() {
   describe('common compare methods', function() {
     describe('compare.num', function() {
-      let arr: number[];
-
-      beforeEach(function() {
-        arr = [8, 3, 11, 29, 31, 55, 25, 1];
-      });
-
       it('asc', function() {
+        const arr = [8, 3, 11, 29, 31, 55, 25, 1];
         arr.sort(array.compare.num.asc);
 
         expect(arr).toEqual([1, 3, 8, 11, 25, 29, 31, 55]);

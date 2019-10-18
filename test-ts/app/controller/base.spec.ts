@@ -2,15 +2,16 @@ import ModelController, { getContainDatesInSchedule } from '@src/controller/base
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { ScheduleData } from '@src/model';
-import forEach from 'tui-code-snippet/collection/forEach';
+
+import viewModelsMatcher from '../../matcher/viewModels';
 
 describe('controller/base', function() {
   let ctrl: ModelController;
-  let set: ScheduleData[];
+  let scheduleDataList: ScheduleData[];
 
   beforeEach(function() {
     ctrl = new ModelController();
-    set = fixture.load('schedule_set_string.json');
+    scheduleDataList = fixture.load('schedule_set_string.json');
   });
 
   afterEach(function() {
@@ -57,15 +58,15 @@ describe('controller/base', function() {
 
   describe('createSchedule()', function() {
     it('return itself for chaining pattern.', function() {
-      const schedule = Schedule.create(set[0]);
+      const schedule = Schedule.create(scheduleDataList[0]);
 
-      expect(schedule.equals(ctrl.createSchedule(set[0]))).toBe(true);
+      expect(schedule.equals(ctrl.createSchedule(scheduleDataList[0]))).toBe(true);
     });
 
     it('create schedule instance by raw schedule data.', function() {
-      const id = ctrl.createSchedule(set[0]).cid();
-      const id2 = ctrl.createSchedule(set[1]).cid();
-      const id3 = ctrl.createSchedule(set[3]).cid();
+      const id = ctrl.createSchedule(scheduleDataList[0]).cid();
+      const id2 = ctrl.createSchedule(scheduleDataList[1]).cid();
+      const id3 = ctrl.createSchedule(scheduleDataList[3]).cid();
 
       expect(ctrl.schedules.length).toBe(3);
       expect(ctrl.idsOfDay).toEqual({
@@ -84,50 +85,14 @@ describe('controller/base', function() {
       scheduleList = [];
       idList = [];
 
-      set.forEach(data => {
+      scheduleDataList.forEach(data => {
         const item = ctrl.createSchedule(data);
         scheduleList.push(item);
         idList.push(item.cid());
       });
 
       // Add returned viewmodel matcher.
-      jasmine.addMatchers({
-        toEqualViewModel(matchersUtil) {
-          return {
-            compare(
-              actual: Record<string, Schedule[]>,
-              expected: Record<string, Schedule[]>
-            ): jasmine.CustomMatcherResult {
-              const result: jasmine.CustomMatcherResult = {
-                pass: false
-              };
-              let isEqual = true;
-
-              forEach(expected, function(_compareTo: any, ymd: string) {
-                const models: Schedule[] = actual[ymd];
-
-                if (!models) {
-                  isEqual = false;
-
-                  return false;
-                }
-
-                const titleList = models.map((item: Schedule) => {
-                  return item.title;
-                });
-
-                isEqual = matchersUtil.equals(titleList.sort(), expected[ymd].sort());
-
-                return isEqual;
-              });
-
-              result.pass = isEqual;
-
-              return result;
-            }
-          };
-        }
-      });
+      jasmine.addMatchers(viewModelsMatcher);
 
       /*
        * matrix: {
@@ -169,17 +134,14 @@ describe('controller/base', function() {
   });
 
   describe('updateSchedule()', function() {
-    let id: number;
-    let model: Schedule;
-
     it('update owned schedule and date matrix.', function() {
-      model = ctrl.createSchedule({
+      const model = ctrl.createSchedule({
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
         end: '2015/05/01 18:30:00'
       });
-      id = model.cid();
+      const id = model.cid();
 
       ctrl.updateSchedule(model.id, model.calendarId, {
         title: 'Go to work',

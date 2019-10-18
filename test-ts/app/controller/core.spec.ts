@@ -96,24 +96,24 @@ describe('Base.Core', function() {
   });
 
   describe('limitRenderRange', function() {
-    let collection: Collection<ScheduleViewModel>;
+    let viewModelColl: Collection<ScheduleViewModel>;
 
     beforeEach(function() {
-      collection = new Collection(viewModel => {
+      viewModelColl = new Collection(viewModel => {
         return viewModel.cid();
       });
     });
 
     it('fill renderStarts, renderEnds to each view model in collection.', function() {
       // 5/1 10:20 ~ 5/1 10:40
-      collection.add(ScheduleViewModel.create(scheduleList[0]));
+      viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
 
       const limit1 = new TZDate('2015-05-01T10:30:00+09:00');
       const limit2 = new TZDate('2015-05-01T10:40:00+09:00');
 
-      limitRenderRange(limit1, limit2, collection);
+      limitRenderRange(limit1, limit2, viewModelColl);
 
-      const viewModel = collection.single();
+      const viewModel = viewModelColl.single();
 
       expect(viewModel).not.toBeNull();
       if (viewModel) {
@@ -124,10 +124,10 @@ describe('Base.Core', function() {
   });
 
   describe('getScheduleInDateRangeFilter', function() {
-    let collection: Collection<ScheduleViewModel>;
+    let viewModelColl: Collection<ScheduleViewModel>;
 
     beforeEach(function() {
-      collection = new Collection(viewModel => {
+      viewModelColl = new Collection(viewModel => {
         return viewModel.cid();
       });
     });
@@ -150,77 +150,77 @@ describe('Base.Core', function() {
       // L ownStart ----------------------------------------------- ownEnd
 
       // 10:20 ~ 10:40
-      collection.add(ScheduleViewModel.create(scheduleList[0]));
+      viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
 
       // A: 09:30 ~ 10:10
       d1 = new TZDate('2015-05-01T09:30:00+09:00');
       d2 = new TZDate('2015-05-01T10:10:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(0);
+      expect(viewModelColl.find(filter).length).toBe(0);
 
       // B: 09:30 ~ 10:20
       d1 = new TZDate('2015-05-01T09:30:00+09:00');
       d2 = new TZDate('2015-05-01T10:20:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // C: 09:30 ~ 10:30
       d1 = new TZDate('2015-05-01T09:30:00+09:00');
       d2 = new TZDate('2015-05-01T10:30:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // D: 10:20 ~ 10:30
       d1 = new TZDate('2015-05-01T10:20:00+09:00');
       d2 = new TZDate('2015-05-01T10:30:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // E: 10:25 ~ 10:35
       d1 = new TZDate('2015-05-01T10:25:00+09:00');
       d2 = new TZDate('2015-05-01T10:35:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // F: 10:30 ~ 10:40
       d1 = new TZDate('2015-05-01T10:30:00+09:00');
       d2 = new TZDate('2015-05-01T10:40:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // G: 10:30 ~ 10:50
       d1 = new TZDate('2015-05-01T10:30:00+09:00');
       d2 = new TZDate('2015-05-01T10:50:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // H: 10:40 ~ 10:50
       d1 = new TZDate('2015-05-01T10:40:00+09:00');
       d2 = new TZDate('2015-05-01T10:50:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
 
       // I: 10:50 ~ 10:55
       d1 = new TZDate('2015-05-01T10:50:00+09:00');
       d2 = new TZDate('2015-05-01T10:55:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(0);
+      expect(viewModelColl.find(filter).length).toBe(0);
 
       // L: 10:10 ~ 10:50
       d1 = new TZDate('2015-05-01T10:10:00+09:00');
       d2 = new TZDate('2015-05-01T10:50:00+09:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(collection.find(filter).length).toBe(1);
+      expect(viewModelColl.find(filter).length).toBe(1);
     });
   });
 });

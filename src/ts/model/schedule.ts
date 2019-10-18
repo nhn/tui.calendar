@@ -193,6 +193,7 @@ export default class Schedule {
 
   /**
    * whether the schedule includes multiple dates
+   * @type {boolean}
    */
   hasMultiDates = false;
 

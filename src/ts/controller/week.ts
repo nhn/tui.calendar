@@ -206,15 +206,15 @@ export function _makeHourRangeFilter(hStart: number, hEnd: number) {
 export function _makeGetViewModelFuncForTimeView(
   hourStart: number,
   hourEnd: number
-): (collection: Collection<ScheduleViewModel>) => ScheduleViewModel[] {
+): (viewModelColl: Collection<ScheduleViewModel>) => ScheduleViewModel[] {
   if (hourStart === 0 && hourEnd === 24) {
-    return (collection: Collection<ScheduleViewModel>) => {
-      return collection.sort(array.compare.schedule.asc);
+    return (viewModelColl: Collection<ScheduleViewModel>) => {
+      return viewModelColl.sort(array.compare.schedule.asc);
     };
   }
 
-  return (collection: Collection<ScheduleViewModel>) => {
-    return collection
+  return (viewModelColl: Collection<ScheduleViewModel>) => {
+    return viewModelColl
       .find(_makeHourRangeFilter(hourStart, hourEnd))
       .sort(array.compare.schedule.asc);
   };
@@ -224,14 +224,14 @@ export function _makeGetViewModelFuncForTimeView(
  * split schedule model by ymd.
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
- * @param {Collection<ScheduleViewModel>} viewModelCollection - collection of schedule view model.
+ * @param {Collection<ScheduleViewModel>} viewModelColl - collection of schedule view model.
  * @returns {object.<string, Collection>} splitted schedule model collections.
  */
 export function splitScheduleByDateRange(
   idsOfDay: Record<string, number[]>,
   start: TZDate,
   end: TZDate,
-  viewModelCollection: Collection<Schedule> | Collection<ScheduleViewModel>
+  viewModelColl: Collection<Schedule> | Collection<ScheduleViewModel>
 ) {
   const result: Record<string, Collection<Schedule | ScheduleViewModel>> = {};
   const range = getContainDatesInSchedule(start, end);
@@ -245,7 +245,7 @@ export function splitScheduleByDateRange(
 
     if (ids && ids.length) {
       ids.forEach(id => {
-        viewModelCollection.doWhenHas(id, (schedule: Schedule | ScheduleViewModel) => {
+        viewModelColl.doWhenHas(id, (schedule: Schedule | ScheduleViewModel) => {
           collection.add(schedule);
         });
       });
@@ -260,7 +260,7 @@ export function splitScheduleByDateRange(
  * @param {ModelController} controller - model controller
  * @param {TZDate} start - start date.
  * @param {TZDate} end - end date.
- * @param {Collection} timeColl - view model collection.
+ * @param {Collection} viewModelTimeColl - view model collection.
  * @param {number} hourStart - start hour to be shown
  * @param {number} hourEnd - end hour to be shown
  * @returns {object} view model for time part.
@@ -269,19 +269,19 @@ export function getViewModelForTimeView(
   controller: ModelController,
   start: TZDate,
   end: TZDate,
-  timeColl: Collection<ScheduleViewModel>,
+  viewModelTimeColl: Collection<ScheduleViewModel>,
   hourStart: number,
   hourEnd: number
 ) {
-  const ymdSplitted = splitScheduleByDateRange(controller.idsOfDay, start, end, timeColl);
+  const ymdSplitted = splitScheduleByDateRange(controller.idsOfDay, start, end, viewModelTimeColl);
   const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
 
   const _getViewModel = _makeGetViewModelFuncForTimeView(hourStart, hourEnd);
 
-  forEach(ymdSplitted, (collection: Collection<ScheduleViewModel>, ymd: string) => {
-    const viewModels = _getViewModel(collection);
+  forEach(ymdSplitted, (viewModelColl: Collection<ScheduleViewModel>, ymd: string) => {
+    const viewModels = _getViewModel(viewModelColl);
     const collisionGroups = getCollisionGroup(viewModels);
-    const matrices = getMatrices(collection, collisionGroups);
+    const matrices = getMatrices(viewModelColl, collisionGroups);
     getCollides(matrices);
 
     result[ymd] = matrices;
@@ -296,10 +296,10 @@ export function getViewModelForTimeView(
 
 /**
  * Set hasMultiDates flag to true and set date ranges for rendering
- * @param {Collection} vColl - view model collection
+ * @param {Collection} viewModelColl - view model collection
  */
-export function _addMultiDatesInfo(vColl: Collection<ScheduleViewModel>) {
-  vColl.each(viewModel => {
+export function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
+  viewModelColl.each(viewModel => {
     const { model } = viewModel;
 
     model.hasMultiDates = true;
@@ -363,9 +363,9 @@ export function findByDateRange(
   const hourStart = pick(options, 'hourStart');
   const hourEnd = pick(options, 'hourEnd');
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
-  const modelColl = convertToViewModel(controller.schedules.find(filter));
+  const viewModelColl = convertToViewModel(controller.schedules.find(filter));
 
-  const group: Record<PANEL_NAME, Collection<ScheduleViewModel>> = modelColl.groupBy(
+  const group: Record<PANEL_NAME, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
     scheduleTypes,
     controller.groupFunc
   );
