@@ -19,7 +19,7 @@ export class Text extends ContextComponent<Props, State> {
   }
 
   private onClick() {
-    const { event: events, outerEvent: outerEvents } = this.context;
+    const { internalEvent: events, externalEvent: outerEvents } = this.context;
 
     events.fire('dblclick', 'data');
     events.fire('render');

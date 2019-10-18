@@ -2,6 +2,7 @@
 import forEach from 'tui-code-snippet/collection/forEach';
 import isExisty from 'tui-code-snippet/type/isExisty';
 import pick from 'tui-code-snippet/object/pick';
+import Schedule from '@src/model/schedule';
 
 interface StampObj extends Record<string, any> {
   __fe_id?: number;
@@ -61,3 +62,7 @@ export function hasStamp(obj: StampObj): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export function noop() {}
+
+export function isSameSchedule(schedule: Schedule, scheduleId: string, calendarId: string) {
+  return schedule.id === scheduleId && schedule.calendarId === calendarId;
+}

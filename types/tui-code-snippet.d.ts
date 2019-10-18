@@ -5,7 +5,7 @@ declare module 'tui-code-snippet/type/isString' {
 }
 
 declare module 'tui-code-snippet/type/isUndefined' {
-  export default function isUndefined(obj: any): obj is boolean;
+  export default function isUndefined(obj: any): obj is undefined;
 }
 
 declare module 'tui-code-snippet/type/isBoolean' {
@@ -16,13 +16,29 @@ declare module 'tui-code-snippet/type/isExisty' {
   export default function isExisty(obj: any): obj is boolean;
 }
 
+declare module 'tui-code-snippet/type/isFunction' {
+  export default function isFunction(obj: any): obj is Function;
+}
+
+declare module 'tui-code-snippet/type/isNumber' {
+  export default function isNumber(obj: any): obj is number;
+}
+
+declare module 'tui-code-snippet/type/isObject' {
+  export default function isObject(obj: any): obj is object;
+}
+
+declare module 'tui-code-snippet/type/isArray' {
+  export default function isArray(obj: any): obj is Array<any>;
+}
+
 // object
 declare module 'tui-code-snippet/object/extend' {
   export default function extend<T>(obj: T, ...objects: T[]): T;
 }
 
 declare module 'tui-code-snippet/object/pick' {
-  export default function pick(obj: any, ...paths: string[]): any;
+  export default function pick(obj: any, ...paths: string[] | number[]): any;
 }
 
 // collection
@@ -44,6 +60,10 @@ declare module 'tui-code-snippet/collection/forEachOwnProperties' {
 
 declare module 'tui-code-snippet/collection/forEachArray' {
   export default function forEachArray(arr: any[], iteratee: Function, context?: any): void;
+}
+
+declare module 'tui-code-snippet/collection/pluck' {
+  export default function pluck(arr: any[], property: string): any[];
 }
 
 // array

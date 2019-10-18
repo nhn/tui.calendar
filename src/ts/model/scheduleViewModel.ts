@@ -2,12 +2,8 @@
  * @fileoverview Model for views
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import { stamp } from '@src/util';
-import * as datetime from '@src/time/datetime';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-
-const SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 /**
  * Schedule ViewModel
@@ -62,11 +58,6 @@ export default class ScheduleViewModel {
    * @type {boolean}
    */
   hidden = false;
-
-  /**
-   * whether the schedule includes multiple dates
-   */
-  hasMultiDates = false;
 
   /**
    * represent render start date used at rendering.
@@ -146,8 +137,8 @@ export default class ScheduleViewModel {
   /**
    * @returns {number} unique number for model.
    */
-  cid(): number {
-    return stamp(this.model);
+  cid() {
+    return this.model.cid();
   }
 
   /**
@@ -162,46 +153,20 @@ export default class ScheduleViewModel {
    * Link duration method
    * @returns {number} Schedule#duration result.
    */
-  duration(): number {
+  duration() {
     return this.model.duration();
   }
 
   /**
    * Link collidesWith method
-   * @param {Schedule|ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.
+   * @param {ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.
    * @returns {boolean} Schedule#collidesWith result.
    */
-  collidesWith(viewModel: ScheduleViewModel): boolean {
-    let ownStarts = Number(this.getStarts());
-    let ownEnds = Number(this.getEnds());
-    let start = Number(viewModel.getStarts());
-    let end = Number(viewModel.getEnds());
-    const ownGoingDuration = datetime.millisecondsFrom('minutes', this.valueOf().goingDuration);
-    const ownComingDuration = datetime.millisecondsFrom('minutes', this.valueOf().comingDuration);
-    const goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-    const comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
-
-    if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
-      ownEnds += SCHEDULE_MIN_DURATION;
+  collidesWith(viewModel: Schedule | ScheduleViewModel) {
+    if (viewModel instanceof Schedule) {
+      return this.model.collidesWith(viewModel);
     }
 
-    if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
-      end += SCHEDULE_MIN_DURATION;
-    }
-
-    ownStarts -= ownGoingDuration;
-    ownEnds += ownComingDuration;
-    start -= goingDuration;
-    end += comingDuration;
-
-    if (
-      (start > ownStarts && start < ownEnds) ||
-      (end > ownStarts && end < ownEnds) ||
-      (start <= ownStarts && end >= ownEnds)
-    ) {
-      return true;
-    }
-
-    return false;
+    return this.model.collidesWith(viewModel.model);
   }
 }

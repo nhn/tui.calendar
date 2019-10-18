@@ -10,7 +10,7 @@ export default class Month extends CalendarControl {
   constructor(container: Element, options: Option = {}) {
     super(container, options);
 
-    this._event.on('render', this.onRender, this);
+    this._internalEvent.on('render', this.onRender, this);
 
     this.render();
   }
@@ -21,5 +21,13 @@ export default class Month extends CalendarControl {
 
   private onRender() {
     this.render();
+  }
+
+  /**
+   * Hide the more view
+   * @todo implement this
+   */
+  hideMoreView() {
+    console.log('hideMoreView');
   }
 }
