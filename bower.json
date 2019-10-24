@@ -8,7 +8,7 @@
     "dist/tui-calendar.js",
     "dist/tui-calendar.css"
   ],
-  "version": "1.12.5",
+  "version": "1.12.6",
   "description": "TOAST UI Calendar",
   "ignore": [
     "**/.*",
@@ -26,7 +26,7 @@
   ],
   "dependencies": {
     "tui-code-snippet": "^1.5.0",
-    "tui-date-picker": "^3.2.1",
-    "tui-time-picker": "^1.5.0"
+    "tui-date-picker": "^4.0.2",
+    "tui-time-picker": "^2.0.1"
   }
 }
