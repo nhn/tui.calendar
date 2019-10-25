@@ -755,9 +755,10 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
         var color = calColor[obj.calendarId];
 
         if (color) {
-            obj.color = color.color;
-            obj.bgColor = color.bgColor;
-            obj.borderColor = color.borderColor;
+            //overwrite only if not customized
+            if (typeof obj.color == 'undefined') { obj.color = color.color; }
+            if (typeof obj.bgColor == 'undefined') { obj.bgColor = color.bgColor; }
+            if (typeof obj.borderColor == 'undefined') { obj.borderColor = color.borderColor; }
         }
     });
 
