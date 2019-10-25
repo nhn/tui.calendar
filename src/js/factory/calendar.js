@@ -754,10 +754,11 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
     util.forEach(schedules, function(obj) {
         var color = calColor[obj.calendarId];
 
+        //overwrite schedule color with calendar's only if schedule is not customized
         if (color) {
-            obj.color = color.color;
-            obj.bgColor = color.bgColor;
-            obj.borderColor = color.borderColor;
+            obj.color = obj.color || color.color;
+            obj.bgColor = obj.bgColor || color.bgColor;
+            obj.borderColor = obj.borderColor || color.borderColor;
         }
     });
 
