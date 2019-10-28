@@ -1,11 +1,13 @@
 import TZDate from '@src/time/date';
-import { ScheduleCategory } from '@src/model/schedule';
+import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
 
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
+import { IDS_OF_DAY } from '@src/controller/base';
+import Collection from '@src/util/collection';
 
 export type DateType = Date | string | number | TZDate;
 
@@ -38,8 +40,15 @@ export interface ScheduleData {
   raw?: any;
 }
 
+export interface DataStore {
+  calendars: CalendarData[];
+  schedules: Collection<Schedule>;
+  idsOfDay: IDS_OF_DAY;
+}
+
 export interface AppContext {
   options: Option;
+  dataStore: DataStore;
   theme: Theme;
   templates: Record<string, Function>;
   internalEvent: EventHandler<InternalEventName>;

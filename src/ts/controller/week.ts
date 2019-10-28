@@ -1,4 +1,3 @@
-/* eslint-disable max-params */
 /**
  * @fileoverview Controller modules for day views.
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
@@ -27,12 +26,12 @@ import {
   convertToViewModel,
   Matrix
 } from '@src/controller/core';
-import ModelController, { getContainDatesInSchedule } from '@src/controller/base';
+import { getDateRange, IDS_OF_DAY, filterByCategory } from '@src/controller/base';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import Collection, { Filter } from '@src/util/collection';
 import TZDate from '@src/time/date';
-import { WeekOption } from '@src/model';
+import { WeekOption, DataStore } from '@src/model';
 import array from '@src/util/array';
 
 export type PANEL_NAME = 'milestone' | 'task' | 'allday' | 'time';
@@ -228,13 +227,13 @@ export function _makeGetViewModelFuncForTimeView(
  * @returns {object.<string, Collection>} splitted schedule model collections.
  */
 export function splitScheduleByDateRange(
-  idsOfDay: Record<string, number[]>,
+  idsOfDay: IDS_OF_DAY,
   start: TZDate,
   end: TZDate,
   viewModelColl: Collection<Schedule> | Collection<ScheduleViewModel>
 ) {
   const result: Record<string, Collection<Schedule | ScheduleViewModel>> = {};
-  const range = getContainDatesInSchedule(start, end);
+  const range = getDateRange(start, end);
 
   range.forEach((date: TZDate) => {
     const ymd = format(date, 'YYYYMMDD');
@@ -257,7 +256,7 @@ export function splitScheduleByDateRange(
 
 /**
  * create view model for time view part
- * @param {ModelController} controller - model controller
+ * @param {IDS_OF_DAY} idsOfDay - model controller
  * @param {TZDate} start - start date.
  * @param {TZDate} end - end date.
  * @param {Collection} viewModelTimeColl - view model collection.
@@ -266,14 +265,14 @@ export function splitScheduleByDateRange(
  * @returns {object} view model for time part.
  */
 export function getViewModelForTimeView(
-  controller: ModelController,
+  idsOfDay: IDS_OF_DAY,
   start: TZDate,
   end: TZDate,
   viewModelTimeColl: Collection<ScheduleViewModel>,
   hourStart: number,
   hourEnd: number
 ) {
-  const ymdSplitted = splitScheduleByDateRange(controller.idsOfDay, start, end, viewModelTimeColl);
+  const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, viewModelTimeColl);
   const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
 
   const _getViewModel = _makeGetViewModelFuncForTimeView(hourStart, hourEnd);
@@ -343,7 +342,8 @@ export function getViewModelForAlldayView(
 
 /**
  * Populate schedules in date range.
- * @param {ModelController} controller - model controller
+ * @param {Collection<Schedule>} schedules - model controller
+ * @param {IDS_OF_DAY} idsOfDay - model controller
  * @param {TZDate} start start date.
  * @param {TZDate} end end date.
  * @param {Array.<object>} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
@@ -352,22 +352,23 @@ export function getViewModelForAlldayView(
  * @returns {object} schedules grouped by dates.
  */
 export function findByDateRange(
-  controller: ModelController,
+  dataStore: DataStore,
   start: TZDate,
   end: TZDate,
   panels: PANEL[],
   andFilters: Filter<Schedule | ScheduleViewModel>[] = [],
   options: WeekOption
 ) {
+  const { schedules, idsOfDay } = dataStore;
   const scheduleTypes = pluck(panels, 'name');
   const hourStart = pick(options, 'hourStart');
   const hourEnd = pick(options, 'hourEnd');
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
-  const viewModelColl = convertToViewModel(controller.schedules.find(filter));
+  const viewModelColl = convertToViewModel(schedules.find(filter));
 
   const group: Record<PANEL_NAME, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
     scheduleTypes,
-    controller.groupFunc
+    filterByCategory
   );
   const resutGroup: Record<
     PANEL_NAME,
@@ -384,7 +385,7 @@ export function findByDateRange(
       resutGroup[name] = getViewModelForAlldayView(start, end, group[name]);
     } else if (type === 'timegrid') {
       resutGroup[name] = getViewModelForTimeView(
-        controller,
+        idsOfDay,
         start,
         end,
         group[name],
