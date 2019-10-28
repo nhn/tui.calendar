@@ -18,8 +18,9 @@ import {
   positionViewModels
 } from '@src/controller/core';
 import { format, isSameDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import ModelController, { IDS_OF_DAY } from './base';
+import { IDS_OF_DAY } from './base';
 import array from '@src/util/array';
+import { DataStore } from '@src/model';
 
 /**
  * Filter function for find allday schedule
@@ -176,7 +177,7 @@ function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
 
 /**
  * Find schedule and get view model for specific month
- * @param {ModelController} controller - model controller
+ * @param {Collection<Schedule>} schedules - model controller
  * @param {TZDate} start - start date to find schedules
  * @param {TZDate} end - end date to find schedules
  * @param {Filter[]} [andFilters] - optional filters to applying search query
@@ -184,15 +185,16 @@ function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
  * @returns {object} view model data
  */
 export function findByDateRange(
-  controller: ModelController,
+  dataStore: DataStore,
   start: TZDate,
   end: TZDate,
   andFilters: Filter<Schedule | ScheduleViewModel>[] = [],
   alldayFirstMode = false
 ) {
+  const { schedules, idsOfDay } = dataStore;
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
 
-  const coll = controller.schedules.find(filter);
+  const coll = schedules.find(filter);
   const viewModelColl = convertToViewModel(coll);
   _addMultiDatesInfo(viewModelColl);
   _adjustRenderRange(start, end, viewModelColl);
@@ -203,9 +205,9 @@ export function findByDateRange(
   positionViewModels(start, end, matrices, _weightTopValue);
 
   if (alldayFirstMode) {
-    _adjustTimeTopIndex(controller.idsOfDay, viewModelColl);
+    _adjustTimeTopIndex(idsOfDay, viewModelColl);
   } else {
-    _stackTimeFromTop(controller.idsOfDay, viewModelColl);
+    _stackTimeFromTop(idsOfDay, viewModelColl);
   }
 
   return matrices;

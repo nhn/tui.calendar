@@ -1,5 +1,5 @@
-import ModelController from '@src/controller/base';
-import { ScheduleData } from '@src/model';
+import { createScheduleCollection, addSchedule } from '@src/controller/base';
+import { ScheduleData, DataStore } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
@@ -10,13 +10,17 @@ import matricesMatcher from '../../matcher/matrices';
 describe('Base.Month', function() {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
-  let base: ModelController;
+  let dataStore: DataStore;
   let mockData: ScheduleData[];
   let scheduleList: Schedule[];
   let actual;
 
   beforeEach(function() {
-    base = new ModelController();
+    dataStore = {
+      calendars: [],
+      schedules: createScheduleCollection(),
+      idsOfDay: {}
+    };
 
     mockData = fixture.load('schedule_set_month.json');
     // mock schedule list
@@ -31,7 +35,7 @@ describe('Base.Month', function() {
     beforeEach(function() {
       // add schedule instance to controller
       scheduleList.forEach(schedule => {
-        base.addSchedule(schedule);
+        addSchedule(dataStore, schedule);
       });
 
       // test/matcher/matrices.js
@@ -73,7 +77,7 @@ describe('Base.Month', function() {
         [undef, undef, 6]
       ];
 
-      actual = findByDateRange(base, start, end, [], true);
+      actual = findByDateRange(dataStore, start, end, [], true);
 
       expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
       expect(actual[0]).toEqualMatricesTop(expectedTop);
@@ -84,7 +88,7 @@ describe('Base.Month', function() {
     beforeEach(function() {
       // add schedule instance to controller
       scheduleList.forEach(schedule => {
-        base.addSchedule(schedule);
+        addSchedule(dataStore, schedule);
       });
 
       // test/matcher/matrices.js
@@ -126,7 +130,7 @@ describe('Base.Month', function() {
         [undef, undef, 5]
       ];
 
-      actual = findByDateRange(base, start, end);
+      actual = findByDateRange(dataStore, start, end);
 
       expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
       expect(actual[0]).toEqualMatricesTop(expectedTop);

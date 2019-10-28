@@ -20,6 +20,7 @@ import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import { toStartOfDay } from '@src/time/datetime';
 import isString from 'tui-code-snippet/type/isString';
+import { createScheduleCollection } from '@src/controller/base';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
@@ -65,6 +66,11 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     this._context = {
       options: {
         defaultView: 'month'
+      },
+      dataStore: {
+        calendars: [],
+        schedules: createScheduleCollection(),
+        idsOfDay: {}
       },
       theme: new Theme(option.theme),
       templates: extend(

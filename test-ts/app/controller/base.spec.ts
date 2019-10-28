@@ -1,16 +1,27 @@
-import ModelController, { getContainDatesInSchedule } from '@src/controller/base';
+import {
+  getDateRange,
+  createScheduleCollection,
+  createSchedule,
+  findByDateRange,
+  updateSchedule,
+  deleteSchedule
+} from '@src/controller/base';
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
-import { ScheduleData } from '@src/model';
+import { ScheduleData, DataStore } from '@src/model';
 
 import viewModelsMatcher from '../../matcher/viewModels';
 
 describe('controller/base', function() {
-  let ctrl: ModelController;
+  let dataStore: DataStore;
   let scheduleDataList: ScheduleData[];
 
   beforeEach(function() {
-    ctrl = new ModelController();
+    dataStore = {
+      calendars: [],
+      schedules: createScheduleCollection(),
+      idsOfDay: {}
+    };
     scheduleDataList = fixture.load('schedule_set_string.json');
   });
 
@@ -18,7 +29,7 @@ describe('controller/base', function() {
     fixture.cleanup();
   });
 
-  describe('getContainDatesInSchedule()', function() {
+  describe('getDateRange()', function() {
     let schedule: Schedule;
 
     it('calculate contain dates for specific schedules.', function() {
@@ -35,7 +46,7 @@ describe('controller/base', function() {
         end: '2015/05/03'
       });
 
-      expect(getContainDatesInSchedule(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
+      expect(getDateRange(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
     });
 
     it('can calculate non all day schedule.', function() {
@@ -52,7 +63,7 @@ describe('controller/base', function() {
         end: '2015/05/03 09:20:00'
       });
 
-      expect(getContainDatesInSchedule(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
+      expect(getDateRange(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
     });
   });
 
@@ -60,16 +71,16 @@ describe('controller/base', function() {
     it('return itself for chaining pattern.', function() {
       const schedule = Schedule.create(scheduleDataList[0]);
 
-      expect(schedule.equals(ctrl.createSchedule(scheduleDataList[0]))).toBe(true);
+      expect(schedule.equals(createSchedule(dataStore, scheduleDataList[0]))).toBe(true);
     });
 
     it('create schedule instance by raw schedule data.', function() {
-      const id = ctrl.createSchedule(scheduleDataList[0]).cid();
-      const id2 = ctrl.createSchedule(scheduleDataList[1]).cid();
-      const id3 = ctrl.createSchedule(scheduleDataList[3]).cid();
+      const id = createSchedule(dataStore, scheduleDataList[0]).cid();
+      const id2 = createSchedule(dataStore, scheduleDataList[1]).cid();
+      const id3 = createSchedule(dataStore, scheduleDataList[3]).cid();
 
-      expect(ctrl.schedules.length).toBe(3);
-      expect(ctrl.idsOfDay).toEqual({
+      expect(dataStore.schedules.length).toBe(3);
+      expect(dataStore.idsOfDay).toEqual({
         '20150501': [id],
         '20150502': [id, id3],
         '20150503': [id2, id3]
@@ -86,7 +97,7 @@ describe('controller/base', function() {
       idList = [];
 
       scheduleDataList.forEach(data => {
-        const item = ctrl.createSchedule(data);
+        const item = createSchedule(dataStore, data);
         scheduleList.push(item);
         idList.push(item.cid());
       });
@@ -113,7 +124,7 @@ describe('controller/base', function() {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
-      const result = ctrl.findByDateRange(start, end);
+      const result = findByDateRange(dataStore, start, end);
 
       expect(result).toEqualViewModel(expected);
     });
@@ -127,7 +138,7 @@ describe('controller/base', function() {
       const start = new TZDate('2015/05/02');
       const end = new TZDate('2015/05/03');
 
-      const result = ctrl.findByDateRange(start, end);
+      const result = findByDateRange(dataStore, start, end);
 
       expect(result).toEqualViewModel(expected);
     });
@@ -135,7 +146,7 @@ describe('controller/base', function() {
 
   describe('updateSchedule()', function() {
     it('update owned schedule and date matrix.', function() {
-      const model = ctrl.createSchedule({
+      const model = createSchedule(dataStore, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
@@ -143,14 +154,14 @@ describe('controller/base', function() {
       });
       const id = model.cid();
 
-      ctrl.updateSchedule(model.id, model.calendarId, {
+      updateSchedule(dataStore, model.id, model.calendarId, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/02',
         end: '2015/05/02'
       });
 
-      const schedule = ctrl.schedules.single();
+      const schedule = dataStore.schedules.single();
 
       expect(schedule).not.toBeNull();
       if (schedule) {
@@ -164,7 +175,7 @@ describe('controller/base', function() {
         );
       }
 
-      expect(ctrl.idsOfDay).toEqual({
+      expect(dataStore.idsOfDay).toEqual({
         '20150501': [],
         '20150502': [id]
       });
@@ -175,7 +186,7 @@ describe('controller/base', function() {
     let schedule: Schedule;
 
     beforeEach(function() {
-      schedule = ctrl.createSchedule({
+      schedule = createSchedule(dataStore, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
@@ -184,9 +195,9 @@ describe('controller/base', function() {
     });
 
     it('delete an schedule by model.', function() {
-      expect(ctrl.deleteSchedule(schedule)).toEqual(schedule);
-      expect(ctrl.schedules.length).toBe(0);
-      expect(ctrl.idsOfDay).toEqual({
+      expect(deleteSchedule(dataStore, schedule)).toEqual(schedule);
+      expect(dataStore.schedules.length).toBe(0);
+      expect(dataStore.idsOfDay).toEqual({
         '20150501': []
       });
     });

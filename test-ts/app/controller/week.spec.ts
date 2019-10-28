@@ -1,5 +1,5 @@
-import ModelController from '@src/controller/base';
-import { ScheduleData } from '@src/model';
+import { createScheduleCollection, createSchedule, addToMatrix } from '@src/controller/base';
+import { ScheduleData, DataStore } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { MILLISECONDS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
@@ -19,11 +19,15 @@ import Collection from '@src/util/collection';
 const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
 describe('Base.Week', function() {
-  let base: ModelController;
+  let dataStore: DataStore;
   let mockData: ScheduleData[];
 
   beforeEach(function() {
-    base = new ModelController();
+    dataStore = {
+      calendars: [],
+      schedules: createScheduleCollection(),
+      idsOfDay: {}
+    };
     mockData = fixture.load('schedule_set_string3.json');
   });
 
@@ -96,7 +100,7 @@ describe('Base.Week', function() {
       ];
 
       mockData.forEach(data => {
-        base.createSchedule(data);
+        createSchedule(dataStore, data);
       });
 
       /*
@@ -114,7 +118,7 @@ describe('Base.Week', function() {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
-      const result = findByDateRange(base, start, end, panels, [], {
+      const result = findByDateRange(dataStore, start, end, panels, [], {
         hourStart: 0,
         hourEnd: 24
       }) as Record<PANEL_NAME, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
@@ -129,7 +133,7 @@ describe('Base.Week', function() {
 
       // Since there is only one event with title J
       const result = findByDateRange(
-        base,
+        dataStore,
         start,
         end,
         panels,
@@ -243,14 +247,14 @@ describe('Base.Week', function() {
       collection.add(...schedules);
 
       schedules.forEach(schedule => {
-        base.schedules.add(schedule);
-        base._addToMatrix(schedule);
+        dataStore.schedules.add(schedule);
+        addToMatrix(dataStore.idsOfDay, schedule);
       });
     });
 
     it('split schedule by ymd.', function() {
       const result = splitScheduleByDateRange(
-        base.idsOfDay,
+        dataStore.idsOfDay,
         new TZDate('2015-05-01T00:00:00+09:00'),
         new TZDate('2015-05-03T23:59:59+09:00'),
         collection
