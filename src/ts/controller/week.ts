@@ -266,12 +266,15 @@ export function splitScheduleByDateRange(
  */
 export function getViewModelForTimeView(
   idsOfDay: IDS_OF_DAY,
-  start: TZDate,
-  end: TZDate,
-  viewModelTimeColl: Collection<ScheduleViewModel>,
-  hourStart: number,
-  hourEnd: number
+  condition: {
+    start: TZDate;
+    end: TZDate;
+    viewModelTimeColl: Collection<ScheduleViewModel>;
+    hourStart: number;
+    hourEnd: number;
+  }
 ) {
+  const { start, end, viewModelTimeColl, hourStart, hourEnd } = condition;
   const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, viewModelTimeColl);
   const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
 
@@ -353,12 +356,15 @@ export function getViewModelForAlldayView(
  */
 export function findByDateRange(
   dataStore: DataStore,
-  start: TZDate,
-  end: TZDate,
-  panels: PANEL[],
-  andFilters: Filter<Schedule | ScheduleViewModel>[] = [],
-  options: WeekOption
+  condition: {
+    start: TZDate;
+    end: TZDate;
+    panels: PANEL[];
+    andFilters: Filter<Schedule | ScheduleViewModel>[];
+    options: WeekOption;
+  }
 ) {
+  const { start, end, panels, andFilters = [], options } = condition;
   const { schedules, idsOfDay } = dataStore;
   const scheduleTypes = pluck(panels, 'name');
   const hourStart = pick(options, 'hourStart');
@@ -384,14 +390,13 @@ export function findByDateRange(
     if (type === 'daygrid') {
       resutGroup[name] = getViewModelForAlldayView(start, end, group[name]);
     } else if (type === 'timegrid') {
-      resutGroup[name] = getViewModelForTimeView(
-        idsOfDay,
+      resutGroup[name] = getViewModelForTimeView(idsOfDay, {
         start,
         end,
-        group[name],
+        viewModelTimeColl: group[name],
         hourStart,
         hourEnd
-      );
+      });
     }
   });
 

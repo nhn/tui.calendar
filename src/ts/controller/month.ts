@@ -186,11 +186,14 @@ function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
  */
 export function findByDateRange(
   dataStore: DataStore,
-  start: TZDate,
-  end: TZDate,
-  andFilters: Filter<Schedule | ScheduleViewModel>[] = [],
-  alldayFirstMode = false
+  condition: {
+    start: TZDate;
+    end: TZDate;
+    andFilters?: Filter<Schedule | ScheduleViewModel>[];
+    alldayFirstMode?: boolean;
+  }
 ) {
+  const { start, end, andFilters = [], alldayFirstMode = false } = condition;
   const { schedules, idsOfDay } = dataStore;
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
 

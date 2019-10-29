@@ -1,7 +1,5 @@
 import { h, render, AnyComponent } from 'preact';
 import renderToString from 'preact-render-to-string';
-import extend from 'tui-code-snippet/object/extend';
-import pick from 'tui-code-snippet/object/pick';
 
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
@@ -21,6 +19,7 @@ import { ThemeKeyValue } from '@src/theme/themeProps';
 import { toStartOfDay } from '@src/time/datetime';
 import isString from 'tui-code-snippet/type/isString';
 import { createScheduleCollection } from '@src/controller/base';
+import { registerTemplateConfig } from '@src/template';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
@@ -73,12 +72,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
         idsOfDay: {}
       },
       theme: new Theme(option.theme),
-      templates: extend(
-        {
-          'time-tmpl': ({ title }: { title: string }) => title
-        },
-        pick(option, 'templates')
-      ),
+      templates: registerTemplateConfig(option.template),
       internalEvent: this._internalEvent,
       externalEvent: this._externalEvent
     };

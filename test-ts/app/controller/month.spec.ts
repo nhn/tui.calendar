@@ -5,7 +5,7 @@ import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import { findByDateRange } from '@src/controller/month';
 
-import matricesMatcher from '../../matcher/matrices';
+import matricesMatcher from '@test/matcher/matrices';
 
 describe('Base.Month', function() {
   // eslint-disable-next-line no-undefined
@@ -77,7 +77,7 @@ describe('Base.Month', function() {
         [undef, undef, 6]
       ];
 
-      actual = findByDateRange(dataStore, start, end, [], true);
+      actual = findByDateRange(dataStore, { start, end, andFilters: [], alldayFirstMode: true });
 
       expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
       expect(actual[0]).toEqualMatricesTop(expectedTop);
@@ -130,7 +130,7 @@ describe('Base.Month', function() {
         [undef, undef, 5]
       ];
 
-      actual = findByDateRange(dataStore, start, end);
+      actual = findByDateRange(dataStore, { start, end });
 
       expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
       expect(actual[0]).toEqualMatricesTop(expectedTop);

@@ -66,3 +66,7 @@ export function noop() {}
 export function isSameSchedule(schedule: Schedule, scheduleId: string, calendarId: string) {
   return schedule.id === scheduleId && schedule.calendarId === calendarId;
 }
+
+export function stripTags(str: string) {
+  return str.replace(/<([^>]+)>/gi, '');
+}
