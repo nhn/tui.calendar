@@ -154,6 +154,17 @@ Base.prototype.updateSchedule = function(schedule, options) {
     var end = options.end || schedule.end;
 
     options = options || {};
+    if (!util.isUndefined(options.isAllDay)) {
+        schedule.set('isAllDay', options.isAllDay);
+    }
+
+    if (options.category && options.category === 'allday') {
+        schedule.set('isAllDay', true);
+    }
+
+    if (options.calendarId !== schedule.calendarId) {
+        schedule.set('calendarId', options.calendarId);
+    }
 
     if (options.title) {
         schedule.set('title', options.title);
@@ -185,10 +196,6 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     if (options.origin) {
         schedule.set('origin', options.origin);
-    }
-
-    if (!util.isUndefined(options.isAllDay)) {
-        schedule.set('isAllDay', options.isAllDay);
     }
 
     if (!util.isUndefined(options.isPending)) {

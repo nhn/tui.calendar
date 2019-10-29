@@ -295,7 +295,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
                 isAllDay: isAllDay,
                 state: state.innerText,
                 triggerEventName: 'click',
-                id: this._schedule.id
+                id: this._schedule.id,
+                _feId: this._schedule.__fe_id
             },
             start: start,
             end: end,
