@@ -1,7 +1,7 @@
 import { templates } from '@src/template/default';
 import forEach from 'tui-code-snippet/collection/forEach';
 import { Template, TemplateConfig, GridViewModel } from '@src/model';
-import { classname } from '@src/util/cssHelper';
+import { cls } from '@src/util/cssHelper';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { format } from '@src/time/datetime';
@@ -131,11 +131,11 @@ export function getMonthScheduleBlock(
 
 export function getHolidayClass(day: number) {
   if (day === 0) {
-    return classname('holiday-sun');
+    return cls('holiday-sun');
   }
 
   if (day === 6) {
-    return classname('holiday-sat');
+    return cls('holiday-sat');
   }
 
   return '';

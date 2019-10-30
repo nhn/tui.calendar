@@ -6,7 +6,7 @@ import { MILLISECONDS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
 import {
   hasCollision,
   generateTimeArrayInRow,
-  PANEL,
+  Panel,
   findByDateRange,
   _makeHourRangeFilter,
   PANEL_NAME,
@@ -87,7 +87,7 @@ describe('Base.Week', function() {
   });
 
   describe('findByDateRange', function() {
-    let panels: PANEL[];
+    let panels: Panel[];
 
     beforeEach(function() {
       panels = [

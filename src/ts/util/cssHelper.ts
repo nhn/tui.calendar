@@ -12,7 +12,7 @@ const viewMatchMap = {
   time: timeGetViewID
 };
 
-export function classname(str = ''): string {
+export function cls(str = ''): string {
   if (str.charAt(0) === '.') {
     return `.${CSS_PREFIX}${str.slice(1)}`;
   }

@@ -36,7 +36,7 @@ import array from '@src/util/array';
 
 export type PANEL_NAME = 'milestone' | 'task' | 'allday' | 'time';
 export type PANEL_TYPE = 'daygrid' | 'timegrid';
-export interface PANEL {
+export interface Panel {
   name: PANEL_NAME;
   type: PANEL_TYPE;
   minHeight?: number;
@@ -359,7 +359,7 @@ export function findByDateRange(
   condition: {
     start: TZDate;
     end: TZDate;
-    panels: PANEL[];
+    panels: Panel[];
     andFilters: Filter<Schedule | ScheduleViewModel>[];
     options: WeekOption;
   }
