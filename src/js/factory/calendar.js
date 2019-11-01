@@ -780,15 +780,20 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
 /**
  * Update the schedule
  * @param {string} scheduleId - ID of a schedule to update
- * @param {string} calendarId - The calendarId of the schedule to update
+ * @param {string} calendarId - The calendarId of the schedule before change
  * @param {Schedule} scheduleData - The {@link Schedule} data to update
  * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
+ *
+ * // When you use a drag and drop to move a schedule
+ * // Or when using the default popup UI
  * calendar.on('beforeUpdateSchedule', function(event) {
  *     var schedule = event.schedule;
  *     var startTime = event.start;
  *     var endTime = event.end;
- *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
+ *     var originCalendarId = event.originCalendarId;
+ *
+ *     calendar.updateSchedule(schedule.id, originCalendarId, {
  *         start: startTime,
  *         end: endTime
  *     });
@@ -798,12 +803,14 @@ Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleDat
     var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
         schedule = ownSchedules.single(function(model) {
-            return model.__fe_id === (scheduleData.__fe_id || scheduleData._feId);
+            return model.id === scheduleId && model.calendarId === calendarId;
         });
-    var hasChangedCalendar = schedule && schedule.calendarId !== calendarId;
+    var hasChangedCalendar = schedule &&
+        scheduleData.calendarId &&
+        schedule.calendarId !== scheduleData.calendarId;
 
     scheduleData = hasChangedCalendar ?
-        this._setScheduleColor(calendarId, scheduleData) :
+        this._setScheduleColor(scheduleData.calendarId, scheduleData) :
         scheduleData;
 
     if (schedule) {

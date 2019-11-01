@@ -295,12 +295,12 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
                 isAllDay: isAllDay,
                 state: state.innerText,
                 triggerEventName: 'click',
-                id: this._schedule.id,
-                _feId: this._schedule.__fe_id
+                id: this._schedule.id
             },
             start: start,
             end: end,
             calendar: this._selectedCal,
+            originCalendarId: this._schedule.calendarId,
             triggerEventName: 'click'
         });
     } else {

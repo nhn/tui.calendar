@@ -154,15 +154,16 @@ Base.prototype.updateSchedule = function(schedule, options) {
     var end = options.end || schedule.end;
 
     options = options || {};
+
+    if (options.category && options.category === 'allday') {
+        options.isAllDay = true;
+    }
+
     if (!util.isUndefined(options.isAllDay)) {
         schedule.set('isAllDay', options.isAllDay);
     }
 
-    if (options.category && options.category === 'allday') {
-        schedule.set('isAllDay', true);
-    }
-
-    if (options.calendarId !== schedule.calendarId) {
+    if (options.calendarId && options.calendarId !== schedule.calendarId) {
         schedule.set('calendarId', options.calendarId);
     }
 

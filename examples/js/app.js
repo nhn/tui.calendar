@@ -48,7 +48,8 @@
             console.log('beforeUpdateSchedule', e);
             e.schedule.start = e.start;
             e.schedule.end = e.end;
-            cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
+            cal.updateSchedule(e.schedule.id, e.originCalendarId, e.schedule);
+            refreshScheduleVisibility();
         },
         'beforeDeleteSchedule': function(e) {
             console.log('beforeDeleteSchedule', e);
