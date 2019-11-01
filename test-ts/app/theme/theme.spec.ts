@@ -43,7 +43,7 @@ describe('Theme', function() {
     const key = 'wrong.key';
     const value = theme.getStyle(key as ThemePropKeys);
 
-    expect(value).toBeUndefined();
+    expect(value).toBe('');
   });
 
   it('no value through property path', function() {
@@ -80,7 +80,7 @@ describe('Theme', function() {
     const keys = Object.keys(preset) as ThemePropKeys[];
 
     keys.forEach(function(key) {
-      expect(theme.getStyle(key)).not.toBeUndefined();
+      expect(theme.getStyle(key)).not.toBe('');
     });
   });
 
@@ -91,7 +91,7 @@ describe('Theme', function() {
     theme = new Theme(customTheme);
 
     keys.forEach(function(key) {
-      expect(theme.getStyle(key)).not.toBeUndefined();
+      expect(theme.getStyle(key)).not.toBe('');
     });
   });
 
@@ -101,14 +101,14 @@ describe('Theme', function() {
     theme.clear();
 
     keys.forEach(function(key) {
-      expect(theme.getStyle(key)).toBeUndefined();
+      expect(theme.getStyle(key)).toBe('');
     });
 
     theme.setStyles(customTheme);
 
     keys = Object.keys(customTheme) as ThemePropKeys[];
     keys.forEach(function(key) {
-      expect(theme.getStyle(key)).not.toBeUndefined();
+      expect(theme.getStyle(key)).not.toBe('');
     });
   });
 });

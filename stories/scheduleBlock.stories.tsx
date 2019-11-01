@@ -1,10 +1,8 @@
 import { h } from 'preact';
-import Provider from 'preact-context-provider';
 import TimeSchedule from '@src/components/timeSchedule';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { Template } from '@src/model';
-import { registerTemplateConfig } from '@src/template';
+import { InstanceContext, getNewAppContext } from '@src/model/context';
 
 export default { title: 'Schedule Block' };
 
@@ -14,11 +12,10 @@ export const timeSchedule = () => {
     bgColor: 'green'
   });
   const scheduleViewModel = ScheduleViewModel.create(schedule);
-  const templates: Template = registerTemplateConfig();
 
   return (
-    <Provider templates={templates}>
+    <InstanceContext.Provider value={getNewAppContext()}>
       <TimeSchedule viewModel={scheduleViewModel} />
-    </Provider>
+    </InstanceContext.Provider>
   );
 };
