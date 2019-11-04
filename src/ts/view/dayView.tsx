@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { ContextComponent } from '@src/components/hoc';
+import ContextComponent from '@src/components/contextComponent';
 
 export default class Day extends ContextComponent {
   render() {

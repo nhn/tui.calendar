@@ -11,6 +11,7 @@ import { templates } from '@src/template/default';
 import { Template } from '@src/components/template';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import Schedule from '@src/model/schedule';
+import { InstanceContext, getNewAppContext } from '@src/model/context';
 
 describe('Render Template', () => {
   it('registerTemplateConfig() returns Template instance with given config and defaults.', () => {
@@ -31,13 +32,13 @@ describe('Render Template', () => {
   });
 
   it('Template component renders html string with given template', () => {
-    const context = { templates };
-    const html = renderToString.render(
-      <Template template="time" model={{ title: 'Custome Title 4' }} />,
-      context
+    const html = renderToString(
+      <InstanceContext.Provider value={getNewAppContext()}>
+        <Template template="time" model={{ title: 'Custom Title 4' }} />
+      </InstanceContext.Provider>
     );
 
-    expect(html).toBe('Custome Title 4');
+    expect(html).toBe('Custom Title 4');
   });
 
   it('getCommonWidth() returns css width percentage with given number.', () => {

@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import { Text } from '@src/components/text';
 import { Template } from '@src/components/template';
-import { ContextComponent } from '@src/components/hoc';
+import ContextComponent from '@src/components/contextComponent';
 
-class Month extends ContextComponent {
+export default class Month extends ContextComponent {
   componentDidMount() {
     const { internalEvent: events } = this.context;
 
@@ -37,5 +37,3 @@ class Month extends ContextComponent {
     );
   }
 }
-
-export default Month;

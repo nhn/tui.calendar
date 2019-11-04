@@ -1,5 +1,6 @@
-import { h, render, AnyComponent } from 'preact';
+import { h, render, AnyComponent, ComponentChild, Fragment } from 'preact';
 import renderToString from 'preact-render-to-string';
+import isString from 'tui-code-snippet/type/isString';
 
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
@@ -13,20 +14,17 @@ import {
   CalendarData,
   ViewType
 } from '@src/model';
-import { contextPass } from '@src/components/hoc';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import { toStartOfDay } from '@src/time/datetime';
-import isString from 'tui-code-snippet/type/isString';
 import { createScheduleCollection } from '@src/controller/base';
 import { registerTemplateConfig } from '@src/template';
+import { InstanceContext } from '@src/model/context';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
 
   protected _options: Option;
-
-  protected _base?: Element;
 
   protected _context: AppContext;
 
@@ -78,19 +76,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     };
   }
 
-  protected abstract getComponent(): AnyComponent<any, any> | null;
-
-  private getMainApp(): AnyComponent<any, any> {
-    const main = this.getComponent();
-    if (!main) {
-      throw new Error('No Main Component');
-    }
-    if (!this._mainApp) {
-      this._mainApp = contextPass(main, this._context);
-    }
-
-    return this._mainApp;
-  }
+  protected abstract getComponent(): ComponentChild;
 
   private initOption(option: Option = {}): Option {
     const {
@@ -137,7 +123,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    */
   destroy() {
     if (this._container) {
-      render('', this._container, this._base);
+      render('', this._container);
     }
 
     for (const key in this) {
@@ -305,11 +291,15 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    *     calendar.render();
    * });
    */
-  render() {
-    const App = this.getMainApp();
 
+  render() {
     if (this._container) {
-      this._base = render(<App context={this._context} />, this._container, this._base);
+      render(
+        <InstanceContext.Provider value={this._context}>
+          {this.getComponent()}
+        </InstanceContext.Provider>,
+        this._container
+      );
     }
 
     return this;
@@ -320,13 +310,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @returns HTML string
    */
   renderToString(): string {
-    const main = this.getComponent();
-    if (!main) {
-      throw new Error('No Main Component');
-    }
-    const App = contextPass(main, this._context);
-
-    return renderToString.render(<App />);
+    return renderToString(<Fragment>{this.getComponent()}</Fragment>, this._context);
   }
 
   /**

@@ -27,10 +27,10 @@ export default class Theme {
   /**
    * Get a style with key
    * @param {ThemePropKeys} key - key for getting a style
-   * @returns {string|undefined} style
+   * @returns {string} style
    */
-  getStyle(key: ThemePropKeys): string | undefined {
-    return this.props[key];
+  getStyle(key: ThemePropKeys): string {
+    return this.props[key] || '';
   }
 
   /**

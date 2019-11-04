@@ -1,6 +1,6 @@
-import { h, RenderableProps, ComponentChild } from 'preact';
+import { h, RenderableProps, JSX } from 'preact';
 
-const Button = ({ children, ...props }: RenderableProps<ComponentChild>): JSX.Element => (
+const Button = ({ children, ...props }: RenderableProps<any>): JSX.Element => (
   <button className="button" type="button" {...props}>
     {children}
   </button>

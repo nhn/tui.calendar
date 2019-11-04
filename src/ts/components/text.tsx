@@ -1,5 +1,6 @@
-import { h } from 'preact';
-import { ContextComponent } from '@src/components/hoc';
+import { h, JSX } from 'preact';
+import { AppContext } from '@src/model';
+import ContextComponent from '@src/components/contextComponent';
 
 export interface Props {
   children?: string | string[] | JSX.Element[];
@@ -30,8 +31,8 @@ export class Text extends ContextComponent<Props, State> {
     });
   }
 
-  render(props: Props, state: State) {
-    const { theme } = this.context;
+  render(props: Props, state: State, context: AppContext) {
+    const { theme } = context;
     const { count } = state;
 
     return (
