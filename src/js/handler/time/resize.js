@@ -217,7 +217,7 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
     }
 
-    changes = common.getChangesSchedule(
+    changes = common.getScheduleChanges(
         schedule,
         ['end'],
         {end: newEnds}
@@ -227,6 +227,8 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
      * @event TimeResize#beforeUpdateSchedule
      * @type {object}
      * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
      * @property {object} changes - end time to update
      *  @property {date} end - end time to update
      */

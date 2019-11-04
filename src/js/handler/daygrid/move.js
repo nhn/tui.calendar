@@ -234,7 +234,7 @@ DayGridMove.prototype._onDragEnd = function(dragEndEventData, overrideEventName,
         dragEnd: this._onDragEnd,
         click: this._onClick
     }, this);
-    console.log(dragEndEventData.originEvent, scheduleData);
+
     scheduleData = getScheduleDataFunc(dragEndEventData.originEvent);
     util.extend(scheduleData, {
         targetModel: dragStart.model

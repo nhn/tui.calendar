@@ -155,7 +155,7 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     options = options || {};
 
-    if (options.category && options.category === 'allday') {
+    if (options.category === 'allday') {
         options.isAllDay = true;
     }
 

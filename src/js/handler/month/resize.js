@@ -74,7 +74,7 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // You can not change the start date of the event. Only the end time can be changed.
     var newEnd = datetime.end(new TZDate(scheduleCache.end)),
         schedule = scheduleCache.schedule;
-    var changes = common.getChangesSchedule(
+    var changes = common.getScheduleChanges(
         schedule,
         ['end'],
         {end: newEnd}
@@ -84,6 +84,8 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
      * @event MonthResize#beforeUpdateSchedule
      * @type {object}
      * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
      * @property {object} changes - end time to update
      *  @property {date} end - end time to update
      */

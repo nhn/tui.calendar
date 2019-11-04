@@ -283,7 +283,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     if (this._isEditMode) {
-        changes = common.getChangesSchedule(
+        changes = common.getScheduleChanges(
             this._schedule,
             ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
             {

@@ -82,6 +82,8 @@ MonthMove.prototype.updateSchedule = function(scheduleCache) {
      * @event MonthMove#beforeUpdateSchedule
      * @type {object}
      * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
      * @property {object} changes - start and end time to update
      *  @property {Date} start - start time to update
      *  @property {Date} end - end time to update

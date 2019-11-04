@@ -779,9 +779,9 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
 
 /**
  * Update the schedule
- * @param {string} scheduleId - ID of a schedule to update
- * @param {string} calendarId - The calendarId of the schedule before change
- * @param {Schedule} scheduleData - The {@link Schedule} data to update
+ * @param {string} scheduleId - id of the original {@link Schedule} instance
+ * @param {string} calendarId - calendarId of the original {@link Schedule} instance
+ * @param {object} changes - The {@link Schedule} properties and values with changes to update
  * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
  *
@@ -794,27 +794,34 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
  *     calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
  * });
  */
-Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData, silent) {
+Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, silent) {
     var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
         schedule = ownSchedules.single(function(model) {
             return model.id === scheduleId && model.calendarId === calendarId;
         });
-    var hasChangedCalendar = schedule &&
-        scheduleData.calendarId &&
-        schedule.calendarId !== scheduleData.calendarId;
+    var hasChangedCalendar = false;
 
-    scheduleData = hasChangedCalendar ?
-        this._setScheduleColor(scheduleData.calendarId, scheduleData) :
-        scheduleData;
-
-    if (schedule) {
-        ctrl.updateSchedule(schedule, scheduleData);
-
-        if (!silent) {
-            this.render();
-        }
+    if (!changes || !schedule) {
+        return;
     }
+
+    hasChangedCalendar = this._hasChangedCalendar(schedule, changes);
+    changes = hasChangedCalendar ?
+        this._setScheduleColor(changes.calendarId, changes) :
+        changes;
+
+    ctrl.updateSchedule(schedule, changes);
+
+    if (!silent) {
+        this.render();
+    }
+};
+
+Calendar.prototype._hasChangedCalendar = function(schedule, changes) {
+    return schedule &&
+        changes.calendarId &&
+        schedule.calendarId !== changes.calendarId;
 };
 
 Calendar.prototype._setScheduleColor = function(calendarId, schedule) {
@@ -1383,9 +1390,9 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
      * @event Calendar#beforeUpdateSchedule
      * @type {object}
      * @property {Schedule} schedule - The original {@link Schedule} instance
-     * @property {object} changes - Schedule properties and values with changes to update
-     * @property {Date} start - Deprecated
-     * @property {Date} end - Deprecated
+     * @property {object} changes - The {@link Schedule} properties and values with changes to update
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
      * @example
      * calendar.on('beforeUpdateSchedule', function(event) {
      *     var schedule = event.schedule;
