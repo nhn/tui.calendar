@@ -80,6 +80,9 @@ describe('TimeResize', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
+                changes: {
+                    end: new TZDate(2015, 4, 1, 11)
+                },
                 start: new TZDate(2015, 4, 1, 9, 30),
                 end: new TZDate(2015, 4, 1, 11)
             });
@@ -100,6 +103,9 @@ describe('TimeResize', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
+                changes: {
+                    end: new TZDate(2015, 4, 1, 10)
+                },
                 start: new TZDate(2015, 4, 1, 9, 30),
                 end: new TZDate(2015, 4, 1, 10)
             });
@@ -120,6 +126,9 @@ describe('TimeResize', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
+                changes: {
+                    end: new TZDate(2015, 4, 1, 23, 59, 59)
+                },
                 start: new TZDate(2015, 4, 1, 9, 30),
                 end: new TZDate(2015, 4, 1, 23, 59, 59)
             });
