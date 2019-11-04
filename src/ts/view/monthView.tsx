@@ -20,9 +20,9 @@ class Month extends ContextComponent {
     return (
       <div style={{ height: 300 }}>
         <Text>Do 텍스트 클릭</Text>
-        <Template template="time-tmpl" model={{ title: '타이틀 템플릿 렌더링4' }} />
+        <Template template="time" model={{ title: '타이틀 템플릿 렌더링4' }} />
         <p>
-          <Template template="time-tmpl" model={{ title: '템플릿 렌더링한다. p 태그로.' }} />
+          <Template template="time" model={{ title: '템플릿 렌더링한다. p 태그로.' }} />
         </p>
         <p>
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor

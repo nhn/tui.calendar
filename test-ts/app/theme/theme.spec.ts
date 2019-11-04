@@ -1,6 +1,6 @@
+import pick from 'tui-code-snippet/object/pick';
 import Theme from '@src/theme';
 import preset from '@src/theme/preset';
-import pick from 'tui-code-snippet/object/pick';
 import { ThemePropKeys } from '@src/theme/themeProps';
 
 describe('Theme', function() {

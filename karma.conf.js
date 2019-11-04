@@ -129,7 +129,8 @@ module.exports = function(config) {
         extensions: ['.ts', '.tsx', '.js'],
         modules: ['node_modules'],
         alias: {
-          '@src': path.resolve(__dirname, './src/ts/')
+          '@src': path.resolve(__dirname, './src/ts/'),
+          '@test': path.resolve(__dirname, './test-ts/')
         }
       }
     },

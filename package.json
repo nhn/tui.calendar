@@ -85,6 +85,7 @@
     "node-sass": "^4.12.0",
     "postcss-loader": "^3.0.0",
     "postcss-prefixer": "^2.1.1",
+    "preact-context-provider": "^1.2.1",
     "prettier": "^1.18.2",
     "safe-umd-webpack-plugin": "^4.0.0",
     "sass-loader": "^8.0.0",

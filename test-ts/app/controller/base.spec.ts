@@ -10,7 +10,7 @@ import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { ScheduleData, DataStore } from '@src/model';
 
-import viewModelsMatcher from '../../matcher/viewModels';
+import viewModelsMatcher from '@test/matcher/viewModels';
 
 describe('controller/base', function() {
   let dataStore: DataStore;
@@ -124,7 +124,7 @@ describe('controller/base', function() {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
-      const result = findByDateRange(dataStore, start, end);
+      const result = findByDateRange(dataStore, { start, end });
 
       expect(result).toEqualViewModel(expected);
     });
@@ -138,7 +138,7 @@ describe('controller/base', function() {
       const start = new TZDate('2015/05/02');
       const end = new TZDate('2015/05/03');
 
-      const result = findByDateRange(dataStore, start, end);
+      const result = findByDateRange(dataStore, { start, end });
 
       expect(result).toEqualViewModel(expected);
     });

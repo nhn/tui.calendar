@@ -6,7 +6,7 @@ import { MILLISECONDS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
 import {
   hasCollision,
   generateTimeArrayInRow,
-  PANEL,
+  Panel,
   findByDateRange,
   _makeHourRangeFilter,
   PANEL_NAME,
@@ -87,7 +87,7 @@ describe('Base.Week', function() {
   });
 
   describe('findByDateRange', function() {
-    let panels: PANEL[];
+    let panels: Panel[];
 
     beforeEach(function() {
       panels = [
@@ -118,9 +118,15 @@ describe('Base.Week', function() {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
-      const result = findByDateRange(dataStore, start, end, panels, [], {
-        hourStart: 0,
-        hourEnd: 24
+      const result = findByDateRange(dataStore, {
+        start,
+        end,
+        panels,
+        andFilters: [],
+        options: {
+          hourStart: 0,
+          hourEnd: 24
+        }
       }) as Record<PANEL_NAME, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
 
       // There are 5 collision blocks on 5/1.
@@ -132,14 +138,13 @@ describe('Base.Week', function() {
       const end = new TZDate('2015/05/02');
 
       // Since there is only one event with title J
-      const result = findByDateRange(
-        dataStore,
+      const result = findByDateRange(dataStore, {
         start,
         end,
         panels,
-        [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
-        { hourStart: 0, hourEnd: 24 }
-      ) as Record<PANEL_NAME, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
+        andFilters: [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
+        options: { hourStart: 0, hourEnd: 24 }
+      }) as Record<PANEL_NAME, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
 
       // One collision block in the timeline group
       expect(result.time['20150501'].length).toBe(1);

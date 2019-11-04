@@ -50,9 +50,15 @@ export interface AppContext {
   options: Option;
   dataStore: DataStore;
   theme: Theme;
-  templates: Record<string, Function>;
+  templates: Template;
   internalEvent: EventHandler<InternalEventName>;
   externalEvent: EventHandler<ExternalEventName>;
+}
+
+export interface GridViewModel {
+  day: number;
+  width: number;
+  left: number;
 }
 
 export interface TemplateTimeGridHourLabel {
@@ -90,51 +96,52 @@ export interface TemplateMonthDayName {
   label: string;
 }
 
-export interface TemplateConfig {
-  milestoneTitle?: () => string;
-  milestone?: (schedule: ScheduleData) => string;
-  taskTitle?: () => string;
-  task?: (schedule: ScheduleData) => string;
-  alldayTitle?: () => string;
-  allday?: (schedule: ScheduleData) => string;
-  time?: (schedule: ScheduleData) => string;
-  goingDuration?: (schedule: ScheduleData) => string;
-  comingDuration?: (schedule: ScheduleData) => string;
-  monthMoreTitleDate?: (date: string, dayname: string) => string;
-  monthMoreClose?: () => string;
-  monthGridHeader?: (model: TemplateMonthGrid) => string;
-  monthGridHeaderExceed?: (hiddenSchedules: number) => string;
-  monthGridFooter?: (model: TemplateMonthGrid) => string;
-  monthGridFooterExceed?: (hiddenSchedules: number) => string;
-  monthDayname?: (model: TemplateMonthDayName) => string;
-  weekDayname?: (model: TemplateWeekDay) => string;
-  weekGridFooterExceed?: (hiddenSchedules: number) => string;
-  dayGridTitle?: (viewName: string) => string;
-  schedule?: (schedule: ScheduleData) => string;
-  collapseBtnTitle?: () => string;
-  timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
-  timegridDisplayPrimayTime?: (time: TemplateTimeGridHourLabel) => string;
-  timegridDisplayPrimaryTime?: (time: TemplateTimeGridHourLabel) => string;
-  timegridDisplayTime?: (time: TemplateTimeGridHourLabel) => string;
-  timegridCurrentTime?: (hourMarker: TemplateTimezoneHourMarker) => string;
-  popupIsAllDay?: () => string;
-  popupStateFree?: () => string;
-  popupStateBusy?: () => string;
-  titlePlaceholder?: () => string;
-  locationPlaceholder?: () => string;
-  startDatePlaceholder?: () => string;
-  endDatePlaceholder?: () => string;
-  popupSave?: () => string;
-  popupUpdate?: () => string;
-  popupDetailDate?: (isAllDay: boolean, start: DateType, end: DateType) => string;
-  popupDetailLocation?: (schedule: ScheduleData) => string;
-  popupDetailUser?: (schedule: ScheduleData) => string;
-  popupDetailState?: (schedule: ScheduleData) => string;
-  popupDetailRepeat?: (schedule: ScheduleData) => string;
-  popupDetailBody?: (schedule: ScheduleData) => string;
-  popupEdit?: () => string;
-  popupDelete?: () => string;
+export interface Template extends Record<string, Function> {
+  milestoneTitle: () => string;
+  milestone: (schedule: Schedule) => string;
+  taskTitle: () => string;
+  task: (schedule: Schedule) => string;
+  alldayTitle: () => string;
+  allday: (schedule: Schedule) => string;
+  time: (schedule: Schedule) => string;
+  goingDuration: (schedule: Schedule) => string;
+  comingDuration: (schedule: Schedule) => string;
+  monthMoreTitleDate: (date: string, dayname: string) => string;
+  monthMoreClose: () => string;
+  monthGridHeader: (model: TemplateMonthGrid) => string;
+  monthGridHeaderExceed: (hiddenSchedules: number) => string;
+  monthGridFooter: (model: TemplateMonthGrid) => string;
+  monthGridFooterExceed: (hiddenSchedules: number) => string;
+  monthDayname: (model: TemplateMonthDayName) => string;
+  weekDayname: (model: TemplateWeekDay) => string;
+  weekGridFooterExceed: (hiddenSchedules: number) => string;
+  dayGridTitle: (viewName: ScheduleCategory) => string;
+  schedule: (schedule: Schedule) => string;
+  collapseBtnTitle: () => string;
+  timezoneDisplayLabel: (timezoneOffset: number, displayLabel: string) => string;
+  timegridDisplayPrimaryTime: (time: TemplateTimeGridHourLabel) => string;
+  timegridDisplayTime: (time: TemplateTimeGridHourLabel) => string;
+  timegridCurrentTime: (hourMarker: TemplateTimezoneHourMarker) => string;
+  popupIsAllDay: () => string;
+  popupStateFree: () => string;
+  popupStateBusy: () => string;
+  titlePlaceholder: () => string;
+  locationPlaceholder: () => string;
+  startDatePlaceholder: () => string;
+  endDatePlaceholder: () => string;
+  popupSave: () => string;
+  popupUpdate: () => string;
+  popupDetailDate: (isAllDay: boolean, start: TZDate, end: TZDate) => string;
+  popupDetailLocation: (schedule: Schedule) => string;
+  popupDetailUser: (schedule: Schedule) => string;
+  popupDetailState: (schedule: Schedule) => string;
+  popupDetailRepeat: (schedule: Schedule) => string;
+  popupDetailBody: (schedule: Schedule) => string;
+  popupEdit: () => string;
+  popupDelete: () => string;
 }
+
+export type TemplateConfig = Partial<Template>;
 
 export interface WeekOption {
   startDayOfWeek?: number;

@@ -36,7 +36,7 @@ import array from '@src/util/array';
 
 export type PANEL_NAME = 'milestone' | 'task' | 'allday' | 'time';
 export type PANEL_TYPE = 'daygrid' | 'timegrid';
-export interface PANEL {
+export interface Panel {
   name: PANEL_NAME;
   type: PANEL_TYPE;
   minHeight?: number;
@@ -257,21 +257,25 @@ export function splitScheduleByDateRange(
 /**
  * create view model for time view part
  * @param {IDS_OF_DAY} idsOfDay - model controller
- * @param {TZDate} start - start date.
- * @param {TZDate} end - end date.
- * @param {Collection} viewModelTimeColl - view model collection.
- * @param {number} hourStart - start hour to be shown
- * @param {number} hourEnd - end hour to be shown
+ * @param {object} condition - find option
+ *  @param {TZDate} condition.start - start date.
+ *  @param {TZDate} condition.end - end date.
+ *  @param {Collection} condition.viewModelTimeColl - view model collection.
+ *  @param {number} condition.hourStart - start hour to be shown
+ *  @param {number} condition.hourEnd - end hour to be shown
  * @returns {object} view model for time part.
  */
 export function getViewModelForTimeView(
   idsOfDay: IDS_OF_DAY,
-  start: TZDate,
-  end: TZDate,
-  viewModelTimeColl: Collection<ScheduleViewModel>,
-  hourStart: number,
-  hourEnd: number
+  condition: {
+    start: TZDate;
+    end: TZDate;
+    viewModelTimeColl: Collection<ScheduleViewModel>;
+    hourStart: number;
+    hourEnd: number;
+  }
 ) {
+  const { start, end, viewModelTimeColl, hourStart, hourEnd } = condition;
   const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, viewModelTimeColl);
   const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
 
@@ -343,22 +347,26 @@ export function getViewModelForAlldayView(
 /**
  * Populate schedules in date range.
  * @param {Collection<Schedule>} schedules - model controller
- * @param {IDS_OF_DAY} idsOfDay - model controller
- * @param {TZDate} start start date.
- * @param {TZDate} end end date.
- * @param {Array.<object>} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
- * @param {function[]} [andFilters] - optional filters to applying search query
- * @param {Object} options - week view options
+ * @param {object} condition - find option
+ *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
+ *  @param {TZDate} condition.start start date.
+ *  @param {TZDate} condition.end end date.
+ *  @param {Array.<object>} condition.panels - schedule panels like 'milestone', 'task', 'allday', 'time'
+ *  @param {function[]} condition.[andFilters] - optional filters to applying search query
+ *  @param {Object} condition.options - week view options
  * @returns {object} schedules grouped by dates.
  */
 export function findByDateRange(
   dataStore: DataStore,
-  start: TZDate,
-  end: TZDate,
-  panels: PANEL[],
-  andFilters: Filter<Schedule | ScheduleViewModel>[] = [],
-  options: WeekOption
+  condition: {
+    start: TZDate;
+    end: TZDate;
+    panels: Panel[];
+    andFilters: Filter<Schedule | ScheduleViewModel>[];
+    options: WeekOption;
+  }
 ) {
+  const { start, end, panels, andFilters = [], options } = condition;
   const { schedules, idsOfDay } = dataStore;
   const scheduleTypes = pluck(panels, 'name');
   const hourStart = pick(options, 'hourStart');
@@ -384,14 +392,13 @@ export function findByDateRange(
     if (type === 'daygrid') {
       resutGroup[name] = getViewModelForAlldayView(start, end, group[name]);
     } else if (type === 'timegrid') {
-      resutGroup[name] = getViewModelForTimeView(
-        idsOfDay,
+      resutGroup[name] = getViewModelForTimeView(idsOfDay, {
         start,
         end,
-        group[name],
+        viewModelTimeColl: group[name],
         hourStart,
         hourEnd
-      );
+      });
     }
   });
 

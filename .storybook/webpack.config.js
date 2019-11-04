@@ -1,21 +1,21 @@
 const path = require('path');
+const custom = require('../webpack.config');
 
 module.exports = ({ config, mode, defaultConfig }) => {
-  config.module.rules.push(
-    {
-      test: /\.tsx?$/,
-      loader: 'ts-loader'
+  return {
+    ...config,
+    resolve: {
+      ...config.resolve,
+      ...custom.resolve,
+      alias: {
+        ...config.resolve.alias,
+        ...custom.resolve.alias,
+        '@stories': path.resolve(__dirname, '../stories')
+      }
     },
-    {
-      test: /\.tsx?$/,
-      loader: 'eslint-loader',
-      exclude: /node_modules/
+    module: {
+      ...config.module,
+      rules: custom.module.rules
     }
-  );
-  config.resolve.extensions.push('.ts', '.tsx', '.js');
-  Object.assign(config.resolve.alias, {
-    '@stories': path.resolve(__dirname, '../stories')
-  });
-
-  return config;
+  };
 };

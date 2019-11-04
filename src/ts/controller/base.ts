@@ -197,9 +197,9 @@ export function setCalendars(dataStore: DataStore, calendars: CalendarData[]) {
  */
 export function findByDateRange(
   dataStore: DataStore,
-  start: TZDate,
-  end: TZDate
+  condition: { start: TZDate; end: TZDate }
 ): Record<string, Schedule[]> {
+  const { start, end } = condition;
   const { schedules, idsOfDay } = dataStore;
   const range = getDateRange(start, end);
   const ownSchedules = schedules.items;
