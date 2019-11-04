@@ -7,11 +7,11 @@ export type CustomEventType = keyof IEvents;
 
 export interface IEventObject {
     schedule: ISchedule;
+    changes: ISchedule | null;
     end: TZDate;
     start: TZDate;
     calendar?: ICalendarInfo;
     triggerEventName?: 'click' | 'dblclick';
-    originCalendarId?: string;
 }
 
 export interface IEventDateObject {

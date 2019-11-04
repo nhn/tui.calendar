@@ -789,14 +789,9 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
  * // Or when using the default popup UI
  * calendar.on('beforeUpdateSchedule', function(event) {
  *     var schedule = event.schedule;
- *     var startTime = event.start;
- *     var endTime = event.end;
- *     var originCalendarId = event.originCalendarId;
+ *     var changes = event.changes;
  *
- *     calendar.updateSchedule(schedule.id, originCalendarId, {
- *         start: startTime,
- *         end: endTime
- *     });
+ *     calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
  * });
  */
 Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData, silent) {
