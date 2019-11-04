@@ -9,6 +9,7 @@ var config = require('../../config');
 var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var TZDate = require('../../common/timezone').Date;
+var common = require('../../common/common');
 var timeCore = require('./core');
 var TimeResizeGuide = require('./resizeGuide');
 
@@ -196,6 +197,7 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         dateEnd,
         newEnds,
         baseDate;
+    var changes;
 
     if (!schedule) {
         return;
@@ -215,15 +217,22 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
     }
 
+    changes = common.getChangesSchedule(
+        schedule,
+        ['end'],
+        {end: newEnds}
+    );
+
     /**
      * @event TimeResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {object} changes - end time to update
+     *  @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: changes,
         start: schedule.getStarts(),
         end: newEnds
     });

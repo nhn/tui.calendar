@@ -163,7 +163,7 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('isAllDay', options.isAllDay);
     }
 
-    if (options.calendarId && options.calendarId !== schedule.calendarId) {
+    if (!util.isUndefined(options.calendarId)) {
         schedule.set('calendarId', options.calendarId);
     }
 

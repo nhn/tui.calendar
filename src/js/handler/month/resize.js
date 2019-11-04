@@ -13,6 +13,8 @@ var config = require('../../config'),
     MonthResizeGuide = require('./resizeGuide'),
     TZDate = require('../../common/timezone').Date;
 
+var common = require('../../common/common');
+
 /**
  * @constructor
  * @param {Drag} dragHandler - Drag handler instance.
@@ -72,16 +74,22 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // You can not change the start date of the event. Only the end time can be changed.
     var newEnd = datetime.end(new TZDate(scheduleCache.end)),
         schedule = scheduleCache.schedule;
+    var changes = common.getChangesSchedule(
+        schedule,
+        ['end'],
+        {end: newEnd}
+    );
 
     /**
      * @event MonthResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {object} changes - end time to update
+     *  @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: changes,
         start: new TZDate(schedule.getStarts()),
         end: newEnd
     });

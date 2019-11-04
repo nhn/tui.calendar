@@ -1387,21 +1387,16 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
      * Fire this event when drag a schedule to change time in daily, weekly, monthly.
      * @event Calendar#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - The {@link Schedule} instance to update
-     * @property {Date} start - The start time to update
-     * @property {Date} end - The end time to update
-     * @property {string} originCalendarId - The calendarId of the schedule before change
+     * @property {Schedule} schedule - The original {@link Schedule} instance
+     * @property {object} changes - Schedule properties and values with changes to update
+     * @property {Date} start - Deprecated
+     * @property {Date} end - Deprecated
      * @example
      * calendar.on('beforeUpdateSchedule', function(event) {
      *     var schedule = event.schedule;
-     *     var startTime = event.start;
-     *     var endTime = event.end;
-     *     var originCalendarId = event.originCalendarId;
+     *     var changes = event.changes;
      *
-     *     calendar.updateSchedule(schedule.id, originCalendarId, {
-     *         start: startTime,
-     *         end: endTime
-     *     });
+     *     calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
      * });
      */
     this.fire('beforeUpdateSchedule', updateScheduleData);
