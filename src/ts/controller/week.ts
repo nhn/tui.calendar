@@ -257,11 +257,12 @@ export function splitScheduleByDateRange(
 /**
  * create view model for time view part
  * @param {IDS_OF_DAY} idsOfDay - model controller
- * @param {TZDate} start - start date.
- * @param {TZDate} end - end date.
- * @param {Collection} viewModelTimeColl - view model collection.
- * @param {number} hourStart - start hour to be shown
- * @param {number} hourEnd - end hour to be shown
+ * @param {object} condition - find option
+ *  @param {TZDate} condition.start - start date.
+ *  @param {TZDate} condition.end - end date.
+ *  @param {Collection} condition.viewModelTimeColl - view model collection.
+ *  @param {number} condition.hourStart - start hour to be shown
+ *  @param {number} condition.hourEnd - end hour to be shown
  * @returns {object} view model for time part.
  */
 export function getViewModelForTimeView(
@@ -346,12 +347,13 @@ export function getViewModelForAlldayView(
 /**
  * Populate schedules in date range.
  * @param {Collection<Schedule>} schedules - model controller
- * @param {IDS_OF_DAY} idsOfDay - model controller
- * @param {TZDate} start start date.
- * @param {TZDate} end end date.
- * @param {Array.<object>} panels - schedule panels like 'milestone', 'task', 'allday', 'time'
- * @param {function[]} [andFilters] - optional filters to applying search query
- * @param {Object} options - week view options
+ * @param {object} condition - find option
+ *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
+ *  @param {TZDate} condition.start start date.
+ *  @param {TZDate} condition.end end date.
+ *  @param {Array.<object>} condition.panels - schedule panels like 'milestone', 'task', 'allday', 'time'
+ *  @param {function[]} condition.[andFilters] - optional filters to applying search query
+ *  @param {Object} condition.options - week view options
  * @returns {object} schedules grouped by dates.
  */
 export function findByDateRange(
