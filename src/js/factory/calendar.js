@@ -1390,13 +1390,15 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
      * @property {Schedule} schedule - The {@link Schedule} instance to update
      * @property {Date} start - The start time to update
      * @property {Date} end - The end time to update
+     * @property {string} originCalendarId - The calendarId of the schedule before change
      * @example
      * calendar.on('beforeUpdateSchedule', function(event) {
      *     var schedule = event.schedule;
      *     var startTime = event.start;
      *     var endTime = event.end;
+     *     var originCalendarId = event.originCalendarId;
      *
-     *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
+     *     calendar.updateSchedule(schedule.id, originCalendarId, {
      *         start: startTime,
      *         end: endTime
      *     });

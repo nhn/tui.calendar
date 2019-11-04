@@ -11,6 +11,7 @@ export interface IEventObject {
     start: TZDate;
     calendar?: ICalendarInfo;
     triggerEventName?: 'click' | 'dblclick';
+    originCalendarId?: string;
 }
 
 export interface IEventDateObject {
