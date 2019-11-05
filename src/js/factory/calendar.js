@@ -779,19 +779,16 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
 
 /**
  * Update the schedule
- * @param {string} scheduleId - id of the original {@link Schedule} instance
- * @param {string} calendarId - calendarId of the original {@link Schedule} instance
+ * @param {string} scheduleId - ID of the original schedule to update
+ * @param {string} calendarId - The calendarId of the original schedule to update
  * @param {object} changes - The {@link Schedule} properties and values with changes to update
  * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
- *
- * // When you use a drag and drop to move a schedule
- * // Or when using the default popup UI
- * calendar.on('beforeUpdateSchedule', function(event) {
- *     var schedule = event.schedule;
- *     var changes = event.changes;
- *
- *     calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
+ * calendar.updateSchedule(schedule.id, schedule.calendarId, {
+ *     title: 'Changed schedule',
+ *     start: new Date('2019-11-05T09:00:00'),
+ *     end: new Date('2019-11-05T10:00:00'),
+ *     category: 'time'
  * });
  */
 Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, silent) {
