@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.6 | Thu Oct 24 2019
+ * @version 1.12.7 | Tue Nov 05 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -2555,6 +2555,7 @@ var aps = Array.prototype.slice;
 
 var domutil = __webpack_require__(/*! ../common/domutil */ "./src/js/common/domutil.js"),
     Collection = __webpack_require__(/*! ../common/collection */ "./src/js/common/collection.js");
+var datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/datetime.js");
 
 /**
  * Default schedule id getter for collection
@@ -2866,6 +2867,23 @@ module.exports = {
         }, contextopt);
 
         return found;
+    },
+
+    getScheduleChanges: function(schedule, propNames, data) {
+        var changes = {};
+        var dateProps = ['start', 'end'];
+
+        util.forEach(propNames, function(propName) {
+            if (dateProps.indexOf(propName) > -1) {
+                if (datetime.compare(schedule[propName], data[propName])) {
+                    changes[propName] = data[propName];
+                }
+            } else if (data[propName] && schedule[propName] !== data[propName]) {
+                changes[propName] = data[propName];
+            }
+        });
+
+        return util.isEmpty(changes) ? null : changes;
     }
 };
 
@@ -6944,6 +6962,18 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     options = options || {};
 
+    if (options.category === 'allday') {
+        options.isAllDay = true;
+    }
+
+    if (!util.isUndefined(options.isAllDay)) {
+        schedule.set('isAllDay', options.isAllDay);
+    }
+
+    if (!util.isUndefined(options.calendarId)) {
+        schedule.set('calendarId', options.calendarId);
+    }
+
     if (options.title) {
         schedule.set('title', options.title);
     }
@@ -6974,10 +7004,6 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     if (options.origin) {
         schedule.set('origin', options.origin);
-    }
-
-    if (!util.isUndefined(options.isAllDay)) {
-        schedule.set('isAllDay', options.isAllDay);
     }
 
     if (!util.isUndefined(options.isPending)) {
@@ -8445,6 +8471,7 @@ var mmin = Math.min;
  * @property {string} [color] - The calendar color
  * @property {string} [bgColor] - The calendar background color
  * @property {string} [borderColor] - The calendar left border color
+ * @property {string} [dragBgColor] - The Background color displayed when you drag a calendar's schedule
  */
 
 /**
@@ -8473,6 +8500,7 @@ var mmin = Math.min;
  * @property {string} color - The text color when schedule is displayed
  * @property {string} bgColor - The background color schedule is displayed
  * @property {string} borderColor - The color of left border or bullet point when schedule is displayed
+ * @property {string} dragBgColor - The background color when schedule dragging
  * @example
  * var cal = new Calendar('#calendar', {
  *   ...
@@ -8827,17 +8855,9 @@ Calendar.prototype._initialize = function(options) {
  * ]);
  */
 Calendar.prototype.createSchedules = function(schedules, silent) {
-    var calColor = this._calendarColor;
-
     util.forEach(schedules, function(obj) {
-        var color = calColor[obj.calendarId];
-
-        if (color) {
-            obj.color = color.color;
-            obj.bgColor = color.bgColor;
-            obj.borderColor = color.borderColor;
-        }
-    });
+        this._setScheduleColor(obj.calendarId, obj);
+    }, this);
 
     this._controller.createSchedules(schedules, silent);
 
@@ -8863,35 +8883,60 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
 
 /**
  * Update the schedule
- * @param {string} scheduleId - ID of a schedule to update
- * @param {string} calendarId - The calendarId of the schedule to update
- * @param {Schedule} scheduleData - The {@link Schedule} data to update
+ * @param {string} scheduleId - ID of the original schedule to update
+ * @param {string} calendarId - The calendarId of the original schedule to update
+ * @param {object} changes - The {@link Schedule} properties and values with changes to update
  * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
- * calendar.on('beforeUpdateSchedule', function(event) {
- *     var schedule = event.schedule;
- *     var startTime = event.start;
- *     var endTime = event.end;
- *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
- *         start: startTime,
- *         end: endTime
- *     });
+ * calendar.updateSchedule(schedule.id, schedule.calendarId, {
+ *     title: 'Changed schedule',
+ *     start: new Date('2019-11-05T09:00:00'),
+ *     end: new Date('2019-11-05T10:00:00'),
+ *     category: 'time'
  * });
  */
-Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData, silent) {
+Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, silent) {
     var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
         schedule = ownSchedules.single(function(model) {
             return model.id === scheduleId && model.calendarId === calendarId;
         });
+    var hasChangedCalendar = false;
 
-    if (schedule) {
-        ctrl.updateSchedule(schedule, scheduleData);
-
-        if (!silent) {
-            this.render();
-        }
+    if (!changes || !schedule) {
+        return;
     }
+
+    hasChangedCalendar = this._hasChangedCalendar(schedule, changes);
+    changes = hasChangedCalendar ?
+        this._setScheduleColor(changes.calendarId, changes) :
+        changes;
+
+    ctrl.updateSchedule(schedule, changes);
+
+    if (!silent) {
+        this.render();
+    }
+};
+
+Calendar.prototype._hasChangedCalendar = function(schedule, changes) {
+    return schedule &&
+        changes.calendarId &&
+        schedule.calendarId !== changes.calendarId;
+};
+
+Calendar.prototype._setScheduleColor = function(calendarId, schedule) {
+    var calColor = this._calendarColor;
+    var color = calColor[calendarId];
+
+    if (color) {
+        schedule.color = schedule.color || color.color;
+        schedule.bgColor = schedule.bgColor || color.bgColor;
+        schedule.borderColor = schedule.borderColor || color.borderColor;
+        schedule.dragBgColor = schedule.dragBgColor || color.dragBgColor;
+    }
+
+    return schedule;
 };
 
 /**
@@ -9262,16 +9307,19 @@ Calendar.prototype._getCurrentView = function() {
  *     color: '#e8e8e8',
  *     bgColor: '#585858',
  *     borderColor: '#a1b56c'
+ *     dragBgColor: '#585858',
  * });
  * calendar.setCalendarColor('2', {
  *     color: '#282828',
  *     bgColor: '#dc9656',
- *     borderColor: '#a1b56c'
+ *     borderColor: '#a1b56c',
+ *     dragBgColor: '#dc9656',
  * });
  * calendar.setCalendarColor('3', {
  *     color: '#a16946',
  *     bgColor: '#ab4642',
- *     borderColor: '#a1b56c'
+ *     borderColor: '#a1b56c',
+ *     dragBgColor: '#ab4642',
  * });
  */
 Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
@@ -9286,7 +9334,8 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
     ownColor = calColor[calendarId] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
-        borderColor: '#a1b56c'
+        borderColor: '#a1b56c',
+        dragBgColor: '#a1b56c'
     }, option);
 
     ownSchedules.each(function(model) {
@@ -9297,6 +9346,7 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
         model.color = ownColor.color;
         model.bgColor = ownColor.bgColor;
         model.borderColor = ownColor.borderColor;
+        model.dragBgColor = ownColor.dragBgColor;
     });
 
     if (!silent) {
@@ -9440,19 +9490,16 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
      * Fire this event when drag a schedule to change time in daily, weekly, monthly.
      * @event Calendar#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - The {@link Schedule} instance to update
-     * @property {Date} start - The start time to update
-     * @property {Date} end - The end time to update
+     * @property {Schedule} schedule - The original {@link Schedule} instance
+     * @property {object} changes - The {@link Schedule} properties and values with changes to update
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
      * @example
      * calendar.on('beforeUpdateSchedule', function(event) {
      *     var schedule = event.schedule;
-     *     var startTime = event.start;
-     *     var endTime = event.end;
+     *     var changes = event.changes;
      *
-     *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
-     *         start: startTime,
-     *         end: endTime
-     *     });
+     *     calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
      * });
      */
     this.fire('beforeUpdateSchedule', updateScheduleData);
@@ -9805,10 +9852,15 @@ Calendar.prototype.getViewName = function() {
 
 /**
  * Set calendar list
- * @param {Array.<Object>} calendars - calendar list
+ * @param {Array.<CalendarProps>} calendars - {@link CalendarProps} List
  */
 Calendar.prototype.setCalendars = function(calendars) {
+    util.forEach(calendars || [], function(calendar) {
+        this.setCalendarColor(calendar.id, calendar, true);
+    }, this);
+
     this._controller.setCalendars(calendars);
+
     this.render();
 };
 
@@ -11676,12 +11728,19 @@ DayGridMove.prototype._updateSchedule = function(scheduleData) {
     /**
      * @event DayGridMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - start and end time to update
+     *  @property {Date} start - start time to update
+     *  @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: {
+            start: newStarts,
+            end: newEnds
+        },
         start: newStarts,
         end: newEnds
     });
@@ -12235,19 +12294,29 @@ DayGridResize.prototype._updateSchedule = function(scheduleData) {
     var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
         newEnds = new TZDate(schedule.end);
+    var changes;
 
     newEnds = newEnds.addDate(dateOffset);
     newEnds = new TZDate(common.maxDate(datetime.end(schedule.start), newEnds));
 
+    changes = common.getScheduleChanges(
+        schedule,
+        ['end'],
+        {end: newEnds}
+    );
+
     /**
      * @event DayGridResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {date} start - start time to update
-     * @property {date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - end time to update
+     *  @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: changes,
         start: schedule.getStarts(),
         end: newEnds
     });
@@ -14072,12 +14141,19 @@ MonthMove.prototype.updateSchedule = function(scheduleCache) {
     /**
      * @event MonthMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - start and end time to update
+     *  @property {Date} start - start time to update
+     *  @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: {
+            start: newStartDate,
+            end: new TZDate(newStartDate).addMilliseconds(duration)
+        },
         start: newStartDate,
         end: new TZDate(newStartDate).addMilliseconds(duration)
     });
@@ -14568,6 +14644,8 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     MonthResizeGuide = __webpack_require__(/*! ./resizeGuide */ "./src/js/handler/month/resizeGuide.js"),
     TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
 
+var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
+
 /**
  * @constructor
  * @param {Drag} dragHandler - Drag handler instance.
@@ -14627,16 +14705,24 @@ MonthResize.prototype._updateSchedule = function(scheduleCache) {
     // You can not change the start date of the event. Only the end time can be changed.
     var newEnd = datetime.end(new TZDate(scheduleCache.end)),
         schedule = scheduleCache.schedule;
+    var changes = common.getScheduleChanges(
+        schedule,
+        ['end'],
+        {end: newEnd}
+    );
 
     /**
      * @event MonthResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - end time to update
+     *  @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: changes,
         start: new TZDate(schedule.getStarts()),
         end: newEnd
     });
@@ -16253,12 +16339,19 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
     /**
      * @event TimeMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - start and end time to update
+     *  @property {Date} start - start time to update
+     *  @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: {
+            start: newStarts,
+            end: newEnds
+        },
         start: newStarts,
         end: newEnds
     });
@@ -16648,6 +16741,7 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
+var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
 var timeCore = __webpack_require__(/*! ./core */ "./src/js/handler/time/core.js");
 var TimeResizeGuide = __webpack_require__(/*! ./resizeGuide */ "./src/js/handler/time/resizeGuide.js");
 
@@ -16835,6 +16929,7 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         dateEnd,
         newEnds,
         baseDate;
+    var changes;
 
     if (!schedule) {
         return;
@@ -16854,15 +16949,24 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
     }
 
+    changes = common.getScheduleChanges(
+        schedule,
+        ['end'],
+        {end: newEnds}
+    );
+
     /**
      * @event TimeResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - end time to update
+     *  @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: changes,
         start: schedule.getStarts(),
         end: newEnds
     });
@@ -19539,6 +19643,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var cssPrefix = config.cssPrefix;
     var title, isPrivate, location, isAllDay, startDate, endDate, state;
     var start, end, calendarId;
+    var changes;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
@@ -19576,21 +19681,27 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     if (this._isEditMode) {
-        this.fire('beforeUpdateSchedule', {
-            schedule: {
-                calendarId: calendarId || this._schedule.calendarId,
+        changes = common.getScheduleChanges(
+            this._schedule,
+            ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+            {
+                calendarId: calendarId,
                 title: title.value,
                 location: location.value,
-                raw: {
-                    class: isPrivate ? 'private' : 'public'
-                },
                 start: start,
                 end: end,
                 isAllDay: isAllDay,
-                state: state.innerText,
-                triggerEventName: 'click',
-                id: this._schedule.id
-            },
+                state: state.innerText
+            }
+        );
+
+        this.fire('beforeUpdateSchedule', {
+            schedule: util.extend({
+                raw: {
+                    class: isPrivate ? 'private' : 'public'
+                }
+            }, this._schedule),
+            changes: changes,
             start: start,
             end: end,
             calendar: this._selectedCal,
@@ -20556,7 +20667,7 @@ var helpers = {
 
     'timegridDisplayPrimayTime-tmpl': function(time) {
         /* TODO: 삭제 필요 (will be deprecated) */
-        return helpers['timegridDisplayPrimaryTime-tmpl'](time);
+        return Handlebars.helpers['timegridDisplayPrimaryTime-tmpl'](time);
     },
 
     'timegridDisplayPrimaryTime-tmpl': function(time) {
