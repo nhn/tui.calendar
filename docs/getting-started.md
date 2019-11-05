@@ -175,13 +175,9 @@ Update the schedule when dragging it.
 ```javascript
 calendar.on('beforeUpdateSchedule', function(event) {
     var schedule = event.schedule;
-    var startTime = event.start;
-    var endTime = event.end;
+    var changes = event.changes;
 
-    calendar.updateSchedule(schedule.id, schedule.calendarId, {
-        start: startTime,
-        end: endTime
-    });
+    calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
 });
 ```
 

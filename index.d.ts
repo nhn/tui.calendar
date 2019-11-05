@@ -7,6 +7,7 @@ export type CustomEventType = keyof IEvents;
 
 export interface IEventObject {
     schedule: ISchedule;
+    changes: ISchedule | null;
     end: TZDate;
     start: TZDate;
     calendar?: ICalendarInfo;

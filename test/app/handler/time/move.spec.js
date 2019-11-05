@@ -92,7 +92,11 @@ describe('handler/time.move', function() {
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
                 start: new TZDate(2015, 4, 1, 10),
-                end: new TZDate(2015, 4, 1, 11)
+                end: new TZDate(2015, 4, 1, 11),
+                changes: {
+                    start: new TZDate(2015, 4, 1, 10),
+                    end: new TZDate(2015, 4, 1, 11)
+                }
             });
         });
 
@@ -124,6 +128,10 @@ describe('handler/time.move', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
+                changes: {
+                    start: new TZDate(2015, 4, 1),
+                    end: new TZDate(2015, 4, 1, 0, 30)
+                },
                 start: new TZDate(2015, 4, 1),
                 end: new TZDate(2015, 4, 1, 0, 30)
             });
@@ -134,6 +142,10 @@ describe('handler/time.move', function() {
 
             expect(mockInstance.fire).toHaveBeenCalledWith('beforeUpdateSchedule', {
                 schedule: baseControllerMock.schedules.items[20],
+                changes: {
+                    start: new TZDate(2015, 4, 2, 0, 30),
+                    end: new TZDate(2015, 4, 2, 1)
+                },
                 start: new TZDate(2015, 4, 2, 0, 30),
                 end: new TZDate(2015, 4, 2, 1)
             });

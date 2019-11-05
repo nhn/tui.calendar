@@ -197,12 +197,19 @@ DayGridMove.prototype._updateSchedule = function(scheduleData) {
     /**
      * @event DayGridMove#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {Date} start - start time to update
-     * @property {Date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - start and end time to update
+     *  @property {Date} start - start time to update
+     *  @property {Date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: {
+            start: newStarts,
+            end: newEnds
+        },
         start: newStarts,
         end: newEnds
     });

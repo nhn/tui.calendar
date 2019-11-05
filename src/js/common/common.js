@@ -9,6 +9,7 @@ var aps = Array.prototype.slice;
 
 var domutil = require('../common/domutil'),
     Collection = require('../common/collection');
+var datetime = require('../common/datetime');
 
 /**
  * Default schedule id getter for collection
@@ -320,5 +321,22 @@ module.exports = {
         }, contextopt);
 
         return found;
+    },
+
+    getScheduleChanges: function(schedule, propNames, data) {
+        var changes = {};
+        var dateProps = ['start', 'end'];
+
+        util.forEach(propNames, function(propName) {
+            if (dateProps.indexOf(propName) > -1) {
+                if (datetime.compare(schedule[propName], data[propName])) {
+                    changes[propName] = data[propName];
+                }
+            } else if (data[propName] && schedule[propName] !== data[propName]) {
+                changes[propName] = data[propName];
+            }
+        });
+
+        return util.isEmpty(changes) ? null : changes;
     }
 };
