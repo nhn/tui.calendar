@@ -22,7 +22,7 @@ Place a `<div></div>` where you want TOAST UI Calendar rendered.
 
 ### javascript
 
-Initialize the Calendar class with given element to make an Calendar.
+Initialize the Calendar class with given element to make a Calendar.
 
 ```javascript
 var Calendar = require('tui-calendar'); /* CommonJS */
