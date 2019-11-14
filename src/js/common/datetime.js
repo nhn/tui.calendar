@@ -199,8 +199,8 @@ datetime = {
      * @returns {TZDate[]} TZDate array.
      */
     range: function(start, end, step) {
-        var startTime = start.getTime();
-        var endTime = end.getTime();
+        var startTime = typeof start.getTime === 'function' && start.getTime();
+        var endTime = typeof end.getTime === 'function' && end.getTime();
         var cursor = startTime;
         var date = dw(new TZDate(start));
         var result = [];
