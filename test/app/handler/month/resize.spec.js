@@ -34,6 +34,9 @@ describe('handler:month/resize', function() {
             'beforeUpdateSchedule',
             {
                 schedule: scheduleInst,
+                changes: {
+                    end: new TZDate('2015-05-02T23:59:59+09:00')
+                },
                 start: new TZDate('2015-05-01T00:00:00+09:00'),
                 end: new TZDate('2015-05-02T23:59:59+09:00')
             }

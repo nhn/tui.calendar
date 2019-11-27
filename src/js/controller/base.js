@@ -93,7 +93,7 @@ Base.prototype._getContainDatesInSchedule = function(schedule) {
  ****************/
 
 /**
- * Create an schedule instance from raw data.
+ * Create a schedule instance from raw data.
  * @emits Base#beforeCreateSchedule
  * @emits Base#createdSchedule
  * @param {object} options Data object to create schedule.
@@ -143,7 +143,7 @@ Base.prototype.createSchedules = function(dataList, silent) {
 };
 
 /**
- * Update an schedule.
+ * Update a schedule.
  * @emits Base#updateSchedule
  * @param {Schedule} schedule - schedule instance to update
  * @param {object} options updated object data.
@@ -154,6 +154,18 @@ Base.prototype.updateSchedule = function(schedule, options) {
     var end = options.end || schedule.end;
 
     options = options || {};
+
+    if (options.category === 'allday') {
+        options.isAllDay = true;
+    }
+
+    if (!util.isUndefined(options.isAllDay)) {
+        schedule.set('isAllDay', options.isAllDay);
+    }
+
+    if (!util.isUndefined(options.calendarId)) {
+        schedule.set('calendarId', options.calendarId);
+    }
 
     if (options.title) {
         schedule.set('title', options.title);
@@ -185,10 +197,6 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     if (options.origin) {
         schedule.set('origin', options.origin);
-    }
-
-    if (!util.isUndefined(options.isAllDay)) {
-        schedule.set('isAllDay', options.isAllDay);
     }
 
     if (!util.isUndefined(options.isPending)) {
@@ -263,7 +271,7 @@ Base.prototype._removeFromMatrix = function(schedule) {
 };
 
 /**
- * Add an schedule instance.
+ * Add a schedule instance.
  * @emits Base#addedSchedule
  * @param {Schedule} schedule The instance of Schedule.
  * @param {boolean} silent - set true then don't fire events.

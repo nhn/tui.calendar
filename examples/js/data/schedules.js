@@ -34,6 +34,7 @@ function ScheduleInfo() {
     this.goingDuration = 0;
     this.comingDuration = 0;
     this.recurrenceRule = '';
+    this.state = '';
 
     this.raw = {
         memo: '',
@@ -119,7 +120,7 @@ function generateRandomSchedule(calendar, renderStart, renderEnd) {
     schedule.location = chance.address();
     schedule.attendees = chance.bool({likelihood: 70}) ? generateNames() : [];
     schedule.recurrenceRule = chance.bool({likelihood: 20}) ? 'repeated events' : '';
-
+    schedule.state = chance.bool({likelihood: 20}) ? 'Free' : 'Busy';
     schedule.color = calendar.color;
     schedule.bgColor = calendar.bgColor;
     schedule.dragBgColor = calendar.dragBgColor;

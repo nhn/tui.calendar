@@ -22,7 +22,7 @@ Place a `<div></div>` where you want TOAST UI Calendar rendered.
 
 ### javascript
 
-Initialize the Calendar class with given element to make an Calendar.
+Initialize the Calendar class with given element to make a Calendar.
 
 ```javascript
 var Calendar = require('tui-calendar'); /* CommonJS */
@@ -175,13 +175,9 @@ Update the schedule when dragging it.
 ```javascript
 calendar.on('beforeUpdateSchedule', function(event) {
     var schedule = event.schedule;
-    var startTime = event.start;
-    var endTime = event.end;
+    var changes = event.changes;
 
-    calendar.updateSchedule(schedule.id, schedule.calendarId, {
-        start: startTime,
-        end: endTime
-    });
+    calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
 });
 ```
 

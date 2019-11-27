@@ -361,7 +361,7 @@ var helpers = {
 
     'timegridDisplayPrimayTime-tmpl': function(time) {
         /* TODO: 삭제 필요 (will be deprecated) */
-        return helpers['timegridDisplayPrimaryTime-tmpl'](time);
+        return Handlebars.helpers['timegridDisplayPrimaryTime-tmpl'](time);
     },
 
     'timegridDisplayPrimaryTime-tmpl': function(time) {

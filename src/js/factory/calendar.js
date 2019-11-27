@@ -367,6 +367,7 @@ var mmin = Math.min;
  * @property {string} [color] - The calendar color
  * @property {string} [bgColor] - The calendar background color
  * @property {string} [borderColor] - The calendar left border color
+ * @property {string} [dragBgColor] - The Background color displayed when you drag a calendar's schedule
  */
 
 /**
@@ -395,6 +396,7 @@ var mmin = Math.min;
  * @property {string} color - The text color when schedule is displayed
  * @property {string} bgColor - The background color schedule is displayed
  * @property {string} borderColor - The color of left border or bullet point when schedule is displayed
+ * @property {string} dragBgColor - The background color when schedule dragging
  * @example
  * var cal = new Calendar('#calendar', {
  *   ...
@@ -425,7 +427,7 @@ var mmin = Math.min;
  * @property {boolean|Array.<string>} [taskView=true] - Show the milestone and task in weekly, daily view. The default value is true. If the value is array, it can be &#91;'milestone', 'task'&#93;.
  * @property {boolean|Array.<string>} [scheduleView=true] - Show the all day and time grid in weekly, daily view. The default value is false. If the value is array, it can be &#91;'allday', 'time'&#93;.
  * @property {themeConfig} [theme=themeConfig] - {@link themeConfig} for custom style.
- * @property {Template} [template={}] - {@link Template} for further informatio
+ * @property {Template} [template={}] - {@link Template} for further information
  * @property {WeekOptions} [week={}] - {@link WeekOptions} for week view
  * @property {MonthOptions} [month={}] - {@link MonthOptions} for month view
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
@@ -749,18 +751,9 @@ Calendar.prototype._initialize = function(options) {
  * ]);
  */
 Calendar.prototype.createSchedules = function(schedules, silent) {
-    var calColor = this._calendarColor;
-
     util.forEach(schedules, function(obj) {
-        var color = calColor[obj.calendarId];
-
-        // overwrite schedule color with calendar's only if schedule is not customized
-        if (color) {
-            obj.color = obj.color || color.color;
-            obj.bgColor = obj.bgColor || color.bgColor;
-            obj.borderColor = obj.borderColor || color.borderColor;
-        }
-    });
+        this._setScheduleColor(obj.calendarId, obj);
+    }, this);
 
     this._controller.createSchedules(schedules, silent);
 
@@ -828,35 +821,60 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
 
 /**
  * Update the schedule
- * @param {string} scheduleId - ID of a schedule to update
- * @param {string} calendarId - The calendarId of the schedule to update
- * @param {Schedule} scheduleData - The {@link Schedule} data to update
+ * @param {string} scheduleId - ID of the original schedule to update
+ * @param {string} calendarId - The calendarId of the original schedule to update
+ * @param {object} changes - The {@link Schedule} properties and values with changes to update
  * @param {boolean} [silent=false] - No auto render after creation when set true
  * @example
- * calendar.on('beforeUpdateSchedule', function(event) {
- *     var schedule = event.schedule;
- *     var startTime = event.start;
- *     var endTime = event.end;
- *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
- *         start: startTime,
- *         end: endTime
- *     });
+ * calendar.updateSchedule(schedule.id, schedule.calendarId, {
+ *     title: 'Changed schedule',
+ *     start: new Date('2019-11-05T09:00:00'),
+ *     end: new Date('2019-11-05T10:00:00'),
+ *     category: 'time'
  * });
  */
-Calendar.prototype.updateSchedule = function(scheduleId, calendarId, scheduleData, silent) {
+Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, silent) {
     var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
         schedule = ownSchedules.single(function(model) {
             return model.id === scheduleId && model.calendarId === calendarId;
         });
+    var hasChangedCalendar = false;
 
-    if (schedule) {
-        ctrl.updateSchedule(schedule, scheduleData);
-
-        if (!silent) {
-            this.render();
-        }
+    if (!changes || !schedule) {
+        return;
     }
+
+    hasChangedCalendar = this._hasChangedCalendar(schedule, changes);
+    changes = hasChangedCalendar ?
+        this._setScheduleColor(changes.calendarId, changes) :
+        changes;
+
+    ctrl.updateSchedule(schedule, changes);
+
+    if (!silent) {
+        this.render();
+    }
+};
+
+Calendar.prototype._hasChangedCalendar = function(schedule, changes) {
+    return schedule &&
+        changes.calendarId &&
+        schedule.calendarId !== changes.calendarId;
+};
+
+Calendar.prototype._setScheduleColor = function(calendarId, schedule) {
+    var calColor = this._calendarColor;
+    var color = calColor[calendarId];
+
+    if (color) {
+        schedule.color = schedule.color || color.color;
+        schedule.bgColor = schedule.bgColor || color.bgColor;
+        schedule.borderColor = schedule.borderColor || color.borderColor;
+        schedule.dragBgColor = schedule.dragBgColor || color.dragBgColor;
+    }
+
+    return schedule;
 };
 
 /**
@@ -1227,16 +1245,19 @@ Calendar.prototype._getCurrentView = function() {
  *     color: '#e8e8e8',
  *     bgColor: '#585858',
  *     borderColor: '#a1b56c'
+ *     dragBgColor: '#585858',
  * });
  * calendar.setCalendarColor('2', {
  *     color: '#282828',
  *     bgColor: '#dc9656',
- *     borderColor: '#a1b56c'
+ *     borderColor: '#a1b56c',
+ *     dragBgColor: '#dc9656',
  * });
  * calendar.setCalendarColor('3', {
  *     color: '#a16946',
  *     bgColor: '#ab4642',
- *     borderColor: '#a1b56c'
+ *     borderColor: '#a1b56c',
+ *     dragBgColor: '#ab4642',
  * });
  */
 Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
@@ -1251,7 +1272,8 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
     ownColor = calColor[calendarId] = util.extend({
         color: '#000',
         bgColor: '#a1b56c',
-        borderColor: '#a1b56c'
+        borderColor: '#a1b56c',
+        dragBgColor: '#a1b56c'
     }, option);
 
     ownSchedules.each(function(model) {
@@ -1262,6 +1284,7 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
         model.color = ownColor.color;
         model.bgColor = ownColor.bgColor;
         model.borderColor = ownColor.borderColor;
+        model.dragBgColor = ownColor.dragBgColor;
     });
 
     if (!silent) {
@@ -1405,19 +1428,16 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
      * Fire this event when drag a schedule to change time in daily, weekly, monthly.
      * @event Calendar#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - The {@link Schedule} instance to update
-     * @property {Date} start - The start time to update
-     * @property {Date} end - The end time to update
+     * @property {Schedule} schedule - The original {@link Schedule} instance
+     * @property {object} changes - The {@link Schedule} properties and values with changes to update
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
      * @example
      * calendar.on('beforeUpdateSchedule', function(event) {
      *     var schedule = event.schedule;
-     *     var startTime = event.start;
-     *     var endTime = event.end;
+     *     var changes = event.changes;
      *
-     *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
-     *         start: startTime,
-     *         end: endTime
-     *     });
+     *     calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
      * });
      */
     this.fire('beforeUpdateSchedule', updateScheduleData);
@@ -1770,10 +1790,15 @@ Calendar.prototype.getViewName = function() {
 
 /**
  * Set calendar list
- * @param {Array.<Object>} calendars - calendar list
+ * @param {Array.<CalendarProps>} calendars - {@link CalendarProps} List
  */
 Calendar.prototype.setCalendars = function(calendars) {
+    util.forEach(calendars || [], function(calendar) {
+        this.setCalendarColor(calendar.id, calendar, true);
+    }, this);
+
     this._controller.setCalendars(calendars);
+
     this.render();
 };
 

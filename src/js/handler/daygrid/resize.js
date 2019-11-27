@@ -183,19 +183,29 @@ DayGridResize.prototype._updateSchedule = function(scheduleData) {
     var schedule = scheduleData.targetModel,
         dateOffset = scheduleData.xIndex - scheduleData.dragStartXIndex,
         newEnds = new TZDate(schedule.end);
+    var changes;
 
     newEnds = newEnds.addDate(dateOffset);
     newEnds = new TZDate(common.maxDate(datetime.end(schedule.start), newEnds));
 
+    changes = common.getScheduleChanges(
+        schedule,
+        ['end'],
+        {end: newEnds}
+    );
+
     /**
      * @event DayGridResize#beforeUpdateSchedule
      * @type {object}
-     * @property {Schedule} schedule - schedule instance to update
-     * @property {date} start - start time to update
-     * @property {date} end - end time to update
+     * @property {Schedule} schedule - The original schedule instance
+     * @property {Date} start - Deprecated: start time to update
+     * @property {Date} end - Deprecated: end time to update
+     * @property {object} changes - end time to update
+     *  @property {date} end - end time to update
      */
     this.fire('beforeUpdateSchedule', {
         schedule: schedule,
+        changes: changes,
         start: schedule.getStarts(),
         end: newEnds
     });

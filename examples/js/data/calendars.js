@@ -11,6 +11,7 @@ function CalendarInfo() {
     this.color = null;
     this.bgColor = null;
     this.borderColor = null;
+    this.dragBgColor = null;
 }
 
 function addCalendar(calendar) {

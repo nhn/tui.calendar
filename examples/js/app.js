@@ -45,10 +45,13 @@
             saveNewSchedule(e);
         },
         'beforeUpdateSchedule': function(e) {
+            var schedule = e.schedule;
+            var changes = e.changes;
+
             console.log('beforeUpdateSchedule', e);
-            e.schedule.start = e.start;
-            e.schedule.end = e.end;
-            cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
+
+            cal.updateSchedule(schedule.id, schedule.calendarId, changes);
+            refreshScheduleVisibility();
         },
         'beforeDeleteSchedule': function(e) {
             console.log('beforeDeleteSchedule', e);

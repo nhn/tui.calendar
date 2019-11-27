@@ -245,6 +245,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var cssPrefix = config.cssPrefix;
     var title, isPrivate, location, isAllDay, startDate, endDate, state;
     var start, end, calendarId;
+    var changes;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
@@ -282,21 +283,27 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     if (this._isEditMode) {
-        this.fire('beforeUpdateSchedule', {
-            schedule: {
-                calendarId: calendarId || this._schedule.calendarId,
+        changes = common.getScheduleChanges(
+            this._schedule,
+            ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+            {
+                calendarId: calendarId,
                 title: title.value,
                 location: location.value,
-                raw: {
-                    class: isPrivate ? 'private' : 'public'
-                },
                 start: start,
                 end: end,
                 isAllDay: isAllDay,
-                state: state.innerText,
-                triggerEventName: 'click',
-                id: this._schedule.id
-            },
+                state: state.innerText
+            }
+        );
+
+        this.fire('beforeUpdateSchedule', {
+            schedule: util.extend({
+                raw: {
+                    class: isPrivate ? 'private' : 'public'
+                }
+            }, this._schedule),
+            changes: changes,
             start: start,
             end: end,
             calendar: this._selectedCal,

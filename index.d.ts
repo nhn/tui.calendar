@@ -1,4 +1,4 @@
-// Type definitions for TOAST UI Calendar v1.12.6
+// Type definitions for TOAST UI Calendar v1.12.7
 // TypeScript Version: 3.2.1
 
 export type DateType = string | Date | TZDate;
@@ -7,6 +7,7 @@ export type CustomEventType = keyof IEvents;
 
 export interface IEventObject {
     schedule: ISchedule;
+    changes: ISchedule | null;
     end: TZDate;
     start: TZDate;
     calendar?: ICalendarInfo;
