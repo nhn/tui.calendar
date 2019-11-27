@@ -754,7 +754,7 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
     util.forEach(schedules, function(obj) {
         var color = calColor[obj.calendarId];
 
-        //overwrite schedule color with calendar's only if schedule is not customized
+        // overwrite schedule color with calendar's only if schedule is not customized
         if (color) {
             obj.color = obj.color || color.color;
             obj.bgColor = obj.bgColor || color.bgColor;
@@ -767,6 +767,48 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
     if (!silent) {
         this.render();
     }
+};
+
+/**
+ * Create schedules from url
+ * @param {String} url - url to get json object array
+ * @param {boolean} [silent=false] - no auto render after creation when set true
+ * @example
+ * calendar.createSchedulesFromUrl("/example");
+ * @example
+ * // json object array
+ * [{
+ *  "id": "1",
+ *  "calendarId": "1",
+ *  "title": "Distribute Computing",
+ *  "category": "time",
+ *  "start": "2019-11-15T10:30:00",
+ *  "end": "2019-11-17T12:30:00"
+ *  }
+ * ,{
+ *  "id": "2",
+ *  "calendarId": "1",
+ *  "title": "Algorithm",
+ *  "category": "time",
+ *  "start": "2019-11-16T10:30:00",
+ *  "end": "2019-11-19T12:30:00",
+ *  "isReadOnly": true,
+ *  "color":"white"
+ * }]
+ */
+Calendar.prototype.createSchedulesFromUrl = function(url, silent) {
+    var self = this;
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                self.createSchedules(JSON.parse(xhr.responseText), silent);
+            }
+        }
+    };
+    xhr.open('GET', url, true);
+    xhr.send(null);
 };
 
 /**

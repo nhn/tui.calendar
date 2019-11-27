@@ -8847,6 +8847,48 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
 };
 
 /**
+ * Create schedules from url
+ * @param {String} url - url to get json object array
+ * @param {boolean} [silent=false] - no auto render after creation when set true
+ * @example
+ * calendar.createSchedulesFromUrl("/example");
+ * @example
+ * // json object array
+ * [{
+ *	"id": "1",
+ *	"calendarId": "1",
+ *	"title": "Distribute Computing",
+ *	"category": "time",
+ *	"start": "2019-11-15T10:30:00",
+ *	"end": "2019-11-17T12:30:00"
+ *	}
+ * ,{
+ *	"id": "2",
+ *	"calendarId": "1",
+ *	"title": "Algorithm",
+ *	"category": "time",
+ *	"start": "2019-11-16T10:30:00",
+ *	"end": "2019-11-19T12:30:00",
+ *	"isReadOnly": true,
+ *	"color":"white"
+ * }]
+ */
+Calendar.prototype.createSchedulesFromUrl = function(url, silent) {
+    var self = this;
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                self.createSchedules(JSON.parse(xhr.responseText), silent);
+            }
+        }
+    };
+    xhr.open('GET', url, true);
+    xhr.send(null);
+};
+
+/**
  * Get a {@link Schedule} object by schedule id and calendar id.
  * @param {string} scheduleId - ID of schedule
  * @param {string} calendarId - calendarId of the schedule
