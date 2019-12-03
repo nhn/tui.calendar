@@ -609,8 +609,7 @@ datetime = {
 
     convertStartDayToLastDay: function(d) {
         var date = new TZDate(d);
-        var isStartOfDay = datetime.isStartOfDay(d);
-        if (isStartOfDay) {
+        if (datetime.isStartOfDay(d)) {
             date.setDate(date.getDate() - 1);
         }
 
