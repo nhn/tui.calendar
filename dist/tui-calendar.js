@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp95-191014 | Mon Oct 14 2019
+ * @version 1.12.5-dooray-sp96-191205 | Thu Dec 05 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -3507,9 +3507,11 @@ datetime = {
 
     convertStartDayToLastDay: function(d) {
         var date = new TZDate(d);
-        var isStartOfDay = datetime.isStartOfDay(d);
+        if (datetime.isStartOfDay(d)) {
+            date.setDate(date.getDate() - 1);
+        }
 
-        return isStartOfDay ? date.setDate(date.getDate() - 1) : date;
+        return date;
     },
 
     getStartOfNextDay: function(d) {
