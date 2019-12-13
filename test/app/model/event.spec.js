@@ -345,7 +345,7 @@ describe('model/Schedule advanced', function() {
             category: 'milestone',
             dueDateClass: '',
             isAllDay: false,
-            start: new TZDate('2015-10-26T00:00:00+09:00'),
+            start: new TZDate('2015-10-26T23:59:59+09:00'),
             end: new TZDate('2015-10-26T23:59:59+09:00')
         }));
 
@@ -356,7 +356,7 @@ describe('model/Schedule advanced', function() {
             category: 'task',
             dueDateClass: 'morning',
             isAllDay: false,
-            start: new TZDate('2015-10-26T00:00:00+09:00'),
+            start: new TZDate('2015-10-26T23:59:59+09:00'),
             end: new TZDate('2015-10-26T23:59:59+09:00')
         }));
     });

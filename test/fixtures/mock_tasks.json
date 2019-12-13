@@ -14,12 +14,12 @@
     "title": "테스트 마일스톤1",
     "category": "milestone",
     "dueDateClass": "",
-    "start": "2015-10-26T00:00:00+09:00",
+    "start": "",
     "end": "2015-10-26T23:59:59+09:00"
 }, {
     "title": "테스트 업무",
     "category": "task",
     "dueDateClass": "morning",
-    "start": "2015-10-26T00:00:00+09:00",
+    "start": "",
     "end": "2015-10-26T23:59:59+09:00"
 }]
