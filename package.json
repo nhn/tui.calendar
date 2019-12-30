@@ -72,7 +72,7 @@
     "stylus-loader": "^3.0.2",
     "tslint": "^5.12.0",
     "tui-jsdoc-template": "^1.2.2",
-    "tui-release-notes": "git+https://github.com/nhn/tui.release-notes.git",
+    "tui-release-notes": "git+https://github.com/nhn/toast-ui.release-notes.git",
     "typescript": "^3.2.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^1.0.1",
