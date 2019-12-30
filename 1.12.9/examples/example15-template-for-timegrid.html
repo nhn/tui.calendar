@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>TOAST UI Calendar Template For Timegrid(Week, Day) DEMO</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+  <link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css">
+  <link rel="stylesheet" type="text/css" href="./css/default.css">
+  <link rel="stylesheet" type="text/css" href="./css/icons.css">
+</head>
+
+<body>
+  <div class="code-html">
+    <div id="menu">
+      <span id="menu-navi">
+        <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+          <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+          <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+        </button>
+      </span>
+      <span id="renderRange" class="render-range"></span>
+    </div>
+
+    <div id="calendar"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+  <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
+  <script src="../dist/tui-calendar.js"></script>
+  <script src="./js/data/calendars.js"></script>
+  <script src="./js/data/schedules.js"></script>
+  <script type="text/javascript" class="code-js">
+  function getTimeTemplate(schedule, isAllDay) {
+    var html = [];
+
+    if (!isAllDay) {
+      html.push('<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ');
+    }
+    if (schedule.isPrivate) {
+      html.push('<span class="calendar-font-icon ic-lock-b"></span>');
+      html.push(' Private');
+    } else {
+      if (schedule.isReadOnly) {
+        html.push('<span class="calendar-font-icon ic-readonly-b"></span>');
+      } else if (schedule.recurrenceRule) {
+        html.push('<span class="calendar-font-icon ic-repeat-b"></span>');
+      } else if (schedule.attendees.length) {
+        html.push('<span class="calendar-font-icon ic-user-b"></span>');
+      } else if (schedule.location) {
+        html.push('<span class="calendar-font-icon ic-location-b"></span>');
+      }
+      html.push(' ' + schedule.title);
+    }
+
+    return html.join('');
+  }
+
+  function getGridTitleTemplate(type) {
+    var title = '';
+
+    switch(type) {
+      case 'milestone':
+        title = '<span class="tui-full-calendar-left-content">MILESTONE</span>';
+        break;
+      case 'task':
+        title = '<span class="tui-full-calendar-left-content">TASK</span>';
+        break;
+      case 'allday':
+        title = '<span class="tui-full-calendar-left-content">ALL DAY</span>';
+        break;
+    }
+
+    return title;
+  }
+
+  function getGridCategoryTemplate(category, schedule) {
+    var tpl;
+
+    switch(category) {
+      case 'milestone':
+        tpl = '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + schedule.bgColor + '">' + schedule.title + '</span>';
+        break;
+      case 'task':
+        tpl = '#' + schedule.title;
+        break;
+      case 'allday':
+        tpl = getTimeTemplate(schedule, true);
+        break;
+    }
+
+    return tpl;
+  }
+
+  function getPadStart(value) {
+    value = value.toString();
+
+    return value.padStart(2, '0');
+  }
+
+  // register templates
+  const templates = {
+    weekDayname: function(model) {
+      return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span>&nbsp;&nbsp;<span class="tui-full-calendar-dayname-name">' + model.dayName + '</span>';
+    },
+    weekGridFooterExceed: function(hiddenSchedules) {
+      return '+' + hiddenSchedules;
+    },
+    dayGridTitle: function(viewName) {
+      /*
+       * use another functions instead of 'dayGridTitle'
+       * milestoneTitle: function() {...}
+       * taskTitle: function() {...}
+       * alldayTitle: function() {...}
+      */
+
+      return getGridTitleTemplate(viewName);
+    },
+    schedule: function(schedule) {
+      /*
+       * use another functions instead of 'schedule'
+       * milestone: function() {...}
+       * task: function() {...}
+       * allday: function() {...}
+      */
+
+      return getGridCategoryTemplate(schedule.category, schedule);
+    },
+    collapseBtnTitle: function() { // ??? 어떤 템플릿인가요??
+      return '<span class="tui-full-calendar-icon tui-full-calendar-ic-arrow-solid-top"></span>';
+    },
+    timezoneDisplayLabel: function(timezoneOffset, displayLabel) {
+      var gmt, hour, minutes;
+
+      if (!displayLabel) {
+        gmt = timezoneOffset < 0 ? '-' : '+';
+        hour = Math.abs(parseInt(timezoneOffset / 60, 10));
+        minutes = Math.abs(timezoneOffset % 60);
+        displayLabel = gmt + getPadStart(hour) + ':' + getPadStart(minutes);
+      }
+
+      return displayLabel;
+    },
+    timegridDisplayPrimayTime: function(time) {
+      /* will be deprecated. use 'timegridDisplayPrimaryTime' */
+      var hour = time.hour;
+      var meridiem = hour >= 12 ? 'pm' : 'am';
+
+      if (hour > 12) {
+        hour = hour - 12;
+      }
+
+      return hour + ' ' + meridiem;
+    },
+    timegridDisplayPrimaryTime: function(time) {
+      var hour = time.hour;
+      var meridiem = hour >= 12 ? 'pm' : 'am';
+
+      if (hour > 12) {
+        hour = hour - 12;
+      }
+
+      return hour + ' ' + meridiem;
+    },
+    timegridDisplayTime: function(time) {
+      return getPadStart(time.hour) + ':' + getPadStart(time.hour);
+    },
+    timegridCurrentTime: function(timezone) {
+      var templates = [];
+
+      if (timezone.dateDifference) {
+          templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
+      }
+
+      templates.push(moment(timezone.hourmarker.toUTCString()).format('HH:mm'));
+      return templates.join('');
+    }
+  };
+
+  var cal = new tui.Calendar('#calendar', {
+    defaultView: 'week',
+    template: templates,
+    week: {
+      showTimezoneCollapseButton: true,
+      timezonesCollapsed: false,
+    },
+    timezones: [
+      {
+        timezoneOffset: 540,
+        tooltip: 'Seoul'
+      },
+      {
+        timezoneOffset: -420,
+        tooltip: 'Los Angeles'
+      }
+    ]
+  });
+  </script>
+  <script src="./js/default.js"></script>
+</body>
+</html>
