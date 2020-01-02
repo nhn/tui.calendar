@@ -8,6 +8,10 @@ declare module 'tui-code-snippet/type/isUndefined' {
   export default function isUndefined(obj: any): obj is undefined;
 }
 
+declare module 'tui-code-snippet/type/isNull' {
+  export default function isNull(obj: any): obj is null;
+}
+
 declare module 'tui-code-snippet/type/isBoolean' {
   export default function isBoolean(obj: any): obj is boolean;
 }
@@ -73,6 +77,22 @@ declare module 'tui-code-snippet/array/range' {
 
 declare module 'tui-code-snippet/array/inArray' {
   export default function inArray(searchElement: any, array: any[], startIndex?: number): number;
+}
+
+// domEvent
+declare module 'tui-code-snippet/domEvent/getMouseButton' {
+  export default function getMouseButton(event: MouseEvent): number;
+}
+
+declare module 'tui-code-snippet/domEvent/getMousePosition' {
+  export default function getMousePosition(
+    event: MouseEvent,
+    relativeElement?: HTMLElement | null
+  ): number[];
+}
+
+declare module 'tui-code-snippet/domEvent/getTarget' {
+  export default function getTarget(event: Event): HTMLElement;
 }
 
 // customEvents

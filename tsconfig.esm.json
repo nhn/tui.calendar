@@ -19,7 +19,7 @@
       }
     ],
     "typeRoots": ["types"],
-    "types": ["node", "webpack-env"],
+    "types": ["webpack-env"],
     "listEmittedFiles": true
   },
   "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"],

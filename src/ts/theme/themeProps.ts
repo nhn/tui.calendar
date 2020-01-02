@@ -69,9 +69,9 @@
     'week.today.color': '#333',
     'week.pastDay.color': '#bbb',
 
-    // week vertical panel 'vpanel'
-    'week.vpanelSplitter.border': '1px solid #e5e5e5',
-    'week.vpanelSplitter.height': '3px',
+    // panel resizer
+    'week.panelResizer.border': '1px solid #e5e5e5',
+    'week.panelResizer.height': '3px',
 
     // week daygrid 'daygrid'
     'week.daygrid.borderRight': '1px solid #e5e5e5',
@@ -189,9 +189,9 @@ export const defaultProps = {
   'week.today.color': '#333',
   'week.pastDay.color': '#bbb',
 
-  // week vertical panel 'vpanel'
-  'week.vpanelSplitter.border': '1px solid #e5e5e5',
-  'week.vpanelSplitter.height': '3px',
+  // panel resizer
+  'week.panelResizer.border': '1px solid #e5e5e5',
+  'week.panelResizer.height': '3px',
 
   // week daygrid 'daygrid'
   'week.daygrid.borderRight': '1px solid #e5e5e5',

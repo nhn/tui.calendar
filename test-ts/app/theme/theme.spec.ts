@@ -85,7 +85,7 @@ describe('Theme', function() {
   });
 
   it('can check  all predefined key of the given custom theme', function() {
-    const customTheme = fixture.load('theme-dooray.json');
+    const customTheme = fixture.load('theme-dooray v2.json');
     const keys = Object.keys(customTheme) as ThemePropKeys[];
 
     theme = new Theme(customTheme);
@@ -96,7 +96,7 @@ describe('Theme', function() {
   });
 
   it('can clear all styles and set another styles', function() {
-    const customTheme = fixture.load('theme-dooray.json');
+    const customTheme = fixture.load('theme-dooray v2.json');
     let keys = Object.keys(preset) as ThemePropKeys[];
     theme.clear();
 

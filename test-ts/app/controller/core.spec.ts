@@ -53,7 +53,11 @@ describe('Base.Core', function() {
 
     beforeEach(function() {
       /* eslint-disable no-undefined */
-      test = [[1, 1, 1], [1, undefined, 3], [4, undefined, undefined]];
+      test = [
+        [1, 1, 1],
+        [1, undefined, 3],
+        [4, undefined, undefined]
+      ];
     });
 
     it('return -1 when column not exist.', function() {

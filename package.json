@@ -99,7 +99,7 @@
     "tslint": "^5.20.0",
     "ttypescript": "^1.5.7",
     "tui-jsdoc-template": "^1.2.2",
-    "tui-release-notes": "git+https://github.com/nhn/tui.release-notes.git",
+    "tui-release-notes": "git+https://github.com/nhn/toast-ui.release-notes.git#v1.0.1",
     "typescript": "^3.6.3",
     "typescript-transform-paths": "^1.1.10",
     "url-loader": "^2.1.0",
@@ -127,7 +127,7 @@
     "build:esm": "ttsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
     "build": "rm -rf dist && npm run build:dev && npm run build:prod && npm run build:dev:es6 && npm run build:prod:es6 && npm run build:esm",
     "analyze": "NODE_ENV=production webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "DEV_SERVER=true start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
