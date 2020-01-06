@@ -21,7 +21,7 @@ const BANNER = [
   '@author ' + pkg.author,
   '@license ' + pkg.license
 ].join('\n');
-const CSS_PREFIX = 'tui-full-calendar-';
+const CSS_PREFIX = 'tui-calendar-';
 
 module.exports = {
   entry: ['./src/sass/index.scss', './src/ts/index.ts'],

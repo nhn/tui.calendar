@@ -3,7 +3,7 @@
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
-export const CSS_PREFIX = 'tui-full-calendar-';
+export const CSS_PREFIX = 'tui-calendar-';
 const weekdayGetViewID = new RegExp(`^${CSS_PREFIX}weekday[\\s]tui-view-(\\d+)`);
 const timeGetViewID = new RegExp(`^${CSS_PREFIX}time-date[\\s]tui-view-(\\d+)`);
 const viewMatchMap = {

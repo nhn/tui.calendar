@@ -39,7 +39,11 @@ describe('Base.Week', function() {
     let supplied: Array<number[]>;
 
     beforeEach(function() {
-      supplied = [[2, 5], [8, 11], [14, 17]];
+      supplied = [
+        [2, 5],
+        [8, 11],
+        [14, 17]
+      ];
     });
 
     it('return false when supplied empty array', function() {
@@ -78,7 +82,12 @@ describe('Base.Week', function() {
     beforeEach(function() {
       supplied = [[getTime(1, 2), getTime(1, 2)], [getTime(4, 5), getTime(5, 6)], [getTime(7, 8)]];
 
-      expected = [[[1, 2 + SCHEDULE_MIN_DURATION], [5, 6 + SCHEDULE_MIN_DURATION]]];
+      expected = [
+        [
+          [1, 2 + SCHEDULE_MIN_DURATION],
+          [5, 6 + SCHEDULE_MIN_DURATION]
+        ]
+      ];
     });
 
     it('get rowmap properly.', function() {
