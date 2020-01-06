@@ -135,15 +135,15 @@ function getLimitedPanelSize(panel: PanelInfo) {
   return panelSize;
 }
 
-function getNumberType(number: number | null) {
+function getNumberValue(number: number | null) {
   return number || 0;
 }
 
 function getRemainingLength(direction: Direction, remainingLength: number, panelSize: PanelSize) {
-  const height = getNumberType(panelSize.height);
-  const width = getNumberType(panelSize.width);
-  const resizerHeight = getNumberType(panelSize.resizerHeight);
-  const resizerWidth = getNumberType(panelSize.resizerWidth);
+  const height = getNumberValue(panelSize.height);
+  const width = getNumberValue(panelSize.width);
+  const resizerHeight = getNumberValue(panelSize.resizerHeight);
+  const resizerWidth = getNumberValue(panelSize.resizerWidth);
 
   if (direction === Direction.COLUMN) {
     remainingLength -= height + resizerHeight;

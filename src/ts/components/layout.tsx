@@ -74,7 +74,7 @@ export class Layout extends Component<Props> {
 
   updatePanels(isResizeMode = false) {
     this.setState({
-      panels: this.layoutPanels(isResizeMode)
+      panels: this.getLayoutPanels(isResizeMode)
     });
   }
 
@@ -95,7 +95,7 @@ export class Layout extends Component<Props> {
     );
   }
 
-  layoutPanels(isResizeMode = false) {
+  getLayoutPanels(isResizeMode = false) {
     const { direction } = this.props;
     const panelInfoList = this.getPanelInfoList(isResizeMode);
     const sizeByProps = {

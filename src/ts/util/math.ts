@@ -11,8 +11,7 @@
  * @returns {number} limited value
  */
 export function limit(value: number, minArr: number[], maxArr: number[]) {
-  let v = Math.max(...[value].concat(minArr));
-  v = Math.min(...[v].concat(maxArr));
+  const v = Math.max(...[value].concat(minArr));
 
-  return v;
+  return Math.min(...[v].concat(maxArr));
 }

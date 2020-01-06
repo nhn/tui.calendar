@@ -199,9 +199,7 @@ export class Draggable extends Component<Props, State> {
   makeDragElement(child: ComponentChild) {
     const { onMouseDown } = this.handlers;
     if (isValidElement(child)) {
-      return cloneElement(child, {
-        onMouseDown
-      });
+      return cloneElement(child, { onMouseDown });
     }
 
     if (!child) {
@@ -237,7 +235,7 @@ export class Draggable extends Component<Props, State> {
     return (
       <Fragment>
         {cloned}
-        {dragElement ? dragElement : null}
+        {dragElement || null}
       </Fragment>
     );
   }
