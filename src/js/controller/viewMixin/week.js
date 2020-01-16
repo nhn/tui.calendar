@@ -215,13 +215,13 @@ var Week = {
     _makeGetViewModelFuncForTimeView: function(hourStart, hourEnd) {
         if (hourStart === 0 && hourEnd === 24) {
             return function(collection) {
-                return collection.sort(array.compare.schedule.asc);
+                return collection.sort(array.compare.schedule.travelScheduleAsc);
             };
         }
 
         return function(collection) {
             return collection.find(Week._makeHourRangeFilter(hourStart, hourEnd))
-                .sort(array.compare.schedule.asc);
+                .sort(array.compare.schedule.travelScheduleAsc);
         };
     },
 

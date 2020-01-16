@@ -4,8 +4,11 @@
  */
 'use strict';
 
+var TZDate = require('./timezone').Date;
 var util = require('tui-code-snippet');
 var datetime = require('../common/datetime');
+var model = require('../common/model');
+var getMaxTravelTime = model.getMaxTravelTime;
 
 /**
  * A module for sorting array.
@@ -219,7 +222,7 @@ function stringDESCIgnoreCase(_a, _b) {
 
     return 0;
 }
-
+/* eslint-disable*/
 /**
  * Compare schedule models for sort.
  *
@@ -262,11 +265,56 @@ function scheduleASC(a, b) {
     return util.stamp(modelA) - util.stamp(modelB);
 }
 
+function travelScheduleAsc(a, b) {
+    var durationA, durationB;
+    var allDayCompare, startsCompare;
+    var modelA = a.valueOf();
+    var modelB = b.valueOf();
+    var aTravelTime;
+    var bTravelTime;
+    var aGoingDuration;
+    var bGoingDuration;
+    var renderedStartA;
+    var renderedStartB;
+
+    allDayCompare = booleanASC(modelA.isAllDay || a.hasMultiDates, modelB.isAllDay || b.hasMultiDates);
+
+    if (allDayCompare) {
+        return allDayCompare;
+    }
+
+    aTravelTime = getMaxTravelTime(a);
+    bTravelTime = getMaxTravelTime(b);
+    aGoingDuration = datetime.millisecondsFrom('minutes', aTravelTime.maxGoingDuration);
+    bGoingDuration = datetime.millisecondsFrom('minutes', bTravelTime.maxGoingDuration);
+    renderedStartA = new TZDate(a.getStarts().getTime() - aGoingDuration);
+    renderedStartB = new TZDate(b.getStarts().getTime() - bGoingDuration);
+
+    startsCompare = datetime.compare(renderedStartA, renderedStartB);
+
+    if (startsCompare) {
+        return startsCompare;
+    }
+
+    durationA = a.duration();
+    durationB = b.duration();
+
+    if (durationA < durationB) {
+        return 1;
+    }
+    if (durationA > durationB) {
+        return -1;
+    }
+
+    return util.stamp(modelA) - util.stamp(modelB);
+}
+
 module.exports = {
     bsearch: bsearch,
     compare: {
         schedule: {
-            asc: scheduleASC
+            asc: scheduleASC,
+            travelScheduleAsc: travelScheduleAsc
         },
         bool: {
             asc: booleanASC,
