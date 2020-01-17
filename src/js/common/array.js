@@ -235,51 +235,90 @@ function stringDESCIgnoreCase(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function scheduleASC(a, b) {
-    var durationA, durationB;
-    var allDayCompare, startsCompare;
+    var allDayCompare, startsCompare, durationCompare;
     var modelA = a.valueOf();
     var modelB = b.valueOf();
-    var aTravelTime;
-    var bTravelTime;
-    var aGoingDuration;
-    var bGoingDuration;
-    var renderedStartA;
-    var renderedStartB;
 
-    allDayCompare = booleanASC(modelA.isAllDay || a.hasMultiDates, modelB.isAllDay || b.hasMultiDates);
+    allDayCompare = _getAllDayCompare(a, b);
 
     if (allDayCompare) {
         return allDayCompare;
     }
 
-    aTravelTime = getMaxTravelTime(a);
-    bTravelTime = getMaxTravelTime(b);
-    aGoingDuration = datetime.millisecondsFrom('minutes', aTravelTime.maxGoingDuration);
-    bGoingDuration = datetime.millisecondsFrom('minutes', bTravelTime.maxGoingDuration);
-    renderedStartA = new TZDate(a.getStarts().getTime() - aGoingDuration);
-    renderedStartB = new TZDate(b.getStarts().getTime() - bGoingDuration);
-
-    startsCompare = datetime.compare(renderedStartA, renderedStartB);
+    startsCompare = _getStartCompare(a, b);
 
     if (startsCompare) {
         return startsCompare;
     }
 
-    durationA = a.duration();
-    durationB = b.duration();
+    durationCompare = _getDurationCompare(a, b);
 
-    if (durationA < durationB) {
-        return 1;
-    }
-    if (durationA > durationB) {
-        return -1;
+    if (durationCompare) {
+        return durationCompare;
     }
 
     return util.stamp(modelA) - util.stamp(modelB);
 }
 
-function sortByDuplicate(arr) {
-    var clone = arr.slice(0);
+/**
+ * Compare events in multiple dates or all-day events
+ *
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
+ * @returns {number} Result of comparison.
+ */
+function _getAllDayCompare(a, b) {
+    return booleanASC(a.valueOf().isAllDay || a.hasMultiDates, b.valueOf().isAllDay || b.hasMultiDates);
+}
+
+/**
+ * Calculate start time, including the going duration of travel time
+ *
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
+ * @returns {number} Result of comparison.
+ */
+function _getStartCompare(a, b) {
+    var aTravelTime = getMaxTravelTime(a);
+    var bTravelTime = getMaxTravelTime(b);
+    var aGoingDuration = datetime.millisecondsFrom('minutes', aTravelTime.maxGoingDuration);
+    var bGoingDuration = datetime.millisecondsFrom('minutes', bTravelTime.maxGoingDuration);
+    var renderedStartA = new TZDate(a.getStarts().getTime() - aGoingDuration);
+    var renderedStartB = new TZDate(b.getStarts().getTime() - bGoingDuration);
+
+    return datetime.compare(renderedStartA, renderedStartB);
+}
+
+/**
+ * Compare time during start-end of schedule
+ *
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
+ * @returns {number} Result of comparison.
+ */
+function _getDurationCompare(a, b) {
+    var durationA = a.duration();
+    var durationB = b.duration();
+
+    if (durationA < durationB) {
+        return 1;
+    }
+
+    if (durationA > durationB) {
+        return -1;
+    }
+
+    return 0;
+}
+
+/**
+ * Sort elements in duplicate arrays sequentially
+ *
+ * @param {Schedule|ScheduleViewModel} array The scheduleViewModel instance.
+ * @returns {Schedule|ScheduleViewModel[]} Sorted array
+ */
+function sortByDuplicate(array) {
+    var clone = array.slice(0);
     var newArr = [];
     var equal = [];
     var el;
@@ -300,18 +339,38 @@ function sortByDuplicate(arr) {
     return newArr;
 }
 
+/**
+ * Returns a callback function that compares the viewModel's ID with the input model's ID.
+ *
+ * @param {Schedule|ScheduleViewModel} vm The scheduleViewModel instance.
+ * @returns {function} Callback function
+ */
 function _isEqualVM(vm) {
     return function(value) {
         return vm.model.id === value.model.id;
     };
 }
 
+/**
+ * Filter duplicate elements in arrays except the first
+ *
+ * @param {Schedule|ScheduleViewModel[]} array The List of ScheduleViewModel(or Schedule)
+ * @param {function} condition Callback function to check filtering condition
+ * @returns {Schedule|ScheduleViewModel[]} Result of filtered
+ */
 function _duplicates(array, condition) {
     return array.slice(1, array.length).filter(condition);
 }
 
-function _remove(arr, condition) {
-    return arr.filter(function(el) {
+/**
+ * Delete element matching condition from array
+ *
+ * @param {Schedule|ScheduleViewModel[]} array The List of ScheduleViewModel(or Schedule)
+ * @param {function} condition Callback function to check deleting condition
+ * @returns {function} Callback function
+ */
+function _remove(array, condition) {
+    return array.filter(function(el) {
         return !condition(el);
     });
 }
