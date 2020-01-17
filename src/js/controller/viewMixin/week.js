@@ -191,6 +191,7 @@ var Week = {
             if (duplicateScheduleLayout) {
                 duplicateCollections = self.Core.groupByDuplicatedItem(collection);
                 duplicateGroups = self.Core.filterDuplicatedViewModel(duplicateCollections, defaultCalendarId);
+                viewModels = array.sortByDuplicate(viewModels);
             }
 
             collisionGroups = self.Core.getCollisionGroup(viewModels, duplicateGroups);

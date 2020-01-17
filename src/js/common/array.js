@@ -268,7 +268,7 @@ function scheduleASC(a, b) {
  * Compare schedule models included a travel time for sort.
  *
  * 1. all day schedule first.
- * 2. early start.
+ * 2. early start included a travel time.
  * 3. longest duration.
  * 4. early created.
  * @param {Schedule|ScheduleViewModel} a The object schedule instance.
@@ -319,6 +319,44 @@ function travelScheduleAsc(a, b) {
     return util.stamp(modelA) - util.stamp(modelB);
 }
 
+function sortByDuplicate(arr) {
+    var clone = arr.slice(0);
+    var newArr = [];
+    var equal = [];
+    var el;
+
+    while (clone.length) {
+        el = clone[0];
+
+        newArr.push(el);
+        equal = _duplicates(clone, _isEqualVM(el));
+
+        if (equal.length) {
+            newArr = newArr.concat(equal);
+        }
+
+        clone = _remove(clone, _isEqualVM(el));
+    }
+
+    return newArr;
+}
+
+function _isEqualVM(vm) {
+    return function(value) {
+        return vm.model.id === value.model.id;
+    };
+}
+
+function _duplicates(array, condition) {
+    return array.slice(1, array.length).filter(condition);
+}
+
+function _remove(arr, condition) {
+    return arr.filter(function(el) {
+        return !condition(el);
+    });
+}
+
 module.exports = {
     bsearch: bsearch,
     compare: {
@@ -340,5 +378,6 @@ module.exports = {
             ascIgnoreCase: stringASCIgnoreCase,
             descIgnoreCase: stringDESCIgnoreCase
         }
-    }
+    },
+    sortByDuplicate: sortByDuplicate
 };
