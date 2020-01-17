@@ -224,47 +224,6 @@ function stringDESCIgnoreCase(_a, _b) {
 }
 
 /**
- * Compare schedule models for sort.
- *
- * 1. all day schedule first.
- * 2. early start.
- * 3. longest duration.
- * 4. early created.
- * @param {Schedule|ScheduleViewModel} a The object schedule instance.
- * @param {Schedule|ScheduleViewModel} b The object schedule instance.
- * @returns {number} Result of comparison.
- */
-function scheduleASC(a, b) {
-    var durationA, durationB;
-    var allDayCompare, startsCompare;
-    var modelA = a.valueOf();
-    var modelB = b.valueOf();
-
-    allDayCompare = booleanASC(modelA.isAllDay || a.hasMultiDates, modelB.isAllDay || b.hasMultiDates);
-
-    if (allDayCompare) {
-        return allDayCompare;
-    }
-
-    startsCompare = datetime.compare(a.getStarts(), b.getStarts());
-
-    if (startsCompare) {
-        return startsCompare;
-    }
-
-    durationA = a.duration();
-    durationB = b.duration();
-
-    if (durationA < durationB) {
-        return 1;
-    }
-    if (durationA > durationB) {
-        return -1;
-    }
-
-    return util.stamp(modelA) - util.stamp(modelB);
-}
-/**
  * Compare schedule models included a travel time for sort.
  *
  * 1. all day schedule first.
@@ -275,7 +234,7 @@ function scheduleASC(a, b) {
  * @param {Schedule|ScheduleViewModel} b The object schedule instance.
  * @returns {number} Result of comparison.
  */
-function travelScheduleAsc(a, b) {
+function scheduleASC(a, b) {
     var durationA, durationB;
     var allDayCompare, startsCompare;
     var modelA = a.valueOf();
@@ -361,8 +320,7 @@ module.exports = {
     bsearch: bsearch,
     compare: {
         schedule: {
-            asc: scheduleASC,
-            travelScheduleAsc: travelScheduleAsc
+            asc: scheduleASC
         },
         bool: {
             asc: booleanASC,
