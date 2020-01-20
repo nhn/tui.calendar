@@ -4,8 +4,11 @@
  */
 'use strict';
 
+var TZDate = require('./timezone').Date;
 var util = require('tui-code-snippet');
 var datetime = require('../common/datetime');
+var model = require('../common/model');
+var getMaxTravelTime = model.getMaxTravelTime;
 
 /**
  * A module for sorting array.
@@ -221,10 +224,10 @@ function stringDESCIgnoreCase(_a, _b) {
 }
 
 /**
- * Compare schedule models for sort.
+ * Compare schedule models included a travel time for sort.
  *
  * 1. all day schedule first.
- * 2. early start.
+ * 2. early start included a travel time.
  * 3. longest duration.
  * 4. early created.
  * @param {Schedule|ScheduleViewModel} a The object schedule instance.
@@ -232,34 +235,80 @@ function stringDESCIgnoreCase(_a, _b) {
  * @returns {number} Result of comparison.
  */
 function scheduleASC(a, b) {
-    var durationA, durationB;
-    var allDayCompare, startsCompare;
+    var allDayCompare, startsCompare, durationCompare;
     var modelA = a.valueOf();
     var modelB = b.valueOf();
 
-    allDayCompare = booleanASC(modelA.isAllDay || a.hasMultiDates, modelB.isAllDay || b.hasMultiDates);
+    allDayCompare = _getAllDayCompare(a, b);
 
     if (allDayCompare) {
         return allDayCompare;
     }
 
-    startsCompare = datetime.compare(a.getStarts(), b.getStarts());
+    startsCompare = _getStartCompare(a, b);
 
     if (startsCompare) {
         return startsCompare;
     }
 
-    durationA = a.duration();
-    durationB = b.duration();
+    durationCompare = _getDurationCompare(a, b);
+
+    if (durationCompare) {
+        return durationCompare;
+    }
+
+    return util.stamp(modelA) - util.stamp(modelB);
+}
+
+/**
+ * Compare events in multiple dates or all-day events
+ *
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
+ * @returns {number} Result of comparison.
+ */
+function _getAllDayCompare(a, b) {
+    return booleanASC(a.valueOf().isAllDay || a.hasMultiDates, b.valueOf().isAllDay || b.hasMultiDates);
+}
+
+/**
+ * Calculate start time, including the going duration of travel time
+ *
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
+ * @returns {number} Result of comparison.
+ */
+function _getStartCompare(a, b) {
+    var aTravelTime = getMaxTravelTime(a);
+    var bTravelTime = getMaxTravelTime(b);
+    var aGoingDuration = datetime.millisecondsFrom('minutes', aTravelTime.maxGoingDuration);
+    var bGoingDuration = datetime.millisecondsFrom('minutes', bTravelTime.maxGoingDuration);
+    var renderedStartA = new TZDate(a.getStarts().getTime() - aGoingDuration);
+    var renderedStartB = new TZDate(b.getStarts().getTime() - bGoingDuration);
+
+    return datetime.compare(renderedStartA, renderedStartB);
+}
+
+/**
+ * Compare time during start-end of schedule
+ *
+ * @param {Schedule|ScheduleViewModel} a The object schedule instance.
+ * @param {Schedule|ScheduleViewModel} b The object schedule instance.
+ * @returns {number} Result of comparison.
+ */
+function _getDurationCompare(a, b) {
+    var durationA = a.duration();
+    var durationB = b.duration();
 
     if (durationA < durationB) {
         return 1;
     }
+
     if (durationA > durationB) {
         return -1;
     }
 
-    return util.stamp(modelA) - util.stamp(modelB);
+    return 0;
 }
 
 module.exports = {
