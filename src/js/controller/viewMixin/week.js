@@ -191,7 +191,7 @@ var Week = {
             if (duplicateScheduleLayout) {
                 duplicateCollections = self.Core.groupByDuplicatedItem(collection);
                 duplicateGroups = self.Core.filterDuplicatedViewModel(duplicateCollections, defaultCalendarId);
-                viewModels = array.sortByDuplicate(viewModels);
+                viewModels = self.Week.sortByDuplicate(viewModels);
             }
 
             collisionGroups = self.Core.getCollisionGroup(viewModels, duplicateGroups);
@@ -404,7 +404,71 @@ var Week = {
                 return row;
             }, this);
         }, this);
+    },
+
+    /**
+     * Sort elements in duplicate arrays sequentially
+     *
+     * @param {Schedule|ScheduleViewModel} array The scheduleViewModel instance.
+     * @returns {Schedule|ScheduleViewModel[]} Sorted array
+     */
+    sortByDuplicate: function(array) {
+        var clone = array.slice(0);
+        var newArr = [];
+        var equal = [];
+        var el;
+
+        while (clone.length) {
+            el = clone[0];
+
+            newArr.push(el);
+            equal = _duplicates(clone, _isEqualVM(el));
+
+            if (equal.length) {
+                newArr = newArr.concat(equal);
+            }
+
+            clone = _remove(clone, _isEqualVM(el));
+        }
+
+        return newArr;
     }
 };
+
+/**
+* Returns a callback function that compares the viewModel's ID with the input model's ID.
+*
+* @param {Schedule|ScheduleViewModel} vm The scheduleViewModel instance.
+* @returns {function} Callback function
+*/
+function _isEqualVM(vm) {
+    return function(value) {
+        return vm.model.id === value.model.id;
+    };
+}
+
+/**
+* Filter duplicate elements in arrays except the first
+*
+* @param {Schedule|ScheduleViewModel[]} array The List of ScheduleViewModel(or Schedule)
+* @param {function} condition Callback function to check filtering condition
+* @returns {Schedule|ScheduleViewModel[]} Result of filtered
+*/
+function _duplicates(array, condition) {
+    return array.slice(1).filter(condition);
+}
+
+/**
+* Delete element matching condition from array
+*
+* @param {Schedule|ScheduleViewModel[]} array The List of ScheduleViewModel(or Schedule)
+* @param {function} condition Callback function to check deleting condition
+* @returns {function} Callback function
+*/
+function _remove(array, condition) {
+    return array.filter(function(el) {
+        return !condition(el);
+    });
+}
 
 module.exports = Week;
