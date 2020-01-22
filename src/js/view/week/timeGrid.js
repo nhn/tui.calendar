@@ -43,8 +43,9 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     var hoursRange = util.range(0, 24);
     var nowAroundHours = null;
     var nowHours, nowHoursIndex;
+    var isNegativeZero = 1 / -Infinity === shiftByOffset;
 
-    if (shiftByOffset < 0 && shiftMinutes > 0) {
+    if ((shiftByOffset < 0 || isNegativeZero) && shiftMinutes > 0) {
         shiftByOffset -= 1;
     }
 
