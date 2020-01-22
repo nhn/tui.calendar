@@ -687,11 +687,7 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [{
-            timezoneOffset: 0,
-            displayLabel: '',
-            tooltip: ''
-        }],
+        timezones: options.timezones || [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
@@ -703,7 +699,7 @@ Calendar.prototype._initialize = function(options) {
 
     this._layout.controller = controller;
 
-    this._setAdditionalInternalOptions();
+    this._setAdditionalInternalOptions(options);
 
     this.changeView(viewName, true);
 };
@@ -713,18 +709,19 @@ Calendar.prototype._initialize = function(options) {
  * 1. Register to the template handlebar
  * 2. Update the calendar list and set the color of the calendar.
  * 3. Change the primary timezone offset of the timezones.
+ * @param {Options} options - calendar options
  * @private
  */
-Calendar.prototype._setAdditionalInternalOptions = function() {
-    var timezones = this._options.timezones || [];
+Calendar.prototype._setAdditionalInternalOptions = function(options) {
+    var timezones = options.timezones || [];
 
-    util.forEach(this._options.template, function(func, name) {
+    util.forEach(options.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
 
-    util.forEach(this._options.calendars || [], function(calendar) {
+    util.forEach(options.calendars || [], function(calendar) {
         this.setCalendarColor(calendar.id, calendar, true);
     }, this);
 
@@ -1714,7 +1711,7 @@ Calendar.prototype.setOptions = function(options, silent) {
         }
     }, this);
 
-    this._setAdditionalInternalOptions();
+    this._setAdditionalInternalOptions(options);
 
     if (!silent) {
         this.changeView(this._viewName, true);
