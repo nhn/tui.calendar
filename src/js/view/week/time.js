@@ -263,7 +263,8 @@ Time.prototype.render = function(ymd, matrices, containerHeight) {
     this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
         matrices: matrices,
-        styles: this._getStyles(this.theme)
+        styles: this._getStyles(this.theme),
+        isReadOnly: this.options.isReadOnly
     });
 };
 
