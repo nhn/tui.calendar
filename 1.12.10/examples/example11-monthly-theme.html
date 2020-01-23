@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>TOAST UI Calendar Monthly Theme DEMO</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+  <link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css">
+  <link rel="stylesheet" type="text/css" href="./css/default.css">
+  <link rel="stylesheet" type="text/css" href="./css/icons.css">
+</head>
+<body>
+  <div class="code-html">
+    <div id="menu">
+      <span id="menu-navi">
+        <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+          <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+          <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+        </button>
+      </span>
+      <span id="renderRange" class="render-range"></span>
+    </div>
+
+    <div id="calendar"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+  <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
+  <script src="../dist/tui-calendar.js"></script>
+  <script src="./js/data/calendars.js"></script>
+  <script src="./js/data/schedules.js"></script>
+  <script type="text/javascript" class="code-js">
+  var MONTHLY_CUSTOM_THEME = {
+    // month header 'dayname'
+    'month.dayname.height': '42px',
+    'month.dayname.borderLeft': 'none',
+    'month.dayname.paddingLeft': '8px',
+    'month.dayname.paddingRight': '0',
+    'month.dayname.fontSize': '13px',
+    'month.dayname.backgroundColor': 'inherit',
+    'month.dayname.fontWeight': 'normal',
+    'month.dayname.textAlign': 'left',
+
+    // month day grid cell 'day'
+    'month.holidayExceptThisMonth.color': '#f3acac',
+    'month.dayExceptThisMonth.color': '#bbb',
+    'month.weekend.backgroundColor': '#fafafa',
+    'month.day.fontSize': '16px',
+
+    // month schedule style
+    'month.schedule.borderRadius': '5px',
+    'month.schedule.height': '18px',
+    'month.schedule.marginTop': '2px',
+    'month.schedule.marginLeft': '10px',
+    'month.schedule.marginRight': '10px',
+
+    // month more view
+    'month.moreView.boxShadow': 'none',
+    'month.moreView.paddingBottom': '0',
+    'month.moreView.border': '1px solid #9a935a',
+    'month.moreView.backgroundColor': '#f9f3c6',
+    'month.moreViewTitle.height': '28px',
+    'month.moreViewTitle.marginBottom': '0',
+    'month.moreViewTitle.backgroundColor': '#f4f4f4',
+    'month.moreViewTitle.borderBottom': '1px solid #ddd',
+    'month.moreViewTitle.padding': '0 10px',
+    'month.moreViewList.padding': '10px'
+  };
+
+  var cal = new tui.Calendar('#calendar', {
+    defaultView: 'month',
+    theme: MONTHLY_CUSTOM_THEME // set theme
+  });
+
+  // or
+  // cal.setTheme(MONTHLY_CUSTOM_THEME);
+  </script>
+  <script src="./js/default.js"></script>
+</body>
+</html>
