@@ -656,8 +656,7 @@ Calendar.prototype.destroy = function() {
  */
 Calendar.prototype._initialize = function(options) {
     var controller = this._controller,
-        viewName = this._viewName,
-        timezones = options.timezones || [];
+        viewName = this._viewName;
 
     this._options = util.extend({
         defaultView: viewName,
@@ -667,34 +666,32 @@ Calendar.prototype._initialize = function(options) {
             allday: null,
             time: null
         }, util.pick(options, 'template') || {}),
-        week: util.extend({}, util.pick(options, 'week') || {}),
-        month: util.extend({}, util.pick(options, 'month') || {}),
+        week: util.extend(
+            {
+                startDayOfWeek: 0,
+                workweek: false
+            },
+            util.pick(options, 'week') || {}
+        ),
+        month: util.extend(
+            {
+                startDayOfWeek: 0,
+                workweek: false,
+                scheduleFilter: function(schedule) {
+                    return Boolean(schedule.isVisible) &&
+                  (schedule.category === 'allday' || schedule.category === 'time');
+                }
+            },
+            util.pick(options, 'month') || {}
+        ),
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [{
-            timezoneOffset: 0,
-            displayLabel: '',
-            tooltip: ''
-        }],
+        timezones: options.timezones || [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
     }, options);
-
-    this._options.week = util.extend({
-        startDayOfWeek: 0,
-        workweek: false
-    }, util.pick(this._options, 'week') || {});
-
-    this._options.month = util.extend({
-        startDayOfWeek: 0,
-        workweek: false,
-        scheduleFilter: function(schedule) {
-            return Boolean(schedule.isVisible) &&
-                (schedule.category === 'allday' || schedule.category === 'time');
-        }
-    }, util.pick(options, 'month') || {});
 
     if (this._options.isReadOnly) {
         this._options.useCreationPopup = false;
@@ -702,22 +699,35 @@ Calendar.prototype._initialize = function(options) {
 
     this._layout.controller = controller;
 
-    util.forEach(this._options.template, function(func, name) {
+    this._setAdditionalInternalOptions(options);
+
+    this.changeView(viewName, true);
+};
+
+/**
+ * Set additional internal options
+ * 1. Register to the template handlebar
+ * 2. Update the calendar list and set the color of the calendar.
+ * 3. Change the primary timezone offset of the timezones.
+ * @param {Options} options - calendar options
+ * @private
+ */
+Calendar.prototype._setAdditionalInternalOptions = function(options) {
+    var timezones = options.timezones || [];
+
+    util.forEach(options.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
 
-    util.forEach(this._options.calendars || [], function(calendar) {
+    util.forEach(options.calendars || [], function(calendar) {
         this.setCalendarColor(calendar.id, calendar, true);
     }, this);
 
-    // set by primary timezone
     if (timezones.length) {
         timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
     }
-
-    this.changeView(viewName, true);
 };
 
 /**********
@@ -1700,6 +1710,8 @@ Calendar.prototype.setOptions = function(options, silent) {
             this._options[name] = value;
         }
     }, this);
+
+    this._setAdditionalInternalOptions(options);
 
     if (!silent) {
         this.changeView(this._viewName, true);

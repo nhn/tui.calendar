@@ -53,7 +53,7 @@
                 {{/if}};">{{{comingDuration-tmpl model}}}</div>
             {{/if}}
             </div>
-            {{#unless (or croppedEnd model.isReadOnly)}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x" style="margin-left: {{@root.styles.paddingLeft}};">&nbsp;</div>{{/unless}}
+            {{#unless (or croppedEnd @root.isReadOnly model.isReadOnly)}}<div class="{{CSS_PREFIX}}time-resize-handle handle-x" style="margin-left: {{@root.styles.paddingLeft}};">&nbsp;</div>{{/unless}}
         </div>
         {{/if ~}}
         {{/each}}
