@@ -151,9 +151,12 @@ MonthGuide.prototype._getGuideElement = function(y) {
  * @returns {number[]} coordinate (x, y)
  */
 MonthGuide.prototype._getCoordByDate = function(date) {
-    var weeks = this.weeks,
-        days = this.days,
-        getIdxFromDiff = function(d1, d2) {
+    var WEEKEND_DAYS = 2;
+    var weeks = this.weeks;
+    var isWorkWeek = this.view.options.workweek;
+    var days = isWorkWeek ? this.days + WEEKEND_DAYS : this.days;
+
+    var getIdxFromDiff = function(d1, d2) {
             return mfloor(datetime.millisecondsTo('day', mabs(d2 - d1)));
         },
         monthStart = datetime.start(weeks[0].options.renderStartDate),
