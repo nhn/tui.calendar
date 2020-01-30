@@ -443,7 +443,7 @@ var mmin = Math.min;
  */
 
 /**
- * {@link https://nhn.github.io/tui.code-snippet/latest/tui.util.CustomEvents.html CustomEvents} document at {@link https://github.com/nhn/tui.code-snippet tui-code-snippet}
+ * {@link https://nhn.github.io/tui.code-snippet/latest/CustomEvents CustomEvents} document at {@link https://github.com/nhn/tui.code-snippet tui-code-snippet}
  * @typedef {class} CustomEvents
  */
 
@@ -666,24 +666,8 @@ Calendar.prototype._initialize = function(options) {
             allday: null,
             time: null
         }, util.pick(options, 'template') || {}),
-        week: util.extend(
-            {
-                startDayOfWeek: 0,
-                workweek: false
-            },
-            util.pick(options, 'week') || {}
-        ),
-        month: util.extend(
-            {
-                startDayOfWeek: 0,
-                workweek: false,
-                scheduleFilter: function(schedule) {
-                    return Boolean(schedule.isVisible) &&
-                  (schedule.category === 'allday' || schedule.category === 'time');
-                }
-            },
-            util.pick(options, 'month') || {}
-        ),
+        week: util.extend({}, util.pick(options, 'week') || {}),
+        month: util.extend({}, util.pick(options, 'month') || {}),
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
@@ -692,6 +676,20 @@ Calendar.prototype._initialize = function(options) {
         disableClick: false,
         isReadOnly: false
     }, options);
+
+    this._options.week = util.extend({
+        startDayOfWeek: 0,
+        workweek: false
+    }, util.pick(this._options, 'week') || {});
+
+    this._options.month = util.extend({
+        startDayOfWeek: 0,
+        workweek: false,
+        scheduleFilter: function(schedule) {
+            return Boolean(schedule.isVisible) &&
+              (schedule.category === 'allday' || schedule.category === 'time');
+        }
+    }, util.pick(options, 'month') || {});
 
     if (this._options.isReadOnly) {
         this._options.useCreationPopup = false;

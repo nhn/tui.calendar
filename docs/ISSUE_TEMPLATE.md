@@ -3,8 +3,6 @@ Thank you for your contribution.
 
 When it comes to write an issue, please, use the template below.
 To use the template is mandatory for submit new issue and we won't reply the issue that without the template.
-
-And you can write template's contents in Korean also.
 -->
 
 <!-- TEMPLATE -->
