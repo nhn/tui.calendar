@@ -61,3 +61,9 @@ markup
 
 # performance tester fixtures
 perf/**/*.json
+
+# es6 module output
+dist/esm/
+
+# webpack bundle analysis file
+stats.json
