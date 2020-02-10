@@ -12,7 +12,8 @@ import {
   DateType,
   CalendarColor,
   CalendarData,
-  ViewType
+  ViewType,
+  CustomTimezone
 } from '@src/model';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
@@ -20,6 +21,9 @@ import { toStartOfDay } from '@src/time/datetime';
 import { createScheduleCollection } from '@src/controller/base';
 import { registerTemplateConfig } from '@src/template';
 import { InstanceContext } from '@src/model/context';
+import TZDate from '@src/time/date';
+import { LocalDate, DateInterface } from '@toast-ui/date';
+import isNumber from 'tui-code-snippet/type/isNumber';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
@@ -39,22 +43,27 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @type {TZDate}
    * @private
    */
-  protected _renderDate = toStartOfDay();
+  protected _renderDate: TZDate;
 
   /**
    * start and end date of weekly, monthly
    * @type {object}
    * @private
    */
-  protected _renderRange = {
-    start: toStartOfDay(),
-    end: toStartOfDay()
+  protected _renderRange: {
+    start: TZDate;
+    end: TZDate;
   };
 
   private _mainApp?: AnyComponent<any, any>;
 
   constructor(container: string | Element, option: Option = {}) {
     super();
+
+    const { timezone } = option;
+    if (timezone) {
+      this.setTimezone(timezone);
+    }
 
     this._container = isString(container) ? document.querySelector(container) : container;
     this._options = this.initOption(option);
@@ -74,6 +83,12 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       internalEvent: this._internalEvent,
       externalEvent: this._externalEvent
     };
+
+    this._renderDate = toStartOfDay();
+    this._renderRange = {
+      start: toStartOfDay(),
+      end: toStartOfDay()
+    };
   }
 
   protected abstract getComponent(): ComponentChild;
@@ -89,13 +104,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       calendars = [],
       useCreationPopup = false,
       useDetailPopup = false,
-      timezones = [
-        {
-          timezoneOffset: 0,
-          displayLabel: '',
-          tooltip: ''
-        }
-      ],
       disableDblClick = false,
       disableClick = false,
       isReadOnly = false
@@ -111,11 +119,24 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       calendars,
       useCreationPopup,
       useDetailPopup,
-      timezones,
       disableDblClick,
       disableClick,
       isReadOnly
     };
+  }
+
+  private setTimezone(timezone: CustomTimezone) {
+    const { dateConstructor = LocalDate, offset, name = '' } = timezone;
+
+    if (dateConstructor) {
+      TZDate.setDateConstructor(dateConstructor);
+    }
+
+    if (isNumber(offset)) {
+      TZDate.setTimezone(offset);
+    } else {
+      TZDate.setTimezone(name);
+    }
   }
 
   /**
@@ -144,36 +165,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    */
   private move(offset = 0) {
     console.log('move', offset);
-  }
-
-  /**
-   * Set timezone offset
-   * @param {number} offset - The offset (min)
-   * @static
-   * @deprecated
-   * @todo remove this
-   * @example
-   * var timezoneName = moment.tz.guess();
-   * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
-   */
-  static setTimezoneOffset(offset: number) {
-    console.log('setTimezoneOffset', offset);
-  }
-
-  /**
-   * Set a callback function to get timezone offset by timestamp
-   * @param {function} callback - The callback function
-   * @static
-   * @deprecated
-   * @todo remove this
-   * @example
-   * var timezoneName = moment.tz.guess();
-   * tui.Calendar.setTimezoneOffsetCallback(function(timestamp) {
-   *      return moment.tz.zone(timezoneName).utcOffset(timestamp));
-   * });
-   */
-  static setTimezoneOffsetCallback(callback: (timestamp: number) => void) {
-    console.log('setTimezoneOffsetCallback', callback);
   }
 
   /**********
@@ -365,7 +356,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * });
    */
   setDate(date: DateType) {
-    console.log('setDate', date);
+    this._renderDate = new TZDate(date);
   }
 
   /**
@@ -563,14 +554,16 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Current rendered date ({@link TZDate} for further information)
-   * @todo implement this
-   * @returns {TZDate}
+   * Current rendered date
+   * @returns {Date}
    */
-  getDate() {
-    console.log('getDate');
+  getDate(isCustomDate = false): Date | DateInterface {
+    // an argument for testing type
+    if (isCustomDate) {
+      return this._renderDate.toCustomDate();
+    }
 
-    return this._renderDate;
+    return this._renderDate.toDate();
   }
 
   /**

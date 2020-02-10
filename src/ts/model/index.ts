@@ -1,3 +1,4 @@
+import { DateConstructor } from '@toast-ui/date';
 import TZDate from '@src/time/date';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import { EventHandler } from '@src/event';
@@ -150,6 +151,7 @@ export interface WeekOption {
   workweek?: boolean;
   showTimezoneCollapseButton?: boolean;
   timezonesCollapsed?: boolean;
+  timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
 }
@@ -177,8 +179,15 @@ export interface MonthOption {
   scheduleFilter?: (schedule: ScheduleData) => boolean;
 }
 
+export interface CustomTimezone {
+  dateConstructor?: DateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
+  offset?: number; // If using YourCustomDate or MomentDate
+  name?: string; // If using YourCustomDate or MomentDate
+}
+
 export interface TimezoneConfig {
   timezoneOffset?: number;
+  timezoneName?: string;
   displayLabel?: string;
   tooltip?: string;
 }
@@ -208,9 +217,9 @@ export interface Option {
   calendars?: CalendarData[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
-  timezones?: TimezoneConfig[];
   disableDblClick?: boolean;
   disableClick?: boolean;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
+  timezone?: CustomTimezone;
 }

@@ -69,7 +69,7 @@ function setConfig(defaultConfig, server) {
     defaultConfig.coverageIstanbulReporter = {
       fixWebpackSourcePaths: true,
       dir: 'report/coverage/',
-      reports: ['html', 'text', 'cobertura'],
+      reports: ['html', 'cobertura'],
       'report-config': {
         html: {
           subdir: 'report-html/'

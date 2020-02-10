@@ -37,7 +37,9 @@
   <script type="text/javascript" src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
   <script type="text/javascript" src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
   <script type="text/javascript" src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+  <script src="../node_modules/@toast-ui/date/dist/toastui-date.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
   <script src="../dist/tui-calendar.js"></script>
   <script src="./js/data/calendars.js"></script>
@@ -45,16 +47,24 @@
   <script type="text/javascript" class="code-js">
   var cal = new tui.Calendar('#calendar', {
     defaultView: 'week', // set 'week' or 'day'
-    timezones: [         // set timezone config
-      {
-        timezoneOffset: 540,
-        tooltip: 'Seoul'
-      },
-      {
-        timezoneOffset: -420,
-        tooltip: 'Los Angeles'
-      }
-    ],
+    // change the primary timezone
+    timezone: {
+      dateConstructor: tui.Date.MomentDate.setMoment(moment),
+      name: 'US/Pacific'
+    },
+    week: {
+      // add sub timezones
+      timezones: [
+        {
+          timezoneOffset: 540,
+          tooltip: 'Seoul'
+        },
+        {
+          timezoneOffset: -420,
+          tooltip: 'Los Angeles'
+        }
+      ]
+    },
     taskView: false,
     scheduleView: ['time']
   });

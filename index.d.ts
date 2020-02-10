@@ -1,5 +1,5 @@
 // Type definitions for TOAST UI Calendar v1.12.5
-// TypeScript Version: 3.2.1
+// TypeScript Version: 3.6.3
 
 export type DateType = string | Date | TZDate;
 export type EventHandlerType = IEvents[keyof IEvents];
@@ -140,6 +140,7 @@ export interface IWeekOptions {
     workweek?: boolean;
     showTimezoneCollapseButton?: boolean;
     timezonesCollapsed?: boolean;
+    timezones?: TimezoneConfig[];
     hourStart?: number;
     hourEnd?: number;
 }
@@ -198,8 +199,15 @@ export interface ISchedule {
     state?: string;
 }
 
+export interface ICustomTimezone {
+    dateConstructor?: DateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
+    offset?: number; // If using YourCustomDate or MomentDate
+    name?: string; // If using YourCustomDate or MomentDate
+}
+
 export interface ITimezone {
     timezoneOffset?: number;
+    timezoneName?: string;
     displayLabel?: string;
     tooltip?: string;
 }
@@ -228,17 +236,14 @@ export interface IOptions {
     calendars?: ICalendarInfo[];
     useCreationPopup?: boolean;
     useDetailPopup?: boolean;
-    timezones?: ITimezone[];
     disableDblClick?: boolean;
     disableClick?: boolean;
     isReadOnly?: boolean;
     usageStatistics?: boolean;
+    timezone?: ICustomTimezone;
 }
 
 export default class Calendar {
-    public static setTimezoneOffset(offset: number): void;
-    public static setTimezoneOffsetCallback(callback: (timestamp: number) => void): void;
-
     constructor(container: Element | string, options?: IOptions);
 
     public changeView(newViewName: string, force?: boolean): void;
