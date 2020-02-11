@@ -1,4 +1,4 @@
-import { DateConstructor } from '@toast-ui/date';
+import { TuiDateConstructor } from '@toast-ui/date';
 import TZDate from '@src/time/date';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import { EventHandler } from '@src/event';
@@ -180,7 +180,7 @@ export interface MonthOption {
 }
 
 export interface CustomTimezone {
-  dateConstructor?: DateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
+  dateConstructor?: TuiDateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
   offset?: number; // If using YourCustomDate or MomentDate
   name?: string; // If using YourCustomDate or MomentDate
 }

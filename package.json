@@ -125,7 +125,6 @@
     "doc:dev": "tuidoc --dev",
     "doc": "tuidoc",
     "build": "rm -rf dist && npm run build:es5 && npm run build:es6 && npm run build:esm && node tsBannerGenerator.js",
-    "build:dev": "webpack --mode production",
     "build:es5": "webpack --mode production && webpack --mode production --minify",
     "build:es6": "TARGET=es6 webpack --mode production && TARGET=es6 webpack --mode production --minify",
     "build:esm": "ttsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
@@ -134,7 +133,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@toast-ui/date": "git+https://github.com/nhn/toast-ui.date.git#feat/setup-project",
+    "@toast-ui/date": "^0.0.1",
     "preact": "^10.0.3",
     "preact-markup": "^2.0.0",
     "preact-render-to-string": "^5.1.0",

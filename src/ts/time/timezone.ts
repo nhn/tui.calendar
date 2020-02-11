@@ -1,13 +1,13 @@
-import { DateConstructor, LocalDate, UTCDate } from '@toast-ui/date';
+import { TuiDateConstructor, LocalDate, UTCDate } from '@toast-ui/date';
 import isNumber from 'tui-code-snippet/type/isNumber';
 
-let Constructor: DateConstructor = LocalDate;
+let Constructor: TuiDateConstructor = LocalDate;
 
 function isTimezoneDisabled() {
   return Constructor === LocalDate || Constructor === UTCDate;
 }
 
-export function setDateConstructor(constructor: DateConstructor) {
+export function setDateConstructor(constructor: TuiDateConstructor) {
   Constructor = constructor;
 }
 
