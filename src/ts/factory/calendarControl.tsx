@@ -132,11 +132,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       TZDate.setDateConstructor(dateConstructor);
     }
 
-    if (isNumber(offset)) {
-      TZDate.setTimezone(offset);
-    } else {
-      TZDate.setTimezone(name);
-    }
+    TZDate.setTimezone(isNumber(offset) ? offset : name);
   }
 
   /**
@@ -557,13 +553,12 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * Current rendered date
    * @returns {Date}
    */
-  getDate(isCustomDate = false): Date | DateInterface {
-    // an argument for testing type
-    if (isCustomDate) {
-      return this._renderDate.toCustomDate();
-    }
-
+  getDate(): Date {
     return this._renderDate.toDate();
+  }
+
+  _getDateInterface(): DateInterface {
+    return this._renderDate.toCustomDate();
   }
 
   /**
