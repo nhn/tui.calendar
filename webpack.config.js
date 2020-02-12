@@ -8,33 +8,27 @@ const postcssPrefixer = require('postcss-prefixer');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const ES6 = 'es6';
-const ES5 = 'es5';
-const isMinify = process.argv.indexOf('--minify') >= 0;
-const isDevServer = process.env.DEV_SERVER === 'true';
-const target = process.env.TARGET || ES5;
-const isES6 = target === ES6;
-const tsConfigFileName = target === ES6 ? 'tsconfig.es6.json' : 'tsconfig.json';
-const JS_FILENAME = pkg.name + (isES6 ? `.${ES6}` : '') + (isMinify ? '.min' : '');
-const CSS_FILENAME = pkg.name + (isMinify ? '.min' : '');
-const BANNER = [
-  'TOAST UI Calendar',
-  '@version ' + pkg.version + ' | ' + new Date().toDateString(),
-  '@author ' + pkg.author,
-  '@license ' + pkg.license
-].join('\n');
-const CSS_PREFIX = 'tui-calendar-';
+const isProduction = mode => mode === 'production';
+const getTsConfigFileName = es6 => (es6 ? 'tsconfig.es6.json' : 'tsconfig.json');
 
-module.exports = (env, { mode = 'development' }) => {
-  const isProduction = mode === 'production';
+module.exports = (__, argv) => {
+  const { mode, es6, minify } = argv;
+  const filename = `${pkg.name}${es6 ? '.es6' : ''}${minify ? '.min' : ''}.js`;
+  const banner = [
+    'TOAST UI Calendar',
+    `@version ${pkg.version} | ${new Date().toDateString()}`,
+    `@author ${pkg.author}`,
+    `@license ${pkg.license}`
+  ].join('\n');
+
   const config = {
-    entry: ['./src/sass/index.scss', './src/ts/index.ts'],
+    entry: ['./src/ts/index.ts'],
     output: {
       library: ['tui', 'Calendar'],
       libraryTarget: 'umd',
       libraryExport: 'default',
       path: path.join(__dirname, 'dist'),
-      filename: JS_FILENAME + '.js',
+      filename,
       publicPath: '/dist'
     },
     externals: {
@@ -58,64 +52,12 @@ module.exports = (env, { mode = 'development' }) => {
       }
     },
     module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: [
-            {
-              loader: 'ts-loader',
-              options: {
-                configFile: tsConfigFileName
-              }
-            },
-            {
-              loader: 'eslint-loader',
-              options: {
-                failOnError: isProduction,
-                cache: !isProduction
-              }
-            }
-          ]
-        },
-        {
-          test: /\.s[ac]ss$/i,
-          use: [
-            isDevServer ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: [
-                  postcssPrefixer({
-                    prefix: CSS_PREFIX
-                  })
-                ]
-              }
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sassOptions: {
-                  outputStyle: 'expanded'
-                }
-              }
-            }
-          ]
-        },
-        {
-          test: /\.(gif|png|jpe?g)$/,
-          use: 'url-loader'
-        }
-      ]
+      rules: []
     },
     plugins: [
       new SafeUmdPlugin(),
-      new StyleLintPlugin(),
-      new MiniCssExtractPlugin({
-        filename: CSS_FILENAME + '.css'
-      }),
       new webpack.BannerPlugin({
-        banner: BANNER,
+        banner,
         entryOnly: true
       })
     ],
@@ -125,7 +67,13 @@ module.exports = (env, { mode = 'development' }) => {
     }
   };
 
-  if (Boolean(isMinify)) {
+  if (!es6) {
+    setConfigES5(config, argv);
+  } else {
+    addOnlyTsLoader(config, argv);
+  }
+
+  if (Boolean(minify)) {
     config.optimization = {
       minimize: true,
       minimizer: [new TerserPlugin({ extractComments: false }), new OptimizeCSSAssetsPlugin()]
@@ -142,3 +90,80 @@ module.exports = (env, { mode = 'development' }) => {
 
   return config;
 };
+
+function setConfigES5(config, argv) {
+  const { mode, minify, es6 } = argv;
+  const isProductionMode = isProduction(mode);
+  const prefix = 'tui-calendar-';
+  const filename = `${pkg.name}${minify ? '.min' : ''}.css`;
+
+  config.entry.unshift('./src/sass/index.scss');
+  config.module.rules.push(
+    // transpile libraries to es5
+    {
+      test: /\.js$/,
+      include: path.resolve(__dirname, 'node_modules/@toast-ui/date/'),
+      loader: 'babel-loader'
+    },
+    {
+      test: /\.s[ac]ss$/i,
+      use: [
+        isProductionMode ? MiniCssExtractPlugin.loader : 'style-loader',
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: { plugins: [postcssPrefixer({ prefix })] }
+        },
+        {
+          loader: 'sass-loader',
+          options: { sassOptions: { outputStyle: 'expanded' } }
+        }
+      ]
+    },
+    {
+      test: /\.(gif|png|jpe?g)$/,
+      use: 'url-loader'
+    }
+  );
+
+  // lint and check type once
+  if (!Boolean(minify)) {
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      use: [
+        {
+          loader: 'ts-loader',
+          options: { configFile: getTsConfigFileName(es6) }
+        },
+        {
+          loader: 'eslint-loader',
+          options: {
+            failOnError: isProductionMode,
+            cache: !isProductionMode
+          }
+        }
+      ]
+    });
+  } else {
+    addOnlyTsLoader(config, argv);
+  }
+
+  config.plugins.push(new StyleLintPlugin(), new MiniCssExtractPlugin({ filename }));
+}
+
+function addOnlyTsLoader(config, { es6 }) {
+  config.module.rules.push({
+    test: /\.tsx?$/,
+    exclude: /node_modules/,
+    use: [
+      {
+        loader: 'ts-loader',
+        options: {
+          configFile: getTsConfigFileName(es6),
+          transpileOnly: true
+        }
+      }
+    ]
+  });
+}

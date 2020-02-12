@@ -118,7 +118,7 @@
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
     "test:types": "tsc --project test/types",
-    "serve": "DEV_SERVER=true webpack-dev-server --mode development",
+    "serve": "webpack-dev-server --mode development",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "release-note": "tuie",
     "eslint": "eslint ./src/ts ./test-ts --ext ts --ext tsx",
@@ -127,10 +127,10 @@
     "doc": "tuidoc",
     "build": "rm -rf dist && npm run build:es5 && npm run build:es6 && npm run build:esm && node tsBannerGenerator.js",
     "build:es5": "webpack --mode production && webpack --mode production --minify",
-    "build:es6": "TARGET=es6 webpack --mode production && TARGET=es6 webpack --mode production --minify",
+    "build:es6": "webpack --mode production --es6 && webpack --mode production --minify --es6",
     "build:esm": "ttsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
     "analyze": "webpack --mode production --minify --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
-    "storybook": "DEV_SERVER=true start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {

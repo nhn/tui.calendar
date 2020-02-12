@@ -122,7 +122,7 @@ module.exports = function(config) {
           {
             test: /\.tsx?$/,
             loader: 'ts-loader',
-            exclude: path.resolve(__dirname, './stories')
+            exclude: [path.resolve(__dirname, './stories'), /node_modules/]
           },
           {
             test: /\.tsx?$/,
