@@ -2,356 +2,145 @@
  * @fileoverview timezone
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import { DateType } from '@src/model';
-import isString from 'tui-code-snippet/type/isString';
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
-const MIN_TO_MS = 60 * 1000;
-/**
- * Get the timezone offset by timestampe
- * @param {number} timestamp - timestamp
- * @returns {number} timezone offset
- */
-function getTimezoneOffset(timestamp: number = Date.now()): number {
-  return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
-}
-
-const nativeOffsetMs = getTimezoneOffset();
-let isSetByTimezoneOption = false;
-let customOffsetMs = nativeOffsetMs;
-let timezoneOffsetCallback: Function;
-
-/**
- * Get the custome timezone offset by timestampe
- * @param {number} timestamp - timestamp
- * @returns {number} timezone offset
- */
-function getCustomTimezoneOffset(timestamp?: number): number {
-  if (!isSetByTimezoneOption && timezoneOffsetCallback) {
-    return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
-  }
-
-  return customOffsetMs;
-}
-
-/**
- * Convert to local time
- * @param {number} time - time
- * @returns {number} local time
- */
-function getLocalTime(time: number): number {
-  const timezoneOffset = getTimezoneOffset(time);
-  const customTimezoneOffset = getCustomTimezoneOffset(time);
-  const timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
-  const localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
-
-  return localTime;
-}
-
-/**
- * Create a Date instance with multiple arguments
- * @returns {Date}
- */
-function createDateWithMultipleArgs(
-  year: number,
-  month: number,
-  date: number,
-  ...args: number[]
-): Date {
-  const utc = Date.UTC(year, month, date, ...args);
-
-  return new Date(utc + getTimezoneOffset(utc));
-}
-
-/**
- * To convert a Date to TZDate as it is.
- * @param {TZDate|number|null} arg - date
- * @returns {Date}
- */
-function createDateWithUTCTime(arg: DateType): Date {
-  let time;
-
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  if (arg instanceof TZDate) {
-    time = arg.getUTCTime();
-  } else if (typeof arg === 'number') {
-    time = arg;
-  } else if (arg === null) {
-    time = 0;
-  } else {
-    throw new Error('Invalid Type');
-  }
-
-  return new Date(time);
-}
-
-/**
- * Convert time to local time. Those times are only from API and not from inner source code.
- * @param {Date|string} arg - date
- * @returns {Date}
- */
-function createDateAsLocalTime(arg: DateType): Date {
-  let time;
-
-  if (arg instanceof Date) {
-    time = arg.getTime();
-  } else if (isString(arg)) {
-    time = Date.parse(arg);
-  } else {
-    throw new Error('Invalid Type');
-  }
-
-  time = getLocalTime(time);
-
-  return new Date(time);
-}
-
-/**
- * is it for local time? These type can be used from Calendar API.
- * @param {DateType} arg - date
- * @returns {boolean}
- */
-function useLocalTimeConverter(arg: DateType): boolean {
-  return arg instanceof Date || isString(arg);
-}
+import { DateInterface } from '@toast-ui/date';
+import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
 
 /**
  * Timezone Date Class
  * @param {number|TZDate|Date|string} date - date to be converted
  */
 export default class TZDate {
-  private _date: Date;
+  private d: DateInterface;
+
+  private static create = newDate;
 
   /**
    * Timezone Date Class
    * @param {number|TZDate|Date|string} date - date to be converted
    */
-  constructor(year?: DateType | null, month?: number, day?: number, ...args: number[]) {
-    const date = year || Date.now();
-    let nativeDate;
-
-    if (arguments.length > 1) {
-      nativeDate = createDateWithMultipleArgs(
-        year as number,
-        month as number,
-        day as number,
-        ...args
-      );
-    } else if (useLocalTimeConverter(date)) {
-      nativeDate = createDateAsLocalTime(date);
-    } else {
-      nativeDate = createDateWithUTCTime(date);
-    }
-
-    this._date = nativeDate;
+  constructor(...args: any[]) {
+    this.d = TZDate.create(...args);
   }
 
-  /**
-   * Get milliseconds which is converted by timezone
-   * @returns {number} milliseconds
-   */
-  getTime(): number {
-    const time = this._date.getTime();
+  static setDateConstructor = setDateConstructor;
 
-    return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
+  static setTimezone(value: number | string) {
+    TZDate.create = getTimezoneFactory(value);
   }
 
-  /**
-   * Get UTC milliseconds
-   * @returns {number} milliseconds
-   */
-  getUTCTime(): number {
-    return this._date.getTime();
+  addDate(d: number): TZDate {
+    this.setDate(this.getDate() + d);
+
+    return this;
   }
 
-  /**
-   * toUTCString
-   * @returns {string}
-   */
-  toUTCString(): string {
-    return this._date.toUTCString();
+  addMinutes(M: number): TZDate {
+    this.setMinutes(this.getMinutes() + M);
+
+    return this;
   }
 
-  /**
-   * to Date
-   * @returns {Date}
-   */
+  addMilliseconds(ms: number): TZDate {
+    this.setMilliseconds(this.getMilliseconds() + ms);
+
+    return this;
+  }
+
+  /* eslint-disable max-params*/
+  setWithRaw(y: number, m: number, d: number, h: number, M: number, s: number, ms: number): TZDate {
+    this.setFullYear(y, m, d);
+    this.setHours(h, M, s, ms);
+
+    return this;
+  }
+
   toDate(): Date {
-    return this._date;
+    return this.d.toDate();
+  }
+
+  toCustomDate(): DateInterface {
+    return TZDate.create(this.d.getTime());
   }
 
   valueOf(): number {
     return this.getTime();
   }
 
-  addDate(day: number): TZDate {
-    this.setDate(this.getDate() + day);
-
-    return this;
-  }
-
-  addMinutes(minutes: number): TZDate {
-    this.setMinutes(this.getMinutes() + minutes);
-
-    return this;
-  }
-
-  addMilliseconds(milliseconds: number): TZDate {
-    this.setMilliseconds(this.getMilliseconds() + milliseconds);
-
-    return this;
-  }
-
-  /* eslint-disable max-params*/
-  setWithRaw(y: number, M: number, d: number, h: number, m: number, s: number, ms: number): TZDate {
-    this.setFullYear(y, M, d);
-    this.setHours(h, m, s, ms);
-
-    return this;
-  }
-
-  /**
-   * @returns {TZDate} local time
-   */
-  toLocalTime(): TZDate {
-    const time = this.getTime();
-    const utcTime = this.getUTCTime();
-    const diff = time - utcTime;
-
-    return new TZDate(utcTime - diff);
-  }
-
-  /**
-   * Set offset
-   * @param {number} offset - timezone offset based on minutes
-   */
-  static setOffset(offset: number) {
-    customOffsetMs = offset * MIN_TO_MS;
-  }
-
-  /**
-   * Set offset
-   * @param {number} offset - timezone offset based on minutes
-   */
-  static setOffsetByTimezoneOption(offset: number) {
-    this.setOffset(-offset);
-    isSetByTimezoneOption = true;
-  }
-
-  /**
-   * Get offset in case of `setByTimezoneOption`. Or return 0.
-   * @returns {number} timezone offset offset minutes
-   */
-  static getOffset(): number {
-    if (isSetByTimezoneOption) {
-      return customOffsetMs / MIN_TO_MS;
-    }
-
-    return 0;
-  }
-
-  /**
-   * Set a callback function to get timezone offset by timestamp
-   * @param {function} callback - callback function
-   */
-  static setOffsetCallback(callback: Function) {
-    timezoneOffsetCallback = callback;
-  }
-
-  /**
-   * (Use this method only for testing)
-   * Reset system timezone and custom timezone
-   */
-  static restoreOffset() {
-    customOffsetMs = getTimezoneOffset();
-  }
-
   // Native properties
-  getDate(): number {
-    return this._date.getDate();
-  }
-
-  getDay(): number {
-    return this._date.getDay();
+  /**
+   * Get milliseconds which is converted by timezone
+   * @returns {number} milliseconds
+   */
+  getTime(): number {
+    return this.d.getTime();
   }
 
   getFullYear(): number {
-    return this._date.getFullYear();
-  }
-
-  getHours(): number {
-    return this._date.getHours();
-  }
-
-  getMilliseconds(): number {
-    return this._date.getMilliseconds();
-  }
-
-  getMinutes(): number {
-    return this._date.getMinutes();
+    return this.d.getFullYear();
   }
 
   getMonth(): number {
-    return this._date.getMonth();
+    return this.d.getMonth();
+  }
+
+  getDate(): number {
+    return this.d.getDate();
+  }
+
+  getHours(): number {
+    return this.d.getHours();
+  }
+
+  getMinutes(): number {
+    return this.d.getMinutes();
   }
 
   getSeconds(): number {
-    return this._date.getSeconds();
+    return this.d.getSeconds();
   }
 
-  setDate(date: number): number {
-    this._date.setDate(date);
-
-    return this.getTime();
+  getMilliseconds(): number {
+    return this.d.getMilliseconds();
   }
 
-  setFullYear(year: number, month?: number, date?: number): number {
-    month = isUndefined(month) ? this.getMonth() : month;
-    date = isUndefined(date) ? this.getDate() : date;
-
-    this._date.setFullYear(year, month, date);
-
-    return this.getTime();
+  getDay(): number {
+    return this.d.getDay();
   }
 
-  setHours(hours: number, min?: number, sec?: number, ms?: number): number {
-    min = isUndefined(min) ? this.getMinutes() : min;
-    sec = isUndefined(sec) ? this.getSeconds() : sec;
-    ms = isUndefined(ms) ? this.getMilliseconds() : ms;
+  setTime(t: number): number {
+    return this.d.setTime(t);
+  }
 
-    this._date.setHours(hours, min, sec, ms);
+  setFullYear(y: number, m = this.getMonth(), d = this.getDate()): number {
+    return this.d.setFullYear(y, m, d);
+  }
 
-    return this.getTime();
+  setMonth(m: number, d = this.getDate()): number {
+    return this.d.setMonth(m, d);
+  }
+
+  setDate(d: number): number {
+    return this.d.setDate(d);
+  }
+
+  setHours(
+    h: number,
+    M = this.getMinutes(),
+    s = this.getSeconds(),
+    ms = this.getMilliseconds()
+  ): number {
+    return this.d.setHours(h, M, s, ms);
+  }
+
+  setMinutes(M: number, s = this.getSeconds(), ms = this.getMilliseconds()): number {
+    return this.d.setMinutes(M, s, ms);
+  }
+
+  setSeconds(s: number, ms = this.getMilliseconds()): number {
+    return this.d.setSeconds(s, ms);
   }
 
   setMilliseconds(ms: number): number {
-    this._date.setMilliseconds(ms);
-
-    return this.getTime();
-  }
-
-  setMinutes(min: number, sec?: number, ms?: number): number {
-    sec = isUndefined(sec) ? this.getSeconds() : sec;
-    ms = isUndefined(ms) ? this.getMilliseconds() : ms;
-
-    this._date.setMinutes(min, sec, ms);
-
-    return this.getTime();
-  }
-
-  setMonth(month: number, date?: number): number {
-    date = isUndefined(date) ? this.getDate() : date;
-
-    this._date.setMonth(month, date);
-
-    return this.getTime();
-  }
-
-  setSeconds(sec: number, ms?: number): number {
-    ms = isUndefined(ms) ? this.getMilliseconds() : ms;
-
-    this._date.setSeconds(sec, ms);
-
-    return this.getTime();
+    return this.d.setMilliseconds(ms);
   }
 }
