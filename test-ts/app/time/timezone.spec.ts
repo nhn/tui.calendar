@@ -63,8 +63,8 @@ describe('MomentDate', () => {
   });
 
   it('use moment instance with local date', () => {
-    const localDate = new Date('2020-01-20T00:00:00');
-    const tzDate = date('2020-01-20T00:00:00');
+    const localDate = new Date('2020-01-20T00:00:00Z');
+    const tzDate = date('2020-01-20T00:00:00Z');
 
     expect(tzDate.getTime()).toBe(localDate.getTime());
     expect(tzDate.getMonth()).toBe(localDate.getMonth());
@@ -73,8 +73,8 @@ describe('MomentDate', () => {
   });
 
   it('use moment instance with utc date', () => {
-    const utcDate = new Date('2020-01-20T00:00:00');
-    const tzDate = date('2020-01-20T00:00:00').setTimezoneOffset(0);
+    const utcDate = new Date('2020-01-20T00:00:00Z');
+    const tzDate = date('2020-01-20T00:00:00Z').setTimezoneOffset(0);
 
     expect(tzDate.getTime()).toBe(utcDate.getTime());
     expect(tzDate.getMonth()).toBe(utcDate.getUTCMonth());

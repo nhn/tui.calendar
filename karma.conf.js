@@ -105,6 +105,12 @@ module.exports = function(config) {
       devtool: 'inline-source-map',
       module: {
         rules: [
+          // transpile libraries to es5
+          {
+            test: /\.js$/,
+            include: [path.resolve(__dirname, 'node_modules/@toast-ui/date/')],
+            loader: 'babel-loader'
+          },
           {
             test: /\.tsx?$/,
             exclude: path.resolve(__dirname, './test-ts'),

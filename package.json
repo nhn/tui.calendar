@@ -35,8 +35,9 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.8.4",
     "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.8.4",
     "@storybook/addon-actions": "^5.2.1",
     "@storybook/addon-links": "^5.2.1",
     "@storybook/addons": "^5.2.1",
@@ -99,7 +100,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "terser-webpack-plugin": "^2.3.4",
-    "timezone-mock": "^1.0.9",
+    "timezone-mock": "^1.0.16",
     "ts-loader": "^6.1.0",
     "tslint": "^5.20.0",
     "ttypescript": "^1.5.7",
@@ -133,7 +134,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@toast-ui/date": "^0.0.1",
+    "@toast-ui/date": "0.0.2",
     "preact": "^10.0.3",
     "preact-markup": "^2.0.0",
     "preact-render-to-string": "^5.1.0",
