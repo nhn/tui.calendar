@@ -5,6 +5,8 @@
 import { DateInterface } from '@toast-ui/date';
 import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
 
+let createDate = newDate;
+
 /**
  * Timezone Date Class
  * @param {number|TZDate|Date|string} date - date to be converted
@@ -12,20 +14,26 @@ import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/ti
 export default class TZDate {
   private d: DateInterface;
 
-  private static create = newDate;
-
   /**
    * Timezone Date Class
    * @param {number|TZDate|Date|string} date - date to be converted
    */
   constructor(...args: any[]) {
-    this.d = TZDate.create(...args);
+    if (args[0] instanceof TZDate) {
+      this.d = createDate(args[0].getTime());
+    } else {
+      this.d = createDate(...args);
+    }
   }
 
   static setDateConstructor = setDateConstructor;
 
-  static setTimezone(value: number | string) {
-    TZDate.create = getTimezoneFactory(value);
+  static setTimezone(value: number | string | null) {
+    createDate = value === null ? newDate : getTimezoneFactory(value);
+  }
+
+  toString() {
+    return this.d.toString();
   }
 
   addDate(d: number): TZDate {
@@ -59,7 +67,7 @@ export default class TZDate {
   }
 
   toCustomDate(): DateInterface {
-    return TZDate.create(this.d.getTime());
+    return createDate(this.d.getTime());
   }
 
   valueOf(): number {

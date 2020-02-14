@@ -27,8 +27,8 @@ describe('model/schedule basic', function() {
         id: '123',
         title: 'Go home',
         isAllDay: false,
-        start: new TZDate('2015-05-01T00:00:00+09:00'),
-        end: new TZDate('2015-05-02T00:00:00+09:00'),
+        start: new TZDate('2015-05-01T00:00:00'),
+        end: new TZDate('2015-05-02T00:00:00'),
         color: '#000',
         bgColor: '#a1b56c'
       };
@@ -37,8 +37,8 @@ describe('model/schedule basic', function() {
         id: '123',
         title: 'Go home',
         isAllDay: false,
-        start: '2015-05-01T00:00:00+09:00',
-        end: '2015-05-02T00:00:00+09:00'
+        start: '2015-05-01T00:00:00',
+        end: '2015-05-02T00:00:00'
       });
 
       expect(schedule).toEqual(jasmine.objectContaining(expected));
@@ -103,8 +103,8 @@ describe('model/schedule basic', function() {
 
   describe('duration()', function() {
     beforeEach(function() {
-      schedule.start = new TZDate('2015-09-25T05:00:00+09:00');
-      schedule.end = new TZDate('2015-09-26T05:00:00+09:00');
+      schedule.start = new TZDate('2015-09-25T05:00:00');
+      schedule.end = new TZDate('2015-09-26T05:00:00');
     });
 
     it('can calculate duration between start and end.', function() {
@@ -114,7 +114,7 @@ describe('model/schedule basic', function() {
     it('return 24 hours when schedule is all day schedule.', function() {
       schedule.isAllDay = true;
 
-      expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-03T08:59:59+09:00')));
+      expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T23:59:59Z')));
     });
   });
 
@@ -157,14 +157,14 @@ describe('model/schedule basic', function() {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
-        start: '2015-05-01T09:30:00+09:00',
-        end: '2015-05-01T10:00:00+09:00'
+        start: '2015-05-01T09:30:00',
+        end: '2015-05-01T10:00:00'
       });
       const b = Schedule.create({
         title: 'B',
         isAllDay: false,
-        start: '2015-05-01T09:40:00+09:00',
-        end: '2015-05-01T10:10:00+09:00'
+        start: '2015-05-01T09:40:00',
+        end: '2015-05-01T10:10:00'
       });
 
       expect(a.collidesWith(b)).toBe(true);
@@ -191,14 +191,14 @@ describe('model/schedule basic', function() {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
-        start: '2015-05-01T09:30:00+09:00',
-        end: '2015-05-01T10:00:00+09:00'
+        start: '2015-05-01T09:30:00',
+        end: '2015-05-01T10:00:00'
       });
       const b = Schedule.create({
         title: 'B',
         isAllDay: false,
-        start: '2015-05-01T09:00:00+09:00',
-        end: '2015-05-01T10:30:00+09:00'
+        start: '2015-05-01T09:00:00',
+        end: '2015-05-01T10:30:00'
       });
 
       expect(a.collidesWith(b)).toBe(true);
@@ -226,14 +226,14 @@ describe('model/schedule basic', function() {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
-        start: '2015-05-01T09:30:00+09:00',
-        end: '2015-05-01T10:00:00+09:00'
+        start: '2015-05-01T09:30:00',
+        end: '2015-05-01T10:00:00'
       });
       const b = Schedule.create({
         title: 'B',
         isAllDay: false,
-        start: '2015-05-01T10:00:00+09:00',
-        end: '2015-05-01T10:30:00+09:00'
+        start: '2015-05-01T10:00:00',
+        end: '2015-05-01T10:30:00'
       });
 
       expect(a.collidesWith(b)).toBe(false);
@@ -263,14 +263,14 @@ describe('model/schedule basic', function() {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
-        start: '2015-05-01T09:30:00+09:00',
-        end: '2015-05-01T09:50:00+09:00'
+        start: '2015-05-01T09:30:00',
+        end: '2015-05-01T09:50:00'
       });
       const b = Schedule.create({
         title: 'B',
         isAllDay: false,
-        start: '2015-05-01T10:10:00+09:00',
-        end: '2015-05-01T10:30:00+09:00'
+        start: '2015-05-01T10:10:00',
+        end: '2015-05-01T10:30:00'
       });
 
       expect(a.collidesWith(b)).toBe(false);
@@ -300,8 +300,8 @@ describe('model/Schedule advanced', function() {
       category: 'time',
       dueDateClass: '',
       isAllDay: false,
-      start: new TZDate('2015-10-26T09:40:00+09:00'),
-      end: new TZDate('2015-10-26T10:00:00+09:00')
+      start: new TZDate('2015-10-26T09:40:00'),
+      end: new TZDate('2015-10-26T10:00:00')
     };
 
     expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
@@ -324,8 +324,8 @@ describe('model/Schedule advanced', function() {
       category: 'milestone',
       dueDateClass: '',
       isAllDay: false,
-      start: new TZDate('2015-10-26T23:59:59+09:00'),
-      end: new TZDate('2015-10-26T23:59:59+09:00')
+      start: new TZDate('2015-10-26T23:59:59'),
+      end: new TZDate('2015-10-26T23:59:59')
     };
 
     expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
@@ -336,8 +336,8 @@ describe('model/Schedule advanced', function() {
       category: 'task',
       dueDateClass: 'morning',
       isAllDay: false,
-      start: new TZDate('2015-10-26T23:59:59+09:00'),
-      end: new TZDate('2015-10-26T23:59:59+09:00')
+      start: new TZDate('2015-10-26T23:59:59'),
+      end: new TZDate('2015-10-26T23:59:59')
     };
 
     expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
@@ -355,8 +355,8 @@ describe('model/Schedule advanced', function() {
       category: 'task',
       dueDateClass: 'morning',
       isAllDay: false,
-      start: new TZDate('2015-10-26T23:59:59+09:00'),
-      end: new TZDate('2015-10-26T23:59:59+09:00'),
+      start: new TZDate('2015-10-26T23:59:59'),
+      end: new TZDate('2015-10-26T23:59:59'),
       raw
     });
 

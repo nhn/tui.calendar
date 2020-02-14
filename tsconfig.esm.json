@@ -22,6 +22,5 @@
     "types": ["webpack-env"],
     "listEmittedFiles": true
   },
-  "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"]
 }

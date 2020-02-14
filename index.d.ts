@@ -1,6 +1,8 @@
 // Type definitions for TOAST UI Calendar v1.12.5
 // TypeScript Version: 3.6.3
 
+import { TuiDateConstructor } from '@toast-ui/date';
+
 export type DateType = string | Date | TZDate;
 export type EventHandlerType = IEvents[keyof IEvents];
 export type CustomEventType = keyof IEvents;
@@ -200,7 +202,7 @@ export interface ISchedule {
 }
 
 export interface ICustomTimezone {
-    dateConstructor?: DateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
+    dateConstructor?: TuiDateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
     offset?: number; // If using YourCustomDate or MomentDate
     name?: string; // If using YourCustomDate or MomentDate
 }

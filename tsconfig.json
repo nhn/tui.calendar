@@ -28,6 +28,5 @@
     "stories/**/*.tsx",
     "test-ts/**/*.ts",
     "test-ts/**/*.tsx"
-  ],
-  "exclude": ["node_modules"]
+  ]
 }

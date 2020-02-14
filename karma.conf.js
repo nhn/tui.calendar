@@ -64,6 +64,8 @@ function setConfig(defaultConfig, server) {
     defaultConfig.concurrency = 1;
   } else {
     defaultConfig.browsers = ['ChromeHeadless'];
+    // for local safari test
+    // defaultConfig.browsers = ['Safari'];
 
     // Not necessary to check all browser's coverage. Do it on local only.
     defaultConfig.coverageIstanbulReporter = {
@@ -105,6 +107,12 @@ module.exports = function(config) {
       devtool: 'inline-source-map',
       module: {
         rules: [
+          // transpile libraries to es5
+          {
+            test: /\.js$/,
+            include: [path.resolve(__dirname, 'node_modules/@toast-ui/date/')],
+            loader: 'babel-loader'
+          },
           {
             test: /\.tsx?$/,
             exclude: path.resolve(__dirname, './test-ts'),
@@ -116,7 +124,7 @@ module.exports = function(config) {
           {
             test: /\.tsx?$/,
             loader: 'ts-loader',
-            exclude: path.resolve(__dirname, './stories')
+            exclude: [path.resolve(__dirname, './stories'), /node_modules/]
           },
           {
             test: /\.tsx?$/,
