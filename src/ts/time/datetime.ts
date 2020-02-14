@@ -367,18 +367,6 @@ export function isValid(d: TZDate): boolean {
 }
 
 /**
- * convert non local date to UTC date.
- * @param {TZDate} d Date to convert UTC.
- * @returns {TZDate} The UTC Date.
- */
-export function toUTC(d: TZDate): TZDate {
-  const l = d.getTime();
-  const offset = millisecondsFrom('minutes', new Date().getTimezoneOffset());
-
-  return new TZDate(l + offset);
-}
-
-/**
  * Convert date string to date object.
  *
  * Only listed below formats avaliable.

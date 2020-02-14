@@ -31,7 +31,7 @@ describe('UTCDate', () => {
   });
 
   it('use UTC+0', () => {
-    const utcDate = new Date('2020-01-20T00:00:00');
+    const utcDate = new Date(2020, 0, 20, 0, 0, 0);
     const tzDate = date('2020-01-20T00:00:00');
 
     expect(tzDate.getTime()).toBe(utcDate.getTime());
@@ -43,7 +43,7 @@ describe('UTCDate', () => {
 
 describe('LocalDate', () => {
   it('use local timezone offset', () => {
-    const localDate = new Date('2020-01-20T00:00:00');
+    const localDate = new Date(2020, 0, 20, 0, 0, 0);
     const tzDate = date('2020-01-20T00:00:00');
 
     expect(tzDate.getTime()).toBe(localDate.getTime());
