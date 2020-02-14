@@ -171,58 +171,58 @@ describe('Base.Week', function() {
     });
 
     it('filter schedule by start, end date visible', function() {
-      schedule.start = new TZDate('2018-05-02T09:30:00+09:00');
-      schedule.end = new TZDate('2018-05-02T13:30:00+09:00');
+      schedule.start = new TZDate('2018-05-02T09:30:00');
+      schedule.end = new TZDate('2018-05-02T13:30:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T00:00:00+09:00');
-      schedule.end = new TZDate('2018-05-02T10:30:00+09:00');
+      schedule.start = new TZDate('2018-05-02T00:00:00');
+      schedule.end = new TZDate('2018-05-02T10:30:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T10:30:00+09:00');
-      schedule.end = new TZDate('2018-05-02T11:30:00+09:00');
+      schedule.start = new TZDate('2018-05-02T10:30:00');
+      schedule.end = new TZDate('2018-05-02T11:30:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T11:30:00+09:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T11:30:00');
+      schedule.end = new TZDate('2018-05-02T15:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T00:00:00+09:00');
-      schedule.end = new TZDate('2018-05-02T10:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T00:00:00');
+      schedule.end = new TZDate('2018-05-02T10:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(false);
 
-      schedule.start = new TZDate('2018-05-02T10:00:00+09:00');
-      schedule.end = new TZDate('2018-05-02T12:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T10:00:00');
+      schedule.end = new TZDate('2018-05-02T12:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T12:00:00+09:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T12:00:00');
+      schedule.end = new TZDate('2018-05-02T15:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(false);
 
-      schedule.start = new TZDate('2018-05-02T09:00:00+09:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T09:00:00');
+      schedule.end = new TZDate('2018-05-02T15:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T09:00:00+09:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T09:00:00');
+      schedule.end = new TZDate('2018-05-02T15:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T09:00:00+09:00');
-      schedule.end = new TZDate('2018-05-03T09:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T09:00:00');
+      schedule.end = new TZDate('2018-05-03T09:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(true); // true, false??
 
-      schedule.start = new TZDate('2018-05-02T11:00:00+09:00');
-      schedule.end = new TZDate('2018-05-03T09:00:00+09:00');
+      schedule.start = new TZDate('2018-05-02T11:00:00');
+      schedule.end = new TZDate('2018-05-03T09:00:00');
 
       expect(hourRangeFilter(schedule)).toBe(true);
     });
@@ -269,8 +269,8 @@ describe('Base.Week', function() {
     it('split schedule by ymd.', function() {
       const result = splitScheduleByDateRange(
         dataStore.idsOfDay,
-        new TZDate('2015-05-01T00:00:00+09:00'),
-        new TZDate('2015-05-03T23:59:59+09:00'),
+        new TZDate('2015-05-01T00:00:00'),
+        new TZDate('2015-05-03T23:59:59'),
         collection
       );
 

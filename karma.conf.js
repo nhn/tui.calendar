@@ -64,6 +64,8 @@ function setConfig(defaultConfig, server) {
     defaultConfig.concurrency = 1;
   } else {
     defaultConfig.browsers = ['ChromeHeadless'];
+    // for local safari test
+    // defaultConfig.browsers = ['Safari'];
 
     // Not necessary to check all browser's coverage. Do it on local only.
     defaultConfig.coverageIstanbulReporter = {

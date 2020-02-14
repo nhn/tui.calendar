@@ -13,7 +13,7 @@ function createDate(y: number, M: number, d: number): TZDate {
     day = `0${day}`;
   }
 
-  return new TZDate(`${[year, month, day].join('-')}T00:00:00+09:00`);
+  return new TZDate(`${[year, month, day].join('-')}T00:00:00`);
 }
 
 describe('datetime', function() {
@@ -130,15 +130,6 @@ describe('datetime', function() {
     });
   });
 
-  it('toUTC() convert non UTC date to UTC.', function() {
-    const timezoneOffset = Math.abs(new Date().getTimezoneOffset());
-    const d = new TZDate('1970-01-01T00:00:00Z');
-    const utc = dt.toUTC(d);
-
-    expect(Math.abs(Number(utc) - Number(d))).toBe(timezoneOffset * 60 * 1000);
-    expect(d).not.toEqual(utc);
-  });
-
   describe('isValid()', function() {
     it('return true when supplied parameter is valid dates.', function() {
       const valid = new TZDate();
@@ -199,7 +190,7 @@ describe('datetime', function() {
 
   describe('format()', function() {
     it('return formatted date string as basis of supplied string.', function() {
-      const birth = new TZDate('1988-09-25T15:30:00+09:00');
+      const birth = new TZDate('1988-09-25T15:30:00');
 
       expect(dt.format(birth, '')).toBe('');
       expect(dt.format(birth, 'YYYY')).toBe('1988');
@@ -277,7 +268,7 @@ describe('datetime', function() {
     });
 
     it('2015/12 will be rendered from 11/30 to 2013/1/3 as of Monday.', function() {
-      const month = new TZDate('2015-12-01T00:00:00+09:00');
+      const month = new TZDate('2015-12-01T00:00:00');
       const actual = dt.arr2dCalendar(
         month,
         Object.assign({}, options, {
@@ -341,7 +332,7 @@ describe('datetime', function() {
     });
 
     it('2016/8 will be rendered from 7/26 to 9/5 on Tuesday.', function() {
-      const month = new TZDate('2016-08-01T00:00:00+09:00');
+      const month = new TZDate('2016-08-01T00:00:00');
       const actual = dt.arr2dCalendar(
         month,
         Object.assign({}, options, {
@@ -414,7 +405,7 @@ describe('datetime', function() {
     });
 
     it('2015/11 will be rendered until 11/1 to 12/5 on Sunday.', function() {
-      const month = new TZDate('2015-11-01T00:00:00+09:00');
+      const month = new TZDate('2015-11-01T00:00:00');
       const actual = dt.arr2dCalendar(month, options);
       const expected = [
         [
@@ -491,22 +482,22 @@ describe('datetime', function() {
   });
 
   it('toStartOfMonth', function() {
-    let month = new TZDate('2015-11-24T09:30:00+09:00');
+    let month = new TZDate('2015-11-24T09:30:00');
 
-    expect(dt.toStartOfMonth(month)).toEqual(new TZDate('2015-11-01T00:00:00+09:00'));
+    expect(dt.toStartOfMonth(month)).toEqual(new TZDate('2015-11-01T00:00:00'));
 
-    month = new TZDate('2015-06-24T00:00:00+09:00');
+    month = new TZDate('2015-06-24T00:00:00');
 
-    expect(dt.toStartOfMonth(month)).toEqual(new TZDate('2015-06-01T00:00:00+09:00'));
+    expect(dt.toStartOfMonth(month)).toEqual(new TZDate('2015-06-01T00:00:00'));
   });
 
   it('toEndOfMonth', function() {
-    let month = new TZDate('2015-11-24T09:30:00+09:00');
+    let month = new TZDate('2015-11-24T09:30:00');
 
-    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59+09:00'));
+    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59'));
 
-    month = new TZDate('2015-07-15T00:00:00+09:00');
+    month = new TZDate('2015-07-15T00:00:00');
 
-    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59+09:00'));
+    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59'));
   });
 });
