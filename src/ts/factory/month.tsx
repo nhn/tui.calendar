@@ -3,7 +3,7 @@
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 import { h } from 'preact';
-import MonthView from '@src/view/monthView';
+import MonthView from '@src/components/view/monthView';
 import CalendarControl from '@src/factory/calendarControl';
 import { Option } from '@src/model';
 
