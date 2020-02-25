@@ -215,6 +215,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('state', options.state);
     }
 
+    if (options.raw) {
+        schedule.set('raw', options.raw);
+    }
+
     this._removeFromMatrix(schedule);
     this._addToMatrix(schedule);
 
