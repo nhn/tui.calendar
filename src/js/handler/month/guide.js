@@ -153,7 +153,7 @@ MonthGuide.prototype._getGuideElement = function(y) {
 MonthGuide.prototype._getCoordByDate = function(date) {
     var WEEKEND_DAYS = 2;
     var weeks = this.weeks;
-    var isWorkWeek = this.view.options.workweek;
+    var isWorkWeek = util.pick(this.view, 'options', 'workweek');
     var days = isWorkWeek ? this.days + WEEKEND_DAYS : this.days;
 
     var getIdxFromDiff = function(d1, d2) {

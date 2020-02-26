@@ -158,7 +158,12 @@ describe('handler:month/guide', function() {
         beforeEach(function() {
             mockInst = {
                 weeks: [w1, w2],
-                days: 7
+                days: 7,
+                view: {
+                    options: {
+                        workweek: false
+                    }
+                }
             };
         });
 
@@ -179,6 +184,7 @@ describe('handler:month/guide', function() {
 
             expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, -2]);
 
+            mockInst.view.options.workweek = true;
             mockInst.days = 5;
             w1.options.renderEndDate = new TZDate('2015-12-31');
             w2.options.renderStartDate = new TZDate('2016-01-01');
@@ -186,7 +192,7 @@ describe('handler:month/guide', function() {
 
             date = new TZDate('2015-12-24T00:00:00');
 
-            expect(proto._getCoordByDate.call(mockInst, date)).toEqual([2, -1]);
+            expect(proto._getCoordByDate.call(mockInst, date)).toEqual([4, -1]);
         });
     });
 
