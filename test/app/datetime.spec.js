@@ -474,4 +474,15 @@ describe('datetime', function() {
         var month = new TZDate('2015-07-15T00:00:00+09:00');
         expect(dt.endDateOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59+09:00'));
     });
+
+    it('getDiffDays', function() {
+        var d1 = new TZDate('2020-02-29T09:30:30');
+        var d2 = new TZDate('2020-02-29T23:00:00');
+        var d3 = new TZDate('2020-03-01T23:00:00');
+        var d4 = new TZDate('2020-02-27T00:30:00');
+
+        expect(dt.getDiffDays(d1, d2)).toEqual(0);
+        expect(dt.getDiffDays(d1, d3)).toEqual(-1);
+        expect(dt.getDiffDays(d1, d4)).toEqual(2);
+    });
 });
