@@ -67,3 +67,5 @@ dist/esm/
 
 # webpack bundle analysis file
 stats.json
+
+storybook-static/

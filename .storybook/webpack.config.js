@@ -1,9 +1,16 @@
 const path = require('path');
-const custom = require('../webpack.dev.config')({}, {});
 
 module.exports = ({ config }) => {
+  let custom;
+  if (config.mode === 'production') {
+    custom = require('../webpack.config')({}, { minify: true });
+  } else {
+    custom = require('../webpack.dev.config')({}, {});
+  }
+
   return {
     ...config,
+    entry: [...config.entry, ...custom.entry],
     resolve: {
       ...config.resolve,
       ...custom.resolve,
@@ -15,7 +22,8 @@ module.exports = ({ config }) => {
     },
     module: {
       ...config.module,
-      rules: custom.module.rules
-    }
+      rules: [...config.module.rules, ...custom.module.rules]
+    },
+    plugins: [...config.plugins, ...custom.plugins]
   };
 };
