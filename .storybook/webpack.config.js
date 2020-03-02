@@ -1,7 +1,7 @@
 const path = require('path');
-const custom = require('../webpack.config');
+const custom = require('../webpack.dev.config')({}, {});
 
-module.exports = ({ config, mode, defaultConfig }) => {
+module.exports = ({ config }) => {
   return {
     ...config,
     resolve: {
