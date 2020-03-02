@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Markup from 'preact-markup';
 import isString from 'tui-code-snippet/type/isString';
-import { noop } from '@src/util';
+import { identity } from '@src/util';
 import ContextComponent from '@src/components/contextComponent';
 
 interface Props {
@@ -17,11 +17,11 @@ export class Template extends ContextComponent<Props> {
     const { template, model } = props;
     const { templates } = this.context;
 
-    const templateFunc = templates[template] || noop;
+    const templateFunc = templates[template] || identity;
     const htmlOrVnode = templateFunc(model, h);
 
     return isString(htmlOrVnode) ? (
-      <Markup wrap={false} markup={htmlOrVnode} allow-events />
+      <Markup wrap={false} markup={htmlOrVnode} type="html" />
     ) : (
       htmlOrVnode
     );
