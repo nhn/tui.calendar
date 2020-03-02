@@ -1,0 +1,73 @@
+.icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+
+  &.ic-title {
+    background: url('image/ic-subject.png') no-repeat;
+  }
+
+  &.ic-location {
+    background: url('image/ic-location.png') no-repeat;
+  }
+
+  &.ic-date {
+    background: url('image/ic-date.png') no-repeat;
+  }
+
+  &.ic-state {
+    background: url('image/ic-state.png') no-repeat;
+  }
+
+  &.ic-private {
+    background: url('image/ic-lock.png') no-repeat;
+  }
+
+  &.ic-public {
+    background: url('image/ic-unlock.png') no-repeat;
+  }
+  &.ic-close {
+    background: url('image/ic-close.png') no-repeat;
+  }
+
+  &.ic-user-b {
+    background-image: url('image/ic-user-b.png');
+  }
+
+  &.ic-edit {
+    background-image: url('image/ic-edit.png');
+  }
+
+  &.ic-delete {
+    background-image: url('image/ic-delete.png');
+  }
+
+  &.ic-arrow-solid-top {
+    background: url('image/ic-arrow-solid-top.png') no-repeat;
+  }
+
+  &.ic-milestone {
+    background: url('image/ic-milestone.png') no-repeat;
+  }
+
+  &.ic-arrow-left {
+    background: url('image/ic-arrow-left.png') no-repeat;
+  }
+
+  &.ic-arrow-right {
+    background: url('image/ic-arrow-right.png') no-repeat;
+  }
+}
+
+.ic-location-b {
+  background: url('image/ic-location-b.png');
+}
+
+.ic-state-b {
+  background: url('image/ic-state-b.png');
+}
+
+.ic-repeat-b {
+  background: url('image/ic-repeat-b.png');
+}
