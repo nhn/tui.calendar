@@ -12,12 +12,12 @@ const viewMatchMap = {
   time: timeGetViewID
 };
 
-export function cls(str = ''): string {
+export function cls(str = '', prefix = ''): string {
   if (str.charAt(0) === '.') {
-    return `.${CSS_PREFIX}${str.slice(1)}`;
+    return `.${CSS_PREFIX}${prefix}${str.slice(1)}`;
   }
 
-  return `${CSS_PREFIX}${str}`;
+  return `${CSS_PREFIX}${prefix}${str}`;
 }
 
 export function matchViewIDRegExp(

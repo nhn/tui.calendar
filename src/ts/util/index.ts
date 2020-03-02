@@ -63,6 +63,10 @@ export function hasStamp(obj: StampObj): boolean {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export function noop() {}
 
+export function identity(value: any) {
+  return value;
+}
+
 export function isSameSchedule(schedule: Schedule, scheduleId: string, calendarId: string) {
   return schedule.id === scheduleId && schedule.calendarId === calendarId;
 }

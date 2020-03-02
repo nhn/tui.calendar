@@ -10,8 +10,8 @@ import {
   TemplateMonthDayName,
   TemplateWeekDay,
   Template,
-  TemplateTimeGridHourLabel,
-  TemplateTimezoneHourMarker
+  TemplateCurrentTime,
+  TemplateTimezone
 } from '@src/model';
 import TZDate from '@src/time/date';
 
@@ -164,21 +164,23 @@ export const templates: Template = {
     return `<span class="${iconName} ${closeIconName}"></span>`;
   },
 
-  timezoneDisplayLabel(timezoneOffset: number, displayLabel: string) {
-    let label = displayLabel;
+  timezoneDisplayLabel(props: TemplateTimezone) {
+    let { displayLabel = '' } = props;
 
-    if (isUndefined(label)) {
+    if (isUndefined(displayLabel)) {
+      const { timezoneOffset } = props;
       const gmt = timezoneOffset < 0 ? '-' : '+';
       const hours = Math.abs(timezoneOffset / SIXTY_MINUTES);
       const minutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
-      label = `${gmt}${leadingZero(hours, 2)}:${leadingZero(minutes, 2)}`;
+      displayLabel = `${gmt}${leadingZero(hours, 2)}:${leadingZero(minutes, 2)}`;
     }
 
-    return label;
+    return displayLabel;
   },
 
-  timegridDisplayPrimaryTime(time: TemplateTimeGridHourLabel) {
-    let { hour } = time;
+  timegridDisplayPrimaryTime(props: TemplateCurrentTime) {
+    const { time } = props;
+    let hour = time.getHours();
     const meridiem = hour >= 12 ? 'pm' : 'am';
 
     if (hour > 12) {
@@ -188,20 +190,18 @@ export const templates: Template = {
     return `${hour} ${meridiem}`;
   },
 
-  timegridDisplayTime(time: TemplateTimeGridHourLabel) {
-    return `${leadingZero(time.hour, 2)}:${leadingZero(time.minutes, 2)}`;
+  timegridDisplayTime(props: TemplateCurrentTime) {
+    const { time } = props;
+    const hour = time.getHours();
+    const minutes = time.getMinutes();
+
+    return `${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
   },
 
-  timegridCurrentTime(timezone: TemplateTimezoneHourMarker) {
-    const now = [];
+  timegridCurrentTime(timezone: TemplateCurrentTime) {
+    const { time, format: timeFormat = 'HH:mm' } = timezone;
 
-    if (timezone.dateDifference) {
-      now.push(`[${timezone.dateDifferenceSign + timezone.dateDifference}]<br>`);
-    }
-
-    now.push(format(timezone.hourmarker, 'HH:mm'));
-
-    return now.join('');
+    return format(time, timeFormat);
   },
 
   popupIsAllDay() {
@@ -279,3 +279,5 @@ export const templates: Template = {
     return body;
   }
 };
+
+export type TemplateName = keyof Template;

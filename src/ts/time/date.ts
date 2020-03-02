@@ -74,6 +74,10 @@ export default class TZDate {
     return this.getTime();
   }
 
+  getTimezoneOffset() {
+    return this.d.getTimezoneOffset();
+  }
+
   // Native properties
   /**
    * Get milliseconds which is converted by timezone

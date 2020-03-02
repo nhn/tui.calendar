@@ -114,7 +114,7 @@ describe('model/schedule basic', function() {
     it('return 24 hours when schedule is all day schedule.', function() {
       schedule.isAllDay = true;
 
-      expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T23:59:59Z')));
+      expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T23:59:59.999Z')));
     });
   });
 

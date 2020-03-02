@@ -53,6 +53,20 @@ export function leadingZero(number: number, length: number): string {
   return (zero + number).slice(length * -1);
 }
 
+function getHourForMeridiem(date: TZDate) {
+  let hour = date.getHours();
+
+  if (hour === 0) {
+    hour = 12;
+  }
+
+  if (hour > 12) {
+    hour = hour % 12;
+  }
+
+  return hour;
+}
+
 const tokenFunc = {
   /**
    * @param {TZDate} date date object.
@@ -105,14 +119,20 @@ const tokenFunc = {
    * @returns {string} hh:mm
    */
   'hh:mm': function(date: TZDate): string {
-    let hour = date.getHours();
+    const hour = getHourForMeridiem(date);
     const minutes = date.getMinutes();
 
-    if (hour > 12) {
-      hour = hour % 12;
-    }
-
     return `${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
+  },
+
+  /**
+   * @param {TZDate} date date object
+   * @returns {string} hour for meridiem
+   */
+  hh(date: TZDate): string {
+    const hour = getHourForMeridiem(date);
+
+    return String(hour);
   },
 
   /**
@@ -149,6 +169,8 @@ export const MILLISECONDS_PER_MINUTES = 60000;
  * @type {number}
  */
 export const MILLISECONDS_SCHEDULE_MIN_DURATION = 20 * 60000;
+
+export const SIXTY_SECONDS = 60;
 
 /**
  * Return formatted string as basis of supplied string.
@@ -336,10 +358,19 @@ export function compare(d1: TZDate, d2: TZDate): number {
 /**
  * @param {TZDate} d1 - date one
  * @param {TZDate} d2 - date two
+ * @returns {boolean} is two date are same year?
+ */
+export function isSameYear(d1: TZDate, d2: TZDate): boolean {
+  return d1.getFullYear() === d2.getFullYear();
+}
+
+/**
+ * @param {TZDate} d1 - date one
+ * @param {TZDate} d2 - date two
  * @returns {boolean} is two date are same year, month?
  */
 export function isSameMonth(d1: TZDate, d2: TZDate): boolean {
-  return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth();
+  return isSameYear(d1, d2) && d1.getMonth() === d2.getMonth();
 }
 
 /**
@@ -348,9 +379,7 @@ export function isSameMonth(d1: TZDate, d2: TZDate): boolean {
  * @returns {boolean} is two date are same year, month, date?
  */
 export function isSameDate(d1: TZDate, d2: TZDate): boolean {
-  const sameMonth = isSameMonth(d1, d2);
-
-  return sameMonth && d1.getDate() === d2.getDate();
+  return isSameMonth(d1, d2) && d1.getDate() === d2.getDate();
 }
 
 /**
@@ -425,7 +454,7 @@ export function parse(str: string, fixMonth = -1): TZDate {
  * @param {TZDate} date date
  * @returns {object} Date object.
  */
-export function raw(date: TZDate): RawDate {
+export function toRaw(date: TZDate): RawDate {
   return {
     y: date.getFullYear(),
     M: date.getMonth(),
@@ -444,7 +473,7 @@ export function raw(date: TZDate): RawDate {
  */
 export function toEndOfDay(date?: number | TZDate): TZDate {
   const d = date ? new TZDate(date) : new TZDate();
-  d.setHours(23, 59, 59, 0);
+  d.setHours(23, 59, 59, 999);
 
   return d;
 }
@@ -474,6 +503,22 @@ export function isBetweenWithDate(d: TZDate, d1: TZDate, d2: TZDate): boolean {
   return n1 <= n && n <= n2;
 }
 
+export function toStartOfMinutes(date: TZDate): TZDate {
+  const startDate = new TZDate(date);
+
+  startDate.setMinutes(0, 0, 0);
+
+  return startDate;
+}
+
+export function toEndOfMinutes(date: TZDate): TZDate {
+  const startDate = new TZDate(date);
+
+  startDate.setMinutes(59, 59, 999);
+
+  return startDate;
+}
+
 /**
  * Get start date of specific month
  * @param {TZDate} date - date to get start date
@@ -488,6 +533,10 @@ export function toStartOfMonth(date: TZDate): TZDate {
   return startDate;
 }
 
+export function toStartOfYear(d: TZDate): TZDate {
+  return new TZDate(d.getFullYear(), 0, 1, 0, 0, 0, 0);
+}
+
 /**
  * Get end date of specific month
  * @param {TZDate} date - date to get end date
@@ -498,9 +547,13 @@ export function toEndOfMonth(date: TZDate): TZDate {
 
   endDate.setMonth(endDate.getMonth() + 1);
   endDate.setDate(endDate.getDate() - 1);
-  endDate.setHours(23, 59, 59);
+  endDate.setHours(23, 59, 59, 999);
 
   return endDate;
+}
+
+export function toEndOfYear(d: TZDate): TZDate {
+  return new TZDate(d.getFullYear(), 11, 31, 23, 59, 59, 999);
 }
 
 /**
@@ -628,4 +681,47 @@ export function getGridLeftAndWidth(
 
     return model;
   });
+}
+
+export function addMinutes(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setMinutes(d.getMinutes() + step);
+
+  return date;
+}
+
+export function addHours(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setHours(d.getHours() + step);
+
+  return date;
+}
+
+export function addDate(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setDate(d.getDate() + step);
+
+  return date;
+}
+
+export function addMonth(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setMonth(d.getMonth() + step);
+
+  return date;
+}
+
+export function addYear(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setFullYear(d.getFullYear() + step);
+
+  return date;
+}
+
+export function getTimezoneDifference(d: TZDate, timezoneOffset = 0) {
+  return d.getTimezoneOffset() - timezoneOffset;
+}
+
+export function getDateDifference(d1: TZDate, d2: TZDate) {
+  return Math.floor((d1.getTime() - d2.getTime()) / MILLISECONDS_PER_DAY);
 }

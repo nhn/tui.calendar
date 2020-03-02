@@ -1,13 +1,18 @@
 import { CSS_PREFIX, cls, matchViewIDRegExp } from '@src/util/cssHelper';
 
 describe('cssHelper', () => {
-  it('classname() returns css selector with prefix "tui-full-calendar"', () => {
+  it('cls() returns css selector with prefix "tui-calendar"', () => {
     expect(cls('view')).toBe(`${CSS_PREFIX}view`);
     expect(cls('.layout')).toBe(`.${CSS_PREFIX}layout`);
   });
 
-  it('classname() returns "tui-full-calendar-" with no argument', () => {
+  it('cls() returns "tui-calendar-" with no argument', () => {
     expect(cls()).toBe(CSS_PREFIX);
+  });
+
+  it('cls() with prefix returns "tui-calendar-prefix-selector"', () => {
+    expect(cls('times', 'timegrid-')).toBe(`${CSS_PREFIX}timegrid-times`);
+    expect(cls('.hours', 'timegrid-')).toBe(`.${CSS_PREFIX}timegrid-hours`);
   });
 
   it('matchViewIDRegExp() matches css selector with view id', () => {

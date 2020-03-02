@@ -74,16 +74,16 @@ describe('datetime', function() {
     expect(d).toEqual(new TZDate('2015/05/21 18:30:00'));
   });
 
-  it('end() return 23:59:59 supplied date.', function() {
+  it('end() return 23:59:59.999 supplied date.', function() {
     const d = new TZDate('2015/05/21 18:30:00');
 
-    expect(dt.toEndOfDay(d)).toEqual(new TZDate('2015/05/21 23:59:59'));
+    expect(dt.toEndOfDay(d)).toEqual(new TZDate('2015/05/21 23:59:59.999'));
   });
 
-  it('raw() return date object from Date.', function() {
+  it('toRaw() return date object from Date.', function() {
     const d = new TZDate('2015/05/01 13:20:05');
 
-    expect(dt.raw(d)).toEqual({
+    expect(dt.toRaw(d)).toEqual({
       y: 2015,
       M: 4,
       d: 1,
@@ -494,10 +494,24 @@ describe('datetime', function() {
   it('toEndOfMonth', function() {
     let month = new TZDate('2015-11-24T09:30:00');
 
-    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59'));
+    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59.999'));
 
     month = new TZDate('2015-07-15T00:00:00');
 
-    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59'));
+    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59.999'));
+  });
+
+  it('toStartOfYear', () => {
+    const date = new TZDate('2020-03-24T09:30:00');
+    const startOfYear = new TZDate('2020-01-01T00:00:00');
+
+    expect(dt.toStartOfYear(date)).toEqual(startOfYear);
+  });
+
+  it('toEndOfYear', () => {
+    const date = new TZDate('2020-03-24T09:30:00');
+    const endOfYear = new TZDate('2020-12-31T23:59:59.999');
+
+    expect(dt.toEndOfYear(date)).toEqual(endOfYear);
   });
 });

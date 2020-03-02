@@ -1,5 +1,4 @@
 import { templates } from '@src/template/default';
-import forEach from 'tui-code-snippet/collection/forEach';
 import { Template, TemplateConfig, GridViewModel } from '@src/model';
 import { cls } from '@src/util/cssHelper';
 import isNumber from 'tui-code-snippet/type/isNumber';
@@ -8,12 +7,10 @@ import { format } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 
 export function registerTemplateConfig(templateConfig: TemplateConfig = {}): Template {
-  const newTemplates: Template = { ...templates };
-  forEach(templateConfig, (func: Function, name: string) => {
-    newTemplates[name] = func || newTemplates[name];
-  });
-
-  return newTemplates;
+  return {
+    ...templates,
+    ...templateConfig
+  };
 }
 
 /**
