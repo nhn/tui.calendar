@@ -4,7 +4,6 @@
   display: inline-block;
   position: relative;
   border-right: 1px solid #e5e5e5;
-
   font-size: 11px;
 
   .timegrid-time {
@@ -16,7 +15,6 @@
     line-height: $height;
     top: -($height / 2);
     right: $margin;
-
     color: #333;
 
     &.timegrid-time-past {
@@ -42,7 +40,6 @@
     position: absolute;
     text-align: right;
     right: $margin;
-
     color: #515ce6;
   }
 }

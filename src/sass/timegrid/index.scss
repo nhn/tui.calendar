@@ -4,19 +4,15 @@
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
-
   user-select: none;
 }
 
 .timegrid-sticky-container {
   position: absolute;
   top: 0;
-
   border-bottom: 1px solid rgb(229, 229, 229);
   background-color: white;
-
   font-size: 11px;
-
   user-select: none;
 
   .timegrid-timezone-label {
@@ -24,7 +20,6 @@
     text-align: right;
     padding-right: 5px;
     border-right: 1px solid #e5e5e5;
-
     height: 40px;
     line-height: 40px;
   }
@@ -34,7 +29,6 @@
     position: absolute;
     text-align: center;
     background-color: #fff;
-
     border: 1px solid #ddd;
     top: 2px;
     bottom: 2px;

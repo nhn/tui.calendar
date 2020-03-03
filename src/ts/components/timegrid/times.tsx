@@ -149,7 +149,7 @@ Times.defaultProps = {
     const date = new TZDate();
     date.setHours(hour, 0, 0, 0);
 
-    const display = format(date, 'HH:mm tt');
+    const display = format(date, 'HH:mm');
 
     return {
       date,

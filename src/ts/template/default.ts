@@ -180,14 +180,8 @@ export const templates: Template = {
 
   timegridDisplayPrimaryTime(props: TemplateCurrentTime) {
     const { time } = props;
-    let hour = time.getHours();
-    const meridiem = hour >= 12 ? 'pm' : 'am';
 
-    if (hour > 12) {
-      hour = hour - 12;
-    }
-
-    return `${hour} ${meridiem}`;
+    return format(time, 'hh tt');
   },
 
   timegridDisplayTime(props: TemplateCurrentTime) {

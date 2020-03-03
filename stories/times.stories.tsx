@@ -39,7 +39,7 @@ Wrapper.defaultProps = {
   width: 200
 };
 
-export const minutes60 = () => {
+export const minutesInAnHour = () => {
   const now = new TZDate();
   now.setMinutes(0, 0, 0);
 
@@ -66,25 +66,25 @@ export const minutes60 = () => {
     </Wrapper>
   );
 };
-minutes60.story = {
+minutesInAnHour.story = {
   name: 'every 10 mins in an hour'
 };
 
-export const hours24 = () => (
+export const hoursInADay = () => (
   <Wrapper>
     <Times showCurrentTime currentTime={new TZDate()} />
   </Wrapper>
 );
-hours24.story = {
+hoursInADay.story = {
   name: '24 hours'
 };
 
-export const hours24FromAt9 = () => (
+export const hoursInOfficeHour = () => (
   <Wrapper>
     <Times start={9} end={18} showFirst showLast showCurrentTime />
   </Wrapper>
 );
-hours24FromAt9.story = {
+hoursInOfficeHour.story = {
   name: 'From 9 to 18 hour'
 };
 
@@ -169,7 +169,7 @@ monthsInAnYear.story = {
   name: 'Months in an year'
 };
 
-export const years = () => {
+export const yearsInDecade = () => {
   const startOfYear = toStartOfYear(new TZDate());
   const times = range(0, 11).map(year => {
     const d = addYear(startOfYear, year);
@@ -196,7 +196,7 @@ export const years = () => {
     </Wrapper>
   );
 };
-years.story = {
+yearsInDecade.story = {
   name: 'An year in 10 years'
 };
 
