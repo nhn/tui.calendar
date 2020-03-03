@@ -623,7 +623,7 @@ datetime = {
         return date;
     },
 
-    getDiffDays: function(d1, d2) {
+    getDateDifference: function(d1, d2) {
         var _d1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
         var _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
