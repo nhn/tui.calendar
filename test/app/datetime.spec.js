@@ -227,7 +227,7 @@ describe('datetime', function() {
 
         it('Providing iteratee allows you to manipulate each date element.', function() {
             var month = new TZDate('2014-10-01T00:00:00');
-            
+
             var actual = dt.arr2dCalendar(month, options, function(date) {
                 return { customize: true, date: date };
             });
@@ -474,4 +474,20 @@ describe('datetime', function() {
         var month = new TZDate('2015-07-15T00:00:00');
         expect(dt.endDateOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59'));
     });
+
+    it('getDateDifference', function() {
+        var d1 = new TZDate('2020-02-29T09:30:30+09:00');
+        var d2 = new TZDate('2020-02-29T23:00:00+09:00');
+        var d3 = new TZDate('2020-03-01T23:00:00+09:00');
+        var d4 = new TZDate('2020-02-27T00:30:00+09:00');
+        var d5 = new TZDate('2012-03-02T00:00:00+09:00')
+        var d6 = new TZDate('2012-03-01T03:00:00+09:00')
+
+        expect(dt.getDateDifference(d1, d2)).toEqual(0);
+        expect(dt.getDateDifference(d1, d3)).toEqual(-1);
+        expect(dt.getDateDifference(d1, d4)).toEqual(2);
+        expect(dt.getDateDifference(d5, d6)).toEqual(1);
+    });
+
+
 });

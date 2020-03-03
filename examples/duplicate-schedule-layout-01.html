@@ -214,6 +214,11 @@
     }
 
     const DEFAULT_CALENDAR_ID = '1';
+    const timezones = [
+      {timezoneOffset: 540, displayLabel: "KST<br>+09:00", tooltip: "Asia/Seoul"},
+      {timezoneOffset: -240, displayLabel: "AST<br>-04:00", tooltip: "Canada/Atlantic"},
+      {timezoneOffset: 780, displayLabel: "NZDT<br>+13:00", tooltip: "Pacific/Auckland"}
+    ];
 
     var cal = new tui.Calendar('#calendar', {
       defaultView: 'week',
@@ -239,7 +244,8 @@
         time: function(schedule) {
           return getTimeTemplate(schedule, false);
         }
-      }
+      },
+      timezones
     });
     </script>
 
