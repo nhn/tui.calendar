@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp98-200120 | Mon Jan 20 2020
+ * @version 1.12.5-dooray-sp99-200303 | Tue Mar 03 2020
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -3646,6 +3646,13 @@ datetime = {
         date.setHours(24);
 
         return date;
+    },
+
+    getDateDifference: function(d1, d2) {
+        var _d1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
+        var _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
+
+        return Math.round((_d1 - _d2) / datetime.MILLISECONDS_PER_DAY);
     }
 };
 
@@ -24684,7 +24691,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
         var dateDifference;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
-        dateDifference = hourmarker.getDate() - now.getDate();
+        dateDifference = datetime.getDateDifference(hourmarker, now);
 
         hourmarkerTimzones.push({
             hourmarker: hourmarker,
@@ -24733,7 +24740,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
         timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
-        dateDifference = hourmarker.getDate() - now.getDate();
+        dateDifference = datetime.getDateDifference(hourmarker, now);
 
         if (index > 0) {
             backgroundColor = styles.additionalTimezoneBackgroundColor;
