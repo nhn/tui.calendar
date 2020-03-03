@@ -264,7 +264,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
         var dateDifference;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
-        dateDifference = hourmarker.getDate() - now.getDate();
+        dateDifference = datetime.getDateDifference(hourmarker, now);
 
         hourmarkerTimzones.push({
             hourmarker: hourmarker,
@@ -313,7 +313,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
         timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
-        dateDifference = hourmarker.getDate() - now.getDate();
+        dateDifference = datetime.getDateDifference(hourmarker, now);
 
         if (index > 0) {
             backgroundColor = styles.additionalTimezoneBackgroundColor;
