@@ -181,7 +181,7 @@ export const templates: Template = {
   timegridDisplayPrimaryTime(props: TemplateCurrentTime) {
     const { time } = props;
 
-    return format(time, 'hh tt');
+    return toFormat(time, 'hh tt');
   },
 
   timegridDisplayTime(props: TemplateCurrentTime) {
