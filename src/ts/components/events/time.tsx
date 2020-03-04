@@ -6,7 +6,7 @@ interface Props {
   viewModel: ScheduleViewModel;
 }
 
-export default function TimeSchedule(props: Props) {
+export function TimeEvent(props: Props) {
   const { model } = props.viewModel;
 
   return (
@@ -15,3 +15,4 @@ export default function TimeSchedule(props: Props) {
     </span>
   );
 }
+TimeEvent.displayName = 'TimeEvent';

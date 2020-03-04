@@ -26,7 +26,7 @@ const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
  * @readonly
  * @enum {string}
  */
-export type ScheduleCategory = 'milestone' | 'task' | 'allday' | 'time';
+export type ScheduleCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
 
 /**
  * The model of calendar schedules.
@@ -424,4 +424,8 @@ export default class Schedule {
 
     return false;
   }
+}
+
+export function isBackgroundEvent({ category }: Schedule) {
+  return category === 'background';
 }

@@ -67,7 +67,7 @@ export const minutesInAnHour = () => {
   );
 };
 minutesInAnHour.story = {
-  name: 'every 10 mins in an hour'
+  name: 'Every 10 mins in an hour'
 };
 
 export const hoursInADay = () => (
