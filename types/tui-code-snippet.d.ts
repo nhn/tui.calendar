@@ -70,6 +70,10 @@ declare module 'tui-code-snippet/collection/pluck' {
   export default function pluck(arr: any[], property: string): any[];
 }
 
+declare module 'tui-code-snippet/collection/toArray' {
+  export default function toArray<T>(arrayLike: any): T[];
+}
+
 // array
 declare module 'tui-code-snippet/array/range' {
   export default function range(start: number, stop?: number, step?: number): number[];
@@ -93,6 +97,19 @@ declare module 'tui-code-snippet/domEvent/getMousePosition' {
 
 declare module 'tui-code-snippet/domEvent/getTarget' {
   export default function getTarget(event: Event): HTMLElement;
+}
+
+// domUtil
+declare module 'tui-code-snippet/domUtil/toggleClass' {
+  export default function toggleClass(element: HTMLElement, ...classes: string[]): void;
+}
+
+declare module 'tui-code-snippet/domUtil/addClass' {
+  export default function addClass(element: HTMLElement, ...classes: string[]): void;
+}
+
+declare module 'tui-code-snippet/domUtil/removeClass' {
+  export default function removeClass(element: HTMLElement, ...classes: string[]): void;
 }
 
 // customEvents

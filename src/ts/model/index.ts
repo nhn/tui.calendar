@@ -62,16 +62,18 @@ export interface GridViewModel {
   left: number;
 }
 
+export type TimeUnit = 'minute' | 'hour' | 'date' | 'month' | 'year';
+
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;
   hour: number;
   minutes: number;
 }
 
-export interface TemplateTimezoneHourMarker {
-  hourmarker: TZDate;
-  dateDifferenceSign: string;
-  dateDifference: number;
+export interface TemplateCurrentTime {
+  unit: TimeUnit;
+  time: TZDate;
+  format: string;
 }
 
 export interface TemplateMonthGrid {
@@ -97,7 +99,11 @@ export interface TemplateMonthDayName {
   label: string;
 }
 
-export interface Template extends Record<string, Function> {
+export interface TemplateTimezone extends TimezoneConfig {
+  timezoneOffset: number;
+}
+
+export interface Template {
   milestoneTitle: () => string;
   milestone: (schedule: Schedule) => string;
   taskTitle: () => string;
@@ -119,10 +125,10 @@ export interface Template extends Record<string, Function> {
   dayGridTitle: (viewName: ScheduleCategory) => string;
   schedule: (schedule: Schedule) => string;
   collapseBtnTitle: () => string;
-  timezoneDisplayLabel: (timezoneOffset: number, displayLabel: string) => string;
-  timegridDisplayPrimaryTime: (time: TemplateTimeGridHourLabel) => string;
-  timegridDisplayTime: (time: TemplateTimeGridHourLabel) => string;
-  timegridCurrentTime: (hourMarker: TemplateTimezoneHourMarker) => string;
+  timezoneDisplayLabel: (props: TemplateTimezone) => string;
+  timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => string;
+  timegridDisplayTime: (props: TemplateCurrentTime) => string;
+  timegridCurrentTime: (props: TemplateCurrentTime) => string;
   popupIsAllDay: () => string;
   popupStateFree: () => string;
   popupStateBusy: () => string;

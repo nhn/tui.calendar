@@ -15,3 +15,21 @@ export function limit(value: number, minArr: number[], maxArr: number[]) {
 
   return Math.min(...[v].concat(maxArr));
 }
+
+/**
+ * Get ratio value.
+ *
+ * a : b = y : X;
+ *
+ * =
+ *
+ * X = (b * y) / a;
+ * @param {number} a - a
+ * @param {number} b - b
+ * @param {number} y - y
+ * @returns {number} ratio value
+ */
+export function ratio(a: number, b: number, y: number) {
+  // a : b = y : x;
+  return (b * y) / a;
+}

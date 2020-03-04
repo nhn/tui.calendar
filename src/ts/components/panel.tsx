@@ -1,7 +1,6 @@
 import { h, Component, Fragment, createRef, VNode } from 'preact';
 import isString from 'tui-code-snippet/type/isString';
 import isNumber from 'tui-code-snippet/type/isNumber';
-
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
 import { PanelResizer } from '@src/components/panelResizer';

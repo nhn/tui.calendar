@@ -1,6 +1,5 @@
 const path = require('path');
 const postcssPrefixer = require('postcss-prefixer');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const merge = require('webpack-merge');

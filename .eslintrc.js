@@ -7,7 +7,7 @@ module.exports = {
     jasmine: true
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['prettier', 'react', '@typescript-eslint', 'jasmine'],
+  plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint', 'jasmine'],
   extends: [
     'tui/es6',
     'plugin:@typescript-eslint/recommended',
@@ -33,7 +33,9 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/explicit-function-return-type': 0,
-    '@typescript-eslint/no-explicit-any': 0
+    '@typescript-eslint/no-explicit-any': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error'
   },
   overrides: [
     {

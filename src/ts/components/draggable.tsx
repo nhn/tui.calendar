@@ -15,7 +15,6 @@ import {
 import getMouseButton from 'tui-code-snippet/domEvent/getMouseButton';
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-
 import { getElementRect } from '@src/util/domutil';
 import { limit } from '@src/util/math';
 import { Direction } from '@src/controller/layout';

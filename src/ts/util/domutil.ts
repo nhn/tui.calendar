@@ -76,3 +76,10 @@ export function getElementRect(el: HTMLElement) {
     ...getSize(el)
   };
 }
+
+export function isOverlapped(el1: Element, el2: Element) {
+  const r1 = el1.getBoundingClientRect();
+  const r2 = el2.getBoundingClientRect();
+
+  return !(r1.top > r2.bottom || r1.right < r2.left || r1.bottom < r2.top || r1.left > r2.right);
+}
