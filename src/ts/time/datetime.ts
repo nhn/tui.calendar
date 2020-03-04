@@ -723,5 +723,8 @@ export function getTimezoneDifference(d: TZDate, timezoneOffset = 0) {
 }
 
 export function getDateDifference(d1: TZDate, d2: TZDate) {
-  return Math.floor((d1.getTime() - d2.getTime()) / MILLISECONDS_PER_DAY);
+  const _d1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
+  const _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
+
+  return Math.round((_d1 - _d2) / MILLISECONDS_PER_DAY);
 }
