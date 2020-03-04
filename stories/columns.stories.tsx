@@ -6,7 +6,7 @@ import TZDate from '@src/time/date';
 import {
   addHours,
   addMinutes,
-  format,
+  toFormat,
   toStartOfYear,
   addMonth,
   toStartOfDay
@@ -36,7 +36,7 @@ Wrapper.defaultProps = {
 };
 
 function renderGridlineChild(time: TZDate) {
-  return <span>{format(time, 'HH:mm')}</span>;
+  return <span>{toFormat(time, 'HH:mm')}</span>;
 }
 
 export const oneDay = () => (
@@ -203,7 +203,7 @@ export const monthsInAnYear = () => {
         times={times}
         events={events}
         renderGridlineChild={time => {
-          return <span>{format(time, 'MM.DD')}</span>;
+          return <span>{toFormat(time, 'MM.DD')}</span>;
         }}
       />
     </Wrapper>

@@ -3,7 +3,7 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import { cls } from '@src/util/cssHelper';
 import { stripTags } from '@src/util';
-import { leadingZero, format, isSameDate } from '@src/time/datetime';
+import { leadingZero, toFormat, isSameDate } from '@src/time/datetime';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import {
   TemplateMonthGrid,
@@ -193,9 +193,9 @@ export const templates: Template = {
   },
 
   timegridCurrentTime(timezone: TemplateCurrentTime) {
-    const { time, format: timeFormat = 'HH:mm' } = timezone;
+    const { time, format = 'HH:mm' } = timezone;
 
-    return format(time, timeFormat);
+    return toFormat(time, format);
   },
 
   popupIsAllDay() {
@@ -247,10 +247,10 @@ export const templates: Template = {
     const endFormat = `${isSame ? '' : 'YYYY.MM.DD '}hh:mm tt`;
 
     if (isAllDay) {
-      return `${format(start, 'YYYY.MM.DD')}${isSame ? '' : ` - ${format(end, 'YYYY.MM.DD')}`}`;
+      return `${toFormat(start, 'YYYY.MM.DD')}${isSame ? '' : ` - ${toFormat(end, 'YYYY.MM.DD')}`}`;
     }
 
-    return `${format(start, 'YYYY.MM.DD hh:mm tt')} - ${format(end, endFormat)}`;
+    return `${toFormat(start, 'YYYY.MM.DD hh:mm tt')} - ${toFormat(end, endFormat)}`;
   },
 
   popupDetailLocation({ location }) {

@@ -7,7 +7,7 @@ import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
-import { format, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
+import { toFormat, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
 import { getTopPercentByTime } from '@src/controller/times';
 import { first, last } from '@src/util/array';
 import { isOverlapped } from '@src/util/domutil';
@@ -147,7 +147,7 @@ Times.defaultProps = {
     const date = new TZDate();
     date.setHours(hour, 0, 0, 0);
 
-    const display = format(date, 'HH:mm');
+    const display = toFormat(date, 'HH:mm');
 
     return {
       date,

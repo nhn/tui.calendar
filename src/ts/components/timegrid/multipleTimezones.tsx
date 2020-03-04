@@ -9,7 +9,7 @@ import { TimezoneLabel } from '@src/components/timegrid/timezoneLabel';
 import {
   addHours,
   addMinutes,
-  format,
+  toFormat,
   getTimezoneDifference,
   isSameDate,
   clone,
@@ -42,7 +42,7 @@ function makeHours(now: TZDate, timezoneOffset?: number): TimeProps[] {
 
     return {
       date,
-      display: format(date, 'HH:mm tt')
+      display: toFormat(date, 'HH:mm tt')
     };
   });
 }

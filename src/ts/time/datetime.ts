@@ -185,7 +185,7 @@ export const SIXTY_SECONDS = 60;
  * @param {string} strFormat format string.
  * @returns {string}  Formatted date string.
  */
-export function format(date: TZDate, strFormat: string): string {
+export function toFormat(date: TZDate, strFormat: string): string {
   let result = strFormat;
   forEachOwnProperties(tokenFunc, (converter: Function, token: string) => {
     result = result.replace(token, converter(date));
@@ -495,10 +495,10 @@ export function isWeekend(day: number): boolean {
  * @returns {boolean} is between?
  */
 export function isBetweenWithDate(d: TZDate, d1: TZDate, d2: TZDate): boolean {
-  const strFormat = 'YYYYMMDD';
-  const n = parseInt(format(d, strFormat), 10);
-  const n1 = parseInt(format(d1, strFormat), 10);
-  const n2 = parseInt(format(d2, strFormat), 10);
+  const format = 'YYYYMMDD';
+  const n = parseInt(toFormat(d, format), 10);
+  const n1 = parseInt(toFormat(d1, format), 10);
+  const n2 = parseInt(toFormat(d2, format), 10);
 
   return n1 <= n && n <= n2;
 }

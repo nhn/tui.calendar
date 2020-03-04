@@ -3,7 +3,7 @@ import { Template, TemplateConfig, GridViewModel } from '@src/model';
 import { cls } from '@src/util/cssHelper';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { format } from '@src/time/datetime';
+import { toFormat } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 
 export function registerTemplateConfig(templateConfig: TemplateConfig = {}): Template {
@@ -66,7 +66,7 @@ function getElWidth(viewModel: ScheduleViewModel, grids: GridViewModel[]) {
  * @returns {string} formatted value
  */
 export function getHhmm(date: TZDate) {
-  return format(date, 'HH:mm');
+  return toFormat(date, 'HH:mm');
 }
 
 /**

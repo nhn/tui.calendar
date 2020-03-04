@@ -15,7 +15,7 @@ import {
   toStartOfDay,
   toEndOfDay,
   MILLISECONDS_PER_DAY,
-  format,
+  toFormat,
   makeDateRange
 } from '@src/time/datetime';
 
@@ -79,7 +79,7 @@ export function addToMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
   const containDates = getDateRange(schedule.getStarts(), schedule.getEnds());
 
   containDates.forEach(date => {
-    const ymd = format(date, 'YYYYMMDD');
+    const ymd = toFormat(date, 'YYYYMMDD');
     const matrix = (idsOfDay[ymd] = idsOfDay[ymd] || []);
 
     matrix.push(schedule.cid());
@@ -210,7 +210,7 @@ export function findByDateRange(
   let viewModels: Schedule[];
 
   range.forEach(date => {
-    ymd = format(date, 'YYYYMMDD');
+    ymd = toFormat(date, 'YYYYMMDD');
     ids = ownMatrix[ymd];
     viewModels = result[ymd] = [];
 

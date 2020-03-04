@@ -12,7 +12,7 @@ import TZDate from '@src/time/date';
 import {
   makeDateRange,
   MILLISECONDS_PER_DAY,
-  format,
+  toFormat,
   toStartOfDay,
   toEndOfDay
 } from '@src/time/datetime';
@@ -170,7 +170,7 @@ export function positionViewModels(
   iteratee?: (viewModel: ScheduleViewModel) => void
 ) {
   const ymdListToRender = makeDateRange(start, end, MILLISECONDS_PER_DAY).map(date => {
-    return format(date, 'YYYYMMDD');
+    return toFormat(date, 'YYYYMMDD');
   });
 
   matrices.forEach(matrix => {
@@ -180,7 +180,7 @@ export function positionViewModels(
           return;
         }
 
-        const ymd = format(viewModel.getStarts(), 'YYYYMMDD');
+        const ymd = toFormat(viewModel.getStarts(), 'YYYYMMDD');
         const dateLength = makeDateRange(
           toStartOfDay(viewModel.getStarts()),
           toEndOfDay(viewModel.getEnds()),
