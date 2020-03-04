@@ -5,7 +5,6 @@ import range from 'tui-code-snippet/array/range';
 import toArray from 'tui-code-snippet/collection/toArray';
 import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
-
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 import { format, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
@@ -14,7 +13,6 @@ import { first, last } from '@src/util/array';
 import { isOverlapped } from '@src/util/domutil';
 import { Template } from '@src/components/template';
 import { TemplateName } from '@src/template/default';
-
 import { prefixer } from '@src/components/timegrid';
 import { CurrentTimeLabel } from '@src/components/timegrid/currentTimeLabel';
 

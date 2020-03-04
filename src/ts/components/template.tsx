@@ -1,10 +1,8 @@
 import { h } from 'preact';
 import Markup from 'preact-markup';
 import isString from 'tui-code-snippet/type/isString';
-
 import { identity } from '@src/util';
 import { TemplateName } from '@src/template/default';
-
 import ContextComponent from '@src/components/contextComponent';
 
 interface Props {

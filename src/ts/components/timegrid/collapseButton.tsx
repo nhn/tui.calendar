@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 import classnames from 'classnames';
-
 import { prefixer } from '@src/components/timegrid';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';

@@ -1,7 +1,6 @@
 import { h, Component, Fragment } from 'preact';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import range from 'tui-code-snippet/array/range';
-
 import { prefixer } from '@src/components/timegrid';
 import { Times, TimeProps } from '@src/components/timegrid/times';
 import { CollapseButton } from '@src/components/timegrid/collapseButton';
