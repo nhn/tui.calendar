@@ -100,7 +100,7 @@ export function Times(props: Props) {
     if (showCurrentTime && ref.current) {
       hideOverlappedTime(ref.current);
     }
-  });
+  }, [showCurrentTime]);
 
   return (
     <div ref={ref} className={classNames.times} style={{ width }}>
