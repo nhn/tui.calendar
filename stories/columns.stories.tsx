@@ -212,3 +212,16 @@ export const monthsInAnYear = () => {
 monthsInAnYear.story = {
   name: 'Months in an year'
 };
+
+export const columnHasBackgroundColor = () => {
+  const backgroundColor = 'rgba(81, 92, 230, 0.05)';
+
+  return (
+    <Wrapper>
+      <Column backgroundColor={backgroundColor} />
+    </Wrapper>
+  );
+};
+columnHasBackgroundColor.story = {
+  name: 'Column has background color'
+};

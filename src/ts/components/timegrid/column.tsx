@@ -20,6 +20,7 @@ interface Props {
   unit: TimeUnit;
   times: TZDate[];
   width: string;
+  backgroundColor: string;
   start?: number;
   end?: number;
   events: Schedule[];
@@ -65,7 +66,13 @@ function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: 
 }
 
 export function Column(props: Props) {
-  const { start = 0, end = props.times.length, width, renderGridlineChild } = props;
+  const {
+    start = 0,
+    end = props.times.length,
+    width,
+    backgroundColor,
+    renderGridlineChild
+  } = props;
   const times = props.times.slice(start, end + 1);
   const startTime = first(times);
   const endTime = last(times);
@@ -74,7 +81,7 @@ export function Column(props: Props) {
   const renderedTimes = times.slice(0, times.length - 1);
 
   return (
-    <div className={styles.column} style={{ width }}>
+    <div className={styles.column} style={{ width, backgroundColor }}>
       {renderGridlines(renderedTimes, renderGridlineChild)}
       {renderBackgroundEvents(events, startTime, endTime)}
     </div>
@@ -91,5 +98,6 @@ Column.defaultProps = {
     return time;
   }),
   width: '72px',
+  backgroundColor: '',
   events: []
 };
