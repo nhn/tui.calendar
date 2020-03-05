@@ -10,7 +10,7 @@ import { BackgroundEvent } from '@src/components/events/background';
 import { getTopPercentByTime } from '@src/controller/times';
 import { toPercent } from '@src/util/units';
 
-const styles = {
+const classNames = {
   column: prefixer('column'),
   gridline: prefixer('gridline'),
   gridlineHalf: prefixer('gridline-half')
@@ -32,8 +32,8 @@ function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) =
     <Fragment>
       {times.map((time, index) => {
         return (
-          <div className={styles.gridline} key={`gridline-${index}`}>
-            <div className={styles.gridlineHalf}></div>
+          <div className={classNames.gridline} key={`gridline-${index}`}>
+            <div className={classNames.gridlineHalf}></div>
             {renderGridlineChild ? renderGridlineChild(time) : null}
           </div>
         );
@@ -81,7 +81,7 @@ export function Column(props: Props) {
   const renderedTimes = times.slice(0, times.length - 1);
 
   return (
-    <div className={styles.column} style={{ width, backgroundColor }}>
+    <div className={classNames.column} style={{ width, backgroundColor }}>
       {renderGridlines(renderedTimes, renderGridlineChild)}
       {renderBackgroundEvents(events, startTime, endTime)}
     </div>

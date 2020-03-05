@@ -3,7 +3,7 @@ import { prefixer } from '@src/components/timegrid';
 import { Template } from '@src/components/template';
 import { TimezoneConfig } from '@src/model';
 
-const styles = {
+const classNames = {
   timezoneLabel: prefixer('timezone-label')
 };
 
@@ -18,7 +18,7 @@ export function TimezoneLabel(props: TimezoneLabelProps) {
   const { tooltip = '' } = timezone;
 
   return (
-    <div title={tooltip} className={styles.timezoneLabel} style={{ width }}>
+    <div title={tooltip} className={classNames.timezoneLabel} style={{ width }}>
       <Template template="timezoneDisplayLabel" model={timezone} />
       {renderCollapseButton ? renderCollapseButton() : null}
     </div>

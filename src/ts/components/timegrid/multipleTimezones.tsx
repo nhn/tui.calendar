@@ -22,7 +22,7 @@ import TZDate from '@src/time/date';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
-const styles = {
+const classNames = {
   container: prefixer('container'),
   stickyContainer: prefixer('sticky-container')
 };
@@ -139,7 +139,7 @@ export class MultipleTimezones extends Component<Props> {
 
     return (
       <Fragment>
-        <div className={styles.container}>
+        <div className={classNames.container}>
           {reverseTimes.map((times, index) => (
             <Times
               key={index}
@@ -172,7 +172,7 @@ export class MultipleTimezones extends Component<Props> {
     return (
       <Fragment>
         {reverseTimezones.length ? (
-          <div className={styles.stickyContainer}>
+          <div className={classNames.stickyContainer}>
             {!this.state.collapsed
               ? reverseTimezones.map((timezone, index) => (
                   <TimezoneLabel key={index} timezone={timezone} />

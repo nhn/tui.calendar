@@ -7,7 +7,7 @@ import { getSize } from '@src/util/domutil';
 import { Template } from '@src/components/template';
 import { prefixer } from '@src/components/timegrid';
 
-const styles = {
+const classNames = {
   currentTime: prefixer('current-time')
 };
 
@@ -57,7 +57,7 @@ export function CurrentTimeLabel(props: CurrentTimeLabelProps) {
   };
 
   return (
-    <div className={styles.currentTime} style={{ top: topValue }}>
+    <div className={classNames.currentTime} style={{ top: topValue }}>
       {dateDifference ? <div ref={signRef}>{`[${dateDifference}]`}</div> : null}
       <div ref={ref}>
         <Template template="timegridCurrentTime" model={model} />

@@ -5,7 +5,7 @@ import { prefixer } from '@src/components/timegrid';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
 
-const styles = {
+const classNames = {
   collapseButton: prefixer('collapse-button')
 };
 
@@ -16,7 +16,7 @@ interface Props {
 
 export function CollapseButton(props: Props) {
   const { collapsed, onClick = noop } = props;
-  const classNames = classnames(cls('icon'), {
+  const iconClassName = classnames(cls('icon'), {
     [cls('ic-arrow-right')]: collapsed,
     [cls('ic-arrow-left')]: !collapsed
   });
@@ -25,8 +25,8 @@ export function CollapseButton(props: Props) {
   }, [collapsed, onClick]);
 
   return (
-    <div className={styles.collapseButton} onClick={memoizedOnClick}>
-      <span className={classNames}></span>
+    <div className={classNames.collapseButton} onClick={memoizedOnClick}>
+      <span className={iconClassName}></span>
     </div>
   );
 }

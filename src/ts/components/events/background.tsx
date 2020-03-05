@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Schedule from '@src/model/schedule';
 import { cls } from '@src/util/cssHelper';
 
-const styles = {
+const classNames = {
   background: cls('event-background')
 };
 
@@ -28,7 +28,7 @@ export function BackgroundEvent(props: Props) {
     left
   };
 
-  return <span className={styles.background} style={style}></span>;
+  return <span className={classNames.background} style={style}></span>;
 }
 BackgroundEvent.displayName = 'BackgroundEvent';
 BackgroundEvent.defaultProps = {
