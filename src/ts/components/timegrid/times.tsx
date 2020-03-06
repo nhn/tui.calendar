@@ -89,7 +89,7 @@ export function Times(props: Props) {
     currentTime = new TZDate(),
     dateDifference,
     start = 0,
-    end = props.times.length,
+    end = props.times.length - 1,
     timeTemplate
   } = props;
   const times = props.times.slice(start, end + 1);
