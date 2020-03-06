@@ -17,7 +17,7 @@ import {
   getMatrices,
   positionViewModels
 } from '@src/controller/core';
-import { format, isSameDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { toFormat, isSameDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { IDS_OF_DAY } from './base';
 import array from '@src/util/array';
 import { DataStore } from '@src/model';
@@ -106,7 +106,7 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<Sch
   const maxIndexInYMD: Record<string, number> = {};
 
   sortedTimeSchedules.forEach(timeViewModel => {
-    const scheduleYMD = format(timeViewModel.getStarts(), 'YYYYMMDD');
+    const scheduleYMD = toFormat(timeViewModel.getStarts(), 'YYYYMMDD');
     let alldayMaxTopInYMD = maxIndexInYMD[scheduleYMD];
 
     if (isUndefined(alldayMaxTopInYMD)) {
@@ -130,7 +130,7 @@ function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<Sched
   const indiceInYMD: Record<string, number[]> = {};
 
   sortedTimeSchedules.forEach(timeViewModel => {
-    const scheduleYMD = format(timeViewModel.getStarts(), 'YYYYMMDD');
+    const scheduleYMD = toFormat(timeViewModel.getStarts(), 'YYYYMMDD');
     let topArrayInYMD = indiceInYMD[scheduleYMD];
 
     if (isUndefined(topArrayInYMD)) {

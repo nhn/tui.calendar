@@ -22,7 +22,7 @@ module.exports = ({ config }) => {
     },
     module: {
       ...config.module,
-      rules: [...config.module.rules, ...custom.module.rules]
+      rules: custom.module.rules
     },
     plugins: [...config.plugins, ...custom.plugins]
   };

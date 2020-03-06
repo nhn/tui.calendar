@@ -188,16 +188,16 @@ describe('datetime', function() {
     });
   });
 
-  describe('format()', function() {
+  describe('toFormat()', function() {
     it('return formatted date string as basis of supplied string.', function() {
       const birth = new TZDate('1988-09-25T15:30:00');
 
-      expect(dt.format(birth, '')).toBe('');
-      expect(dt.format(birth, 'YYYY')).toBe('1988');
-      expect(dt.format(birth, 'MM')).toBe('09');
-      expect(dt.format(birth, 'DD')).toBe('25');
-      expect(dt.format(birth, 'YYYYMMDD')).toBe('19880925');
-      expect(dt.format(birth, 'HH:mm')).toBe(
+      expect(dt.toFormat(birth, '')).toBe('');
+      expect(dt.toFormat(birth, 'YYYY')).toBe('1988');
+      expect(dt.toFormat(birth, 'MM')).toBe('09');
+      expect(dt.toFormat(birth, 'DD')).toBe('25');
+      expect(dt.toFormat(birth, 'YYYYMMDD')).toBe('19880925');
+      expect(dt.toFormat(birth, 'HH:mm')).toBe(
         `${dt.leadingZero(birth.getHours(), 2)}:${dt.leadingZero(birth.getMinutes(), 2)}`
       );
     });

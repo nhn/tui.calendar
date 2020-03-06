@@ -1,0 +1,25 @@
+.timegrid-column {
+  $borderColor: #e5e5e5;
+
+  position: relative;
+  border-right: 1px solid $borderColor;
+
+  .timegrid-gridline {
+    $height: 52px;
+
+    position: relative;
+    height: $height;
+    border-bottom: 1px solid $borderColor;
+
+    .timegrid-gridline-half {
+      position: absolute;
+      width: 100%;
+      height: $height / 2;
+      border-bottom: 1px dotted #f9f9f9;
+    }
+  }
+
+  .event-background {
+    position: absolute;
+  }
+}

@@ -7,7 +7,7 @@ import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
-import { format, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
+import { toFormat, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
 import { getTopPercentByTime } from '@src/controller/times';
 import { first, last } from '@src/util/array';
 import { isOverlapped } from '@src/util/domutil';
@@ -16,7 +16,7 @@ import { TemplateName } from '@src/template/default';
 import { prefixer } from '@src/components/timegrid';
 import { CurrentTimeLabel } from '@src/components/timegrid/currentTimeLabel';
 
-const styles = {
+const classNames = {
   times: prefixer('times'),
   time: prefixer('time'),
   timeLabel: prefixer('time-label'),
@@ -64,17 +64,17 @@ function isPastByUnit(time: TZDate, now: TZDate, unit: TimeUnit) {
 
 function hideOverlappedTime(timesElement: HTMLElement) {
   const timeLabelElements = toArray<HTMLElement>(
-    timesElement.getElementsByClassName(styles.timeLabel)
+    timesElement.getElementsByClassName(classNames.timeLabel)
   );
   const [currentElement] = toArray<HTMLElement>(
-    timesElement.getElementsByClassName(styles.currentTime)
+    timesElement.getElementsByClassName(classNames.currentTime)
   );
 
   timeLabelElements.forEach(timeLabelElement => {
     if (isOverlapped(timeLabelElement, currentElement)) {
-      addClass(timeLabelElement, styles.hidden);
+      addClass(timeLabelElement, classNames.hidden);
     } else {
-      removeClass(timeLabelElement, styles.hidden);
+      removeClass(timeLabelElement, classNames.hidden);
     }
   });
 }
@@ -89,7 +89,7 @@ export function Times(props: Props) {
     currentTime = new TZDate(),
     dateDifference,
     start = 0,
-    end = props.times.length,
+    end = props.times.length - 1,
     timeTemplate
   } = props;
   const times = props.times.slice(start, end + 1);
@@ -103,22 +103,22 @@ export function Times(props: Props) {
   });
 
   return (
-    <div ref={ref} className={styles.times} style={{ width }}>
+    <div ref={ref} className={classNames.times} style={{ width }}>
       {times.map((slot, index) => {
         const isPast = isPastByUnit(slot.date, currentTime, unit);
         const isFirst = index === 0;
         const isLast = index === times.length - 1;
-        const className = classnames(styles.time, {
-          [styles.past]: isPast,
-          [styles.first]: isFirst,
-          [styles.last]: isLast,
-          [styles.hidden]: isLast && !showLast
+        const className = classnames(classNames.time, {
+          [classNames.past]: isPast,
+          [classNames.first]: isFirst,
+          [classNames.last]: isLast,
+          [classNames.hidden]: isLast && !showLast
         });
         const display = !showFirst && isFirst ? '' : slot.display;
 
         return (
           <div className={className} key={index}>
-            <span className={styles.timeLabel}>
+            <span className={classNames.timeLabel}>
               {timeTemplate ? (
                 <Template template={timeTemplate} model={{ time: slot.date }} />
               ) : (
@@ -147,7 +147,7 @@ Times.defaultProps = {
     const date = new TZDate();
     date.setHours(hour, 0, 0, 0);
 
-    const display = format(date, 'HH:mm');
+    const display = toFormat(date, 'HH:mm');
 
     return {
       date,

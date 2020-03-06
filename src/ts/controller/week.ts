@@ -11,7 +11,7 @@ import {
   millisecondsFrom,
   toStartOfDay,
   toEndOfDay,
-  format,
+  toFormat,
   makeDateRange,
   MILLISECONDS_PER_DAY
 } from '@src/time/datetime';
@@ -236,7 +236,7 @@ export function splitScheduleByDateRange(
   const range = getDateRange(start, end);
 
   range.forEach((date: TZDate) => {
-    const ymd = format(date, 'YYYYMMDD');
+    const ymd = toFormat(date, 'YYYYMMDD');
     const ids = idsOfDay[ymd];
     const collection = (result[ymd] = new Collection<Schedule | ScheduleViewModel>(schedule => {
       return schedule.cid();
@@ -405,8 +405,8 @@ export function findByDateRange(
   return resutGroup;
 }
 
-function getYMD(date: TZDate, fmt = 'YYYYMMDD') {
-  return format(date, fmt);
+function getYMD(date: TZDate, format = 'YYYYMMDD') {
+  return toFormat(date, format);
 }
 
 /* eslint max-nested-callbacks: 0 */

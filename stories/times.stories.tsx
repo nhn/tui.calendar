@@ -4,7 +4,7 @@ import range from 'tui-code-snippet/array/range';
 import { Times } from '@src/components/timegrid/times';
 import TZDate from '@src/time/date';
 import {
-  format,
+  toFormat,
   addDate,
   addMonth,
   toStartOfMonth,
@@ -45,7 +45,7 @@ export const minutesInAnHour = () => {
 
   const times = range(0, 60, 10).map(minutes => {
     const d = addMinutes(now, minutes);
-    const display = format(d, 'HH:mm');
+    const display = toFormat(d, 'HH:mm');
 
     return {
       date: d,
@@ -67,7 +67,7 @@ export const minutesInAnHour = () => {
   );
 };
 minutesInAnHour.story = {
-  name: 'every 10 mins in an hour'
+  name: 'Every 10 mins in an hour'
 };
 
 export const hoursInADay = () => (
@@ -92,7 +92,7 @@ export const datesInAWeek = () => {
   const month = addDate(new TZDate(), -3);
   const times = range(0, 8).map(date => {
     const d = addDate(month, date);
-    const display = format(d, 'MM.DD');
+    const display = toFormat(d, 'MM.DD');
 
     return {
       date: d,
@@ -121,7 +121,7 @@ export const datesInAMonth = () => {
   const month = toStartOfMonth(new TZDate());
   const times = range(0, 30).map(date => {
     const d = addDate(month, date);
-    const display = format(d, 'MM.DD');
+    const display = toFormat(d, 'MM.DD');
 
     return {
       date: d,
@@ -151,7 +151,7 @@ export const monthsInAnYear = () => {
   const startOfYear = toStartOfYear(new TZDate());
   const times = range(0, 13).map(month => {
     const d = addMonth(startOfYear, month);
-    const display = format(d, 'MM.DD');
+    const display = toFormat(d, 'MM.DD');
 
     return {
       date: d,
@@ -173,7 +173,7 @@ export const yearsInDecade = () => {
   const startOfYear = toStartOfYear(new TZDate());
   const times = range(0, 11).map(year => {
     const d = addYear(startOfYear, year);
-    const display = format(d, 'YYYY');
+    const display = toFormat(d, 'YYYY');
 
     return {
       date: d,
