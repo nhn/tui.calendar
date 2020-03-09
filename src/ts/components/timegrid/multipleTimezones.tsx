@@ -1,11 +1,11 @@
 import { h, Component, Fragment } from 'preact';
+import { createPortal } from 'preact/compat';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import range from 'tui-code-snippet/array/range';
-import { prefixer } from '@src/components/timegrid';
+import { className as timegridClassName, prefixer } from '@src/components/timegrid';
 import { Times, TimeProps } from '@src/components/timegrid/times';
 import { CollapseButton } from '@src/components/timegrid/collapseButton';
 import { TimezoneLabel } from '@src/components/timegrid/timezoneLabel';
-
 import {
   addHours,
   addMinutes,
@@ -19,17 +19,23 @@ import {
 } from '@src/time/datetime';
 import { TimezoneConfig } from '@src/model';
 import TZDate from '@src/time/date';
+import { cls } from '@src/util/cssHelper';
+import { noop } from '@src/util';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
-  container: prefixer('container'),
-  stickyContainer: prefixer('sticky-container')
+  timegrid: cls(timegridClassName),
+  sticky: prefixer('sticky')
 };
 
 interface Props {
+  currentTime: TZDate;
+  width: string;
   timezones?: TimezoneConfig[];
   showTimezoneLabel?: boolean;
+  stickyContainer?: HTMLElement | null;
+  onChangeCollapsed?: (collapsed: boolean) => void;
 }
 
 function makeHours(now: TZDate, timezoneOffset?: number): TimeProps[] {
@@ -49,6 +55,11 @@ function makeHours(now: TZDate, timezoneOffset?: number): TimeProps[] {
 
 export class MultipleTimezones extends Component<Props> {
   static displayName = 'MultipleTimezones';
+
+  static defaultProps = {
+    currentTime: new TZDate(),
+    width: '72px'
+  };
 
   state = {
     collapsed: false
@@ -102,9 +113,13 @@ export class MultipleTimezones extends Component<Props> {
   }
 
   makeTimezones() {
-    const { timezones = [] } = this.props;
-    const now = new TZDate();
-    const startOfToday = toStartOfDay(now);
+    const { currentTime } = this.props;
+    let { timezones = [] } = this.props;
+    const startOfToday = toStartOfDay(currentTime);
+
+    if (!timezones.length) {
+      timezones = [{}];
+    }
 
     return timezones.map((timezone, index) => {
       const { timezoneOffset } = timezone;
@@ -113,16 +128,25 @@ export class MultipleTimezones extends Component<Props> {
       return {
         times: makeHours(startOfToday, timezoneOffset),
         currentTime: isPrimaryTimezone
-          ? clone(now)
-          : addMinutes(now, getTimezoneDifference(now, timezoneOffset)),
+          ? clone(currentTime)
+          : addMinutes(currentTime, getTimezoneDifference(currentTime, timezoneOffset)),
         timezone
       };
     });
   }
 
+  onClickCollapseButton(value: boolean) {
+    const { onChangeCollapsed = noop } = this.props;
+    const collapsed = !value;
+
+    onChangeCollapsed(collapsed);
+
+    this.setState({ collapsed });
+  }
+
   render() {
     const { collapsed } = this.state;
-    const { showTimezoneLabel } = this.props;
+    const { showTimezoneLabel, width, stickyContainer } = this.props;
 
     const timezones = this.makeTimezones();
     const [primaryTimes, ...subTimes] = timezones.map(timezone => timezone.times);
@@ -131,60 +155,69 @@ export class MultipleTimezones extends Component<Props> {
     );
     const reverseTimes = collapsed ? [] : subTimes.reverse();
     const reverseCurrentTimes = collapsed ? [] : subCurrentTimes.reverse();
-    const showCurrentTime = isSameDate(primaryCurrentTime, new TZDate());
+    const now = new TZDate();
+    const showCurrentTime = isSameDate(primaryCurrentTime, now);
 
     if (showCurrentTime) {
       this.addTimeoutOnExactMinutes();
     }
 
+    let timezoneLabels = null;
+    if (showTimezoneLabel) {
+      timezoneLabels = this.renderTimezoneLabels(
+        timezones.map(({ timezone }) => timezone),
+        width
+      );
+    }
+
     return (
       <Fragment>
-        <div className={classNames.container}>
-          {reverseTimes.map((times, index) => (
-            <Times
-              key={index}
-              times={times}
-              showCurrentTime={showCurrentTime}
-              currentTime={reverseCurrentTimes[index]}
-              dateDifference={getDateDifference(reverseCurrentTimes[index], primaryCurrentTime)}
-              timeTemplate="timegridDisplayTime"
-            />
-          ))}
+        {reverseTimes.map((times, index) => (
           <Times
-            times={primaryTimes}
+            key={index}
+            width={width}
+            times={times}
             showCurrentTime={showCurrentTime}
-            currentTime={primaryCurrentTime}
-            timeTemplate="timegridDisplayPrimaryTime"
+            currentTime={reverseCurrentTimes[index]}
+            dateDifference={getDateDifference(reverseCurrentTimes[index], primaryCurrentTime)}
+            timeTemplate="timegridDisplayTime"
           />
-        </div>
+        ))}
+        <Times
+          width={width}
+          times={primaryTimes}
+          showCurrentTime={showCurrentTime}
+          currentTime={primaryCurrentTime}
+          timeTemplate="timegridDisplayPrimaryTime"
+        />
 
-        {showTimezoneLabel
-          ? this.renderStickyContainer(timezones.map(({ timezone }) => timezone))
-          : null}
+        {stickyContainer && timezoneLabels
+          ? createPortal(timezoneLabels, stickyContainer)
+          : timezoneLabels}
       </Fragment>
     );
   }
 
-  renderStickyContainer(timezones: TimezoneConfig[]) {
+  renderTimezoneLabels(timezones: TimezoneConfig[], width: string) {
     const [primaryTimezone, ...subTimezones] = timezones;
     const reverseTimezones = subTimezones.reverse();
+    if (!reverseTimezones.length) {
+      return null;
+    }
 
     return (
-      <Fragment>
-        {reverseTimezones.length ? (
-          <div className={classNames.stickyContainer}>
-            {!this.state.collapsed
-              ? reverseTimezones.map((timezone, index) => (
-                  <TimezoneLabel key={index} timezone={timezone} />
-                ))
-              : null}
-            <TimezoneLabel
-              timezone={primaryTimezone}
-              renderCollapseButton={() => this.renderCollapseButton()}
-            />
-          </div>
-        ) : null}
-      </Fragment>
+      <div className={classNames.sticky}>
+        {!this.state.collapsed
+          ? reverseTimezones.map((timezone, index) => (
+              <TimezoneLabel key={index} timezone={timezone} width={width} />
+            ))
+          : null}
+        <TimezoneLabel
+          timezone={primaryTimezone}
+          width={width}
+          renderCollapseButton={() => this.renderCollapseButton()}
+        />
+      </div>
     );
   }
 
@@ -193,9 +226,7 @@ export class MultipleTimezones extends Component<Props> {
 
     return (
       <CollapseButton
-        onClick={(value: boolean) => {
-          this.setState({ collapsed: !value });
-        }}
+        onClick={(value: boolean) => this.onClickCollapseButton(value)}
         collapsed={collapsed}
       />
     );

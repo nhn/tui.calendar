@@ -82,7 +82,7 @@ function hideOverlappedTime(timesElement: HTMLElement) {
 export function Times(props: Props) {
   const {
     unit,
-    width,
+    width = '72px',
     showFirst,
     showLast,
     showCurrentTime,
