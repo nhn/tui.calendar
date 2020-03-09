@@ -4,7 +4,7 @@
 var pkg = require('./package.json');
 var path = require('path');
 var webpack = require('webpack');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var TerserPlugin = require('terser-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var OptimizaeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 var SafeUmdPlugin = require('safe-umd-webpack-plugin');
@@ -105,10 +105,9 @@ module.exports = {
     ],
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: true
+            new TerserPlugin({
+                sourceMap: true,
+                extractComments: false
             }),
             new OptimizaeCSSAssetsPlugin({
                 cssProcessorOptions: {
