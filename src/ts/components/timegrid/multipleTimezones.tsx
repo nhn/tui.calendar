@@ -13,7 +13,6 @@ import {
   getTimezoneDifference,
   isSameDate,
   clone,
-  SIXTY_SECONDS,
   getDateDifference,
   toStartOfDay
 } from '@src/time/datetime';
@@ -21,8 +20,6 @@ import { TimezoneConfig } from '@src/model';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
-
-const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
   timegrid: cls(timegridClassName),
@@ -64,53 +61,6 @@ export class MultipleTimezones extends Component<Props> {
   state = {
     collapsed: false
   };
-
-  intervalId: any;
-
-  timerId: any;
-
-  componentWillMount() {
-    this.onTick = this.onTick.bind(this);
-  }
-
-  componentWillUnmount() {
-    this.clearTimeout();
-    this.clearInterval();
-  }
-
-  clearTimeout() {
-    if (this.timerId) {
-      clearTimeout(this.timerId);
-      this.timerId = 0;
-    }
-  }
-
-  clearInterval() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = 0;
-    }
-  }
-
-  onTick() {
-    this.clearTimeout();
-
-    if (!this.intervalId) {
-      this.intervalId = setInterval(this.onTick, REFRESH_INTERVAL);
-    }
-
-    this.refreshCurrentTime();
-  }
-
-  refreshCurrentTime() {
-    this.forceUpdate();
-  }
-
-  addTimeoutOnExactMinutes() {
-    if (!this.timerId) {
-      this.timerId = setTimeout(this.onTick, (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
-    }
-  }
 
   makeTimezones() {
     const { currentTime } = this.props;
@@ -157,10 +107,6 @@ export class MultipleTimezones extends Component<Props> {
     const reverseCurrentTimes = collapsed ? [] : subCurrentTimes.reverse();
     const now = new TZDate();
     const showCurrentTime = isSameDate(primaryCurrentTime, now);
-
-    if (showCurrentTime) {
-      this.addTimeoutOnExactMinutes();
-    }
 
     let timezoneLabels = null;
     if (showTimezoneLabel) {

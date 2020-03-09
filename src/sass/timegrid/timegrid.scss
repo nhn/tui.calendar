@@ -19,6 +19,33 @@
       display: inline-block;
     }
   }
+
+  .timegrid-current-time-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    .timegrid-current-time-line-left {
+      position: absolute;
+    }
+
+    .timegrid-current-time-line-marker {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin: -4px 0 0 -5px;
+    }
+
+    .timegrid-current-time-line-today {
+      position: absolute;
+    }
+
+    .timegrid-current-time-line-right {
+      position: absolute;
+      right: 0;
+    }
+  }
 }
 
 .timegrid-sticky {
