@@ -72,8 +72,9 @@ export class TimeGrid extends Component<Props, State> {
     currentTime: new TZDate(),
     unit: 'hour',
     columnInfoList: range(0, 7).map(day => {
-      const startTime = addDate(new TZDate(), day);
-      const endTime = addDate(new TZDate(), day + 1);
+      const now = new TZDate();
+      const startTime = toStartOfDay(addDate(now, day + -now.getDay()));
+      const endTime = toEndOfDay(startTime);
 
       return {
         startTime,
@@ -165,10 +166,9 @@ export class TimeGrid extends Component<Props, State> {
 
   render(props: Props, state: State) {
     const { columnInfoList, timesWidth, timezones = [{}], events } = props;
+    const { stickyContainer } = state;
     const showTimezoneLabel = timezones.length > 1;
     const columWidth = 100 / columnInfoList.length;
-
-    const { stickyContainer } = state;
     const columnLeft = state.columnLeft || calculateLeft(timesWidth, timezones);
     const now = new TZDate();
     const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
