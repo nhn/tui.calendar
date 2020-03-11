@@ -5,18 +5,10 @@ import { TimeUnit } from '@src/model';
 import { toPercent } from '@src/util/units';
 import { getSize } from '@src/util/domutil';
 import { Template } from '@src/components/template';
-import { prefixer } from '@src/components/timegrid';
+import { prefixer, timeFormats } from '@src/components/timegrid';
 
 const classNames = {
   currentTime: prefixer('current-time')
-};
-
-const timeFormats: Record<TimeUnit, string> = {
-  minute: 'HH:mm',
-  hour: 'HH:mm',
-  date: 'HH:mm',
-  month: 'MM.DD',
-  year: 'YYYY.MM.DD'
 };
 
 interface CurrentTimeLabelProps {

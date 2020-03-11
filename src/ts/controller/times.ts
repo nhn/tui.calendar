@@ -17,3 +17,27 @@ export function getTopPercentByTime(date: TZDate, start: TZDate, end: TZDate) {
 
   return limit(topPercent, [0], [100]);
 }
+
+/**
+ * @typedef {Object} VerticalPositionsByTime
+ * @property {number} top - top percent
+ * @property {number} height - height percent
+ */
+/**
+ *
+ * @param {TZDate} start target time which is converted to percent value
+ * @param {TZDate} end target time which is converted to percent value
+ * @param {TZDate} minTime start time
+ * @param {TZDate} maxTime end time
+ * @returns {VerticalPositionsByTime} verticalPositions
+ */
+export function getTopHeightByTime(start: TZDate, end: TZDate, minTime: TZDate, maxTime: TZDate) {
+  const top = getTopPercentByTime(start, minTime, maxTime);
+  const bottom = getTopPercentByTime(end, minTime, maxTime);
+  const height = bottom - top;
+
+  return {
+    top,
+    height
+  };
+}

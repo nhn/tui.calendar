@@ -22,4 +22,24 @@
   .event-background {
     position: absolute;
   }
+
+  .timegrid-guide-creation {
+    position: absolute;
+    right: 10px;
+    left: 1px;
+    padding: 3px;
+    background-color: rgba(81, 92, 230, 0.05);
+    border: 1px solid rgb(81, 92, 230);
+
+    .creation-label {
+      color: rgb(81, 92, 230);
+      font-size: 11px;
+      font-weight: bold;
+
+      &.creation-label-bottom {
+        position: absolute;
+        bottom: 3px;
+      }
+    }
+  }
 }
