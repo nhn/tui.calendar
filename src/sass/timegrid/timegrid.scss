@@ -1,0 +1,83 @@
+.timegrid {
+  user-select: none;
+  position: relative;
+  height: 100%;
+
+  .timegrid-scroll-area {
+    overflow: hidden;
+    overflow-y: auto;
+    position: relative;
+    height: 100%;
+  }
+
+  .timegrid-columns {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .timegrid-column {
+      display: inline-block;
+    }
+  }
+
+  .timegrid-current-time-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    .timegrid-current-time-line-left {
+      position: absolute;
+    }
+
+    .timegrid-current-time-line-marker {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin: -4px 0 0 -5px;
+    }
+
+    .timegrid-current-time-line-today {
+      position: absolute;
+    }
+
+    .timegrid-current-time-line-right {
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+.timegrid-sticky {
+  position: absolute;
+  top: 0;
+  border-bottom: 1px solid rgb(229, 229, 229);
+  background-color: white;
+  font-size: 11px;
+  user-select: none;
+
+  .timegrid-timezone-label {
+    display: inline-block;
+    text-align: right;
+    padding-right: 5px;
+    border-right: 1px solid #e5e5e5;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .timegrid-collapse-button {
+    cursor: pointer;
+    position: absolute;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    top: 2px;
+    bottom: 2px;
+    width: 10px;
+    border-left: none;
+
+    .icon {
+      width: 5px;
+    }
+  }
+}

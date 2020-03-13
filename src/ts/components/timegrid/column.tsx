@@ -100,4 +100,4 @@ Column.defaultProps = {
   width: '72px',
   backgroundColor: '',
   events: []
-};
+} as Props;

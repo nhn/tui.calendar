@@ -5,6 +5,7 @@
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { compare } from '@src/time/datetime';
+import forEach from 'tui-code-snippet/collection/forEach';
 
 /**
  * A module for sorting array.
@@ -184,4 +185,23 @@ export function first<T>(array: Array<T>) {
 
 export function last<T>(array: Array<T>) {
   return array[array.length - 1];
+}
+
+export function findIndex<T>(array: Array<T>, iteratee: (item: T) => boolean) {
+  if (Array.prototype.findIndex) {
+    return Array.prototype.findIndex.call(array, iteratee);
+  }
+
+  let foundIndex = -1;
+  forEach(array, (item: T, index: number) => {
+    if (iteratee(item)) {
+      foundIndex = index;
+
+      return false;
+    }
+
+    return true;
+  });
+
+  return foundIndex;
 }

@@ -48,7 +48,7 @@ export function CurrentTimeLabel(props: CurrentTimeLabelProps) {
     }
   };
 
-  useEffect(adjustTopForCentering);
+  useEffect(adjustTopForCentering, [top]);
 
   const model = {
     unit,

@@ -82,7 +82,7 @@ function hideOverlappedTime(timesElement: HTMLElement) {
 export function Times(props: Props) {
   const {
     unit,
-    width,
+    width = '72px',
     showFirst,
     showLast,
     showCurrentTime,
@@ -100,7 +100,7 @@ export function Times(props: Props) {
     if (showCurrentTime && ref.current) {
       hideOverlappedTime(ref.current);
     }
-  });
+  }, [showCurrentTime]);
 
   return (
     <div ref={ref} className={classNames.times} style={{ width }}>

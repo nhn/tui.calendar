@@ -229,3 +229,6 @@ export const multipleTimezones = () => {
     </Wrapper>
   );
 };
+multipleTimezones.story = {
+  name: 'Multiple timezones'
+};
