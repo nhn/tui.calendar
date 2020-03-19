@@ -45,7 +45,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^2.99.1",
     "jsdoc": "^3.5.5",
-    "karma": "^2.0.2",
+    "karma": "^4.4.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
     "karma-coverage": "^2.0.1",
@@ -62,7 +62,6 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.32",
     "karma-webdriver-launcher": "git+https://github.com/nhn/karma-webdriver-launcher.git#v1.2.0",
-    "karma-webpack": "^3.0.0",
     "mini-css-extract-plugin": "^0.4.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "preprocess-loader": "^0.3.0",
@@ -94,6 +93,7 @@
     "doc": "tuidoc"
   },
   "dependencies": {
+    "karma-webpack": "^4.0.2",
     "tui-code-snippet": "^1.5.0",
     "tui-date-picker": "^4.0.2",
     "tui-time-picker": "^2.0.1"
