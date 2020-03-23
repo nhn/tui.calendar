@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>TOAST UI Calendar Weekly Theme DEMO</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+  <link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css">
+  <link rel="stylesheet" type="text/css" href="./css/default.css">
+  <link rel="stylesheet" type="text/css" href="./css/icons.css">
+</head>
+<body>
+  <div class="code-html">
+    <div id="menu">
+      <span id="menu-navi">
+        <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+          <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+          <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+        </button>
+      </span>
+      <span id="renderRange" class="render-range"></span>
+    </div>
+
+    <div id="calendar"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+  <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
+  <script src="../dist/tui-calendar.js"></script>
+  <script src="./js/data/calendars.js"></script>
+  <script src="./js/data/schedules.js"></script>
+  <script type="text/javascript" class="code-js">
+  var WEEKLY_CUSTOM_THEME = {
+    // week header 'dayname'
+    'week.dayname.height': '41px',
+    'week.dayname.borderTop': '1px solid #ddd',
+    'week.dayname.borderBottom': '1px solid #ddd',
+    'week.dayname.borderLeft': '1px solid #ddd',
+    'week.dayname.paddingLeft': '5px',
+    'week.dayname.backgroundColor': 'inherit',
+    'week.dayname.textAlign': 'left',
+    'week.today.color': '#b857d8',
+    'week.pastDay.color': '#999',
+
+    // week vertical panel 'vpanel'
+    'week.vpanelSplitter.border': '1px solid #ddd',
+    'week.vpanelSplitter.height': '3px',
+
+    // week daygrid 'daygrid'
+    'week.daygrid.borderRight': '1px solid #ddd',
+    'week.daygrid.backgroundColor': 'inherit',
+
+    'week.daygridLeft.width': '77px',
+    'week.daygridLeft.backgroundColor': '#a8def74d',
+    'week.daygridLeft.paddingRight': '5px',
+    'week.daygridLeft.borderRight': '1px solid #ddd',
+
+    'week.today.backgroundColor': '#b857d81f',
+    'week.weekend.backgroundColor': 'inherit',
+
+    // week timegrid 'timegrid'
+    'week.timegridLeft.width': '77px',
+    'week.timegridLeft.backgroundColor': '#03a9f44d',
+    'week.timegridLeft.borderRight': '1px solid #ddd',
+    'week.timegridLeft.fontSize': '12px',
+    'week.timegridLeftTimezoneLabel.height': '51px',
+    'week.timegridLeftAdditionalTimezone.backgroundColor': '#fdfdfd',
+
+    'week.timegridOneHour.height': '48px',
+    'week.timegridHalfHour.height': '24px',
+    'week.timegridHalfHour.borderBottom': '1px dotted #f9f9f9',
+    'week.timegridHorizontalLine.borderBottom': '1px solid #eee',
+
+    'week.timegrid.paddingRight': '10px',
+    'week.timegrid.borderRight': '1px solid #ddd',
+    'week.timegridSchedule.borderRadius': '0',
+    'week.timegridSchedule.paddingLeft': '0',
+
+    'week.currentTime.color': '#135de6',
+    'week.currentTime.fontSize': '12px',
+    'week.currentTime.fontWeight': 'bold',
+
+    'week.pastTime.color': '#808080',
+    'week.pastTime.fontWeight': 'normal',
+
+    'week.futureTime.color': '#333',
+    'week.futureTime.fontWeight': 'normal',
+
+    'week.currentTimeLinePast.border': '1px solid rgba(19, 93, 230, 0.3)',
+    'week.currentTimeLineBullet.backgroundColor': '#135de6',
+    'week.currentTimeLineToday.border': '1px solid #135de6',
+    'week.currentTimeLineFuture.border': '1px solid #135de6',
+
+    // week creation guide style
+    'week.creationGuide.color': '#135de6',
+    'week.creationGuide.fontSize': '12px',
+    'week.creationGuide.fontWeight': 'bold',
+
+    // week daygrid schedule style
+    'week.dayGridSchedule.borderRadius': '0',
+    'week.dayGridSchedule.height': '18px',
+    'week.dayGridSchedule.marginTop': '2px',
+    'week.dayGridSchedule.marginLeft': '10px',
+    'week.dayGridSchedule.marginRight': '10px'
+  };
+
+  var cal = new tui.Calendar('#calendar', {
+    defaultView: 'week',
+    theme: WEEKLY_CUSTOM_THEME // set theme
+  });
+
+  // or
+  // cal.setTheme(WEEKLY_CUSTOM_THEME);
+
+  </script>
+  <script src="./js/default.js"></script>
+</body>
+</html>
