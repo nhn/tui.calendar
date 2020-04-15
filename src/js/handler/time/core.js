@@ -61,7 +61,7 @@ var timeCore = {
                 );
 
             return util.extend({
-                target: mouseEvent.target || mouseEvent.srcElement,
+                target: domevent.getEventTarget(mouseEvent),
                 relatedView: timeView,
                 originEvent: mouseEvent,
                 mouseY: mouseY,

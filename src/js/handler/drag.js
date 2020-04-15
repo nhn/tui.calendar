@@ -109,7 +109,7 @@ Drag.prototype._toggleDragEvent = function(toBind) {
  */
 Drag.prototype._getEventData = function(mouseEvent) {
     return {
-        target: mouseEvent.target || mouseEvent.srcElement,
+        target: domevent.getEventTarget(mouseEvent),
         originEvent: mouseEvent
     };
 };
@@ -120,7 +120,7 @@ Drag.prototype._getEventData = function(mouseEvent) {
  */
 Drag.prototype._onMouseDown = function(mouseDownEvent) {
     var opt = this.options,
-        target = (mouseDownEvent.srcElement || mouseDownEvent.target);
+        target = domevent.getEventTarget(mouseDownEvent);
 
     // only primary button can start drag.
     if (domevent.getMouseButton(mouseDownEvent) !== 0) {

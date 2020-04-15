@@ -70,7 +70,7 @@ util.inherit(More, View);
  * @param {MouseEvent} clickEvent - mouse event object
  */
 More.prototype._onClick = function(clickEvent) {
-    var target = (clickEvent.target || clickEvent.srcElement);
+    var target = domevent.getEventTarget(clickEvent);
     var className = config.classname('month-more-close');
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
@@ -86,7 +86,7 @@ More.prototype._onClick = function(clickEvent) {
  * @param {MouseEvent} mouseDownEvent - mouse event object
  */
 More.prototype._onMouseDown = function(mouseDownEvent) {
-    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+    var target = domevent.getEventTarget(mouseDownEvent),
         moreLayer = domutil.closest(target, config.classname('.month-more'));
 
     if (moreLayer) {

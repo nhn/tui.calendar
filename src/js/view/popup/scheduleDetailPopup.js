@@ -43,7 +43,7 @@ util.inherit(ScheduleDetailPopup, View);
  * @param {MouseEvent} mouseDownEvent - mouse event object
  */
 ScheduleDetailPopup.prototype._onMouseDown = function(mouseDownEvent) {
-    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+    var target = domevent.getEventTarget(mouseDownEvent),
         popupLayer = domutil.closest(target, config.classname('.floating-layer'));
 
     if (popupLayer) {
@@ -70,7 +70,7 @@ ScheduleDetailPopup.prototype.destroy = function() {
  * @param {MouseEvent} clickEvent - mouse event object
  */
 ScheduleDetailPopup.prototype._onClick = function(clickEvent) {
-    var target = (clickEvent.target || clickEvent.srcElement);
+    var target = domevent.getEventTarget(clickEvent);
 
     this._onClickEditSchedule(target);
 
@@ -146,7 +146,7 @@ ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(even
     };
 
     var containerBound = this.container.getBoundingClientRect();
-    var scheduleEl = event.target || event.srcElement;
+    var scheduleEl = domevent.getEventTarget(event);
     var blockEl = domutil.closest(scheduleEl, config.classname('.time-date-schedule-block'))
         || domutil.closest(scheduleEl, config.classname('.weekday-schedule'))
         || scheduleEl;
