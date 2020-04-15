@@ -165,7 +165,7 @@ Drag.prototype._onMouseMove = function(mouseMoveEvent) {
 
     distance = this.options.distance;
     // prevent automatic scrolling.
-    domevent.preventDefault(mouseMoveEvent);
+    domutil.preventDefaultWhenNotPopup(mouseMoveEvent);
 
     if (this._distance < distance) {
         this._distance += 1;

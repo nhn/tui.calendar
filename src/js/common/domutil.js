@@ -6,6 +6,7 @@
 'use strict';
 
 var domevent = require('./domevent');
+var config = require('../config');
 var Collection = require('./collection');
 var util = require('tui-code-snippet');
 
@@ -594,7 +595,20 @@ var userSelectProperty = domutil.testProp([
 ]);
 var supportSelectStart = 'onselectstart' in document;
 var prevSelectStyle = '';
+
 /* eslint-enable*/
+/**
+ * If the target is not a popup, it prevents the default.
+ * @method
+ * @param {MouseEvent} event - Mouse event object
+ */
+domutil.preventDefaultWhenNotPopup = function(event) {
+    var popup = domutil.closest(event.target, config.classname('.popup'));
+
+    if (!popup) {
+        domevent.preventDefault(event);
+    }
+};
 
 /**
  * Disable browser's text selection behaviors.
@@ -603,7 +617,7 @@ var prevSelectStyle = '';
 domutil.disableTextSelection = (function() {
     if (supportSelectStart) {
         return function(dom) {
-            domevent.on(dom, 'selectstart', domevent.preventDefault);
+            domevent.on(dom, 'selectstart', domutil.preventDefaultWhenNotPopup);
         };
     }
 
@@ -621,7 +635,7 @@ domutil.disableTextSelection = (function() {
 domutil.enableTextSelection = (function() {
     if (supportSelectStart) {
         return function() {
-            domevent.off(window, 'selectstart', domevent.preventDefault);
+            domevent.off(window, 'selectstart', domutil.preventDefaultWhenNotPopup);
         };
     }
 
