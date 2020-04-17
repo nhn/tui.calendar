@@ -48,7 +48,8 @@
       "example14-template-for-month": "Template for Month",
       "example15-template-for-timegrid": "Template for Week, Day",
       "example16-template-for-popup": "Template for Popup"
-    }
+    },
+    "globalErrorLogVariable": true
   },
   "pathPrefix": "tui.calendar"
 }
