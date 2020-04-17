@@ -375,7 +375,7 @@
     function currentCalendarDate(format) {
       var currentDate = moment([cal.getDate().getFullYear(), cal.getDate().getMonth(), cal.getDate().getDate()]);
 
-      return format ? currentDate.format(format) : currentDate;
+      return currentDate.format(format);
     }
 
     function setRenderRangeText() {
