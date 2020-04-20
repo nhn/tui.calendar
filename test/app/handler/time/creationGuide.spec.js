@@ -1,6 +1,5 @@
 'use strict';
 
-var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
 var TimeCreationGuide = require('handler/time/creationGuide');
 var Theme = require('theme/theme');
