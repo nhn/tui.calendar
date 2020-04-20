@@ -594,6 +594,7 @@ var userSelectProperty = domutil.testProp([
 ]);
 var supportSelectStart = 'onselectstart' in document;
 var prevSelectStyle = '';
+
 /* eslint-enable */
 
 /**
@@ -603,7 +604,7 @@ var prevSelectStyle = '';
 domutil.disableTextSelection = (function() {
     if (supportSelectStart) {
         return function(dom, onSelectstartHandler) {
-            domevent.on(dom, 'selectstart', onSelectstartHandler);
+            domevent.on(dom, 'selectstart', onSelectstartHandler || domevent.preventDefault);
         };
     }
 
@@ -620,8 +621,8 @@ domutil.disableTextSelection = (function() {
  */
 domutil.enableTextSelection = (function() {
     if (supportSelectStart) {
-        return function(__dom, onSelectstartHandler) {
-            domevent.off(window, 'selectstart', onSelectstartHandler);
+        return function(dom, onSelectstartHandler) {
+            domevent.off(window, 'selectstart', onSelectstartHandler || domevent.preventDefault);
         };
     }
 
