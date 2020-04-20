@@ -156,13 +156,12 @@ ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(even
     this._scheduleEl = blockEl;
 
     pos = this._calcRenderingData(layerSize, containerBound, scheduleBound);
-
     this.layer.setPosition(pos.x, pos.y);
     this._setArrowDirection(pos.arrow);
 };
 
 /**
- * Calculate rendering positions of y and arrow top by schedule block elements
+ * Get calculate rendering positions of y and arrow top by schedule block elements
  * @param {number} scheduleBoundTop - schedule block's top
  * @param {number} scheduleBoundBottom - schedule block's bottom
  * @param {number} layerHeight - popup layer's height
@@ -170,7 +169,7 @@ ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(even
  * @param {number} containerBottom - container's bottom
  * @returns {YAndArrowTop} y and arrowTop
  */
-ScheduleDetailPopup.prototype._getYAndArropTop = function(
+ScheduleDetailPopup.prototype._getYAndArrowTop = function(
     scheduleBoundTop,
     scheduleBoundBottom,
     layerHeight,
@@ -189,7 +188,7 @@ ScheduleDetailPopup.prototype._getYAndArropTop = function(
         y = containerBottom - layerHeight - containerTop;
         arrowTop = scheduleVerticalCenter - y - containerTop - ARROW_WIDTH_HALF;
     } else {
-        y = y - containerTop;
+        y -= containerTop;
     }
 
     /**
@@ -204,7 +203,7 @@ ScheduleDetailPopup.prototype._getYAndArropTop = function(
 };
 
 /**
- * Calculate rendering x position and arrow direction by schedule block elements
+ * Get calculate rendering x position and arrow direction by schedule block elements
  * @param {number} scheduleBoundLeft - schedule block's left
  * @param {number} scheduleBoundRight - schedule block's right
  * @param {number} layerWidth - popup layer's width
@@ -227,13 +226,13 @@ ScheduleDetailPopup.prototype._getXAndArrowDirection = function(
         arrowDirection = 'arrow-right';
         x = scheduleBoundLeft - layerWidth - MARGIN;
     } else {
-        x = x + MARGIN;
+        x += MARGIN;
     }
 
     if (x < containerLeft) {
         x = 0;
     } else {
-        x = x - containerLeft;
+        x -= containerLeft;
     }
 
     /**
@@ -255,14 +254,14 @@ ScheduleDetailPopup.prototype._getXAndArrowDirection = function(
  * @returns {PopupRenderingData} rendering position of popup and popup arrow
  */
 ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, containerBound, scheduleBound) {
-    var aboutY = this._getYAndArropTop(
+    var yPosInfo = this._getYAndArrowTop(
         scheduleBound.top,
         scheduleBound.bottom,
         layerSize.height,
         containerBound.top,
         containerBound.bottom
     );
-    var aboutX = this._getXAndArrowDirection(
+    var xPosInfo = this._getXAndArrowDirection(
         scheduleBound.left,
         scheduleBound.right,
         layerSize.width,
@@ -278,11 +277,11 @@ ScheduleDetailPopup.prototype._calcRenderingData = function(layerSize, container
      * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
      */
     return {
-        x: aboutX.x,
-        y: aboutY.y,
+        x: xPosInfo.x,
+        y: yPosInfo.y,
         arrow: {
-            direction: aboutX.arrowDirection,
-            position: aboutY.arrowTop
+            direction: xPosInfo.arrowDirection,
+            position: yPosInfo.arrowTop
         }
     };
 };
