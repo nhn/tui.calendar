@@ -235,17 +235,41 @@ ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
 };
 
 /**
- * Save new schedule if user clicked save button
- * @emits ScheduleCreationPopup#saveSchedule
- * @param {HTMLElement} target click event target
- * @returns {boolean} whether save button is clicked or not
+ * Get range date from range picker
+ * @returns {RangeDate} Returns the start and end time data that is the range date
  */
-ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
+ScheduleCreationPopup.prototype._getRangeDate = function() {
+    var cssPrefix = config.cssPrefix;
+    var isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
+    var startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
+    var endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
+
+    if (isAllDay) {
+        startDate.setHours(0, 0, 0);
+        endDate.setHours(23, 59, 59);
+    }
+
+    /**
+     * @typedef {object} RangeDate
+     * @property {TZDate} start start time
+     * @property {TZDate} end end time
+     */
+    return {
+        start: new TZDate(startDate),
+        end: new TZDate(endDate)
+    };
+};
+
+/**
+ * Validate the form
+ * @param {HTMLElement} target click event target
+ * @returns {boolean} Returns false if the form is not valid for submission.
+ */
+ScheduleCreationPopup.prototype._validationForm = function(target) {
+    var validated = true;
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
-    var title, isPrivate, location, isAllDay, startDate, endDate, state;
-    var start, end, calendarId;
-    var changes;
+    var title, startDate, endDate;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
@@ -258,80 +282,136 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     if (!title.value) {
         title.focus();
 
-        return true;
+        return false;
     }
 
     if (!startDate && !endDate) {
-        return true;
+        return false;
     }
 
-    isPrivate = !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'));
-    location = domutil.get(cssPrefix + 'schedule-location');
-    state = domutil.get(cssPrefix + 'schedule-state');
-    isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
+    return validated;
+};
 
-    if (isAllDay) {
-        startDate.setHours(0, 0, 0);
-        endDate.setHours(23, 59, 59);
+/**
+ * Save new schedule if user clicked save button
+ * @emits ScheduleCreationPopup#saveSchedule
+ * @param {HTMLElement} target click event target
+ * @returns {boolean} whether save button is clicked or not
+ */
+ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
+    var cssPrefix = config.cssPrefix;
+    var startEndDate;
+    var form;
+
+    var validated = this._validationForm(target);
+
+    if (!validated) {
+        return false;
     }
 
-    start = new TZDate(startDate);
-    end = new TZDate(endDate);
+    startEndDate = this._getRangeDate();
 
-    if (this._selectedCal) {
-        calendarId = this._selectedCal.id;
-    }
+    form = {
+        calendarId: this._selectedCal ? this._selectedCal.id : null,
+        title: domutil.get(cssPrefix + 'schedule-title'),
+        location: domutil.get(cssPrefix + 'schedule-location'),
+        start: startEndDate.start,
+        end: startEndDate.end,
+        isAllDay: !!domutil.get(cssPrefix + 'schedule-allday').checked,
+        state: domutil.get(cssPrefix + 'schedule-state').innerText,
+        isPrivate: !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'))
+    };
 
     if (this._isEditMode) {
-        changes = common.getScheduleChanges(
-            this._schedule,
-            ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
-            {
-                calendarId: calendarId,
-                title: title.value,
-                location: location.value,
-                start: start,
-                end: end,
-                isAllDay: isAllDay,
-                state: state.innerText
-            }
-        );
-
-        this.fire('beforeUpdateSchedule', {
-            schedule: util.extend({
-                raw: {
-                    class: isPrivate ? 'private' : 'public'
-                }
-            }, this._schedule),
-            changes: changes,
-            start: start,
-            end: end,
-            calendar: this._selectedCal,
-            triggerEventName: 'click'
-        });
+        this._onClickUpdateSchedule(form);
     } else {
-        /**
-         * @event ScheduleCreationPopup#beforeCreateSchedule
-         * @type {object}
-         * @property {Schedule} schedule - new schedule instance to be added
-         */
-        this.fire('beforeCreateSchedule', {
-            calendarId: calendarId,
-            title: title.value,
-            location: location.value,
-            raw: {
-                class: isPrivate ? 'private' : 'public'
-            },
-            start: start,
-            end: end,
-            isAllDay: isAllDay,
-            state: state.innerText
-        });
+        this._onClickCreateSchedule(form);
     }
 
     this.hide();
 
     return true;
+};
+
+/**
+ * Request schedule model creation to controller by custom schedules.
+ * @fires {ScheduleCreationPopup#beforeUpdateSchedule}
+ * @param {{
+      calendarId: {string},
+      title: {string},
+      location: {string},
+      start: {TZDate},
+      end: {TZDate},
+      isAllDay: {boolean},
+      state: {string},
+      isPrivate: {boolean}
+   }} form schedule input form data
+ */
+ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
+    var changes = common.getScheduleChanges(
+        this._schedule,
+        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+        {
+            calendarId: form.calendarId,
+            title: form.title.value,
+            location: location.value,
+            start: form.start,
+            end: form.end,
+            isAllDay: form.isAllDay,
+            state: form.state
+        }
+    );
+
+    /**
+     * @event ScheduleCreationPopup#beforeUpdateSchedule
+     * @type {object}
+     * @property {Schedule} schedule - schedule object to be updated
+     */
+    this.fire('beforeUpdateSchedule', {
+        schedule: util.extend({
+            raw: {
+                class: form.isPrivate ? 'private' : 'public'
+            }
+        }, this._schedule),
+        changes: changes,
+        start: form.start,
+        end: form.end,
+        calendar: this._selectedCal,
+        triggerEventName: 'click'
+    });
+};
+
+/**
+ * Request the controller to update the schedule model according to the custom schedule.
+ * @fires {ScheduleCreationPopup#beforeCreateSchedule}
+ * @param {{
+      calendarId: {string},
+      title: {string},
+      location: {string},
+      start: {TZDate},
+      end: {TZDate},
+      isAllDay: {boolean},
+      state: {string}
+    }} form schedule input form data
+ */
+ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
+    /**
+     * @event ScheduleCreationPopup#beforeCreateSchedule
+     * @type {object}
+     * @property {Schedule} schedule - new schedule instance to be added
+     */
+    this.fire('beforeCreateSchedule', {
+        calendarId: form.calendarId,
+        title: form.title.value,
+        location: location.value,
+        raw: {
+            class: form.isPrivate ? 'private' : 'public'
+        },
+        start: form.start,
+        end: form.end,
+        isAllDay: form.isAllDay,
+        state: form.state
+    });
 };
 
 /**
