@@ -16,7 +16,6 @@ var common = require('../../common/common');
 var tmpl = require('../template/popup/scheduleCreationPopup.hbs');
 var TZDate = timezone.Date;
 var MAX_WEEK_OF_MONTH = 6;
-var ARROW_WIDTH_HALF = 8;
 
 /**
  * @constructor
@@ -427,20 +426,9 @@ ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(gu
         width: layer.offsetWidth,
         height: layer.offsetHeight
     };
-    var windowSize = {
-        right: window.innerWidth,
-        bottom: window.innerHeight
-    };
-    var parentRect = this.layer.parent.getBoundingClientRect();
-    var parentBounds = {
-        left: parentRect.left,
-        top: parentRect.top
-    };
-    var pos;
+    var containerBound = this.container.getBoundingClientRect();
+    var pos = this._calcRenderingData(layerSize, containerBound, guideBound);
 
-    pos = this._calcRenderingData(layerSize, windowSize, guideBound);
-    pos.x -= parentBounds.left;
-    pos.y -= (parentBounds.top + 6);
     this.layer.setPosition(pos.x, pos.y);
     this._setArrowDirection(pos.arrow);
 };
@@ -492,35 +480,108 @@ ScheduleCreationPopup.prototype._getBoundOfFirstRowGuideElement = function(guide
 };
 
 /**
+ * Get calculate rendering positions of y and arrow direction by guide block elements
+ * @param {number} guideBoundTop - guide block's top
+ * @param {number} guideBoundBottom - guide block's bottom
+ * @param {number} layerHeight - popup layer's height
+ * @param {number} containerTop - container's top
+ * @returns {YAndArrowDirection} y and arrowDirection
+ */
+ScheduleCreationPopup.prototype._getYAndArrowDirection = function(
+    guideBoundTop,
+    guideBoundBottom,
+    layerHeight,
+    containerTop
+) {
+    var arrowDirection = 'arrow-bottom';
+    var MARGIN = 3;
+    var y = guideBoundTop - layerHeight;
+
+    if (y < containerTop) {
+        y = guideBoundBottom - containerTop + MARGIN;
+        arrowDirection = 'arrow-top';
+    } else {
+        y = y - containerTop - MARGIN;
+    }
+
+    /**
+   * @typedef {Object} YAndArrowDirection
+   * @property {number} y - top position of popup layer
+   * @property {string} [arrowDirection] - direction of popup arrow
+   */
+    return {
+        y: y,
+        arrowDirection: arrowDirection
+    };
+};
+
+/**
+* Get calculate rendering x position and arrow left by guide block elements
+* @param {number} guideBoundLeft - guide block's left
+* @param {number} guideBoundRight - guide block's right
+* @param {number} layerWidth - popup layer's width
+* @param {number} containerLeft - container's left
+* @param {number} containerRight - container's right
+* @returns {XAndArrowLeft} x and arrowLeft
+*/
+ScheduleCreationPopup.prototype._getXAndArrowLeft = function(
+    guideBoundLeft,
+    guideBoundRight,
+    layerWidth,
+    containerLeft,
+    containerRight
+) {
+    var guideHorizontalCenter = (guideBoundLeft + guideBoundRight) / 2;
+    var x = guideHorizontalCenter - (layerWidth / 2);
+    var ARROW_WIDTH_HALF = 8;
+    var arrowLeft;
+
+    if (x + layerWidth > containerRight) {
+        x = guideBoundRight - layerWidth + ARROW_WIDTH_HALF;
+        arrowLeft = guideHorizontalCenter - x;
+    } else {
+        x += ARROW_WIDTH_HALF;
+    }
+
+    if (x < containerLeft) {
+        x = 0;
+        arrowLeft = guideHorizontalCenter - containerLeft - ARROW_WIDTH_HALF;
+    } else {
+        x = x - containerLeft - ARROW_WIDTH_HALF;
+    }
+
+    /**
+   * @typedef {Object} XAndArrowLeft
+   * @property {number} x - left position of popup layer
+   * @property {numbe3er} arrowLeft - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
+   */
+    return {
+        x: x,
+        arrowLeft: arrowLeft
+    };
+};
+
+/**
  * Calculate rendering position usering guide elements
  * @param {{width: {number}, height: {number}}} layerSize - popup layer's width and height
- * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} parentSize - width and height of the upper layer, that acts as a border of popup
+ * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} containerBound - width and height of the upper layer, that acts as a border of popup
  * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} guideBound - guide element bound data
  * @returns {PopupRenderingData} rendering position of popup and popup arrow
  */
-ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentSize, guideBound) {
-    var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
-    var x = guideHorizontalCenter - (layerSize.width / 2);
-    var y = guideBound.top - layerSize.height + 3;
-    var arrowDirection = 'arrow-bottom';
-    var arrowLeft;
-
-    if (y < 0) {
-        y = guideBound.bottom + 9;
-        arrowDirection = 'arrow-top';
-    }
-
-    if (x > 0 && (x + layerSize.width > parentSize.right)) {
-        x = parentSize.right - layerSize.width;
-    }
-
-    if (x < 0) {
-        x = 0;
-    }
-
-    if (guideHorizontalCenter - x !== layerSize.width / 2) {
-        arrowLeft = guideHorizontalCenter - x - ARROW_WIDTH_HALF;
-    }
+ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, containerBound, guideBound) {
+    var yPosInfo = this._getYAndArrowDirection(
+        guideBound.top,
+        guideBound.bottom,
+        layerSize.height,
+        containerBound.top
+    );
+    var xPosInfo = this._getXAndArrowLeft(
+        guideBound.left,
+        guideBound.right,
+        layerSize.width,
+        containerBound.left,
+        containerBound.right
+    );
 
     /**
      * @typedef {Object} PopupRenderingData
@@ -530,11 +591,11 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentS
      * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
      */
     return {
-        x: x,
-        y: y,
+        x: xPosInfo.x,
+        y: yPosInfo.y,
         arrow: {
-            direction: arrowDirection,
-            position: arrowLeft
+            direction: yPosInfo.arrowDirection,
+            position: xPosInfo.arrowLeft
         }
     };
 };
