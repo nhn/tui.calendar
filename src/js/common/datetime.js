@@ -611,6 +611,7 @@ datetime = {
         var date = new TZDate(d);
         if (datetime.isStartOfDay(d)) {
             date.setDate(date.getDate() - 1);
+            date.setHours(23, 59, 59);
         }
 
         return date;

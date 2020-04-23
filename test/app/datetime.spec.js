@@ -489,4 +489,12 @@ describe('datetime', function() {
         expect(dt.getDateDifference(d5, d6)).toEqual(1);
     });
 
+    it('convertStartDayToLastDay', function() {
+      var d1 = new TZDate('2020/04/24');
+      var d2 = new TZDate('2020/04/24 00:00:00');
+
+      expect(dt.convertStartDayToLastDay(d1)).toEqual(new TZDate('2020/04/24'));
+      expect(dt.convertStartDayToLastDay(d2)).toEqual(new TZDate('2020/04/23 23:59:59'));
+    });
+
 });
