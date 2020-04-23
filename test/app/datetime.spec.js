@@ -490,11 +490,11 @@ describe('datetime', function() {
     });
 
     it('convertStartDayToLastDay', function() {
-      var d1 = new TZDate('2020/04/24');
-      var d2 = new TZDate('2020/04/24 00:00:00');
+      var d1 = new TZDate('2020-04-24');
+      var d2 = new TZDate('2020-04-24T00:00:00+09:00');
 
-      expect(dt.convertStartDayToLastDay(d1)).toEqual(new TZDate('2020/04/24'));
-      expect(dt.convertStartDayToLastDay(d2)).toEqual(new TZDate('2020/04/23 23:59:59'));
+      expect(dt.convertStartDayToLastDay(d1)).toEqual(new TZDate('2020-04-24'));
+      expect(dt.convertStartDayToLastDay(d2)).toEqual(new TZDate('2020-04-23T23:59:59+09:00'));
     });
 
 });
