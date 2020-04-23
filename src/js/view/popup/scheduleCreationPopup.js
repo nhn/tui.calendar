@@ -505,10 +505,10 @@ ScheduleCreationPopup.prototype._getYAndArrowDirection = function(
     }
 
     /**
-   * @typedef {Object} YAndArrowDirection
-   * @property {number} y - top position of popup layer
-   * @property {string} [arrowDirection] - direction of popup arrow
-   */
+     * @typedef {Object} YAndArrowDirection
+     * @property {number} y - top position of popup layer
+     * @property {string} [arrowDirection] - direction of popup arrow
+     */
     return {
         y: y,
         arrowDirection: arrowDirection
@@ -551,10 +551,10 @@ ScheduleCreationPopup.prototype._getXAndArrowLeft = function(
     }
 
     /**
-   * @typedef {Object} XAndArrowLeft
-   * @property {number} x - left position of popup layer
-   * @property {numbe3er} arrowLeft - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
-   */
+     * @typedef {Object} XAndArrowLeft
+     * @property {number} x - left position of popup layer
+     * @property {numbe3er} arrowLeft - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
+     */
     return {
         x: x,
         arrowLeft: arrowLeft
