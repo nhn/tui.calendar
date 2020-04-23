@@ -186,7 +186,7 @@ describe('Handler/Drag', function() {
       });
 
       it('is not prevented default mouse event in the popup layer', function() {
-        el.classList.add(config.classname('popup'));
+        el.className = config.classname('popup');
 
         var mockEvent = {
           target: el
