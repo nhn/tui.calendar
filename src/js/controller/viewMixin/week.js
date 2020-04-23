@@ -243,7 +243,7 @@ var Week = {
             var model = viewModel.model;
             viewModel.hasMultiDates = true;
             viewModel.renderStarts = datetime.start(model.getStarts());
-            viewModel.renderEnds = datetime.end(model.getEnds());
+            viewModel.renderEnds = datetime.convertStartDayToLastDay(model.getEnds());
         });
     },
 
