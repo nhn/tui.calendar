@@ -332,7 +332,7 @@ module.exports = {
                 if (datetime.compare(schedule[propName], data[propName])) {
                     changes[propName] = data[propName];
                 }
-            } else if (data[propName] && schedule[propName] !== data[propName]) {
+            } else if (!util.isUndefined(data[propName]) && schedule[propName] !== data[propName]) {
                 changes[propName] = data[propName];
             }
         });
