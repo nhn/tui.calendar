@@ -429,6 +429,16 @@ var domevent = {
         }
 
         return -1;
+    },
+
+    /**
+     * Get target from event object
+     *
+     * @param {Event} event - The event object
+     * @returns {object} - The event target object
+     */
+    getEventTarget: function(event) {
+        return event.target || event.srcElement;
     }
 };
 

@@ -63,7 +63,7 @@ util.inherit(ScheduleCreationPopup, View);
  * @param {MouseEvent} mouseDownEvent - mouse event object
  */
 ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
-    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+    var target = domevent.getEventTarget(mouseDownEvent),
         popupLayer = domutil.closest(target, config.classname('.floating-layer'));
 
     if (popupLayer) {
@@ -90,7 +90,7 @@ ScheduleCreationPopup.prototype.destroy = function() {
  * @param {MouseEvent} clickEvent - mouse event object
  */
 ScheduleCreationPopup.prototype._onClick = function(clickEvent) {
-    var target = (clickEvent.target || clickEvent.srcElement);
+    var target = domevent.getEventTarget(clickEvent);
 
     util.forEach(this._onClickListeners, function(listener) {
         return !listener(target);
