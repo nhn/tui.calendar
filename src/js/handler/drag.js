@@ -249,9 +249,7 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
 function preventDefaultWhenNotPopup(event) {
     var popup = null;
 
-    if (event.target) {
-        popup = domutil.closest(event.target, config.classname('.popup'));
-    }
+    popup = domutil.closest(event.target, config.classname('.popup'));
 
     if (!popup) {
         domevent.preventDefault(event);
