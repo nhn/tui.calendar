@@ -11,7 +11,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
         containerSize = {top: 50, left: 100, bottom: 300, right: 500, width: 500, height: 300};
     });
 
-    it('It is usually placed at the top center of the guide element.', function() {
+    it('it is usually placed at the top center of the guide element', function() {
         var guideBound = {top: 200, left: 100, bottom: 200, right: 400};
         var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
@@ -21,7 +21,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
         expect(posData.arrow.position).toBeUndefined();
     });
 
-    it('If it overflows the top of the container, it should be placed under the guide element', function() {
+    it('if it overflows the top of the container, it should be placed under the guide element', function() {
         var guideBound = {top: 100, left: 100, bottom: 200, right: 400};
         var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
@@ -31,7 +31,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
         expect(posData.arrow.position).toBeUndefined();
     });
 
-    it('When overflowing to the left of the container, the left value is set to 0 and the left value of the arrow is also set.', function() {
+    it('when overflowing to the left of the container, the left value is set to 0 and the left value of the arrow is also set.', function() {
         var guideBound = {top: 200, left: 50, bottom: 200, right: 200};
         var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
@@ -39,7 +39,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
         expect(posData.arrow.position).toBeDefined();
     });
 
-    it('When it overflows to the right of the container, the popup is aligned to the right and the left value of the arrow should be set', function() {
+    it('when it overflows to the right of the container, the popup is aligned to the right and the left value of the arrow should be set', function() {
         var guideBound = {top: 200, left: 400, bottom: 200, right: 500};
         var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
