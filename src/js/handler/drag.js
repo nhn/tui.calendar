@@ -247,9 +247,7 @@ Drag.prototype._onMouseUp = function(mouseUpEvent) {
  * @param {MouseEvent} event - Mouse event object
  */
 function preventDefaultWhenNotPopup(event) {
-    var popup = null;
-
-    popup = domutil.closest(event.target, config.classname('.popup'));
+    var popup = domutil.closest(event.target, config.classname('.popup'));
 
     if (!popup) {
         domevent.preventDefault(event);
