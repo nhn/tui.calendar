@@ -1,4 +1,5 @@
 /*eslint-disable*/
+var config = require('config');
 var domutil = require('common/domutil');
 var domevent = require('common/domevent');
 var Drag = require('handler/drag');
@@ -158,4 +159,43 @@ describe('Handler/Drag', function() {
             expect(domevent.off).toHaveBeenCalled();
         });
     });
+
+    describe('preventDefaultWhenNotPopup', function() {
+      var el;
+
+      beforeEach(function() {
+        spyOn(domevent, 'preventDefault');
+
+        mockInst.options = {
+          distance: 10
+        };
+
+        el = document.createElement('div');
+        el.innerHTML = 'hello';
+      })
+
+      it('prevent default mouse event when not popup layer', function() {
+        var mockEvent = {
+          target: el
+        };
+
+        Drag.prototype._onMouseDown.call(mockInst, mockEvent);
+        Drag.prototype._onMouseMove.call(mockInst, mockEvent);
+
+        expect(domevent.preventDefault).toHaveBeenCalled();
+      });
+
+      it('is not prevented default mouse event in the popup layer', function() {
+        el.className = config.classname('popup');
+
+        var mockEvent = {
+          target: el
+        };
+
+        Drag.prototype._onMouseDown.call(mockInst, mockEvent);
+        Drag.prototype._onMouseMove.call(mockInst, mockEvent);
+
+        expect(domevent.preventDefault).not.toHaveBeenCalled();
+      });
+    })
 });

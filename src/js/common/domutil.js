@@ -163,7 +163,13 @@ domutil = {
      * @returns {HTMLElement} - element finded or null.
      */
     closest: function(el, selector, excludeEl) {
-        var parent = el.parentNode;
+        var parent;
+
+        if (!el) {
+            return null;
+        }
+
+        parent = el.parentNode;
 
         if (!excludeEl && domutil._matcher(el, selector)) {
             return el;
