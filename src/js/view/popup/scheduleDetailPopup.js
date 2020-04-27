@@ -176,10 +176,14 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
     containerTop,
     containerBottom
 ) {
-    var scheduleVerticalCenter = (scheduleBoundTop + scheduleBoundBottom) / 2;
-    var y = scheduleVerticalCenter - (layerHeight / 2);
     var ARROW_WIDTH_HALF = 8;
+    var scheduleVerticalCenter;
+    var y;
     var arrowTop;
+
+    scheduleBoundTop = scheduleBoundTop < 0 ? 0 : scheduleBoundTop;
+    scheduleVerticalCenter = (scheduleBoundTop + scheduleBoundBottom) / 2;
+    y = scheduleVerticalCenter - (layerHeight / 2);
 
     if (y < containerTop) {
         y = 0;
