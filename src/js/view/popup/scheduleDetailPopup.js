@@ -155,6 +155,8 @@ ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(even
 
     this._scheduleEl = blockEl;
 
+    console.log(this.layer);
+
     pos = this._calcRenderingData(layerSize, containerBound, scheduleBound);
     this.layer.setPosition(pos.x, pos.y);
     this._setArrowDirection(pos.arrow);
@@ -176,10 +178,12 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
     containerTop,
     containerBottom
 ) {
-    var scheduleVerticalCenter = (scheduleBoundTop + scheduleBoundBottom) / 2;
-    var y = scheduleVerticalCenter - (layerHeight / 2);
+    var scheduleVerticalCenter, y, arrowTop;
     var ARROW_WIDTH_HALF = 8;
-    var arrowTop;
+
+    scheduleBoundTop = scheduleBoundTop < 0 ? 0 : scheduleBoundTop;
+    scheduleVerticalCenter = (scheduleBoundTop + scheduleBoundBottom) / 2;
+    y = scheduleVerticalCenter - (layerHeight / 2);
 
     if (y < containerTop) {
         y = 0;
@@ -189,6 +193,10 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
         arrowTop = scheduleVerticalCenter - y - containerTop - ARROW_WIDTH_HALF;
     } else {
         y -= containerTop;
+    }
+
+    if (arrowTop < 0 || arrowTop > layerHeight) {
+        arrowTop = '50%';
     }
 
     /**
