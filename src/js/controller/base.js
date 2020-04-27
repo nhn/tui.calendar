@@ -149,11 +149,16 @@ Base.prototype.createSchedules = function(dataList, silent) {
  * @param {object} options updated object data.
  * @returns {Schedule} updated schedule instance
  */
+// eslint-disable-next-line complexity
 Base.prototype.updateSchedule = function(schedule, options) {
     var start = options.start || schedule.start;
     var end = options.end || schedule.end;
 
     options = options || {};
+
+    if (['milestone', 'task', 'allday', 'time'].indexOf(options.category) > -1) {
+        schedule.set('category', options.category);
+    }
 
     if (options.category === 'allday') {
         options.isAllDay = true;

@@ -50,6 +50,10 @@
 
             console.log('beforeUpdateSchedule', e);
 
+            if (changes && !changes.isAllDay && schedule.category === 'allday') {
+                changes.category = 'time';
+            }
+
             cal.updateSchedule(schedule.id, schedule.calendarId, changes);
             refreshScheduleVisibility();
         },
