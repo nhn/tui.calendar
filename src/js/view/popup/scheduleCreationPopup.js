@@ -240,6 +240,7 @@ ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
  * @param {HTMLElement} target click event target
  * @returns {boolean} whether save button is clicked or not
  */
+// eslint-disable-next-line complexity
 ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
@@ -248,7 +249,6 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var endDate;
     var rangeDate;
     var form;
-    var validated = true;
     var isAllDay;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
@@ -259,9 +259,11 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
     endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
 
-    validated = this._validateForm(title, startDate, endDate);
+    if (!this._validateForm(title, startDate, endDate)) {
+        if (!title.value) {
+            title.focus();
+        }
 
-    if (!validated) {
         return false;
     }
 
@@ -645,8 +647,6 @@ ScheduleCreationPopup.prototype.setCalendars = function(calendars) {
  */
 ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDate) {
     if (!title.value) {
-        title.focus();
-
         return false;
     }
 
