@@ -155,8 +155,6 @@ ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(even
 
     this._scheduleEl = blockEl;
 
-    console.log(this.layer);
-
     pos = this._calcRenderingData(layerSize, containerBound, scheduleBound);
     this.layer.setPosition(pos.x, pos.y);
     this._setArrowDirection(pos.arrow);
