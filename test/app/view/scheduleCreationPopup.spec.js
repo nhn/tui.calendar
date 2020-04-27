@@ -1,6 +1,7 @@
 'use strict';
 
 var ScheduleCreationpPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
+var TZDate = require('common/timezone').Date;
 
 /* eslint-disable object-property-newline */
 describe('ScheduleCreationpPopup#_calcRenderingData', function() {
@@ -45,5 +46,34 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
         expect(posData.x).toBe(200);
         expect(posData.arrow.position).toBeDefined();
+    });
+});
+
+describe('ScheduleCreationpPopup#_getRangeDate', function() {
+    it('when it is an all-day schedule, set the hour and minute', function() {
+        var start = new TZDate('2020/04/24 10:00:00');
+        var end = new TZDate('2020/04/24 15:00:00');
+        var rangeDate = ScheduleCreationpPopup.prototype._getRangeDate(start, end, true);
+
+        expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
+        expect(rangeDate.end).toEqual(new TZDate('2020/04/24 23:59:59'));
+    });
+
+    it('when it is an all-day schedule, if the end date is the start time of the day, it is set as the last time of the previous day', function() {
+        var start = new TZDate('2020/04/24 00:00:00');
+        var end = new TZDate('2020/04/25 00:00:00');
+        var rangeDate = ScheduleCreationpPopup.prototype._getRangeDate(start, end, true);
+
+        expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
+        expect(rangeDate.end).toEqual(new TZDate('2020/04/24 23:59:59'));
+    });
+
+    it('when it is not an all-day schedule, if the end date is entered user date', function() {
+        var start = new TZDate('2020/04/24 00:00:00');
+        var end = new TZDate('2020/04/25 00:00:00');
+        var rangeDate = ScheduleCreationpPopup.prototype._getRangeDate(start, end, false);
+
+        expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
+        expect(rangeDate.end).toEqual(new TZDate('2020/04/25 00:00:00'));
     });
 });
