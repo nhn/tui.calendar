@@ -191,6 +191,10 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
         y -= containerTop;
     }
 
+    if (arrowTop < 0 || arrowTop > layerHeight) {
+        arrowTop = '50%';
+    }
+
     /**
      * @typedef {Object} YAndArrowTop
      * @property {number} y - top position of popup layer
