@@ -192,7 +192,7 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
     }
 
     if (arrowTop < 0 || arrowTop > layerHeight) {
-        arrowTop = '50%';
+        arrowTop = null;
     }
 
     /**
