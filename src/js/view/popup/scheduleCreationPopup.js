@@ -444,13 +444,15 @@ ScheduleCreationPopup.prototype._getBoundOfFirstRowGuideElement = function(guide
  * @param {number} guideBoundBottom - guide block's bottom
  * @param {number} layerHeight - popup layer's height
  * @param {number} containerTop - container's top
+ * @param {number} containerBottom - container's bottom
  * @returns {YAndArrowDirection} y and arrowDirection
  */
 ScheduleCreationPopup.prototype._getYAndArrowDirection = function(
     guideBoundTop,
     guideBoundBottom,
     layerHeight,
-    containerTop
+    containerTop,
+    containerBottom
 ) {
     var arrowDirection = 'arrow-bottom';
     var MARGIN = 3;
@@ -461,6 +463,10 @@ ScheduleCreationPopup.prototype._getYAndArrowDirection = function(
         arrowDirection = 'arrow-top';
     } else {
         y = y - containerTop - MARGIN;
+    }
+
+    if (y + layerHeight > containerBottom) {
+        y = containerBottom - layerHeight - containerTop - MARGIN;
     }
 
     /**
@@ -532,7 +538,8 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, contain
         guideBound.top,
         guideBound.bottom,
         layerSize.height,
-        containerBound.top
+        containerBound.top,
+        containerBound.bottom
     );
     var xPosInfo = this._getXAndArrowLeft(
         guideBound.left,
