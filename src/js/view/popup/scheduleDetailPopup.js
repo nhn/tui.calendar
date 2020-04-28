@@ -177,9 +177,7 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
     containerBottom
 ) {
     var ARROW_WIDTH_HALF = 8;
-    var scheduleVerticalCenter;
-    var y;
-    var arrowTop;
+    var scheduleVerticalCenter, y, arrowTop;
 
     scheduleBoundTop = scheduleBoundTop < 0 ? 0 : scheduleBoundTop;
     scheduleVerticalCenter = (scheduleBoundTop + scheduleBoundBottom) / 2;
