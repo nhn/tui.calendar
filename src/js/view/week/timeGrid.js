@@ -164,6 +164,12 @@ function TimeGrid(name, options, panelElement) {
     this.timerID = 0;
 
     /**
+     * requestAnimationFrame unique ID
+     * @type {number}
+     */
+    this.rAnimationFrameID = 0;
+
+    /**
      * @type {boolean}
      */
     this._scrolled = false;
@@ -201,6 +207,7 @@ TimeGrid.prototype.viewName = 'timegrid';
 TimeGrid.prototype._beforeDestroy = function() {
     clearInterval(this.intervalID);
     clearTimeout(this.timerID);
+    reqAnimFrame.cancelAnimFrame(this.rAnimationFrameID);
 
     if (this._autoScroll) {
         this._autoScroll.destroy();
@@ -209,7 +216,7 @@ TimeGrid.prototype._beforeDestroy = function() {
     domevent.off(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 
     this._autoScroll = this.hourmarkers = this.intervalID =
-    this.timerID = this._cacheParentViewModel = this.stickyContainer = null;
+    this.timerID = this.rAnimationFrameID = this._cacheParentViewModel = this.stickyContainer = null;
 };
 
 /**
@@ -483,15 +490,16 @@ TimeGrid.prototype.refreshHourmarker = function() {
     var hourmarkers = this.hourmarkers;
     var viewModel = this._cacheParentViewModel;
     var hoursLabels = this._cacheHoursLabels;
+    var rAnimationFrameID = this.rAnimationFrameID;
     var baseViewModel;
 
-    if (!hourmarkers || !viewModel) {
+    if (!hourmarkers || !viewModel || rAnimationFrameID) {
         return;
     }
 
     baseViewModel = this._getBaseViewModel(viewModel);
 
-    reqAnimFrame.requestAnimFrame(function() {
+    this.rAnimationFrameID = reqAnimFrame.requestAnimFrame(function() {
         var needsRender = false;
 
         util.forEach(hoursLabels, function(hoursLabel, index) {
@@ -525,6 +533,8 @@ TimeGrid.prototype.refreshHourmarker = function() {
                 }
             });
         }
+
+        this.rAnimationFrameID = null;
     }, this);
 };
 
@@ -534,7 +544,7 @@ TimeGrid.prototype.refreshHourmarker = function() {
 TimeGrid.prototype.attachEvent = function() {
     clearInterval(this.intervalID);
     clearTimeout(this.timerID);
-    this.intervalID = this.timerID = null;
+    this.intervalID = this.timerID = this.rAnimationFrameID = null;
 
     this.timerID = setTimeout(util.bind(this.onTick, this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
 
