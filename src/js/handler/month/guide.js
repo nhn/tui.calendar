@@ -6,7 +6,6 @@
 
 var util = require('tui-code-snippet');
 var config = require('../../config'),
-    common = require('../../common/common'),
     domutil = require('../../common/domutil'),
     datetime = require('../../common/datetime'),
     TZDate = require('../../common/timezone').Date,
@@ -25,8 +24,6 @@ var mmax = Math.max,
  * @param {Month} monthView - Month view instance
  */
 function MonthGuide(options, monthView) {
-    var self = this;
-
     /**
      * @type {object}
      */
@@ -58,13 +55,6 @@ function MonthGuide(options, monthView) {
     this.days = monthView.children.single().getRenderDateRange().length;
 
     /**
-     * @type {function}
-     */
-    this.ratio = util.bind(function(value) {
-        return common.ratio(self.days, 100, value);
-    });
-
-    /**
      * start coordinate of guide effect. (x, y) (days, weeks) effect can't
      *  start lower than this coordinate.
      * @type {number[]}
@@ -90,7 +80,7 @@ MonthGuide.prototype.destroy = function() {
     this.clear();
 
     this.options = this.view = this.weeks = this.days =
-        this.ratio = this.startCoord = this.guideElements = null;
+        this.startCoord = this.guideElements = null;
 };
 
 MonthGuide.prototype.clearGuideElement = function() {

@@ -322,10 +322,7 @@ DayGridCreation.prototype._onDblClick = function(clickEventData) {
  * @param {Schedule} schedule - schedule instance
  */
 DayGridCreation.prototype.invokeCreationClick = function(schedule) {
-    var getScheduleDataFunc, scheduleData;
-
-    getScheduleDataFunc = this._retriveScheduleDataFromDate(this.view, schedule.start);
-    scheduleData = getScheduleDataFunc(schedule.start);
+    var scheduleData = this._retriveScheduleDataFromDate(this.view, schedule.start);
 
     this.fire('click', scheduleData);
 

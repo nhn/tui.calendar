@@ -51,7 +51,7 @@ var timeCore = {
          * @param {object} [extend] - object to extend event data before return.
          * @returns {object} - common event data for time.*
          */
-        return util.bind(function(mouseEvent, extend) {
+        return function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
@@ -71,47 +71,40 @@ var timeCore = {
                 nearestGridTimeY: nearestGridTimeY,
                 triggerEvent: mouseEvent.type
             }, extend);
-        }, this);
+        };
     },
 
     /**
      * Get function to makes event data from Time and mouseEvent
      * @param {Time} timeView - Instance of time view.
-     * @param {number} xIndex - Time view index
-     * @returns {function} - Function that return event data from mouse event.
+     * @param {TZDate} startDate - start date
+     * @param {TZDate} endDate - end date
+     * @param {number} hourStart Can limit of render hour start.
+     * @returns {object} - common event data for time.* from mouse event.
      */
-    _retriveScheduleDataFromDate: function(timeView) {
+    _retriveScheduleDataFromDate: function(timeView, startDate, endDate, hourStart) {
         var viewTime = timeView.getDate();
+        var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
 
-        /**
-         * @param {TZDate} startDate - start date
-         * @param {TZDate} endDate - end date
-         * @param {number} hourStart Can limit of render hour start.
-         * @returns {object} - common event data for time.*
-         */
-        return util.bind(function(startDate, endDate, hourStart) {
-            var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
+        gridY = startDate.getHours() - hourStart + getNearestHour(startDate.getMinutes());
+        timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY));
+        nearestGridY = gridY;
+        nearestGridTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridY));
+        nearestGridEndY = endDate.getHours() - hourStart + getNearestHour(endDate.getMinutes());
+        nearestGridEndTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridEndY));
 
-            gridY = startDate.getHours() - hourStart + getNearestHour(startDate.getMinutes());
-            timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY));
-            nearestGridY = gridY;
-            nearestGridTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridY));
-            nearestGridEndY = endDate.getHours() - hourStart + getNearestHour(endDate.getMinutes());
-            nearestGridEndTimeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(nearestGridEndY));
-
-            return util.extend({
-                target: timeView,
-                relatedView: timeView,
-                gridY: gridY,
-                timeY: timeY,
-                nearestGridY: nearestGridY,
-                nearestGridTimeY: nearestGridTimeY,
-                nearestGridEndY: nearestGridEndY,
-                nearestGridEndTimeY: nearestGridEndTimeY,
-                triggerEvent: 'manual',
-                hourStart: hourStart
-            });
-        }, this);
+        return {
+            target: timeView,
+            relatedView: timeView,
+            gridY: gridY,
+            timeY: timeY,
+            nearestGridY: nearestGridY,
+            nearestGridTimeY: nearestGridTimeY,
+            nearestGridEndY: nearestGridEndY,
+            nearestGridEndTimeY: nearestGridEndTimeY,
+            triggerEvent: 'manual',
+            hourStart: hourStart
+        };
     },
 
     /**
