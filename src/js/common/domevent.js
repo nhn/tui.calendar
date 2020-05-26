@@ -6,8 +6,7 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var browser = util.browser,
-    eventKey = '_evt',
+var eventKey = '_evt',
     DRAG = {
         START: ['touchstart', 'mousedown'],
         END: {
@@ -154,13 +153,6 @@ var domevent = {
         delete obj[eventKey][id];
 
         if (util.keys(obj[eventKey]).length) {
-            return;
-        }
-
-        // throw exception when deleting host object's property in below IE8
-        if (util.browser.msie && util.browser.version < 9) {
-            obj[eventKey] = null;
-
             return;
         }
 
@@ -365,11 +357,6 @@ var domevent = {
             button: 0,
             relatedTarget: undefined  // eslint-disable-line
         }, eventObj);
-
-        // prevent throw error when inserting wheelDelta property to mouse event on below IE8
-        if (browser.msie && browser.version < 9) {
-            delete e.wheelDelta;
-        }
 
         if (typeof document.createEvent === 'function') {
             evt = document.createEvent('MouseEvents');
