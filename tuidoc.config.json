@@ -49,7 +49,7 @@
       "example15-template-for-timegrid": "Template for Week, Day",
       "example16-template-for-popup": "Template for Popup"
     },
-    "globalErrorLogVariable": true
+    "globalErrorLogVariable": "errorLogs"
   },
   "pathPrefix": "tui.calendar"
 }
