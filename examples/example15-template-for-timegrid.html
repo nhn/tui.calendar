@@ -41,6 +41,21 @@
   <script src="../dist/tui-calendar.js"></script>
   <script src="./js/data/calendars.js"></script>
   <script src="./js/data/schedules.js"></script>
+  <script type="text/javascript">
+  function padStart(value, targetLength, padString) {
+    targetLength = targetLength >> 0; //floor if number or convert non-number to 0;
+    padString = String(typeof padString !== 'undefined' ? padString : ' ');
+    if (this.length > targetLength) {
+      return String(this);
+    } else {
+      targetLength = targetLength - this.length;
+      if (targetLength > padString.length) {
+        padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+      }
+      return padString.slice(0, targetLength) + String(this);
+    }
+  };
+  </script>
   <script type="text/javascript" class="code-js">
   function getTimeTemplate(schedule, isAllDay) {
     var html = [];
@@ -106,11 +121,11 @@
   function getPadStart(value) {
     value = value.toString();
 
-    return value.padStart(2, '0');
+    return padStart.call(value, 2, '0');
   }
 
   // register templates
-  const templates = {
+  var templates = {
     weekDayname: function(model) {
       return '<span class="tui-full-calendar-dayname-date">' + model.date + '</span>&nbsp;&nbsp;<span class="tui-full-calendar-dayname-name">' + model.dayName + '</span>';
     },
@@ -149,7 +164,6 @@
         minutes = Math.abs(timezoneOffset % 60);
         displayLabel = gmt + getPadStart(hour) + ':' + getPadStart(minutes);
       }
-
       return displayLabel;
     },
     timegridDisplayPrimayTime: function(time) {
