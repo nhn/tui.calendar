@@ -5,7 +5,6 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var aps = Array.prototype.slice;
 
 var domutil = require('../common/domutil'),
     Collection = require('../common/collection');
@@ -66,51 +65,6 @@ module.exports = {
             nearestIndex = util.inArray(Math.min.apply(null, diff), diff);
 
         return nearest[nearestIndex];
-    },
-
-    /**
-     * pick value from object then return utility object to treat it.
-     * @param {object} obj - object to search supplied path property.
-     * @param {...string} paths - rest parameter that string value to search property in object.
-     * @returns {object} pick object.
-     */
-    pick2: function(obj, paths) {    // eslint-disable-line
-        var result = util.pick.apply(null, arguments),
-            pick;
-
-        pick = {
-            /**
-             * @returns {*} picked value.
-             */
-            val: function() {
-                return result;
-            },
-
-            /**
-             * invoke supplied function in picked object.
-             *
-             * the callback context is set picked object.
-             * @param {string|function} fn - function to invoke in picked object.
-             * @returns {*} result of invoke.
-             */
-            then: function(fn) {
-                var args;
-
-                if (!result) {
-                    return undefined;    //eslint-disable-line
-                }
-
-                args = aps.call(arguments, 1);
-
-                if (util.isString(fn)) {
-                    return (util.pick(result, fn) || function() {}).apply(result, args);
-                }
-
-                return fn.call(result, result);
-            }
-        };
-
-        return pick;
     },
 
     /**
