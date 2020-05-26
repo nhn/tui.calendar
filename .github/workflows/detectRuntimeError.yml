@@ -24,7 +24,7 @@ jobs:
             - name: set browser list
               run: |
                   browserList=`cat ./browserList.txt`
-                  echo ::set-env name=BROWSER_LIST::$$browserList
+                  echo ::set-env name=BROWSER_LIST::$browserList
             - name: detect runtime error
               uses: nhn/toast-ui.detect-runtime-error-actions@v1.0.1
               with:
