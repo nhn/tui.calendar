@@ -7,7 +7,7 @@ var config = require(path.resolve(process.cwd(), 'tuidoc.config.json'));
 var examples = config.examples || {};
 var filePath = examples.filePath;
 var globalErrorLogVariable = examples.globalErrorLogVariable;
-console.log(globalErrorLogVariable);
+
 /**
  * Get Examples Url
  */
