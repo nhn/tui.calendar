@@ -764,7 +764,7 @@ ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
     this.fire('beforeCreateSchedule', {
         calendarId: form.calendarId,
         title: form.title.value,
-        location: location.value,
+        location: form.location.value,
         raw: {
             class: form.isPrivate ? 'private' : 'public'
         },
