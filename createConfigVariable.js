@@ -41,15 +41,5 @@ function getGlobalVariable() {
     fs.writeFileSync('errorVariable.txt', globalErrorLogVariable);
 }
 
-/**
- * Get Supported Browser List
- */
-function getBrowserList() {
-    var browsers = ['ie9', 'ie10', 'ie11', 'safari', 'edge', 'firefox', 'chrome'];
-
-    fs.writeFileSync('browserList.txt', browsers.join(', '));
-}
-
 getTestUrls();
 getGlobalVariable();
-getBrowserList();
