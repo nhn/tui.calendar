@@ -715,7 +715,7 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
         {
             calendarId: form.calendarId,
             title: form.title.value,
-            location: location.value,
+            location: form.location.value,
             start: form.start,
             end: form.end,
             isAllDay: form.isAllDay,
