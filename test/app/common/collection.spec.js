@@ -567,58 +567,6 @@ describe('Collection', function() {
         });
     });
 
-    describe('merge()', function() {
-        it('return new collection with merged supplied collections.', function() {
-            var item1 = {_id:1},
-                item2 = {_id:2},
-                item3 = {_id:5},
-                c2 = new Collection();
-
-            c.add(item1);
-            c2.add(item2, item3);
-
-            var merged = Collection.merge(c, c2);
-            expect(merged.length).toBe(3);
-            expect(merged.items).toEqual({
-                1: item1,
-                2: item2,
-                5: item3
-            });
-        });
-
-        it('newly create collection has same getItemIDFn with first argumented collection.', function() {
-            var item1 = {_id:1},
-                item2 = {_id:2},
-                item3 = {_id:5},
-                c2 = new Collection();
-
-            c.add(item1);
-            c2.add(item2, item3);
-
-            var merged = Collection.merge(c, c2);
-
-            expect(merged.getItemID).toBe(c.getItemID);
-        });
-
-        it('item with same id did not affect total item counts', function() {
-            var item1 = {_id:1},
-                item2 = {_id:2},
-                item3 = {_id:5},
-                item4 = {_id:1, hello: 'world'},
-                item5 = {_id:2},
-                item6 = {_id:5},
-                c2 = new Collection();
-
-            c.add(item1, item2, item3);
-            c2.add(item4, item5, item6);
-
-            var merged = Collection.merge(c, c2);
-
-            expect(merged.length).toBe(3);
-            expect(merged.items['1']).toEqual({_id: 1, hello: 'world'});
-        });
-    });
-
     describe('toArray()', function() {
         it('return new array with collection items.', function() {
             var item1 = {_id:1},

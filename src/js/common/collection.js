@@ -91,29 +91,6 @@ Collection.or = function(filters) {
     };
 };
 
-/**
- * Merge several collections.
- *
- * You can\'t merge collections different _getScheduleID functions. Take case of use.
- * @param {...Collection} collections collection arguments to merge
- * @returns {Collection} merged collection.
- */
-Collection.merge = function(collections) {    // eslint-disable-line
-    var cols = aps.call(arguments),
-        newItems = {},
-        merged = new Collection(cols[0].getItemID),
-        extend = util.extend;
-
-    forEachArr(cols, function(col) {
-        extend(newItems, col.items);
-    });
-
-    merged.items = newItems;
-    merged.length = util.keys(merged.items).length;
-
-    return merged;
-};
-
 /**********
  * prototype props
  **********/
