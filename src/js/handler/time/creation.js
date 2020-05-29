@@ -369,7 +369,7 @@ TimeCreation.prototype.invokeCreationClick = function(schedule) {
             datetime.MILLISECONDS_PER_DAY),
         hourStart = opt.hourStart,
         targetDate = schedule.start;
-    var getScheduleDataFunc, eventData, timeView;
+    var eventData, timeView;
 
     util.forEach(range, function(date, index) {
         if (datetime.isSameDate(date, targetDate)) {
@@ -382,8 +382,7 @@ TimeCreation.prototype.invokeCreationClick = function(schedule) {
         timeView = this.timeGridView.children.toArray()[0];
     }
 
-    getScheduleDataFunc = this._retriveScheduleDataFromDate(timeView);
-    eventData = getScheduleDataFunc(schedule.start, schedule.end, hourStart);
+    eventData = this._retriveScheduleDataFromDate(timeView, schedule.start, schedule.end, hourStart);
 
     this.fire('timeCreationClick', eventData);
 
