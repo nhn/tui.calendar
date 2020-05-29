@@ -148,7 +148,7 @@ AutoScroll.prototype._onMouseDown = function(mouseDownEvent) {
     }
 
     window.clearInterval(this._intervalID);
-    this._intervalID = window.setInterval(util.bind(this._onTick, this), SCROLL_INTERVAL);
+    this._intervalID = window.setInterval(this._onTick.bind(this), SCROLL_INTERVAL);
 
     domevent.on(global, {
         'mousemove': this._onMouseMove,
