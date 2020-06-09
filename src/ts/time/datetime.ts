@@ -7,8 +7,8 @@ import range from 'tui-code-snippet/array/range';
 import inArray from 'tui-code-snippet/array/inArray';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
+import { TimeUnit } from '@src/model';
 
-export type ConvertUnit = 'day' | 'hour' | 'minutes' | 'seconds';
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
 }
@@ -31,6 +31,8 @@ const memo: {
   millisecondsTo: {},
   millisecondsFrom: {}
 };
+
+const convByTimeUnit = [24, 60, 60, 1000];
 
 /**
  * pad left zero characters.
@@ -172,6 +174,8 @@ export const MILLISECONDS_SCHEDULE_MIN_DURATION = 20 * 60000;
 
 export const SIXTY_SECONDS = 60;
 
+export const SIXTY_MINUTES = 60;
+
 /**
  * Return formatted string as basis of supplied string.
  *
@@ -196,38 +200,34 @@ export function toFormat(date: TZDate, strFormat: string): string {
 
 /**
  * convert milliseconds
- * @param {ConvertUnit} type - type of value.
+ * @param {TimeUnit} type - type of value.
  * @param {number} value - value to convert.
  * @param {function} iteratee - iteratee function to use reduce.
  * @returns {number} converted value.
  */
-function _convMilliseconds(type: ConvertUnit, value: number, iteratee: ReduceIteratee): number {
-  const conv = [24, 60, 60, 1000];
-  const index = {
-    day: 0,
+function _convMilliseconds(type: TimeUnit, value: number, iteratee: ReduceIteratee): number {
+  const index: Partial<Record<TimeUnit, number>> = {
+    date: 0,
     hour: 1,
-    minutes: 2,
-    seconds: 3
+    minute: 2,
+    second: 3
   };
 
   if (!(type in index) || isNaN(value)) {
     return 0;
   }
 
-  return [value].concat(conv.slice(index[type])).reduce(iteratee);
+  return [value].concat(convByTimeUnit.slice(index[type])).reduce(iteratee);
 }
 
 /**
  * Convert milliseconds value to other type
- * @param {ConvertUnit} type convert to type want to. support "day", "hour",
+ * @param {TimeUnit} type convert to type want to. support "day", "hour",
  *  "minutes", "seconds" only.
  * @param {number} value - value to convert.
  * @returns {number} converted value.
  */
-export function millisecondsTo(
-  type: 'day' | 'hour' | 'minutes' | 'seconds',
-  value: number
-): number {
+export function millisecondsTo(type: TimeUnit, value: number): number {
   const cache = memo.millisecondsTo;
   const key = type + value;
 
@@ -250,14 +250,11 @@ export function millisecondsTo(
 
 /**
  * Convert value to milliseconds
- * @param {ConvertUnit} type - type of supplied value. support "hour", "minutes", "seconds" only.
+ * @param {TimeUnit} type - type of supplied value. support "hour", "minutes", "seconds" only.
  * @param {number} value - value to convert.
  * @returns {number} converted value.
  */
-export function millisecondsFrom(
-  type: 'day' | 'hour' | 'minutes' | 'seconds',
-  value: number
-): number {
+export function millisecondsFrom(type: TimeUnit, value: number): number {
   const cache = memo.millisecondsFrom;
   const key = type + value;
 
@@ -380,6 +377,15 @@ export function isSameMonth(d1: TZDate, d2: TZDate): boolean {
  */
 export function isSameDate(d1: TZDate, d2: TZDate): boolean {
   return isSameMonth(d1, d2) && d1.getDate() === d2.getDate();
+}
+
+/**
+ * @param {TZDate} d1 - date one
+ * @param {TZDate} d2 - date two
+ * @returns {boolean} is two date are same?
+ */
+export function isSame(d1: TZDate, d2: TZDate): boolean {
+  return compare(d1, d2) === 0;
 }
 
 /**
@@ -681,6 +687,20 @@ export function getGridLeftAndWidth(
 
     return model;
   });
+}
+
+export function addMilliseconds(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setMilliseconds(d.getMilliseconds() + step);
+
+  return date;
+}
+
+export function addSeconds(d: TZDate, step: number) {
+  const date = clone(d);
+  date.setSeconds(d.getSeconds() + step);
+
+  return date;
 }
 
 export function addMinutes(d: TZDate, step: number) {

@@ -200,7 +200,8 @@ export const monthsInAnYear = () => {
   return (
     <Wrapper>
       <Column
-        unit="month"
+        unit="date"
+        slot={15}
         times={times}
         events={events}
         renderGridlineChild={time => {
@@ -232,7 +233,7 @@ export const columnCreationGuideWithTop = () => {
   const creationGuide: CreationGuideInfo = {
     start: addHours(start, 2),
     end: addHours(start, 5),
-    unit: 'hour'
+    unit: 'minute'
   };
 
   return (
@@ -250,7 +251,7 @@ export const columnCreationGuideWithBottom = () => {
   const creationGuide: CreationGuideInfo = {
     start: addHours(start, 3),
     end: addHours(start, 6),
-    unit: 'hour',
+    unit: 'minute',
     textPosition: 'bottom'
   };
 

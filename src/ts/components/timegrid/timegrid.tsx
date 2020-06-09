@@ -1,4 +1,4 @@
-import { h, Component, createRef } from 'preact';
+import { h, createRef } from 'preact';
 import TZDate from '@src/time/date';
 import range from 'tui-code-snippet/array/range';
 import {
@@ -16,26 +16,25 @@ import { cls } from '@src/util/cssHelper';
 import { toPx, toPercent } from '@src/util/units';
 import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
 import { Column } from '@src/components/timegrid/column';
-import { TimeProps } from '@src/components/timegrid/times';
-import { className as timegridClassName, prefixer } from '@src/components/timegrid';
+import {
+  className as timegridClassName,
+  prefixer,
+  CreationGuideInfo
+} from '@src/components/timegrid';
 import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
 import { getTopPercentByTime } from '@src/controller/times';
 import { findIndex } from '@src/util/array';
+import ContextComponent from '@src/components/contextComponent';
+import { ColumnsWithMouse, ColumnInfo } from '@src/components/timegrid/columns';
+import pick from 'tui-code-snippet/object/pick';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
   timegrid: cls(timegridClassName),
-  scrollArea: prefixer('scroll-area'),
-  columns: prefixer('columns')
+  scrollArea: prefixer('scroll-area')
 };
 
-interface ColumnInfo {
-  unit: TimeUnit;
-  startTime: TZDate;
-  endTime: TZDate;
-  times: TimeProps[];
-}
 interface Props {
   currentTime: TZDate;
   unit: TimeUnit;
@@ -50,6 +49,7 @@ interface Props {
 interface State {
   stickyContainer: HTMLElement | null;
   columnLeft: number;
+  creationGuide: CreationGuideInfo | null;
 }
 
 function calculateLeft(timesWidth: number, timezones: Array<any>) {
@@ -65,7 +65,7 @@ function make24Hours(start: TZDate) {
   });
 }
 
-export class TimeGrid extends Component<Props, State> {
+export class TimeGrid extends ContextComponent<Props, State> {
   static displayName = 'TimeGrid';
 
   static defaultProps = {
@@ -73,12 +73,14 @@ export class TimeGrid extends Component<Props, State> {
     unit: 'hour',
     columnInfoList: range(0, 7).map(day => {
       const now = new TZDate();
-      const startTime = toStartOfDay(addDate(now, day + -now.getDay()));
-      const endTime = toEndOfDay(startTime);
+      const start = toStartOfDay(addDate(now, day + -now.getDay()));
+      const end = toEndOfDay(start);
 
       return {
-        startTime,
-        endTime
+        start,
+        end,
+        unit: 'minute',
+        slot: 30
       };
     }),
     timesWidth: 72,
@@ -87,7 +89,8 @@ export class TimeGrid extends Component<Props, State> {
 
   state = {
     stickyContainer: null,
-    columnLeft: 0
+    columnLeft: 0,
+    creationGuide: null
   };
 
   refStickyContainer = createRef<HTMLDivElement>();
@@ -95,6 +98,19 @@ export class TimeGrid extends Component<Props, State> {
   intervalId: any;
 
   timerId: any;
+
+  constructor() {
+    super();
+
+    this.initializeListeners();
+  }
+
+  initializeListeners() {
+    this.onGuideStart = this.onGuideStart.bind(this);
+    this.onGuideChange = this.onGuideChange.bind(this);
+    this.onGuideEnd = this.onGuideEnd.bind(this);
+    this.onGuideCancel = this.onGuideCancel.bind(this);
+  }
 
   componentWillMount() {
     this.onTick = this.onTick.bind(this);
@@ -164,18 +180,45 @@ export class TimeGrid extends Component<Props, State> {
     }
   }
 
+  onGuideStart(e: CreationGuideInfo) {
+    this.setState({ creationGuide: e });
+  }
+
+  onGuideChange(e: CreationGuideInfo) {
+    this.setState({ creationGuide: e });
+  }
+
+  onGuideEnd(e: CreationGuideInfo) {
+    this.onCreateEvent(e);
+  }
+
+  onGuideCancel() {
+    this.setState({ creationGuide: null });
+  }
+
+  onCreateEvent(e: CreationGuideInfo) {
+    const { externalEvent } = this.context;
+
+    externalEvent.fire('beforeCreateSchedule', {
+      start: e.start,
+      end: e.end,
+      isAllDay: false
+    });
+  }
+
   render(props: Props, state: State) {
     const { columnInfoList, timesWidth, timezones = [{}], events } = props;
-    const { stickyContainer } = state;
+    const { stickyContainer, creationGuide } = state;
     const showTimezoneLabel = timezones.length > 1;
-    const columWidth = 100 / columnInfoList.length;
+    const columnWidth = 100 / columnInfoList.length;
     const columnLeft = state.columnLeft || calculateLeft(timesWidth, timezones);
     const now = new TZDate();
     const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
-    const columnIndex = findIndex(columnInfoList, ({ startTime, endTime }) => {
+    const columnIndex = findIndex(columnInfoList, ({ start: startTime, end: endTime }) => {
       return isBetweenWithDate(now, startTime, endTime);
     });
     const showCurrentTime = columnIndex >= 0;
+    const creationGuideColumnIndex: number = pick(creationGuide, 'columnIndex');
 
     return (
       <div className={classNames.timegrid}>
@@ -188,26 +231,35 @@ export class TimeGrid extends Component<Props, State> {
             stickyContainer={stickyContainer}
             onChangeCollapsed={this.onChangeCollapsed}
           />
-          <div className={classNames.columns} style={{ left: columnLeft }}>
-            {columnInfoList.map(({ startTime }, index) => {
+          <ColumnsWithMouse
+            columnLeft={columnLeft}
+            columnInfoList={columnInfoList}
+            onGuideStart={this.onGuideStart}
+            onGuideChange={this.onGuideChange}
+            onGuideEnd={this.onGuideEnd}
+            onGuideCancel={this.onGuideCancel}
+          >
+            {columnInfoList.map(({ start }, index) => {
               return (
                 <Column
                   key={index}
-                  width={toPercent(columWidth)}
-                  times={make24Hours(startTime)}
+                  index={index}
+                  width={toPercent(columnWidth)}
+                  times={make24Hours(start)}
                   events={events}
+                  creationGuide={creationGuideColumnIndex === index ? creationGuide : null}
                 />
               );
             })}
             {showCurrentTime ? (
               <CurrentTimeLine
                 top={currentTimeLineTop}
-                columnWidth={columWidth}
+                columnWidth={columnWidth}
                 columnCount={columnInfoList.length}
                 columnIndex={columnIndex}
               />
             ) : null}
-          </div>
+          </ColumnsWithMouse>
         </div>
         <div ref={this.refStickyContainer}></div>
       </div>

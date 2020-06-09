@@ -1,17 +1,17 @@
-.timegrid-column {
+.column {
   $borderColor: #e5e5e5;
 
   position: relative;
   border-right: 1px solid $borderColor;
 
-  .timegrid-gridline {
+  .gridline {
     $height: 52px;
 
     position: relative;
     height: $height;
     border-bottom: 1px solid $borderColor;
 
-    .timegrid-gridline-half {
+    .gridline-half {
       position: absolute;
       width: 100%;
       height: $height / 2;
@@ -23,7 +23,7 @@
     position: absolute;
   }
 
-  .timegrid-guide-creation {
+  .guide-creation {
     position: absolute;
     right: 10px;
     left: 1px;

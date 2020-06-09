@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import classnames from 'classnames';
-import { CreationGuideInfo, timeFormats, prefixer } from '@src/components/timegrid';
+import { CreationGuideInfo, timeFormats } from '@src/components/timegrid';
 import { toFormat } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
 
 const classNames = {
-  guide: prefixer('guide-creation'),
+  guide: cls('guide-creation'),
   label: cls('creation-label'),
   bottom: cls('creation-label-bottom')
 };

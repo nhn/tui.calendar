@@ -3,6 +3,8 @@
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 import isNull from 'tui-code-snippet/type/isNull';
+import getTarget from 'tui-code-snippet/domEvent/getTarget';
+import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -47,7 +49,7 @@ export function getPosition(el: HTMLElement) {
 }
 
 // eslint-disable-next-line complexity
-export function getSize(el: HTMLElement) {
+export function getSize(el: HTMLElement): { width: number; height: number } {
   let width = getStyle(el, 'width');
   let height = getStyle(el, 'height');
   let bound;
@@ -75,6 +77,24 @@ export function getElementRect(el: HTMLElement) {
     ...getPosition(el),
     ...getSize(el)
   };
+}
+
+export function getOffsetParent(e: MouseEvent): HTMLElement {
+  const { offsetParent } = getTarget(e);
+
+  return offsetParent as HTMLElement;
+}
+
+export function getOffsetParentPos(e: MouseEvent) {
+  const offsetParent = getOffsetParent(e);
+
+  return getMousePosition(e, offsetParent);
+}
+
+export function getOffsetParentRect(e: MouseEvent) {
+  const offsetParent = getOffsetParent(e);
+
+  return getElementRect(offsetParent);
 }
 
 export function isOverlapped(el1: Element, el2: Element) {

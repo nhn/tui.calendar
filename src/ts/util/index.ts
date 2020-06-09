@@ -60,8 +60,8 @@ export function hasStamp(obj: StampObj): boolean {
   return isExisty(pick(obj, '__fe_id'));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export function noop() {}
+// eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+export function noop(..._args: any[]) {}
 
 export function identity(value: any) {
   return value;

@@ -75,10 +75,10 @@ export function generateTimeArrayInRow<T>(matrix: ScheduleMatrix2d<T>) {
     while (schedule) {
       start =
         schedule.getStarts().getTime() -
-        millisecondsFrom('minutes', schedule.valueOf().goingDuration);
+        millisecondsFrom('minute', schedule.valueOf().goingDuration);
       end =
         schedule.getEnds().getTime() +
-        millisecondsFrom('minutes', schedule.valueOf().comingDuration);
+        millisecondsFrom('minute', schedule.valueOf().comingDuration);
 
       if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
         end += SCHEDULE_MIN_DURATION;
@@ -146,8 +146,8 @@ export function getCollides(matrices: ScheduleMatrix<ScheduleViewModel>) {
           endTime += SCHEDULE_MIN_DURATION;
         }
 
-        startTime -= millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-        endTime += millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
+        startTime -= millisecondsFrom('minute', viewModel.valueOf().goingDuration);
+        endTime += millisecondsFrom('minute', viewModel.valueOf().comingDuration);
 
         endTime -= 1;
 

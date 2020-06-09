@@ -215,6 +215,7 @@ export default class Schedule {
    * Initialize schedule instance.
    * @param {ScheduleData} schedule options.
    */
+  // eslint-disable-next-line complexity
   init(schedule: ScheduleData) {
     schedule = extend({}, schedule);
     if (schedule.category === 'allday') {
@@ -321,6 +322,7 @@ export default class Schedule {
    * @param {Schedule} schedule Schedule model instance to compare.
    * @returns {boolean} Return false when not same.
    */
+  // eslint-disable-next-line complexity
   equals(schedule: Schedule) {
     if (this.id !== schedule.id) {
       return false;
@@ -389,6 +391,7 @@ export default class Schedule {
    * @param {Schedule} schedule The other schedule to compare with this Schedule.
    * @returns {boolean} If the other schedule occurs within the same time as the first object.
    */
+  // eslint-disable-next-line complexity
   collidesWith(schedule: Schedule | ScheduleViewModel): boolean {
     schedule = schedule instanceof ScheduleViewModel ? schedule.model : schedule;
 
@@ -396,10 +399,10 @@ export default class Schedule {
     let ownEnds = Number(this.getEnds());
     let start = Number(schedule.getStarts());
     let end = Number(schedule.getEnds());
-    const ownGoingDuration = millisecondsFrom('minutes', this.goingDuration);
-    const ownComingDuration = millisecondsFrom('minutes', this.comingDuration);
-    const goingDuration = millisecondsFrom('minutes', schedule.goingDuration);
-    const comingDuration = millisecondsFrom('minutes', schedule.comingDuration);
+    const ownGoingDuration = millisecondsFrom('minute', this.goingDuration);
+    const ownComingDuration = millisecondsFrom('minute', this.comingDuration);
+    const goingDuration = millisecondsFrom('minute', schedule.goingDuration);
+    const comingDuration = millisecondsFrom('minute', schedule.comingDuration);
 
     if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
       ownEnds += SCHEDULE_MIN_DURATION;
