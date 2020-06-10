@@ -115,11 +115,11 @@ export function getNextGridTime(time: TZDate, slot: number, unit: TimeUnit) {
  * @param {TZDate} startTime - start time
  * @param {number} y - Y coordinate to calculate hour ratio.
  * @param {number} height - container element height.
- * @param {number} baseMil - base milliseconds number for supplied height.
+ * @param {number} baseMs - base milliseconds number for supplied height.
  * @returns {number} hour index ratio value.
  */
-function convertYPosToTime(startTime: TZDate, y: number, height: number, baseMil: number) {
-  const secondsOfY = millisecondsTo('second', (y * baseMil) / height);
+function convertYPosToTime(startTime: TZDate, y: number, height: number, baseMs: number) {
+  const secondsOfY = millisecondsTo('second', (y * baseMs) / height);
 
   return addSeconds(startTime, secondsOfY);
 }
@@ -157,7 +157,5 @@ export function getPrevGridTimeFromMouseEvent(
     time = addMilliseconds(time, 1);
   }
 
-  const prevGridTime = getPrevGridTime(time, slot, unit);
-
-  return prevGridTime;
+  return getPrevGridTime(time, slot, unit);
 }
