@@ -68,29 +68,6 @@ Collection.and = function(filters) {
     };
 };
 
-/**
- * Combine multiple function filters with OR clause.
- * @param {...function} filters - function filters
- * @returns {function} combined filter
- */
-Collection.or = function(filters) {
-    var cnt;
-
-    filters = aps.call(arguments);
-    cnt = filters.length;
-
-    return function(item) {
-        var i = 1,
-            result = filters[0].call(null, item);
-
-        for (; i < cnt; i += 1) {
-            result = (result || filters[i].call(null, item));
-        }
-
-        return result;
-    };
-};
-
 /**********
  * prototype props
  **********/
@@ -246,8 +223,6 @@ Collection.prototype.doWhenHas = function(id, fn, context) {
  * }
  *
  * collection.find(Collection.and(filter1, filter2));
- *
- * collection.find(Collection.or(filter1, filter2));
  */
 Collection.prototype.find = function(filter) {
     var result = new Collection();
