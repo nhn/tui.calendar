@@ -33,13 +33,11 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^3.2.0",
     "eslint": "^4.19.1",
     "eslint-config-tui": "^1.0.3",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
-    "extract-loader": "^2.0.1",
     "handlebars": "^4.0.14",
     "handlebars-template-loader": "^1.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
@@ -67,7 +65,6 @@
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "preprocess-loader": "^0.3.0",
     "safe-umd-webpack-plugin": "^4.0.0",
-    "style-loader": "^0.21.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "terser-webpack-plugin": "^2.3.5",
