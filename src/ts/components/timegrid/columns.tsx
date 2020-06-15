@@ -73,19 +73,12 @@ export class ColumnsWithMouse extends Component<Props> {
       ? this.guideStartData.columnIndex
       : this.getColumnIndexFromMouse(e);
     const columnInfo = this.props.columnInfoList[columnIndex];
-    const { start, end, unit, slot } = columnInfo;
+    const { unit, slot } = columnInfo;
     const containerSelector = classNames.columnsSelector;
-    const startGridTime = getPrevGridTimeFromMouseEvent(
-      e,
-      start,
-      end,
-      containerSelector,
-      slot,
-      unit
-    );
-    const endGridTime = getNextGridTime(addMilliseconds(startGridTime, 1), slot, unit);
+    const start = getPrevGridTimeFromMouseEvent(e, columnInfo, containerSelector);
+    const end = getNextGridTime(addMilliseconds(start, 1), slot, unit);
 
-    return { start: startGridTime, end: endGridTime, unit, columnIndex };
+    return { start, end, unit, columnIndex };
   }
 
   onDragStart(e: MouseEvent) {

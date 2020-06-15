@@ -292,11 +292,8 @@ describe('times controller', () => {
       container.addEventListener('click', () => {
         const result = getPrevGridTimeFromMouseEvent(
           vMouseEvent,
-          startGridTime,
-          endGridTime,
-          selector,
-          slot,
-          unit
+          { start: startGridTime, end: endGridTime, slot, unit },
+          selector
         );
 
         expect(result).toEqual(expected);

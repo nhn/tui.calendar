@@ -4,11 +4,13 @@ import closest from 'tui-code-snippet/domUtil/closest';
 import TZDate from '@src/time/date';
 import { ratio, limit } from '@src/util/math';
 import { millisecondsTo, clone, addSeconds, addMilliseconds } from '@src/time/datetime';
-
 import { getSize } from '@src/util/domutil';
 import { TimeUnit } from '@src/model';
+import { ColumnInfo } from '@src/components/timegrid/columns';
 
 const DEFAULT_SLOT = 30;
+
+type GridColumnInfo = Omit<ColumnInfo, 'times'>;
 
 /**
  * @param {TZDate} [time] - target time which is converted to percent value
@@ -132,15 +134,17 @@ function convertYPosToTime(startTime: TZDate, y: number, height: number, baseMs:
  * @param {string} containerSelector - a selector of container element to limit
  * @returns {number} nearestGridTimeY - nearest grid time of yAxis
  */
-// eslint-disable-next-line max-params
 export function getPrevGridTimeFromMouseEvent(
   mouseEvent: MouseEvent,
-  startGridTime: TZDate,
-  endGridTime: TZDate,
-  containerSelector: string,
-  slot: number = DEFAULT_SLOT,
-  unit: TimeUnit = 'minute'
+  gridColumnInfo: GridColumnInfo,
+  containerSelector: string
 ) {
+  const {
+    start: startGridTime,
+    end: endGridTime,
+    slot = DEFAULT_SLOT,
+    unit = 'minute'
+  } = gridColumnInfo;
   const target = getTarget(mouseEvent);
   const container = closest(target, containerSelector) || target;
   const { height: containerHeight } = getSize(container);

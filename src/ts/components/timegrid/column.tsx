@@ -105,20 +105,11 @@ export function Column(props: Props) {
   const events = props.events.filter(getScheduleInDateRangeFilter(startTime, endTime));
   const renderedTimes = times.slice(0, times.length - 1);
 
-  if (readOnly) {
-    return (
-      <div className={classNames.column} style={{ width, backgroundColor }}>
-        {renderGridlines(renderedTimes, renderGridlineChild)}
-        {renderBackgroundEvents(events, startTime, endTime)}
-      </div>
-    );
-  }
-
   return (
     <div className={classNames.column} style={{ width, backgroundColor }} data-index={index}>
       {renderGridlines(renderedTimes, renderGridlineChild)}
       {renderBackgroundEvents(events, startTime, endTime)}
-      {renderCreationGuide(creationGuide, startTime, endTime)}
+      {!readOnly ? renderCreationGuide(creationGuide, startTime, endTime) : null}
     </div>
   );
 }
