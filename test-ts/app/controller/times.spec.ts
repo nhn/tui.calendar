@@ -1,5 +1,20 @@
-import { getTopPercentByTime } from '@src/controller/times';
+import {
+  getTopPercentByTime,
+  getPrevGridTimeFromMouseEvent,
+  getNextGridTime,
+  getPrevGridTime
+} from '@src/controller/times';
 import TZDate from '@src/time/date';
+import { cls } from '@src/util/cssHelper';
+import { TimeUnit } from '@src/model';
+
+interface TestData {
+  unit: TimeUnit;
+  slot: number;
+  startGridTime: TZDate;
+  endGridTime: TZDate;
+  expected: TZDate;
+}
 
 describe('times controller', () => {
   describe('getTopPercentByTimeUnit() calculate top pixel value between start date, end date', () => {
@@ -101,6 +116,192 @@ describe('times controller', () => {
           new TZDate('2021-01-01T00:00:00')
         )
       ).toBeLessThanOrEqual(50);
+    });
+  });
+
+  it('getPrevGridTime', () => {
+    const time = new TZDate('2015-05-05T12:00:00');
+    const slot = 30;
+    const unit = 'minute';
+    const result = getPrevGridTime(time, slot, unit);
+    const prevGridTime = new TZDate('2015-05-05T12:00:00');
+
+    expect(result).toEqual(prevGridTime);
+  });
+
+  it('getPrevGridTime with slot 15 minutes', () => {
+    const time = new TZDate('2015-05-05T12:18:00');
+    const slot = 15;
+    const unit = 'minute';
+    const result = getPrevGridTime(time, slot, unit);
+    const prevGridTime = new TZDate('2015-05-05T12:15:00');
+
+    expect(result).toEqual(prevGridTime);
+  });
+
+  it(`getPrevGridTime with slot 1 hour`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'hour';
+    const result = getPrevGridTime(time, slot, unit);
+    const prevGridTime = new TZDate('2015-05-05T12:00:00');
+
+    expect(result).toEqual(prevGridTime);
+  });
+
+  it(`getPrevGridTime with slot 1 day`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'date';
+    const result = getPrevGridTime(time, slot, unit);
+    const prevGridTime = new TZDate('2015-05-05T00:00:00');
+
+    expect(result).toEqual(prevGridTime);
+  });
+
+  it(`getPrevGridTime with slot 1 month`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'month';
+    const result = getPrevGridTime(time, slot, unit);
+    const prevGridTime = new TZDate('2015-05-01T00:00:00');
+
+    expect(result).toEqual(prevGridTime);
+  });
+
+  it(`getPrevGridTime with slot 1 year`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'year';
+    const result = getPrevGridTime(time, slot, unit);
+    const prevGridTime = new TZDate('2015-01-01T00:00:00');
+
+    expect(result).toEqual(prevGridTime);
+  });
+
+  it('getNextGridTime', () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 30;
+    const unit = 'minute';
+    const result = getNextGridTime(time, slot, unit);
+    const nextGridTime = new TZDate('2015-05-05T12:30:00');
+
+    expect(result).toEqual(nextGridTime);
+  });
+
+  it('getNextGridTime with slot 15 minutes', () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 15;
+    const unit = 'minute';
+    const result = getNextGridTime(time, slot, unit);
+    const nextGridTime = new TZDate('2015-05-05T12:15:00');
+
+    expect(result).toEqual(nextGridTime);
+  });
+
+  it(`getNextGridTime with slot 1 hour`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'hour';
+    const result = getNextGridTime(time, slot, unit);
+    const nextGridTime = new TZDate('2015-05-05T13:00:00');
+
+    expect(result).toEqual(nextGridTime);
+  });
+
+  it(`getNextGridTime with slot 1 day`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'date';
+    const result = getNextGridTime(time, slot, unit);
+    const nextGridTime = new TZDate('2015-05-06T00:00:00');
+
+    expect(result).toEqual(nextGridTime);
+  });
+
+  it(`getNextGridTime with slot 1 month`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'month';
+    const result = getNextGridTime(time, slot, unit);
+    const nextGridTime = new TZDate('2015-06-01T00:00:00');
+
+    expect(result).toEqual(nextGridTime);
+  });
+
+  it(`getNextGridTime with slot 1 year`, () => {
+    const time = new TZDate('2015-05-05T12:10:00');
+    const slot = 1;
+    const unit = 'year';
+    const result = getNextGridTime(time, slot, unit);
+    const nextGridTime = new TZDate('2016-01-01T00:00:00');
+
+    expect(result).toEqual(nextGridTime);
+  });
+
+  const tests: Array<TestData> = [
+    {
+      unit: 'minute',
+      slot: 10,
+      startGridTime: new TZDate('2015-05-05T00:00:00'),
+      endGridTime: new TZDate('2015-05-05T12:40:00'),
+      expected: new TZDate('2015-05-05T06:20:00')
+    },
+    {
+      unit: 'hour',
+      slot: 1,
+      startGridTime: new TZDate('2015-05-05T00:00:00'),
+      endGridTime: new TZDate('2015-05-06T00:00:00'),
+      expected: new TZDate('2015-05-05T12:00:00')
+    },
+    {
+      unit: 'date',
+      slot: 1,
+      startGridTime: new TZDate('2015-05-01T00:00:00'),
+      endGridTime: new TZDate('2015-05-31T00:00:00'),
+      expected: new TZDate('2015-05-16T00:00:00')
+    },
+    {
+      unit: 'month',
+      slot: 1,
+      startGridTime: new TZDate('2015-01-01T00:00:00'),
+      endGridTime: new TZDate('2016-01-01T00:00:00'),
+      expected: new TZDate('2015-07-01T00:00:00')
+    },
+    {
+      unit: 'year',
+      slot: 1,
+      startGridTime: new TZDate('2015-01-01T00:00:00'),
+      endGridTime: new TZDate('2025-01-01T00:00:00'),
+      expected: new TZDate('2020-01-01T00:00:00')
+    }
+  ];
+
+  tests.forEach(({ unit, slot, startGridTime, endGridTime, expected }) => {
+    it(`getPrevGridTimeFromMouseEvent() with unit '${unit}'`, done => {
+      const selector = cls('.column');
+      const container = document.createElement('div');
+      container.className = cls('column');
+      container.style.height = '230px';
+      container.style.width = ' 70px';
+
+      const vMouseEvent = new MouseEvent('click', {
+        clientX: 10,
+        clientY: 115
+      });
+      container.addEventListener('click', () => {
+        const result = getPrevGridTimeFromMouseEvent(
+          vMouseEvent,
+          { start: startGridTime, end: endGridTime, slot, unit },
+          selector
+        );
+
+        expect(result).toEqual(expected);
+
+        done();
+      });
+
+      container.dispatchEvent(vMouseEvent);
     });
   });
 });

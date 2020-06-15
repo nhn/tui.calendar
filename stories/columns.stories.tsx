@@ -1,4 +1,5 @@
 import { h, RenderableProps } from 'preact';
+import range from 'tui-code-snippet/array/range';
 import { Column } from '@src/components/timegrid/column';
 import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
@@ -12,7 +13,7 @@ import {
   toStartOfDay
 } from '@src/time/datetime';
 import { ScheduleData } from '@src/model';
-import range from 'tui-code-snippet/array/range';
+import { CreationGuideInfo } from '@src/components/timegrid';
 
 export default {
   title: 'Column'
@@ -199,7 +200,8 @@ export const monthsInAnYear = () => {
   return (
     <Wrapper>
       <Column
-        unit="month"
+        unit="date"
+        slot={15}
         times={times}
         events={events}
         renderGridlineChild={time => {
@@ -224,4 +226,41 @@ export const columnHasBackgroundColor = () => {
 };
 columnHasBackgroundColor.story = {
   name: 'Column has background color'
+};
+
+export const columnCreationGuideWithTop = () => {
+  const start = toStartOfDay(new TZDate());
+  const creationGuide: CreationGuideInfo = {
+    start: addHours(start, 2),
+    end: addHours(start, 5),
+    unit: 'minute'
+  };
+
+  return (
+    <Wrapper>
+      <Column width="100px" creationGuide={creationGuide} />
+    </Wrapper>
+  );
+};
+columnCreationGuideWithTop.story = {
+  name: 'Creation Guide(text on top)'
+};
+
+export const columnCreationGuideWithBottom = () => {
+  const start = toStartOfDay(new TZDate());
+  const creationGuide: CreationGuideInfo = {
+    start: addHours(start, 3),
+    end: addHours(start, 6),
+    unit: 'minute',
+    textPosition: 'bottom'
+  };
+
+  return (
+    <Wrapper>
+      <Column width="100px" creationGuide={creationGuide} />
+    </Wrapper>
+  );
+};
+columnCreationGuideWithBottom.story = {
+  name: 'Creation Guide(text on bottom)'
 };

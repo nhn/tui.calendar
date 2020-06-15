@@ -20,8 +20,8 @@ describe('datetime', function() {
   describe('millisecondsTo()', function() {
     it('convert millisecond value to other types.', function() {
       expect(dt.millisecondsTo('hour', 86400000)).toBe(24);
-      expect(dt.millisecondsTo('minutes', 1800000)).toBe(30);
-      expect(dt.millisecondsTo('seconds', 10000)).toBe(10);
+      expect(dt.millisecondsTo('minute', 1800000)).toBe(30);
+      expect(dt.millisecondsTo('second', 10000)).toBe(10);
     });
   });
 

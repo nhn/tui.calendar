@@ -13,9 +13,7 @@ import {
   toChildArray
 } from 'preact';
 import getMouseButton from 'tui-code-snippet/domEvent/getMouseButton';
-import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
-import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import { getElementRect } from '@src/util/domutil';
+import { getOffsetParentPos, getOffsetParentRect } from '@src/util/domutil';
 import { limit } from '@src/util/math';
 import { Direction } from '@src/controller/layout';
 
@@ -94,26 +92,14 @@ export class Draggable extends Component<Props, State> {
     this.setState({ isMoved: false });
   }
 
-  getOffsetParentPos(e: MouseEvent) {
-    const { offsetParent } = getTarget(e);
-
-    return getMousePosition(e, offsetParent as HTMLElement);
-  }
-
-  getOffsetParentRect(e: MouseEvent) {
-    const { offsetParent } = getTarget(e);
-
-    return getElementRect(offsetParent as HTMLElement);
-  }
-
   onMouseDown(e: MouseEvent) {
     // only primary button can start drag.
     if (getMouseButton(e) !== 0) {
       return;
     }
 
-    const [startX, startY] = this.getOffsetParentPos(e);
-    const rect = this.getOffsetParentRect(e);
+    const [startX, startY] = getOffsetParentPos(e);
+    const rect = getOffsetParentRect(e);
 
     this.startX = startX;
     this.startY = startY;
@@ -161,7 +147,7 @@ export class Draggable extends Component<Props, State> {
   onMouseUp(e: MouseEvent) {
     if (this.state.isMoved && this.props.onDragEnd) {
       const { startX, startY, maxX, maxY } = this;
-      const [endX, endY] = this.getOffsetParentPos(e);
+      const [endX, endY] = getOffsetParentPos(e);
 
       this.props.onDragEnd({
         startX,
@@ -177,7 +163,7 @@ export class Draggable extends Component<Props, State> {
   updateDragPosition(e: MouseEvent) {
     const { direction } = this.props;
     const { minX, minY, maxX, maxY } = this;
-    let [x, y] = this.getOffsetParentPos(e);
+    let [x, y] = getOffsetParentPos(e);
 
     x = limit(x, [minX], [maxX]);
     y = limit(y, [minY], [maxY]);

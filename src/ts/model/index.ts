@@ -62,7 +62,7 @@ export interface GridViewModel {
   left: number;
 }
 
-export type TimeUnit = 'minute' | 'hour' | 'date' | 'month' | 'year';
+export type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';
 
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;

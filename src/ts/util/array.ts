@@ -77,6 +77,7 @@ function compareStringsASC(_a: any, _b: any) {
  * @param {Schedule} b The object schedule instance.
  * @returns {number} Result of comparison.
  */
+// eslint-disable-next-line complexity
 function compareSchedulesASC(a: Schedule | ScheduleViewModel, b: Schedule | ScheduleViewModel) {
   const modelA = a instanceof ScheduleViewModel ? a.model : a;
   const modelB = b instanceof ScheduleViewModel ? b.model : b;

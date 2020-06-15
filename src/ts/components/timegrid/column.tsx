@@ -5,25 +5,31 @@ import { first, last } from '@src/util/array';
 import { getScheduleInDateRangeFilter } from '@src/controller/core';
 import TZDate from '@src/time/date';
 import Schedule, { isBackgroundEvent } from '@src/model/schedule';
-import { prefixer } from '@src/components/timegrid';
+import { CreationGuideInfo } from '@src/components/timegrid';
 import { BackgroundEvent } from '@src/components/events/background';
-import { getTopPercentByTime } from '@src/controller/times';
+import { getTopHeightByTime } from '@src/controller/times';
 import { toPercent } from '@src/util/units';
+import { CreationGuide } from '@src/components/timegrid/creationGuide';
+import { cls } from '@src/util/cssHelper';
 
 const classNames = {
-  column: prefixer('column'),
-  gridline: prefixer('gridline'),
-  gridlineHalf: prefixer('gridline-half')
+  column: cls('column'),
+  gridline: cls('gridline'),
+  gridlineHalf: cls('gridline-half')
 };
 
 interface Props {
   unit: TimeUnit;
+  slot: number;
   times: TZDate[];
   width: string;
   backgroundColor: string;
   start?: number;
   end?: number;
   events: Schedule[];
+  creationGuide: CreationGuideInfo | null;
+  index: number;
+  readOnly?: boolean;
   renderGridlineChild?: (time: TZDate) => VNode;
 }
 
@@ -48,9 +54,7 @@ function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: 
   return (
     <Fragment>
       {backgroundEvents.map((event, index) => {
-        const top = getTopPercentByTime(event.start, startTime, endTime);
-        const bottom = getTopPercentByTime(event.end, startTime, endTime);
-        const height = bottom - top;
+        const { top, height } = getTopHeightByTime(event.start, event.end, startTime, endTime);
 
         return (
           <BackgroundEvent
@@ -65,32 +69,55 @@ function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: 
   );
 }
 
+function renderCreationGuide(
+  creationGuide: CreationGuideInfo | null,
+  startTime: TZDate,
+  endTime: TZDate
+) {
+  if (!creationGuide) {
+    return null;
+  }
+
+  const { top, height } = getTopHeightByTime(
+    creationGuide.start,
+    creationGuide.end,
+    startTime,
+    endTime
+  );
+
+  return <CreationGuide {...creationGuide} top={top} height={height} />;
+}
+
 export function Column(props: Props) {
   const {
     start = 0,
     end = props.times.length,
     width,
     backgroundColor,
+    creationGuide,
+    readOnly,
+    index,
     renderGridlineChild
   } = props;
   const times = props.times.slice(start, end + 1);
   const startTime = first(times);
   const endTime = last(times);
   const events = props.events.filter(getScheduleInDateRangeFilter(startTime, endTime));
-
   const renderedTimes = times.slice(0, times.length - 1);
 
   return (
-    <div className={classNames.column} style={{ width, backgroundColor }}>
+    <div className={classNames.column} style={{ width, backgroundColor }} data-index={index}>
       {renderGridlines(renderedTimes, renderGridlineChild)}
       {renderBackgroundEvents(events, startTime, endTime)}
+      {!readOnly ? renderCreationGuide(creationGuide, startTime, endTime) : null}
     </div>
   );
 }
 
 Column.displayName = 'Column';
 Column.defaultProps = {
-  unit: 'hour',
+  unit: 'minute',
+  slot: 30,
   times: range(0, 25).map(hour => {
     const time = new TZDate();
     time.setHours(hour, 0, 0, 0);
@@ -99,5 +126,8 @@ Column.defaultProps = {
   }),
   width: '72px',
   backgroundColor: '',
-  events: []
+  events: [],
+  creationGuide: null,
+  readOnly: false,
+  index: 0
 } as Props;
