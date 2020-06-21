@@ -187,7 +187,7 @@ ScheduleDetailPopup.prototype._getYAndArrowTop = function(
         y = 0;
         arrowTop = scheduleVerticalCenter - containerTop - ARROW_WIDTH_HALF;
     } else if (y + layerHeight > containerBottom) {
-        y = containerBottom - layerHeight - containerTop;
+        y = Math.max(containerBottom - layerHeight - containerTop, 0);
         arrowTop = scheduleVerticalCenter - y - containerTop - ARROW_WIDTH_HALF;
     } else {
         y -= containerTop;
