@@ -1,0 +1,29 @@
+.event-time {
+  position: absolute;
+  overflow: hidden;
+
+  cursor: pointer;
+
+  .travel-time,
+  .event-time-content {
+    overflow: hidden;
+    padding: 1px 0 0 3px;
+    font-size: 12px;
+  }
+}
+
+.resize-handler-x {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  left: 0;
+  height: 5px;
+  text-align: center;
+  color: #fff;
+  cursor: row-resize;
+  background-position: center top;
+
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url(./image/handler-x.png);
+}

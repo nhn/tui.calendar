@@ -162,6 +162,8 @@ export function getCollides(matrices: ScheduleMatrix<ScheduleViewModel>) {
       });
     });
   });
+
+  return matrices;
 }
 
 /**
@@ -171,6 +173,7 @@ export function getCollides(matrices: ScheduleMatrix<ScheduleViewModel>) {
  * @returns {function} - filtering function
  */
 export function _makeHourRangeFilter(hStart: number, hEnd: number) {
+  // eslint-disable-next-line complexity
   return (viewModel: Schedule | ScheduleViewModel) => {
     const ownHourStart = viewModel.getStarts();
     const ownHourEnd = viewModel.getEnds();
@@ -283,9 +286,8 @@ export function getViewModelForTimeView(
     const viewModels = _getViewModel(viewModelColl);
     const collisionGroups = getCollisionGroup(viewModels);
     const matrices = getMatrices(viewModelColl, collisionGroups);
-    getCollides(matrices);
 
-    result[ymd] = matrices;
+    result[ymd] = getCollides(matrices);
   });
 
   return result;

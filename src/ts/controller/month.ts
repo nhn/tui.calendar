@@ -27,7 +27,7 @@ import { DataStore } from '@src/model';
  * @param {ScheduleViewModel} viewModel - schedule view model
  * @returns {boolean} whether model is allday schedule?
  */
-function _isAllday({ model }: ScheduleViewModel) {
+function _isAllDay({ model }: ScheduleViewModel) {
   return model.isAllDay || model.hasMultiDates;
 }
 
@@ -37,7 +37,7 @@ function _isAllday({ model }: ScheduleViewModel) {
  * @returns {boolean} whether model is time schedule?
  */
 function _isNotAllday(viewModel: ScheduleViewModel) {
-  return !_isAllday(viewModel);
+  return !_isAllDay(viewModel);
 }
 
 /**
@@ -101,7 +101,7 @@ function _getAlldayMaxTopIndexAtYMD(
  * @param {Collection} viewModelColl - collection of schedule view model
  */
 function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<ScheduleViewModel>) {
-  const vAlldayColl = viewModelColl.find(_isAllday);
+  const vAlldayColl = viewModelColl.find(_isAllDay);
   const sortedTimeSchedules = viewModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
   const maxIndexInYMD: Record<string, number> = {};
 
@@ -125,7 +125,7 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<Sch
  * @param {Collection} viewModelColl - collection of schedule view model
  */
 function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<ScheduleViewModel>) {
-  const viewModelAlldayColl = viewModelColl.find(_isAllday);
+  const viewModelAlldayColl = viewModelColl.find(_isAllDay);
   const sortedTimeSchedules = viewModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
   const indiceInYMD: Record<string, number[]> = {};
 

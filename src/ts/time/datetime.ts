@@ -402,6 +402,34 @@ export function isValid(d: TZDate): boolean {
 }
 
 /**
+ * Return a bigger value
+ * @param {TZDate} d1 - date one
+ * @param {TZDate} d2 - date two
+ * @returns {TZDate} bigger value;
+ */
+export function max(d1: TZDate, d2: TZDate): TZDate {
+  if (compare(d1, d2) === 1) {
+    return d1;
+  }
+
+  return d2;
+}
+
+/**
+ * Return a smaller value
+ * @param {TZDate} d1 - date one
+ * @param {TZDate} d2 - date two
+ * @returns {TZDate} smaller value;
+ */
+export function min(d1: TZDate, d2: TZDate): TZDate {
+  if (compare(d1, d2) === -1) {
+    return d1;
+  }
+
+  return d2;
+}
+
+/**
  * Convert date string to date object.
  *
  * Only listed below formats avaliable.

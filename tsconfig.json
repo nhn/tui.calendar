@@ -6,6 +6,7 @@
     "jsxFactory": "h",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
     "outDir": "dist/es5/",

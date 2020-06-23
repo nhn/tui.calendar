@@ -25,10 +25,18 @@ export type IDS_OF_DAY = Record<string, number[]>;
  * Make a schedule collection
  * @returns {Collection<Schedule>} instance
  */
-export function createScheduleCollection() {
-  return new Collection<Schedule>(schedule => {
+export function createScheduleCollection<T extends Schedule | ScheduleViewModel>(
+  ...initItems: T[]
+) {
+  const collection = new Collection<T>(schedule => {
     return schedule.cid();
   });
+
+  if (initItems.length) {
+    collection.add(...initItems);
+  }
+
+  return collection;
 }
 /**
  * Calculate contain dates in schedule.

@@ -1,21 +1,25 @@
-import { h, Fragment, VNode } from 'preact';
+import { h, VNode } from 'preact';
 import range from 'tui-code-snippet/array/range';
 import { TimeUnit } from '@src/model';
 import { first, last } from '@src/util/array';
-import { getScheduleInDateRangeFilter } from '@src/controller/core';
 import TZDate from '@src/time/date';
 import Schedule, { isBackgroundEvent } from '@src/model/schedule';
 import { CreationGuideInfo } from '@src/components/timegrid';
-import { BackgroundEvent } from '@src/components/events/background';
+import { BackgroundEvent } from '@src/components/events/backgroundEvent';
+import { TimeEvent } from '@src/components/events/timeEvent';
 import { getTopHeightByTime } from '@src/controller/times';
 import { toPercent } from '@src/util/units';
 import { CreationGuide } from '@src/components/timegrid/creationGuide';
 import { cls } from '@src/util/cssHelper';
+import { getViewModels, isBetween } from '@src/controller/column';
 
 const classNames = {
   column: cls('column'),
+  grid: cls('grid'),
   gridline: cls('gridline'),
-  gridlineHalf: cls('gridline-half')
+  gridlineHalf: cls('gridline-half'),
+  backgrounds: cls('background-events'),
+  events: cls('events')
 };
 
 interface Props {
@@ -35,7 +39,7 @@ interface Props {
 
 function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) => VNode) {
   return (
-    <Fragment>
+    <div className={classNames.grid}>
       {times.map((time, index) => {
         return (
           <div className={classNames.gridline} key={`gridline-${index}`}>
@@ -44,7 +48,7 @@ function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) =
           </div>
         );
       })}
-    </Fragment>
+    </div>
   );
 }
 
@@ -52,7 +56,7 @@ function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: 
   const backgroundEvents = events.filter(isBackgroundEvent);
 
   return (
-    <Fragment>
+    <div className={classNames.backgrounds}>
       {backgroundEvents.map((event, index) => {
         const { top, height } = getTopHeightByTime(event.start, event.end, startTime, endTime);
 
@@ -65,7 +69,23 @@ function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: 
           />
         );
       })}
-    </Fragment>
+    </div>
+  );
+}
+
+function renderEvents(events: Schedule[], startTime: TZDate, endTime: TZDate) {
+  const marginRight = 8;
+  const style = {
+    marginRight
+  };
+  const viewModels = getViewModels(events, startTime, endTime);
+
+  return (
+    <div className={classNames.events} style={style}>
+      {viewModels.map((viewModel, index) => {
+        return <TimeEvent viewModel={viewModel} key={index} />;
+      })}
+    </div>
   );
 }
 
@@ -102,13 +122,18 @@ export function Column(props: Props) {
   const times = props.times.slice(start, end + 1);
   const startTime = first(times);
   const endTime = last(times);
-  const events = props.events.filter(getScheduleInDateRangeFilter(startTime, endTime));
+  const events = props.events.filter(isBetween(startTime, endTime));
   const renderedTimes = times.slice(0, times.length - 1);
+  const style = {
+    width,
+    backgroundColor
+  };
 
   return (
-    <div className={classNames.column} style={{ width, backgroundColor }} data-index={index}>
+    <div className={classNames.column} style={style} data-index={index}>
       {renderGridlines(renderedTimes, renderGridlineChild)}
       {renderBackgroundEvents(events, startTime, endTime)}
+      {renderEvents(events, startTime, endTime)}
       {!readOnly ? renderCreationGuide(creationGuide, startTime, endTime) : null}
     </div>
   );

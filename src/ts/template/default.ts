@@ -47,12 +47,20 @@ export const templates: Template = {
   },
 
   time(model: Schedule) {
-    return stripTags(model.title);
+    const { start, title } = model;
+
+    if (start) {
+      return `<span><strong>${toFormat(start, 'HH:mm')}</strong>&nbsp;<span>${stripTags(
+        title
+      )}</span></span>`;
+    }
+
+    return stripTags(title);
   },
 
   goingDuration(model: Schedule) {
     const { goingDuration } = model;
-    const hour = goingDuration / SIXTY_MINUTES;
+    const hour = Math.floor(goingDuration / SIXTY_MINUTES);
     const minutes = goingDuration % SIXTY_MINUTES;
 
     return `GoingTime ${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
@@ -60,7 +68,7 @@ export const templates: Template = {
 
   comingDuration(model: Schedule) {
     const { comingDuration } = model;
-    const hour = comingDuration / SIXTY_MINUTES;
+    const hour = Math.floor(comingDuration / SIXTY_MINUTES);
     const minutes = comingDuration % SIXTY_MINUTES;
 
     return `ComingTime ${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;

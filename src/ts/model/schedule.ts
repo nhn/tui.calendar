@@ -9,13 +9,13 @@ import TZDate from '@src/time/date';
 import { DateType, ScheduleData } from '@src/model';
 import { stamp } from '@src/util';
 import {
-  isSameDate,
   MILLISECONDS_SCHEDULE_MIN_DURATION,
   parse,
   toEndOfDay,
   toStartOfDay,
   millisecondsFrom,
-  compare
+  compare,
+  MILLISECONDS_PER_DAY
 } from '@src/time/datetime';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
@@ -293,7 +293,8 @@ export default class Schedule {
       this.end.setMinutes(this.end.getMinutes() + 30);
     }
 
-    this.hasMultiDates = !isSameDate(this.start, this.end);
+    // if over 24 hours
+    this.hasMultiDates = this.end.getTime() - this.start.getTime() > MILLISECONDS_PER_DAY;
   }
 
   /**
@@ -431,4 +432,8 @@ export default class Schedule {
 
 export function isBackgroundEvent({ category }: Schedule) {
   return category === 'background';
+}
+
+export function isTimeEvent({ category, isAllDay, hasMultiDates }: Schedule) {
+  return category === 'time' && isAllDay === false && hasMultiDates === false;
 }
