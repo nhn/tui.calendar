@@ -159,7 +159,7 @@ var Month = {
             var start = model.getStarts();
             var end = model.getEnds();
 
-            viewModel.hasMultiDates = !datetime.isSameDate(start, end);
+            viewModel.hasMultiDates = datetime.hasMultiDates(start, end);
 
             if (!model.isAllDay && viewModel.hasMultiDates) {
                 viewModel.renderStarts = datetime.start(start);
