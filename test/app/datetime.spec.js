@@ -512,18 +512,18 @@ describe('datetime', function() {
   });
 
   it('getHourDifference', function() {
-      var d1 = new TZDate('2020-02-29T23:00:00+09:00');
-      var d2 = new TZDate('2020-02-30T00:00:00+09:00');
-      var d3 = new TZDate('2020-02-30T01:00:00+09:00');
+      var d1 = new TZDate('2020-03-29T23:00:00+09:00');
+      var d2 = new TZDate('2020-03-30T00:00:00+09:00');
+      var d3 = new TZDate('2020-03-30T01:00:00+09:00');
 
       expect(dt.getHourDifference(d1, d2)).toBe(-1);
       expect(dt.getHourDifference(d1, d3)).toBe(-2);
   });
 
   it ('hasMultiDates', function() {
-      var d1 = new TZDate('2020-02-29T23:00:00+09:00');
-      var d2 = new TZDate('2020-02-30T00:00:00+09:00');
-      var d3 = new TZDate('2020-02-30T1:00:00+09:00');
+      var d1 = new TZDate('2020-03-29T23:00:00+09:00');
+      var d2 = new TZDate('2020-03-30T00:00:00+09:00');
+      var d3 = new TZDate('2020-03-30T01:00:00+09:00');
 
       expect(dt.hasMultiDates(d1, d2)).toBe(false);
       expect(dt.hasMultiDates(d1, d3)).toBe(true);
