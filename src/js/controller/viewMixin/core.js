@@ -212,7 +212,6 @@ var Core = {
                     endTime = viewModel.hasMultiDates ?
                         datetime.end(viewModel.getEnds()) :
                         datetime.convertStartDayToLastDay(viewModel.getEnds());
-
                     dateLength = datetime.range(
                         datetime.start(viewModel.getStarts()),
                         endTime,

@@ -624,25 +624,25 @@ datetime = {
     },
 
     getDateDifference: function(d1, d2) {
-        var _d1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
-        var _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
+        var time1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
+        var time2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
-        return Math.round((_d1 - _d2) / datetime.MILLISECONDS_PER_DAY);
+        return Math.round((time1 - time2) / datetime.MILLISECONDS_PER_DAY);
     },
 
     getHourDifference: function(d1, d2) {
-        var _d1 = new TZDate(d1).getTime();
-        var _d2 = new TZDate(d2).getTime();
+        var time1 = new TZDate(d1).getTime();
+        var time2 = new TZDate(d2).getTime();
 
-        return Math.round((_d1 - _d2) / datetime.MILLISECONDS_PER_HOUR);
+        return Math.round((time1 - time2) / datetime.MILLISECONDS_PER_HOUR);
     },
 
-    hasMultiDates: function(d1, d2) {
-        var diffDays = Math.abs(datetime.getDateDifference(d1, d2));
-        var diffHours = Math.abs(datetime.getHourDifference(d1, d2));
-        var withinADay = diffDays === 1 && diffHours < 24;
+    hasMultiDates: function(start, end) {
+        var diffDays = datetime.getDateDifference(start, end);
+        var diffHours = Math.abs(datetime.getHourDifference(start, end));
+        var withinDay = diffDays === -1 && diffHours < 24 && datetime.isStartOfDay(end);
 
-        return !(datetime.isSameDate(d1, d2) || withinADay);
+        return !datetime.isSameDate(start, end) && !withinDay;
     }
 };
 
