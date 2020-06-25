@@ -505,10 +505,10 @@ describe('datetime', function() {
       var d5 = new TZDate('2012-03-02T00:00:00+09:00')
       var d6 = new TZDate('2012-03-01T03:00:00+09:00')
 
-      expect(dt.getDateDifference(d1, d2)).toEqual(0);
-      expect(dt.getDateDifference(d1, d3)).toEqual(-1);
-      expect(dt.getDateDifference(d1, d4)).toEqual(2);
-      expect(dt.getDateDifference(d5, d6)).toEqual(1);
+      expect(dt.getDateDifference(d1, d2)).toBe(0);
+      expect(dt.getDateDifference(d1, d3)).toBe(-1);
+      expect(dt.getDateDifference(d1, d4)).toBe(2);
+      expect(dt.getDateDifference(d5, d6)).toBe(1);
   });
 
   it('getHourDifference', function() {
@@ -516,8 +516,8 @@ describe('datetime', function() {
       var d2 = new TZDate('2020-02-30T00:00:00+09:00');
       var d3 = new TZDate('2020-02-30T01:00:00+09:00');
 
-      expect(dt.getHourDifference(d1, d2)).toEqual(-1);
-      expect(dt.getHourDifference(d1, d3)).toEqual(-2);
+      expect(dt.getHourDifference(d1, d2)).toBe(-1);
+      expect(dt.getHourDifference(d1, d3)).toBe(-2);
   });
 
   it ('hasMultiDates', function() {
@@ -528,5 +528,4 @@ describe('datetime', function() {
       expect(dt.hasMultiDates(d1, d2)).toBe(false);
       expect(dt.hasMultiDates(d1, d3)).toBe(true);
   });
-
 });
