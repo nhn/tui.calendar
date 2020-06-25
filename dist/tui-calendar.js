@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp101-200625 | Thu Jun 25 2020
+ * @version 1.12.5-dooray-sp101-200625-2 | Thu Jun 25 2020
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -13259,7 +13259,8 @@ module.exports = MonthClick;
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js"),
     domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js"),
-    domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
+    domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js"),
+    datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var mfloor = Math.floor;
 
 /**
@@ -13343,7 +13344,7 @@ function getMousePosDate(monthView) {
             y: y,
             sizeX: dayCount,
             sizeY: weekCount,
-            date: date,
+            date: datetime.end(date),
             weekdayView: weekdayView,
             triggerEvent: mouseEvent.type
         };
