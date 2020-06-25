@@ -31,7 +31,7 @@ var config = require('../config'),
 function getViewModelForMoreLayer(date, target, schedules, daynames) {
     schedules.each(function(schedule) {
         var model = schedule.model;
-        schedule.hasMultiDates = !datetime.isSameDate(model.start, model.end);
+        schedule.hasMultiDates = datetime.hasMultiDates(model.start, model.end);
     });
 
     return {
