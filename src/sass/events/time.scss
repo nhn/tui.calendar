@@ -21,9 +21,6 @@
   text-align: center;
   color: #fff;
   cursor: row-resize;
-  background-position: center top;
 
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-image: url(./image/handler-x.png);
+  background: url(./image/handler-x.png) no-repeat center center;
 }

@@ -46,26 +46,32 @@ function getEvents() {
   const start = toStartOfDay(new TZDate());
   const adjustForWeekStart = start.getDay();
   const disabledAMEvents: ScheduleData[] = range(0, 7).map(date => {
+    const eventStart = addDate(start, date - adjustForWeekStart);
+
     return {
       category: 'background',
-      start: addDate(start, date - adjustForWeekStart),
-      end: addHours(addDate(start, date - adjustForWeekStart), 9),
+      start: eventStart,
+      end: addHours(eventStart, 9),
       bgColor: 'rgba(100, 100, 100, .3)'
     };
   });
   const disabledPMEvents: ScheduleData[] = range(0, 7).map(date => {
+    const eventStart = addDate(start, date - adjustForWeekStart);
+
     return {
       category: 'background',
-      start: addHours(addDate(start, date - adjustForWeekStart), 18),
-      end: addHours(addDate(start, date - adjustForWeekStart), 24),
+      start: addHours(eventStart, 18),
+      end: addHours(eventStart, 24),
       bgColor: 'rgba(100, 100, 100, .3)'
     };
   });
   const disabledLunchEvents: ScheduleData[] = range(0, 7).map(date => {
+    const eventStart = addDate(start, date - adjustForWeekStart);
+
     return {
       category: 'background',
-      start: addHours(addDate(start, date - adjustForWeekStart), 12),
-      end: addHours(addDate(start, date - adjustForWeekStart), 13),
+      start: addHours(eventStart, 12),
+      end: addHours(eventStart, 13),
       bgColor: 'rgba(23, 255, 100, .3)'
     };
   });

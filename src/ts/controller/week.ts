@@ -124,6 +124,7 @@ export function hasCollision(arr: Array<number[]> = [], start: number, end: numb
 /**
  * Initialize values to viewmodels for detect real collision at rendering phase.
  * @param {array[]} matrices - Matrix data.
+ * @returns {array[]} matrices - Matrix data with collision information
  */
 export function getCollides(matrices: ScheduleMatrix<ScheduleViewModel>) {
   matrices.forEach(matrix => {

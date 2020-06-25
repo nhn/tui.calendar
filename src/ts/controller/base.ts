@@ -28,9 +28,7 @@ export type IDS_OF_DAY = Record<string, number[]>;
 export function createScheduleCollection<T extends Schedule | ScheduleViewModel>(
   ...initItems: T[]
 ) {
-  const collection = new Collection<T>(schedule => {
-    return schedule.cid();
-  });
+  const collection = new Collection<T>(schedule => schedule.cid());
 
   if (initItems.length) {
     collection.add(...initItems);

@@ -15,9 +15,7 @@ interface Props {
   viewModel: ScheduleViewModel;
 }
 
-// eslint-disable-next-line complexity
-export function TimeEvent(props: Props) {
-  const { viewModel } = props;
+function getStyles(viewModel: ScheduleViewModel) {
   const {
     top,
     left,
@@ -37,7 +35,7 @@ export function TimeEvent(props: Props) {
   const defaultMarginBottom = 2;
   const marginLeft = left > 0 ? paddingLeft : 0;
 
-  const { color, bgColor, borderColor, isReadOnly } = model;
+  const { color, bgColor, borderColor } = model;
   const containerStyle: Record<string, string | number> = {
     width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
     height: `calc(${toPercent(height)} - ${defaultMarginBottom}px)`,
@@ -70,6 +68,28 @@ export function TimeEvent(props: Props) {
     containerStyle.borderBottomLeftRadius = 0;
     containerStyle.borderBottomRightRadius = 0;
   }
+
+  return {
+    containerStyle,
+    goingDurationStyle,
+    modelDurationStyle,
+    comingDurationStyle
+  };
+}
+
+export function TimeEvent(props: Props) {
+  const { viewModel } = props;
+  const {
+    model,
+    goingDurationHeight,
+    modelDurationHeight,
+    comingDurationHeight,
+    croppedEnd
+  } = viewModel;
+  const { isReadOnly } = model;
+  const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
+    viewModel
+  );
 
   return (
     <div className={classNames.time} style={containerStyle}>
