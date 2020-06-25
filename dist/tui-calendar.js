@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp101-200515 | Fri May 15 2020
+ * @version 1.12.5-dooray-sp101-200625 | Thu Jun 25 2020
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -3649,10 +3649,25 @@ datetime = {
     },
 
     getDateDifference: function(d1, d2) {
-        var _d1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
-        var _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
+        var time1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
+        var time2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
-        return Math.round((_d1 - _d2) / datetime.MILLISECONDS_PER_DAY);
+        return Math.round((time1 - time2) / datetime.MILLISECONDS_PER_DAY);
+    },
+
+    getHourDifference: function(d1, d2) {
+        var time1 = new TZDate(d1).getTime();
+        var time2 = new TZDate(d2).getTime();
+
+        return Math.round((time1 - time2) / datetime.MILLISECONDS_PER_HOUR);
+    },
+
+    hasMultiDates: function(start, end) {
+        var diffDays = datetime.getDateDifference(start, end);
+        var diffHours = Math.abs(datetime.getHourDifference(start, end));
+        var withinDay = diffDays === -1 && diffHours < 24 && datetime.isStartOfDay(end);
+
+        return !datetime.isSameDate(start, end) && !withinDay;
     }
 };
 
@@ -7561,7 +7576,7 @@ var Core = {
      * @param {function} [iteratee] - iteratee function invoke each view models
      */
     positionViewModels: function(start, end, matrices, iteratee) {
-        var ymdListToRender;
+        var ymdListToRender, endTime;
 
         ymdListToRender = util.map(
             datetime.range(start, end, datetime.MILLISECONDS_PER_DAY),
@@ -7580,9 +7595,12 @@ var Core = {
                     }
 
                     ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
+                    endTime = viewModel.hasMultiDates ?
+                        datetime.end(viewModel.getEnds()) :
+                        datetime.convertStartDayToLastDay(viewModel.getEnds());
                     dateLength = datetime.range(
                         datetime.start(viewModel.getStarts()),
-                        datetime.end(viewModel.getEnds()),
+                        endTime,
                         datetime.MILLISECONDS_PER_DAY
                     ).length;
 
@@ -7895,7 +7913,7 @@ var Month = {
             var start = model.getStarts();
             var end = model.getEnds();
 
-            viewModel.hasMultiDates = !datetime.isSameDate(start, end);
+            viewModel.hasMultiDates = datetime.hasMultiDates(start, end);
 
             if (!model.isAllDay && viewModel.hasMultiDates) {
                 viewModel.renderStarts = datetime.start(start);
@@ -10401,7 +10419,7 @@ var config = __webpack_require__(/*! ../config */ "./src/js/config.js"),
 function getViewModelForMoreLayer(date, target, schedules, daynames) {
     schedules.each(function(schedule) {
         var model = schedule.model;
-        schedule.hasMultiDates = !datetime.isSameDate(model.start, model.end);
+        schedule.hasMultiDates = datetime.hasMultiDates(model.start, model.end);
     });
 
     return {
