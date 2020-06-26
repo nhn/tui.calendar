@@ -5,7 +5,7 @@ export const KEYCODE = {
   ESC: 27
 };
 
-const keyAndKeyCodeMap = {
+export const keyAndKeyCodeMap: Record<string, number> = {
   [ESCAPE]: KEYCODE.ESC
 };
 

@@ -1,8 +1,11 @@
+import browser from 'tui-code-snippet/browser/browser';
+import { keyAndKeyCodeMap } from '@src/util/keycode';
+
 export function createMouseEvent(name: string, eventInitDic: MouseEventInit = {}) {
   const primaryButton = 0;
   let event;
 
-  if (document.createEvent) {
+  if (browser.msie) {
     event = document.createEvent('MouseEvent');
     event.initMouseEvent(
       name,
@@ -29,8 +32,8 @@ export function createMouseEvent(name: string, eventInitDic: MouseEventInit = {}
 }
 
 export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventInit) {
-  let event;
-  if (document.createEvent) {
+  let event: KeyboardEvent;
+  if (browser.msie) {
     event = document.createEvent('KeyboardEvent');
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore;
@@ -39,11 +42,10 @@ export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventIn
       true,
       true,
       window,
-      false,
-      false,
-      false,
-      false,
       eventInitDict.key,
+      keyAndKeyCodeMap[eventInitDict.key || ''],
+      0,
+      0,
       0
     );
   } else {
