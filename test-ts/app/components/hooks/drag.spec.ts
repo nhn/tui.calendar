@@ -1,5 +1,6 @@
 import { useDrag, DISTANCE, MouseEventListener, DragListeners } from '@src/components/hooks/drag';
 import { noop } from '@src/util';
+import { createMouseEvent, createKeyboardEvent } from '@test/util';
 
 const primaryButton = 0;
 
@@ -29,12 +30,12 @@ describe('drag hook', () => {
 
     ({ onMouseDown, onMouseMove, onMouseUp, onKeydown } = useDrag(listeners));
 
-    mouseDownEvent = new MouseEvent('mousedown', { button: primaryButton });
-    mouseMoveEvent = new MouseEvent('mousemove');
-    mouseUpEvent = new MouseEvent('mouseup');
+    mouseDownEvent = createMouseEvent('mousedown', { button: primaryButton });
+    mouseMoveEvent = createMouseEvent('mousemove');
+    mouseUpEvent = createMouseEvent('mouseup');
   });
 
-  it('firess onDragStart', () => {
+  it('fires onDragStart', () => {
     onMouseDown(mouseDownEvent);
 
     // do not fire until distance is DISTANCE
@@ -90,7 +91,7 @@ describe('drag hook', () => {
   });
 
   it('ESC fires onCancel and do not fire any more events', () => {
-    const keyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+    const keyEvent = createKeyboardEvent('keydown', { key: 'Escape' });
 
     onMouseDown(mouseDownEvent);
 

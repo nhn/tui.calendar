@@ -7,6 +7,7 @@ import {
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { TimeUnit } from '@src/model';
+import { createMouseEvent } from '@test/util';
 
 interface TestData {
   unit: TimeUnit;
@@ -285,7 +286,7 @@ describe('times controller', () => {
       container.style.height = '230px';
       container.style.width = ' 70px';
 
-      const vMouseEvent = new MouseEvent('click', {
+      const vMouseEvent = createMouseEvent('click', {
         clientX: 10,
         clientY: 115
       });
