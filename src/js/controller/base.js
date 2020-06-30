@@ -212,6 +212,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('isFocused', options.isFocused);
     }
 
+    if (!util.isUndefined(options.isReadOnly)) {
+        schedule.set('isReadOnly', options.isReadOnly);
+    }
+
     if (options.location) {
         schedule.set('location', options.location);
     }
