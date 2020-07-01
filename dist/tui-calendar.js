@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp101-207001-1 | Wed Jul 01 2020
+ * @version 1.12.5-dooray-sp101-200701 | Wed Jul 01 2020
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -7576,7 +7576,7 @@ var Core = {
      * @param {function} [iteratee] - iteratee function invoke each view models
      */
     positionViewModels: function(start, end, matrices, iteratee) {
-        var ymdListToRender, endTime, isSameDate;
+        var ymdListToRender, endTime;
 
         ymdListToRender = util.map(
             datetime.range(start, end, datetime.MILLISECONDS_PER_DAY),
@@ -7595,8 +7595,8 @@ var Core = {
                     }
 
                     ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
-                    isSameDate = datetime.isSameDate(viewModel.getStarts(), viewModel.getEnds());
-                    endTime = viewModel.hasMultiDates || isSameDate ?
+
+                    endTime = viewModel.hasMultiDates ?
                         datetime.end(viewModel.getEnds()) :
                         datetime.convertStartDayToLastDay(viewModel.getEnds());
                     dateLength = datetime.range(
