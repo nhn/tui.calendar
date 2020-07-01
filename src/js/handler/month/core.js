@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /**
  * @fileoverview Module for calculate date by month view and mouse event object
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
@@ -8,6 +9,7 @@ var util = require('tui-code-snippet');
 var common = require('../../common/common'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent');
+var datetime = require('../../common/datetime');
 var mfloor = Math.floor;
 
 /**
@@ -91,7 +93,7 @@ function getMousePosDate(monthView) {
             y: y,
             sizeX: dayCount,
             sizeY: weekCount,
-            date: date,
+            date: datetime.end(date),
             weekdayView: weekdayView,
             triggerEvent: mouseEvent.type
         };
