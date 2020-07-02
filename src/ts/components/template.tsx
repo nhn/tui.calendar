@@ -24,7 +24,7 @@ export class Template extends ContextComponent<Props> {
 
     if (isString(htmlOrVnode)) {
       if (browser.msie && browser.version === 9) {
-        return htmlOrVnode;
+        return <span dangerouslySetInnerHTML={{ __html: htmlOrVnode }} />;
       }
 
       return <Markup wrap={false} markup={htmlOrVnode} type="html" />;

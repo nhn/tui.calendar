@@ -140,7 +140,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@toast-ui/date": "0.0.2",
+    "@toast-ui/date": "0.0.3",
     "classnames": "^2.2.6",
     "preact": "^10.3.2",
     "preact-markup": "^2.0.0",
