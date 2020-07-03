@@ -116,6 +116,22 @@ declare module 'tui-code-snippet/domUtil/closest' {
   export default function closest(element: HTMLElement, selector: string): HTMLElement | null;
 }
 
+// browser
+declare module 'tui-code-snippet/browser/browser' {
+  interface Browser {
+    chrome: boolean;
+    firefox: boolean;
+    safari: boolean;
+    msie: boolean;
+    edge: boolean;
+    others: boolean;
+    version: number;
+  }
+
+  const browser: Browser;
+  export default browser;
+}
+
 // customEvents
 declare module 'tui-code-snippet/customEvents/customEvents' {
   export default class CustomEvents {

@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { TimeEvent } from '@src/components/events/time';
+import { TimeEvent } from '@src/components/events/timeEvent';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { InstanceContext, getNewAppContext } from '@src/model/context';
-import { BackgroundEvent } from '@src/components/events/background';
+import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 
 export default { title: 'Various Event Blocks' };
 

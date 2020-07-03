@@ -7,6 +7,7 @@ import {
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { TimeUnit } from '@src/model';
+import { createMouseEvent } from '@test/util';
 
 interface TestData {
   unit: TimeUnit;
@@ -277,31 +278,44 @@ describe('times controller', () => {
     }
   ];
 
-  tests.forEach(({ unit, slot, startGridTime, endGridTime, expected }) => {
-    it(`getPrevGridTimeFromMouseEvent() with unit '${unit}'`, done => {
-      const selector = cls('.column');
-      const container = document.createElement('div');
+  describe('getPrevGridTimeFromMouseEvent() with unit', () => {
+    const selector = cls('.column');
+    let container = document.createElement('div');
+
+    beforeEach(() => {
+      container = document.createElement('div');
       container.className = cls('column');
+      container.style.position = 'absolute';
+      container.style.top = '0px';
       container.style.height = '230px';
       container.style.width = ' 70px';
+      document.body.appendChild(container);
+    });
 
-      const vMouseEvent = new MouseEvent('click', {
-        clientX: 10,
-        clientY: 115
+    afterEach(() => {
+      document.body.removeChild(container);
+    });
+
+    tests.forEach(({ unit, slot, startGridTime, endGridTime, expected }) => {
+      it(` '${unit}'`, done => {
+        const vMouseEvent = createMouseEvent('click', {
+          clientX: 10,
+          clientY: 115
+        });
+        container.addEventListener('click', () => {
+          const result = getPrevGridTimeFromMouseEvent(
+            vMouseEvent,
+            { start: startGridTime, end: endGridTime, slot, unit },
+            selector
+          );
+
+          expect(result).toEqual(expected);
+
+          done();
+        });
+
+        container.dispatchEvent(vMouseEvent);
       });
-      container.addEventListener('click', () => {
-        const result = getPrevGridTimeFromMouseEvent(
-          vMouseEvent,
-          { start: startGridTime, end: endGridTime, slot, unit },
-          selector
-        );
-
-        expect(result).toEqual(expected);
-
-        done();
-      });
-
-      container.dispatchEvent(vMouseEvent);
     });
   });
 });

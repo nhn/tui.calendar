@@ -42,6 +42,7 @@
     "@storybook/addon-links": "^5.3.13",
     "@storybook/addons": "^5.3.13",
     "@storybook/preact": "^5.3.13",
+    "@types/chance": "^1.1.0",
     "@types/classnames": "^2.2.9",
     "@types/jasmine": "^2.8.16",
     "@types/karma-fixture": "^0.2.5",
@@ -50,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
     "babel-loader": "^8.0.6",
+    "chance": "^1.1.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.2.0",
     "eslint": "^6.4.0",
@@ -138,7 +140,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@toast-ui/date": "0.0.2",
+    "@toast-ui/date": "0.0.3",
     "classnames": "^2.2.6",
     "preact": "^10.3.2",
     "preact-markup": "^2.0.0",

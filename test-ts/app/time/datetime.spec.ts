@@ -77,7 +77,8 @@ describe('datetime', function() {
   it('end() return 23:59:59.999 supplied date.', function() {
     const d = new TZDate('2015/05/21 18:30:00');
 
-    expect(dt.toEndOfDay(d)).toEqual(new TZDate('2015/05/21 23:59:59.999'));
+    // if you want use milliseconds, use format 'YYYY-MM-DDTHH:mm:ss.sssZ' based on http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
+    expect(dt.toEndOfDay(d)).toEqual(new TZDate('2015-05-21T23:59:59.999'));
   });
 
   it('toRaw() return date object from Date.', function() {

@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import renderToString from 'preact-render-to-string';
+import browser from 'tui-code-snippet/browser/browser';
 
 import {
   registerTemplateConfig,
@@ -32,13 +33,18 @@ describe('Render Template', () => {
   });
 
   it('Template component renders html string with given template', () => {
-    const html = renderToString(
+    const vdom = (
       <InstanceContext.Provider value={getNewAppContext()}>
         <Template template="time" model={{ title: 'Custom Title 4' }} />
       </InstanceContext.Provider>
     );
+    const html = renderToString(vdom);
 
-    expect(html).toBe('Custom Title 4');
+    if (browser.msie && browser.version === 9) {
+      expect(html).toBe('<span>Custom Title 4</span>');
+    } else {
+      expect(html).toBe('Custom Title 4');
+    }
   });
 
   it('getCommonWidth() returns css width percentage with given number.', () => {

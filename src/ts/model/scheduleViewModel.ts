@@ -68,12 +68,6 @@ export default class ScheduleViewModel {
   renderStarts?: TZDate;
 
   /**
-   * whether the actual start-date is before the render-start-date
-   * @type {boolean}
-   */
-  exceedLeft = false;
-
-  /**
    * represent render end date used at rendering.
    *
    * if set null then use model's 'end' property.
@@ -82,10 +76,43 @@ export default class ScheduleViewModel {
   renderEnds?: TZDate;
 
   /**
+   * whether the actual start-date is before the render-start-date
+   * @type {boolean}
+   */
+  exceedLeft = false;
+
+  /**
    * whether the actual end-date is after the render-end-date
    * @type {boolean}
    */
   exceedRight = false;
+
+  /**
+   * whether the actual start-date is before the render-start-date for column
+   * @type {boolean}
+   */
+  croppedStart = false;
+
+  /**
+   * whether the actual end-date is after the render-end-date for column
+   * @type {boolean}
+   */
+  croppedEnd = false;
+
+  /**
+   * @type {number} percent
+   */
+  goingDurationHeight = 0;
+
+  /**
+   * @type {number} percent
+   */
+  modelDurationHeight = 100;
+
+  /**
+   * @type {number} percent
+   */
+  comingDurationHeight = 0;
 
   /**
    * Schedule ViewModel
