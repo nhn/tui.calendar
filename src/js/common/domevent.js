@@ -7,21 +7,7 @@
 
 var util = require('tui-code-snippet');
 var eventKey = '_evt',
-    DRAG = {
-        START: ['touchstart', 'mousedown'],
-        END: {
-            mousedown: 'mouseup',
-            touchstart: 'touchend',
-            pointerdown: 'touchend',
-            MSPointerDown: 'touchend'
-        },
-        MOVE: {
-            mousedown: 'mousemove',
-            touchstart: 'touchmove',
-            pointerdown: 'touchmove',
-            MSPointerDown: 'touchmove'
-        }
-    };
+    DRAG_START = ['touchstart', 'mousedown'];
 
 var domevent = {
     /**
@@ -234,7 +220,7 @@ var domevent = {
      * @param {HTMLElement} el HTML element to prevent all event related with click.
      */
     disableClickPropagation: function(el) {
-        domevent.on(el, DRAG.START.join(' ') + ' click dblclick', domevent.stopPropagation);
+        domevent.on(el, DRAG_START.join(' ') + ' click dblclick', domevent.stopPropagation);
     },
 
     /**
