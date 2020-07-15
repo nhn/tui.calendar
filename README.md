@@ -222,7 +222,8 @@ var calendar = new Calendar('#calendar', {
 Or you can use jquery plugin. You must include jquery before using this jquery plugin.
 
 ```js
-$('#calendar').tuiCalendar({
+// jquery wrapper
+var $calEl = $('#calendar').tuiCalendar({
   defaultView: 'month',
   taskView: true,
   template: {
@@ -232,6 +233,11 @@ $('#calendar').tuiCalendar({
     ...
   }
 });
+
+// You can get calendar instance
+var calendarInstance = $calEl.data('tuiCalendar');
+
+calendarInstance.createSchedules([...]);
 ```
 
 ## 🌏 Browser Support
