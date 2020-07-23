@@ -676,11 +676,14 @@ ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDa
  * @returns {RangeDate} Returns the start and end time data that is the range date
  */
 ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isAllDay) {
+    var start = startDate;
+    var end = endDate;
+
     if (isAllDay) {
-        startDate.setHours(0, 0, 0);
-        endDate = datetime.isStartOfDay(endDate) ?
+        start = datetime.start(startDate);
+        end = datetime.hasMultiDates(startDate, endDate) && datetime.isStartOfDay(endDate) ?
             datetime.convertStartDayToLastDay(endDate) :
-            endDate.setHours(23, 59, 59);
+            datetime.end(endDate);
     }
 
     /**
@@ -689,8 +692,8 @@ ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isA
      * @property {TZDate} end end time
      */
     return {
-        start: new TZDate(startDate),
-        end: new TZDate(endDate)
+        start: new TZDate(start),
+        end: new TZDate(end)
     };
 };
 
