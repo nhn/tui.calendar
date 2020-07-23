@@ -176,7 +176,6 @@ var Core = {
 
                     startDate = viewModel.getStarts();
                     endDate = viewModel.getEnds();
-
                     dateLength = datetime.range(
                         datetime.start(startDate),
                         datetime.renderEnd(startDate, endDate),
