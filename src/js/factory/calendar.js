@@ -1582,7 +1582,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
             dragHandler,
             options
         );
-    } else if (newViewName === 'week' || newViewName === 'day') {
+    } else if (newViewName === 'week') {
         created = _createWeekView(
             controller,
             layout.container,
