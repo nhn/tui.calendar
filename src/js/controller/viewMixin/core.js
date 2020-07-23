@@ -156,7 +156,7 @@ var Core = {
      * @param {function} [iteratee] - iteratee function invoke each view models
      */
     positionViewModels: function(start, end, matrices, iteratee) {
-        var ymdListToRender, endTime, isSameDate;
+        var ymdListToRender, endTime;
 
         ymdListToRender = util.map(
             datetime.range(start, end, datetime.MILLISECONDS_PER_DAY),
@@ -168,23 +168,26 @@ var Core = {
         forEachArr(matrices, function(matrix) {
             forEachArr(matrix, function(column) {
                 forEachArr(column, function(viewModel, index) {
-                    var ymd, dateLength;
+                    var ymd, dateLength, isSameDate, startDate, endDate;
 
                     if (!viewModel) {
                         return;
                     }
 
-                    ymd = datetime.format(viewModel.getStarts(), 'YYYYMMDD');
-                    isSameDate = datetime.isSameDate(viewModel.getStarts(), viewModel.getEnds());
+                    startDate = viewModel.getStarts();
+                    endDate = viewModel.getEnds();
+
+                    ymd = datetime.format(startDate, 'YYYYMMDD');
+                    isSameDate = datetime.isSameDate(startDate, endDate);
 
                     if (viewModel.hasMultiDates || isSameDate) {
-                        endTime = datetime.end(viewModel.getEnds());
+                        endTime = datetime.end(endDate);
                     } else {
-                        endTime = datetime.convertStartDayToLastDay(viewModel.getEnds());
+                        endTime = datetime.convertStartDayToLastDay(endDate);
                     }
 
                     dateLength = datetime.range(
-                        datetime.start(viewModel.getStarts()),
+                        datetime.start(startDate),
                         endTime,
                         datetime.MILLISECONDS_PER_DAY
                     ).length;

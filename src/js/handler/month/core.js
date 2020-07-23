@@ -9,7 +9,6 @@ var util = require('tui-code-snippet');
 var common = require('../../common/common'),
     domutil = require('../../common/domutil'),
     domevent = require('../../common/domevent');
-var datetime = require('../../common/datetime');
 var mfloor = Math.floor;
 
 /**
