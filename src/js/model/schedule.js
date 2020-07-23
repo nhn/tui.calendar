@@ -269,22 +269,11 @@ Schedule.prototype.init = function(options) {
 };
 
 Schedule.prototype.setAllDayPeriod = function(start, end) {
-    // If it is an all-day schedule, only the date information of the string is used.
-    if (util.isString(start)) {
-        start = datetime.parse(start.substring(0, 10));
-    } else {
-        start = new TZDate(start || Date.now());
-    }
-    if (util.isString(end)) {
-        end = datetime.parse(end.substring(0, 10));
-    } else {
-        end = new TZDate(end || this.start);
-    }
+    var startDate = new TZDate(start || Date.now());
+    var endDate = new TZDate(end || this.start);
 
-    this.start = start;
-    this.start.setHours(0, 0, 0);
-    this.end = end || new TZDate(this.start);
-    this.end.setHours(23, 59, 59);
+    this.start = datetime.start(startDate);
+    this.end = datetime.end(endDate);
 };
 
 Schedule.prototype.setTimePeriod = function(start, end) {
