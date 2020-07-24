@@ -759,7 +759,17 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
  * ]);
  */
 Calendar.prototype.createSchedules = function(schedules, silent) {
-    util.forEach(schedules, function(obj) {
+    var calendars = this._controller.calendars;
+    schedules.forEach(function(obj) {
+        var i;
+        // emulates for IE9
+        // obj.isVisible = calendars.find(cal => cal.id === obj.calendarId)._isVisible !== false;
+        for (i in calendars) {
+            if (calendars[i].id === obj.calendarId) {
+                obj.isVisible = calendars[i]._isVisible !== false;
+                break;
+            }
+        }
         this._setScheduleColor(obj.calendarId, obj);
     }, this);
 
@@ -925,10 +935,15 @@ Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
  * @param {boolean} [render=true] - set true then render after change visible property each models
  */
 Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
-    var ownSchedules = this._controller.schedules;
+    var ownSchedules = this._controller.schedules, calendars = this._controller.calendars, c;
 
     render = util.isExisty(render) ? render : true;
     calendarId = util.isArray(calendarId) ? calendarId : [calendarId];
+    for (c in calendars) {
+        if (~calendarId.indexOf(calendars[c].id)) {
+            calendars[c]._isVisible = !toHide;
+        }
+    }
 
     ownSchedules.each(function(schedule) {
         if (~util.inArray(schedule.calendarId, calendarId)) {
