@@ -278,19 +278,21 @@ module.exports = {
     },
 
     getScheduleChanges: function(schedule, propNames, data) {
-        var changes = {};
+        var changes = {}, isEmpty = true;
         var dateProps = ['start', 'end'];
 
         util.forEach(propNames, function(propName) {
             if (dateProps.indexOf(propName) > -1) {
                 if (datetime.compare(schedule[propName], data[propName])) {
                     changes[propName] = data[propName];
+                    isEmpty = false;
                 }
             } else if (!util.isUndefined(data[propName]) && schedule[propName] !== data[propName]) {
                 changes[propName] = data[propName];
+                isEmpty = false;
             }
         });
 
-        return util.isEmpty(changes) ? null : changes;
+        return isEmpty ? null : changes;
     }
 };
