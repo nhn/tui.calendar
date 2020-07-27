@@ -184,10 +184,7 @@ VPanel.prototype._initPanel = function(options, container) {
     if (options.autoHeight) {
         domutil.setData(container, 'autoHeight', true);
     } else {
-        height = common.limit(options.height || 0,
-            [options.minHeight],
-            [options.maxHeight || options.height]
-        );
+        height = common.limit(options.height || 0, options.minHeight, options.maxHeight || options.height);
 
         options.height = height;
         this.setHeight(container, height);

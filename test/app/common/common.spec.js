@@ -28,9 +28,9 @@ describe('module:common', function() {
     });
 
     it('limit can applying limitation supplied number', function() {
-        expect(common.limit(3, [0], [2])).toBe(2);
-        expect(common.limit(-20, [0], [2])).toBe(0);
-        expect(common.limit(10, [0, 15], [20])).toBe(15);
+        expect(common.limit(3, 0, 2)).toBe(2);
+        expect(common.limit(-20, 0, 2)).toBe(0);
+        expect(common.limit(10, 15, 20)).toBe(15);
     });
 
     it('get first element in 2d array.', function() {

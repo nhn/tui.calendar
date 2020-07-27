@@ -158,8 +158,8 @@ TimeCreationGuide.prototype._getUnitData = function(relatedView) {
 TimeCreationGuide.prototype._limitStyleData = function(top, height, start, end) {
     var unitData = this._styleUnit;
 
-    top = common.limit(top, [0], [unitData[0]]);
-    height = common.limit(top + height, [0], [unitData[0]]) - top;
+    top = common.limit(top, 0, unitData[0]);
+    height = common.limit(top + height, 0, unitData[0]) - top;
     start = common.limitDate(start, unitData[2], unitData[3]);
     end = common.limitDate(end, unitData[2], unitData[3]);
 
@@ -189,7 +189,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
             gridEndTimeY = scheduleData.nearestGridEndTimeY || new TZDate(gridTimeY).addMinutes(minMinutes),
             top, startTime, endTime;
 
-        top = common.limit(ratio(hourLength, viewHeight, gridY), [0], [viewHeight]);
+        top = common.limit(ratio(hourLength, viewHeight, gridY), 0, viewHeight);
         startTime = common.limitDate(gridTimeY, todayStartTime, todayEndTime);
         endTime = common.limitDate(gridEndTimeY, todayStartTime, todayEndTime);
 

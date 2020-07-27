@@ -239,7 +239,7 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
     topPercent = common.ratio(maxMilliseconds, 100, hmsMilliseconds);
     topPercent -= common.ratio(maxMilliseconds, 100, datetime.millisecondsFrom('hour', opt.hourStart));
 
-    return common.limit(topPercent, [0], [100]);
+    return common.limit(topPercent, 0, 100);
 };
 
 /**

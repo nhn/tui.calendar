@@ -79,17 +79,14 @@ module.exports = {
     },
 
     /**
-     * Limit supplied value base on `minArr`, `maxArr`
+     * Limit supplied value base on `min`, `max`
      * @param {number} value - value
-     * @param {array} minArr - min
-     * @param {array} maxArr - max
+     * @param {number} min - min
+     * @param {number} max - max
      * @returns {number} limited value
      */
-    limit: function(value, minArr, maxArr) {
-        var v = Math.max.apply(null, [value].concat(minArr));
-        v = Math.min.apply(null, [v].concat(maxArr));
-
-        return v;
+    limit: function(value, min, max) {
+        return Math.min(Math.max(value, min), max);
     },
 
     /**

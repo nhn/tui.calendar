@@ -302,7 +302,7 @@ VLayout.prototype._onDrag = function(e) {
     var dragData = this._dragData,
         mouseY = domevent.getMousePosition(e.originEvent, this.container)[1];
 
-    mouseY = common.limit(mouseY - dragData.splOffsetY, [dragData.minY], [dragData.maxY]);
+    mouseY = common.limit(mouseY - dragData.splOffsetY, dragData.minY, dragData.maxY);
 
     this._refreshGuideElement(dragData.guideElement, mouseY);
 };
@@ -320,8 +320,8 @@ VLayout.prototype._onDragEnd = function(e) {
     // mouseY value can't exceed summation of splitter height and panel's minimum height based on target splitter.
     mouseY = common.limit(
         mouseY - dragData.splOffsetY,
-        [dragData.minY + asideMinMax[0]],
-        [dragData.maxY - asideMinMax[1]]
+        dragData.minY + asideMinMax[0],
+        dragData.maxY - asideMinMax[1]
     );
 
     this._resize(dragData.splPanel, dragData.startY, mouseY);
