@@ -20,7 +20,7 @@ function mixin(from, to, propertyName) {
     var obj = to[propertyName] = {};
 
     util.forEach(from, function(method, methodName) {
-        obj[methodName] = util.bind(method, to);
+        obj[methodName] = method.bind(to);
     });
 }
 

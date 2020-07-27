@@ -49,7 +49,7 @@ var timeCore = {
         /**
          * @param {MouseEvent} mouseEvent - mouse event object to get common event data.
          * @param {object} [extend] - object to extend event data before return.
-         * @returns {object} - common event data for time.*
+         * @returns {object} - common event data for time
          */
         return function(mouseEvent, extend) {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
@@ -80,7 +80,7 @@ var timeCore = {
      * @param {TZDate} startDate - start date
      * @param {TZDate} endDate - end date
      * @param {number} hourStart Can limit of render hour start.
-     * @returns {object} - common event data for time.* from mouse event.
+     * @returns {object} - common event data for time from mouse event.
      */
     _retriveScheduleDataFromDate: function(timeView, startDate, endDate, hourStart) {
         var viewTime = timeView.getDate();

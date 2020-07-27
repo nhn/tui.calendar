@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var util = require('tui-code-snippet');
 var requestFn,
     cancelFn;
 
@@ -40,7 +39,7 @@ module.exports = {
      * @returns {number} Unique id
      */
     requestAnimFrame: function(fn, context) {
-        return requestFn.call(global, util.bind(fn, context));
+        return requestFn.call(global, fn.bind(context));
     },
 
     /**

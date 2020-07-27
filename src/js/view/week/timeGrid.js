@@ -545,7 +545,7 @@ TimeGrid.prototype.attachEvent = function() {
     clearTimeout(this.timerID);
     this.intervalID = this.timerID = this.rAnimationFrameID = null;
 
-    this.timerID = setTimeout(util.bind(this.onTick, this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
+    this.timerID = setTimeout(this.onTick.bind(this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
 
     domevent.on(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 };
@@ -600,7 +600,7 @@ TimeGrid.prototype.onTick = function() {
     }
 
     if (!this.intervalID) {
-        this.intervalID = setInterval(util.bind(this.onTick, this), HOURMARKER_REFRESH_INTERVAL);
+        this.intervalID = setInterval(this.onTick.bind(this), HOURMARKER_REFRESH_INTERVAL);
     }
     this.refreshHourmarker();
 };
