@@ -43,7 +43,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^2.99.1",
     "jsdoc": "^3.5.5",
-    "karma": "^4.4.1",
+    "karma": "^5.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
     "karma-coverage": "^2.0.3",
