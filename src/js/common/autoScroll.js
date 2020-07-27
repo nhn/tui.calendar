@@ -7,7 +7,6 @@
 var util = require('tui-code-snippet');
 var domevent = require('../common/domevent');
 var domutil = require('../common/domutil');
-var Point = require('../common/point');
 
 var SCROLL_INTERVAL = 30;
 var SCROLL_MAX = 15;
@@ -162,7 +161,11 @@ AutoScroll.prototype._onMouseDown = function(mouseDownEvent) {
  */
 AutoScroll.prototype._onMouseMove = function(mouseEvent) {
     var edge = this._getEdgePositions(this.container.getBoundingClientRect()),
-        pos = Point.n(domevent.getMousePosition(mouseEvent));
+        mousePosition = domevent.getMousePosition(mouseEvent),
+        pos = {
+            x: mousePosition[0],
+            y: mousePosition[1]
+        };
 
     if (pos.y >= edge.top && pos.y <= edge.bottom &&
         pos.x >= edge.left && pos.x <= edge.right) {

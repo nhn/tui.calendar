@@ -8,7 +8,6 @@ var util = require('tui-code-snippet');
 var common = require('../../common/common');
 var datetime = require('../../common/datetime');
 var domevent = require('../../common/domevent');
-var Point = require('../../common/point');
 var TZDate = require('../../common/timezone').Date;
 
 /**
@@ -52,7 +51,7 @@ var timeCore = {
          * @returns {object} - common event data for time
          */
         return function(mouseEvent, extend) {
-            var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
+            var mouseY = domevent.getMousePosition(mouseEvent, container)[1],
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
                 nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY),
