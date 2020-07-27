@@ -372,7 +372,7 @@ domutil = {
                         });
                     }
 
-                    return el.currentStyle[prop] ? el.currentStyle[prop] : null;
+                    return el.currentStyle[prop] || null;
                 }
             };
         }
