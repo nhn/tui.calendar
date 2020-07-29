@@ -109,25 +109,19 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     var baseHeight = options.baseHeight;
     var croppedStart = false;
     var croppedEnd = false;
-    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-    var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
-    var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
+    var offsetStart = viewModel.valueOf().start - options.todayStart;
     // containerHeight : milliseconds in day = x : schedule's milliseconds
     var top = (baseHeight * offsetStart) / baseMS;
     var modelDuration = viewModel.duration();
     var height;
     var duration;
-    var goingDurationHeight;
     var modelDurationHeight;
-    var comingDurationHeight;
 
     modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
-    duration = modelDuration + goingDuration + comingDuration;
+    duration = modelDuration;
     height = (baseHeight * duration) / baseMS;
 
-    goingDurationHeight = (baseHeight * goingDuration) / baseMS; // common.ratio(duration, goingDuration, 100);
     modelDurationHeight = (baseHeight * modelDuration) / baseMS; // common.ratio(duration, modelDuration, 100);
-    comingDurationHeight = (baseHeight * comingDuration) / baseMS; // common.ratio(duration, comingDuration, 100);
 
     if (offsetStart < 0) {
         top = 0;
@@ -144,10 +138,6 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
         top: top,
         height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
         modelDurationHeight: modelDurationHeight,
-        goingDurationHeight: goingDurationHeight,
-        comingDurationHeight: comingDurationHeight,
-        hasGoingDuration: goingDuration > 0,
-        hasComingDuration: comingDuration > 0,
         croppedStart: croppedStart,
         croppedEnd: croppedEnd
     };

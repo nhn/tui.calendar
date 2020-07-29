@@ -248,7 +248,7 @@ var helpers = {
     },
 
     'time-tmpl': function(model) {
-        return common.stripTags(model.title);
+        return common.stripTags(model);
     },
 
     'goingDuration-tmpl': function(model) {

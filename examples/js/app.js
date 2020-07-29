@@ -94,23 +94,19 @@
     function getTimeTemplate(schedule, isAllDay) {
         var html = [];
         var start = moment(schedule.start.toUTCString());
+        var end = moment(schedule.end.toUTCString());
         if (!isAllDay) {
-            html.push('<strong>' + start.format('HH:mm') + '</strong> ');
-        }
-        if (schedule.isPrivate) {
-            html.push('<span class="calendar-font-icon ic-lock-b"></span>');
-            html.push(' Private');
-        } else {
-            if (schedule.isReadOnly) {
-                html.push('<span class="calendar-font-icon ic-readonly-b"></span>');
-            } else if (schedule.recurrenceRule) {
-                html.push('<span class="calendar-font-icon ic-repeat-b"></span>');
-            } else if (schedule.attendees.length) {
-                html.push('<span class="calendar-font-icon ic-user-b"></span>');
-            } else if (schedule.location) {
-                html.push('<span class="calendar-font-icon ic-location-b"></span>');
-            }
-            html.push(' ' + schedule.title);
+            html.push('<div style="padding-left: 6px; display: grid; place-items: center"><svg id="Component_316_1" data-name="Component 316 – 1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">\n' +
+                '  <path id="Path_13945" data-name="Path 13945" d="M-117.614,445.439a7,7,0,0,0-7,7,7,7,0,0,0,7,7,7,7,0,0,0,7-7A7,7,0,0,0-117.614,445.439Zm0,8a.991.991,0,0,1-.684-.278h-3.328v-1h3.068a.977.977,0,0,1,.323-.488v-4.244h1v4.086a1,1,0,0,1,.621.924A1,1,0,0,1-117.614,453.439Z" transform="translate(124.614 -445.439)" fill="#fff"/>\n' +
+                '</svg></div>');
+            html.push('<strong style="padding-left: 5px; padding-right: 5px">' + ' ' + start.format('HH:mm') + '</strong> ');
+            html.push('<div style="display: grid; place-items: center"><svg xmlns="http://www.w3.org/2000/svg" width="11.189" height="9.914" viewBox="0 0 11.189 9.914">\n' +
+                '  <g id="Component_147_11" data-name="Component 147 – 11" transform="translate(0.5 0.707)">\n' +
+                '    <path id="Path_13734" data-name="Path 13734" d="M0,0,4.208,4.25,8.5,0" transform="translate(5.939 8.5) rotate(-90)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>\n' +
+                '    <path id="Path_13733" data-name="Path 13733" d="M431.667,70h9.107" transform="translate(-431.667 -65.75)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>\n' +
+                '  </g>\n' +
+                '</svg></div>');
+            html.push('<strong style="padding-left: 5px; padding-right: 5px">' + ' ' + end.format('HH:mm') + '</strong> ');
         }
 
         return html.join('');
@@ -265,6 +261,7 @@
             });
         }
     }
+
     function saveNewSchedule(scheduleData) {
         var calendar = scheduleData.calendar || findCalendar(scheduleData.calendarId);
         var schedule = {
@@ -377,9 +374,9 @@
     }
 
     function currentCalendarDate(format) {
-      var currentDate = moment([cal.getDate().getFullYear(), cal.getDate().getMonth(), cal.getDate().getDate()]);
+        var currentDate = moment([cal.getDate().getFullYear(), cal.getDate().getMonth(), cal.getDate().getDate()]);
 
-      return currentDate.format(format);
+        return currentDate.format(format);
     }
 
     function setRenderRangeText() {
