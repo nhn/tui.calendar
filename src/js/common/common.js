@@ -21,17 +21,10 @@ function scheduleIDGetter(schedule) {
 
 module.exports = {
     /**
-     * @param {...*} initItems - items to add newly created collection.
      * @returns {Collection} new collection for schedule models.
      */
-    createScheduleCollection: function(initItems) {    // eslint-disable-line
-        var collection = new Collection(scheduleIDGetter);
-
-        if (arguments.length) {
-            collection.add.apply(collection, arguments);
-        }
-
-        return collection;
+    createScheduleCollection: function() {
+        return new Collection(scheduleIDGetter);
     },
 
     /**
