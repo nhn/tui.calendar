@@ -221,6 +221,34 @@ var helpers = {
         return '<span class="' + icon + ' ' + iconName + '"></span><span style="background-color: ' + model.bgColor + '">' + common.stripTags(model.title) + '</span>';
     },
 
+    'title-tmpl': function() {
+        var icon = config.classname('icon');
+        var iconName = config.classname('ic-edit-2');
+
+        return '<span class="' + icon + ' ' + iconName + '"></span>';
+    },
+
+    'arrow-tmpl': function() {
+        var icon = config.classname('icon');
+        var iconName = config.classname('ic-arrow-right-2');
+
+        return '<span class="' + icon + ' ' + iconName + '"></span>';
+    },
+
+    'location-tmpl': function() {
+        var icon = config.classname('icon');
+        var iconName = config.classname('ic-map-pin');
+
+        return '<span class="' + icon + ' ' + iconName + '"></span>';
+    },
+
+    'attendees-tmpl': function() {
+        var icon = config.classname('icon');
+        var iconName = config.classname('ic-user');
+
+        return '<span class="' + icon + ' ' + iconName + '"></span>';
+    },
+
     'milestoneTitle-tmpl': function() {
         var className = config.classname('left-content');
 

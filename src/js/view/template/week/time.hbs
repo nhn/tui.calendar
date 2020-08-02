@@ -41,25 +41,31 @@
                                          flex-direction: column;
                                          ">
                                 <div class="{{CSS_PREFIX}}time-schedule-content-header"
-                                     style="background-color: {{model.bgColor}}; height: 38px;
-                                             font-family: OpenSans;
-                                             font-size: 13px;
-                                             font-weight: 600;
-                                             display: flex;
-                                             flex-direction: row;
-                                             justify-content: flex-start;
-                                             align-items: center;
-                                             font-stretch: normal;
-                                             font-style: normal;
-                                             line-height: 1.38;
-                                             letter-spacing: normal;
-                                             text-align: left;
-                                             color: #ffffff;">
-                                    {{{time-tmpl model}}}
+                                     style="display: flex; flex-direction: row; justify-content: space-between; align-items: center"
+                                     >
+                                    <div style="background-color: {{model.bgColor}}; height: 38px;
+                                            font-family: OpenSans;
+                                            font-size: 13px;
+                                            font-weight: 600;
+                                            display: flex;
+                                            flex-direction: row;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            font-stretch: normal;
+                                            font-style: normal;
+                                            line-height: 1.38;
+                                            letter-spacing: normal;
+                                            text-align: left;
+                                            color: #ffffff;">
+                                        {{{time-tmpl model}}}
+                                    </div>
+                                    <div>
+                                        {{{arrow-tmpl}}}
+                                    </div>
                                 </div>
                                 <div class="{{CSS_PREFIX}}time-schedule-content-body"
                                      style="color: #000000; flex: 1;
-                                     min-height: 24px;
+                                     min-height: 23px;
                                      border: solid 1px #c7c7c7;
                                      border-bottom-width: 3px;
                                      border-bottom-left-radius: 7px;
@@ -70,11 +76,34 @@
                                       padding-right: 8px;
                                       margin-bottom: 5px;
                                       flex-direction: column">
-                                        <div>
-                                            {{{model.title}}}
+                                        <div style="display: flex; flex-direction: row; justify-content: flex-start">
+                                            <div>
+                                                {{{title-tmpl}}}
+                                            </div>
+                                            <div class="blank-space"></div>
+                                            <div>
+                                                {{{model.title}}}
+                                            </div>
                                         </div>
-                                        <div>
-                                            {{{model.location}}}
+                                        <div style="display: flex; flex-direction: row; justify-content: flex-start">
+                                            <div>
+                                                {{{location-tmpl}}}
+                                            </div>
+                                            <div class="blank-space"></div>
+                                            <div>
+                                                {{{model.location}}}
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; flex-direction: row; justify-content: flex-start">
+                                            <div>
+                                                {{{attendees-tmpl}}}
+                                            </div>
+                                            <div class="blank-space"></div>
+                                            <div>
+                                                {{#each model.attendees}}
+                                                    <span>{{this}}</span>
+                                                {{/each}}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
