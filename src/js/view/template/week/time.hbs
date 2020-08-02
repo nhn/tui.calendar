@@ -59,13 +59,24 @@
                                 </div>
                                 <div class="{{CSS_PREFIX}}time-schedule-content-body"
                                      style="color: #000000; flex: 1;
-                                     min-height: 17px;
+                                     min-height: 24px;
                                      border: solid 1px #c7c7c7;
                                      border-bottom-width: 3px;
                                      border-bottom-left-radius: 7px;
                                      border-bottom-right-radius: 7px;
                                       background-color: #f6f6f6">
-                                    {{{model.title}}}
+                                    <div style="display: flex;
+                                      padding-left: 8px;
+                                      padding-right: 8px;
+                                      margin-bottom: 5px;
+                                      flex-direction: column">
+                                        <div>
+                                            {{{model.title}}}
+                                        </div>
+                                        <div>
+                                            {{{model.location}}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             {{#if hasComingDuration}}
