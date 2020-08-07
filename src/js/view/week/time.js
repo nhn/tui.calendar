@@ -139,7 +139,10 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
         height: Math.max(height, this.options.minHeight) - this.options.defaultMarginBottom,
         modelDurationHeight: modelDurationHeight,
         croppedStart: croppedStart,
-        croppedEnd: croppedEnd
+        croppedEnd: croppedEnd,
+        maxHeight: modelDurationHeight - 38,
+        isEnoughHeight: modelDurationHeight > 38,
+        isEnoughWidth: options.baseWidth > 34
     };
 };
 

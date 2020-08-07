@@ -188,7 +188,8 @@ TimeMoveGuide.prototype._onDragStart = function(dragStartEventData) {
         hasComingDuration: comingDuration > 0,
         goingDurationHeight: common.ratio(duration, goingDuration, 100),
         modelDurationHeight: common.ratio(duration, modelDuration, 100),
-        comingDurationHeight: common.ratio(duration, comingDuration, 100)
+        comingDurationHeight: common.ratio(duration, comingDuration, 100),
+        haha: 'haha'
     };
 
     this._resetGuideLayer();

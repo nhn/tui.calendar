@@ -24,93 +24,67 @@
                                          border-radius: 7px;
                                  {{/unless}}
                                  {{#if model.isFocused}}
-                                 color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};
+                                 border-color:{{model.color}};
                                  {{else}}
-                                 color:{{model.color}}; background-color:{{model.bgColor}}; border-color:{{model.borderColor}};
+                                 color:{{model.color}}; border-color:{{model.borderColor}};
                                  {{/if}}
                                  {{model.customStyle}}"
                         >
                             {{#if hasGoingDuration}}
-                                <div style="height: {{goingDurationHeight}}px;
-                                        background-color: transparent;">
+                                <div style="height: {{goingDurationHeight}}px;">
                                 </div>
                             {{/if}}
                             <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time"
-                                 style="height: {{modelDurationHeight}}px;
-                                         display: flex;
-                                         flex-direction: column;
-                                         ">
-                                <div class="{{CSS_PREFIX}}time-schedule-content-header"
-                                     style="display: flex; flex-direction: row; justify-content: space-between; align-items: center"
-                                     >
-                                    <div style="background-color: {{model.bgColor}}; height: 38px;
-                                            font-family: OpenSans;
-                                            font-size: 13px;
-                                            font-weight: 600;
-                                            display: flex;
-                                            flex-direction: row;
-                                            justify-content: space-between;
-                                            align-items: center;
-                                            font-stretch: normal;
-                                            font-style: normal;
-                                            line-height: 1.38;
-                                            letter-spacing: normal;
-                                            text-align: left;
-                                            color: #ffffff;">
-                                        {{{time-tmpl model}}}
+                                 style="height: {{modelDurationHeight}}px;">
+                                <div class="{{CSS_PREFIX}}time-schedule-content-header">
+                                    <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
+                                         style="background-color: {{model.bgColor}};">
+                                        {{#if isEnoughHeight}}
+                                            {{{time-tmpl model}}}
+                                        {{/if}}
                                     </div>
-                                    <div>
-                                        {{{arrow-tmpl}}}
+                                    <div class="{{CSS_PREFIX}}time-schedule-content-header-arrow"
+                                         style="background-color: {{model.bgColor}};">
+                                        {{#if isEnoughHeight}}
+                                            {{{arrow-tmpl}}}
+                                        {{/if}}
                                     </div>
                                 </div>
                                 <div class="{{CSS_PREFIX}}time-schedule-content-body"
-                                     style="color: #000000; flex: 1;
-                                     min-height: 23px;
-                                     border: solid 1px #c7c7c7;
-                                     border-bottom-width: 3px;
-                                     border-bottom-left-radius: 7px;
-                                     border-bottom-right-radius: 7px;
-                                      background-color: #f6f6f6">
-                                    <div style="display: flex;
-                                      padding-left: 8px;
-                                      padding-right: 8px;
-                                      margin-bottom: 5px;
-                                      flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; justify-content: flex-start">
-                                            <div>
-                                                {{{title-tmpl}}}
-                                            </div>
-                                            <div class="blank-space"></div>
-                                            <div>
-                                                {{{model.title}}}
-                                            </div>
+                                     style="height: {{maxHeight}}px">
+                                    <div class="{{CSS_PREFIX}}time-flex-row-start">
+                                        <div>
+                                            {{{title-tmpl}}}
                                         </div>
-                                        <div style="display: flex; flex-direction: row; justify-content: flex-start">
-                                            <div>
-                                                {{{location-tmpl}}}
-                                            </div>
-                                            <div class="blank-space"></div>
-                                            <div>
-                                                {{{model.location}}}
-                                            </div>
+                                        <div class="blank-space"></div>
+                                        <div>
+                                            {{{model.title}}}
                                         </div>
-                                        <div style="display: flex; flex-direction: row; justify-content: flex-start">
-                                            <div>
-                                                {{{attendees-tmpl}}}
-                                            </div>
-                                            <div class="blank-space"></div>
-                                            <div>
-                                                {{#each model.attendees}}
-                                                    <span>{{this}}</span>
-                                                {{/each}}
-                                            </div>
+                                    </div>
+                                    <div class="{{CSS_PREFIX}}time-flex-row-start">
+                                        <div>
+                                            {{{location-tmpl}}}
+                                        </div>
+                                        <div class="blank-space"></div>
+                                        <div>
+                                            {{{model.location}}}
+                                        </div>
+                                    </div>
+                                    <div class="{{CSS_PREFIX}}time-flex-row-start">
+                                        <div>
+                                            {{{attendees-tmpl}}}
+                                        </div>
+                                        <div class="blank-space"></div>
+                                        <div>
+                                            {{#each model.attendees}}
+                                                <span>{{this}}</span>
+                                            {{/each}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             {{#if hasComingDuration}}
-                                <div style="height: {{goingDurationHeight}}px;
-                                        background-color: transparent;">
+                                <div style="height: {{goingDurationHeight}}px;">
                                 </div>
                             {{/if}}
                         </div>

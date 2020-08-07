@@ -229,10 +229,7 @@ var helpers = {
     },
 
     'arrow-tmpl': function() {
-        var icon = config.classname('icon');
-        var iconName = config.classname('ic-arrow-right-2');
-
-        return '<span class="' + icon + ' ' + iconName + '"></span>';
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>';
     },
 
     'location-tmpl': function() {
