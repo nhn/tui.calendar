@@ -11,14 +11,14 @@
                 left:{{grid-left this @root.dates}}%;
                 width:{{grid-width this @root.dates}}%">
         <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}weekday-schedule {{#if model.isFocused}}{{CSS_PREFIX}}weekday-schedule-focused {{/if}}"
-            style="height:{{@root.scheduleHeight}}px; line-height:{{@root.scheduleHeight}}px; border-radius: {{@root.styles.borderRadius}};
+            style="height:{{@root.scheduleHeight}}px; line-height:{{@root.scheduleHeight}}px; border-radius: 7px;
                 {{#if model.isFocused}}
                     color: #ffffff; background-color:{{model.color}}; border-color:{{model.color}};
                 {{else}}
                     color:{{model.color}}; background-color:{{model.bgColor}}; border-color:{{model.borderColor}};
                 {{/if}}
             {{model.customStyle}}">
-            <span class="{{CSS_PREFIX}}weekday-schedule-title" title="{{model.title}}">{{{schedule-tmpl model}}}</span>
+            <span class="{{CSS_PREFIX}}weekday-schedule-title" title="{{model.title}}">{{model.title}}</span>
             {{#unless (or @root.isReadOnly model.isReadOnly)}}<span class="{{CSS_PREFIX}}weekday-resize-handle handle-y" style="line-height:{{@root.scheduleHeight}}px;">&nbsp;</span>{{/unless}}
         </div>
     </div>

@@ -35,7 +35,7 @@
                                 </div>
                             {{/if}}
                             <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time"
-                                 style="height: {{modelDurationHeight}}px;">
+                                 style="{{real-height this}}">
                                 <div class="{{CSS_PREFIX}}time-schedule-content-header">
                                     <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
                                          style="background-color: {{model.bgColor}};">
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="{{CSS_PREFIX}}time-schedule-content-body"
-                                     style="height: {{maxHeight}}px">
+                                     style="{{real-height this}}">
                                     <div class="{{CSS_PREFIX}}time-flex-row-start">
                                         <div>
                                             {{{title-tmpl}}}

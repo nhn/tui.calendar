@@ -131,6 +131,10 @@ var helpers = {
         return [top, left, width, height].join(';');
     },
 
+    'real-height': function(viewModel) {
+        return getElSize(viewModel.height, 'px', 'height');
+    },
+
     'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
         var top = getElSize(((viewModel.top - 1) * blockHeight) + paddingTop, 'px', 'top');
         var left = getElSize(grids[viewModel.left] ? grids[viewModel.left].left : 0, '%', 'left');
