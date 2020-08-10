@@ -412,7 +412,6 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
             domutil.appendHTMLElement('div', container, config.classname('time-date')),
             theme
         );
-        console.log(schedules);
         child.render(ymd, schedules, containerHeight);
 
         self.addChild(child);
