@@ -38,15 +38,15 @@
     "eslint-config-tui": "^1.0.3",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
-    "handlebars": "^4.0.14",
+    "handlebars": "^4.7.6",
     "handlebars-template-loader": "^1.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^2.99.1",
     "jsdoc": "^3.5.5",
-    "karma": "^4.4.1",
+    "karma": "^5.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
-    "karma-coverage": "^2.0.1",
+    "karma-coverage": "^2.0.3",
     "karma-fixture": "^0.2.6",
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.2",
@@ -75,7 +75,7 @@
     "url-loader": "^1.0.1",
     "webpack": "^4.13.0",
     "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
     "test": "karma start --no-single-run",
