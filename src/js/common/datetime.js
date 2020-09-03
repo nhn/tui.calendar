@@ -644,6 +644,12 @@ datetime = {
         var withinDay = diffDays === -1 && diffHours < 24 && datetime.isStartOfDay(end);
 
         return !datetime.isSameDate(start, end) && !withinDay;
+    },
+
+    renderEnd: function(start, end) {
+        return datetime.hasMultiDates(start, end) && datetime.isStartOfDay(end) ?
+            datetime.convertStartDayToLastDay(end) :
+            datetime.end(end);
     }
 };
 

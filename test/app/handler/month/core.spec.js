@@ -68,7 +68,7 @@ describe('handler:MonthCore', function() {
             y: 0,
             sizeX: 7,
             sizeY: 2,
-            date: new TZDate('2015-12-27T00:00:00+09:00'),
+            date: new TZDate('2015-12-27T23:59:59+09:00'),
             weekdayView: w1,
             triggerEvent: 'click'
         });
@@ -84,7 +84,7 @@ describe('handler:MonthCore', function() {
             y: 1,
             sizeX: 7,
             sizeY: 2,
-            date: new TZDate('2016-01-08T00:00:00+09:00'),
+            date: new TZDate('2016-01-08T23:59:59+09:00'),
             weekdayView: w2,
             triggerEvent: 'click'
         });
