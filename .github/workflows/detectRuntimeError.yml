@@ -2,7 +2,7 @@ name: detect runtime error
 
 on:
     schedule:
-        - cron: "*/5 * * * *"
+        - cron: "0 0/5 * * *"
 jobs:
     detectError:
         runs-on: ubuntu-latest
