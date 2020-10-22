@@ -67,7 +67,7 @@ function getCustomTimezoneOffset(timestamp) {
 function getLocalTime(time) {
     var timezoneOffset = getTimezoneOffset(time);
     var customTimezoneOffset = getCustomTimezoneOffset(time);
-    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
+    var timezoneOffsetDiff = customTimezoneOffset ? customTimezoneOffset - timezoneOffset  : nativeOffsetMs - timezoneOffset;
     var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
 
     return localTime;
