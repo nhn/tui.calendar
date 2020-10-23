@@ -36,23 +36,29 @@
                             {{/if}}
                             <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time"
                                  style="{{real-height this}}">
-                                <div class="{{CSS_PREFIX}}time-schedule-content-header"
-                                     style="height: 100%;">
-                                    <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
-                                         style="background-color: {{model.bgColor}}; white-space: nowrap;">
-                                        {{#if isEnoughHeight}}
-                                            {{{time-tmpl model}}}
-                                        {{else}}
+                                {{#if isEnoughHeight}}
+                                    <div class="{{CSS_PREFIX}}time-schedule-content-header">
+                                        <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
+                                             style="background-color: {{model.bgColor}}; white-space: nowrap;">
+                                                {{{time-tmpl model}}}
+                                        </div>
+                                        <div class="{{CSS_PREFIX}}time-schedule-content-header-arrow"
+                                             style="background-color: {{model.bgColor}};">
+                                            {{#if isEnoughHeight}}
+                                                {{{arrow-tmpl}}}
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div class="{{CSS_PREFIX}}time-schedule-content-header" style="height: 100%">
+                                        <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
+                                             style="background-color: {{model.bgColor}};
+                                                     padding-left: 6px;
+                                                     white-space: nowrap;">
                                             {{{model.title}}}
-                                        {{/if}}
+                                        </div>
                                     </div>
-                                    <div class="{{CSS_PREFIX}}time-schedule-content-header-arrow"
-                                         style="background-color: {{model.bgColor}};">
-                                        {{#if isEnoughHeight}}
-                                            {{{arrow-tmpl}}}
-                                        {{/if}}
-                                    </div>
-                                </div>
+                                {{/if}}
                                 <div class="{{CSS_PREFIX}}time-schedule-content-body"
                                      style="{{real-height this}}">
                                     <div class="{{CSS_PREFIX}}time-flex-row-start">
