@@ -36,11 +36,14 @@
                             {{/if}}
                             <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time"
                                  style="{{real-height this}}">
-                                <div class="{{CSS_PREFIX}}time-schedule-content-header">
+                                <div class="{{CSS_PREFIX}}time-schedule-content-header"
+                                     style="height: 100%;">
                                     <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
-                                         style="background-color: {{model.bgColor}};">
+                                         style="background-color: {{model.bgColor}}; white-space: nowrap;">
                                         {{#if isEnoughHeight}}
                                             {{{time-tmpl model}}}
+                                        {{else}}
+                                            {{{model.title}}}
                                         {{/if}}
                                     </div>
                                     <div class="{{CSS_PREFIX}}time-schedule-content-header-arrow"

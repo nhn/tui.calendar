@@ -243,6 +243,10 @@ var helpers = {
         return '<span class="' + icon + ' ' + iconName + '"></span>';
     },
 
+    'text-tmpl': function() {
+        return '<span></span>';
+    },
+
     'attendees-tmpl': function() {
         var icon = config.classname('icon');
         var iconName = config.classname('ic-user');
