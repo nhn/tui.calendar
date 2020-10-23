@@ -55,11 +55,11 @@ describe('view:WeekdayInMonth', function() {
             var viewModel = ScheduleViewModel.create(Schedule.create({
                     title: 'A',
                     isAllDay: true,
-                    start: '2015-05-01T00:00:00',
-                    end: '2015-05-03T23:59:59'
+                    start: '2015-05-01T00:00:00+09:00',
+                    end: '2015-05-03T23:59:59+09:00'
                 })),
                 eventsInDateRange = [[[viewModel]]],
-                ranges = [new TZDate('2015-05-01T00:00:00'), new TZDate('2015-05-02T00:00:00'), new TZDate('2015-05-03T00:00:00')],
+                ranges = [new TZDate('2015-05-01T00:00:00+09:00'), new TZDate('2015-05-02T00:00:00+09:00'), new TZDate('2015-05-03T00:00:00+09:00')],
                 cache = WeekdayInMonth.prototype.getExceedDate(0, eventsInDateRange, ranges);
 
             expect(cache).toEqual({

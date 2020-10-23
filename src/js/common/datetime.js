@@ -641,9 +641,17 @@ datetime = {
     hasMultiDates: function(start, end) {
         var diffDays = datetime.getDateDifference(start, end);
         var diffHours = Math.abs(datetime.getHourDifference(start, end));
-        var withinDay = diffDays === -1 && diffHours < 24 && datetime.isStartOfDay(end);
+        var withinDay = Math.abs(diffDays) === 1 && diffHours < 24 && datetime.isStartOfDay(end);
 
         return !datetime.isSameDate(start, end) && !withinDay;
+    },
+
+    renderEnd: function(start, end) {
+        var diffDays = datetime.getDateDifference(start, end);
+
+        return Math.abs(diffDays) >= 1 && datetime.isStartOfDay(end) ?
+            datetime.convertStartDayToLastDay(end) :
+            datetime.end(end);
     }
 };
 
