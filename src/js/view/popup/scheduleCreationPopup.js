@@ -244,20 +244,20 @@ ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
 ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
-    var title;
-    var startDate;
-    var endDate;
-    var rangeDate;
-    var form;
-    var isAllDay;
+    var title, startDate, endDate, rangeDate, form, isAllDay;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
-    endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
+    startDate = new TZDate(this.rangePicker.getStartDate());
+    endDate = new TZDate(this.rangePicker.getEndDate());
+
+    if (timezone.hasTimezoneOption()) {
+        startDate = new TZDate(startDate.getTime());
+        endDate = new TZDate(endDate.getTime());
+    }
 
     if (!this._validateForm(title, startDate, endDate)) {
         if (!title.value) {
@@ -345,8 +345,8 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     title = schedule.title;
     isPrivate = raw['class'] === 'private';
     location = schedule.location;
-    startDate = schedule.start;
-    endDate = schedule.end;
+    startDate = new TZDate(schedule.start);
+    endDate = new TZDate(schedule.end);
     isAllDay = schedule.isAllDay;
     state = schedule.state;
 

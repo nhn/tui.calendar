@@ -40,7 +40,7 @@ var setterMethods = [
  * @private
  */
 function getTimezoneOffset(timestamp) {
-    timestamp = timestamp || Date.now();
+    timestamp = util.isUndefined(timestamp) ? Date.now() : timestamp;
 
     return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
 }
@@ -67,8 +67,18 @@ function getCustomTimezoneOffset(timestamp) {
 function getLocalTime(time) {
     var timezoneOffset = getTimezoneOffset(time);
     var customTimezoneOffset = getCustomTimezoneOffset(time);
-    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
-    var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+    var localTime = time - customTimezoneOffset + timezoneOffset;
+    var newDateTimezoneOffsetMS = new Date(localTime).getTimezoneOffset() * MIN_TO_MS;
+    var timezoneOffsetDiff;
+
+    if (setByTimezoneOption && newDateTimezoneOffsetMS !== timezoneOffset) {
+        timezoneOffsetDiff = newDateTimezoneOffsetMS - timezoneOffset;
+        localTime += timezoneOffsetDiff;
+    }
+
+    if (!setByTimezoneOption) {
+        localTime += (customTimezoneOffset - timezoneOffset);
+    }
 
     return localTime;
 }
@@ -286,6 +296,14 @@ module.exports = {
      */
     setOffsetCallback: function(callback) {
         timezoneOffsetCallback = callback;
+    },
+
+    /**
+     * Check to use custom timezone option
+     * @returns {boolean} use custom timezone option
+     */
+    hasTimezoneOption: function() {
+        return setByTimezoneOption;
     },
 
     /**
