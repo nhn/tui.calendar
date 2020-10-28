@@ -71,12 +71,12 @@ function getLocalTime(time) {
     var newDateTimezoneOffsetMS = new Date(localTime).getTimezoneOffset() * MIN_TO_MS;
     var timezoneOffsetDiff;
 
-    if (setByTimezoneOption && newDateTimezoneOffsetMS !== timezoneOffset) {
-        timezoneOffsetDiff = newDateTimezoneOffsetMS - timezoneOffset;
-        localTime += timezoneOffsetDiff;
-    }
-
-    if (!setByTimezoneOption) {
+    if (setByTimezoneOption) {
+        if (newDateTimezoneOffsetMS !== timezoneOffset) {
+            timezoneOffsetDiff = newDateTimezoneOffsetMS - timezoneOffset;
+            localTime += timezoneOffsetDiff;
+        }
+    } else {
         localTime += (customTimezoneOffset - timezoneOffset);
     }
 
