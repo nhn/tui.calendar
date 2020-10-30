@@ -11,6 +11,8 @@ var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
+var primaryTimezoneName = '';
+var intlFormatter;
 
 var getterMethods = [
     'getDate',
@@ -33,6 +35,15 @@ var setterMethods = [
     'setSeconds'
 ];
 
+var typeToPos = {
+    year: 0,
+    month: 1,
+    day: 2,
+    hour: 3,
+    minute: 4,
+    second: 5
+};
+
 /**
  * Get the timezone offset by timestampe
  * @param {number} timestamp - timestamp
@@ -52,8 +63,16 @@ function getTimezoneOffset(timestamp) {
  * @private
  */
 function getCustomTimezoneOffset(timestamp) {
+    var date;
+
     if (!setByTimezoneOption && timezoneOffsetCallback) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
+    }
+
+    if (intlFormatter) {
+        date = new Date(timestamp);
+
+        return -getOffset(partsOffset(intlFormatter, date), date) * MIN_TO_MS;
     }
 
     return customOffsetMs;
@@ -65,19 +84,19 @@ function getCustomTimezoneOffset(timestamp) {
  * @returns {number} local time
  */
 function getLocalTime(time) {
-    var timezoneOffset = getTimezoneOffset(time);
-    var customTimezoneOffset = getCustomTimezoneOffset(time);
-    var localTime = time - customTimezoneOffset + timezoneOffset;
-    var newDateTimezoneOffsetMS = new Date(localTime).getTimezoneOffset() * MIN_TO_MS;
-    var timezoneOffsetDiff;
+    var timezoneOffset, customTimezoneOffset, localTime, newDateTimezoneOffsetMS;
 
-    if (setByTimezoneOption) {
-        if (newDateTimezoneOffsetMS !== timezoneOffset) {
-            timezoneOffsetDiff = newDateTimezoneOffsetMS - timezoneOffset;
-            localTime += timezoneOffsetDiff;
-        }
-    } else {
-        localTime += (customTimezoneOffset - timezoneOffset);
+    if (!setByTimezoneOption) {
+        return time;
+    }
+
+    timezoneOffset = getTimezoneOffset(time);
+    customTimezoneOffset = getCustomTimezoneOffset(time);
+    localTime = time - customTimezoneOffset + timezoneOffset;
+    newDateTimezoneOffsetMS = new Date(localTime).getTimezoneOffset() * MIN_TO_MS;
+
+    if (newDateTimezoneOffsetMS !== timezoneOffset) {
+        localTime += (newDateTimezoneOffsetMS - timezoneOffset);
     }
 
     return localTime;
@@ -144,6 +163,48 @@ function createDateAsLocalTime(arg) {
  */
 function useLocalTimeConverter(arg) {
     return arg instanceof Date || (typeof arg) === 'string';
+}
+
+/**
+ * Extract date tokens (y, M, d, h, m, s) using the formatToParts() method.
+ * @param {Intl.DateTimeFormat} dtf - Intl.DateTimeFormat instance
+ * @param {Date} date - date object
+ * @returns {Array.<number>} An array of objects only containing the formatted date
+ */
+function partsOffset(dtf, date) {
+    var formatted = dtf.formatToParts(date);
+    var filled = [];
+    var i, pos;
+
+    for (i = 0; i < formatted.length; i += 1) {
+        pos = typeToPos[formatted[i].type];
+
+        if (typeof pos !== 'undefined') {
+            filled[pos] = parseInt(formatted[i].value, 10);
+        }
+    }
+
+    return filled;
+}
+
+/**
+ * The time zone offset is calculated from the difference between the current time and the time in a specific time zone.
+ * @param {Array.<number>} parts - An array of objects only containing the formatted date
+ * @param {Date} date - date object
+ * @returns {number} offset
+ */
+function getOffset(parts, date) {
+    var y = parts[0];
+    var M = parts[1];
+    var d = parts[2];
+    var h = parts[3];
+    var m = parts[4];
+    var s = parts[5];
+
+    var utc = new Date(Date.UTC(y, M - 1, d, h, m, s));
+    var offset = (utc - date) / 60 / 1000;
+
+    return offset;
 }
 
 /**
@@ -304,6 +365,27 @@ module.exports = {
      */
     hasTimezoneOption: function() {
         return setByTimezoneOption;
+    },
+
+    /**
+     * set primary timezone name
+     * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+     */
+    setCustomTimezone: function(timezone) {
+        primaryTimezoneName = timezone;
+
+        if (primaryTimezoneName && Intl && Intl.DateTimeFormat) {
+            intlFormatter = new Intl.DateTimeFormat('en-US', {
+                hourCycle: 'h23',
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZone: primaryTimezoneName
+            });
+        }
     },
 
     /**
