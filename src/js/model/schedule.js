@@ -288,17 +288,8 @@ Schedule.prototype.setAllDayPeriod = function(start, end) {
 };
 
 Schedule.prototype.setTimePeriod = function(start, end) {
-    if (start instanceof TZDate) {
-        this.start = start;
-    } else {
-        this.start = new TZDate(start || Date.now());
-    }
-
-    if (end instanceof TZDate) {
-        this.end = end;
-    } else {
-        this.end = new TZDate(end || this.start);
-    }
+    this.start = new TZDate(start || Date.now());
+    this.end = new TZDate(end || this.start);
 
     if (!end) {
         this.end.setMinutes(this.end.getMinutes() + 30);

@@ -363,7 +363,7 @@ module.exports = {
      * Check to use custom timezone option
      * @returns {boolean} use custom timezone option
      */
-    hasTimezoneOption: function() {
+    hasCustomeTimezoneOffset: function() {
         return setByTimezoneOption;
     },
 

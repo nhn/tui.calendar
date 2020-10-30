@@ -254,7 +254,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     startDate = new TZDate(this.rangePicker.getStartDate());
     endDate = new TZDate(this.rangePicker.getEndDate());
 
-    if (timezone.hasTimezoneOption()) {
+    if (timezone.hasCustomeTimezoneOffset()) {
         startDate = new TZDate(startDate.getTime());
         endDate = new TZDate(endDate.getTime());
     }
