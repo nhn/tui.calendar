@@ -375,18 +375,15 @@ var mmin = Math.min;
  * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
  * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
  * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
- * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York'). It works when the browser supports Intl.DateTimeFormat. If Intl.DateTimeFormat is not supported (e.g. IE), an Intl polyfill will be added or the timezoneOffset value will be calculated.
+ * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York'). It works when the browser supports Intl.DateTimeFormat. If Intl.DateTimeFormat is not supported (e.g. below IE 10), the caller must provide an Intl polyfill, otherwise it will be calculated incorrectly in the timezone using summer time. If you have not entered the timezone, It will be calculated using the timezoneOffset value you entered.
  * @example
  * var cal = new Calendar('#calendar', {
  *  timezones: [{
- *      timezone: 'Asia/Seoul'
  *      timezoneOffset: 540,
  *      displayLabel: 'GMT+09:00',
  *      tooltip: 'Seoul'
  *  }, {
  *      timezone: 'America/Los_Angeles'
- *      timezoneOffset: -420,
- *      displayLabel: 'GMT-08:00',
  *      tooltip: 'Los Angeles'
  *  }]
  * });
