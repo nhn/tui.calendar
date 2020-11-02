@@ -256,7 +256,7 @@ var cal = new Calendar('#calendar', {
 });
 ```
 
-2\) If your browser supports `Intl.DateTimeFormat` (including `formatToPart`), you can calculate by entering only the `timezone` property. If `Intl.DateTimeFormat` is not supported, the caller must provide an **Intl** polyfill.
+2\) If your browser supports `Intl.DateTimeFormat` (including `formatToPart`), you can calculate by entering only the `timezone` property. If `Intl.DateTimeFormat` and `formatToPart` are not supported (e.g. less than IE 11), the caller must provide polyfills for `Intl` and `dateTimeFormat`. Otherwise, it will not be possible to extract the correct value from the timezone using summer time.
 
 ```js
 var cal = new Calendar('#calendar', {

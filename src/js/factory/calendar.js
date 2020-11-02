@@ -375,7 +375,11 @@ var mmin = Math.min;
  * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
  * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
  * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
- * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York'). It works when the browser supports Intl.DateTimeFormat. If Intl.DateTimeFormat is not supported (e.g. below IE 10), the caller must provide an Intl polyfill, otherwise it will be calculated incorrectly in the timezone using summer time. If you have not entered the timezone, It will be calculated using the timezoneOffset value you entered.
+ * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York').
+ *    If only timezone is entered(no 'timezoneOffset'), it works when the browser supports 'Intl.DateTimeFormat' (including 'formatToPart').
+ *    If 'Intl.DateTimeFormat' and 'formatToPart' are not supported (e.g. less than IE 11), the caller must provide polyfills for 'Intl' and 'dateTimeFormat'. Otherwise, it will not be possible to extract the correct value from the timezone using summer time.
+ *    The 'Intl' polyfill and tz(timezone) data can be added and used, but the size is very large. It is recommended to use a callback function('offsetCallback' property) to calculate and pass the offset outside the application.
+ *    If no 'timezone' is entered, it is calculated using the entered 'timezoneOffset' value.
  * @property {function} [offsetCallback] - Set a callback function to get timezone offset by timestamp
  * @example
  * var cal = new Calendar('#calendar', {
