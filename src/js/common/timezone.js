@@ -10,9 +10,9 @@ var MIN_TO_MS = 60 * 1000;
 var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
+var timezoneOffsetCallbackFunc = null;
 var setByTimezoneOption = false;
-var primaryTimezoneName = '';
-var intlFormatter;
+var primaryTimezoneName, intlFormatter;
 
 var getterMethods = [
     'getDate',
@@ -67,6 +67,10 @@ function getCustomTimezoneOffset(timestamp) {
 
     if (!setByTimezoneOption && timezoneOffsetCallback) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
+    }
+
+    if (!util.isUndefined(primaryTimezoneName) && timezoneOffsetCallbackFunc) {
+        return -timezoneOffsetCallbackFunc(primaryTimezoneName, timestamp) * MIN_TO_MS;
     }
 
     if (intlFormatter) {
@@ -204,7 +208,7 @@ function getOffset(parts, date) {
     var utc = new Date(Date.UTC(y, M - 1, d, h, m, s));
     var offset = (utc - date) / 60 / 1000;
 
-    return offset;
+    return Math.round(offset);
 }
 
 /**
@@ -354,9 +358,18 @@ module.exports = {
     /**
      * Set a callback function to get timezone offset by timestamp
      * @param {function} callback - callback function
+     * @deprecated Use the setOffsetCallbackFunc method instead of this.
      */
     setOffsetCallback: function(callback) {
         timezoneOffsetCallback = callback;
+    },
+
+    /**
+     * Set a callback function to get timezone offset by timestamp
+     * @param {function} callback - callback function
+     */
+    setOffsetCallbackFunc: function(callback) {
+        timezoneOffsetCallbackFunc = callback;
     },
 
     /**
@@ -371,20 +384,57 @@ module.exports = {
      * set primary timezone name
      * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
      */
-    setCustomTimezone: function(timezone) {
+    setTimezoneName: function(timezone) {
         primaryTimezoneName = timezone;
+    },
 
-        if (primaryTimezoneName && Intl && Intl.DateTimeFormat) {
-            intlFormatter = new Intl.DateTimeFormat('en-US', {
-                hourCycle: 'h23',
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
-                timeZone: primaryTimezoneName
-            });
+    /**
+     * set primary timezone by timezone option
+     * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+     */
+    // eslint-disable-next-line complexity
+    setPrimaryTimezone: function(timezoneObj) {
+        var offset, timestamp, date;
+
+        if (!timezoneObj) {
+            return;
+        }
+
+        setByTimezoneOption = true;
+
+        if (util.isNumber(timezoneObj.timezoneOffset)) {
+            this.setOffset(-timezoneObj.timezoneOffset);
+        }
+
+        timestamp = new TZDate().toLocalTime().valueOf();
+
+        if (timezoneObj.timezone) {
+            this.setTimezoneName(timezoneObj.timezone);
+
+            if (timezoneObj.offsetCallback) {
+                offset = timezoneObj.offsetCallback(
+                    timezoneObj.timezone,
+                    timestamp
+                );
+                this.setOffset(-offset);
+                this.setOffsetCallbackFunc(timezoneObj.offsetCallback);
+            } else if (Intl && Intl.DateTimeFormat) {
+                intlFormatter = new Intl.DateTimeFormat('en-US', {
+                    hourCycle: 'h23',
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    timeZone: primaryTimezoneName
+                });
+
+                date = new Date(timestamp);
+                offset = getOffset(partsOffset(intlFormatter, date), date);
+
+                this.setOffset(offset);
+            }
         }
     },
 

@@ -724,8 +724,7 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
     }, this);
 
     if (timezones.length) {
-        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
-        timezone.setCustomTimezone(timezones[0].timezone);
+        timezone.setPrimaryTimezone(timezones[0]);
     }
 };
 

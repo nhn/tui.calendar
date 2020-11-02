@@ -37,6 +37,8 @@
   <script src="https://uicdn.toast.com/tui.time-picker/v2.0.3/tui-time-picker.min.js"></script>
   <script src="https://uicdn.toast.com/tui.date-picker/v4.0.3/tui-date-picker.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone-with-data.js" integrity="sha512-ECoTMVFwwVtxjEBRjUMjviUd6hBjwDhBJI0+3W2YDs+ld5rHHUDr59T15gxwEPkGu5XLmkASUSvPgQe/Tpyodg==" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
   <script src="../dist/tui-calendar.js"></script>
   <script src="./js/data/calendars.js"></script>
@@ -46,16 +48,19 @@
     defaultView: 'week', // set 'week' or 'day'
     timezones: [         // set timezone config
       {
-        timezoneOffset: 540,
-        tooltip: 'Seoul'
+        tooltip: 'New York',
+        timezone: 'America/New_York',
+        offsetCallback: function(timezone, timestamp) {
+          return -moment.tz.zone(timezone).utcOffset(timestamp);
+        }
       },
       {
-        timezoneOffset: -420,
-        tooltip: 'Los Angeles'
+        timezoneOffset: 540,
+        tooltip: 'Seoul',
       }
     ],
     taskView: false,
-    scheduleView: ['time']
+    scheduleView: ['time'],
   });
   </script>
   <script src="./js/default.js"></script>
