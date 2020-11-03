@@ -104,9 +104,10 @@ function getTimezoneOffsetByTimezoneOption(timezoneObj, timestamp) {
     var timezoneOffset = util.isNumber(timezoneObj.timezoneOffset) ?
         timezoneObj.timezoneOffset :
         Timezone.getOffset();
+    var timezoneOffsetFn = Timezone.getTimezoneOffsetFn();
 
-    if (timezoneObj.timezone && timezoneObj.offsetCallback) {
-        timezoneOffset = timezoneObj.offsetCallback(timezoneObj.timezone, timestamp);
+    if (timezoneObj.timezone && timezoneOffsetFn) {
+        timezoneOffset = timezoneOffsetFn(timezoneObj.timezone, timestamp);
     }
 
     return timezoneOffset;

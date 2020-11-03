@@ -10,7 +10,7 @@ var MIN_TO_MS = 60 * 1000;
 var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
-var timezoneOffsetCallbackFunc = null;
+var timezoneOffsetFn = null;
 var setByTimezoneOption = false;
 var primaryTimezoneName, intlFormatter;
 
@@ -69,8 +69,8 @@ function getCustomTimezoneOffset(timestamp) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
     }
 
-    if (!util.isUndefined(primaryTimezoneName) && timezoneOffsetCallbackFunc) {
-        return -timezoneOffsetCallbackFunc(primaryTimezoneName, timestamp) * MIN_TO_MS;
+    if (!util.isUndefined(primaryTimezoneName) && timezoneOffsetFn) {
+        return -timezoneOffsetFn(primaryTimezoneName, timestamp) * MIN_TO_MS;
     }
 
     if (intlFormatter) {
@@ -368,8 +368,16 @@ module.exports = {
      * Set a callback function to get timezone offset by timestamp
      * @param {function} callback - callback function
      */
-    setOffsetCallbackFunc: function(callback) {
-        timezoneOffsetCallbackFunc = callback;
+    setTimezoneOffsetFn: function(callback) {
+        timezoneOffsetFn = callback;
+    },
+
+    /**
+     * Get a function to get timezone offset by timestamp
+     * @returns {function} callback - callback function
+     */
+    getTimezoneOffsetFn: function() {
+        return timezoneOffsetFn;
     },
 
     /**
@@ -411,13 +419,13 @@ module.exports = {
         if (timezoneObj.timezone) {
             this.setTimezoneName(timezoneObj.timezone);
 
-            if (timezoneObj.offsetCallback) {
-                offset = timezoneObj.offsetCallback(
+            if (timezoneOffsetFn) {
+                offset = timezoneOffsetFn(
                     timezoneObj.timezone,
                     timestamp
                 );
+
                 this.setOffset(-offset);
-                this.setOffsetCallbackFunc(timezoneObj.offsetCallback);
             } else if (Intl && Intl.DateTimeFormat) {
                 intlFormatter = new Intl.DateTimeFormat('en-US', {
                     hourCycle: 'h23',

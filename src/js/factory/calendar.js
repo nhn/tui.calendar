@@ -378,11 +378,13 @@ var mmin = Math.min;
  * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York').
  *    If only timezone is entered(no 'timezoneOffset'), it works when the browser supports 'Intl.DateTimeFormat' (including 'formatToPart').
  *    If 'Intl.DateTimeFormat' and 'formatToPart' are not supported (e.g. less than IE 11), the caller must provide polyfills for 'Intl' and 'dateTimeFormat'. Otherwise, it will not be possible to extract the correct value from the timezone using summer time.
- *    The 'Intl' polyfill and tz(timezone) data can be added and used, but the size is very large. It is recommended to use a callback function('offsetCallback' property) to calculate and pass the offset outside the application.
+ *    The 'Intl' polyfill and tz(timezone) data can be added and used, but the size is very large. It is recommended to register function('timezoneOffsetFn' property) to calculate and pass the offset outside the application.
  *    If no 'timezone' is entered, it is calculated using the entered 'timezoneOffset' value.
- * @property {function} [offsetCallback] - Set a callback function to get timezone offset by timestamp
  * @example
  * var cal = new Calendar('#calendar', {
+ *  timezoneOffsetFn: function() {
+ *    return -moment.tz.zone(timezone).utcOffset(timestamp); // e.g. +09:00 => 540, -04:00 => -240
+ *  },
  *  timezones: [
  *    { // 1. set timezoneOffset only
  *      timezoneOffset: 540,
@@ -392,13 +394,6 @@ var mmin = Math.min;
  *      tooltip: 'New York',
  *      timezone: 'America/New_York',
  *    },
- *    { // 3. set timezone and offsetCallback
- *       tooltip: 'New York',
- *       timezone: 'America/New_York',
- *       offsetCallback: function(timezone, timestamp) {
- *         return -moment.tz.zone(timezone).utcOffset(timestamp);
- *       }
- *    }
  *  ]
  * });
  */
@@ -448,8 +443,11 @@ var mmin = Math.min;
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
  * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
- *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function
+ *  The first Timezone element is primary
  *  The rest timezone elements are shown in left timegrid of weekly/daily view
+ * @property {function} [timezoneOffsetFn] - Set a function to get timezone offset by timestamp.
+ *  If the time difference is +09:00, the setting value should be 540.
+ *  If the time difference is -04:00, the setting value should be -240.
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
@@ -725,7 +723,12 @@ Calendar.prototype._initialize = function(options) {
  * @private
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
+    var timezoneOffsetFn = options.timezoneOffsetFn;
     var timezones = options.timezones || [];
+
+    if (util.isFunction(timezoneOffsetFn)) {
+        timezone.setTimezoneOffsetFn(timezoneOffsetFn);
+    }
 
     util.forEach(options.template, function(func, name) {
         if (func) {

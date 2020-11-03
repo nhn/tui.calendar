@@ -276,17 +276,17 @@ var cal = new Calendar('#calendar', {
   * It also supports `formatToParts.`
 
 3\) The `Intl` polyfill and tz(timezone) data can be added and used, but the size is very large.
-If you use a date library such as `luxon, moment-timezone` in your project, it is recommended to pass the offset calculated with the `offsetCallback` function and use it.
+If you use a date library such as `luxon, moment-timezone` in your project, it is recommended to register a function that calculates the offset by date and timezone using the `timezoneOffsetFn` option.
 
 ```js
 var cal = new Calendar('#calendar', {
+  timezoneOffsetFn: function(timezone, timestamp) {
+    return -moment.tz.zone(timezone).utcOffset(timestamp);
+  }
   timezones: [
     {
       tooltip: 'New York',
       timezone: 'America/New_York',
-      offsetCallback: function(timezone, timestamp) {
-        return -moment.tz.zone(timezone).utcOffset(timestamp);
-      }
     },
   ]
 });
