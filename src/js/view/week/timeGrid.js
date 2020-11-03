@@ -103,12 +103,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
 function getTimezoneOffsetByTimezoneOption(timezoneObj, timestamp) {
     var timezoneOffset = util.isNumber(timezoneObj.timezoneOffset) ?
         timezoneObj.timezoneOffset :
-        Timezone.getOffset();
-    var timezoneOffsetFn = Timezone.getTimezoneOffsetFn();
-
-    if (timezoneObj.timezone && timezoneOffsetFn) {
-        timezoneOffset = timezoneOffsetFn(timezoneObj.timezone, timestamp);
-    }
+        Timezone.getTimezoneOffsetByTimezone(timezoneObj.timezone, timestamp);
 
     return timezoneOffset;
 }
@@ -288,7 +283,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     util.forEach(timezones, function(timezone) {
         var hourmarker = new TZDate(now);
         var dateDifference;
-        var timezoneOffset = getTimezoneOffsetByTimezoneOption(timezone, hourmarker.valueOf());
+        var timezoneOffset = getTimezoneOffsetByTimezoneOption(timezone, hourmarker.getTime());
         var timezoneDifference = timezoneOffset + primaryOffset;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);

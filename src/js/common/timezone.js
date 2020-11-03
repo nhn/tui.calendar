@@ -12,7 +12,8 @@ var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var timezoneOffsetFn = null;
 var setByTimezoneOption = false;
-var primaryTimezoneName, intlFormatter;
+var primaryTimezoneName;
+var intlFormatter = {};
 
 var getterMethods = [
     'getDate',
@@ -69,14 +70,14 @@ function getCustomTimezoneOffset(timestamp) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
     }
 
-    if (!util.isUndefined(primaryTimezoneName) && timezoneOffsetFn) {
-        return -timezoneOffsetFn(primaryTimezoneName, timestamp) * MIN_TO_MS;
-    }
-
-    if (intlFormatter) {
+    if (intlFormatter[primaryTimezoneName]) {
         date = new Date(timestamp);
 
-        return -getOffset(partsOffset(intlFormatter, date), date) * MIN_TO_MS;
+        return -getOffset(partsOffset(intlFormatter[primaryTimezoneName], date), date) * MIN_TO_MS;
+    }
+
+    if (!util.isUndefined(primaryTimezoneName) && timezoneOffsetFn) {
+        return -timezoneOffsetFn(primaryTimezoneName, timestamp) * MIN_TO_MS;
     }
 
     return customOffsetMs;
@@ -209,6 +210,47 @@ function getOffset(parts, date) {
     var offset = (utc - date) / 60 / 1000;
 
     return Math.round(offset);
+}
+
+/**
+ * 브라우저가 Intl, Intl.DateTimeFormat, formatToParts API를 지원하는지 확인
+ * @param {string} timeZone - timezone
+ * @returns {boolean} supported
+ */
+function supportIntl(timeZone) {
+    var supported = false;
+
+    if (window.Intl && window.Intl.DateTimeFormat) {
+        intlFormatter[timeZone] = getIntlFormatter(timeZone);
+
+        if (util.isFunction(intlFormatter[timeZone].formatToParts)) {
+            supported = true;
+        }
+    }
+
+    return supported;
+}
+
+/**
+ * Intl에 맞춘 DateTimeFormat 인스턴스 반환
+ * @param {string} timeZone - timezone
+ * @returns {DateTimeFormat} Intl.DateTimeFormat instance
+ */
+function getIntlFormatter(timeZone) {
+    if (!intlFormatter[timeZone]) {
+        intlFormatter[timeZone] = new Intl.DateTimeFormat('en-US', {
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: timeZone
+        });
+    }
+
+    return intlFormatter[timeZone];
 }
 
 /**
@@ -397,12 +439,13 @@ module.exports = {
     },
 
     /**
-     * set primary timezone by timezone option
+     * set timezone and offset by timezone option
      * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
      */
     // eslint-disable-next-line complexity
     setPrimaryTimezone: function(timezoneObj) {
-        var offset, timestamp, date;
+        var timezoneName = timezoneObj.timezone;
+        var offset, timestamp, date, formatter;
 
         if (!timezoneObj) {
             return;
@@ -419,31 +462,42 @@ module.exports = {
         if (timezoneObj.timezone) {
             this.setTimezoneName(timezoneObj.timezone);
 
-            if (timezoneOffsetFn) {
+            if (supportIntl(timezoneName)) {
+                formatter = getIntlFormatter(timezoneName);
+                date = new Date(timestamp);
+                offset = getOffset(partsOffset(formatter, date), date);
+
+                this.setOffset(-offset);
+            } else if (timezoneOffsetFn) {
                 offset = timezoneOffsetFn(
                     timezoneObj.timezone,
                     timestamp
                 );
 
                 this.setOffset(-offset);
-            } else if (Intl && Intl.DateTimeFormat) {
-                intlFormatter = new Intl.DateTimeFormat('en-US', {
-                    hourCycle: 'h23',
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                    timeZone: primaryTimezoneName
-                });
-
-                date = new Date(timestamp);
-                offset = getOffset(partsOffset(intlFormatter, date), date);
-
-                this.setOffset(offset);
             }
         }
+    },
+
+    /**
+     * set timezone and offset by timezone option
+     * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+     * @param {string} timestamp - timezone (such as 'Asia/Seoul', 'America/New_York')
+     * @returns {number} timezone offset
+     */
+    getTimezoneOffsetByTimezone: function(timezone, timestamp) {
+        var offset = this.getOffset();
+        var formatter, date;
+
+        if (supportIntl(timezone)) {
+            formatter = getIntlFormatter(timezone);
+            date = new Date(timestamp);
+            offset = getOffset(partsOffset(formatter, date), date);
+        } else if (timezoneOffsetFn) {
+            offset = timezoneOffsetFn(timezone, timestamp);
+        }
+
+        return offset;
     },
 
     /**

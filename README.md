@@ -256,7 +256,7 @@ var cal = new Calendar('#calendar', {
 });
 ```
 
-2\) If your browser supports `Intl.DateTimeFormat` (including `formatToPart`), you can calculate by entering only the `timezone` property. If `Intl.DateTimeFormat` and `formatToPart` are not supported (e.g. less than IE 11), the caller must provide polyfills for `Intl` and `dateTimeFormat`. Otherwise, it will not be possible to extract the correct value from the timezone using summer time.
+2\) If your browser supports `Intl.DateTimeFormat` (including `formatToPart`), you can calculate by entering only the `timezone` property.
 
 ```js
 var cal = new Calendar('#calendar', {
@@ -269,14 +269,7 @@ var cal = new Calendar('#calendar', {
 });
 ```
 
-
-* [Intl polyfill](https://polyfill.io/v3/)
-  * If necessary, Set and WeakMap may be additionally required.
-* [Intl.DateTimeFormat polyfill](https://formatjs.io/docs/polyfills/intl-datetimeformat/)
-  * It also supports `formatToParts.`
-
-3\) The `Intl` polyfill and tz(timezone) data can be added and used, but the size is very large.
-If you use a date library such as `luxon, moment-timezone` in your project, it is recommended to register a function that calculates the offset by date and timezone using the `timezoneOffsetFn` option.
+If `Intl.DateTimeFormat` and `formatToPart` are not supported (e.g. less than IE 11), the caller must provide polyfills for `Intl` and `dateTimeFormat`. But, the size is very large. We provide the `timezoneOffsetFn` option to improve this. If you use a date library such as `luxon, moment-timezone` in your project, it is recommended to register a function that calculates the offset by date and timezone using the `timezoneOffsetFn` option.
 
 ```js
 var cal = new Calendar('#calendar', {
