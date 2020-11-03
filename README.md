@@ -281,7 +281,7 @@ If you use a date library such as `luxon, moment-timezone` in your project, it i
 ```js
 var cal = new Calendar('#calendar', {
   timezoneOffsetFn: function(timezone, timestamp) {
-    return -moment.tz.zone(timezone).utcOffset(timestamp);
+    return -moment.tz.zone(timezone).utcOffset(timestamp); // e.g. +09:00 => 540, -04:00 => -240
   }
   timezones: [
     {
