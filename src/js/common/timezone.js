@@ -213,7 +213,7 @@ function getOffset(parts, date) {
 }
 
 /**
- * 브라우저가 Intl, Intl.DateTimeFormat, formatToParts API를 지원하는지 확인
+ * Check if browser supports Intl, Intl.DateTimeFormat, formatToParts API
  * @param {string} timeZone - timezone
  * @returns {boolean} supported
  */
@@ -232,7 +232,7 @@ function supportIntl(timeZone) {
 }
 
 /**
- * Intl에 맞춘 DateTimeFormat 인스턴스 반환
+ * Return DateTimeFormat instance by timezone
  * @param {string} timeZone - timezone
  * @returns {DateTimeFormat} Intl.DateTimeFormat instance
  */
@@ -439,7 +439,7 @@ module.exports = {
     },
 
     /**
-     * set timezone and offset by timezone option
+     * Set timezone and offset by timezone option
      * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
      */
     // eslint-disable-next-line complexity
@@ -480,9 +480,9 @@ module.exports = {
     },
 
     /**
-     * set timezone and offset by timezone option
+     * Get offset by timezone and time
      * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
-     * @param {string} timestamp - timezone (such as 'Asia/Seoul', 'America/New_York')
+     * @param {string} timestamp - timestamp
      * @returns {number} timezone offset
      */
     getTimezoneOffsetByTimezone: function(timezone, timestamp) {
