@@ -371,32 +371,64 @@ var mmin = Math.min;
  */
 
 /**
- * @typedef {object} Timezone
- * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
- * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
- * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
- * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York').
- *    If `Intl.DateTimeFormat` and `formatToPart` are not supported (e.g. Internet Explorer), use 'timezoneOffsetFn' option or add polyfills.
- *    The `timezoneOffsetFn` option allows you to set up a function that returns the timezone offset for that time using date libraries like '[js-joda](https://js-joda.github.io/js-joda/)' and '[moment-timezone](https://momentjs.com/timezone/)'.
+ * @typedef {object} TimeZone
+ * @property {Array.<Zone>} [zones] - {@link Zone} array. Set the list of time zones.
+ *  The first zone element is primary
+ *  The rest zone elements are shown in left timegrid of weekly/daily view
+ * @property {function} [offsetCalculator = null] - If you define the 'offsetCalculator' property, the offset calculation is done with this function.
+ *  This option allows you to set up a function that returns the timezone offset for that time using date libraries like ['js-joda'](https://js-joda.github.io/js-joda/) and ['moment-timezone'](https://momentjs.com/timezone/).
+ *  This option is useful when your browser does not support 'Intl.DateTimeFormat' and 'formatToPart', or you want to use the date library you are familiar with.
+ *  (If the time difference is +09:00, the setting value should be 540.)
+ *  (If the time difference is -04:00, the setting value should be -240.)
+
  * @example
  * var cal = new Calendar('#calendar', {
- *  // If the browser does not support Intl.DateTimeFormat and formatToParts APIs
- *  // (such as Internet Explorer 11 and below)
- *  timezoneOffsetFn: function() {
- *    return -moment.tz.zone(timezone).utcOffset(timestamp); // e.g. +09:00 => 540, -04:00 => -240
- *  },
- *  timezones: [
- *    { // 1. set timezoneOffset only
- *      timezoneOffset: 540,
- *      tooltip: 'Seoul',
- *      displayLabel: 'GMT+09:00'
- *    },
- *    { // 2. set timezone only
- *      tooltip: 'New York',
- *      timezone: 'America/New_York',
- *      displayLabel: 'GMT-05:00'
- *    },
- *  ]
+ *   timeZone: {
+ *     zones: [
+ *       {
+ *         tooltip: 'Seoul',
+ *         timezoneOffset: 'Asia/Seoul',
+ *         displayLabel: 'GMT+09:00'
+ *       },
+ *       {
+ *         tooltip: 'New York',
+ *         timezone: 'America/New_York',
+ *         displayLabel: 'GMT-05:00'
+ *       },
+ *     ],
+ *     offsetCalculator: function(timezone, timestamp){
+ *       // e.g. +09:00 => 540, -04:00 => -240
+ *       return -moment.tz.zone(timezone).utcOffset(timestamp);
+ *     },
+ *   }
+ * });
+ */
+
+/**
+ * @typedef {object} Zone
+ * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York').
+ *  Basically, it will calculate the offset using 'Intl.DateTimeFormat' with the value of the this property entered.
+ *  This property is required.
+ * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
+ * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
+* @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset().
+ *  This property will be deprecated. (since version 1.13)
+ * @example
+ * var cal = new Calendar('#calendar', {
+ *   timeZone: {
+ *     zones: [
+ *       {
+ *         tooltip: 'Seoul',
+ *         timezoneOffset: 'Asia/Seoul',
+ *         displayLabel: 'GMT+09:00'
+ *       },
+ *       {
+ *         tooltip: 'New York',
+ *         timezone: 'America/New_York',
+ *         displayLabel: 'GMT-05:00'
+ *       },
+ *     ]
+ *   }
  * });
  */
 
@@ -444,17 +476,15 @@ var mmin = Math.min;
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
- * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
- *  The first Timezone element is primary
- *  The rest timezone elements are shown in left timegrid of weekly/daily view
- * @property {function} [timezoneOffsetFn] - If the browser does not support Intl.DateTimeFormat and formatToParts APIs(such as Internet Explorer 11 and below),
- *  it is recommended to provide timezone offset via 'timezoneOffsetFn'"
- *  (If the time difference is +09:00, the setting value should be 540.)
- *  (If the time difference is -04:00, the setting value should be -240.)
+ * @property {TimeZone} [TimeZone] - {@link TimeZone} for customizing time zone
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
  * @property {boolean} [usageStatistics=true] - Let us know the hostname. If you don't want to send the hostname, please set to false.
+ * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
+ *  The first Timezone element is primary
+ *  The rest timezone elements are shown in left timegrid of weekly/daily view
+ *  This property will be deprecated. (since version 1.13)
  */
 
 /**
