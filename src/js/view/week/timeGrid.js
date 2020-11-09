@@ -103,7 +103,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
 function getTimezoneOffsetByTimezoneOption(timezoneObj, timestamp) {
     var offset, timezoneOffset;
 
-    if (timezoneObj.timezoneOffset) {
+    if (util.isNumber(timezoneObj.timezoneOffset)) {
         return timezoneObj.timezoneOffset; // It will be deprecated
     }
 
@@ -165,7 +165,7 @@ function TimeGrid(name, options, panelElement) {
         renderEndDate: '',
         hourStart: 0,
         hourEnd: 24,
-        timezones: options.timeZone.zones,
+        timezones: options.timezones,
         isReadOnly: options.isReadOnly,
         showTimezoneCollapseButton: false
     }, options.week);

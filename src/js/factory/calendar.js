@@ -716,9 +716,7 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timeZone: {
-            zones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : []
-        },
+        timezones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false

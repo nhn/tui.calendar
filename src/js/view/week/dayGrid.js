@@ -50,7 +50,7 @@ function DayGrid(name, options, container, theme) {
         scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
         scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
         scheduleContainerTop: 1,
-        timezones: options.timeZone.zones,
+        timezones: options.timezones,
         isReadOnly: options.isReadOnly,
         getViewModelFunc: function(viewModel) {
             return viewModel.schedulesInDateRange[name];

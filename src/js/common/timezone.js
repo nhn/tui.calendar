@@ -404,7 +404,7 @@ module.exports = {
             return customOffsetMs / MIN_TO_MS;
         }
 
-        return nativeOffsetMs / MIN_TO_MS;
+        return 0;
     },
 
     /**

@@ -29,7 +29,7 @@ function DayName(options, container, theme) {
 
     this.options = util.extend({
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        timezones: options.timeZone.zones
+        timezones: options.timezones
     }, options.week);
 
     /**
