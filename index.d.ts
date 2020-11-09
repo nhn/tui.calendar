@@ -1,4 +1,4 @@
-// Type definitions for TOAST UI Calendar v1.12.5-dooray-sp101-200701
+// Type definitions for TOAST UI Calendar v1.12.5-dooray-sp104-201109-beta
 // TypeScript Version: 3.2.1
 
 declare namespace tuiCalendar {

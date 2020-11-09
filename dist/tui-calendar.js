@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5-dooray-sp101-200701 | Wed Jul 01 2020
+ * @version 1.12.5-dooray-sp104-201109-beta | Mon Nov 09 2020
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -4332,6 +4332,16 @@ var domevent = {
         }
 
         return -1;
+    },
+
+    /**
+     * Get target from event object
+     *
+     * @param {Event} event - The event object
+     * @returns {object} - The event target object
+     */
+    getEventTarget: function(event) {
+        return event.target || event.srcElement;
     }
 };
 
@@ -5951,7 +5961,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/**
+/* WEBPACK VAR INJECTION */(function(global) {/**
  * @fileoverview timezone
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
@@ -5963,7 +5973,10 @@ var MIN_TO_MS = 60 * 1000;
 var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
+var offsetCalculator = null;
 var setByTimezoneOption = false;
+var primaryTimezoneName;
+var intlFormatter = {};
 
 var getterMethods = [
     'getDate',
@@ -5986,6 +5999,15 @@ var setterMethods = [
     'setSeconds'
 ];
 
+var typeToPos = {
+    year: 0,
+    month: 1,
+    day: 2,
+    hour: 3,
+    minute: 4,
+    second: 5
+};
+
 /**
  * Get the timezone offset by timestampe
  * @param {number} timestamp - timestamp
@@ -5993,7 +6015,7 @@ var setterMethods = [
  * @private
  */
 function getTimezoneOffset(timestamp) {
-    timestamp = timestamp || Date.now();
+    timestamp = util.isUndefined(timestamp) ? Date.now() : timestamp;
 
     return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
 }
@@ -6005,8 +6027,20 @@ function getTimezoneOffset(timestamp) {
  * @private
  */
 function getCustomTimezoneOffset(timestamp) {
+    var date;
+
     if (!setByTimezoneOption && timezoneOffsetCallback) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
+    }
+
+    if (!util.isUndefined(primaryTimezoneName) && offsetCalculator) {
+        return -offsetCalculator(primaryTimezoneName, timestamp) * MIN_TO_MS;
+    }
+
+    if (intlFormatter[primaryTimezoneName]) {
+        date = new Date(timestamp);
+
+        return -getOffset(partsOffset(intlFormatter[primaryTimezoneName], date), date) * MIN_TO_MS;
     }
 
     return customOffsetMs;
@@ -6018,10 +6052,20 @@ function getCustomTimezoneOffset(timestamp) {
  * @returns {number} local time
  */
 function getLocalTime(time) {
-    var timezoneOffset = getTimezoneOffset(time);
-    var customTimezoneOffset = getCustomTimezoneOffset(time);
-    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
-    var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+    var timezoneOffset, customTimezoneOffset, localTime, newDateTimezoneOffsetMS;
+
+    if (!setByTimezoneOption) {
+        return time;
+    }
+
+    timezoneOffset = getTimezoneOffset(time);
+    customTimezoneOffset = getCustomTimezoneOffset(time);
+    localTime = time - customTimezoneOffset + timezoneOffset;
+    newDateTimezoneOffsetMS = new Date(localTime).getTimezoneOffset() * MIN_TO_MS;
+
+    if (newDateTimezoneOffsetMS !== timezoneOffset) {
+        localTime += (newDateTimezoneOffsetMS - timezoneOffset);
+    }
 
     return localTime;
 }
@@ -6082,11 +6126,104 @@ function createDateAsLocalTime(arg) {
 
 /**
  * is it for local time? These type can be used from Calendar API.
- * @param {Date|string} arg - date 
+ * @param {Date|string} arg - date
  * @returns {boolean}
  */
 function useLocalTimeConverter(arg) {
     return arg instanceof Date || (typeof arg) === 'string';
+}
+
+/**
+ * Extract date tokens (y, M, d, h, m, s) using the formatToParts() method.
+ * @param {Intl.DateTimeFormat} dtf - Intl.DateTimeFormat instance
+ * @param {Date} date - date object
+ * @returns {Array.<number>} An array of objects only containing the formatted date
+ */
+function partsOffset(dtf, date) {
+    var formatted = dtf.formatToParts(date);
+    var filled = [];
+    var i, pos;
+
+    for (i = 0; i < formatted.length; i += 1) {
+        pos = typeToPos[formatted[i].type];
+
+        if (typeof pos !== 'undefined') {
+            filled[pos] = parseInt(formatted[i].value, 10);
+        }
+    }
+
+    return filled;
+}
+
+/**
+ * The time zone offset is calculated from the difference between the current time and the time in a specific time zone.
+ * @param {Array.<number>} parts - An array of objects only containing the formatted date (e.g. [2020, 12, 14, 10, 15, 19])
+ * @param {Date} date - date object
+ * @returns {number} offset
+ */
+function getOffset(parts, date) {
+    var y = parts[0];
+    var M = parts[1];
+    var d = parts[2];
+    var h = parts[3];
+    var m = parts[4];
+    var s = parts[5];
+
+    var utc = new Date(Date.UTC(y, M - 1, d, h, m, s));
+    var offset = (utc - date) / 60 / 1000;
+
+    return Math.round(offset);
+}
+
+/**
+ * Check if browser supports Intl, Intl.DateTimeFormat, formatToParts API
+ * @param {string} timeZone - timezone
+ * @returns {boolean} supported
+ */
+function supportIntl(timeZone) {
+    var supported = false;
+    var formatter;
+
+    if (global.Intl && global.Intl.DateTimeFormat) {
+        formatter = getIntlFormatter(timeZone);
+
+        if (util.isFunction(formatter.formatToParts)) {
+            intlFormatter[timeZone] = formatter;
+            supported = true;
+        }
+    }
+
+    return supported;
+}
+
+/**
+ * Return DateTimeFormat instance by timezone
+ * @param {string} timeZone - timezone
+ * @returns {DateTimeFormat} Intl.DateTimeFormat instance
+ */
+function getIntlFormatter(timeZone) {
+    if (!intlFormatter[timeZone]) {
+        intlFormatter[timeZone] = new Intl.DateTimeFormat('en-US', {
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: timeZone
+        });
+    }
+
+    return intlFormatter[timeZone];
+}
+
+/**
+ * set primary timezone name
+ * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+ */
+function setTimezoneName(timezone) {
+    primaryTimezoneName = timezone;
 }
 
 /**
@@ -6132,7 +6269,7 @@ TZDate.prototype.getUTCTime = function() {
 
 /**
  * toUTCString
- * @returns {Date}
+ * @returns {string}
  */
 TZDate.prototype.toUTCString = function() {
     return this._date.toUTCString();
@@ -6236,9 +6373,75 @@ module.exports = {
     /**
      * Set a callback function to get timezone offset by timestamp
      * @param {function} callback - callback function
+     * @deprecated Use the setOffsetCallbackFunc method instead of this.
      */
     setOffsetCallback: function(callback) {
         timezoneOffsetCallback = callback;
+    },
+
+    /**
+     * Set a callback function to get timezone offset by timestamp
+     * @param {function} calculator - offset calculator
+     */
+    setOffsetCalculator: function(calculator) {
+        offsetCalculator = calculator;
+    },
+
+    /**
+     * Check to use custom timezone option
+     * @returns {boolean} use custom timezone option
+     */
+    hasCustomeTimezoneOffset: function() {
+        return setByTimezoneOption;
+    },
+
+    /**
+     * Set timezone and offset by timezone option
+     * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+     */
+    // eslint-disable-next-line complexity
+    setPrimaryTimezone: function(timezoneObj) {
+        var timezoneName = timezoneObj.timezone;
+        var offset, timestamp;
+
+        if (!timezoneObj) {
+            return;
+        }
+
+        setByTimezoneOption = true;
+
+        if (util.isNumber(timezoneObj.timezoneOffset)) {
+            this.setOffset(-timezoneObj.timezoneOffset);
+        }
+
+        timestamp = new TZDate().toLocalTime().valueOf();
+
+        if (timezoneName) {
+            setTimezoneName(timezoneName);
+            offset = this.getTimezoneOffsetByTimezone(timezoneName, timestamp);
+            this.setOffset(-offset);
+        }
+    },
+
+    /**
+     * Get offset by timezone and time
+     * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+     * @param {number} timestamp - timestamp
+     * @returns {number} timezone offset
+     */
+    getTimezoneOffsetByTimezone: function(timezone, timestamp) {
+        var offset = this.getOffset();
+        var formatter, date;
+
+        if (offsetCalculator) {
+            offset = offsetCalculator(timezone, timestamp);
+        } else if (supportIntl(timezone)) {
+            formatter = getIntlFormatter(timezone);
+            date = new Date(timestamp);
+            offset = getOffset(partsOffset(formatter, date), date);
+        }
+
+        return offset;
     },
 
     /**
@@ -6250,6 +6453,7 @@ module.exports = {
     }
 };
 
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -9120,8 +9324,7 @@ Calendar.prototype.destroy = function() {
  */
 Calendar.prototype._initialize = function(options) {
     var controller = this._controller,
-        viewName = this._viewName,
-        timezones = options.timezones || [];
+        viewName = this._viewName;
 
     this._options = util.extend({
         defaultView: viewName,
@@ -9136,11 +9339,7 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [{
-            timezoneOffset: 0,
-            displayLabel: '',
-            tooltip: ''
-        }],
+        timezones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
@@ -9168,22 +9367,45 @@ Calendar.prototype._initialize = function(options) {
 
     this._layout.controller = controller;
 
-    util.forEach(this._options.template, function(func, name) {
+    this._setAdditionalInternalOptions(options);
+
+    this.changeView(viewName, true);
+};
+
+/**
+ * Set additional internal options
+ * 1. Register to the template handlebar
+ * 2. Update the calendar list and set the color of the calendar.
+ * 3. Change the primary timezone offset of the timezones.
+ * @param {Options} options - calendar options
+ * @private
+ */
+Calendar.prototype._setAdditionalInternalOptions = function(options) {
+    var timeZone = options.timeZone;
+    var zones, offsetCalculator;
+
+    util.forEach(options.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
 
-    util.forEach(this._options.calendars || [], function(calendar) {
+    util.forEach(options.calendars || [], function(calendar) {
         this.setCalendarColor(calendar.id, calendar, true);
     }, this);
 
-    // set by primary timezone
-    if (timezones.length) {
-        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
-    }
+    if (timeZone) {
+        zones = timeZone.zones || [];
+        offsetCalculator = timeZone.offsetCalculator;
 
-    this.changeView(viewName, true);
+        if (util.isFunction(offsetCalculator)) {
+            timezone.setOffsetCalculator(offsetCalculator);
+        }
+
+        if (zones.length) {
+            timezone.setPrimaryTimezone(zones[0]);
+        }
+    }
 };
 
 /**********
@@ -19746,10 +19968,10 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
+var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 var tmpl = __webpack_require__(/*! ../template/popup/scheduleCreationPopup.hbs */ "./src/js/view/template/popup/scheduleCreationPopup.hbs");
 var TZDate = timezone.Date;
 var MAX_WEEK_OF_MONTH = 6;
-var ARROW_WIDTH_HALF = 8;
 
 /**
  * @constructor
@@ -19796,7 +20018,7 @@ util.inherit(ScheduleCreationPopup, View);
  * @param {MouseEvent} mouseDownEvent - mouse event object
  */
 ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
-    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
+    var target = domevent.getEventTarget(mouseDownEvent),
         popupLayer = domutil.closest(target, config.classname('.floating-layer'));
 
     if (popupLayer) {
@@ -19823,7 +20045,7 @@ ScheduleCreationPopup.prototype.destroy = function() {
  * @param {MouseEvent} clickEvent - mouse event object
  */
 ScheduleCreationPopup.prototype._onClick = function(clickEvent) {
-    var target = (clickEvent.target || clickEvent.srcElement);
+    var target = domevent.getEventTarget(clickEvent);
 
     util.forEach(this._onClickListeners, function(listener) {
         return !listener(target);
@@ -19973,86 +20195,51 @@ ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
  * @param {HTMLElement} target click event target
  * @returns {boolean} whether save button is clicked or not
  */
+// eslint-disable-next-line complexity
 ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
-    var title, isPrivate, location, isAllDay, startDate, endDate, state;
-    var start, end, calendarId;
+    var title, startDate, endDate, rangeDate, form, isAllDay;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
-    endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
+    startDate = new TZDate(this.rangePicker.getStartDate());
+    endDate = new TZDate(this.rangePicker.getEndDate());
 
-    if (!title.value) {
-        title.focus();
-
-        return true;
+    if (timezone.hasCustomeTimezoneOffset()) {
+        startDate = new TZDate(startDate.getTime());
+        endDate = new TZDate(endDate.getTime());
     }
 
-    if (!startDate && !endDate) {
-        return true;
+    if (!this._validateForm(title, startDate, endDate)) {
+        if (!title.value) {
+            title.focus();
+        }
+
+        return false;
     }
 
-    isPrivate = !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'));
-    location = domutil.get(cssPrefix + 'schedule-location');
-    state = domutil.get(cssPrefix + 'schedule-state');
     isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
+    rangeDate = this._getRangeDate(startDate, endDate, isAllDay);
 
-    if (isAllDay) {
-        startDate.setHours(0, 0, 0);
-        endDate.setHours(23, 59, 59);
-    }
-
-    start = new TZDate(startDate);
-    end = new TZDate(endDate);
-
-    if (this._selectedCal) {
-        calendarId = this._selectedCal.id;
-    }
+    form = {
+        calendarId: this._selectedCal ? this._selectedCal.id : null,
+        title: title,
+        location: domutil.get(cssPrefix + 'schedule-location'),
+        start: rangeDate.start,
+        end: rangeDate.end,
+        isAllDay: isAllDay,
+        state: domutil.get(cssPrefix + 'schedule-state').innerText,
+        isPrivate: !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'))
+    };
 
     if (this._isEditMode) {
-        this.fire('beforeUpdateSchedule', {
-            schedule: {
-                calendarId: calendarId || this._schedule.calendarId,
-                title: title.value,
-                location: location.value,
-                raw: {
-                    class: isPrivate ? 'private' : 'public'
-                },
-                start: start,
-                end: end,
-                isAllDay: isAllDay,
-                state: state.innerText,
-                triggerEventName: 'click',
-                id: this._schedule.id
-            },
-            start: start,
-            end: end,
-            calendar: this._selectedCal,
-            triggerEventName: 'click'
-        });
+        this._onClickUpdateSchedule(form);
     } else {
-        /**
-         * @event ScheduleCreationPopup#beforeCreateSchedule
-         * @type {object}
-         * @property {Schedule} schedule - new schedule instance to be added
-         */
-        this.fire('beforeCreateSchedule', {
-            calendarId: calendarId,
-            title: title.value,
-            location: location.value,
-            raw: {
-                class: isPrivate ? 'private' : 'public'
-            },
-            start: start,
-            end: end,
-            isAllDay: isAllDay,
-            state: state.innerText
-        });
+        this._onClickCreateSchedule(form);
     }
 
     this.hide();
@@ -20113,8 +20300,8 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     title = schedule.title;
     isPrivate = raw['class'] === 'private';
     location = schedule.location;
-    startDate = schedule.start;
-    endDate = schedule.end;
+    startDate = new TZDate(schedule.start);
+    endDate = new TZDate(schedule.end);
     isAllDay = schedule.isAllDay;
     state = schedule.state;
 
@@ -20153,20 +20340,9 @@ ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(gu
         width: layer.offsetWidth,
         height: layer.offsetHeight
     };
-    var windowSize = {
-        right: window.innerWidth,
-        bottom: window.innerHeight
-    };
-    var parentRect = this.layer.parent.getBoundingClientRect();
-    var parentBounds = {
-        left: parentRect.left,
-        top: parentRect.top
-    };
-    var pos;
+    var containerBound = this.container.getBoundingClientRect();
+    var pos = this._calcRenderingData(layerSize, containerBound, guideBound);
 
-    pos = this._calcRenderingData(layerSize, windowSize, guideBound);
-    pos.x -= parentBounds.left;
-    pos.y -= (parentBounds.top + 6);
     this.layer.setPosition(pos.x, pos.y);
     this._setArrowDirection(pos.arrow);
 };
@@ -20218,35 +20394,115 @@ ScheduleCreationPopup.prototype._getBoundOfFirstRowGuideElement = function(guide
 };
 
 /**
+ * Get calculate rendering positions of y and arrow direction by guide block elements
+ * @param {number} guideBoundTop - guide block's top
+ * @param {number} guideBoundBottom - guide block's bottom
+ * @param {number} layerHeight - popup layer's height
+ * @param {number} containerTop - container's top
+ * @param {number} containerBottom - container's bottom
+ * @returns {YAndArrowDirection} y and arrowDirection
+ */
+ScheduleCreationPopup.prototype._getYAndArrowDirection = function(
+    guideBoundTop,
+    guideBoundBottom,
+    layerHeight,
+    containerTop,
+    containerBottom
+) {
+    var arrowDirection = 'arrow-bottom';
+    var MARGIN = 3;
+    var y = guideBoundTop - layerHeight;
+
+    if (y < containerTop) {
+        y = guideBoundBottom - containerTop + MARGIN;
+        arrowDirection = 'arrow-top';
+    } else {
+        y = y - containerTop - MARGIN;
+    }
+
+    if (y + layerHeight > containerBottom) {
+        y = containerBottom - layerHeight - containerTop - MARGIN;
+    }
+
+    /**
+     * @typedef {Object} YAndArrowDirection
+     * @property {number} y - top position of popup layer
+     * @property {string} [arrowDirection] - direction of popup arrow
+     */
+    return {
+        y: y,
+        arrowDirection: arrowDirection
+    };
+};
+
+/**
+* Get calculate rendering x position and arrow left by guide block elements
+* @param {number} guideBoundLeft - guide block's left
+* @param {number} guideBoundRight - guide block's right
+* @param {number} layerWidth - popup layer's width
+* @param {number} containerLeft - container's left
+* @param {number} containerRight - container's right
+* @returns {XAndArrowLeft} x and arrowLeft
+*/
+ScheduleCreationPopup.prototype._getXAndArrowLeft = function(
+    guideBoundLeft,
+    guideBoundRight,
+    layerWidth,
+    containerLeft,
+    containerRight
+) {
+    var guideHorizontalCenter = (guideBoundLeft + guideBoundRight) / 2;
+    var x = guideHorizontalCenter - (layerWidth / 2);
+    var ARROW_WIDTH_HALF = 8;
+    var arrowLeft;
+
+    if (x + layerWidth > containerRight) {
+        x = guideBoundRight - layerWidth + ARROW_WIDTH_HALF;
+        arrowLeft = guideHorizontalCenter - x;
+    } else {
+        x += ARROW_WIDTH_HALF;
+    }
+
+    if (x < containerLeft) {
+        x = 0;
+        arrowLeft = guideHorizontalCenter - containerLeft - ARROW_WIDTH_HALF;
+    } else {
+        x = x - containerLeft - ARROW_WIDTH_HALF;
+    }
+
+    /**
+     * @typedef {Object} XAndArrowLeft
+     * @property {number} x - left position of popup layer
+     * @property {numbe3er} arrowLeft - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
+     */
+    return {
+        x: x,
+        arrowLeft: arrowLeft
+    };
+};
+
+/**
  * Calculate rendering position usering guide elements
  * @param {{width: {number}, height: {number}}} layerSize - popup layer's width and height
- * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} parentSize - width and height of the upper layer, that acts as a border of popup
+ * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} containerBound - width and height of the upper layer, that acts as a border of popup
  * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} guideBound - guide element bound data
  * @returns {PopupRenderingData} rendering position of popup and popup arrow
  */
-ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentSize, guideBound) {
-    var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
-    var x = guideHorizontalCenter - (layerSize.width / 2);
-    var y = guideBound.top - layerSize.height + 3;
-    var arrowDirection = 'arrow-bottom';
-    var arrowLeft;
-
-    if (y < 0) {
-        y = guideBound.bottom + 9;
-        arrowDirection = 'arrow-top';
-    }
-
-    if (x > 0 && (x + layerSize.width > parentSize.right)) {
-        x = parentSize.right - layerSize.width;
-    }
-
-    if (x < 0) {
-        x = 0;
-    }
-
-    if (guideHorizontalCenter - x !== layerSize.width / 2) {
-        arrowLeft = guideHorizontalCenter - x - ARROW_WIDTH_HALF;
-    }
+ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, containerBound, guideBound) {
+    var yPosInfo = this._getYAndArrowDirection(
+        guideBound.top,
+        guideBound.bottom,
+        layerSize.height,
+        containerBound.top,
+        containerBound.bottom
+    );
+    var xPosInfo = this._getXAndArrowLeft(
+        guideBound.left,
+        guideBound.right,
+        layerSize.width,
+        containerBound.left,
+        containerBound.right
+    );
 
     /**
      * @typedef {Object} PopupRenderingData
@@ -20256,11 +20512,11 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentS
      * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
      */
     return {
-        x: x,
-        y: y,
+        x: xPosInfo.x,
+        y: yPosInfo.y,
         arrow: {
-            direction: arrowDirection,
-            position: arrowLeft
+            direction: yPosInfo.arrowDirection,
+            position: xPosInfo.arrowLeft
         }
     };
 };
@@ -20342,6 +20598,132 @@ ScheduleCreationPopup.prototype.refresh = function() {
  */
 ScheduleCreationPopup.prototype.setCalendars = function(calendars) {
     this.calendars = calendars || [];
+};
+
+/**
+ * Validate the form
+ * @param {string} title title of then entered schedule
+ * @param {TZDate} startDate start date time from range picker
+ * @param {TZDate} endDate end date time from range picker
+ * @returns {boolean} Returns false if the form is not valid for submission.
+ */
+ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDate) {
+    if (!title.value) {
+        return false;
+    }
+
+    if (!startDate && !endDate) {
+        return false;
+    }
+
+    if (datetime.compare(startDate, endDate) === 1) {
+        return false;
+    }
+
+    return true;
+};
+
+/**
+ * Get range date from range picker
+ * @param {TZDate} startDate start date time from range picker
+ * @param {TZDate} endDate end date time from range picker
+ * @param {boolean} isAllDay whether it is an all-day schedule
+ * @returns {RangeDate} Returns the start and end time data that is the range date
+ */
+ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isAllDay) {
+    var start = isAllDay ? datetime.start(startDate) : startDate;
+    var end = isAllDay ? datetime.renderEnd(startDate, endDate) : endDate;
+
+    /**
+     * @typedef {object} RangeDate
+     * @property {TZDate} start start time
+     * @property {TZDate} end end time
+     */
+    return {
+        start: new TZDate(start),
+        end: new TZDate(end)
+    };
+};
+
+/**
+ * Request schedule model creation to controller by custom schedules.
+ * @fires {ScheduleCreationPopup#beforeUpdateSchedule}
+ * @param {{
+    calendarId: {string},
+    title: {string},
+    location: {string},
+    start: {TZDate},
+    end: {TZDate},
+    isAllDay: {boolean},
+    state: {string},
+    isPrivate: {boolean}
+  }} form schedule input form data
+*/
+ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
+    var changes = common.getScheduleChanges(
+        this._schedule,
+        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+        {
+            calendarId: form.calendarId,
+            title: form.title.value,
+            location: form.location.value,
+            start: form.start,
+            end: form.end,
+            isAllDay: form.isAllDay,
+            state: form.state
+        }
+    );
+
+    /**
+     * @event ScheduleCreationPopup#beforeUpdateSchedule
+     * @type {object}
+     * @property {Schedule} schedule - schedule object to be updated
+     */
+    this.fire('beforeUpdateSchedule', {
+        schedule: util.extend({
+            raw: {
+                class: form.isPrivate ? 'private' : 'public'
+            }
+        }, this._schedule),
+        changes: changes,
+        start: form.start,
+        end: form.end,
+        calendar: this._selectedCal,
+        triggerEventName: 'click'
+    });
+};
+
+/**
+ * Request the controller to update the schedule model according to the custom schedule.
+ * @fires {ScheduleCreationPopup#beforeCreateSchedule}
+ * @param {{
+    calendarId: {string},
+    title: {string},
+    location: {string},
+    start: {TZDate},
+    end: {TZDate},
+    isAllDay: {boolean},
+    state: {string}
+  }} form schedule input form data
+ */
+ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
+    /**
+     * @event ScheduleCreationPopup#beforeCreateSchedule
+     * @type {object}
+     * @property {Schedule} schedule - new schedule instance to be added
+     */
+    this.fire('beforeCreateSchedule', {
+        calendarId: form.calendarId,
+        title: form.title.value,
+        location: form.location.value,
+        raw: {
+            class: form.isPrivate ? 'private' : 'public'
+        },
+        start: form.start,
+        end: form.end,
+        isAllDay: form.isAllDay,
+        state: form.state
+    });
 };
 
 module.exports = ScheduleCreationPopup;
@@ -23479,7 +23861,7 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     var baseViewModel, visibleScheduleCount;
-    var now = new TZDate().toLocalTime();
+    var now = new TZDate();
 
     if (panel.showExpandableButton) {
         if (!heightForcedSet) {
@@ -24540,6 +24922,30 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
         };
     });
 }
+
+/**
+ * Returns timezone offset from timezone object
+ * @param {object} timezoneObj - timezone object in options.timzones
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezoneOffset - timezone offset
+ */
+function getTimezoneOffsetByTimezoneOption(timezoneObj, timestamp) {
+    var offset, timezoneOffset;
+
+    if (util.isNumber(timezoneObj.timezoneOffset)) {
+        return timezoneObj.timezoneOffset; // It will be deprecated
+    }
+
+    if (!timezoneObj.timezone) {
+        throw new Error('The \'timezone\' property is required');
+    }
+
+    offset = Timezone.getTimezoneOffsetByTimezone(timezoneObj.timezone, timestamp);
+    timezoneOffset = util.isNumber(offset) ? offset : timezoneObj.timezoneOffset;
+
+    return timezoneOffset;
+}
+
 /**
  * @constructor
  * @extends {View}
@@ -24713,9 +25119,10 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     });
 
     util.forEach(timezones, function(timezone) {
-        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
         var hourmarker = new TZDate(now);
         var dateDifference;
+        var timezoneOffset = getTimezoneOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
@@ -24757,13 +25164,13 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
     var now = new TZDate().toLocalTime();
     var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 
+    // eslint-disable-next-line complexity
     util.forEach(timezones, function(timezone, index) {
         var hourmarker = new TZDate(now);
-        var timezoneDifference;
-        var timeSlots;
-        var dateDifference;
+        var timezoneOffset = getTimezoneOffsetByTimezoneOption(timezone, hourmarker.valueOf());
+        var timezoneDifference, timeSlots, dateDifference;
 
-        timezoneDifference = timezone.timezoneOffset + primaryOffset;
+        timezoneDifference = timezoneOffset + primaryOffset;
         timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
@@ -24776,7 +25183,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
         timezoneViewModel.push({
             timeSlots: timeSlots,
             displayLabel: timezone.displayLabel,
-            timezoneOffset: timezone.timezoneOffset,
+            timezoneOffset: timezoneOffset,
             tooltip: timezone.tooltip || '',
             width: width,
             left: collapsed ? 0 : (timezones.length - index - 1) * width,
@@ -25060,6 +25467,7 @@ TimeGrid.prototype.onTick = function() {
  * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
+// eslint-disable-next-line complexity
 TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
