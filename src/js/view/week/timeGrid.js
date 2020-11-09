@@ -92,6 +92,30 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
         };
     });
 }
+
+/**
+ * Returns timezone offset from timezone object
+ * @param {object} timezoneObj - timezone object in options.timzones
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezoneOffset - timezone offset
+ */
+function getTimezoneOffsetByTimezoneOption(timezoneObj, timestamp) {
+    var offset, timezoneOffset;
+
+    if (util.isNumber(timezoneObj.timezoneOffset)) {
+        return timezoneObj.timezoneOffset; // It will be deprecated
+    }
+
+    if (!timezoneObj.timezone) {
+        throw new Error('The \'timezone\' property is required');
+    }
+
+    offset = Timezone.getTimezoneOffsetByTimezone(timezoneObj.timezone, timestamp);
+    timezoneOffset = util.isNumber(offset) ? offset : timezoneObj.timezoneOffset;
+
+    return timezoneOffset;
+}
+
 /**
  * @constructor
  * @extends {View}
@@ -265,9 +289,10 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     });
 
     util.forEach(timezones, function(timezone) {
-        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
         var hourmarker = new TZDate(now);
         var dateDifference;
+        var timezoneOffset = getTimezoneOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
@@ -309,13 +334,13 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
     var now = new TZDate().toLocalTime();
     var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 
+    // eslint-disable-next-line complexity
     util.forEach(timezones, function(timezone, index) {
         var hourmarker = new TZDate(now);
-        var timezoneDifference;
-        var timeSlots;
-        var dateDifference;
+        var timezoneOffset = getTimezoneOffsetByTimezoneOption(timezone, hourmarker.valueOf());
+        var timezoneDifference, timeSlots, dateDifference;
 
-        timezoneDifference = timezone.timezoneOffset + primaryOffset;
+        timezoneDifference = timezoneOffset + primaryOffset;
         timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
@@ -328,7 +353,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
         timezoneViewModel.push({
             timeSlots: timeSlots,
             displayLabel: timezone.displayLabel,
-            timezoneOffset: timezone.timezoneOffset,
+            timezoneOffset: timezoneOffset,
             tooltip: timezone.tooltip || '',
             width: width,
             left: collapsed ? 0 : (timezones.length - index - 1) * width,
@@ -612,6 +637,7 @@ TimeGrid.prototype.onTick = function() {
  * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
+// eslint-disable-next-line complexity
 TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;

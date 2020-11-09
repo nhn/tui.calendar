@@ -656,8 +656,7 @@ Calendar.prototype.destroy = function() {
  */
 Calendar.prototype._initialize = function(options) {
     var controller = this._controller,
-        viewName = this._viewName,
-        timezones = options.timezones || [];
+        viewName = this._viewName;
 
     this._options = util.extend({
         defaultView: viewName,
@@ -672,11 +671,7 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [{
-            timezoneOffset: 0,
-            displayLabel: '',
-            tooltip: ''
-        }],
+        timezones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
@@ -704,22 +699,45 @@ Calendar.prototype._initialize = function(options) {
 
     this._layout.controller = controller;
 
-    util.forEach(this._options.template, function(func, name) {
+    this._setAdditionalInternalOptions(options);
+
+    this.changeView(viewName, true);
+};
+
+/**
+ * Set additional internal options
+ * 1. Register to the template handlebar
+ * 2. Update the calendar list and set the color of the calendar.
+ * 3. Change the primary timezone offset of the timezones.
+ * @param {Options} options - calendar options
+ * @private
+ */
+Calendar.prototype._setAdditionalInternalOptions = function(options) {
+    var timeZone = options.timeZone;
+    var zones, offsetCalculator;
+
+    util.forEach(options.template, function(func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
     });
 
-    util.forEach(this._options.calendars || [], function(calendar) {
+    util.forEach(options.calendars || [], function(calendar) {
         this.setCalendarColor(calendar.id, calendar, true);
     }, this);
 
-    // set by primary timezone
-    if (timezones.length) {
-        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
-    }
+    if (timeZone) {
+        zones = timeZone.zones || [];
+        offsetCalculator = timeZone.offsetCalculator;
 
-    this.changeView(viewName, true);
+        if (util.isFunction(offsetCalculator)) {
+            timezone.setOffsetCalculator(offsetCalculator);
+        }
+
+        if (zones.length) {
+            timezone.setPrimaryTimezone(zones[0]);
+        }
+    }
 };
 
 /**********

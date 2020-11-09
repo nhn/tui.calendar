@@ -87,7 +87,7 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     var baseViewModel, visibleScheduleCount;
-    var now = new TZDate().toLocalTime();
+    var now = new TZDate();
 
     if (panel.showExpandableButton) {
         if (!heightForcedSet) {
