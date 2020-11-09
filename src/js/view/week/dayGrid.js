@@ -50,7 +50,7 @@ function DayGrid(name, options, container, theme) {
         scheduleHeight: parseInt(theme.week.dayGridSchedule.height, 10),
         scheduleGutter: parseInt(theme.week.dayGridSchedule.marginTop, 10),
         scheduleContainerTop: 1,
-        timezones: options.timezones,
+        timezones: options.timeZone.zones,
         isReadOnly: options.isReadOnly,
         getViewModelFunc: function(viewModel) {
             return viewModel.schedulesInDateRange[name];
@@ -87,7 +87,7 @@ DayGrid.prototype.getBaseViewModel = function(viewModel) {
         styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     var baseViewModel, visibleScheduleCount;
-    var now = new TZDate().toLocalTime();
+    var now = new TZDate();
 
     if (panel.showExpandableButton) {
         if (!heightForcedSet) {

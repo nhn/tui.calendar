@@ -10,7 +10,7 @@ var MIN_TO_MS = 60 * 1000;
 var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
-var timezoneOffsetFn = null;
+var offsetCalculator = null;
 var setByTimezoneOption = false;
 var primaryTimezoneName;
 var intlFormatter = {};
@@ -70,14 +70,14 @@ function getCustomTimezoneOffset(timestamp) {
         return timezoneOffsetCallback(timestamp) * MIN_TO_MS;
     }
 
+    if (!util.isUndefined(primaryTimezoneName) && offsetCalculator) {
+        return -offsetCalculator(primaryTimezoneName, timestamp) * MIN_TO_MS;
+    }
+
     if (intlFormatter[primaryTimezoneName]) {
         date = new Date(timestamp);
 
         return -getOffset(partsOffset(intlFormatter[primaryTimezoneName], date), date) * MIN_TO_MS;
-    }
-
-    if (!util.isUndefined(primaryTimezoneName) && timezoneOffsetFn) {
-        return -timezoneOffsetFn(primaryTimezoneName, timestamp) * MIN_TO_MS;
     }
 
     return customOffsetMs;
@@ -194,7 +194,7 @@ function partsOffset(dtf, date) {
 
 /**
  * The time zone offset is calculated from the difference between the current time and the time in a specific time zone.
- * @param {Array.<number>} parts - An array of objects only containing the formatted date
+ * @param {Array.<number>} parts - An array of objects only containing the formatted date (e.g. [2020, 12, 14, 10, 15, 19])
  * @param {Date} date - date object
  * @returns {number} offset
  */
@@ -219,11 +219,13 @@ function getOffset(parts, date) {
  */
 function supportIntl(timeZone) {
     var supported = false;
+    var formatter;
 
-    if (window.Intl && window.Intl.DateTimeFormat) {
-        intlFormatter[timeZone] = getIntlFormatter(timeZone);
+    if (global.Intl && global.Intl.DateTimeFormat) {
+        formatter = getIntlFormatter(timeZone);
 
-        if (util.isFunction(intlFormatter[timeZone].formatToParts)) {
+        if (util.isFunction(formatter.formatToParts)) {
+            intlFormatter[timeZone] = formatter;
             supported = true;
         }
     }
@@ -251,6 +253,14 @@ function getIntlFormatter(timeZone) {
     }
 
     return intlFormatter[timeZone];
+}
+
+/**
+ * set primary timezone name
+ * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
+ */
+function setTimezoneName(timezone) {
+    primaryTimezoneName = timezone;
 }
 
 /**
@@ -394,7 +404,7 @@ module.exports = {
             return customOffsetMs / MIN_TO_MS;
         }
 
-        return 0;
+        return nativeOffsetMs / MIN_TO_MS;
     },
 
     /**
@@ -408,18 +418,10 @@ module.exports = {
 
     /**
      * Set a callback function to get timezone offset by timestamp
-     * @param {function} callback - callback function
+     * @param {function} calculator - offset calculator
      */
-    setTimezoneOffsetFn: function(callback) {
-        timezoneOffsetFn = callback;
-    },
-
-    /**
-     * Get a function to get timezone offset by timestamp
-     * @returns {function} callback - callback function
-     */
-    getTimezoneOffsetFn: function() {
-        return timezoneOffsetFn;
+    setOffsetCalculator: function(calculator) {
+        offsetCalculator = calculator;
     },
 
     /**
@@ -431,21 +433,13 @@ module.exports = {
     },
 
     /**
-     * set primary timezone name
-     * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
-     */
-    setTimezoneName: function(timezone) {
-        primaryTimezoneName = timezone;
-    },
-
-    /**
      * Set timezone and offset by timezone option
      * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
      */
     // eslint-disable-next-line complexity
     setPrimaryTimezone: function(timezoneObj) {
         var timezoneName = timezoneObj.timezone;
-        var offset, timestamp, date, formatter;
+        var offset, timestamp;
 
         if (!timezoneObj) {
             return;
@@ -459,42 +453,29 @@ module.exports = {
 
         timestamp = new TZDate().toLocalTime().valueOf();
 
-        if (timezoneObj.timezone) {
-            this.setTimezoneName(timezoneObj.timezone);
-
-            if (supportIntl(timezoneName)) {
-                formatter = getIntlFormatter(timezoneName);
-                date = new Date(timestamp);
-                offset = getOffset(partsOffset(formatter, date), date);
-
-                this.setOffset(-offset);
-            } else if (timezoneOffsetFn) {
-                offset = timezoneOffsetFn(
-                    timezoneObj.timezone,
-                    timestamp
-                );
-
-                this.setOffset(-offset);
-            }
+        if (timezoneName) {
+            setTimezoneName(timezoneName);
+            offset = this.getTimezoneOffsetByTimezone(timezoneName, timestamp);
+            this.setOffset(-offset);
         }
     },
 
     /**
      * Get offset by timezone and time
      * @param {string} timezone - timezone (such as 'Asia/Seoul', 'America/New_York')
-     * @param {string} timestamp - timestamp
+     * @param {number} timestamp - timestamp
      * @returns {number} timezone offset
      */
     getTimezoneOffsetByTimezone: function(timezone, timestamp) {
         var offset = this.getOffset();
         var formatter, date;
 
-        if (supportIntl(timezone)) {
+        if (offsetCalculator) {
+            offset = offsetCalculator(timezone, timestamp);
+        } else if (supportIntl(timezone)) {
             formatter = getIntlFormatter(timezone);
             date = new Date(timestamp);
             offset = getOffset(partsOffset(formatter, date), date);
-        } else if (timezoneOffsetFn) {
-            offset = timezoneOffsetFn(timezone, timestamp);
         }
 
         return offset;

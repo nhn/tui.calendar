@@ -45,21 +45,27 @@
   <script type="text/javascript" class="code-js">
   var cal = new tui.Calendar('#calendar', {
     defaultView: 'week', // set 'week' or 'day'
-    timezoneOffsetFn: function(timezone, timestamp) {
-      return -moment.tz.zone(timezone).utcOffset(timestamp); // e.g. +09:00 => 540, -04:00 => -240
-    },
-    timezones: [ // set timezone config
-      {
-        tooltip: 'New York',
-        timezone: 'America/New_York',
+    timeZone: { // set timeZone config
+      zones: [
+
+        {
+          tooltip: 'Seoul',
+          timezone: 'Asia/Seoul',
+          displayLabel: 'GMT+09:00'
+        },
+        {
+          tooltip: 'New York',
+          timezone: 'America/New_York',
+          displayLabel: 'GMT-05:00'
+        },
+      ],
+      offsetCalculator: function(timezone, timestamp){
+        // e.g. +09:00 => 540, -04:00 => -240
+        return -moment.tz.zone(timezone).utcOffset(timestamp);
       },
-      {
-        timezoneOffset: 540,
-        tooltip: 'Seoul',
-      }
-    ],
+    },
     taskView: false,
-    scheduleView: ['time'],
+    scheduleView: ['time']
   });
   </script>
   <script src="./js/default.js"></script>

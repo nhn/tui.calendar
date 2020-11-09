@@ -241,49 +241,67 @@ calendarInstance.createSchedules([...]);
 ```
 
 ### Custom Timezone
-There are three ways to specify a primary time zone (eg'Asia / Seoul','America / New_York') when rendering a calendar.
+You can customize the default time zone (e.g.'Asia / Seoul','America / New_York') when rendering the calendar.
 
-1\) If a `timezoneOffset` is specified, it is calculated as a fixed offset value regardless of summer time.
+The `timezones` and `timezoneOffset` will be deprecated.
+In order to calculate the offset, `timezone` property is essential.
 
-```js
-var cal = new Calendar('#calendar', {
-  timezones: [
-    {
-      timezoneOffset: 540,
-      tooltip: 'Seoul',
-    },
-  ]
-});
-```
+A new `timeZone` option is available. Set the list of time zones in the `zones` property.
+Basically, it will calculate the offset using `Intl.DateTimeFormat` with the value of the `timezone` property entered.
 
-2\) If your browser supports `Intl.DateTimeFormat` (including `formatToPart`), you can calculate by entering only the `timezone` property.
+If you define the `offsetCalculator` property, the offset calculation is done with this function.
 
 ```js
 var cal = new Calendar('#calendar', {
-  timezones: [
-    {
-      tooltip: 'New York',
-      timezone: 'America/New_York',
-    },
-  ]
-});
-```
-
-If `Intl.DateTimeFormat` and `formatToPart` are not supported (e.g. less than IE 11), the caller must provide polyfills for `Intl` and `dateTimeFormat`. But, the size is very large. We provide the `timezoneOffsetFn` option to improve this. If you use a date library such as `luxon, moment-timezone` in your project, it is recommended to register a function that calculates the offset by date and timezone using the `timezoneOffsetFn` option.
-
-```js
-var cal = new Calendar('#calendar', {
-  timezoneOffsetFn: function(timezone, timestamp) {
-    return -moment.tz.zone(timezone).utcOffset(timestamp); // e.g. +09:00 => 540, -04:00 => -240
+  timeZone: { // set timeZone config
+    zones: [
+      {
+        tooltip: 'Seoul',
+        timezone: 'Asia/Seoul',
+        displayLabel: 'GMT+09:00'
+      },
+      {
+        tooltip: 'New York',
+        timezone: 'America/New_York',
+        displayLabel: 'GMT-05:00'
+      },
+    ],
   }
-  timezones: [
-    {
-      tooltip: 'New York',
-      timezone: 'America/New_York',
-    },
-  ]
 });
 ```
+
+The `offsetCalculator` option allows you to set up a function that returns the timezone offset for that time using date libraries like [`js-joda`](https://js-joda.github.io/js-joda/) and [`moment-timezone`](https://momentjs.com/timezone/).
+
+The `offsetCalculator` option is useful when your browser does not support `Intl.DateTimeFormat` and `formatToPart`, or you want to use the date library you are familiar with.
+
+```js
+var cal = new Calendar('#calendar', {
+  timeZone: { // set timeZone config
+    ...
+    offsetCalculator: function(timezone, timestamp){
+      // e.g. +09:00 => 540, -04:00 => -240
+      return -moment.tz.zone(timezone).utcOffset(timestamp);
+    },
+  }
+});
+```
+
+If you are using a custom time zone, you need to add a polyfill if all of the following are true.
+
+1\) Browser does not support `Intl.DateTimeFormat` and `formatToPart`. <br>
+2\) The `offsetCalculator` option is not defined. <br>
+3\) Your service supports Internet Explorer. <br>
+
+**UMD**
+* [Intl ployfill](https://polyfill.io/v3/url-builder/)
+* I copied the `node_modules/@formatjs/intl-datetimeformat/polyfill.umd.min.js` file and used it.
+* You also need `node_modules/@formatjs/intl-getcanonicallocales/polyfill.umd.min.js` file to support lower versions of Internet Explorer 11.
+
+**CommonJS / ES6**
+* [@formatjs/intl](https://formatjs.io/docs/intl/)
+* [@formatjs/intl-datetimeformat](https://formatjs.io/docs/polyfills/intl-datetimeformat)
+* [@formatjs/intl-getcanonicallocales](https://formatjs.io/docs/polyfills/intl-getcanonicallocales)
+  * This is used to support lower versions of Internet Explorer 11.
 
 ## 🌏 Browser Support
 | <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |

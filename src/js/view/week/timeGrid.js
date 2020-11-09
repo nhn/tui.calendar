@@ -101,9 +101,18 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
  * @returns {number} timezoneOffset - timezone offset
  */
 function getTimezoneOffsetByTimezoneOption(timezoneObj, timestamp) {
-    var timezoneOffset = util.isNumber(timezoneObj.timezoneOffset) ?
-        timezoneObj.timezoneOffset :
-        Timezone.getTimezoneOffsetByTimezone(timezoneObj.timezone, timestamp);
+    var offset, timezoneOffset;
+
+    if (timezoneObj.timezoneOffset) {
+        return timezoneObj.timezoneOffset; // It will be deprecated
+    }
+
+    if (!timezoneObj.timezone) {
+        throw new Error('The \'timezone\' property is required');
+    }
+
+    offset = Timezone.getTimezoneOffsetByTimezone(timezoneObj.timezone, timestamp);
+    timezoneOffset = util.isNumber(offset) ? offset : timezoneObj.timezoneOffset;
 
     return timezoneOffset;
 }
@@ -156,7 +165,7 @@ function TimeGrid(name, options, panelElement) {
         renderEndDate: '',
         hourStart: 0,
         hourEnd: 24,
-        timezones: options.timezones,
+        timezones: options.timeZone.zones,
         isReadOnly: options.isReadOnly,
         showTimezoneCollapseButton: false
     }, options.week);

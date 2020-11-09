@@ -376,22 +376,25 @@ var mmin = Math.min;
  * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
  * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
  * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York').
- *    If only timezone is entered(no 'timezoneOffset'), it works when the browser supports 'Intl.DateTimeFormat' (including 'formatToPart').
- *    If 'Intl.DateTimeFormat' and 'formatToPart' are not supported (e.g. less than IE 11), the caller must provide polyfills for 'Intl' and 'dateTimeFormat'.
- *    The 'Intl' polyfill and tz(timezone) data can be added and used, but the size is very large. It is recommended to register function('timezoneOffsetFn' property) to calculate and pass the offset outside the application.
+ *    If `Intl.DateTimeFormat` and `formatToPart` are not supported (e.g. Internet Explorer), use 'timezoneOffsetFn' option or add polyfills.
+ *    The `timezoneOffsetFn` option allows you to set up a function that returns the timezone offset for that time using date libraries like '[js-joda](https://js-joda.github.io/js-joda/)' and '[moment-timezone](https://momentjs.com/timezone/)'.
  * @example
  * var cal = new Calendar('#calendar', {
- *  timezoneOffsetFn: function() { // If the browser does not support Intl.DateTimeFormat and formatToParts APIs, such as IE11 and below
+ *  // If the browser does not support Intl.DateTimeFormat and formatToParts APIs
+ *  // (such as Internet Explorer 11 and below)
+ *  timezoneOffsetFn: function() {
  *    return -moment.tz.zone(timezone).utcOffset(timestamp); // e.g. +09:00 => 540, -04:00 => -240
  *  },
  *  timezones: [
  *    { // 1. set timezoneOffset only
  *      timezoneOffset: 540,
  *      tooltip: 'Seoul',
+ *      displayLabel: 'GMT+09:00'
  *    },
  *    { // 2. set timezone only
  *      tooltip: 'New York',
  *      timezone: 'America/New_York',
+ *      displayLabel: 'GMT-05:00'
  *    },
  *  ]
  * });
@@ -444,7 +447,8 @@ var mmin = Math.min;
  * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
  *  The first Timezone element is primary
  *  The rest timezone elements are shown in left timegrid of weekly/daily view
- * @property {function} [timezoneOffsetFn] - If the browser does not support Intl.DateTimeFormat and formatToParts APIs(such as IE11 and below), it is recommended to register function('timezoneOffsetFn' property) to calculate and pass the offset outside the application.
+ * @property {function} [timezoneOffsetFn] - If the browser does not support Intl.DateTimeFormat and formatToParts APIs(such as Internet Explorer 11 and below),
+ *  it is recommended to provide timezone offset via 'timezoneOffsetFn'"
  *  (If the time difference is +09:00, the setting value should be 540.)
  *  (If the time difference is -04:00, the setting value should be -240.)
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
@@ -682,7 +686,9 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [],
+        timeZone: {
+            zones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : []
+        },
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
@@ -722,12 +728,8 @@ Calendar.prototype._initialize = function(options) {
  * @private
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
-    var timezoneOffsetFn = options.timezoneOffsetFn;
-    var timezones = options.timezones || [];
-
-    if (util.isFunction(timezoneOffsetFn)) {
-        timezone.setTimezoneOffsetFn(timezoneOffsetFn);
-    }
+    var timeZone = options.timeZone;
+    var zones, offsetCalculator;
 
     util.forEach(options.template, function(func, name) {
         if (func) {
@@ -739,8 +741,17 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
         this.setCalendarColor(calendar.id, calendar, true);
     }, this);
 
-    if (timezones.length) {
-        timezone.setPrimaryTimezone(timezones[0]);
+    if (timeZone) {
+        zones = timeZone.zones || [];
+        offsetCalculator = timeZone.offsetCalculator;
+
+        if (util.isFunction(offsetCalculator)) {
+            timezone.setOffsetCalculator(offsetCalculator);
+        }
+
+        if (zones.length) {
+            timezone.setPrimaryTimezone(zones[0]);
+        }
     }
 };
 
