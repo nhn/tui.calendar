@@ -671,7 +671,7 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [],
+        timezones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
@@ -690,6 +690,10 @@ Calendar.prototype._initialize = function(options) {
               (schedule.category === 'allday' || schedule.category === 'time');
         }
     }, util.pick(options, 'month') || {});
+
+    this._options.timeZone = util.extend({
+        zones: []
+    }, util.pick(options, 'timeZone') || {});
 
     if (this._options.isReadOnly) {
         this._options.useCreationPopup = false;
@@ -711,7 +715,8 @@ Calendar.prototype._initialize = function(options) {
  * @private
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
-    var timezones = options.timezones || [];
+    var timeZone = options.timeZone;
+    var zones, offsetCalculator;
 
     util.forEach(options.template, function(func, name) {
         if (func) {
@@ -723,8 +728,17 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
         this.setCalendarColor(calendar.id, calendar, true);
     }, this);
 
-    if (timezones.length) {
-        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
+    if (timeZone) {
+        zones = timeZone.zones || [];
+        offsetCalculator = timeZone.offsetCalculator;
+
+        if (util.isFunction(offsetCalculator)) {
+            timezone.setOffsetCalculator(offsetCalculator);
+        }
+
+        if (zones.length) {
+            timezone.setPrimaryOffsetByTimezoneOption(zones[0]);
+        }
     }
 };
 

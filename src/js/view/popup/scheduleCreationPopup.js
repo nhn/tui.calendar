@@ -4,19 +4,23 @@
  */
 'use strict';
 
+/* eslint-disable */
+
 var View = require('../../view/view');
 var FloatingLayer = require('../../common/floatingLayer');
 var util = require('tui-code-snippet');
 var DatePicker = require('tui-date-picker');
-var timezone = require('../../common/timezone');
+var timezoneUtil = require('../../common/timezone');
 var config = require('../../config');
 var domevent = require('../../common/domevent');
 var domutil = require('../../common/domutil');
 var common = require('../../common/common');
 var datetime = require('../../common/datetime');
 var tmpl = require('../template/popup/scheduleCreationPopup.hbs');
-var TZDate = timezone.Date;
+var TZDate = timezoneUtil.Date;
 var MAX_WEEK_OF_MONTH = 6;
+var DIFFERENT_OFFSET = timezoneUtil.differentOffset;
+var HOUR_TO_MS = 60 * 60 * 1000;
 
 /**
  * @constructor
@@ -256,8 +260,45 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
-    endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
+    startDate = new TZDate(this.rangePicker.getStartDate());
+    endDate = new TZDate(this.rangePicker.getEndDate());
+    startDate = new TZDate(startDate.getTime());
+    endDate = new TZDate(endDate.getTime());
+    /*
+    var a = this.rangePicker.getStartDate();
+    var b = this.rangePicker.getEndDate();
+    var c =  new TZDate(a);
+    var d =  new TZDate(b);
+    var e = c.toLocalTime();
+    var f = d.toLocalTime();
+    var g = c.convertByPrimaryTimezone();
+    var h = d.convertByPrimaryTimezone();
+    var i = new Date(this.rangePicker.getStartDate());
+    var j = new Date(this.rangePicker.getEndDate());
+
+    console.log(a, b, c, d, e, f, g, h);
+    */
+
+
+    var isDifferentOffsetStartAndEndTime = timezoneUtil.isDifferentOffsetStartAndEndTime(startDate, endDate);
+
+    if (!timezoneUtil.hasCustomeTimezoneOffset()) {
+        var i = new Date(this.rangePicker.getStartDate()).getTime();
+        var j = new Date(this.rangePicker.getEndDate()).getTime();
+
+        console.log(i, j);
+
+        isDifferentOffsetStartAndEndTime = timezoneUtil.isDifferentOffsetStartAndEndTime(i, j);
+    }
+
+    console.log(isDifferentOffsetStartAndEndTime, startDate, endDate);
+
+    if (isDifferentOffsetStartAndEndTime === DIFFERENT_OFFSET.STANDARD_TO_DST) {
+        endDate.addMilliseconds(HOUR_TO_MS);
+        console.log('STANDARD TO DST');
+    } else if (isDifferentOffsetStartAndEndTime === DIFFERENT_OFFSET.DST_TO_STANDARD) {
+        console.log('DST TO STANDARD');
+    }
 
     if (!this._validateForm(title, startDate, endDate)) {
         if (!title.value) {
