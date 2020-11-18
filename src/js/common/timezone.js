@@ -20,7 +20,7 @@ var getterMethods = [
     'getMilliseconds',
     'getMinutes',
     'getMonth',
-    'getSeconds'
+    'getSeconds',
 ];
 
 var setterMethods = [
@@ -30,7 +30,7 @@ var setterMethods = [
     'setMilliseconds',
     'setMinutes',
     'setMonth',
-    'setSeconds'
+    'setSeconds',
 ];
 
 /**
@@ -65,10 +65,15 @@ function getCustomTimezoneOffset(timestamp) {
  * @returns {number} local time
  */
 function getLocalTime(time) {
-    var timezoneOffset = getTimezoneOffset(time);
-    var customTimezoneOffset = getCustomTimezoneOffset(time);
-    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
-    var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+    var timezoneOffset, customTimezoneOffset, timezoneOffsetDiff, localTime;
+    if (!setByTimezoneOption) {
+        return time;
+    }
+
+    timezoneOffset = getTimezoneOffset(time);
+    customTimezoneOffset = getCustomTimezoneOffset(time);
+    timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
+    localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
 
     return localTime;
 }
@@ -95,7 +100,7 @@ function createDateWithUTCTime(arg) {
 
     if (arg instanceof TZDate) {
         time = arg.getUTCTime();
-    } else if ((typeof arg) === 'number') {
+    } else if (typeof arg === 'number') {
         time = arg;
     } else if (arg === null) {
         time = 0;
@@ -116,7 +121,7 @@ function createDateAsLocalTime(arg) {
 
     if (arg instanceof Date) {
         time = arg.getTime();
-    } else if ((typeof arg) === 'string') {
+    } else if (typeof arg === 'string') {
         time = Date.parse(arg);
     } else {
         throw new Error('Invalid Type');
@@ -133,7 +138,7 @@ function createDateAsLocalTime(arg) {
  * @returns {boolean}
  */
 function useLocalTimeConverter(arg) {
-    return arg instanceof Date || (typeof arg) === 'string';
+    return arg instanceof Date || typeof arg === 'string';
 }
 
 /**
@@ -163,7 +168,7 @@ function TZDate(date) {
  * Get milliseconds which is converted by timezone
  * @returns {number} milliseconds
  */
-TZDate.prototype.getTime = function() {
+TZDate.prototype.getTime = function () {
     var time = this._date.getTime();
 
     return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
@@ -173,7 +178,7 @@ TZDate.prototype.getTime = function() {
  * Get UTC milliseconds
  * @returns {number} milliseconds
  */
-TZDate.prototype.getUTCTime = function() {
+TZDate.prototype.getUTCTime = function () {
     return this._date.getTime();
 };
 
@@ -181,7 +186,7 @@ TZDate.prototype.getUTCTime = function() {
  * toUTCString
  * @returns {string}
  */
-TZDate.prototype.toUTCString = function() {
+TZDate.prototype.toUTCString = function () {
     return this._date.toUTCString();
 };
 
@@ -189,34 +194,34 @@ TZDate.prototype.toUTCString = function() {
  * to Date
  * @returns {Date}
  */
-TZDate.prototype.toDate = function() {
+TZDate.prototype.toDate = function () {
     return this._date;
 };
 
-TZDate.prototype.valueOf = function() {
+TZDate.prototype.valueOf = function () {
     return this.getTime();
 };
 
-TZDate.prototype.addDate = function(day) {
+TZDate.prototype.addDate = function (day) {
     this.setDate(this.getDate() + day);
 
     return this;
 };
 
-TZDate.prototype.addMinutes = function(minutes) {
+TZDate.prototype.addMinutes = function (minutes) {
     this.setMinutes(this.getMinutes() + minutes);
 
     return this;
 };
 
-TZDate.prototype.addMilliseconds = function(milliseconds) {
+TZDate.prototype.addMilliseconds = function (milliseconds) {
     this.setMilliseconds(this.getMilliseconds() + milliseconds);
 
     return this;
 };
 
 /* eslint-disable max-params*/
-TZDate.prototype.setWithRaw = function(y, M, d, h, m, s, ms) {
+TZDate.prototype.setWithRaw = function (y, M, d, h, m, s, ms) {
     this.setFullYear(y, M, d);
     this.setHours(h, m, s, ms);
 
@@ -226,7 +231,7 @@ TZDate.prototype.setWithRaw = function(y, M, d, h, m, s, ms) {
 /**
  * @returns {TZDate} local time
  */
-TZDate.prototype.toLocalTime = function() {
+TZDate.prototype.toLocalTime = function () {
     var time = this.getTime();
     var utcTime = this.getUTCTime();
     var diff = time - utcTime;
@@ -234,14 +239,14 @@ TZDate.prototype.toLocalTime = function() {
     return new TZDate(utcTime - diff);
 };
 
-getterMethods.forEach(function(methodName) {
-    TZDate.prototype[methodName] = function() {
+getterMethods.forEach(function (methodName) {
+    TZDate.prototype[methodName] = function () {
         return this._date[methodName].apply(this._date, arguments);
     };
 });
 
-setterMethods.forEach(function(methodName) {
-    TZDate.prototype[methodName] = function() {
+setterMethods.forEach(function (methodName) {
+    TZDate.prototype[methodName] = function () {
         this._date[methodName].apply(this._date, arguments);
 
         return this.getTime();
@@ -255,7 +260,7 @@ module.exports = {
      * Set offset
      * @param {number} offset - timezone offset based on minutes
      */
-    setOffset: function(offset) {
+    setOffset: function (offset) {
         customOffsetMs = offset * MIN_TO_MS;
     },
 
@@ -263,7 +268,7 @@ module.exports = {
      * Set offset
      * @param {number} offset - timezone offset based on minutes
      */
-    setOffsetByTimezoneOption: function(offset) {
+    setOffsetByTimezoneOption: function (offset) {
         this.setOffset(-offset);
         setByTimezoneOption = true;
     },
@@ -272,7 +277,7 @@ module.exports = {
      * Get offset in case of `setByTimezoneOption`. Or return 0.
      * @returns {number} timezone offset offset minutes
      */
-    getOffset: function() {
+    getOffset: function () {
         if (setByTimezoneOption) {
             return customOffsetMs / MIN_TO_MS;
         }
@@ -284,7 +289,7 @@ module.exports = {
      * Set a callback function to get timezone offset by timestamp
      * @param {function} callback - callback function
      */
-    setOffsetCallback: function(callback) {
+    setOffsetCallback: function (callback) {
         timezoneOffsetCallback = callback;
     },
 
@@ -292,7 +297,7 @@ module.exports = {
      * (Use this method only for testing)
      * Reset system timezone and custom timezone
      */
-    restoreOffset: function() {
+    restoreOffset: function () {
         customOffsetMs = getTimezoneOffset();
-    }
+    },
 };
