@@ -65,16 +65,14 @@ function getCustomTimezoneOffset(timestamp) {
  * @returns {number} local time
  */
 function getLocalTime(time) {
-    var timezoneOffset, customTimezoneOffset, timezoneOffsetDiff, localTime;
+    var customTimezoneOffset, localTime;
 
     if (!setByTimezoneOption) {
         return time;
     }
 
-    timezoneOffset = getTimezoneOffset(time);
     customTimezoneOffset = getCustomTimezoneOffset(time);
-    timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
-    localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+    localTime = time - customTimezoneOffset + nativeOffsetMs; // timezoneOffset;
 
     return localTime;
 }
@@ -300,5 +298,17 @@ module.exports = {
      */
     restoreOffset: function () {
         customOffsetMs = getTimezoneOffset();
+    },
+
+    getNativeOffsetMs: function () {
+        return nativeOffsetMs;
+    },
+
+    /**
+     * Check to use custom timezone option
+     * @returns {boolean} use custom timezone option
+     */
+    hasPrimaryTimezoneCustomSetting: function () {
+        return setByTimezoneOption;
     },
 };

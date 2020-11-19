@@ -6,10 +6,13 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var TZDate = require('../common/timezone').Date;
+var tz = require('../common/timezone');
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
+var tzUtil = require('../common/timezoneUtil');
+var intlUtil = require('../common/intlUtil');
+var TZDate = tz.Date;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -29,8 +32,41 @@ var SCHEDULE_CATEGORY = {
     ALLDAY: 'allday',
 
     /** normal schedule */
-    TIME: 'time'
+    TIME: 'time',
 };
+
+/**
+ * Get duration by custom primary timezone
+ * @param {Date} start render start date
+ * @param {Date} end render end date
+ * @returns {number} duration
+ */
+function getDurationByCustomTimezone(start, end) {
+    // @TODO : 테스트 및 브라우저 호환성 대응 필요
+    var startTime = start.toDate().getTime();
+    var endTime = end.toDate().getTime();
+    var primaryTimezoneCode = tzUtil.getPrimaryTimezoneCode();
+    var parseStart = intlUtil.getTimezoneDate(primaryTimezoneCode, startTime);
+    var parseEnd = intlUtil.getTimezoneDate(primaryTimezoneCode, endTime);
+    var convertedStart = new Date(
+        parseStart[0],
+        parseStart[1] - 1,
+        parseStart[2],
+        parseStart[3],
+        parseStart[4],
+        parseStart[5]
+    );
+    var convertedEnd = new Date(
+        parseEnd[0],
+        parseEnd[1] - 1,
+        parseEnd[2],
+        parseEnd[3],
+        parseEnd[4],
+        parseEnd[5]
+    );
+
+    return convertedEnd.getTime() - convertedStart.getTime();
+}
 
 /**
  * The model of calendar schedules.
@@ -205,7 +241,7 @@ function Schedule() {
 
 Schedule.schema = {
     required: ['title'],
-    dateRange: ['start', 'end']
+    dateRange: ['start', 'end'],
 };
 
 /**
@@ -213,7 +249,7 @@ Schedule.schema = {
  * @param {object} data object for model.
  * @returns {Schedule} Schedule model instance.
  */
-Schedule.create = function(data) {
+Schedule.create = function (data) {
     var inst = new Schedule();
     inst.init(data);
 
@@ -228,7 +264,7 @@ Schedule.create = function(data) {
  * Initialize schedule instance.
  * @param {object} options options.
  */
-Schedule.prototype.init = function(options) {
+Schedule.prototype.init = function (options) {
     options = util.extend({}, options);
     if (options.category === SCHEDULE_CATEGORY.ALLDAY) {
         options.isAllDay = true;
@@ -268,7 +304,7 @@ Schedule.prototype.init = function(options) {
     this.raw = options.raw || null;
 };
 
-Schedule.prototype.setAllDayPeriod = function(start, end) {
+Schedule.prototype.setAllDayPeriod = function (start, end) {
     // If it is an all-day schedule, only the date information of the string is used.
     if (util.isString(start) && start.length === 10) {
         start = datetime.parse(start);
@@ -287,7 +323,7 @@ Schedule.prototype.setAllDayPeriod = function(start, end) {
     this.end = datetime.renderEnd(start, end);
 };
 
-Schedule.prototype.setTimePeriod = function(start, end) {
+Schedule.prototype.setTimePeriod = function (start, end) {
     this.start = new TZDate(start || Date.now());
     this.end = new TZDate(end || this.start);
 
@@ -299,21 +335,21 @@ Schedule.prototype.setTimePeriod = function(start, end) {
 /**
  * @returns {Date} render start date.
  */
-Schedule.prototype.getStarts = function() {
+Schedule.prototype.getStarts = function () {
     return this.start;
 };
 
 /**
  * @returns {Date} render end date.
  */
-Schedule.prototype.getEnds = function() {
+Schedule.prototype.getEnds = function () {
     return this.end;
 };
 
 /**
  * @returns {number} instance unique id.
  */
-Schedule.prototype.cid = function() {
+Schedule.prototype.cid = function () {
     return util.stamp(this);
 };
 
@@ -322,7 +358,7 @@ Schedule.prototype.cid = function() {
  * @param {Schedule} schedule Schedule model instance to compare.
  * @returns {boolean} Return false when not same.
  */
-Schedule.prototype.equals = function(schedule) {
+Schedule.prototype.equals = function (schedule) {
     if (this.id !== schedule.id) {
         return false;
     }
@@ -370,13 +406,15 @@ Schedule.prototype.equals = function(schedule) {
  * return duration between start and end.
  * @returns {Date} duration (UTC)
  */
-Schedule.prototype.duration = function() {
+Schedule.prototype.duration = function () {
     var start = this.getStarts(),
         end = this.getEnds(),
         duration;
 
     if (this.isAllDay) {
         duration = datetime.end(end) - datetime.start(start);
+    } else if (tz.hasPrimaryTimezoneCustomSetting()) {
+        duration = getDurationByCustomTimezone(start, end);
     } else {
         duration = end - start;
     }
@@ -390,7 +428,7 @@ Schedule.prototype.duration = function() {
  * @param {Schedule} schedule The other schedule to compare with this Schedule.
  * @returns {boolean} If the other schedule occurs within the same time as the first object.
  */
-Schedule.prototype.collidesWith = function(schedule) {
+Schedule.prototype.collidesWith = function (schedule) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
         start = schedule.getStarts(),
@@ -413,9 +451,11 @@ Schedule.prototype.collidesWith = function(schedule) {
     start -= goingDuration;
     end += comingDuration;
 
-    if ((start > ownStarts && start < ownEnds) ||
+    if (
+        (start > ownStarts && start < ownEnds) ||
         (end > ownStarts && end < ownEnds) ||
-        (start <= ownStarts && end >= ownEnds)) {
+        (start <= ownStarts && end >= ownEnds)
+    ) {
         return true;
     }
 

@@ -10,6 +10,7 @@ var datetime = require('../../common/datetime');
 var domutil = require('../../common/domutil');
 var View = require('../view');
 var timeTmpl = require('../template/week/time.hbs');
+var tz = require('../../common/timezone');
 
 var forEachArr = util.forEachArray;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
@@ -30,18 +31,21 @@ var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 function Time(options, container, theme) {
     View.call(this, container);
 
-    this.options = util.extend({
-        index: 0,
-        width: 0,
-        ymd: '',
-        isToday: false,
-        pending: false,
-        hourStart: 0,
-        hourEnd: 24,
-        defaultMarginBottom: 2,
-        minHeight: 18.5,
-        isReadOnly: false
-    }, options);
+    this.options = util.extend(
+        {
+            index: 0,
+            width: 0,
+            ymd: '',
+            isToday: false,
+            pending: false,
+            hourStart: 0,
+            hourEnd: 24,
+            defaultMarginBottom: 2,
+            minHeight: 18.5,
+            isReadOnly: false,
+        },
+        options
+    );
 
     this.timeTmpl = timeTmpl;
 
@@ -67,7 +71,7 @@ util.inherit(Time, View);
  * @param {string} str formatted string.
  * @returns {Date} start of date.
  */
-Time.prototype._parseDateGroup = function(str) {
+Time.prototype._parseDateGroup = function (str) {
     var y = parseInt(str.substr(0, 4), 10),
         m = parseInt(str.substr(4, 2), 10),
         d = parseInt(str.substr(6, 2), 10);
@@ -84,7 +88,7 @@ Time.prototype._parseDateGroup = function(str) {
  * @param {object} options - options for calculating schedule element's bound.
  * @returns {object} - left and width
  */
-Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
+Time.prototype._getScheduleViewBoundX = function (viewModel, options) {
     var width = options.baseWidth * (viewModel.extraSpace + 1);
 
     // set width auto when has no collisions.
@@ -94,7 +98,7 @@ Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
 
     return {
         left: options.baseLeft[options.columnIndex],
-        width: width
+        width: width,
     };
 };
 
@@ -104,22 +108,34 @@ Time.prototype._getScheduleViewBoundX = function(viewModel, options) {
  * @param {object} options - options for calculating schedule element's bound.
  * @returns {object} - left and width
  */
-Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
+Time.prototype._getScheduleViewBoundY = function (viewModel, options) {
     var baseMS = options.baseMS;
     var baseHeight = options.baseHeight;
     var croppedStart = false;
     var croppedEnd = false;
     var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
     var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
-    var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
-    // containerHeight : milliseconds in day = x : schedule's milliseconds
-    var top = (baseHeight * offsetStart) / baseMS;
     var modelDuration = viewModel.duration();
-    var height;
-    var duration;
-    var goingDurationHeight;
-    var modelDurationHeight;
-    var comingDurationHeight;
+    var startDayOffset = options.todayStart.toDate().getTimezoneOffset();
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
+    var startOffset = viewModel.valueOf().start.toDate().getTimezoneOffset();
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+    var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
+    var top, height, duration;
+    var goingDurationHeight, modelDurationHeight, comingDurationHeight;
+
+    if (hasPrimaryTimezoneCustomSetting && nativeOffsetMs !== startDayOffset) {
+        // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
+        // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
+        // 접속 시간이 하계시/표준시에 영향을 받지 않고 항상 동일한 위치에 일정이 표시되어야 한다.
+        offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
+        offsetStart += offsetDiffMs;
+    }
+
+    // containerHeight : milliseconds in day = x : schedule's milliseconds
+    top = (baseHeight * offsetStart) / baseMS;
 
     modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
     duration = modelDuration + goingDuration + comingDuration;
@@ -131,7 +147,7 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
 
     if (offsetStart < 0) {
         top = 0;
-        height += ((baseHeight * offsetStart) / baseMS);
+        height += (baseHeight * offsetStart) / baseMS;
         croppedStart = true;
     }
 
@@ -149,7 +165,7 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
         hasGoingDuration: goingDuration > 0,
         hasComingDuration: comingDuration > 0,
         croppedStart: croppedStart,
-        croppedEnd: croppedEnd
+        croppedEnd: croppedEnd,
     };
 };
 
@@ -165,7 +181,7 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
  * it represent rendering index from left sides in view.
  * @returns {object} bound object for supplied view model.
  */
-Time.prototype.getScheduleViewBound = function(viewModel, options) {
+Time.prototype.getScheduleViewBound = function (viewModel, options) {
     var boundX = this._getScheduleViewBoundX(viewModel, options);
     var boundY = this._getScheduleViewBoundY(viewModel, options);
     var schedule = viewModel.model;
@@ -175,10 +191,14 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
         travelBorderColor = null; // follow text color
     }
 
-    return util.extend({
-        isReadOnly: isReadOnly,
-        travelBorderColor: travelBorderColor
-    }, boundX, boundY);
+    return util.extend(
+        {
+            isReadOnly: isReadOnly,
+            travelBorderColor: travelBorderColor,
+        },
+        boundX,
+        boundY
+    );
 };
 
 /**
@@ -187,7 +207,7 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
  * @param {array} matrices The matrices for schedule placing.
  * @param {number} containerHeight - container's height
  */
-Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
+Time.prototype._getBaseViewModel = function (ymd, matrices, containerHeight) {
     var self = this,
         options = this.options,
         hourStart = options.hourStart,
@@ -203,17 +223,17 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
     containerHeight = containerHeight || this.getViewBound().height;
     todayStart = this._parseDateGroup(ymd);
     todayStart.setHours(hourStart);
-    baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
+    baseMS = datetime.millisecondsFrom('hour', hourEnd - hourStart);
 
-    forEachArr(matrices, function(matrix) {
-        var maxRowLength,
-            widthPercent,
-            leftPercents,
-            i;
+    forEachArr(matrices, function (matrix) {
+        var maxRowLength, widthPercent, leftPercents, i;
 
-        maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
-            return row.length;
-        }));
+        maxRowLength = Math.max.apply(
+            null,
+            util.map(matrix, function (row) {
+                return row.length;
+            })
+        );
 
         widthPercent = 100 / maxRowLength;
 
@@ -222,8 +242,8 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
             leftPercents[i] = widthPercent * i;
         }
 
-        forEachArr(matrix, function(row) {
-            forEachArr(row, function(viewModel, col) {
+        forEachArr(matrix, function (row) {
+            forEachArr(row, function (viewModel, col) {
                 var viewBound;
 
                 if (!viewModel) {
@@ -237,7 +257,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
                     baseWidth: widthPercent,
                     baseHeight: containerHeight,
                     columnIndex: col,
-                    isReadOnly: isReadOnly
+                    isReadOnly: isReadOnly,
                 });
 
                 util.extend(viewModel, viewBound);
@@ -249,7 +269,7 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
 /**
  * @returns {Date} - Date of this view.
  */
-Time.prototype.getDate = function() {
+Time.prototype.getDate = function () {
     return this._parseDateGroup(this.options.ymd);
 };
 
@@ -259,12 +279,12 @@ Time.prototype.getDate = function() {
  * @param {array} matrices Matrices for placing schedules
  * @param {number} containerHeight - container's height
  */
-Time.prototype.render = function(ymd, matrices, containerHeight) {
+Time.prototype.render = function (ymd, matrices, containerHeight) {
     this._getBaseViewModel(ymd, matrices, containerHeight);
     this.container.innerHTML = this.timeTmpl({
         matrices: matrices,
         styles: this._getStyles(this.theme),
-        isReadOnly: this.options.isReadOnly
+        isReadOnly: this.options.isReadOnly,
     });
 };
 
@@ -273,7 +293,7 @@ Time.prototype.render = function(ymd, matrices, containerHeight) {
  * @param {Theme} theme - theme instance
  * @returns {object} styles - styles object
  */
-Time.prototype._getStyles = function(theme) {
+Time.prototype._getStyles = function (theme) {
     var styles = {};
     var options = this.options;
 
@@ -288,7 +308,7 @@ Time.prototype._getStyles = function(theme) {
     return styles;
 };
 
-Time.prototype.applyTheme = function() {
+Time.prototype.applyTheme = function () {
     var style = this.container.style;
     var styles = this._getStyles(this.theme);
 
