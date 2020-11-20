@@ -5,12 +5,15 @@
 'use strict';
 
 var util = require('tui-code-snippet');
+var intlUtil = require('./intlUtil');
 
 var MIN_TO_MS = 60 * 1000;
 var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
+var primaryOffset, offsetCalculator;
+var primaryTimezoneCode;
 
 var getterMethods = [
     'getDate',
@@ -32,6 +35,12 @@ var setterMethods = [
     'setMonth',
     'setSeconds',
 ];
+
+var differentOffset = {
+    STANDARD_TO_DST: 1,
+    DST_TO_STANDARD: -1,
+    SAME: 0,
+};
 
 /**
  * Get the timezone offset by timestampe
@@ -72,7 +81,7 @@ function getLocalTime(time) {
     }
 
     customTimezoneOffset = getCustomTimezoneOffset(time);
-    localTime = time - customTimezoneOffset + nativeOffsetMs; // timezoneOffset;
+    localTime = time - customTimezoneOffset + nativeOffsetMs;
 
     return localTime;
 }
@@ -252,16 +261,144 @@ setterMethods.forEach(function (methodName) {
     };
 });
 
+/**
+ * Set offset
+ * @param {number} offset - timezone offset based on minutes
+ */
+function setOffset(offset) {
+    customOffsetMs = offset * MIN_TO_MS;
+}
+
+/**
+ * Set primary offset
+ * @param {number} offset - offset
+ */
+function setPrimaryOffset(offset) {
+    primaryOffset = offset;
+    setOffset(offset);
+}
+
+/**
+ * Return primary offset
+ * @returns {number} offset
+ */
+function getPrimaryOffset() {
+    return util.isNumber(primaryOffset) ? primaryOffset : new Date().getTimezoneOffset();
+}
+
+/**
+ * Set primary timezone code
+ * @param {string} timezoneCode - timezone code (such as 'Asia/Seoul', 'America/New_York')
+ */
+function setPrimaryTimezoneCode(timezoneCode) {
+    primaryTimezoneCode = timezoneCode;
+}
+
+/**
+ * Get offset by timezoneCode
+ * @param {string} timezoneCode - timezone code (such as 'Asia/Seoul', 'America/New_York')
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezone offset
+ */
+function getOffsetByTimezoneCode(timezoneCode, timestamp) {
+    var offset = getPrimaryOffset();
+    var calculator;
+
+    if (!timezoneCode) {
+        return offset;
+    }
+
+    calculator = getOffsetCalculator(timezoneCode);
+
+    return calculator ? calculator(timezoneCode, timestamp) : offset;
+}
+
+/**
+ * Set a calculator function to get timezone offset by timestamp
+ * @param {function} calculator - offset calculator
+ */
+function setOffsetCalculator(calculator) {
+    offsetCalculator = calculator;
+}
+
+/**
+ * Return a function to calculate timezone offset by timestamp
+ * @param {string} timezoneCode - timezone code
+ * @returns {function | null} offset calculator
+ */
+function getOffsetCalculator(timezoneCode) {
+    if (util.isFunction(offsetCalculator)) {
+        return offsetCalculator;
+    }
+
+    if (intlUtil.supportIntl(timezoneCode)) {
+        return intlUtil.offsetCalculator;
+    }
+
+    return null;
+}
+
+/**
+ * Set timezone and offset by timezone option
+ * @param {Timezone} timezoneObj - {@link Timezone}
+ */
+function setPrimaryTimezoneByOption(timezoneObj) {
+    var timezoneCode = timezoneObj.timezone;
+    var timestamp, offset;
+
+    if (!timezoneObj) {
+        return;
+    }
+
+    timestamp = Date.now();
+
+    if (timezoneCode) {
+        setByTimezoneOption = true;
+        setPrimaryTimezoneCode(timezoneCode);
+
+        offset = getOffsetByTimezoneCode(timezoneCode, timestamp);
+
+        if (offset === nativeOffsetMs / MIN_TO_MS) {
+            setByTimezoneOption = false;
+        }
+
+        setPrimaryOffset(offset);
+    }
+}
+
+/**
+ * Get primary timezone code
+ * @returns {string} primary timezone code (such as 'Asia/Seoul', 'America/New_York')
+ */
+function getPrimaryTimezoneCode() {
+    return primaryTimezoneCode;
+}
+
+/**
+ *
+ * @param {number} startTime - start timestamp
+ * @param {number} endTime - end timestamp
+ * @returns {number}
+ */
+function isDifferentOffsetStartAndEndTime(startTime, endTime) {
+    var offset1 = getOffsetByTimezoneCode(primaryTimezoneCode, startTime);
+    var offset2 = getOffsetByTimezoneCode(primaryTimezoneCode, endTime);
+    var result = differentOffset.SAME;
+
+    if (offset1 > offset2) {
+        result = differentOffset.STANDARD_TO_DST; // Standard to DST
+    } else if (offset1 < offset2) {
+        result = differentOffset.DST_TO_STANDARD; // DST to Standard
+    }
+
+    return result;
+}
+
 module.exports = {
     Date: TZDate,
+    differentOffset: differentOffset,
 
-    /**
-     * Set offset
-     * @param {number} offset - timezone offset based on minutes
-     */
-    setOffset: function (offset) {
-        customOffsetMs = offset * MIN_TO_MS;
-    },
+    setOffset: setOffset,
 
     /**
      * Set offset
@@ -311,4 +448,35 @@ module.exports = {
     hasPrimaryTimezoneCustomSetting: function () {
         return setByTimezoneOption;
     },
+
+    setOffsetCalculator: setOffsetCalculator,
+
+    setPrimaryTimezoneByOption: setPrimaryTimezoneByOption,
+
+    getPrimaryOffset: getPrimaryOffset,
+
+    getOffsetByTimezoneCode: getOffsetByTimezoneCode,
+
+    getPrimaryTimezoneCode: getPrimaryTimezoneCode,
+
+    isNativeOsUsingDSTTimezone: function () {
+        var year = new Date().getFullYear();
+        var jan = new Date(year, 0, 1).getTimezoneOffset();
+        var jul = new Date(year, 6, 1).getTimezoneOffset();
+
+        return jan !== jul;
+    },
+
+    isPrimaryUsingDSTTimezone: function () {
+        var year = new Date().getFullYear();
+        var jan = new Date(year, 0, 1);
+        var jul = new Date(year, 6, 1);
+
+        return (
+            getOffsetByTimezoneCode(primaryTimezoneCode, jan) !==
+            getOffsetByTimezoneCode(primaryTimezoneCode, jul)
+        );
+    },
+
+    isDifferentOffsetStartAndEndTime: isDifferentOffsetStartAndEndTime,
 };

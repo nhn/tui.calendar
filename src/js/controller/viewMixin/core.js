@@ -139,19 +139,12 @@ var Core = {
         return function (model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
+            var dateByOffset;
 
-            var nativeOffsetMs = tz.getNativeOffsetMs();
-            var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
-            var startOffset = ownStarts.toDate().getTimezoneOffset();
-            var MIN_TO_MS = 60 * 1000;
-            var offsetDiffMs = 0;
-
-            if (hasPrimaryTimezoneCustomSetting && nativeOffsetMs !== startOffset) {
-                // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
-                // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
-                offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
-                ownStarts = new TZDate(ownStarts.getUTCTime() + offsetDiffMs);
-                ownEnds = new TZDate(ownEnds.getUTCTime() + offsetDiffMs);
+            if (tz.hasPrimaryTimezoneCustomSetting()) {
+                dateByOffset = recalculateDateByOffset(ownStarts, ownEnds);
+                ownStarts = dateByOffset.start;
+                ownEnds = dateByOffset.end;
             }
 
             // shorthand condition of
@@ -267,5 +260,40 @@ var Core = {
         return viewModelColl;
     },
 };
+
+/**
+ * Get range date by custom timezone or native timezone
+ * @param {TZDate} ownStarts start date.
+ * @param {TZDate} ownEnds end date.
+ * @returns {RangeDate} recalculated start and end date
+ */
+function recalculateDateByOffset(ownStarts, ownEnds) {
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var startOffset = ownStarts.toDate().getTimezoneOffset();
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+
+    var primaryTimezoneCode = tz.getPrimaryTimezoneCode();
+    var primaryOffset = tz.getPrimaryOffset();
+    var timezoneOffset = tz.getOffsetByTimezoneCode(primaryTimezoneCode, ownStarts.getTime());
+
+    if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
+        // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
+        // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
+        offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
+    }
+
+    if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+        // 커스텀 타임존영역이 DST가 포함된 두개의 오프셋이 적용되는 타임존인데,
+        // 처음 렌더링되는 일정은 접속 시간에 계산된 오프셋으로 계산되어 그려진다.
+        // 원래 시간대의 오프셋으로 재계산해주어야한다.
+        offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+    }
+
+    return {
+        start: new TZDate(ownStarts.getUTCTime() + offsetDiffMs),
+        end: new TZDate(ownEnds.getUTCTime() + offsetDiffMs),
+    };
+}
 
 module.exports = Core;

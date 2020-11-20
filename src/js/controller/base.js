@@ -14,6 +14,52 @@ var tz = require('../common/timezone');
 var TZDate = tz.Date;
 
 /**
+ * Get range date by custom timezone or native timezone
+ * @param {Schedule} schedule The instance of schedule.
+ * @returns {RangeDate} start and end date
+ */
+function getRangeDateByOffset(schedule) {
+    var scheduleStart = schedule.getStarts();
+    var scheduleEnd = schedule.getEnds();
+    var start = datetime.start(scheduleStart);
+    var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
+    var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
+    var end = datetime.end(endDate);
+
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var startOffset = scheduleStart.toDate().getTimezoneOffset();
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+
+    var primaryTimezoneCode = tz.getPrimaryTimezoneCode();
+    var primaryOffset = tz.getPrimaryOffset();
+    var timezoneOffset = tz.getOffsetByTimezoneCode(primaryTimezoneCode, scheduleStart.getTime());
+
+    if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
+        // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
+        // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
+        offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
+    }
+
+    if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+        // 커스텀 타임존영역이 DST가 포함된 두개의 오프셋이 적용되는 타임존인데,
+        // 처음 렌더링되는 일정은 접속 시간에 계산된 오프셋으로 계산되어 그려진다.
+        // 원래 시간대의 오프셋으로 재계산해주어야한다.
+        offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+    }
+
+    start = datetime.start(scheduleStart.getUTCTime() + offsetDiffMs);
+    end = datetime.end(
+        datetime.convertStartDayToLastDay(new TZDate(scheduleEnd.getUTCTime() + offsetDiffMs))
+    );
+
+    return {
+        start: start,
+        end: end,
+    };
+}
+
+/**
  * @constructor
  * @param {object} options - options for base controller
  * @param {function} [options.groupFunc] - function for group each models {@see Collection#groupBy}
@@ -86,21 +132,12 @@ Base.prototype._getContainDatesInSchedule = function (schedule) {
     var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
     var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
     var end = datetime.end(endDate);
+    var rangeDateByOffset;
 
-    var nativeOffsetMs = tz.getNativeOffsetMs();
-    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
-    var startOffset = scheduleStart.toDate().getTimezoneOffset();
-    var MIN_TO_MS = 60 * 1000;
-    var offsetDiffMs = 0;
-
-    if (hasPrimaryTimezoneCustomSetting && nativeOffsetMs !== startOffset) {
-        // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
-        // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
-        offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
-        start = datetime.start(scheduleStart.getUTCTime() + offsetDiffMs);
-        end = datetime.end(
-            datetime.convertStartDayToLastDay(new TZDate(scheduleEnd.getUTCTime() + offsetDiffMs))
-        );
+    if (tz.hasPrimaryTimezoneCustomSetting()) {
+        rangeDateByOffset = getRangeDateByOffset(schedule);
+        start = rangeDateByOffset.start;
+        end = rangeDateByOffset.end;
     }
 
     return datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);

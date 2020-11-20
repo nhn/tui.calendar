@@ -10,8 +10,7 @@ var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
-var Timezone = require('../../common/timezone');
-var tzUtil = require('../../common/timezoneUtil');
+var tz = require('../../common/timezone');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var View = require('../view');
 var Time = require('./time');
@@ -19,7 +18,7 @@ var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
 var timezoneStickyTmpl = require('../template/week/timezoneSticky.hbs');
 var timegridCurrentTimeTmpl = require('../template/week/timeGridCurrentTime.hbs');
-var TZDate = Timezone.Date;
+var TZDate = tz.Date;
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 var SIXTY_SECONDS = 60;
 var SIXTY_MINUTES = 60;
@@ -103,7 +102,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
  * @returns {number} timezoneOffset - timezone offset
  */
 function getOffsetByTimezoneOption(timezoneObj, timestamp) {
-    return -tzUtil.getOffsetByTimezoneCode(timezoneObj.timezone, timestamp);
+    return -tz.getOffsetByTimezoneCode(timezoneObj.timezone, timestamp);
 }
 
 /**
@@ -165,7 +164,7 @@ function TimeGrid(name, options, panelElement) {
     if (this.options.timezones.length < 1) {
         this.options.timezones = [
             {
-                timezoneOffset: tzUtil.getPrimaryOffset(),
+                timezoneOffset: tz.getPrimaryOffset(),
             },
         ];
     }
@@ -276,7 +275,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function (now, grids, range) {
     var todaymarkerWidth = -1;
     var hourmarkerTimzones = [];
     var opt = this.options;
-    var primaryOffset = tzUtil.getPrimaryOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var viewModel;
 
@@ -324,7 +323,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function (now, grids, range) {
  */
 TimeGrid.prototype._getTimezoneViewModel = function (currentHours, timezonesCollapsed, styles) {
     var opt = this.options;
-    var primaryOffset = tzUtil.getPrimaryOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var timezonesLength = timezones.length;
     var timezoneViewModel = [];

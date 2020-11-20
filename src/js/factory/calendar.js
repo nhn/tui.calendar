@@ -8,18 +8,18 @@ var GA_TRACKING_ID = 'UA-129951699-1';
 
 var util = require('tui-code-snippet'),
     Handlebars = require('handlebars-template-loader/runtime');
-var dw = require('../common/dw'),
-    datetime = require('../common/datetime'),
-    Layout = require('../view/layout'),
-    Drag = require('../handler/drag'),
-    controllerFactory = require('./controller'),
-    weekViewFactory = require('./weekView'),
-    monthViewFactory = require('./monthView'),
-    TZDate = require('../common/timezone').Date,
-    config = require('../config'),
-    timezone = require('../common/timezone'),
-    reqAnimFrame = require('../common/reqAnimFrame');
-var tzUtil = require('../common/timezoneUtil');
+var dw = require('../common/dw');
+var datetime = require('../common/datetime');
+var Layout = require('../view/layout');
+var Drag = require('../handler/drag');
+var controllerFactory = require('./controller');
+var weekViewFactory = require('./weekView');
+var monthViewFactory = require('./monthView');
+var tz = require('../common/timezone');
+var TZDate = tz.Date;
+var config = require('../config');
+var timezone = require('../common/timezone');
+var reqAnimFrame = require('../common/reqAnimFrame');
 
 var mmin = Math.min;
 
@@ -794,13 +794,13 @@ Calendar.prototype._setAdditionalInternalOptions = function (options) {
         offsetCalculator = timeZone.offsetCalculator;
 
         if (util.isFunction(offsetCalculator)) {
-            tzUtil.setOffsetCalculator(offsetCalculator);
+            tz.setOffsetCalculator(offsetCalculator);
         }
 
         zones = timeZone.zones;
 
         if (zones.length) {
-            tzUtil.setPrimaryTimezoneByOption(zones[0]);
+            tz.setPrimaryTimezoneByOption(zones[0]);
         }
     }
 };

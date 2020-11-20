@@ -10,9 +10,9 @@ var tz = require('../common/timezone');
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
-var tzUtil = require('../common/timezoneUtil');
 var intlUtil = require('../common/intlUtil');
 var TZDate = tz.Date;
+var differentOffset = tz.differentOffset;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -36,18 +36,37 @@ var SCHEDULE_CATEGORY = {
 };
 
 /**
- * Get duration by custom primary timezone
+ * Get duration by primary timezone
  * @param {Date} start render start date
  * @param {Date} end render end date
  * @returns {number} duration
  */
-function getDurationByCustomTimezone(start, end) {
+function getDurationByPrimaryTimezone(start, end) {
+    var isDifferentOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
+    var duration = end - start;
+
+    if (isDifferentOffset === differentOffset.DST_TO_STANDARD) {
+        duration -= datetime.MILLISECONDS_PER_HOUR;
+    } else if (isDifferentOffset === differentOffset.STANDARD_TO_DST) {
+        duration += datetime.MILLISECONDS_PER_HOUR;
+    }
+
+    return duration;
+}
+
+/**
+ * Get duration by native timezone
+ * @param {Date} start render start date
+ * @param {Date} end render end date
+ * @returns {number} duration
+ */
+function getDurationByNativeTimezone(start, end) {
     // @TODO : 테스트 및 브라우저 호환성 대응 필요
     var startTime = start.toDate().getTime();
     var endTime = end.toDate().getTime();
-    var primaryTimezoneCode = tzUtil.getPrimaryTimezoneCode();
-    var parseStart = intlUtil.getTimezoneDate(primaryTimezoneCode, startTime);
-    var parseEnd = intlUtil.getTimezoneDate(primaryTimezoneCode, endTime);
+    var timezoneCode = tz.getPrimaryTimezoneCode();
+    var parseStart = intlUtil.getTimezoneDate(timezoneCode, startTime);
+    var parseEnd = intlUtil.getTimezoneDate(timezoneCode, endTime);
     var convertedStart = new Date(
         parseStart[0],
         parseStart[1] - 1,
@@ -410,11 +429,14 @@ Schedule.prototype.duration = function () {
     var start = this.getStarts(),
         end = this.getEnds(),
         duration;
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
 
     if (this.isAllDay) {
         duration = datetime.end(end) - datetime.start(start);
-    } else if (tz.hasPrimaryTimezoneCustomSetting()) {
-        duration = getDurationByCustomTimezone(start, end);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
+        duration = getDurationByNativeTimezone(start, end);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isPrimaryUsingDSTTimezone()) {
+        duration = getDurationByPrimaryTimezone(start, end);
     } else {
         duration = end - start;
     }
