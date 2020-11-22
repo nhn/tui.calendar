@@ -152,7 +152,7 @@ var Core = {
             // (ownStarts >= start && ownEnds <= end) ||
             // (ownStarts < start && ownEnds >= start) ||
             // (ownEnds > end && ownStarts <= end)
-            return !(ownEnds <= start || ownStarts > end);
+            return !(ownEnds < start || ownStarts > end);
         };
     },
 

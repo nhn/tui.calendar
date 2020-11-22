@@ -12,8 +12,8 @@ var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
-var primaryOffset, offsetCalculator;
-var primaryTimezoneCode;
+var offsetCalculator = null;
+var primaryOffset, primaryTimezoneCode;
 
 var getterMethods = [
     'getDate',
@@ -408,6 +408,7 @@ module.exports = {
      */
     setOffsetByTimezoneOption: function (offset) {
         this.setOffset(-offset);
+        primaryOffset = -offset;
         setByTimezoneOption = true;
     },
 
@@ -451,6 +452,10 @@ module.exports = {
         return setByTimezoneOption;
     },
 
+    resetCustomSetting: function () {
+        setByTimezoneOption = false;
+    },
+
     setOffsetCalculator: setOffsetCalculator,
 
     setPrimaryTimezoneByOption: setPrimaryTimezoneByOption,
@@ -481,4 +486,5 @@ module.exports = {
     },
 
     isDifferentOffsetStartAndEndTime: isDifferentOffsetStartAndEndTime,
+    setPrimaryTimezoneCode: setPrimaryTimezoneCode,
 };

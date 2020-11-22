@@ -57,7 +57,7 @@ function calculateOffset(parts, date) {
 
 /**
  * Check if browser supports Intl, Intl.DateTimeFormat, formatToParts API
- * @param {string} timezoneCode - timezone
+ * @param {string} timezoneCode - timezone (e.g. 'Asia/Seoul', 'Americal/New_York')
  * @returns {boolean} supported
  */
 function supportIntl(timezoneCode) {
@@ -111,23 +111,9 @@ function offsetCalculator(timezoneCode, timestamp) {
     return -calculateOffset(parseOffset(formatter, date), date);
 }
 
-/**
- * Get offset of the time by timezone
- * @param {string} timezoneCode - timezone (e.g. 'Asia/Seoul', 'America/New_York')
- * @param {number} timestamp - timestamp
- * @returns {number} offset
- */
-function getTimezoneDate(timezoneCode, timestamp) {
-    var formatter = getIntlFormatter(timezoneCode);
-    var date = new Date(timestamp);
-
-    return parseOffset(formatter, date);
-}
-
 intlUtil = {
     supportIntl: supportIntl,
     offsetCalculator: offsetCalculator,
-    getTimezoneDate: getTimezoneDate,
 };
 
 module.exports = intlUtil;
