@@ -801,6 +801,11 @@ Calendar.prototype._setAdditionalInternalOptions = function (options) {
 
         if (zones.length) {
             tz.setPrimaryTimezoneByOption(zones[0]);
+
+            if (util.isNumber(zones[0].timezoneOffset)) {
+                // @deprecated timezoneOffset property will be deprecated. use timezone property
+                tz.setOffsetByTimezoneOption(zones[0].timezoneOffset);
+            }
         }
     }
 };

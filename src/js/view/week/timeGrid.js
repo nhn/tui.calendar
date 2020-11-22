@@ -102,7 +102,16 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
  * @returns {number} timezoneOffset - timezone offset
  */
 function getOffsetByTimezoneOption(timezoneObj, timestamp) {
-    return -tz.getOffsetByTimezoneCode(timezoneObj.timezone, timestamp);
+    if (util.isString(timezoneObj.timezone)) {
+        return -tz.getOffsetByTimezoneCode(timezoneObj.timezone, timestamp);
+    }
+
+    // @deprecated timezoneOffset property will be deprecated
+    if (util.isNumber(timezoneObj.timezoneOffset)) {
+        return timezoneObj.timezoneOffset;
+    }
+
+    return -tz.getPrimaryOffset();
 }
 
 /**
