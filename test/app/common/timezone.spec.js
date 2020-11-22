@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable vars-on-top */
 'use strict';
 
