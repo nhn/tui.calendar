@@ -35,7 +35,6 @@
   "devDependencies": {
     "css-loader": "^3.2.0",
     "eslint": "^4.19.1",
-    "eslint-config-prettier": "^6.15.0",
     "eslint-config-tui": "^1.0.3",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
