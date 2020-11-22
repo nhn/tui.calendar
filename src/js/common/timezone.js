@@ -23,7 +23,7 @@ var getterMethods = [
     'getMilliseconds',
     'getMinutes',
     'getMonth',
-    'getSeconds',
+    'getSeconds'
 ];
 
 var setterMethods = [
@@ -33,13 +33,13 @@ var setterMethods = [
     'setMilliseconds',
     'setMinutes',
     'setMonth',
-    'setSeconds',
+    'setSeconds'
 ];
 
 var differentOffset = {
     STANDARD_TO_DST: 1,
     DST_TO_STANDARD: -1,
-    SAME: 0,
+    SAME: 0
 };
 
 /**
@@ -176,7 +176,7 @@ function TZDate(date) {
  * Get milliseconds which is converted by timezone
  * @returns {number} milliseconds
  */
-TZDate.prototype.getTime = function () {
+TZDate.prototype.getTime = function() {
     var time = this._date.getTime();
 
     return time + getCustomTimezoneOffset(time) - getTimezoneOffset(time);
@@ -186,7 +186,7 @@ TZDate.prototype.getTime = function () {
  * Get UTC milliseconds
  * @returns {number} milliseconds
  */
-TZDate.prototype.getUTCTime = function () {
+TZDate.prototype.getUTCTime = function() {
     return this._date.getTime();
 };
 
@@ -194,7 +194,7 @@ TZDate.prototype.getUTCTime = function () {
  * toUTCString
  * @returns {string}
  */
-TZDate.prototype.toUTCString = function () {
+TZDate.prototype.toUTCString = function() {
     return this._date.toUTCString();
 };
 
@@ -202,34 +202,34 @@ TZDate.prototype.toUTCString = function () {
  * to Date
  * @returns {Date}
  */
-TZDate.prototype.toDate = function () {
+TZDate.prototype.toDate = function() {
     return this._date;
 };
 
-TZDate.prototype.valueOf = function () {
+TZDate.prototype.valueOf = function() {
     return this.getTime();
 };
 
-TZDate.prototype.addDate = function (day) {
+TZDate.prototype.addDate = function(day) {
     this.setDate(this.getDate() + day);
 
     return this;
 };
 
-TZDate.prototype.addMinutes = function (minutes) {
+TZDate.prototype.addMinutes = function(minutes) {
     this.setMinutes(this.getMinutes() + minutes);
 
     return this;
 };
 
-TZDate.prototype.addMilliseconds = function (milliseconds) {
+TZDate.prototype.addMilliseconds = function(milliseconds) {
     this.setMilliseconds(this.getMilliseconds() + milliseconds);
 
     return this;
 };
 
 /* eslint-disable max-params*/
-TZDate.prototype.setWithRaw = function (y, M, d, h, m, s, ms) {
+TZDate.prototype.setWithRaw = function(y, M, d, h, m, s, ms) {
     this.setFullYear(y, M, d);
     this.setHours(h, m, s, ms);
 
@@ -239,7 +239,7 @@ TZDate.prototype.setWithRaw = function (y, M, d, h, m, s, ms) {
 /**
  * @returns {TZDate} local time
  */
-TZDate.prototype.toLocalTime = function () {
+TZDate.prototype.toLocalTime = function() {
     var time = this.getTime();
     var utcTime = this.getUTCTime();
     var diff = time - utcTime;
@@ -247,14 +247,14 @@ TZDate.prototype.toLocalTime = function () {
     return new TZDate(utcTime - diff);
 };
 
-getterMethods.forEach(function (methodName) {
-    TZDate.prototype[methodName] = function () {
+getterMethods.forEach(function(methodName) {
+    TZDate.prototype[methodName] = function() {
         return this._date[methodName].apply(this._date, arguments);
     };
 });
 
-setterMethods.forEach(function (methodName) {
-    TZDate.prototype[methodName] = function () {
+setterMethods.forEach(function(methodName) {
+    TZDate.prototype[methodName] = function() {
         this._date[methodName].apply(this._date, arguments);
 
         return this.getTime();
@@ -393,7 +393,7 @@ function isDifferentOffsetStartAndEndTime(startTime, endTime) {
 
     return {
         isOffsetChanged: result,
-        offsetDiff: offset1 - offset2,
+        offsetDiff: offset1 - offset2
     };
 }
 
@@ -406,7 +406,7 @@ module.exports = {
      * Set offset
      * @param {number} offset - timezone offset based on minutes
      */
-    setOffsetByTimezoneOption: function (offset) {
+    setOffsetByTimezoneOption: function(offset) {
         this.setOffset(-offset);
         primaryOffset = -offset;
         setByTimezoneOption = true;
@@ -416,7 +416,7 @@ module.exports = {
      * Get offset in case of `setByTimezoneOption`. Or return 0.
      * @returns {number} timezone offset offset minutes
      */
-    getOffset: function () {
+    getOffset: function() {
         if (setByTimezoneOption) {
             return customOffsetMs / MIN_TO_MS;
         }
@@ -428,7 +428,7 @@ module.exports = {
      * Set a callback function to get timezone offset by timestamp
      * @param {function} callback - callback function
      */
-    setOffsetCallback: function (callback) {
+    setOffsetCallback: function(callback) {
         timezoneOffsetCallback = callback;
     },
 
@@ -436,11 +436,11 @@ module.exports = {
      * (Use this method only for testing)
      * Reset system timezone and custom timezone
      */
-    restoreOffset: function () {
+    restoreOffset: function() {
         customOffsetMs = getTimezoneOffset();
     },
 
-    getNativeOffsetMs: function () {
+    getNativeOffsetMs: function() {
         return nativeOffsetMs;
     },
 
@@ -448,11 +448,11 @@ module.exports = {
      * Check to use custom timezone option
      * @returns {boolean} use custom timezone option
      */
-    hasPrimaryTimezoneCustomSetting: function () {
+    hasPrimaryTimezoneCustomSetting: function() {
         return setByTimezoneOption;
     },
 
-    resetCustomSetting: function () {
+    resetCustomSetting: function() {
         setByTimezoneOption = false;
     },
 
@@ -466,7 +466,7 @@ module.exports = {
 
     getPrimaryTimezoneCode: getPrimaryTimezoneCode,
 
-    isNativeOsUsingDSTTimezone: function () {
+    isNativeOsUsingDSTTimezone: function() {
         var year = new Date().getFullYear();
         var jan = new Date(year, 0, 1).getTimezoneOffset();
         var jul = new Date(year, 6, 1).getTimezoneOffset();
@@ -474,7 +474,7 @@ module.exports = {
         return jan !== jul;
     },
 
-    isPrimaryUsingDSTTimezone: function () {
+    isPrimaryUsingDSTTimezone: function() {
         var year = new Date().getFullYear();
         var jan = new Date(year, 0, 1);
         var jul = new Date(year, 6, 1);
@@ -486,5 +486,5 @@ module.exports = {
     },
 
     isDifferentOffsetStartAndEndTime: isDifferentOffsetStartAndEndTime,
-    setPrimaryTimezoneCode: setPrimaryTimezoneCode,
+    setPrimaryTimezoneCode: setPrimaryTimezoneCode
 };

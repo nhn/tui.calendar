@@ -1,17 +1,16 @@
-/* eslint-disable space-before-function-paren */
 'use strict';
 
 var util = require('tui-code-snippet');
 var intlUtil = require('common/intlUtil');
 
-describe('common/intlUtil', function () {
-    it('supportIntl()', function () {
+describe('common/intlUtil', function() {
+    it('supportIntl()', function() {
         var supported = !util.browser.msie;
 
         expect(intlUtil.supportIntl('Asia/Seoul')).toBe(supported);
     });
 
-    it('offsetCalculator()', function () {
+    it('offsetCalculator()', function() {
         var d1 = new Date(2020, 10, 22, 0, 0, 0);
         var d2 = new Date(2020, 5, 22, 0, 0, 0);
 

@@ -38,7 +38,7 @@ function getRangeDateByOffset(schedule) {
     if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
         // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
         // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
-        offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
     }
 
     if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
@@ -55,7 +55,7 @@ function getRangeDateByOffset(schedule) {
 
     return {
         start: start,
-        end: end,
+        end: end
     };
 }
 
@@ -77,7 +77,7 @@ function Base(options) {
      */
     this.groupFunc =
         options.groupFunc ||
-        function (viewModel) {
+        function(viewModel) {
             var model = viewModel.model;
 
             if (viewModel.model.isAllDay) {
@@ -125,7 +125,7 @@ function Base(options) {
  * @param {Schedule} schedule The instance of schedule.
  * @returns {array} contain dates.
  */
-Base.prototype._getContainDatesInSchedule = function (schedule) {
+Base.prototype._getContainDatesInSchedule = function(schedule) {
     var scheduleStart = schedule.getStarts();
     var scheduleEnd = schedule.getEnds();
     var start = datetime.start(scheduleStart);
@@ -155,10 +155,10 @@ Base.prototype._getContainDatesInSchedule = function (schedule) {
  * @param {boolean} silent - set true then don't fire events.
  * @returns {Schedule} The instance of Schedule that created.
  */
-Base.prototype.createSchedule = function (options, silent) {
+Base.prototype.createSchedule = function(options, silent) {
     var schedule,
         scheduleData = {
-            data: options,
+            data: options
         };
 
     /**
@@ -189,10 +189,10 @@ Base.prototype.createSchedule = function (options, silent) {
  * @param {boolean} [silent=false] - set true then don't fire events.
  * @returns {Schedule[]} The instance list of Schedule that created.
  */
-Base.prototype.createSchedules = function (dataList, silent) {
+Base.prototype.createSchedules = function(dataList, silent) {
     var self = this;
 
-    return util.map(dataList, function (data) {
+    return util.map(dataList, function(data) {
         return self.createSchedule(data, silent);
     });
 };
@@ -205,7 +205,7 @@ Base.prototype.createSchedules = function (dataList, silent) {
  * @returns {Schedule} updated schedule instance
  */
 // eslint-disable-next-line complexity
-Base.prototype.updateSchedule = function (schedule, options) {
+Base.prototype.updateSchedule = function(schedule, options) {
     var start = options.start || schedule.start;
     var end = options.end || schedule.end;
 
@@ -303,7 +303,7 @@ Base.prototype.updateSchedule = function (schedule, options) {
  * @param {Schedule} schedule - schedule instance to delete
  * @returns {Schedule} deleted model instance.
  */
-Base.prototype.deleteSchedule = function (schedule) {
+Base.prototype.deleteSchedule = function(schedule) {
     this._removeFromMatrix(schedule);
     this.schedules.remove(schedule);
 
@@ -314,11 +314,11 @@ Base.prototype.deleteSchedule = function (schedule) {
  * Set date matrix to supplied schedule instance.
  * @param {Schedule} schedule - instance of schedule.
  */
-Base.prototype._addToMatrix = function (schedule) {
+Base.prototype._addToMatrix = function(schedule) {
     var ownMatrix = this.dateMatrix;
     var containDates = this._getContainDatesInSchedule(schedule);
 
-    util.forEach(containDates, function (date) {
+    util.forEach(containDates, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),
             matrix = (ownMatrix[ymd] = ownMatrix[ymd] || []);
 
@@ -330,12 +330,12 @@ Base.prototype._addToMatrix = function (schedule) {
  * Remove schedule's id from matrix.
  * @param {Schedule} schedule - instance of schedule
  */
-Base.prototype._removeFromMatrix = function (schedule) {
+Base.prototype._removeFromMatrix = function(schedule) {
     var modelID = util.stamp(schedule);
 
     util.forEach(
         this.dateMatrix,
-        function (matrix) {
+        function(matrix) {
             var index = util.inArray(modelID, matrix);
 
             if (~index) {
@@ -353,7 +353,7 @@ Base.prototype._removeFromMatrix = function (schedule) {
  * @param {boolean} silent - set true then don't fire events.
  * @returns {Schedule} The instance of Schedule that added.
  */
-Base.prototype.addSchedule = function (schedule, silent) {
+Base.prototype.addSchedule = function(schedule, silent) {
     this.schedules.add(schedule);
     this._addToMatrix(schedule);
 
@@ -375,7 +375,7 @@ Base.prototype.addSchedule = function (schedule, silent) {
  * @param {Collection} scheduleCollection - collection of schedule model.
  * @returns {object.<string, Collection>} splitted schedule model collections.
  */
-Base.prototype.splitScheduleByDateRange = function (start, end, scheduleCollection) {
+Base.prototype.splitScheduleByDateRange = function(start, end, scheduleCollection) {
     var range = datetime.range(
             datetime.start(start),
             datetime.end(end),
@@ -384,7 +384,7 @@ Base.prototype.splitScheduleByDateRange = function (start, end, scheduleCollecti
         ownMatrix = this.dateMatrix,
         result = {};
 
-    util.forEachArray(range, function (date) {
+    util.forEachArray(range, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),
             matrix = ownMatrix[ymd],
             collection;
@@ -392,8 +392,8 @@ Base.prototype.splitScheduleByDateRange = function (start, end, scheduleCollecti
         collection = result[ymd] = common.createScheduleCollection();
 
         if (matrix && matrix.length) {
-            util.forEachArray(matrix, function (id) {
-                scheduleCollection.doWhenHas(id, function (schedule) {
+            util.forEachArray(matrix, function(id) {
+                scheduleCollection.doWhenHas(id, function(schedule) {
                     collection.add(schedule);
                 });
             });
@@ -411,7 +411,7 @@ Base.prototype.splitScheduleByDateRange = function (start, end, scheduleCollecti
  * @param {TZDate} end end date.
  * @returns {object.<string, Collection>} schedule collection grouped by dates.
  */
-Base.prototype.findByDateRange = function (start, end) {
+Base.prototype.findByDateRange = function(start, end) {
     var range = datetime.range(
             datetime.start(start),
             datetime.end(end),
@@ -425,7 +425,7 @@ Base.prototype.findByDateRange = function (start, end) {
         ymd,
         viewModels;
 
-    util.forEachArray(range, function (date) {
+    util.forEachArray(range, function(date) {
         ymd = dformat(date, 'YYYYMMDD');
         matrix = ownMatrix[ymd];
         viewModels = result[ymd] = common.createScheduleCollection();
@@ -433,7 +433,7 @@ Base.prototype.findByDateRange = function (start, end) {
         if (matrix && matrix.length) {
             viewModels.add.apply(
                 viewModels,
-                util.map(matrix, function (id) {
+                util.map(matrix, function(id) {
                     return ScheduleViewModel.create(ownSchedules[id]);
                 })
             );
@@ -443,7 +443,7 @@ Base.prototype.findByDateRange = function (start, end) {
     return result;
 };
 
-Base.prototype.clearSchedules = function () {
+Base.prototype.clearSchedules = function() {
     this.dateMatrix = {};
     this.schedules.clear();
     /**
@@ -459,7 +459,7 @@ Base.prototype.clearSchedules = function () {
  * @param {themeConfig} theme - theme keys, styles
  * @returns {Array.<string>} keys - error keys not predefined.
  */
-Base.prototype.setTheme = function (theme) {
+Base.prototype.setTheme = function(theme) {
     return this.theme.setStyles(theme);
 };
 
@@ -467,7 +467,7 @@ Base.prototype.setTheme = function (theme) {
  * Set calendar list
  * @param {Array.<Calendar>} calendars - calendar list
  */
-Base.prototype.setCalendars = function (calendars) {
+Base.prototype.setCalendars = function(calendars) {
     this.calendars = calendars;
 };
 

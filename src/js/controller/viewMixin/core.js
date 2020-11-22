@@ -20,7 +20,7 @@ var Core = {
      * @param {array} viewModels List of viewmodels.
      * @returns {array} Collision Group.
      */
-    getCollisionGroup: function (viewModels) {
+    getCollisionGroup: function(viewModels) {
         var collisionGroups = [],
             foundPrevCollisionSchedule = false,
             previousScheduleList;
@@ -30,16 +30,16 @@ var Core = {
         }
 
         collisionGroups[0] = [util.stamp(viewModels[0].valueOf())];
-        forEachArr(viewModels.slice(1), function (schedule, index) {
+        forEachArr(viewModels.slice(1), function(schedule, index) {
             foundPrevCollisionSchedule = false;
             previousScheduleList = aps.apply(viewModels, [0, index + 1]).reverse();
 
-            forEachArr(previousScheduleList, function (previous) {
+            forEachArr(previousScheduleList, function(previous) {
                 if (schedule.collidesWith(previous)) {
                     // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
                     foundPrevCollisionSchedule = true;
 
-                    forEachArr(collisionGroups.slice(0).reverse(), function (group) {
+                    forEachArr(collisionGroups.slice(0).reverse(), function(group) {
                         if (~util.inArray(util.stamp(previous.valueOf()), group)) {
                             // If you find a previous schedule that overlaps, include it in the Collision Group to which it belongs.
                             group.push(util.stamp(schedule.valueOf()));
@@ -71,7 +71,7 @@ var Core = {
      * @param {number} col Column index.
      * @returns {number} Last row number in column.
      */
-    getLastRowInColumn: function (arr2d, col) {
+    getLastRowInColumn: function(arr2d, col) {
         var row = arr2d.length;
 
         while (row > 0) {
@@ -90,14 +90,14 @@ var Core = {
      * @param {array[]} collisionGroups Collision groups for schedule set.
      * @returns {array} matrices
      */
-    getMatrices: function (collection, collisionGroups) {
+    getMatrices: function(collection, collisionGroups) {
         var result = [],
             getLastRowInColumn = Core.getLastRowInColumn;
 
-        forEachArr(collisionGroups, function (group) {
+        forEachArr(collisionGroups, function(group) {
             var matrix = [[]];
 
-            forEachArr(group, function (scheduleID) {
+            forEachArr(group, function(scheduleID) {
                 var schedule = collection.items[scheduleID],
                     col = 0,
                     found = false,
@@ -135,8 +135,8 @@ var Core = {
      * @param {Date} end - end date
      * @returns {function} schedule filter function
      */
-    getScheduleInDateRangeFilter: function (start, end) {
-        return function (model) {
+    getScheduleInDateRangeFilter: function(start, end) {
+        return function(model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
             var dateByOffset;
@@ -163,19 +163,19 @@ var Core = {
      * @param {array} matrices - matrices from controller
      * @param {function} [iteratee] - iteratee function invoke each view models
      */
-    positionViewModels: function (start, end, matrices, iteratee) {
+    positionViewModels: function(start, end, matrices, iteratee) {
         var ymdListToRender;
 
         ymdListToRender = util.map(
             datetime.range(start, end, datetime.MILLISECONDS_PER_DAY),
-            function (date) {
+            function(date) {
                 return datetime.format(date, 'YYYYMMDD');
             }
         );
 
-        forEachArr(matrices, function (matrix) {
-            forEachArr(matrix, function (column) {
-                forEachArr(column, function (viewModel, index) {
+        forEachArr(matrices, function(matrix) {
+            forEachArr(matrix, function(column) {
+                forEachArr(column, function(viewModel, index) {
                     var ymd, dateLength, startDate, endDate;
 
                     if (!viewModel) {
@@ -212,7 +212,7 @@ var Core = {
      * @returns {ScheduleViewModel} return view model when third parameter is
      *  view model
      */
-    limitRenderRange: function (start, end, viewModelColl) {
+    limitRenderRange: function(start, end, viewModelColl) {
         /**
          * Limit render range for view models
          * @param {ScheduleViewModel} viewModel - view model instance
@@ -246,19 +246,19 @@ var Core = {
      * @param {Collection} modelColl - collection of schedule model
      * @returns {Collection} collection of schedule view model
      */
-    convertToViewModel: function (modelColl) {
+    convertToViewModel: function(modelColl) {
         var viewModelColl;
 
-        viewModelColl = new Collection(function (viewModel) {
+        viewModelColl = new Collection(function(viewModel) {
             return viewModel.cid();
         });
 
-        modelColl.each(function (model) {
+        modelColl.each(function(model) {
             viewModelColl.add(ScheduleViewModel.create(model));
         });
 
         return viewModelColl;
-    },
+    }
 };
 
 /**
@@ -280,7 +280,7 @@ function recalculateDateByOffset(ownStarts, ownEnds) {
     if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
         // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
         // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
-        offsetDiffMs = startOffset * MIN_TO_MS - nativeOffsetMs;
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
     }
 
     if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
@@ -292,7 +292,7 @@ function recalculateDateByOffset(ownStarts, ownEnds) {
 
     return {
         start: new TZDate(ownStarts.getUTCTime() + offsetDiffMs),
-        end: new TZDate(ownEnds.getUTCTime() + offsetDiffMs),
+        end: new TZDate(ownEnds.getUTCTime() + offsetDiffMs)
     };
 }
 

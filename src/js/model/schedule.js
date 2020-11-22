@@ -31,7 +31,7 @@ var SCHEDULE_CATEGORY = {
     ALLDAY: 'allday',
 
     /** normal schedule */
-    TIME: 'time',
+    TIME: 'time'
 };
 
 /**
@@ -62,7 +62,7 @@ function getDurationByNativeTimezone(start, end) {
     var startOffset = start.toDate().getTimezoneOffset();
     var endOffset = end.toDate().getTimezoneOffset();
 
-    return end - start + (endOffset - startOffset) * MIN_TO_MS;
+    return (end - start) + ((endOffset - startOffset) * MIN_TO_MS);
 }
 
 /**
@@ -238,7 +238,7 @@ function Schedule() {
 
 Schedule.schema = {
     required: ['title'],
-    dateRange: ['start', 'end'],
+    dateRange: ['start', 'end']
 };
 
 /**
@@ -246,7 +246,7 @@ Schedule.schema = {
  * @param {object} data object for model.
  * @returns {Schedule} Schedule model instance.
  */
-Schedule.create = function (data) {
+Schedule.create = function(data) {
     var inst = new Schedule();
     inst.init(data);
 
@@ -261,7 +261,7 @@ Schedule.create = function (data) {
  * Initialize schedule instance.
  * @param {object} options options.
  */
-Schedule.prototype.init = function (options) {
+Schedule.prototype.init = function(options) {
     options = util.extend({}, options);
     if (options.category === SCHEDULE_CATEGORY.ALLDAY) {
         options.isAllDay = true;
@@ -301,7 +301,7 @@ Schedule.prototype.init = function (options) {
     this.raw = options.raw || null;
 };
 
-Schedule.prototype.setAllDayPeriod = function (start, end) {
+Schedule.prototype.setAllDayPeriod = function(start, end) {
     // If it is an all-day schedule, only the date information of the string is used.
     if (util.isString(start) && start.length === 10) {
         start = datetime.parse(start);
@@ -320,7 +320,7 @@ Schedule.prototype.setAllDayPeriod = function (start, end) {
     this.end = datetime.renderEnd(start, end);
 };
 
-Schedule.prototype.setTimePeriod = function (start, end) {
+Schedule.prototype.setTimePeriod = function(start, end) {
     this.start = new TZDate(start || Date.now());
     this.end = new TZDate(end || this.start);
 
@@ -332,21 +332,21 @@ Schedule.prototype.setTimePeriod = function (start, end) {
 /**
  * @returns {Date} render start date.
  */
-Schedule.prototype.getStarts = function () {
+Schedule.prototype.getStarts = function() {
     return this.start;
 };
 
 /**
  * @returns {Date} render end date.
  */
-Schedule.prototype.getEnds = function () {
+Schedule.prototype.getEnds = function() {
     return this.end;
 };
 
 /**
  * @returns {number} instance unique id.
  */
-Schedule.prototype.cid = function () {
+Schedule.prototype.cid = function() {
     return util.stamp(this);
 };
 
@@ -355,7 +355,7 @@ Schedule.prototype.cid = function () {
  * @param {Schedule} schedule Schedule model instance to compare.
  * @returns {boolean} Return false when not same.
  */
-Schedule.prototype.equals = function (schedule) {
+Schedule.prototype.equals = function(schedule) {
     if (this.id !== schedule.id) {
         return false;
     }
@@ -403,7 +403,7 @@ Schedule.prototype.equals = function (schedule) {
  * return duration between start and end.
  * @returns {Date} duration (UTC)
  */
-Schedule.prototype.duration = function () {
+Schedule.prototype.duration = function() {
     var start = this.getStarts(),
         end = this.getEnds(),
         duration;
@@ -428,7 +428,7 @@ Schedule.prototype.duration = function () {
  * @param {Schedule} schedule The other schedule to compare with this Schedule.
  * @returns {boolean} If the other schedule occurs within the same time as the first object.
  */
-Schedule.prototype.collidesWith = function (schedule) {
+Schedule.prototype.collidesWith = function(schedule) {
     var ownStarts = this.getStarts(),
         ownEnds = this.getEnds(),
         start = schedule.getStarts(),

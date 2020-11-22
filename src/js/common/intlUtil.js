@@ -10,7 +10,7 @@ var typeToPos = {
     day: 2,
     hour: 3,
     minute: 4,
-    second: 5,
+    second: 5
 };
 
 /**
@@ -91,7 +91,7 @@ function getIntlFormatter(timezoneCode) {
             hour: 'numeric',
             minute: 'numeric',
             second: 'numeric',
-            timeZone: timezoneCode,
+            timeZone: timezoneCode
         });
     }
 
@@ -113,7 +113,7 @@ function offsetCalculator(timezoneCode, timestamp) {
 
 intlUtil = {
     supportIntl: supportIntl,
-    offsetCalculator: offsetCalculator,
+    offsetCalculator: offsetCalculator
 };
 
 module.exports = intlUtil;
