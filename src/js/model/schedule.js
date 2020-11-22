@@ -10,9 +10,8 @@ var tz = require('../common/timezone');
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
-var intlUtil = require('../common/intlUtil');
 var TZDate = tz.Date;
-var differentOffset = tz.differentOffset;
+var MIN_TO_MS = 60 * 1000;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -42,13 +41,12 @@ var SCHEDULE_CATEGORY = {
  * @returns {number} duration
  */
 function getDurationByPrimaryTimezone(start, end) {
-    var isDifferentOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
+    var checkOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
+    var isOffsetChanged = checkOffset.isOffsetChanged;
     var duration = end - start;
 
-    if (isDifferentOffset === differentOffset.DST_TO_STANDARD) {
-        duration -= datetime.MILLISECONDS_PER_HOUR;
-    } else if (isDifferentOffset === differentOffset.STANDARD_TO_DST) {
-        duration += datetime.MILLISECONDS_PER_HOUR;
+    if (isOffsetChanged) {
+        duration += checkOffset.offsetDiff * MIN_TO_MS;
     }
 
     return duration;
@@ -61,30 +59,10 @@ function getDurationByPrimaryTimezone(start, end) {
  * @returns {number} duration
  */
 function getDurationByNativeTimezone(start, end) {
-    // @TODO : 테스트 및 브라우저 호환성 대응 필요
-    var startTime = start.toDate().getTime();
-    var endTime = end.toDate().getTime();
-    var timezoneCode = tz.getPrimaryTimezoneCode();
-    var parseStart = intlUtil.getTimezoneDate(timezoneCode, startTime);
-    var parseEnd = intlUtil.getTimezoneDate(timezoneCode, endTime);
-    var convertedStart = new Date(
-        parseStart[0],
-        parseStart[1] - 1,
-        parseStart[2],
-        parseStart[3],
-        parseStart[4],
-        parseStart[5]
-    );
-    var convertedEnd = new Date(
-        parseEnd[0],
-        parseEnd[1] - 1,
-        parseEnd[2],
-        parseEnd[3],
-        parseEnd[4],
-        parseEnd[5]
-    );
+    var startOffset = start.toDate().getTimezoneOffset();
+    var endOffset = end.toDate().getTimezoneOffset();
 
-    return convertedEnd.getTime() - convertedStart.getTime();
+    return end - start + (endOffset - startOffset) * MIN_TO_MS;
 }
 
 /**
@@ -433,10 +411,10 @@ Schedule.prototype.duration = function () {
 
     if (this.isAllDay) {
         duration = datetime.end(end) - datetime.start(start);
-    } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
-        duration = getDurationByNativeTimezone(start, end);
     } else if (hasPrimaryTimezoneCustomSetting && tz.isPrimaryUsingDSTTimezone()) {
         duration = getDurationByPrimaryTimezone(start, end);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
+        duration = getDurationByNativeTimezone(start, end);
     } else {
         duration = end - start;
     }

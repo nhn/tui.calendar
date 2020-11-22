@@ -378,7 +378,7 @@ function getPrimaryTimezoneCode() {
  *
  * @param {number} startTime - start timestamp
  * @param {number} endTime - end timestamp
- * @returns {number}
+ * @returns {object} whether to change the offset and offset difference value
  */
 function isDifferentOffsetStartAndEndTime(startTime, endTime) {
     var offset1 = getOffsetByTimezoneCode(primaryTimezoneCode, startTime);
@@ -391,12 +391,14 @@ function isDifferentOffsetStartAndEndTime(startTime, endTime) {
         result = differentOffset.DST_TO_STANDARD; // DST to Standard
     }
 
-    return result;
+    return {
+        isOffsetChanged: result,
+        offsetDiff: offset1 - offset2,
+    };
 }
 
 module.exports = {
     Date: TZDate,
-    differentOffset: differentOffset,
 
     setOffset: setOffset,
 

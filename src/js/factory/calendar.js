@@ -759,7 +759,7 @@ Calendar.prototype._initialize = function (options) {
 
     this._layout.controller = controller;
 
-    this._setAdditionalInternalOptions(options);
+    this._setAdditionalInternalOptions(this._options);
 
     this.changeView(viewName, true);
 };

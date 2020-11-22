@@ -108,7 +108,7 @@ function offsetCalculator(timezoneCode, timestamp) {
     var formatter = getIntlFormatter(timezoneCode);
     var date = new Date(timestamp);
 
-    return calculateOffset(parseOffset(formatter, date), date);
+    return -calculateOffset(parseOffset(formatter, date), date);
 }
 
 /**
