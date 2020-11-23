@@ -303,8 +303,6 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
         var timezoneDifference = timezoneOffset + primaryOffset;
         var dateDifference;
 
-        console.log(timezoneOffset, primaryOffset);
-
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
 
