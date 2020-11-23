@@ -265,15 +265,13 @@ describe('module:timezone TZDate', function() {
     });
 
     describe('isDifferentOffsetStartAndEndTime()', function() {
-        beforeEach(function() {
+        it('shoulde be calculated the offset difference value, if offset value changed between start time and end time (DST to Standard)', function() {
             if (!intlUtil.supportIntl('America/New_York')) {
                 return;
             }
 
             tz.setPrimaryTimezoneCode('America/New_York');
-        });
 
-        it('shoulde be calculated the offset difference value, if offset value changed between start time and end time (DST to Standard)', function() {
             var start = new Date('2020-11-01T01:00:00-04:00');
             var end = new Date('2020-11-01T02:00:00-05:00');
 
@@ -284,6 +282,12 @@ describe('module:timezone TZDate', function() {
         });
 
         it('shoulde be calculated the offset difference value, if offset value changed between start time and end time (Standard to DST)', function() {
+            if (!intlUtil.supportIntl('America/New_York')) {
+                return;
+            }
+
+            tz.setPrimaryTimezoneCode('America/New_York');
+
             var start = new Date('2021-03-14T01:00:00-05:00');
             var end = new Date('2021-03-14T03:00:00-04:00');
 

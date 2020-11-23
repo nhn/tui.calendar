@@ -64,7 +64,12 @@ function supportIntl(timezoneCode) {
     var supported = false;
     var formatter;
 
-    if (global.Intl && global.Intl.DateTimeFormat) {
+    /**
+     * IE9 and IE10 do not support Intl.DateTimeFormat
+     * IE11 does not support IANA timezone names
+     * http://kangax.github.io/compat-table/esintl/#test-DateTimeFormat_accepts_IANA_timezone_names
+     */
+    if (!util.browser.msie && global.Intl && global.Intl.DateTimeFormat) {
         formatter = getIntlFormatter(timezoneCode);
 
         if (util.isFunction(formatter.formatToParts)) {
