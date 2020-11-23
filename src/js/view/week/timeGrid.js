@@ -102,16 +102,17 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
  * @returns {number} timezoneOffset - timezone offset
  */
 function getOffsetByTimezoneOption(timezoneObj, timestamp) {
+    var primaryOffset = tz.getPrimaryOffset();
     if (util.isString(timezoneObj.timezone)) {
         return -tz.getOffsetByTimezoneCode(timezoneObj.timezone, timestamp);
     }
 
     // @deprecated timezoneOffset property will be deprecated
-    if (util.isNumber(timezoneObj.timezoneOffset)) {
+    if (util.isNumber(timezoneObj.timezoneOffset) && timezoneObj.timezoneOffset !== primaryOffset) {
         return timezoneObj.timezoneOffset;
     }
 
-    return -tz.getPrimaryOffset();
+    return -primaryOffset;
 }
 
 /**
@@ -301,6 +302,8 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
         var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
         var timezoneDifference = timezoneOffset + primaryOffset;
         var dateDifference;
+
+        console.log(timezoneOffset, primaryOffset);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);

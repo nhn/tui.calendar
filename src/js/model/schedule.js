@@ -45,7 +45,7 @@ function getDurationByPrimaryTimezone(start, end) {
     var isOffsetChanged = checkOffset.isOffsetChanged;
     var duration = end - start;
 
-    if (isOffsetChanged) {
+    if (isOffsetChanged !== 0) {
         duration += checkOffset.offsetDiff * MIN_TO_MS;
     }
 
