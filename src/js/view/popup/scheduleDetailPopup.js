@@ -1,3 +1,4 @@
+/* eslint-disable vars-on-top */
 /**
  * @fileoverview Floating layer for showing detail schedule
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
@@ -11,6 +12,9 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     domutil = require('../../common/domutil');
 var tmpl = require('../template/popup/scheduleDetailPopup.hbs');
+var tz = require('../../common/timezone');
+var TZDate = tz.Date;
+var datetime = require('../../common/datetime');
 
 /**
  * @constructor
@@ -120,7 +124,7 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
     var self = this;
 
     layer.setContent(tmpl({
-        schedule: viewModel.schedule,
+        schedule: this._getScheduleModel(viewModel.schedule),
         calendar: viewModel.calendar
     }));
     layer.show();
@@ -132,6 +136,76 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
     })();
+};
+
+// eslint-disable-next-line complexity
+ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
+    var schedule = util.extend({}, scheduleViewModel);
+    var dayStart = datetime.start(scheduleViewModel.start);
+    var startDayOffset = dayStart.toDate().getTimezoneOffset();
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
+    var startOffset = schedule.start.toDate().getTimezoneOffset();
+    var endOffset = schedule.end.toDate().getTimezoneOffset();
+    var primaryTimezoneCode = tz.getPrimaryTimezoneCode();
+    var primaryOffset = tz.getPrimaryOffset();
+    var startTimezoneOffset = tz.getOffsetByTimezoneCode(
+        primaryTimezoneCode,
+        schedule.start.getTime()
+    );
+    var endTimezoneOffset = tz.getOffsetByTimezoneCode(
+        primaryTimezoneCode,
+        schedule.end.getTime()
+    );
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+    var start, end;
+
+    if (
+        hasPrimaryTimezoneCustomSetting &&
+        tz.isNativeOsUsingDSTTimezone() &&
+        nativeOffsetMs !== startDayOffset
+    ) {
+        // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
+        // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
+        // 접속 시간이 하계시/표준시에 영향을 받지 않고 항상 동일한 위치에 일정이 표시되어야 한다.
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+        start = new TZDate(schedule.start);
+        start.addMilliseconds(offsetDiffMs);
+
+        schedule.start = start;
+
+        offsetDiffMs = (endOffset * MIN_TO_MS) - nativeOffsetMs;
+        end = new TZDate(schedule.end);
+        end.addMilliseconds(offsetDiffMs);
+
+        schedule.end = end;
+    }
+
+    if (
+        hasPrimaryTimezoneCustomSetting &&
+        tz.isPrimaryUsingDSTTimezone() &&
+        (primaryOffset !== startTimezoneOffset || primaryOffset !== endTimezoneOffset)
+    ) {
+        // 커스텀 타임존영역이 DST가 포함된 두개의 오프셋이 적용되는 타임존인데,
+        // 처음 렌더링되는 일정은 접속 시간에 계산된 오프셋으로 계산되어 그려진다.
+        // 원래 시간대의 오프셋으로 재계산해주어야한다.
+        offsetDiffMs = (primaryOffset - startTimezoneOffset) * MIN_TO_MS;
+
+        start = new TZDate(schedule.start);
+        start.addMilliseconds(offsetDiffMs);
+
+        schedule.start = start;
+
+        offsetDiffMs = (primaryOffset - endTimezoneOffset) * MIN_TO_MS;
+
+        end = new TZDate(schedule.end);
+        end.addMilliseconds(offsetDiffMs);
+
+        schedule.end = end;
+    }
+
+    return schedule;
 };
 
 /**
