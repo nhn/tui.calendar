@@ -14,10 +14,10 @@ jobs:
                   node createConfigVariable.js
             - name: set global error variable
               run: |
-                  echo ::set-env name=ERROR_VARIABLE::$(head -n 1 ./errorVariable.txt)
+                  echo "ERROR_VARIABLE=$(head -n 1 ./errorVariable.txt)" >> $GITHUB_ENV
             - name: set url
               run: |
-                  echo ::set-env name=URLS::$(head -n 1 ./url.txt)
+                  echo "URLS=$(head -n 1 ./url.txt)" >> $GITHUB_ENV
             - name: detect runtime error
               uses: nhn/toast-ui.detect-runtime-error-actions@v1.0.1
               with:
