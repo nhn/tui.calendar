@@ -54,8 +54,8 @@ function getDurationByPrimaryTimezone(start, end) {
 
 /**
  * Get duration by native timezone
- * @param {Date} start render start date
- * @param {Date} end render end date
+ * @param {TZDate} start render start date
+ * @param {TZDate} end render end date
  * @returns {number} duration
  */
 function getDurationByNativeTimezone(start, end) {

@@ -140,22 +140,22 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
 
 // eslint-disable-next-line complexity
 ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
-    var schedule = util.extend({}, scheduleViewModel);
+    var viewModel = util.extend({}, scheduleViewModel);
     var dayStart = datetime.start(scheduleViewModel.start);
     var startDayOffset = dayStart.toDate().getTimezoneOffset();
     var nativeOffsetMs = tz.getNativeOffsetMs();
     var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
-    var startOffset = schedule.start.toDate().getTimezoneOffset();
-    var endOffset = schedule.end.toDate().getTimezoneOffset();
-    var primaryTimezoneCode = tz.getPrimaryTimezoneCode();
+    var startOffset = viewModel.start.toDate().getTimezoneOffset();
+    var endOffset = viewModel.end.toDate().getTimezoneOffset();
+    var primaryTimezoneCode = tz.getPrimaryTimezoneName();
     var primaryOffset = tz.getPrimaryOffset();
-    var startTimezoneOffset = tz.getOffsetByTimezoneCode(
+    var startTimezoneOffset = tz.getOffsetByTimezoneName(
         primaryTimezoneCode,
-        schedule.start.getTime()
+        viewModel.start.getTime()
     );
-    var endTimezoneOffset = tz.getOffsetByTimezoneCode(
+    var endTimezoneOffset = tz.getOffsetByTimezoneName(
         primaryTimezoneCode,
-        schedule.end.getTime()
+        viewModel.end.getTime()
     );
     var MIN_TO_MS = 60 * 1000;
     var offsetDiffMs = 0;
@@ -166,20 +166,20 @@ ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
         tz.isNativeOsUsingDSTTimezone() &&
         nativeOffsetMs !== startDayOffset
     ) {
-        // 커스텀 타임존을 사용할때는 네이티브 타임존 오프셋을 고정해서 렌더링한다.
-        // 네이티브 타임존 오프셋으로 고정되서 계산된 시간을 원래 타임존 오프셋으로 재계산해주어야한다.
-        // 접속 시간이 하계시/표준시에 영향을 받지 않고 항상 동일한 위치에 일정이 표시되어야 한다.
+        // When using a custom time zone, the native time zone offset is fixed and rendered.
+        // So, The fixed and rendered time should be recalculated as the original time zone offset.
+        // The current system OS local time is not affected by summer/standard time and the schedule should always be displayed in the same location.
         offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
-        start = new TZDate(schedule.start);
+        start = new TZDate(viewModel.start);
         start.addMilliseconds(offsetDiffMs);
 
-        schedule.start = start;
+        viewModel.start = start;
 
         offsetDiffMs = (endOffset * MIN_TO_MS) - nativeOffsetMs;
-        end = new TZDate(schedule.end);
+        end = new TZDate(viewModel.end);
         end.addMilliseconds(offsetDiffMs);
 
-        schedule.end = end;
+        viewModel.end = end;
     }
 
     if (
@@ -187,25 +187,25 @@ ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
         tz.isPrimaryUsingDSTTimezone() &&
         (primaryOffset !== startTimezoneOffset || primaryOffset !== endTimezoneOffset)
     ) {
-        // 커스텀 타임존영역이 DST가 포함된 두개의 오프셋이 적용되는 타임존인데,
-        // 처음 렌더링되는 일정은 접속 시간에 계산된 오프셋으로 계산되어 그려진다.
-        // 원래 시간대의 오프셋으로 재계산해주어야한다.
+        // The custom time zone is a time zone where two offsets including DST are applied.
+        // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+        // It should be recalculated with the original time zone offset.
         offsetDiffMs = (primaryOffset - startTimezoneOffset) * MIN_TO_MS;
 
-        start = new TZDate(schedule.start);
+        start = new TZDate(viewModel.start);
         start.addMilliseconds(offsetDiffMs);
 
-        schedule.start = start;
+        viewModel.start = start;
 
         offsetDiffMs = (primaryOffset - endTimezoneOffset) * MIN_TO_MS;
 
-        end = new TZDate(schedule.end);
+        end = new TZDate(viewModel.end);
         end.addMilliseconds(offsetDiffMs);
 
-        schedule.end = end;
+        viewModel.end = end;
     }
 
-    return schedule;
+    return viewModel;
 };
 
 /**

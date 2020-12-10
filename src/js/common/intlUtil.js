@@ -22,12 +22,13 @@ var typeToPos = {
 function parseOffset(dtf, date) {
     var formatted = dtf.formatToParts(date);
     var filled = [];
+    var formattedLength = formatted.length;
     var i, pos;
 
-    for (i = 0; i < formatted.length; i += 1) {
+    for (i = 0; i < formattedLength; i += 1) {
         pos = typeToPos[formatted[i].type];
 
-        if (typeof pos !== 'undefined') {
+        if (!util.isUndefined(pos)) {
             filled[pos] = parseInt(formatted[i].value, 10);
         }
     }
@@ -56,39 +57,27 @@ function calculateOffset(parts, date) {
 }
 
 /**
- * Check if browser supports Intl, Intl.DateTimeFormat, formatToParts API
- * @param {string} timezoneCode - timezone (e.g. 'Asia/Seoul', 'Americal/New_York')
+ * Check if browser supports Intl.DateTimeFormat.prototype.formatToParts API
  * @returns {boolean} supported
  */
-function supportIntl(timezoneCode) {
-    var supported = false;
-    var formatter;
-
+function supportIntl() {
     /**
      * IE9 and IE10 do not support Intl.DateTimeFormat
      * IE11 does not support IANA timezone names
      * http://kangax.github.io/compat-table/esintl/#test-DateTimeFormat_accepts_IANA_timezone_names
      */
-    if (!util.browser.msie && global.Intl && global.Intl.DateTimeFormat) {
-        formatter = getIntlFormatter(timezoneCode);
-
-        if (util.isFunction(formatter.formatToParts)) {
-            intlFormatter[timezoneCode] = formatter;
-            supported = true;
-        }
-    }
-
-    return supported;
+    return global.Intl && global.Intl.DateTimeFormat &&
+        util.isFunction(Intl.DateTimeFormat.prototype.formatToParts);
 }
 
 /**
  * Return DateTimeFormat instance by timezone
- * @param {string} timezoneCode - timezone
+ * @param {string} timezoneName - timezone
  * @returns {DateTimeFormat} Intl.DateTimeFormat instance
  */
-function getIntlFormatter(timezoneCode) {
-    if (!intlFormatter[timezoneCode]) {
-        intlFormatter[timezoneCode] = new Intl.DateTimeFormat('en-US', {
+function getIntlFormatter(timezoneName) {
+    if (!intlFormatter[timezoneName]) {
+        intlFormatter[timezoneName] = new Intl.DateTimeFormat('en-US', {
             hourCycle: 'h23',
             year: 'numeric',
             month: 'numeric',
@@ -96,21 +85,21 @@ function getIntlFormatter(timezoneCode) {
             hour: 'numeric',
             minute: 'numeric',
             second: 'numeric',
-            timeZone: timezoneCode
+            timeZone: timezoneName
         });
     }
 
-    return intlFormatter[timezoneCode];
+    return intlFormatter[timezoneName];
 }
 
 /**
  * Get offset of the time by timezone
- * @param {string} timezoneCode - timezone (e.g. 'Asia/Seoul', 'America/New_York')
+ * @param {string} timezoneName - recognize the time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York'
  * @param {number} timestamp - timestamp
  * @returns {number} offset
  */
-function offsetCalculator(timezoneCode, timestamp) {
-    var formatter = getIntlFormatter(timezoneCode);
+function offsetCalculator(timezoneName, timestamp) {
+    var formatter = getIntlFormatter(timezoneName);
     var date = new Date(timestamp);
 
     return -calculateOffset(parseOffset(formatter, date), date);

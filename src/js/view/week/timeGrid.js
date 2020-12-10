@@ -103,8 +103,8 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
  */
 function getOffsetByTimezoneOption(timezoneObj, timestamp) {
     var primaryOffset = tz.getPrimaryOffset();
-    if (util.isString(timezoneObj.timezone)) {
-        return -tz.getOffsetByTimezoneCode(timezoneObj.timezone, timestamp);
+    if (util.isString(timezoneObj.timezoneName)) {
+        return -tz.getOffsetByTimezoneName(timezoneObj.timezoneName, timestamp);
     }
 
     // @deprecated timezoneOffset property will be deprecated

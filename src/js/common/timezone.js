@@ -13,7 +13,7 @@ var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
 var offsetCalculator = null;
-var primaryOffset, primaryTimezoneCode;
+var primaryOffset, primaryTimezoneName;
 
 var getterMethods = [
     'getDate',
@@ -36,11 +36,8 @@ var setterMethods = [
     'setSeconds'
 ];
 
-var differentOffset = {
-    STANDARD_TO_DST: 1,
-    DST_TO_STANDARD: -1,
-    SAME: 0
-};
+var STANDARD_TO_DST = 1;
+var DST_TO_STANDARD = -1;
 
 /**
  * Get the timezone offset by timestampe
@@ -49,7 +46,7 @@ var differentOffset = {
  * @private
  */
 function getTimezoneOffset(timestamp) {
-    timestamp = timestamp || Date.now();
+    timestamp = !util.isUndefined(timestamp) ? timestamp : Date.now();
 
     return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
 }
@@ -287,30 +284,30 @@ function getPrimaryOffset() {
 }
 
 /**
- * Set primary timezone code
- * @param {string} timezoneCode - timezone code (such as 'Asia/Seoul', 'America/New_York')
+ * Set primary timezone name
+ * @param {string} timezoneName - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York')
  */
-function setPrimaryTimezoneCode(timezoneCode) {
-    primaryTimezoneCode = timezoneCode;
+function setPrimaryTimezoneCode(timezoneName) {
+    primaryTimezoneName = timezoneName;
 }
 
 /**
- * Get offset by timezoneCode
- * @param {string} timezoneCode - timezone code (such as 'Asia/Seoul', 'America/New_York')
+ * Get offset by timezoneName
+ * @param {string} timezoneName - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York')
  * @param {number} timestamp - timestamp
  * @returns {number} timezone offset
  */
-function getOffsetByTimezoneCode(timezoneCode, timestamp) {
+function getOffsetByTimezoneName(timezoneName, timestamp) {
     var offset = getPrimaryOffset();
     var calculator;
 
-    if (!timezoneCode) {
+    if (!timezoneName) {
         return offset;
     }
 
-    calculator = getOffsetCalculator(timezoneCode);
+    calculator = getOffsetCalculator(timezoneName);
 
-    return calculator ? calculator(timezoneCode, timestamp) : offset;
+    return calculator ? calculator(timezoneName, timestamp) : offset;
 }
 
 /**
@@ -323,15 +320,15 @@ function setOffsetCalculator(calculator) {
 
 /**
  * Return a function to calculate timezone offset by timestamp
- * @param {string} timezoneCode - timezone code
+ * @param {string} timezoneName - timezone name
  * @returns {function | null} offset calculator
  */
-function getOffsetCalculator(timezoneCode) {
+function getOffsetCalculator(timezoneName) {
     if (util.isFunction(offsetCalculator)) {
         return offsetCalculator;
     }
 
-    if (intlUtil.supportIntl(timezoneCode)) {
+    if (intlUtil.supportIntl(timezoneName)) {
         return intlUtil.offsetCalculator;
     }
 
@@ -343,52 +340,48 @@ function getOffsetCalculator(timezoneCode) {
  * @param {Timezone} timezoneObj - {@link Timezone}
  */
 function setPrimaryTimezoneByOption(timezoneObj) {
-    var timezoneCode = timezoneObj.timezone;
-    var timestamp, offset;
+    var timezoneName, offset;
 
-    if (!timezoneObj) {
+    if (!(timezoneObj && timezoneObj.timezoneName)) {
         return;
     }
 
-    timestamp = Date.now();
+    timezoneName = timezoneObj.timezoneName;
+    setByTimezoneOption = true;
+    setPrimaryTimezoneCode(timezoneName);
 
-    if (timezoneCode) {
-        setByTimezoneOption = true;
-        setPrimaryTimezoneCode(timezoneCode);
+    offset = getOffsetByTimezoneName(timezoneName, Date.now());
 
-        offset = getOffsetByTimezoneCode(timezoneCode, timestamp);
-
-        if (offset === nativeOffsetMs / MIN_TO_MS) {
-            setByTimezoneOption = false;
-        }
-
-        setPrimaryOffset(offset);
+    if (offset === nativeOffsetMs / MIN_TO_MS) {
+        setByTimezoneOption = false;
     }
+
+    setPrimaryOffset(offset);
 }
 
 /**
- * Get primary timezone code
- * @returns {string} primary timezone code (such as 'Asia/Seoul', 'America/New_York')
+ * Get primary timezone name
+ * @returns {string} primary timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York')
  */
-function getPrimaryTimezoneCode() {
-    return primaryTimezoneCode;
+function getPrimaryTimezoneName() {
+    return primaryTimezoneName;
 }
 
 /**
- *
+ * Compare the start and end times to see if the time zone is changing.
  * @param {number} startTime - start timestamp
  * @param {number} endTime - end timestamp
  * @returns {object} whether to change the offset and offset difference value
  */
 function isDifferentOffsetStartAndEndTime(startTime, endTime) {
-    var offset1 = getOffsetByTimezoneCode(primaryTimezoneCode, startTime);
-    var offset2 = getOffsetByTimezoneCode(primaryTimezoneCode, endTime);
-    var result = differentOffset.SAME;
+    var offset1 = getOffsetByTimezoneName(primaryTimezoneName, startTime);
+    var offset2 = getOffsetByTimezoneName(primaryTimezoneName, endTime);
+    var result = 0;
 
     if (offset1 > offset2) {
-        result = differentOffset.STANDARD_TO_DST; // Standard to DST
+        result = STANDARD_TO_DST;
     } else if (offset1 < offset2) {
-        result = differentOffset.DST_TO_STANDARD; // DST to Standard
+        result = DST_TO_STANDARD;
     }
 
     return {
@@ -462,9 +455,9 @@ module.exports = {
 
     getPrimaryOffset: getPrimaryOffset,
 
-    getOffsetByTimezoneCode: getOffsetByTimezoneCode,
+    getOffsetByTimezoneName: getOffsetByTimezoneName,
 
-    getPrimaryTimezoneCode: getPrimaryTimezoneCode,
+    getPrimaryTimezoneName: getPrimaryTimezoneName,
 
     isNativeOsUsingDSTTimezone: function() {
         var year = new Date().getFullYear();
@@ -480,8 +473,8 @@ module.exports = {
         var jul = new Date(year, 6, 1);
 
         return (
-            getOffsetByTimezoneCode(primaryTimezoneCode, jan) !==
-            getOffsetByTimezoneCode(primaryTimezoneCode, jul)
+            getOffsetByTimezoneName(primaryTimezoneName, jan) !==
+            getOffsetByTimezoneName(primaryTimezoneName, jul)
         );
     },
 

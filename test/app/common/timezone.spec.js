@@ -214,29 +214,21 @@ describe('module:timezone TZDate', function() {
             return;
         }
 
-        var offset0 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2020, 10, 1, 12));
-        var offset1 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2020, 10, 1, 13));
-        var offset2 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2020, 10, 1, 14));
-        var offset3 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2020, 10, 1, 15));
-        var offset4 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2020, 10, 1, 16));
+        var offset1 = tz.getOffsetByTimezoneName('America/New_York', new Date(2020, 10, 1, 14));
+        var offset2 = tz.getOffsetByTimezoneName('America/New_York', new Date(2020, 10, 1, 15));
+        var offset3 = tz.getOffsetByTimezoneName('America/New_York', new Date(2021, 2, 14, 15));
+        var offset4 = tz.getOffsetByTimezoneName('America/New_York', new Date(2021, 2, 14, 16));
 
-        var offset5 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2021, 2, 14, 14));
-        var offset6 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2021, 2, 14, 15));
-        var offset7 = tz.getOffsetByTimezoneCode('America/New_York', new Date(2021, 2, 14, 16));
-
-        expect(offset0).toBe(240);
         expect(offset1).toBe(240);
-        expect(offset2).toBe(240);
+        expect(offset2).toBe(300);
+
         expect(offset3).toBe(300);
-        expect(offset4).toBe(300);
-        expect(offset5).toBe(300);
-        expect(offset6).toBe(300);
-        expect(offset7).toBe(240);
+        expect(offset4).toBe(240);
     });
 
     it('should be calculated as the return value of offsetCalculator function', function() {
         var timezoneOption = {
-            timezone: 'Asia/Seoul'
+            timezoneName: 'Asia/Seoul'
         };
         var offsetCalculator = function() {
             return -500;
@@ -248,10 +240,6 @@ describe('module:timezone TZDate', function() {
         expect(tz.getPrimaryOffset()).toBe(-500);
 
         tz.setOffsetCalculator(null);
-    });
-
-    it('should return whether the system OS local setting includes DST', function() {
-        expect(tz.isNativeOsUsingDSTTimezone()).toBe(false);
     });
 
     it('should return whether the DST of the main timezone designated as the custom timezone is included', function() {

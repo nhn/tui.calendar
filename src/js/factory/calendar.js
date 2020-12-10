@@ -18,7 +18,6 @@ var monthViewFactory = require('./monthView');
 var tz = require('../common/timezone');
 var TZDate = tz.Date;
 var config = require('../config');
-var timezone = require('../common/timezone');
 var reqAnimFrame = require('../common/reqAnimFrame');
 
 var mmin = Math.min;
@@ -384,30 +383,30 @@ var mmin = Math.min;
  *
  * @example
  * var cal = new Calendar('#calendar', {
- *   timeZone: {
+ *   timezone: {
  *     zones: [
  *       {
- *         timezoneOffset: 'Asia/Seoul',
+ *         timezoneName: 'Asia/Seoul',
  *         displayLabel: 'GMT+09:00',
  *         tooltip: 'Seoul'
  *       },
  *       {
- *         timezone: 'America/New_York',
+ *         timezoneName: 'America/New_York',
  *         displayLabel: 'GMT-05:00',
  *         tooltip: 'New York',
  *       }
  *     ],
- *     offsetCalculator: function(timezone, timestamp){
+ *     offsetCalculator: function(timezoneName, timestamp){
  *       // e.g. +09:00 => -540, -04:00 => 240
- *       return moment.tz.zone(timezone).utcOffset(timestamp);
+ *       return moment.tz.zone(timezoneName).utcOffset(timestamp);
  *     },
  *   }
  * });
  */
 
 /**
- * @typedef {object} Zone
- * @property {string} [timezone] - timezone (such as 'Asia/Seoul', 'America/New_York').
+ * @typedef {object} Timezone
+ * @property {string} [timezoneName] - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York').
  *  Basically, it will calculate the offset using 'Intl.DateTimeFormat' with the value of the this property entered.
  *  This property is required.
  * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
@@ -417,15 +416,15 @@ var mmin = Math.min;
  *
  * @example
  * var cal = new Calendar('#calendar', {
- *   timeZone: {
+ *   timezone: {
  *     zones: [
  *       {
- *         timezoneOffset: 'Asia/Seoul',
+ *         timezoneName: 'Asia/Seoul',
  *         displayLabel: 'GMT+09:00',
  *         tooltip: 'Seoul'
  *       },
  *       {
- *         timezone: 'America/New_York',
+ *         timezoneName: 'America/New_York',
  *         displayLabel: 'GMT-05:00',
  *         tooltip: 'New York',
  *       }
@@ -478,12 +477,12 @@ var mmin = Math.min;
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
- * @property {TimeZone} [timeZone] - {@link TimeZone} for customizing time zone
+ * @property {Timezone} [timezone] - {@link Timezone} for customizing time zone
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
  * @property {boolean} [usageStatistics=true] - Let us know the hostname. If you don't want to send the hostname, please set to false.
- * @property {Array.<Timezone>} [timezones] - This property will be deprecated. (since version 1.13) Please use timeZone property.
+ * @property {Array.<Timezone>} [timezones] - This property will be deprecated. (since version 1.13) Please use timezone property.
  */
 
 /**
@@ -723,7 +722,7 @@ Calendar.prototype._initialize = function(options) {
             calendars: [],
             useCreationPopup: false,
             useDetailPopup: false,
-            timezones: options.timeZone && options.timeZone.zones ? options.timeZone.zones : [],
+            timezones: options.timezone && options.timezone.zones ? options.timezone.zones : [],
             disableDblClick: false,
             disableClick: false,
             isReadOnly: false
@@ -739,7 +738,7 @@ Calendar.prototype._initialize = function(options) {
         util.pick(this._options, 'week') || {}
     );
 
-    this._options.timeZone = util.extend({zones: []}, util.pick(options, 'timeZone') || {});
+    this._options.timezone = util.extend({zones: []}, util.pick(options, 'timezone') || {});
 
     this._options.month = util.extend(
         {
@@ -775,7 +774,7 @@ Calendar.prototype._initialize = function(options) {
  * @private
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
-    var timeZone = options.timeZone;
+    var timezone = options.timezone;
     var zones, offsetCalculator;
 
     util.forEach(options.template, function(func, name) {
@@ -792,14 +791,14 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
         this
     );
 
-    if (timeZone) {
-        offsetCalculator = timeZone.offsetCalculator;
+    if (timezone) {
+        offsetCalculator = timezone.offsetCalculator;
 
         if (util.isFunction(offsetCalculator)) {
             tz.setOffsetCalculator(offsetCalculator);
         }
 
-        zones = timeZone.zones;
+        zones = timezone.zones;
 
         if (zones.length) {
             tz.setPrimaryTimezoneByOption(zones[0]);
@@ -1905,7 +1904,7 @@ Calendar.prototype.hideMoreView = function() {
  * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
  */
 Calendar.setTimezoneOffset = function(offset) {
-    timezone.setOffset(offset);
+    tz.setOffset(offset);
 };
 
 /**
@@ -1920,7 +1919,7 @@ Calendar.setTimezoneOffset = function(offset) {
  * });
  */
 Calendar.setTimezoneOffsetCallback = function(callback) {
-    timezone.setOffsetCallback(callback);
+    tz.setOffsetCallback(callback);
 };
 
 /**
