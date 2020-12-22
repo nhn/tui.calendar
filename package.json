@@ -55,7 +55,6 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
     "karma-coverage": "^2.0.3",
-    "karma-firefox-launcher": "^2.1.0",
     "karma-fixture": "^0.2.6",
     "karma-html2js-preprocessor": "^1.1.0",
     "karma-jasmine": "^1.1.2",
