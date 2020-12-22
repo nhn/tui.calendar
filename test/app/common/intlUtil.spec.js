@@ -1,6 +1,7 @@
 /* eslint-disable vars-on-top */
 'use strict';
 
+require('es6-set/implement');
 require('weakmap-polyfill');
 require('@formatjs/intl-getcanonicallocales/polyfill');
 require('@formatjs/intl-datetimeformat/polyfill');
