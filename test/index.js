@@ -1,5 +1,6 @@
 /*eslint-disable*/
 
+// for IE9, IE10, IE11
 require('es6-set/implement');
 require('weakmap-polyfill');
 require('@formatjs/intl-getcanonicallocales/polyfill');
