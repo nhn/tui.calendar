@@ -4,8 +4,9 @@
 require('es6-set/implement');
 require('weakmap-polyfill');
 require('@formatjs/intl-getcanonicallocales/polyfill');
+require('@formatjs/intl-numberformat/polyfill');
 require('@formatjs/intl-datetimeformat/polyfill');
-require('@formatjs/intl-datetimeformat/locale-data/en-US');
+require('@formatjs/intl-datetimeformat/locale-data/en');
 require('@formatjs/intl-datetimeformat/add-all-tz');
 
 var intlUtil = require('common/intlUtil');
