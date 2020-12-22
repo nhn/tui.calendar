@@ -38,6 +38,7 @@
     "@formatjs/intl-getcanonicallocales": "^1.5.1",
     "@formatjs/intl-locale": "^2.4.11",
     "@formatjs/intl-numberformat": "^6.1.1",
+    "@formatjs/intl-pluralrules": "^4.0.1",
     "css-loader": "^3.2.0",
     "es6-set": "^0.1.5",
     "eslint": "^4.19.1",
