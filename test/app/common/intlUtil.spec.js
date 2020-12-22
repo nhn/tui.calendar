@@ -1,5 +1,8 @@
+/* eslint-disable vars-on-top */
 'use strict';
 
+require('@formatjs/intl-datetimeformat/polyfill');
+require('@formatjs/intl-datetimeformat/add-all-tz');
 var util = require('tui-code-snippet');
 var intlUtil = require('common/intlUtil');
 
