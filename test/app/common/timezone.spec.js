@@ -210,10 +210,6 @@ describe('module:timezone TZDate', function() {
     });
 
     it("should be calculated the offset with Intl.DateTimeFormat() by default, if 'Intl.DateTimeFormat()' is supported and there is no function defined as offsetCalculator", function() {
-        if (!intlUtil.supportIntl('America/New_York')) {
-            return;
-        }
-
         var offset1 = tz.getOffsetByTimezoneName('America/New_York', new Date(2020, 10, 1, 14));
         var offset2 = tz.getOffsetByTimezoneName('America/New_York', new Date(2020, 10, 1, 15));
         var offset3 = tz.getOffsetByTimezoneName('America/New_York', new Date(2021, 2, 14, 15));
@@ -243,10 +239,6 @@ describe('module:timezone TZDate', function() {
     });
 
     it('should return whether the DST of the main timezone designated as the custom timezone is included', function() {
-        if (!intlUtil.supportIntl('America/New_York')) {
-            return;
-        }
-
         tz.setPrimaryTimezoneCode('America/New_York');
 
         expect(tz.isPrimaryUsingDSTTimezone()).toBe(true);
@@ -254,10 +246,6 @@ describe('module:timezone TZDate', function() {
 
     describe('isDifferentOffsetStartAndEndTime()', function() {
         it('shoulde be calculated the offset difference value, if offset value changed between start time and end time (DST to Standard)', function() {
-            if (!intlUtil.supportIntl('America/New_York')) {
-                return;
-            }
-
             tz.setPrimaryTimezoneCode('America/New_York');
 
             var start = new Date('2020-11-01T01:00:00-04:00');
@@ -270,10 +258,6 @@ describe('module:timezone TZDate', function() {
         });
 
         it('shoulde be calculated the offset difference value, if offset value changed between start time and end time (Standard to DST)', function() {
-            if (!intlUtil.supportIntl('America/New_York')) {
-                return;
-            }
-
             tz.setPrimaryTimezoneCode('America/New_York');
 
             var start = new Date('2021-03-14T01:00:00-05:00');
