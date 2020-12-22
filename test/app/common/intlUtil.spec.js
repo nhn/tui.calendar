@@ -2,6 +2,7 @@
 'use strict';
 
 require('weakmap-polyfill');
+require('@formatjs/intl-getcanonicallocales/polyfill');
 require('@formatjs/intl-datetimeformat/polyfill');
 require('@formatjs/intl-datetimeformat/add-all-tz');
 var util = require('tui-code-snippet');
