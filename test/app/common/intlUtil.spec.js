@@ -6,14 +6,12 @@ require('weakmap-polyfill');
 require('@formatjs/intl-getcanonicallocales/polyfill');
 require('@formatjs/intl-datetimeformat/polyfill');
 require('@formatjs/intl-datetimeformat/add-all-tz');
-var util = require('tui-code-snippet');
+
 var intlUtil = require('common/intlUtil');
 
 describe('common/intlUtil', function() {
     it('supportIntl()', function() {
-        var supported = !util.browser.msie;
-
-        expect(intlUtil.supportIntl('Asia/Seoul')).toBe(supported);
+        expect(intlUtil.supportIntl('Asia/Seoul')).toBe(true);
     });
 
     it('offsetCalculator()', function() {
