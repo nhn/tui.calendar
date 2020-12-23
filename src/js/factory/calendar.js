@@ -376,10 +376,8 @@ var mmin = Math.min;
  *  The first zone element is primary
  *  The rest zone elements are shown in left timegrid of weekly/daily view
  * @property {function} [offsetCalculator = null] - If you define the 'offsetCalculator' property, the offset calculation is done with this function.
- *  This option allows you to set up a function that returns the timezone offset for that time using date libraries like ['js-joda'](https://js-joda.github.io/js-joda/) and ['moment-timezone'](https://momentjs.com/timezone/).
- *  This option is useful when your browser does not support 'Intl.DateTimeFormat' and 'formatToPart', or you want to use the date library you are familiar with.
- *  (If the time difference is +09:00, the setting value should be 540.)
- *  (If the time difference is -04:00, the setting value should be -240.)
+ * The offsetCalculator option allows you to set up a function that returns the timezone offset for that time using date libraries like ['js-joda'](https://js-joda.github.io/js-joda/) and ['moment-timezone'](https://momentjs.com/timezone/).
+ * The 'offsetCalculator' option is useful when your browser does not support 'Intl.DateTimeFormat' and 'formatToPart', or you want to use the date library you are familiar with.
  *
  * @example
  * var cal = new Calendar('#calendar', {
@@ -397,6 +395,7 @@ var mmin = Math.min;
  *       }
  *     ],
  *     offsetCalculator: function(timezoneName, timestamp){
+ *       // matches 'getTimezoneOffset()' of Date API
  *       // e.g. +09:00 => -540, -04:00 => 240
  *       return moment.tz.zone(timezoneName).utcOffset(timestamp);
  *     },
@@ -405,7 +404,7 @@ var mmin = Math.min;
  */
 
 /**
- * @typedef {object} Timezone
+ * @typedef {object} Zone
  * @property {string} [timezoneName] - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York').
  *  Basically, it will calculate the offset using 'Intl.DateTimeFormat' with the value of the this property entered.
  *  This property is required.
@@ -477,7 +476,7 @@ var mmin = Math.min;
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
- * @property {Timezone} [timezone] - {@link Timezone} for customizing time zone
+ * @property {Timezone} [timezone] - {@link Timezone} - Set a custom time zone. You can add secondary timezone in the weekly/daily view.
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
