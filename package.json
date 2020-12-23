@@ -33,7 +33,14 @@
     "index.d.ts"
   ],
   "devDependencies": {
+    "@formatjs/intl": "^1.4.8",
+    "@formatjs/intl-datetimeformat": "^3.0.0",
+    "@formatjs/intl-getcanonicallocales": "^1.5.1",
+    "@formatjs/intl-locale": "^2.4.11",
+    "@formatjs/intl-numberformat": "^6.1.1",
+    "@formatjs/intl-pluralrules": "^4.0.1",
     "css-loader": "^3.2.0",
+    "es6-set": "^0.1.5",
     "eslint": "^4.19.1",
     "eslint-config-tui": "^1.0.3",
     "eslint-loader": "^2.0.0",
@@ -75,6 +82,7 @@
     "tui-release-notes": "git+https://github.com/nhn/toast-ui.release-notes.git#v1.0.1",
     "typescript": "^3.2.1",
     "url-loader": "^1.0.1",
+    "weakmap-polyfill": "^2.0.2",
     "webpack": "^4.13.0",
     "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.11.0"

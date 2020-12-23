@@ -10,6 +10,54 @@ var ScheduleViewModel = require('../model/viewModel/scheduleViewModel');
 var datetime = require('../common/datetime');
 var common = require('../common/common');
 var Theme = require('../theme/theme');
+var tz = require('../common/timezone');
+var TZDate = tz.Date;
+
+/**
+ * Get range date by custom timezone or native timezone
+ * @param {Schedule} schedule The instance of schedule.
+ * @returns {RangeDate} start and end date
+ */
+function getRangeDateByOffset(schedule) {
+    var scheduleStart = schedule.getStarts();
+    var scheduleEnd = schedule.getEnds();
+    var start = datetime.start(scheduleStart);
+    var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
+    var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
+    var end = datetime.end(endDate);
+
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var startOffset = scheduleStart.toDate().getTimezoneOffset();
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+
+    var primaryTimezoneName = tz.getPrimaryTimezoneName();
+    var primaryOffset = tz.getPrimaryOffset();
+    var timezoneOffset = tz.getOffsetByTimezoneName(primaryTimezoneName, scheduleStart.getTime());
+
+    if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
+        // When using a custom time zone, the native time zone offset is fixed and rendered.
+        // So, The fixed and rendered time should be recalculated as the original time zone offset.
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+    }
+
+    if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+        // The custom time zone is a time zone where two offsets including DST are applied.
+        // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+        // It should be recalculated with the original time zone offset.
+        offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+    }
+
+    start = datetime.start(scheduleStart.getUTCTime() + offsetDiffMs);
+    end = datetime.end(
+        datetime.convertStartDayToLastDay(new TZDate(scheduleEnd.getUTCTime() + offsetDiffMs))
+    );
+
+    return {
+        start: start,
+        end: end
+    };
+}
 
 /**
  * @constructor
@@ -27,19 +75,24 @@ function Base(options) {
      * @param {ScheduleViewModel} viewModel - view model instance
      * @returns {string} group key
      */
-    this.groupFunc = options.groupFunc || function(viewModel) {
-        var model = viewModel.model;
+    this.groupFunc =
+        options.groupFunc ||
+        function(viewModel) {
+            var model = viewModel.model;
 
-        if (viewModel.model.isAllDay) {
-            return 'allday';
-        }
+            if (viewModel.model.isAllDay) {
+                return 'allday';
+            }
 
-        if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
-            return 'allday';
-        }
+            if (
+                model.category === 'time' &&
+                model.end - model.start > datetime.MILLISECONDS_PER_DAY
+            ) {
+                return 'allday';
+            }
 
-        return model.category;
-    };
+            return model.category;
+        };
 
     /**
      * schedules collection.
@@ -79,13 +132,15 @@ Base.prototype._getContainDatesInSchedule = function(schedule) {
     var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
     var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
     var end = datetime.end(endDate);
-    var range = datetime.range(
-        start,
-        end,
-        datetime.MILLISECONDS_PER_DAY
-    );
+    var rangeDateByOffset;
 
-    return range;
+    if (tz.hasPrimaryTimezoneCustomSetting()) {
+        rangeDateByOffset = getRangeDateByOffset(schedule);
+        start = rangeDateByOffset.start;
+        end = rangeDateByOffset.end;
+    }
+
+    return datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);
 };
 
 /****************
@@ -265,7 +320,7 @@ Base.prototype._addToMatrix = function(schedule) {
 
     util.forEach(containDates, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),
-            matrix = ownMatrix[ymd] = ownMatrix[ymd] || [];
+            matrix = (ownMatrix[ymd] = ownMatrix[ymd] || []);
 
         matrix.push(util.stamp(schedule));
     });
@@ -278,13 +333,17 @@ Base.prototype._addToMatrix = function(schedule) {
 Base.prototype._removeFromMatrix = function(schedule) {
     var modelID = util.stamp(schedule);
 
-    util.forEach(this.dateMatrix, function(matrix) {
-        var index = util.inArray(modelID, matrix);
+    util.forEach(
+        this.dateMatrix,
+        function(matrix) {
+            var index = util.inArray(modelID, matrix);
 
-        if (~index) {
-            matrix.splice(index, 1);
-        }
-    }, this);
+            if (~index) {
+                matrix.splice(index, 1);
+            }
+        },
+        this
+    );
 };
 
 /**
@@ -372,9 +431,12 @@ Base.prototype.findByDateRange = function(start, end) {
         viewModels = result[ymd] = common.createScheduleCollection();
 
         if (matrix && matrix.length) {
-            viewModels.add.apply(viewModels, util.map(matrix, function(id) {
-                return ScheduleViewModel.create(ownSchedules[id]);
-            }));
+            viewModels.add.apply(
+                viewModels,
+                util.map(matrix, function(id) {
+                    return ScheduleViewModel.create(ownSchedules[id]);
+                })
+            );
         }
     });
 
