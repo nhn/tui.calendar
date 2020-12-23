@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.14 | Tue Sep 22 2020
+ * @version 1.13.0 | Wed Dec 23 2020
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -5395,6 +5395,132 @@ module.exports = FloatingLayer;
 
 /***/ }),
 
+/***/ "./src/js/common/intlUtil.js":
+/*!***********************************!*\
+  !*** ./src/js/common/intlUtil.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
+var intlFormatter = {};
+var intlUtil;
+
+var typeToPos = {
+    year: 0,
+    month: 1,
+    day: 2,
+    hour: 3,
+    minute: 4,
+    second: 5
+};
+
+/**
+ * Extract date tokens (y, M, d, h, m, s) using the formatToParts() method.
+ * @param {Intl.DateTimeFormat} dtf - Intl.DateTimeFormat instance
+ * @param {Date} date - date object
+ * @returns {Array.<number>} An array of objects only containing the formatted date
+ */
+function parseOffset(dtf, date) {
+    var formatted = dtf.formatToParts(date);
+    var filled = [];
+    var formattedLength = formatted.length;
+    var i, pos;
+
+    for (i = 0; i < formattedLength; i += 1) {
+        pos = typeToPos[formatted[i].type];
+
+        if (!util.isUndefined(pos)) {
+            filled[pos] = parseInt(formatted[i].value, 10);
+        }
+    }
+
+    return filled;
+}
+
+/**
+ * The time zone offset is calculated from the difference between the current time and the time in a specific time zone.
+ * @param {Array.<number>} parts - An array of objects only containing the formatted date (e.g. [2020, 12, 14, 10, 15, 19])
+ * @param {Date} date - date object
+ * @returns {number} offset
+ */
+function calculateOffset(parts, date) {
+    var y = parts[0];
+    var M = parts[1];
+    var d = parts[2];
+    var h = parts[3];
+    var m = parts[4];
+    var s = parts[5];
+
+    var utc = new Date(Date.UTC(y, M - 1, d, h, m, s));
+    var offset = (utc - date) / 60 / 1000;
+
+    return Math.round(offset);
+}
+
+/**
+ * Check if browser supports Intl.DateTimeFormat.prototype.formatToParts API
+ * @returns {boolean} supported
+ */
+function supportIntl() {
+    /**
+     * IE9 and IE10 do not support Intl.DateTimeFormat
+     * IE11 does not support IANA timezone names
+     * http://kangax.github.io/compat-table/esintl/#test-DateTimeFormat_accepts_IANA_timezone_names
+     */
+    return global.Intl && global.Intl.DateTimeFormat &&
+        util.isFunction(Intl.DateTimeFormat.prototype.formatToParts);
+}
+
+/**
+ * Return DateTimeFormat instance by timezone
+ * @param {string} timezoneName - timezone
+ * @returns {DateTimeFormat} Intl.DateTimeFormat instance
+ */
+function getIntlFormatter(timezoneName) {
+    if (!intlFormatter[timezoneName]) {
+        intlFormatter[timezoneName] = new Intl.DateTimeFormat('en-US', {
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: timezoneName
+        });
+    }
+
+    return intlFormatter[timezoneName];
+}
+
+/**
+ * Get offset of the time by timezone
+ * @param {string} timezoneName - recognize the time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York'
+ * @param {number} timestamp - timestamp
+ * @returns {number} offset
+ */
+function offsetCalculator(timezoneName, timestamp) {
+    var formatter = getIntlFormatter(timezoneName);
+    var date = new Date(timestamp);
+
+    return -calculateOffset(parseOffset(formatter, date), date);
+}
+
+intlUtil = {
+    supportIntl: supportIntl,
+    offsetCalculator: offsetCalculator
+};
+
+module.exports = intlUtil;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./src/js/common/model.js":
 /*!********************************!*\
   !*** ./src/js/common/model.js ***!
@@ -5994,12 +6120,15 @@ module.exports = {
 
 
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
+var intlUtil = __webpack_require__(/*! ./intlUtil */ "./src/js/common/intlUtil.js");
 
 var MIN_TO_MS = 60 * 1000;
 var nativeOffsetMs = getTimezoneOffset();
 var customOffsetMs = nativeOffsetMs;
 var timezoneOffsetCallback = null;
 var setByTimezoneOption = false;
+var offsetCalculator = null;
+var primaryOffset, primaryTimezoneName;
 
 var getterMethods = [
     'getDate',
@@ -6022,6 +6151,9 @@ var setterMethods = [
     'setSeconds'
 ];
 
+var STANDARD_TO_DST = 1;
+var DST_TO_STANDARD = -1;
+
 /**
  * Get the timezone offset by timestampe
  * @param {number} timestamp - timestamp
@@ -6029,7 +6161,7 @@ var setterMethods = [
  * @private
  */
 function getTimezoneOffset(timestamp) {
-    timestamp = timestamp || Date.now();
+    timestamp = !util.isUndefined(timestamp) ? timestamp : Date.now();
 
     return new Date(timestamp).getTimezoneOffset() * MIN_TO_MS;
 }
@@ -6054,10 +6186,14 @@ function getCustomTimezoneOffset(timestamp) {
  * @returns {number} local time
  */
 function getLocalTime(time) {
-    var timezoneOffset = getTimezoneOffset(time);
-    var customTimezoneOffset = getCustomTimezoneOffset(time);
-    var timezoneOffsetDiff = customTimezoneOffset ? 0 : nativeOffsetMs - timezoneOffset;
-    var localTime = time - customTimezoneOffset + timezoneOffset + timezoneOffsetDiff;
+    var customTimezoneOffset, localTime;
+
+    if (!setByTimezoneOption) {
+        return time;
+    }
+
+    customTimezoneOffset = getCustomTimezoneOffset(time);
+    localTime = time - customTimezoneOffset + nativeOffsetMs;
 
     return localTime;
 }
@@ -6084,7 +6220,7 @@ function createDateWithUTCTime(arg) {
 
     if (arg instanceof TZDate) {
         time = arg.getUTCTime();
-    } else if ((typeof arg) === 'number') {
+    } else if (typeof arg === 'number') {
         time = arg;
     } else if (arg === null) {
         time = 0;
@@ -6105,7 +6241,7 @@ function createDateAsLocalTime(arg) {
 
     if (arg instanceof Date) {
         time = arg.getTime();
-    } else if ((typeof arg) === 'string') {
+    } else if (typeof arg === 'string') {
         time = Date.parse(arg);
     } else {
         throw new Error('Invalid Type');
@@ -6122,7 +6258,7 @@ function createDateAsLocalTime(arg) {
  * @returns {boolean}
  */
 function useLocalTimeConverter(arg) {
-    return arg instanceof Date || (typeof arg) === 'string';
+    return arg instanceof Date || typeof arg === 'string';
 }
 
 /**
@@ -6237,16 +6373,142 @@ setterMethods.forEach(function(methodName) {
     };
 });
 
+/**
+ * Set offset
+ * @param {number} offset - timezone offset based on minutes
+ */
+function setOffset(offset) {
+    customOffsetMs = offset * MIN_TO_MS;
+}
+
+/**
+ * Set primary offset
+ * @param {number} offset - offset
+ */
+function setPrimaryOffset(offset) {
+    primaryOffset = offset;
+    setOffset(offset);
+}
+
+/**
+ * Return primary offset
+ * @returns {number} offset
+ */
+function getPrimaryOffset() {
+    return util.isNumber(primaryOffset) ? primaryOffset : new Date().getTimezoneOffset();
+}
+
+/**
+ * Set primary timezone name
+ * @param {string} timezoneName - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York')
+ */
+function setPrimaryTimezoneCode(timezoneName) {
+    primaryTimezoneName = timezoneName;
+}
+
+/**
+ * Get offset by timezoneName
+ * @param {string} timezoneName - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York')
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezone offset
+ */
+function getOffsetByTimezoneName(timezoneName, timestamp) {
+    var offset = getPrimaryOffset();
+    var calculator;
+
+    if (!timezoneName) {
+        return offset;
+    }
+
+    calculator = getOffsetCalculator(timezoneName);
+
+    return calculator ? calculator(timezoneName, timestamp) : offset;
+}
+
+/**
+ * Set a calculator function to get timezone offset by timestamp
+ * @param {function} calculator - offset calculator
+ */
+function setOffsetCalculator(calculator) {
+    offsetCalculator = calculator;
+}
+
+/**
+ * Return a function to calculate timezone offset by timestamp
+ * @param {string} timezoneName - timezone name
+ * @returns {function | null} offset calculator
+ */
+function getOffsetCalculator(timezoneName) {
+    if (util.isFunction(offsetCalculator)) {
+        return offsetCalculator;
+    }
+
+    if (intlUtil.supportIntl(timezoneName)) {
+        return intlUtil.offsetCalculator;
+    }
+
+    return null;
+}
+
+/**
+ * Set timezone and offset by timezone option
+ * @param {Timezone} timezoneObj - {@link Timezone}
+ */
+function setPrimaryTimezoneByOption(timezoneObj) {
+    var timezoneName, offset;
+
+    if (!(timezoneObj && timezoneObj.timezoneName)) {
+        return;
+    }
+
+    timezoneName = timezoneObj.timezoneName;
+    setByTimezoneOption = true;
+    setPrimaryTimezoneCode(timezoneName);
+
+    offset = getOffsetByTimezoneName(timezoneName, Date.now());
+
+    if (offset === nativeOffsetMs / MIN_TO_MS) {
+        setByTimezoneOption = false;
+    }
+
+    setPrimaryOffset(offset);
+}
+
+/**
+ * Get primary timezone name
+ * @returns {string} primary timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York')
+ */
+function getPrimaryTimezoneName() {
+    return primaryTimezoneName;
+}
+
+/**
+ * Compare the start and end times to see if the time zone is changing.
+ * @param {number} startTime - start timestamp
+ * @param {number} endTime - end timestamp
+ * @returns {object} whether to change the offset and offset difference value
+ */
+function isDifferentOffsetStartAndEndTime(startTime, endTime) {
+    var offset1 = getOffsetByTimezoneName(primaryTimezoneName, startTime);
+    var offset2 = getOffsetByTimezoneName(primaryTimezoneName, endTime);
+    var result = 0;
+
+    if (offset1 > offset2) {
+        result = STANDARD_TO_DST;
+    } else if (offset1 < offset2) {
+        result = DST_TO_STANDARD;
+    }
+
+    return {
+        isOffsetChanged: result,
+        offsetDiff: offset1 - offset2
+    };
+}
+
 module.exports = {
     Date: TZDate,
 
-    /**
-     * Set offset
-     * @param {number} offset - timezone offset based on minutes
-     */
-    setOffset: function(offset) {
-        customOffsetMs = offset * MIN_TO_MS;
-    },
+    setOffset: setOffset,
 
     /**
      * Set offset
@@ -6254,6 +6516,7 @@ module.exports = {
      */
     setOffsetByTimezoneOption: function(offset) {
         this.setOffset(-offset);
+        primaryOffset = -offset;
         setByTimezoneOption = true;
     },
 
@@ -6283,7 +6546,55 @@ module.exports = {
      */
     restoreOffset: function() {
         customOffsetMs = getTimezoneOffset();
-    }
+    },
+
+    getNativeOffsetMs: function() {
+        return nativeOffsetMs;
+    },
+
+    /**
+     * Check to use custom timezone option
+     * @returns {boolean} use custom timezone option
+     */
+    hasPrimaryTimezoneCustomSetting: function() {
+        return setByTimezoneOption;
+    },
+
+    resetCustomSetting: function() {
+        setByTimezoneOption = false;
+    },
+
+    setOffsetCalculator: setOffsetCalculator,
+
+    setPrimaryTimezoneByOption: setPrimaryTimezoneByOption,
+
+    getPrimaryOffset: getPrimaryOffset,
+
+    getOffsetByTimezoneName: getOffsetByTimezoneName,
+
+    getPrimaryTimezoneName: getPrimaryTimezoneName,
+
+    isNativeOsUsingDSTTimezone: function() {
+        var year = new Date().getFullYear();
+        var jan = new Date(year, 0, 1).getTimezoneOffset();
+        var jul = new Date(year, 6, 1).getTimezoneOffset();
+
+        return jan !== jul;
+    },
+
+    isPrimaryUsingDSTTimezone: function() {
+        var year = new Date().getFullYear();
+        var jan = new Date(year, 0, 1);
+        var jul = new Date(year, 6, 1);
+
+        return (
+            getOffsetByTimezoneName(primaryTimezoneName, jan) !==
+            getOffsetByTimezoneName(primaryTimezoneName, jul)
+        );
+    },
+
+    isDifferentOffsetStartAndEndTime: isDifferentOffsetStartAndEndTime,
+    setPrimaryTimezoneCode: setPrimaryTimezoneCode
 };
 
 
@@ -7026,6 +7337,54 @@ var ScheduleViewModel = __webpack_require__(/*! ../model/viewModel/scheduleViewM
 var datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/datetime.js");
 var common = __webpack_require__(/*! ../common/common */ "./src/js/common/common.js");
 var Theme = __webpack_require__(/*! ../theme/theme */ "./src/js/theme/theme.js");
+var tz = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js");
+var TZDate = tz.Date;
+
+/**
+ * Get range date by custom timezone or native timezone
+ * @param {Schedule} schedule The instance of schedule.
+ * @returns {RangeDate} start and end date
+ */
+function getRangeDateByOffset(schedule) {
+    var scheduleStart = schedule.getStarts();
+    var scheduleEnd = schedule.getEnds();
+    var start = datetime.start(scheduleStart);
+    var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
+    var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
+    var end = datetime.end(endDate);
+
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var startOffset = scheduleStart.toDate().getTimezoneOffset();
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+
+    var primaryTimezoneName = tz.getPrimaryTimezoneName();
+    var primaryOffset = tz.getPrimaryOffset();
+    var timezoneOffset = tz.getOffsetByTimezoneName(primaryTimezoneName, scheduleStart.getTime());
+
+    if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
+        // When using a custom time zone, the native time zone offset is fixed and rendered.
+        // So, The fixed and rendered time should be recalculated as the original time zone offset.
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+    }
+
+    if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+        // The custom time zone is a time zone where two offsets including DST are applied.
+        // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+        // It should be recalculated with the original time zone offset.
+        offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+    }
+
+    start = datetime.start(scheduleStart.getUTCTime() + offsetDiffMs);
+    end = datetime.end(
+        datetime.convertStartDayToLastDay(new TZDate(scheduleEnd.getUTCTime() + offsetDiffMs))
+    );
+
+    return {
+        start: start,
+        end: end
+    };
+}
 
 /**
  * @constructor
@@ -7043,19 +7402,24 @@ function Base(options) {
      * @param {ScheduleViewModel} viewModel - view model instance
      * @returns {string} group key
      */
-    this.groupFunc = options.groupFunc || function(viewModel) {
-        var model = viewModel.model;
+    this.groupFunc =
+        options.groupFunc ||
+        function(viewModel) {
+            var model = viewModel.model;
 
-        if (viewModel.model.isAllDay) {
-            return 'allday';
-        }
+            if (viewModel.model.isAllDay) {
+                return 'allday';
+            }
 
-        if (model.category === 'time' && (model.end - model.start > datetime.MILLISECONDS_PER_DAY)) {
-            return 'allday';
-        }
+            if (
+                model.category === 'time' &&
+                model.end - model.start > datetime.MILLISECONDS_PER_DAY
+            ) {
+                return 'allday';
+            }
 
-        return model.category;
-    };
+            return model.category;
+        };
 
     /**
      * schedules collection.
@@ -7095,13 +7459,15 @@ Base.prototype._getContainDatesInSchedule = function(schedule) {
     var equalStartEnd = datetime.compare(scheduleStart, scheduleEnd) === 0;
     var endDate = equalStartEnd ? scheduleEnd : datetime.convertStartDayToLastDay(scheduleEnd);
     var end = datetime.end(endDate);
-    var range = datetime.range(
-        start,
-        end,
-        datetime.MILLISECONDS_PER_DAY
-    );
+    var rangeDateByOffset;
 
-    return range;
+    if (tz.hasPrimaryTimezoneCustomSetting()) {
+        rangeDateByOffset = getRangeDateByOffset(schedule);
+        start = rangeDateByOffset.start;
+        end = rangeDateByOffset.end;
+    }
+
+    return datetime.range(start, end, datetime.MILLISECONDS_PER_DAY);
 };
 
 /****************
@@ -7281,7 +7647,7 @@ Base.prototype._addToMatrix = function(schedule) {
 
     util.forEach(containDates, function(date) {
         var ymd = datetime.format(date, 'YYYYMMDD'),
-            matrix = ownMatrix[ymd] = ownMatrix[ymd] || [];
+            matrix = (ownMatrix[ymd] = ownMatrix[ymd] || []);
 
         matrix.push(util.stamp(schedule));
     });
@@ -7294,13 +7660,17 @@ Base.prototype._addToMatrix = function(schedule) {
 Base.prototype._removeFromMatrix = function(schedule) {
     var modelID = util.stamp(schedule);
 
-    util.forEach(this.dateMatrix, function(matrix) {
-        var index = util.inArray(modelID, matrix);
+    util.forEach(
+        this.dateMatrix,
+        function(matrix) {
+            var index = util.inArray(modelID, matrix);
 
-        if (~index) {
-            matrix.splice(index, 1);
-        }
-    }, this);
+            if (~index) {
+                matrix.splice(index, 1);
+            }
+        },
+        this
+    );
 };
 
 /**
@@ -7388,9 +7758,12 @@ Base.prototype.findByDateRange = function(start, end) {
         viewModels = result[ymd] = common.createScheduleCollection();
 
         if (matrix && matrix.length) {
-            viewModels.add.apply(viewModels, util.map(matrix, function(id) {
-                return ScheduleViewModel.create(ownSchedules[id]);
-            }));
+            viewModels.add.apply(
+                viewModels,
+                util.map(matrix, function(id) {
+                    return ScheduleViewModel.create(ownSchedules[id]);
+                })
+            );
         }
     });
 
@@ -7452,7 +7825,8 @@ var forEachArr = util.forEachArray,
     aps = Array.prototype.slice;
 
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
-var TZDate = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js").Date;
+var tz = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js");
+var TZDate = tz.Date;
 var Collection = __webpack_require__(/*! ../../common/collection */ "./src/js/common/collection.js");
 var ScheduleViewModel = __webpack_require__(/*! ../../model/viewModel/scheduleViewModel */ "./src/js/model/viewModel/scheduleViewModel.js");
 
@@ -7581,6 +7955,13 @@ var Core = {
         return function(model) {
             var ownStarts = model.getStarts(),
                 ownEnds = model.getEnds();
+            var dateByOffset;
+
+            if (tz.hasPrimaryTimezoneCustomSetting()) {
+                dateByOffset = recalculateDateByOffset(ownStarts, ownEnds);
+                ownStarts = dateByOffset.start;
+                ownEnds = dateByOffset.end;
+            }
 
             // shorthand condition of
             //
@@ -7695,6 +8076,41 @@ var Core = {
         return viewModelColl;
     }
 };
+
+/**
+ * Get range date by custom timezone or native timezone
+ * @param {TZDate} ownStarts start date.
+ * @param {TZDate} ownEnds end date.
+ * @returns {RangeDate} recalculated start and end date
+ */
+function recalculateDateByOffset(ownStarts, ownEnds) {
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var startOffset = ownStarts.toDate().getTimezoneOffset();
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+
+    var primaryTimezoneName = tz.getPrimaryTimezoneName();
+    var primaryOffset = tz.getPrimaryOffset();
+    var timezoneOffset = tz.getOffsetByTimezoneName(primaryTimezoneName, ownStarts.getTime());
+
+    if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
+        // When using a custom time zone, the native time zone offset is fixed and rendered.
+        // So, The fixed and rendered time should be recalculated as the original time zone offset.
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+    }
+
+    if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+        // The custom time zone is a time zone where two offsets including DST are applied.
+        // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+        // It should be recalculated with the original time zone offset.
+        offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+    }
+
+    return {
+        start: new TZDate(ownStarts.getUTCTime() + offsetDiffMs),
+        end: new TZDate(ownEnds.getUTCTime() + offsetDiffMs)
+    };
+}
 
 module.exports = Core;
 
@@ -8344,17 +8760,17 @@ var GA_TRACKING_ID = 'UA-129951699-1';
 
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet"),
     Handlebars = __webpack_require__(/*! handlebars-template-loader/runtime */ "./node_modules/handlebars-template-loader/runtime/index.js");
-var dw = __webpack_require__(/*! ../common/dw */ "./src/js/common/dw.js"),
-    datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/datetime.js"),
-    Layout = __webpack_require__(/*! ../view/layout */ "./src/js/view/layout.js"),
-    Drag = __webpack_require__(/*! ../handler/drag */ "./src/js/handler/drag.js"),
-    controllerFactory = __webpack_require__(/*! ./controller */ "./src/js/factory/controller.js"),
-    weekViewFactory = __webpack_require__(/*! ./weekView */ "./src/js/factory/weekView.js"),
-    monthViewFactory = __webpack_require__(/*! ./monthView */ "./src/js/factory/monthView.js"),
-    TZDate = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js").Date,
-    config = __webpack_require__(/*! ../config */ "./src/js/config.js"),
-    timezone = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js"),
-    reqAnimFrame = __webpack_require__(/*! ../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
+var dw = __webpack_require__(/*! ../common/dw */ "./src/js/common/dw.js");
+var datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/datetime.js");
+var Layout = __webpack_require__(/*! ../view/layout */ "./src/js/view/layout.js");
+var Drag = __webpack_require__(/*! ../handler/drag */ "./src/js/handler/drag.js");
+var controllerFactory = __webpack_require__(/*! ./controller */ "./src/js/factory/controller.js");
+var weekViewFactory = __webpack_require__(/*! ./weekView */ "./src/js/factory/weekView.js");
+var monthViewFactory = __webpack_require__(/*! ./monthView */ "./src/js/factory/monthView.js");
+var tz = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js");
+var TZDate = tz.Date;
+var config = __webpack_require__(/*! ../config */ "./src/js/config.js");
+var reqAnimFrame = __webpack_require__(/*! ../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
 
 var mmin = Math.min;
 
@@ -8687,9 +9103,9 @@ var mmin = Math.min;
  * @property {number} [visibleScheduleCount] - The visible schedule count in monthly grid
  * @property {object} [moreLayerSize] - The more layer size
  * @property {object} [moreLayerSize.width=null] - The css width value(px, 'auto').
-*                                                  The default value 'null' is to fit a grid cell.
+ *                                                  The default value 'null' is to fit a grid cell.
  * @property {object} [moreLayerSize.height=null] - The css height value(px, 'auto').
-*                                                   The default value 'null' is to fit a grid cell.
+ *                                                   The default value 'null' is to fit a grid cell.
  * @property {object} [grid] - The grid's header and footer information
  *  @property {object} [grid.header] - The grid's header informatioin
  *   @property {number} [grid.header.height=34] - The grid's header height
@@ -8708,20 +9124,63 @@ var mmin = Math.min;
 
 /**
  * @typedef {object} Timezone
- * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
- * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
- * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
+ * @property {Array.<Zone>} [zones] - {@link Zone} array. Set the list of time zones.
+ *  The first zone element is primary
+ *  The rest zone elements are shown in left timegrid of weekly/daily view
+ * @property {function} [offsetCalculator = null] - If you define the 'offsetCalculator' property, the offset calculation is done with this function.
+ * The offsetCalculator option allows you to set up a function that returns the timezone offset for that time using date libraries like ['js-joda'](https://js-joda.github.io/js-joda/) and ['moment-timezone'](https://momentjs.com/timezone/).
+ * The 'offsetCalculator' option is useful when your browser does not support 'Intl.DateTimeFormat' and 'formatToPart', or you want to use the date library you are familiar with.
+ *
  * @example
  * var cal = new Calendar('#calendar', {
- *  timezones: [{
- *      timezoneOffset: 540,
- *      displayLabel: 'GMT+09:00',
- *      tooltip: 'Seoul'
- *  }, {
- *      timezoneOffset: -420,
- *      displayLabel: 'GMT-08:00',
- *      tooltip: 'Los Angeles'
- *  }]
+ *   timezone: {
+ *     zones: [
+ *       {
+ *         timezoneName: 'Asia/Seoul',
+ *         displayLabel: 'GMT+09:00',
+ *         tooltip: 'Seoul'
+ *       },
+ *       {
+ *         timezoneName: 'America/New_York',
+ *         displayLabel: 'GMT-05:00',
+ *         tooltip: 'New York',
+ *       }
+ *     ],
+ *     offsetCalculator: function(timezoneName, timestamp){
+ *       // matches 'getTimezoneOffset()' of Date API
+ *       // e.g. +09:00 => -540, -04:00 => 240
+ *       return moment.tz.zone(timezoneName).utcOffset(timestamp);
+ *     },
+ *   }
+ * });
+ */
+
+/**
+ * @typedef {object} Zone
+ * @property {string} [timezoneName] - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York').
+ *  Basically, it will calculate the offset using 'Intl.DateTimeFormat' with the value of the this property entered.
+ *  This property is required.
+ * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
+ * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
+ * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset().
+ *  This property will be deprecated. (since version 1.13)
+ *
+ * @example
+ * var cal = new Calendar('#calendar', {
+ *   timezone: {
+ *     zones: [
+ *       {
+ *         timezoneName: 'Asia/Seoul',
+ *         displayLabel: 'GMT+09:00',
+ *         tooltip: 'Seoul'
+ *       },
+ *       {
+ *         timezoneName: 'America/New_York',
+ *         displayLabel: 'GMT-05:00',
+ *         tooltip: 'New York',
+ *       }
+ *     ],
+ *   }
  * });
  */
 
@@ -8769,13 +9228,12 @@ var mmin = Math.min;
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
- * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
- *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function
- *  The rest timezone elements are shown in left timegrid of weekly/daily view
+ * @property {Timezone} [timezone] - {@link Timezone} - Set a custom time zone. You can add secondary timezone in the weekly/daily view.
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
  * @property {boolean} [usageStatistics=true] - Let us know the hostname. If you don't want to send the hostname, please set to false.
+ * @property {Array.<Timezone>} [timezones] - This property will be deprecated. (since version 1.13) Please use timezone property.
  */
 
 /**
@@ -8847,9 +9305,12 @@ var mmin = Math.min;
  * });
  */
 function Calendar(container, options) {
-    options = util.extend({
-        usageStatistics: true
-    }, options);
+    options = util.extend(
+        {
+            usageStatistics: true
+        },
+        options
+    );
 
     if (options.usageStatistics === true && util.sendHostname) {
         util.sendHostname('calendar', GA_TRACKING_ID);
@@ -8980,9 +9441,9 @@ Calendar.prototype.destroy = function() {
         }
     });
 
-    this._options = this._renderDate = this._controller =
-        this._layout = this._dragHandler = this._viewName =
-        this._refreshMethod = this._scrollToNowMethod = null;
+    this._options = this._renderDate = this._controller
+        = this._layout = this._dragHandler = this._viewName = this._refreshMethod
+        = this._scrollToNowMethod = null;
 };
 
 /**
@@ -8990,42 +9451,59 @@ Calendar.prototype.destroy = function() {
  * @param {Options} options - calendar options
  * @private
  */
+// eslint-disable-next-line complexity
 Calendar.prototype._initialize = function(options) {
     var controller = this._controller,
         viewName = this._viewName;
 
-    this._options = util.extend({
-        defaultView: viewName,
-        taskView: true,
-        scheduleView: true,
-        template: util.extend({
-            allday: null,
-            time: null
-        }, util.pick(options, 'template') || {}),
-        week: util.extend({}, util.pick(options, 'week') || {}),
-        month: util.extend({}, util.pick(options, 'month') || {}),
-        calendars: [],
-        useCreationPopup: false,
-        useDetailPopup: false,
-        timezones: options.timezones || [],
-        disableDblClick: false,
-        disableClick: false,
-        isReadOnly: false
-    }, options);
+    this._options = util.extend(
+        {
+            defaultView: viewName,
+            taskView: true,
+            scheduleView: true,
+            template: util.extend(
+                {
+                    allday: null,
+                    time: null
+                },
+                util.pick(options, 'template') || {}
+            ),
+            week: util.extend({}, util.pick(options, 'week') || {}),
+            month: util.extend({}, util.pick(options, 'month') || {}),
+            calendars: [],
+            useCreationPopup: false,
+            useDetailPopup: false,
+            timezones: options.timezone && options.timezone.zones ? options.timezone.zones : [],
+            disableDblClick: false,
+            disableClick: false,
+            isReadOnly: false
+        },
+        options
+    );
 
-    this._options.week = util.extend({
-        startDayOfWeek: 0,
-        workweek: false
-    }, util.pick(this._options, 'week') || {});
+    this._options.week = util.extend(
+        {
+            startDayOfWeek: 0,
+            workweek: false
+        },
+        util.pick(this._options, 'week') || {}
+    );
 
-    this._options.month = util.extend({
-        startDayOfWeek: 0,
-        workweek: false,
-        scheduleFilter: function(schedule) {
-            return Boolean(schedule.isVisible) &&
-              (schedule.category === 'allday' || schedule.category === 'time');
-        }
-    }, util.pick(options, 'month') || {});
+    this._options.timezone = util.extend({zones: []}, util.pick(options, 'timezone') || {});
+
+    this._options.month = util.extend(
+        {
+            startDayOfWeek: 0,
+            workweek: false,
+            scheduleFilter: function(schedule) {
+                return (
+                    Boolean(schedule.isVisible) &&
+                    (schedule.category === 'allday' || schedule.category === 'time')
+                );
+            }
+        },
+        util.pick(options, 'month') || {}
+    );
 
     if (this._options.isReadOnly) {
         this._options.useCreationPopup = false;
@@ -9033,7 +9511,7 @@ Calendar.prototype._initialize = function(options) {
 
     this._layout.controller = controller;
 
-    this._setAdditionalInternalOptions(options);
+    this._setAdditionalInternalOptions(this._options);
 
     this.changeView(viewName, true);
 };
@@ -9047,7 +9525,8 @@ Calendar.prototype._initialize = function(options) {
  * @private
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
-    var timezones = options.timezones || [];
+    var timezone = options.timezone;
+    var zones, offsetCalculator;
 
     util.forEach(options.template, function(func, name) {
         if (func) {
@@ -9055,12 +9534,31 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
         }
     });
 
-    util.forEach(options.calendars || [], function(calendar) {
-        this.setCalendarColor(calendar.id, calendar, true);
-    }, this);
+    util.forEach(
+        options.calendars || [],
+        function(calendar) {
+            this.setCalendarColor(calendar.id, calendar, true);
+        },
+        this
+    );
 
-    if (timezones.length) {
-        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
+    if (timezone) {
+        offsetCalculator = timezone.offsetCalculator;
+
+        if (util.isFunction(offsetCalculator)) {
+            tz.setOffsetCalculator(offsetCalculator);
+        }
+
+        zones = timezone.zones;
+
+        if (zones.length) {
+            tz.setPrimaryTimezoneByOption(zones[0]);
+
+            if (util.isNumber(zones[0].timezoneOffset)) {
+                // @deprecated timezoneOffset property will be deprecated. use timezone property
+                tz.setOffsetByTimezoneOption(zones[0].timezoneOffset);
+            }
+        }
     }
 };
 
@@ -9095,9 +9593,13 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
  * ]);
  */
 Calendar.prototype.createSchedules = function(schedules, silent) {
-    util.forEach(schedules, function(obj) {
-        this._setScheduleColor(obj.calendarId, obj);
-    }, this);
+    util.forEach(
+        schedules,
+        function(obj) {
+            this._setScheduleColor(obj.calendarId, obj);
+        },
+        this
+    );
 
     this._controller.createSchedules(schedules, silent);
 
@@ -9148,9 +9650,7 @@ Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, si
     }
 
     hasChangedCalendar = this._hasChangedCalendar(schedule, changes);
-    changes = hasChangedCalendar ?
-        this._setScheduleColor(changes.calendarId, changes) :
-        changes;
+    changes = hasChangedCalendar ? this._setScheduleColor(changes.calendarId, changes) : changes;
 
     ctrl.updateSchedule(schedule, changes);
 
@@ -9160,9 +9660,7 @@ Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, si
 };
 
 Calendar.prototype._hasChangedCalendar = function(schedule, changes) {
-    return schedule &&
-        changes.calendarId &&
-        schedule.calendarId !== changes.calendarId;
+    return schedule && changes.calendarId && schedule.calendarId !== changes.calendarId;
 };
 
 Calendar.prototype._setScheduleColor = function(calendarId, schedule) {
@@ -9382,13 +9880,20 @@ Calendar.prototype.today = function() {
  * // move previous month when "month" view.
  * calendar.move(-1);
  */
+// eslint-disable-next-line complexity
 Calendar.prototype.move = function(offset) {
     var renderDate = dw(datetime.start(this._renderDate)),
         viewName = this._viewName,
         view = this._getCurrentView(),
         recursiveSet = _setOptionRecurseively,
-        startDate, endDate, tempDate,
-        startDayOfWeek, visibleWeeksCount, workweek, isAlways6Week, datetimeOptions;
+        startDate,
+        endDate,
+        tempDate,
+        startDayOfWeek,
+        visibleWeeksCount,
+        workweek,
+        isAlways6Week,
+        datetimeOptions;
 
     offset = util.isExisty(offset) ? offset : 0;
 
@@ -9568,15 +10073,20 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
         ownColor = calColor[calendarId];
 
     if (!util.isObject(option)) {
-        config.throwError('Calendar#changeCalendarColor(): color 는 {color: \'\', bgColor: \'\'} 형태여야 합니다.');
+        config.throwError(
+            "Calendar#changeCalendarColor(): color 는 {color: '', bgColor: ''} 형태여야 합니다."
+        );
     }
 
-    ownColor = calColor[calendarId] = util.extend({
-        color: '#000',
-        bgColor: '#a1b56c',
-        borderColor: '#a1b56c',
-        dragBgColor: '#a1b56c'
-    }, option);
+    ownColor = calColor[calendarId] = util.extend(
+        {
+            color: '#000',
+            bgColor: '#a1b56c',
+            borderColor: '#a1b56c',
+            dragBgColor: '#a1b56c'
+        },
+        option
+    );
 
     ownSchedules.each(function(model) {
         if (model.calendarId !== calendarId) {
@@ -9882,6 +10392,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
  * calendar.setOptions({month: {workweek: true}}, true);
  * calendar.changeView(calendar.getViewName(), true);
  */
+// eslint-disable-next-line complexity
 Calendar.prototype.changeView = function(newViewName, force) {
     var self = this,
         layout = this._layout,
@@ -9912,12 +10423,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
     layout.clear();
 
     if (newViewName === 'month') {
-        created = _createMonthView(
-            controller,
-            layout.container,
-            dragHandler,
-            options
-        );
+        created = _createMonthView(controller, layout.container, dragHandler, options);
     } else if (newViewName === 'week') {
         created = _createWeekView(
             controller,
@@ -10005,7 +10511,9 @@ Calendar.prototype._setViewName = function(viewName) {
 Calendar.prototype.getElement = function(scheduleId, calendarId) {
     var schedule = this.getSchedule(scheduleId, calendarId);
     if (schedule) {
-        return document.querySelector('[data-schedule-id="' + scheduleId + '"][data-calendar-id="' + calendarId + '"]');
+        return document.querySelector(
+            '[data-schedule-id="' + scheduleId + '"][data-calendar-id="' + calendarId + '"]'
+        );
     }
 
     return null;
@@ -10035,15 +10543,23 @@ Calendar.prototype.setTheme = function(theme) {
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
 Calendar.prototype.setOptions = function(options, silent) {
-    util.forEach(options, function(value, name) {
-        if (util.isObject(value) && !util.isArray(value)) {
-            util.forEach(value, function(innerValue, innerName) {
-                this._options[name][innerName] = innerValue;
-            }, this);
-        } else {
-            this._options[name] = value;
-        }
-    }, this);
+    util.forEach(
+        options,
+        function(value, name) {
+            if (util.isObject(value) && !util.isArray(value)) {
+                util.forEach(
+                    value,
+                    function(innerValue, innerName) {
+                        this._options[name][innerName] = innerValue;
+                    },
+                    this
+                );
+            } else {
+                this._options[name] = value;
+            }
+        },
+        this
+    );
 
     this._setAdditionalInternalOptions(options);
 
@@ -10097,9 +10613,13 @@ Calendar.prototype.getViewName = function() {
  * @param {Array.<CalendarProps>} calendars - {@link CalendarProps} List
  */
 Calendar.prototype.setCalendars = function(calendars) {
-    util.forEach(calendars || [], function(calendar) {
-        this.setCalendarColor(calendar.id, calendar, true);
-    }, this);
+    util.forEach(
+        calendars || [],
+        function(calendar) {
+            this.setCalendarColor(calendar.id, calendar, true);
+        },
+        this
+    );
 
     this._controller.setCalendars(calendars);
 
@@ -10135,7 +10655,7 @@ Calendar.prototype.hideMoreView = function() {
  * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
  */
 Calendar.setTimezoneOffset = function(offset) {
-    timezone.setOffset(offset);
+    tz.setOffset(offset);
 };
 
 /**
@@ -10150,7 +10670,7 @@ Calendar.setTimezoneOffset = function(offset) {
  * });
  */
 Calendar.setTimezoneOffsetCallback = function(callback) {
-    timezone.setOffsetCallback(callback);
+    tz.setOffsetCallback(callback);
 };
 
 /**
@@ -10174,13 +10694,7 @@ function _createController(options) {
  * @private
  */
 function _createWeekView(controller, container, dragHandler, options, viewName) {
-    return weekViewFactory(
-        controller,
-        container,
-        dragHandler,
-        options,
-        viewName
-    );
+    return weekViewFactory(controller, container, dragHandler, options, viewName);
 }
 
 /**
@@ -10193,12 +10707,7 @@ function _createWeekView(controller, container, dragHandler, options, viewName) 
  * @private
  */
 function _createMonthView(controller, container, dragHandler, options) {
-    return monthViewFactory(
-        controller,
-        container,
-        dragHandler,
-        options
-    );
+    return monthViewFactory(controller, container, dragHandler, options);
 }
 
 /**
@@ -17564,10 +18073,12 @@ module.exports = TimeResizeGuide;
 
 
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
-var TZDate = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js").Date;
+var tz = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js");
 var datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/datetime.js");
 var dirty = __webpack_require__(/*! ../common/dirty */ "./src/js/common/dirty.js");
 var model = __webpack_require__(/*! ../common/model */ "./src/js/common/model.js");
+var TZDate = tz.Date;
+var MIN_TO_MS = 60 * 1000;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -17589,6 +18100,37 @@ var SCHEDULE_CATEGORY = {
     /** normal schedule */
     TIME: 'time'
 };
+
+/**
+ * Get duration by primary timezone
+ * @param {Date} start render start date
+ * @param {Date} end render end date
+ * @returns {number} duration
+ */
+function getDurationByPrimaryTimezone(start, end) {
+    var checkOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
+    var isOffsetChanged = checkOffset.isOffsetChanged;
+    var duration = end - start;
+
+    if (isOffsetChanged !== 0) {
+        duration += checkOffset.offsetDiff * MIN_TO_MS;
+    }
+
+    return duration;
+}
+
+/**
+ * Get duration by native timezone
+ * @param {TZDate} start render start date
+ * @param {TZDate} end render end date
+ * @returns {number} duration
+ */
+function getDurationByNativeTimezone(start, end) {
+    var startOffset = start.toDate().getTimezoneOffset();
+    var endOffset = end.toDate().getTimezoneOffset();
+
+    return (end - start) + ((endOffset - startOffset) * MIN_TO_MS);
+}
 
 /**
  * The model of calendar schedules.
@@ -17932,9 +18474,14 @@ Schedule.prototype.duration = function() {
     var start = this.getStarts(),
         end = this.getEnds(),
         duration;
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
 
     if (this.isAllDay) {
         duration = datetime.end(end) - datetime.start(start);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isPrimaryUsingDSTTimezone()) {
+        duration = getDurationByPrimaryTimezone(start, end);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
+        duration = getDurationByNativeTimezone(start, end);
     } else {
         duration = end - start;
     }
@@ -17971,9 +18518,11 @@ Schedule.prototype.collidesWith = function(schedule) {
     start -= goingDuration;
     end += comingDuration;
 
-    if ((start > ownStarts && start < ownEnds) ||
+    if (
+        (start > ownStarts && start < ownEnds) ||
         (end > ownStarts && end < ownEnds) ||
-        (start <= ownStarts && end >= ownEnds)) {
+        (start <= ownStarts && end >= ownEnds)
+    ) {
         return true;
     }
 
@@ -19931,8 +20480,9 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-    startDate = new TZDate(this.rangePicker.getStartDate()).toLocalTime();
-    endDate = new TZDate(this.rangePicker.getEndDate()).toLocalTime();
+
+    startDate = new TZDate(this.rangePicker.getStartDate());
+    endDate = new TZDate(this.rangePicker.getEndDate());
 
     if (!this._validateForm(title, startDate, endDate)) {
         if (!title.value) {
@@ -20459,6 +21009,7 @@ module.exports = ScheduleCreationPopup;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* eslint-disable vars-on-top */
 /**
  * @fileoverview Floating layer for showing detail schedule
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
@@ -20472,6 +21023,9 @@ var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js"),
     domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var tmpl = __webpack_require__(/*! ../template/popup/scheduleDetailPopup.hbs */ "./src/js/view/template/popup/scheduleDetailPopup.hbs");
+var tz = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js");
+var TZDate = tz.Date;
+var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
 
 /**
  * @constructor
@@ -20581,7 +21135,7 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
     var self = this;
 
     layer.setContent(tmpl({
-        schedule: viewModel.schedule,
+        schedule: this._getScheduleModel(viewModel.schedule),
         calendar: viewModel.calendar
     }));
     layer.show();
@@ -20593,6 +21147,76 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
     })();
+};
+
+// eslint-disable-next-line complexity
+ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
+    var viewModel = util.extend({}, scheduleViewModel);
+    var dayStart = datetime.start(scheduleViewModel.start);
+    var startDayOffset = dayStart.toDate().getTimezoneOffset();
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
+    var startOffset = viewModel.start.toDate().getTimezoneOffset();
+    var endOffset = viewModel.end.toDate().getTimezoneOffset();
+    var primaryTimezoneCode = tz.getPrimaryTimezoneName();
+    var primaryOffset = tz.getPrimaryOffset();
+    var startTimezoneOffset = tz.getOffsetByTimezoneName(
+        primaryTimezoneCode,
+        viewModel.start.getTime()
+    );
+    var endTimezoneOffset = tz.getOffsetByTimezoneName(
+        primaryTimezoneCode,
+        viewModel.end.getTime()
+    );
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+    var start, end;
+
+    if (
+        hasPrimaryTimezoneCustomSetting &&
+        tz.isNativeOsUsingDSTTimezone() &&
+        nativeOffsetMs !== startDayOffset
+    ) {
+        // When using a custom time zone, the native time zone offset is fixed and rendered.
+        // So, The fixed and rendered time should be recalculated as the original time zone offset.
+        // The current system OS local time is not affected by summer/standard time and the schedule should always be displayed in the same location.
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+        start = new TZDate(viewModel.start);
+        start.addMilliseconds(offsetDiffMs);
+
+        viewModel.start = start;
+
+        offsetDiffMs = (endOffset * MIN_TO_MS) - nativeOffsetMs;
+        end = new TZDate(viewModel.end);
+        end.addMilliseconds(offsetDiffMs);
+
+        viewModel.end = end;
+    }
+
+    if (
+        hasPrimaryTimezoneCustomSetting &&
+        tz.isPrimaryUsingDSTTimezone() &&
+        (primaryOffset !== startTimezoneOffset || primaryOffset !== endTimezoneOffset)
+    ) {
+        // The custom time zone is a time zone where two offsets including DST are applied.
+        // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+        // It should be recalculated with the original time zone offset.
+        offsetDiffMs = (primaryOffset - startTimezoneOffset) * MIN_TO_MS;
+
+        start = new TZDate(viewModel.start);
+        start.addMilliseconds(offsetDiffMs);
+
+        viewModel.start = start;
+
+        offsetDiffMs = (primaryOffset - endTimezoneOffset) * MIN_TO_MS;
+
+        end = new TZDate(viewModel.end);
+        end.addMilliseconds(offsetDiffMs);
+
+        viewModel.end = end;
+    }
+
+    return viewModel;
 };
 
 /**
@@ -24847,9 +25471,51 @@ var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var View = __webpack_require__(/*! ../view */ "./src/js/view/view.js");
 var timeTmpl = __webpack_require__(/*! ../template/week/time.hbs */ "./src/js/view/template/week/time.hbs");
+var tz = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js");
 
 var forEachArr = util.forEachArray;
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
+
+/**
+ * calculate offset start of schedule
+ * @param {ScheduleViewModel} viewModel - view model instance to calculate bound.
+ * @param {object} options - options for calculating schedule element's bound.
+ * @returns {object} - left and width
+ */
+function getOffsetStart(viewModel, options) {
+    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
+    var startDayOffset = options.todayStart.toDate().getTimezoneOffset();
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var startOffset = viewModel.valueOf().start.toDate().getTimezoneOffset();
+    var primaryOffset = tz.getPrimaryOffset();
+    var timezoneOffset = tz.getOffsetByTimezoneName(
+        tz.getPrimaryTimezoneName(),
+        viewModel.valueOf().start.getTime()
+    );
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+    var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
+
+    if (tz.hasPrimaryTimezoneCustomSetting()) {
+        if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startDayOffset) {
+            // When using a custom time zone, the native time zone offset is fixed and rendered.
+            // So, The fixed and rendered time should be recalculated as the original time zone offset.
+            // The current system OS local time is not affected by summer/standard time and the schedule should always be displayed in the same location.
+            offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+            offsetStart += offsetDiffMs;
+        }
+
+        if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+            // The custom time zone is a time zone where two offsets including DST are applied.
+            // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+            // It should be recalculated with the original time zone offset.
+            offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+            offsetStart += offsetDiffMs;
+        }
+    }
+
+    return offsetStart;
+}
 
 /**
  * @constructor
@@ -24867,18 +25533,21 @@ var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 function Time(options, container, theme) {
     View.call(this, container);
 
-    this.options = util.extend({
-        index: 0,
-        width: 0,
-        ymd: '',
-        isToday: false,
-        pending: false,
-        hourStart: 0,
-        hourEnd: 24,
-        defaultMarginBottom: 2,
-        minHeight: 18.5,
-        isReadOnly: false
-    }, options);
+    this.options = util.extend(
+        {
+            index: 0,
+            width: 0,
+            ymd: '',
+            isToday: false,
+            pending: false,
+            hourStart: 0,
+            hourEnd: 24,
+            defaultMarginBottom: 2,
+            minHeight: 18.5,
+            isReadOnly: false
+        },
+        options
+    );
 
     this.timeTmpl = timeTmpl;
 
@@ -24948,15 +25617,13 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     var croppedEnd = false;
     var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
     var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
-    var offsetStart = viewModel.valueOf().start - goingDuration - options.todayStart;
-    // containerHeight : milliseconds in day = x : schedule's milliseconds
-    var top = (baseHeight * offsetStart) / baseMS;
     var modelDuration = viewModel.duration();
-    var height;
-    var duration;
-    var goingDurationHeight;
-    var modelDurationHeight;
-    var comingDurationHeight;
+    var top, height, duration;
+    var goingDurationHeight, modelDurationHeight, comingDurationHeight;
+    var offsetStart = getOffsetStart(viewModel, options);
+
+    // containerHeight : milliseconds in day = x : schedule's milliseconds
+    top = (baseHeight * offsetStart) / baseMS;
 
     modelDuration = modelDuration > SCHEDULE_MIN_DURATION ? modelDuration : SCHEDULE_MIN_DURATION;
     duration = modelDuration + goingDuration + comingDuration;
@@ -24968,7 +25635,7 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
 
     if (offsetStart < 0) {
         top = 0;
-        height += ((baseHeight * offsetStart) / baseMS);
+        height += (baseHeight * offsetStart) / baseMS;
         croppedStart = true;
     }
 
@@ -25012,10 +25679,14 @@ Time.prototype.getScheduleViewBound = function(viewModel, options) {
         travelBorderColor = null; // follow text color
     }
 
-    return util.extend({
-        isReadOnly: isReadOnly,
-        travelBorderColor: travelBorderColor
-    }, boundX, boundY);
+    return util.extend(
+        {
+            isReadOnly: isReadOnly,
+            travelBorderColor: travelBorderColor
+        },
+        boundX,
+        boundY
+    );
 };
 
 /**
@@ -25040,17 +25711,17 @@ Time.prototype._getBaseViewModel = function(ymd, matrices, containerHeight) {
     containerHeight = containerHeight || this.getViewBound().height;
     todayStart = this._parseDateGroup(ymd);
     todayStart.setHours(hourStart);
-    baseMS = datetime.millisecondsFrom('hour', (hourEnd - hourStart));
+    baseMS = datetime.millisecondsFrom('hour', hourEnd - hourStart);
 
     forEachArr(matrices, function(matrix) {
-        var maxRowLength,
-            widthPercent,
-            leftPercents,
-            i;
+        var maxRowLength, widthPercent, leftPercents, i;
 
-        maxRowLength = Math.max.apply(null, util.map(matrix, function(row) {
-            return row.length;
-        }));
+        maxRowLength = Math.max.apply(
+            null,
+            util.map(matrix, function(row) {
+                return row.length;
+            })
+        );
 
         widthPercent = 100 / maxRowLength;
 
@@ -25158,7 +25829,7 @@ var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/com
 var domutil = __webpack_require__(/*! ../../common/domutil */ "./src/js/common/domutil.js");
 var domevent = __webpack_require__(/*! ../../common/domevent */ "./src/js/common/domevent.js");
 var datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js");
-var Timezone = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js");
+var tz = __webpack_require__(/*! ../../common/timezone */ "./src/js/common/timezone.js");
 var reqAnimFrame = __webpack_require__(/*! ../../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
 var View = __webpack_require__(/*! ../view */ "./src/js/view/view.js");
 var Time = __webpack_require__(/*! ./time */ "./src/js/view/week/time.js");
@@ -25166,7 +25837,7 @@ var AutoScroll = __webpack_require__(/*! ../../common/autoScroll */ "./src/js/co
 var mainTmpl = __webpack_require__(/*! ../template/week/timeGrid.hbs */ "./src/js/view/template/week/timeGrid.hbs");
 var timezoneStickyTmpl = __webpack_require__(/*! ../template/week/timezoneSticky.hbs */ "./src/js/view/template/week/timezoneSticky.hbs");
 var timegridCurrentTimeTmpl = __webpack_require__(/*! ../template/week/timeGridCurrentTime.hbs */ "./src/js/view/template/week/timeGridCurrentTime.hbs");
-var TZDate = Timezone.Date;
+var TZDate = tz.Date;
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 var SIXTY_SECONDS = 60;
 var SIXTY_MINUTES = 60;
@@ -25219,8 +25890,9 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     return util.map(hoursRange, function(hour, index) {
         var color;
         var fontWeight;
-        var isPast = (hasHourMarker && index <= nowHoursIndex) ||
-                     (renderEndDate < now && !datetime.isSameDate(renderEndDate, now));
+        var isPast =
+            (hasHourMarker && index <= nowHoursIndex) ||
+            (renderEndDate < now && !datetime.isSameDate(renderEndDate, now));
 
         if (isPast) {
             // past
@@ -25241,6 +25913,27 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
         };
     });
 }
+
+/**
+ * Returns timezone offset from timezone object
+ * @param {object} timezoneObj - timezone object in options.timzones
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezoneOffset - timezone offset
+ */
+function getOffsetByTimezoneOption(timezoneObj, timestamp) {
+    var primaryOffset = tz.getPrimaryOffset();
+    if (util.isString(timezoneObj.timezoneName)) {
+        return -tz.getOffsetByTimezoneName(timezoneObj.timezoneName, timestamp);
+    }
+
+    // @deprecated timezoneOffset property will be deprecated
+    if (util.isNumber(timezoneObj.timezoneOffset) && timezoneObj.timezoneOffset !== primaryOffset) {
+        return timezoneObj.timezoneOffset;
+    }
+
+    return -primaryOffset;
+}
+
 /**
  * @constructor
  * @extends {View}
@@ -25283,21 +25976,26 @@ function TimeGrid(name, options, panelElement) {
      * Time view options.
      * @type {object}
      */
-    this.options = util.extend({
-        viewName: name,
-        renderStartDate: '',
-        renderEndDate: '',
-        hourStart: 0,
-        hourEnd: 24,
-        timezones: options.timezones,
-        isReadOnly: options.isReadOnly,
-        showTimezoneCollapseButton: false
-    }, options.week);
+    this.options = util.extend(
+        {
+            viewName: name,
+            renderStartDate: '',
+            renderEndDate: '',
+            hourStart: 0,
+            hourEnd: 24,
+            timezones: options.timezones,
+            isReadOnly: options.isReadOnly,
+            showTimezoneCollapseButton: false
+        },
+        options.week
+    );
 
     if (this.options.timezones.length < 1) {
-        this.options.timezones = [{
-            timezoneOffset: Timezone.getOffset()
-        }];
+        this.options.timezones = [
+            {
+                timezoneOffset: tz.getPrimaryOffset()
+            }
+        ];
     }
 
     /**
@@ -25364,8 +26062,8 @@ TimeGrid.prototype._beforeDestroy = function() {
 
     domevent.off(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 
-    this._autoScroll = this.hourmarkers = this.intervalID =
-    this.timerID = this.rAnimationFrameID = this._cacheParentViewModel = this.stickyContainer = null;
+    this._autoScroll = this.hourmarkers = this.intervalID
+        = this.timerID = this.rAnimationFrameID = this._cacheParentViewModel = this.stickyContainer = null;
 };
 
 /**
@@ -25378,14 +26076,19 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
         raw = datetime.raw(time || new TZDate()),
         hourLength = util.range(opt.hourStart, opt.hourEnd).length,
         maxMilliseconds = hourLength * datetime.MILLISECONDS_PER_HOUR,
-        hmsMilliseconds = datetime.millisecondsFrom('hour', raw.h) +
+        hmsMilliseconds =
+            datetime.millisecondsFrom('hour', raw.h) +
             datetime.millisecondsFrom('minutes', raw.m) +
             datetime.millisecondsFrom('seconds', raw.s) +
             raw.ms,
         topPercent;
 
     topPercent = common.ratio(maxMilliseconds, 100, hmsMilliseconds);
-    topPercent -= common.ratio(maxMilliseconds, 100, datetime.millisecondsFrom('hour', opt.hourStart));
+    topPercent -= common.ratio(
+        maxMilliseconds,
+        100,
+        datetime.millisecondsFrom('hour', opt.hourStart)
+    );
 
     return common.limit(topPercent, [0], [100]);
 };
@@ -25402,7 +26105,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     var todaymarkerWidth = -1;
     var hourmarkerTimzones = [];
     var opt = this.options;
-    var primaryOffset = Timezone.getOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var viewModel;
 
@@ -25414,8 +26117,9 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     });
 
     util.forEach(timezones, function(timezone) {
-        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
         var hourmarker = new TZDate(now);
+        var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
         var dateDifference;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
@@ -25423,7 +26127,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 
         hourmarkerTimzones.push({
             hourmarker: hourmarker,
-            dateDifferenceSign: (dateDifference < 0) ? '-' : '+',
+            dateDifferenceSign: dateDifference < 0 ? '-' : '+',
             dateDifference: Math.abs(dateDifference)
         });
     });
@@ -25449,7 +26153,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
  */
 TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesCollapsed, styles) {
     var opt = this.options;
-    var primaryOffset = Timezone.getOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var timezonesLength = timezones.length;
     var timezoneViewModel = [];
@@ -25458,14 +26162,13 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
     var now = new TZDate().toLocalTime();
     var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 
+    // eslint-disable-next-line complexity
     util.forEach(timezones, function(timezone, index) {
         var hourmarker = new TZDate(now);
-        var timezoneDifference;
-        var timeSlots;
+        var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
+        var timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
         var dateDifference;
-
-        timezoneDifference = timezone.timezoneOffset + primaryOffset;
-        timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
@@ -25485,7 +26188,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
             backgroundColor: backgroundColor || '',
             hidden: index !== 0 && collapsed,
             hourmarker: hourmarker,
-            dateDifferenceSign: (dateDifference < 0) ? '-' : '+',
+            dateDifferenceSign: dateDifference < 0 ? '-' : '+',
             dateDifference: Math.abs(dateDifference)
         });
     });
@@ -25507,7 +26210,11 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     return util.extend(baseViewModel, {
-        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, timezonesCollapsed, styles),
+        timezones: this._getTimezoneViewModel(
+            baseViewModel.todaymarkerLeft,
+            timezonesCollapsed,
+            styles
+        ),
         hoursLabels: getHoursLabels(opt, baseViewModel.todaymarkerLeft >= 0, 0, styles),
         styles: styles,
         showTimezoneCollapseButton: util.pick(opt, 'showTimezoneCollapseButton'),
@@ -25529,7 +26236,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
         child,
         isToday,
         containerHeight,
-        today = datetime.format(new TZDate(), 'YYYYMMDD'),
+        today = datetime.format(new TZDate().toLocalTime(), 'YYYYMMDD'),
         i = 0;
 
     // clear contents
@@ -25663,15 +26370,22 @@ TimeGrid.prototype.refreshHourmarker = function() {
             this.render(viewModel);
         } else {
             util.forEach(hourmarkers, function(hourmarker) {
-                var todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
-                var hourmarkerContainer = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
+                var todaymarker = domutil.find(
+                    config.classname('.timegrid-todaymarker'),
+                    hourmarker
+                );
+                var hourmarkerContainer = domutil.find(
+                    config.classname('.timegrid-hourmarker-time'),
+                    hourmarker
+                );
                 var timezone = domutil.closest(hourmarker, config.classname('.timegrid-timezone'));
                 var timezoneIndex = timezone ? domutil.getData(timezone, 'timezoneIndex') : 0;
 
                 hourmarker.style.top = baseViewModel.hourmarkerTop + '%';
 
                 if (todaymarker) {
-                    todaymarker.style.display = (baseViewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
+                    todaymarker.style.display =
+                        baseViewModel.todaymarkerLeft >= 0 ? 'block' : 'none';
                 }
                 if (hourmarkerContainer) {
                     hourmarkerContainer.innerHTML = timegridCurrentTimeTmpl(
@@ -25693,7 +26407,10 @@ TimeGrid.prototype.attachEvent = function() {
     clearTimeout(this.timerID);
     this.intervalID = this.timerID = this.rAnimationFrameID = null;
 
-    this.timerID = setTimeout(this.onTick.bind(this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
+    this.timerID = setTimeout(
+        this.onTick.bind(this),
+        (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000
+    );
 
     domevent.on(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 };
@@ -25703,12 +26420,7 @@ TimeGrid.prototype.attachEvent = function() {
  */
 TimeGrid.prototype.scrollToNow = function() {
     var container = this.container;
-    var offsetTop,
-        viewBound,
-        scrollTop,
-        scrollAmount,
-        scrollBy,
-        scrollFn;
+    var offsetTop, viewBound, scrollTop, scrollAmount, scrollBy, scrollFn;
 
     if (!this.hourmarkers || !this.hourmarkers.length) {
         return;
@@ -25759,6 +26471,7 @@ TimeGrid.prototype.onTick = function() {
  * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
+// eslint-disable-next-line complexity
 TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
@@ -25767,7 +26480,8 @@ TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
 
     if (theme) {
         styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
-        styles.halfHourBorderBottom = theme.week.timegridHalfHour.borderBottom || theme.common.border;
+        styles.halfHourBorderBottom =
+            theme.week.timegridHalfHour.borderBottom || theme.common.border;
 
         styles.todayBackgroundColor = theme.week.today.backgroundColor;
         styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
@@ -25777,11 +26491,14 @@ TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
         styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
         styles.leftFontSize = theme.week.timegridLeft.fontSize;
         styles.timezoneWidth = theme.week.timegridLeft.width;
-        styles.additionalTimezoneBackgroundColor = theme.week.timegridLeftAdditionalTimezone.backgroundColor
-                                                || styles.leftBackgroundColor;
+        styles.additionalTimezoneBackgroundColor =
+            theme.week.timegridLeftAdditionalTimezone.backgroundColor || styles.leftBackgroundColor;
 
         styles.displayTimezoneLabelHeight = theme.week.timegridLeftTimezoneLabel.height;
-        styles.displayTimezoneLabelBackgroundColor = theme.week.timegridLeft.backgroundColor === 'inherit' ? 'white' : theme.week.timegridLeft.backgroundColor;
+        styles.displayTimezoneLabelBackgroundColor =
+            theme.week.timegridLeft.backgroundColor === 'inherit'
+                ? 'white'
+                : theme.week.timegridLeft.backgroundColor;
 
         styles.oneHourHeight = theme.week.timegridOneHour.height;
         styles.halfHourHeight = theme.week.timegridHalfHour.height;

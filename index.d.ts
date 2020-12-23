@@ -1,4 +1,4 @@
-// Type definitions for TOAST UI Calendar v1.12.14
+// Type definitions for TOAST UI Calendar v1.13.0
 // TypeScript Version: 3.2.1
 
 export type DateType = string | Date | TZDate;
