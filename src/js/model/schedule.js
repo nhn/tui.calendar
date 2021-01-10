@@ -6,11 +6,13 @@
 'use strict';
 
 var util = require('tui-code-snippet');
-var TZDate = require('../common/timezone').Date;
+var tz = require('../common/timezone');
 var datetime = require('../common/datetime');
 var dirty = require('../common/dirty');
 var model = require('../common/model');
 var getMaxTravelTime = model.getMaxTravelTime;
+var TZDate = tz.Date;
+var MIN_TO_MS = 60 * 1000;
 
 var SCHEDULE_MIN_DURATION = datetime.MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -32,6 +34,37 @@ var SCHEDULE_CATEGORY = {
     /** normal schedule */
     TIME: 'time'
 };
+
+/**
+ * Get duration by primary timezone
+ * @param {Date} start render start date
+ * @param {Date} end render end date
+ * @returns {number} duration
+ */
+function getDurationByPrimaryTimezone(start, end) {
+    var checkOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
+    var isOffsetChanged = checkOffset.isOffsetChanged;
+    var duration = end - start;
+
+    if (isOffsetChanged !== 0) {
+        duration += checkOffset.offsetDiff * MIN_TO_MS;
+    }
+
+    return duration;
+}
+
+/**
+* Get duration by native timezone
+* @param {TZDate} start render start date
+* @param {TZDate} end render end date
+* @returns {number} duration
+*/
+function getDurationByNativeTimezone(start, end) {
+    var startOffset = start.toDate().getTimezoneOffset();
+    var endOffset = end.toDate().getTimezoneOffset();
+
+    return (end - start) + ((endOffset - startOffset) * MIN_TO_MS);
+}
 
 /**
  * The model of calendar schedules.
@@ -387,9 +420,14 @@ Schedule.prototype.duration = function() {
     var start = this.getStarts(),
         end = this.getEnds(),
         duration;
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
 
     if (this.isAllDay) {
         duration = datetime.end(end) - datetime.start(start);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isPrimaryUsingDSTTimezone()) {
+        duration = getDurationByPrimaryTimezone(start, end);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
+        duration = getDurationByNativeTimezone(start, end);
     } else {
         duration = end - start;
     }

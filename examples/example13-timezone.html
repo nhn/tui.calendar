@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
   <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
-  <link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css" />
-  <link rel="stylesheet" type="text/css" href="./css/default.css"></link>
-  <link rel="stylesheet" type="text/css" href="./css/icons.css"></link>
+  <link rel="stylesheet" type="text/css" href="../dist/tui-calendar.css">
+  <link rel="stylesheet" type="text/css" href="./css/default.css">
+  <link rel="stylesheet" type="text/css" href="./css/icons.css">
 </head>
 
 <body>
@@ -33,28 +33,37 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
       crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.min.js"></script>
-  <script type="text/javascript" src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
-  <script type="text/javascript" src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
-  <script type="text/javascript" src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.time-picker/v2.0.3/tui-time-picker.min.js"></script>
+  <script src="https://uicdn.toast.com/tui.date-picker/v4.0.3/tui-date-picker.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone-with-data.js" integrity="sha512-ECoTMVFwwVtxjEBRjUMjviUd6hBjwDhBJI0+3W2YDs+ld5rHHUDr59T15gxwEPkGu5XLmkASUSvPgQe/Tpyodg==" crossorigin="anonymous"></script>
   <script src="../dist/tui-calendar.js"></script>
   <script src="./js/data/calendars.js"></script>
   <script src="./js/data/schedules.js"></script>
   <script type="text/javascript" class="code-js">
   var cal = new tui.Calendar('#calendar', {
     defaultView: 'week', // set 'week' or 'day'
-    timezones: [         // set timezone config
-      {
-        timezoneOffset: 540,
-        tooltip: 'Seoul'
+    timezone: {
+      zones: [
+        {
+          timezoneName: 'Asia/Seoul',
+          displayLabel: 'GMT+09:00',
+          tooltip: 'Seoul'
+        },
+        {
+          timezoneName: 'America/New_York',
+          displayLabel: 'GMT-05:00',
+          tooltip: 'New York',
+        }
+      ],
+      offsetCalculator: function(timezoneName, timestamp){
+        // e.g. +09:00 => -540, -04:00 => 240
+        return moment.tz.zone(timezoneName).utcOffset(timestamp);
       },
-      {
-        timezoneOffset: -420,
-        tooltip: 'Los Angeles'
-      }
-    ],
+    },
+
     taskView: false,
     scheduleView: ['time']
   });

@@ -102,6 +102,7 @@ describe('View/TimeGrid', function() {
 
         afterEach(function() {
             timezone.restoreOffset();
+            timezone.resetCustomSetting();
         });
 
         it ('get view model with timezone option', function() {

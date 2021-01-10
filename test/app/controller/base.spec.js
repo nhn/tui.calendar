@@ -1,11 +1,8 @@
 /*eslint-disable*/
 var util = require('tui-code-snippet');
-var array = require('common/array');
 var Collection = require('common/collection');
 var ControllerFactory = require('factory/controller');
 var Schedule = require('model/schedule');
-var ScheduleViewModel = require('model/viewModel/scheduleViewModel');
-var datetime = require('common/datetime');
 var TZDate = require('common/timezone').Date;
 
 describe('controller/base', function() {
@@ -60,8 +57,6 @@ describe('controller/base', function() {
     });
 
     describe('createSchedule()', function() {
-        var created;
-
         it('return itself for chaining pattern.', function() {
             var schedule = Schedule.create(set[0]);
             expect(schedule.equals(ctrl.createSchedule(set[0]))).toBe(true);
