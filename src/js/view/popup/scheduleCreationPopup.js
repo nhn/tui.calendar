@@ -13,10 +13,10 @@ var config = require('../../config');
 var domevent = require('../../common/domevent');
 var domutil = require('../../common/domutil');
 var common = require('../../common/common');
-var datetime = require('../../common/datetime');
 var tmpl = require('../template/popup/scheduleCreationPopup.hbs');
 var TZDate = timezone.Date;
 var MAX_WEEK_OF_MONTH = 6;
+var ARROW_WIDTH_HALF = 8;
 
 /**
  * @constructor
@@ -63,7 +63,7 @@ util.inherit(ScheduleCreationPopup, View);
  * @param {MouseEvent} mouseDownEvent - mouse event object
  */
 ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
-    var target = domevent.getEventTarget(mouseDownEvent),
+    var target = (mouseDownEvent.target || mouseDownEvent.srcElement),
         popupLayer = domutil.closest(target, config.classname('.floating-layer'));
 
     if (popupLayer) {
@@ -90,7 +90,7 @@ ScheduleCreationPopup.prototype.destroy = function() {
  * @param {MouseEvent} clickEvent - mouse event object
  */
 ScheduleCreationPopup.prototype._onClick = function(clickEvent) {
-    var target = domevent.getEventTarget(clickEvent);
+    var target = (clickEvent.target || clickEvent.srcElement);
 
     util.forEach(this._onClickListeners, function(listener) {
         return !listener(target);
@@ -240,52 +240,86 @@ ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
  * @param {HTMLElement} target click event target
  * @returns {boolean} whether save button is clicked or not
  */
-// eslint-disable-next-line complexity
 ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
-    var title;
-    var startDate;
-    var endDate;
-    var rangeDate;
-    var form;
-    var isAllDay;
+    var title, isPrivate, location, isAllDay, startDate, endDate, state;
+    var start, end, calendarId;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
     }
 
     title = domutil.get(cssPrefix + 'schedule-title');
-
     startDate = new TZDate(this.rangePicker.getStartDate());
     endDate = new TZDate(this.rangePicker.getEndDate());
 
-    if (!this._validateForm(title, startDate, endDate)) {
-        if (!title.value) {
-            title.focus();
-        }
+    if (!title.value) {
+        title.focus();
 
-        return false;
+        return true;
     }
 
-    isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
-    rangeDate = this._getRangeDate(startDate, endDate, isAllDay);
+    if (!startDate && !endDate) {
+        return true;
+    }
 
-    form = {
-        calendarId: this._selectedCal ? this._selectedCal.id : null,
-        title: title,
-        location: domutil.get(cssPrefix + 'schedule-location'),
-        start: rangeDate.start,
-        end: rangeDate.end,
-        isAllDay: isAllDay,
-        state: domutil.get(cssPrefix + 'schedule-state').innerText,
-        isPrivate: !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'))
-    };
+    isPrivate = !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'));
+    location = domutil.get(cssPrefix + 'schedule-location');
+    state = domutil.get(cssPrefix + 'schedule-state');
+    isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
+
+    if (isAllDay) {
+        startDate.setHours(0, 0, 0);
+        endDate.setHours(23, 59, 59);
+    }
+
+    start = new TZDate(startDate);
+    end = new TZDate(endDate);
+
+    if (this._selectedCal) {
+        calendarId = this._selectedCal.id;
+    }
 
     if (this._isEditMode) {
-        this._onClickUpdateSchedule(form);
+        this.fire('beforeUpdateSchedule', {
+            schedule: {
+                calendarId: calendarId || this._schedule.calendarId,
+                title: title.value,
+                location: location.value,
+                raw: {
+                    class: isPrivate ? 'private' : 'public'
+                },
+                start: start,
+                end: end,
+                isAllDay: isAllDay,
+                state: state.innerText,
+                triggerEventName: 'click',
+                id: this._schedule.id
+            },
+            start: start,
+            end: end,
+            calendar: this._selectedCal,
+            triggerEventName: 'click'
+        });
     } else {
-        this._onClickCreateSchedule(form);
+        /**
+         * @event ScheduleCreationPopup#beforeCreateSchedule
+         * @type {object}
+         * @property {Schedule} schedule - new schedule instance to be added
+         */
+        this.fire('beforeCreateSchedule', {
+            calendarId: calendarId,
+            title: title.value,
+            location: location.value,
+            raw: {
+                class: isPrivate ? 'private' : 'public'
+            },
+            start: start,
+            end: end,
+            isAllDay: isAllDay,
+            state: state.innerText
+        });
     }
 
     this.hide();
@@ -386,9 +420,20 @@ ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(gu
         width: layer.offsetWidth,
         height: layer.offsetHeight
     };
-    var containerBound = this.container.getBoundingClientRect();
-    var pos = this._calcRenderingData(layerSize, containerBound, guideBound);
+    var windowSize = {
+        right: window.innerWidth,
+        bottom: window.innerHeight
+    };
+    var parentRect = this.layer.parent.getBoundingClientRect();
+    var parentBounds = {
+        left: parentRect.left,
+        top: parentRect.top
+    };
+    var pos;
 
+    pos = this._calcRenderingData(layerSize, windowSize, guideBound);
+    pos.x -= parentBounds.left;
+    pos.y -= (parentBounds.top + 6);
     this.layer.setPosition(pos.x, pos.y);
     this._setArrowDirection(pos.arrow);
 };
@@ -440,115 +485,35 @@ ScheduleCreationPopup.prototype._getBoundOfFirstRowGuideElement = function(guide
 };
 
 /**
- * Get calculate rendering positions of y and arrow direction by guide block elements
- * @param {number} guideBoundTop - guide block's top
- * @param {number} guideBoundBottom - guide block's bottom
- * @param {number} layerHeight - popup layer's height
- * @param {number} containerTop - container's top
- * @param {number} containerBottom - container's bottom
- * @returns {YAndArrowDirection} y and arrowDirection
- */
-ScheduleCreationPopup.prototype._getYAndArrowDirection = function(
-    guideBoundTop,
-    guideBoundBottom,
-    layerHeight,
-    containerTop,
-    containerBottom
-) {
-    var arrowDirection = 'arrow-bottom';
-    var MARGIN = 3;
-    var y = guideBoundTop - layerHeight;
-
-    if (y < containerTop) {
-        y = guideBoundBottom - containerTop + MARGIN;
-        arrowDirection = 'arrow-top';
-    } else {
-        y = y - containerTop - MARGIN;
-    }
-
-    if (y + layerHeight > containerBottom) {
-        y = containerBottom - layerHeight - containerTop - MARGIN;
-    }
-
-    /**
-     * @typedef {Object} YAndArrowDirection
-     * @property {number} y - top position of popup layer
-     * @property {string} [arrowDirection] - direction of popup arrow
-     */
-    return {
-        y: y,
-        arrowDirection: arrowDirection
-    };
-};
-
-/**
-* Get calculate rendering x position and arrow left by guide block elements
-* @param {number} guideBoundLeft - guide block's left
-* @param {number} guideBoundRight - guide block's right
-* @param {number} layerWidth - popup layer's width
-* @param {number} containerLeft - container's left
-* @param {number} containerRight - container's right
-* @returns {XAndArrowLeft} x and arrowLeft
-*/
-ScheduleCreationPopup.prototype._getXAndArrowLeft = function(
-    guideBoundLeft,
-    guideBoundRight,
-    layerWidth,
-    containerLeft,
-    containerRight
-) {
-    var guideHorizontalCenter = (guideBoundLeft + guideBoundRight) / 2;
-    var x = guideHorizontalCenter - (layerWidth / 2);
-    var ARROW_WIDTH_HALF = 8;
-    var arrowLeft;
-
-    if (x + layerWidth > containerRight) {
-        x = guideBoundRight - layerWidth + ARROW_WIDTH_HALF;
-        arrowLeft = guideHorizontalCenter - x;
-    } else {
-        x += ARROW_WIDTH_HALF;
-    }
-
-    if (x < containerLeft) {
-        x = 0;
-        arrowLeft = guideHorizontalCenter - containerLeft - ARROW_WIDTH_HALF;
-    } else {
-        x = x - containerLeft - ARROW_WIDTH_HALF;
-    }
-
-    /**
-     * @typedef {Object} XAndArrowLeft
-     * @property {number} x - left position of popup layer
-     * @property {numbe3er} arrowLeft - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
-     */
-    return {
-        x: x,
-        arrowLeft: arrowLeft
-    };
-};
-
-/**
  * Calculate rendering position usering guide elements
  * @param {{width: {number}, height: {number}}} layerSize - popup layer's width and height
- * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} containerBound - width and height of the upper layer, that acts as a border of popup
+ * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} parentSize - width and height of the upper layer, that acts as a border of popup
  * @param {{top: {number}, left: {number}, right: {number}, bottom: {number}}} guideBound - guide element bound data
  * @returns {PopupRenderingData} rendering position of popup and popup arrow
  */
-ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, containerBound, guideBound) {
-    var yPosInfo = this._getYAndArrowDirection(
-        guideBound.top,
-        guideBound.bottom,
-        layerSize.height,
-        containerBound.top,
-        containerBound.bottom
-    );
-    var xPosInfo = this._getXAndArrowLeft(
-        guideBound.left,
-        guideBound.right,
-        layerSize.width,
-        containerBound.left,
-        containerBound.right
-    );
+ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, parentSize, guideBound) {
+    var guideHorizontalCenter = (guideBound.left + guideBound.right) / 2;
+    var x = guideHorizontalCenter - (layerSize.width / 2);
+    var y = guideBound.top - layerSize.height + 3;
+    var arrowDirection = 'arrow-bottom';
+    var arrowLeft;
+
+    if (y < 0) {
+        y = guideBound.bottom + 9;
+        arrowDirection = 'arrow-top';
+    }
+
+    if (x > 0 && (x + layerSize.width > parentSize.right)) {
+        x = parentSize.right - layerSize.width;
+    }
+
+    if (x < 0) {
+        x = 0;
+    }
+
+    if (guideHorizontalCenter - x !== layerSize.width / 2) {
+        arrowLeft = guideHorizontalCenter - x - ARROW_WIDTH_HALF;
+    }
 
     /**
      * @typedef {Object} PopupRenderingData
@@ -558,11 +523,11 @@ ScheduleCreationPopup.prototype._calcRenderingData = function(layerSize, contain
      * @property {number} [arrow.position] - relative position of popup arrow, if it is not set, arrow appears on the middle of popup
      */
     return {
-        x: xPosInfo.x,
-        y: yPosInfo.y,
+        x: x,
+        y: y,
         arrow: {
-            direction: yPosInfo.arrowDirection,
-            position: xPosInfo.arrowLeft
+            direction: arrowDirection,
+            position: arrowLeft
         }
     };
 };
@@ -644,132 +609,6 @@ ScheduleCreationPopup.prototype.refresh = function() {
  */
 ScheduleCreationPopup.prototype.setCalendars = function(calendars) {
     this.calendars = calendars || [];
-};
-
-/**
- * Validate the form
- * @param {string} title title of then entered schedule
- * @param {TZDate} startDate start date time from range picker
- * @param {TZDate} endDate end date time from range picker
- * @returns {boolean} Returns false if the form is not valid for submission.
- */
-ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDate) {
-    if (!title.value) {
-        return false;
-    }
-
-    if (!startDate && !endDate) {
-        return false;
-    }
-
-    if (datetime.compare(startDate, endDate) === 1) {
-        return false;
-    }
-
-    return true;
-};
-
-/**
- * Get range date from range picker
- * @param {TZDate} startDate start date time from range picker
- * @param {TZDate} endDate end date time from range picker
- * @param {boolean} isAllDay whether it is an all-day schedule
- * @returns {RangeDate} Returns the start and end time data that is the range date
- */
-ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isAllDay) {
-    var start = isAllDay ? datetime.start(startDate) : startDate;
-    var end = isAllDay ? datetime.renderEnd(startDate, endDate) : endDate;
-
-    /**
-     * @typedef {object} RangeDate
-     * @property {TZDate} start start time
-     * @property {TZDate} end end time
-     */
-    return {
-        start: new TZDate(start),
-        end: new TZDate(end)
-    };
-};
-
-/**
- * Request schedule model creation to controller by custom schedules.
- * @fires {ScheduleCreationPopup#beforeUpdateSchedule}
- * @param {{
-    calendarId: {string},
-    title: {string},
-    location: {string},
-    start: {TZDate},
-    end: {TZDate},
-    isAllDay: {boolean},
-    state: {string},
-    isPrivate: {boolean}
-  }} form schedule input form data
-*/
-ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
-    var changes = common.getScheduleChanges(
-        this._schedule,
-        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
-        {
-            calendarId: form.calendarId,
-            title: form.title.value,
-            location: form.location.value,
-            start: form.start,
-            end: form.end,
-            isAllDay: form.isAllDay,
-            state: form.state
-        }
-    );
-
-    /**
-     * @event ScheduleCreationPopup#beforeUpdateSchedule
-     * @type {object}
-     * @property {Schedule} schedule - schedule object to be updated
-     */
-    this.fire('beforeUpdateSchedule', {
-        schedule: util.extend({
-            raw: {
-                class: form.isPrivate ? 'private' : 'public'
-            }
-        }, this._schedule),
-        changes: changes,
-        start: form.start,
-        end: form.end,
-        calendar: this._selectedCal,
-        triggerEventName: 'click'
-    });
-};
-
-/**
- * Request the controller to update the schedule model according to the custom schedule.
- * @fires {ScheduleCreationPopup#beforeCreateSchedule}
- * @param {{
-    calendarId: {string},
-    title: {string},
-    location: {string},
-    start: {TZDate},
-    end: {TZDate},
-    isAllDay: {boolean},
-    state: {string}
-  }} form schedule input form data
- */
-ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
-    /**
-     * @event ScheduleCreationPopup#beforeCreateSchedule
-     * @type {object}
-     * @property {Schedule} schedule - new schedule instance to be added
-     */
-    this.fire('beforeCreateSchedule', {
-        calendarId: form.calendarId,
-        title: form.title.value,
-        location: form.location.value,
-        raw: {
-            class: form.isPrivate ? 'private' : 'public'
-        },
-        start: form.start,
-        end: form.end,
-        isAllDay: form.isAllDay,
-        state: form.state
-    });
 };
 
 module.exports = ScheduleCreationPopup;
