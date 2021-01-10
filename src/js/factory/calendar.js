@@ -15,9 +15,9 @@ var dw = require('../common/dw'),
     controllerFactory = require('./controller'),
     weekViewFactory = require('./weekView'),
     monthViewFactory = require('./monthView'),
-    TZDate = require('../common/timezone').Date,
+    tz = require('../common/timezone');
+    TZDate = tz.Date,
     config = require('../config'),
-    timezone = require('../common/timezone'),
     reqAnimFrame = require('../common/reqAnimFrame');
 
 var mmin = Math.min;
@@ -370,22 +370,66 @@ var mmin = Math.min;
  * @property {string} [borderColor] - The calendar left border color
  */
 
+
 /**
  * @typedef {object} Timezone
- * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset()
- * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
- * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
+ * @property {Array.<Zone>} [zones] - {@link Zone} array. Set the list of time zones.
+ *  The first zone element is primary
+ *  The rest zone elements are shown in left timegrid of weekly/daily view
+ * @property {function} [offsetCalculator = null] - If you define the 'offsetCalculator' property, the offset calculation is done with this function.
+ * The offsetCalculator option allows you to set up a function that returns the timezone offset for that time using date libraries like ['js-joda'](https://js-joda.github.io/js-joda/) and ['moment-timezone'](https://momentjs.com/timezone/).
+ * The 'offsetCalculator' option is useful when your browser does not support 'Intl.DateTimeFormat' and 'formatToPart', or you want to use the date library you are familiar with.
+ *
  * @example
  * var cal = new Calendar('#calendar', {
- *  timezones: [{
- *      timezoneOffset: 540,
- *      displayLabel: 'GMT+09:00',
- *      tooltip: 'Seoul'
- *  }, {
- *      timezoneOffset: -420,
- *      displayLabel: 'GMT-08:00',
- *      tooltip: 'Los Angeles'
- *  }]
+ *   timezone: {
+ *     zones: [
+ *       {
+ *         timezoneName: 'Asia/Seoul',
+ *         displayLabel: 'GMT+09:00',
+ *         tooltip: 'Seoul'
+ *       },
+ *       {
+ *         timezoneName: 'America/New_York',
+ *         displayLabel: 'GMT-05:00',
+ *         tooltip: 'New York',
+ *       }
+ *     ],
+ *     offsetCalculator: function(timezoneName, timestamp){
+ *       // matches 'getTimezoneOffset()' of Date API
+ *       // e.g. +09:00 => -540, -04:00 => 240
+ *       return moment.tz.zone(timezoneName).utcOffset(timestamp);
+ *     },
+ *   }
+ * });
+ */
+
+/**
+ * @typedef {object} Zone
+ * @property {string} [timezoneName] - timezone name (time zone names of the IANA time zone database, such as 'Asia/Seoul', 'America/New_York').
+ *  Basically, it will calculate the offset using 'Intl.DateTimeFormat' with the value of the this property entered.
+ *  This property is required.
+ * @property {string} [displayLabel] -  The display label of your timezone at weekly/daily view(e.g. 'GMT+09:00')
+ * @property {string} [tooltip] -  The tooltip(e.g. 'Seoul')
+ * @property {number} [timezoneOffset] - The minutes for your timezone offset. If null, use the browser's timezone. Refer to Date.prototype.getTimezoneOffset().
+ *  This property will be deprecated. (since version 1.13)
+ *
+ * @example
+ * var cal = new Calendar('#calendar', {
+ *   timezone: {
+ *     zones: [
+ *       {
+ *         timezoneName: 'Asia/Seoul',
+ *         displayLabel: 'GMT+09:00',
+ *         tooltip: 'Seoul'
+ *       },
+ *       {
+ *         timezoneName: 'America/New_York',
+ *         displayLabel: 'GMT-05:00',
+ *         tooltip: 'New York',
+ *       }
+ *     ],
+ *   }
  * });
  */
 
@@ -432,13 +476,12 @@ var mmin = Math.min;
  * @property {Array.<CalendarProps>} [calendars=[]] - {@link CalendarProps} List that can be used to add new schedule. The default value is [].
  * @property {boolean} [useCreationPopup=false] - Whether use default creation popup or not. The default value is false.
  * @property {boolean} [useDetailPopup=false] - Whether use default detail popup or not. The default value is false.
- * @property {Array.<Timezone>} [timezones] - {@link Timezone} array.
- *  The first Timezone element is primary and can override Calendar#setTimezoneOffset function
- *  The rest timezone elements are shown in left timegrid of weekly/daily view
+ * @property {Timezone} [timezone] - {@link Timezone} for customizing time zone
  * @property {boolean} [disableDblClick=false] - Disable double click to create a schedule. The default value is false.
  * @property {boolean} [disableClick=false] - Disable click to create a schedule. The default value is false.
  * @property {boolean} [isReadOnly=false] - {@link Calendar} is read-only mode and a user can't create and modify any schedule. The default value is false.
  * @property {boolean} [usageStatistics=true] - Let us know the hostname. If you don't want to send the hostname, please set to false.
+ * @property {Array.<Timezone>} [timezones] - This property will be deprecated. (since version 1.13) Please use timezone property.
  */
 
 /**
@@ -672,11 +715,7 @@ Calendar.prototype._initialize = function(options) {
         calendars: [],
         useCreationPopup: false,
         useDetailPopup: false,
-        timezones: options.timezones || [{
-            timezoneOffset: 0,
-            displayLabel: '',
-            tooltip: ''
-        }],
+        timezones: options.timezone && options.timezone.zones ? options.timezone.zones : [],
         disableDblClick: false,
         disableClick: false,
         isReadOnly: false
@@ -687,6 +726,8 @@ Calendar.prototype._initialize = function(options) {
         workweek: false,
         duplicateScheduleLayout: false
     }, util.pick(this._options, 'week') || {});
+
+    this._options.timezone = util.extend({zones: []}, util.pick(options, 'timezone') || {});
 
     this._options.month = util.extend({
         startDayOfWeek: 0,
@@ -704,22 +745,55 @@ Calendar.prototype._initialize = function(options) {
 
     this._layout.controller = controller;
 
-    util.forEach(this._options.template, function(func, name) {
-        if (func) {
-            Handlebars.registerHelper(name + '-tmpl', func);
-        }
-    });
-
-    util.forEach(this._options.calendars || [], function(calendar) {
-        this.setCalendarColor(calendar.id, calendar, true);
-    }, this);
-
-    // set by primary timezone
-    if (timezones.length) {
-        timezone.setOffsetByTimezoneOption(timezones[0].timezoneOffset);
-    }
+    this._setAdditionalInternalOptions(this._options);
 
     this.changeView(viewName, true);
+};
+
+/**
+ * Set additional internal options
+ * 1. Register to the template handlebar
+ * 2. Update the calendar list and set the color of the calendar.
+ * 3. Change the primary timezone offset of the timezones.
+ * @param {Options} options - calendar options
+ * @private
+ */
+Calendar.prototype._setAdditionalInternalOptions = function(options) {
+  var timezone = options.timezone;
+  var zones, offsetCalculator;
+
+  util.forEach(options.template, function(func, name) {
+      if (func) {
+          Handlebars.registerHelper(name + '-tmpl', func);
+      }
+  });
+
+  util.forEach(
+      options.calendars || [],
+      function(calendar) {
+          this.setCalendarColor(calendar.id, calendar, true);
+      },
+      this
+  );
+
+  if (timezone) {
+      offsetCalculator = timezone.offsetCalculator;
+
+      if (util.isFunction(offsetCalculator)) {
+          tz.setOffsetCalculator(offsetCalculator);
+      }
+
+      zones = timezone.zones;
+
+      if (zones.length) {
+          tz.setPrimaryTimezoneByOption(zones[0]);
+
+          if (util.isNumber(zones[0].timezoneOffset)) {
+              // @deprecated timezoneOffset property will be deprecated. use timezone property
+              tz.setOffsetByTimezoneOption(zones[0].timezoneOffset);
+          }
+      }
+  }
 };
 
 /**********
@@ -1684,6 +1758,8 @@ Calendar.prototype.setOptions = function(options, silent) {
         }
     }, this);
 
+    this._setAdditionalInternalOptions(options);
+
     if (!silent) {
         this.changeView(this._viewName, true);
     }
@@ -1767,7 +1843,7 @@ Calendar.prototype.hideMoreView = function() {
  * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
  */
 Calendar.setTimezoneOffset = function(offset) {
-    timezone.setOffset(offset);
+    tz.setOffset(offset);
 };
 
 /**
@@ -1782,7 +1858,7 @@ Calendar.setTimezoneOffset = function(offset) {
  * });
  */
 Calendar.setTimezoneOffsetCallback = function(callback) {
-    timezone.setOffsetCallback(callback);
+    tz.setOffsetCallback(callback);
 };
 
 /**

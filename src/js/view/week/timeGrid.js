@@ -10,7 +10,7 @@ var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
-var Timezone = require('../../common/timezone');
+var tz = require('../../common/timezone');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var View = require('../view');
 var Time = require('./time');
@@ -18,7 +18,7 @@ var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
 var timezoneStickyTmpl = require('../template/week/timezoneSticky.hbs');
 var timegridCurrentTimeTmpl = require('../template/week/timeGridCurrentTime.hbs');
-var TZDate = Timezone.Date;
+var TZDate = tz.Date;
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 var SIXTY_SECONDS = 60;
 var SIXTY_MINUTES = 60;
@@ -92,6 +92,28 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
         };
     });
 }
+
+
+/**
+ * Returns timezone offset from timezone object
+ * @param {object} timezoneObj - timezone object in options.timzones
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezoneOffset - timezone offset
+ */
+function getOffsetByTimezoneOption(timezoneObj, timestamp) {
+  var primaryOffset = tz.getPrimaryOffset();
+  if (util.isString(timezoneObj.timezoneName)) {
+      return -tz.getOffsetByTimezoneName(timezoneObj.timezoneName, timestamp);
+  }
+
+  // @deprecated timezoneOffset property will be deprecated
+  if (util.isNumber(timezoneObj.timezoneOffset) && timezoneObj.timezoneOffset !== primaryOffset) {
+      return timezoneObj.timezoneOffset;
+  }
+
+  return -primaryOffset;
+}
+
 /**
  * @constructor
  * @extends {View}
@@ -147,7 +169,7 @@ function TimeGrid(name, options, panelElement) {
 
     if (this.options.timezones.length < 1) {
         this.options.timezones = [{
-            timezoneOffset: Timezone.getOffset()
+            timezoneOffset: tz.getPrimaryOffset()
         }];
     }
 
@@ -253,7 +275,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     var todaymarkerWidth = -1;
     var hourmarkerTimzones = [];
     var opt = this.options;
-    var primaryOffset = Timezone.getOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var viewModel;
 
@@ -265,8 +287,9 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     });
 
     util.forEach(timezones, function(timezone) {
-        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
         var hourmarker = new TZDate(now);
+        var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
         var dateDifference;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
@@ -300,7 +323,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
  */
 TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesCollapsed, styles) {
     var opt = this.options;
-    var primaryOffset = Timezone.getOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var timezonesLength = timezones.length;
     var timezoneViewModel = [];
@@ -311,12 +334,10 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
 
     util.forEach(timezones, function(timezone, index) {
         var hourmarker = new TZDate(now);
-        var timezoneDifference;
-        var timeSlots;
+        var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
+        var timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
         var dateDifference;
-
-        timezoneDifference = timezone.timezoneOffset + primaryOffset;
-        timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
@@ -380,7 +401,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
         child,
         isToday,
         containerHeight,
-        today = datetime.format(new TZDate(), 'YYYYMMDD'),
+        today = datetime.format(new TZDate().toLocalTime(), 'YYYYMMDD'),
         duplicateScheduleLayout = options.duplicateScheduleLayout,
         i = 0;
 

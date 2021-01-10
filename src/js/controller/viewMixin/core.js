@@ -9,11 +9,47 @@ var forEachArr = util.forEachArray,
     aps = Array.prototype.slice;
 
 var datetime = require('../../common/datetime');
-var TZDate = require('../../common/timezone').Date;
+var tz = require('../../common/timezone');
+var TZDate = tz.Date;
 var Collection = require('../../common/collection');
 var ScheduleViewModel = require('../../model/viewModel/scheduleViewModel');
 var model = require('../../common/model');
 var getMaxTravelTime = model.getMaxTravelTime;
+
+/**
+ * Get range date by custom timezone or native timezone
+ * @param {TZDate} ownStarts start date.
+ * @param {TZDate} ownEnds end date.
+ * @returns {RangeDate} recalculated start and end date
+ */
+function recalculateDateByOffset(ownStarts, ownEnds) {
+  var nativeOffsetMs = tz.getNativeOffsetMs();
+  var startOffset = ownStarts.toDate().getTimezoneOffset();
+  var MIN_TO_MS = 60 * 1000;
+  var offsetDiffMs = 0;
+
+  var primaryTimezoneName = tz.getPrimaryTimezoneName();
+  var primaryOffset = tz.getPrimaryOffset();
+  var timezoneOffset = tz.getOffsetByTimezoneName(primaryTimezoneName, ownStarts.getTime());
+
+  if (tz.isNativeOsUsingDSTTimezone() && nativeOffsetMs !== startOffset) {
+      // When using a custom time zone, the native time zone offset is fixed and rendered.
+      // So, The fixed and rendered time should be recalculated as the original time zone offset.
+      offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+  }
+
+  if (tz.isPrimaryUsingDSTTimezone() && primaryOffset !== timezoneOffset) {
+      // The custom time zone is a time zone where two offsets including DST are applied.
+      // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+      // It should be recalculated with the original time zone offset.
+      offsetDiffMs = (primaryOffset - timezoneOffset) * MIN_TO_MS;
+  }
+
+  return {
+      start: new TZDate(ownStarts.getUTCTime() + offsetDiffMs),
+      end: new TZDate(ownEnds.getUTCTime() + offsetDiffMs)
+  };
+}
 
 var Core = {
     /**
@@ -172,6 +208,13 @@ var Core = {
         return function(schedule) {
             var ownStarts = schedule.getStarts(),
                 ownEnds = schedule.getEnds();
+            var dateByOffset;
+
+            if (tz.hasPrimaryTimezoneCustomSetting()) {
+                dateByOffset = recalculateDateByOffset(ownStarts, ownEnds);
+                ownStarts = dateByOffset.start;
+                ownEnds = dateByOffset.end;
+            }
 
             // shorthand condition of
             //
