@@ -10,7 +10,7 @@ var common = require('../../common/common');
 var domutil = require('../../common/domutil');
 var domevent = require('../../common/domevent');
 var datetime = require('../../common/datetime');
-var Timezone = require('../../common/timezone');
+var tz = require('../../common/timezone');
 var reqAnimFrame = require('../../common/reqAnimFrame');
 var View = require('../view');
 var Time = require('./time');
@@ -18,7 +18,7 @@ var AutoScroll = require('../../common/autoScroll');
 var mainTmpl = require('../template/week/timeGrid.hbs');
 var timezoneStickyTmpl = require('../template/week/timezoneSticky.hbs');
 var timegridCurrentTimeTmpl = require('../template/week/timeGridCurrentTime.hbs');
-var TZDate = Timezone.Date;
+var TZDate = tz.Date;
 var HOURMARKER_REFRESH_INTERVAL = 1000 * 60;
 var SIXTY_SECONDS = 60;
 var SIXTY_MINUTES = 60;
@@ -71,8 +71,9 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     return util.map(hoursRange, function(hour, index) {
         var color;
         var fontWeight;
-        var isPast = (hasHourMarker && index <= nowHoursIndex) ||
-                     (renderEndDate < now && !datetime.isSameDate(renderEndDate, now));
+        var isPast =
+            (hasHourMarker && index <= nowHoursIndex) ||
+            (renderEndDate < now && !datetime.isSameDate(renderEndDate, now));
 
         if (isPast) {
             // past
@@ -93,6 +94,27 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
         };
     });
 }
+
+/**
+ * Returns timezone offset from timezone object
+ * @param {object} timezoneObj - timezone object in options.timzones
+ * @param {number} timestamp - timestamp
+ * @returns {number} timezoneOffset - timezone offset
+ */
+function getOffsetByTimezoneOption(timezoneObj, timestamp) {
+    var primaryOffset = tz.getPrimaryOffset();
+    if (util.isString(timezoneObj.timezoneName)) {
+        return -tz.getOffsetByTimezoneName(timezoneObj.timezoneName, timestamp);
+    }
+
+    // @deprecated timezoneOffset property will be deprecated
+    if (util.isNumber(timezoneObj.timezoneOffset) && timezoneObj.timezoneOffset !== primaryOffset) {
+        return timezoneObj.timezoneOffset;
+    }
+
+    return -primaryOffset;
+}
+
 /**
  * @constructor
  * @extends {View}
@@ -135,21 +157,26 @@ function TimeGrid(name, options, panelElement) {
      * Time view options.
      * @type {object}
      */
-    this.options = util.extend({
-        viewName: name,
-        renderStartDate: '',
-        renderEndDate: '',
-        hourStart: 0,
-        hourEnd: 24,
-        timezones: options.timezones,
-        isReadOnly: options.isReadOnly,
-        showTimezoneCollapseButton: false
-    }, options.week);
+    this.options = util.extend(
+        {
+            viewName: name,
+            renderStartDate: '',
+            renderEndDate: '',
+            hourStart: 0,
+            hourEnd: 24,
+            timezones: options.timezones,
+            isReadOnly: options.isReadOnly,
+            showTimezoneCollapseButton: false
+        },
+        options.week
+    );
 
     if (this.options.timezones.length < 1) {
-        this.options.timezones = [{
-            timezoneOffset: Timezone.getOffset()
-        }];
+        this.options.timezones = [
+            {
+                timezoneOffset: tz.getPrimaryOffset()
+            }
+        ];
     }
 
     /**
@@ -216,8 +243,8 @@ TimeGrid.prototype._beforeDestroy = function() {
 
     domevent.off(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 
-    this._autoScroll = this.hourmarkers = this.intervalID =
-    this.timerID = this.rAnimationFrameID = this._cacheParentViewModel = this.stickyContainer = null;
+    this._autoScroll = this.hourmarkers = this.intervalID
+        = this.timerID = this.rAnimationFrameID = this._cacheParentViewModel = this.stickyContainer = null;
 };
 
 /**
@@ -230,14 +257,19 @@ TimeGrid.prototype._getTopPercentByTime = function(time) {
         raw = datetime.raw(time || new TZDate()),
         hourLength = util.range(opt.hourStart, opt.hourEnd).length,
         maxMilliseconds = hourLength * datetime.MILLISECONDS_PER_HOUR,
-        hmsMilliseconds = datetime.millisecondsFrom('hour', raw.h) +
+        hmsMilliseconds =
+            datetime.millisecondsFrom('hour', raw.h) +
             datetime.millisecondsFrom('minutes', raw.m) +
             datetime.millisecondsFrom('seconds', raw.s) +
             raw.ms,
         topPercent;
 
     topPercent = common.ratio(maxMilliseconds, 100, hmsMilliseconds);
-    topPercent -= common.ratio(maxMilliseconds, 100, datetime.millisecondsFrom('hour', opt.hourStart));
+    topPercent -= common.ratio(
+        maxMilliseconds,
+        100,
+        datetime.millisecondsFrom('hour', opt.hourStart)
+    );
 
     return common.limit(topPercent, [0], [100]);
 };
@@ -254,7 +286,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     var todaymarkerWidth = -1;
     var hourmarkerTimzones = [];
     var opt = this.options;
-    var primaryOffset = Timezone.getOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var viewModel;
 
@@ -266,8 +298,9 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
     });
 
     util.forEach(timezones, function(timezone) {
-        var timezoneDifference = timezone.timezoneOffset + primaryOffset;
         var hourmarker = new TZDate(now);
+        var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
         var dateDifference;
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
@@ -275,7 +308,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
 
         hourmarkerTimzones.push({
             hourmarker: hourmarker,
-            dateDifferenceSign: (dateDifference < 0) ? '-' : '+',
+            dateDifferenceSign: dateDifference < 0 ? '-' : '+',
             dateDifference: Math.abs(dateDifference)
         });
     });
@@ -301,7 +334,7 @@ TimeGrid.prototype._getHourmarkerViewModel = function(now, grids, range) {
  */
 TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesCollapsed, styles) {
     var opt = this.options;
-    var primaryOffset = Timezone.getOffset();
+    var primaryOffset = tz.getPrimaryOffset();
     var timezones = opt.timezones;
     var timezonesLength = timezones.length;
     var timezoneViewModel = [];
@@ -310,14 +343,13 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
     var now = new TZDate().toLocalTime();
     var backgroundColor = styles.displayTimezoneLabelBackgroundColor;
 
+    // eslint-disable-next-line complexity
     util.forEach(timezones, function(timezone, index) {
         var hourmarker = new TZDate(now);
-        var timezoneDifference;
-        var timeSlots;
+        var timezoneOffset = getOffsetByTimezoneOption(timezone, hourmarker.getTime());
+        var timezoneDifference = timezoneOffset + primaryOffset;
+        var timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
         var dateDifference;
-
-        timezoneDifference = timezone.timezoneOffset + primaryOffset;
-        timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
 
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
@@ -337,7 +369,7 @@ TimeGrid.prototype._getTimezoneViewModel = function(currentHours, timezonesColla
             backgroundColor: backgroundColor || '',
             hidden: index !== 0 && collapsed,
             hourmarker: hourmarker,
-            dateDifferenceSign: (dateDifference < 0) ? '-' : '+',
+            dateDifferenceSign: dateDifference < 0 ? '-' : '+',
             dateDifference: Math.abs(dateDifference)
         });
     });
@@ -359,7 +391,11 @@ TimeGrid.prototype._getBaseViewModel = function(viewModel) {
     var styles = this._getStyles(viewModel.theme, timezonesCollapsed);
 
     return util.extend(baseViewModel, {
-        timezones: this._getTimezoneViewModel(baseViewModel.todaymarkerLeft, timezonesCollapsed, styles),
+        timezones: this._getTimezoneViewModel(
+            baseViewModel.todaymarkerLeft,
+            timezonesCollapsed,
+            styles
+        ),
         hoursLabels: getHoursLabels(opt, baseViewModel.todaymarkerLeft >= 0, 0, styles),
         styles: styles,
         showTimezoneCollapseButton: util.pick(opt, 'showTimezoneCollapseButton'),
@@ -381,7 +417,7 @@ TimeGrid.prototype._renderChildren = function(viewModels, grids, container, them
         child,
         isToday,
         containerHeight,
-        today = datetime.format(new TZDate(), 'YYYYMMDD'),
+        today = datetime.format(new TZDate().toLocalTime(), 'YYYYMMDD'),
         i = 0;
 
     // clear contents
@@ -515,15 +551,22 @@ TimeGrid.prototype.refreshHourmarker = function() {
             this.render(viewModel);
         } else {
             util.forEach(hourmarkers, function(hourmarker) {
-                var todaymarker = domutil.find(config.classname('.timegrid-todaymarker'), hourmarker);
-                var hourmarkerContainer = domutil.find(config.classname('.timegrid-hourmarker-time'), hourmarker);
+                var todaymarker = domutil.find(
+                    config.classname('.timegrid-todaymarker'),
+                    hourmarker
+                );
+                var hourmarkerContainer = domutil.find(
+                    config.classname('.timegrid-hourmarker-time'),
+                    hourmarker
+                );
                 var timezone = domutil.closest(hourmarker, config.classname('.timegrid-timezone'));
                 var timezoneIndex = timezone ? domutil.getData(timezone, 'timezoneIndex') : 0;
 
                 hourmarker.style.top = baseViewModel.hourmarkerTop + '%';
 
                 if (todaymarker) {
-                    todaymarker.style.display = (baseViewModel.todaymarkerLeft >= 0) ? 'block' : 'none';
+                    todaymarker.style.display =
+                        baseViewModel.todaymarkerLeft >= 0 ? 'block' : 'none';
                 }
                 if (hourmarkerContainer) {
                     hourmarkerContainer.innerHTML = timegridCurrentTimeTmpl(
@@ -545,7 +588,10 @@ TimeGrid.prototype.attachEvent = function() {
     clearTimeout(this.timerID);
     this.intervalID = this.timerID = this.rAnimationFrameID = null;
 
-    this.timerID = setTimeout(this.onTick.bind(this), (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
+    this.timerID = setTimeout(
+        this.onTick.bind(this),
+        (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000
+    );
 
     domevent.on(this.stickyContainer, 'click', this._onClickStickyContainer, this);
 };
@@ -555,12 +601,7 @@ TimeGrid.prototype.attachEvent = function() {
  */
 TimeGrid.prototype.scrollToNow = function() {
     var container = this.container;
-    var offsetTop,
-        viewBound,
-        scrollTop,
-        scrollAmount,
-        scrollBy,
-        scrollFn;
+    var offsetTop, viewBound, scrollTop, scrollAmount, scrollBy, scrollFn;
 
     if (!this.hourmarkers || !this.hourmarkers.length) {
         return;
@@ -611,6 +652,7 @@ TimeGrid.prototype.onTick = function() {
  * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
+// eslint-disable-next-line complexity
 TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
@@ -619,7 +661,8 @@ TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
 
     if (theme) {
         styles.borderBottom = theme.week.timegridHorizontalLine.borderBottom || theme.common.border;
-        styles.halfHourBorderBottom = theme.week.timegridHalfHour.borderBottom || theme.common.border;
+        styles.halfHourBorderBottom =
+            theme.week.timegridHalfHour.borderBottom || theme.common.border;
 
         styles.todayBackgroundColor = theme.week.today.backgroundColor;
         styles.weekendBackgroundColor = theme.week.weekend.backgroundColor;
@@ -629,11 +672,14 @@ TimeGrid.prototype._getStyles = function(theme, timezonesCollapsed) {
         styles.leftBorderRight = theme.week.timegridLeft.borderRight || theme.common.border;
         styles.leftFontSize = theme.week.timegridLeft.fontSize;
         styles.timezoneWidth = theme.week.timegridLeft.width;
-        styles.additionalTimezoneBackgroundColor = theme.week.timegridLeftAdditionalTimezone.backgroundColor
-                                                || styles.leftBackgroundColor;
+        styles.additionalTimezoneBackgroundColor =
+            theme.week.timegridLeftAdditionalTimezone.backgroundColor || styles.leftBackgroundColor;
 
         styles.displayTimezoneLabelHeight = theme.week.timegridLeftTimezoneLabel.height;
-        styles.displayTimezoneLabelBackgroundColor = theme.week.timegridLeft.backgroundColor === 'inherit' ? 'white' : theme.week.timegridLeft.backgroundColor;
+        styles.displayTimezoneLabelBackgroundColor =
+            theme.week.timegridLeft.backgroundColor === 'inherit'
+                ? 'white'
+                : theme.week.timegridLeft.backgroundColor;
 
         styles.oneHourHeight = theme.week.timegridOneHour.height;
         styles.halfHourHeight = theme.week.timegridHalfHour.height;

@@ -1,3 +1,4 @@
+/* eslint-disable vars-on-top */
 /**
  * @fileoverview Floating layer for showing detail schedule
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
@@ -11,6 +12,9 @@ var config = require('../../config'),
     domevent = require('../../common/domevent'),
     domutil = require('../../common/domutil');
 var tmpl = require('../template/popup/scheduleDetailPopup.hbs');
+var tz = require('../../common/timezone');
+var TZDate = tz.Date;
+var datetime = require('../../common/datetime');
 
 /**
  * @constructor
@@ -120,7 +124,7 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
     var self = this;
 
     layer.setContent(tmpl({
-        schedule: viewModel.schedule,
+        schedule: this._getScheduleModel(viewModel.schedule),
         calendar: viewModel.calendar
     }));
     layer.show();
@@ -132,6 +136,76 @@ ScheduleDetailPopup.prototype.render = function(viewModel) {
     util.debounce(function() {
         domevent.on(document.body, 'mousedown', self._onMouseDown, self);
     })();
+};
+
+// eslint-disable-next-line complexity
+ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
+    var viewModel = util.extend({}, scheduleViewModel);
+    var dayStart = datetime.start(scheduleViewModel.start);
+    var startDayOffset = dayStart.toDate().getTimezoneOffset();
+    var nativeOffsetMs = tz.getNativeOffsetMs();
+    var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
+    var startOffset = viewModel.start.toDate().getTimezoneOffset();
+    var endOffset = viewModel.end.toDate().getTimezoneOffset();
+    var primaryTimezoneCode = tz.getPrimaryTimezoneName();
+    var primaryOffset = tz.getPrimaryOffset();
+    var startTimezoneOffset = tz.getOffsetByTimezoneName(
+        primaryTimezoneCode,
+        viewModel.start.getTime()
+    );
+    var endTimezoneOffset = tz.getOffsetByTimezoneName(
+        primaryTimezoneCode,
+        viewModel.end.getTime()
+    );
+    var MIN_TO_MS = 60 * 1000;
+    var offsetDiffMs = 0;
+    var start, end;
+
+    if (
+        hasPrimaryTimezoneCustomSetting &&
+        tz.isNativeOsUsingDSTTimezone() &&
+        nativeOffsetMs !== startDayOffset
+    ) {
+        // When using a custom time zone, the native time zone offset is fixed and rendered.
+        // So, The fixed and rendered time should be recalculated as the original time zone offset.
+        // The current system OS local time is not affected by summer/standard time and the schedule should always be displayed in the same location.
+        offsetDiffMs = (startOffset * MIN_TO_MS) - nativeOffsetMs;
+        start = new TZDate(viewModel.start);
+        start.addMilliseconds(offsetDiffMs);
+
+        viewModel.start = start;
+
+        offsetDiffMs = (endOffset * MIN_TO_MS) - nativeOffsetMs;
+        end = new TZDate(viewModel.end);
+        end.addMilliseconds(offsetDiffMs);
+
+        viewModel.end = end;
+    }
+
+    if (
+        hasPrimaryTimezoneCustomSetting &&
+        tz.isPrimaryUsingDSTTimezone() &&
+        (primaryOffset !== startTimezoneOffset || primaryOffset !== endTimezoneOffset)
+    ) {
+        // The custom time zone is a time zone where two offsets including DST are applied.
+        // The first rendered schedule is calculated and drawn with the offset calculated at the access time(system OS local time).
+        // It should be recalculated with the original time zone offset.
+        offsetDiffMs = (primaryOffset - startTimezoneOffset) * MIN_TO_MS;
+
+        start = new TZDate(viewModel.start);
+        start.addMilliseconds(offsetDiffMs);
+
+        viewModel.start = start;
+
+        offsetDiffMs = (primaryOffset - endTimezoneOffset) * MIN_TO_MS;
+
+        end = new TZDate(viewModel.end);
+        end.addMilliseconds(offsetDiffMs);
+
+        viewModel.end = end;
+    }
+
+    return viewModel;
 };
 
 /**

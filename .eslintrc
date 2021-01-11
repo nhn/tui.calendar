@@ -1,5 +1,6 @@
 {
-    "extends": "tui",
+    "plugins": ["prettier"],
+    "extends": ["tui"],
     "globals": {
         "chance": true,
         "moment": true

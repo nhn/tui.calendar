@@ -193,7 +193,11 @@
     timegridCurrentTime: function(timezone) {
       var templates = [];
 
-      if (timezone.dateDifference) {
+      if (!timezone) {
+          return '';
+      }
+
+      if (timezone.dateDifference !== 0) {
           templates.push('[' + timezone.dateDifferenceSign + timezone.dateDifference + ']<br>');
       }
 
