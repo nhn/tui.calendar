@@ -154,12 +154,10 @@ Time.prototype._getScheduleViewBoundY = function(viewModel, options) {
     var baseHeight = options.baseHeight;
     var croppedStart = false;
     var croppedEnd = false;
-    var goingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().goingDuration);
-    var comingDuration = datetime.millisecondsFrom('minutes', viewModel.valueOf().comingDuration);
     var modelDuration = viewModel.duration();
     var top, height, duration;
     var offsetStart = getOffsetStart(viewModel, options);
-    var goingDurationHeight, modelDurationHeight, comingDurationHeight;
+    var modelDurationHeight;
 
     // containerHeight : milliseconds in day = x : schedule's milliseconds
     top = (baseHeight * offsetStart) / baseMS;

@@ -487,8 +487,28 @@ var helpers = {
     },
     'popupDelete-tmpl': function() {
         return 'Delete';
+    },
+    'monthScheduleName-tmpl': function(schedule) {
+        var start = schedule.start;
+
+        return msToTime(start);
     }
 };
+
+/**
+ * Get CSS syntax for element size
+ * @param {number} milliseconds - time to milliseconds
+ * @returns {string} start time
+ */
+function msToTime(milliseconds) {
+    var minutes = Math.floor((milliseconds / (1000 * 60)) % 60),
+        hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? '0' + hours : hours;
+    minutes = (minutes < 10) ? '0' + minutes : minutes;
+
+    return hours + ':' + minutes;
+}
 
 /**
  * Get CSS syntax for element size
