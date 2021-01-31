@@ -14,15 +14,7 @@
                         <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}"
                              class="{{CSS_PREFIX}}time-schedule {{#if
                                      model.isFocused}}{{CSS_PREFIX}}time-schedule-focused {{/if}}"
-                             style="
-                                 {{#unless croppedEnd}}
-                                     {{@root.styles.borderRadius}};
-                                     {{@root.styles.borderRadius}};
-                                 {{/unless}}
-                                 {{#unless croppedStart}}
-                                     {{@root.styles.borderRadius}};
-                                         border-radius: 7px;
-                                 {{/unless}}
+                             style="border-radius: 7px;
                                  {{#if model.isFocused}}
                                  border-color:{{model.color}};
                                  {{else}}
