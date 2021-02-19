@@ -1,6 +1,0 @@
-build/
-dist/
-node_modules/
-perf/
-
-src/js/**/*.hbs
