@@ -1,6 +1,6 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
-> A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
+> 🍞📅 A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
 
 [![GitHub release](https://img.shields.io/github/release/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/releases/latest)
 [![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/tui-calendar)
@@ -9,48 +9,33 @@
 [![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 ![tui-calendar-demo-nhn-corp](https://user-images.githubusercontent.com/43128697/55609612-0c19db00-57bc-11e9-849b-f42a9bd8c591.gif)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
-## 🚩 Table of Contents
+## 📦 Packages
 
-* [Collect statistics on the use of open source](#Collect-statistics-on-the-use-of-open-source)
-* [Documents](#-documents)
-* [How Cool: Monthly, Weekly, Daily and Various View Types.](#how-cool-monthly-weekly-daily-and-various-view-types)
-* [Easy to Use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
-* [Ready to Use: Default Popups](#ready-to-use-default-popups)
-* [Features](#-features)
-* [Examples](#-examples)
-* [Install](#-install)
-* [Wrappers](#-wrappers)
-* [Usage](#-usage)
-* [Browser Support](#-browser-support)
-* [Pull Request Steps](#-pull-request-steps)
-* [Contributing](#-contributing)
-* [Dependency](#-dependency)
-* [TOAST UI Family](#-toast-ui-family)
-* [Used By](#-used-by)
-* [License](#-license)
+The functionality of TOAST UI Calendar is available when using the Plain JavaScript, React, Vue Component.
 
-## Collect statistics on the use of open source
-
-TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage.
-
-To disable GA use the [options](https://nhn.github.io/tui.calendar/latest/global.html#Options):
-
-```js
-var calendar = new Calendar('#calendar', {
-  usageStatistics: false
-});
-```
+- [toast-ui.calendar](https://github.com/nhn/tui.calendar/tree/main/apps/calendar) - Plain JavaScript component implemented by NHN.
+- [toast-ui.vue-calendar](https://github.com/nhn/tui.calendar/tree/main/apps/vue-calendar) - **Vue** wrapper component implemented by NHN.
+- [toast-ui.react-calendar](https://github.com/nhn/tui.calendar/tree/main/apps/react-calendar) - **React** wrapper component implemented by NHN.
 
 ## 📙 Documents
 
 * [Getting Started](https://github.com/nhn/tui.calendar/blob/master/docs/getting-started.md)
 * [Tutorials](https://github.com/nhn/tui.calendar/tree/master/docs)
 * [APIs](https://nhn.github.io/tui.calendar/latest/Calendar)
+- [Getting Started](https://github.com/nhn/tui.calendar/blob/main/docs/en/getting-started.md)
+- Tutorials
+  - [English](https://github.com/nhn/tui.calendar/blob/main/docs/README.md)
+  - [한국어](https://github.com/nhn/tui.calendar/blob/main/docs/ko/README.md)
+- [APIs](https://nhn.github.io/tui.calendar/latest/)
+- v4.0 Migration Guide
+  - [English](https://github.com/nhn/tui.calendar/blob/main/docs/v4.0-migration-guide-en.md)
+  - [한국어](https://github.com/nhn/tui.calendar/blob/main/docs/v4.0-migration-guide-ko.md)
 
-You can also see the older versions of API page on the [releases page](https://github.com/nhn/tui.calendar/releases).
 
-## ✨ How Cool: Monthly, Weekly, Daily and Various View Types.
+## 😍 Why TOAST UI Calendar?
+### ✨ How Cool: Monthly, Weekly, Daily and Various View Types.
 
 | Monthly | Weekly |
 | --- | --- |
@@ -60,7 +45,7 @@ You can also see the older versions of API page on the [releases page](https://g
 | --- | --- |
 | ![image](https://user-images.githubusercontent.com/26706716/39230685-60a2a1d6-48a2-11e8-9d46-ce5693277a64.png) | ![image](https://user-images.githubusercontent.com/26706716/39230638-281d5266-48a2-11e8-84d8-ab289f372051.png) |
 
-## Easy to Use: Dragging and Resizing a Schedule
+### Easy to Use: Dragging and Resizing a Schedule
 
 | Dragging | Resizing |
 | --- | --- |
@@ -87,158 +72,7 @@ You can also see the older versions of API page on the [releases page](https://g
 
 * [Basic](https://nhn.github.io/tui.calendar/latest/tutorial-example00-basic) : Example of using default options.
 
-## 💾 Install
-
-TOAST UI products can be used by using the package manager or downloading the source directly.
-However, we highly recommend using the package manager.
-
-### Via Package Manager
-
-TOAST UI products are registered in two package managers, [npm](https://www.npmjs.com/) and [bower](https://bower.io/).
-You can conveniently install it using the commands provided by each package manager.
-When using npm, be sure to use it in the environment [Node.js](https://nodejs.org) is installed.
-
-#### npm
-
-``` sh
-$ npm install --save tui-calendar # Latest version
-$ npm install --save tui-calendar@<version> # Specific version
-```
-
-#### bower
-
-``` sh
-$ bower install tui-calendar # Latest version
-$ bower install tui-calendar#<tag> # Specific version
-```
-
-### Via Contents Delivery Network (CDN)
-TOAST UI products are available over the CDN powered by [TOAST Cloud](https://www.toast.com).
-
-You can use the CDN as below.
-
-Insert style sheet files
-```html
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
-
-<!-- If you use the default popups, use this. -->
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
-```
-
-Insert JavaScript file
-```html
-<script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
-<script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
-<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
-```
-
-If you want to use a specific version, use the tag name instead of `latest` in the url's path.
-
-The CDN directory has the following structure.
-
-```
-tui-calendar/
-├─ latest/
-│  ├─ tui-calendar.js
-│  └─ tui-calendar.min.js
-│  └─ tui-calendar.css
-│  └─ tui-calendar.min.css
-├─ v1.0.0/
-│  ├─ ...
-```
-
-### Download Source Files
-
-* [Download bundle files](https://github.com/nhn/tui.calendar/tree/master/dist)
-* [Download all sources for each version](https://github.com/nhn/tui.calendar/releases)
-
-## 🛍 Wrappers
-
-* [toast-ui.vue-calendar](https://github.com/nhn/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhn).
-* [toast-ui.react-calendar](https://github.com/nhn/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhn).
-* [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhn/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
-* [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhn/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
-* [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhn/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
-
-## 🔨 Usage
-
-### HTML
-
-Place a `<div></div>` where you want TOAST UI Calendar rendered.
-
-```html
-<body>
-...
-<div id="calendar" style="height: 800px;"></div>
-...
-</body>
-```
-
-### JavaScript
-
-#### Using namespace in browser environment
-
-```javascript
-var Calendar = tui.Calendar;
-```
-
-#### Using module format in node environment
-
-```javascript
-var Calendar = require('tui-calendar'); /* CommonJS */
-require("tui-calendar/dist/tui-calendar.css");
-
-// If you use the default popups, use this.
-require("tui-date-picker/dist/tui-date-picker.css");
-require("tui-time-picker/dist/tui-time-picker.css");
-```
-
-```javascript
-import Calendar from 'tui-calendar'; /* ES6 */
-import "tui-calendar/dist/tui-calendar.css";
-
-// If you use the default popups, use this.
-import 'tui-date-picker/dist/tui-date-picker.css';
-import 'tui-time-picker/dist/tui-time-picker.css';
-```
-
-Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/latest/Options) to set configuration.
-
-```javascript
-var calendar = new Calendar('#calendar', {
-  defaultView: 'month',
-  taskView: true,
-  template: {
-    monthDayname: function(dayname) {
-      return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
-    }
-    ...
-  }
-});
-```
-
-Or you can use jquery plugin. You must include jquery before using this jquery plugin.
-
-```js
-$('#calendar').tuiCalendar({
-  defaultView: 'month',
-  taskView: true,
-  template: {
-    monthDayname: function(dayname) {
-      return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
-    }
-    ...
-  }
-});
-```
-
-## 🌏 Browser Support
-| <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |
-| :---------: | :---------: | :---------: | :---------: | :---------: |
-| Yes | +9 | Yes | Yes | Yes |
+Here are more [examples](https://nhn.github.io/tui.calendar/latest/tutorial-example00-basic) and play with TOAST UI Calendar!
 
 ## 🔧 Pull Request Steps
 
@@ -290,15 +124,19 @@ For more information on PR's step, please see links of Contributing section.
 * [Issue guideline](https://github.com/nhn/tui.calendar/blob/master/docs/ISSUE_TEMPLATE.md)
 * [Commit convention](https://github.com/nhn/tui.calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
 
+## 🌏 Browser Support
+| <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |
+| :---------: | :---------: | :---------: | :---------: | :---------: |
+| Latest | +9 | Latest | Latest | Latest |
+
 ## 🔩 Dependency
 
-* [tui-code-snippet](https://github.com/nhn/tui.code-snippet) >= 1.5.0
 * [tui-date-picker](https://github.com/nhn/tui.date-picker) >= 3.0.0 is optional.
 * [tui-time-picker](https://github.com/nhn/tui.time-picker) >= 1.0.0 is optional.
 
 ## 🍞 TOAST UI Family
 * [TOAST UI Grid](https://github.com/nhn/tui.grid)
-* [TOAST UI Chart](https://github.com/nhn/tui.chart)
+* [TOAST UI Chart](https://github.com/nhn/tui.calendar)
 * [TOAST UI Editor](https://github.com/nhn/tui.editor)
 * [TOAST UI Image-Editor](https://github.com/nhn/tui.image-editor)
 * [TOAST UI Components](https://github.com/nhn?q=tui)

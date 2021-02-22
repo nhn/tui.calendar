@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://tui.Calendar/./src/sass/index.scss"],"names":[],"mappings":";;;;;;AAAA,2BACE,SAAU,CACV,cAAe","file":"tui-calendar.min.css","sourcesContent":[".holiday {\n  color: red;\n  font-size: 15px;\n}\n"],"sourceRoot":""}

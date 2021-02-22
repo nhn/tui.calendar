@@ -12,12 +12,16 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
-screenshots
+
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
 # Dependency directory
+# Deployed apps should consider commenting this line out:
+# see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
 
 # Bower Components
@@ -42,20 +46,26 @@ Desktop.ini
 .project
 .metadata
 
-# build
-build
-
 # etc
-*.swp
-etc
 temp
-api
 doc
 report
-karma.conf.local.js
-.tern-project
-.tern-port
+tui.calendar
+# dist
 *.vim
-.\#*
-.vscode/
-dist/
+
+# for local dev purpose
+demo-dev/
+build/
+markup
+
+# performance tester fixtures
+perf/**/*.json
+
+# es6 module output
+dist/esm/
+
+# webpack bundle analysis file
+stats.json
+
+storybook-static/
