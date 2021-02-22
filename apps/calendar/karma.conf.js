@@ -89,12 +89,12 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['fixture', 'jasmine-ajax', 'jasmine'],
     files: [
-      'test-ts/index.ts',
+      'test/index.ts',
       'test/fixtures/**/*',
       'node_modules/@babel/polyfill/dist/polyfill.js'
     ],
     preprocessors: {
-      'test-ts/index.ts': ['webpack', 'sourcemap'],
+      'test/index.ts': ['webpack', 'sourcemap'],
       'test/fixtures/**/*.html': ['html2js'],
       'test/fixtures/**/*.json': ['json_fixtures']
     },

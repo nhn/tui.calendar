@@ -36,8 +36,6 @@
     "types"
   ],
   "devDependencies": {
-    "@storybook/addon-actions": "^6.1.18",
-    "@storybook/addon-links": "^6.1.18",
     "@storybook/addons": "^6.1.18",
     "@storybook/preact": "^6.1.18",
     "@storybook/theming": "^6.1.18",

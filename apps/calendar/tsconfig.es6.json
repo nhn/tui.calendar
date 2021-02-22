@@ -11,12 +11,17 @@
     "outDir": "dist/es6/",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/ts/*"]
+      "@src/*": ["src/*"],
+      "@t/*": ["./types/*"],
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
     "typeRoots": ["types"],
     "types": ["webpack-env", "node", "jasmine", "karma-fixture"]
   },
-  "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*",
+  ]
 }

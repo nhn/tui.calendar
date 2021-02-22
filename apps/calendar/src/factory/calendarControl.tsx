@@ -13,7 +13,7 @@ import {
   CalendarColor,
   CalendarData,
   ViewType,
-  CustomTimezone
+  CustomTimezone,
 } from '@src/model';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
@@ -71,23 +71,23 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     this._externalEvent = this;
     this._context = {
       options: {
-        defaultView: 'month'
+        defaultView: 'month',
       },
       dataStore: {
         calendars: [],
         schedules: createScheduleCollection(),
-        idsOfDay: {}
+        idsOfDay: {},
       },
       theme: new Theme(option.theme),
       templates: registerTemplateConfig(option.template),
       internalEvent: this._internalEvent,
-      externalEvent: this._externalEvent
+      externalEvent: this._externalEvent,
     };
 
     this._renderDate = toStartOfDay();
     this._renderRange = {
       start: toStartOfDay(),
-      end: toStartOfDay()
+      end: toStartOfDay(),
     };
   }
 
@@ -106,7 +106,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       useDetailPopup = false,
       disableDblClick = false,
       disableClick = false,
-      isReadOnly = false
+      isReadOnly = false,
     } = option;
 
     return {
@@ -121,7 +121,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       useDetailPopup,
       disableDblClick,
       disableClick,
-      isReadOnly
+      isReadOnly,
     };
   }
 

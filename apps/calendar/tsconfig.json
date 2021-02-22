@@ -24,7 +24,6 @@
     "types": ["webpack-env", "node", "jasmine", "karma-fixture"]
   },
   "include": [
-    "types",
     "src/**/*.ts",
     "src/**/*.tsx",
     "stories/**/*.ts",
@@ -32,5 +31,5 @@
     "test/**/*.ts",
     "test/**/*.tsx",
     "types/**/*",
-  ],
+  ]
 }

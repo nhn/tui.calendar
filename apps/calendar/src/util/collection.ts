@@ -40,10 +40,10 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {...Filter} filters - function filters
    * @returns {function} combined filter
    */
-  static and<T>(...filters: Array<Filter<T>>) {
+  static and<ItemType>(...filters: Array<Filter<ItemType>>) {
     const { length } = filters;
 
-    return (item: T) => {
+    return (item: ItemType) => {
       for (let i = 0; i < length; i += 1) {
         if (!filters[i].call(null, item)) {
           return false;
@@ -59,14 +59,14 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {...function} filters - function filters
    * @returns {function} combined filter
    */
-  static or<T>(...filters: Array<Filter<T>>) {
+  static or<ItemType>(...filters: Array<Filter<ItemType>>) {
     const { length } = filters;
 
     if (!length) {
       return () => false;
     }
 
-    return (item: T) => {
+    return (item: ItemType) => {
       let result = filters[0].call(null, item);
 
       for (let i = 1; i < length; i += 1) {

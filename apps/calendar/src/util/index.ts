@@ -4,6 +4,7 @@ import pick from 'tui-code-snippet/object/pick';
 import Schedule from '@src/model/schedule';
 
 interface StampObj extends Record<string, any> {
+  /* eslint-disable camelcase */
   __fe_id?: number;
 }
 
@@ -43,7 +44,6 @@ export function set(object: Record<string, any>, path: string, value: any) {
 export function stamp(obj: StampObj): number {
   if (!obj.__fe_id) {
     lastId += 1;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     obj.__fe_id = lastId;
   }
 

@@ -11,7 +11,9 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/ts/*"]
+      "@src/*": ["./src/*"],
+      "@t/*": ["./types/*"],
+      "preact-markup": ["./types/preact-markup.d.ts"]
     },
     "plugins": [
       {
@@ -20,7 +22,14 @@
     ],
     "typeRoots": ["types"],
     "types": ["webpack-env"],
-    "listEmittedFiles": true
+    "listEmittedFiles": true,
+    "declaration": true,
   },
-  "include": ["types", "src/ts/**/*.ts", "src/ts/**/*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*",
+  ]
 }
+
+

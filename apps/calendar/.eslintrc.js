@@ -31,16 +31,16 @@ module.exports = {
     fixture: true
   },
   rules: {
-    'no-use-before-define': 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/ban-types": 0,
+    '@typescript-eslint/no-use-before-define': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/no-explicit-any': 0,
+    'no-use-before-define': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
     complexity: ['error', { max: 10 }],
     'max-nested-callbacks': ['error', { max: 10 }],
     'max-depth': ['error', 5],
-    '@typescript-eslint/no-use-before-define': 0,
-    'typescript-eslint/camelcase': 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0,
   },
 };
