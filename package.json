@@ -2,9 +2,6 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/plugin-proposal-class-properties": "^7.12.13",
-    "@babel/preset-env": "^7.12.16",
     "lerna": "^3.22.1",
     "prettier": "^2.2.1"
   },

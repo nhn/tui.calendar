@@ -36,6 +36,9 @@
     "types"
   ],
   "devDependencies": {
+    "@babel/core": "^7.13.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.13.0",
+    "@babel/preset-env": "^7.13.0",
     "@storybook/addons": "^6.1.18",
     "@storybook/preact": "^6.1.18",
     "@storybook/theming": "^6.1.18",
@@ -98,7 +101,7 @@
     "sass-loader": "^8.0.0",
     "storybook": "^6.1.18",
     "style-loader": "^1.0.0",
-    "stylelint": "^11.0.0",
+    "stylelint": "^13.11.0",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-scss": "^3.11.0",
     "stylelint-webpack-plugin": "^0.10.5",

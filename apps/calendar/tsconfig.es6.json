@@ -2,8 +2,8 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "target": "es6",
-    "jsx": "react",
-    "jsxFactory": "h",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
