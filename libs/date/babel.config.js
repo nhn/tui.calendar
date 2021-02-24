@@ -1,4 +1,19 @@
-module.exports = {
-  presets: ['@babel/preset-env'],
-  plugins: ['@babel/proposal-object-rest-spread']
+module.exports = (api) => {
+  api.cache(true);
+
+  return {
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          useBuiltIns: 'usage',
+          corejs: 3,
+          shippedProposals: true,
+        },
+      ],
+    ],
+    plugins: [
+      '@babel/plugin-proposal-object-rest-spread'
+    ],
+  };
 };

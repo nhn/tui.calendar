@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
-    jasmine: true
+    jasmine: true,
   },
   parser: '@typescript-eslint/parser',
   plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint', 'jasmine'],
@@ -14,7 +14,7 @@ module.exports = {
     'prettier/@typescript-eslint',
     'plugin:jasmine/recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
   ],
   parserOptions: {
     parser: 'typescript-eslint-parser',
@@ -24,15 +24,15 @@ module.exports = {
   settings: {
     react: {
       pragma: 'h',
-      version: '16.3'
-    }
+      version: '16.3',
+    },
   },
   globals: {
-    fixture: true
+    fixture: true,
   },
   rules: {
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-    "@typescript-eslint/ban-types": 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/no-use-before-define': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/no-explicit-any': 0,

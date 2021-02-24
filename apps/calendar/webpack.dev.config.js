@@ -1,5 +1,4 @@
 /* eslint-disable */
-const path = require('path');
 const postcssPrefixer = require('postcss-prefixer');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 
@@ -13,27 +12,10 @@ module.exports = (env, argv) => {
     entry: ['./src/sass/index.scss', './src/index.ts'],
     module: {
       rules: [
-        // transpile libraries to es5
         {
-          test: /\.js$/,
-          include: path.resolve(__dirname, 'node_modules/@toast-ui/date/'),
-          loader: 'babel-loader'
-        },
-        {
-          test: /\.tsx?$/,
+          test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: 'ts-loader',
-              options: { configFile: 'tsconfig.json' }
-            },
-            {
-              loader: 'eslint-loader',
-              options: {
-                cache: true
-              }
-            }
-          ]
+          loader: ['babel-loader', 'eslint-loader'],
         },
         {
           test: /\.s[ac]ss$/i,
@@ -42,24 +24,24 @@ module.exports = (env, argv) => {
             'css-loader',
             {
               loader: 'postcss-loader',
-              options: { plugins: [postcssPrefixer({ prefix })] }
+              options: { plugins: [postcssPrefixer({ prefix })] },
             },
-            'sass-loader'
-          ]
+            'sass-loader',
+          ],
         },
         {
           test: /\.(gif|png|jpe?g)$/,
-          use: 'url-loader'
-        }
-      ]
+          use: 'url-loader',
+        },
+      ],
     },
     plugins: [new StyleLintPlugin()],
     devtool: 'inline-source-map',
     devServer: {
       historyApiFallback: false,
       host: '0.0.0.0',
-      disableHostCheck: true
-    }
+      disableHostCheck: true,
+    },
   };
 
   return merge(common(env, argv), config);

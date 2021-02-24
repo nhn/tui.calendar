@@ -1,6 +1,4 @@
 /* eslint-disable */
-const pkg = require('./package.json');
-const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const postcssPrefixer = require('postcss-prefixer');
@@ -11,7 +9,7 @@ const common = require('./webpack.common.config');
 module.exports = (env, argv) => {
   const { minify } = argv;
   const prefix = 'toastui-calendar-';
-  const filename = `${pkg.name}${minify ? '.min' : ''}.css`;
+  const filename = `toastui-calendar${minify ? '.min' : ''}.css`;
 
   const config = {
     mode: 'production',
@@ -20,9 +18,9 @@ module.exports = (env, argv) => {
       rules: [
         // transpile libraries to es5
         {
-          test: /\.js$/,
-          include: path.resolve(__dirname, 'node_modules/@toast-ui/date/'),
-          loader: 'babel-loader'
+          test: /\.(ts|tsx|js)$/,
+          exclude: /node_modules/,
+          use: ['babel-loader', 'eslint-loader'],
         },
         {
           test: /\.s[ac]ss$/i,
@@ -31,57 +29,22 @@ module.exports = (env, argv) => {
             'css-loader',
             {
               loader: 'postcss-loader',
-              options: { plugins: [postcssPrefixer({ prefix })] }
+              options: { plugins: [postcssPrefixer({ prefix })] },
             },
             {
               loader: 'sass-loader',
-              options: { sassOptions: { outputStyle: 'expanded' } }
-            }
-          ]
+              options: { sassOptions: { outputStyle: 'expanded' } },
+            },
+          ],
         },
         {
           test: /\.(gif|png|jpe?g)$/,
-          use: 'url-loader'
-        }
-      ]
-    },
-    plugins: [new StyleLintPlugin(), new MiniCssExtractPlugin({ filename })]
-  };
-
-  // lint and check type once
-  if (!Boolean(minify)) {
-    config.module.rules.push({
-      test: /\.tsx?$/,
-      exclude: /node_modules/,
-      use: [
-        {
-          loader: 'ts-loader',
-          options: { configFile: 'tsconfig.json' }
+          use: 'url-loader',
         },
-        {
-          loader: 'eslint-loader',
-          options: {
-            failOnError: true,
-            cache: false
-          }
-        }
-      ]
-    });
-  } else {
-    config.module.rules.push({
-      test: /\.tsx?$/,
-      exclude: /node_modules/,
-      use: [
-        {
-          loader: 'ts-loader',
-          options: {
-            configFile: 'tsconfig.json',
-            transpileOnly: true
-          }
-        }
-      ]
-    });
-  }
+      ],
+    },
+    plugins: [new StyleLintPlugin(), new MiniCssExtractPlugin({ filename })],
+  };
 
   return merge(common(env, argv), config);
 };
