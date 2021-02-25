@@ -501,8 +501,9 @@ var helpers = {
  * @returns {string} start time
  */
 function msToTime(milliseconds) {
-    var minutes = Math.floor((milliseconds / (1000 * 60)) % 60),
-        hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
+    var time = new Date(milliseconds);
+    var minutes = time.getMinutes(),
+        hours = time.getHours();
 
     hours = (hours < 10) ? '0' + hours : hours;
     minutes = (minutes < 10) ? '0' + minutes : minutes;
