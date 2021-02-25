@@ -20,7 +20,7 @@ describe('drag hook', () => {
       onDrag: noop,
       onDragEnd: noop,
       onClick: noop,
-      onCancel: noop
+      onCancel: noop,
     };
     spyOn(listeners, 'onDragStart');
     spyOn(listeners, 'onDrag');

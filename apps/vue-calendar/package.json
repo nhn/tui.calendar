@@ -18,10 +18,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nhn/toast-ui.vue-calendar.git"
+    "url": "https://github.com/nhn/tui.calendar.git"
   },
-  "homepage": "https://github.com/nhn/toast-ui.vue-calendar",
-  "bugs": "https://github.com/nhn/toast-ui.vue-calendar/issues",
+  "homepage": "https://github.com/nhn/tui.calendar",
+  "bugs": "https://github.com/nhn/tui.calendar/issues",
   "author": "NHN. FE Development Lab <dl_javascript@nhn.com>",
   "license": "MIT",
   "browserslist": "last 2 versions, ie 9",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
+    "@toast-ui/release-notes": "^2.0.1",
     "@vue/cli": "^3.2.1",
     "@vue/cli-service-global": "^3.1.2",
     "babel-eslint": "^9.0.0",
@@ -40,7 +41,6 @@
     "eslint-config-tui": "^2.0.0",
     "eslint-loader": "^2.1.0",
     "eslint-plugin-vue": "^4.7.1",
-    "tui-release-notes": "git+https://github.com/nhn/tui.release-notes.git",
     "vue-loader": "^15.4.1",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.2",

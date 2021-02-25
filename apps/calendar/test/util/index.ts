@@ -31,13 +31,25 @@ export function createMouseEvent(name: string, eventInitDic: MouseEventInit = {}
   return event;
 }
 
+interface MSIEKeyboardEvent extends KeyboardEvent {
+  initKeyboardEvent: (
+    typeArg: string,
+    canBubbleArg: boolean,
+    cancelableArg: boolean,
+    viewArg: Window & typeof globalThis,
+    charArg: string | undefined,
+    keyArg?: number,
+    locationArg?: number,
+    modifiersListArg?: number,
+    repeat?: number
+  ) => void;
+}
+
 export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventInit) {
   let event: KeyboardEvent;
   if (browser.msie) {
     event = document.createEvent('KeyboardEvent');
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore;
-    event.initKeyboardEvent(
+    (event as MSIEKeyboardEvent).initKeyboardEvent(
       name,
       true,
       true,

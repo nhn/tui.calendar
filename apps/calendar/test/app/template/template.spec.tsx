@@ -6,7 +6,7 @@ import {
   registerTemplateConfig,
   getCommonWidth,
   getTimeScheduleBlock,
-  getMonthScheduleBlock
+  getMonthScheduleBlock,
 } from '@src/template';
 import { templates } from '@src/template/default';
 import { Template } from '@src/components/template';

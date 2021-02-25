@@ -17,8 +17,8 @@ describe('Calendar', () => {
       const now = new Date();
       const calendar = new Calendar(document.createElement('div'), {
         timezone: {
-          dateConstructor: UTCDate
-        }
+          dateConstructor: UTCDate,
+        },
       });
       calendar.setDate(now);
 
@@ -40,8 +40,8 @@ describe('Calendar', () => {
       const now = new Date();
       const calendar = new Calendar(document.createElement('div'), {
         timezone: {
-          dateConstructor: MomentDate
-        }
+          dateConstructor: MomentDate,
+        },
       });
       calendar.setDate(now);
 
@@ -54,8 +54,8 @@ describe('Calendar', () => {
       const calendar = new Calendar(document.createElement('div'), {
         timezone: {
           dateConstructor: MomentDate,
-          offset: 0
-        }
+          offset: 0,
+        },
       });
       calendar.setDate(now);
 
@@ -67,8 +67,8 @@ describe('Calendar', () => {
       const calendar = new Calendar(document.createElement('div'), {
         timezone: {
           dateConstructor: MomentDate,
-          name: 'America/Los_Angeles'
-        }
+          name: 'America/Los_Angeles',
+        },
       });
 
       // PDT

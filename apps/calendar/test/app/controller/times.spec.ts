@@ -2,7 +2,7 @@ import {
   getTopPercentByTime,
   getPrevGridTimeFromMouseEvent,
   getNextGridTime,
-  getPrevGridTime
+  getPrevGridTime,
 } from '@src/controller/times';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
@@ -246,36 +246,36 @@ describe('times controller', () => {
       slot: 10,
       startGridTime: new TZDate('2015-05-05T00:00:00'),
       endGridTime: new TZDate('2015-05-05T12:40:00'),
-      expected: new TZDate('2015-05-05T06:20:00')
+      expected: new TZDate('2015-05-05T06:20:00'),
     },
     {
       unit: 'hour',
       slot: 1,
       startGridTime: new TZDate('2015-05-05T00:00:00'),
       endGridTime: new TZDate('2015-05-06T00:00:00'),
-      expected: new TZDate('2015-05-05T12:00:00')
+      expected: new TZDate('2015-05-05T12:00:00'),
     },
     {
       unit: 'date',
       slot: 1,
       startGridTime: new TZDate('2015-05-01T00:00:00'),
       endGridTime: new TZDate('2015-05-31T00:00:00'),
-      expected: new TZDate('2015-05-16T00:00:00')
+      expected: new TZDate('2015-05-16T00:00:00'),
     },
     {
       unit: 'month',
       slot: 1,
       startGridTime: new TZDate('2015-01-01T00:00:00'),
       endGridTime: new TZDate('2016-01-01T00:00:00'),
-      expected: new TZDate('2015-07-01T00:00:00')
+      expected: new TZDate('2015-07-01T00:00:00'),
     },
     {
       unit: 'year',
       slot: 1,
       startGridTime: new TZDate('2015-01-01T00:00:00'),
       endGridTime: new TZDate('2025-01-01T00:00:00'),
-      expected: new TZDate('2020-01-01T00:00:00')
-    }
+      expected: new TZDate('2020-01-01T00:00:00'),
+    },
   ];
 
   describe('getPrevGridTimeFromMouseEvent() with unit', () => {
@@ -297,10 +297,10 @@ describe('times controller', () => {
     });
 
     tests.forEach(({ unit, slot, startGridTime, endGridTime, expected }) => {
-      it(` '${unit}'`, done => {
+      it(` '${unit}'`, (done) => {
         const vMouseEvent = createMouseEvent('click', {
           clientX: 10,
-          clientY: 115
+          clientY: 115,
         });
         container.addEventListener('click', () => {
           const result = getPrevGridTimeFromMouseEvent(

@@ -1,7 +1,7 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
 > 🍞📅 A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
-
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 [![GitHub release](https://img.shields.io/github/release/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/releases/latest)
 [![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/tui-calendar)
 [![GitHub license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/master/LICENSE)
@@ -9,7 +9,7 @@
 [![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 ![tui-calendar-demo-nhn-corp](https://user-images.githubusercontent.com/43128697/55609612-0c19db00-57bc-11e9-849b-f42a9bd8c591.gif)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+
 
 ## 📦 Packages
 
@@ -29,9 +29,9 @@ The functionality of TOAST UI Calendar is available when using the Plain JavaScr
   - [English](https://github.com/nhn/tui.calendar/blob/main/docs/README.md)
   - [한국어](https://github.com/nhn/tui.calendar/blob/main/docs/ko/README.md)
 - [APIs](https://nhn.github.io/tui.calendar/latest/)
-- v4.0 Migration Guide
-  - [English](https://github.com/nhn/tui.calendar/blob/main/docs/v4.0-migration-guide-en.md)
-  - [한국어](https://github.com/nhn/tui.calendar/blob/main/docs/v4.0-migration-guide-ko.md)
+- v2.0 Migration Guide
+  - [English](https://github.com/nhn/tui.calendar/blob/main/docs/v2.0-migration-guide-en.md)
+  - [한국어](https://github.com/nhn/tui.calendar/blob/main/docs/v2.0-migration-guide-ko.md)
 
 
 ## 😍 Why TOAST UI Calendar?
@@ -122,12 +122,12 @@ For more information on PR's step, please see links of Contributing section.
 * [Code of Conduct](https://github.com/nhn/tui.calendar/blob/master/CODE_OF_CONDUCT.md)
 * [Contributing guideline](https://github.com/nhn/tui.calendar/blob/master/CONTRIBUTING.md)
 * [Issue guideline](https://github.com/nhn/tui.calendar/blob/master/docs/ISSUE_TEMPLATE.md)
-* [Commit convention](https://github.com/nhn/tui.calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
+* [Commit convention](https://github.com/nhn/tui.calendar/blob/main/docs/COMMIT_MESSAGE_CONVENTION.md)
 
 ## 🌏 Browser Support
 | <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |
 | :---------: | :---------: | :---------: | :---------: | :---------: |
-| Latest | +9 | Latest | Latest | Latest |
+| Latest | 9+ | Latest | Latest | Latest |
 
 ## 🔩 Dependency
 
@@ -136,7 +136,7 @@ For more information on PR's step, please see links of Contributing section.
 
 ## 🍞 TOAST UI Family
 * [TOAST UI Grid](https://github.com/nhn/tui.grid)
-* [TOAST UI Chart](https://github.com/nhn/tui.calendar)
+* [TOAST UI Chart](https://github.com/nhn/tui.chart)
 * [TOAST UI Editor](https://github.com/nhn/tui.editor)
 * [TOAST UI Image-Editor](https://github.com/nhn/tui.image-editor)
 * [TOAST UI Components](https://github.com/nhn?q=tui)

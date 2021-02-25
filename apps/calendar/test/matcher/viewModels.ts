@@ -9,11 +9,11 @@ export default {
         expected: Record<string, Schedule[]>
       ): jasmine.CustomMatcherResult {
         const result: jasmine.CustomMatcherResult = {
-          pass: false
+          pass: false,
         };
         let isEqual = true;
 
-        forEach(expected, function(_compareTo: any, ymd: string) {
+        forEach(expected, function (_compareTo: any, ymd: string) {
           const models: Schedule[] = actual[ymd];
 
           if (!models) {
@@ -34,7 +34,7 @@ export default {
         result.pass = isEqual;
 
         return result;
-      }
+      },
     };
-  }
+  },
 };

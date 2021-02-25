@@ -4,12 +4,14 @@ const prefix = 'toastui-calendar-';
 
 module.exports = {
   stories: ['../stories/**/*.stories.@(ts|tsx)'],
-  webpackFinal: async (config, { configType }) => {
+  webpackFinal: async (config) => {
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
-      use: [{
+      use: [
+        {
           loader: require.resolve('ts-loader'),
-      }],
+        },
+      ],
     });
 
     config.module.rules.push({
@@ -19,25 +21,20 @@ module.exports = {
         'css-loader',
         {
           loader: 'postcss-loader',
-          options: { plugins: [postcssPrefixer({ prefix })] }
+          options: { plugins: [postcssPrefixer({ prefix })] },
         },
-        'sass-loader'
-      ]
+        'sass-loader',
+      ],
     });
 
     config.resolve.alias = {
       ...config.resolve.alias,
-      'core-js/modules': path.resolve(
-        __dirname,
-        '..',
-        'node_modules/core-js/modules'
-      ),
+      'core-js/modules': path.resolve(__dirname, '..', 'node_modules/core-js/modules'),
       '@src': path.resolve(__dirname, '../src/'),
       '@t': path.resolve(__dirname, '../types/'),
-      "@stories": path.resolve(__dirname, '../stories/'),
+      '@stories': path.resolve(__dirname, '../stories/'),
     };
 
-    // Return the altered config
     return config;
   },
-}
+};

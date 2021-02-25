@@ -7,7 +7,7 @@ import { findByDateRange } from '@src/controller/month';
 
 import matricesMatcher from '@test/matcher/matrices';
 
-describe('Base.Month', function() {
+describe('Base.Month', function () {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
   let dataStore: DataStore;
@@ -15,26 +15,26 @@ describe('Base.Month', function() {
   let scheduleList: Schedule[];
   let actual;
 
-  beforeEach(function() {
+  beforeEach(function () {
     dataStore = {
       calendars: [],
       schedules: createScheduleCollection(),
-      idsOfDay: {}
+      idsOfDay: {},
     };
 
     mockData = fixture.load('schedule_set_month.json');
     // mock schedule list
-    scheduleList = mockData.map(data => Schedule.create(data)).sort(array.compare.schedule.asc);
+    scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     fixture.cleanup();
   });
 
-  describe('findByDateRange()', function() {
-    beforeEach(function() {
+  describe('findByDateRange()', function () {
+    beforeEach(function () {
       // add schedule instance to controller
-      scheduleList.forEach(schedule => {
+      scheduleList.forEach((schedule) => {
         addSchedule(dataStore, schedule);
       });
 
@@ -42,7 +42,7 @@ describe('Base.Month', function() {
       jasmine.addMatchers(matricesMatcher);
     });
 
-    it('get schedules instance in month', function() {
+    it('get schedules instance in month', function () {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 
@@ -63,7 +63,7 @@ describe('Base.Month', function() {
         [undef, '주간보고 작성', '팀 스터디 - A'],
         [undef, undef, 'FE 스크럼 - 3'],
         [undef, undef, '[코드리뷰] 콤보차트 리펙토링'],
-        [undef, undef, '캘린더이야기']
+        [undef, undef, '캘린더이야기'],
       ];
 
       const expectedTop = [
@@ -74,7 +74,7 @@ describe('Base.Month', function() {
         [undef, 5, 6],
         [undef, undef, 4],
         [undef, undef, 5],
-        [undef, undef, 6]
+        [undef, undef, 6],
       ];
 
       actual = findByDateRange(dataStore, { start, end, andFilters: [], alldayFirstMode: true });
@@ -84,10 +84,10 @@ describe('Base.Month', function() {
     });
   });
 
-  describe('findByDateRange() by stacking time and all-day schedule', function() {
-    beforeEach(function() {
+  describe('findByDateRange() by stacking time and all-day schedule', function () {
+    beforeEach(function () {
       // add schedule instance to controller
-      scheduleList.forEach(schedule => {
+      scheduleList.forEach((schedule) => {
         addSchedule(dataStore, schedule);
       });
 
@@ -95,7 +95,7 @@ describe('Base.Month', function() {
       jasmine.addMatchers(matricesMatcher);
     });
 
-    it('get schedules instance in month for all-day schedule', function() {
+    it('get schedules instance in month for all-day schedule', function () {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 
@@ -116,7 +116,7 @@ describe('Base.Month', function() {
         [undef, '주간보고 작성', '팀 스터디 - A'],
         [undef, undef, 'FE 스크럼 - 3'],
         [undef, undef, '[코드리뷰] 콤보차트 리펙토링'],
-        [undef, undef, '캘린더이야기']
+        [undef, undef, '캘린더이야기'],
       ];
 
       const expectedTop = [
@@ -127,7 +127,7 @@ describe('Base.Month', function() {
         [undef, 4, 6],
         [undef, undef, 4],
         [undef, undef, 5],
-        [undef, undef, 5]
+        [undef, undef, 5],
       ];
 
       actual = findByDateRange(dataStore, { start, end });

@@ -22,7 +22,7 @@ function getDateTime(dateString) {
       m: Number(m),
       s: Number(s),
       ms: Number(ms) || 0,
-      zoneInfo
+      zoneInfo,
     };
   }
 
@@ -86,7 +86,7 @@ const getterMethods = [
   'getMinutes',
   'getSeconds',
   'getMilliseconds',
-  'getDay'
+  'getDay',
 ];
 
 const setterMethods = [
@@ -97,16 +97,16 @@ const setterMethods = [
   'setHours',
   'setMinutes',
   'setSeconds',
-  'setMilliseconds'
+  'setMilliseconds',
 ];
 
-getterMethods.forEach(methodName => {
+getterMethods.forEach((methodName) => {
   LocalDate.prototype[methodName] = function(...args) {
     return this.d[methodName](...args);
   };
 });
 
-setterMethods.forEach(methodName => {
+setterMethods.forEach((methodName) => {
   LocalDate.prototype[methodName] = function(...args) {
     return this.d[methodName](...args);
   };

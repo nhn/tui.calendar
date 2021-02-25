@@ -19,14 +19,14 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          height: 200
+          height: 200,
         },
         {
-          name: 'b'
-        }
+          name: 'b',
+        },
       ],
       {
-        direction: Direction.COLUMN
+        direction: Direction.COLUMN,
       }
     );
 
@@ -38,15 +38,15 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a'
+          name: 'a',
         },
         {
           name: 'b',
-          minHeight: 100
-        }
+          minHeight: 100,
+        },
       ],
       {
-        direction: Direction.COLUMN
+        direction: Direction.COLUMN,
       }
     );
 
@@ -58,15 +58,15 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a'
+          name: 'a',
         },
         {
           name: 'b',
-          minWidth: 100
-        }
+          minWidth: 100,
+        },
       ],
       {
-        direction: Direction.ROW
+        direction: Direction.ROW,
       }
     );
 
@@ -81,25 +81,25 @@ describe('layout controller', () => {
           name: 'a',
           expandable: true,
           height: 300,
-          maxExpandableHeight: 200
+          maxExpandableHeight: 200,
         },
         {
           name: 'b',
           expandable: true,
           height: 300,
           maxHeight: 100,
-          maxExpandableHeight: 200
+          maxExpandableHeight: 200,
         },
         {
           name: 'b',
           expandable: false,
           height: 300,
           maxHeight: 100,
-          maxExpandableHeight: 200
-        }
+          maxExpandableHeight: 200,
+        },
       ],
       {
-        direction: Direction.COLUMN
+        direction: Direction.COLUMN,
       }
     );
 
@@ -115,25 +115,25 @@ describe('layout controller', () => {
           name: 'a',
           expandable: true,
           width: 300,
-          maxExpandableWidth: 200
+          maxExpandableWidth: 200,
         },
         {
           name: 'b',
           expandable: true,
           width: 300,
           maxWidth: 100,
-          maxExpandableWidth: 200
+          maxExpandableWidth: 200,
         },
         {
           name: 'c',
           expandable: false,
           width: 300,
           maxWidth: 100,
-          maxExpandableWidth: 200
-        }
+          maxExpandableWidth: 200,
+        },
       ],
       {
-        direction: Direction.ROW
+        direction: Direction.ROW,
       }
     );
 
@@ -148,11 +148,11 @@ describe('layout controller', () => {
         {
           name: 'a',
           height: 100,
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
-        direction: Direction.COLUMN
+        direction: Direction.COLUMN,
       }
     );
 
@@ -164,16 +164,16 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          autoSize: 1
+          autoSize: 1,
         },
         {
           name: 'b',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.COLUMN,
-        height: 300
+        height: 300,
       }
     );
 
@@ -186,16 +186,16 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          autoSize: 1
+          autoSize: 1,
         },
         {
           name: 'b',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.ROW,
-        width: 300
+        width: 300,
       }
     );
 
@@ -208,16 +208,16 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          autoSize: 2
+          autoSize: 2,
         },
         {
           name: 'b',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.COLUMN,
-        height: 300
+        height: 300,
       }
     );
 
@@ -230,25 +230,25 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          height: 100
+          height: 100,
         },
         {
           name: 'b',
           height: 100,
-          autoSize: 2
+          autoSize: 2,
         },
         {
           name: 'b',
-          height: 100
+          height: 100,
         },
         {
           name: 'd',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.COLUMN,
-        height: 500
+        height: 500,
       }
     );
 
@@ -263,24 +263,24 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          height: 100
+          height: 100,
         },
         {
           name: 'b',
-          height: 300
+          height: 300,
         },
         {
           name: 'c',
-          height: 300
+          height: 300,
         },
         {
           name: 'd',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.COLUMN,
-        height: 500
+        height: 500,
       }
     );
 
@@ -295,25 +295,25 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          height: 100
+          height: 100,
         },
         {
           name: 'b',
           height: 200,
-          show: false
+          show: false,
         },
         {
           name: 'c',
-          height: 300
+          height: 300,
         },
         {
           name: 'd',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.COLUMN,
-        height: 500
+        height: 500,
       }
     );
 
@@ -328,26 +328,26 @@ describe('layout controller', () => {
       [
         {
           name: 'a',
-          height: 100
+          height: 100,
         },
         {
           name: 'b',
           height: 100,
           resizable: true,
-          resizerHeight: 5
+          resizerHeight: 5,
         },
         {
           name: 'c',
-          height: 100
+          height: 100,
         },
         {
           name: 'd',
-          autoSize: 1
-        }
+          autoSize: 1,
+        },
       ],
       {
         direction: Direction.COLUMN,
-        height: 500
+        height: 500,
       }
     );
 

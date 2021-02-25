@@ -8,7 +8,7 @@ const BANNER = [
   'TOAST UI Date',
   '@version ' + pkg.version + ' | ' + new Date().toDateString(),
   '@author ' + pkg.author,
-  '@license ' + pkg.license
+  '@license ' + pkg.license,
 ].join('\n');
 
 module.exports = (env, { mode = 'development', minify }) => {
@@ -19,30 +19,30 @@ module.exports = (env, { mode = 'development', minify }) => {
       libraryTarget: 'umd',
       libraryExport: 'default',
       path: path.join(__dirname, 'dist'),
-      filename: 'toastui-date' + (minify ? '.min' : '') + '.js'
+      filename: 'toastui-date' + (minify ? '.min' : '') + '.js',
     },
     module: {
       rules: [
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: ['babel-loader', 'eslint-loader']
-        }
-      ]
+          loader: ['babel-loader', 'eslint-loader'],
+        },
+      ],
     },
     plugins: [
       new SafeUmdPlugin(),
       new webpack.BannerPlugin({
         banner: BANNER,
-        entryOnly: true
-      })
+        entryOnly: true,
+      }),
     ],
-    devtool: 'source-map'
+    devtool: 'source-map',
   };
 
   if (mode === 'production') {
     config.optimization = {
-      minimize: Boolean(minify)
+      minimize: Boolean(minify),
     };
   }
 

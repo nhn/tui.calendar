@@ -160,7 +160,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.move(-1);
    */
   private move(offset = 0) {
-    console.log('move', offset);
+    // console.log('move', offset);
   }
 
   /**********
@@ -195,7 +195,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * ]);
    */
   createSchedules(schedules: ScheduleData[], silent = false) {
-    console.log('createSchedules', schedules, silent);
+    // console.log('createSchedules', schedules, silent);
   }
 
   /**
@@ -209,7 +209,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * console.log(schedule.title);
    */
   getSchedule(scheduleId: string, calendarId: string) {
-    console.log('getSchedule', scheduleId, calendarId);
+    // console.log('getSchedule', scheduleId, calendarId);
   }
 
   /**
@@ -236,7 +236,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     scheduleData: ScheduleData,
     silent = false
   ) {
-    console.log('updateSchedule', scheduleId, calendarId, scheduleData, silent);
+    // console.log('updateSchedule', scheduleId, calendarId, scheduleData, silent);
   }
 
   /**
@@ -247,7 +247,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   deleteSchedule(scheduleId: string, calendarId: string, silent = false) {
-    console.log('deleteSchedule', scheduleId, calendarId, silent);
+    // console.log('deleteSchedule', scheduleId, calendarId, silent);
   }
 
   /**********
@@ -262,7 +262,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   toggleSchedules(calendarId: string, toHide: boolean, renderImmediately = true) {
-    console.log('toggleSchedules', calendarId, toHide, renderImmediately);
+    // console.log('toggleSchedules', calendarId, toHide, renderImmediately);
   }
 
   /**
@@ -309,7 +309,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.render();
    */
   clear() {
-    console.log('clear');
+    // console.log('clear');
   }
 
   /**
@@ -324,7 +324,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * }
    */
   scrollToNow() {
-    console.log('scrollToNow');
+    // console.log('scrollToNow');
   }
 
   /**
@@ -336,7 +336,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * }
    */
   today() {
-    console.log('today');
+    // console.log('today');
   }
 
   /**
@@ -411,7 +411,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * });
    */
   setCalendarColor(calendarId: string, option: CalendarColor, silent = false) {
-    console.log('setCalendarColor', calendarId, option, silent);
+    // console.log('setCalendarColor', calendarId, option, silent);
 
     if (!silent) {
       this.render();
@@ -458,7 +458,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.changeView(calendar.getViewName(), true);
    */
   changeView(newViewName: string, force = false) {
-    console.log('changeView', newViewName, force);
+    // console.log('changeView', newViewName, force);
 
     this.move();
     this.render();
@@ -477,7 +477,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.toggleTaskView(true);
    */
   toggleTaskView(enabled: boolean) {
-    console.log('toggleTaskView', enabled);
+    // console.log('toggleTaskView', enabled);
   }
 
   /**
@@ -493,7 +493,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.toggleScheduleView(true);
    */
   toggleScheduleView(enabled: boolean) {
-    console.log('toggleScheduleView', enabled);
+    // console.log('toggleScheduleView', enabled);
   }
 
   /**
@@ -507,7 +507,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * console.log(element);
    */
   getElement(scheduleId: string, calendarId: string) {
-    console.log('getElement', scheduleId, calendarId);
+    // console.log('getElement', scheduleId, calendarId);
 
     return null;
   }
@@ -538,7 +538,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   setOptions(options: Option, silent = false) {
-    console.log('setOptions', options, silent);
+    // onsole.log('setOptions', options, silent);
   }
 
   /**
@@ -567,7 +567,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   getDateRangeStart() {
-    console.log('getDateRangeStart');
+    // console.log('getDateRangeStart');
 
     return this._renderRange.start;
   }
@@ -578,7 +578,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   getDateRangeEnd() {
-    console.log('getDateRangeEnd');
+    // console.log('getDateRangeEnd');
 
     return this._renderRange.end;
   }
@@ -589,7 +589,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   getViewName() {
-    console.log('getViewName');
+    // console.log('getViewName');
 
     return null;
   }
@@ -600,7 +600,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   setCalendars(calendars: CalendarData[]) {
-    console.log('setCalendars', calendars);
+    // console.log('setCalendars', calendars);
   }
 
   /**
@@ -609,6 +609,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   openCreationPopup(schedule: ScheduleData) {
-    console.log('openCreationPopup', schedule);
+    // console.log('openCreationPopup', schedule);
   }
 }

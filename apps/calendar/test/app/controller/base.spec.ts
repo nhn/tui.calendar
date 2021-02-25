@@ -4,7 +4,7 @@ import {
   createSchedule,
   findByDateRange,
   updateSchedule,
-  deleteSchedule
+  deleteSchedule,
 } from '@src/controller/base';
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
@@ -12,69 +12,69 @@ import { ScheduleData, DataStore } from '@src/model';
 
 import viewModelsMatcher from '@test/matcher/viewModels';
 
-describe('controller/base', function() {
+describe('controller/base', function () {
   let dataStore: DataStore;
   let scheduleDataList: ScheduleData[];
 
-  beforeEach(function() {
+  beforeEach(function () {
     dataStore = {
       calendars: [],
       schedules: createScheduleCollection(),
-      idsOfDay: {}
+      idsOfDay: {},
     };
     scheduleDataList = fixture.load('schedule_set_string.json');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     fixture.cleanup();
   });
 
-  describe('getDateRange()', function() {
+  describe('getDateRange()', function () {
     let schedule: Schedule;
 
-    it('calculate contain dates for specific schedules.', function() {
+    it('calculate contain dates for specific schedules.', function () {
       const expected = [
         new TZDate('2015/05/01'),
         new TZDate('2015/05/02'),
-        new TZDate('2015/05/03')
+        new TZDate('2015/05/03'),
       ];
 
       schedule = Schedule.create({
         title: 'A',
         isAllDay: true,
         start: '2015/05/01',
-        end: '2015/05/03'
+        end: '2015/05/03',
       });
 
       expect(getDateRange(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
     });
 
-    it('can calculate non all day schedule.', function() {
+    it('can calculate non all day schedule.', function () {
       const expected = [
         new TZDate('2015/05/01'),
         new TZDate('2015/05/02'),
-        new TZDate('2015/05/03')
+        new TZDate('2015/05/03'),
       ];
 
       schedule = Schedule.create({
         title: 'A',
         isAllDay: false,
         start: '2015/05/01 12:30:00',
-        end: '2015/05/03 09:20:00'
+        end: '2015/05/03 09:20:00',
       });
 
       expect(getDateRange(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
     });
   });
 
-  describe('createSchedule()', function() {
-    it('return itself for chaining pattern.', function() {
+  describe('createSchedule()', function () {
+    it('return itself for chaining pattern.', function () {
       const schedule = Schedule.create(scheduleDataList[0]);
 
       expect(schedule.equals(createSchedule(dataStore, scheduleDataList[0]))).toBe(true);
     });
 
-    it('create schedule instance by raw schedule data.', function() {
+    it('create schedule instance by raw schedule data.', function () {
       const id = createSchedule(dataStore, scheduleDataList[0]).cid();
       const id2 = createSchedule(dataStore, scheduleDataList[1]).cid();
       const id3 = createSchedule(dataStore, scheduleDataList[3]).cid();
@@ -83,20 +83,20 @@ describe('controller/base', function() {
       expect(dataStore.idsOfDay).toEqual({
         '20150501': [id],
         '20150502': [id, id3],
-        '20150503': [id2, id3]
+        '20150503': [id2, id3],
       });
     });
   });
 
-  describe('findByDateRange()', function() {
+  describe('findByDateRange()', function () {
     let scheduleList: Schedule[];
     let idList: number[];
 
-    beforeEach(function() {
+    beforeEach(function () {
       scheduleList = [];
       idList = [];
 
-      scheduleDataList.forEach(data => {
+      scheduleDataList.forEach((data) => {
         const item = createSchedule(dataStore, data);
         scheduleList.push(item);
         idList.push(item.cid());
@@ -114,11 +114,11 @@ describe('controller/base', function() {
        */
     });
 
-    it('by YMD', function() {
+    it('by YMD', function () {
       const expected = {
         '20150430': [],
         '20150501': ['hunting'],
-        '20150502': ['hunting', 'A']
+        '20150502': ['hunting', 'A'],
       };
 
       const start = new TZDate('2015/04/30');
@@ -129,10 +129,10 @@ describe('controller/base', function() {
       expect(result).toEqualViewModel(expected);
     });
 
-    it('return viewmodels in dates properly.', function() {
+    it('return viewmodels in dates properly.', function () {
       const expected = {
         '20150502': ['hunting', 'A'],
-        '20150503': ['A', 'meeting', 'physical training']
+        '20150503': ['A', 'meeting', 'physical training'],
       };
 
       const start = new TZDate('2015/05/02');
@@ -144,13 +144,13 @@ describe('controller/base', function() {
     });
   });
 
-  describe('updateSchedule()', function() {
-    it('update owned schedule and date matrix.', function() {
+  describe('updateSchedule()', function () {
+    it('update owned schedule and date matrix.', function () {
       const model = createSchedule(dataStore, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
-        end: '2015/05/01 18:30:00'
+        end: '2015/05/01 18:30:00',
       });
       const id = model.cid();
 
@@ -158,7 +158,7 @@ describe('controller/base', function() {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/02',
-        end: '2015/05/02'
+        end: '2015/05/02',
       });
 
       const schedule = dataStore.schedules.single();
@@ -170,35 +170,35 @@ describe('controller/base', function() {
             title: 'Go to work',
             isAllDay: false,
             start: new TZDate('2015/05/02'),
-            end: new TZDate('2015/05/02')
+            end: new TZDate('2015/05/02'),
           })
         );
       }
 
       expect(dataStore.idsOfDay).toEqual({
         '20150501': [],
-        '20150502': [id]
+        '20150502': [id],
       });
     });
   });
 
-  describe('deleteSchedule()', function() {
+  describe('deleteSchedule()', function () {
     let schedule: Schedule;
 
-    beforeEach(function() {
+    beforeEach(function () {
       schedule = createSchedule(dataStore, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
-        end: '2015/05/01 18:30:00'
+        end: '2015/05/01 18:30:00',
       });
     });
 
-    it('delete an schedule by model.', function() {
+    it('delete an schedule by model.', function () {
       expect(deleteSchedule(dataStore, schedule)).toEqual(schedule);
       expect(dataStore.schedules.length).toBe(0);
       expect(dataStore.idsOfDay).toEqual({
-        '20150501': []
+        '20150501': [],
       });
     });
   });

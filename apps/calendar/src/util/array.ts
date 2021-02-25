@@ -141,7 +141,7 @@ export function bsearch(
   arr: any[],
   search: any,
   fn?: (item: any) => any,
-  compareFn?: (item: any, search: any) => number
+  compareFn?: (item: any, searchArg: any) => number
 ) {
   let minIndex = 0;
   let maxIndex = arr.length - 1;

@@ -3,20 +3,20 @@ import Theme from '@src/theme';
 import preset from '@src/theme/preset';
 import { ThemePropKeys } from '@src/theme/themeProps';
 
-describe('Theme', function() {
+describe('Theme', function () {
   let theme: Theme;
 
-  beforeEach(function() {
+  beforeEach(function () {
     theme = new Theme();
   });
 
-  it('get a style by key', function() {
+  it('get a style by key', function () {
     const value = theme.getStyle('common.border');
 
     expect(value).toBe('1px solid #e5e5e5');
   });
 
-  it('set a style by key', function() {
+  it('set a style by key', function () {
     const key = 'common.border';
     const value = '2px dashed #ddd';
 
@@ -25,11 +25,11 @@ describe('Theme', function() {
     expect(theme.getStyle(key)).toBe(value);
   });
 
-  it('set multiple styles with key, value map', function() {
+  it('set multiple styles with key, value map', function () {
     const map = {
       'common.border': '2px dashed #ddd',
       'month.dayname.paddingLeft': '3px',
-      'week.today.color': '#555'
+      'week.today.color': '#555',
     };
     const result = theme.setStyles(map);
 
@@ -39,18 +39,18 @@ describe('Theme', function() {
     expect(result.length).toBe(0);
   });
 
-  it('no return a style with wrong key parameter', function() {
+  it('no return a style with wrong key parameter', function () {
     const key = 'wrong.key';
     const value = theme.getStyle(key as ThemePropKeys);
 
     expect(value).toBe('');
   });
 
-  it('no value through property path', function() {
+  it('no value through property path', function () {
     expect(pick(theme, 'wrong', 'border')).toBeUndefined();
   });
 
-  it('return true to set a style by right key', function() {
+  it('return true to set a style by right key', function () {
     const key = 'common.border';
     const value = '2px dashed #ddd';
     const result = theme.setStyle(key, value);
@@ -58,7 +58,7 @@ describe('Theme', function() {
     expect(result).toBe(true);
   });
 
-  it('return false to set a style by wrong key', function() {
+  it('return false to set a style by wrong key', function () {
     const key = 'wrong.border';
     const value = '2px dashed #ddd';
     const result = theme.setStyle(key as ThemePropKeys, value);
@@ -66,48 +66,48 @@ describe('Theme', function() {
     expect(result).toBe(false);
   });
 
-  it('return wrong keys array when setting multiple styles including wrong key', function() {
+  it('return wrong keys array when setting multiple styles including wrong key', function () {
     const styles = {
       'wrong.border': '2px dashed #ddd',
-      'common.border': '2px dashed #ddd'
+      'common.border': '2px dashed #ddd',
     };
     const result = theme.setStyles(styles);
 
     expect(result).toEqual(['wrong.border']);
   });
 
-  it('can check all predefined key of the standard theme', function() {
+  it('can check all predefined key of the standard theme', function () {
     const keys = Object.keys(preset) as ThemePropKeys[];
 
-    keys.forEach(function(key) {
+    keys.forEach(function (key) {
       expect(theme.getStyle(key)).not.toBe('');
     });
   });
 
-  it('can check  all predefined key of the given custom theme', function() {
+  it('can check  all predefined key of the given custom theme', function () {
     const customTheme = fixture.load('theme-dooray v2.json');
     const keys = Object.keys(customTheme) as ThemePropKeys[];
 
     theme = new Theme(customTheme);
 
-    keys.forEach(function(key) {
+    keys.forEach(function (key) {
       expect(theme.getStyle(key)).not.toBe('');
     });
   });
 
-  it('can clear all styles and set another styles', function() {
+  it('can clear all styles and set another styles', function () {
     const customTheme = fixture.load('theme-dooray v2.json');
     let keys = Object.keys(preset) as ThemePropKeys[];
     theme.clear();
 
-    keys.forEach(function(key) {
+    keys.forEach(function (key) {
       expect(theme.getStyle(key)).toBe('');
     });
 
     theme.setStyles(customTheme);
 
     keys = Object.keys(customTheme) as ThemePropKeys[];
-    keys.forEach(function(key) {
+    keys.forEach(function (key) {
       expect(theme.getStyle(key)).not.toBe('');
     });
   });

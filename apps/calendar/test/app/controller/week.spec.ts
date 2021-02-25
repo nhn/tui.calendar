@@ -10,7 +10,7 @@ import {
   findByDateRange,
   _makeHourRangeFilter,
   PANEL_NAME,
-  splitScheduleByDateRange
+  splitScheduleByDateRange,
 } from '@src/controller/week';
 import { ScheduleMatrix } from '@src/controller/core';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
@@ -18,44 +18,44 @@ import Collection from '@src/util/collection';
 
 const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
-describe('Base.Week', function() {
+describe('Base.Week', function () {
   let dataStore: DataStore;
   let mockData: ScheduleData[];
 
-  beforeEach(function() {
+  beforeEach(function () {
     dataStore = {
       calendars: [],
       schedules: createScheduleCollection(),
-      idsOfDay: {}
+      idsOfDay: {},
     };
     mockData = fixture.load('schedule_set_string3.json');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     fixture.cleanup();
   });
 
-  describe('hasCollision()', function() {
+  describe('hasCollision()', function () {
     let supplied: Array<number[]>;
 
-    beforeEach(function() {
+    beforeEach(function () {
       supplied = [
         [2, 5],
         [8, 11],
-        [14, 17]
+        [14, 17],
       ];
     });
 
-    it('return false when supplied empty array', function() {
+    it('return false when supplied empty array', function () {
       expect(hasCollision([], 3, 4)).toBe(false);
     });
 
-    it('calculate collision information properly.', function() {
+    it('calculate collision information properly.', function () {
       expect(hasCollision(supplied, 6, 7)).toBe(false);
     });
   });
 
-  describe('generateTimeArrayInRow()', function() {
+  describe('generateTimeArrayInRow()', function () {
     /**
      * |---|---|
      * | 1 | 2 |
@@ -79,36 +79,36 @@ describe('Base.Week', function() {
       return new Schedule().init({ start, end });
     }
 
-    beforeEach(function() {
+    beforeEach(function () {
       supplied = [[getTime(1, 2), getTime(1, 2)], [getTime(4, 5), getTime(5, 6)], [getTime(7, 8)]];
 
       expected = [
         [
           [1, 2 + SCHEDULE_MIN_DURATION],
-          [5, 6 + SCHEDULE_MIN_DURATION]
-        ]
+          [5, 6 + SCHEDULE_MIN_DURATION],
+        ],
       ];
     });
 
-    it('get rowmap properly.', function() {
+    it('get rowmap properly.', function () {
       expect(generateTimeArrayInRow(supplied)).toEqual(expected);
     });
   });
 
-  describe('findByDateRange', function() {
+  describe('findByDateRange', function () {
     let panels: Panel[];
 
-    beforeEach(function() {
+    beforeEach(function () {
       panels = [
         {
           name: 'time',
           type: 'timegrid',
           handlers: ['click', 'creation', 'move', 'resize'],
-          show: true
-        }
+          show: true,
+        },
       ];
 
-      mockData.forEach(data => {
+      mockData.forEach((data) => {
         createSchedule(dataStore, data);
       });
 
@@ -123,7 +123,7 @@ describe('Base.Week', function() {
        */
     });
 
-    it('by YMD', function() {
+    it('by YMD', function () {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
@@ -134,15 +134,15 @@ describe('Base.Week', function() {
         andFilters: [],
         options: {
           hourStart: 0,
-          hourEnd: 24
-        }
+          hourEnd: 24,
+        },
       }) as Record<PANEL_NAME, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
 
       // There are 5 collision blocks on 5/1.
       expect(result.time['20150501'].length).toBe(5);
     });
 
-    it('Can add more AND clause filter function by third parameter', function() {
+    it('Can add more AND clause filter function by third parameter', function () {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
@@ -152,7 +152,7 @@ describe('Base.Week', function() {
         end,
         panels,
         andFilters: [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
-        options: { hourStart: 0, hourEnd: 24 }
+        options: { hourStart: 0, hourEnd: 24 },
       }) as Record<PANEL_NAME, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
 
       // One collision block in the timeline group
@@ -160,17 +160,17 @@ describe('Base.Week', function() {
     });
   });
 
-  describe('_getHourRangeFilter()', function() {
+  describe('_getHourRangeFilter()', function () {
     let hourRangeFilter: (schedule: Schedule) => boolean;
     let schedule: Schedule;
 
-    beforeEach(function() {
+    beforeEach(function () {
       // 8:00 ~ 20:00
       hourRangeFilter = _makeHourRangeFilter(10, 12);
       schedule = new Schedule();
     });
 
-    it('filter schedule by start, end date visible', function() {
+    it('filter schedule by start, end date visible', function () {
       schedule.start = new TZDate('2018-05-02T09:30:00');
       schedule.end = new TZDate('2018-05-02T13:30:00');
 
@@ -228,12 +228,12 @@ describe('Base.Week', function() {
     });
   });
 
-  describe('splitScheduleByDateRange()', function() {
+  describe('splitScheduleByDateRange()', function () {
     let schedules: Schedule[];
     let collection: Collection<Schedule>;
 
-    beforeEach(function() {
-      collection = new Collection(item => {
+    beforeEach(function () {
+      collection = new Collection((item) => {
         return item.cid();
       });
 
@@ -242,31 +242,31 @@ describe('Base.Week', function() {
           title: 'A',
           isAllDay: false,
           start: '2015/05/01 09:30:00',
-          end: '2015/05/01 18:30:00'
+          end: '2015/05/01 18:30:00',
         },
         {
           title: 'B',
           isAllDay: false,
           start: '2015/05/02 09:30:00',
-          end: '2015/05/02 18:30:00'
+          end: '2015/05/02 18:30:00',
         },
         {
           title: 'C',
           isAllDay: true,
           start: '2015/05/01 09:00:00',
-          end: '2015/05/02 09:00:00'
-        }
-      ].map(scheduleData => Schedule.create(scheduleData));
+          end: '2015/05/02 09:00:00',
+        },
+      ].map((scheduleData) => Schedule.create(scheduleData));
 
       collection.add(...schedules);
 
-      schedules.forEach(schedule => {
+      schedules.forEach((schedule) => {
         dataStore.schedules.add(schedule);
         addToMatrix(dataStore.idsOfDay, schedule);
       });
     });
 
-    it('split schedule by ymd.', function() {
+    it('split schedule by ymd.', function () {
       const result = splitScheduleByDateRange(
         dataStore.idsOfDay,
         new TZDate('2015-05-01T00:00:00'),
@@ -278,7 +278,7 @@ describe('Base.Week', function() {
       const expected = {
         '20150501': new Collection(getter),
         '20150502': new Collection(getter),
-        '20150503': new Collection(getter)
+        '20150503': new Collection(getter),
       };
 
       expected['20150501'].add(schedules[0]);

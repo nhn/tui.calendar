@@ -17,7 +17,6 @@ import { CreationGuideInfo } from '@src/components/timegrid';
 
 export default { title: 'Column' };
 
-
 interface WrapperProps {
   width: number;
   position: string;

@@ -28,8 +28,10 @@ declare module 'preact-markup' {
 
   class Markup extends Component<Props, {}> {
     static setReviver(h: typeof createElement): void;
-    setComponents(components: Components): void;
-    render(props: Props, {}): VNode;
+
+    public setComponents(components: Components): void;
+
+    public render(props: Props): VNode;
   }
 
   export default Markup;

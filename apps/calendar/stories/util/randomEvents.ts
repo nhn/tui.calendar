@@ -107,18 +107,15 @@ function generateRandomEvent(calendar: CalendarData, renderStart: TZDate, render
   return event;
 }
 
-export function generateRandomEvents(
-  viewName: ViewType = 'week',
-  renderStart: TZDate,
-  renderEnd: TZDate
-) {
+export function generateRandomEvents(viewName: ViewType, renderStart: TZDate, renderEnd: TZDate) {
+  const view = viewName ?? 'week';
   const events: ScheduleData[] = [];
 
   calendars.forEach((calendar) => {
     let length = 10;
-    if (viewName === 'month') {
+    if (view === 'month') {
       length = 3;
-    } else if (viewName === 'day') {
+    } else if (view === 'day') {
       length = 4;
     }
     for (let i = 0; i < length; i += 1) {

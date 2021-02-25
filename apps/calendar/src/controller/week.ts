@@ -105,8 +105,8 @@ function searchFunc(index: number) {
  * @param {number} end - schedule end time that want to detect collisions.
  * @returns {boolean} target has collide in supplied array?
  */
-export function hasCollision(arr: Array<number[]> = [], start: number, end: number) {
-  if (!arr.length) {
+export function hasCollision(arr: Array<number[]>, start: number, end: number) {
+  if (!arr?.length) {
     return false;
   }
 

@@ -9,89 +9,89 @@ import {
   CollisionGroup,
   getMatrices,
   limitRenderRange,
-  getScheduleInDateRangeFilter
+  getScheduleInDateRangeFilter,
 } from '@src/controller/core';
 import Collection from '@src/util/collection';
 
-describe('Base.Core', function() {
+describe('Base.Core', function () {
   let mockData: ScheduleData[];
   let scheduleList: Schedule[];
   let expected;
   let actual;
 
-  beforeEach(function() {
+  beforeEach(function () {
     mockData = fixture.load('schedule_set_string3.json');
-    scheduleList = mockData.map(data => Schedule.create(data)).sort(array.compare.schedule.asc);
+    scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     fixture.cleanup();
   });
 
-  describe('getCollisionGroup()', function() {
-    it('Get collision group properly.', function() {
+  describe('getCollisionGroup()', function () {
+    it('Get collision group properly.', function () {
       actual = getCollisionGroup(scheduleList);
       expected = [
         [
           scheduleList[0].cid(),
           scheduleList[1].cid(),
           scheduleList[2].cid(),
-          scheduleList[3].cid()
+          scheduleList[3].cid(),
         ],
         [scheduleList[4].cid()],
         [scheduleList[5].cid(), scheduleList[6].cid()],
         [scheduleList[7].cid(), scheduleList[8].cid(), scheduleList[9].cid()],
-        [scheduleList[10].cid()]
+        [scheduleList[10].cid()],
       ];
 
       expect(actual).toEqual(expected);
     });
   });
 
-  describe('getLastRowInColumn()', function() {
+  describe('getLastRowInColumn()', function () {
     let test: Array<Array<number | undefined>>;
 
-    beforeEach(function() {
+    beforeEach(function () {
       /* eslint-disable no-undefined */
       test = [
         [1, 1, 1],
         [1, undefined, 3],
-        [4, undefined, undefined]
+        [4, undefined, undefined],
       ];
     });
 
-    it('return -1 when column not exist.', function() {
+    it('return -1 when column not exist.', function () {
       const result = getLastRowInColumn(test, 4);
 
       expect(result).toBe(-1);
     });
 
-    it('can calculate last row in column in 2d array.', function() {
+    it('can calculate last row in column in 2d array.', function () {
       const result = getLastRowInColumn(test, 0);
 
       expect(result).toBe(2);
     });
   });
 
-  describe('getMatrices()', function() {
+  describe('getMatrices()', function () {
     let collection: Collection<Schedule>;
     let collisionGroup: CollisionGroup;
 
-    beforeEach(function() {
-      collection = new Collection<Schedule>(model => {
+    beforeEach(function () {
+      collection = new Collection<Schedule>((model) => {
         return model.cid();
       });
       collection.add(...scheduleList);
       collisionGroup = getCollisionGroup(scheduleList);
     });
 
-    it('can calculate matrices accuratly.', function() {
+    it('can calculate matrices accuratly.', function () {
       expected = [
         [[scheduleList[0], scheduleList[1]], [scheduleList[2]], [scheduleList[3]]],
         [[scheduleList[4]]],
         [[scheduleList[5], scheduleList[6]]],
         [[scheduleList[7], scheduleList[8]], [scheduleList[9]]],
-        [[scheduleList[10]]]
+        [[scheduleList[10]]],
       ];
       actual = getMatrices(collection, collisionGroup);
 
@@ -99,16 +99,16 @@ describe('Base.Core', function() {
     });
   });
 
-  describe('limitRenderRange', function() {
+  describe('limitRenderRange', function () {
     let viewModelColl: Collection<ScheduleViewModel>;
 
-    beforeEach(function() {
-      viewModelColl = new Collection(viewModel => {
+    beforeEach(function () {
+      viewModelColl = new Collection((viewModel) => {
         return viewModel.cid();
       });
     });
 
-    it('fill renderStarts, renderEnds to each view model in collection.', function() {
+    it('fill renderStarts, renderEnds to each view model in collection.', function () {
       // 5/1 10:20 ~ 5/1 10:40
       viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
 
@@ -127,16 +127,16 @@ describe('Base.Core', function() {
     });
   });
 
-  describe('getScheduleInDateRangeFilter', function() {
+  describe('getScheduleInDateRangeFilter', function () {
     let viewModelColl: Collection<ScheduleViewModel>;
 
-    beforeEach(function() {
-      viewModelColl = new Collection(viewModel => {
+    beforeEach(function () {
+      viewModelColl = new Collection((viewModel) => {
         return viewModel.cid();
       });
     });
 
-    it('filter schedules properly.', function() {
+    it('filter schedules properly.', function () {
       let filter;
       let d1;
       let d2;

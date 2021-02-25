@@ -3,10 +3,10 @@
 > This is Vue component wrapping [TOAST UI Calendar](https://github.com/nhn/tui.calendar).
 
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
-[![github version](https://img.shields.io/github/release/nhn/toast-ui.vue-calendar.svg)](https://github.com/nhn/toast-ui.vue-calendar/releases/latest)
+[![github version](https://img.shields.io/github/release/nhn/toast-ui.vue-calendar.svg)](https://github.com/nhn/tui.calendar/releases/latest)
 [![npm version](https://img.shields.io/npm/v/@toast-ui/vue-calendar.svg)](https://www.npmjs.com/package/@toast-ui/vue-calendar)
 [![license](https://img.shields.io/github/license/nhn/toast-ui.vue-calendar.svg)](https://github.com/nhn/toast-ui.vue-calendar/blob/master/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/toast-ui.vue-calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 ## 🚩 Table of Contents
@@ -132,9 +132,9 @@ We provide props for [Options of Toast UI Calendar](https://nhn.github.io/tui.ca
 | view | String | 'week' | O | View of calendar. There are three views, `day`, `week` and `month`. |
 | taskView | Boolean, Array | true | O | Show the milestone and task in weekly, daily view. If set `true`, the milestone and task show. If you want to show only the milestone or task, set array like this: `['mileston']` or `['task']`. |
 | scheduleView | Boolean, Array | true | O | Show the all day and time grid in weekly, daily view. If set `true`, the all day and time show. If you want to show only the all day or time, set array like this: `['allday']` or `['time']`.|
-| theme | Object | {} | O | Customize theme. For more infomation about theme, see [ThemeConfig of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/themeConfig). |
-| week | Object | {} | O | Set more for the `week` and `day` view. For more infomation about week, see [WeekOptions of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/WeekOptions). |
-| month | Object | {} | O | Set more for the `month` view. For more infomation about month, see [MonthOptions of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/MonthOptions). |
+| theme | Object | {} | O | Customize theme. For more information about theme, see [ThemeConfig of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/themeConfig). |
+| week | Object | {} | O | Set more for the `week` and `day` view. For more information about week, see [WeekOptions of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/WeekOptions). |
+| month | Object | {} | O | Set more for the `month` view. For more information about month, see [MonthOptions of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/MonthOptions). |
 | timezones | Array | [] | O | Set multiple time zones. For more information about timezones, see [Timezone of Toast UI Calendar](https://nhn.github.io/tui.calendar/latest/Timezone). |
 | disableDblClick | Boolean | false | O | Disable double click to create a schedule. |
 | disableClick | Boolean | false | O | Whether to use mouse click events as defaults to create schedules. |

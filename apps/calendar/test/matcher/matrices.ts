@@ -25,7 +25,7 @@ function pickTitle(matrix: ScheduleViewModel[]) {
 function fail(message: string) {
   return {
     message,
-    pass: false
+    pass: false,
   };
 }
 
@@ -101,7 +101,7 @@ function getMatcher(comparator: (viewModel: ScheduleViewModel, value: string | n
 
     return {
       message: 'Matrix match',
-      pass: true
+      pass: true,
     };
   };
 }
@@ -109,12 +109,12 @@ function getMatcher(comparator: (viewModel: ScheduleViewModel, value: string | n
 export default {
   toEqualMatricesTitle() {
     return {
-      compare: getMatcher(titleComparator)
+      compare: getMatcher(titleComparator),
     };
   },
   toEqualMatricesTop() {
     return {
-      compare: getMatcher(topComparator)
+      compare: getMatcher(topComparator),
     };
-  }
+  },
 };

@@ -2,10 +2,10 @@
 
 > This is a React component wrapping [TOAST UI Calendar](https://github.com/nhn/tui.calendar).
 
- [![github version](https://img.shields.io/github/release/nhnent/toast-ui.react-calendar.svg)](https://github.com/nhn/toast-ui.react-calendar/releases/latest)
+ [![github version](https://img.shields.io/github/release/nhnent/toast-ui.react-calendar.svg)](https://github.com/nhn/tui.calendar/releases/latest)
 [![npm version](https://img.shields.io/npm/v/@toast-ui/react-calendar.svg)](https://www.npmjs.com/package/@toast-ui/react-calendar)
-[![license](https://img.shields.io/github/license/nhnent/toast-ui.vue-calendar.svg)](https://github.com/nhn/toast-ui.react-calendar/blob/master/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/toast-ui.react-calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![license](https://img.shields.io/github/license/nhnent/toast-ui.vue-calendar.svg)](https://github.com/nhn/tui.calendar/blob/master/LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 ## 🚩 Table of Contents
@@ -302,9 +302,9 @@ If it has no error, commit and then push it!
 For more information on PR's step, please see links of Contributing section.
 
 ## 💬 Contributing
-* [Code of Conduct](https://github.com/nhn/toast-ui.react-calendar/blob/master/CODE_OF_CONDUCT.md)
-* [Contributing guideline](https://github.com/nhn/toast-ui.react-calendar/blob/master/CONTRIBUTING.md)
-* [Commit convention](https://github.com/nhn/toast-ui.react-calendar/blob/master/docs/COMMIT_MESSAGE_CONVENTION.md)
+* [Code of Conduct](https://github.com/nhn/tui.calendar/blob/master/CODE_OF_CONDUCT.md)
+* [Contributing guideline](https://github.com/nhn/tui.calendar/blob/master/CONTRIBUTING.md)
+* [Commit convention](https://github.com/nhn/tui.calendar/blob/main/docs/COMMIT_MESSAGE_CONVENTION.md)
 
 ## 📜 License
 This software is licensed under the [MIT](./LICENSE) © [NHN.](https://github.com/nhn)
