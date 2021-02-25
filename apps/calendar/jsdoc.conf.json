@@ -1,0 +1,33 @@
+{
+  "source": {
+    "include": [
+      "src/js/factory/calendar.js",
+      "src/js/theme/themeConfig.js",
+      "src/js/common/timezone.js",
+      "README.md"
+    ],
+    "exclude": [],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "name": "Calendar",
+    "logo": {
+      "url": "https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png",
+      "width": "150px",
+      "height": "13px",
+      "link": "https://github.com/nhn/tui.jsdoc-template"
+    }
+  },
+  "opts": {
+    "private": false,
+    "recurse": true,
+    "destination": "doc",
+    "tutorials": "examples",
+    "template": "./node_modules/tui-jsdoc-template",
+    "package": "package.json"
+  }
+}

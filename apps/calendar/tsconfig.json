@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es5",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "dist/es5/",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@t/*": ["./types/*"],
+      "@stories/*": ["./stories/*"],
+      "@test/*": ["./test/*"],
+      "preact-markup": ["./types/preact-markup.d.ts"]
+    },
+    "sourceMap": true,
+    "lib": ["esnext", "dom"],
+    "typeRoots": ["./types"],
+    "types": ["webpack-env", "node", "jasmine", "karma-fixture"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "stories/**/*.ts",
+    "stories/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "types/**/*",
+  ]
+}

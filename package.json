@@ -1,0 +1,18 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "lerna": "^3.22.1",
+    "prettier": "^2.2.1"
+  },
+  "scripts": {
+    "build": "lerna run build",
+    "build:chart": "lerna run --scope @toast-ui/chart build",
+    "build:react": "lerna run --scope @toast-ui/react-chart build",
+    "build:vue": "lerna run --scope @toast-ui/vue-chart build",
+    "build:date": "lerna run --scope @toast-ui/date build",
+    "install:date": "cd libs/date && npm install",
+    "build:libs": "npm run build:date",
+    "setup:libs": "npm run install:libs && npm run build:libs"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "header": {
+    "logo": {
+      "src": "https://uicdn.toast.com/toastui/img/tui-calendar-bi-white.png"
+    },
+    "title": {
+      "text": "repo",
+      "linkUrl": "https://github.com/nhn/tui.calendar"
+    }
+  },
+  "footer": [
+    {
+      "title": "NHN",
+      "linkUrl": "https://github.com/nhn"
+    },
+    {
+      "title": "FE Development Lab",
+      "linkUrl": "https://github.com/nhn/fe.javascript"
+    }
+  ],
+  "main": {
+    "filePath": "README.md"
+  },
+  "api": {
+    "filePath": [
+      "src/js/factory/calendar.js",
+      "src/js/theme/themeConfig.js",
+      "src/js/common/timezone.js"
+    ]
+  },
+  "examples": {
+    "filePath": "examples",
+    "titles": {
+      "example00-basic": "Calendar App",
+      "example01-monthly": "Monthly",
+      "example02-weekly": "Weekly",
+      "example03-daily": "Daily",
+      "example04-2-weeks": "2 Weeks",
+      "example05-3-weeks": "3 Weeks",
+      "example06-narrow-weekends": "Narrower Weekends",
+      "example07-hide-weekends": "Hide Weekends",
+      "example08-task-n-schedule": "Task & Schedule",
+      "example09-task-only": "Task Only",
+      "example10-common-theme": "Common Theme",
+      "example11-monthly-theme": "Monthly Theme",
+      "example12-weekly-theme": "Weekly Theme",
+      "example13-timezone": "Timezone",
+      "example14-template-for-month": "Template for Month",
+      "example15-template-for-timegrid": "Template for Week, Day",
+      "example16-template-for-popup": "Template for Popup"
+    }
+  },
+  "pathPrefix": "tui.calendar"
+}

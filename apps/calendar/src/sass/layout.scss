@@ -1,0 +1,34 @@
+.layout {
+  box-sizing: border-box;
+  position: relative;
+  white-space: nowrap;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .panel-resizer {
+    user-select: none;
+
+    &:hover {
+      border-color: #999;
+    }
+  }
+
+  .panel-resizer-guide {
+    position: absolute;
+  }
+
+  .dragging {
+    position: absolute;
+  }
+
+  &.horizontal {
+    .panel,
+    .panel-resizer,
+    .draggable {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}

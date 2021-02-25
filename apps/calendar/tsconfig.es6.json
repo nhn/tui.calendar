@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es6",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "dist/es6/",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@t/*": ["./types/*"],
+    },
+    "sourceMap": true,
+    "lib": ["esnext", "dom"],
+    "typeRoots": ["types"],
+    "types": ["webpack-env", "node", "jasmine", "karma-fixture"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*",
+  ]
+}

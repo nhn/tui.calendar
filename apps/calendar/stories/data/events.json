@@ -1,0 +1,139 @@
+[
+  {
+    "title": "[류선임] 휴가",
+    "isAllDay": true,
+    "start": "2020-06-15T00:00:00",
+    "end": "2020-06-21T23:59:59"
+  },
+  {
+    "title": "조정은[일본출장]",
+    "isAllDay": true,
+    "start": "2020-06-16T00:00:00",
+    "end": "2020-06-18T23:59:59"
+  },
+  {
+    "title": "[유동식] 오전반차",
+    "isAllDay": true,
+    "start": "2020-06-16T00:00:00",
+    "end": "2020-06-16T23:59:59"
+  },
+  {
+    "title": "[일본 출장] 류선임, 조정은",
+    "isAllDay": true,
+    "start": "2020-06-17T00:00:00",
+    "end": "2020-06-20T23:59:59"
+  },
+  {
+    "title": "FE 스크럼 - 1",
+    "isAllDay": false,
+    "start": "2020-06-16T08:40:00",
+    "end": "2020-06-16T10:00:00"
+  },
+  {
+    "title": "[조정은] 연차",
+    "isAllDay": true,
+    "start": "2020-06-17T00:00:00",
+    "end": "2020-06-17T23:59:59"
+  },
+  {
+    "title": "FE 스크럼 - 2",
+    "isAllDay": false,
+    "start": "2020-06-17T08:50:00",
+    "end": "2020-06-17T10:00:00"
+  },
+  {
+    "title": "팀 스터디 - A",
+    "isAllDay": false,
+    "start": "2020-06-17T12:30:00",
+    "end": "2020-06-17T13:00:00"
+  },
+  {
+    "title": "FE 스크럼 - 3",
+    "isAllDay": false,
+    "start": "2020-06-18T09:10:00",
+    "end": "2020-06-18T10:20:00"
+  },
+  {
+    "title": "[코드리뷰] v2 리펙토링",
+    "isAllDay": false,
+    "start": "2020-06-18T10:00:00",
+    "end": "2020-06-18T11:00:00"
+  },
+  {
+    "title": "FE 스크럼 - 4",
+    "isAllDay": false,
+    "start": "2020-06-19T09:30:00",
+    "end": "2020-06-19T10:40:00"
+  },
+  {
+    "title": "팀 스터디 - B",
+    "isAllDay": false,
+    "start": "2020-06-19T12:00:00",
+    "end": "2020-06-19T13:00:00"
+  },
+  {
+    "title": "캘린더이야기",
+    "isAllDay": false,
+    "start": "2020-06-19T12:30:00",
+    "end": "2020-06-19T13:00:00"
+  },
+  {
+    "title": "FE 스크럼 - 5",
+    "isAllDay": false,
+    "start": "2020-06-20T09:40:00",
+    "end": "2020-06-20T10:00:00"
+  },
+  {
+    "title": "주간보고 작성",
+    "isAllDay": false,
+    "start": "2020-06-20T14:00:00",
+    "end": "2020-06-20T15:00:00",
+    "goingDuration": 30,
+    "comingDuration": 40
+  },
+  {
+    "title": "14일 일정",
+    "isAllDay": false,
+    "start": "2020-06-14T22:00:00",
+    "end": "2020-06-15T00:00:00",
+    "goingDuration": 30,
+    "comingDuration": 40
+  },
+  {
+    "title": "14-15일 일정",
+    "isAllDay": false,
+    "start": "2020-06-14T23:00:00",
+    "end": "2020-06-15T01:00:00",
+    "goingDuration": 30,
+    "comingDuration": 40
+  },
+  {
+    "title": "15일 끝일정",
+    "isAllDay": false,
+    "start": "2020-06-15T20:00:00",
+    "end": "2020-06-16T00:00:00"
+  },
+  {
+    "title": "16일 첫일정",
+    "isAllDay": false,
+    "start": "2020-06-16T00:00:00",
+    "end": "2020-06-16T03:00:00"
+  },
+  {
+    "title": "매우 짧은 일정",
+    "isAllDay": false,
+    "start": "2020-06-15T08:00:00",
+    "end": "2020-06-15T08:10:00",
+    "goingDuration": 30,
+    "comingDuration": 50
+  },
+  {
+    "title": "읽기 전용",
+    "isAllDay": false,
+    "isReadOnly": true,
+    "start": "2020-06-16T04:00:00",
+    "end": "2020-06-16T05:30:00",
+    "goingDuration": 30,
+    "comingDuration": 30
+  }
+]
