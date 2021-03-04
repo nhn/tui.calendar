@@ -41,8 +41,14 @@ module.exports = {
     'no-use-before-define': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    complexity: ['error', { max: 10 }],
-    'max-nested-callbacks': ['error', { max: 10 }],
-    'max-depth': ['error', 5],
+    complexity: ['error', { max: 8 }],
   },
+  overrides: [
+    {
+      files: ['*.spec.ts', '*.spec.tsx'],
+      rules: {
+        'max-nested-callbacks': ['error', { max: 5 }],
+      },
+    },
+  ],
 };
