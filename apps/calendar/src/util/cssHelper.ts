@@ -54,6 +54,7 @@ export function classnames(...args: ClassNameValue[]): string {
       if (arg.length) {
         const inner = classnames(...arg);
 
+        // eslint-disable-next-line max-depth
         if (inner) {
           classes.push(inner);
         }
@@ -62,7 +63,9 @@ export function classnames(...args: ClassNameValue[]): string {
       if (arg.toString !== Object.prototype.toString) {
         classes.push(arg.toString());
       } else {
+        // eslint-disable-next-line max-depth
         for (const key in arg) {
+          // eslint-disable-next-line max-depth
           if ({}.hasOwnProperty.call(arg, key) && arg[key]) {
             classes.push(key);
           }
