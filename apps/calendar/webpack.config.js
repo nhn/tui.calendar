@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
 
   const config = {
     mode: 'production',
-    entry: ['./src/sass/index.scss', './src/index.ts'],
+    entry: ['./src/css/index.css', './src/index.ts'],
     module: {
       rules: [
         // transpile libraries to es5
@@ -23,17 +23,18 @@ module.exports = (env, argv) => {
           use: ['babel-loader', 'eslint-loader'],
         },
         {
-          test: /\.s[ac]ss$/i,
+          test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
-            'css-loader',
             {
-              loader: 'postcss-loader',
-              options: { plugins: [postcssPrefixer({ prefix })] },
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
             },
             {
-              loader: 'sass-loader',
-              options: { sassOptions: { outputStyle: 'expanded' } },
+              loader: 'postcss-loader',
+              options: { postcssOptions: { plugins: [postcssPrefixer({ prefix })] } },
             },
           ],
         },

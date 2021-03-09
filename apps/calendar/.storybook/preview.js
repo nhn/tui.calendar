@@ -1,1 +1,1 @@
-import '../src/sass/index.scss';
+import '@src/css/index.css';

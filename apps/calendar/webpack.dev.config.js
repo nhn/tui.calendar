@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
   const prefix = 'toastui-calendar-';
   const config = {
     mode: 'development',
-    entry: ['./src/sass/index.scss', './src/index.ts'],
+    entry: ['./src/css/index.css', './src/index.ts'],
     module: {
       rules: [
         {
@@ -18,15 +18,19 @@ module.exports = (env, argv) => {
           loader: ['babel-loader', 'eslint-loader'],
         },
         {
-          test: /\.s[ac]ss$/i,
+          test: /\.css$/,
           use: [
             'style-loader',
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
             {
               loader: 'postcss-loader',
-              options: { plugins: [postcssPrefixer({ prefix })] },
+              options: { postcssOptions: { plugins: [postcssPrefixer({ prefix })] } },
             },
-            'sass-loader',
           ],
         },
         {

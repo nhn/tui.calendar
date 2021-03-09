@@ -8,7 +8,7 @@ module.exports = {
         shippedProposals: true,
       },
     ],
-    '@babel/preset-typescript',
+    ['@babel/preset-typescript', { jsxPragma: 'h' }],
     '@babel/preset-react',
   ],
   plugins: [
