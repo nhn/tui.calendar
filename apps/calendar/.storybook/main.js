@@ -1,31 +1,12 @@
 const path = require('path');
 const postcssPrefixer = require('postcss-prefixer');
 const prefix = 'toastui-calendar-';
+const custom = require('../webpack.dev.config.js')({}, {});
 
 module.exports = {
-  stories: ['../stories/**/*.stories.@(ts|tsx)'],
+  stories: ['@stories/**/*.stories.@(ts|tsx)'],
   webpackFinal: async (config) => {
-    config.module.rules.push({
-      test: /\.(ts|tsx)$/,
-      use: [
-        {
-          loader: require.resolve('ts-loader'),
-        },
-      ],
-    });
-
-    config.module.rules.push({
-      test: /\.s[ac]ss$/i,
-      use: [
-        'style-loader',
-        'css-loader',
-        {
-          loader: 'postcss-loader',
-          options: { plugins: [postcssPrefixer({ prefix })] },
-        },
-        'sass-loader',
-      ],
-    });
+    config.module.rules = custom.module.rules;
 
     config.resolve.alias = {
       ...config.resolve.alias,
