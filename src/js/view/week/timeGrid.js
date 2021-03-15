@@ -93,7 +93,6 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     });
 }
 
-
 /**
  * Returns timezone offset from timezone object
  * @param {object} timezoneObj - timezone object in options.timzones
@@ -101,17 +100,17 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
  * @returns {number} timezoneOffset - timezone offset
  */
 function getOffsetByTimezoneOption(timezoneObj, timestamp) {
-  var primaryOffset = tz.getPrimaryOffset();
-  if (util.isString(timezoneObj.timezoneName)) {
-      return -tz.getOffsetByTimezoneName(timezoneObj.timezoneName, timestamp);
-  }
+    var primaryOffset = tz.getPrimaryOffset();
+    if (util.isString(timezoneObj.timezoneName)) {
+        return -tz.getOffsetByTimezoneName(timezoneObj.timezoneName, timestamp);
+    }
 
-  // @deprecated timezoneOffset property will be deprecated
-  if (util.isNumber(timezoneObj.timezoneOffset) && timezoneObj.timezoneOffset !== primaryOffset) {
-      return timezoneObj.timezoneOffset;
-  }
+    // @deprecated timezoneOffset property will be deprecated
+    if (util.isNumber(timezoneObj.timezoneOffset) && timezoneObj.timezoneOffset !== primaryOffset) {
+        return timezoneObj.timezoneOffset;
+    }
 
-  return -primaryOffset;
+    return -primaryOffset;
 }
 
 /**

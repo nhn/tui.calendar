@@ -39,6 +39,7 @@ var setterMethods = [
 var STANDARD_TO_DST = 1;
 var DST_TO_STANDARD = -1;
 
+console.log(util);
 /**
  * Get the timezone offset by timestampe
  * @param {number} timestamp - timestamp

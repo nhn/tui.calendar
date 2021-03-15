@@ -6,19 +6,19 @@
 
 var GA_TRACKING_ID = 'UA-129951699-1';
 
-var util = require('tui-code-snippet'),
-    Handlebars = require('handlebars-template-loader/runtime');
-var dw = require('../common/dw'),
-    datetime = require('../common/datetime'),
-    Layout = require('../view/layout'),
-    Drag = require('../handler/drag'),
-    controllerFactory = require('./controller'),
-    weekViewFactory = require('./weekView'),
-    monthViewFactory = require('./monthView'),
-    tz = require('../common/timezone');
-    TZDate = tz.Date,
-    config = require('../config'),
-    reqAnimFrame = require('../common/reqAnimFrame');
+var util = require('tui-code-snippet');
+var Handlebars = require('handlebars-template-loader/runtime');
+var dw = require('../common/dw');
+var datetime = require('../common/datetime');
+var Layout = require('../view/layout');
+var Drag = require('../handler/drag');
+var controllerFactory = require('./controller');
+var weekViewFactory = require('./weekView');
+var monthViewFactory = require('./monthView');
+var tz = require('../common/timezone');
+var TZDate = tz.Date;
+var config = require('../config');
+var reqAnimFrame = require('../common/reqAnimFrame');
 
 var mmin = Math.min;
 
@@ -370,7 +370,6 @@ var mmin = Math.min;
  * @property {string} [borderColor] - The calendar left border color
  */
 
-
 /**
  * @typedef {object} Timezone
  * @property {Array.<Zone>} [zones] - {@link Zone} array. Set the list of time zones.
@@ -699,8 +698,7 @@ Calendar.prototype.destroy = function() {
  */
 Calendar.prototype._initialize = function(options) {
     var controller = this._controller,
-        viewName = this._viewName,
-        timezones = options.timezones || [];
+        viewName = this._viewName;
 
     this._options = util.extend({
         defaultView: viewName,
@@ -759,41 +757,41 @@ Calendar.prototype._initialize = function(options) {
  * @private
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
-  var timezone = options.timezone;
-  var zones, offsetCalculator;
+    var timezone = options.timezone;
+    var zones, offsetCalculator;
 
-  util.forEach(options.template, function(func, name) {
-      if (func) {
-          Handlebars.registerHelper(name + '-tmpl', func);
-      }
-  });
+    util.forEach(options.template, function(func, name) {
+        if (func) {
+            Handlebars.registerHelper(name + '-tmpl', func);
+        }
+    });
 
-  util.forEach(
-      options.calendars || [],
-      function(calendar) {
-          this.setCalendarColor(calendar.id, calendar, true);
-      },
-      this
-  );
+    util.forEach(
+        options.calendars || [],
+        function(calendar) {
+            this.setCalendarColor(calendar.id, calendar, true);
+        },
+        this
+    );
 
-  if (timezone) {
-      offsetCalculator = timezone.offsetCalculator;
+    if (timezone) {
+        offsetCalculator = timezone.offsetCalculator;
 
-      if (util.isFunction(offsetCalculator)) {
-          tz.setOffsetCalculator(offsetCalculator);
-      }
+        if (util.isFunction(offsetCalculator)) {
+            tz.setOffsetCalculator(offsetCalculator);
+        }
 
-      zones = timezone.zones;
+        zones = timezone.zones;
 
-      if (zones.length) {
-          tz.setPrimaryTimezoneByOption(zones[0]);
+        if (zones.length) {
+            tz.setPrimaryTimezoneByOption(zones[0]);
 
-          if (util.isNumber(zones[0].timezoneOffset)) {
-              // @deprecated timezoneOffset property will be deprecated. use timezone property
-              tz.setOffsetByTimezoneOption(zones[0].timezoneOffset);
-          }
-      }
-  }
+            if (util.isNumber(zones[0].timezoneOffset)) {
+                // @deprecated timezoneOffset property will be deprecated. use timezone property
+                tz.setOffsetByTimezoneOption(zones[0].timezoneOffset);
+            }
+        }
+    }
 };
 
 /**********

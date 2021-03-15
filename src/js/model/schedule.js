@@ -35,7 +35,6 @@ var SCHEDULE_CATEGORY = {
     TIME: 'time'
 };
 
-
 /**
  * Get duration by primary timezone
  * @param {Date} start render start date
@@ -43,15 +42,15 @@ var SCHEDULE_CATEGORY = {
  * @returns {number} duration
  */
 function getDurationByPrimaryTimezone(start, end) {
-  var checkOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
-  var isOffsetChanged = checkOffset.isOffsetChanged;
-  var duration = end - start;
+    var checkOffset = tz.isDifferentOffsetStartAndEndTime(start.getTime(), end.getTime());
+    var isOffsetChanged = checkOffset.isOffsetChanged;
+    var duration = end - start;
 
-  if (isOffsetChanged !== 0) {
-      duration += checkOffset.offsetDiff * MIN_TO_MS;
-  }
+    if (isOffsetChanged !== 0) {
+        duration += checkOffset.offsetDiff * MIN_TO_MS;
+    }
 
-  return duration;
+    return duration;
 }
 
 /**
@@ -61,10 +60,10 @@ function getDurationByPrimaryTimezone(start, end) {
 * @returns {number} duration
 */
 function getDurationByNativeTimezone(start, end) {
-  var startOffset = start.toDate().getTimezoneOffset();
-  var endOffset = end.toDate().getTimezoneOffset();
+    var startOffset = start.toDate().getTimezoneOffset();
+    var endOffset = end.toDate().getTimezoneOffset();
 
-  return (end - start) + ((endOffset - startOffset) * MIN_TO_MS);
+    return (end - start) + ((endOffset - startOffset) * MIN_TO_MS);
 }
 
 /**
@@ -424,14 +423,14 @@ Schedule.prototype.duration = function() {
     var hasPrimaryTimezoneCustomSetting = tz.hasPrimaryTimezoneCustomSetting();
 
     if (this.isAllDay) {
-      duration = datetime.end(end) - datetime.start(start);
-  } else if (hasPrimaryTimezoneCustomSetting && tz.isPrimaryUsingDSTTimezone()) {
-      duration = getDurationByPrimaryTimezone(start, end);
-  } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
-      duration = getDurationByNativeTimezone(start, end);
-  } else {
-      duration = end - start;
-  }
+        duration = datetime.end(end) - datetime.start(start);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isPrimaryUsingDSTTimezone()) {
+        duration = getDurationByPrimaryTimezone(start, end);
+    } else if (hasPrimaryTimezoneCustomSetting && tz.isNativeOsUsingDSTTimezone()) {
+        duration = getDurationByNativeTimezone(start, end);
+    } else {
+        duration = end - start;
+    }
 
     return duration;
 };
