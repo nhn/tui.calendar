@@ -21,12 +21,51 @@ describe('common/array', function () {
       let schedules: Schedule[];
 
       beforeEach(function () {
-        mockData = fixture.load('schedule_set_string2.json');
+        mockData = [
+          {
+            title: 'hunting',
+            isAllDay: true,
+            start: '2015/05/01',
+            end: '2015/05/02',
+          },
+          {
+            title: 'meeting',
+            isAllDay: false,
+            start: '2015/05/03 12:30:00',
+            end: '2015/05/03 16:00:00',
+          },
+          {
+            title: 'physical training',
+            isAllDay: false,
+            start: '2015/05/03 18:30:00',
+            end: '2015/05/03 19:30:00',
+          },
+          {
+            title: 'logical training2',
+            isAllDay: false,
+            start: '2015/05/03 18:30:00',
+            end: '2015/05/03 19:20:00',
+          },
+          {
+            title: 'logical training',
+            isAllDay: false,
+            start: '2015/05/03 18:30:00',
+            end: '2015/05/03 19:20:00',
+          },
+          {
+            title: '평가기간',
+            isAllDay: true,
+            start: '2015/05/03',
+            end: '2015/05/12',
+          },
+          {
+            title: 'drawing study',
+            isAllDay: true,
+            start: '2015/05/04 18:40:00',
+            end: '2015/05/04 19:40:00',
+          },
+        ];
         schedules = [];
-      });
-
-      afterEach(function () {
-        fixture.cleanup();
       });
 
       it('isAllDay ASC, start ASC, duration DESC, id ASC', function () {
@@ -96,7 +135,7 @@ describe('common/array', function () {
       expect(array.bsearch(arr, 'q')).toBeLessThan(0);
     });
 
-    it('it can be used to insert the element.', function () {
+    it('can be used to insert the element.', function () {
       arr.splice(Math.abs(array.bsearch(arr, 'g')), 0, 'g');
 
       expect(inArray('g', arr)).toBe(7);

@@ -10,8 +10,6 @@ import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { ScheduleData, DataStore } from '@src/model';
 
-import viewModelsMatcher from '@test/matcher/viewModels';
-
 describe('controller/base', function () {
   let dataStore: DataStore;
   let scheduleDataList: ScheduleData[];
@@ -22,11 +20,32 @@ describe('controller/base', function () {
       schedules: createScheduleCollection(),
       idsOfDay: {},
     };
-    scheduleDataList = fixture.load('schedule_set_string.json');
-  });
-
-  afterEach(function () {
-    fixture.cleanup();
+    scheduleDataList = [
+      {
+        title: 'hunting',
+        isAllDay: true,
+        start: '2015/05/01',
+        end: '2015/05/02',
+      },
+      {
+        title: 'meeting',
+        isAllDay: false,
+        start: '2015/05/03 12:30:00',
+        end: '2015/05/03 16:00:00',
+      },
+      {
+        title: 'physical training',
+        isAllDay: false,
+        start: '2015/05/03 18:30:00',
+        end: '2015/05/03 19:30:00',
+      },
+      {
+        title: 'A',
+        isAllDay: false,
+        start: '2015/05/02 12:30:00',
+        end: '2015/05/03 09:20:00',
+      },
+    ];
   });
 
   describe('getDateRange()', function () {
@@ -102,9 +121,6 @@ describe('controller/base', function () {
         idList.push(item.cid());
       });
 
-      // Add returned viewmodel matcher.
-      jasmine.addMatchers(viewModelsMatcher);
-
       /*
        * matrix: {
        * '20150501': [id1],
@@ -123,10 +139,9 @@ describe('controller/base', function () {
 
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
-
       const result = findByDateRange(dataStore, { start, end });
 
-      expect(result).toEqualViewModel(expected);
+      expect(result).toEqualViewModelByTitle(expected);
     });
 
     it('return viewmodels in dates properly.', function () {
@@ -140,7 +155,7 @@ describe('controller/base', function () {
 
       const result = findByDateRange(dataStore, { start, end });
 
-      expect(result).toEqualViewModel(expected);
+      expect(result).toEqualViewModelByTitle(expected);
     });
   });
 
@@ -164,16 +179,17 @@ describe('controller/base', function () {
       const schedule = dataStore.schedules.single();
 
       expect(schedule).not.toBeNull();
-      if (schedule) {
-        expect(schedule).toEqual(
-          jasmine.objectContaining<Schedule>({
-            title: 'Go to work',
-            isAllDay: false,
-            start: new TZDate('2015/05/02'),
-            end: new TZDate('2015/05/02'),
-          })
-        );
-      }
+
+      type CompatableSchedule = Record<string, any>;
+
+      expect(schedule).toEqual(
+        expect.objectContaining<CompatableSchedule>({
+          title: 'Go to work',
+          isAllDay: false,
+          start: new TZDate('2015/05/02'),
+          end: new TZDate('2015/05/02'),
+        })
+      );
 
       expect(dataStore.idsOfDay).toEqual({
         '20150501': [],

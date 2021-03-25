@@ -110,7 +110,6 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    // eslint-disable-next-line jasmine/no-spec-dupes
     it("method doesn't work when collection is empty", function () {
       const col = new Collection();
       col.clear();
@@ -139,7 +138,7 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    // eslint-disable-next-line jasmine/no-spec-dupes
+    // eslint-disable-next-line
     it("method doesn't work when collection is empty", function () {
       const col = new Collection();
 
@@ -535,7 +534,7 @@ describe('Collection', function () {
   });
 
   describe('each()', function () {
-    let spy: jasmine.Spy;
+    let spy: jest.Mock;
     let item1: Item;
     let item2: Item;
     let item3: Item;
@@ -547,17 +546,17 @@ describe('Collection', function () {
 
       c.add(item1, item2, item3);
 
-      spy = jasmine.createSpy('each');
+      spy = jest.fn();
     });
 
     it('iterate own items.', function () {
       c.each(spy);
 
-      expect(spy.calls.argsFor(2)).toEqual(jasmine.arrayContaining([{ _id: 4, value: 2 }, '4']));
+      expect(spy.mock.calls[2]).toEqual(expect.arrayContaining([{ _id: 4, value: 2 }, '4']));
     });
 
     it('break loop when iteratee return false.', function () {
-      spy.and.callFake((item: Item) => {
+      spy.mockImplementation((item: Item) => {
         if (item.value === 50) {
           return false;
         }
@@ -567,16 +566,16 @@ describe('Collection', function () {
 
       c.each(spy);
 
-      expect(spy.calls.count()).toBe(2);
-      expect(spy.calls.argsFor(2)).toEqual([]);
+      expect(spy).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('doWhenHas()', function () {
     it('invoke supplied method when collection has model.', function () {
       const item1 = { _id: 1 };
-      const spy1 = jasmine.createSpy('spy1');
-      const spy2 = jasmine.createSpy('spy2');
+
+      const spy1 = jest.fn();
+      const spy2 = jest.fn();
 
       c.add(item1);
 
@@ -599,9 +598,7 @@ describe('Collection', function () {
       const item = c.single();
 
       expect(item).not.toBeNull();
-      if (item) {
-        expect([item1, item2, item3]).toContain(item);
-      }
+      expect([item1, item2, item3]).toContain(item);
     });
 
     it('return first single item that meet with supplied function filter', function () {

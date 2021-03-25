@@ -1,6 +1,4 @@
 // Type definitions for TOAST UI Date v0.0.3
-// TypeScript Version: 3.7.5
-
 export interface TuiDateConstructor {
   new (...args: any[]): DateInterface;
 }

@@ -20,8 +20,8 @@
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
-    "typeRoots": ["./types"],
-    "types": ["webpack-env", "node", "jasmine", "karma-fixture"]
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "types": [ "webpack-env", "node", "jest"]
   },
   "include": [
     "src/**/*.ts",

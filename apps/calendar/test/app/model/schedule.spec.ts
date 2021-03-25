@@ -1,6 +1,7 @@
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { ScheduleData } from '@src/model';
+import { advanceTo } from 'jest-date-mock';
 
 describe('model/schedule basic', function () {
   let schedule: Schedule;
@@ -15,11 +16,12 @@ describe('model/schedule basic', function () {
 
   describe('init()', function () {
     beforeEach(function () {
-      jasmine.clock().mockDate(new Date('2015/05/01 00:00:00'));
+      jest.useFakeTimers();
+      advanceTo(new Date('2015/05/01 00:00:00').getTime());
     });
 
     afterEach(function () {
-      jasmine.clock().uninstall();
+      jest.useRealTimers();
     });
 
     it('initialize schedule with supplied options.', function () {
@@ -41,7 +43,7 @@ describe('model/schedule basic', function () {
         end: '2015-05-02T00:00:00',
       });
 
-      expect(schedule).toEqual(jasmine.objectContaining(expected));
+      expect(schedule).toEqual(expect.objectContaining(expected));
     });
   });
 
@@ -283,11 +285,36 @@ describe('model/Schedule advanced', function () {
   let jsonFixtures: ScheduleData[];
 
   beforeEach(function () {
-    jsonFixtures = fixture.load('mock_tasks.json');
-  });
-
-  afterEach(function () {
-    fixture.cleanup();
+    jsonFixtures = [
+      {
+        title: '스크럼',
+        category: 'time',
+        dueDateClass: '',
+        start: '2015-10-26T09:40:00',
+        end: '2015-10-26T10:00:00',
+      },
+      {
+        title: '[홍길동]연차',
+        category: 'allday',
+        dueDateClass: '',
+        start: '2015-10-26T00:00:00',
+        end: '2015-10-26T23:59:59',
+      },
+      {
+        title: '테스트 마일스톤1',
+        category: 'milestone',
+        dueDateClass: '',
+        start: '',
+        end: '2015-10-26T23:59:59',
+      },
+      {
+        title: '테스트 업무',
+        category: 'task',
+        dueDateClass: 'morning',
+        start: '',
+        end: '2015-10-26T23:59:59',
+      },
+    ];
   });
 
   it('factory function (create())', function () {
@@ -304,7 +331,7 @@ describe('model/Schedule advanced', function () {
       end: new TZDate('2015-10-26T10:00:00'),
     };
 
-    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
 
     e = Schedule.create(jsonFixtures[1]);
     expected = {
@@ -316,7 +343,7 @@ describe('model/Schedule advanced', function () {
       end: new TZDate(2015, 9, 26, 23, 59, 59),
     };
 
-    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
 
     e = Schedule.create(jsonFixtures[2]);
     expected = {
@@ -328,7 +355,7 @@ describe('model/Schedule advanced', function () {
       end: new TZDate('2015-10-26T23:59:59'),
     };
 
-    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
 
     e = Schedule.create(jsonFixtures[3]);
     expected = {
@@ -340,7 +367,7 @@ describe('model/Schedule advanced', function () {
       end: new TZDate('2015-10-26T23:59:59'),
     };
 
-    expect(e).toEqual(jasmine.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
   });
 
   it('raw data', function () {

@@ -69,7 +69,7 @@ describe('Render Template', () => {
     expect(getTimeScheduleBlock(viewModel)).toBe('top:30px;left:40%;width:50%;height:60px');
   });
 
-  it('getMonthScheduleBlock() returns top(px), left(%), width(%), height(px) css. ', () => {
+  it('getMonthScheduleBlock() returns top(px), left(%), width(%), height(px) css.', () => {
     const viewModel = new ScheduleViewModel(new Schedule());
     viewModel.top = 30;
     viewModel.left = 40;

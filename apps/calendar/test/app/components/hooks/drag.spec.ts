@@ -22,11 +22,12 @@ describe('drag hook', () => {
       onClick: noop,
       onCancel: noop,
     };
-    spyOn(listeners, 'onDragStart');
-    spyOn(listeners, 'onDrag');
-    spyOn(listeners, 'onDragEnd');
-    spyOn(listeners, 'onClick');
-    spyOn(listeners, 'onCancel');
+
+    jest.spyOn(listeners, 'onDragStart');
+    jest.spyOn(listeners, 'onDrag');
+    jest.spyOn(listeners, 'onDragEnd');
+    jest.spyOn(listeners, 'onClick');
+    jest.spyOn(listeners, 'onCancel');
 
     ({ onMouseDown, onMouseMove, onMouseUp, onKeydown } = useDrag(listeners));
 

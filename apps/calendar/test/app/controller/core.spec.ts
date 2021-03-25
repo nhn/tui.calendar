@@ -20,12 +20,86 @@ describe('Base.Core', function () {
   let actual;
 
   beforeEach(function () {
-    mockData = fixture.load('schedule_set_string3.json');
+    mockData = [
+      {
+        title: 'A',
+        isAllDay: false,
+        start: '2015-05-01T10:20:00',
+        end: '2015-05-01T10:40:00',
+        category: 'time',
+      },
+      {
+        title: 'B',
+        isAllDay: false,
+        start: '2015-05-01T10:30:00',
+        end: '2015-05-01T11:30:00',
+        category: 'time',
+      },
+      {
+        title: 'C',
+        isAllDay: false,
+        start: '2015-05-01T11:20:00',
+        end: '2015-05-01T12:00:00',
+        category: 'time',
+      },
+      {
+        title: 'D',
+        isAllDay: false,
+        start: '2015-05-01T10:50:00',
+        end: '2015-05-01T11:10:00',
+        category: 'time',
+      },
+      {
+        title: 'E',
+        isAllDay: false,
+        start: '2015-05-01T13:20:00',
+        end: '2015-05-01T13:40:00',
+        category: 'time',
+      },
+      {
+        title: 'F',
+        isAllDay: false,
+        start: '2015-05-01T14:00:00',
+        end: '2015-05-01T14:20:00',
+        category: 'time',
+      },
+      {
+        title: 'G',
+        isAllDay: false,
+        start: '2015-05-01T14:10:00',
+        end: '2015-05-01T14:20:00',
+        category: 'time',
+      },
+      {
+        title: 'H',
+        isAllDay: false,
+        start: '2015-05-01T16:00:00',
+        end: '2015-05-01T18:00:00',
+        category: 'time',
+      },
+      {
+        title: 'I',
+        isAllDay: false,
+        start: '2015-05-01T17:00:00',
+        end: '2015-05-01T20:00:00',
+        category: 'time',
+      },
+      {
+        title: 'J',
+        isAllDay: false,
+        start: '2015-05-01T19:00:00',
+        end: '2015-05-01T21:00:00',
+        category: 'time',
+      },
+      {
+        title: '물고기 밥주기',
+        isAllDay: false,
+        start: '2015-05-01T22:00:00',
+        end: '2015-05-01T22:10:00',
+        category: 'time',
+      },
+    ];
     scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
-  });
-
-  afterEach(function () {
-    fixture.cleanup();
   });
 
   describe('getCollisionGroup()', function () {
@@ -52,10 +126,11 @@ describe('Base.Core', function () {
     let test: Array<Array<number | undefined>>;
 
     beforeEach(function () {
-      /* eslint-disable no-undefined */
       test = [
         [1, 1, 1],
+        // eslint-disable-next-line no-undefined
         [1, undefined, 3],
+        // eslint-disable-next-line no-undefined
         [4, undefined, undefined],
       ];
     });
@@ -120,6 +195,7 @@ describe('Base.Core', function () {
       const viewModel = viewModelColl.single();
 
       expect(viewModel).not.toBeNull();
+
       if (viewModel) {
         expect(viewModel.renderStarts).toEqual(limit1);
         expect(viewModel.renderEnds).toBeUndefined();
