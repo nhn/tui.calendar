@@ -111,7 +111,6 @@
     "lint": "eslint .",
     "test:setup": "cd ../../libs/date npm install && npm run build",
     "test": "jest",
-    "test:ne": "KARMA_SERVER=ne karma start",
     "serve": "webpack-dev-server --config webpack.dev.config.js",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "release-note": "tuie",
