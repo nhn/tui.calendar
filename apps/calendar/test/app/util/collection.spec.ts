@@ -138,7 +138,6 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    // eslint-disable-next-line
     it("method doesn't work when collection is empty", function () {
       const col = new Collection();
 

@@ -40,7 +40,6 @@ module.exports = {
     'no-use-before-define': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    'jest/no-conditional-expect': 0,
     complexity: ['error', { max: 8 }],
   },
   overrides: [
