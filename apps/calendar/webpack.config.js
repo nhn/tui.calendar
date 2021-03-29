@@ -8,7 +8,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.config');
 
 module.exports = (env, argv) => {
-  const { minify } = argv;
+  const { minify } = env;
   const prefix = 'toastui-calendar-';
   const filename = `toastui-calendar${minify ? '.min' : ''}.css`;
 

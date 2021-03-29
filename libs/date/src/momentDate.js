@@ -96,10 +96,7 @@ export default class MomentDate {
   }
 
   setFullYear(y, m = this.getMonth(), d = this.getDate()) {
-    this.m
-      .year(y)
-      .month(m)
-      .date(d);
+    this.m.year(y).month(m).date(d);
 
     return this.getTime();
   }
@@ -117,20 +114,13 @@ export default class MomentDate {
   }
 
   setHours(h, m = this.getMinutes(), s = this.getSeconds(), ms = this.getMilliseconds()) {
-    this.m
-      .hours(h)
-      .minutes(m)
-      .seconds(s)
-      .milliseconds(ms);
+    this.m.hours(h).minutes(m).seconds(s).milliseconds(ms);
 
     return this.getTime();
   }
 
   setMinutes(m, s = this.getSeconds(), ms = this.getMilliseconds()) {
-    this.m
-      .minutes(m)
-      .seconds(s)
-      .milliseconds(ms);
+    this.m.minutes(m).seconds(s).milliseconds(ms);
 
     return this.getTime();
   }

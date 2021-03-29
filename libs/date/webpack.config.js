@@ -11,7 +11,9 @@ const BANNER = [
   '@license ' + pkg.license,
 ].join('\n');
 
-module.exports = (env, { mode = 'development', minify }) => {
+module.exports = (env, args) => {
+  const { minify } = env;
+  const { mode = 'development' } = args;
   const config = {
     entry: './src/index.js',
     output: {

@@ -239,18 +239,17 @@ export class TimeGrid extends ContextComponent<Props, State> {
             onGuideEnd={this.onGuideEnd}
             onGuideCancel={this.onGuideCancel}
           >
-            {columnInfoList.map(({ start }, index) => {
-              return (
-                <Column
-                  key={index}
-                  index={index}
-                  width={toPercent(columnWidth)}
-                  times={make24Hours(start)}
-                  events={events}
-                  creationGuide={creationGuideColumnIndex === index ? creationGuide : null}
-                />
-              );
-            })}
+            {columnInfoList.map(({ start }, index) => (
+              <Column
+                key={index}
+                index={index}
+                width={toPercent(columnWidth)}
+                times={make24Hours(start)}
+                events={events}
+                creationGuide={creationGuideColumnIndex === index ? creationGuide : null}
+              />
+            ))}
+
             {showCurrentTime ? (
               <CurrentTimeLine
                 top={currentTimeLineTop}
