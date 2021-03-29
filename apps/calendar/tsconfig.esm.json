@@ -20,7 +20,8 @@
         "transform": "typescript-transform-paths"
       }
     ],
-   "types": ["webpack-env"],
+    "typeRoots": ["types"],
+    "types": ["webpack-env"],
     "listEmittedFiles": true,
     "declaration": true,
   },

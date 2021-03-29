@@ -1,4 +1,4 @@
-import { h, JSX } from 'preact';
+import { h, FunctionComponent, ComponentChildren } from 'preact';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import closest from 'tui-code-snippet/domUtil/closest';
 import pick from 'tui-code-snippet/object/pick';
@@ -23,7 +23,7 @@ interface Props {
   onGuideChange?: (e: CreationGuideInfo) => void;
   onGuideEnd?: (e: CreationGuideInfo) => void;
   onGuideCancel?: () => void;
-  children?: string | string[] | JSX.Element[];
+  children?: ComponentChildren;
 }
 
 export interface ColumnInfo {
@@ -38,7 +38,7 @@ interface ColumnGuideCreationInfo extends CreationGuideInfo {
   columnIndex: number;
 }
 
-export function ColumnsWithMouse(props: Props) {
+export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
   let guideStartData: ColumnGuideCreationInfo | null = null;
 
   let guidePrevDragData: ColumnGuideCreationInfo | null = null;
@@ -146,4 +146,4 @@ export function ColumnsWithMouse(props: Props) {
       {children}
     </div>
   );
-}
+};

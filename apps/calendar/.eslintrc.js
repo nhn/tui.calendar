@@ -23,7 +23,7 @@ module.exports = {
   settings: {
     react: {
       pragma: 'h',
-      version: '17',
+      version: '16.13',
     },
   },
   globals: {
