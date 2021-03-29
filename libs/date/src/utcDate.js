@@ -34,7 +34,7 @@ const setterProperties = [
 getterProperties.forEach((prop) => {
   const methodName = `get${prop}`;
 
-  UTCDate.prototype[methodName] = function(...args) {
+  UTCDate.prototype[methodName] = function (...args) {
     return this.d[`getUTC${prop}`](...args);
   };
 });
@@ -42,7 +42,7 @@ getterProperties.forEach((prop) => {
 setterProperties.forEach((prop) => {
   const methodName = `set${prop}`;
 
-  UTCDate.prototype[methodName] = function(...args) {
+  UTCDate.prototype[methodName] = function (...args) {
     return this.d[`setUTC${prop}`](...args);
   };
 });

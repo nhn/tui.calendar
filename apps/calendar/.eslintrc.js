@@ -9,8 +9,8 @@ module.exports = {
   plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint', 'jest'],
   extends: [
     'tui/es6',
+    'prettier',
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
     'plugin:jest/recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
@@ -23,7 +23,7 @@ module.exports = {
   settings: {
     react: {
       pragma: 'h',
-      version: '16.3',
+      version: '17',
     },
   },
   globals: {

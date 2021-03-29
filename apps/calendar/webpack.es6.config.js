@@ -2,8 +2,8 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.config');
 
-module.exports = (env, argv) => {
-  const { minify } = argv;
+module.exports = (env) => {
+  const { minify } = env;
   const filename = `toastui-calendar.es6${minify ? '.min' : ''}.js`;
 
   const config = {
@@ -24,5 +24,5 @@ module.exports = (env, argv) => {
     },
   };
 
-  return merge(common(env, argv), config);
+  return merge(common(env), config);
 };

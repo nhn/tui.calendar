@@ -16,8 +16,6 @@
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
-    "typeRoots": ["types"],
-    "types": ["webpack-env", "node"]
   },
   "include": [
     "src/**/*.ts",
