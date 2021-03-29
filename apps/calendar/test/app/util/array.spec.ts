@@ -5,10 +5,10 @@ import array from '@src/util/array';
 import { ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 
-describe('common/array', function () {
-  describe('common compare methods', function () {
-    describe('compare.num', function () {
-      it('asc', function () {
+describe('common/array', () => {
+  describe('common compare methods', () => {
+    describe('compare.num', () => {
+      it('asc', () => {
         const arr = [8, 3, 11, 29, 31, 55, 25, 1];
         arr.sort(array.compare.num.asc);
 
@@ -16,11 +16,11 @@ describe('common/array', function () {
       });
     });
 
-    describe('Schedule', function () {
+    describe('Schedule', () => {
       let mockData: ScheduleData[];
       let schedules: Schedule[];
 
-      beforeEach(function () {
+      beforeEach(() => {
         mockData = [
           {
             title: 'hunting',
@@ -68,7 +68,7 @@ describe('common/array', function () {
         schedules = [];
       });
 
-      it('isAllDay ASC, start ASC, duration DESC, id ASC', function () {
+      it('isAllDay ASC, start ASC, duration DESC, id ASC', () => {
         mockData.forEach((data) => {
           schedules.push(Schedule.create(data));
         });
@@ -86,7 +86,7 @@ describe('common/array', function () {
         ]);
       });
 
-      it('duration', function () {
+      it('duration', () => {
         const expected = ['B', 'A'];
 
         const fixtures = [
@@ -115,33 +115,33 @@ describe('common/array', function () {
     });
   });
 
-  describe('binary search', function () {
+  describe('binary search', () => {
     let arr: string[];
 
-    beforeEach(function () {
+    beforeEach(() => {
       arr = ['B', 'Z', 'a', 'c', 'd', 'e', 'f', 'x']; // asc
     });
 
-    it('return correct index to insertion.', function () {
+    it('return correct index to insertion.', () => {
       arr = ['CA', 'WA'];
 
       expect(array.bsearch(arr, 'TX')).toBe(-1);
     });
 
-    it('search item index using binary search.', function () {
+    it('search item index using binary search.', () => {
       expect(array.bsearch(arr, 'd')).toBe(4);
       expect(array.bsearch(arr, 'f')).toBe(6);
       expect(array.bsearch(arr, 'B')).not.toBe(1);
       expect(array.bsearch(arr, 'q')).toBeLessThan(0);
     });
 
-    it('can be used to insert the element.', function () {
+    it('can be used to insert the element.', () => {
       arr.splice(Math.abs(array.bsearch(arr, 'g')), 0, 'g');
 
       expect(inArray('g', arr)).toBe(7);
     });
 
-    it('search by custom functions.', function () {
+    it('search by custom functions.', () => {
       const items = [{ a: 'B' }, { a: 'e' }, { a: 'f' }, { a: 'x' }, { a: 'z' }]; // asc
 
       expect(
@@ -151,7 +151,7 @@ describe('common/array', function () {
       ).toBe(2);
     });
 
-    it('can search complicated sort type array.', function () {
+    it('can search complicated sort type array.', () => {
       interface Item {
         f: number;
         s: number;

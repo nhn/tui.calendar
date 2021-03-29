@@ -1,5 +1,6 @@
 import browser from 'tui-code-snippet/browser/browser';
 import { keyAndKeyCodeMap } from '@src/util/keycode';
+import { DragListeners } from '@src/components/hooks/drag';
 
 export function createMouseEvent(name: string, eventInitDic: MouseEventInit = {}) {
   const primaryButton = 0;
@@ -65,4 +66,12 @@ export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventIn
   }
 
   return event;
+}
+
+export function spyOnDragEvent(listeners: DragListeners) {
+  jest.spyOn(listeners, 'onDragStart');
+  jest.spyOn(listeners, 'onDrag');
+  jest.spyOn(listeners, 'onDragEnd');
+  jest.spyOn(listeners, 'onClick');
+  jest.spyOn(listeners, 'onCancel');
 }

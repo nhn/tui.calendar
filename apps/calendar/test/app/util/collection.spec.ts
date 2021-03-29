@@ -2,15 +2,15 @@ import Collection from '@src/util/collection';
 
 type Item = Record<string, any>;
 
-describe('Collection', function () {
+describe('Collection', () => {
   let c: Collection<Item>;
 
-  beforeEach(function () {
+  beforeEach(() => {
     c = new Collection<Item>();
   });
 
-  describe('constructor()', function () {
-    it('can customize method that extract ID from item.', function () {
+  describe('constructor()', () => {
+    it('can customize method that extract ID from item.', () => {
       const col = new Collection(function (item) {
         return item.myID;
       });
@@ -21,30 +21,30 @@ describe('Collection', function () {
     });
   });
 
-  describe('getItemID()', function () {
-    it('get ID from item.', function () {
+  describe('getItemID()', () => {
+    it('get ID from item.', () => {
       const item = { _id: 7 };
 
       expect(c.getItemID(item)).toBe('7');
     });
   });
 
-  describe('add()', function () {
-    it('add item to collection.', function () {
+  describe('add()', () => {
+    it('add item to collection.', () => {
       c.add({ _id: 25 });
 
       expect(c.length).toBe(1);
       expect(c.items['25']).toBeDefined();
     });
 
-    it('add duplicated model then overwrite it.', function () {
+    it('add duplicated model then overwrite it.', () => {
       c.add({ _id: 25 });
       c.add({ _id: 25, hello: 'world' });
 
       expect(c.items['25'].hello).toBe('world');
     });
 
-    it('can use multiple arguments item.', function () {
+    it('can use multiple arguments item.', () => {
       c.add({ _id: 2 }, { _id: 4 });
 
       expect(c.length).toBe(2);
@@ -52,12 +52,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('remove()', function () {
+  describe('remove()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1 };
       item2 = { _id: 2 };
       item3 = { _id: 4 };
@@ -65,30 +65,30 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it("method doesn't work when collection is empty", function () {
+    it("method doesn't work when collection is empty", () => {
       const col = new Collection();
       col.remove(2);
 
       expect(col.length).toBe(0);
     });
 
-    it("can't delete other item", function () {
+    it("can't delete other item", () => {
       c.remove(3);
 
       expect(c.length).toBe(3);
     });
 
-    it('remove own item.', function () {
+    it('remove own item.', () => {
       expect(c.remove(2)).toBe(item2);
       expect(c.length).toBe(2);
     });
 
-    it('can remove multiple item.', function () {
+    it('can remove multiple item.', () => {
       expect(c.remove(1, 2)).toEqual([item1, item2]);
       expect(c.length).toBe(1);
     });
 
-    it('also accept item itself.', function () {
+    it('also accept item itself.', () => {
       c.remove(item1, item2);
 
       expect(c.length).toBe(1);
@@ -97,12 +97,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('clear()', function () {
+  describe('clear()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1 };
       item2 = { _id: 2 };
       item3 = { _id: 4 };
@@ -110,14 +110,14 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it("method doesn't work when collection is empty", function () {
+    it("method doesn't work when collection is empty", () => {
       const col = new Collection();
       col.clear();
 
       expect(col.length).toBe(0);
     });
 
-    it('remove all of collection items.', function () {
+    it('remove all of collection items.', () => {
       c.clear();
 
       expect(c.length).toBe(0);
@@ -125,12 +125,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('has()', function () {
+  describe('has()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1 };
       item2 = { _id: 2 };
       item3 = { _id: 4 };
@@ -138,23 +138,23 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it("method doesn't work when collection is empty", function () {
+    it("method doesn't work when collection is empty", () => {
       const col = new Collection();
 
       expect(col.has(item1)).toBe(false);
     });
 
-    it('return true when collection has that object.', function () {
+    it('return true when collection has that object.', () => {
       expect(c.has(item1)).toBe(true);
       expect(c.has({})).toBe(false);
     });
 
-    it('check item existance by id.', function () {
+    it('check item existance by id.', () => {
       expect(c.has(2)).toBe(true);
       expect(c.has(14)).toBe(false);
     });
 
-    it('can use filter function instead of id.', function () {
+    it('can use filter function instead of id.', () => {
       let callCount = 0;
 
       expect(
@@ -175,12 +175,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('find()', function () {
+  describe('find()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1, value: 20 };
       item2 = { _id: 2, value: 50 };
       item3 = { _id: 4, value: 2 };
@@ -188,7 +188,7 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it('return new collection that filled with filtered items.', function () {
+    it('return new collection that filled with filtered items.', () => {
       const filtered = c.find((item) => {
         if (!item.value) {
           return false;
@@ -200,7 +200,7 @@ describe('Collection', function () {
       expect(filtered.length).toBe(2);
     });
 
-    it("when collection's getItemID customized. then return collection has same func.", function () {
+    it("when collection's getItemID customized. then return collection has same func.", () => {
       const cust = function (item: Item & { ID: number }) {
         return String(item.ID);
       };
@@ -216,12 +216,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('Collection.and()', function () {
+  describe('Collection.and()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1, value: 20 };
       item2 = { _id: 2, value: 50 };
       item3 = { _id: 4, value: 2 };
@@ -229,7 +229,7 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it('combind multiple function filter AND clause.', function () {
+    it('combind multiple function filter AND clause.', () => {
       function filter1(item: Item) {
         return item._id === 2;
       }
@@ -258,12 +258,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('Collection.or()', function () {
+  describe('Collection.or()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1, value: 20 };
       item2 = { _id: 2, value: 50 };
       item3 = { _id: 4, value: 2 };
@@ -271,7 +271,7 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it('combine multiple function filter with OR clause.', function () {
+    it('combine multiple function filter with OR clause.', () => {
       function filter1(item: Item) {
         return item._id === 2;
       }
@@ -294,13 +294,13 @@ describe('Collection', function () {
     });
   });
 
-  describe('Mixed and(), or() filter', function () {
+  describe('Mixed and(), or() filter', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
     let item4: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1, value: 20 };
       item2 = { _id: 2, value: 50 };
       item3 = { _id: 4, value: 2 };
@@ -309,7 +309,7 @@ describe('Collection', function () {
       c.add(item1, item2, item3, item4);
     });
 
-    it('mixed and, or filter also available for find()', function () {
+    it('mixed and, or filter also available for find()', () => {
       function filter1(item: Item) {
         return item.value === 20;
       }
@@ -333,7 +333,7 @@ describe('Collection', function () {
       ).toEqual(result);
     });
 
-    it('mixed and, or combined filter2', function () {
+    it('mixed and, or combined filter2', () => {
       function filter1(item: Item) {
         return item.value === 50;
       }
@@ -355,12 +355,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('groupBy()', function () {
+  describe('groupBy()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = {
         _id: 1,
         value: 20,
@@ -395,7 +395,7 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it('group all elements by number values.', function () {
+    it('group all elements by number values.', () => {
       const grouped = c.groupBy('value');
 
       const c1 = new Collection(c.getItemID);
@@ -412,7 +412,7 @@ describe('Collection', function () {
       });
     });
 
-    it('group by number property', function () {
+    it('group by number property', () => {
       const grouped = c.groupBy(30);
 
       const c1 = new Collection(c.getItemID);
@@ -424,7 +424,7 @@ describe('Collection', function () {
       expect(grouped.b).toEqual(c2);
     });
 
-    it('group by boolean values.', function () {
+    it('group by boolean values.', () => {
       const grouped = c.groupBy('isGood');
 
       const c1 = new Collection(c.getItemID);
@@ -438,7 +438,7 @@ describe('Collection', function () {
       });
     });
 
-    it('if base value is function then use returned value', function () {
+    it('if base value is function then use returned value', () => {
       const grouped = c.groupBy('no');
 
       const c1 = new Collection(c.getItemID);
@@ -455,7 +455,7 @@ describe('Collection', function () {
       });
     });
 
-    it('group by custom functions', function () {
+    it('group by custom functions', () => {
       const grouped = c.groupBy((item: Item) => {
         return item.value > 10 ? 'upper' : 'lower';
       });
@@ -469,7 +469,7 @@ describe('Collection', function () {
       expect(grouped.lower).toEqual(c2);
     });
 
-    it('create each collection with keys when array of key values supplied by first arguments.', function () {
+    it('create each collection with keys when array of key values supplied by first arguments.', () => {
       let grouped = c.groupBy(['20', '50']);
 
       expect(grouped['20'].constructor).toBe(Collection);
@@ -495,12 +495,12 @@ describe('Collection', function () {
     });
   });
 
-  describe('sort()', function () {
+  describe('sort()', () => {
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1, value: 20 };
       item2 = { _id: 2, value: 50 };
       item3 = { _id: 4, value: 2 };
@@ -508,13 +508,13 @@ describe('Collection', function () {
       c.add(item1, item2, item3);
     });
 
-    it('no sort when compareFunction not supplied.', function () {
+    it('no sort when compareFunction not supplied.', () => {
       const arr = c.sort();
 
       expect(arr).toEqual([item1, item2, item3]);
     });
 
-    it('sort own items by given compare function.', function () {
+    it('sort own items by given compare function.', () => {
       const arr = c.sort(function (a, b) {
         if (a.value < b.value) {
           return -1;
@@ -532,13 +532,13 @@ describe('Collection', function () {
     });
   });
 
-  describe('each()', function () {
+  describe('each()', () => {
     let spy: jest.Mock;
     let item1: Item;
     let item2: Item;
     let item3: Item;
 
-    beforeEach(function () {
+    beforeEach(() => {
       item1 = { _id: 1, value: 20 };
       item2 = { _id: 2, value: 50 };
       item3 = { _id: 4, value: 2 };
@@ -548,13 +548,13 @@ describe('Collection', function () {
       spy = jest.fn();
     });
 
-    it('iterate own items.', function () {
+    it('iterate own items.', () => {
       c.each(spy);
 
       expect(spy.mock.calls[2]).toEqual(expect.arrayContaining([{ _id: 4, value: 2 }, '4']));
     });
 
-    it('break loop when iteratee return false.', function () {
+    it('break loop when iteratee return false.', () => {
       spy.mockImplementation((item: Item) => {
         if (item.value === 50) {
           return false;
@@ -569,8 +569,8 @@ describe('Collection', function () {
     });
   });
 
-  describe('doWhenHas()', function () {
-    it('invoke supplied method when collection has model.', function () {
+  describe('doWhenHas()', () => {
+    it('invoke supplied method when collection has model.', () => {
       const item1 = { _id: 1 };
 
       const spy1 = jest.fn();
@@ -586,8 +586,8 @@ describe('Collection', function () {
     });
   });
 
-  describe('single()', function () {
-    it('return single element in collection.', function () {
+  describe('single()', () => {
+    it('return single element in collection.', () => {
       const item1: Item = { _id: 1 };
       const item2: Item = { _id: 2 };
       const item3: Item = { _id: 5 };
@@ -600,7 +600,7 @@ describe('Collection', function () {
       expect([item1, item2, item3]).toContain(item);
     });
 
-    it('return first single item that meet with supplied function filter', function () {
+    it('return first single item that meet with supplied function filter', () => {
       const item1 = { _id: 1 };
       const item2 = { _id: 2 };
       const item3 = { _id: 5 };
@@ -614,7 +614,7 @@ describe('Collection', function () {
       expect(result).toBe(item2);
     });
 
-    it('return null when no item.', function () {
+    it('return null when no item.', () => {
       const item1 = { _id: 1 };
 
       expect(c.single()).toBe(null);
@@ -622,15 +622,15 @@ describe('Collection', function () {
       c.add(item1);
 
       expect(
-        c.single(function () {
+        c.single(() => {
           return false;
         })
       ).toBe(null);
     });
   });
 
-  describe('toArray()', function () {
-    it('return new array with collection items.', function () {
+  describe('toArray()', () => {
+    it('return new array with collection items.', () => {
       const item1 = { _id: 1 };
       const item2 = { _id: 2 };
       const item3 = { _id: 5 };

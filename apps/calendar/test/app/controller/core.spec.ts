@@ -13,13 +13,13 @@ import {
 } from '@src/controller/core';
 import Collection from '@src/util/collection';
 
-describe('Base.Core', function () {
+describe('Base.Core', () => {
   let mockData: ScheduleData[];
   let scheduleList: Schedule[];
   let expected;
   let actual;
 
-  beforeEach(function () {
+  beforeEach(() => {
     mockData = [
       {
         title: 'A',
@@ -102,8 +102,8 @@ describe('Base.Core', function () {
     scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
   });
 
-  describe('getCollisionGroup()', function () {
-    it('Get collision group properly.', function () {
+  describe('getCollisionGroup()', () => {
+    it('Get collision group properly.', () => {
       actual = getCollisionGroup(scheduleList);
       expected = [
         [
@@ -122,10 +122,10 @@ describe('Base.Core', function () {
     });
   });
 
-  describe('getLastRowInColumn()', function () {
+  describe('getLastRowInColumn()', () => {
     let test: Array<Array<number | undefined>>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       test = [
         [1, 1, 1],
         // eslint-disable-next-line no-undefined
@@ -135,24 +135,24 @@ describe('Base.Core', function () {
       ];
     });
 
-    it('return -1 when column not exist.', function () {
+    it('return -1 when column not exist.', () => {
       const result = getLastRowInColumn(test, 4);
 
       expect(result).toBe(-1);
     });
 
-    it('can calculate last row in column in 2d array.', function () {
+    it('can calculate last row in column in 2d array.', () => {
       const result = getLastRowInColumn(test, 0);
 
       expect(result).toBe(2);
     });
   });
 
-  describe('getMatrices()', function () {
+  describe('getMatrices()', () => {
     let collection: Collection<Schedule>;
     let collisionGroup: CollisionGroup;
 
-    beforeEach(function () {
+    beforeEach(() => {
       collection = new Collection<Schedule>((model) => {
         return model.cid();
       });
@@ -160,7 +160,7 @@ describe('Base.Core', function () {
       collisionGroup = getCollisionGroup(scheduleList);
     });
 
-    it('can calculate matrices accuratly.', function () {
+    it('can calculate matrices accuratly.', () => {
       expected = [
         [[scheduleList[0], scheduleList[1]], [scheduleList[2]], [scheduleList[3]]],
         [[scheduleList[4]]],
@@ -174,16 +174,16 @@ describe('Base.Core', function () {
     });
   });
 
-  describe('limitRenderRange', function () {
+  describe('limitRenderRange', () => {
     let viewModelColl: Collection<ScheduleViewModel>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       viewModelColl = new Collection((viewModel) => {
         return viewModel.cid();
       });
     });
 
-    it('fill renderStarts, renderEnds to each view model in collection.', function () {
+    it('fill renderStarts, renderEnds to each view model in collection.', () => {
       // 5/1 10:20 ~ 5/1 10:40
       viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
 
@@ -203,16 +203,16 @@ describe('Base.Core', function () {
     });
   });
 
-  describe('getScheduleInDateRangeFilter', function () {
+  describe('getScheduleInDateRangeFilter', () => {
     let viewModelColl: Collection<ScheduleViewModel>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       viewModelColl = new Collection((viewModel) => {
         return viewModel.cid();
       });
     });
 
-    it('filter schedules properly.', function () {
+    it('filter schedules properly.', () => {
       let filter;
       let d1;
       let d2;

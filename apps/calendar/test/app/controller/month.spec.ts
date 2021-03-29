@@ -5,7 +5,7 @@ import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import { findByDateRange } from '@src/controller/month';
 
-describe('Base.Month', function () {
+describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
   let dataStore: DataStore;
@@ -13,7 +13,7 @@ describe('Base.Month', function () {
   let scheduleList: Schedule[];
   let actual;
 
-  beforeEach(function () {
+  beforeEach(() => {
     dataStore = {
       calendars: [],
       schedules: createScheduleCollection(),
@@ -116,15 +116,15 @@ describe('Base.Month', function () {
     scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
   });
 
-  describe('findByDateRange()', function () {
-    beforeEach(function () {
+  describe('findByDateRange()', () => {
+    beforeEach(() => {
       // add schedule instance to controller
       scheduleList.forEach((schedule) => {
         addSchedule(dataStore, schedule);
       });
     });
 
-    it('get schedules instance in month', function () {
+    it('get schedules instance in month', () => {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 
@@ -166,15 +166,15 @@ describe('Base.Month', function () {
     });
   });
 
-  describe('findByDateRange() by stacking time and all-day schedule', function () {
-    beforeEach(function () {
+  describe('findByDateRange() by stacking time and all-day schedule', () => {
+    beforeEach(() => {
       // add schedule instance to controller
       scheduleList.forEach((schedule) => {
         addSchedule(dataStore, schedule);
       });
     });
 
-    it('get schedules instance in month for all-day schedule', function () {
+    it('get schedules instance in month for all-day schedule', () => {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 

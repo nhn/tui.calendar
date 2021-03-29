@@ -3,28 +3,28 @@ import TZDate from '@src/time/date';
 import { ScheduleData } from '@src/model';
 import { advanceTo } from 'jest-date-mock';
 
-describe('model/schedule basic', function () {
+describe('model/schedule basic', () => {
   let schedule: Schedule;
 
-  beforeEach(function () {
+  beforeEach(() => {
     schedule = new Schedule();
   });
 
-  it('creation', function () {
+  it('creation', () => {
     expect(schedule.isAllDay).toBe(false);
   });
 
-  describe('init()', function () {
-    beforeEach(function () {
+  describe('init()', () => {
+    beforeEach(() => {
       jest.useFakeTimers();
       advanceTo(new Date('2015/05/01 00:00:00').getTime());
     });
 
-    afterEach(function () {
+    afterEach(() => {
       jest.useRealTimers();
     });
 
-    it('initialize schedule with supplied options.', function () {
+    it('initialize schedule with supplied options.', () => {
       const expected = {
         id: '123',
         title: 'Go home',
@@ -47,15 +47,15 @@ describe('model/schedule basic', function () {
     });
   });
 
-  describe('equals()', function () {
+  describe('equals()', () => {
     let schedule2: Schedule;
 
-    beforeEach(function () {
+    beforeEach(() => {
       schedule = new Schedule();
       schedule2 = new Schedule();
     });
 
-    it("return true when schedule's property are same", function () {
+    it("return true when schedule's property are same", () => {
       schedule.title = 'dance';
       schedule2.title = 'dance';
       schedule.isAllDay = true;
@@ -68,14 +68,14 @@ describe('model/schedule basic', function () {
       expect(schedule.equals(schedule2)).toBe(true);
     });
 
-    it('return false when title is not equals.', function () {
+    it('return false when title is not equals.', () => {
       schedule.title = 'meeting';
       schedule2.title = 'working';
 
       expect(schedule.equals(schedule2)).toBe(false);
     });
 
-    it('return false when two schedule has different all day flags.', function () {
+    it('return false when two schedule has different all day flags.', () => {
       schedule.title = 'dance';
       schedule2.title = 'dance';
       schedule.isAllDay = true;
@@ -84,7 +84,7 @@ describe('model/schedule basic', function () {
       expect(schedule.equals(schedule2)).toBe(false);
     });
 
-    it('return false when two schedule has different start or end.', function () {
+    it('return false when two schedule has different start or end.', () => {
       schedule.title = 'dance';
       schedule2.title = 'dance';
       schedule.isAllDay = true;
@@ -103,25 +103,25 @@ describe('model/schedule basic', function () {
     });
   });
 
-  describe('duration()', function () {
-    beforeEach(function () {
+  describe('duration()', () => {
+    beforeEach(() => {
       schedule.start = new TZDate('2015-09-25T05:00:00');
       schedule.end = new TZDate('2015-09-26T05:00:00');
     });
 
-    it('can calculate duration between start and end.', function () {
+    it('can calculate duration between start and end.', () => {
       expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T00:00:00Z')));
     });
 
-    it('return 24 hours when schedule is all day schedule.', function () {
+    it('return 24 hours when schedule is all day schedule.', () => {
       schedule.isAllDay = true;
 
       expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T23:59:59.999Z')));
     });
   });
 
-  describe('Schedule.create()', function () {
-    it('create schedule model instance from data object.', function () {
+  describe('Schedule.create()', () => {
+    it('create schedule model instance from data object.', () => {
       const mock = {
         title: 'hunting',
         isAllDay: true,
@@ -141,7 +141,7 @@ describe('model/schedule basic', function () {
     });
   });
 
-  describe('collidesWith()', function () {
+  describe('collidesWith()', () => {
     /**
      * type - A
      * |---|
@@ -155,7 +155,7 @@ describe('model/schedule basic', function () {
      * | A |---|
      * |---|
      */
-    it('Check type A, B', function () {
+    it('Check type A, B', () => {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
@@ -189,7 +189,7 @@ describe('model/schedule basic', function () {
      * |---|   |
      *     |---|
      */
-    it('check type C, D', function () {
+    it('check type C, D', () => {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
@@ -224,7 +224,7 @@ describe('model/schedule basic', function () {
      * | A |
      * |---|
      */
-    it('check type E, F', function () {
+    it('check type E, F', () => {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
@@ -261,7 +261,7 @@ describe('model/schedule basic', function () {
      * | A |
      * |---|
      */
-    it('check type G, H', function () {
+    it('check type G, H', () => {
       const a = Schedule.create({
         title: 'A',
         isAllDay: false,
@@ -281,11 +281,11 @@ describe('model/schedule basic', function () {
   });
 });
 
-describe('model/Schedule advanced', function () {
-  let jsonFixtures: ScheduleData[];
+describe('model/Schedule advanced', () => {
+  let scheduleData: ScheduleData[];
 
-  beforeEach(function () {
-    jsonFixtures = [
+  beforeEach(() => {
+    scheduleData = [
       {
         title: '스크럼',
         category: 'time',
@@ -317,10 +317,10 @@ describe('model/Schedule advanced', function () {
     ];
   });
 
-  it('factory function (create())', function () {
+  it('factory function (create())', () => {
     type CompatableSchedule = Record<string, any>;
 
-    let e = Schedule.create(jsonFixtures[0]);
+    let e = Schedule.create(scheduleData[0]);
 
     let expected: ScheduleData = {
       title: '스크럼',
@@ -333,7 +333,7 @@ describe('model/Schedule advanced', function () {
 
     expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
 
-    e = Schedule.create(jsonFixtures[1]);
+    e = Schedule.create(scheduleData[1]);
     expected = {
       title: '[홍길동]연차',
       category: 'allday',
@@ -345,7 +345,7 @@ describe('model/Schedule advanced', function () {
 
     expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
 
-    e = Schedule.create(jsonFixtures[2]);
+    e = Schedule.create(scheduleData[2]);
     expected = {
       title: '테스트 마일스톤1',
       category: 'milestone',
@@ -357,7 +357,7 @@ describe('model/Schedule advanced', function () {
 
     expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
 
-    e = Schedule.create(jsonFixtures[3]);
+    e = Schedule.create(scheduleData[3]);
     expected = {
       title: '테스트 업무',
       category: 'task',
@@ -370,7 +370,7 @@ describe('model/Schedule advanced', function () {
     expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
   });
 
-  it('raw data', function () {
+  it('raw data', () => {
     const raw: {
       hello: string;
       hello2?: string;

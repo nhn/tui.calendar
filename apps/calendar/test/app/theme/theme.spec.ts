@@ -73,20 +73,20 @@ const doorayTheme = {
   'week.dayGridSchedule.marginRight': '10px',
 };
 
-describe('Theme', function () {
+describe('Theme', () => {
   let theme: Theme;
 
-  beforeEach(function () {
+  beforeEach(() => {
     theme = new Theme();
   });
 
-  it('get a style by key', function () {
+  it('get a style by key', () => {
     const value = theme.getStyle('common.border');
 
     expect(value).toBe('1px solid #e5e5e5');
   });
 
-  it('set a style by key', function () {
+  it('set a style by key', () => {
     const key = 'common.border';
     const value = '2px dashed #ddd';
 
@@ -95,7 +95,7 @@ describe('Theme', function () {
     expect(theme.getStyle(key)).toBe(value);
   });
 
-  it('set multiple styles with key, value map', function () {
+  it('set multiple styles with key, value map', () => {
     const map = {
       'common.border': '2px dashed #ddd',
       'month.dayname.paddingLeft': '3px',
@@ -109,18 +109,18 @@ describe('Theme', function () {
     expect(result.length).toBe(0);
   });
 
-  it('no return a style with wrong key parameter', function () {
+  it('no return a style with wrong key parameter', () => {
     const key = 'wrong.key';
     const value = theme.getStyle(key as ThemePropKeys);
 
     expect(value).toBe('');
   });
 
-  it('no value through property path', function () {
+  it('no value through property path', () => {
     expect(pick(theme, 'wrong', 'border')).toBeUndefined();
   });
 
-  it('return true to set a style by right key', function () {
+  it('return true to set a style by right key', () => {
     const key = 'common.border';
     const value = '2px dashed #ddd';
     const result = theme.setStyle(key, value);
@@ -128,7 +128,7 @@ describe('Theme', function () {
     expect(result).toBe(true);
   });
 
-  it('return false to set a style by wrong key', function () {
+  it('return false to set a style by wrong key', () => {
     const key = 'wrong.border';
     const value = '2px dashed #ddd';
     const result = theme.setStyle(key as ThemePropKeys, value);
@@ -136,7 +136,7 @@ describe('Theme', function () {
     expect(result).toBe(false);
   });
 
-  it('return wrong keys array when setting multiple styles including wrong key', function () {
+  it('return wrong keys array when setting multiple styles including wrong key', () => {
     const styles = {
       'wrong.border': '2px dashed #ddd',
       'common.border': '2px dashed #ddd',
@@ -146,7 +146,7 @@ describe('Theme', function () {
     expect(result).toEqual(['wrong.border']);
   });
 
-  it('can check all predefined key of the standard theme', function () {
+  it('can check all predefined key of the standard theme', () => {
     const keys = Object.keys(preset) as ThemePropKeys[];
 
     keys.forEach(function (key) {
@@ -154,7 +154,7 @@ describe('Theme', function () {
     });
   });
 
-  it('can check  all predefined key of the given custom theme', function () {
+  it('can check  all predefined key of the given custom theme', () => {
     const customTheme = doorayTheme;
     const keys = Object.keys(customTheme) as ThemePropKeys[];
 
@@ -165,7 +165,7 @@ describe('Theme', function () {
     });
   });
 
-  it('can clear all styles and set another styles', function () {
+  it('can clear all styles and set another styles', () => {
     const customTheme = doorayTheme;
     let keys = Object.keys(preset) as ThemePropKeys[];
     theme.clear();

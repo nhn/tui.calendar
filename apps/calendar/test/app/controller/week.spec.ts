@@ -18,11 +18,11 @@ import Collection from '@src/util/collection';
 
 const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
-describe('Base.Week', function () {
+describe('Base.Week', () => {
   let dataStore: DataStore;
   let mockData: ScheduleData[];
 
-  beforeEach(function () {
+  beforeEach(() => {
     dataStore = {
       calendars: [],
       schedules: createScheduleCollection(),
@@ -109,10 +109,10 @@ describe('Base.Week', function () {
     ];
   });
 
-  describe('hasCollision()', function () {
+  describe('hasCollision()', () => {
     let supplied: Array<number[]>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       supplied = [
         [2, 5],
         [8, 11],
@@ -120,16 +120,16 @@ describe('Base.Week', function () {
       ];
     });
 
-    it('return false when supplied empty array', function () {
+    it('return false when supplied empty array', () => {
       expect(hasCollision([], 3, 4)).toBe(false);
     });
 
-    it('calculate collision information properly.', function () {
+    it('calculate collision information properly.', () => {
       expect(hasCollision(supplied, 6, 7)).toBe(false);
     });
   });
 
-  describe('generateTimeArrayInRow()', function () {
+  describe('generateTimeArrayInRow()', () => {
     /**
      * |---|---|
      * | 1 | 2 |
@@ -153,7 +153,7 @@ describe('Base.Week', function () {
       return new Schedule().init({ start, end });
     }
 
-    beforeEach(function () {
+    beforeEach(() => {
       supplied = [[getTime(1, 2), getTime(1, 2)], [getTime(4, 5), getTime(5, 6)], [getTime(7, 8)]];
 
       expected = [
@@ -164,15 +164,15 @@ describe('Base.Week', function () {
       ];
     });
 
-    it('get rowmap properly.', function () {
+    it('get rowmap properly.', () => {
       expect(generateTimeArrayInRow(supplied)).toEqual(expected);
     });
   });
 
-  describe('findByDateRange', function () {
+  describe('findByDateRange', () => {
     let panels: Panel[];
 
-    beforeEach(function () {
+    beforeEach(() => {
       panels = [
         {
           name: 'time',
@@ -197,7 +197,7 @@ describe('Base.Week', function () {
        */
     });
 
-    it('by YMD', function () {
+    it('by YMD', () => {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
@@ -216,7 +216,7 @@ describe('Base.Week', function () {
       expect(result.time['20150501'].length).toBe(5);
     });
 
-    it('Can add more AND clause filter function by third parameter', function () {
+    it('Can add more AND clause filter function by third parameter', () => {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
@@ -234,17 +234,17 @@ describe('Base.Week', function () {
     });
   });
 
-  describe('_getHourRangeFilter()', function () {
+  describe('_getHourRangeFilter()', () => {
     let hourRangeFilter: (schedule: Schedule) => boolean;
     let schedule: Schedule;
 
-    beforeEach(function () {
+    beforeEach(() => {
       // 8:00 ~ 20:00
       hourRangeFilter = _makeHourRangeFilter(10, 12);
       schedule = new Schedule();
     });
 
-    it('filter schedule by start, end date visible', function () {
+    it('filter schedule by start, end date visible', () => {
       schedule.start = new TZDate('2018-05-02T09:30:00');
       schedule.end = new TZDate('2018-05-02T13:30:00');
 
@@ -302,11 +302,11 @@ describe('Base.Week', function () {
     });
   });
 
-  describe('splitScheduleByDateRange()', function () {
+  describe('splitScheduleByDateRange()', () => {
     let schedules: Schedule[];
     let collection: Collection<Schedule>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       collection = new Collection((item) => {
         return item.cid();
       });
@@ -340,7 +340,7 @@ describe('Base.Week', function () {
       });
     });
 
-    it('split schedule by ymd.', function () {
+    it('split schedule by ymd.', () => {
       const result = splitScheduleByDateRange(
         dataStore.idsOfDay,
         new TZDate('2015-05-01T00:00:00'),
