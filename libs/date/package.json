@@ -16,8 +16,6 @@
   },
   "scripts": {
     "lint": "eslint ./src ./test",
-    "test": "jest --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch",
     "build": "webpack --mode=production && webpack --mode=production --env minify && node tsBannerGenerator.js",
     "doc": "tuidoc",
     "analyze": "NODE_ENV=production webpack --mode=production --minify --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist"
