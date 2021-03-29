@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const postcssPrefixer = require('postcss-prefixer');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
-
+const ESLintPlugin = require('eslint-webpack-plugin');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.config');
 
@@ -15,7 +15,7 @@ module.exports = (env, argv) => {
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          loader: ['babel-loader', 'eslint-loader'],
+          loader: ['babel-loader'],
         },
         {
           test: /\.css$/,
@@ -39,7 +39,7 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    plugins: [new StyleLintPlugin()],
+    plugins: [new StyleLintPlugin(), new ESLintPlugin({ extensions: ['tsx', 'ts', 'js'] })],
     devtool: 'inline-source-map',
     devServer: {
       historyApiFallback: false,

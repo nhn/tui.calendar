@@ -2,7 +2,7 @@
 const pkg = require('./package.json');
 const path = require('path');
 const webpack = require('webpack');
-const SafeUmdPlugin = require('safe-umd-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const BANNER = [
   'TOAST UI Date',
@@ -26,16 +26,16 @@ module.exports = (env, { mode = 'development', minify }) => {
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: ['babel-loader', 'eslint-loader'],
+          loader: ['babel-loader'],
         },
       ],
     },
     plugins: [
-      new SafeUmdPlugin(),
       new webpack.BannerPlugin({
         banner: BANNER,
         entryOnly: true,
       }),
+      new ESLintPlugin(),
     ],
     devtool: 'source-map',
   };

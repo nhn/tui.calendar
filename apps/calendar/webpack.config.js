@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const postcssPrefixer = require('postcss-prefixer');
 
 const merge = require('webpack-merge');
@@ -20,7 +21,7 @@ module.exports = (env, argv) => {
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          use: ['babel-loader', 'eslint-loader'],
+          use: ['babel-loader'],
         },
         {
           test: /\.css$/,
@@ -44,7 +45,11 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    plugins: [new StyleLintPlugin(), new MiniCssExtractPlugin({ filename })],
+    plugins: [
+      new StyleLintPlugin(),
+      new MiniCssExtractPlugin({ filename }),
+      new ESLintPlugin({ extensions: ['.tsx', '.ts', '.js'] }),
+    ],
   };
 
   return merge(common(env, argv), config);
