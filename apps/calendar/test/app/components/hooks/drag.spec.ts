@@ -1,6 +1,6 @@
 import { useDrag, DISTANCE, MouseEventListener, DragListeners } from '@src/components/hooks/drag';
 import { noop } from '@src/util';
-import { createMouseEvent, createKeyboardEvent } from '@test/util';
+import { createMouseEvent, createKeyboardEvent, spyOnDragEvent } from '@test/util';
 
 const primaryButton = 0;
 
@@ -22,11 +22,8 @@ describe('drag hook', () => {
       onClick: noop,
       onCancel: noop,
     };
-    spyOn(listeners, 'onDragStart');
-    spyOn(listeners, 'onDrag');
-    spyOn(listeners, 'onDragEnd');
-    spyOn(listeners, 'onClick');
-    spyOn(listeners, 'onCancel');
+
+    spyOnDragEvent(listeners);
 
     ({ onMouseDown, onMouseMove, onMouseUp, onKeydown } = useDrag(listeners));
 

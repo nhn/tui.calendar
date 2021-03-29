@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, FunctionComponent, ComponentChildren } from 'preact';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import closest from 'tui-code-snippet/domUtil/closest';
 import pick from 'tui-code-snippet/object/pick';
@@ -23,6 +23,7 @@ interface Props {
   onGuideChange?: (e: CreationGuideInfo) => void;
   onGuideEnd?: (e: CreationGuideInfo) => void;
   onGuideCancel?: () => void;
+  children?: ComponentChildren;
 }
 
 export interface ColumnInfo {
@@ -37,63 +38,41 @@ interface ColumnGuideCreationInfo extends CreationGuideInfo {
   columnIndex: number;
 }
 
-export class ColumnsWithMouse extends Component<Props> {
-  static displayName = 'ColumnsWithMouse';
+export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
+  let guideStartData: ColumnGuideCreationInfo | null = null;
 
-  onMouseDown: (e: MouseEvent) => void;
+  let guidePrevDragData: ColumnGuideCreationInfo | null = null;
 
-  guideStartData: ColumnGuideCreationInfo | null = null;
-
-  guidePrevDragData: ColumnGuideCreationInfo | null = null;
-
-  constructor() {
-    super();
-
-    const { onMouseDown } = useDrag({
-      onDragStart: this.onDragStart.bind(this),
-      onDrag: this.onDrag.bind(this),
-      onDragEnd: this.onDragEnd.bind(this),
-      onClick: this.onClick.bind(this),
-      onCancel: this.onCancel.bind(this),
-    });
-
-    this.onMouseDown = onMouseDown;
-  }
-
-  getColumnIndexFromMouse(e: MouseEvent) {
+  const getColumnIndexFromMouse = (e: MouseEvent) => {
     const target = getTarget(e);
     const container = closest(target, classNames.columnsSelector) || target;
     const columnIndex = Number(container.getAttribute('data-index'));
 
     return columnIndex;
-  }
+  };
 
-  getCreationGuideDataFromMouse(e: MouseEvent): ColumnGuideCreationInfo {
-    const columnIndex = this.guideStartData
-      ? this.guideStartData.columnIndex
-      : this.getColumnIndexFromMouse(e);
-    const columnInfo = this.props.columnInfoList[columnIndex];
+  const getCreationGuideDataFromMouse = (e: MouseEvent): ColumnGuideCreationInfo => {
+    const columnIndex = guideStartData ? guideStartData.columnIndex : getColumnIndexFromMouse(e);
+    const columnInfo = props.columnInfoList[columnIndex];
     const { unit, slot } = columnInfo;
     const containerSelector = classNames.columnsSelector;
     const start = getPrevGridTimeFromMouseEvent(e, columnInfo, containerSelector);
     const end = getNextGridTime(addMilliseconds(start, 1), slot, unit);
 
     return { start, end, unit, columnIndex };
-  }
+  };
 
-  onDragStart(e: MouseEvent) {
-    this.guideStartData = this.getCreationGuideDataFromMouse(e);
+  const onDragStart = (e: MouseEvent) => {
+    guideStartData = getCreationGuideDataFromMouse(e);
 
-    if (this.props.onGuideStart) {
-      this.props.onGuideStart(this.guideStartData);
+    if (props.onGuideStart) {
+      props.onGuideStart(guideStartData);
     }
-  }
+  };
 
-  // eslint-disable-next-line complexity
-  onDrag(e: MouseEvent) {
-    const guideData = this.getCreationGuideDataFromMouse(e);
+  const onDrag = (e: MouseEvent) => {
+    const guideData = getCreationGuideDataFromMouse(e);
     const { start, end } = guideData;
-    const { guideStartData, guidePrevDragData } = this;
     const guideStartTime = pick(guideStartData, 'start') || start;
     const guideEndTime = pick(guideStartData, 'end') || end;
     let guideInfo: ColumnGuideCreationInfo;
@@ -120,49 +99,51 @@ export class ColumnsWithMouse extends Component<Props> {
       return;
     }
 
-    this.guidePrevDragData = guideInfo;
-    if (this.props.onGuideChange) {
-      this.props.onGuideChange(guideInfo);
+    guidePrevDragData = guideInfo;
+    if (props.onGuideChange) {
+      props.onGuideChange(guideInfo);
     }
-  }
+  };
 
-  onDragEnd(e: MouseEvent) {
-    this.guideStartData = null;
+  const onDragEnd = (e: MouseEvent) => {
+    guideStartData = null;
 
-    if (this.props.onGuideEnd) {
-      this.props.onGuideEnd(this.getCreationGuideDataFromMouse(e));
+    if (props.onGuideEnd) {
+      props.onGuideEnd(getCreationGuideDataFromMouse(e));
     }
-  }
+  };
 
-  onClick(e: MouseEvent) {
-    const guideData = this.getCreationGuideDataFromMouse(e);
+  const onClick = (e: MouseEvent) => {
+    const guideData = getCreationGuideDataFromMouse(e);
 
-    if (this.props.onGuideStart) {
-      this.props.onGuideStart(guideData);
+    if (props.onGuideStart) {
+      props.onGuideStart(guideData);
     }
 
-    if (this.props.onGuideEnd) {
-      this.props.onGuideEnd(guideData);
+    if (props.onGuideEnd) {
+      props.onGuideEnd(guideData);
     }
-  }
+  };
 
-  onCancel() {
-    if (this.props.onGuideCancel) {
-      this.props.onGuideCancel();
+  const onCancel = () => {
+    if (props.onGuideCancel) {
+      props.onGuideCancel();
     }
-  }
+  };
 
-  render() {
-    const { columnLeft, children } = this.props;
+  const { onMouseDown } = useDrag({
+    onDragStart,
+    onDrag,
+    onDragEnd,
+    onClick,
+    onCancel,
+  });
 
-    return (
-      <div
-        className={classNames.columns}
-        style={{ left: columnLeft }}
-        onMouseDown={this.onMouseDown}
-      >
-        {children}
-      </div>
-    );
-  }
-}
+  const { columnLeft, children } = props;
+
+  return (
+    <div className={classNames.columns} style={{ left: columnLeft }} onMouseDown={onMouseDown}>
+      {children}
+    </div>
+  );
+};

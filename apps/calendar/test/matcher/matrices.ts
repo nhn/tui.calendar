@@ -1,6 +1,6 @@
 /* eslint-disable prefer-template */
 /**
- * @fileoverview jasmine custom matcher for test
+ * @fileoverview jest custom matcher for test
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 import ScheduleViewModel from '@src/model/scheduleViewModel';
@@ -24,7 +24,7 @@ function pickTitle(matrix: ScheduleViewModel[]) {
 
 function fail(message: string) {
   return {
-    message,
+    message: () => message,
     pass: false,
   };
 }
@@ -100,21 +100,13 @@ function getMatcher(comparator: (viewModel: ScheduleViewModel, value: string | n
     }
 
     return {
-      message: 'Matrix match',
+      message: () => 'Matrix match',
       pass: true,
     };
   };
 }
 
-export default {
-  toEqualMatricesTitle() {
-    return {
-      compare: getMatcher(titleComparator),
-    };
-  },
-  toEqualMatricesTop() {
-    return {
-      compare: getMatcher(topComparator),
-    };
-  },
-};
+expect.extend({
+  toEqualMatricesTitle: getMatcher(titleComparator),
+  toEqualMatricesTop: getMatcher(topComparator),
+});

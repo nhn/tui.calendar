@@ -1,7 +1,7 @@
 import moment from 'moment';
 import MomentDate from '../src/momentDate';
 
-describe('MomentDate should throw error ', () => {
+describe('MomentDate should throw error', () => {
   test('if there is no moment', () => {
     expect(() => new MomentDate()).toThrow();
   });

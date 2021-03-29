@@ -4,15 +4,14 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
-    jasmine: true,
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint', 'jasmine'],
+  plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint', 'jest'],
   extends: [
     'tui/es6',
+    'prettier',
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
-    'plugin:jasmine/recommended',
+    'plugin:jest/recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
   ],
@@ -24,7 +23,7 @@ module.exports = {
   settings: {
     react: {
       pragma: 'h',
-      version: '16.3',
+      version: '16.13',
     },
   },
   globals: {
@@ -41,6 +40,7 @@ module.exports = {
     'no-use-before-define': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
+    'jest/no-conditional-expect': 0,
     complexity: ['error', { max: 8 }],
   },
   overrides: [

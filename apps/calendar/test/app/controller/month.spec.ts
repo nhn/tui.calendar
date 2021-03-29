@@ -5,9 +5,7 @@ import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import { findByDateRange } from '@src/controller/month';
 
-import matricesMatcher from '@test/matcher/matrices';
-
-describe('Base.Month', function () {
+describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
   let dataStore: DataStore;
@@ -15,34 +13,118 @@ describe('Base.Month', function () {
   let scheduleList: Schedule[];
   let actual;
 
-  beforeEach(function () {
+  beforeEach(() => {
     dataStore = {
       calendars: [],
       schedules: createScheduleCollection(),
       idsOfDay: {},
     };
 
-    mockData = fixture.load('schedule_set_month.json');
+    mockData = [
+      {
+        title: '[김동우] 휴가',
+        isAllDay: true,
+        start: '2015-11-15T00:00:00',
+        end: '2015-11-21T23:59:59',
+      },
+      {
+        title: '김태용[일본출장]',
+        isAllDay: true,
+        start: '2015-11-16T00:00:00',
+        end: '2015-11-18T23:59:59',
+      },
+      {
+        title: '[류진경] 오전반차',
+        isAllDay: true,
+        start: '2015-11-16T00:00:00',
+        end: '2015-11-16T23:59:59',
+      },
+      {
+        title: '[일본 출장] 김지해, 장세영',
+        isAllDay: true,
+        start: '2015-11-17T00:00:00',
+        end: '2015-11-20T23:59:59',
+      },
+      {
+        title: 'FE 스크럼 - 1',
+        isAllDay: false,
+        start: '2015-11-16T09:40:00',
+        end: '2015-11-16T10:00:00',
+      },
+      {
+        title: '[김성호] 연차',
+        isAllDay: true,
+        start: '2015-11-17T00:00:00',
+        end: '2015-11-17T23:59:59',
+      },
+      {
+        title: 'FE 스크럼 - 2',
+        isAllDay: false,
+        start: '2015-11-17T09:40:00',
+        end: '2015-11-17T10:00:00',
+      },
+      {
+        title: '팀 스터디 - A',
+        isAllDay: false,
+        start: '2015-11-17T12:30:00',
+        end: '2015-11-17T13:00:00',
+      },
+      {
+        title: 'FE 스크럼 - 3',
+        isAllDay: false,
+        start: '2015-11-18T09:40:00',
+        end: '2015-11-18T10:00:00',
+      },
+      {
+        title: '[코드리뷰] 콤보차트 리펙토링',
+        isAllDay: false,
+        start: '2015-11-18T10:00:00',
+        end: '2015-11-18T11:00:00',
+      },
+      {
+        title: 'FE 스크럼 - 4',
+        isAllDay: false,
+        start: '2015-11-19T09:40:00',
+        end: '2015-11-19T10:00:00',
+      },
+      {
+        title: '팀 스터디 - B',
+        isAllDay: false,
+        start: '2015-11-19T12:00:00',
+        end: '2015-11-19T13:00:00',
+      },
+      {
+        title: '캘린더이야기',
+        isAllDay: false,
+        start: '2015-11-19T12:30:00',
+        end: '2015-11-19T13:00:00',
+      },
+      {
+        title: 'FE 스크럼 - 5',
+        isAllDay: false,
+        start: '2015-11-20T09:40:00',
+        end: '2015-11-20T10:00:00',
+      },
+      {
+        title: '주간보고 작성',
+        isAllDay: false,
+        start: '2015-11-20T14:00:00',
+        end: '2015-11-20T15:00:00',
+      },
+    ];
     // mock schedule list
     scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
   });
 
-  afterEach(function () {
-    fixture.cleanup();
-  });
-
-  describe('findByDateRange()', function () {
-    beforeEach(function () {
+  describe('findByDateRange()', () => {
+    beforeEach(() => {
       // add schedule instance to controller
       scheduleList.forEach((schedule) => {
         addSchedule(dataStore, schedule);
       });
-
-      // test/matcher/matrices.js
-      jasmine.addMatchers(matricesMatcher);
     });
 
-    it('get schedules instance in month', function () {
+    it('get schedules instance in month', () => {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 
@@ -84,18 +166,15 @@ describe('Base.Month', function () {
     });
   });
 
-  describe('findByDateRange() by stacking time and all-day schedule', function () {
-    beforeEach(function () {
+  describe('findByDateRange() by stacking time and all-day schedule', () => {
+    beforeEach(() => {
       // add schedule instance to controller
       scheduleList.forEach((schedule) => {
         addSchedule(dataStore, schedule);
       });
-
-      // test/matcher/matrices.js
-      jasmine.addMatchers(matricesMatcher);
     });
 
-    it('get schedules instance in month for all-day schedule', function () {
+    it('get schedules instance in month for all-day schedule', () => {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 

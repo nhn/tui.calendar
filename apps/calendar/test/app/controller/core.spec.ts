@@ -13,23 +13,97 @@ import {
 } from '@src/controller/core';
 import Collection from '@src/util/collection';
 
-describe('Base.Core', function () {
+describe('Base.Core', () => {
   let mockData: ScheduleData[];
   let scheduleList: Schedule[];
   let expected;
   let actual;
 
-  beforeEach(function () {
-    mockData = fixture.load('schedule_set_string3.json');
+  beforeEach(() => {
+    mockData = [
+      {
+        title: 'A',
+        isAllDay: false,
+        start: '2015-05-01T10:20:00',
+        end: '2015-05-01T10:40:00',
+        category: 'time',
+      },
+      {
+        title: 'B',
+        isAllDay: false,
+        start: '2015-05-01T10:30:00',
+        end: '2015-05-01T11:30:00',
+        category: 'time',
+      },
+      {
+        title: 'C',
+        isAllDay: false,
+        start: '2015-05-01T11:20:00',
+        end: '2015-05-01T12:00:00',
+        category: 'time',
+      },
+      {
+        title: 'D',
+        isAllDay: false,
+        start: '2015-05-01T10:50:00',
+        end: '2015-05-01T11:10:00',
+        category: 'time',
+      },
+      {
+        title: 'E',
+        isAllDay: false,
+        start: '2015-05-01T13:20:00',
+        end: '2015-05-01T13:40:00',
+        category: 'time',
+      },
+      {
+        title: 'F',
+        isAllDay: false,
+        start: '2015-05-01T14:00:00',
+        end: '2015-05-01T14:20:00',
+        category: 'time',
+      },
+      {
+        title: 'G',
+        isAllDay: false,
+        start: '2015-05-01T14:10:00',
+        end: '2015-05-01T14:20:00',
+        category: 'time',
+      },
+      {
+        title: 'H',
+        isAllDay: false,
+        start: '2015-05-01T16:00:00',
+        end: '2015-05-01T18:00:00',
+        category: 'time',
+      },
+      {
+        title: 'I',
+        isAllDay: false,
+        start: '2015-05-01T17:00:00',
+        end: '2015-05-01T20:00:00',
+        category: 'time',
+      },
+      {
+        title: 'J',
+        isAllDay: false,
+        start: '2015-05-01T19:00:00',
+        end: '2015-05-01T21:00:00',
+        category: 'time',
+      },
+      {
+        title: '물고기 밥주기',
+        isAllDay: false,
+        start: '2015-05-01T22:00:00',
+        end: '2015-05-01T22:10:00',
+        category: 'time',
+      },
+    ];
     scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
   });
 
-  afterEach(function () {
-    fixture.cleanup();
-  });
-
-  describe('getCollisionGroup()', function () {
-    it('Get collision group properly.', function () {
+  describe('getCollisionGroup()', () => {
+    it('Get collision group properly.', () => {
       actual = getCollisionGroup(scheduleList);
       expected = [
         [
@@ -48,36 +122,37 @@ describe('Base.Core', function () {
     });
   });
 
-  describe('getLastRowInColumn()', function () {
+  describe('getLastRowInColumn()', () => {
     let test: Array<Array<number | undefined>>;
 
-    beforeEach(function () {
-      /* eslint-disable no-undefined */
+    beforeEach(() => {
       test = [
         [1, 1, 1],
+        // eslint-disable-next-line no-undefined
         [1, undefined, 3],
+        // eslint-disable-next-line no-undefined
         [4, undefined, undefined],
       ];
     });
 
-    it('return -1 when column not exist.', function () {
+    it('return -1 when column not exist.', () => {
       const result = getLastRowInColumn(test, 4);
 
       expect(result).toBe(-1);
     });
 
-    it('can calculate last row in column in 2d array.', function () {
+    it('can calculate last row in column in 2d array.', () => {
       const result = getLastRowInColumn(test, 0);
 
       expect(result).toBe(2);
     });
   });
 
-  describe('getMatrices()', function () {
+  describe('getMatrices()', () => {
     let collection: Collection<Schedule>;
     let collisionGroup: CollisionGroup;
 
-    beforeEach(function () {
+    beforeEach(() => {
       collection = new Collection<Schedule>((model) => {
         return model.cid();
       });
@@ -85,7 +160,7 @@ describe('Base.Core', function () {
       collisionGroup = getCollisionGroup(scheduleList);
     });
 
-    it('can calculate matrices accuratly.', function () {
+    it('can calculate matrices accuratly.', () => {
       expected = [
         [[scheduleList[0], scheduleList[1]], [scheduleList[2]], [scheduleList[3]]],
         [[scheduleList[4]]],
@@ -99,16 +174,16 @@ describe('Base.Core', function () {
     });
   });
 
-  describe('limitRenderRange', function () {
+  describe('limitRenderRange', () => {
     let viewModelColl: Collection<ScheduleViewModel>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       viewModelColl = new Collection((viewModel) => {
         return viewModel.cid();
       });
     });
 
-    it('fill renderStarts, renderEnds to each view model in collection.', function () {
+    it('fill renderStarts, renderEnds to each view model in collection.', () => {
       // 5/1 10:20 ~ 5/1 10:40
       viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
 
@@ -120,6 +195,7 @@ describe('Base.Core', function () {
       const viewModel = viewModelColl.single();
 
       expect(viewModel).not.toBeNull();
+
       if (viewModel) {
         expect(viewModel.renderStarts).toEqual(limit1);
         expect(viewModel.renderEnds).toBeUndefined();
@@ -127,16 +203,16 @@ describe('Base.Core', function () {
     });
   });
 
-  describe('getScheduleInDateRangeFilter', function () {
+  describe('getScheduleInDateRangeFilter', () => {
     let viewModelColl: Collection<ScheduleViewModel>;
 
-    beforeEach(function () {
+    beforeEach(() => {
       viewModelColl = new Collection((viewModel) => {
         return viewModel.cid();
       });
     });
 
-    it('filter schedules properly.', function () {
+    it('filter schedules properly.', () => {
       let filter;
       let d1;
       let d2;

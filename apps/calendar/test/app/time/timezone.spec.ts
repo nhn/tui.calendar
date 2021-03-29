@@ -1,24 +1,28 @@
+import moment from 'moment-timezone';
 import { UTCDate, LocalDate, MomentDate } from '@toast-ui/date';
 import { register, unregister, TimeZone } from 'timezone-mock';
 import { date, setDateConstructor, getTimezoneFactory } from '@src/time/timezone';
+import { advanceTo } from 'jest-date-mock';
+
+MomentDate.setMoment(moment);
 
 /**
- * First mocking jasmine and then mocking timezone
+ * First mocking jest and then mocking timezone
  * @param {TimeZone} timezoneName
  * @param {string} initialDate
  */
 function startMockingTimezone(timezoneName: TimeZone, initialDate: string) {
-  jasmine.clock().install();
-  jasmine.clock().mockDate(new Date(initialDate));
+  jest.useFakeTimers();
+  advanceTo(new Date(initialDate).getTime());
   register(timezoneName);
 }
 
 /**
- * First uninstall jasmine and then unregister.
+ * First uninstall jest and then unregister.
  */
 function finishMockingTimezone() {
   unregister();
-  jasmine.clock().uninstall();
+  jest.useRealTimers();
 }
 
 describe('UTCDate', () => {

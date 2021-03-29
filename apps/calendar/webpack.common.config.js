@@ -4,9 +4,10 @@ const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
-module.exports = (__, argv) => {
-  const { minify } = argv;
+module.exports = (env) => {
+  const { minify } = env;
   const filename = `toastui-calendar${minify ? '.min' : ''}.js`;
   const banner = [
     'TOAST UI Calendar 2nd Edition',
@@ -50,6 +51,7 @@ module.exports = (__, argv) => {
         banner,
         entryOnly: true,
       }),
+      new ESLintPlugin({ extensions: ['.tsx', '.ts', '.js'] }),
     ],
     optimization: {
       minimize: false,

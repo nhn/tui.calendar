@@ -101,13 +101,13 @@ const setterMethods = [
 ];
 
 getterMethods.forEach((methodName) => {
-  LocalDate.prototype[methodName] = function(...args) {
+  LocalDate.prototype[methodName] = function (...args) {
     return this.d[methodName](...args);
   };
 });
 
 setterMethods.forEach((methodName) => {
-  LocalDate.prototype[methodName] = function(...args) {
+  LocalDate.prototype[methodName] = function (...args) {
     return this.d[methodName](...args);
   };
 });

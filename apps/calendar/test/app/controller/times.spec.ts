@@ -288,7 +288,7 @@ describe('times controller', () => {
       container.style.position = 'absolute';
       container.style.top = '0px';
       container.style.height = '230px';
-      container.style.width = ' 70px';
+      container.style.width = '70px';
       document.body.appendChild(container);
     });
 
@@ -297,24 +297,26 @@ describe('times controller', () => {
     });
 
     tests.forEach(({ unit, slot, startGridTime, endGridTime, expected }) => {
-      it(` '${unit}'`, (done) => {
-        const vMouseEvent = createMouseEvent('click', {
-          clientX: 10,
-          clientY: 115,
+      it(`'${unit}'`, () => {
+        return new Promise((done) => {
+          const vMouseEvent = createMouseEvent('click', {
+            clientX: 10,
+            clientY: 115,
+          });
+          container.addEventListener('click', () => {
+            const result = getPrevGridTimeFromMouseEvent(
+              vMouseEvent,
+              { start: startGridTime, end: endGridTime, slot, unit },
+              selector
+            );
+
+            expect(result).toEqual(expected);
+
+            done(true);
+          });
+
+          container.dispatchEvent(vMouseEvent);
         });
-        container.addEventListener('click', () => {
-          const result = getPrevGridTimeFromMouseEvent(
-            vMouseEvent,
-            { start: startGridTime, end: endGridTime, slot, unit },
-            selector
-          );
-
-          expect(result).toEqual(expected);
-
-          done();
-        });
-
-        container.dispatchEvent(vMouseEvent);
       });
     });
   });
