@@ -6,13 +6,14 @@ import { Milestone } from '@src/components/panel/milestone';
 interface WrapperProps {
   style?: Record<string, any>;
   position: string;
+  height: string;
 }
 
 export default { title: 'Panel' };
 
-function Wrapper({ children, style, position }: RenderableProps<WrapperProps>) {
+function Wrapper({ children, style, position, height }: RenderableProps<WrapperProps>) {
   return (
-    <div className={cls('layout')} style={{ position, ...style }}>
+    <div className={cls('layout')} style={{ position, height, ...style }}>
       {children}
     </div>
   );
@@ -20,6 +21,7 @@ function Wrapper({ children, style, position }: RenderableProps<WrapperProps>) {
 
 Wrapper.defaultProps = {
   position: 'relative',
+  height: '500px',
 };
 
 export const milestone = () => {

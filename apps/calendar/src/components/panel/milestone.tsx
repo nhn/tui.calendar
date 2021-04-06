@@ -1,27 +1,42 @@
-import { h, FunctionComponent, createContext } from 'preact';
-import { useContext } from 'preact/hooks';
+import { h, FunctionComponent } from 'preact';
+import range from 'tui-code-snippet/array/range';
 
 import Panel from '@src/components/panel';
 import { cls } from '@src/util/cssHelper';
+import TZDate from '@src/time/date';
+import { addDate } from '@src/time/datetime';
+import { Column } from '@src/components/timegrid/column';
 
 const TIME_GRID_PANEL_TITLE = cls('panel-title');
+const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
+  const now = new TZDate();
+
+  return addDate(now, day - now.getDay());
+});
 
 interface Props {
+  panelInfoList?: TZDate[];
   timesWidth?: number;
+  timezonesCount?: number;
 }
 
-const timeGridPanelContext = createContext({ timezonesLength: 1 });
-
-export const Milestone: FunctionComponent<Props> = ({ timesWidth = 120 }) => {
-  const { timezonesLength } = useContext(timeGridPanelContext);
-  const columnWidth = timesWidth * timezonesLength;
+export const Milestone: FunctionComponent<Props> = ({
+  panelInfoList = defaultPanelInfoList,
+  timesWidth = 120,
+  timezonesCount = 1,
+}) => {
+  const columnWidth = timesWidth * timezonesCount;
 
   return (
-    <Panel name="Milestone" resizable height={20}>
+    <Panel name="Milestone" resizable minHeight={20} height={20}>
       <div className={TIME_GRID_PANEL_TITLE} style={{ width: columnWidth }}>
         TimeGrid title1
       </div>
-      <div>Milestone</div>
+      {panelInfoList.map((panelInfo) => {
+        console.log(panelInfo);
+
+        return <Column />;
+      })}
     </Panel>
   );
 };
