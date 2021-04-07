@@ -5,38 +5,43 @@ import Panel from '@src/components/panel';
 import { cls } from '@src/util/cssHelper';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
-import { Column } from '@src/components/timegrid/column';
+import Schedule from '@src/model/schedule';
+import { Grid } from '@src/components/panel/grid';
 
-const TIME_GRID_PANEL_TITLE = cls('panel-title');
+const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 
   return addDate(now, day - now.getDay());
 });
+const MIN_HEIGHT = 20;
 
 interface Props {
-  panelInfoList?: TZDate[];
+  events: Schedule[];
+  gridInfoList?: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
 }
 
 export const Milestone: FunctionComponent<Props> = ({
-  panelInfoList = defaultPanelInfoList,
+  events,
+  gridInfoList = defaultPanelInfoList,
   timesWidth = 120,
   timezonesCount = 1,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
 
   return (
-    <Panel name="Milestone" resizable minHeight={20} height={20}>
-      <div className={TIME_GRID_PANEL_TITLE} style={{ width: columnWidth }}>
-        TimeGrid title1
+    <Panel name="Milestone" resizable minHeight={MIN_HEIGHT} height={20}>
+      <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
+        TimeGrid title
       </div>
-      {panelInfoList.map((panelInfo) => {
-        console.log(panelInfo);
+      <Grid gridInfoList={gridInfoList} />
+      {/*{gridInfoList.map((panelInfo, index) => {*/}
+      {/*  console.log(panelInfo);*/}
 
-        return <Column />;
-      })}
+      {/*  return <div>{index}</div>;*/}
+      {/*})}*/}
     </Panel>
   );
 };

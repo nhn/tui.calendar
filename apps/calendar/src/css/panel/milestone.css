@@ -1,0 +1,21 @@
+.panel .panel-title,
+.panel .panel-grid-wrapper {
+  height: 100%;
+}
+
+.panel-title {
+  float: left;
+  height: 100%;
+  padding-right: 5px;
+  border-right: 1px solid #ddd;
+}
+
+.panel-grid-wrapper {
+  position: relative;
+  overflow-y: hidden;
+}
+
+.panel-grid {
+  height: 100%;
+  position: absolute;
+}
