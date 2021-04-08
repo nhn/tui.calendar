@@ -42,7 +42,7 @@ export const milestone = () => {
     },
     {
       start,
-      end: addDate(start, 1),
+      end: addDate(start, 2),
     },
     {
       start: addDate(start, 2),

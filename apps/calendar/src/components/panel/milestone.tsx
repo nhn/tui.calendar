@@ -7,6 +7,7 @@ import { addDate } from '@src/time/datetime';
 import { Grid } from '@src/components/panel/grid';
 import { Schedules, Task } from '@src/components/panel/schedules';
 import TZDate from '@src/time/date';
+import { Layout } from '@src/components/layout';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
@@ -33,14 +34,16 @@ export const Milestone: FunctionComponent<Props> = ({
   const columnWidth = timesWidth * timezonesCount;
 
   return (
-    <Panel name="Milestone" resizable minHeight={MIN_HEIGHT} height={20}>
-      <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
-        Title
-      </div>
-      <div className={PANEL_MILESTONE_CLASS_NAME}>
-        <Grid gridInfoList={gridInfoList} />
-        <Schedules gridInfoList={gridInfoList} events={events} />
-      </div>
-    </Panel>
+    <Layout height={500}>
+      <Panel name="Milestone" resizable minHeight={MIN_HEIGHT} height={20}>
+        <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
+          Title
+        </div>
+        <div className={PANEL_MILESTONE_CLASS_NAME}>
+          <Grid gridInfoList={gridInfoList} />
+          <Schedules gridInfoList={gridInfoList} events={events} />
+        </div>
+      </Panel>
+    </Layout>
   );
 };
