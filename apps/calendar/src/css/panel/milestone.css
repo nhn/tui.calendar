@@ -10,6 +10,12 @@
   border-right: 1px solid #ddd;
 }
 
+.panel-milestone {
+  position: relative;
+  height: 100%;
+  overflow-y: hidden;
+}
+
 .panel-grid-wrapper {
   position: relative;
   overflow-y: hidden;
@@ -17,5 +23,17 @@
 
 .panel-grid {
   height: 100%;
+  position: absolute;
+}
+
+.panel-schedule-wrapper {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.panel-schedule {
   position: absolute;
 }

@@ -3,12 +3,13 @@ import range from 'tui-code-snippet/array/range';
 
 import Panel from '@src/components/panel';
 import { cls } from '@src/util/cssHelper';
-import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
-import Schedule from '@src/model/schedule';
 import { Grid } from '@src/components/panel/grid';
+import { Schedules, Task } from '@src/components/panel/schedules';
+import TZDate from '@src/time/date';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
+const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 
@@ -17,7 +18,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 const MIN_HEIGHT = 20;
 
 interface Props {
-  events: Schedule[];
+  events: Task[];
   gridInfoList?: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
@@ -34,14 +35,12 @@ export const Milestone: FunctionComponent<Props> = ({
   return (
     <Panel name="Milestone" resizable minHeight={MIN_HEIGHT} height={20}>
       <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
-        TimeGrid title
+        Title
       </div>
-      <Grid gridInfoList={gridInfoList} />
-      {/*{gridInfoList.map((panelInfo, index) => {*/}
-      {/*  console.log(panelInfo);*/}
-
-      {/*  return <div>{index}</div>;*/}
-      {/*})}*/}
+      <div className={PANEL_MILESTONE_CLASS_NAME}>
+        <Grid gridInfoList={gridInfoList} />
+        <Schedules gridInfoList={gridInfoList} events={events} />
+      </div>
     </Panel>
   );
 };

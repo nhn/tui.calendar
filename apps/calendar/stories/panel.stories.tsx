@@ -2,6 +2,10 @@ import { h, RenderableProps } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
 import { Milestone } from '@src/components/panel/milestone';
+import { ScheduleData } from '@src/model';
+import { addDate, toStartOfDay } from '@src/time/datetime';
+import TZDate from '@src/time/date';
+import Schedule from '@src/model/schedule';
 
 interface WrapperProps {
   style?: Record<string, any>;
@@ -24,10 +28,35 @@ Wrapper.defaultProps = {
   height: '500px',
 };
 
+interface Task {
+  start: TZDate;
+  end: TZDate;
+}
+
 export const milestone = () => {
+  const start = toStartOfDay(new TZDate());
+  const data: Task[] = [
+    {
+      start,
+      end: addDate(start, 1),
+    },
+    {
+      start,
+      end: addDate(start, 1),
+    },
+    {
+      start: addDate(start, 2),
+      end: addDate(start, 4),
+    },
+    {
+      start: addDate(start, 5),
+      end: addDate(start, 6),
+    },
+  ];
+
   return (
     <Wrapper>
-      <Milestone />
+      <Milestone events={data} />
     </Wrapper>
   );
 };
