@@ -15,6 +15,7 @@ import {
   isPanelShown,
   getPanelStylesFromInfo,
 } from '@src/controller/panel';
+import { Milestone } from '@src/components/panel/milestone';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -154,7 +155,7 @@ function isPanel(child: Child): child is VNode<PanelInfo> {
     return false;
   }
 
-  return child.type === Panel;
+  return child.type === Panel || child.type === Milestone;
 }
 
 function getPanelInfo(panel: VNode<PanelInfo>): PanelInfo {

@@ -105,8 +105,8 @@ export const Schedules: FunctionComponent<Props> = ({ gridInfoList, events }) =>
 
   return (
     <div className={PANEL_SCHEDULE_WRAPPER_CLASS_NAME}>
-      {events.map(({ start, end }, index) => {
-        const scheduleStyle = getScheduleStyle({ start, end }, startDate, scheduleHeightMap);
+      {events.map((event, index) => {
+        const scheduleStyle = getScheduleStyle(event, startDate, scheduleHeightMap);
 
         return (
           <div

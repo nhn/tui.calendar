@@ -1,32 +1,12 @@
-import { h, RenderableProps } from 'preact';
+import { h } from 'preact';
 
-import { cls } from '@src/util/cssHelper';
 import { Milestone } from '@src/components/panel/milestone';
-import { ScheduleData } from '@src/model';
 import { addDate, toStartOfDay } from '@src/time/datetime';
 import TZDate from '@src/time/date';
-import Schedule from '@src/model/schedule';
-
-interface WrapperProps {
-  style?: Record<string, any>;
-  position: string;
-  height: string;
-}
+import { Layout } from '@src/components/layout';
+import Panel from '@src/components/panel';
 
 export default { title: 'Panel' };
-
-function Wrapper({ children, style, position, height }: RenderableProps<WrapperProps>) {
-  return (
-    <div className={cls('layout')} style={{ position, height, ...style }}>
-      {children}
-    </div>
-  );
-}
-
-Wrapper.defaultProps = {
-  position: 'relative',
-  height: '500px',
-};
 
 interface Task {
   start: TZDate;
@@ -55,12 +35,12 @@ export const milestone = () => {
   ];
 
   return (
-    <Wrapper>
-      <Milestone events={data} />
-    </Wrapper>
+    <Layout height={500}>
+      <Panel name="Milestone" resizable minHeight={20}>
+        <Milestone events={data} />
+      </Panel>
+    </Layout>
   );
 };
 
-milestone.story = {
-  name: 'milestone',
-};
+milestone.storyName = 'milestone';
