@@ -20,6 +20,16 @@ interface Props {
   events: Task[];
 }
 
+enum Day {
+  SUN,
+  MON,
+  TUE,
+  WED,
+  THU,
+  FRI,
+  SAT,
+}
+
 function getTop(start: number, end: number, scheduleHeightMap: number[]) {
   const scheduleTopList = scheduleHeightMap.filter((_, index) => start <= index && index <= end);
 
@@ -35,33 +45,31 @@ function getScheduleStyle({ start, end }: Task, minDate: number, scheduleHeightM
   let top: number;
 
   if (startDay > endDay && startDate < minDate) {
-    top = getTop(0, endDay, scheduleHeightMap);
+    top = getTop(Day.SUN, endDay, scheduleHeightMap);
     style = {
       left: 0,
-      width:
-        endDay === 6 ? toPercent(12 * WIDTH_PER_DAY) : toPercent((endDay * 2 + 1) * WIDTH_PER_DAY),
+      width: endDay === Day.SAT ? toPercent(100) : toPercent((endDay * 2 + 1) * WIDTH_PER_DAY),
       top: toPx(top * DEFAULT_SCHEDULE_HEIGHT),
     };
 
     scheduleHeightMap.forEach((_, index) => {
-      if (index >= 0 && index <= endDay) {
+      if (Day.SUN <= index && index <= endDay) {
         scheduleHeightMap[index] = top + 1;
       }
     });
   }
 
   if (startDay > endDay && startDate >= minDate) {
-    top = getTop(startDay, 6, scheduleHeightMap);
+    top = getTop(startDay, Day.SAT, scheduleHeightMap);
     style = {
-      left: !startDay ? toPercent(0) : toPercent((2 * startDay - 1) * WIDTH_PER_DAY),
-      width: !startDay
-        ? toPercent(12 * WIDTH_PER_DAY)
-        : toPercent(((7 - startDay) * 2 - 1) * WIDTH_PER_DAY),
+      left: startDay === Day.SUN ? toPercent(0) : toPercent((2 * startDay - 1) * WIDTH_PER_DAY),
+      width:
+        startDay === Day.SUN ? toPercent(100) : toPercent(((7 - startDay) * 2 - 1) * WIDTH_PER_DAY),
       top: toPx(top * DEFAULT_SCHEDULE_HEIGHT),
     };
 
     scheduleHeightMap.forEach((_, index) => {
-      if (index >= startDay && index <= 6) {
+      if (startDay <= index && index <= Day.SAT) {
         scheduleHeightMap[index] = top + 1;
       }
     });
@@ -70,16 +78,18 @@ function getScheduleStyle({ start, end }: Task, minDate: number, scheduleHeightM
   if (startDay <= endDay) {
     top = getTop(startDay, endDay, scheduleHeightMap);
     style = {
-      left: !startDay ? toPercent(0) : toPercent((2 * startDay - 1) * WIDTH_PER_DAY),
+      left: startDay === Day.SUN ? toPercent(0) : toPercent((2 * startDay - 1) * WIDTH_PER_DAY),
       width: toPercent(
-        (12 - (!startDay ? 0 : 2 * startDay - 1) - (endDay === 6 ? 0 : (6 - endDay) * 2 - 1)) *
+        (12 -
+          (startDay === Day.SUN ? 0 : 2 * startDay - 1) -
+          (endDay === Day.SAT ? 0 : (6 - endDay) * 2 - 1)) *
           WIDTH_PER_DAY
       ),
       top: toPx(top * DEFAULT_SCHEDULE_HEIGHT),
     };
 
     scheduleHeightMap.forEach((_, index) => {
-      if (index >= startDay && index <= endDay) {
+      if (startDay <= index && index <= endDay) {
         scheduleHeightMap[index] = top + 1;
       }
     });
@@ -92,7 +102,6 @@ export const Schedules: FunctionComponent<Props> = ({ gridInfoList, events }) =>
   const scheduleHeightMap = [0, 0, 0, 0, 0, 0, 0];
   const startDate = gridInfoList[0].getDate();
   const endDate = gridInfoList[gridInfoList.length - 1].getDate();
-  const isDayView = gridInfoList.length === 1;
   events = events.filter((event) => {
     const eventStartDate = event.start.getDate();
     const eventEndDate = event.end.getDate();
