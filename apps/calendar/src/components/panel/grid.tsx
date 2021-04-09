@@ -3,6 +3,7 @@ import { h, FunctionComponent } from 'preact';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
+import { Day } from '@src/components/panel/schedules';
 
 const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
 const PANEL_GRID_CLASS_NAME = cls('panel-grid');
@@ -27,9 +28,11 @@ export const Grid: FunctionComponent<Props> = ({ gridInfoList }) => {
       ) : (
         gridInfoList.map((gridInfo, index) => {
           const day = gridInfo.getDay();
-          const left = !day ? toPercent(0) : toPercent((2 * index - 1) * WIDTH_PER_DAY);
+          const left = day === Day.SUN ? toPercent(0) : toPercent((2 * index - 1) * WIDTH_PER_DAY);
           const width =
-            day === 0 || day === 6 ? toPercent(WIDTH_PER_DAY) : toPercent(WIDTH_PER_DAY * 2);
+            day === Day.SUN || day === Day.SAT
+              ? toPercent(WIDTH_PER_DAY)
+              : toPercent(WIDTH_PER_DAY * 2);
 
           return (
             <div

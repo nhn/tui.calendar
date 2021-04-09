@@ -20,7 +20,7 @@ interface Props {
   events: Task[];
 }
 
-enum Day {
+export enum Day {
   SUN,
   MON,
   TUE,
