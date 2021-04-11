@@ -1,5 +1,5 @@
 import { h, Fragment, VNode, FunctionComponent } from 'preact';
-import { useRef, useEffect } from 'preact/hooks';
+import { useRef, useEffect, useState, useCallback } from 'preact/hooks';
 
 import isString from 'tui-code-snippet/type/isString';
 import isNumber from 'tui-code-snippet/type/isNumber';
@@ -42,29 +42,9 @@ const Panel: FunctionComponent<Props> = (props) => {
     children,
   } = props;
 
-  let panelRect = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-    resizerWidth: 0,
-    resizerHeight: 0,
-  };
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
-  let resizerRect: Size = { width: 0, height: 0 };
-  const getResizerElementSize = () => {
-    let width = 0;
-    let height = 0;
-
-    if (resizerRef.current) {
-      resizerRect = getElementRect(resizerRef.current.base);
-      width += direction === Direction.COLUMN ? 0 : resizerRect.width;
-      height += direction === Direction.ROW ? 0 : resizerRect.height;
-    }
-
-    return { width, height };
-  };
+  const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
   const getPanelResizer = () => {
     let width;
     let height;
@@ -88,26 +68,38 @@ const Panel: FunctionComponent<Props> = (props) => {
       />
     );
   };
-  const updateElementRect = () => {
+
+  const updateElementRect = useCallback(() => {
     if (!onPanelRectUpdated) {
       return;
     }
 
+    const getResizerElementSize = () => {
+      let width = 0;
+      let height = 0;
+
+      if (resizerRef.current) {
+        setResizerRect(getElementRect(resizerRef.current.base));
+        width += direction === Direction.COLUMN ? 0 : resizerRect.width;
+        height += direction === Direction.ROW ? 0 : resizerRect.height;
+      }
+
+      return { width, height };
+    };
+
     const elementRect = getElementRect(panelRef.current);
     const { width, height } = getResizerElementSize();
 
-    panelRect = {
+    onPanelRectUpdated(name, {
       ...elementRect,
       resizerWidth: width,
       resizerHeight: height,
-    };
-
-    onPanelRectUpdated(name, panelRect);
-  };
+    });
+  }, [direction, name, onPanelRectUpdated, resizerRect.height, resizerRect.width]);
 
   useEffect(() => {
     updateElementRect();
-  });
+  }, [updateElementRect]);
 
   const styles = getPanelStylesFromInfo(props);
 

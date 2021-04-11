@@ -1,5 +1,5 @@
 import { cloneElement, FunctionComponent, h, isValidElement, toChildArray, VNode } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import Panel, { filterPanels, getPanelPropsList, Props as PanelProps } from '@src/components/panel';
 import {
@@ -37,16 +37,9 @@ export const Layout: FunctionComponent<Props> = ({
   height,
 }) => {
   const [panels, setPanels] = useState<PanelSize[]>([]);
-  const panelElementRectMap: PanelElementRectMap = {
-    Milestone: {
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-      resizerWidth: 0,
-      resizerHeight: 0,
-    },
-  };
+  const panelElementRectMap: PanelElementRectMap = useMemo(() => {
+    return {};
+  }, []);
   const ref = useRef<HTMLDivElement>(null);
 
   const getClassNames = () => {
@@ -57,18 +50,40 @@ export const Layout: FunctionComponent<Props> = ({
 
     return classNames.join(' ');
   };
-  const getLayoutPanels = (isResizeMode = false) => {
-    const panelInfoList = getPanelInfoList(isResizeMode);
-    const sizeByProps = { width, height };
-    const elementSize = ref.current ? getSize(ref.current) : sizeByProps;
+  const updatePanels = useCallback(
+    (isResizeMode = false) => {
+      const getPanelInfoList = () => {
+        return getPanelPropsList(filterPanels(toChildArray(children))).map(
+          (panelProps: PanelInfo) => {
+            const panelRect = panelElementRectMap[panelProps.name];
+            if (panelRect) {
+              sizeKeys.forEach((key: SizeType) => {
+                if (!panelProps[key] || isResizeMode) {
+                  panelProps[key] = panelRect[key];
+                }
+              });
+            }
 
-    return layoutPanels(panelInfoList, {
-      direction,
-      width: width ?? elementSize.width,
-      height: width ?? elementSize.height,
-    });
-  };
-  const updatePanels = (isResizeMode = false) => setPanels(getLayoutPanels(isResizeMode));
+            return panelProps;
+          }
+        );
+      };
+      const getLayoutPanels = () => {
+        const panelInfoList = getPanelInfoList();
+        const sizeByProps = { width, height };
+        const elementSize = ref.current ? getSize(ref.current) : sizeByProps;
+
+        return layoutPanels(panelInfoList, {
+          direction,
+          width: width ?? elementSize.width,
+          height: width ?? elementSize.height,
+        });
+      };
+
+      setPanels(getLayoutPanels());
+    },
+    [children, direction, height, panelElementRectMap, width]
+  );
   const onResizeEnd = (panelName: string, dragPositionInfo: DragPositionInfo) => {
     const isResizeMode = true;
     if (resizeMode === ResizeMode.RELATIVE) {
@@ -91,20 +106,6 @@ export const Layout: FunctionComponent<Props> = ({
   };
   const handlers = { onResizeEnd, onPanelRectUpdated };
 
-  const getPanelInfoList = (isResizeMode = false) => {
-    return getPanelPropsList(filterPanels(toChildArray(children))).map((panelProps: PanelInfo) => {
-      const panelRect = panelElementRectMap[panelProps.name];
-      if (panelRect) {
-        sizeKeys.forEach((key: SizeType) => {
-          if (!panelProps[key] || isResizeMode) {
-            panelProps[key] = panelRect[key];
-          }
-        });
-      }
-
-      return panelProps;
-    });
-  };
   const renderPanel = (child: Child, panelDirection: Direction, size: PanelSize) => {
     if (isValidElement(child)) {
       return cloneElement(child, {
