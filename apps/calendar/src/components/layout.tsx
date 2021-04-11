@@ -17,7 +17,7 @@ import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel
 import { cls } from '@src/util/cssHelper';
 
 interface Props {
-  children: VNode<Panel> | VNode<Panel>[];
+  children: VNode<typeof Panel> | VNode<typeof Panel>[];
   direction?: Direction;
   height?: number;
   width?: number;
@@ -37,7 +37,16 @@ export const Layout: FunctionComponent<Props> = ({
   height,
 }) => {
   const [panels, setPanels] = useState<PanelSize[]>([]);
-  const panelElementRectMap: PanelElementRectMap = {};
+  const panelElementRectMap: PanelElementRectMap = {
+    Milestone: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      resizerWidth: 0,
+      resizerHeight: 0,
+    },
+  };
   const ref = useRef<HTMLDivElement>(null);
 
   const getClassNames = () => {
@@ -59,9 +68,7 @@ export const Layout: FunctionComponent<Props> = ({
       height: width ?? elementSize.height,
     });
   };
-  const updatePanels = (isResizeMode = false) => {
-    setPanels(getLayoutPanels(isResizeMode));
-  };
+  const updatePanels = (isResizeMode = false) => setPanels(getLayoutPanels(isResizeMode));
   const onResizeEnd = (panelName: string, dragPositionInfo: DragPositionInfo) => {
     const isResizeMode = true;
     if (resizeMode === ResizeMode.RELATIVE) {
@@ -82,6 +89,7 @@ export const Layout: FunctionComponent<Props> = ({
   const onPanelRectUpdated = (panelName: string, panelRect: PanelRect) => {
     panelElementRectMap[panelName] = panelRect;
   };
+  const handlers = { onResizeEnd, onPanelRectUpdated };
 
   const getPanelInfoList = (isResizeMode = false) => {
     return getPanelPropsList(filterPanels(toChildArray(children))).map((panelProps: PanelInfo) => {
@@ -108,8 +116,6 @@ export const Layout: FunctionComponent<Props> = ({
 
     return child;
   };
-
-  const handlers = { onResizeEnd, onPanelRectUpdated };
 
   useEffect(() => {
     updatePanels();
