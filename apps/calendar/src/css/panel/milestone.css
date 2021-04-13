@@ -38,3 +38,18 @@
   position: absolute;
   border: 1px solid #333;
 }
+
+.weekday-exceed-in-week {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  z-index: 1;
+  margin-right: 5px;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  padding: 1px 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #000;
+}

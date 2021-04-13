@@ -37,10 +37,10 @@ interface Props {
 type Child = VNode<any> | string | number;
 type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 interface PanelState {
-  height?: number;
-  scheduleHeight?: number;
-  maxScheduleHeightMap?: number[];
-  renderedScheduleHeightMap?: number[];
+  height: number;
+  scheduleHeight: number;
+  maxScheduleHeightMap: number[];
+  renderedScheduleHeightMap: number[];
 }
 interface LayoutState {
   milestone: PanelState;
@@ -60,7 +60,7 @@ export type PanelActionType =
 interface PanelAction {
   type: PanelActionType;
   panelType: PANEL_NAME;
-  state: PanelState;
+  state: Partial<PanelState>;
 }
 type Dispatch = (action: PanelAction) => void;
 
@@ -91,12 +91,42 @@ function reducer(prevState: LayoutState, action: PanelAction) {
         },
       };
     case UPDATE_SCHEDULE_HEIGHT_MAP: {
-      prevState[panelType].renderedScheduleHeightMap = state.renderedScheduleHeightMap;
+      console.log(
+        'update map',
+
+        prevState[panelType].renderedScheduleHeightMap?.every(
+          (height, index) => height === state.renderedScheduleHeightMap![index]
+        )
+      );
+      if (
+        prevState[panelType].renderedScheduleHeightMap?.every(
+          (height, index) => height === state.renderedScheduleHeightMap![index]
+        )
+      ) {
+        return prevState;
+      }
+
+      prevState[panelType].renderedScheduleHeightMap = state.renderedScheduleHeightMap!;
 
       return prevState;
     }
     case UPDATE_MAX_SCHEDULE_HEIGHT_MAP: {
-      prevState[panelType].maxScheduleHeightMap = state.maxScheduleHeightMap;
+      console.log(
+        'update max map',
+
+        prevState[panelType].maxScheduleHeightMap?.every(
+          (height, index) => height === state.maxScheduleHeightMap![index]
+        )
+      );
+      if (
+        prevState[panelType].maxScheduleHeightMap?.every(
+          (height, index) => height === state.maxScheduleHeightMap![index]
+        )
+      ) {
+        return prevState;
+      }
+
+      prevState[panelType].maxScheduleHeightMap = state.maxScheduleHeightMap!;
 
       return prevState;
     }

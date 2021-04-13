@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useContext, useEffect } from 'preact/hooks';
+import { useContext, useEffect, useState } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
@@ -41,7 +41,6 @@ export const Milestone: FunctionComponent<Props> = ({
   const { milestone } = useContext(PanelStateStore);
   const height = milestone?.height ?? DEFAULT_PANEL_HEIGHT;
   const scheduleHeight = milestone?.scheduleHeight ?? DEFAULT_SCHEDULE_HEIGHT;
-  const scheduleHeightMap = milestone?.renderedScheduleHeightMap ?? [0, 0, 0, 0, 0, 0, 0];
 
   const startDate = gridInfoList[0].getDate();
   const endDate = gridInfoList[gridInfoList.length - 1].getDate();
@@ -109,7 +108,9 @@ export const Milestone: FunctionComponent<Props> = ({
         maxScheduleHeightMap,
       },
     });
-  }, [dispatch, filteredEvents, height, scheduleHeight, startDate]);
+
+    console.log('milestone', milestone);
+  }, [dispatch, filteredEvents, height, milestone, scheduleHeight, startDate]);
 
   return (
     <Fragment>
@@ -117,7 +118,12 @@ export const Milestone: FunctionComponent<Props> = ({
         Title
       </div>
       <div className={PANEL_MILESTONE_CLASS_NAME}>
-        <Grid name="milestone" gridInfoList={gridInfoList} />
+        <Grid
+          name="milestone"
+          gridInfoList={gridInfoList}
+          maxScheduleHeightMap={milestone.maxScheduleHeightMap}
+          renderedScheduleHeightMap={milestone.renderedScheduleHeightMap}
+        />
         <Schedules
           name="milestone"
           gridInfoList={gridInfoList}
