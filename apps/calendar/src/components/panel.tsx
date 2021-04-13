@@ -1,5 +1,5 @@
-import { h, Fragment, VNode, FunctionComponent } from 'preact';
-import { useRef, useEffect, useState, useCallback } from 'preact/hooks';
+import { Fragment, FunctionComponent, h, VNode } from 'preact';
+import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
 
 import isString from 'tui-code-snippet/type/isString';
 import isNumber from 'tui-code-snippet/type/isNumber';
@@ -9,15 +9,16 @@ import { PanelResizer } from '@src/components/panelResizer';
 import { DragPositionInfo } from '@src/components/draggable';
 import { Direction } from '@src/controller/layout';
 import {
+  getElementRect,
+  getPanelStylesFromInfo,
+  isPanelShown,
   PanelInfo,
+  panelInfoKeys,
   PanelRect,
   Size,
-  panelInfoKeys,
-  getElementRect,
-  isPanelShown,
-  getPanelStylesFromInfo,
 } from '@src/controller/panel';
 import { Milestone } from '@src/components/panel/milestone';
+import { UPDATE_PANEL_HEIGHT, PanelDispatchStore } from '@src/components/layout';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -45,6 +46,18 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
+  const dispatch = useContext(PanelDispatchStore);
+
+  const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
+    onResizeEnd(name, resizeInfo);
+    dispatch({
+      type: UPDATE_PANEL_HEIGHT,
+      panelType: name,
+      state: {
+        height: getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY,
+      },
+    });
+  };
   const getPanelResizer = () => {
     let width;
     let height;
@@ -64,7 +77,7 @@ const Panel: FunctionComponent<Props> = (props) => {
         width={width}
         height={height}
         onResizeStart={() => onResizeStart(name)}
-        onResizeEnd={(resizeInfo: DragPositionInfo) => onResizeEnd(name, resizeInfo)}
+        onResizeEnd={panelResizeEnd}
       />
     );
   };

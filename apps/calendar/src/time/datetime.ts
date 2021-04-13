@@ -8,6 +8,7 @@ import inArray from 'tui-code-snippet/array/inArray';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
+import { Task } from '@src/components/panel/schedules';
 
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
@@ -771,4 +772,14 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   const _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
   return Math.round((_d1 - _d2) / MILLISECONDS_PER_DAY);
+}
+
+export function isEventWithinRange({ start, end }: Task, startDate: number, endDate: number) {
+  const eventStartDate = start.getDate();
+  const eventEndDate = end.getDate();
+
+  return (
+    (startDate <= eventStartDate && eventStartDate <= endDate) ||
+    (startDate <= eventEndDate && eventEndDate <= endDate)
+  );
 }

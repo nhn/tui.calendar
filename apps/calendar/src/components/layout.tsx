@@ -1,5 +1,13 @@
-import { cloneElement, FunctionComponent, h, isValidElement, toChildArray, VNode } from 'preact';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  cloneElement,
+  createContext,
+  FunctionComponent,
+  h,
+  isValidElement,
+  toChildArray,
+  VNode,
+} from 'preact';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks';
 
 import Panel, { filterPanels, getPanelPropsList, Props as PanelProps } from '@src/components/panel';
 import {
@@ -15,6 +23,8 @@ import { DragPositionInfo } from '@src/components/draggable';
 import { getSize } from '@src/util/domutil';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
+import { noop } from '@src/util';
+import { PANEL_NAME } from '@src/controller/week';
 
 interface Props {
   children: VNode<typeof Panel> | VNode<typeof Panel>[];
@@ -26,8 +36,77 @@ interface Props {
 
 type Child = VNode<any> | string | number;
 type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
+interface PanelState {
+  height?: number;
+  scheduleHeight?: number;
+  maxScheduleHeightMap?: number[];
+  renderedScheduleHeightMap?: number[];
+}
+interface LayoutState {
+  milestone: PanelState;
+  task: PanelState;
+  allday: PanelState;
+  time: PanelState;
+}
+export const UPDATE_PANEL_HEIGHT = 'updatePanelHeight';
+export const UPDATE_SCHEDULE_HEIGHT = 'updateScheduleHeight';
+export const UPDATE_SCHEDULE_HEIGHT_MAP = 'updateScheduleHeightMap';
+export const UPDATE_MAX_SCHEDULE_HEIGHT_MAP = 'updateMaxScheduleHeightMap';
+export type PanelActionType =
+  | typeof UPDATE_PANEL_HEIGHT
+  | typeof UPDATE_SCHEDULE_HEIGHT
+  | typeof UPDATE_SCHEDULE_HEIGHT_MAP
+  | typeof UPDATE_MAX_SCHEDULE_HEIGHT_MAP;
+interface PanelAction {
+  type: PanelActionType;
+  panelType: PANEL_NAME;
+  state: PanelState;
+}
+type Dispatch = (action: PanelAction) => void;
 
 const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
+const defaultLayoutState: LayoutState = {
+  milestone: {
+    height: 20,
+    scheduleHeight: 20,
+    maxScheduleHeightMap: [0, 0, 0, 0, 0, 0, 0],
+    renderedScheduleHeightMap: [0, 0, 0, 0, 0, 0, 0],
+  },
+  task: { height: 20, scheduleHeight: 20 },
+  allday: { height: 20, scheduleHeight: 20 },
+  time: { height: 20, scheduleHeight: 20 },
+};
+
+function reducer(prevState: LayoutState, action: PanelAction) {
+  const { type, panelType, state } = action;
+
+  switch (type) {
+    case UPDATE_PANEL_HEIGHT:
+    case UPDATE_SCHEDULE_HEIGHT:
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+        },
+      };
+    case UPDATE_SCHEDULE_HEIGHT_MAP: {
+      prevState[panelType].renderedScheduleHeightMap = state.renderedScheduleHeightMap;
+
+      return prevState;
+    }
+    case UPDATE_MAX_SCHEDULE_HEIGHT_MAP: {
+      prevState[panelType].maxScheduleHeightMap = state.maxScheduleHeightMap;
+
+      return prevState;
+    }
+    default:
+      return prevState;
+  }
+}
+
+export const PanelStateStore = createContext<LayoutState>(defaultLayoutState);
+export const PanelDispatchStore = createContext<Dispatch>(noop);
 
 export const Layout: FunctionComponent<Props> = ({
   direction = Direction.COLUMN,
@@ -41,6 +120,7 @@ export const Layout: FunctionComponent<Props> = ({
     return {};
   }, []);
   const ref = useRef<HTMLDivElement>(null);
+  const [state, dispatch] = useReducer(reducer, defaultLayoutState);
 
   const getClassNames = () => {
     const classNames = [cls('layout')];
@@ -125,8 +205,12 @@ export const Layout: FunctionComponent<Props> = ({
   const filteredPanels = filterPanels(toChildArray(children));
 
   return (
-    <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
-      {filteredPanels.map((panel, index) => renderPanel(panel, direction, panels[index]))}
-    </div>
+    <PanelStateStore.Provider value={state}>
+      <PanelDispatchStore.Provider value={dispatch}>
+        <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
+          {filteredPanels.map((panel, index) => renderPanel(panel, direction, panels[index]))}
+        </div>
+      </PanelDispatchStore.Provider>
+    </PanelStateStore.Provider>
   );
 };

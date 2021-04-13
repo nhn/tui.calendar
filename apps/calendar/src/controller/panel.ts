@@ -1,6 +1,7 @@
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 import { Direction } from '@src/controller/layout';
 import { getElementRect as getRect } from '@src/util/domutil';
+import { PANEL_NAME } from '@src/controller/week';
 
 export type Styles = Record<string, string | number>;
 export type PanelElementRectMap = Record<string, PanelRect>;
@@ -15,7 +16,7 @@ export interface PanelRect extends Size {
   resizerHeight: number;
 }
 export interface PanelInfo {
-  name: string;
+  name: PANEL_NAME;
   direction?: Direction;
   overflowY?: boolean;
   overflowX?: boolean;

@@ -4,6 +4,7 @@ import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 import { Day } from '@src/components/panel/schedules';
+import { PANEL_NAME } from '@src/controller/week';
 
 const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
 const PANEL_GRID_CLASS_NAME = cls('panel-grid');
@@ -15,6 +16,7 @@ const DEFAULT_GRID_STYLE = {
 };
 
 interface Props {
+  name: PANEL_NAME;
   gridInfoList: TZDate[];
 }
 
