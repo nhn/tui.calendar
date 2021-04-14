@@ -44,7 +44,7 @@ interface PanelState {
   maxScheduleHeightMap: number[];
   renderedScheduleHeightMap: number[];
   events: Task[];
-  // test: number[];
+  lastRenderedHeightMap: number[];
 }
 interface LayoutState {
   milestone: PanelState;
@@ -59,6 +59,7 @@ export const UPDATE_SCHEDULE_HEIGHT_MAP = 'updateScheduleHeightMap';
 export const UPDATE_MAX_SCHEDULE_HEIGHT_MAP = 'updateMaxScheduleHeightMap';
 export const UPDATE_EVENTS = 'updateEvents';
 export const UPDATE_PANEL_HEIGHT_TO_MAX = 'updatePanelHeightToMax';
+export const REDUCE_HEIGHT = 'reduceHeight';
 export type PanelActionType =
   | typeof INIT_STATE
   | typeof UPDATE_PANEL_HEIGHT
@@ -66,7 +67,8 @@ export type PanelActionType =
   | typeof UPDATE_SCHEDULE_HEIGHT_MAP
   | typeof UPDATE_MAX_SCHEDULE_HEIGHT_MAP
   | typeof UPDATE_EVENTS
-  | typeof UPDATE_PANEL_HEIGHT_TO_MAX;
+  | typeof UPDATE_PANEL_HEIGHT_TO_MAX
+  | typeof REDUCE_HEIGHT;
 interface PanelAction {
   type: PanelActionType;
   panelType: PANEL_NAME;
@@ -81,6 +83,7 @@ const defaultPanelState: PanelState = {
   maxScheduleHeightMap: [],
   renderedScheduleHeightMap: [],
   events: [],
+  lastRenderedHeightMap: [],
 };
 const defaultLayoutState: LayoutState = {
   milestone: { ...defaultPanelState },
@@ -99,7 +102,6 @@ function reducer(prevState: LayoutState, action: PanelAction) {
         [panelType]: {
           ...prevState[panelType],
           ...state,
-          test: [state.height],
         },
       };
     }
@@ -114,15 +116,11 @@ function reducer(prevState: LayoutState, action: PanelAction) {
     }
     case UPDATE_PANEL_HEIGHT:
     case UPDATE_SCHEDULE_HEIGHT: {
-      // 맵 계산 로직
-      const test = [state.height];
-
       return {
         ...prevState,
         [panelType]: {
           ...prevState[panelType],
           ...state,
-          test,
         },
       };
     }
@@ -170,6 +168,19 @@ function reducer(prevState: LayoutState, action: PanelAction) {
         [panelType]: {
           ...prevState[panelType],
           height: prevState[panelType].scheduleHeight * max,
+          lastRenderedHeightMap: prevState[panelType].renderedScheduleHeightMap,
+        },
+      };
+    }
+    case REDUCE_HEIGHT: {
+      const max = Math.max(...prevState[panelType].lastRenderedHeightMap);
+
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          height: prevState[panelType].scheduleHeight * max,
+          renderedScheduleHeightMap: prevState[panelType].lastRenderedHeightMap,
         },
       };
     }

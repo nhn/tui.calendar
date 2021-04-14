@@ -12,6 +12,7 @@ import { PanelDispatchStore, UPDATE_PANEL_HEIGHT_TO_MAX } from '@src/components/
 const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
 const PANEL_GRID_CLASS_NAME = cls('panel-grid');
 const WEEKDAY_EXCEED_IN_WEEK = cls('weekday-exceed-in-week');
+const COLLAPSE_BTN = cls('collapse-btn');
 const WIDTH_PER_DAY = 100 / 12;
 const DEFAULT_GRID_STYLE = {
   width: toPercent(100),
@@ -35,15 +36,29 @@ export const Grid: FunctionComponent<Props> = ({
   const [exceedMap, setExceedMap] = useState(
     maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedScheduleHeightMap[index])
   );
+  const [lastExceedMap, setLastExceedMap] = useState<number[]>([]);
+  const [isClickedExceedCount, setClickedExceedCount] = useState(false);
   const dispatch = useContext(PanelDispatchStore);
   const isDayView = gridInfoList.length === 1;
 
-  const onClickExceedCount = () =>
+  const onClickExceedCount = () => {
+    setClickedExceedCount(true);
+    setLastExceedMap(exceedMap);
     dispatch({
       type: UPDATE_PANEL_HEIGHT_TO_MAX,
       panelType: name,
       state: {},
     });
+  };
+
+  const onClickReduceHeight = () => {
+    setClickedExceedCount(false);
+    dispatch({
+      type: 'reduceHeight',
+      panelType: name,
+      state: {},
+    });
+  };
 
   useEffect(() => {
     setExceedMap(
@@ -70,11 +85,17 @@ export const Grid: FunctionComponent<Props> = ({
               className={PANEL_GRID_CLASS_NAME}
               style={{ ...DEFAULT_GRID_STYLE, width, left }}
             >
-              {exceedMap[index] ? (
+              {exceedMap[index] && !isClickedExceedCount ? (
                 <span
                   className={WEEKDAY_EXCEED_IN_WEEK}
                   onClick={onClickExceedCount}
+                  style={{ display: isClickedExceedCount ? 'none' : '' }}
                 >{`+${exceedMap[index]}`}</span>
+              ) : null}
+              {lastExceedMap[index] && isClickedExceedCount ? (
+                <span className={WEEKDAY_EXCEED_IN_WEEK} onClick={onClickReduceHeight}>
+                  <i className={COLLAPSE_BTN} />
+                </span>
               ) : null}
             </div>
           );

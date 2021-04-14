@@ -53,3 +53,10 @@
   border: 1px solid #ddd;
   color: #000;
 }
+
+.collapse-btn {
+  width: 9px;
+  height: 7px;
+  display: inline-block;
+  vertical-align: middle;
+}
