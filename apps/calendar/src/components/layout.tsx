@@ -44,6 +44,7 @@ interface PanelState {
   maxScheduleHeightMap: number[];
   renderedScheduleHeightMap: number[];
   events: Task[];
+  // test: number[];
 }
 interface LayoutState {
   milestone: PanelState;
@@ -51,17 +52,21 @@ interface LayoutState {
   allday: PanelState;
   time: PanelState;
 }
+export const INIT_STATE = 'initState';
 export const UPDATE_PANEL_HEIGHT = 'updatePanelHeight';
 export const UPDATE_SCHEDULE_HEIGHT = 'updateScheduleHeight';
 export const UPDATE_SCHEDULE_HEIGHT_MAP = 'updateScheduleHeightMap';
 export const UPDATE_MAX_SCHEDULE_HEIGHT_MAP = 'updateMaxScheduleHeightMap';
 export const UPDATE_EVENTS = 'updateEvents';
+export const UPDATE_PANEL_HEIGHT_TO_MAX = 'updatePanelHeightToMax';
 export type PanelActionType =
+  | typeof INIT_STATE
   | typeof UPDATE_PANEL_HEIGHT
   | typeof UPDATE_SCHEDULE_HEIGHT
   | typeof UPDATE_SCHEDULE_HEIGHT_MAP
   | typeof UPDATE_MAX_SCHEDULE_HEIGHT_MAP
-  | typeof UPDATE_EVENTS;
+  | typeof UPDATE_EVENTS
+  | typeof UPDATE_PANEL_HEIGHT_TO_MAX;
 interface PanelAction {
   type: PanelActionType;
   panelType: PANEL_NAME;
@@ -70,36 +75,67 @@ interface PanelAction {
 type Dispatch = (action: PanelAction) => void;
 
 const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
+const defaultPanelState: PanelState = {
+  height: 20,
+  scheduleHeight: 20,
+  maxScheduleHeightMap: [],
+  renderedScheduleHeightMap: [],
+  events: [],
+};
 const defaultLayoutState: LayoutState = {
-  milestone: {
-    height: 20,
-    scheduleHeight: 20,
-    maxScheduleHeightMap: [0, 0, 0, 0, 0, 0, 0],
-    renderedScheduleHeightMap: [0, 0, 0, 0, 0, 0, 0],
-    events: [],
-  },
-  task: { height: 20, scheduleHeight: 20 },
-  allday: { height: 20, scheduleHeight: 20 },
-  time: { height: 20, scheduleHeight: 20 },
+  milestone: { ...defaultPanelState },
+  task: { ...defaultPanelState },
+  allday: { ...defaultPanelState },
+  time: { ...defaultPanelState },
 };
 
 function reducer(prevState: LayoutState, action: PanelAction) {
   const { type, panelType, state } = action;
 
   switch (type) {
+    case INIT_STATE: {
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+          test: [state.height],
+        },
+      };
+    }
     case UPDATE_EVENTS: {
-      console.log(prevState[panelType].events, state.events);
-
-      if (isSameArray(prevState[panelType].events, state.events ?? [])) {
+      if (isSameArray(prevState[panelType].events ?? [], state.events ?? [])) {
         return prevState;
       }
 
-      prevState[panelType].events = state.events!;
+      prevState[panelType].events = state.events ?? [];
 
       return prevState;
     }
     case UPDATE_PANEL_HEIGHT:
-    case UPDATE_SCHEDULE_HEIGHT:
+    case UPDATE_SCHEDULE_HEIGHT: {
+      // 맵 계산 로직
+      const test = [state.height];
+
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+          test,
+        },
+      };
+    }
+    case UPDATE_SCHEDULE_HEIGHT_MAP: {
+      if (
+        isSameArray(
+          prevState[panelType].renderedScheduleHeightMap ?? [],
+          state.renderedScheduleHeightMap ?? []
+        )
+      ) {
+        return prevState;
+      }
+
       return {
         ...prevState,
         [panelType]: {
@@ -107,45 +143,35 @@ function reducer(prevState: LayoutState, action: PanelAction) {
           ...state,
         },
       };
-    case UPDATE_SCHEDULE_HEIGHT_MAP: {
-      console.log(
-        'update map',
-
-        prevState[panelType].renderedScheduleHeightMap?.every(
-          (height, index) => height === state.renderedScheduleHeightMap![index]
-        )
-      );
-      if (
-        prevState[panelType].renderedScheduleHeightMap?.every(
-          (height, index) => height === state.renderedScheduleHeightMap![index]
-        )
-      ) {
-        return prevState;
-      }
-
-      prevState[panelType].renderedScheduleHeightMap = state.renderedScheduleHeightMap!;
-
-      return prevState;
     }
     case UPDATE_MAX_SCHEDULE_HEIGHT_MAP: {
-      console.log(
-        'update max map',
-
-        prevState[panelType].maxScheduleHeightMap?.every(
-          (height, index) => height === state.maxScheduleHeightMap![index]
-        )
-      );
       if (
-        prevState[panelType].maxScheduleHeightMap?.every(
-          (height, index) => height === state.maxScheduleHeightMap![index]
+        isSameArray(
+          prevState[panelType].maxScheduleHeightMap ?? [],
+          state.maxScheduleHeightMap ?? []
         )
       ) {
         return prevState;
       }
 
-      prevState[panelType].maxScheduleHeightMap = state.maxScheduleHeightMap!;
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+        },
+      };
+    }
+    case UPDATE_PANEL_HEIGHT_TO_MAX: {
+      const max = Math.max(...prevState[panelType].maxScheduleHeightMap);
 
-      return prevState;
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          height: prevState[panelType].scheduleHeight * max,
+        },
+      };
     }
     default:
       return prevState;

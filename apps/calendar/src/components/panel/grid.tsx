@@ -5,9 +5,9 @@ import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 import { Day } from '@src/components/panel/schedules';
-import { PanelStateStore } from '@src/components/layout';
 
 import type { PANEL_NAME } from '@src/controller/week';
+import { PanelDispatchStore, UPDATE_PANEL_HEIGHT_TO_MAX } from '@src/components/layout';
 
 const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
 const PANEL_GRID_CLASS_NAME = cls('panel-grid');
@@ -27,6 +27,7 @@ interface Props {
 }
 
 export const Grid: FunctionComponent<Props> = ({
+  name,
   gridInfoList,
   maxScheduleHeightMap,
   renderedScheduleHeightMap,
@@ -34,22 +35,21 @@ export const Grid: FunctionComponent<Props> = ({
   const [exceedMap, setExceedMap] = useState(
     maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedScheduleHeightMap[index])
   );
+  const dispatch = useContext(PanelDispatchStore);
   const isDayView = gridInfoList.length === 1;
-  // const exceedMap = maxScheduleHeightMap.map(
-  //   (maxHeight, index) => maxHeight - renderedScheduleHeightMap[index]
-  // );
+
+  const onClickExceedCount = () =>
+    dispatch({
+      type: UPDATE_PANEL_HEIGHT_TO_MAX,
+      panelType: name,
+      state: {},
+    });
 
   useEffect(() => {
     setExceedMap(
       maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedScheduleHeightMap[index])
     );
-    console.log(
-      'set',
-      maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedScheduleHeightMap[index])
-    );
   }, [maxScheduleHeightMap, renderedScheduleHeightMap]);
-
-  // console.log('init', maxScheduleHeightMap, renderedScheduleHeightMap);
 
   return (
     <div className={PANEL_GRID_WRAPPER_CLASS_NAME}>
@@ -71,7 +71,10 @@ export const Grid: FunctionComponent<Props> = ({
               style={{ ...DEFAULT_GRID_STYLE, width, left }}
             >
               {exceedMap[index] ? (
-                <span className={WEEKDAY_EXCEED_IN_WEEK}>{`+${exceedMap[index]}`}</span>
+                <span
+                  className={WEEKDAY_EXCEED_IN_WEEK}
+                  onClick={onClickExceedCount}
+                >{`+${exceedMap[index]}`}</span>
               ) : null}
             </div>
           );

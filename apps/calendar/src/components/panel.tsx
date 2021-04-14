@@ -18,7 +18,7 @@ import {
   Size,
 } from '@src/controller/panel';
 import { Milestone } from '@src/components/panel/milestone';
-import { UPDATE_PANEL_HEIGHT, PanelDispatchStore } from '@src/components/layout';
+import { UPDATE_PANEL_HEIGHT, PanelDispatchStore, PanelStateStore } from '@src/components/layout';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -114,7 +114,8 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const styles = getPanelStylesFromInfo(props);
+  const { height } = useContext(PanelStateStore)[name];
+  const styles = getPanelStylesFromInfo({ ...props, height });
 
   return (
     <Fragment>

@@ -7,7 +7,13 @@ import { addDate, isEventWithinRange } from '@src/time/datetime';
 import { Grid } from '@src/components/panel/grid';
 import { Day, Schedules, Task } from '@src/components/panel/schedules';
 import TZDate from '@src/time/date';
-import { PanelDispatchStore, PanelStateStore, UPDATE_EVENTS } from '@src/components/layout';
+import {
+  INIT_STATE,
+  PanelDispatchStore,
+  PanelStateStore,
+  UPDATE_EVENTS,
+  UPDATE_MAX_SCHEDULE_HEIGHT_MAP,
+} from '@src/components/layout';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
@@ -38,9 +44,23 @@ export const Milestone: FunctionComponent<Props> = ({
   const height = milestone?.height ?? DEFAULT_PANEL_HEIGHT;
   const scheduleHeight = milestone?.scheduleHeight ?? DEFAULT_SCHEDULE_HEIGHT;
 
+  // const map1 = milestone.maxScheduleHeightMap;
+  // const map2 = milestone.renderedScheduleHeightMap;
+
   const startDate = gridInfoList[0].getDate();
   const endDate = gridInfoList[gridInfoList.length - 1].getDate();
   const filteredEvents = events.filter((event) => isEventWithinRange(event, startDate, endDate));
+
+  useEffect(() => {
+    dispatch({
+      type: INIT_STATE,
+      panelType: 'milestone',
+      state: {
+        height: DEFAULT_PANEL_HEIGHT,
+        scheduleHeight: DEFAULT_SCHEDULE_HEIGHT,
+      },
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch({
@@ -114,8 +134,6 @@ export const Milestone: FunctionComponent<Props> = ({
         maxScheduleHeightMap,
       },
     });
-
-    console.log('milestone', milestone);
   }, [dispatch, filteredEvents, height, milestone, scheduleHeight, startDate]);
 
   return (
@@ -124,12 +142,7 @@ export const Milestone: FunctionComponent<Props> = ({
         Title
       </div>
       <div className={PANEL_MILESTONE_CLASS_NAME}>
-        <Grid
-          name="milestone"
-          gridInfoList={gridInfoList}
-          maxScheduleHeightMap={milestone.maxScheduleHeightMap}
-          renderedScheduleHeightMap={milestone.renderedScheduleHeightMap}
-        />
+        <Grid name="milestone" gridInfoList={gridInfoList} {...milestone} />
         <Schedules
           name="milestone"
           gridInfoList={gridInfoList}
