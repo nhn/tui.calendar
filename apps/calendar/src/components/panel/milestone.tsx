@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useContext, useEffect, useState } from 'preact/hooks';
+import { useContext, useEffect } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
@@ -7,11 +7,7 @@ import { addDate, isEventWithinRange } from '@src/time/datetime';
 import { Grid } from '@src/components/panel/grid';
 import { Day, Schedules, Task } from '@src/components/panel/schedules';
 import TZDate from '@src/time/date';
-import {
-  PanelDispatchStore,
-  PanelStateStore,
-  UPDATE_MAX_SCHEDULE_HEIGHT_MAP,
-} from '@src/components/layout';
+import { PanelDispatchStore, PanelStateStore, UPDATE_EVENTS } from '@src/components/layout';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
@@ -45,6 +41,16 @@ export const Milestone: FunctionComponent<Props> = ({
   const startDate = gridInfoList[0].getDate();
   const endDate = gridInfoList[gridInfoList.length - 1].getDate();
   const filteredEvents = events.filter((event) => isEventWithinRange(event, startDate, endDate));
+
+  useEffect(() => {
+    dispatch({
+      type: UPDATE_EVENTS,
+      panelType: 'milestone',
+      state: {
+        events: filteredEvents,
+      },
+    });
+  }, [dispatch, filteredEvents]);
 
   useEffect(() => {
     const maxScheduleHeightMap = [0, 0, 0, 0, 0, 0, 0];
