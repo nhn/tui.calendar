@@ -32,7 +32,7 @@ export function useCreateRouter({ initialView, components }: RouterParams): Rout
   const goto = useCallback((newViewName: string) => setViewName(newViewName), []);
 
   return {
-    viewName: initialView ?? Object.keys(components)?.[0] ?? '',
+    viewName,
     components,
     getComponent,
     getCurrentComponent,
