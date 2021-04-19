@@ -795,7 +795,3 @@ export function isEventWithinRange({ start, end }: BaseEvent, startDate: number,
     (startDate <= eventEndDate && eventEndDate <= endDate)
   );
 }
-
-export function isValidEvents({ start, end }: BaseEvent, gridInfoList: GridInfoList) {
-  return gridInfoList.some((gridInfo) => isBetweenWithDate(gridInfo, start, end));
-}
