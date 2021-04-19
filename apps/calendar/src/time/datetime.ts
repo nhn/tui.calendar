@@ -8,7 +8,19 @@ import inArray from 'tui-code-snippet/array/inArray';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
-import { Task } from '@src/components/panel/schedules';
+
+import type { GridInfoList } from '@t/panel';
+import type { BaseEvent } from '@t/events';
+
+export enum Day {
+  SUN,
+  MON,
+  TUE,
+  WED,
+  THU,
+  FRI,
+  SAT,
+}
 
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
@@ -515,11 +527,11 @@ export function toEndOfDay(date?: number | TZDate): TZDate {
 
 /**
  * Get that day is weekend
- * @param {number} day number
- * @returns {boolean} true if weekend or false
+ * @param {number} day - number
+ * @returns {boolean} true if day is weekend
  */
 export function isWeekend(day: number): boolean {
-  return day === 0 || day === 6;
+  return day === Day.SUN || day === Day.SAT;
 }
 
 /**
@@ -774,7 +786,7 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   return Math.round((_d1 - _d2) / MILLISECONDS_PER_DAY);
 }
 
-export function isEventWithinRange({ start, end }: Task, startDate: number, endDate: number) {
+export function isEventWithinRange({ start, end }: BaseEvent, startDate: number, endDate: number) {
   const eventStartDate = start.getDate();
   const eventEndDate = end.getDate();
 
@@ -782,4 +794,8 @@ export function isEventWithinRange({ start, end }: Task, startDate: number, endD
     (startDate <= eventStartDate && eventStartDate <= endDate) ||
     (startDate <= eventEndDate && eventEndDate <= endDate)
   );
+}
+
+export function isValidEvents({ start, end }: BaseEvent, gridInfoList: GridInfoList) {
+  return gridInfoList.some((gridInfo) => isBetweenWithDate(gridInfo, start, end));
 }

@@ -17,7 +17,6 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { Milestone } from '@src/components/panel/milestone';
 import { UPDATE_PANEL_HEIGHT, PanelDispatchStore, PanelStateStore } from '@src/components/layout';
 
 export interface Props extends PanelInfo {
@@ -134,7 +133,7 @@ function isPanel(child: Child): child is VNode<PanelInfo> {
     return false;
   }
 
-  return child.type === Panel || child.type === Milestone;
+  return child.type === Panel;
 }
 
 function getPanelInfo(panel: VNode<PanelInfo>): PanelInfo {

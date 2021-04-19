@@ -3,9 +3,9 @@ import { useContext, useEffect } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
-import { addDate, isEventWithinRange } from '@src/time/datetime';
-import { Grid } from '@src/components/panel/grid';
-import { Day, Schedules, Task } from '@src/components/panel/schedules';
+import { Day, addDate, isEventWithinRange } from '@src/time/datetime';
+import { PanelGrid } from '@src/components/panelgrid/panelGrid';
+import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import TZDate from '@src/time/date';
 import {
   INIT_STATE,
@@ -14,6 +14,9 @@ import {
   UPDATE_EVENTS,
   UPDATE_MAX_SCHEDULE_HEIGHT_MAP,
 } from '@src/components/layout';
+
+import type { MilestoneEvent } from '@t/events';
+import type { GridInfoList } from '@t/panel';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
@@ -26,8 +29,8 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 });
 
 interface Props {
-  events: Task[];
-  gridInfoList?: TZDate[];
+  events: MilestoneEvent[];
+  gridInfoList?: GridInfoList;
   timesWidth?: number;
   timezonesCount?: number;
 }
@@ -43,9 +46,6 @@ export const Milestone: FunctionComponent<Props> = ({
   const { milestone } = useContext(PanelStateStore);
   const height = milestone?.height ?? DEFAULT_PANEL_HEIGHT;
   const scheduleHeight = milestone?.scheduleHeight ?? DEFAULT_SCHEDULE_HEIGHT;
-
-  // const map1 = milestone.maxScheduleHeightMap;
-  // const map2 = milestone.renderedScheduleHeightMap;
 
   const startDate = gridInfoList[0].getDate();
   const endDate = gridInfoList[gridInfoList.length - 1].getDate();
@@ -89,7 +89,7 @@ export const Milestone: FunctionComponent<Props> = ({
     const isOnCurrentWeek = (startDay: number, endDay: number) => {
       return startDay <= endDay;
     };
-    const updateScheduleHeightMap = ({ start, end }: Task, map: number[]) => {
+    const updateScheduleHeightMap = ({ start, end }: MilestoneEvent, map: number[]) => {
       const scheduleStartDate = start.getDate();
       const startDay = start.getDay();
       const endDay = end.getDay();
@@ -142,14 +142,8 @@ export const Milestone: FunctionComponent<Props> = ({
         Title
       </div>
       <div className={PANEL_MILESTONE_CLASS_NAME}>
-        <Grid name="milestone" gridInfoList={gridInfoList} {...milestone} />
-        <Schedules
-          name="milestone"
-          gridInfoList={gridInfoList}
-          events={filteredEvents}
-          height={height}
-          scheduleHeight={scheduleHeight}
-        />
+        <PanelGrid name="milestone" gridInfoList={gridInfoList} {...milestone} />
+        <PanelEvents name="milestone" gridInfoList={gridInfoList} {...milestone} />
       </div>
     </Fragment>
   );

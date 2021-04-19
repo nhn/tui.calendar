@@ -24,9 +24,10 @@ import { getSize } from '@src/util/domutil';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
-import { PANEL_NAME } from '@src/controller/week';
-import { Task } from '@src/components/panel/schedules';
 import { isSameArray } from '@src/util/array';
+
+import type { BaseEvent } from '@t/events';
+import type { PanelName } from '@t/panel';
 
 interface Props {
   children: VNode<typeof Panel> | VNode<typeof Panel>[];
@@ -42,16 +43,13 @@ interface PanelState {
   height: number;
   scheduleHeight: number;
   maxScheduleHeightMap: number[];
-  renderedScheduleHeightMap: number[];
-  events: Task[];
+  renderedHeightMap: number[];
+  events: BaseEvent[];
   lastRenderedHeightMap: number[];
+  narrowWeekend: boolean;
+  eventHeight: number;
 }
-interface LayoutState {
-  milestone: PanelState;
-  task: PanelState;
-  allday: PanelState;
-  time: PanelState;
-}
+type LayoutState = Record<PanelName, PanelState>;
 export const INIT_STATE = 'initState';
 export const UPDATE_PANEL_HEIGHT = 'updatePanelHeight';
 export const UPDATE_SCHEDULE_HEIGHT = 'updateScheduleHeight';
@@ -71,7 +69,7 @@ export type PanelActionType =
   | typeof REDUCE_HEIGHT;
 interface PanelAction {
   type: PanelActionType;
-  panelType: PANEL_NAME;
+  panelType: PanelName;
   state: Partial<PanelState>;
 }
 type Dispatch = (action: PanelAction) => void;
@@ -80,8 +78,10 @@ const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHe
 const defaultPanelState: PanelState = {
   height: 20,
   scheduleHeight: 20,
+  eventHeight: 20,
+  narrowWeekend: true,
   maxScheduleHeightMap: [],
-  renderedScheduleHeightMap: [],
+  renderedHeightMap: [],
   events: [],
   lastRenderedHeightMap: [],
 };
@@ -126,10 +126,7 @@ function reducer(prevState: LayoutState, action: PanelAction) {
     }
     case UPDATE_SCHEDULE_HEIGHT_MAP: {
       if (
-        isSameArray(
-          prevState[panelType].renderedScheduleHeightMap ?? [],
-          state.renderedScheduleHeightMap ?? []
-        )
+        isSameArray(prevState[panelType].renderedHeightMap ?? [], state.renderedHeightMap ?? [])
       ) {
         return prevState;
       }
@@ -168,7 +165,7 @@ function reducer(prevState: LayoutState, action: PanelAction) {
         [panelType]: {
           ...prevState[panelType],
           height: prevState[panelType].scheduleHeight * max,
-          lastRenderedHeightMap: prevState[panelType].renderedScheduleHeightMap,
+          lastRenderedHeightMap: prevState[panelType].renderedHeightMap,
         },
       };
     }
