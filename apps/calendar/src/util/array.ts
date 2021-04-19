@@ -215,12 +215,5 @@ export function isSameArray<T>(array1: Array<T>, array2: Array<T>): boolean {
     return false;
   }
 
-  let isSame = true;
-  forEach(array1, (item: T, index: number) => {
-    if (item !== array2[index]) {
-      isSame = false;
-    }
-  });
-
-  return isSame;
+  return array1.every((value, index) => value === array2[index]);
 }

@@ -73,7 +73,7 @@ export const Milestone: FunctionComponent<Props> = ({
   }, [dispatch, filteredEvents]);
 
   useEffect(() => {
-    const maxScheduleHeightMap = [0, 0, 0, 0, 0, 0, 0];
+    const maxScheduleHeightMap = gridInfoList.map(() => 0);
 
     const getTop = (start: number, end: number, heightMap: number[]) => {
       const scheduleTopList = heightMap.filter((_, index) => start <= index && index <= end);
