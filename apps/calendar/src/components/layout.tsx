@@ -39,6 +39,8 @@ interface Props {
 
 type Child = VNode<any> | string | number;
 type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
+
+// @TODO: remove after store module merged
 interface PanelState {
   height: number;
   scheduleHeight: number;

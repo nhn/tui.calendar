@@ -35,13 +35,13 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const [exceedMap, setExceedMap] = useState(
     maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index])
   );
-  const [lastExceedMap, setLastExceedMap] = useState<number[]>([]);
+  const [clickedCountIndex, setClickedCountIndex] = useState(0);
   const [isClickedExceedCount, setClickedExceedCount] = useState(false);
   const dispatch = useContext(PanelDispatchStore);
 
-  const onClickExceedCount = () => {
+  const onClickExceedCount = (index: number) => {
     setClickedExceedCount(true);
-    setLastExceedMap(exceedMap);
+    setClickedCountIndex(index);
     dispatch({
       type: UPDATE_PANEL_HEIGHT_TO_MAX,
       panelType: name,
@@ -74,16 +74,17 @@ export const PanelGrid: FunctionComponent<Props> = ({
     exceedMap[index] && !isClickedExceedCount ? (
       <span
         className={WEEKDAY_EXCEED_IN_WEEK}
-        onClick={onClickExceedCount}
+        onClick={() => onClickExceedCount(index)}
         style={{ display: isClickedExceedCount ? 'none' : '' }}
       >{`+${exceedMap[index]}`}</span>
     ) : null;
   const renderCollapseButton = (index: number) =>
-    lastExceedMap[index] && isClickedExceedCount ? (
+    index === clickedCountIndex && isClickedExceedCount ? (
       <span className={WEEKDAY_EXCEED_IN_WEEK} onClick={onClickCollapseButton}>
         <i className={COLLAPSE_BTN} />
       </span>
     ) : null;
+
   const renderCells = () => {
     return gridInfoList.map((gridInfo, index) => {
       const width = toPercent(widthList[index]);
