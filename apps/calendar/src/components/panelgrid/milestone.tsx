@@ -17,6 +17,7 @@ import {
 
 import type { MilestoneEvent } from '@t/events';
 import type { GridInfoList } from '@t/panel';
+import { isBetween } from '@src/util/math';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
@@ -76,7 +77,7 @@ export const Milestone: FunctionComponent<Props> = ({
     const maxScheduleHeightMap = gridInfoList.map(() => 0);
 
     const getTop = (start: number, end: number, heightMap: number[]) => {
-      const scheduleTopList = heightMap.filter((_, index) => start <= index && index <= end);
+      const scheduleTopList = heightMap.filter((_, index) => isBetween(index, start, end));
 
       return Math.max(...scheduleTopList);
     };
@@ -98,7 +99,7 @@ export const Milestone: FunctionComponent<Props> = ({
       if (isStartOnPrevWeek(startDay, endDay, scheduleStartDate)) {
         top = getTop(Day.SUN, endDay, map);
         map.forEach((_, index) => {
-          if (Day.SUN <= index && index <= endDay) {
+          if (isBetween(index, Day.SUN, endDay)) {
             map[index] = top + 1;
           }
         });
@@ -107,7 +108,7 @@ export const Milestone: FunctionComponent<Props> = ({
       if (isEndOnNextWeek(startDay, endDay, scheduleStartDate)) {
         top = getTop(startDay, Day.SAT, map);
         map.forEach((_, index) => {
-          if (startDay <= index && index <= Day.SAT) {
+          if (isBetween(index, startDay, Day.SAT)) {
             map[index] = top + 1;
           }
         });
@@ -116,7 +117,7 @@ export const Milestone: FunctionComponent<Props> = ({
       if (isOnCurrentWeek(startDay, endDay)) {
         top = getTop(startDay, endDay, map);
         map.forEach((_, index) => {
-          if (startDay <= index && index <= endDay) {
+          if (isBetween(index, startDay, endDay)) {
             map[index] = top + 1;
           }
         });

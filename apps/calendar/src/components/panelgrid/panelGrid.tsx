@@ -5,7 +5,11 @@ import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 import { getPanelEventInfo } from '@src/time/panelEvent';
 
-import { PanelDispatchStore, UPDATE_PANEL_HEIGHT_TO_MAX } from '@src/components/layout';
+import {
+  PanelDispatchStore,
+  REDUCE_HEIGHT,
+  UPDATE_PANEL_HEIGHT_TO_MAX,
+} from '@src/components/layout';
 import type { PanelName, GridInfoList } from '@t/panel';
 
 const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
@@ -52,7 +56,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const onClickCollapseButton = () => {
     setClickedExceedCount(false);
     dispatch({
-      type: 'reduceHeight',
+      type: REDUCE_HEIGHT,
       panelType: name,
       state: {},
     });
