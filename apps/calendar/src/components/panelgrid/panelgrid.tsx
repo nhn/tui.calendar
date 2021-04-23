@@ -12,10 +12,6 @@ import {
 } from '@src/components/layout';
 import type { PanelName, GridInfoList } from '@t/panel';
 
-const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
-const PANEL_GRID_CLASS_NAME = cls('panel-grid');
-const WEEKDAY_EXCEED_IN_WEEK = cls('weekday-exceed-in-week');
-const COLLAPSE_BTN = cls('collapse-btn');
 const TOTAL_WIDTH = 100;
 const DEFAULT_GRID_STYLE = {
   borderRight: '1px solid #ddd',
@@ -77,15 +73,15 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const renderExceedCount = (index: number) =>
     exceedMap[index] && !isClickedExceedCount ? (
       <span
-        className={WEEKDAY_EXCEED_IN_WEEK}
+        className={cls('weekday-exceed-in-week')}
         onClick={() => onClickExceedCount(index)}
         style={{ display: isClickedExceedCount ? 'none' : '' }}
       >{`+${exceedMap[index]}`}</span>
     ) : null;
   const renderCollapseButton = (index: number) =>
     index === clickedCountIndex && isClickedExceedCount ? (
-      <span className={WEEKDAY_EXCEED_IN_WEEK} onClick={onClickCollapseButton}>
-        <i className={COLLAPSE_BTN} />
+      <span className={cls('weekday-exceed-in-week')} onClick={onClickCollapseButton}>
+        <i className={cls('collapse-btn')} />
       </span>
     ) : null;
 
@@ -97,7 +93,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
       return (
         <div
           key={`panel-grid-${gridInfo.getDate()}`}
-          className={PANEL_GRID_CLASS_NAME}
+          className={cls('panel-grid')}
           style={{ ...DEFAULT_GRID_STYLE, width, left }}
         >
           {renderExceedCount(index)}
@@ -107,5 +103,5 @@ export const PanelGrid: FunctionComponent<Props> = ({
     });
   };
 
-  return <div className={PANEL_GRID_WRAPPER_CLASS_NAME}>{renderCells()}</div>;
+  return <div className={cls('panel-grid-wrapper')}>{renderCells()}</div>;
 };

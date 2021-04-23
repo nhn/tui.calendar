@@ -11,8 +11,6 @@ import { isBetween } from '@src/util/math';
 import type { GridInfoList, PanelName } from '@t/panel';
 import type { BaseEvent } from '@t/events';
 
-const PANEL_SCHEDULE_WRAPPER_CLASS_NAME = cls('panel-schedule-wrapper');
-const PANEL_SCHEDULE_CLASS_NAME = cls('panel-schedule');
 const TOTAL_WIDTH = 100;
 
 interface Props {
@@ -183,7 +181,7 @@ export const PanelEvents: FunctionComponent<Props> = ({
         return (
           <div
             key={`panel-events-${index}`}
-            className={PANEL_SCHEDULE_CLASS_NAME}
+            className={cls('panel-event')}
             style={{ ...eventStyle }}
           >
             {index}
@@ -201,5 +199,5 @@ export const PanelEvents: FunctionComponent<Props> = ({
     });
   }, [dispatch, eventHeight, events, gridInfoList, height, name, narrowWeekend]);
 
-  return <div className={PANEL_SCHEDULE_WRAPPER_CLASS_NAME}>{renderedEvents}</div>;
+  return <div className={cls('panel-event-wrapper')}>{renderedEvents}</div>;
 };

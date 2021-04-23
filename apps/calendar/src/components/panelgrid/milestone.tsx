@@ -20,8 +20,6 @@ import {
 import type { MilestoneEvent } from '@t/events';
 import type { GridInfoList } from '@t/panel';
 
-const PANEL_TITLE_CLASS_NAME = cls('panel-title');
-const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
 const DEFAULT_PANEL_HEIGHT = 20;
 const DEFAULT_SCHEDULE_HEIGHT = 20;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
@@ -140,10 +138,10 @@ export const Milestone: FunctionComponent<Props> = ({
 
   return (
     <Fragment>
-      <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
+      <div className={cls('panel-title')} style={{ width: columnWidth }}>
         Title
       </div>
-      <div className={PANEL_MILESTONE_CLASS_NAME}>
+      <div className={cls('panel-milestone')}>
         <PanelGrid name="milestone" gridInfoList={gridInfoList} {...milestone} />
         <PanelEvents name="milestone" gridInfoList={gridInfoList} {...milestone} />
       </div>
