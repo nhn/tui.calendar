@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import { getPanelEventInfo } from '@src/time/panelEvent';
+import { getGridStyleInfo } from '@src/time/panelEvent';
 
 import {
   PanelDispatchStore,
@@ -68,7 +68,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
     );
   }, [maxScheduleHeightMap, renderedHeightMap]);
 
-  const { widthList, leftList } = getPanelEventInfo({
+  const { widthList, leftList } = getGridStyleInfo({
     gridInfoList,
     narrowWeekend,
     totalWidth: TOTAL_WIDTH,

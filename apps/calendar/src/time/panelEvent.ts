@@ -1,10 +1,11 @@
-import { isWeekend } from '@src/time/datetime';
+import { isBetweenWithDate, isWeekend } from '@src/time/datetime';
 import { GridInfoList } from '@t/panel';
+import { BaseEvent } from '@t/events';
 
 const getWeekendCount = (gridInfoList: GridInfoList) =>
   gridInfoList.filter((gridInfo) => isWeekend(gridInfo.getDay())).length;
 
-export const getPanelEventInfo = ({
+export const getGridStyleInfo = ({
   gridInfoList,
   narrowWeekend,
   totalWidth,
@@ -51,3 +52,17 @@ export const getWidth = (widthList: number[], start: number, end: number) =>
 
     return acc;
   }, 0);
+
+export function isValidEvents({ start, end }: BaseEvent, gridInfoList: GridInfoList) {
+  return gridInfoList.some((gridInfo) => isBetweenWithDate(gridInfo, start, end));
+}
+
+export function isEventWithinRange({ start, end }: BaseEvent, startDate: number, endDate: number) {
+  const eventStartDate = start.getDate();
+  const eventEndDate = end.getDate();
+
+  return (
+    (startDate <= eventStartDate && eventStartDate <= endDate) ||
+    (startDate <= eventEndDate && eventEndDate <= endDate)
+  );
+}

@@ -5,11 +5,11 @@ import { cls } from '@src/util/cssHelper';
 import { toPercent, toPx } from '@src/util/units';
 import { Day } from '@src/time/datetime';
 import { PanelDispatchStore, UPDATE_SCHEDULE_HEIGHT_MAP } from '@src/components/layout';
-import { getPanelEventInfo, getWidth } from '@src/time/panelEvent';
+import { getGridStyleInfo, getWidth } from '@src/time/panelEvent';
+import { isBetween } from '@src/util/math';
 
 import type { GridInfoList, PanelName } from '@t/panel';
 import type { BaseEvent } from '@t/events';
-import { isBetween } from '@src/util/math';
 
 const PANEL_SCHEDULE_WRAPPER_CLASS_NAME = cls('panel-schedule-wrapper');
 const PANEL_SCHEDULE_CLASS_NAME = cls('panel-schedule');
@@ -63,7 +63,7 @@ export const PanelEvents: FunctionComponent<Props> = ({
       return Math.max(...validEventHeightMap);
     };
     const getEventStyle = (start: Day, end: Day) => {
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth: TOTAL_WIDTH,

@@ -3,9 +3,11 @@ import { useContext, useEffect } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
-import { Day, addDate, isEventWithinRange } from '@src/time/datetime';
-import { PanelGrid } from '@src/components/panelgrid/panelGrid';
+import { addDate, Day } from '@src/time/datetime';
+import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelEvents } from '@src/components/panelgrid/panelEvents';
+import { isBetween } from '@src/util/math';
+import { isEventWithinRange } from '@src/time/panelEvent';
 import TZDate from '@src/time/date';
 import {
   INIT_STATE,
@@ -17,7 +19,6 @@ import {
 
 import type { MilestoneEvent } from '@t/events';
 import type { GridInfoList } from '@t/panel';
-import { isBetween } from '@src/util/math';
 
 const PANEL_TITLE_CLASS_NAME = cls('panel-title');
 const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');

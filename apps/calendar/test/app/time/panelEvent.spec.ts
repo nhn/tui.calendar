@@ -1,5 +1,5 @@
 import TZDate from '@src/time/date';
-import { getPanelEventInfo, getWidth } from '@src/time/panelEvent';
+import { getGridStyleInfo, getWidth } from '@src/time/panelEvent';
 
 import { GridInfoList } from '@t/panel';
 
@@ -31,7 +31,7 @@ describe('panelEvent', () => {
     it('should return single PanelEventInfo', () => {
       gridInfoList = [createDate(2021, 4, 16)];
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -47,7 +47,7 @@ describe('panelEvent', () => {
       // Mon, Tue, Wed, Thu, Fri
       gridInfoList = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -63,7 +63,7 @@ describe('panelEvent', () => {
       // Sat, Sun
       gridInfoList = [17, 18].map((d) => createDate(2021, 4, d));
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -79,7 +79,7 @@ describe('panelEvent', () => {
       // Thu, Fri, Sat
       gridInfoList = [15, 16, 17].map((d) => createDate(2021, 4, d));
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -100,7 +100,7 @@ describe('panelEvent', () => {
     it('should return single PanelEventInfo', () => {
       gridInfoList = [createDate(2021, 4, 16)];
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -116,7 +116,7 @@ describe('panelEvent', () => {
       // Mon, Tue, Wed, Thu, Fri
       gridInfoList = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -132,7 +132,7 @@ describe('panelEvent', () => {
       // Sat, Sun
       gridInfoList = [17, 18].map((d) => createDate(2021, 4, d));
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
@@ -148,7 +148,7 @@ describe('panelEvent', () => {
       // Thu, Fri, Sat, Sun
       gridInfoList = [15, 16, 17, 18].map((d) => createDate(2021, 4, d));
 
-      const { widthList, leftList } = getPanelEventInfo({
+      const { widthList, leftList } = getGridStyleInfo({
         gridInfoList,
         narrowWeekend,
         totalWidth,
