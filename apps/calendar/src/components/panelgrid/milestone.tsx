@@ -10,8 +10,6 @@ import TZDate from '@src/time/date';
 import type { MilestoneEvent } from '@t/events';
 import type { GridInfoList } from '@t/panel';
 
-const PANEL_TITLE_CLASS_NAME = cls('panel-title');
-const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 
@@ -41,10 +39,10 @@ export const Milestone: FunctionComponent<Props> = ({
 
   return (
     <Fragment>
-      <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
+      <div className={cls('panel-title')} style={{ width: columnWidth }}>
         Title
       </div>
-      <div className={PANEL_MILESTONE_CLASS_NAME}>
+      <div className={cls('panel-milestone')}>
         <PanelGrid gridInfoList={gridInfoList} {...state} />
         <PanelEvents gridInfoList={gridInfoList} events={events} {...state} />
       </div>

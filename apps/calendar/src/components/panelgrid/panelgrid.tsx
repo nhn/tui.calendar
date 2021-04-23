@@ -6,8 +6,6 @@ import { getGridStyleInfo } from '@src/time/panelEvent';
 
 import type { GridInfoList } from '@t/panel';
 
-const PANEL_GRID_WRAPPER_CLASS_NAME = cls('panel-grid-wrapper');
-const PANEL_GRID_CLASS_NAME = cls('panel-grid');
 const TOTAL_WIDTH = 100;
 const DEFAULT_GRID_STYLE = {
   borderRight: '1px solid #ddd',
@@ -33,11 +31,11 @@ export const PanelGrid: FunctionComponent<Props> = ({ gridInfoList, narrowWeeken
       return (
         <div
           key={`panel-grid-${gridInfo.getDate()}`}
-          className={PANEL_GRID_CLASS_NAME}
+          className={cls('panel-grid')}
           style={{ ...DEFAULT_GRID_STYLE, width, left }}
         />
       );
     });
 
-  return <div className={PANEL_GRID_WRAPPER_CLASS_NAME}>{getCells()}</div>;
+  return <div className={cls('panel-grid-wrapper')}>{getCells()}</div>;
 };

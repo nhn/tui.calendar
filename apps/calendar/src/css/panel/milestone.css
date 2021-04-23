@@ -26,7 +26,7 @@
   position: absolute;
 }
 
-.panel-schedule-wrapper {
+.panel-event-wrapper {
   top: 0;
   left: 0;
   width: 100%;
@@ -34,7 +34,7 @@
   position: absolute;
 }
 
-.panel-schedule {
+.panel-event {
   position: absolute;
   border: 1px solid #333;
 }

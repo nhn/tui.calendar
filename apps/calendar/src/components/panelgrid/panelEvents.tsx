@@ -8,8 +8,6 @@ import { getGridStyleInfo, getWidth, isValidEvents } from '@src/time/panelEvent'
 import type { GridInfoList } from '@t/panel';
 import type { BaseEvent } from '@t/events';
 
-const PANEL_SCHEDULE_WRAPPER_CLASS_NAME = cls('panel-schedule-wrapper');
-const PANEL_SCHEDULE_CLASS_NAME = cls('panel-schedule');
 const TOTAL_WIDTH = 100;
 
 interface Props {
@@ -93,8 +91,8 @@ export const PanelEvents: FunctionComponent<Props> = ({
       // @TODO: change to dayEvent component (using controller/core.ts)
       return (
         <div
-          key={`panel-events-${index}`}
-          className={PANEL_SCHEDULE_CLASS_NAME}
+          key={`panel-event-${index}`}
+          className={cls('panel-event')}
           style={{ ...getScheduleStyle(event, weekStartDate) }}
         >
           {index}
@@ -102,5 +100,5 @@ export const PanelEvents: FunctionComponent<Props> = ({
       );
     });
 
-  return <div className={PANEL_SCHEDULE_WRAPPER_CLASS_NAME}>{renderEvents()}</div>;
+  return <div className={cls('panel-event-wrapper')}>{renderEvents()}</div>;
 };
