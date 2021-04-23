@@ -2,7 +2,7 @@ import { h, FunctionComponent } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import { getPanelEventInfo } from '@src/time/panelEvent';
+import { getGridStyleInfo } from '@src/time/panelEvent';
 
 import type { GridInfoList } from '@t/panel';
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const PanelGrid: FunctionComponent<Props> = ({ gridInfoList, narrowWeekend }) => {
-  const { widthList, leftList } = getPanelEventInfo({
+  const { widthList, leftList } = getGridStyleInfo({
     gridInfoList,
     narrowWeekend,
     totalWidth: TOTAL_WIDTH,

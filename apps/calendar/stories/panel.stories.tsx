@@ -11,7 +11,7 @@ export default { title: 'Panel', component: Milestone, args: { primary: true } }
 
 const Template: Story = (args) => (
   <Layout height={500}>
-    <Panel name="Milestone" resizable minHeight={20}>
+    <Panel name="milestone" resizable minHeight={20}>
       <Milestone events={args.events} />
     </Panel>
   </Layout>

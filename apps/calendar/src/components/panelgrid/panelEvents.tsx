@@ -2,8 +2,8 @@ import { h, FunctionComponent } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent, toPx } from '@src/util/units';
-import { Day, isValidEvents } from '@src/time/datetime';
-import { getPanelEventInfo, getWidth } from '@src/time/panelEvent';
+import { Day } from '@src/time/datetime';
+import { getGridStyleInfo, getWidth, isValidEvents } from '@src/time/panelEvent';
 
 import type { GridInfoList } from '@t/panel';
 import type { BaseEvent } from '@t/events';
@@ -37,7 +37,7 @@ export const PanelEvents: FunctionComponent<Props> = ({
   narrowWeekend,
   eventHeight,
 }) => {
-  const { widthList, leftList } = getPanelEventInfo({
+  const { widthList, leftList } = getGridStyleInfo({
     gridInfoList,
     narrowWeekend,
     totalWidth: TOTAL_WIDTH,

@@ -3,7 +3,7 @@ import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
 import { addDate } from '@src/time/datetime';
-import { PanelGrid } from '@src/components/panelgrid/panelGrid';
+import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import TZDate from '@src/time/date';
 

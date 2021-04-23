@@ -525,11 +525,6 @@ export function toEndOfDay(date?: number | TZDate): TZDate {
   return d;
 }
 
-/**
- * Get that day is weekend
- * @param {number} day - number
- * @returns {boolean} true if day is weekend
- */
 export function isWeekend(day: number): boolean {
   return day === Day.SUN || day === Day.SAT;
 }
@@ -784,8 +779,4 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   const _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
   return Math.round((_d1 - _d2) / MILLISECONDS_PER_DAY);
-}
-
-export function isValidEvents({ start, end }: BaseEvent, gridInfoList: GridInfoList) {
-  return gridInfoList.some((gridInfo) => isBetweenWithDate(gridInfo, start, end));
 }
