@@ -1,0 +1,33 @@
+name: Test
+on:
+  pull_request:
+    branches: [ next ]
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 12.x ]
+    env:
+      WORKING_DIRECTORY: ./apps/calendar
+    steps:
+      - name: Checkout next branch
+        uses: actions/checkout@v2
+        with:
+          ref: "next"
+          clean: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install(jest)
+        run: |
+          npm install --legacy-peer-deps
+      - name: npm install(toast.ui-calendar)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm install --legacy-peer-deps
+      - name: test
+        run: |
+          npm run test
