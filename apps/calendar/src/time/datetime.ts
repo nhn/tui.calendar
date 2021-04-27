@@ -9,6 +9,19 @@ import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 
+import type { GridInfoList } from '@t/panel';
+import type { BaseEvent } from '@t/events';
+
+export enum Day {
+  SUN,
+  MON,
+  TUE,
+  WED,
+  THU,
+  FRI,
+  SAT,
+}
+
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
 }
@@ -512,13 +525,8 @@ export function toEndOfDay(date?: number | TZDate): TZDate {
   return d;
 }
 
-/**
- * Get that day is weekend
- * @param {number} day number
- * @returns {boolean} true if weekend or false
- */
 export function isWeekend(day: number): boolean {
-  return day === 0 || day === 6;
+  return day === Day.SUN || day === Day.SAT;
 }
 
 /**

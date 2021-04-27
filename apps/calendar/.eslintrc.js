@@ -38,7 +38,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'no-shadow': 'off',
     'no-use-before-define': 0,
-    'react/prop-types': 'off',
+    'react/prop-types': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
     'jest/no-conditional-expect': 0,
