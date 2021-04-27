@@ -17,7 +17,7 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { UPDATE_PANEL_HEIGHT, PanelDispatchStore, PanelStateStore } from '@src/components/layout';
+import { PanelStateStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -27,7 +27,7 @@ export interface Props extends PanelInfo {
 
 type Child = VNode<any> | string | number;
 
-const className = cls('panel');
+const defaultPanelHeight = 18;
 
 const Panel: FunctionComponent<Props> = (props) => {
   const {
@@ -45,7 +45,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const dispatch = useContext(PanelDispatchStore);
+  const { state, dispatch } = useContext(PanelStateStore);
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);
@@ -113,12 +113,15 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const { height } = useContext(PanelStateStore)[name];
-  const styles = getPanelStylesFromInfo({ ...props, height });
+  const panelHeight = state[name]?.height ?? defaultPanelHeight;
+  const height = props.height ?? panelHeight;
+  const styles = getPanelStylesFromInfo(
+    direction === Direction.COLUMN ? { ...props, height } : { ...props, width: height }
+  );
 
   return (
     <Fragment>
-      <div ref={panelRef} className={className} style={styles}>
+      <div ref={panelRef} className={cls('panel')} style={styles}>
         {children}
       </div>
       {resizable ? getPanelResizer() : null}

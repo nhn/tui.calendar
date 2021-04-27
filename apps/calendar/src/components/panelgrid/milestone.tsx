@@ -7,21 +7,15 @@ import { addDate, Day } from '@src/time/datetime';
 import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import { isBetween } from '@src/util/math';
-import { isEventWithinRange } from '@src/time/panelEvent';
 import TZDate from '@src/time/date';
-import {
-  INIT_STATE,
-  PanelDispatchStore,
-  PanelStateStore,
-  UPDATE_EVENTS,
-  UPDATE_MAX_SCHEDULE_HEIGHT_MAP,
-} from '@src/components/layout';
+import { PanelStateStore, UPDATE_MAX_EVENT_HEIGHT_MAP } from '@src/components/layout';
 
 import type { MilestoneEvent } from '@t/events';
 import type { GridInfoList } from '@t/panel';
+import { isEndOnNextWeek, isOnCurrentWeek, isStartOnPrevWeek } from '@src/time/panelEvent';
 
 const DEFAULT_PANEL_HEIGHT = 20;
-const DEFAULT_SCHEDULE_HEIGHT = 20;
+const DEFAULT_EVENT_HEIGHT = 20;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 
@@ -42,60 +36,28 @@ export const Milestone: FunctionComponent<Props> = ({
   timezonesCount = 1,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
-  const dispatch = useContext(PanelDispatchStore);
-  const { milestone } = useContext(PanelStateStore);
+  const { state, dispatch } = useContext(PanelStateStore);
+  const { milestone } = state;
   const height = milestone?.height ?? DEFAULT_PANEL_HEIGHT;
-  const scheduleHeight = milestone?.scheduleHeight ?? DEFAULT_SCHEDULE_HEIGHT;
+  const eventHeight = DEFAULT_EVENT_HEIGHT;
 
-  const startDate = gridInfoList[0].getDate();
-  const endDate = gridInfoList[gridInfoList.length - 1].getDate();
-  const filteredEvents = events.filter((event) => isEventWithinRange(event, startDate, endDate));
+  const gridStartDate = gridInfoList[0].getDate();
 
   useEffect(() => {
-    dispatch({
-      type: INIT_STATE,
-      panelType: 'milestone',
-      state: {
-        height: DEFAULT_PANEL_HEIGHT,
-        scheduleHeight: DEFAULT_SCHEDULE_HEIGHT,
-      },
-    });
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch({
-      type: UPDATE_EVENTS,
-      panelType: 'milestone',
-      state: {
-        events: filteredEvents,
-      },
-    });
-  }, [dispatch, filteredEvents]);
-
-  useEffect(() => {
-    const maxScheduleHeightMap = gridInfoList.map(() => 0);
+    const maxEventHeightMap = gridInfoList.map(() => 0);
 
     const getTop = (start: number, end: number, heightMap: number[]) => {
-      const scheduleTopList = heightMap.filter((_, index) => isBetween(index, start, end));
+      const eventTopList = heightMap.filter((_, index) => isBetween(index, start, end));
 
-      return Math.max(...scheduleTopList);
+      return Math.max(...eventTopList);
     };
-    const isStartOnPrevWeek = (startDay: number, endDay: number, scheduleStartDate: number) => {
-      return startDay > endDay && scheduleStartDate < startDate;
-    };
-    const isEndOnNextWeek = (startDay: number, endDay: number, scheduleStartDate: number) => {
-      return startDay > endDay && scheduleStartDate >= startDate;
-    };
-    const isOnCurrentWeek = (startDay: number, endDay: number) => {
-      return startDay <= endDay;
-    };
-    const updateScheduleHeightMap = ({ start, end }: MilestoneEvent, map: number[]) => {
-      const scheduleStartDate = start.getDate();
+    const updateEventHeightMap = ({ start, end }: MilestoneEvent, map: number[]) => {
+      const eventStartDate = start.getDate();
       const startDay = start.getDay();
       const endDay = end.getDay();
       let top: number;
 
-      if (isStartOnPrevWeek(startDay, endDay, scheduleStartDate)) {
+      if (isStartOnPrevWeek(startDay, endDay, eventStartDate, gridStartDate)) {
         top = getTop(Day.SUN, endDay, map);
         map.forEach((_, index) => {
           if (isBetween(index, Day.SUN, endDay)) {
@@ -104,7 +66,7 @@ export const Milestone: FunctionComponent<Props> = ({
         });
       }
 
-      if (isEndOnNextWeek(startDay, endDay, scheduleStartDate)) {
+      if (isEndOnNextWeek(startDay, endDay, eventStartDate, gridStartDate)) {
         top = getTop(startDay, Day.SAT, map);
         map.forEach((_, index) => {
           if (isBetween(index, startDay, Day.SAT)) {
@@ -123,18 +85,18 @@ export const Milestone: FunctionComponent<Props> = ({
       }
     };
 
-    filteredEvents.forEach((event) => {
-      updateScheduleHeightMap(event, maxScheduleHeightMap);
+    events.forEach((event) => {
+      updateEventHeightMap(event, maxEventHeightMap);
     });
 
     dispatch({
-      type: UPDATE_MAX_SCHEDULE_HEIGHT_MAP,
+      type: UPDATE_MAX_EVENT_HEIGHT_MAP,
       panelType: 'milestone',
       state: {
-        maxScheduleHeightMap,
+        maxEventHeightMap,
       },
     });
-  }, [dispatch, filteredEvents, height, milestone, scheduleHeight, startDate]);
+  }, [dispatch, events, gridInfoList, height, milestone, eventHeight, gridStartDate]);
 
   return (
     <Fragment>
@@ -143,7 +105,7 @@ export const Milestone: FunctionComponent<Props> = ({
       </div>
       <div className={cls('panel-milestone')}>
         <PanelGrid name="milestone" gridInfoList={gridInfoList} {...milestone} />
-        <PanelEvents name="milestone" gridInfoList={gridInfoList} {...milestone} />
+        <PanelEvents name="milestone" events={events} gridInfoList={gridInfoList} {...milestone} />
       </div>
     </Fragment>
   );

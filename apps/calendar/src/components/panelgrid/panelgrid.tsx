@@ -5,11 +5,7 @@ import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 import { getGridStyleInfo } from '@src/time/panelEvent';
 
-import {
-  PanelDispatchStore,
-  REDUCE_HEIGHT,
-  UPDATE_PANEL_HEIGHT_TO_MAX,
-} from '@src/components/layout';
+import { PanelStateStore, REDUCE_HEIGHT, UPDATE_PANEL_HEIGHT_TO_MAX } from '@src/components/layout';
 import type { PanelName, GridInfoList } from '@t/panel';
 
 const TOTAL_WIDTH = 100;
@@ -21,23 +17,23 @@ interface Props {
   name: PanelName;
   gridInfoList: GridInfoList;
   narrowWeekend: boolean;
-  maxScheduleHeightMap: number[];
-  renderedHeightMap: number[];
+  maxEventHeightMap?: number[];
+  renderedHeightMap?: number[];
 }
 
 export const PanelGrid: FunctionComponent<Props> = ({
   name,
   gridInfoList,
   narrowWeekend,
-  maxScheduleHeightMap,
-  renderedHeightMap,
+  maxEventHeightMap = [],
+  renderedHeightMap = [],
 }) => {
   const [exceedMap, setExceedMap] = useState(
-    maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index])
+    maxEventHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index])
   );
   const [clickedCountIndex, setClickedCountIndex] = useState(0);
   const [isClickedExceedCount, setClickedExceedCount] = useState(false);
-  const dispatch = useContext(PanelDispatchStore);
+  const { dispatch } = useContext(PanelStateStore);
 
   const onClickExceedCount = (index: number) => {
     setClickedExceedCount(true);
@@ -59,10 +55,8 @@ export const PanelGrid: FunctionComponent<Props> = ({
   };
 
   useEffect(() => {
-    setExceedMap(
-      maxScheduleHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index])
-    );
-  }, [maxScheduleHeightMap, renderedHeightMap]);
+    setExceedMap(maxEventHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index]));
+  }, [maxEventHeightMap, renderedHeightMap]);
 
   const { widthList, leftList } = getGridStyleInfo({
     gridInfoList,

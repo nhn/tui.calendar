@@ -206,14 +206,3 @@ export function findIndex<T>(array: Array<T>, iteratee: (item: T) => boolean) {
 
   return foundIndex;
 }
-
-export function isSameArray<T>(array1: Array<T>, array2: Array<T>): boolean {
-  if (!array1.length && !array2.length) {
-    return true;
-  }
-  if (array1.length !== array2.length) {
-    return false;
-  }
-
-  return array1.every((value, index) => value === array2[index]);
-}

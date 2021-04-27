@@ -24,9 +24,7 @@ import { getSize } from '@src/util/domutil';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
-import { isSameArray } from '@src/util/array';
 
-import type { BaseEvent } from '@t/events';
 import type { PanelName } from '@t/panel';
 
 interface Props {
@@ -43,30 +41,23 @@ type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 // @TODO: remove after store module merged
 interface PanelState {
   height: number;
-  scheduleHeight: number;
-  maxScheduleHeightMap: number[];
+  maxEventHeightMap: number[];
   renderedHeightMap: number[];
-  events: BaseEvent[];
   lastRenderedHeightMap: number[];
   narrowWeekend: boolean;
   eventHeight: number;
 }
 type LayoutState = Record<PanelName, PanelState>;
-export const INIT_STATE = 'initState';
+const EVENT_HEIGHT = 18;
 export const UPDATE_PANEL_HEIGHT = 'updatePanelHeight';
-export const UPDATE_SCHEDULE_HEIGHT = 'updateScheduleHeight';
-export const UPDATE_SCHEDULE_HEIGHT_MAP = 'updateScheduleHeightMap';
-export const UPDATE_MAX_SCHEDULE_HEIGHT_MAP = 'updateMaxScheduleHeightMap';
-export const UPDATE_EVENTS = 'updateEvents';
+export const UPDATE_EVENT_HEIGHT_MAP = 'updateEventHeightMap';
+export const UPDATE_MAX_EVENT_HEIGHT_MAP = 'updateMaxEventHeightMap';
 export const UPDATE_PANEL_HEIGHT_TO_MAX = 'updatePanelHeightToMax';
 export const REDUCE_HEIGHT = 'reduceHeight';
 export type PanelActionType =
-  | typeof INIT_STATE
   | typeof UPDATE_PANEL_HEIGHT
-  | typeof UPDATE_SCHEDULE_HEIGHT
-  | typeof UPDATE_SCHEDULE_HEIGHT_MAP
-  | typeof UPDATE_MAX_SCHEDULE_HEIGHT_MAP
-  | typeof UPDATE_EVENTS
+  | typeof UPDATE_EVENT_HEIGHT_MAP
+  | typeof UPDATE_MAX_EVENT_HEIGHT_MAP
   | typeof UPDATE_PANEL_HEIGHT_TO_MAX
   | typeof REDUCE_HEIGHT;
 interface PanelAction {
@@ -77,47 +68,13 @@ interface PanelAction {
 type Dispatch = (action: PanelAction) => void;
 
 const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
-const defaultPanelState: PanelState = {
-  height: 20,
-  scheduleHeight: 20,
-  eventHeight: 20,
-  narrowWeekend: true,
-  maxScheduleHeightMap: [],
-  renderedHeightMap: [],
-  events: [],
-  lastRenderedHeightMap: [],
-};
-const defaultLayoutState: LayoutState = {
-  milestone: { ...defaultPanelState },
-  task: { ...defaultPanelState },
-  allday: { ...defaultPanelState },
-  time: { ...defaultPanelState },
-};
+const defaultLayoutState: LayoutState = {} as LayoutState;
 
 function reducer(prevState: LayoutState, action: PanelAction) {
   const { type, panelType, state } = action;
 
   switch (type) {
-    case INIT_STATE: {
-      return {
-        ...prevState,
-        [panelType]: {
-          ...prevState[panelType],
-          ...state,
-        },
-      };
-    }
-    case UPDATE_EVENTS: {
-      if (isSameArray(prevState[panelType].events ?? [], state.events ?? [])) {
-        return prevState;
-      }
-
-      prevState[panelType].events = state.events ?? [];
-
-      return prevState;
-    }
     case UPDATE_PANEL_HEIGHT:
-    case UPDATE_SCHEDULE_HEIGHT: {
       return {
         ...prevState,
         [panelType]: {
@@ -125,11 +82,9 @@ function reducer(prevState: LayoutState, action: PanelAction) {
           ...state,
         },
       };
-    }
-    case UPDATE_SCHEDULE_HEIGHT_MAP: {
-      if (
-        isSameArray(prevState[panelType].renderedHeightMap ?? [], state.renderedHeightMap ?? [])
-      ) {
+    // @TODO: remove after dayEvent merged
+    case UPDATE_EVENT_HEIGHT_MAP: {
+      if (prevState[panelType]?.renderedHeightMap ?? [] === state.renderedHeightMap ?? []) {
         return prevState;
       }
 
@@ -141,13 +96,9 @@ function reducer(prevState: LayoutState, action: PanelAction) {
         },
       };
     }
-    case UPDATE_MAX_SCHEDULE_HEIGHT_MAP: {
-      if (
-        isSameArray(
-          prevState[panelType].maxScheduleHeightMap ?? [],
-          state.maxScheduleHeightMap ?? []
-        )
-      ) {
+    // @TODO: remove after dayEvent merged
+    case UPDATE_MAX_EVENT_HEIGHT_MAP: {
+      if (prevState[panelType]?.maxEventHeightMap ?? [] === state.maxEventHeightMap ?? []) {
         return prevState;
       }
 
@@ -160,13 +111,13 @@ function reducer(prevState: LayoutState, action: PanelAction) {
       };
     }
     case UPDATE_PANEL_HEIGHT_TO_MAX: {
-      const max = Math.max(...prevState[panelType].maxScheduleHeightMap);
+      const max = Math.max(...prevState[panelType].maxEventHeightMap);
 
       return {
         ...prevState,
         [panelType]: {
           ...prevState[panelType],
-          height: prevState[panelType].scheduleHeight * max,
+          height: EVENT_HEIGHT * max,
           lastRenderedHeightMap: prevState[panelType].renderedHeightMap,
         },
       };
@@ -178,8 +129,8 @@ function reducer(prevState: LayoutState, action: PanelAction) {
         ...prevState,
         [panelType]: {
           ...prevState[panelType],
-          height: prevState[panelType].scheduleHeight * max,
-          renderedScheduleHeightMap: prevState[panelType].lastRenderedHeightMap,
+          height: EVENT_HEIGHT * max,
+          renderedHeightMap: prevState[panelType].lastRenderedHeightMap,
         },
       };
     }
@@ -188,8 +139,10 @@ function reducer(prevState: LayoutState, action: PanelAction) {
   }
 }
 
-export const PanelStateStore = createContext<LayoutState>(defaultLayoutState);
-export const PanelDispatchStore = createContext<Dispatch>(noop);
+export const PanelStateStore = createContext<{ state: LayoutState; dispatch: Dispatch }>({
+  state: defaultLayoutState,
+  dispatch: noop,
+});
 
 export const Layout: FunctionComponent<Props> = ({
   direction = Direction.COLUMN,
@@ -269,10 +222,10 @@ export const Layout: FunctionComponent<Props> = ({
   };
   const handlers = { onResizeEnd, onPanelRectUpdated };
 
-  const renderPanel = (child: Child, panelDirection: Direction, size: PanelSize) => {
+  const renderPanel = (child: Child, size: PanelSize) => {
     if (isValidElement(child)) {
       return cloneElement(child, {
-        panelDirection,
+        direction,
         ...handlers,
         ...size,
       } as Partial<PanelProps>);
@@ -288,12 +241,10 @@ export const Layout: FunctionComponent<Props> = ({
   const filteredPanels = filterPanels(toChildArray(children));
 
   return (
-    <PanelStateStore.Provider value={state}>
-      <PanelDispatchStore.Provider value={dispatch}>
-        <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
-          {filteredPanels.map((panel, index) => renderPanel(panel, direction, panels[index]))}
-        </div>
-      </PanelDispatchStore.Provider>
+    <PanelStateStore.Provider value={{ state, dispatch }}>
+      <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
+        {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
+      </div>
     </PanelStateStore.Provider>
   );
 };
