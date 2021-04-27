@@ -14,9 +14,6 @@ jobs:
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
-        with:
-          ref: "next"
-          clean: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
