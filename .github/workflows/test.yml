@@ -23,11 +23,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm install(jest)
         run: |
-          npm install --legacy-peer-deps
+          npm install
+      - name: build libs/date
+        run: |
+          npm run setup:date
       - name: npm install(toast.ui-calendar)
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          npm install --legacy-peer-deps
+          npm install
       - name: test
         run: |
           npm run test
