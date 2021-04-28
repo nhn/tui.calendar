@@ -73,8 +73,6 @@ const Toolbar: FunctionComponent = () => {
     changeView,
   };
 
-  console.log('[Toolbar]리렌더!');
-
   // @TODO: Toolbar 작성 필요
   return (
     <div className={cls('toolbar')}>
