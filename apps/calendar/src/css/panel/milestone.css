@@ -1,0 +1,40 @@
+.panel .panel-title,
+.panel .panel-grid-wrapper {
+  height: 100%;
+}
+
+.panel-title {
+  float: left;
+  height: 100%;
+  padding-right: 5px;
+  border-right: 1px solid #ddd;
+}
+
+.panel-milestone {
+  position: relative;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.panel-grid-wrapper {
+  position: relative;
+  overflow-y: hidden;
+}
+
+.panel-grid {
+  height: 100%;
+  position: absolute;
+}
+
+.panel-event-wrapper {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.panel-event {
+  position: absolute;
+  border: 1px solid #333;
+}

@@ -34,18 +34,7 @@ import TZDate from '@src/time/date';
 import { WeekOption, DataStore } from '@src/model';
 import array from '@src/util/array';
 
-export type PANEL_NAME = 'milestone' | 'task' | 'allday' | 'time';
-export type PANEL_TYPE = 'daygrid' | 'timegrid';
-export interface Panel {
-  name: PANEL_NAME;
-  type: PANEL_TYPE;
-  minHeight?: number;
-  maxHeight?: number;
-  showExpandableButton?: boolean;
-  maxExpandableHeight?: number;
-  handlers?: ['click', 'creation', 'move', 'resize'];
-  show?: boolean;
-}
+import type { Panel, PanelName } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -375,12 +364,12 @@ export function findByDateRange(
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
   const viewModelColl = convertToViewModel(schedules.find(filter));
 
-  const group: Record<PANEL_NAME, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
+  const group: Record<PanelName, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
     scheduleTypes,
     filterByCategory
   );
   const resutGroup: Record<
-    PANEL_NAME,
+    PanelName,
     ScheduleMatrix<ScheduleViewModel> | Record<string, ScheduleMatrix<ScheduleViewModel>>
   > = {
     milestone: [],

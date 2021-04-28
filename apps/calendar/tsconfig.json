@@ -20,7 +20,7 @@
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
-    "types": ["webpack-env", "node", "jest"],
+    "types": ["webpack-env", "node", "jest"]
   },
   "include": [
     "src/**/*.ts",
@@ -29,6 +29,6 @@
     "stories/**/*.tsx",
     "test/**/*.ts",
     "test/**/*.tsx",
-    "types/**/*",
+    "types/**/*"
   ]
 }
