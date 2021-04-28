@@ -1,13 +1,13 @@
 import { ViewListMap } from '@t/option';
 import { createContext, ComponentType } from 'preact';
-import { useCallback, useContext, useState } from 'preact/hooks';
+import { useContext, useState } from 'preact/hooks';
 
 type Props = {
   initialView: string;
   components: ViewListMap;
 };
 
-type RouterContext = {
+type Router = {
   viewName: string;
   components: ViewListMap;
   getComponent: (rounterKey: string) => ComponentType;
@@ -15,20 +15,19 @@ type RouterContext = {
   goto: (viewName: string) => void;
 };
 
-export const Router = createContext<RouterContext>({
-  viewName: '',
-} as RouterContext);
+export const RouterContext = createContext<Router | null>(null);
 
-export function useCreateRouter({ initialView, components }: Props): RouterContext {
+export function useCreateRouter({ initialView, components }: Props): Router {
   const [viewName, setViewName] = useState(initialView);
-  const getComponent = useCallback((routerKey: string) => components[routerKey].component, [
-    components,
-  ]);
-  const getCurrentComponent = useCallback(() => components[viewName].component, [
-    components,
-    viewName,
-  ]);
-  const goto = useCallback((newViewName: string) => setViewName(newViewName), []);
+  const getComponent = (routerKey: string) => {
+    if (!components[routerKey]) {
+      throw new TypeError(`The routerKey '${routerKey}' is not valid.`);
+    }
+
+    return components[routerKey].component;
+  };
+  const getCurrentComponent = () => components[viewName].component;
+  const goto = (newViewName: string) => setViewName(newViewName);
 
   return {
     viewName,
@@ -40,5 +39,13 @@ export function useCreateRouter({ initialView, components }: Props): RouterConte
 }
 
 export function useRouter() {
-  return useContext(Router);
+  const router = useContext(RouterContext);
+
+  if (!router) {
+    throw new TypeError(
+      'There is no value provided in RouterContext. Create a value with useCreateRouter.'
+    );
+  }
+
+  return router;
 }

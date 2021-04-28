@@ -4,7 +4,7 @@ import StoreProvider from '@src/components/provider/storeProvider';
 import Store from '@src/store/store';
 import { CalendarState } from '@t/store';
 import { ViewListMap } from '@t/option';
-import { Router, useCreateRouter } from '@src/components/hooks/router';
+import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
 
 type Props = {
   initialView: string;
@@ -22,12 +22,12 @@ const Main: FunctionComponent<Props> = ({ initialView, components }) => {
   const ToolbarComponent = router.getComponent('toolbar');
 
   return (
-    <Router.Provider value={router}>
+    <RouterContext.Provider value={router}>
       <ToolbarComponent />
       <StoreProvider store={store}>
         <ViewComponent />
       </StoreProvider>
-    </Router.Provider>
+    </RouterContext.Provider>
   );
 };
 
