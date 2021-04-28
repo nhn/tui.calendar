@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 import Store from '@src/store/store';
 import { CalendarState } from '@t/store';
-import { renderHook } from '@testing-library/preact-hooks';
+import { renderHook, act } from '@testing-library/preact-hooks';
 import StoreProvider from '@src/components/provider/storeProvider.tsx';
 import { useCreateStore, useStore, useActions } from '@src/components/hooks/store';
 import { counter, todos } from '@test/module/modules';
@@ -86,6 +86,16 @@ describe('Store Provider', () => {
       expect(result.current.state).toEqual({
         todos: [],
         input: '',
+      });
+
+      act(() => {
+        result.current?.actions.insert('todo 1');
+      });
+
+      expect(result.current.state.todos[0]).toEqual({
+        id: 1,
+        text: 'todo 1',
+        done: false,
       });
     });
   });
