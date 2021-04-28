@@ -40,6 +40,7 @@
     "@storybook/core": "^6.1.21",
     "@storybook/preact": "^6.1.18",
     "@storybook/theming": "^6.1.18",
+    "@testing-library/preact": "^2.0.1",
     "@testing-library/preact-hooks": "^1.1.0",
     "@toast-ui/date": "file:../../libs/date",
     "@toast-ui/release-notes": "^2.0.1",
