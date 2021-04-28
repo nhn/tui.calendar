@@ -1,14 +1,30 @@
-import Store from '@src/store/store';
-import { CalendarState } from '@t/store';
+import Store from '@src/store';
+
+type TodoItem = {
+  id: number;
+  text: string;
+  done: boolean;
+};
+
+type TodosState = {
+  input: string;
+  todos: TodoItem[];
+};
+
+type CounterState = {
+  number: number;
+};
 
 let todoItemId = 0;
 
+const initialState: TodosState = {
+  input: '',
+  todos: [],
+};
+
 export const todos = {
   name: 'todos',
-  state: {
-    input: '',
-    todos: [],
-  },
+  state: initialState,
   actions: {
     toggleCheck(state: TodosState, payload: number): TodosState {
       return {
@@ -18,7 +34,7 @@ export const todos = {
         ),
       };
     },
-    insert(state: TodosState, payload: string, store: Store<CalendarState>): TodosState {
+    insert(state: TodosState, payload: string, store: Store): TodosState {
       todoItemId += 1;
       store.dispatch('counter/increment');
 
@@ -27,7 +43,7 @@ export const todos = {
         todos: state.todos.concat({ id: todoItemId, text: payload, done: false }),
       };
     },
-    remove(state: TodosState, payload: number, store: Store<CalendarState>): TodosState {
+    remove(state: TodosState, payload: number, store: Store): TodosState {
       store.dispatch('counter/decrement');
 
       return { ...state, todos: state.todos.filter(({ id }) => id !== payload) };

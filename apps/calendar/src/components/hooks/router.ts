@@ -7,13 +7,13 @@ type Props = {
   components: ViewListMap;
 };
 
-type Router = {
+export interface Router {
   viewName: string;
   components: ViewListMap;
-  getComponent: (rounterKey: string) => ComponentType;
+  getComponent: (routerKey: string) => ComponentType;
   getCurrentComponent: () => ComponentType;
-  goto: (viewName: string) => void;
-};
+  go: (viewName: string) => void;
+}
 
 export const RouterContext = createContext<Router | null>(null);
 
@@ -21,20 +21,20 @@ export function useCreateRouter({ initialView, components }: Props): Router {
   const [viewName, setViewName] = useState(initialView);
   const getComponent = (routerKey: string) => {
     if (!components[routerKey]) {
-      throw new TypeError(`The routerKey '${routerKey}' is not valid.`);
+      throw new TypeError(`The routerKey '${routerKey}' is not registered.`);
     }
 
     return components[routerKey].component;
   };
   const getCurrentComponent = () => components[viewName].component;
-  const goto = (newViewName: string) => setViewName(newViewName);
+  const go = (newViewName: string) => setViewName(newViewName);
 
   return {
     viewName,
     components,
     getComponent,
     getCurrentComponent,
-    goto,
+    go,
   };
 }
 

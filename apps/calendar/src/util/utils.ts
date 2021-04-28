@@ -58,13 +58,13 @@ export function deepCopy<T extends Record<string, any>>(obj: T) {
     return obj;
   }
 
-  keys.forEach((prop) => {
-    if (isObject(obj[prop])) {
-      resultObj[prop] = Array.isArray(obj[prop]) ? deepCopyArray(obj[prop]) : deepCopy(obj[prop]);
+  keys.forEach((key) => {
+    if (isObject(obj[key])) {
+      resultObj[key] = Array.isArray(obj[key]) ? deepCopyArray(obj[key]) : deepCopy(obj[key]);
     } else {
-      resultObj[prop] = obj[prop];
+      resultObj[key] = obj[key];
     }
   });
 
-  return resultObj as T;
+  return resultObj;
 }

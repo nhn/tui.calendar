@@ -1,4 +1,4 @@
-import Store from '@src/store/store';
+import Store from '@src/store';
 import { getActions, getState } from '@src/util/storeHelper';
 import {
   CalendarActions,
@@ -11,7 +11,6 @@ import {
 import { createContext } from 'preact';
 import { useContext, useMemo, useState } from 'preact/hooks';
 
-// define calendar actions
 let calendarActions: PayloadActions;
 
 type StateType<S> = S extends keyof CalendarState ? CalendarState[S] : never;
@@ -21,10 +20,10 @@ export const StoreContext = createContext<CalendarState | null>(null);
 
 export function useCreateStore(store: Store<CalendarState>) {
   const [state, setCalendarState] = useState(store.state);
-  const { payloadActions } = store;
+  const { actions } = store;
 
   store.setStateUpdater(setCalendarState);
-  calendarActions = payloadActions;
+  calendarActions = actions;
 
   return state;
 }

@@ -1,5 +1,5 @@
 import { theme, template, options } from '@src/modules';
-import Store from '@src/store/store';
+import Store from '@src/store';
 import { Options } from './option';
 
 type InitStoreData = {

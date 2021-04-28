@@ -1,8 +1,8 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useCallback } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { useRouter } from '@src/components/hooks/router';
+import Button from '@src/components/ui/button';
 import { ViewListMap } from '@t/option';
 
 interface ViewButton {
@@ -19,36 +19,13 @@ const makeToolbarViewButtons = (viewConfigMap: ViewListMap) => {
   return Object.keys(viewConfigMap).reduce<ViewButton[]>((acc, viewType) => {
     const { router } = viewConfigMap[viewType];
 
-    if (router) {
-      acc.push({ name: router.linkTitle, value: viewType });
-    }
-
-    return acc;
+    return router ? [...acc, { name: router.linkTitle, value: viewType }] : acc;
   }, []);
 };
 
-interface ButtonProps {
-  name: string;
-  value: string;
-  className: string;
-  onClick: (value: string) => void;
-}
-
-const Button: FunctionComponent<ButtonProps> = ({ name, onClick, value, className }) => {
-  return (
-    <button type="button" className={className} onClick={() => onClick(value)}>
-      {name}
-    </button>
-  );
-};
-
 const ToolbarButtons: FunctionComponent<Props> = ({ currentViewName, viewButtons, changeView }) => {
-  const getClassName = useCallback(
-    (viewName: string) => {
-      return `${cls('toolbar-button')} ${currentViewName === viewName ? cls('active') : ''}`;
-    },
-    [currentViewName]
-  );
+  const getClassName = (viewName: string) =>
+    `${cls('toolbar-button')} ${currentViewName === viewName ? cls('active') : ''}`;
 
   return (
     <Fragment>
@@ -65,18 +42,16 @@ const ToolbarButtons: FunctionComponent<Props> = ({ currentViewName, viewButtons
 };
 
 const Toolbar: FunctionComponent = () => {
-  const { viewName: currentViewName, components, goto: changeView } = useRouter();
-
-  const props = {
-    currentViewName,
-    viewButtons: makeToolbarViewButtons(components),
-    changeView,
-  };
+  const { viewName, components, go } = useRouter();
 
   // @TODO: Toolbar 작성 필요
   return (
     <div className={cls('toolbar')}>
-      <ToolbarButtons {...props} />
+      <ToolbarButtons
+        currentViewName={viewName}
+        viewButtons={makeToolbarViewButtons(components)}
+        changeView={go}
+      />
     </div>
   );
 };

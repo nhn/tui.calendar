@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { renderHook, act } from '@testing-library/preact-hooks';
-import { useCreateRouter } from '@src/components/hooks/router';
+import { Router, useCreateRouter } from '@src/components/hooks/router';
 
 const View1: FunctionComponent = () => {
   return <div>View1</div>;
@@ -47,7 +47,7 @@ describe('useCreateRouter', () => {
       components: { view1, view2, toolbar },
       getComponent: expect.any(Function),
       getCurrentComponent: expect.any(Function),
-      goto: expect.any(Function),
+      go: expect.any(Function),
     });
   });
 
@@ -59,13 +59,9 @@ describe('useCreateRouter', () => {
 
   it('should throw an error if you use a routerKey that is not registered', () => {
     const { result } = setup();
+    const getComponentFn = result.current?.getComponent.bind(this, 'view3');
 
-    if (!result.current) {
-      return;
-    }
-
-    const getComponentFn = result.current.getComponent.bind(this, 'view3');
-    expect(getComponentFn).toThrowError("The routerKey 'view3' is not valid.");
+    expect(getComponentFn).toThrowError("The routerKey 'view3' is not registered.");
   });
 
   it('should get the currently selected component', () => {
@@ -78,7 +74,7 @@ describe('useCreateRouter', () => {
     const { result } = setup();
 
     act(() => {
-      result.current?.['goto']('view2');
+      result.current?.go('view2');
     });
 
     expect(result.current?.viewName).toEqual('view2');

@@ -15,16 +15,16 @@ interface StoreProps {
   initStoreData: InitStoreData;
 }
 
-class Store<S extends Record<string, any> = any> {
-  state = {} as S;
+class Store<State extends Record<string, any> = any> {
+  state = {} as State;
 
   initStoreData!: InitStoreData;
 
   flattenActionMap: Action = {};
 
-  payloadActions: PayloadActions = {};
+  actions: PayloadActions = {};
 
-  stateUpdater: StateUpdater<S> | null = null;
+  stateUpdater: StateUpdater<State> | null = null;
 
   constructor({ modules, initStoreData }: StoreProps) {
     this.initStoreData = deepCopy(initStoreData);
@@ -32,7 +32,7 @@ class Store<S extends Record<string, any> = any> {
     modules.forEach((module) => this.setModule(module));
   }
 
-  setStateUpdater(stateUpdater: StateUpdater<S>) {
+  setStateUpdater(stateUpdater: StateUpdater<State>) {
     this.stateUpdater = stateUpdater;
   }
 
@@ -40,7 +40,7 @@ class Store<S extends Record<string, any> = any> {
     return this.state;
   }
 
-  setState(state: S) {
+  setState(state: State) {
     this.state = state;
   }
 
@@ -61,13 +61,12 @@ class Store<S extends Record<string, any> = any> {
   }
 
   setPayloadAction(name: string, actionName: string) {
-    if (!this.payloadActions[name]) {
-      this.payloadActions[name] = {};
+    if (!this.actions[name]) {
+      this.actions[name] = {};
     }
 
-    this.payloadActions[name][actionName] = (payload?: any) => {
+    this.actions[name][actionName] = (payload?: any) =>
       this.dispatch(`${name}/${actionName}`, payload);
-    };
   }
 
   setFlattenActionMap(actionType: string, actionFn: ActionFunc) {
@@ -87,33 +86,6 @@ class Store<S extends Record<string, any> = any> {
     if (this.stateUpdater) {
       this.stateUpdater(this.state);
     }
-  }
-
-  getValue(names?: ModuleKeys | ModuleKeys[]) {
-    if (typeof names === 'string') {
-      if (!Object.keys(this.state).includes(names)) {
-        throw new Error(
-          `It is not a registered ${names} module. Please register the module to be used when using 'useCreateStore'.`
-        );
-      }
-
-      return {
-        state: this.state[names],
-        actions: this.payloadActions[names],
-      };
-    }
-
-    if (Array.isArray(names)) {
-      return names.reduce(
-        (acc, name) => ({
-          state: { ...acc.state, [name]: this.state[name] },
-          actions: { ...acc.actions, ...filterActions(this.payloadActions, name) },
-        }),
-        { state: {}, actions: {} }
-      );
-    }
-
-    return { state: this.state, actions: this.payloadActions };
   }
 }
 

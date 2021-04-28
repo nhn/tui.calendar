@@ -1,7 +1,7 @@
 import { h, FunctionComponent } from 'preact';
 
 import StoreProvider from '@src/components/provider/storeProvider';
-import Store from '@src/store/store';
+import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { ViewListMap } from '@t/option';
 import { RouterContext, useCreateRouter } from '@src/components/hooks/router';

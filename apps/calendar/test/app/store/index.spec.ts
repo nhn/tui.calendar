@@ -1,4 +1,4 @@
-import Store from '@src/store/store';
+import Store from '@src/store';
 import { CalendarState, InitStoreData } from '@t/store';
 import { counter, todos } from '@test/module/modules';
 
@@ -48,8 +48,8 @@ describe('Store', () => {
       expect(store.flattenActionMap).toHaveProperty('counter/decrement');
     });
 
-    it('should set payloadActions', () => {
-      expect(store.payloadActions).toEqual({
+    it('should set actions', () => {
+      expect(store.actions).toEqual({
         todos: {
           toggleCheck: expect.any(Function),
           insert: expect.any(Function),

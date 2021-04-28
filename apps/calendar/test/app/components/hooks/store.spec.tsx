@@ -1,5 +1,5 @@
 import { FunctionComponent, h } from 'preact';
-import Store from '@src/store/store';
+import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { renderHook, act } from '@testing-library/preact-hooks';
 import StoreProvider from '@src/components/provider/storeProvider.tsx';
@@ -97,6 +97,18 @@ describe('Store Provider', () => {
         text: 'todo 1',
         done: false,
       });
+
+      act(() => {
+        result.current?.actions.toggleCheck(1);
+      });
+
+      expect(result.current.state.todos[0].done).toBeTruthy();
+
+      act(() => {
+        result.current?.actions.remove(1);
+      });
+
+      expect(result.current.state.todos.length).toBe(0);
     });
   });
 
