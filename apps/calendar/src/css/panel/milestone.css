@@ -34,6 +34,24 @@
   position: absolute;
 }
 
+.panel-schedule-wrapper .weekday-event-block {
+  position: absolute;
+}
+
+.panel-schedule-wrapper .weekday-event-block .weekday-event {
+  position: relative;
+  margin: 0 10px 0 1px;
+  cursor: pointer;
+  border-left-style: solid;
+  border-left-width: 3px;
+
+  height: 18px;
+  border-radius: 0;
+  color: #9a1313;
+  background-color: rgba(218, 27, 27, 0.2);
+  border-color: #da1b1b;
+}
+
 .panel-event {
   position: absolute;
   border: 1px solid #333;
