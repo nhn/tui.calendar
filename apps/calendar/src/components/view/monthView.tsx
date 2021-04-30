@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Text } from '@src/components/text';
+import { Text } from '@src/components/ui/text';
 import { Template } from '@src/components/template';
 import ContextComponent from '@src/components/contextComponent';
 

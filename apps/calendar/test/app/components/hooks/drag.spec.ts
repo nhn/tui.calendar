@@ -1,6 +1,6 @@
 import { useDrag, DISTANCE, MouseEventListener, DragListeners } from '@src/components/hooks/drag';
 import { noop } from '@src/util';
-import { createMouseEvent, createKeyboardEvent, spyOnDragEvent } from '@test/util';
+import { createMouseEvent, createKeyboardEvent, spyOnDragEvent } from '@test/helper';
 
 const primaryButton = 0;
 
