@@ -109,11 +109,11 @@ export const setRenderInfo = (
   viewModel.exceedRight = exceedRight;
 };
 
-export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList, options) => {
-  const viewModels = events
-    .filter(isBetweenEvent(gridInfoList))
-    .sort(array.compare.schedule.asc)
-    .map(ScheduleViewModel.create);
+export const setViewModelsInfo = (
+  viewModels: ScheduleViewModel[],
+  gridInfoList: GridInfoList,
+  options
+) => {
   const { narrowWeekend = false } = options;
 
   const matrices = getMatrices(viewModels);
@@ -128,8 +128,6 @@ export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList, op
       setRenderInfo(viewModel, gridInfoList, widthList, top);
     });
   });
-
-  return viewModels;
 };
 
 export const isCollisionWith = (viewModel: ScheduleViewModel) => {
@@ -141,6 +139,13 @@ export const isCollisionWith = (viewModel: ScheduleViewModel) => {
 
     return (start <= targetStart && targetStart <= end) || (start <= targetEnd && targetEnd <= end);
   };
+};
+
+export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList) => {
+  return events
+    .filter(isBetweenEvent(gridInfoList))
+    .sort(array.compare.schedule.asc)
+    .map(ScheduleViewModel.create);
 };
 
 export const getMatrices = (viewModels: ScheduleViewModel[]) => {

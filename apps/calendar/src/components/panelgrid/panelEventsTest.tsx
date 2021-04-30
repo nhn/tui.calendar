@@ -11,7 +11,7 @@ import { isBetween } from '@src/util/math';
 import Schedule from '@src/model/schedule';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { DayEvent } from '@src/components/events/dayEvent';
-import { getViewModels } from '@src/time/panelEvent';
+import { getMatrices, getViewModels, setViewModelsInfo } from '@src/time/panelEvent';
 import { PanelStateStore } from '@src/components/layout';
 
 const PANEL_SCHEDULE_WRAPPER_CLASS_NAME = cls('panel-schedule-wrapper');
@@ -39,7 +39,8 @@ const renderEvents = (events: Schedule[], gridInfoList: GridInfoList, options) =
   const style = {
     marginRight,
   };
-  const viewModels = getViewModels(events, gridInfoList, options);
+  const viewModels = getViewModels(events, gridInfoList);
+  setViewModelsInfo(viewModels, gridInfoList, options);
 
   return (
     <Fragment>

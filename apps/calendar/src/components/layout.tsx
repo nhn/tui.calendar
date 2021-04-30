@@ -40,7 +40,7 @@ type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 
 // @TODO: remove after store module merged
 interface PanelState {
-  height: number;
+  panelHeight: number;
   maxEventHeightMap: number[];
   renderedHeightMap: number[];
   lastRenderedHeightMap: number[];
@@ -192,7 +192,7 @@ export const Layout: FunctionComponent<Props> = ({
         return layoutPanels(panelInfoList, {
           direction,
           width: width ?? elementSize.width,
-          height: width ?? elementSize.height,
+          height: height ?? elementSize.height,
         });
       };
 

@@ -53,7 +53,7 @@ const Panel: FunctionComponent<Props> = (props) => {
       type: UPDATE_PANEL_HEIGHT,
       panelType: name,
       state: {
-        height: getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY,
+        panelHeight: getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY,
       },
     });
   };
@@ -113,8 +113,7 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const panelHeight = state[name]?.height ?? defaultPanelHeight;
-  const height = props.height ?? panelHeight;
+  const height = state[name]?.panelHeight ?? defaultPanelHeight;
   const styles = getPanelStylesFromInfo(
     direction === Direction.COLUMN ? { ...props, height } : { ...props, width: height }
   );
