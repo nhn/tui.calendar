@@ -1,4 +1,4 @@
-import { isWeekend } from '@src/time/datetime';
+import { isWeekend, toStartOfDay } from '@src/time/datetime';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import array from '@src/util/array';
@@ -75,7 +75,7 @@ export const setRenderInfo = (
   viewModel: ScheduleViewModel,
   gridInfoList: GridInfoList,
   widthList: number[],
-  row: number
+  top: number
 ) => {
   const modelStart = viewModel.getStarts();
   const modelEnd = viewModel.getEnds();
@@ -93,9 +93,20 @@ export const setRenderInfo = (
 
   const left = !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1);
 
+  let exceedRight = true;
+  gridInfoList.forEach((gridInfo) => {
+    const modelEndDate = toStartOfDay(modelEnd).getDate();
+    const gridDate = toStartOfDay(gridInfo).getDate();
+
+    if (modelEndDate === gridDate) {
+      exceedRight = false;
+    }
+  });
+
   viewModel.width = getWidth(widthList, gridStartIndex, gridEndIndex);
   viewModel.left = left;
-  viewModel.top = row;
+  viewModel.top = top;
+  viewModel.exceedRight = exceedRight;
 };
 
 export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList, options) => {
@@ -112,9 +123,9 @@ export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList, op
     totalWidth: 100,
   });
 
-  matrices.forEach((matrix, row) => {
+  matrices.forEach((matrix, top) => {
     matrix.forEach((viewModel) => {
-      setRenderInfo(viewModel, gridInfoList, widthList, row);
+      setRenderInfo(viewModel, gridInfoList, widthList, top);
     });
   });
 

@@ -16,7 +16,12 @@ export const DayEvent: FunctionComponent<Props> = ({ viewModel }) => {
   };
 
   return (
-    <div className={cls('weekday-event-block')} style={style}>
+    <div
+      className={`${cls('weekday-event-block')} ${cls(
+        viewModel.exceedRight ? 'weekday-exceed-right' : ''
+      )}`}
+      style={style}
+    >
       <div className={cls('weekday-event')}>{viewModel.cid()}</div>
     </div>
   );

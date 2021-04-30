@@ -38,7 +38,7 @@
   position: absolute;
 }
 
-.panel-schedule-wrapper .weekday-event-block .weekday-event {
+.panel-schedule-wrapper .weekday-event {
   position: relative;
   margin: 0 10px 0 1px;
   cursor: pointer;
@@ -50,6 +50,10 @@
   color: #9a1313;
   background-color: rgba(218, 27, 27, 0.2);
   border-color: #da1b1b;
+}
+
+.panel-schedule-wrapper .weekday-exceed-right .weekday-event {
+  margin-right: 0;
 }
 
 .panel-event {
