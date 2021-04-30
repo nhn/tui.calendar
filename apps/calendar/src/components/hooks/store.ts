@@ -13,12 +13,12 @@ import { useContext, useMemo, useState } from 'preact/hooks';
 
 let calendarActions: PayloadActions;
 
-type StateType<S> = S extends keyof CalendarState ? CalendarState[S] : never;
-type ActionType<A> = A extends keyof CalendarActions ? CalendarActions[A] : never;
+type StateType<NAME> = NAME extends keyof CalendarState ? CalendarState[NAME] : never;
+type ActionType<NAME> = NAME extends keyof CalendarActions ? CalendarActions[NAME] : never;
 
 export const StoreContext = createContext<CalendarState | null>(null);
 
-export function useCreateStore(store: Store<CalendarState>) {
+export function useCalendarState(store: Store<CalendarState>) {
   const [state, setCalendarState] = useState(store.state);
   const { actions } = store;
 
@@ -46,7 +46,7 @@ export function useStore(names?: ModuleKeys | ModuleKeys[]) {
   const state = useContext(StoreContext);
 
   if (!state) {
-    throw new Error('There is no state available.');
+    throw new Error('There is no store available.');
   }
 
   return {

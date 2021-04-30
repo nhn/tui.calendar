@@ -4,7 +4,7 @@ import { Option } from '@src/model';
 type Options = Option; // @TODO: Option 정의 필요
 
 interface ViewInfoUserInput {
-  component: ComponentType;
+  component: ComponentType<any>;
   router?: {
     linkTitle: string;
   };

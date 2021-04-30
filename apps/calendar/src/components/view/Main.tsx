@@ -1,10 +1,12 @@
 import { h, FunctionComponent } from 'preact';
 
-import StoreProvider from '@src/components/provider/storeProvider';
+import Provider from '@src/components/provider';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { ViewListMap } from '@t/option';
 import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
+import ToolbarContainer from '@src/components/toolbar/toolbarContainer';
+import ViewContainer from '@src/components/view/viewContainer';
 
 type Props = {
   initialView: string;
@@ -18,15 +20,13 @@ const store = new Store<CalendarState>({
 
 const Main: FunctionComponent<Props> = ({ initialView, components }) => {
   const router = useCreateRouter({ initialView, components });
-  const ViewComponent = router.getCurrentComponent();
-  const ToolbarComponent = router.getComponent('toolbar');
 
   return (
     <RouterContext.Provider value={router}>
-      <ToolbarComponent />
-      <StoreProvider store={store}>
-        <ViewComponent />
-      </StoreProvider>
+      <ToolbarContainer />
+      <Provider store={store}>
+        <ViewContainer />
+      </Provider>
     </RouterContext.Provider>
   );
 };

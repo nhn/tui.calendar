@@ -1,9 +1,9 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-
 import { cls } from '@src/util/cssHelper';
-import { useRouter } from '@src/components/hooks/router';
 import Button from '@src/components/ui/button';
 import { ViewListMap } from '@t/option';
+import React from 'preact/compat';
+import { ToolbarProps } from '@t/toolbar';
 
 interface ViewButton {
   name: string;
@@ -41,9 +41,7 @@ const ToolbarButtons: FunctionComponent<Props> = ({ currentViewName, viewButtons
   );
 };
 
-const Toolbar: FunctionComponent = () => {
-  const { viewName, components, go } = useRouter();
-
+const Toolbar: FunctionComponent<ToolbarProps> = ({ viewName, components, go }) => {
   // @TODO: Toolbar 작성 필요
   return (
     <div className={cls('toolbar')}>

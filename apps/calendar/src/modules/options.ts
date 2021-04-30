@@ -1,10 +1,9 @@
-import { deepMergedCopy } from '@src/util/utils';
 import { Option } from '@src/model';
 import { InitStoreData } from '@t/store';
 
-const optionsData = {
+const options = {
   name: 'options',
-  state: ({ options }: InitStoreData) => ({ options: deepMergedCopy({}, options) } as Option),
+  state: (initStoreData: InitStoreData) => ({ options: { ...initStoreData.options } } as Option),
 };
 
-export default optionsData;
+export default options;

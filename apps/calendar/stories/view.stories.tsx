@@ -5,6 +5,7 @@ import MonthView from '@src/components/view/monthView';
 import WeekView from '@src/components/view/weekView';
 import DayView from '@src/components/view/dayView';
 import { cls } from '@src/util/cssHelper';
+import { ViewListMap } from '@t/option';
 
 export default { title: 'View' };
 
@@ -36,24 +37,20 @@ const timeGridDay = {
     linkTitle: 'Daily',
   },
 };
-const ToolbarContainerWrapper: FunctionComponent = () => <Toolbar />;
 
 export const main = () => {
-  const calendarProps = {
-    initialView: 'dayGridMonth',
-    components: {
-      dayGridMonth,
-      timeGridWeek,
-      timeGridDay,
-      toolbar: {
-        component: ToolbarContainerWrapper,
-      },
+  const components: ViewListMap = {
+    dayGridMonth,
+    timeGridWeek,
+    timeGridDay,
+    toolbar: {
+      component: Toolbar,
     },
   };
 
   return (
     <Wrapper>
-      <Main {...calendarProps} />
+      <Main initialView="dayGridMonth" components={components} />
     </Wrapper>
   );
 };

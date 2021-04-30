@@ -5,18 +5,16 @@ describe('utils', () => {
     const obj = { a: 1, b: { c: 1 } };
     const copiedObj = deepCopy(obj);
 
-    copiedObj.a = 2;
-    expect(obj.a).toEqual(1);
-    expect(copiedObj).toEqual({ a: 2, b: { c: 1 } });
+    expect(obj).not.toBe(copiedObj);
+    expect(obj).toEqual(copiedObj);
   });
 
   it('deepCopyArray', () => {
     const arr = [1, 2, 3, 4];
     const copiedArr = deepCopyArray(arr);
 
-    copiedArr.push(5);
-    expect(arr).toEqual([1, 2, 3, 4]);
-    expect(copiedArr).toEqual([1, 2, 3, 4, 5]);
+    expect(arr).not.toBe(copiedArr);
+    expect(arr).toEqual(copiedArr);
   });
 
   it('deepMergedCopy', () => {

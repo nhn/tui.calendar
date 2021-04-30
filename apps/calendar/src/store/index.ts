@@ -1,14 +1,13 @@
 import {
   Action,
   ActionFunc,
+  FlattenActions,
   InitStoreData,
-  ModuleKeys,
   PayloadActions,
   StoreModule,
 } from '@t/store';
 import { deepCopy, forEach } from '@src/util/utils';
 import { StateUpdater } from 'preact/hooks';
-import { filterActions } from '@src/util/storeHelper';
 
 interface StoreProps {
   modules: StoreModule[];
@@ -36,10 +35,6 @@ class Store<State extends Record<string, any> = any> {
     this.stateUpdater = stateUpdater;
   }
 
-  getState() {
-    return this.state;
-  }
-
   setState(state: State) {
     this.state = state;
   }
@@ -65,15 +60,22 @@ class Store<State extends Record<string, any> = any> {
       this.actions[name] = {};
     }
 
-    this.actions[name][actionName] = (payload?: any) =>
-      this.dispatch(`${name}/${actionName}`, payload);
+    this.actions[name][actionName] = (payload?: any) => {
+      const actionType = `${name}/${actionName}` as keyof FlattenActions;
+
+      this.dispatch(actionType, payload);
+    };
   }
 
   setFlattenActionMap(actionType: string, actionFn: ActionFunc) {
     this.flattenActionMap[actionType] = actionFn;
   }
 
-  dispatch(actionType: string, payload?: any) {
+  dispatch(actionType: keyof FlattenActions, payload?: any) {
+    if (!Object.keys(this.flattenActionMap).includes(actionType)) {
+      throw new TypeError(`Action type '${actionType}' is not valid.`);
+    }
+
     const [name] = actionType.split('/');
     const nextState = this.flattenActionMap[actionType](this.state[name], payload, this);
 

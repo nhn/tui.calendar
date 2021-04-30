@@ -1,16 +1,16 @@
 import { h, FunctionComponent } from 'preact';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
-import { StoreContext, useCreateStore } from '@src/components/hooks/store';
+import { StoreContext, useCalendarState } from '@src/components/hooks/store';
 
 interface Props {
   store: Store<CalendarState>;
 }
 
-const StoreProvider: FunctionComponent<Props> = ({ children, store }) => {
-  const state = useCreateStore(store);
+const Provider: FunctionComponent<Props> = ({ children, store }) => {
+  const state = useCalendarState(store);
 
   return <StoreContext.Provider value={state}>{children}</StoreContext.Provider>;
 };
 
-export default StoreProvider;
+export default Provider;

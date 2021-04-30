@@ -1,10 +1,10 @@
 type Event = { id: string; title: string };
 
-type Events = {
+type EventsState = {
   events: Event[];
 };
 
-const initialState: Events = { events: [] };
+const initialState: EventsState = { events: [] };
 
 const events = {
   name: 'events',

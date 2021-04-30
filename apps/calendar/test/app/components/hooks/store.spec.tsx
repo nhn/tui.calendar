@@ -2,8 +2,8 @@ import { FunctionComponent, h } from 'preact';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { renderHook, act } from '@testing-library/preact-hooks';
-import StoreProvider from '@src/components/provider/storeProvider.tsx';
-import { useCreateStore, useStore, useActions } from '@src/components/hooks/store';
+import StoreProvider from '@src/components/provider';
+import { useCalendarState, useStore, useActions } from '@src/components/hooks/store';
 import { counter, todos } from '@test/module/modules';
 
 function getStoreWrapper(store: Store): FunctionComponent {
@@ -23,7 +23,7 @@ describe('Store Provider', () => {
     });
 
     it('should return initial state', () => {
-      const { result } = renderHook(() => useCreateStore(store));
+      const { result } = renderHook(() => useCalendarState(store));
 
       expect(result.current).toEqual({
         todos: { todos: [], input: '' },
@@ -34,7 +34,7 @@ describe('Store Provider', () => {
     it('should set stateUpdater for Store', () => {
       expect(store.stateUpdater).toBeNull();
 
-      renderHook(() => useCreateStore(store));
+      renderHook(() => useCalendarState(store));
 
       expect(store.stateUpdater).toBeDefined();
     });
