@@ -16,6 +16,7 @@ import { PanelStateStore } from '@src/components/layout';
 
 const PANEL_SCHEDULE_WRAPPER_CLASS_NAME = cls('panel-schedule-wrapper');
 const PANEL_SCHEDULE_CLASS_NAME = cls('panel-schedule');
+const EVENT_HEIGHT = 20;
 const TOTAL_WIDTH = 100;
 
 interface Props {
@@ -24,8 +25,7 @@ interface Props {
   events: Schedule[];
   narrowWeekend: boolean;
   eventHeight: number;
-  height: number;
-  renderedHeightMap: number[];
+  panelHeight: number;
 }
 
 interface EventStyle {
@@ -34,36 +34,30 @@ interface EventStyle {
   top: number;
 }
 
-const renderEvents = (events: Schedule[], gridInfoList: GridInfoList, options) => {
-  const marginRight = 8;
-  const style = {
-    marginRight,
-  };
-  const viewModels = getViewModels(events, gridInfoList);
-  setViewModelsInfo(viewModels, gridInfoList, options);
-
-  return (
-    <Fragment>
-      {viewModels.map((viewModel, index) => (
-        <DayEvent viewModel={viewModel} key={`DayEvent-${index}`} />
-      ))}
-    </Fragment>
-  );
-};
-
 export const PanelEventsTest: FunctionComponent<Props> = ({
   name,
   gridInfoList,
   events,
   narrowWeekend,
   eventHeight,
-  height,
+  panelHeight,
 }) => {
   const { dispatch } = useContext(PanelStateStore);
 
-  return (
-    <div className={PANEL_SCHEDULE_WRAPPER_CLASS_NAME}>
-      {renderEvents(events, gridInfoList, { narrowWeekend, eventHeight })}
-    </div>
-  );
+  const renderEvents = () => {
+    const viewModels = getViewModels(events, gridInfoList);
+    setViewModelsInfo(viewModels, gridInfoList, { narrowWeekend, eventHeight });
+
+    return (
+      <Fragment>
+        {viewModels
+          .filter(({ top }) => panelHeight >= (top + 1) * EVENT_HEIGHT)
+          .map((viewModel, index) => (
+            <DayEvent viewModel={viewModel} key={`DayEvent-${index}`} />
+          ))}
+      </Fragment>
+    );
+  };
+
+  return <div className={PANEL_SCHEDULE_WRAPPER_CLASS_NAME}>{renderEvents()}</div>;
 };
