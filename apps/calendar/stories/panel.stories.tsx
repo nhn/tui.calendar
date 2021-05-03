@@ -23,22 +23,22 @@ const fri = addDate(now, -now.getDay() + 5);
 const sat = addDate(now, -now.getDay() + 6);
 const sun = addDate(now, -now.getDay() + 7);
 
-const data: MilestoneEvent[] = [
-  { start: mon, end: wed, name: 'milestone', type: 'daygrid' },
-  { start: mon, end: wed, name: 'milestone', type: 'daygrid' },
-  { start: mon, end: tue, name: 'milestone', type: 'daygrid' },
-  { start: mon, end: tue, name: 'milestone', type: 'daygrid' },
-  { start: tue, end: fri, name: 'milestone', type: 'daygrid' },
-  { start: tue, end: fri, name: 'milestone', type: 'daygrid' },
-  { start: tue, end: wed, name: 'milestone', type: 'daygrid' },
-  { start: wed, end: thu, name: 'milestone', type: 'daygrid' },
-  { start: wed, end: wed, name: 'milestone', type: 'daygrid' },
-  { start: thu, end: sun, name: 'milestone', type: 'daygrid' },
-  { start: thu, end: sat, name: 'milestone', type: 'daygrid' },
-  { start: thu, end: fri, name: 'milestone', type: 'daygrid' },
-  { start: thu, end: fri, name: 'milestone', type: 'daygrid' },
-  { start: thu, end: fri, name: 'milestone', type: 'daygrid' },
-];
+const data = [
+  { start: mon, end: wed },
+  { start: mon, end: wed },
+  { start: mon, end: tue },
+  { start: mon, end: tue },
+  { start: tue, end: fri },
+  { start: tue, end: fri },
+  { start: tue, end: wed },
+  { start: wed, end: thu },
+  { start: wed, end: wed },
+  { start: thu, end: sun },
+  { start: thu, end: sat },
+  { start: thu, end: fri },
+  { start: thu, end: fri },
+  { start: thu, end: fri },
+] as MilestoneEvent[];
 
 const Template: Story = (args) => (
   <Layout height={500}>
@@ -68,11 +68,11 @@ Wrapper.defaultProps = {
 export const milestone = Template.bind({});
 
 milestone.args = {
-  events: data.map((v) => {
-    const events = Schedule.create(v);
-    events.isAllDay = true;
+  events: data.map((e) => {
+    const event = Schedule.create(e);
+    event.isAllDay = true;
 
-    return events;
+    return event;
   }),
 };
 

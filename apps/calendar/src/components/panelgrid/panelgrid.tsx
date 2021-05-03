@@ -3,16 +3,11 @@ import { useContext, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import {
-  getGridStyleInfo,
-  getViewModels,
-  isExceededHeight,
-  isInGrid,
-  setViewModelsInfo,
-} from '@src/time/panelEvent';
+import { getGridStyleInfo, getViewModels, isInGrid, setViewModelsInfo } from '@src/time/panelEvent';
 import { PanelState, PanelStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 import Schedule from '@src/model/schedule';
 import { toStartOfDay } from '@src/time/datetime';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { PanelName, GridInfoList } from '@t/panel';
 
@@ -29,6 +24,10 @@ interface Props {
   defaultPanelHeight: number;
   options?: PanelState;
 }
+
+const isExceededHeight = (panelHeight: number, eventHeight: number) => {
+  return ({ top }: ScheduleViewModel) => panelHeight < (top + 1) * eventHeight;
+};
 
 export const PanelGrid: FunctionComponent<Props> = ({
   name,
@@ -57,7 +56,6 @@ export const PanelGrid: FunctionComponent<Props> = ({
       },
     });
   };
-
   const onClickCollapseButton = () => {
     setClickedExceedCount(false);
     dispatch({

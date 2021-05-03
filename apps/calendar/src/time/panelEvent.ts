@@ -58,7 +58,7 @@ export const getWidth = (widthList: number[], start: number, end: number) =>
     return acc;
   }, 0);
 
-export const isBetweenEvent = (gridInfoList: GridInfoList) => {
+const isBetweenEvent = (gridInfoList: GridInfoList) => {
   const [gridStart] = gridInfoList;
   const gridEnd = gridInfoList[gridInfoList.length - 1];
 
@@ -73,14 +73,6 @@ export const isBetweenEvent = (gridInfoList: GridInfoList) => {
   };
 };
 
-export const isExceededHeight = (panelHeight: number, eventHeight: number) => {
-  return ({ top }: ScheduleViewModel) => panelHeight < (top + 1) * eventHeight;
-};
-
-export const isWithinHeight = (panelHeight: number, eventHeight: number) => {
-  return ({ top }: ScheduleViewModel) => panelHeight >= (top + 1) * eventHeight;
-};
-
 export const isInGrid = (gridDate: TZDate) => {
   return (viewModel: ScheduleViewModel) => {
     const scheduleStart = toStartOfDay(viewModel.getStarts());
@@ -90,7 +82,7 @@ export const isInGrid = (gridDate: TZDate) => {
   };
 };
 
-export const setRenderInfo = (
+const setRenderInfo = (
   viewModel: ScheduleViewModel,
   gridInfoList: GridInfoList,
   widthList: number[],
@@ -128,28 +120,7 @@ export const setRenderInfo = (
   viewModel.exceedRight = exceedRight;
 };
 
-export const setViewModelsInfo = (
-  viewModels: ScheduleViewModel[],
-  gridInfoList: GridInfoList,
-  options: PanelState
-) => {
-  const { narrowWeekend = false } = options;
-
-  const matrices = getMatrices(viewModels);
-  const { widthList } = getGridStyleInfo({
-    gridInfoList,
-    narrowWeekend,
-    totalWidth: 100,
-  });
-
-  matrices.forEach((matrix, top) => {
-    matrix.forEach((viewModel) => {
-      setRenderInfo(viewModel, gridInfoList, widthList, top);
-    });
-  });
-};
-
-export const isCollisionWith = (viewModel: ScheduleViewModel) => {
+const isCollisionWith = (viewModel: ScheduleViewModel) => {
   return (target: ScheduleViewModel) => {
     const start = viewModel.getStarts();
     const end = viewModel.getEnds();
@@ -160,14 +131,7 @@ export const isCollisionWith = (viewModel: ScheduleViewModel) => {
   };
 };
 
-export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList) => {
-  return events
-    .filter(isBetweenEvent(gridInfoList))
-    .sort(array.compare.schedule.asc)
-    .map(ScheduleViewModel.create);
-};
-
-export const getMatrices = (viewModels: ScheduleViewModel[]) => {
+const getMatrices = (viewModels: ScheduleViewModel[]) => {
   if (!viewModels.length) {
     return [];
   }
@@ -193,4 +157,32 @@ export const getMatrices = (viewModels: ScheduleViewModel[]) => {
   });
 
   return matrices;
+};
+
+export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList) => {
+  return events
+    .filter(isBetweenEvent(gridInfoList))
+    .sort(array.compare.schedule.asc)
+    .map(ScheduleViewModel.create);
+};
+
+export const setViewModelsInfo = (
+  viewModels: ScheduleViewModel[],
+  gridInfoList: GridInfoList,
+  options: PanelState
+) => {
+  const { narrowWeekend = false } = options;
+
+  const matrices = getMatrices(viewModels);
+  const { widthList } = getGridStyleInfo({
+    gridInfoList,
+    narrowWeekend,
+    totalWidth: 100,
+  });
+
+  matrices.forEach((matrix, top) => {
+    matrix.forEach((viewModel) => {
+      setRenderInfo(viewModel, gridInfoList, widthList, top);
+    });
+  });
 };

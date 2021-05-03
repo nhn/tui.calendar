@@ -3,7 +3,8 @@ import { FunctionComponent, h, Fragment } from 'preact';
 import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
 import { DayEvent } from '@src/components/events/dayEvent';
-import { getViewModels, isWithinHeight, setViewModelsInfo } from '@src/time/panelEvent';
+import { getViewModels, setViewModelsInfo } from '@src/time/panelEvent';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { GridInfoList, PanelName } from '@t/panel';
 import type { PanelState } from '@src/components/layout';
@@ -16,6 +17,10 @@ interface Props {
   events: Schedule[];
   options?: PanelState;
 }
+
+const isWithinHeight = (panelHeight: number, eventHeight: number) => {
+  return ({ top }: ScheduleViewModel) => panelHeight >= (top + 1) * eventHeight;
+};
 
 export const PanelEvents: FunctionComponent<Props> = ({
   name,
