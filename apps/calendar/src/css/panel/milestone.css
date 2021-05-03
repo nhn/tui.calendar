@@ -77,8 +77,14 @@
 }
 
 .collapse-btn {
-  width: 9px;
-  height: 7px;
   display: inline-block;
   vertical-align: middle;
+  margin-top: -1px;
+  margin-left: -4px;
+  margin-right: -14px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 5px solid #4f5959;
 }
