@@ -1,62 +1,68 @@
-import { h, FunctionComponent } from 'preact';
-import { useContext, useEffect, useState } from 'preact/hooks';
+import { FunctionComponent, h } from 'preact';
+import { useContext, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import { getGridStyleInfo } from '@src/time/panelEvent';
+import { getGridStyleInfo, getViewModels, setViewModelsInfo } from '@src/time/panelEvent';
+import { PanelStateStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
+import Schedule from '@src/model/schedule';
+import { toStartOfDay } from '@src/time/datetime';
 
-import { PanelStateStore, REDUCE_HEIGHT, UPDATE_PANEL_HEIGHT_TO_MAX } from '@src/components/layout';
 import type { PanelName, GridInfoList } from '@t/panel';
 
 const TOTAL_WIDTH = 100;
 const DEFAULT_GRID_STYLE = {
   borderRight: '1px solid #ddd',
 };
+const EVENT_HEIGHT = 20;
 
 interface Props {
   name: PanelName;
   gridInfoList: GridInfoList;
+  events: Schedule[];
+  panelHeight: number;
+  defaultPanelHeight: number;
   narrowWeekend: boolean;
-  maxEventHeightMap?: number[];
-  renderedHeightMap?: number[];
 }
 
 export const PanelGrid: FunctionComponent<Props> = ({
   name,
   gridInfoList,
+  events,
+  panelHeight,
+  defaultPanelHeight,
   narrowWeekend,
-  maxEventHeightMap = [],
-  renderedHeightMap = [],
 }) => {
-  const [exceedMap, setExceedMap] = useState(
-    maxEventHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index])
-  );
   const [clickedCountIndex, setClickedCountIndex] = useState(0);
   const [isClickedExceedCount, setClickedExceedCount] = useState(false);
   const { dispatch } = useContext(PanelStateStore);
+
+  const viewModels = getViewModels(events, gridInfoList);
+  setViewModelsInfo(viewModels, gridInfoList, {});
+  const maxTop = viewModels.reduce((acc, viewModel) => Math.max(acc, viewModel.top), 0);
 
   const onClickExceedCount = (index: number) => {
     setClickedExceedCount(true);
     setClickedCountIndex(index);
     dispatch({
-      type: UPDATE_PANEL_HEIGHT_TO_MAX,
+      type: UPDATE_PANEL_HEIGHT,
       panelType: name,
-      state: {},
+      state: {
+        panelHeight: (maxTop + 1) * EVENT_HEIGHT,
+      },
     });
   };
 
   const onClickCollapseButton = () => {
     setClickedExceedCount(false);
     dispatch({
-      type: REDUCE_HEIGHT,
+      type: UPDATE_PANEL_HEIGHT,
       panelType: name,
-      state: {},
+      state: {
+        panelHeight: defaultPanelHeight,
+      },
     });
   };
-
-  useEffect(() => {
-    setExceedMap(maxEventHeightMap.map((maxHeight, index) => maxHeight - renderedHeightMap[index]));
-  }, [maxEventHeightMap, renderedHeightMap]);
 
   const { widthList, leftList } = getGridStyleInfo({
     gridInfoList,
@@ -64,14 +70,25 @@ export const PanelGrid: FunctionComponent<Props> = ({
     totalWidth: TOTAL_WIDTH,
   });
 
-  const renderExceedCount = (index: number) =>
-    exceedMap[index] && !isClickedExceedCount ? (
+  const renderExceedCount = (index: number) => {
+    const gridDate = toStartOfDay(gridInfoList[index]);
+    const exceedCount = viewModels
+      .filter((viewModel) => {
+        const scheduleStart = toStartOfDay(viewModel.getStarts());
+        const scheduleEnd = toStartOfDay(viewModel.getEnds());
+
+        return scheduleStart <= gridDate && gridDate <= scheduleEnd;
+      })
+      .filter(({ top }) => panelHeight < (top + 1) * EVENT_HEIGHT).length;
+
+    return exceedCount && !isClickedExceedCount ? (
       <span
         className={cls('weekday-exceed-in-week')}
         onClick={() => onClickExceedCount(index)}
         style={{ display: isClickedExceedCount ? 'none' : '' }}
-      >{`+${exceedMap[index]}`}</span>
+      >{`+${exceedCount}`}</span>
     ) : null;
+  };
   const renderCollapseButton = (index: number) =>
     index === clickedCountIndex && isClickedExceedCount ? (
       <span className={cls('weekday-exceed-in-week')} onClick={onClickCollapseButton}>

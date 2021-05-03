@@ -8,10 +8,6 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
-import { getCollisionGroup } from '@src/controller/core';
-import DayEvent from '@src/components/events/dayEvent';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { MilestoneTest } from '@src/components/panelgrid/milestoneTest';
 import { MilestoneEvent } from '@t/events';
 
 export default { title: 'Panel', component: Milestone, args: { primary: true } };
@@ -115,23 +111,6 @@ export const Test = () => {
   const fri = addDate(now, -now.getDay() + 5);
   const sat = addDate(now, -now.getDay() + 6);
   const sun = addDate(now, -now.getDay() + 7);
-
-  // const rawData: MilestoneEvent[] = [
-  //   { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 10
-  //   { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 11
-  //   { start: mon, end: wed, name: 'milestone', type: 'daygrid' }, // 2
-  //   { start: tue, end: wed, name: 'milestone', type: 'daygrid' }, // 6
-  //   { start: wed, end: wed, name: 'milestone', type: 'daygrid' }, // 8
-  //   { start: tue, end: fri, name: 'milestone', type: 'daygrid' }, // 7
-  //   { start: thu, end: sun, name: 'milestone', type: 'daygrid' }, // 14
-  //   { start: mon, end: tue, name: 'milestone', type: 'daygrid' }, // 4
-  //   { start: mon, end: wed, name: 'milestone', type: 'daygrid' }, // 1
-  //   { start: wed, end: thu, name: 'milestone', type: 'daygrid' }, // 9
-  //   { start: tue, end: fri, name: 'milestone', type: 'daygrid' }, // 5
-  //   { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 12
-  //   { start: thu, end: sat, name: 'milestone', type: 'daygrid' }, // 13
-  //   { start: mon, end: tue, name: 'milestone', type: 'daygrid' }, // 3
-  // ];
   const rawData: MilestoneEvent[] = [
     { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 12
     { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 13
@@ -162,7 +141,7 @@ export const Test = () => {
   return (
     <Layout height={500}>
       <Panel name="milestone" resizable minHeight={20}>
-        <MilestoneTest
+        <Milestone
           events={rawData
             .map((v) => Schedule.create(v))
             .map((schedule) => {
