@@ -18,11 +18,11 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           height: 200,
         },
         {
-          name: 'b',
+          name: 'milestone',
         },
       ],
       {
@@ -38,10 +38,10 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
         },
         {
-          name: 'b',
+          name: 'milestone',
           minHeight: 100,
         },
       ],
@@ -58,10 +58,10 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
         },
         {
-          name: 'b',
+          name: 'milestone',
           minWidth: 100,
         },
       ],
@@ -78,20 +78,20 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           expandable: true,
           height: 300,
           maxExpandableHeight: 200,
         },
         {
-          name: 'b',
+          name: 'milestone',
           expandable: true,
           height: 300,
           maxHeight: 100,
           maxExpandableHeight: 200,
         },
         {
-          name: 'b',
+          name: 'milestone',
           expandable: false,
           height: 300,
           maxHeight: 100,
@@ -112,20 +112,20 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           expandable: true,
           width: 300,
           maxExpandableWidth: 200,
         },
         {
-          name: 'b',
+          name: 'milestone',
           expandable: true,
           width: 300,
           maxWidth: 100,
           maxExpandableWidth: 200,
         },
         {
-          name: 'c',
+          name: 'milestone',
           expandable: false,
           width: 300,
           maxWidth: 100,
@@ -146,7 +146,7 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           height: 100,
           autoSize: 1,
         },
@@ -163,11 +163,11 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           autoSize: 1,
         },
         {
-          name: 'b',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -185,11 +185,11 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           autoSize: 1,
         },
         {
-          name: 'b',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -207,11 +207,11 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           autoSize: 2,
         },
         {
-          name: 'b',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -229,20 +229,20 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           height: 100,
         },
         {
-          name: 'b',
+          name: 'milestone',
           height: 100,
           autoSize: 2,
         },
         {
-          name: 'b',
+          name: 'milestone',
           height: 100,
         },
         {
-          name: 'd',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -262,19 +262,19 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           height: 100,
         },
         {
-          name: 'b',
+          name: 'milestone',
           height: 300,
         },
         {
-          name: 'c',
+          name: 'milestone',
           height: 300,
         },
         {
-          name: 'd',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -294,20 +294,20 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           height: 100,
         },
         {
-          name: 'b',
+          name: 'milestone',
           height: 200,
           show: false,
         },
         {
-          name: 'c',
+          name: 'milestone',
           height: 300,
         },
         {
-          name: 'd',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -327,21 +327,21 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           height: 100,
         },
         {
-          name: 'b',
+          name: 'milestone',
           height: 100,
           resizable: true,
           resizerHeight: 5,
         },
         {
-          name: 'c',
+          name: 'milestone',
           height: 100,
         },
         {
-          name: 'd',
+          name: 'milestone',
           autoSize: 1,
         },
       ],

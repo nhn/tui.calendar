@@ -37,5 +37,5 @@ export const PanelEvents: FunctionComponent<Props> = ({
     return <Fragment>{renderedViewModels}</Fragment>;
   };
 
-  return <div className={cls('panel-schedule-wrapper')}>{renderEvents()}</div>;
+  return <div className={cls('panel-event-wrapper')}>{renderEvents()}</div>;
 };
