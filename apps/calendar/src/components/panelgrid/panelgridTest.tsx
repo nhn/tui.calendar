@@ -19,7 +19,7 @@ import {
 } from '@src/components/layout';
 import type { PanelName, GridInfoList } from '@t/panel';
 import Schedule from '@src/model/schedule';
-import { toStartOfDay } from '@src/time/datetime';
+import { Day, toStartOfDay } from '@src/time/datetime';
 
 const TOTAL_WIDTH = 100;
 const DEFAULT_GRID_STYLE = {
@@ -59,7 +59,7 @@ export const PanelGridTest: FunctionComponent<Props> = ({
       type: UPDATE_PANEL_HEIGHT,
       panelType: name,
       state: {
-        panelHeight: maxTop * EVENT_HEIGHT,
+        panelHeight: (maxTop + 1) * EVENT_HEIGHT,
       },
     });
   };
@@ -88,10 +88,7 @@ export const PanelGridTest: FunctionComponent<Props> = ({
         const scheduleStart = toStartOfDay(viewModel.getStarts());
         const scheduleEnd = toStartOfDay(viewModel.getEnds());
 
-        return (
-          (gridDate <= scheduleStart && scheduleStart <= gridDate) ||
-          (gridDate <= scheduleEnd && scheduleEnd <= gridDate)
-        );
+        return scheduleStart <= gridDate && gridDate <= scheduleEnd;
       })
       .filter(({ top }) => panelHeight < (top + 1) * EVENT_HEIGHT).length;
 
