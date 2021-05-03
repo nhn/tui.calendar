@@ -8,9 +8,37 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
-import { MilestoneEvent } from '@t/events';
+
+import type { MilestoneEvent } from '@t/events';
 
 export default { title: 'Panel', component: Milestone, args: { primary: true } };
+
+const now = new TZDate();
+
+const mon = addDate(now, -now.getDay() + 1);
+const tue = addDate(now, -now.getDay() + 2);
+const wed = addDate(now, -now.getDay() + 3);
+const thu = addDate(now, -now.getDay() + 4);
+const fri = addDate(now, -now.getDay() + 5);
+const sat = addDate(now, -now.getDay() + 6);
+const sun = addDate(now, -now.getDay() + 7);
+
+const data: MilestoneEvent[] = [
+  { start: mon, end: wed, name: 'milestone', type: 'daygrid' },
+  { start: mon, end: wed, name: 'milestone', type: 'daygrid' },
+  { start: mon, end: tue, name: 'milestone', type: 'daygrid' },
+  { start: mon, end: tue, name: 'milestone', type: 'daygrid' },
+  { start: tue, end: fri, name: 'milestone', type: 'daygrid' },
+  { start: tue, end: fri, name: 'milestone', type: 'daygrid' },
+  { start: tue, end: wed, name: 'milestone', type: 'daygrid' },
+  { start: wed, end: thu, name: 'milestone', type: 'daygrid' },
+  { start: wed, end: wed, name: 'milestone', type: 'daygrid' },
+  { start: thu, end: sun, name: 'milestone', type: 'daygrid' },
+  { start: thu, end: sat, name: 'milestone', type: 'daygrid' },
+  { start: thu, end: fri, name: 'milestone', type: 'daygrid' },
+  { start: thu, end: fri, name: 'milestone', type: 'daygrid' },
+  { start: thu, end: fri, name: 'milestone', type: 'daygrid' },
+];
 
 const Template: Story = (args) => (
   <Layout height={500}>
@@ -19,70 +47,6 @@ const Template: Story = (args) => (
     </Panel>
   </Layout>
 );
-
-// prev week event(Sat) ~ current week event(Tue)
-const makePrevWeekStartEvent = () => {
-  const now = new TZDate();
-
-  return {
-    start: addDate(now, -now.getDay() - 1),
-    end: addDate(now, -now.getDay() + 1),
-  };
-};
-
-// current week event(Fri) ~ next week event(Mon)
-const makeNextWeekEndEvent = () => {
-  const now = new TZDate();
-
-  return {
-    start: addDate(now, 7 - now.getDay() - 2),
-    end: addDate(now, 7 - now.getDay()),
-  };
-};
-
-// current week event(Mon) ~ current week event(Fri)
-const makeCurrentWeekEvent = () => {
-  const now = new TZDate();
-
-  return {
-    start: addDate(now, -now.getDay() + 1),
-    end: addDate(now, -now.getDay() + 5),
-  };
-};
-
-export const prevMilestone = Template.bind({});
-
-prevMilestone.args = {
-  events: [makePrevWeekStartEvent()],
-};
-
-prevMilestone.storyName = 'Prev week started event';
-
-export const nextMilestone = Template.bind({});
-
-nextMilestone.args = {
-  events: [makeNextWeekEndEvent()],
-};
-
-nextMilestone.storyName = 'Next week ended event';
-
-export const currentMilestone = Template.bind({});
-
-currentMilestone.args = {
-  events: [makeCurrentWeekEvent()],
-};
-
-currentMilestone.storyName = 'Current week event';
-
-export const totalMilestone = Template.bind({});
-
-totalMilestone.args = {
-  events: [makePrevWeekStartEvent(), makeCurrentWeekEvent(), makeNextWeekEndEvent()],
-};
-
-totalMilestone.storyName = 'Total week event';
-
-// test
 
 interface WrapperProps {
   width: number;
@@ -101,56 +65,15 @@ Wrapper.defaultProps = {
   width: 200,
 };
 
-export const Test = () => {
-  const now = new TZDate();
+export const milestone = Template.bind({});
 
-  const mon = addDate(now, -now.getDay() + 1);
-  const tue = addDate(now, -now.getDay() + 2);
-  const wed = addDate(now, -now.getDay() + 3);
-  const thu = addDate(now, -now.getDay() + 4);
-  const fri = addDate(now, -now.getDay() + 5);
-  const sat = addDate(now, -now.getDay() + 6);
-  const sun = addDate(now, -now.getDay() + 7);
-  const rawData: MilestoneEvent[] = [
-    { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 12
-    { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 13
-    { start: mon, end: wed, name: 'milestone', type: 'daygrid' }, // 2
-    { start: tue, end: fri, name: 'milestone', type: 'daygrid' }, // 6
-    { start: wed, end: thu, name: 'milestone', type: 'daygrid' }, // 8
-    { start: tue, end: wed, name: 'milestone', type: 'daygrid' }, // 7
-    { start: thu, end: sat, name: 'milestone', type: 'daygrid' }, // 11
-    { start: mon, end: tue, name: 'milestone', type: 'daygrid' }, // 4
-    { start: mon, end: wed, name: 'milestone', type: 'daygrid' }, // 1
-    { start: wed, end: wed, name: 'milestone', type: 'daygrid' }, // 9
-    { start: tue, end: fri, name: 'milestone', type: 'daygrid' }, // 5
-    { start: thu, end: fri, name: 'milestone', type: 'daygrid' }, // 14
-    { start: thu, end: sun, name: 'milestone', type: 'daygrid' }, // 10
-    { start: mon, end: tue, name: 'milestone', type: 'daygrid' }, // 3
-  ];
-  // grid 밖 data
-  // const rawData: MilestoneEvent[] = [
-  //   {
-  //     start: addDate(now, -now.getDay() - 6),
-  //     end: addDate(now, -now.getDay() - 5),
-  //     name: 'milestone',
-  //     type: 'daygrid',
-  //   },
-  // ];
-  // const data = rawData.map((value) => ScheduleViewModel.create(Schedule.create(value)));
+milestone.args = {
+  events: data.map((v) => {
+    const events = Schedule.create(v);
+    events.isAllDay = true;
 
-  return (
-    <Layout height={500}>
-      <Panel name="milestone" resizable minHeight={20}>
-        <Milestone
-          events={rawData
-            .map((v) => Schedule.create(v))
-            .map((schedule) => {
-              schedule.isAllDay = true;
-
-              return schedule;
-            })}
-        />
-      </Panel>
-    </Layout>
-  );
+    return events;
+  }),
 };
+
+milestone.storyName = 'events milestone';

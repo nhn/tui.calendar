@@ -2,8 +2,10 @@ import { isWeekend, toStartOfDay } from '@src/time/datetime';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import array from '@src/util/array';
+import TZDate from '@src/time/date';
 
 import type { GridInfoList } from '@t/panel';
+import type { PanelState } from '@src/components/layout';
 
 const getWeekendCount = (gridInfoList: GridInfoList) =>
   gridInfoList.filter((gridInfo) => isWeekend(gridInfo.getDay())).length;
@@ -71,6 +73,23 @@ export const isBetweenEvent = (gridInfoList: GridInfoList) => {
   };
 };
 
+export const isExceededHeight = (panelHeight: number, eventHeight: number) => {
+  return ({ top }: ScheduleViewModel) => panelHeight < (top + 1) * eventHeight;
+};
+
+export const isWithinHeight = (panelHeight: number, eventHeight: number) => {
+  return ({ top }: ScheduleViewModel) => panelHeight >= (top + 1) * eventHeight;
+};
+
+export const isInGrid = (gridDate: TZDate) => {
+  return (viewModel: ScheduleViewModel) => {
+    const scheduleStart = toStartOfDay(viewModel.getStarts());
+    const scheduleEnd = toStartOfDay(viewModel.getEnds());
+
+    return scheduleStart <= gridDate && gridDate <= scheduleEnd;
+  };
+};
+
 export const setRenderInfo = (
   viewModel: ScheduleViewModel,
   gridInfoList: GridInfoList,
@@ -112,7 +131,7 @@ export const setRenderInfo = (
 export const setViewModelsInfo = (
   viewModels: ScheduleViewModel[],
   gridInfoList: GridInfoList,
-  options
+  options: PanelState
 ) => {
   const { narrowWeekend = false } = options;
 

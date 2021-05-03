@@ -17,7 +17,7 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { PanelStateStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
+import { PanelStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -45,7 +45,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const { state, dispatch } = useContext(PanelStateStore);
+  const { state, dispatch } = useContext(PanelStore);
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);

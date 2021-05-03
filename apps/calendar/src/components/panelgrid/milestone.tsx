@@ -7,13 +7,11 @@ import { addDate } from '@src/time/datetime';
 import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import TZDate from '@src/time/date';
-import { PanelStateStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
+import { PanelStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 import Schedule from '@src/model/schedule';
 
 import type { GridInfoList } from '@t/panel';
 
-const PANEL_TITLE_CLASS_NAME = cls('panel-title');
-const PANEL_MILESTONE_CLASS_NAME = cls('panel-milestone');
 const DEFAULT_MILESTONE_PANEL_HEIGHT = 20;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
@@ -26,6 +24,7 @@ interface Props {
   gridInfoList?: GridInfoList;
   timesWidth?: number;
   timezonesCount?: number;
+  panelHeight?: number;
 }
 
 export const Milestone: FunctionComponent<Props> = ({
@@ -33,38 +32,39 @@ export const Milestone: FunctionComponent<Props> = ({
   gridInfoList = defaultPanelInfoList,
   timesWidth = 120,
   timezonesCount = 1,
+  panelHeight = DEFAULT_MILESTONE_PANEL_HEIGHT,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
-  const { state, dispatch } = useContext(PanelStateStore);
+  const { state, dispatch } = useContext(PanelStore);
 
   useEffect(() => {
     dispatch({
       type: UPDATE_PANEL_HEIGHT,
       panelType: 'milestone',
       state: {
-        panelHeight: DEFAULT_MILESTONE_PANEL_HEIGHT,
+        panelHeight,
       },
     });
-  }, [dispatch]);
+  }, [dispatch, panelHeight]);
 
   return (
     <Fragment>
-      <div className={PANEL_TITLE_CLASS_NAME} style={{ width: columnWidth }}>
+      <div className={cls('panel-title')} style={{ width: columnWidth }}>
         Title
       </div>
-      <div className={PANEL_MILESTONE_CLASS_NAME}>
+      <div className={cls('panel-milestone')}>
         <PanelGrid
           name="milestone"
           gridInfoList={gridInfoList}
           events={events}
-          defaultPanelHeight={DEFAULT_MILESTONE_PANEL_HEIGHT}
-          {...state?.milestone}
+          defaultPanelHeight={panelHeight}
+          options={state?.milestone}
         />
         <PanelEvents
           name="milestone"
           gridInfoList={gridInfoList}
           events={events}
-          {...state?.milestone}
+          options={state?.milestone}
         />
       </div>
     </Fragment>

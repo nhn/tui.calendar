@@ -8,18 +8,20 @@ interface Props {
   viewModel: ScheduleViewModel;
 }
 
+const EVENT_HEIGHT = 20;
+
 export const DayEvent: FunctionComponent<Props> = ({ viewModel }) => {
+  const { width, left, top, exceedRight } = viewModel;
+
   const style = {
-    width: toPercent(viewModel.width),
-    left: toPercent(viewModel.left),
-    top: toPx(viewModel.top * 20),
+    width: toPercent(width),
+    left: toPercent(left),
+    top: toPx(top * EVENT_HEIGHT),
   };
 
   return (
     <div
-      className={`${cls('weekday-event-block')} ${cls(
-        viewModel.exceedRight ? 'weekday-exceed-right' : ''
-      )}`}
+      className={`${cls('weekday-event-block')} ${cls(exceedRight ? 'weekday-exceed-right' : '')}`}
       style={style}
     >
       <div className={cls('weekday-event')}>{viewModel.cid()}</div>

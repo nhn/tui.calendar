@@ -3,8 +3,14 @@ import { useContext, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import { getGridStyleInfo, getViewModels, setViewModelsInfo } from '@src/time/panelEvent';
-import { PanelStateStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
+import {
+  getGridStyleInfo,
+  getViewModels,
+  isExceededHeight,
+  isInGrid,
+  setViewModelsInfo,
+} from '@src/time/panelEvent';
+import { PanelState, PanelStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 import Schedule from '@src/model/schedule';
 import { toStartOfDay } from '@src/time/datetime';
 
@@ -20,22 +26,21 @@ interface Props {
   name: PanelName;
   gridInfoList: GridInfoList;
   events: Schedule[];
-  panelHeight: number;
   defaultPanelHeight: number;
-  narrowWeekend: boolean;
+  options?: PanelState;
 }
 
 export const PanelGrid: FunctionComponent<Props> = ({
   name,
   gridInfoList,
   events,
-  panelHeight,
   defaultPanelHeight,
-  narrowWeekend,
+  options = {},
 }) => {
   const [clickedCountIndex, setClickedCountIndex] = useState(0);
   const [isClickedExceedCount, setClickedExceedCount] = useState(false);
-  const { dispatch } = useContext(PanelStateStore);
+  const { dispatch } = useContext(PanelStore);
+  const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
 
   const viewModels = getViewModels(events, gridInfoList);
   setViewModelsInfo(viewModels, gridInfoList, {});
@@ -73,13 +78,8 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const renderExceedCount = (index: number) => {
     const gridDate = toStartOfDay(gridInfoList[index]);
     const exceedCount = viewModels
-      .filter((viewModel) => {
-        const scheduleStart = toStartOfDay(viewModel.getStarts());
-        const scheduleEnd = toStartOfDay(viewModel.getEnds());
-
-        return scheduleStart <= gridDate && gridDate <= scheduleEnd;
-      })
-      .filter(({ top }) => panelHeight < (top + 1) * EVENT_HEIGHT).length;
+      .filter(isExceededHeight(panelHeight, EVENT_HEIGHT))
+      .filter(isInGrid(gridDate)).length;
 
     return exceedCount && !isClickedExceedCount ? (
       <span

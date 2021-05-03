@@ -3,44 +3,39 @@ import { FunctionComponent, h, Fragment } from 'preact';
 import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
 import { DayEvent } from '@src/components/events/dayEvent';
-import { getViewModels, setViewModelsInfo } from '@src/time/panelEvent';
+import { getViewModels, isWithinHeight, setViewModelsInfo } from '@src/time/panelEvent';
 
 import type { GridInfoList, PanelName } from '@t/panel';
+import type { PanelState } from '@src/components/layout';
 
-const PANEL_SCHEDULE_WRAPPER_CLASS_NAME = cls('panel-schedule-wrapper');
 const EVENT_HEIGHT = 20;
 
 interface Props {
   name: PanelName;
   gridInfoList: GridInfoList;
   events: Schedule[];
-  narrowWeekend: boolean;
-  eventHeight: number;
-  panelHeight: number;
+  options?: PanelState;
 }
 
 export const PanelEvents: FunctionComponent<Props> = ({
   name,
   gridInfoList,
   events,
-  narrowWeekend,
-  eventHeight,
-  panelHeight,
+  options = {},
 }) => {
   const renderEvents = () => {
+    const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
     const viewModels = getViewModels(events, gridInfoList);
-    setViewModelsInfo(viewModels, gridInfoList, { narrowWeekend, eventHeight });
+    setViewModelsInfo(viewModels, gridInfoList, { narrowWeekend });
 
-    return (
-      <Fragment>
-        {viewModels
-          .filter(({ top }) => panelHeight >= (top + 1) * EVENT_HEIGHT)
-          .map((viewModel, index) => (
-            <DayEvent viewModel={viewModel} key={`DayEvent-${index}`} />
-          ))}
-      </Fragment>
-    );
+    const renderedViewModels = viewModels
+      .filter(isWithinHeight(panelHeight, EVENT_HEIGHT))
+      .map((viewModel, index) => (
+        <DayEvent viewModel={viewModel} key={`${name}-DayEvent-${index}`} />
+      ));
+
+    return <Fragment>{renderedViewModels}</Fragment>;
   };
 
-  return <div className={PANEL_SCHEDULE_WRAPPER_CLASS_NAME}>{renderEvents()}</div>;
+  return <div className={cls('panel-schedule-wrapper')}>{renderEvents()}</div>;
 };
