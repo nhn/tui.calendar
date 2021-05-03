@@ -1,7 +1,10 @@
 import TZDate from '@src/time/date';
-import { getGridStyleInfo, getWidth } from '@src/time/panelEvent';
+import { getGridStyleInfo, getViewModels, getWidth, isInGrid } from '@src/time/panelEvent';
 
 import { GridInfoList } from '@t/panel';
+import Schedule from '@src/model/schedule';
+import { MilestoneEvent } from '@t/events';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 function createDate(y: number, M: number, d: number): TZDate {
   const year = String(y);
@@ -177,5 +180,38 @@ describe('panelEvent', () => {
         expect(expected).toBe(sum);
       }
     }
+  });
+
+  const data = [
+    { start: createDate(2021, 4, 30), end: createDate(2021, 5, 2) }, // Fri ~ Sun
+    { start: createDate(2021, 5, 2), end: createDate(2021, 5, 4) }, // Sun ~ Tue
+    { start: createDate(2021, 5, 4), end: createDate(2021, 5, 6) }, // Tue ~ Thu
+  ];
+
+  it('should return whether it is in grid or not', () => {
+    const gridInfo = createDate(2021, 5, 3);
+
+    const viewModels = data.map((e) => {
+      const event = Schedule.create(e);
+      event.isAllDay = true;
+
+      return ScheduleViewModel.create(event);
+    });
+
+    const result = viewModels.filter(isInGrid(gridInfo));
+    const expected = [viewModels[1]];
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return sorted viewModels', () => {
+    // Sun ~ Sat
+    gridInfoList = [2, 3, 4, 5, 6, 7, 8].map((d) => createDate(2021, 5, d));
+    const events = data.map((e) => Schedule.create(e));
+
+    const result = getViewModels(events, gridInfoList);
+    const expected = events.map((event) => ScheduleViewModel.create(event));
+
+    expect(result).toEqual(expected);
   });
 });
