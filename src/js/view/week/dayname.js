@@ -21,16 +21,15 @@ var daynameTmpl = require('../template/week/daynames.hbs');
  * @extends {View}
  */
 function DayName(options, container, theme) {
-    container = domutil.appendHTMLElement(
-        'div',
-        container,
-        config.classname('dayname-container')
-    );
+    container = domutil.appendHTMLElement('div', container, config.classname('dayname-container'));
 
-    this.options = util.extend({
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        timezones: options.timezones
-    }, options.week);
+    this.options = util.extend(
+        {
+            daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            timezones: options.timezones,
+        },
+        options.week
+    );
 
     /**
      * @type {Theme}
@@ -51,32 +50,32 @@ util.inherit(DayName, View);
  * @param {object} grids grid data(width, left, day)
  * @returns {array} viewmodel.
  */
-DayName.prototype._getBaseViewModel = function(start, end, grids) {
+DayName.prototype._getBaseViewModel = function (start, end, grids) {
     var daynames = this.options.daynames,
         theme = this.theme,
         now = new TZDate().toLocalTime(),
         viewModel;
 
-    viewModel = util.map(datetime.range(
-        datetime.start(start),
-        datetime.end(end),
-        datetime.MILLISECONDS_PER_DAY
-    ), function(d, i) {
-        var day = d.getDay();
-        var isToday = datetime.isSameDate(d, now);
-        var isPastDay = d < now && !isToday;
+    viewModel = util.map(
+        datetime.range(datetime.start(start), datetime.end(end), datetime.MILLISECONDS_PER_DAY),
+        function (d, i) {
+            var day = d.getDay();
+            var isToday = datetime.isSameDate(d, now);
+            var isPastDay = d < now && !isToday;
 
-        return {
-            day: day,
-            dayName: daynames[day],
-            isToday: isToday,
-            date: d.getDate(),
-            left: grids[i] ? grids[i].left : 0,
-            width: grids[i] ? grids[i].width : 0,
-            renderDate: datetime.format(d, 'YYYY-MM-DD'),
-            color: this._getDayNameColor(theme, day, isToday, isPastDay)
-        };
-    }, this);
+            return {
+                day: day,
+                dayName: daynames[day],
+                isToday: isToday,
+                date: d.getDate(),
+                left: grids[i] ? grids[i].left : 0,
+                width: grids[i] ? grids[i].width : 0,
+                renderDate: datetime.format(d, 'YYYY-MM-DD'),
+                color: this._getDayNameColor(theme, day, isToday, isPastDay),
+            };
+        },
+        this
+    );
 
     return viewModel;
 };
@@ -85,7 +84,7 @@ DayName.prototype._getBaseViewModel = function(start, end, grids) {
  * @override
  * @param {object} viewModel View model from parent (WeekView)
  */
-DayName.prototype.render = function(viewModel) {
+DayName.prototype.render = function (viewModel) {
     var dayNames = this._getBaseViewModel(
         viewModel.renderStartDate,
         viewModel.renderEndDate,
@@ -93,10 +92,13 @@ DayName.prototype.render = function(viewModel) {
     );
     var timezonesCollapsed = viewModel.state.timezonesCollapsed;
     var styles = this._getStyles(this.theme, timezonesCollapsed);
-    var baseViewModel = util.extend({}, {
-        dayNames: dayNames,
-        styles: styles
-    });
+    var baseViewModel = util.extend(
+        {},
+        {
+            dayNames: dayNames,
+            styles: styles,
+        }
+    );
 
     this.container.innerHTML = daynameTmpl(baseViewModel);
 };
@@ -109,9 +111,8 @@ DayName.prototype.render = function(viewModel) {
  * @param {boolean} isPastDay - is past day flag
  * @returns {string} style - color style
  */
-DayName.prototype._getDayNameColor = function(theme, day, isToday, isPastDay) {
+DayName.prototype._getDayNameColor = function (theme, day, isToday, isPastDay) {
     var color = '';
-
     if (theme) {
         if (day === 0) {
             color = theme.common.holiday.color;
@@ -120,7 +121,7 @@ DayName.prototype._getDayNameColor = function(theme, day, isToday, isPastDay) {
         } else if (day === 6) {
             color = theme.common.saturday.color;
         } else if (isToday) {
-            color = theme.week.today.color || theme.common.today.color;
+            color = '#135de6';
         } else {
             color = theme.common.dayname.color;
         }
@@ -135,7 +136,7 @@ DayName.prototype._getDayNameColor = function(theme, day, isToday, isPastDay) {
  * @param {boolean} timezonesCollapsed - multiple timezones are collapsed.
  * @returns {object} styles - styles object
  */
-DayName.prototype._getStyles = function(theme, timezonesCollapsed) {
+DayName.prototype._getStyles = function (theme, timezonesCollapsed) {
     var styles = {};
     var timezonesLength = this.options.timezones.length;
     var collapsed = timezonesCollapsed;
@@ -147,20 +148,21 @@ DayName.prototype._getStyles = function(theme, timezonesCollapsed) {
         styles.borderLeft = theme.week.dayname.borderLeft || theme.common.border;
         styles.paddingLeft = theme.week.dayname.paddingLeft;
         styles.backgroundColor = theme.week.dayname.backgroundColor;
+        // styles.backgroundColor = 'red';
         styles.height = theme.week.dayname.height;
         styles.textAlign = theme.week.dayname.textAlign;
         styles.marginLeft = theme.week.daygridLeft.width;
 
         if (!collapsed && timezonesLength > 1) {
             numberAndUnit = common.parseUnit(styles.marginLeft);
-            styles.marginLeft = (numberAndUnit[0] * timezonesLength) + numberAndUnit[1];
+            styles.marginLeft = numberAndUnit[0] * timezonesLength + numberAndUnit[1];
         }
     }
 
     return styles;
 };
 
-DayName.prototype.applyTheme = function() {
+DayName.prototype.applyTheme = function () {
     var styles = this._getStyles(this.theme);
     var style = this.container.style;
 
