@@ -18,7 +18,7 @@ var theme = {
     'common.today.color': '#333',
 
     // creation guide style
-    'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'common.creationGuide.backgroundColor': '',
     'common.creationGuide.border': '1px solid #515ce6',
 
     // month header 'dayname'
@@ -63,7 +63,7 @@ var theme = {
     'week.dayname.paddingLeft': '0',
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
-    'week.today.color': 'inherit',
+    'week.today.color': '#135de6',
     'week.pastDay.color': '#bbb',
 
     // week vertical panel 'vpanel'
@@ -79,7 +79,7 @@ var theme = {
     'week.daygridLeft.paddingRight': '8px',
     'week.daygridLeft.borderRight': '1px solid #e5e5e5',
 
-    'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+    'week.today.backgroundColor': 'inherit',
     'week.weekend.backgroundColor': 'inherit',
 
     // week timegrid 'timegrid'
@@ -117,7 +117,7 @@ var theme = {
     'week.dayGridSchedule.height': '24px',
     'week.dayGridSchedule.marginTop': '2px',
     'week.dayGridSchedule.marginLeft': '8px',
-    'week.dayGridSchedule.marginRight': '8px'
+    'week.dayGridSchedule.marginRight': '8px',
 };
 
 module.exports = theme;
