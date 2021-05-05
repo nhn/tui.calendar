@@ -25601,7 +25601,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
             fontWeight = styles.futureTimeFontWeight;
         }
 
-        if (hour >= 8 && hour <= 17) {
+        if (hour >= 8 && hour < 17) {
             backgroundColor = '#d2e1ff';
         } else {
             backgroundColor = 'white';
@@ -25611,7 +25611,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
             hour: hour,
             minutes: shiftMinutes,
             hidden: nowAroundHours === hour || index === 0,
-            color: color || 'red',
+            color: color || '',
             fontWeight: fontWeight || '',
             backgroundColor: backgroundColor,
         };
