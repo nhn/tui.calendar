@@ -1,96 +1,93 @@
 <div class="{{CSS_PREFIX}}time-date-schedule-block-wrap" style="margin-right: {{styles.marginRight}};">
     {{#each matrices}}
-        {{#each this}}
-            {{#each this}}
-                {{#if this ~}}
-                    <div class="{{CSS_PREFIX}}time-date-schedule-block {{#if
+    {{#each this}}
+    {{#each this}}
+    {{#if this ~}}
+    <div class="{{CSS_PREFIX}}time-date-schedule-block {{#if
                             model.isPending}} {{CSS_PREFIX}}time-date-schedule-block-pending{{/if}}"
-                         data-id="{{stamp model}}"
-                         style="{{time-scheduleBlock this}};
+        data-id="{{stamp model}}" style="{{time-scheduleBlock this}};
                              {{#fi left '!==' 0}}
                              padding-left: {{@root.styles.paddingLeft}};
                              {{/fi}}
                                  ">
-                        <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}"
-                             class="{{CSS_PREFIX}}time-schedule {{#if
-                                     model.isFocused}}{{CSS_PREFIX}}time-schedule-focused {{/if}}"
-                             style="border-radius: 7px;
+        <div data-schedule-id="{{model.id}}" data-calendar-id="{{model.calendarId}}" class="{{CSS_PREFIX}}time-schedule {{#if
+                                     model.isFocused}}{{CSS_PREFIX}}time-schedule-focused {{/if}}" style="border-radius: 7px;
                                  {{#if model.isFocused}}
                                  border-color:{{model.color}};
                                  {{else}}
                                  color:{{model.color}}; border-color:{{model.borderColor}};
-                                 {{/if}}"
-                        >
-                            {{#if hasGoingDuration}}
-                                <div style="height: {{goingDurationHeight}}px;">
-                                </div>
-                            {{/if}}
-                            <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time"
-                                 style="{{real-height this}}">
-                                {{#if isEnoughHeight}}
-                                    <div class="{{CSS_PREFIX}}time-schedule-content-header">
-                                        <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
-                                             style="background-color: {{model.bgColor}}; white-space: nowrap;">
-                                                {{{time-tmpl model}}}
-                                        </div>
-                                        <div class="{{CSS_PREFIX}}time-schedule-content-header-arrow"
-                                             style="background-color: {{model.bgColor}};">
-                                            {{#if isEnoughHeight}}
-                                                {{{arrow-tmpl}}}
-                                            {{/if}}
-                                        </div>
-                                    </div>
-                                {{else}}
-                                    <div class="{{CSS_PREFIX}}time-schedule-content-header" style="height: 100%">
-                                        <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
-                                             style="background-color: {{model.bgColor}};
+                                 {{/if}}">
+            {{#if hasGoingDuration}}
+            <div style="height: {{goingDurationHeight}}px;">
+            </div>
+            {{/if}}
+            <div class="{{CSS_PREFIX}}time-schedule-content {{CSS_PREFIX}}time-schedule-content-time"
+                style="{{real-height this}}">
+                {{#if isEnoughHeight}}
+                <div class="{{CSS_PREFIX}}time-schedule-content-header">
+                    <div class="{{CSS_PREFIX}}time-schedule-content-header-time"
+                        style="background-color: {{model.bgColor}}; white-space: nowrap;">
+                        {{{time-tmpl model}}}
+                    </div>
+                    <div class="{{CSS_PREFIX}}time-schedule-content-header-arrow"
+                        style="background-color: {{model.bgColor}};">
+                        {{#if isEnoughHeight}}
+                        {{{arrow-tmpl}}}
+                        {{/if}}
+                    </div>
+                </div>
+                {{else}}
+                <div class="{{CSS_PREFIX}}time-schedule-content-header" style="height: 100%">
+                    <div class="{{CSS_PREFIX}}time-schedule-content-header-time" style="background-color: {{model.bgColor}};
                                                      padding-left: 6px;
                                                      white-space: nowrap;">
-                                            {{{model.title}}}
-                                        </div>
-                                    </div>
-                                {{/if}}
-                                <div class="{{CSS_PREFIX}}time-schedule-content-body"
-                                     style="{{real-height this}}">
-                                    <div class="{{CSS_PREFIX}}time-flex-row-start">
-                                        <div>
-                                            {{{title-tmpl}}}
-                                        </div>
-                                        <div class="blank-space"></div>
-                                        <div>
-                                            {{{model.title}}}
-                                        </div>
-                                    </div>
-                                    <div class="{{CSS_PREFIX}}time-flex-row-start">
-                                        <div>
-                                            {{{location-tmpl}}}
-                                        </div>
-                                        <div class="blank-space"></div>
-                                        <div>
-                                            {{{model.location}}}
-                                        </div>
-                                    </div>
-                                    <div class="{{CSS_PREFIX}}time-flex-row-start">
-                                        <div>
-                                            {{{attendees-tmpl}}}
-                                        </div>
-                                        <div class="blank-space"></div>
-                                        <div>
-                                            {{#each model.attendees}}
-                                                <span>{{this}}</span>
-                                            {{/each}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{#if hasComingDuration}}
-                                <div style="height: {{goingDurationHeight}}px;">
-                                </div>
-                            {{/if}}
+                        {{{model.title}}}
+                    </div>
+                </div>
+                {{/if}}
+                <div class="{{CSS_PREFIX}}time-schedule-content-body" style="{{real-height this}}">
+                    <div class="{{CSS_PREFIX}}time-flex-row-start">
+                        <div>
+                            {{{title-tmpl}}}
+                        </div>
+                        <div class="blank-space"></div>
+                        <div>
+                            <span
+                                style="font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;">{{{model.title}}}</span>
                         </div>
                     </div>
-                {{/if ~}}
-            {{/each}}
-        {{/each}}
+                    <div class="{{CSS_PREFIX}}time-flex-row-start">
+                        <div>
+                            {{{location-tmpl}}}
+                        </div>
+                        <div class="blank-space"></div>
+                        <div>
+                            <span
+                                style="font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;">{{{model.location}}}</span>
+                        </div>
+                    </div>
+                    <div class="{{CSS_PREFIX}}time-flex-row-start">
+                        <div>
+                            {{{attendees-tmpl}}}
+                        </div>
+                        <div class="blank-space"></div>
+                        <div>
+                            {{#each model.attendees}}
+                            <span
+                                style="font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;">{{this}}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{#if hasComingDuration}}
+            <div style="height: {{goingDurationHeight}}px;">
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    {{/if ~}}
+    {{/each}}
+    {{/each}}
     {{/each}}
 </div>

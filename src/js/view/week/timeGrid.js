@@ -480,7 +480,6 @@ TimeGrid.prototype.render = function (viewModel) {
     }
 
     baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
-    console.log(baseViewModel);
     container.innerHTML = mainTmpl(baseViewModel);
 
     /**********

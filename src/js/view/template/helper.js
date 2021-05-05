@@ -20,7 +20,7 @@ var helpers = {
      * @param {object} obj - object to stamp
      * @returns {number} stamp value
      */
-    'stamp': function(obj) {
+    stamp: function (obj) {
         return util.stamp(obj);
     },
 
@@ -30,7 +30,7 @@ var helpers = {
      * @param {*} b - b
      * @returns {boolean} result of operation
      */
-    'equal': function(a, b) {
+    equal: function (a, b) {
         return a === b;
     },
 
@@ -40,7 +40,7 @@ var helpers = {
      * @param {*} b - b
      * @returns {boolean} or
      */
-    'or': function(a, b) {
+    or: function (a, b) {
         return a || b;
     },
 
@@ -50,7 +50,7 @@ var helpers = {
      * @param {*} b - b
      * @returns {boolean} or
      */
-    'and': function(a, b) {
+    and: function (a, b) {
         return a && b;
     },
 
@@ -62,18 +62,18 @@ var helpers = {
      * @param {Handlebars} options - handlebar options
      * @returns {boolean} result of operation
      */
-    'fi': function(a, oper, b, options) {
+    fi: function (a, oper, b, options) {
         switch (oper) {
             case '==':
-                return (a == b) ? options.fn(this) : options.inverse(this);  // eslint-disable-line
+                return a == b ? options.fn(this) : options.inverse(this); // eslint-disable-line
             case '===':
-                return (a === b) ? options.fn(this) : options.inverse(this);
+                return a === b ? options.fn(this) : options.inverse(this);
             case '!==':
-                return (a !== b) ? options.fn(this) : options.inverse(this);
+                return a !== b ? options.fn(this) : options.inverse(this);
             case '<':
-                return (a < b) ? options.fn(this) : options.inverse(this);
+                return a < b ? options.fn(this) : options.inverse(this);
             case '||':
-                return (a || b) ? options.fn(this) : options.inverse(this);
+                return a || b ? options.fn(this) : options.inverse(this);
             default:
                 throw new Error('Not match operation');
         }
@@ -84,7 +84,7 @@ var helpers = {
      * @param {Date} date - date object
      * @returns {string} formatted value
      */
-    'hhmm': function(date) {
+    hhmm: function (date) {
         return datetime.format(date, 'HH:mm');
     },
 
@@ -93,7 +93,7 @@ var helpers = {
      * @param {number} width - width percentage
      * @returns {string} css style part
      */
-    'common-width': function(width) {
+    'common-width': function (width) {
         return getElSize(width, '%', 'width');
     },
 
@@ -103,7 +103,7 @@ var helpers = {
      * @param {Array} grids - dates information
      * @returns {number} element left
      */
-    'grid-left': function(viewModel, grids) {
+    'grid-left': function (viewModel, grids) {
         return getElLeft(viewModel, grids);
     },
 
@@ -113,7 +113,7 @@ var helpers = {
      * @param {Array} grids - dates information
      * @returns {number} element width
      */
-    'grid-width': function(viewModel, grids) {
+    'grid-width': function (viewModel, grids) {
         return getElWidth(viewModel, grids);
     },
 
@@ -122,7 +122,7 @@ var helpers = {
      * @param {ScheduleViewModel} viewModel viewModel
      * @returns {string} element size css class
      */
-    'time-scheduleBlock': function(viewModel) {
+    'time-scheduleBlock': function (viewModel) {
         var top = getElSize(viewModel.top, 'px', 'top'),
             left = getElSize(viewModel.left, '%', 'left'),
             width = getElSize(viewModel.width, '%', 'width'),
@@ -131,12 +131,12 @@ var helpers = {
         return [top, left, width, height].join(';');
     },
 
-    'real-height': function(viewModel) {
+    'real-height': function (viewModel) {
         return getElSize(viewModel.height, 'px', 'height');
     },
 
-    'month-scheduleBlock': function(viewModel, grids, blockHeight, paddingTop) {
-        var top = getElSize(((viewModel.top - 1) * blockHeight) + paddingTop, 'px', 'top');
+    'month-scheduleBlock': function (viewModel, grids, blockHeight, paddingTop) {
+        var top = getElSize((viewModel.top - 1) * blockHeight + paddingTop, 'px', 'top');
         var left = getElSize(grids[viewModel.left] ? grids[viewModel.left].left : 0, '%', 'left');
         var width = getElSize(getElWidth(viewModel, grids), '%', 'width');
         var height = getElSize(viewModel.height, 'px', 'height');
@@ -144,7 +144,7 @@ var helpers = {
         return [top, left, width, height].join(';');
     },
 
-    'holiday': function(day) {
+    holiday: function (day) {
         var cssClass = '';
 
         if (day === 0) {
@@ -164,7 +164,7 @@ var helpers = {
      * @param {*} b - b
      * @returns {number} result of operation
      */
-    'add': function(a, b) {
+    add: function (a, b) {
         return a + b;
     },
 
@@ -174,7 +174,7 @@ var helpers = {
      * @param {*} b - b
      * @returns {number} result of operation
      */
-    'multiply': function(a, b) {
+    multiply: function (a, b) {
         return a * b;
     },
 
@@ -184,7 +184,7 @@ var helpers = {
      * @param {*} b - b
      * @returns {number} result of operation
      */
-    'divide': function(a, b) {
+    divide: function (a, b) {
         return a / b;
     },
 
@@ -194,11 +194,11 @@ var helpers = {
      * @param {*} b - b
      * @returns {number} result of operation
      */
-    'subtract': function(a, b) {
+    subtract: function (a, b) {
         return a - b;
     },
 
-    'getRight': function(a, b) {
+    getRight: function (a, b) {
         return mmax(0, 100 - (a + b));
     },
 
@@ -206,11 +206,11 @@ var helpers = {
      * Get css prefix in global configuration
      * @returns {string} css prefix
      */
-    'CSS_PREFIX': function() {
+    CSS_PREFIX: function () {
         return config.cssPrefix;
     },
 
-    'reverse': function(array) {
+    reverse: function (array) {
         return array.slice().reverse();
     },
 
@@ -218,101 +218,125 @@ var helpers = {
      * Default schedule template
      **********/
 
-    'milestone-tmpl': function(model) {
+    'milestone-tmpl': function (model) {
         var icon = config.classname('icon');
         var iconName = config.classname('ic-milestone');
 
-        return '<span class="' + icon + ' ' + iconName + '"></span><span style="background-color: ' + model.bgColor + '">' + common.stripTags(model.title) + '</span>';
+        return (
+            '<span class="' +
+            icon +
+            ' ' +
+            iconName +
+            '"></span><span style="background-color: ' +
+            model.bgColor +
+            '">' +
+            common.stripTags(model.title) +
+            '</span>'
+        );
     },
 
-    'title-tmpl': function() {
+    'title-tmpl': function () {
         var icon = config.classname('icon');
         var iconName = config.classname('ic-edit-2');
 
         return '<span class="' + icon + ' ' + iconName + '"></span>';
     },
 
-    'arrow-tmpl': function() {
+    'arrow-tmpl': function () {
         return '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>';
     },
 
-    'location-tmpl': function() {
+    'location-tmpl': function () {
         var icon = config.classname('icon');
         var iconName = config.classname('ic-map-pin');
 
-        return '<span class="' + icon + ' ' + iconName + '"></span>';
+        return '<span class="' + icon + ' ' + iconName + '" ></span>';
     },
 
-    'text-tmpl': function() {
+    'text-tmpl': function () {
         return '<span></span>';
     },
 
-    'attendees-tmpl': function() {
+    'attendees-tmpl': function () {
         var icon = config.classname('icon');
         var iconName = config.classname('ic-user');
 
         return '<span class="' + icon + ' ' + iconName + '"></span>';
     },
 
-    'milestoneTitle-tmpl': function() {
+    'milestoneTitle-tmpl': function () {
         var className = config.classname('left-content');
 
         return '<span class="' + className + '">Milestone</span>';
     },
 
-    'task-tmpl': function(model) {
+    'task-tmpl': function (model) {
         return '#' + model.title;
     },
 
-    'taskTitle-tmpl': function() {
+    'taskTitle-tmpl': function () {
         var className = config.classname('left-content');
 
         return '<span class="' + className + '">Task</span>';
     },
 
-    'alldayTitle-tmpl': function() {
+    'alldayTitle-tmpl': function () {
         var className = config.classname('left-content');
 
         return '<span class="' + className + '">All Day</span>';
     },
 
-    'allday-tmpl': function(model) {
+    'allday-tmpl': function (model) {
         return common.stripTags(model.title);
     },
 
-    'time-tmpl': function(model) {
+    'time-tmpl': function (model) {
         return common.stripTags(model);
     },
 
-    'goingDuration-tmpl': function(model) {
+    'goingDuration-tmpl': function (model) {
         var goingDuration = model.goingDuration;
         var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
         var minutes = goingDuration % SIXTY_MINUTES;
 
-        return 'GoingTime ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+        return (
+            'GoingTime ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2)
+        );
     },
 
-    'comingDuration-tmpl': function(model) {
+    'comingDuration-tmpl': function (model) {
         var goingDuration = model.goingDuration;
         var hour = parseInt(goingDuration / SIXTY_MINUTES, 10);
         var minutes = goingDuration % SIXTY_MINUTES;
 
-        return 'ComingTime ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+        return (
+            'ComingTime ' + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2)
+        );
     },
 
-    'monthMoreTitleDate-tmpl': function(date, dayname) {
+    'monthMoreTitleDate-tmpl': function (date, dayname) {
         var classDay = config.classname('month-more-title-day');
         var classDayLabel = config.classname('month-more-title-day-label');
         var day = util.pick(date.split('.'), 2);
 
-        return '<span class="' + classDay + '">' + day + '</span> <span class="' + classDayLabel + '">' + dayname + '</span>';
+        return (
+            '<span class="' +
+            classDay +
+            '">' +
+            day +
+            '</span> <span class="' +
+            classDayLabel +
+            '">' +
+            dayname +
+            '</span>'
+        );
     },
 
-    'monthMoreClose-tmpl': function() {
+    'monthMoreClose-tmpl': function () {
         return '';
     },
 
-    'monthGridHeader-tmpl': function(model) {
+    'monthGridHeader-tmpl': function (model) {
         var date = parseInt(model.date.split('-')[2], 10);
         var classNames = [];
 
@@ -324,37 +348,47 @@ var helpers = {
         return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
     },
 
-    'monthGridHeaderExceed-tmpl': function(hiddenSchedules) {
+    'monthGridHeaderExceed-tmpl': function (hiddenSchedules) {
         var className = config.classname('weekday-grid-more-schedules');
 
         return '<span class="' + className + '">' + hiddenSchedules + ' more</span>';
     },
 
-    'monthGridFooter-tmpl': function() {
+    'monthGridFooter-tmpl': function () {
         return '';
     },
 
     /* eslint no-unused-vars: 0 */
-    'monthGridFooterExceed-tmpl': function(hiddenSchedules) {
+    'monthGridFooterExceed-tmpl': function (hiddenSchedules) {
         return '';
     },
 
-    'monthDayname-tmpl': function(model) {
+    'monthDayname-tmpl': function (model) {
         return model.label;
     },
 
-    'weekDayname-tmpl': function(model) {
+    'weekDayname-tmpl': function (model) {
         var classDate = config.classname('dayname-date');
         var className = config.classname('dayname-name');
 
-        return '<span class="' + classDate + '">' + model.date + '</span>&nbsp;&nbsp;<span class="' + className + '">' + model.dayName + '</span>';
+        return (
+            '<span class="' +
+            classDate +
+            '">' +
+            model.date +
+            '</span>&nbsp;&nbsp;<span class="' +
+            className +
+            '">' +
+            model.dayName +
+            '</span>'
+        );
     },
 
-    'weekGridFooterExceed-tmpl': function(hiddenSchedules) {
+    'weekGridFooterExceed-tmpl': function (hiddenSchedules) {
         return '+' + hiddenSchedules;
     },
 
-    'dayGridTitle-tmpl': function(viewName) {
+    'dayGridTitle-tmpl': function (viewName) {
         var tmpl = Handlebars.helpers[viewName + 'Title-tmpl'];
         if (tmpl) {
             return tmpl(viewName);
@@ -363,7 +397,7 @@ var helpers = {
         return viewName;
     },
 
-    'schedule-tmpl': function(model) {
+    'schedule-tmpl': function (model) {
         var tmpl = Handlebars.helpers[model.category + '-tmpl'];
         if (tmpl) {
             return tmpl(model);
@@ -372,32 +406,33 @@ var helpers = {
         return '';
     },
 
-    'collapseBtnTitle-tmpl': function() {
+    'collapseBtnTitle-tmpl': function () {
         var iconName = config.classname('icon');
         var closeIconName = config.classname('ic-arrow-solid-top');
 
         return '<span class="' + iconName + ' ' + closeIconName + '"></span>';
     },
 
-    'timezoneDisplayLabel-tmpl': function(timezoneOffset, displayLabel) {
+    'timezoneDisplayLabel-tmpl': function (timezoneOffset, displayLabel) {
         var gmt, hour, minutes;
 
         if (util.isUndefined(displayLabel)) {
             gmt = timezoneOffset < 0 ? '-' : '+';
             hour = Math.abs(parseInt(timezoneOffset / SIXTY_MINUTES, 10));
             minutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
-            displayLabel = gmt + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
+            displayLabel =
+                gmt + datetime.leadingZero(hour, 2) + ':' + datetime.leadingZero(minutes, 2);
         }
 
         return displayLabel;
     },
 
-    'timegridDisplayPrimayTime-tmpl': function(time) {
+    'timegridDisplayPrimayTime-tmpl': function (time) {
         /* TODO: 삭제 필요 (will be deprecated) */
         return Handlebars.helpers['timegridDisplayPrimaryTime-tmpl'](time);
     },
 
-    'timegridDisplayPrimaryTime-tmpl': function(time) {
+    'timegridDisplayPrimaryTime-tmpl': function (time) {
         var hour = time.hour;
         var meridiem = hour >= 12 ? 'pm' : 'am';
 
@@ -408,11 +443,11 @@ var helpers = {
         return hour + ' ' + meridiem;
     },
 
-    'timegridDisplayTime-tmpl': function(time) {
+    'timegridDisplayTime-tmpl': function (time) {
         return datetime.leadingZero(time.hour, 2) + ':' + datetime.leadingZero(time.minutes, 2);
     },
 
-    'timegridCurrentTime-tmpl': function(timezone) {
+    'timegridCurrentTime-tmpl': function (timezone) {
         var templates = [];
 
         if (timezone.dateDifference) {
@@ -424,75 +459,80 @@ var helpers = {
         return templates.join('');
     },
 
-    'popupIsAllDay-tmpl': function() {
+    'popupIsAllDay-tmpl': function () {
         return 'All day';
     },
 
-    'popupStateFree-tmpl': function() {
+    'popupStateFree-tmpl': function () {
         return 'Free';
     },
 
-    'popupStateBusy-tmpl': function() {
+    'popupStateBusy-tmpl': function () {
         return 'Busy';
     },
 
-    'titlePlaceholder-tmpl': function() {
+    'titlePlaceholder-tmpl': function () {
         return 'Subject';
     },
 
-    'locationPlaceholder-tmpl': function() {
+    'locationPlaceholder-tmpl': function () {
         return 'Location';
     },
 
-    'startDatePlaceholder-tmpl': function() {
+    'startDatePlaceholder-tmpl': function () {
         return 'Start date';
     },
 
-    'endDatePlaceholder-tmpl': function() {
+    'endDatePlaceholder-tmpl': function () {
         return 'End date';
     },
-    'popupSave-tmpl': function() {
+    'popupSave-tmpl': function () {
         return 'Save';
     },
-    'popupUpdate-tmpl': function() {
+    'popupUpdate-tmpl': function () {
         return 'Update';
     },
-    'popupDetailDate-tmpl': function(isAllDay, start, end) {
+    'popupDetailDate-tmpl': function (isAllDay, start, end) {
         var isSameDate = datetime.isSameDate(start, end);
         var endFormat = (isSameDate ? '' : 'YYYY.MM.DD ') + 'hh:mm tt';
 
         if (isAllDay) {
-            return datetime.format(start, 'YYYY.MM.DD') + (isSameDate ? '' : ' - ' + datetime.format(end, 'YYYY.MM.DD'));
+            return (
+                datetime.format(start, 'YYYY.MM.DD') +
+                (isSameDate ? '' : ' - ' + datetime.format(end, 'YYYY.MM.DD'))
+            );
         }
 
-        return (datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat));
+        return (
+            datetime.format(start, 'YYYY.MM.DD hh:mm tt') + ' - ' + datetime.format(end, endFormat)
+        );
     },
-    'popupDetailLocation-tmpl': function(schedule) {
+    'popupDetailLocation-tmpl': function (schedule) {
         return schedule.location;
     },
-    'popupDetailUser-tmpl': function(schedule) {
+    'popupDetailUser-tmpl': function (schedule) {
         return (schedule.attendees || []).join(', ');
     },
-    'popupDetailState-tmpl': function(schedule) {
+    'popupDetailState-tmpl': function (schedule) {
         return schedule.state || 'Busy';
     },
-    'popupDetailRepeat-tmpl': function(schedule) {
+    'popupDetailRepeat-tmpl': function (schedule) {
         return schedule.recurrenceRule;
     },
-    'popupDetailBody-tmpl': function(schedule) {
+    'popupDetailBody-tmpl': function (schedule) {
         return schedule.body;
     },
-    'popupEdit-tmpl': function() {
+    'popupEdit-tmpl': function () {
         return 'Edit';
     },
-    'popupDelete-tmpl': function() {
+    'popupDelete-tmpl': function () {
         return 'Delete';
     },
-    'monthScheduleName-tmpl': function(schedule) {
+    'monthScheduleName-tmpl': function (schedule) {
         var start = schedule.start;
 
         return msToTime(start);
-    }
+    },
 };
 
 /**
@@ -505,8 +545,8 @@ function msToTime(milliseconds) {
     var minutes = time.getMinutes(),
         hours = time.getHours();
 
-    hours = (hours < 10) ? '0' + hours : hours;
-    minutes = (minutes < 10) ? '0' + minutes : minutes;
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
 
     return hours + ':' + minutes;
 }
