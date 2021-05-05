@@ -121,7 +121,7 @@ DayName.prototype._getDayNameColor = function (theme, day, isToday, isPastDay) {
         } else if (day === 6) {
             color = theme.common.saturday.color;
         } else if (isToday) {
-            color = '#135de6';
+            color = theme.week.today.color || theme.common.today.color;
         } else {
             color = theme.common.dayname.color;
         }
