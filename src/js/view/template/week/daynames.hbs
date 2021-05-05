@@ -1,11 +1,14 @@
 <div class="{{CSS_PREFIX}}dayname-leftmargin" style="margin-left: {{@root.styles.marginLeft}};">
-{{#each dayNames}}
-<div class="{{CSS_PREFIX}}dayname {{#if isToday}}{{CSS_PREFIX}}today{{/if}} {{holiday day}}"
-     data-date="{{renderDate}}"
-     style="{{common-width width}};left:{{left}}%; line-height: {{@root.styles.height}}; border-left: {{@root.styles.borderLeft}}; padding-left: {{@root.styles.paddingLeft}};">
-    <span class="{{CSS_PREFIX}}dayname-date-area" style="color: {{color}};">
-        {{{weekDayname-tmpl this}}}
-    </span>
-</div>
-{{/each}}
+    {{#each dayNames}}
+    <div class="{{CSS_PREFIX}}dayname {{#if isToday}}{{CSS_PREFIX}}today{{/if}} {{holiday day}}"
+        data-date="{{renderDate}}" style="{{common-width width}};left:{{left}}%; line-height: {{@root.styles.height}}; border-left: {{@root.styles.borderLeft}}; padding-left: {{@root.styles.paddingLeft}};
+     {{#if isToday}}
+            background-color: #d2e1ff;
+            {{/if}}
+     ">
+        <span class="{{CSS_PREFIX}}dayname-date-area" style="color: {{color}};">
+            {{{weekDayname-tmpl this}}}
+        </span>
+    </div>
+    {{/each}}
 </div>

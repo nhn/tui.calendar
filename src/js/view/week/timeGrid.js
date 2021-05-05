@@ -71,6 +71,7 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
     return util.map(hoursRange, function (hour, index) {
         var color;
         var fontWeight;
+        var backgroundColor;
         var isPast =
             (hasHourMarker && index <= nowHoursIndex) ||
             (renderEndDate < now && !datetime.isSameDate(renderEndDate, now));
@@ -85,12 +86,19 @@ function getHoursLabels(opt, hasHourMarker, timezoneOffset, styles) {
             fontWeight = styles.futureTimeFontWeight;
         }
 
+        if (hour >= 8 && hour <= 17) {
+            backgroundColor = '#d2e1ff';
+        } else {
+            backgroundColor = 'white';
+        }
+
         return {
             hour: hour,
             minutes: shiftMinutes,
             hidden: nowAroundHours === hour || index === 0,
-            color: color || '',
+            color: color || 'red',
             fontWeight: fontWeight || '',
+            backgroundColor: backgroundColor,
         };
     });
 }
@@ -349,7 +357,6 @@ TimeGrid.prototype._getTimezoneViewModel = function (currentHours, timezonesColl
         var timezoneDifference = timezoneOffset + primaryOffset;
         var timeSlots = getHoursLabels(opt, currentHours >= 0, timezoneDifference, styles);
         var dateDifference;
-        console.log(opt);
         hourmarker.setMinutes(hourmarker.getMinutes() + timezoneDifference);
         dateDifference = datetime.getDateDifference(hourmarker, now);
 
@@ -366,14 +373,12 @@ TimeGrid.prototype._getTimezoneViewModel = function (currentHours, timezonesColl
             left: collapsed ? 0 : (timezones.length - index - 1) * width,
             isPrimary: index === 0,
             backgroundColor: backgroundColor || '',
-            // backgroundColor: 'red',
             hidden: index !== 0 && collapsed,
             hourmarker: hourmarker,
             dateDifferenceSign: dateDifference < 0 ? '-' : '+',
             dateDifference: Math.abs(dateDifference),
         });
     });
-
     return timezoneViewModel;
 };
 
@@ -470,13 +475,12 @@ TimeGrid.prototype.render = function (viewModel) {
 
     this._cacheParentViewModel = viewModel;
     this._cacheHoursLabels = baseViewModel.hoursLabels;
-
     if (!scheduleLen) {
         return;
     }
 
     baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
-
+    console.log(baseViewModel);
     container.innerHTML = mainTmpl(baseViewModel);
 
     /**********

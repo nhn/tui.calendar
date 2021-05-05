@@ -148,7 +148,6 @@ DayName.prototype._getStyles = function (theme, timezonesCollapsed) {
         styles.borderLeft = theme.week.dayname.borderLeft || theme.common.border;
         styles.paddingLeft = theme.week.dayname.paddingLeft;
         styles.backgroundColor = theme.week.dayname.backgroundColor;
-        // styles.backgroundColor = 'red';
         styles.height = theme.week.dayname.height;
         styles.textAlign = theme.week.dayname.textAlign;
         styles.marginLeft = theme.week.daygridLeft.width;
