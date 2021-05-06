@@ -1,4 +1,4 @@
-import { FunctionComponent, h, Fragment } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
@@ -6,13 +6,13 @@ import { DayEvent } from '@src/components/events/dayEvent';
 import { getViewModels, setViewModelsInfo } from '@src/time/panelEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
-import type { GridInfoList, PanelName } from '@t/panel';
+import type { GridInfoList } from '@t/panel';
 import type { PanelState } from '@src/components/layout';
 
 const EVENT_HEIGHT = 20;
 
 interface Props {
-  name: PanelName;
+  name: string;
   gridInfoList: GridInfoList;
   events: Schedule[];
   options?: PanelState;
@@ -28,19 +28,15 @@ export const PanelEvents: FunctionComponent<Props> = ({
   events,
   options = {},
 }) => {
-  const renderEvents = () => {
-    const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
-    const viewModels = getViewModels(events, gridInfoList);
-    setViewModelsInfo(viewModels, gridInfoList, { narrowWeekend });
+  const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
+  const viewModels = getViewModels(events, gridInfoList);
+  setViewModelsInfo(viewModels, gridInfoList, { narrowWeekend });
 
-    const renderedViewModels = viewModels
-      .filter(isWithinHeight(panelHeight, EVENT_HEIGHT))
-      .map((viewModel, index) => (
-        <DayEvent viewModel={viewModel} key={`${name}-DayEvent-${index}`} />
-      ));
+  const filteredViewModels = viewModels.filter(isWithinHeight(panelHeight, EVENT_HEIGHT));
 
-    return <Fragment>{renderedViewModels}</Fragment>;
-  };
+  const dayEvents = filteredViewModels.map((viewModel, index) => (
+    <DayEvent viewModel={viewModel} key={`${name}-DayEvent-${index}`} />
+  ));
 
-  return <div className={cls('panel-event-wrapper')}>{renderEvents()}</div>;
+  return <div className={cls('panel-event-wrapper')}>{dayEvents}</div>;
 };

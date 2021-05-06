@@ -25,8 +25,6 @@ import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
 
-import type { PanelName } from '@t/panel';
-
 interface Props {
   children: VNode<typeof Panel> | VNode<typeof Panel>[];
   direction?: Direction;
@@ -38,30 +36,36 @@ interface Props {
 type Child = VNode<any> | string | number;
 type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 
+const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
+
 // @TODO: remove after store module merged
 export interface PanelState {
   panelHeight?: number;
   narrowWeekend?: boolean;
+  maxPanelHeight?: number;
 }
-type LayoutState = Record<PanelName, PanelState>;
-export const UPDATE_PANEL_HEIGHT = 'updatePanelHeight';
-export const REDUCE_HEIGHT = 'reduceHeight';
-export type PanelActionType = typeof UPDATE_PANEL_HEIGHT | typeof REDUCE_HEIGHT;
+
+export enum PanelActionType {
+  UPDATE_PANEL_HEIGHT = 'updatePanelHeight',
+}
+
 interface PanelAction {
   type: PanelActionType;
-  panelType: PanelName;
+  panelType: string;
   state: Partial<PanelState>;
 }
-type Dispatch = (action: PanelAction) => void;
 
-const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
+export type LayoutState = Record<string, PanelState>;
+
+export type Dispatch = (action: PanelAction) => void;
+
 const defaultLayoutState: LayoutState = {} as LayoutState;
 
-function reducer(prevState: LayoutState, action: PanelAction) {
+export function reducer(prevState: LayoutState, action: PanelAction) {
   const { type, panelType, state } = action;
 
   switch (type) {
-    case UPDATE_PANEL_HEIGHT:
+    case PanelActionType.UPDATE_PANEL_HEIGHT:
       return {
         ...prevState,
         [panelType]: {

@@ -7,6 +7,8 @@ import TZDate from '@src/time/date';
 import type { GridInfoList } from '@t/panel';
 import type { PanelState } from '@src/components/layout';
 
+export const TOTAL_WIDTH = 100;
+
 const getWeekendCount = (gridInfoList: GridInfoList) =>
   gridInfoList.filter((gridInfo) => isWeekend(gridInfo.getDay())).length;
 
@@ -58,19 +60,14 @@ export const getWidth = (widthList: number[], start: number, end: number) =>
     return acc;
   }, 0);
 
-const isBetweenEvent = (gridInfoList: GridInfoList) => {
-  const [gridStart] = gridInfoList;
-  const gridEnd = gridInfoList[gridInfoList.length - 1];
+const isBetweenEvent = (schedule: Schedule, gridStart: TZDate, gridEnd: TZDate) => {
+  const scheduleStart = schedule.getStarts();
+  const scheduleEnd = schedule.getEnds();
 
-  return (schedule: Schedule) => {
-    const scheduleStart = schedule.getStarts();
-    const scheduleEnd = schedule.getEnds();
-
-    return (
-      (gridStart <= scheduleStart && scheduleStart <= gridEnd) ||
-      (gridStart <= scheduleEnd && scheduleEnd <= gridEnd)
-    );
-  };
+  return (
+    (gridStart <= scheduleStart && scheduleStart <= gridEnd) ||
+    (gridStart <= scheduleEnd && scheduleEnd <= gridEnd)
+  );
 };
 
 export const isInGrid = (gridDate: TZDate) => {
@@ -160,8 +157,11 @@ const getMatrices = (viewModels: ScheduleViewModel[]) => {
 };
 
 export const getViewModels = (events: Schedule[], gridInfoList: GridInfoList) => {
+  const [gridStart] = gridInfoList;
+  const gridEnd = gridInfoList[gridInfoList.length - 1];
+
   return events
-    .filter(isBetweenEvent(gridInfoList))
+    .filter((event) => isBetweenEvent(event, gridStart, gridEnd))
     .sort(array.compare.schedule.asc)
     .map(ScheduleViewModel.create);
 };
@@ -177,7 +177,7 @@ export const setViewModelsInfo = (
   const { widthList } = getGridStyleInfo({
     gridInfoList,
     narrowWeekend,
-    totalWidth: 100,
+    totalWidth: TOTAL_WIDTH,
   });
 
   matrices.forEach((matrix, top) => {

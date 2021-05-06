@@ -3,7 +3,7 @@ import { getResizeInfoByGrowth, PanelInfo, PanelRect } from '@src/controller/pan
 describe('panel controller', () => {
   it('getResizeInfoByGrowth() calculate new size and remain size by supplied growth value', () => {
     const panelProps: PanelInfo = {
-      name: 'milestone',
+      name: 'dummy',
     };
     const panelRect: PanelRect = {
       x: 0,

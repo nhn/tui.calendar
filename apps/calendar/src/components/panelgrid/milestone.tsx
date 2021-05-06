@@ -7,8 +7,8 @@ import { addDate } from '@src/time/datetime';
 import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import TZDate from '@src/time/date';
-import { PanelStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 import Schedule from '@src/model/schedule';
+import { PanelActionType, PanelStore } from '@src/components/layout';
 
 import type { GridInfoList } from '@t/panel';
 
@@ -39,7 +39,7 @@ export const Milestone: FunctionComponent<Props> = ({
 
   useEffect(() => {
     dispatch({
-      type: UPDATE_PANEL_HEIGHT,
+      type: PanelActionType.UPDATE_PANEL_HEIGHT,
       panelType: 'milestone',
       state: {
         panelHeight,

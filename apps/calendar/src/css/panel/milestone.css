@@ -32,6 +32,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
+  overflow-y: scroll;
 }
 
 .panel-event-wrapper .weekday-event-block {

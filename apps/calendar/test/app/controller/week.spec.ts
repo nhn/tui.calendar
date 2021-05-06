@@ -14,7 +14,7 @@ import { ScheduleMatrix } from '@src/controller/core';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import Collection from '@src/util/collection';
 
-import type { Panel, PanelName } from '@t/panel';
+import type { Panel } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -210,7 +210,7 @@ describe('Base.Week', () => {
           hourStart: 0,
           hourEnd: 24,
         },
-      }) as Record<PanelName, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
+      }) as Record<string, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
 
       // There are 5 collision blocks on 5/1.
       expect(result.time['20150501'].length).toBe(5);
@@ -227,7 +227,7 @@ describe('Base.Week', () => {
         panels,
         andFilters: [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
         options: { hourStart: 0, hourEnd: 24 },
-      }) as Record<PanelName, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
+      }) as Record<string, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
 
       // One collision block in the timeline group
       expect(result.time['20150501'].length).toBe(1);

@@ -3,7 +3,6 @@ import { getGridStyleInfo, getViewModels, getWidth, isInGrid } from '@src/time/p
 
 import { GridInfoList } from '@t/panel';
 import Schedule from '@src/model/schedule';
-import { MilestoneEvent } from '@t/events';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 function createDate(y: number, M: number, d: number): TZDate {
