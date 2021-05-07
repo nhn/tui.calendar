@@ -24,7 +24,7 @@ var THEME_DOORAY = {
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': '#f3acac',
-    'month.dayExceptThisMonth.color': '#bbb',
+    'month.dayExceptThisMonth.color': '#e5e5e5',
     'month.weekend.backgroundColor': '#fafafa',
     'month.day.fontSize': '16px',
 
@@ -113,5 +113,5 @@ var THEME_DOORAY = {
     'week.dayGridSchedule.height': '18px',
     'week.dayGridSchedule.marginTop': '2px',
     'week.dayGridSchedule.marginLeft': '10px',
-    'week.dayGridSchedule.marginRight': '10px'
+    'week.dayGridSchedule.marginRight': '10px',
 };

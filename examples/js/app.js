@@ -5,7 +5,7 @@
 /* global moment, tui, chance */
 /* global findCalendar, CalendarList, ScheduleList, generateSchedule */
 
-(function(window, Calendar) {
+(function (window, Calendar) {
     var cal, resizeThrottled;
     var useCreationPopup = true;
     var useDetailPopup = true;
@@ -17,34 +17,40 @@
         useDetailPopup: useDetailPopup,
         calendars: CalendarList,
         template: {
-            milestone: function(model) {
-                return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + model.bgColor + '">' + model.title + '</span>';
+            milestone: function (model) {
+                return (
+                    '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' +
+                    model.bgColor +
+                    '">' +
+                    model.title +
+                    '</span>'
+                );
             },
-            allday: function(schedule) {
+            allday: function (schedule) {
                 return getTimeTemplate(schedule, true);
             },
-            time: function(schedule) {
+            time: function (schedule) {
                 return getTimeTemplate(schedule, false);
-            }
-        }
+            },
+        },
     });
 
     // event handlers
     cal.on({
-        'clickMore': function(e) {
+        clickMore: function (e) {
             console.log('clickMore', e);
         },
-        'clickSchedule': function(e) {
+        clickSchedule: function (e) {
             console.log('clickSchedule', e);
         },
-        'clickDayname': function(date) {
+        clickDayname: function (date) {
             console.log('clickDayname', date);
         },
-        'beforeCreateSchedule': function(e) {
+        beforeCreateSchedule: function (e) {
             console.log('beforeCreateSchedule', e);
             saveNewSchedule(e);
         },
-        'beforeUpdateSchedule': function(e) {
+        beforeUpdateSchedule: function (e) {
             var schedule = e.schedule;
             var changes = e.changes;
 
@@ -57,32 +63,32 @@
             cal.updateSchedule(schedule.id, schedule.calendarId, changes);
             refreshScheduleVisibility();
         },
-        'beforeDeleteSchedule': function(e) {
+        beforeDeleteSchedule: function (e) {
             console.log('beforeDeleteSchedule', e);
             cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
         },
-        'afterRenderSchedule': function(e) {
+        afterRenderSchedule: function (e) {
             var schedule = e.schedule;
             // var element = cal.getElement(schedule.id, schedule.calendarId);
             // console.log('afterRenderSchedule', element);
         },
-        'clickTimezonesCollapseBtn': function(timezonesCollapsed) {
+        clickTimezonesCollapseBtn: function (timezonesCollapsed) {
             console.log('timezonesCollapsed', timezonesCollapsed);
 
             if (timezonesCollapsed) {
                 cal.setTheme({
                     'week.daygridLeft.width': '77px',
-                    'week.timegridLeft.width': '77px'
+                    'week.timegridLeft.width': '77px',
                 });
             } else {
                 cal.setTheme({
                     'week.daygridLeft.width': '60px',
-                    'week.timegridLeft.width': '60px'
+                    'week.timegridLeft.width': '60px',
                 });
             }
 
             return true;
-        }
+        },
     });
 
     /**
@@ -96,17 +102,31 @@
         var start = moment(schedule.start.toUTCString());
         var end = moment(schedule.end.toUTCString());
         if (!isAllDay) {
-            html.push('<div style="padding-left: 6px; display: grid; place-items: center"><svg id="Component_316_1" data-name="Component 316 – 1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">\n' +
-                '  <path id="Path_13945" data-name="Path 13945" d="M-117.614,445.439a7,7,0,0,0-7,7,7,7,0,0,0,7,7,7,7,0,0,0,7-7A7,7,0,0,0-117.614,445.439Zm0,8a.991.991,0,0,1-.684-.278h-3.328v-1h3.068a.977.977,0,0,1,.323-.488v-4.244h1v4.086a1,1,0,0,1,.621.924A1,1,0,0,1-117.614,453.439Z" transform="translate(124.614 -445.439)" fill="#fff"/>\n' +
-                '</svg></div>');
-            html.push('<strong style="padding-left: 5px; padding-right: 5px">' + ' ' + start.format('HH:mm') + '</strong> ');
-            html.push('<div style="display: grid; place-items: center"><svg xmlns="http://www.w3.org/2000/svg" width="11.189" height="9.914" viewBox="0 0 11.189 9.914">\n' +
-                '  <g id="Component_147_11" data-name="Component 147 – 11" transform="translate(0.5 0.707)">\n' +
-                '    <path id="Path_13734" data-name="Path 13734" d="M0,0,4.208,4.25,8.5,0" transform="translate(5.939 8.5) rotate(-90)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>\n' +
-                '    <path id="Path_13733" data-name="Path 13733" d="M431.667,70h9.107" transform="translate(-431.667 -65.75)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>\n' +
-                '  </g>\n' +
-                '</svg></div>');
-            html.push('<strong style="padding-left: 5px; padding-right: 5px">' + ' ' + end.format('HH:mm') + '</strong> ');
+            html.push(
+                '<div style="padding-left: 6px; display: grid; place-items: center"><svg id="Component_316_1" data-name="Component 316 – 1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">\n' +
+                    '  <path id="Path_13945" data-name="Path 13945" d="M-117.614,445.439a7,7,0,0,0-7,7,7,7,0,0,0,7,7,7,7,0,0,0,7-7A7,7,0,0,0-117.614,445.439Zm0,8a.991.991,0,0,1-.684-.278h-3.328v-1h3.068a.977.977,0,0,1,.323-.488v-4.244h1v4.086a1,1,0,0,1,.621.924A1,1,0,0,1-117.614,453.439Z" transform="translate(124.614 -445.439)" fill="#fff"/>\n' +
+                    '</svg></div>'
+            );
+            html.push(
+                '<strong style="padding-left: 5px; padding-right: 5px">' +
+                    ' ' +
+                    start.format('HH:mm') +
+                    '</strong> '
+            );
+            html.push(
+                '<div style="display: grid; place-items: center"><svg xmlns="http://www.w3.org/2000/svg" width="11.189" height="9.914" viewBox="0 0 11.189 9.914">\n' +
+                    '  <g id="Component_147_11" data-name="Component 147 – 11" transform="translate(0.5 0.707)">\n' +
+                    '    <path id="Path_13734" data-name="Path 13734" d="M0,0,4.208,4.25,8.5,0" transform="translate(5.939 8.5) rotate(-90)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>\n' +
+                    '    <path id="Path_13733" data-name="Path 13733" d="M431.667,70h9.107" transform="translate(-431.667 -65.75)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>\n' +
+                    '  </g>\n' +
+                    '</svg></div>'
+            );
+            html.push(
+                '<strong style="padding-left: 5px; padding-right: 5px">' +
+                    ' ' +
+                    end.format('HH:mm') +
+                    '</strong> '
+            );
         }
 
         return html.join('');
@@ -122,8 +142,6 @@
         var options = cal.getOptions();
         var viewName = '';
 
-        console.log(target);
-        console.log(action);
         switch (action) {
             case 'toggle-daily':
                 viewName = 'day';
@@ -209,24 +227,26 @@
             return;
         }
 
-        cal.createSchedules([{
-            id: String(chance.guid()),
-            calendarId: calendar.id,
-            title: title,
-            isAllDay: isAllDay,
-            start: start,
-            end: end,
-            category: isAllDay ? 'allday' : 'time',
-            dueDateClass: '',
-            color: calendar.color,
-            bgColor: calendar.bgColor,
-            dragBgColor: calendar.bgColor,
-            borderColor: calendar.borderColor,
-            raw: {
-                location: location
+        cal.createSchedules([
+            {
+                id: String(chance.guid()),
+                calendarId: calendar.id,
+                title: title,
+                isAllDay: isAllDay,
+                start: start,
+                end: end,
+                category: isAllDay ? 'allday' : 'time',
+                dueDateClass: '',
+                color: calendar.color,
+                bgColor: calendar.bgColor,
+                dragBgColor: calendar.bgColor,
+                borderColor: calendar.borderColor,
+                raw: {
+                    location: location,
+                },
+                state: 'Busy',
             },
-            state: 'Busy'
-        }]);
+        ]);
 
         $('#modal-new-schedule').modal('hide');
     }
@@ -242,7 +262,13 @@
         var calendar = findCalendar(calendarId);
         var html = [];
 
-        html.push('<span class="calendar-bar" style="background-color: ' + calendar.bgColor + '; border-color:' + calendar.borderColor + ';"></span>');
+        html.push(
+            '<span class="calendar-bar" style="background-color: ' +
+                calendar.bgColor +
+                '; border-color:' +
+                calendar.borderColor +
+                ';"></span>'
+        );
         html.push('<span class="calendar-name">' + calendar.name + '</span>');
 
         calendarNameElement.innerHTML = html.join('');
@@ -257,7 +283,7 @@
         if (useCreationPopup) {
             cal.openCreationPopup({
                 start: start,
-                end: end
+                end: end,
             });
         }
     }
@@ -278,9 +304,9 @@
             borderColor: calendar.borderColor,
             location: scheduleData.location,
             raw: {
-                class: scheduleData.raw['class']
+                class: scheduleData.raw['class'],
             },
-            state: scheduleData.state
+            state: scheduleData.state,
         };
         if (calendar) {
             schedule.calendarId = calendar.id;
@@ -298,25 +324,27 @@
         var calendarId = e.target.value;
         var checked = e.target.checked;
         var viewAll = document.querySelector('.lnb-calendars-item input');
-        var calendarElements = Array.prototype.slice.call(document.querySelectorAll('#calendarList input'));
+        var calendarElements = Array.prototype.slice.call(
+            document.querySelectorAll('#calendarList input')
+        );
         var allCheckedCalendars = true;
 
         if (calendarId === 'all') {
             allCheckedCalendars = checked;
 
-            calendarElements.forEach(function(input) {
+            calendarElements.forEach(function (input) {
                 var span = input.parentNode;
                 input.checked = checked;
                 span.style.backgroundColor = checked ? span.style.borderColor : 'transparent';
             });
 
-            CalendarList.forEach(function(calendar) {
+            CalendarList.forEach(function (calendar) {
                 calendar.checked = checked;
             });
         } else {
             findCalendar(calendarId).checked = checked;
 
-            allCheckedCalendars = calendarElements.every(function(input) {
+            allCheckedCalendars = calendarElements.every(function (input) {
                 return input.checked;
             });
 
@@ -331,15 +359,17 @@
     }
 
     function refreshScheduleVisibility() {
-        var calendarElements = Array.prototype.slice.call(document.querySelectorAll('#calendarList input'));
+        var calendarElements = Array.prototype.slice.call(
+            document.querySelectorAll('#calendarList input')
+        );
 
-        CalendarList.forEach(function(calendar) {
+        CalendarList.forEach(function (calendar) {
             cal.toggleSchedules(calendar.id, !calendar.checked, false);
         });
 
         cal.render(true);
 
-        calendarElements.forEach(function(input) {
+        calendarElements.forEach(function (input) {
             var span = input.nextElementSibling;
             span.style.backgroundColor = input.checked ? span.style.borderColor : 'transparent';
         });
@@ -374,7 +404,11 @@
     }
 
     function currentCalendarDate(format) {
-        var currentDate = moment([cal.getDate().getFullYear(), cal.getDate().getMonth(), cal.getDate().getDate()]);
+        var currentDate = moment([
+            cal.getDate().getFullYear(),
+            cal.getDate().getMonth(),
+            cal.getDate().getDate(),
+        ]);
 
         return currentDate.format(format);
     }
@@ -387,8 +421,10 @@
         var html = [];
         if (viewName === 'day') {
             html.push(currentCalendarDate('YYYY.MM.DD'));
-        } else if (viewName === 'month' &&
-            (!options.month.visibleWeeksCount || options.month.visibleWeeksCount > 4)) {
+        } else if (
+            viewName === 'month' &&
+            (!options.month.visibleWeeksCount || options.month.visibleWeeksCount > 4)
+        ) {
             html.push(currentCalendarDate('YYYY.MM'));
         } else {
             html.push(moment(cal.getDateRangeStart().getTime()).format('YYYY.MM.DD'));
@@ -423,7 +459,7 @@
         return target.dataset ? target.dataset.action : target.getAttribute('data-action');
     }
 
-    resizeThrottled = tui.util.throttle(function() {
+    resizeThrottled = tui.util.throttle(function () {
         cal.render();
     }, 50);
 
@@ -436,15 +472,24 @@
 })(window, tui.Calendar);
 
 // set calendars
-(function() {
+(function () {
     var calendarList = document.getElementById('calendarList');
     var html = [];
-    CalendarList.forEach(function(calendar) {
-        html.push('<div class="lnb-calendars-item"><label>' +
-            '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' + calendar.id + '" checked>' +
-            '<span style="border-color: ' + calendar.borderColor + '; background-color: ' + calendar.borderColor + ';"></span>' +
-            '<span>' + calendar.name + '</span>' +
-            '</label></div>'
+    CalendarList.forEach(function (calendar) {
+        html.push(
+            '<div class="lnb-calendars-item"><label>' +
+                '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' +
+                calendar.id +
+                '" checked>' +
+                '<span style="border-color: ' +
+                calendar.borderColor +
+                '; background-color: ' +
+                calendar.borderColor +
+                ';"></span>' +
+                '<span>' +
+                calendar.name +
+                '</span>' +
+                '</label></div>'
         );
     });
     calendarList.innerHTML = html.join('\n');
