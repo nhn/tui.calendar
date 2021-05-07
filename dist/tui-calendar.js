@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Wed May 05 2021
+ * @version 1.13.0 | Fri May 07 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -18800,7 +18800,7 @@ var theme = {
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
-    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+    'month.dayExceptThisMonth.color': '#e5e5e5',
     'month.weekend.backgroundColor': 'inherit',
     'month.day.fontSize': '14px',
 
@@ -19047,7 +19047,7 @@ module.exports = Theme;
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
-    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+    'month.dayExceptThisMonth.color': '#e5e5e5',
     'month.weekend.backgroundColor': 'inherit',
     'month.day.fontSize': '14px',
 
@@ -19167,7 +19167,7 @@ var themeConfig = {
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
-    'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
+    'month.dayExceptThisMonth.color': '#e5e5e5',
     'month.weekend.backgroundColor': 'inherit',
     'month.day.fontSize': '14px',
 
@@ -20073,7 +20073,7 @@ util.inherit(WeekdayInMonth, Weekday);
  * View#getViewBound.
  * @override
  */
-WeekdayInMonth.prototype.getViewBound = function() {
+WeekdayInMonth.prototype.getViewBound = function () {
     var bound = View.prototype.getViewBound.call(this);
 
     return bound;
@@ -20084,7 +20084,7 @@ WeekdayInMonth.prototype.getViewBound = function() {
  * @param {number} panelHeight - panel's height for pre-calculation
  * @returns {number} limit index
  */
-WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
+WeekdayInMonth.prototype._getRenderLimitIndex = function (panelHeight) {
     var opt = this.options;
     var containerHeight = panelHeight || this.getViewBound().height;
     var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
@@ -20092,7 +20092,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
     var visibleScheduleCount = opt.visibleScheduleCount || 0;
     var count;
 
-    containerHeight -= (gridHeaderHeight + gridFooterHeight);
+    containerHeight -= gridHeaderHeight + gridFooterHeight;
 
     count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
 
@@ -20107,29 +20107,38 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
  * @override
  * @param {object} viewModel - schedules view models
  */
-WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
+WeekdayInMonth.prototype.getBaseViewModel = function (viewModel) {
     var opt = this.options,
         gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
         gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
         renderLimitIdx = this._getRenderLimitIndex() + 1,
-        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range),
+        exceedDate = this.getExceedDate(
+            renderLimitIdx,
+            viewModel.eventsInDateRange,
+            viewModel.range
+        ),
         styles = this._getStyles(viewModel.theme);
     var baseViewModel;
 
-    viewModel = util.extend({
-        exceedDate: exceedDate
-    }, viewModel);
+    viewModel = util.extend(
+        {
+            exceedDate: exceedDate,
+        },
+        viewModel
+    );
 
     baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
-
-    baseViewModel = util.extend({
-        matrices: viewModel.eventsInDateRange,
-        gridHeaderHeight: gridHeaderHeight,
-        gridFooterHeight: gridFooterHeight,
-        renderLimitIdx: renderLimitIdx,
-        isReadOnly: opt.isReadOnly,
-        styles: styles
-    }, baseViewModel);
+    baseViewModel = util.extend(
+        {
+            matrices: viewModel.eventsInDateRange,
+            gridHeaderHeight: gridHeaderHeight,
+            gridFooterHeight: gridFooterHeight,
+            renderLimitIdx: renderLimitIdx,
+            isReadOnly: opt.isReadOnly,
+            styles: styles,
+        },
+        baseViewModel
+    );
 
     return baseViewModel;
 };
@@ -20138,7 +20147,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
  * @override
  * @param {object} viewModel - schedules view models
  */
-WeekdayInMonth.prototype.render = function(viewModel) {
+WeekdayInMonth.prototype.render = function (viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(viewModel),
         scheduleContainer;
@@ -20149,10 +20158,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     container.innerHTML = baseTmpl(baseViewModel);
 
-    scheduleContainer = domutil.find(
-        config.classname('.weekday-schedules'),
-        container
-    );
+    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
 
     if (!scheduleContainer) {
         return;
@@ -20160,22 +20166,17 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
 
-    common.setAutoEllipsis(
-        config.classname('.weekday-schedule-title'),
-        container,
-        true
-    );
+    common.setAutoEllipsis(config.classname('.weekday-schedule-title'), container, true);
 };
 
-WeekdayInMonth.prototype._beforeDestroy = function() {
-};
+WeekdayInMonth.prototype._beforeDestroy = function () {};
 
 /**
  * Get the styles from theme
  * @param {Theme} theme - theme instance
  * @returns {object} styles - styles object
  */
-WeekdayInMonth.prototype._getStyles = function(theme) {
+WeekdayInMonth.prototype._getStyles = function (theme) {
     var styles = {};
 
     if (theme) {
@@ -20200,12 +20201,17 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
 function setIsOtherMonthFlag(dates, renderMonth, theme) {
     var month = renderMonth.getMonth() + 1;
 
-    util.forEach(dates, function(dateObj) {
+    util.forEach(dates, function (dateObj) {
         var isOtherMonth = dateObj.month !== month;
         dateObj.isOtherMonth = isOtherMonth;
 
         if (isOtherMonth) {
-            dateObj.color = Weekday.prototype._getDayNameColor(theme, dateObj.day, dateObj.isToday, isOtherMonth);
+            dateObj.color = Weekday.prototype._getDayNameColor(
+                theme,
+                dateObj.day,
+                dateObj.isToday,
+                isOtherMonth
+            );
         }
     });
 }
@@ -22255,30 +22261,30 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     };
 
   return "<div class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":7,"column":16},"end":{"line":7,"column":30}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":6,"column":16},"end":{"line":6,"column":30}}}) : helper)))
     + "weekday-grid-line "
-    + alias4((lookupProperty(helpers,"holiday")||(depth0 && lookupProperty(depth0,"holiday"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"day") : depth0),{"name":"holiday","hash":{},"data":data,"loc":{"start":{"line":7,"column":48},"end":{"line":7,"column":63}}}))
-    + ((stack1 = (lookupProperty(helpers,"fi")||(depth0 && lookupProperty(depth0,"fi"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"date") : depth0),"!==",1,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":7,"column":63},"end":{"line":7,"column":119}}})) != null ? stack1 : "")
-    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"isToday") : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":7,"column":119},"end":{"line":7,"column":161}}})) != null ? stack1 : "")
-    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"isOtherMonth") : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":7,"column":161},"end":{"line":7,"column":213}}})) != null ? stack1 : "")
+    + alias4((lookupProperty(helpers,"holiday")||(depth0 && lookupProperty(depth0,"holiday"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"day") : depth0),{"name":"holiday","hash":{},"data":data,"loc":{"start":{"line":6,"column":48},"end":{"line":6,"column":63}}}))
+    + ((stack1 = (lookupProperty(helpers,"fi")||(depth0 && lookupProperty(depth0,"fi"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"date") : depth0),"!==",1,{"name":"fi","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":6,"column":63},"end":{"line":6,"column":119}}})) != null ? stack1 : "")
+    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"isToday") : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":6,"column":119},"end":{"line":6,"column":161}}})) != null ? stack1 : "")
+    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"isOtherMonth") : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":6,"column":161},"end":{"line":6,"column":213}}})) != null ? stack1 : "")
     + "\"\r\n        style=\"width:"
-    + alias4(((helper = (helper = lookupProperty(helpers,"width") || (depth0 != null ? lookupProperty(depth0,"width") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data,"loc":{"start":{"line":8,"column":21},"end":{"line":8,"column":30}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"width") || (depth0 != null ? lookupProperty(depth0,"width") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"width","hash":{},"data":data,"loc":{"start":{"line":7,"column":21},"end":{"line":7,"column":30}}}) : helper)))
     + "%; left:"
-    + alias4(((helper = (helper = lookupProperty(helpers,"left") || (depth0 != null ? lookupProperty(depth0,"left") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data,"loc":{"start":{"line":8,"column":38},"end":{"line":8,"column":46}}}) : helper)))
-    + "%; background-color: "
-    + alias4(((helper = (helper = lookupProperty(helpers,"backgroundColor") || (depth0 != null ? lookupProperty(depth0,"backgroundColor") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"backgroundColor","hash":{},"data":data,"loc":{"start":{"line":8,"column":67},"end":{"line":8,"column":86}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"left") || (depth0 != null ? lookupProperty(depth0,"left") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"left","hash":{},"data":data,"loc":{"start":{"line":7,"column":38},"end":{"line":7,"column":46}}}) : helper)))
+    + "%; background-color:"
+    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"isOtherMonth") : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data,"loc":{"start":{"line":7,"column":66},"end":{"line":7,"column":127}}})) != null ? stack1 : "")
     + "; font-size: "
     + alias4(container.lambda(((stack1 = ((stack1 = (data && lookupProperty(data,"root"))) && lookupProperty(stack1,"styles"))) && lookupProperty(stack1,"fontSize")), depth0))
     + ";\r\n"
-    + ((stack1 = lookupProperty(helpers,"unless").call(alias1,(data && lookupProperty(data,"last")),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":9,"column":8},"end":{"line":11,"column":19}}})) != null ? stack1 : "")
+    + ((stack1 = lookupProperty(helpers,"unless").call(alias1,(data && lookupProperty(data,"last")),{"name":"unless","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":8,"column":8},"end":{"line":10,"column":19}}})) != null ? stack1 : "")
     + "        \">\r\n        <div class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":13,"column":20},"end":{"line":13,"column":34}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":12,"column":20},"end":{"line":12,"column":34}}}) : helper)))
     + "weekday-grid-header\">\r\n            <span style=\"color: "
-    + alias4(((helper = (helper = lookupProperty(helpers,"color") || (depth0 != null ? lookupProperty(depth0,"color") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data,"loc":{"start":{"line":14,"column":32},"end":{"line":14,"column":41}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"color") || (depth0 != null ? lookupProperty(depth0,"color") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"color","hash":{},"data":data,"loc":{"start":{"line":13,"column":32},"end":{"line":13,"column":41}}}) : helper)))
     + ";\">"
-    + ((stack1 = (lookupProperty(helpers,"monthGridHeader-tmpl")||(depth0 && lookupProperty(depth0,"monthGridHeader-tmpl"))||alias2).call(alias1,depth0,{"name":"monthGridHeader-tmpl","hash":{},"data":data,"loc":{"start":{"line":14,"column":44},"end":{"line":14,"column":75}}})) != null ? stack1 : "")
+    + ((stack1 = (lookupProperty(helpers,"monthGridHeader-tmpl")||(depth0 && lookupProperty(depth0,"monthGridHeader-tmpl"))||alias2).call(alias1,depth0,{"name":"monthGridHeader-tmpl","hash":{},"data":data,"loc":{"start":{"line":13,"column":44},"end":{"line":13,"column":75}}})) != null ? stack1 : "")
     + "</span>\r\n"
-    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"if","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":15,"column":12},"end":{"line":17,"column":19}}})) != null ? stack1 : "")
+    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"if","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":14,"column":12},"end":{"line":17,"column":19}}})) != null ? stack1 : "")
     + "        </div>\r\n        <div class=\""
     + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":19,"column":20},"end":{"line":19,"column":34}}}) : helper)))
     + "weekday-grid-footer\">\r\n            <span style=\"color: "
@@ -22286,7 +22292,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + ";\">"
     + ((stack1 = (lookupProperty(helpers,"monthGridFooter-tmpl")||(depth0 && lookupProperty(depth0,"monthGridFooter-tmpl"))||alias2).call(alias1,depth0,{"name":"monthGridFooter-tmpl","hash":{},"data":data,"loc":{"start":{"line":20,"column":44},"end":{"line":20,"column":75}}})) != null ? stack1 : "")
     + "</span>\r\n"
-    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":21,"column":12},"end":{"line":23,"column":19}}})) != null ? stack1 : "")
+    + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"if","hash":{},"fn":container.program(16, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":21,"column":12},"end":{"line":24,"column":19}}})) != null ? stack1 : "")
     + "        </div>\r\n    </div>\r\n";
 },"2":function(container,depth0,helpers,partials,data) {
     var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -22297,7 +22303,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     };
 
   return " "
-    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":7,"column":84},"end":{"line":7,"column":98}}}) : helper)))
+    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":6,"column":84},"end":{"line":6,"column":98}}}) : helper)))
     + "near-month-day";
 },"4":function(container,depth0,helpers,partials,data) {
     var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -22308,7 +22314,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     };
 
   return " "
-    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":7,"column":135},"end":{"line":7,"column":149}}}) : helper)))
+    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":6,"column":135},"end":{"line":6,"column":149}}}) : helper)))
     + "today";
 },"6":function(container,depth0,helpers,partials,data) {
     var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -22319,9 +22325,20 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     };
 
   return " "
-    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":7,"column":182},"end":{"line":7,"column":196}}}) : helper)))
+    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":6,"column":182},"end":{"line":6,"column":196}}}) : helper)))
     + "extra-date";
 },"8":function(container,depth0,helpers,partials,data) {
+    return "#f4f4f4";
+},"10":function(container,depth0,helpers,partials,data) {
+    var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
+        if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
+          return parent[propertyName];
+        }
+        return undefined
+    };
+
+  return container.escapeExpression(((helper = (helper = lookupProperty(helpers,"backgroundColor") || (depth0 != null ? lookupProperty(depth0,"backgroundColor") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"backgroundColor","hash":{},"data":data,"loc":{"start":{"line":7,"column":101},"end":{"line":7,"column":120}}}) : helper)));
+},"12":function(container,depth0,helpers,partials,data) {
     var stack1, lookupProperty = container.lookupProperty || function(parent, propertyName) {
         if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
           return parent[propertyName];
@@ -22332,7 +22349,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
   return "        border-right:"
     + container.escapeExpression(container.lambda(((stack1 = ((stack1 = (data && lookupProperty(data,"root"))) && lookupProperty(stack1,"styles"))) && lookupProperty(stack1,"borderLeft")), depth0))
     + ";\r\n";
-},"10":function(container,depth0,helpers,partials,data) {
+},"14":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
         if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
           return parent[propertyName];
@@ -22340,14 +22357,14 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
         return undefined
     };
 
-  return "                <span class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":16,"column":29},"end":{"line":16,"column":43}}}) : helper)))
+  return "            <span class=\""
+    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":15,"column":25},"end":{"line":15,"column":39}}}) : helper)))
     + "weekday-exceed-in-month\" data-ymd=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"ymd") || (depth0 != null ? lookupProperty(depth0,"ymd") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data,"loc":{"start":{"line":16,"column":78},"end":{"line":16,"column":85}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"ymd") || (depth0 != null ? lookupProperty(depth0,"ymd") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data,"loc":{"start":{"line":15,"column":74},"end":{"line":15,"column":81}}}) : helper)))
     + "\">"
-    + ((stack1 = (lookupProperty(helpers,"monthGridHeaderExceed-tmpl")||(depth0 && lookupProperty(depth0,"monthGridHeaderExceed-tmpl"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"monthGridHeaderExceed-tmpl","hash":{},"data":data,"loc":{"start":{"line":16,"column":87},"end":{"line":16,"column":135}}})) != null ? stack1 : "")
+    + ((stack1 = (lookupProperty(helpers,"monthGridHeaderExceed-tmpl")||(depth0 && lookupProperty(depth0,"monthGridHeaderExceed-tmpl"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"monthGridHeaderExceed-tmpl","hash":{},"data":data,"loc":{"start":{"line":15,"column":83},"end":{"line":16,"column":34}}})) != null ? stack1 : "")
     + "</span>\r\n";
-},"12":function(container,depth0,helpers,partials,data) {
+},"16":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
         if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
           return parent[propertyName];
@@ -22355,12 +22372,12 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
         return undefined
     };
 
-  return "                <span class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":22,"column":29},"end":{"line":22,"column":43}}}) : helper)))
+  return "            <span class=\""
+    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":22,"column":25},"end":{"line":22,"column":39}}}) : helper)))
     + "weekday-exceed-in-month\" data-ymd=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"ymd") || (depth0 != null ? lookupProperty(depth0,"ymd") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data,"loc":{"start":{"line":22,"column":78},"end":{"line":22,"column":85}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"ymd") || (depth0 != null ? lookupProperty(depth0,"ymd") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ymd","hash":{},"data":data,"loc":{"start":{"line":22,"column":74},"end":{"line":22,"column":81}}}) : helper)))
     + "\">"
-    + ((stack1 = (lookupProperty(helpers,"monthGridFooterExceed-tmpl")||(depth0 && lookupProperty(depth0,"monthGridFooterExceed-tmpl"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"monthGridFooterExceed-tmpl","hash":{},"data":data,"loc":{"start":{"line":22,"column":87},"end":{"line":22,"column":135}}})) != null ? stack1 : "")
+    + ((stack1 = (lookupProperty(helpers,"monthGridFooterExceed-tmpl")||(depth0 && lookupProperty(depth0,"monthGridFooterExceed-tmpl"))||alias2).call(alias1,(depth0 != null ? lookupProperty(depth0,"hiddenSchedules") : depth0),{"name":"monthGridFooterExceed-tmpl","hash":{},"data":data,"loc":{"start":{"line":22,"column":83},"end":{"line":23,"column":34}}})) != null ? stack1 : "")
     + "</span>\r\n";
 },"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
@@ -22372,15 +22389,15 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
 
   return "<div class=\""
     + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":1,"column":12},"end":{"line":1,"column":26}}}) : helper)))
-    + "weekday-border\"\r\n    style=\"\r\n    border-top: "
+    + "weekday-border\" style=\"\r\n    border-top: "
     + alias4(container.lambda(((stack1 = (depth0 != null ? lookupProperty(depth0,"styles") : depth0)) != null ? lookupProperty(stack1,"borderTop") : stack1), depth0))
     + ";\r\n\"></div>\r\n<div class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":5,"column":12},"end":{"line":5,"column":26}}}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":4,"column":12},"end":{"line":4,"column":26}}}) : helper)))
     + "weekday-grid\">\r\n"
-    + ((stack1 = lookupProperty(helpers,"each").call(alias1,(depth0 != null ? lookupProperty(depth0,"dates") : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":6,"column":0},"end":{"line":26,"column":11}}})) != null ? stack1 : "")
+    + ((stack1 = lookupProperty(helpers,"each").call(alias1,(depth0 != null ? lookupProperty(depth0,"dates") : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":5,"column":4},"end":{"line":27,"column":15}}})) != null ? stack1 : "")
     + "</div>\r\n<div class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":28,"column":12},"end":{"line":28,"column":26}}}) : helper)))
-    + "weekday-schedules\"></div>\r\n";
+    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":29,"column":12},"end":{"line":29,"column":26}}}) : helper)))
+    + "weekday-schedules\"></div>";
 },"useData":true});
 
 /***/ }),
@@ -26518,23 +26535,22 @@ var config = __webpack_require__(/*! ../config */ "./src/js/config.js"),
  *  view.
  */
 function Weekday(options, container) {
-    container = domutil.appendHTMLElement(
-        'div',
-        container,
-        config.classname('weekday')
-    );
+    container = domutil.appendHTMLElement('div', container, config.classname('weekday'));
 
     /**
      * @type {object}
      */
-    this.options = util.extend({
-        containerBottomGutter: 8,
-        scheduleHeight: 18,
-        scheduleGutter: 2,
-        narrowWeekend: false,
-        startDayOfWeek: 0,
-        workweek: false
-    }, options);
+    this.options = util.extend(
+        {
+            containerBottomGutter: 8,
+            scheduleHeight: 18,
+            scheduleGutter: 2,
+            narrowWeekend: false,
+            startDayOfWeek: 0,
+            workweek: false,
+        },
+        options
+    );
 
     /*
      * cache parent's view model
@@ -26551,7 +26567,7 @@ util.inherit(Weekday, View);
  * Get render date range
  * @returns {Date[]} rendered date range
  */
-Weekday.prototype.getRenderDateRange = function() {
+Weekday.prototype.getRenderDateRange = function () {
     return this._cacheParentViewModel.range;
 };
 
@@ -26559,7 +26575,7 @@ Weekday.prototype.getRenderDateRange = function() {
  * Get render date grids information
  * @returns {Date[]} rendered date grids information
  */
-Weekday.prototype.getRenderDateGrids = function() {
+Weekday.prototype.getRenderDateGrids = function () {
     return this._cacheParentViewModel.grids;
 };
 
@@ -26568,10 +26584,10 @@ Weekday.prototype.getRenderDateGrids = function() {
  * @param {object} viewModel parent's view model
  * @returns {object} viewModel to rendering.
  */
-Weekday.prototype.getBaseViewModel = function(viewModel) {
+Weekday.prototype.getBaseViewModel = function (viewModel) {
     var opt = this.options;
     var range = viewModel.range;
-    var gridWidth = (100 / range.length);
+    var gridWidth = 100 / range.length;
     var grids = viewModel.grids;
     var exceedDate = viewModel.exceedDate || {};
     var theme = viewModel.theme;
@@ -26582,26 +26598,30 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
     return {
         width: gridWidth,
         scheduleHeight: opt.scheduleHeight,
-        scheduleBlockHeight: (opt.scheduleHeight + opt.scheduleGutter),
+        scheduleBlockHeight: opt.scheduleHeight + opt.scheduleGutter,
         scheduleBlockGutter: opt.scheduleGutter,
-        dates: util.map(range, function(date, index) {
-            var day = date.getDay();
-            var ymd = datetime.format(new TZDate(date), 'YYYYMMDD');
-            var isToday = datetime.isSameDate(now, date);
+        dates: util.map(
+            range,
+            function (date, index) {
+                var day = date.getDay();
+                var ymd = datetime.format(new TZDate(date), 'YYYYMMDD');
+                var isToday = datetime.isSameDate(now, date);
 
-            return {
-                date: datetime.format(date, 'YYYY-MM-DD'),
-                month: date.getMonth() + 1,
-                day: day,
-                isToday: isToday,
-                ymd: ymd,
-                hiddenSchedules: exceedDate[ymd] || 0,
-                width: grids[index] ? grids[index].width : 0,
-                left: grids[index] ? grids[index].left : 0,
-                color: this._getDayNameColor(theme, day, isToday),
-                backgroundColor: this._getDayBackgroundColor(theme, day)
-            };
-        }, this)
+                return {
+                    date: datetime.format(date, 'YYYY-MM-DD'),
+                    month: date.getMonth() + 1,
+                    day: day,
+                    isToday: isToday,
+                    ymd: ymd,
+                    hiddenSchedules: exceedDate[ymd] || 0,
+                    width: grids[index] ? grids[index].width : 0,
+                    left: grids[index] ? grids[index].left : 0,
+                    color: this._getDayNameColor(theme, day, isToday),
+                    backgroundColor: isToday ? '#d2e1ff' : this._getDayBackgroundColor(theme, day),
+                };
+            },
+            this
+        ),
     };
 };
 
@@ -26613,12 +26633,12 @@ Weekday.prototype.getBaseViewModel = function(viewModel) {
  * @param {Array.<TZDate>} range - date range of one week
  * @returns {object} exceedDate
  */
-Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
+Weekday.prototype.getExceedDate = function (maxCount, eventsInDateRange, range) {
     var exceedDate = this._initExceedDate(range);
 
-    util.forEach(eventsInDateRange, function(matrix) {
-        util.forEach(matrix, function(column) {
-            util.forEach(column, function(viewModel) {
+    util.forEach(eventsInDateRange, function (matrix) {
+        util.forEach(matrix, function (column) {
+            util.forEach(column, function (viewModel) {
                 var period;
                 if (!viewModel || viewModel.top < maxCount) {
                     return;
@@ -26633,7 +26653,7 @@ Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
                     datetime.MILLISECONDS_PER_DAY
                 );
 
-                util.forEach(period, function(date) {
+                util.forEach(period, function (date) {
                     var ymd = datetime.format(date, 'YYYYMMDD');
                     exceedDate[ymd] += 1;
                 });
@@ -26649,10 +26669,10 @@ Weekday.prototype.getExceedDate = function(maxCount, eventsInDateRange, range) {
  * @param {Array.<TZDate>} range - date range of one week
  * @returns {Object} - initiated exceed date
  */
-Weekday.prototype._initExceedDate = function(range) {
+Weekday.prototype._initExceedDate = function (range) {
     var exceedDate = {};
 
-    util.forEach(range, function(date) {
+    util.forEach(range, function (date) {
         var ymd = datetime.format(date, 'YYYYMMDD');
         exceedDate[ymd] = 0;
     });
@@ -26668,18 +26688,23 @@ Weekday.prototype._initExceedDate = function(range) {
  * @param {boolean} isOtherMonth - not this month flag
  * @returns {string} style - color style
  */
-Weekday.prototype._getDayNameColor = function(theme, day, isToday, isOtherMonth) {
+Weekday.prototype._getDayNameColor = function (theme, day, isToday, isOtherMonth) {
     var color = '';
-
     if (theme) {
         if (day === 0) {
-            color = isOtherMonth ? theme.month.holidayExceptThisMonth.color : theme.common.holiday.color;
+            color = isOtherMonth
+                ? theme.month.holidayExceptThisMonth.color
+                : theme.common.holiday.color;
         } else if (day === 6) {
-            color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.saturday.color;
+            color = isOtherMonth
+                ? theme.month.dayExceptThisMonth.color
+                : theme.common.saturday.color;
         } else if (isToday) {
             color = theme.common.today.color;
         } else {
-            color = isOtherMonth ? theme.month.dayExceptThisMonth.color : theme.common.dayname.color;
+            color = isOtherMonth
+                ? theme.month.dayExceptThisMonth.color
+                : theme.common.dayname.color;
         }
     }
 
@@ -26692,9 +26717,8 @@ Weekday.prototype._getDayNameColor = function(theme, day, isToday, isOtherMonth)
  * @param {number} day - day number
  * @returns {string} style - color style
  */
-Weekday.prototype._getDayBackgroundColor = function(theme, day) {
+Weekday.prototype._getDayBackgroundColor = function (theme, day) {
     var color = '';
-
     if (theme) {
         if (day === 0 || day === 6) {
             color = theme.month.weekend.backgroundColor;

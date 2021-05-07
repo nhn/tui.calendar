@@ -1,9 +1,10 @@
 import Calendar, { ISchedule, IEventObject } from 'tui-calendar';
 
-const querySelectorEl = document.querySelector('#div') ||
-  document.getElementById('div') ||
-  document.createElement('div') ||
-  '#cal';
+const querySelectorEl =
+    document.querySelector('#div') ||
+    document.getElementById('div') ||
+    document.createElement('div') ||
+    '#cal';
 
 const calendar = new Calendar(querySelectorEl, {
     defaultView: 'week',
@@ -32,18 +33,18 @@ const calendar = new Calendar(querySelectorEl, {
             return `${schedule.title}(${schedule.start})`;
         },
         goingDuration(model: ISchedule) {
-            const SIXTY_MINUTES:number = 60;
+            const SIXTY_MINUTES: number = 60;
             const goingDuration = model.goingDuration || 0;
             const hour = parseInt('1000', 10);
             const minutes = goingDuration % SIXTY_MINUTES;
 
             return `GoingTime ${hour}:${minutes}`;
-        }
+        },
     },
     week: {
         startDayOfWeek: 0,
         narrowWeekend: true,
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     },
     month: {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -53,22 +54,22 @@ const calendar = new Calendar(querySelectorEl, {
         workweek: true,
         moreLayerSize: {
             width: '200px',
-            height: '150px'
+            height: '150px',
         },
         grid: {
             header: {
-                height: 50
-            }
+                height: 50,
+            },
         },
         scheduleFilter(schedule) {
             return Boolean(schedule.title);
-        }
+        },
     },
     useCreationPopup: false,
     useDetailPopup: false,
     disableDblClick: true,
     disableClick: false,
-    isReadOnly: true
+    isReadOnly: true,
 });
 
 calendar.changeView('month');
@@ -82,13 +83,13 @@ calendar.createSchedules([
         start: '2018-10-31T10:30:00+09:00',
         end: '2018-10-31T12:30:00+09:00',
         raw: {
-          hasTest: true,
-          name: 'string name',
-          info: {
-            age: 10
-          },
-          child: 3
-        }
+            hasTest: true,
+            name: 'string name',
+            info: {
+                age: 10,
+            },
+            child: 3,
+        },
     },
     {
         id: '2',
@@ -98,8 +99,8 @@ calendar.createSchedules([
         dueDateClass: '',
         start: '2018-10-31T14:30:00+09:00',
         end: '2018-10-31T16:30:00+09:00',
-        isReadOnly: true
-    }
+        isReadOnly: true,
+    },
 ]);
 calendar.deleteSchedule('1', 'Major Lecture');
 calendar.destroy();
@@ -119,16 +120,20 @@ calendar.openCreationPopup({
     category: 'task',
     dueDateClass: 'major',
     start: '2018-10-31T10:30:00+09:00',
-    end: '2018-10-31T12:30:00+09:00'
+    end: '2018-10-31T12:30:00+09:00',
 });
 calendar.prev();
 calendar.render();
 calendar.scrollToNow();
-calendar.setCalendarColor('1', {
-    color: '#f00',
-    bgColor: '#0f0',
-    borderColor: '#00f'
-}, false);
+calendar.setCalendarColor(
+    '1',
+    {
+        color: '#f00',
+        bgColor: '#0f0',
+        borderColor: '#00f',
+    },
+    false
+);
 calendar.setCalendars([
     {
         id: 'Major Lecture',
@@ -136,14 +141,17 @@ calendar.setCalendars([
         color: '#ffffff',
         bgColor: '#ffbb3b',
         dragBgColor: '#ffbb3b',
-        borderColor: '#ffbb3b'
-    }
+        borderColor: '#ffbb3b',
+    },
 ]);
 calendar.setDate('2018-01-01');
 calendar.setDate(new Date());
-calendar.setOptions({
-    taskView: ['milestone', 'task']
-}, true);
+calendar.setOptions(
+    {
+        taskView: ['milestone', 'task'],
+    },
+    true
+);
 
 const theme = {
     'common.border': '1px solid #ddd',
@@ -169,7 +177,7 @@ const theme = {
 
     // month day grid cell 'day'
     'month.holidayExceptThisMonth.color': '#f3acac',
-    'month.dayExceptThisMonth.color': '#bbb',
+    'month.dayExceptThisMonth.color': '#e5e5e5',
     'month.weekend.backgroundColor': '#fafafa',
     'month.day.fontSize': '16px',
 
@@ -258,7 +266,7 @@ const theme = {
     'week.dayGridSchedule.height': '18px',
     'week.dayGridSchedule.marginTop': '2px',
     'week.dayGridSchedule.marginLeft': '10px',
-    'week.dayGridSchedule.marginRight': '10px'
+    'week.dayGridSchedule.marginRight': '10px',
 };
 
 calendar.setTheme(theme);
@@ -266,16 +274,16 @@ calendar.today();
 calendar.toggleSchedules('Major Lecture', false, true);
 calendar.toggleScheduleView(true);
 calendar.updateSchedule('1', 'Major Lecture', {
-    title: 'Digital Design'
+    title: 'Digital Design',
 });
 
 calendar.on('beforeUpdateSchedule', (scheduleData: IEventObject) => {
-    const {schedule, start, end} = scheduleData;
+    const { schedule, start, end } = scheduleData;
 
     if (schedule.id && schedule.calendarId) {
         calendar.updateSchedule(schedule.id, schedule.calendarId, {
             start,
-            end
+            end,
         });
     }
 });
@@ -294,7 +302,7 @@ calendar.on({
         console.log('beforeUpdateSchedule : ', e);
     },
     clickDayname(date) {
-        console.log('clickDayname : ', date)
+        console.log('clickDayname : ', date);
     },
     clickMore(e) {
         console.log('clickMore : ', e);
@@ -304,6 +312,5 @@ calendar.on({
     },
     clickTimezonesCollapseBtn(isCollapse) {
         console.log('clickTimezonesCollapseBtn', isCollapse);
-    }
+    },
 });
-

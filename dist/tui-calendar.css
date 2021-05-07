@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Wed May 05 2021
+ * @version 1.13.0 | Fri May 07 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -89,9 +89,8 @@
   height: 27px;
   line-height: 27px;
   text-align: center;
-  background: #135de6;
   border-radius: 50%;
-  color: #fff;
+  color: #135de6;
   font-weight: bold;
   margin-left: 2px;
 }

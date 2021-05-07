@@ -40,7 +40,7 @@ util.inherit(WeekdayInMonth, Weekday);
  * View#getViewBound.
  * @override
  */
-WeekdayInMonth.prototype.getViewBound = function() {
+WeekdayInMonth.prototype.getViewBound = function () {
     var bound = View.prototype.getViewBound.call(this);
 
     return bound;
@@ -51,7 +51,7 @@ WeekdayInMonth.prototype.getViewBound = function() {
  * @param {number} panelHeight - panel's height for pre-calculation
  * @returns {number} limit index
  */
-WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
+WeekdayInMonth.prototype._getRenderLimitIndex = function (panelHeight) {
     var opt = this.options;
     var containerHeight = panelHeight || this.getViewBound().height;
     var gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0;
@@ -59,7 +59,7 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
     var visibleScheduleCount = opt.visibleScheduleCount || 0;
     var count;
 
-    containerHeight -= (gridHeaderHeight + gridFooterHeight);
+    containerHeight -= gridHeaderHeight + gridFooterHeight;
 
     count = mfloor(containerHeight / (opt.scheduleHeight + opt.scheduleGutter));
 
@@ -74,29 +74,38 @@ WeekdayInMonth.prototype._getRenderLimitIndex = function(panelHeight) {
  * @override
  * @param {object} viewModel - schedules view models
  */
-WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
+WeekdayInMonth.prototype.getBaseViewModel = function (viewModel) {
     var opt = this.options,
         gridHeaderHeight = util.pick(opt, 'grid', 'header', 'height') || 0,
         gridFooterHeight = util.pick(opt, 'grid', 'footer', 'height') || 0,
         renderLimitIdx = this._getRenderLimitIndex() + 1,
-        exceedDate = this.getExceedDate(renderLimitIdx, viewModel.eventsInDateRange, viewModel.range),
+        exceedDate = this.getExceedDate(
+            renderLimitIdx,
+            viewModel.eventsInDateRange,
+            viewModel.range
+        ),
         styles = this._getStyles(viewModel.theme);
     var baseViewModel;
 
-    viewModel = util.extend({
-        exceedDate: exceedDate
-    }, viewModel);
+    viewModel = util.extend(
+        {
+            exceedDate: exceedDate,
+        },
+        viewModel
+    );
 
     baseViewModel = Weekday.prototype.getBaseViewModel.call(this, viewModel);
-
-    baseViewModel = util.extend({
-        matrices: viewModel.eventsInDateRange,
-        gridHeaderHeight: gridHeaderHeight,
-        gridFooterHeight: gridFooterHeight,
-        renderLimitIdx: renderLimitIdx,
-        isReadOnly: opt.isReadOnly,
-        styles: styles
-    }, baseViewModel);
+    baseViewModel = util.extend(
+        {
+            matrices: viewModel.eventsInDateRange,
+            gridHeaderHeight: gridHeaderHeight,
+            gridFooterHeight: gridFooterHeight,
+            renderLimitIdx: renderLimitIdx,
+            isReadOnly: opt.isReadOnly,
+            styles: styles,
+        },
+        baseViewModel
+    );
 
     return baseViewModel;
 };
@@ -105,7 +114,7 @@ WeekdayInMonth.prototype.getBaseViewModel = function(viewModel) {
  * @override
  * @param {object} viewModel - schedules view models
  */
-WeekdayInMonth.prototype.render = function(viewModel) {
+WeekdayInMonth.prototype.render = function (viewModel) {
     var container = this.container,
         baseViewModel = this.getBaseViewModel(viewModel),
         scheduleContainer;
@@ -116,10 +125,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     container.innerHTML = baseTmpl(baseViewModel);
 
-    scheduleContainer = domutil.find(
-        config.classname('.weekday-schedules'),
-        container
-    );
+    scheduleContainer = domutil.find(config.classname('.weekday-schedules'), container);
 
     if (!scheduleContainer) {
         return;
@@ -127,22 +133,17 @@ WeekdayInMonth.prototype.render = function(viewModel) {
 
     scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
 
-    common.setAutoEllipsis(
-        config.classname('.weekday-schedule-title'),
-        container,
-        true
-    );
+    common.setAutoEllipsis(config.classname('.weekday-schedule-title'), container, true);
 };
 
-WeekdayInMonth.prototype._beforeDestroy = function() {
-};
+WeekdayInMonth.prototype._beforeDestroy = function () {};
 
 /**
  * Get the styles from theme
  * @param {Theme} theme - theme instance
  * @returns {object} styles - styles object
  */
-WeekdayInMonth.prototype._getStyles = function(theme) {
+WeekdayInMonth.prototype._getStyles = function (theme) {
     var styles = {};
 
     if (theme) {
@@ -167,12 +168,17 @@ WeekdayInMonth.prototype._getStyles = function(theme) {
 function setIsOtherMonthFlag(dates, renderMonth, theme) {
     var month = renderMonth.getMonth() + 1;
 
-    util.forEach(dates, function(dateObj) {
+    util.forEach(dates, function (dateObj) {
         var isOtherMonth = dateObj.month !== month;
         dateObj.isOtherMonth = isOtherMonth;
 
         if (isOtherMonth) {
-            dateObj.color = Weekday.prototype._getDayNameColor(theme, dateObj.day, dateObj.isToday, isOtherMonth);
+            dateObj.color = Weekday.prototype._getDayNameColor(
+                theme,
+                dateObj.day,
+                dateObj.isToday,
+                isOtherMonth
+            );
         }
     });
 }
