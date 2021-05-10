@@ -1,0 +1,36 @@
+.month {
+  height: 100%;
+}
+
+.grid {
+  position: relative;
+}
+
+.daygrid-cell {
+  position: absolute;
+  padding: 3px;
+  border-right: 1px solid #e5e5e5;
+  height: 100%;
+  min-height: inherit;
+}
+
+.grid-cell-date {
+  display: inline-block;
+  width: 27px;
+  height: 27px;
+  line-height: 27px;
+  text-align: center;
+}
+
+.grid-cell-more-events {
+  float: right;
+  height: 27px;
+  line-height: 27px;
+  padding: 0 5px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: #aaa;
+  border: none;
+  background-color: transparent;
+}

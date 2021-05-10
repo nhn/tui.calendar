@@ -7,6 +7,9 @@ import { ViewListMap } from '@t/option';
 import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
 import ToolbarContainer from '@src/components/toolbar/toolbarContainer';
 import ViewContainer from '@src/components/view/viewContainer';
+import { layerPopup } from '@src/modules/layerPopup';
+import template from '@src/modules/template';
+import theme from '@src/modules/theme';
 
 type Props = {
   initialView: string;
@@ -15,7 +18,7 @@ type Props = {
 
 const store = new Store<CalendarState>({
   initStoreData: { options: {} },
-  modules: [],
+  modules: [template, theme, layerPopup],
 });
 
 const Main: FunctionComponent<Props> = ({ initialView, components }) => {

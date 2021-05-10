@@ -1,4 +1,6 @@
+import { MonthOption } from '@src/model';
 import { theme, template, options } from '@src/modules';
+import { layerPopup, PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import { Options } from './option';
 
@@ -51,6 +53,7 @@ declare global {
     options: typeof options;
     template: typeof template;
     theme: typeof theme;
+    layerPopup: typeof layerPopup;
   }
 }
 
@@ -97,3 +100,14 @@ type Flatten<T> = T extends object
   : T;
 
 type FlattenActions = Flatten<FlattenActionMap>;
+
+interface LayerPopupState {
+  popupType: PopupType | null;
+  param: any;
+}
+
+type CalendarMonthOption = Required<MonthOption>;
+
+interface OptionData {
+  month: CalendarMonthOption;
+}

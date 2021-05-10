@@ -45,12 +45,8 @@ export function useStore<T extends ModuleKeys>(
 export function useStore(names?: ModuleKeys | ModuleKeys[]) {
   const state = useContext(StoreContext);
 
-  if (!state) {
-    throw new Error('There is no store available.');
-  }
-
   return {
-    state: useMemo(() => getState(state, names), [state, names]),
+    state: useMemo(() => getState(state ?? {}, names), [state, names]),
     actions: useMemo(() => getActions(calendarActions, names), [names]),
   };
 }

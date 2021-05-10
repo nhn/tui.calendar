@@ -1,4 +1,14 @@
-import { isObject, isUndefined, deepCopyArray, deepMergedCopy, deepCopy } from '@src/util/utils';
+import {
+  isObject,
+  isUndefined,
+  deepCopyArray,
+  deepMergedCopy,
+  deepCopy,
+  range,
+  includes,
+  pick,
+  isNumber,
+} from '@src/util/utils';
 
 describe('utils', () => {
   it('deepCopy', () => {
@@ -38,5 +48,29 @@ describe('utils', () => {
     const b = {};
     expect(isUndefined(a)).toBeTruthy();
     expect(isUndefined(b)).toBeFalsy();
+  });
+
+  it('range', () => {
+    expect(range(5)).toEqual([0, 1, 2, 3, 4]);
+    expect(range(2, 5)).toEqual([2, 3, 4]);
+    expect(range(0, 10, 2)).toEqual([0, 2, 4, 6, 8]);
+  });
+
+  it('includes', () => {
+    expect(includes([1, 2, 3], 1)).toBe(true);
+    expect(includes([1, 2, 3], 1, 2)).toBe(false);
+    expect(includes([1, 2, 3], 1, 0)).toBe(true);
+  });
+
+  it('pick', () => {
+    const obj = { a: 1, b: { c: 2 }, d: 2 };
+
+    expect(pick(obj, 'a', 'd')).toEqual({ a: 1, d: 2 });
+  });
+
+  it('isNumber', () => {
+    expect(isNumber(null)).toBeFalsy();
+    expect(isNumber('TOAST UI')).toBeFalsy();
+    expect(isNumber(0)).toBeTruthy();
   });
 });

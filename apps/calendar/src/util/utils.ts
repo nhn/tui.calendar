@@ -1,9 +1,15 @@
+type PickedKey<T, K extends keyof T> = keyof Pick<T, K>;
+
 export function isUndefined(value: unknown): value is undefined {
   return typeof value === 'undefined';
 }
 
 export function isObject(obj: unknown): obj is object {
   return typeof obj === 'object' && obj !== null;
+}
+
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
 }
 
 export function forEach<T extends object, K extends Extract<keyof T, string>, V extends T[K]>(
@@ -67,4 +73,50 @@ export function deepCopy<T extends Record<string, any>>(obj: T) {
   });
 
   return resultObj;
+}
+
+export function range(start: number, stop?: number, step?: number) {
+  if (isUndefined(stop)) {
+    stop = start || 0;
+    start = 0;
+  }
+
+  step = step || 1;
+
+  const arr: number[] = [];
+
+  if (stop) {
+    const flag = step < 0 ? -1 : 1;
+    stop *= flag;
+
+    for (; start * flag < stop; start += step) {
+      arr.push(start);
+    }
+  }
+
+  return arr;
+}
+
+export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: K[]) {
+  const resultMap = {} as Pick<T, K>;
+  Object.keys(obj).forEach((key) => {
+    if (includes(propNames, key as K)) {
+      resultMap[key as PickedKey<T, K>] = obj[key as PickedKey<T, K>];
+    }
+  });
+
+  return resultMap;
+}
+
+export function includes<T>(arr: T[], searchItem: T, searchIndex?: number) {
+  if (typeof searchIndex === 'number' && arr[searchIndex] !== searchItem) {
+    return false;
+  }
+  for (const item of arr) {
+    if (item === searchItem) {
+      return true;
+    }
+  }
+
+  return false;
 }

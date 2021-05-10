@@ -16,6 +16,11 @@ import preset from '@src/theme/preset';
 export default class Theme {
   private props: ThemeKeyValue = {};
 
+  // TODO: theme 모듈로 이동하면서 defaultTheme 설정 필요
+  month: any;
+
+  common: any;
+
   /**
    *
    * @param customTheme custom theme

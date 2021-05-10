@@ -1,0 +1,25 @@
+.see-more-close {
+  position: absolute;
+  right: 0;
+  outline: 0;
+  background: none;
+  border: 0;
+  font-size: 14px;
+  line-height: 50px;
+  padding: 0 17px;
+  cursor: pointer;
+}
+
+.more-title {
+  display: inline-block;
+}
+
+.more-title-date {
+  font-size: 23px;
+  color: #333;
+}
+
+.more-title-day {
+  font-size: 12px;
+  color: #333;
+}

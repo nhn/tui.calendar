@@ -1,4 +1,4 @@
-import { h, FunctionComponent, RenderableProps } from 'preact';
+import { h, RenderableProps } from 'preact';
 import Main from '@src/components/view/Main';
 import Toolbar from '@src/components/toolbar/toolbar';
 import MonthView from '@src/components/view/monthView';
@@ -9,9 +9,17 @@ import { ViewListMap } from '@t/option';
 
 export default { title: 'View' };
 
+const style = {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 5,
+  top: 5,
+};
+
 function Wrapper({ children }: RenderableProps<any>) {
   return (
-    <div className={cls('layout')} style={{ overflow: 'hidden', height: '100%' }}>
+    <div className={cls('layout')} style={style}>
       {children}
     </div>
   );
