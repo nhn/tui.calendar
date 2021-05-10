@@ -30,32 +30,46 @@ interface Props {
   options?: PanelState;
 }
 
+interface ExceedCountProps {
+  index: number;
+  exceedCount: number;
+  isClicked: boolean;
+  clickHandler: (exceedCount: number) => void;
+}
+
+interface CollapseButtonProps {
+  index: number;
+  clickedIndex: number;
+  isClicked: boolean;
+  clickHandler: () => void;
+}
+
 const isExceededHeight = (panelHeight: number, eventHeight: number) => {
   return ({ top }: ScheduleViewModel) => panelHeight < (top + 1) * eventHeight;
 };
 
-const renderExceedCount = (
-  index: number,
-  exceedCount: number,
-  isClickedExceedCount: boolean,
-  onClickExceedCount: (exceedCount: number) => void
-) =>
-  exceedCount && !isClickedExceedCount ? (
+const ExceedCount: FunctionComponent<ExceedCountProps> = ({
+  index,
+  exceedCount,
+  isClicked,
+  clickHandler,
+}) =>
+  exceedCount && !isClicked ? (
     <span
       className={cls('weekday-exceed-in-week')}
-      onClick={() => onClickExceedCount(index)}
-      style={{ display: isClickedExceedCount ? 'none' : '' }}
+      onClick={() => clickHandler(index)}
+      style={{ display: isClicked ? 'none' : '' }}
     >{`+${exceedCount}`}</span>
   ) : null;
 
-const renderCollapseButton = (
-  index: number,
-  clickedCountIndex: number,
-  isClickedExceedCount: boolean,
-  onClickCollapseButton: () => void
-) =>
-  index === clickedCountIndex && isClickedExceedCount ? (
-    <span className={cls('weekday-exceed-in-week')} onClick={onClickCollapseButton}>
+const CollapseButton: FunctionComponent<CollapseButtonProps> = ({
+  index,
+  clickedIndex,
+  isClicked,
+  clickHandler,
+}) =>
+  index === clickedIndex && isClicked ? (
+    <span className={cls('weekday-exceed-in-week')} onClick={clickHandler}>
       <i className={cls('collapse-btn')} />
     </span>
   ) : null;
@@ -120,13 +134,18 @@ export const PanelGrid: FunctionComponent<Props> = ({
           className={cls('panel-grid')}
           style={{ ...DEFAULT_GRID_STYLE, width, left }}
         >
-          {renderExceedCount(index, exceedCount, isClickedExceedCount, onClickExceedCount)}
-          {renderCollapseButton(
-            index,
-            clickedCountIndex,
-            isClickedExceedCount,
-            onClickCollapseButton
-          )}
+          <ExceedCount
+            index={index}
+            exceedCount={exceedCount}
+            isClicked={isClickedExceedCount}
+            clickHandler={onClickExceedCount}
+          />
+          <CollapseButton
+            index={index}
+            clickedIndex={clickedCountIndex}
+            isClicked={isClickedExceedCount}
+            clickHandler={onClickCollapseButton}
+          />
         </div>
       );
     });
