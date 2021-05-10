@@ -5,10 +5,10 @@ import Grid from '@src/components/daygrid/grid';
 import Schedule from '@src/model/schedule';
 import React from 'preact/compat';
 import TZDate from '@src/time/date';
-import { MonthOption } from '@src/model';
+import { CalendarMonthOption } from '@t/store';
 
 interface DayGridProps {
-  options: Required<MonthOption>;
+  options: CalendarMonthOption;
   calendar: TZDate[][];
   appContainer: { current: HTMLDivElement };
 }

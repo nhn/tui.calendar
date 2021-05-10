@@ -6,6 +6,7 @@ import { range } from '@src/util/utils';
 import { toStartOfDay } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import DayGrid from '@src/components/daygrid/dayGrid';
+import { CalendarMonthOption } from '@t/store';
 
 export default { title: 'DayGrid' };
 
@@ -81,7 +82,7 @@ export const daygrid = () => {
     narrowWeekend: true,
     startDayOfWeek: 0,
     isAlways6Week: true,
-  };
+  } as CalendarMonthOption;
 
   return (
     <ProviderWrapper>

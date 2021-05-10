@@ -2,25 +2,29 @@ import { h, FunctionComponent } from 'preact';
 import { cls } from '@src/util/cssHelper';
 import { useStore } from './hooks/store';
 
-import CreationPopup from '@src/components/popup/creationPopup';
-import DetailPopup from '@src/components/popup/detailPopup';
-import SeeMorePopup from '@src/components/popup/seeMorePopup';
+import creationPopup from '@src/components/popup/creationPopup';
+import detailPopup from '@src/components/popup/detailPopup';
+import seeMorePopup from '@src/components/popup/seeMorePopup';
 import { PopupType } from '@src/modules/layerPopup';
+import { CreationPopupParam, DetailPopupParam, PopupParamMap, SeeMorePopupParam } from '@t/store';
 
-const getPopupComponent = (popupType: PopupType | null) => {
-  return !popupType || !Object.values(PopupType).includes(popupType)
-    ? null
-    : {
-        [PopupType.seeMore]: SeeMorePopup,
-        [PopupType.creation]: CreationPopup,
-        [PopupType.detail]: DetailPopup,
-      }[popupType];
+const getPopupComponent = (popupType: PopupType | null, param: PopupParamMap[PopupType]) => {
+  switch (popupType) {
+    case PopupType.seeMore:
+      return seeMorePopup(param as SeeMorePopupParam);
+    case PopupType.creation:
+      return creationPopup(param as CreationPopupParam);
+    case PopupType.detail:
+      return detailPopup(param as DetailPopupParam);
+    default:
+      return null;
+  }
 };
 
 const FloatingLayer: FunctionComponent = () => {
   const { state } = useStore('layerPopup');
   const { popupType, param } = state;
-  const popupComponent = getPopupComponent(popupType);
+  const popupComponent = getPopupComponent(popupType, param);
 
   if (!popupComponent) {
     return null;
@@ -29,14 +33,14 @@ const FloatingLayer: FunctionComponent = () => {
   const { popupRect } = param;
 
   const style = {
-    display: popupComponent(param) ? 'block' : 'none',
+    display: popupComponent ? 'block' : 'none',
     position: 'absolute',
     ...popupRect,
   };
 
   return (
     <div className={cls('floating-layer')} style={style}>
-      {popupComponent(param)}
+      {popupComponent}
     </div>
   );
 };

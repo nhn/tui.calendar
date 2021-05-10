@@ -8,7 +8,7 @@ describe('Calendar', () => {
   describe('Timezone', () => {
     beforeEach(() => {
       jest.spyOn(Store, 'useStore').mockReturnValue({
-        state: {},
+        state: {} as any,
         actions: {},
       });
       MomentDate.setMoment(moment);

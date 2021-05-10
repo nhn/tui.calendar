@@ -1,4 +1,4 @@
-import { LayerPopupState } from '@t/store';
+import { LayerPopupState, PopupParamMap } from '@t/store';
 
 export enum PopupType {
   seeMore = 'seeMore',
@@ -13,7 +13,10 @@ export const layerPopup = {
     param: {},
   } as LayerPopupState,
   actions: {
-    show(state: LayerPopupState, { type, param }: { type: PopupType; param: any }) {
+    show<T extends PopupType>(
+      state: LayerPopupState,
+      { type, param }: { type: T; param: PopupParamMap[T] }
+    ) {
       return { ...state, popupType: type, param };
     },
     hide(state: LayerPopupState) {

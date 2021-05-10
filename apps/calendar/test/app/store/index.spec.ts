@@ -15,16 +15,16 @@ describe('Store', () => {
     it('should set state with state function', () => {
       store = new Store({
         modules: [],
-        initStoreData: { options: { week: { narrowWeekend: true } } },
+        initStoreData: { options: { month: { narrowWeekend: true } } },
       });
       store.setModule({
         name: 'options',
         state: ({ options }: InitStoreData) => ({
-          week: { narrowWeekend: options?.week?.narrowWeekend ?? false },
+          month: { narrowWeekend: options.month?.narrowWeekend ?? false },
         }),
       });
 
-      expect(store.state.options.week?.narrowWeekend).toBe(true);
+      expect(store.state.options.month?.narrowWeekend).toBe(true);
     });
   });
 

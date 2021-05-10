@@ -1,10 +1,10 @@
 import { h, FunctionComponent } from 'preact';
 import { useActions, useStore } from '../hooks/store';
 import { cls } from '@src/util/cssHelper';
-import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { pick } from '@src/util/utils';
 import { capitalizeDayName, getDayName } from '@src/util/dayName';
+import { SeeMorePopupParam } from '@t/store';
 
 interface MoreHeaderProps {
   date: number;
@@ -14,6 +14,10 @@ interface MoreHeaderProps {
 interface MoreTitleProps {
   date: number;
   day: string;
+}
+
+interface EventInSeeMoreProps {
+  event: Schedule;
 }
 
 const MoreTitle: FunctionComponent<MoreTitleProps> = (props) => {
@@ -50,21 +54,6 @@ const MoreHeader: FunctionComponent<MoreHeaderProps> = (props) => {
   );
 };
 
-interface SeeMoreProps {
-  date: TZDate;
-  events: Schedule[];
-  layout: {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-  };
-}
-
-interface EventInSeeMoreProps {
-  event: Schedule;
-}
-
 const EventItem: FunctionComponent<EventInSeeMoreProps> = (props) => {
   const {
     event: { title },
@@ -74,7 +63,7 @@ const EventItem: FunctionComponent<EventInSeeMoreProps> = (props) => {
   return <div>{title}</div>;
 };
 
-const SeeMorePopup: FunctionComponent<SeeMoreProps> = (props) => {
+const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
 
   const { state } = useStore('theme');

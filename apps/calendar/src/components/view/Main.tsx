@@ -10,6 +10,7 @@ import ViewContainer from '@src/components/view/viewContainer';
 import { layerPopup } from '@src/modules/layerPopup';
 import template from '@src/modules/template';
 import theme from '@src/modules/theme';
+import options from '@src/modules/options';
 
 type Props = {
   initialView: string;
@@ -18,7 +19,7 @@ type Props = {
 
 const store = new Store<CalendarState>({
   initStoreData: { options: {} },
-  modules: [template, theme, layerPopup],
+  modules: [template, theme, options, layerPopup],
 });
 
 const Main: FunctionComponent<Props> = ({ initialView, components }) => {

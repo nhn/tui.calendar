@@ -1,7 +1,7 @@
 import { h, FunctionComponent } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
-import MonthDayNames, { DayName } from '@src/components/daygrid/dayNames';
+import MonthDayNames, { DayNameItem } from '@src/components/daygrid/dayNames';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import { useStore } from '@src/components/hooks/store';
 import { MonthOption, TemplateMonthDayName } from '@src/model';
@@ -12,13 +12,14 @@ import TZDate from '@src/time/date';
 import { arr2dCalendar, isWeekend } from '@src/time/datetime';
 import { capitalizeDayName } from '@src/util/dayName';
 import { OptionData } from '@t/store';
+import { isNumber } from '@src/util/utils';
 
 function getDayNames(
   monthDayNameTemplate: (model: TemplateMonthDayName) => string,
   options: OptionData
 ) {
   const { daynames, workweek } = options.month;
-  const dayNames: DayName[] = [];
+  const dayNames: DayNameItem[] = [];
 
   daynames.forEach((name, index) => {
     if (!workweek || (workweek && !isWeekend(index))) {
@@ -35,6 +36,12 @@ function getDayNames(
   return dayNames;
 }
 
+function getDayNameHeight(height?: string | number) {
+  const dayNameHeight = height ?? 0;
+
+  return isNumber(dayNameHeight) ? dayNameHeight : parseFloat(dayNameHeight);
+}
+
 function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
   const date = new TZDate(renderMonthDate);
   const {
@@ -45,20 +52,12 @@ function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) 
   } = options;
   const weekCount = Math.min(visibleWeeksCount, 6);
 
-  const datetimeOptions = visibleWeeksCount
-    ? {
-        startDayOfWeek,
-        isAlways6Week: false,
-        weekCount,
-        workweek,
-      }
-    : {
-        startDayOfWeek,
-        isAlways6Week,
-        workweek,
-      };
-
-  return arr2dCalendar(date, datetimeOptions);
+  return arr2dCalendar(date, {
+    startDayOfWeek,
+    workweek,
+    isAlways6Week: visibleWeeksCount ? false : isAlways6Week,
+    visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
+  });
 }
 
 function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: number) {
@@ -76,24 +75,26 @@ function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: numbe
 }
 
 const Month: FunctionComponent = () => {
-  const container = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>();
+
   const { state } = useStore(['template', 'theme', 'options']);
   const { template, theme, options } = state;
 
-  const gridPanelHeight = useContainerHeight(container, parseFloat(theme?.month.dayname.height));
+  const dayNameHeight = getDayNameHeight(theme?.month.dayname.height);
+  const gridPanelHeight = useContainerHeight(container, dayNameHeight);
 
   if (!template || !theme || !options) {
     return null;
   }
 
   const dayNames = getDayNames(template.monthDayname, options);
-  const renderMonthDate = new Date(); // @TODO: 현재 렌더링된 MonthDate기준으로 계산 (move)
+  const renderMonthDate = new Date(); // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const monthOptions = options.month;
   const calendar = getMonthCalendar(renderMonthDate, monthOptions);
 
   return (
     <div className={cls('month')} ref={container}>
-      <Panel name="month-daynames" height={theme?.month.dayname.height}>
+      <Panel name="month-daynames" height={dayNameHeight}>
         <MonthDayNames dayNames={dayNames} theme={theme.month.dayname} options={monthOptions} />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>

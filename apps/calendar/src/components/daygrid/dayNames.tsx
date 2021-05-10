@@ -3,9 +3,9 @@ import { cls } from '@src/util/cssHelper';
 import React from 'preact/compat';
 import { getGridLeftAndWidth, isWeekend } from '@src/time/datetime';
 import { toPercent, toPx } from '@src/util/units';
-import { includes, isNumber } from '@src/util/utils';
 import { getDayName } from '@src/util/dayName';
-import { MonthOption } from '@src/model';
+import { CalendarMonthOption } from '@t/store';
+import { isNumber } from '@src/util/utils';
 
 interface DayNameProps {
   dayname: string;
@@ -20,26 +20,15 @@ interface DayNameProps {
   };
 }
 
-export type DayName = {
+export type DayNameItem = {
   name: string;
   dayIndex: number;
 };
 
-interface DayNameTheme {
-  height: number;
-  borderLeft: number;
-  paddingRight: number;
-  paddingLeft: number;
-  backgroundColor: string;
-  fontSize: number;
-  fontWeight: string | number;
-  textAlign: string;
-}
-
 export interface DayNamesProps {
-  dayNames: DayName[];
-  theme: DayNameTheme;
-  options: Required<MonthOption>;
+  dayNames: DayNameItem[];
+  theme?: DayNameTheme;
+  options?: CalendarMonthOption;
 }
 
 const defaultDayNameTheme = {

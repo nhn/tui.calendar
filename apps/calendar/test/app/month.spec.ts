@@ -4,7 +4,7 @@ import * as Store from '@src/components/hooks/store';
 describe('View/Month', () => {
   it('Month view', () => {
     jest.spyOn(Store, 'useStore').mockReturnValue({
-      state: {},
+      state: {} as any,
       actions: {},
     });
     // import test

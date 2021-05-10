@@ -1,7 +1,9 @@
-import { MonthOption } from '@src/model';
+import { MonthOption, WeekOption } from '@src/model';
+import Schedule from '@src/model/schedule';
 import { theme, template, options } from '@src/modules';
 import { layerPopup, PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
+import TZDate from '@src/time/date';
 import { Options } from './option';
 
 type InitStoreData = {
@@ -103,11 +105,47 @@ type FlattenActions = Flatten<FlattenActionMap>;
 
 interface LayerPopupState {
   popupType: PopupType | null;
-  param: any;
+  param: PopupParamMap[PopupType];
 }
 
 type CalendarMonthOption = Required<MonthOption>;
+type CalendarWeekOption = Required<WeekOption>;
 
 interface OptionData {
   month: CalendarMonthOption;
+  // week: CalendarWeekOption;
 }
+
+interface BasePopupParam {
+  popupRect: PopupRect;
+}
+
+type PopupParamMap = {
+  seeMore: SeeMorePopupParam;
+  creation: CreationPopupParam;
+  detail: DetailPopupParam;
+};
+
+interface SeeMorePopupParam extends BasePopupParam {
+  date: TZDate | Date;
+  events: Schedule[];
+}
+
+interface CreationPopupParam extends BasePopupParam {
+  // @TODO: 팝업 작성 시 타입 정의
+  date: TZDate | Date;
+}
+
+interface DetailPopupParam extends BasePopupParam {
+  // @TODO: 팝업 작성 시 타입 정의
+  date: TZDate | Date;
+}
+
+type PopupRect = {
+  width: number;
+  height: number;
+  top?: number | string;
+  bottom?: number | string;
+  left?: number | string;
+  right?: number | string;
+};

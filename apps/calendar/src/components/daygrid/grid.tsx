@@ -41,6 +41,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
     <div className={cls('grid')} style={style} ref={container}>
       {calendar.map((date, index) => {
         const dayIndex = date.getDay();
+        const { width, left } = grids[index];
 
         return (
           <Cell
@@ -49,8 +50,8 @@ const Grid: FunctionComponent<GridProps> = (props) => {
             dayIndex={dayIndex}
             style={{
               backgroundColor: 'transparent',
-              width: toPercent(grids[index].width),
-              left: toPercent(grids[index].left),
+              width: toPercent(width),
+              left: toPercent(left),
             }}
             parentContainer={container.current}
             appContainer={appContainer.current}

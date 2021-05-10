@@ -8,8 +8,18 @@ import { getPosition, getSize } from '@src/util/domutil';
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
+import { Day } from '@src/time/datetime';
+import { PopupRect } from '@t/store';
 
-export interface CellProps {
+const OUT_PADDING = 5;
+const VIEW_MIN_WIDTH = 280;
+
+enum CellBarType {
+  header = 'header',
+  footer = 'footer',
+}
+
+interface CellProps {
   date: TZDate | Date;
   dayIndex: number;
   style?: {
@@ -24,7 +34,7 @@ export interface CellProps {
 }
 
 interface CellBarProps {
-  type?: 'header' | 'footer'; // @todo enum으로 작성
+  type?: CellBarType;
   exceedCount?: number;
   date: number;
   onClickExceedCount: () => void;
@@ -48,8 +58,14 @@ type SeeMoreOptions = {
   scheduleHeight: number;
 };
 
-const OUT_PADDING = 5;
-const VIEW_MIN_WIDTH = 280;
+type SeeMoreRectParam = {
+  cell: HTMLDivElement;
+  grid: HTMLDivElement;
+  appContainer: HTMLDivElement;
+  theme: SeeMorePopupTheme;
+  options: SeeMoreOptions;
+  events: Event[];
+};
 
 function getSeeMorePopupSize(
   styles: SeeMorePopupTheme,
@@ -78,7 +94,7 @@ function getSeeMorePopupSize(
     height += (scheduleGutter + scheduleHeight) * maxVisibleSchedulesInLayer;
   }
   height += parseFloat(paddingBottom);
-  height += OUT_PADDING; // for border
+  height += OUT_PADDING;
 
   if (layerWidth) {
     width = layerWidth;
@@ -134,87 +150,23 @@ function getSeeMorePopupPosition(
   return { left, top };
 }
 
-const ExceedCountButton: FunctionComponent<ExceedCountButtonProps> = (props) => {
-  const { number, clickHandler, className } = props;
-
-  if (!number) {
-    return null;
-  }
-
-  // @TODO: 템플릿 적용 필요
-  return (
-    <button type="button" onClick={clickHandler} className={className}>
-      {number} More
-    </button>
-  );
-};
-
-const CellBar: FunctionComponent<CellBarProps> = (props) => {
-  const { type = 'header', exceedCount = 0, date, onClickExceedCount } = props;
-
-  // @TODO: date 템플릿 적용 필요 / 오늘 표시 (예: 파란 원)
-  return (
-    <div className={cls(`grid-cell-${type}`)}>
-      <span className={cls('grid-cell-date')}>{date}</span>
-      {exceedCount ? (
-        <ExceedCountButton
-          number={exceedCount}
-          clickHandler={onClickExceedCount}
-          className={cls('grid-cell-more-events')}
-        ></ExceedCountButton>
-      ) : null}
-    </div>
-  );
-};
-
 function getExceedCount() {
   return 0; // @TODO: 높이 기준으로 초과 갯수 계산
 }
 
-type CommonTheme = {
-  backgroundColor: string;
-  border: string;
-  creationGuide: {
-    backgroundColor: string;
-    border: string;
-  };
-  dayname: { color: string };
-  holiday: { color: string };
-  saturday: { color: string };
-  today: { color: string };
-};
-
 function getDateColor(dayIndex: number, commonTheme: CommonTheme) {
   const { holiday, saturday, today } = commonTheme;
 
-  if (dayIndex === 0) {
+  if (dayIndex === Day.SUN) {
     return holiday.color;
   }
 
-  if (dayIndex === 6) {
+  if (dayIndex === Day.SAT) {
     return saturday.color;
   }
 
   return today.color;
 }
-
-type Rect = {
-  width: number;
-  height: number;
-  top?: number | string;
-  bottom?: number | string;
-  left?: number | string;
-  right?: number | string;
-};
-
-type SeeMoreRectParam = {
-  cell: HTMLDivElement;
-  grid: HTMLDivElement;
-  appContainer: HTMLDivElement;
-  theme: SeeMorePopupTheme;
-  options: SeeMoreOptions;
-  events: Event[];
-};
 
 function getSeeMorePopupRect({
   cell,
@@ -223,7 +175,7 @@ function getSeeMorePopupRect({
   options,
   appContainer,
   events = [],
-}: SeeMoreRectParam): Rect {
+}: SeeMoreRectParam): PopupRect {
   const popupSize = getSeeMorePopupSize(theme, options, cell, grid, events);
   const appContainerSize = getSize(appContainer);
 
@@ -246,19 +198,14 @@ function getSeeMorePopupRect({
   return { ...popupSize, ...popupPosition };
 }
 
-export const Cell: FunctionComponent<CellProps> = (props) => {
-  const container = useRef<HTMLDivElement>(null);
-  const [popupRect, setPopupRect] = useState<Rect | null>(null);
-
-  const { show } = useActions('layerPopup');
-  const { state } = useStore('theme');
-
-  const {
-    common: commonTheme,
-    month: { moreViewTitle, moreView, schedule: scheduleTheme },
-  } = state;
-
-  const { date, dayIndex, style, parentContainer, appContainer } = props;
+function usePopupRect(
+  monthTheme: MonthTheme,
+  parentContainer?: HTMLDivElement,
+  appContainer?: HTMLDivElement
+) {
+  const container = useRef<HTMLDivElement>();
+  const [popupRect, setPopupRect] = useState<PopupRect | null>(null);
+  const { moreViewTitle, moreView, schedule: scheduleTheme } = monthTheme;
 
   useLayoutEffect(() => {
     const { marginBottom, height } = moreViewTitle;
@@ -272,8 +219,8 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
 
     const options: SeeMoreOptions = {
       moreLayerSize: { width: null, height: null },
-      scheduleGutter: scheduleTheme.height,
-      scheduleHeight: scheduleTheme.marginTop,
+      scheduleGutter: parseFloat(scheduleTheme.height),
+      scheduleHeight: parseFloat(scheduleTheme.marginTop),
     };
 
     if (appContainer && parentContainer) {
@@ -290,15 +237,62 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
     }
   }, [parentContainer, appContainer, moreViewTitle, moreView, scheduleTheme]);
 
+  return { popupRect, container };
+}
+
+const ExceedCountButton: FunctionComponent<ExceedCountButtonProps> = (props) => {
+  const { number, clickHandler, className } = props;
+
+  if (!number) {
+    return null;
+  }
+
+  // @TODO: 템플릿 적용 필요
+  return (
+    <button type="button" onClick={clickHandler} className={className}>
+      {number} More
+    </button>
+  );
+};
+
+const CellBar: FunctionComponent<CellBarProps> = (props) => {
+  const { type = 'header', exceedCount = 0, date, onClickExceedCount } = props;
+
+  // @TODO: date 템플릿 적용 필요 / 오늘 표시
+  return (
+    <div className={cls(`grid-cell-${type}`)}>
+      <span className={cls('grid-cell-date')}>{date}</span>
+      {exceedCount ? (
+        <ExceedCountButton
+          number={exceedCount}
+          clickHandler={onClickExceedCount}
+          className={cls('grid-cell-more-events')}
+        />
+      ) : null}
+    </div>
+  );
+};
+
+export const Cell: FunctionComponent<CellProps> = (props) => {
+  const { show } = useActions('layerPopup');
+  const { state } = useStore('theme');
+
+  const { common: commonTheme } = state;
+  const { date, dayIndex, style, parentContainer, appContainer } = props;
+
+  const { popupRect, container } = usePopupRect(state.month, parentContainer, appContainer);
+
   const onOpenSeeMorePopup = () => {
-    show({
-      type: PopupType.seeMore,
-      param: {
-        date,
-        popupRect,
-        events: [], // @TODO: 해당 날짜의 모든 일정 넘기기
-      },
-    });
+    if (popupRect) {
+      show({
+        type: PopupType.seeMore,
+        param: {
+          date,
+          popupRect,
+          events: [], // @TODO: 해당 날짜의 모든 일정 넘기기
+        },
+      });
+    }
   };
 
   const exceedCount = getExceedCount();

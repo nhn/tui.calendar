@@ -1,6 +1,7 @@
+import { CreationPopupParam } from '@t/store';
 import { h, FunctionComponent } from 'preact';
 
-const CreationPopup: FunctionComponent = () => {
+const CreationPopup: FunctionComponent<CreationPopupParam> = () => {
   // @TODO: creation popup
   return <div>Creation Popup</div>;
 };

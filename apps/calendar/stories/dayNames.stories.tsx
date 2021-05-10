@@ -1,26 +1,21 @@
 import { h } from 'preact';
-import { Story } from '@storybook/preact';
-import DayNames, { DayNamesProps } from '@src/components/daygrid/dayNames';
+import DayNames from '@src/components/daygrid/dayNames';
 
 export default { title: 'DayNames' };
 
-const Template: Story<DayNamesProps> = (args) => <DayNames {...args} />;
-
-export const oneDay = Template.bind({});
-
-oneDay.args = {
-  dayNames: [
+export const oneDay = () => {
+  const dayNames = [
     {
       name: 'Mon',
       dayIndex: 1,
     },
-  ],
+  ];
+
+  return <DayNames dayNames={dayNames} />;
 };
 
-export const threeDays = Template.bind({});
-
-threeDays.args = {
-  dayNames: [
+export const threeDays = () => {
+  const dayNames = [
     {
       name: 'Mon',
       dayIndex: 1,
@@ -33,5 +28,7 @@ threeDays.args = {
       name: 'Fri',
       dayIndex: 5,
     },
-  ],
+  ];
+
+  return <DayNames dayNames={dayNames} />;
 };

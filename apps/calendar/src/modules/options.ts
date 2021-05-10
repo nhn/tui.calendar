@@ -1,11 +1,18 @@
 import { ScheduleData } from '@src/model';
-import { includes } from '@src/util/utils';
+import { getDayName } from '@src/util/dayName';
+import { includes, range } from '@src/util/utils';
 import { Options } from '@t/option';
 import { InitStoreData, OptionData } from '@t/store';
 
+function initializeDayNames(startDayOfWeek = 0) {
+  return range(startDayOfWeek, 7)
+    .concat(range(startDayOfWeek))
+    .map((day) => getDayName(day));
+}
+
 function getOptionData(optionsData: Options = {}): OptionData {
   const month = {
-    daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    daynames: [],
     visibleWeeksCount: 6,
     workweek: false,
     narrowWeekend: false,
@@ -16,11 +23,15 @@ function getOptionData(optionsData: Options = {}): OptionData {
       header: { height: 31 },
       footer: { height: 31 },
     },
-    visibleScheduleCount: 10, // @TODO: 어디에 사용되는지 확인 필요
+    visibleScheduleCount: 6,
     scheduleFilter: (schedule: ScheduleData) =>
       !!schedule.isVisible && includes(['allday', 'time'], schedule.category),
     ...optionsData.month,
   };
+
+  if (!month.daynames.length) {
+    month.daynames = initializeDayNames(month.startDayOfWeek);
+  }
 
   return {
     month,
