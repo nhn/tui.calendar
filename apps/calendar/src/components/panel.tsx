@@ -1,4 +1,6 @@
-import { h, Component, Fragment, createRef, VNode } from 'preact';
+import { Fragment, FunctionComponent, h, VNode } from 'preact';
+import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
+
 import isString from 'tui-code-snippet/type/isString';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import { cls } from '@src/util/cssHelper';
@@ -7,14 +9,15 @@ import { PanelResizer } from '@src/components/panelResizer';
 import { DragPositionInfo } from '@src/components/draggable';
 import { Direction } from '@src/controller/layout';
 import {
+  getElementRect,
+  getPanelStylesFromInfo,
+  isPanelShown,
   PanelInfo,
+  panelInfoKeys,
   PanelRect,
   Size,
-  panelInfoKeys,
-  getElementRect,
-  isPanelShown,
-  getPanelStylesFromInfo,
 } from '@src/controller/panel';
+import { PanelStateStore, UPDATE_PANEL_HEIGHT } from '@src/components/layout';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -24,130 +27,109 @@ export interface Props extends PanelInfo {
 
 type Child = VNode<any> | string | number;
 
-const className = cls('panel');
+const defaultPanelHeight = 18;
 
-export default class Panel extends Component<Props> {
-  static defaultProps = {
-    direction: Direction.COLUMN,
-    onResizeStart: noop,
-    onResizeEnd: noop,
+const Panel: FunctionComponent<Props> = (props) => {
+  const {
+    direction = Direction.COLUMN,
+    onResizeStart = noop,
+    onResizeEnd = noop,
+    onPanelRectUpdated,
+    name,
+    resizerWidth,
+    resizerHeight,
+    resizable,
+    children,
+  } = props;
+
+  const panelRef = useRef<HTMLDivElement>(null);
+  const resizerRef = useRef<HTMLDivElement>(null);
+  const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
+  const { state, dispatch } = useContext(PanelStateStore);
+
+  const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
+    onResizeEnd(name, resizeInfo);
+    dispatch({
+      type: UPDATE_PANEL_HEIGHT,
+      panelType: name,
+      state: {
+        height: getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY,
+      },
+    });
   };
-
-  panelRef = createRef();
-
-  resizerRef = createRef();
-
-  panelRect: PanelRect = { x: 0, y: 0, width: 0, height: 0, resizerWidth: 0, resizerHeight: 0 };
-
-  resizerRect: Size = { width: 0, height: 0 };
-
-  handlers = {
-    onResizeStart: this.onResizeStart.bind(this),
-    onResizeEnd: this.onResizeEnd.bind(this),
-  };
-
-  componentDidMount() {
-    this.updateElementRect();
-  }
-
-  componentDidUpdate() {
-    this.updateElementRect();
-  }
-
-  getResizerElementSize() {
-    let width = 0;
-    let height = 0;
-
-    if (this.resizerRef.current) {
-      const { direction } = this.props;
-      const resizerRect = getElementRect(this.resizerRef.current.base);
-      width += direction === Direction.COLUMN ? 0 : resizerRect.width;
-      height += direction === Direction.ROW ? 0 : resizerRect.height;
-
-      this.resizerRect = resizerRect;
-    }
-
-    return {
-      width,
-      height,
-    };
-  }
-
-  updateElementRect() {
-    if (!this.props.onPanelRectUpdated) {
-      return;
-    }
-
-    const panelRect = getElementRect(this.panelRef.current);
-    const { x, y, width, height } = panelRect;
-    const { width: resizerWidth, height: resizerHeight } = this.getResizerElementSize();
-
-    this.panelRect = {
-      x,
-      y,
-      width,
-      height,
-      resizerWidth,
-      resizerHeight,
-    };
-
-    this.props.onPanelRectUpdated(this.props.name, this.panelRect);
-  }
-
-  onResizeStart() {
-    if (!this.props.onResizeStart) {
-      return;
-    }
-
-    this.props.onResizeStart(this.props.name);
-  }
-
-  onResizeEnd(resizeInfo: DragPositionInfo) {
-    if (!this.props.onResizeEnd) {
-      return;
-    }
-
-    this.props.onResizeEnd(this.props.name, resizeInfo);
-  }
-
-  getPanelResizer() {
-    const { direction = Direction.COLUMN, resizerWidth, resizerHeight } = this.props;
+  const getPanelResizer = () => {
     let width;
     let height;
 
     if (isNumber(resizerWidth)) {
-      width = Math.max(resizerWidth, this.resizerRect.width);
+      width = Math.max(resizerWidth, resizerRect.width);
     }
 
     if (isNumber(resizerHeight)) {
-      height = Math.max(resizerHeight, this.resizerRect.height);
+      height = Math.max(resizerHeight, resizerRect.height);
     }
 
     return (
       <PanelResizer
-        ref={this.resizerRef}
+        ref={resizerRef}
         direction={direction}
         width={width}
         height={height}
-        {...this.handlers}
+        onResizeStart={() => onResizeStart(name)}
+        onResizeEnd={panelResizeEnd}
       />
     );
-  }
+  };
 
-  render() {
-    const { resizable, children } = this.props;
-    const styles = getPanelStylesFromInfo(this.props);
+  const updateElementRect = useCallback(() => {
+    if (!onPanelRectUpdated) {
+      return;
+    }
 
-    return (
-      <Fragment>
-        <div ref={this.panelRef} className={className} style={styles}>
-          {children}
-        </div>
-        {resizable ? this.getPanelResizer() : null}
-      </Fragment>
-    );
-  }
-}
+    const getResizerElementSize = () => {
+      let width = 0;
+      let height = 0;
+
+      if (resizerRef.current) {
+        setResizerRect(getElementRect(resizerRef.current.base));
+        width += direction === Direction.COLUMN ? 0 : resizerRect.width;
+        height += direction === Direction.ROW ? 0 : resizerRect.height;
+      }
+
+      return { width, height };
+    };
+
+    const elementRect = getElementRect(panelRef.current);
+    const { width, height } = getResizerElementSize();
+
+    onPanelRectUpdated(name, {
+      ...elementRect,
+      resizerWidth: width,
+      resizerHeight: height,
+    });
+  }, [direction, name, onPanelRectUpdated, resizerRect.height, resizerRect.width]);
+
+  useEffect(() => {
+    updateElementRect();
+  }, [updateElementRect]);
+
+  const panelHeight = state[name]?.height ?? defaultPanelHeight;
+  const height = props.height ?? panelHeight;
+  const styles = getPanelStylesFromInfo(
+    direction === Direction.COLUMN ? { ...props, height } : { ...props, width: height }
+  );
+
+  return (
+    <Fragment>
+      <div ref={panelRef} className={cls('panel')} style={styles}>
+        {children}
+      </div>
+      {resizable ? getPanelResizer() : null}
+    </Fragment>
+  );
+};
+
+export default Panel;
 
 function isPanel(child: Child): child is VNode<PanelInfo> {
   if (isString(child) || isNumber(child)) {

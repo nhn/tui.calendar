@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, FunctionComponent } from 'preact';
 import { cls } from '@src/util/cssHelper';
 import { Draggable, DragPositionInfo } from '@src/components/draggable';
 import { Direction } from '@src/controller/layout';
@@ -18,50 +18,45 @@ interface Props {
   onResizeEnd?: (dragPositionInfo: DragPositionInfo) => void;
 }
 
-export class PanelResizer extends Component<Props> {
-  render() {
-    const {
-      direction,
-      width = DEFAULT_LENGTH,
-      height = DEFAULT_LENGTH,
-      onResizeStart,
-      onResizeEnd,
-    } = this.props;
-    const styles = {
-      ...DEFAULT_STYLES,
-    };
-    const border = BORDER;
-    const className = cls('panel-resizer');
+export const PanelResizer: FunctionComponent<Props> = ({
+  direction,
+  width = DEFAULT_LENGTH,
+  height = DEFAULT_LENGTH,
+  onResizeStart,
+  onResizeEnd,
+}) => {
+  const styles = { ...DEFAULT_STYLES };
+  const border = BORDER;
+  const className = cls('panel-resizer');
 
-    if (direction === Direction.ROW) {
-      styles.borderLeft = border;
-      styles.borderRight = border;
-      styles.height = '100%';
-      styles.width = width;
-      styles.cursor = 'col-resize';
-    } else {
-      styles.borderTop = border;
-      styles.borderBottom = border;
-      styles.height = height;
-      styles.width = '100%';
-      styles.cursor = 'row-resize';
-    }
-
-    const guideStyles = {
-      ...styles,
-      border: 'none',
-      backgroundColor: '#999',
-    };
-
-    return (
-      <Draggable
-        direction={direction}
-        onDragStart={onResizeStart}
-        onDragEnd={onResizeEnd}
-        renderDragElement={() => <div className={cls('panel-resizer-guide')} style={guideStyles} />}
-      >
-        <div className={className} style={styles}></div>
-      </Draggable>
-    );
+  if (direction === Direction.ROW) {
+    styles.borderLeft = border;
+    styles.borderRight = border;
+    styles.height = '100%';
+    styles.width = width;
+    styles.cursor = 'col-resize';
+  } else {
+    styles.borderTop = border;
+    styles.borderBottom = border;
+    styles.height = height;
+    styles.width = '100%';
+    styles.cursor = 'row-resize';
   }
-}
+
+  const guideStyles = {
+    ...styles,
+    border: 'none',
+    backgroundColor: '#999',
+  };
+
+  return (
+    <Draggable
+      direction={direction}
+      onDragStart={onResizeStart}
+      onDragEnd={onResizeEnd}
+      renderDragElement={() => <div className={cls('panel-resizer-guide')} style={guideStyles} />}
+    >
+      <div className={className} style={styles} />
+    </Draggable>
+  );
+};

@@ -1,4 +1,4 @@
-import { isBetweenWithDate, isWeekend } from '@src/time/datetime';
+import { Day, isBetweenWithDate, isWeekend } from '@src/time/datetime';
 import { GridInfoList } from '@t/panel';
 import { BaseEvent } from '@t/events';
 
@@ -53,6 +53,18 @@ export const getWidth = (widthList: number[], start: number, end: number) =>
     return acc;
   }, 0);
 
-export function isValidEvents({ start, end }: BaseEvent, gridInfoList: GridInfoList) {
-  return gridInfoList.some((gridInfo) => isBetweenWithDate(gridInfo, start, end));
-}
+export const isStartOnPrevWeek = (
+  startDay: Day,
+  endDay: Day,
+  scheduleStartDate: number,
+  gridStartDate: number
+) => startDay > endDay && scheduleStartDate < gridStartDate;
+
+export const isEndOnNextWeek = (
+  startDay: Day,
+  endDay: Day,
+  scheduleStartDate: number,
+  gridStartDate: number
+) => startDay > endDay && scheduleStartDate >= gridStartDate;
+
+export const isOnCurrentWeek = (startDay: number, endDay: number) => startDay <= endDay;

@@ -33,3 +33,13 @@ export function ratio(a: number, b: number, y: number) {
   // a : b = y : x;
   return (b * y) / a;
 }
+
+/**
+ * Whether value is between a and b
+ * @param {number} value - value
+ * @param {number} min - min value
+ * @param {number} max - max value
+ */
+export function isBetween(value: number, min: number, max: number) {
+  return min <= value && value <= max;
+}

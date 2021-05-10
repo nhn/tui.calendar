@@ -1,22 +1,35 @@
-import { h, Component, toChildArray, VNode, cloneElement, isValidElement, createRef } from 'preact';
-import { cls } from '@src/util/cssHelper';
-import Panel, { getPanelPropsList, filterPanels, Props as PanelProps } from '@src/components/panel';
+import {
+  cloneElement,
+  createContext,
+  FunctionComponent,
+  h,
+  isValidElement,
+  toChildArray,
+  VNode,
+} from 'preact';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks';
+
+import Panel, { filterPanels, getPanelPropsList, Props as PanelProps } from '@src/components/panel';
 import {
   Direction,
-  PanelSize,
-  ResizeMode,
-  layoutPanels,
   getLayoutStylesFromInfo,
+  layoutPanels,
+  PanelSize,
   resizeByAbsoluteMode,
   resizeByRelativeMode,
+  ResizeMode,
 } from '@src/controller/layout';
 import { DragPositionInfo } from '@src/components/draggable';
 import { getSize } from '@src/util/domutil';
-import { PanelElementRectMap, PanelRect, PanelInfo } from '@src/controller/panel';
+import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
+import { cls } from '@src/util/cssHelper';
+import { noop } from '@src/util';
+
+import type { PanelName } from '@t/panel';
 
 interface Props {
-  direction: Direction;
-  children: VNode<Panel> | VNode<Panel>[];
+  children: VNode<typeof Panel> | VNode<typeof Panel>[];
+  direction?: Direction;
   height?: number;
   width?: number;
   resizeMode?: ResizeMode;
@@ -25,128 +38,213 @@ interface Props {
 type Child = VNode<any> | string | number;
 type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 
+// @TODO: remove after store module merged
+interface PanelState {
+  height: number;
+  maxEventHeightMap: number[];
+  renderedHeightMap: number[];
+  lastRenderedHeightMap: number[];
+  narrowWeekend: boolean;
+  eventHeight: number;
+}
+type LayoutState = Record<PanelName, PanelState>;
+const EVENT_HEIGHT = 18;
+export const UPDATE_PANEL_HEIGHT = 'updatePanelHeight';
+export const UPDATE_EVENT_HEIGHT_MAP = 'updateEventHeightMap';
+export const UPDATE_MAX_EVENT_HEIGHT_MAP = 'updateMaxEventHeightMap';
+export const UPDATE_PANEL_HEIGHT_TO_MAX = 'updatePanelHeightToMax';
+export const REDUCE_HEIGHT = 'reduceHeight';
+export type PanelActionType =
+  | typeof UPDATE_PANEL_HEIGHT
+  | typeof UPDATE_EVENT_HEIGHT_MAP
+  | typeof UPDATE_MAX_EVENT_HEIGHT_MAP
+  | typeof UPDATE_PANEL_HEIGHT_TO_MAX
+  | typeof REDUCE_HEIGHT;
+interface PanelAction {
+  type: PanelActionType;
+  panelType: PanelName;
+  state: Partial<PanelState>;
+}
+type Dispatch = (action: PanelAction) => void;
+
 const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
+const defaultLayoutState: LayoutState = {} as LayoutState;
 
-export class Layout extends Component<Props> {
-  static defaultProps = {
-    direction: Direction.COLUMN,
-  };
+function reducer(prevState: LayoutState, action: PanelAction) {
+  const { type, panelType, state } = action;
 
-  state = {
-    panels: [],
-  };
-
-  panelElementRectMap: PanelElementRectMap = {};
-
-  handlers = {
-    onResizeEnd: this.onResizeEnd.bind(this),
-    onPanelRectUpdated: this.onPanelRectUpdated.bind(this),
-  };
-
-  ref = createRef();
-
-  componentDidMount() {
-    this.updatePanels();
-  }
-
-  onResizeEnd(panelName: string, dragPositionInfo: DragPositionInfo) {
-    const isResizeMode = true;
-    const { direction, resizeMode = ResizeMode.RELATIVE, children } = this.props;
-    if (resizeMode === ResizeMode.RELATIVE) {
-      const panelPropsList = getPanelPropsList(filterPanels(toChildArray(children)));
-      resizeByRelativeMode(
-        panelName,
-        direction,
-        panelPropsList,
-        this.panelElementRectMap,
-        dragPositionInfo
-      );
-    } else if (resizeMode === ResizeMode.ABSOLUTE) {
-      resizeByAbsoluteMode(panelName, this.panelElementRectMap, dragPositionInfo);
-    }
-
-    this.updatePanels(isResizeMode);
-  }
-
-  onPanelRectUpdated(panelName: string, panelRect: PanelRect) {
-    this.panelElementRectMap[panelName] = panelRect;
-  }
-
-  updatePanels(isResizeMode = false) {
-    this.setState({
-      panels: this.getLayoutPanels(isResizeMode),
-    });
-  }
-
-  getPanelInfoList(isResizeMode = false) {
-    return getPanelPropsList(filterPanels(toChildArray(this.props.children))).map(
-      (panelProps: PanelInfo) => {
-        const panelRect = this.panelElementRectMap[panelProps.name];
-        if (panelRect) {
-          sizeKeys.forEach((key: SizeType) => {
-            if (!panelProps[key] || isResizeMode) {
-              panelProps[key] = panelRect[key];
-            }
-          });
-        }
-
-        return panelProps;
+  switch (type) {
+    case UPDATE_PANEL_HEIGHT:
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+        },
+      };
+    // @TODO: remove after dayEvent merged
+    case UPDATE_EVENT_HEIGHT_MAP: {
+      if (prevState[panelType]?.renderedHeightMap ?? [] === state.renderedHeightMap ?? []) {
+        return prevState;
       }
-    );
+
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+        },
+      };
+    }
+    // @TODO: remove after dayEvent merged
+    case UPDATE_MAX_EVENT_HEIGHT_MAP: {
+      if (prevState[panelType]?.maxEventHeightMap ?? [] === state.maxEventHeightMap ?? []) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          ...state,
+        },
+      };
+    }
+    case UPDATE_PANEL_HEIGHT_TO_MAX: {
+      const max = Math.max(...prevState[panelType].maxEventHeightMap);
+
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          height: EVENT_HEIGHT * max,
+          lastRenderedHeightMap: prevState[panelType].renderedHeightMap,
+        },
+      };
+    }
+    case REDUCE_HEIGHT: {
+      const max = Math.max(...prevState[panelType].lastRenderedHeightMap);
+
+      return {
+        ...prevState,
+        [panelType]: {
+          ...prevState[panelType],
+          height: EVENT_HEIGHT * max,
+          renderedHeightMap: prevState[panelType].lastRenderedHeightMap,
+        },
+      };
+    }
+    default:
+      return prevState;
   }
+}
 
-  getLayoutPanels(isResizeMode = false) {
-    const { direction } = this.props;
-    const panelInfoList = this.getPanelInfoList(isResizeMode);
-    const sizeByProps = {
-      width: this.props.width,
-      height: this.props.height,
-    };
-    const elementSize = this.ref.current ? getSize(this.ref.current) : sizeByProps;
-    const resultPanels = layoutPanels(panelInfoList, {
-      direction,
-      width: sizeByProps.width ? sizeByProps.width : elementSize.width,
-      height: sizeByProps.height ? sizeByProps.height : elementSize.height,
-    });
+export const PanelStateStore = createContext<{ state: LayoutState; dispatch: Dispatch }>({
+  state: defaultLayoutState,
+  dispatch: noop,
+});
 
-    return resultPanels;
-  }
+export const Layout: FunctionComponent<Props> = ({
+  direction = Direction.COLUMN,
+  resizeMode = ResizeMode.RELATIVE,
+  children,
+  width,
+  height,
+}) => {
+  const [panels, setPanels] = useState<PanelSize[]>([]);
+  const panelElementRectMap: PanelElementRectMap = useMemo(() => {
+    return {};
+  }, []);
+  const ref = useRef<HTMLDivElement>(null);
+  const [state, dispatch] = useReducer(reducer, defaultLayoutState);
 
-  getClassNames() {
-    const { direction } = this.props;
+  const getClassNames = () => {
     const classNames = [cls('layout')];
     if (direction === Direction.ROW) {
       classNames.push(cls('horizontal'));
     }
 
     return classNames.join(' ');
-  }
+  };
+  const updatePanels = useCallback(
+    (isResizeMode = false) => {
+      const getPanelInfoList = () => {
+        return getPanelPropsList(filterPanels(toChildArray(children))).map(
+          (panelProps: PanelInfo) => {
+            const panelRect = panelElementRectMap[panelProps.name];
+            if (panelRect) {
+              sizeKeys.forEach((key: SizeType) => {
+                if (!panelProps[key] || isResizeMode) {
+                  panelProps[key] = panelRect[key];
+                }
+              });
+            }
 
-  renderPanel(child: Child, direction: Direction, size: PanelSize) {
+            return panelProps;
+          }
+        );
+      };
+      const getLayoutPanels = () => {
+        const panelInfoList = getPanelInfoList();
+        const sizeByProps = { width, height };
+        const elementSize = ref.current ? getSize(ref.current) : sizeByProps;
+
+        return layoutPanels(panelInfoList, {
+          direction,
+          width: width ?? elementSize.width,
+          height: width ?? elementSize.height,
+        });
+      };
+
+      setPanels(getLayoutPanels());
+    },
+    [children, direction, height, panelElementRectMap, width]
+  );
+  const onResizeEnd = (panelName: string, dragPositionInfo: DragPositionInfo) => {
+    const isResizeMode = true;
+    if (resizeMode === ResizeMode.RELATIVE) {
+      const panelPropsList = getPanelPropsList(filterPanels(toChildArray(children)));
+      resizeByRelativeMode(
+        panelName,
+        direction,
+        panelPropsList,
+        panelElementRectMap,
+        dragPositionInfo
+      );
+    } else if (resizeMode === ResizeMode.ABSOLUTE) {
+      resizeByAbsoluteMode(panelName, panelElementRectMap, dragPositionInfo);
+    }
+
+    updatePanels(isResizeMode);
+  };
+  const onPanelRectUpdated = (panelName: string, panelRect: PanelRect) => {
+    panelElementRectMap[panelName] = panelRect;
+  };
+  const handlers = { onResizeEnd, onPanelRectUpdated };
+
+  const renderPanel = (child: Child, size: PanelSize) => {
     if (isValidElement(child)) {
       return cloneElement(child, {
         direction,
-        ...this.handlers,
+        ...handlers,
         ...size,
       } as Partial<PanelProps>);
     }
 
     return child;
-  }
+  };
 
-  render() {
-    const { direction, width, height } = this.props;
-    const panels = filterPanels(toChildArray(this.props.children));
-    const panelInfoList = this.state.panels;
+  useEffect(() => {
+    updatePanels();
+  }, [updatePanels]);
 
-    return (
-      <div
-        ref={this.ref}
-        className={this.getClassNames()}
-        style={getLayoutStylesFromInfo(width, height)}
-      >
-        {panels.map((panel, index) => this.renderPanel(panel, direction, panelInfoList[index]))}
+  const filteredPanels = filterPanels(toChildArray(children));
+
+  return (
+    <PanelStateStore.Provider value={{ state, dispatch }}>
+      <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
+        {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
       </div>
-    );
-  }
-}
+    </PanelStateStore.Provider>
+  );
+};
