@@ -22,7 +22,7 @@ export const narrowWeekend = () => {
 
 export const startDayOfWeek = () => {
   return (
-    <ProviderWrapper options={{ month: { startDayOfWeek: 1 } }}>
+    <ProviderWrapper options={{ month: { startDayOfWeek: 3 } }}>
       <MonthView />
     </ProviderWrapper>
   );
