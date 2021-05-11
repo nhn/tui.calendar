@@ -36,12 +36,13 @@ export const Milestone: FunctionComponent<Props> = ({
   panelHeight = DEFAULT_MILESTONE_PANEL_HEIGHT,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
+  const panelType = 'milestone';
   const { state, dispatch } = useContext(PanelStore);
 
   useEffect(() => {
     dispatch({
       type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: 'milestone',
+      panelType,
       state: {
         panelHeight,
       },
@@ -50,16 +51,16 @@ export const Milestone: FunctionComponent<Props> = ({
 
   return (
     <Fragment>
-      <PanelTitle width={columnWidth} template="milestoneTitle" model="milestone" />
+      <PanelTitle width={columnWidth} template={panelType} model={panelType} />
       <div className={cls('panel-milestone')}>
         <PanelGrid
-          name="milestone"
+          name={panelType}
           cells={cells}
           events={events}
           defaultPanelHeight={panelHeight}
           options={state?.milestone}
         />
-        <PanelEvents name="milestone" cells={cells} events={events} options={state?.milestone} />
+        <PanelEvents name={panelType} cells={cells} events={events} options={state?.milestone} />
       </div>
     </Fragment>
   );
