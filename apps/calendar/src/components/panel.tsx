@@ -120,9 +120,9 @@ const Panel: FunctionComponent<Props> = (props) => {
 
   const panelHeight = state[name]?.panelHeight ?? props.height ?? defaultPanelHeight;
   const panelWidth = state[name]?.panelHeight ?? props.width ?? defaultPanelHeight;
-  const styleInfo =
+  const styleWithDirection =
     direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };
-  const styles = getPanelStylesFromInfo({ ...props, ...styleInfo });
+  const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });
 
   return (
     <Fragment>

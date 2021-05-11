@@ -10,7 +10,7 @@ import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { PanelActionType, PanelStore } from '@src/components/layout';
 
-import type { GridInfoList } from '@t/panel';
+import type { Cells } from '@t/panel';
 
 const DEFAULT_MILESTONE_PANEL_HEIGHT = 20;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
@@ -21,7 +21,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 
 interface Props {
   events: Schedule[];
-  gridInfoList?: GridInfoList;
+  cells?: Cells;
   timesWidth?: number;
   timezonesCount?: number;
   panelHeight?: number;
@@ -29,7 +29,7 @@ interface Props {
 
 export const Milestone: FunctionComponent<Props> = ({
   events,
-  gridInfoList = defaultPanelInfoList,
+  cells = defaultPanelInfoList,
   timesWidth = 120,
   timezonesCount = 1,
   panelHeight = DEFAULT_MILESTONE_PANEL_HEIGHT,
@@ -55,17 +55,12 @@ export const Milestone: FunctionComponent<Props> = ({
       <div className={cls('panel-milestone')}>
         <PanelGrid
           name="milestone"
-          gridInfoList={gridInfoList}
+          cells={cells}
           events={events}
           defaultPanelHeight={panelHeight}
           options={state?.milestone}
         />
-        <PanelEvents
-          name="milestone"
-          gridInfoList={gridInfoList}
-          events={events}
-          options={state?.milestone}
-        />
+        <PanelEvents name="milestone" cells={cells} events={events} options={state?.milestone} />
       </div>
     </Fragment>
   );

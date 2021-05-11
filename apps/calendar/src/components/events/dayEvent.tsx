@@ -3,12 +3,11 @@ import { FunctionComponent, h } from 'preact';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { toPercent, toPx } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
+import { EVENT_HEIGHT } from '@src/event/panelEvent';
 
 interface Props {
   viewModel: ScheduleViewModel;
 }
-
-const EVENT_HEIGHT = 20;
 
 export const DayEvent: FunctionComponent<Props> = ({ viewModel }) => {
   const { width, left, top, exceedRight } = viewModel;

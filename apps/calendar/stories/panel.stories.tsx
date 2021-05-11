@@ -1,4 +1,4 @@
-import { h, RenderableProps } from 'preact';
+import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
 import { Milestone } from '@src/components/panelgrid/milestone';
@@ -6,7 +6,6 @@ import { addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
-import { cls } from '@src/util/cssHelper';
 import Schedule from '@src/model/schedule';
 
 import type { MilestoneEvent } from '@t/events';
@@ -42,28 +41,11 @@ const data = [
 
 const Template: Story = (args) => (
   <Layout height={500}>
-    <Panel name="milestone" resizable minHeight={20}>
+    <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
       <Milestone events={args.events} />
     </Panel>
   </Layout>
 );
-
-interface WrapperProps {
-  width: number;
-  position: string;
-}
-
-function Wrapper({ children, position }: RenderableProps<WrapperProps>) {
-  return (
-    <div className={cls('layout')} style={{ position }}>
-      {children}
-    </div>
-  );
-}
-Wrapper.defaultProps = {
-  position: 'relative',
-  width: 200,
-};
 
 export const milestone = Template.bind({});
 
@@ -77,3 +59,17 @@ milestone.args = {
 };
 
 milestone.storyName = 'events milestone';
+
+export const scrollMilestone = Template.bind({});
+
+scrollMilestone.args = {
+  events: data.map((e) => {
+    const event = Schedule.create(e);
+    event.isAllDay = true;
+
+    return event;
+  }),
+  maxHeight: 40,
+};
+
+scrollMilestone.storyName = 'events milestone with scroll';

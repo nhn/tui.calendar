@@ -4,27 +4,27 @@ import { useContext, useState } from 'preact/hooks';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 import {
+  EVENT_HEIGHT,
   getGridStyleInfo,
   getViewModels,
   isInGrid,
-  setViewModelsInfo,
   TOTAL_WIDTH,
-} from '@src/time/panelEvent';
+} from '@src/event/panelEvent';
+import { setViewModelsInfo } from '@src/event/gridEvent';
 import Schedule from '@src/model/schedule';
 import { toStartOfDay } from '@src/time/datetime';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { PanelActionType, PanelState, PanelStore } from '@src/components/layout';
 
-import type { GridInfoList } from '@t/panel';
+import type { Cells } from '@t/panel';
 
 const DEFAULT_GRID_STYLE = {
   borderRight: '1px solid #ddd',
 };
-const EVENT_HEIGHT = 20;
 
 interface Props {
   name: string;
-  gridInfoList: GridInfoList;
+  cells: Cells;
   events: Schedule[];
   defaultPanelHeight: number;
   options?: PanelState;
@@ -34,14 +34,13 @@ interface ExceedCountProps {
   index: number;
   exceedCount: number;
   isClicked: boolean;
-  clickHandler: (exceedCount: number) => void;
+  onClick: (exceedCount: number) => void;
 }
 
 interface CollapseButtonProps {
-  index: number;
-  clickedIndex: number;
   isClicked: boolean;
-  clickHandler: () => void;
+  isClickedIndex: boolean;
+  onClick: () => void;
 }
 
 const isExceededHeight = (panelHeight: number, eventHeight: number) => {
@@ -52,47 +51,50 @@ const ExceedCount: FunctionComponent<ExceedCountProps> = ({
   index,
   exceedCount,
   isClicked,
-  clickHandler,
-}) =>
-  exceedCount && !isClicked ? (
+  onClick,
+}) => {
+  const clickExceedCount = () => onClick(index);
+  const style = { display: isClicked ? 'none' : '' };
+
+  return exceedCount && !isClicked ? (
     <span
       className={cls('weekday-exceed-in-week')}
-      onClick={() => clickHandler(index)}
-      style={{ display: isClicked ? 'none' : '' }}
+      onClick={clickExceedCount}
+      style={style}
     >{`+${exceedCount}`}</span>
   ) : null;
+};
 
 const CollapseButton: FunctionComponent<CollapseButtonProps> = ({
-  index,
-  clickedIndex,
   isClicked,
-  clickHandler,
+  isClickedIndex,
+  onClick,
 }) =>
-  index === clickedIndex && isClicked ? (
-    <span className={cls('weekday-exceed-in-week')} onClick={clickHandler}>
+  isClicked && isClickedIndex ? (
+    <span className={cls('weekday-exceed-in-week')} onClick={onClick}>
       <i className={cls('collapse-btn')} />
     </span>
   ) : null;
 
 export const PanelGrid: FunctionComponent<Props> = ({
   name,
-  gridInfoList,
+  cells,
   events,
   defaultPanelHeight,
   options = {},
 }) => {
-  const [clickedCountIndex, setClickedCountIndex] = useState(0);
-  const [isClickedExceedCount, setClickedExceedCount] = useState(false);
+  const [clickedIndex, setClickedIndex] = useState(0);
+  const [isClickedCount, setClickedCount] = useState(false);
   const { dispatch } = useContext(PanelStore);
   const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
 
-  const viewModels = getViewModels(events, gridInfoList);
-  setViewModelsInfo(viewModels, gridInfoList, {});
-  const maxTop = viewModels.reduce((acc, viewModel) => Math.max(acc, viewModel.top), 0);
+  const viewModels = getViewModels(events, cells);
+  setViewModelsInfo(viewModels, cells, {});
+  const maxTop = Math.max(0, ...viewModels.map(({ top }) => top));
 
   const onClickExceedCount = (index: number) => {
-    setClickedExceedCount(true);
-    setClickedCountIndex(index);
+    setClickedCount(true);
+    setClickedIndex(index);
     dispatch({
       type: PanelActionType.UPDATE_PANEL_HEIGHT,
       panelType: name,
@@ -102,7 +104,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
     });
   };
   const onClickCollapseButton = () => {
-    setClickedExceedCount(false);
+    setClickedCount(false);
     dispatch({
       type: PanelActionType.UPDATE_PANEL_HEIGHT,
       panelType: name,
@@ -112,44 +114,38 @@ export const PanelGrid: FunctionComponent<Props> = ({
     });
   };
 
-  const { widthList, leftList } = getGridStyleInfo({
-    gridInfoList,
-    narrowWeekend,
-    totalWidth: TOTAL_WIDTH,
+  const { widthList, leftList } = getGridStyleInfo(cells, narrowWeekend, TOTAL_WIDTH);
+
+  const gridCells = cells.map((cell, index) => {
+    const width = toPercent(widthList[index]);
+    const left = toPercent(leftList[index]);
+
+    const gridDate = toStartOfDay(cell);
+    const exceedCount = viewModels
+      .filter(isExceededHeight(panelHeight, EVENT_HEIGHT))
+      .filter(isInGrid(gridDate)).length;
+    const isClickedIndex = index === clickedIndex;
+
+    return (
+      <div
+        key={`panel-grid-${cell.getDate()}`}
+        className={cls('panel-grid')}
+        style={{ ...DEFAULT_GRID_STYLE, width, left }}
+      >
+        <ExceedCount
+          index={index}
+          exceedCount={exceedCount}
+          isClicked={isClickedCount}
+          onClick={onClickExceedCount}
+        />
+        <CollapseButton
+          isClickedIndex={isClickedIndex}
+          isClicked={isClickedCount}
+          onClick={onClickCollapseButton}
+        />
+      </div>
+    );
   });
 
-  const renderCells = () => {
-    return gridInfoList.map((gridInfo, index) => {
-      const width = toPercent(widthList[index]);
-      const left = toPercent(leftList[index]);
-
-      const gridDate = toStartOfDay(gridInfo);
-      const exceedCount = viewModels
-        .filter(isExceededHeight(panelHeight, EVENT_HEIGHT))
-        .filter(isInGrid(gridDate)).length;
-
-      return (
-        <div
-          key={`panel-grid-${gridInfo.getDate()}`}
-          className={cls('panel-grid')}
-          style={{ ...DEFAULT_GRID_STYLE, width, left }}
-        >
-          <ExceedCount
-            index={index}
-            exceedCount={exceedCount}
-            isClicked={isClickedExceedCount}
-            clickHandler={onClickExceedCount}
-          />
-          <CollapseButton
-            index={index}
-            clickedIndex={clickedCountIndex}
-            isClicked={isClickedExceedCount}
-            clickHandler={onClickCollapseButton}
-          />
-        </div>
-      );
-    });
-  };
-
-  return <div className={cls('panel-grid-wrapper')}>{renderCells()}</div>;
+  return <div className={cls('panel-grid-wrapper')}>{gridCells}</div>;
 };

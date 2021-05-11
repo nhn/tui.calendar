@@ -13,4 +13,4 @@ export interface Panel {
   show?: boolean;
 }
 
-export type GridInfoList = TZDate[];
+export type Cells = TZDate[];
