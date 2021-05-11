@@ -3,7 +3,6 @@ import { h, FunctionComponent, Fragment } from 'preact';
 import { toPercent } from '@src/util/units';
 import Grid from '@src/components/daygrid/grid';
 import Schedule from '@src/model/schedule';
-import React from 'preact/compat';
 import TZDate from '@src/time/date';
 import { CalendarMonthOption } from '@t/store';
 
@@ -24,7 +23,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     <Fragment>
       {calendar.map((week, index) => (
         <Grid
-          key={index}
+          key={`dayGrid-${index}`}
           height={toPercent(rowHeight)}
           events={events}
           workweek={workweek}

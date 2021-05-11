@@ -50,10 +50,18 @@ describe('utils', () => {
     expect(isUndefined(b)).toBeFalsy();
   });
 
-  it('range', () => {
-    expect(range(5)).toEqual([0, 1, 2, 3, 4]);
-    expect(range(2, 5)).toEqual([2, 3, 4]);
-    expect(range(0, 10, 2)).toEqual([0, 2, 4, 6, 8]);
+  describe('range', () => {
+    it('should return an array of the number of inputs is created starting from 0, if only one parameter is passed', () => {
+      expect(range(5)).toEqual([0, 1, 2, 3, 4]);
+    });
+
+    it('should return an array of the number of between the starting digit and the ending digit, if two parameters is passed', () => {
+      expect(range(2, 5)).toEqual([2, 3, 4]);
+    });
+
+    it('should return an array of numbers that is the size of the step with third parameter, if three parameters are passed', () => {
+      expect(range(0, 10, 2)).toEqual([0, 2, 4, 6, 8]);
+    });
   });
 
   it('includes', () => {

@@ -1,4 +1,4 @@
-import { h, Fragment, FunctionComponent } from 'preact';
+import { h, FunctionComponent, Fragment } from 'preact';
 
 import Month from '@src/components/view/month';
 import FloatingLayer from '@src/components/floatingLayer';

@@ -1,29 +1,14 @@
 import { h, FunctionComponent } from 'preact';
+
 import { cls } from '@src/util/cssHelper';
-import React from 'preact/compat';
-import { getGridLeftAndWidth, isWeekend } from '@src/time/datetime';
+import { getGridLeftAndWidth } from '@src/time/datetime';
 import { toPercent, toPx } from '@src/util/units';
-import { getDayName } from '@src/util/dayName';
-import { CalendarMonthOption } from '@t/store';
 import { isNumber } from '@src/util/utils';
+import { useStore } from '@src/components/hooks/store';
+import DayName from '@src/components/daygrid/dayName';
 
-interface DayNameProps {
-  dayname: string;
-  dayIndex: number;
-  style: Pick<
-    DayNameTheme,
-    'fontSize' | 'fontWeight' | 'textAlign' | 'paddingLeft' | 'paddingRight'
-  > & {
-    lineHeight: string;
-    width: number | string;
-    left: number | string;
-  };
-}
-
-export type DayNameItem = {
-  name: string;
-  dayIndex: number;
-};
+import { CalendarMonthOption } from '@t/store';
+import { DayNameItem } from '@t/components/daygrid/dayNames';
 
 export interface DayNamesProps {
   dayNames: DayNameItem[];
@@ -31,38 +16,18 @@ export interface DayNamesProps {
   options?: CalendarMonthOption;
 }
 
-const defaultDayNameTheme = {
-  height: 31,
-  borderLeft: 'none',
-  paddingLeft: 10,
-  paddingRight: 0,
-  backgroundColor: 'inherit',
-  fontSize: 12,
-  fontWeight: 'normal',
-  textAlign: 'left',
-};
-
 const defaultDayNameOption = {
   narrowWeekend: false,
   startDayOfWeek: 0,
   workweek: false,
 };
 
-const DayName: FunctionComponent<DayNameProps> = (props) => {
-  const { dayname, dayIndex, style } = props;
-
-  return (
-    <div className={cls('dayname-item')} style={style}>
-      <span className={isWeekend(dayIndex) ? cls(`holiday-${getDayName(dayIndex)}`) : ''}>
-        {dayname}
-      </span>
-    </div>
-  );
-};
-
 const MonthDayNames: FunctionComponent<DayNamesProps> = (props) => {
-  const { dayNames = [], theme = defaultDayNameTheme, options = defaultDayNameOption } = props;
+  const { dayNames = [], options = defaultDayNameOption } = props;
   const { narrowWeekend, startDayOfWeek, workweek } = options;
+
+  const { state } = useStore('theme');
+  const dayNameTheme = state.month.dayname;
 
   const {
     height,
@@ -73,7 +38,7 @@ const MonthDayNames: FunctionComponent<DayNamesProps> = (props) => {
     fontSize,
     fontWeight,
     textAlign,
-  } = theme;
+  } = dayNameTheme;
 
   const style = {
     height,
@@ -98,7 +63,7 @@ const MonthDayNames: FunctionComponent<DayNamesProps> = (props) => {
         <DayName
           dayname={name}
           dayIndex={dayIndex}
-          key={dayIndex}
+          key={`dayNames-${name}-${dayIndex}`}
           style={{
             ...dayNameStyle,
             width: toPercent(grids[index].width),

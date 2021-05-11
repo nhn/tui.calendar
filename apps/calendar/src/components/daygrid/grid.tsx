@@ -19,7 +19,7 @@ interface GridProps {
 }
 
 const Grid: FunctionComponent<GridProps> = (props) => {
-  const container = useRef<HTMLDivElement>();
+  const container = useRef<HTMLDivElement>(null);
   const {
     height,
     narrowWeekend = false,
@@ -27,7 +27,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
     workweek = false,
     calendar,
     appContainer,
-    events = [],
+    events = [], // @TODO: 그리드에 입력될 이벤트 정보를 셀에 넘겨주기 위함 (작성 필요)
   } = props;
 
   const style = {

@@ -76,13 +76,21 @@ export const daygrid = () => {
     new TZDate(date.setDate(sunday + WEEKDAYS * index)),
   ]);
 
-  const options = {
+  const options: CalendarMonthOption = {
     visibleWeeksCount: 3,
     workweek: false,
     narrowWeekend: true,
     startDayOfWeek: 0,
     isAlways6Week: true,
-  } as CalendarMonthOption;
+    daynames: [],
+    moreLayerSize: { width: null, height: null },
+    grid: {
+      header: { height: 31 },
+      footer: { height: 31 },
+    },
+    visibleScheduleCount: 6,
+    scheduleFilter: () => true,
+  };
 
   return (
     <ProviderWrapper>

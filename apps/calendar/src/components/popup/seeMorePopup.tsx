@@ -1,67 +1,11 @@
 import { h, FunctionComponent } from 'preact';
-import { useActions, useStore } from '../hooks/store';
+import { useStore } from '@src/components/hooks/store';
 import { cls } from '@src/util/cssHelper';
-import Schedule from '@src/model/schedule';
 import { pick } from '@src/util/utils';
 import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import { SeeMorePopupParam } from '@t/store';
-
-interface MoreHeaderProps {
-  date: number;
-  day: string;
-}
-
-interface MoreTitleProps {
-  date: number;
-  day: string;
-}
-
-interface EventInSeeMoreProps {
-  event: Schedule;
-}
-
-const MoreTitle: FunctionComponent<MoreTitleProps> = (props) => {
-  const { date, day } = props;
-  const { state } = useStore('theme');
-  const style = pick(
-    state.month.moreViewTitle,
-    'height',
-    'marginBottom',
-    'backgroundColor',
-    'borderBottom',
-    'padding'
-  );
-
-  return (
-    <div className={cls('more-title')} style={style}>
-      <span className={cls('more-title-date')}>{date}</span>{' '}
-      <span className={cls('more-title-day')}>{day}</span>
-    </div>
-  );
-};
-
-const MoreHeader: FunctionComponent<MoreHeaderProps> = (props) => {
-  const { date, day } = props;
-  const { hide } = useActions('layerPopup');
-
-  return (
-    <div className={cls('see-more-header')}>
-      <MoreTitle date={date} day={day} />
-      <button type="button" className={cls('see-more-close')} onClick={hide}>
-        X
-      </button>
-    </div>
-  );
-};
-
-const EventItem: FunctionComponent<EventInSeeMoreProps> = (props) => {
-  const {
-    event: { title },
-  } = props;
-
-  // @TODO: 일정 타이틀 템플릿 적용
-  return <div>{title}</div>;
-};
+import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
+import GridEvent from '@src/components/events/gridEvent';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
@@ -80,9 +24,9 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
 
   return (
     <div className={cls('see-more')} style={style}>
-      <MoreHeader date={date.getDate()} day={dayName} />
+      <SeeMoreHeader date={date.getDate()} day={dayName} />
       {events.map((event, index) => (
-        <EventItem event={event} key={`see-more-event-item-${index}`} />
+        <GridEvent event={event} key={`see-more-event-item-${index}`} />
       ))}
     </div>
   );

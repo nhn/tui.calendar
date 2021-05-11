@@ -33,7 +33,7 @@ type MonthTheme = {
     boxShadow: string;
     paddingBottom: string;
   };
-  moreViewList: { padding: '0 17px' };
+  moreViewList: { padding: string };
   moreViewTitle: {
     backgroundColor: string;
     borderBottom: string;

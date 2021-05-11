@@ -109,7 +109,7 @@ export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: 
 }
 
 export function includes<T>(arr: T[], searchItem: T, searchIndex?: number) {
-  if (typeof searchIndex === 'number' && arr[searchIndex] !== searchItem) {
+  if (isNumber(searchIndex) && arr[searchIndex] !== searchItem) {
     return false;
   }
   for (const item of arr) {

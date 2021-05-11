@@ -1,53 +1,43 @@
 import { h } from 'preact';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import MonthView from '@src/components/view/monthView';
+import { Story } from '@storybook/preact';
 
 export default { title: 'MonthView' };
 
-export const basic = () => {
-  return (
-    <ProviderWrapper>
-      <MonthView />
-    </ProviderWrapper>
-  );
+const Template: Story = (args) => (
+  <ProviderWrapper options={args.options}>
+    <MonthView />
+  </ProviderWrapper>
+);
+
+export const basic = Template.bind({});
+
+export const narrowWeekend = Template.bind({});
+narrowWeekend.args = {
+  options: { month: { narrowWeekend: true } },
 };
 
-export const narrowWeekend = () => {
-  return (
-    <ProviderWrapper options={{ month: { narrowWeekend: true } }}>
-      <MonthView />
-    </ProviderWrapper>
-  );
+export const startDayOfWeek = Template.bind({});
+startDayOfWeek.args = {
+  options: { month: { startDayOfWeek: 3 } },
 };
 
-export const startDayOfWeek = () => {
-  return (
-    <ProviderWrapper options={{ month: { startDayOfWeek: 3 } }}>
-      <MonthView />
-    </ProviderWrapper>
-  );
+export const dayNames = Template.bind({});
+dayNames.args = {
+  options: {
+    month: {
+      daynames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    },
+  },
 };
 
-export const daynames = () => {
-  return (
-    <ProviderWrapper options={{ month: { daynames: ['일', '월', '화', '수', '목', '금', '토'] } }}>
-      <MonthView />
-    </ProviderWrapper>
-  );
+export const workweek = Template.bind({});
+workweek.args = {
+  options: { month: { workweek: true } },
 };
 
-export const workweek = () => {
-  return (
-    <ProviderWrapper options={{ month: { workweek: true } }}>
-      <MonthView />
-    </ProviderWrapper>
-  );
-};
-
-export const twoWeeks = () => {
-  return (
-    <ProviderWrapper options={{ month: { visibleWeeksCount: 2 } }}>
-      <MonthView />
-    </ProviderWrapper>
-  );
+export const twoWeeks = Template.bind({});
+twoWeeks.args = {
+  options: { month: { visibleWeeksCount: 2 } },
 };

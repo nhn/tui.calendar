@@ -1,71 +1,34 @@
 import { h, FunctionComponent } from 'preact';
 import { cls } from '@src/util/cssHelper';
-import { useActions, useStore } from '../hooks/store';
+import { useActions, useStore } from '@src/components/hooks/store';
 import { PopupType } from '@src/modules/layerPopup';
 import TZDate from '@src/time/date';
-import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { getPosition, getSize } from '@src/util/domutil';
-import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
 import { Day } from '@src/time/datetime';
+import { CellBar } from '@src/components/daygrid/cellBar';
 import { PopupRect } from '@t/store';
+import { toPercent } from '@src/util/units';
+import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;
 
-enum CellBarType {
-  header = 'header',
-  footer = 'footer',
-}
-
 interface CellProps {
   date: TZDate | Date;
-  dayIndex: number;
+  dayIndex: Day;
   style?: {
-    width?: number | string;
-    left?: number | string;
+    width?: CSSValue;
+    left?: CSSValue;
     backgroundColor?: string;
-    height?: number | string;
-    top?: number | string;
+    height?: CSSValue;
+    top?: CSSValue;
   };
   parentContainer?: HTMLDivElement;
   appContainer?: HTMLDivElement;
 }
-
-interface CellBarProps {
-  type?: CellBarType;
-  exceedCount?: number;
-  date: number;
-  onClickExceedCount: () => void;
-}
-
-interface ExceedCountButtonProps {
-  number: number;
-  clickHandler: () => void;
-  className: string;
-}
-
-type SeeMorePopupTheme = {
-  titleHeight: string;
-  titleMarginBottom: string;
-  paddingBottom: string;
-};
-
-type SeeMoreOptions = {
-  moreLayerSize: { width: number | null; height: number | null };
-  scheduleGutter: number;
-  scheduleHeight: number;
-};
-
-type SeeMoreRectParam = {
-  cell: HTMLDivElement;
-  grid: HTMLDivElement;
-  appContainer: HTMLDivElement;
-  theme: SeeMorePopupTheme;
-  options: SeeMoreOptions;
-  events: Event[];
-};
 
 function getSeeMorePopupSize(
   styles: SeeMorePopupTheme,
@@ -125,8 +88,8 @@ function getSeeMorePopupPosition(
   const isOverWidth = calWidth + width >= containerWidth;
   const isOverHeight = calHeight + height >= containerHeight;
 
-  const left = `${leftPos}%`;
-  const top = `${topPos}%`;
+  const left = toPercent(leftPos);
+  const top = toPercent(topPos);
 
   if (isOverWidth && isOverHeight) {
     return {
@@ -134,12 +97,14 @@ function getSeeMorePopupPosition(
       bottom: 0,
     };
   }
+
   if (!isOverWidth && isOverHeight) {
     return {
       left,
       bottom: 0,
     };
   }
+
   if (isOverWidth && !isOverHeight) {
     return {
       right: 0,
@@ -151,10 +116,10 @@ function getSeeMorePopupPosition(
 }
 
 function getExceedCount() {
-  return 0; // @TODO: 높이 기준으로 초과 갯수 계산
+  return 3; // @TODO: 높이 기준으로 초과 갯수 계산
 }
 
-function getDateColor(dayIndex: number, commonTheme: CommonTheme) {
+function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
   const { holiday, saturday, today } = commonTheme;
 
   if (dayIndex === Day.SUN) {
@@ -203,11 +168,11 @@ function usePopupRect(
   parentContainer?: HTMLDivElement,
   appContainer?: HTMLDivElement
 ) {
-  const container = useRef<HTMLDivElement>();
+  const container = useRef<HTMLDivElement>(null);
   const [popupRect, setPopupRect] = useState<PopupRect | null>(null);
   const { moreViewTitle, moreView, schedule: scheduleTheme } = monthTheme;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const { marginBottom, height } = moreViewTitle;
     const { paddingBottom } = moreView;
 
@@ -224,54 +189,21 @@ function usePopupRect(
     };
 
     if (appContainer && parentContainer) {
-      setPopupRect(
-        getSeeMorePopupRect({
-          cell: container.current,
-          grid: parentContainer,
-          theme,
-          options,
-          events: [],
-          appContainer,
-        })
-      );
+      const rect = getSeeMorePopupRect({
+        cell: container.current,
+        grid: parentContainer,
+        theme,
+        options,
+        events: [],
+        appContainer,
+      });
+
+      setPopupRect(rect);
     }
   }, [parentContainer, appContainer, moreViewTitle, moreView, scheduleTheme]);
 
   return { popupRect, container };
 }
-
-const ExceedCountButton: FunctionComponent<ExceedCountButtonProps> = (props) => {
-  const { number, clickHandler, className } = props;
-
-  if (!number) {
-    return null;
-  }
-
-  // @TODO: 템플릿 적용 필요
-  return (
-    <button type="button" onClick={clickHandler} className={className}>
-      {number} More
-    </button>
-  );
-};
-
-const CellBar: FunctionComponent<CellBarProps> = (props) => {
-  const { type = 'header', exceedCount = 0, date, onClickExceedCount } = props;
-
-  // @TODO: date 템플릿 적용 필요 / 오늘 표시
-  return (
-    <div className={cls(`grid-cell-${type}`)}>
-      <span className={cls('grid-cell-date')}>{date}</span>
-      {exceedCount ? (
-        <ExceedCountButton
-          number={exceedCount}
-          clickHandler={onClickExceedCount}
-          className={cls('grid-cell-more-events')}
-        />
-      ) : null}
-    </div>
-  );
-};
 
 export const Cell: FunctionComponent<CellProps> = (props) => {
   const { show } = useActions('layerPopup');
@@ -282,7 +214,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
 
   const { popupRect, container } = usePopupRect(state.month, parentContainer, appContainer);
 
-  const onOpenSeeMorePopup = () => {
+  const onOpenSeeMorePopup1 = useCallback(() => {
     if (popupRect) {
       show({
         type: PopupType.seeMore,
@@ -293,7 +225,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
         },
       });
     }
-  };
+  }, [date, popupRect, show]);
 
   const exceedCount = getExceedCount();
 
@@ -306,7 +238,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
       <CellBar
         exceedCount={exceedCount}
         date={date.getDate()}
-        onClickExceedCount={onOpenSeeMorePopup}
+        onClickExceedCount={onOpenSeeMorePopup1}
       />
     </div>
   );

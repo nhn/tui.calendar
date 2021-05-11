@@ -1,4 +1,5 @@
 import { ScheduleData } from '@src/model';
+import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
 import { includes, range } from '@src/util/utils';
 import { Options } from '@t/option';
@@ -10,13 +11,13 @@ function initializeDayNames(startDayOfWeek = 0) {
     .map((day) => getDayName(day));
 }
 
-function getOptionData(optionsData: Options = {}): OptionData {
+function getInitialOptions(optionsData: Options = {}): OptionData {
   const month = {
     daynames: [],
     visibleWeeksCount: 6,
     workweek: false,
     narrowWeekend: false,
-    startDayOfWeek: 0,
+    startDayOfWeek: Day.SUN,
     isAlways6Week: true,
     moreLayerSize: { width: null, height: null },
     grid: {
@@ -24,8 +25,8 @@ function getOptionData(optionsData: Options = {}): OptionData {
       footer: { height: 31 },
     },
     visibleScheduleCount: 6,
-    scheduleFilter: (schedule: ScheduleData) =>
-      !!schedule.isVisible && includes(['allday', 'time'], schedule.category),
+    scheduleFilter: (schedule: Required<ScheduleData>) =>
+      schedule.isVisible && includes(['allday', 'time'], schedule.category),
     ...optionsData.month,
   };
 
@@ -40,7 +41,7 @@ function getOptionData(optionsData: Options = {}): OptionData {
 
 const options = {
   name: 'options',
-  state: (initStoreData: InitStoreData) => getOptionData(initStoreData.options),
+  state: (initStoreData: InitStoreData) => getInitialOptions(initStoreData.options),
 };
 
 export default options;

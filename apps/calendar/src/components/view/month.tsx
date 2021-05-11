@@ -1,18 +1,20 @@
 import { h, FunctionComponent } from 'preact';
+import { Ref, useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
-import MonthDayNames, { DayNameItem } from '@src/components/daygrid/dayNames';
+import MonthDayNames from '@src/components/daygrid/dayNames';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import { useStore } from '@src/components/hooks/store';
 import { MonthOption, TemplateMonthDayName } from '@src/model';
 import Panel from '@src/components/panel';
-import { Ref, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { getSize } from '@src/util/domutil';
 import TZDate from '@src/time/date';
 import { arr2dCalendar, isWeekend } from '@src/time/datetime';
 import { capitalizeDayName } from '@src/util/dayName';
-import { OptionData } from '@t/store';
 import { isNumber } from '@src/util/utils';
+import { DayNameItem } from '@t/components/daygrid/dayNames';
+
+import { OptionData } from '@t/store';
 
 function getDayNames(
   monthDayNameTemplate: (model: TemplateMonthDayName) => string,
@@ -75,7 +77,7 @@ function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: numbe
 }
 
 const Month: FunctionComponent = () => {
-  const container = useRef<HTMLDivElement>();
+  const container = useRef<HTMLDivElement>(null);
 
   const { state } = useStore(['template', 'theme', 'options']);
   const { template, theme, options } = state;

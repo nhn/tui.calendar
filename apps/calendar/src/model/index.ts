@@ -182,7 +182,7 @@ export interface MonthOption {
       height?: number;
     };
   };
-  scheduleFilter?: (schedule: ScheduleData) => boolean;
+  scheduleFilter?: (schedule: Required<ScheduleData>) => boolean;
 }
 
 export interface CustomTimezone {
