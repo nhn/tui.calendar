@@ -2,8 +2,6 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 import { Direction } from '@src/controller/layout';
 import { getElementRect as getRect } from '@src/util/domutil';
 
-import type { PanelName } from '@t/panel';
-
 export type Styles = Record<string, string | number>;
 export type PanelElementRectMap = Record<string, PanelRect>;
 export interface Size {
@@ -17,7 +15,7 @@ export interface PanelRect extends Size {
   resizerHeight: number;
 }
 export interface PanelInfo {
-  name: PanelName;
+  name: string;
   direction?: Direction;
   overflowY?: boolean;
   overflowX?: boolean;
@@ -61,6 +59,8 @@ export const panelInfoKeys: Array<keyof PanelInfo> = [
   'resizerWidth',
 ];
 
+const styleKeys: Array<keyof PanelInfo> = ['minHeight', 'maxHeight', 'minWidth', 'maxWidth'];
+
 export function getElementRect(element: HTMLElement) {
   if (element) {
     return getRect(element);
@@ -73,24 +73,35 @@ export function isPanelShown(panel: PanelInfo) {
   return isUndefined(panel.show) || panel.show;
 }
 
+function getPanelSide(side: number, maxExpandableSide?: number) {
+  return maxExpandableSide ? Math.min(maxExpandableSide, side) : side;
+}
+
 export function getPanelStylesFromInfo(panel: PanelInfo) {
   const styles: Styles = {};
-  const { height, width, overflowX, overflowY } = panel;
+  const { height, width, overflowX, overflowY, maxExpandableWidth, maxExpandableHeight } = panel;
 
   if (width) {
-    styles.width = width;
+    styles.width = getPanelSide(width, maxExpandableWidth);
     styles.height = '100%';
   }
   if (height) {
-    styles.height = height;
     styles.width = '100%';
+    styles.height = getPanelSide(height, maxExpandableHeight);
   }
+
   if (overflowX) {
     styles.overflowX = 'auto';
   }
   if (overflowY) {
     styles.overflowY = 'auto';
   }
+
+  styleKeys.forEach((key) => {
+    if (panel[key]) {
+      styles[key] = panel[key] as keyof PanelInfo;
+    }
+  });
 
   return styles;
 }

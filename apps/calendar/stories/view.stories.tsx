@@ -1,4 +1,4 @@
-import { h, FunctionComponent, RenderableProps } from 'preact';
+import { h, RenderableProps } from 'preact';
 import Main from '@src/components/view/Main';
 import Toolbar from '@src/components/toolbar/toolbar';
 import MonthView from '@src/components/view/monthView';
