@@ -16,6 +16,10 @@ import preset from '@src/theme/preset';
 export default class Theme {
   private props: ThemeKeyValue = {};
 
+  month!: MonthTheme;
+
+  common!: CommonTheme;
+
   /**
    *
    * @param customTheme custom theme

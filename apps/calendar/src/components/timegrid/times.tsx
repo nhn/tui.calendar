@@ -94,7 +94,7 @@ export function Times(props: Props) {
   } = props;
   const times = props.times.slice(start, end + 1);
   const top = getTopPercentByTime(currentTime, first(times).date, last(times).date);
-  const ref = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (showCurrentTime && ref.current) {

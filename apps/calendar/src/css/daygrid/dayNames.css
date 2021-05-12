@@ -1,0 +1,8 @@
+.month-dayname {
+  width: 100%;
+}
+
+.dayname-item {
+  width: 100%;
+  position: absolute;
+}

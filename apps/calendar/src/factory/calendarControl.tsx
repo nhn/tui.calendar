@@ -20,10 +20,18 @@ import { ThemeKeyValue } from '@src/theme/themeProps';
 import { toStartOfDay } from '@src/time/datetime';
 import { createScheduleCollection } from '@src/controller/base';
 import { registerTemplateConfig } from '@src/template';
-import { InstanceContext } from '@src/model/context';
 import TZDate from '@src/time/date';
 import { LocalDate, DateInterface } from '@toast-ui/date';
 import isNumber from 'tui-code-snippet/type/isNumber';
+
+import Provider from '@src/components/provider';
+import Store from '@src/store';
+import {
+  template as templateModule,
+  theme as themeModule,
+  options as OptionsModule,
+  layerPopup,
+} from '@src/modules';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
@@ -54,6 +62,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     start: TZDate;
     end: TZDate;
   };
+
+  protected store: Store;
 
   private _mainApp?: AnyComponent<any, any>;
 
@@ -89,6 +99,11 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       start: toStartOfDay(),
       end: toStartOfDay(),
     };
+
+    this.store = new Store({
+      initStoreData: { options: this._options },
+      modules: [OptionsModule, templateModule, themeModule, layerPopup],
+    });
   }
 
   protected abstract getComponent(): ComponentChild;
@@ -281,12 +296,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   render() {
     if (this._container) {
-      render(
-        <InstanceContext.Provider value={this._context}>
-          {this.getComponent()}
-        </InstanceContext.Provider>,
-        this._container
-      );
+      render(<Provider store={this.store}>{this.getComponent()}</Provider>, this._container);
     }
 
     return this;
@@ -538,7 +548,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @todo implement this
    */
   setOptions(options: Option, silent = false) {
-    // onsole.log('setOptions', options, silent);
+    // console.log('setOptions', options, silent);
   }
 
   /**

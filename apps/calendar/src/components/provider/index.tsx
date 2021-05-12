@@ -1,8 +1,9 @@
 import { h, FunctionComponent } from 'preact';
+
 import Store from '@src/store';
-import { CalendarState } from '@t/store';
 import { StoreContext, useCalendarState } from '@src/components/hooks/store';
 
+import { CalendarState } from '@t/store';
 interface Props {
   store: Store<CalendarState>;
 }

@@ -40,26 +40,25 @@ class Store<State extends Record<string, any> = any> {
   }
 
   setModule(module: StoreModule) {
-    const { name, actions } = module;
+    const { name, actions = {} } = module;
 
     if (module.state) {
       const state =
         typeof module.state === 'function' ? module.state(this.initStoreData) : module.state;
       this.state = { ...this.state, [name]: state };
     }
-    if (actions) {
-      forEach(actions, (action, actionName) => {
-        this.setFlattenActionMap(`${name}/${actionName}`, action);
-        this.setPayloadAction(name, actionName);
-      });
-    }
-  }
 
-  setPayloadAction(name: string, actionName: string) {
     if (!this.actions[name]) {
       this.actions[name] = {};
     }
 
+    forEach(actions, (action, actionName) => {
+      this.setFlattenActionMap(`${name}/${actionName}`, action);
+      this.setPayloadAction(name, actionName);
+    });
+  }
+
+  setPayloadAction(name: string, actionName: string) {
     this.actions[name][actionName] = (payload?: any) => {
       const actionType = `${name}/${actionName}` as keyof FlattenActions;
 

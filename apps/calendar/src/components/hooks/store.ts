@@ -1,3 +1,6 @@
+import { createContext } from 'preact';
+import { useContext, useMemo, useState } from 'preact/hooks';
+
 import Store from '@src/store';
 import { getActions, getState } from '@src/util/storeHelper';
 import {
@@ -8,8 +11,6 @@ import {
   PayloadActions,
   PayloadModuleActions,
 } from '@t/store';
-import { createContext } from 'preact';
-import { useContext, useMemo, useState } from 'preact/hooks';
 
 let calendarActions: PayloadActions;
 
@@ -45,12 +46,8 @@ export function useStore<T extends ModuleKeys>(
 export function useStore(names?: ModuleKeys | ModuleKeys[]) {
   const state = useContext(StoreContext);
 
-  if (!state) {
-    throw new Error('There is no store available.');
-  }
-
   return {
-    state: useMemo(() => getState(state, names), [state, names]),
+    state: useMemo(() => getState(state ?? {}, names), [state, names]),
     actions: useMemo(() => getActions(calendarActions, names), [names]),
   };
 }

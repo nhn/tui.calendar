@@ -23,8 +23,8 @@ export function CurrentTimeLabel(props: CurrentTimeLabelProps) {
   const top = toPercent(props.top);
   const time = props.time || new TZDate();
   const [topValue, setTop] = useState(top);
-  const ref = useRef<HTMLDivElement>();
-  const signRef = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
+  const signRef = useRef<HTMLDivElement>(null);
 
   const adjustTopForCentering = () => {
     if (ref.current) {
