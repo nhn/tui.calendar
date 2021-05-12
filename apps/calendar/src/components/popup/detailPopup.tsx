@@ -1,5 +1,6 @@
-import { DetailPopupParam } from '@t/store';
 import { h, FunctionComponent } from 'preact';
+
+import { DetailPopupParam } from '@t/store';
 
 const DetailPopup: FunctionComponent<DetailPopupParam> = () => {
   // @TODO: detail popup

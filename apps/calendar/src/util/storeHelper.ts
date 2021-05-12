@@ -42,7 +42,9 @@ export function getActions(actions: PayloadActions, names?: ModuleKeys | ModuleK
 
   if (typeof names === 'string') {
     if (!Object.keys(actions).includes(names)) {
-      return {};
+      throw new Error(
+        `It is not a registered ${names} module. Please register the module to be used when using 'useCreateStore'.`
+      );
     }
 
     return actions[names];

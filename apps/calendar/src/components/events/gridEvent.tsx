@@ -1,4 +1,5 @@
 import { h, FunctionComponent } from 'preact';
+
 import Schedule from '@src/model/schedule';
 
 interface EventInSeeMoreProps {

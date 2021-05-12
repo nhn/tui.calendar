@@ -4,7 +4,7 @@ import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import template from '@src/modules/template';
 import theme from '@src/modules/theme';
-import { layerPopup } from '@src/modules/layerPopup';
+import layerPopup from '@src/modules/layerPopup';
 import { cls } from '@src/util/cssHelper';
 import options from '@src/modules/options';
 import { Options } from '@t/option';

@@ -1,7 +1,7 @@
 import { MonthOption, WeekOption } from '@src/model';
 import Schedule from '@src/model/schedule';
 import { theme, template, options } from '@src/modules';
-import { layerPopup, PopupType } from '@src/modules/layerPopup';
+import layerPopup, { PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import TZDate from '@src/time/date';
 import { Options } from './option';

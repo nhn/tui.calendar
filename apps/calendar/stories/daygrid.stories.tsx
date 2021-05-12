@@ -3,10 +3,10 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { Cell } from '@src/components/daygrid/cell';
 import Grid from '@src/components/daygrid/grid';
 import { range } from '@src/util/utils';
-import { toStartOfDay } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import { CalendarMonthOption } from '@t/store';
+import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
 
 export default { title: 'DayGrid' };
 
@@ -21,15 +21,7 @@ export const cell = () => {
 };
 
 export const week = () => {
-  const date = new Date();
-
-  const dayIndex = date.getDay();
-  const start = date.getDate() - dayIndex;
-  const end = start + 6;
-  const startDate = toStartOfDay(date.setDate(start));
-  const endDate = toStartOfDay(date.setDate(end));
-  const days = (Number(endDate) - Number(startDate)) / (24 * 1000 * 60 * 60) + 1;
-  const calendar = range(days).map((index) => new TZDate(startDate).addDate(index));
+  const calendar = getWeekDates();
 
   return (
     <ProviderWrapper>
@@ -43,13 +35,7 @@ export const week = () => {
 };
 
 export const weekend = () => {
-  const date = new Date();
-
-  const dayIndex = date.getDay();
-  const start = date.getDate() - dayIndex;
-  const saturday = start + 6;
-  const sunday = saturday + 1;
-  const calendar = [new TZDate(date.setDate(saturday)), new TZDate(date.setDate(sunday))];
+  const calendar = getWeekendDates();
 
   return (
     <ProviderWrapper>

@@ -6,7 +6,7 @@ export enum PopupType {
   detail = 'detail',
 }
 
-export const layerPopup = {
+const layerPopup = {
   name: 'layerPopup',
   state: {
     popupType: null,
@@ -24,3 +24,5 @@ export const layerPopup = {
     },
   },
 };
+
+export default layerPopup;

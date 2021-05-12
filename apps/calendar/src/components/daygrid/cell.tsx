@@ -1,17 +1,18 @@
 import { h, FunctionComponent } from 'preact';
+import { useCallback, useLayoutEffect, useRef, useState } from 'preact/hooks';
+
 import { cls } from '@src/util/cssHelper';
 import { useActions, useStore } from '@src/components/hooks/store';
 import { PopupType } from '@src/modules/layerPopup';
 import TZDate from '@src/time/date';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { getPosition, getSize } from '@src/util/domutil';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
 import { Day } from '@src/time/datetime';
-import { CellBar } from '@src/components/daygrid/cellBar';
+import CellBar from '@src/components/daygrid/cellBar';
 import { PopupRect } from '@t/store';
 import { toPercent } from '@src/util/units';
-import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
+import { getMousePosition } from '@src/util/domEvent';
 
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;
@@ -75,7 +76,7 @@ function getSeeMorePopupSize(
 }
 
 function getSeeMorePopupPosition(
-  position: [number, number],
+  position: [positionX: number, positionY: number],
   popupSize: Size,
   appContainerSize: Size
 ) {
@@ -116,7 +117,7 @@ function getSeeMorePopupPosition(
 }
 
 function getExceedCount() {
-  return 3; // @TODO: 높이 기준으로 초과 갯수 계산
+  return 0; // @TODO: 높이 기준으로 초과 갯수 계산
 }
 
 function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
@@ -172,7 +173,7 @@ function usePopupRect(
   const [popupRect, setPopupRect] = useState<PopupRect | null>(null);
   const { moreViewTitle, moreView, schedule: scheduleTheme } = monthTheme;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const { marginBottom, height } = moreViewTitle;
     const { paddingBottom } = moreView;
 

@@ -2,15 +2,13 @@ import { h, FunctionComponent } from 'preact';
 
 import Provider from '@src/components/provider';
 import Store from '@src/store';
-import { CalendarState } from '@t/store';
-import { ViewListMap } from '@t/option';
 import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
 import ToolbarContainer from '@src/components/toolbar/toolbarContainer';
 import ViewContainer from '@src/components/view/viewContainer';
-import { layerPopup } from '@src/modules/layerPopup';
-import template from '@src/modules/template';
-import theme from '@src/modules/theme';
-import options from '@src/modules/options';
+import { template, theme, options, layerPopup } from '@src/modules';
+
+import { CalendarState } from '@t/store';
+import { ViewListMap } from '@t/option';
 
 type Props = {
   initialView: string;

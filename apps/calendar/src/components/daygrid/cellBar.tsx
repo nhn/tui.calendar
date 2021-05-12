@@ -15,7 +15,7 @@ interface CellBarProps {
   onClickExceedCount: () => void;
 }
 
-export const CellBar: FunctionComponent<CellBarProps> = ({
+const CellBar: FunctionComponent<CellBarProps> = ({
   type = CellBarType.header,
   exceedCount = 0,
   date,
@@ -35,3 +35,5 @@ export const CellBar: FunctionComponent<CellBarProps> = ({
     </div>
   );
 };
+
+export default CellBar;

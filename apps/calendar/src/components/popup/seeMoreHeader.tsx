@@ -1,4 +1,5 @@
 import { h, FunctionComponent } from 'preact';
+
 import { useActions } from '@src/components/hooks/store';
 import { cls } from '@src/util/cssHelper';
 

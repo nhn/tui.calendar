@@ -2,15 +2,10 @@ import moment from 'moment-timezone';
 import Calendar from '@src/factory/calendar';
 import { UTCDate, LocalDate, MomentDate } from '@toast-ui/date';
 import { setDateConstructor } from '@src/time/timezone';
-import * as Store from '@src/components/hooks/store';
 
 describe('Calendar', () => {
   describe('Timezone', () => {
     beforeEach(() => {
-      jest.spyOn(Store, 'useStore').mockReturnValue({
-        state: {} as any,
-        actions: {},
-      });
       MomentDate.setMoment(moment);
     });
 

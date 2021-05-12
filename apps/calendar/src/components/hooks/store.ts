@@ -1,3 +1,6 @@
+import { createContext } from 'preact';
+import { useContext, useMemo, useState } from 'preact/hooks';
+
 import Store from '@src/store';
 import { getActions, getState } from '@src/util/storeHelper';
 import {
@@ -8,8 +11,6 @@ import {
   PayloadActions,
   PayloadModuleActions,
 } from '@t/store';
-import { createContext } from 'preact';
-import { useContext, useMemo, useState } from 'preact/hooks';
 
 let calendarActions: PayloadActions;
 
