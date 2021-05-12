@@ -113,7 +113,7 @@ type CalendarWeekOption = Required<WeekOption>;
 
 interface OptionData {
   month: CalendarMonthOption;
-  // week: CalendarWeekOption;
+  week: CalendarWeekOption;
 }
 
 interface BasePopupParam {

@@ -7,6 +7,8 @@ import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
+import { ProviderWrapper } from '@stories/util/providerWrapper';
+import { WeekDayNames } from '@src/components/panelgrid/dayNames';
 
 import type { MilestoneEvent } from '@t/events';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
@@ -82,3 +84,45 @@ export const title: Story = () => {
 };
 
 title.storyName = 'panel title';
+
+export const dayNames1day: Story = () => {
+  const dayNames = [
+    {
+      name: 'Mon',
+      dayIndex: 1,
+    },
+  ];
+
+  return (
+    <ProviderWrapper>
+      <WeekDayNames dayNames={dayNames} />
+    </ProviderWrapper>
+  );
+};
+
+dayNames1day.storyName = '1 day DayNames';
+
+export const dayNames3day: Story = () => {
+  const dayNames = [
+    {
+      name: 'Mon',
+      dayIndex: 1,
+    },
+    {
+      name: 'Wed',
+      dayIndex: 3,
+    },
+    {
+      name: 'Fri',
+      dayIndex: 5,
+    },
+  ];
+
+  return (
+    <ProviderWrapper>
+      <WeekDayNames dayNames={dayNames} />
+    </ProviderWrapper>
+  );
+};
+
+dayNames3day.storyName = '3 days DayNames';

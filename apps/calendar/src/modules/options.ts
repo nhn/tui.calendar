@@ -1,14 +1,29 @@
-import { ScheduleData } from '@src/model';
+import { ScheduleData, TimezoneConfig } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
 import { includes, range } from '@src/util/utils';
 import { Options } from '@t/option';
-import { InitStoreData, OptionData } from '@t/store';
+import { CalendarWeekOption, InitStoreData, OptionData } from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {
   return range(startDayOfWeek, 7)
     .concat(range(startDayOfWeek))
     .map((day) => getDayName(day));
+}
+
+function getInitialWeekOptions(optionsData: Options = {}): CalendarWeekOption {
+  return {
+    startDayOfWeek: 0,
+    daynames: [],
+    narrowWeekend: false,
+    workweek: false,
+    showTimezoneCollapseButton: false,
+    timezonesCollapsed: false,
+    timezones: [],
+    hourStart: 0,
+    hourEnd: 24,
+    ...optionsData.week,
+  };
 }
 
 function getInitialOptions(optionsData: Options = {}): OptionData {
@@ -36,6 +51,7 @@ function getInitialOptions(optionsData: Options = {}): OptionData {
 
   return {
     month,
+    week: getInitialWeekOptions(optionsData),
   };
 }
 

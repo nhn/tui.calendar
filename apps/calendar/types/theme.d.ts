@@ -22,6 +22,10 @@ type DayNameTheme = {
   textAlign: string;
 };
 
+type WeekTheme = {
+  dayname: DayNameTheme;
+};
+
 type MonthTheme = {
   day: { fontSize: string };
   dayExceptThisMonth: { color: string };
