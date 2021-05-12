@@ -9,9 +9,6 @@ import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 
-import type { GridInfoList } from '@t/panel';
-import type { BaseEvent } from '@t/events';
-
 export enum Day {
   SUN,
   MON,

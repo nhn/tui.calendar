@@ -34,7 +34,7 @@ import TZDate from '@src/time/date';
 import { WeekOption, DataStore } from '@src/model';
 import array from '@src/util/array';
 
-import type { Panel, PanelName } from '@t/panel';
+import type { Panel } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
 
@@ -364,12 +364,12 @@ export function findByDateRange(
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
   const viewModelColl = convertToViewModel(schedules.find(filter));
 
-  const group: Record<PanelName, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
+  const group: Record<string, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
     scheduleTypes,
     filterByCategory
   );
   const resutGroup: Record<
-    PanelName,
+    string,
     ScheduleMatrix<ScheduleViewModel> | Record<string, ScheduleMatrix<ScheduleViewModel>>
   > = {
     milestone: [],

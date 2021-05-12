@@ -91,7 +91,7 @@ describe('layout controller', () => {
           maxExpandableHeight: 200,
         },
         {
-          name: 'b',
+          name: 'c',
           expandable: false,
           height: 300,
           maxHeight: 100,
@@ -207,11 +207,11 @@ describe('layout controller', () => {
     const panels = layoutPanels(
       [
         {
-          name: 'a',
+          name: 'milestone',
           autoSize: 2,
         },
         {
-          name: 'b',
+          name: 'milestone',
           autoSize: 1,
         },
       ],
@@ -238,7 +238,7 @@ describe('layout controller', () => {
           autoSize: 2,
         },
         {
-          name: 'b',
+          name: 'c',
           height: 100,
         },
         {

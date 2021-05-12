@@ -1,8 +1,3 @@
-.panel .panel-title,
-.panel .panel-grid-wrapper {
-  height: 100%;
-}
-
 .panel-title {
   float: left;
   height: 100%;
@@ -10,14 +5,19 @@
   border-right: 1px solid #ddd;
 }
 
-.panel-milestone {
+.panel-grid-wrapper {
   position: relative;
-  height: 100%;
   overflow-y: hidden;
 }
 
-.panel-grid-wrapper {
+.panel .panel-title,
+.panel .panel-grid-wrapper {
+  height: 100%;
+}
+
+.panel-milestone {
   position: relative;
+  height: 100%;
   overflow-y: hidden;
 }
 
@@ -32,9 +32,58 @@
   width: 100%;
   height: 100%;
   position: absolute;
+  overflow-y: scroll;
+}
+
+.panel-event-wrapper .weekday-event-block {
+  position: absolute;
+}
+
+.panel-event-wrapper .weekday-event {
+  position: relative;
+  margin: 0 10px 0 1px;
+  cursor: pointer;
+  border-left-style: solid;
+  border-left-width: 3px;
+
+  height: 18px;
+  border-radius: 0;
+  color: #9a1313;
+  background-color: rgba(218, 27, 27, 0.2);
+  border-color: #da1b1b;
+}
+
+.panel-event-wrapper .weekday-exceed-right .weekday-event {
+  margin-right: 0;
 }
 
 .panel-event {
   position: absolute;
   border: 1px solid #333;
+}
+
+.weekday-exceed-in-week {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  z-index: 1;
+  margin-right: 5px;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  padding: 1px 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #000;
+}
+
+.collapse-btn {
+  display: inline-block;
+  vertical-align: middle;
+  margin: -1px -14px 0 -4px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 5px solid #4f5959;
 }

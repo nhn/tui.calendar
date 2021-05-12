@@ -1,10 +1,9 @@
 import type TZDate from '@src/time/date';
 
-export type PanelName = 'milestone' | 'task' | 'allday' | 'time';
 export type PanelType = 'daygrid' | 'timegrid';
 
 export interface Panel {
-  name: PanelName;
+  name: string;
   type: PanelType;
   minHeight?: number;
   maxHeight?: number;
@@ -14,4 +13,4 @@ export interface Panel {
   show?: boolean;
 }
 
-export type GridInfoList = TZDate[];
+export type Cells = TZDate[];
