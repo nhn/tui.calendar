@@ -1,0 +1,12 @@
+.week-dayname {
+  width: 100%;
+}
+
+.week-dayname-leftmargin {
+  position: relative;
+}
+
+.dayname-item {
+  width: 100%;
+  position: absolute;
+}
