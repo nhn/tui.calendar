@@ -161,6 +161,7 @@ tui-calendar/
 * [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhn/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
 * [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhn/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
 * [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhn/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
+* [toast_ui.blazor_calendar](https://github.com/gismofx/toast_ui.blazor_calendar): **C#/Blazor** JSInterop wrapper component is provided(ref #[781](https://github.com/nhn/tui.calendar/issues/781)) by [@gismofx](https://github.com/gismofx) ![NuGet](https://img.shields.io/nuget/vpre/toast_ui.blazor_calendar?color=blue)
 
 ## 🔨 Usage
 
