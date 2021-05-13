@@ -9,9 +9,10 @@ import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { WeekDayNames } from '@src/components/panelgrid/dayNames';
+import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 
 import type { MilestoneEvent } from '@t/events';
-import { PanelTitle } from '@src/components/panelgrid/panelTitle';
+import type { DayNameItem } from '@t/components/daygrid/dayNames';
 
 export default { title: 'Panel', component: Milestone, args: { primary: true } };
 
@@ -85,25 +86,26 @@ export const title: Story = () => {
 
 title.storyName = 'panel title';
 
-export const dayNames1day: Story = () => {
-  const dayNames = [
+const DayNamesTemplate: Story<{ dayNames: DayNameItem[] }> = (args) => (
+  <ProviderWrapper>
+    <WeekDayNames dayNames={args.dayNames} />
+  </ProviderWrapper>
+);
+
+export const dayNames1day = DayNamesTemplate.bind({});
+dayNames1day.args = {
+  dayNames: [
     {
       name: 'Mon',
       dayIndex: 1,
     },
-  ];
-
-  return (
-    <ProviderWrapper>
-      <WeekDayNames dayNames={dayNames} />
-    </ProviderWrapper>
-  );
+  ],
 };
-
 dayNames1day.storyName = '1 day DayNames';
 
-export const dayNames3day: Story = () => {
-  const dayNames = [
+export const dayNames3day = DayNamesTemplate.bind({});
+dayNames3day.args = {
+  dayNames: [
     {
       name: 'Mon',
       dayIndex: 1,
@@ -116,13 +118,6 @@ export const dayNames3day: Story = () => {
       name: 'Fri',
       dayIndex: 5,
     },
-  ];
-
-  return (
-    <ProviderWrapper>
-      <WeekDayNames dayNames={dayNames} />
-    </ProviderWrapper>
-  );
+  ],
 };
-
 dayNames3day.storyName = '3 days DayNames';
