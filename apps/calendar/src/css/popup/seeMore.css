@@ -1,3 +1,7 @@
+.see-more {
+  height: inherit;
+}
+
 .see-more-close {
   position: absolute;
   right: 0;
@@ -22,4 +26,8 @@
 .more-title-day {
   font-size: 12px;
   color: #333;
+}
+
+.month-more-list {
+  overflow: auto;
 }

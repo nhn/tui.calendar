@@ -1,37 +1,42 @@
 import { h, FunctionComponent } from 'preact';
 
 import { Cell } from '@src/components/daygrid/cell';
-import Schedule from '@src/model/schedule';
 import { cls } from '@src/util/cssHelper';
-import { getGridLeftAndWidth } from '@src/time/datetime';
-import { toPercent } from '@src/util/units';
+import { getGridLeftAndWidth, toFormat, toStartOfDay } from '@src/time/datetime';
+import { toPercent, toPx } from '@src/util/units';
 import TZDate from '@src/time/date';
 import { useRef } from 'preact/hooks';
-
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { EVENT_HEIGHT } from '@src/event/panelEvent';
+import { CSSValue } from '@t/components/daygrid/cell';
 interface GridProps {
-  height: number | string;
-  events?: Schedule[];
+  cssHeight?: CSSValue;
+  gridModels?: Record<string, ScheduleViewModel[]>;
   narrowWeekend?: boolean;
   startDayOfWeek?: number;
   workweek?: boolean;
   calendar: TZDate[];
   appContainer: { current: HTMLDivElement };
+  eventHeight?: number;
+  height?: number;
 }
 
 const Grid: FunctionComponent<GridProps> = (props) => {
   const container = useRef<HTMLDivElement>(null);
   const {
-    height,
+    cssHeight,
     narrowWeekend = false,
     startDayOfWeek = 0,
     workweek = false,
     calendar,
     appContainer,
-    events = [], // @TODO: 그리드에 입력될 이벤트 정보를 셀에 넘겨주기 위함 (작성 필요)
+    gridModels = {},
+    eventHeight = EVENT_HEIGHT,
+    height = 0,
   } = props;
 
   const style = {
-    height,
+    height: cssHeight ?? toPx(height),
     borderTop: '1px solid #e5e5e5',
   };
 
@@ -42,6 +47,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
       {calendar.map((date, index) => {
         const dayIndex = date.getDay();
         const { width, left } = grids[index];
+        const YMD = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
         return (
           <Cell
@@ -55,6 +61,9 @@ const Grid: FunctionComponent<GridProps> = (props) => {
             }}
             parentContainer={container.current}
             appContainer={appContainer.current}
+            events={gridModels[YMD]}
+            eventHeight={eventHeight}
+            height={height}
           />
         );
       })}

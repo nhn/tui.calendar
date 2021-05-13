@@ -3,6 +3,7 @@ import { h, FunctionComponent } from 'preact';
 import { Day, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getDayName } from '@src/util/dayName';
+import { CSSValue } from '@t/components/daygrid/cell';
 
 interface DayNameProps {
   dayname: string;
@@ -12,8 +13,8 @@ interface DayNameProps {
     'fontSize' | 'fontWeight' | 'textAlign' | 'paddingLeft' | 'paddingRight'
   > & {
     lineHeight: string;
-    width: number | string;
-    left: number | string;
+    width: CSSValue;
+    left: CSSValue;
   };
 }
 

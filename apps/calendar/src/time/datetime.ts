@@ -299,7 +299,7 @@ export function minutesFromHours(hours: number): number {
  * @param {TZDate} date date. if undefined, use now.
  * @returns {TZDate} start date.
  */
-export function toStartOfDay(date?: number | TZDate): TZDate {
+export function toStartOfDay(date?: number | TZDate | Date): TZDate {
   const d = date ? new TZDate(date) : new TZDate();
   d.setHours(0, 0, 0, 0);
 

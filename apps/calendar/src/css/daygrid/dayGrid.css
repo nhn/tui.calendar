@@ -2,8 +2,19 @@
   height: 100%;
 }
 
-.grid {
+.month-week-item {
   position: relative;
+}
+
+.month-daygrid {
+  position: relative;
+}
+
+.grid {
+  position: absolute;
+  min-height: inherit;
+  width: 100%;
+  height: 100%;
 }
 
 .daygrid-cell {
@@ -33,4 +44,15 @@
   color: #aaa;
   border: none;
   background-color: transparent;
+}
+
+.weekday-schedules {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 12px;
+}
+.weekday {
+  height: 100%;
 }

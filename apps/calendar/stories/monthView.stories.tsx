@@ -2,11 +2,18 @@ import { h } from 'preact';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import MonthView from '@src/components/view/monthView';
 import { Story } from '@storybook/preact';
+import {
+  generateRandomEvents,
+  generateRandomScheduleViewModelsForMonth,
+} from './util/randomEvents';
+import { ScheduleData } from '@src/model';
+import { getMonthCalendar } from '@src/components/view/month';
+import Schedule from '@src/model/schedule';
 
 export default { title: 'MonthView' };
 
 const Template: Story = (args) => (
-  <ProviderWrapper options={args.options}>
+  <ProviderWrapper options={args.options} events={args.events}>
     <MonthView />
   </ProviderWrapper>
 );
@@ -40,4 +47,9 @@ workweek.args = {
 export const twoWeeks = Template.bind({});
 twoWeeks.args = {
   options: { month: { visibleWeeksCount: 2 } },
+};
+
+export const randomEvents = Template.bind({});
+randomEvents.args = {
+  events: generateRandomScheduleViewModelsForMonth(40),
 };

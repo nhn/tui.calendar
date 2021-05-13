@@ -1,3 +1,5 @@
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+
 type CSSValue = number | string;
 
 type SeeMorePopupTheme = {
@@ -18,5 +20,5 @@ type SeeMoreRectParam = {
   appContainer: HTMLDivElement;
   theme: SeeMorePopupTheme;
   options: SeeMoreOptions;
-  events: Event[];
+  events: ScheduleViewModel[];
 };

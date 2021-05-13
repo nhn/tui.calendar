@@ -3,7 +3,8 @@ import moment from 'moment-timezone';
 import TZDate from '@src/time/date';
 import { ScheduleData, ViewType, CalendarData } from '@src/model';
 import { calendars } from '@stories/util/mockCalendars';
-import { ScheduleCategory } from '@src/model/schedule';
+import Schedule, { ScheduleCategory } from '@src/model/schedule';
+import { getMonthCalendar } from '@src/components/view/month';
 
 const chance = new Chance();
 const EVENT_CATEGORY: ScheduleCategory[] = ['milestone', 'task'];
@@ -107,22 +108,36 @@ function generateRandomEvent(calendar: CalendarData, renderStart: TZDate, render
   return event;
 }
 
-export function generateRandomEvents(viewName: ViewType, renderStart: TZDate, renderEnd: TZDate) {
+const defaultEventCount = { month: 3, week: 10, day: 4 };
+
+export function generateRandomEvents(
+  viewName: ViewType,
+  renderStart: TZDate,
+  renderEnd: TZDate,
+  eventCount?: number
+) {
   const view = viewName ?? 'week';
   const events: ScheduleData[] = [];
+  const count = eventCount ?? defaultEventCount[view];
 
   calendars.forEach((calendar) => {
-    let length = 10;
-    if (view === 'month') {
-      length = 3;
-    } else if (view === 'day') {
-      length = 4;
-    }
-    for (let i = 0; i < length; i += 1) {
+    for (let i = 0; i < count; i += 1) {
       const event = generateRandomEvent(calendar, renderStart, renderEnd);
       events.push(event);
     }
   });
 
   return events;
+}
+
+export function generateRandomScheduleViewModelsForMonth(length = defaultEventCount.month) {
+  const calendar = getMonthCalendar(new Date());
+  const data = generateRandomEvents(
+    'month',
+    calendar[0][0],
+    calendar[calendar.length - 1][6],
+    length
+  );
+
+  return data.map((event: ScheduleData) => Schedule.create(event));
 }
