@@ -11,22 +11,26 @@ import type { DayNameItem } from '@t/components/daygrid/dayNames';
 
 interface Props {
   dayNames: DayNameItem[];
-  theme?: DayNameTheme;
+  timezoneWidth?: number;
 }
 
-export const WeekDayNames: FunctionComponent<Props> = ({ dayNames = [] }) => {
+const defaultTimezoneWidth = 60;
+
+export const WeekDayNames: FunctionComponent<Props> = ({
+  dayNames = [],
+  timezoneWidth = defaultTimezoneWidth,
+}) => {
   const { state: options } = useStore('options');
-  const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options.week ?? {};
+  const {
+    narrowWeekend = false,
+    startDayOfWeek = 0,
+    workweek = false,
+    timezones = [],
+  } = options.week;
+  const marginLeft = toPx(timezones.length * timezoneWidth);
 
   const { state: theme } = useStore('theme');
-  const {
-    height,
-    paddingLeft,
-    paddingRight,
-    fontSize,
-    fontWeight,
-    textAlign,
-  } = theme.month.dayname;
+  const { height, paddingLeft, paddingRight, fontSize, fontWeight, textAlign } = theme.week.dayname;
 
   const dayNameStyle = {
     fontSize,
@@ -41,7 +45,7 @@ export const WeekDayNames: FunctionComponent<Props> = ({ dayNames = [] }) => {
 
   return (
     <div className={cls('week-dayname')}>
-      <div className={cls('week-dayname-leftmargin')} style={{ marginLeft: '100px' }}>
+      <div className={cls('week-dayname-leftmargin')} style={{ marginLeft }}>
         {dayNames.map(({ name, dayIndex }, index) => (
           <DayName
             dayname={name}
