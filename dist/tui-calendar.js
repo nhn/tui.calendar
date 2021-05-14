@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Sun May 09 2021
+ * @version 1.13.0 | Fri May 14 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -9081,7 +9081,7 @@ var mmin = Math.min;
 /**
  * Options for daily, weekly view.
  * @typedef {object} WeekOptions
- * @property {number} [startDayOfWeek=0] - The start day of week,
+ * @property {number} [startDayOfWeek=1] - The start day of week,
  * @property {Array.<string>} [daynames] - The day names in weekly and daily. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
  * @property {boolean} [workweek=false] - Show only 5 days except for weekend
@@ -9095,7 +9095,7 @@ var mmin = Math.min;
  * Options for monthly view.
  * @typedef {object} MonthOptions
  * @property {Array.<string>} [daynames] - The day names in monthly. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
- * @property {number} [startDayOfWeek=0] - The start day of week
+ * @property {number} [startDayOfWeek=1] - The start day of week
  * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
  * @property {number} [visibleWeeksCount=6] - The visible week count in monthly(0 or null are same with 6)
  * @property {boolean} [isAlways6Week=true] - Always show 6 weeks. If false, show 5 weeks or 6 weeks based on the month.
@@ -9294,12 +9294,12 @@ var mmin = Math.min;
  *     },
  *     month: {
  *         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
- *         startDayOfWeek: 0,
+ *         startDayOfWeek: 1,
  *         narrowWeekend: true
  *     },
  *     week: {
  *         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
- *         startDayOfWeek: 0,
+ *         startDayOfWeek: 1,
  *         narrowWeekend: true
  *     }
  * });
@@ -9307,7 +9307,7 @@ var mmin = Math.min;
 function Calendar(container, options) {
     options = util.extend(
         {
-            usageStatistics: true
+            usageStatistics: true,
         },
         options
     );
@@ -9341,7 +9341,7 @@ function Calendar(container, options) {
      */
     this._renderRange = {
         start: null,
-        end: null
+        end: null,
     };
 
     /**
@@ -9364,7 +9364,7 @@ function Calendar(container, options) {
      * @type {Drag}
      * @private
      */
-    this._dragHandler = new Drag({distance: 10}, this._layout.container);
+    this._dragHandler = new Drag({ distance: 10 }, this._layout.container);
 
     /**
      * current rendered view name. ('day', 'week', 'month')
@@ -9429,21 +9429,19 @@ function Calendar(container, options) {
 /**
  * destroy calendar instance.
  */
-Calendar.prototype.destroy = function() {
+Calendar.prototype.destroy = function () {
     this._dragHandler.destroy();
     this._controller.off();
     this._layout.clear();
     this._layout.destroy();
 
-    util.forEach(this._options.template, function(func, name) {
+    util.forEach(this._options.template, function (func, name) {
         if (func) {
             Handlebars.unregisterHelper(name + '-tmpl');
         }
     });
 
-    this._options = this._renderDate = this._controller
-        = this._layout = this._dragHandler = this._viewName = this._refreshMethod
-        = this._scrollToNowMethod = null;
+    this._options = this._renderDate = this._controller = this._layout = this._dragHandler = this._viewName = this._refreshMethod = this._scrollToNowMethod = null;
 };
 
 /**
@@ -9452,7 +9450,7 @@ Calendar.prototype.destroy = function() {
  * @private
  */
 // eslint-disable-next-line complexity
-Calendar.prototype._initialize = function(options) {
+Calendar.prototype._initialize = function (options) {
     var controller = this._controller,
         viewName = this._viewName;
 
@@ -9464,7 +9462,7 @@ Calendar.prototype._initialize = function(options) {
             template: util.extend(
                 {
                     allday: null,
-                    time: null
+                    time: null,
                 },
                 util.pick(options, 'template') || {}
             ),
@@ -9476,31 +9474,31 @@ Calendar.prototype._initialize = function(options) {
             timezones: options.timezone && options.timezone.zones ? options.timezone.zones : [],
             disableDblClick: false,
             disableClick: false,
-            isReadOnly: false
+            isReadOnly: false,
         },
         options
     );
 
     this._options.week = util.extend(
         {
-            startDayOfWeek: 0,
-            workweek: false
+            startDayOfWeek: 1,
+            workweek: false,
         },
         util.pick(this._options, 'week') || {}
     );
 
-    this._options.timezone = util.extend({zones: []}, util.pick(options, 'timezone') || {});
+    this._options.timezone = util.extend({ zones: [] }, util.pick(options, 'timezone') || {});
 
     this._options.month = util.extend(
         {
-            startDayOfWeek: 0,
+            startDayOfWeek: 1,
             workweek: false,
-            scheduleFilter: function(schedule) {
+            scheduleFilter: function (schedule) {
                 return (
                     Boolean(schedule.isVisible) &&
                     (schedule.category === 'allday' || schedule.category === 'time')
                 );
-            }
+            },
         },
         util.pick(options, 'month') || {}
     );
@@ -9524,11 +9522,11 @@ Calendar.prototype._initialize = function(options) {
  * @param {Options} options - calendar options
  * @private
  */
-Calendar.prototype._setAdditionalInternalOptions = function(options) {
+Calendar.prototype._setAdditionalInternalOptions = function (options) {
     var timezone = options.timezone;
     var zones, offsetCalculator;
 
-    util.forEach(options.template, function(func, name) {
+    util.forEach(options.template, function (func, name) {
         if (func) {
             Handlebars.registerHelper(name + '-tmpl', func);
         }
@@ -9536,7 +9534,7 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
 
     util.forEach(
         options.calendars || [],
-        function(calendar) {
+        function (calendar) {
             this.setCalendarColor(calendar.id, calendar, true);
         },
         this
@@ -9592,10 +9590,10 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
  *     }
  * ]);
  */
-Calendar.prototype.createSchedules = function(schedules, silent) {
+Calendar.prototype.createSchedules = function (schedules, silent) {
     util.forEach(
         schedules,
-        function(obj) {
+        function (obj) {
             this._setScheduleColor(obj.calendarId, obj);
         },
         this
@@ -9617,8 +9615,8 @@ Calendar.prototype.createSchedules = function(schedules, silent) {
  * var schedule = calendar.getSchedule(scheduleId, calendarId);
  * console.log(schedule.title);
  */
-Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
-    return this._controller.schedules.single(function(model) {
+Calendar.prototype.getSchedule = function (scheduleId, calendarId) {
+    return this._controller.schedules.single(function (model) {
         return model.id === scheduleId && model.calendarId === calendarId;
     });
 };
@@ -9637,10 +9635,10 @@ Calendar.prototype.getSchedule = function(scheduleId, calendarId) {
  *     category: 'time'
  * });
  */
-Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, silent) {
+Calendar.prototype.updateSchedule = function (scheduleId, calendarId, changes, silent) {
     var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
-        schedule = ownSchedules.single(function(model) {
+        schedule = ownSchedules.single(function (model) {
             return model.id === scheduleId && model.calendarId === calendarId;
         });
     var hasChangedCalendar = false;
@@ -9659,11 +9657,11 @@ Calendar.prototype.updateSchedule = function(scheduleId, calendarId, changes, si
     }
 };
 
-Calendar.prototype._hasChangedCalendar = function(schedule, changes) {
+Calendar.prototype._hasChangedCalendar = function (schedule, changes) {
     return schedule && changes.calendarId && schedule.calendarId !== changes.calendarId;
 };
 
-Calendar.prototype._setScheduleColor = function(calendarId, schedule) {
+Calendar.prototype._setScheduleColor = function (calendarId, schedule) {
     var calColor = this._calendarColor;
     var color = calColor[calendarId];
 
@@ -9683,10 +9681,10 @@ Calendar.prototype._setScheduleColor = function(calendarId, schedule) {
  * @param {string} calendarId - The CalendarId of the schedule to delete
  * @param {boolean} [silent=false] - No auto render after creation when set true
  */
-Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
+Calendar.prototype.deleteSchedule = function (scheduleId, calendarId, silent) {
     var ctrl = this._controller,
         ownSchedules = ctrl.schedules,
-        schedule = ownSchedules.single(function(model) {
+        schedule = ownSchedules.single(function (model) {
             return model.id === scheduleId && model.calendarId === calendarId;
         });
 
@@ -9706,18 +9704,18 @@ Calendar.prototype.deleteSchedule = function(scheduleId, calendarId, silent) {
 
 /**
  * @param {string|Date} date - The Date to show in calendar
- * @param {number} [startDayOfWeek=0] - The Start day of week
+ * @param {number} [startDayOfWeek=1] - The Start day of week
  * @param {boolean} [workweek=false] - The only show work week
  * @returns {array} render range
  * @private
  */
-Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
+Calendar.prototype._getWeekDayRange = function (date, startDayOfWeek, workweek) {
     var day;
     var start;
     var end;
     var range;
 
-    startDayOfWeek = (startDayOfWeek || 0); // eslint-disable-line
+    startDayOfWeek = startDayOfWeek || 1; // eslint-disable-line
     date = util.isDate(date) ? date : new TZDate(date);
     day = date.getDay();
 
@@ -9738,7 +9736,7 @@ Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
             datetime.MILLISECONDS_PER_DAY
         );
 
-        range = util.filter(range, function(weekday) {
+        range = util.filter(range, function (weekday) {
             return !datetime.isWeekend(weekday.getDay());
         });
 
@@ -9758,13 +9756,13 @@ Calendar.prototype._getWeekDayRange = function(date, startDayOfWeek, workweek) {
  * @param {boolean} toHide - Set true to hide schedules
  * @param {boolean} [render=true] - set true then render after change visible property each models
  */
-Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
+Calendar.prototype.toggleSchedules = function (calendarId, toHide, render) {
     var ownSchedules = this._controller.schedules;
 
     render = util.isExisty(render) ? render : true;
     calendarId = util.isArray(calendarId) ? calendarId : [calendarId];
 
-    ownSchedules.each(function(schedule) {
+    ownSchedules.each(function (schedule) {
         if (~util.inArray(schedule.calendarId, calendarId)) {
             schedule.set('isVisible', !toHide);
         }
@@ -9794,7 +9792,7 @@ Calendar.prototype.toggleSchedules = function(calendarId, toHide, render) {
  *     calendar.render();
  * });
  */
-Calendar.prototype.render = function(immediately) {
+Calendar.prototype.render = function (immediately) {
     if (this._requestRender) {
         reqAnimFrame.cancelAnimFrame(this._requestRender);
     }
@@ -9810,7 +9808,7 @@ Calendar.prototype.render = function(immediately) {
  * Render and refresh all layout and process requests.
  * @private
  */
-Calendar.prototype._renderFunc = function() {
+Calendar.prototype._renderFunc = function () {
     if (this._refreshMethod) {
         this._refreshMethod();
     }
@@ -9834,7 +9832,7 @@ Calendar.prototype._renderFunc = function() {
  * calendar.createSchedules(schedules, true);
  * calendar.render();
  */
-Calendar.prototype.clear = function(immediately) {
+Calendar.prototype.clear = function (immediately) {
     this._controller.clearSchedules();
     this.render(immediately);
 };
@@ -9849,7 +9847,7 @@ Calendar.prototype.clear = function(immediately) {
  *     }
  * }
  */
-Calendar.prototype.scrollToNow = function() {
+Calendar.prototype.scrollToNow = function () {
     if (this._scrollToNowMethod) {
         this._requestScrollToNow = true;
         // this._scrollToNowMethod() will be called at next frame rendering.
@@ -9863,7 +9861,7 @@ Calendar.prototype.scrollToNow = function() {
  *     calendar.today();
  * }
  */
-Calendar.prototype.today = function() {
+Calendar.prototype.today = function () {
     this._renderDate = datetime.start();
 
     this._setViewName(this._viewName);
@@ -9881,7 +9879,7 @@ Calendar.prototype.today = function() {
  * calendar.move(-1);
  */
 // eslint-disable-next-line complexity
-Calendar.prototype.move = function(offset) {
+Calendar.prototype.move = function (offset) {
     var renderDate = dw(datetime.start(this._renderDate)),
         viewName = this._viewName,
         view = this._getCurrentView(),
@@ -9898,7 +9896,7 @@ Calendar.prototype.move = function(offset) {
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 0;
+        startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 1;
         visibleWeeksCount = mmin(util.pick(this._options, 'month', 'visibleWeeksCount') || 0, 6);
         workweek = util.pick(this._options, 'month', 'workweek') || false;
         isAlways6Week = util.pick(this._options, 'month', 'isAlways6Week');
@@ -9908,26 +9906,26 @@ Calendar.prototype.move = function(offset) {
                 startDayOfWeek: startDayOfWeek,
                 isAlways6Week: false,
                 visibleWeeksCount: visibleWeeksCount,
-                workweek: workweek
+                workweek: workweek,
             };
 
             renderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
             tempDate = datetime.arr2dCalendar(renderDate.d, datetimeOptions);
 
-            recursiveSet(view, function(childView, opt) {
+            recursiveSet(view, function (childView, opt) {
                 opt.renderMonth = new TZDate(renderDate.d);
             });
         } else {
             datetimeOptions = {
                 startDayOfWeek: startDayOfWeek,
                 isAlways6Week: isAlways6Week,
-                workweek: workweek
+                workweek: workweek,
             };
 
             renderDate.addMonth(offset);
             tempDate = datetime.arr2dCalendar(renderDate.d, datetimeOptions);
 
-            recursiveSet(view, function(childView, opt) {
+            recursiveSet(view, function (childView, opt) {
                 opt.renderMonth = new TZDate(renderDate.d);
             });
         }
@@ -9936,19 +9934,19 @@ Calendar.prototype.move = function(offset) {
         endDate = tempDate[tempDate.length - 1][tempDate[tempDate.length - 1].length - 1];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        startDayOfWeek = util.pick(this._options, 'week', 'startDayOfWeek') || 0;
+        startDayOfWeek = util.pick(this._options, 'week', 'startDayOfWeek') || 1;
         workweek = util.pick(this._options, 'week', 'workweek') || false;
         tempDate = this._getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
 
         startDate = tempDate[0];
         endDate = tempDate[1];
 
-        recursiveSet(view, function(childView, opt) {
+        recursiveSet(view, function (childView, opt) {
             opt.renderStartDate = new TZDate(startDate);
             opt.renderEndDate = new TZDate(endDate);
 
             childView.setState({
-                collapsed: true
+                collapsed: true,
             });
         });
     } else if (viewName === 'day') {
@@ -9956,12 +9954,12 @@ Calendar.prototype.move = function(offset) {
         startDate = datetime.start(renderDate.d);
         endDate = datetime.end(renderDate.d);
 
-        recursiveSet(view, function(childView, opt) {
+        recursiveSet(view, function (childView, opt) {
             opt.renderStartDate = new TZDate(startDate);
             opt.renderEndDate = new TZDate(endDate);
 
             childView.setState({
-                collapsed: true
+                collapsed: true,
             });
         });
     }
@@ -9969,7 +9967,7 @@ Calendar.prototype.move = function(offset) {
     this._renderDate = renderDate.d;
     this._renderRange = {
         start: startDate,
-        end: endDate
+        end: endDate,
     };
 };
 
@@ -9984,7 +9982,7 @@ Calendar.prototype.move = function(offset) {
  *     }
  * });
  */
-Calendar.prototype.setDate = function(date) {
+Calendar.prototype.setDate = function (date) {
     if (util.isString(date)) {
         date = datetime.parse(date);
     }
@@ -10006,7 +10004,7 @@ Calendar.prototype.setDate = function(date) {
     }
 }
  */
-Calendar.prototype.next = function() {
+Calendar.prototype.next = function () {
     this.move(1);
     this.render();
 };
@@ -10022,7 +10020,7 @@ Calendar.prototype.next = function() {
     }
 }
  */
-Calendar.prototype.prev = function() {
+Calendar.prototype.prev = function () {
     this.move(-1);
     this.render();
 };
@@ -10032,7 +10030,7 @@ Calendar.prototype.prev = function() {
  * @returns {View} current view instance
  * @private
  */
-Calendar.prototype._getCurrentView = function() {
+Calendar.prototype._getCurrentView = function () {
     var viewName = this._viewName;
 
     if (viewName === 'day') {
@@ -10067,7 +10065,7 @@ Calendar.prototype._getCurrentView = function() {
  *     dragBgColor: '#ab4642',
  * });
  */
-Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
+Calendar.prototype.setCalendarColor = function (calendarId, option, silent) {
     var calColor = this._calendarColor,
         ownSchedules = this._controller.schedules,
         ownColor = calColor[calendarId];
@@ -10083,12 +10081,12 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
             color: '#000',
             bgColor: '#a1b56c',
             borderColor: '#a1b56c',
-            dragBgColor: '#a1b56c'
+            dragBgColor: '#a1b56c',
         },
         option
     );
 
-    ownSchedules.each(function(model) {
+    ownSchedules.each(function (model) {
         if (model.calendarId !== calendarId) {
             return;
         }
@@ -10114,7 +10112,7 @@ Calendar.prototype.setCalendarColor = function(calendarId, option, silent) {
  * @param {object} clickScheduleData - The event data of 'clickSchedule' handler
  * @private
  */
-Calendar.prototype._onClick = function(clickScheduleData) {
+Calendar.prototype._onClick = function (clickScheduleData) {
     /**
      * Fire this event when click a schedule.
      * @event Calendar#clickSchedule
@@ -10147,7 +10145,7 @@ Calendar.prototype._onClick = function(clickScheduleData) {
  * @param {object} clickMoreSchedule - The event data of 'clickMore' handler
  * @private
  */
-Calendar.prototype._onClickMore = function(clickMoreSchedule) {
+Calendar.prototype._onClickMore = function (clickMoreSchedule) {
     /**
      * Fire this event when click a schedule.
      * @event Calendar#clickMore
@@ -10168,7 +10166,7 @@ Calendar.prototype._onClickMore = function(clickMoreSchedule) {
  * @param {object} clickScheduleData - The event data of 'clickDayname' handler
  * @private
  */
-Calendar.prototype._onClickDayname = function(clickScheduleData) {
+Calendar.prototype._onClickDayname = function (clickScheduleData) {
     /**
      * Fire this event when click a day name in weekly.
      * @event Calendar#clickDayname
@@ -10190,7 +10188,7 @@ Calendar.prototype._onClickDayname = function(clickScheduleData) {
  * @param {object} createScheduleData - select schedule data from allday, time
  * @private
  */
-Calendar.prototype._onBeforeCreate = function(createScheduleData) {
+Calendar.prototype._onBeforeCreate = function (createScheduleData) {
     if (this._options.useCreationPopup && !createScheduleData.useCreationPopup) {
         if (this._showCreationPopup) {
             this._showCreationPopup(createScheduleData);
@@ -10235,7 +10233,7 @@ Calendar.prototype._onBeforeCreate = function(createScheduleData) {
  * @param {object} updateScheduleData - update {@link Schedule} data
  * @private
  */
-Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
+Calendar.prototype._onBeforeUpdate = function (updateScheduleData) {
     /**
      * Fire this event when drag a schedule to change time in daily, weekly, monthly.
      * @event Calendar#beforeUpdateSchedule
@@ -10260,7 +10258,7 @@ Calendar.prototype._onBeforeUpdate = function(updateScheduleData) {
  * @param {object} deleteScheduleData - delete schedule data
  * @private
  */
-Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
+Calendar.prototype._onBeforeDelete = function (deleteScheduleData) {
     /**
      * Fire this event when delete a schedule.
      * @event Calendar#beforeDeleteSchedule
@@ -10280,7 +10278,7 @@ Calendar.prototype._onBeforeDelete = function(deleteScheduleData) {
  * @param {Schedule} scheduleData - The schedule data
  * @private
  */
-Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
+Calendar.prototype._onAfterRenderSchedule = function (scheduleData) {
     /**
      * Fire this event by every single schedule after rendering whole calendar.
      * @event Calendar#afterRenderSchedule
@@ -10302,7 +10300,7 @@ Calendar.prototype._onAfterRenderSchedule = function(scheduleData) {
  * @param {boolean} timezonesCollapsed - timezones collapsed flag
  * @private
  */
-Calendar.prototype._onClickTimezonesCollapseBtn = function(timezonesCollapsed) {
+Calendar.prototype._onClickTimezonesCollapseBtn = function (timezonesCollapsed) {
     /**
      * Fire this event by clicking timezones collapse button
      * @event Calendar#clickTimezonesCollapseBtn
@@ -10322,29 +10320,29 @@ Calendar.prototype._onClickTimezonesCollapseBtn = function(timezonesCollapsed) {
  * @param {Week|Month} view - Weekly view or Monthly view
  * @private
  */
-Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
+Calendar.prototype._toggleViewSchedule = function (isAttach, view) {
     var self = this,
         handler = view.handler,
         method = isAttach ? 'on' : 'off';
 
-    util.forEach(handler.click, function(clickHandler) {
+    util.forEach(handler.click, function (clickHandler) {
         clickHandler[method]('clickSchedule', self._onClick, self);
     });
 
-    util.forEach(handler.dayname, function(clickHandler) {
+    util.forEach(handler.dayname, function (clickHandler) {
         clickHandler[method]('clickDayname', self._onClickDayname, self);
     });
 
-    util.forEach(handler.creation, function(creationHandler) {
+    util.forEach(handler.creation, function (creationHandler) {
         creationHandler[method]('beforeCreateSchedule', self._onBeforeCreate, self);
         creationHandler[method]('beforeDeleteSchedule', self._onBeforeDelete, self);
     });
 
-    util.forEach(handler.move, function(moveHandler) {
+    util.forEach(handler.move, function (moveHandler) {
         moveHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
     });
 
-    util.forEach(handler.resize, function(resizeHandler) {
+    util.forEach(handler.resize, function (resizeHandler) {
         resizeHandler[method]('beforeUpdateSchedule', self._onBeforeUpdate, self);
     });
 
@@ -10393,7 +10391,7 @@ Calendar.prototype._toggleViewSchedule = function(isAttach, view) {
  * calendar.changeView(calendar.getViewName(), true);
  */
 // eslint-disable-next-line complexity
-Calendar.prototype.changeView = function(newViewName, force) {
+Calendar.prototype.changeView = function (newViewName, force) {
     var self = this,
         layout = this._layout,
         controller = this._controller,
@@ -10416,7 +10414,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
     if (newViewName === 'day') {
         newViewName = 'week';
     }
-    layout.children.doWhenHas(viewName, function(view) {
+    layout.children.doWhenHas(viewName, function (view) {
         self._toggleViewSchedule(false, view);
     });
 
@@ -10436,7 +10434,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
 
     layout.addChild(created.view);
 
-    layout.children.doWhenHas(newViewName, function(view) {
+    layout.children.doWhenHas(newViewName, function (view) {
         self._toggleViewSchedule(true, view);
     });
 
@@ -10461,7 +10459,7 @@ Calendar.prototype.changeView = function(newViewName, force) {
  * // There are some milestone, task, so show those view panel.
  * calendar.toggleTaskView(true);
  */
-Calendar.prototype.toggleTaskView = function(enabled) {
+Calendar.prototype.toggleTaskView = function (enabled) {
     var viewName = this._viewName,
         options = this._options;
 
@@ -10481,7 +10479,7 @@ Calendar.prototype.toggleTaskView = function(enabled) {
  * // show those view panel.
  * calendar.toggleScheduleView(true);
  */
-Calendar.prototype.toggleScheduleView = function(enabled) {
+Calendar.prototype.toggleScheduleView = function (enabled) {
     var viewName = this._viewName,
         options = this._options;
 
@@ -10495,7 +10493,7 @@ Calendar.prototype.toggleScheduleView = function(enabled) {
  * @param {string} viewName - new view name to render
  * @private
  */
-Calendar.prototype._setViewName = function(viewName) {
+Calendar.prototype._setViewName = function (viewName) {
     this._viewName = viewName;
 };
 
@@ -10508,7 +10506,7 @@ Calendar.prototype._setViewName = function(viewName) {
  * var element = calendar.getElement(scheduleId, calendarId);
  * console.log(element);
  */
-Calendar.prototype.getElement = function(scheduleId, calendarId) {
+Calendar.prototype.getElement = function (scheduleId, calendarId) {
     var schedule = this.getSchedule(scheduleId, calendarId);
     if (schedule) {
         return document.querySelector(
@@ -10530,7 +10528,7 @@ Calendar.prototype.getElement = function(scheduleId, calendarId) {
     'month.dayname.borderBottom': '1px solid #e5e5e5' // Not valid key  will be return.
  * });
  */
-Calendar.prototype.setTheme = function(theme) {
+Calendar.prototype.setTheme = function (theme) {
     var result = this._controller.setTheme(theme);
     this.render(true);
 
@@ -10542,14 +10540,14 @@ Calendar.prototype.setTheme = function(theme) {
  * @param {Options} options - set {@link Options}
  * @param {boolean} [silent=false] - no auto render after creation when set true
  */
-Calendar.prototype.setOptions = function(options, silent) {
+Calendar.prototype.setOptions = function (options, silent) {
     util.forEach(
         options,
-        function(value, name) {
+        function (value, name) {
             if (util.isObject(value) && !util.isArray(value)) {
                 util.forEach(
                     value,
-                    function(innerValue, innerName) {
+                    function (innerValue, innerName) {
                         this._options[name][innerName] = innerValue;
                     },
                     this
@@ -10572,7 +10570,7 @@ Calendar.prototype.setOptions = function(options, silent) {
  * Get current {@link Options}.
  * @returns {Options} options
  */
-Calendar.prototype.getOptions = function() {
+Calendar.prototype.getOptions = function () {
     return this._options;
 };
 
@@ -10580,7 +10578,7 @@ Calendar.prototype.getOptions = function() {
  * Current rendered date ({@link TZDate} for further information)
  * @returns {TZDate}
  */
-Calendar.prototype.getDate = function() {
+Calendar.prototype.getDate = function () {
     return this._renderDate;
 };
 
@@ -10588,7 +10586,7 @@ Calendar.prototype.getDate = function() {
  * Start time of rendered date range ({@link TZDate} for further information)
  * @returns {TZDate}
  */
-Calendar.prototype.getDateRangeStart = function() {
+Calendar.prototype.getDateRangeStart = function () {
     return this._renderRange.start;
 };
 
@@ -10596,7 +10594,7 @@ Calendar.prototype.getDateRangeStart = function() {
  * End time of rendered date range ({@link TZDate} for further information)
  * @returns {TZDate}
  */
-Calendar.prototype.getDateRangeEnd = function() {
+Calendar.prototype.getDateRangeEnd = function () {
     return this._renderRange.end;
 };
 
@@ -10604,7 +10602,7 @@ Calendar.prototype.getDateRangeEnd = function() {
  * Get current view name('day', 'week', 'month')
  * @returns {string} view name
  */
-Calendar.prototype.getViewName = function() {
+Calendar.prototype.getViewName = function () {
     return this._viewName;
 };
 
@@ -10612,10 +10610,10 @@ Calendar.prototype.getViewName = function() {
  * Set calendar list
  * @param {Array.<CalendarProps>} calendars - {@link CalendarProps} List
  */
-Calendar.prototype.setCalendars = function(calendars) {
+Calendar.prototype.setCalendars = function (calendars) {
     util.forEach(
         calendars || [],
-        function(calendar) {
+        function (calendar) {
             this.setCalendarColor(calendar.id, calendar, true);
         },
         this
@@ -10630,7 +10628,7 @@ Calendar.prototype.setCalendars = function(calendars) {
  * Open schedule creation popup
  * @param {Schedule} schedule - The preset {@link Schedule} data
  */
-Calendar.prototype.openCreationPopup = function(schedule) {
+Calendar.prototype.openCreationPopup = function (schedule) {
     if (this._openCreationPopup) {
         this._openCreationPopup(schedule);
     }
@@ -10639,7 +10637,7 @@ Calendar.prototype.openCreationPopup = function(schedule) {
 /**
  * Hide the more view
  */
-Calendar.prototype.hideMoreView = function() {
+Calendar.prototype.hideMoreView = function () {
     if (this._hideMoreView) {
         this._hideMoreView();
     }
@@ -10654,7 +10652,7 @@ Calendar.prototype.hideMoreView = function() {
  * var timezoneName = moment.tz.guess();
  * tui.Calendar.setTimezoneOffset(moment.tz.zone(timezoneName).utcOffset(moment()));
  */
-Calendar.setTimezoneOffset = function(offset) {
+Calendar.setTimezoneOffset = function (offset) {
     tz.setOffset(offset);
 };
 
@@ -10669,7 +10667,7 @@ Calendar.setTimezoneOffset = function(offset) {
  *      return moment.tz.zone(timezoneName).utcOffset(timestamp));
  * });
  */
-Calendar.setTimezoneOffsetCallback = function(callback) {
+Calendar.setTimezoneOffsetCallback = function (callback) {
     tz.setOffsetCallback(callback);
 };
 
@@ -10717,7 +10715,7 @@ function _createMonthView(controller, container, dragHandler, options) {
  * @private
  */
 function _setOptionRecurseively(view, func) {
-    view.recursive(function(childView) {
+    view.recursive(function (childView) {
         var opt = childView.options;
 
         if (!opt) {
@@ -19402,7 +19400,7 @@ var mmin = Math.min;
  * @extends {View}
  * @param {object} options - options
  * @param {function} [options.scheduleFilter] - schedule filter
- * @param {number} [options.startDayOfWeek=0] - start day of week
+ * @param {number} [options.startDayOfWeek=1] - start day of week
  * @param {string} [options.renderMonth='2015-12'] - render month
  * @param {string[]} [options.daynames] - daynames to use upside of month view
  * @param {HTMLElement} container - container element
@@ -19425,43 +19423,56 @@ function Month(options, container, controller) {
     /**
      * @type {VLayout}
      */
-    this.vLayout = new VLayout({
-        panels: [
-            {height: parseInt(controller.theme.month.dayname.height, 10) || 42},
-            {autoHeight: true}
-        ]
-    }, container, theme);
+    this.vLayout = new VLayout(
+        {
+            panels: [
+                { height: parseInt(controller.theme.month.dayname.height, 10) || 42 },
+                { autoHeight: true },
+            ],
+        },
+        container,
+        theme
+    );
 
     /**
      * @type {string}
      */
-    this.options = util.extend({
-        scheduleFilter: function(schedule) {
-            return Boolean(schedule.isVisible);
-        },
-        startDayOfWeek: 0,
-        renderMonth: '2018-01',
-        daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        narrowWeekend: false,
-        visibleWeeksCount: null,
-        isAlways6Week: true,
-        isReadOnly: options.isReadOnly,
-        grid: {
-            header: {
-                height: 34
+    this.options = util.extend(
+        {
+            scheduleFilter: function (schedule) {
+                return Boolean(schedule.isVisible);
             },
-            footer: {
-                height: 3
-            }
-        }
-    }, monthOption);
+            startDayOfWeek: 1,
+            renderMonth: '2018-01',
+            daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            narrowWeekend: false,
+            visibleWeeksCount: null,
+            isAlways6Week: true,
+            isReadOnly: options.isReadOnly,
+            grid: {
+                header: {
+                    height: 34,
+                },
+                footer: {
+                    height: 3,
+                },
+            },
+        },
+        monthOption
+    );
 
-    this.options.grid.header = util.extend({
-        height: 34
-    }, util.pick(monthOption, 'grid', 'header'));
-    this.options.grid.footer = util.extend({
-        height: 3
-    }, util.pick(monthOption, 'grid', 'footer'));
+    this.options.grid.header = util.extend(
+        {
+            height: 34,
+        },
+        util.pick(monthOption, 'grid', 'header')
+    );
+    this.options.grid.footer = util.extend(
+        {
+            height: 3,
+        },
+        util.pick(monthOption, 'grid', 'footer')
+    );
 
     /**
      * horizontal grid information
@@ -19470,7 +19481,8 @@ function Month(options, container, controller) {
     this.grids = datetime.getGridLeftAndWidth(
         this.options.daynames.length,
         this.options.narrowWeekend,
-        this.options.startDayOfWeek);
+        this.options.startDayOfWeek
+    );
 }
 
 util.inherit(Month, View);
@@ -19486,9 +19498,9 @@ Month.prototype.viewName = 'month';
  * @param {string} renderMonth - month to render YYYY-MM, weeks2/3 to render YYYY-MM-DD
  * @returns {array.<Date[]>} calendar array
  */
-Month.prototype._getMonthCalendar = function(renderMonth) {
+Month.prototype._getMonthCalendar = function (renderMonth) {
     var date = new TZDate(renderMonth);
-    var startDayOfWeek = this.options.startDayOfWeek || 0;
+    var startDayOfWeek = this.options.startDayOfWeek || 1;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
     var workweek = this.options.workweek || false;
     var datetimeOptions, calendar;
@@ -19498,13 +19510,13 @@ Month.prototype._getMonthCalendar = function(renderMonth) {
             startDayOfWeek: startDayOfWeek,
             isAlways6Week: false,
             visibleWeeksCount: visibleWeeksCount,
-            workweek: workweek
+            workweek: workweek,
         };
     } else {
         datetimeOptions = {
             startDayOfWeek: startDayOfWeek,
             isAlways6Week: this.options.isAlways6Week,
-            workweek: workweek
+            workweek: workweek,
         };
     }
 
@@ -19519,7 +19531,7 @@ Month.prototype._getMonthCalendar = function(renderMonth) {
  * @param {array.<Date[]>} calendar - calendar array from datetime#arr2dCalendar
  * @param {Theme} theme - theme instance
  */
-Month.prototype._renderChildren = function(container, calendar, theme) {
+Month.prototype._renderChildren = function (container, calendar, theme) {
     var self = this;
     var weekCount = calendar.length;
     var heightPercent = 100 / weekCount;
@@ -19535,29 +19547,35 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
     container.innerHTML = '';
     this.children.clear();
 
-    util.forEach(calendar, function(weekArr) {
+    util.forEach(calendar, function (weekArr) {
         var start = new TZDate(weekArr[0]),
             end = new TZDate(weekArr[weekArr.length - 1]),
             weekdayViewContainer,
             weekdayView;
 
         weekdayViewContainer = domutil.appendHTMLElement(
-            'div', container, config.classname('month-week-item'));
+            'div',
+            container,
+            config.classname('month-week-item')
+        );
 
-        weekdayView = new WeekdayInMonth({
-            renderMonth: renderMonth,
-            heightPercent: heightPercent,
-            renderStartDate: start,
-            renderEndDate: end,
-            narrowWeekend: narrowWeekend,
-            startDayOfWeek: startDayOfWeek,
-            visibleWeeksCount: visibleWeeksCount,
-            visibleScheduleCount: visibleScheduleCount,
-            grid: gridOption,
-            scheduleHeight: parseInt(theme.month.schedule.height, 10),
-            scheduleGutter: parseInt(theme.month.schedule.marginTop, 10),
-            isReadOnly: isReadOnly
-        }, weekdayViewContainer);
+        weekdayView = new WeekdayInMonth(
+            {
+                renderMonth: renderMonth,
+                heightPercent: heightPercent,
+                renderStartDate: start,
+                renderEndDate: end,
+                narrowWeekend: narrowWeekend,
+                startDayOfWeek: startDayOfWeek,
+                visibleWeeksCount: visibleWeeksCount,
+                visibleScheduleCount: visibleScheduleCount,
+                grid: gridOption,
+                scheduleHeight: parseInt(theme.month.schedule.height, 10),
+                scheduleGutter: parseInt(theme.month.schedule.marginTop, 10),
+                isReadOnly: isReadOnly,
+            },
+            weekdayViewContainer
+        );
 
         self.addChild(weekdayView);
     });
@@ -19567,7 +19585,7 @@ Month.prototype._renderChildren = function(container, calendar, theme) {
  * Render month view
  * @override
  */
-Month.prototype.render = function() {
+Month.prototype.render = function () {
     var self = this,
         opt = this.options,
         vLayout = this.vLayout,
@@ -19590,26 +19608,31 @@ Month.prototype.render = function() {
 
     daynameViewModel = util.map(
         util.range(opt.startDayOfWeek, 7).concat(util.range(7)).slice(0, 7),
-        function(day, index) {
+        function (day, index) {
             return {
                 day: day,
                 label: daynames[day],
                 width: grids[index] ? grids[index].width : 0,
                 left: grids[index] ? grids[index].left : 0,
-                color: this._getDayNameColor(theme, day)
+                color: this._getDayNameColor(theme, day),
             };
         },
         this
     );
 
     if (workweek) {
-        grids = this.grids = datetime.getGridLeftAndWidth(5, opt.narrowWeekend, opt.startDayOfWeek, workweek);
+        grids = this.grids = datetime.getGridLeftAndWidth(
+            5,
+            opt.narrowWeekend,
+            opt.startDayOfWeek,
+            workweek
+        );
 
-        daynameViewModel = util.filter(daynameViewModel, function(daynameModel) {
+        daynameViewModel = util.filter(daynameViewModel, function (daynameModel) {
             return !datetime.isWeekend(daynameModel.day);
         });
 
-        util.forEach(daynameViewModel, function(daynameModel, index) {
+        util.forEach(daynameViewModel, function (daynameModel, index) {
             daynameModel.width = grids[index] ? grids[index].width : 0;
             daynameModel.left = grids[index] ? grids[index].left : 0;
         });
@@ -19617,7 +19640,7 @@ Month.prototype.render = function() {
 
     baseViewModel = {
         daynames: daynameViewModel,
-        styles: styles
+        styles: styles,
     };
 
     vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
@@ -19626,7 +19649,7 @@ Month.prototype.render = function() {
 
     baseViewModel.panelHeight = vLayout.panels[1].getHeight();
 
-    this.children.each(function(childView) {
+    this.children.each(function (childView) {
         var start = datetime.start(childView.options.renderStartDate);
         var end = datetime.start(childView.options.renderEndDate);
         var eventsInDateRange = controller.findByDateRange(
@@ -19637,13 +19660,14 @@ Month.prototype.render = function() {
         var dateRange = datetime.range(
             datetime.start(start),
             datetime.end(end),
-            datetime.MILLISECONDS_PER_DAY);
+            datetime.MILLISECONDS_PER_DAY
+        );
         var viewModel = {
             eventsInDateRange: eventsInDateRange,
             range: dateRange.slice(0, grids.length),
             grids: grids,
             panelHeight: baseViewModel.panelHeight,
-            theme: theme
+            theme: theme,
         };
 
         childView.render(viewModel);
@@ -19657,16 +19681,16 @@ Month.prototype.render = function() {
  * @param {Array} matrices - schedule matrices from view model
  * @fires Month#afterRenderSchedule
  */
-Month.prototype._invokeAfterRenderSchedule = function(matrices) {
+Month.prototype._invokeAfterRenderSchedule = function (matrices) {
     var self = this;
-    util.forEachArray(matrices, function(matrix) {
-        util.forEachArray(matrix, function(column) {
-            util.forEachArray(column, function(scheduleViewModel) {
+    util.forEachArray(matrices, function (matrix) {
+        util.forEachArray(matrix, function (column) {
+            util.forEachArray(column, function (scheduleViewModel) {
                 if (scheduleViewModel && !scheduleViewModel.hidden) {
                     /**
                      * @event Month#afterRenderSchedule
                      */
-                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+                    self.fire('afterRenderSchedule', { schedule: scheduleViewModel.model });
                 }
             });
         });
@@ -19678,7 +19702,7 @@ Month.prototype._invokeAfterRenderSchedule = function(matrices) {
  * @param {Theme} theme - theme instance
  * @returns {object} styles - styles object
  */
-Month.prototype._getStyles = function(theme) {
+Month.prototype._getStyles = function (theme) {
     var styles = {};
     var dayname;
 
@@ -19705,7 +19729,7 @@ Month.prototype._getStyles = function(theme) {
  * @param {number} day - day number
  * @returns {string} style - color style
  */
-Month.prototype._getDayNameColor = function(theme, day) {
+Month.prototype._getDayNameColor = function (theme, day) {
     var color = '';
 
     if (theme) {
@@ -26312,20 +26336,25 @@ function Week(controller, options, container, panels, viewName) {
     /**
      * @type {object} Options for view.
      */
-    this.options = util.extend({
-        scheduleFilter: [function(schedule) {
-            return Boolean(schedule.isVisible);
-        }],
-        renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
-        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
-        narrowWeekend: false,
-        startDayOfWeek: 0,
-        workweek: false,
-        showTimezoneCollapseButton: false,
-        timezonesCollapsed: false,
-        hourStart: 0,
-        hourEnd: 24
-    }, options);
+    this.options = util.extend(
+        {
+            scheduleFilter: [
+                function (schedule) {
+                    return Boolean(schedule.isVisible);
+                },
+            ],
+            renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
+            renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
+            narrowWeekend: false,
+            startDayOfWeek: 1,
+            workweek: false,
+            showTimezoneCollapseButton: false,
+            timezonesCollapsed: false,
+            hourStart: 0,
+            hourEnd: 24,
+        },
+        options
+    );
 
     /**
      * Week controller mixin.
@@ -26344,7 +26373,7 @@ function Week(controller, options, container, panels, viewName) {
      * @type {object}
      */
     this.state = {
-        timezonesCollapsed: this.options.timezonesCollapsed
+        timezonesCollapsed: this.options.timezonesCollapsed,
     };
 
     if (viewName === 'day') {
@@ -26363,7 +26392,7 @@ util.inherit(Week, View);
  * @fires Week#afterRender
  * @override
  */
-Week.prototype.render = function() {
+Week.prototype.render = function () {
     var self = this,
         options = this.options,
         scheduleFilter = options.scheduleFilter,
@@ -26384,7 +26413,7 @@ Week.prototype.render = function() {
     );
 
     if (options.workweek && datetime.compare(renderStartDate, renderEndDate)) {
-        range = util.filter(range, function(date) {
+        range = util.filter(range, function (date) {
             return !datetime.isWeekend(date.getDay());
         });
 
@@ -26400,12 +26429,7 @@ Week.prototype.render = function() {
         this.options
     );
 
-    grids = datetime.getGridLeftAndWidth(
-        range.length,
-        narrowWeekend,
-        startDayOfWeek,
-        workweek
-    );
+    grids = datetime.getGridLeftAndWidth(range.length, narrowWeekend, startDayOfWeek, workweek);
 
     viewModel = {
         schedulesInDateRange: schedulesInDateRange,
@@ -26414,10 +26438,10 @@ Week.prototype.render = function() {
         grids: grids,
         range: range,
         theme: theme,
-        state: state
+        state: state,
     };
 
-    this.children.each(function(childView) {
+    this.children.each(function (childView) {
         var matrices;
         var viewName = util.pick(childView.options, 'viewName');
         childView.render(viewModel);
@@ -26428,7 +26452,7 @@ Week.prototype.render = function() {
             if (util.isArray(matrices)) {
                 self._invokeAfterRenderSchedule(matrices);
             } else {
-                util.forEach(matrices, function(matricesOfDay) {
+                util.forEach(matrices, function (matricesOfDay) {
                     self._invokeAfterRenderSchedule(matricesOfDay);
                 });
             }
@@ -26446,16 +26470,16 @@ Week.prototype.render = function() {
  * @param {Array} matrices - schedule matrices from view model
  * @fires Week#afterRenderSchedule
  */
-Week.prototype._invokeAfterRenderSchedule = function(matrices) {
+Week.prototype._invokeAfterRenderSchedule = function (matrices) {
     var self = this;
-    util.forEachArray(matrices, function(matrix) {
-        util.forEachArray(matrix, function(column) {
-            util.forEachArray(column, function(scheduleViewModel) {
+    util.forEachArray(matrices, function (matrix) {
+        util.forEachArray(matrix, function (column) {
+            util.forEachArray(column, function (scheduleViewModel) {
                 if (scheduleViewModel) {
                     /**
                      * @event Week#afterRenderSchedule
                      */
-                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+                    self.fire('afterRenderSchedule', { schedule: scheduleViewModel.model });
                 }
             });
         });
@@ -26473,7 +26497,7 @@ Week.prototype.viewName = 'week';
  * @param {Date} baseDate base date.
  * @returns {object} date range.
  */
-Week.prototype._getRenderDateRange = function(baseDate) {
+Week.prototype._getRenderDateRange = function (baseDate) {
     var base = datetime.start(baseDate),
         start = new TZDate(Number(base)),
         end = new TZDate(Number(base));
@@ -26483,7 +26507,7 @@ Week.prototype._getRenderDateRange = function(baseDate) {
 
     return {
         start: start,
-        end: end
+        end: end,
     };
 };
 
@@ -26546,7 +26570,7 @@ function Weekday(options, container) {
             scheduleHeight: 18,
             scheduleGutter: 2,
             narrowWeekend: false,
-            startDayOfWeek: 0,
+            startDayOfWeek: 1,
             workweek: false,
         },
         options

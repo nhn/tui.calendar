@@ -34,7 +34,7 @@ function Weekday(options, container) {
             scheduleHeight: 18,
             scheduleGutter: 2,
             narrowWeekend: false,
-            startDayOfWeek: 0,
+            startDayOfWeek: 1,
             workweek: false,
         },
         options
