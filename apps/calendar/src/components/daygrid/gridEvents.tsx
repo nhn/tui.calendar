@@ -2,10 +2,8 @@ import { h, FunctionComponent } from 'preact';
 
 import GridEvent from '@src/components/events/gridEvent';
 
-import { EVENT_HEIGHT } from '@src/event/panelEvent';
 import TZDate from '@src/time/date';
-import { isWithinHeight } from '@src/util/event';
-import { cls } from '@src/util/cssHelper';
+import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 interface Props {

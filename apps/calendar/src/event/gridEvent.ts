@@ -1,9 +1,9 @@
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { PanelState } from '@src/components/layout';
-import { getGridStyleInfo, getWidth, TOTAL_WIDTH } from '@src/event/panelEvent';
 import { toStartOfDay } from '@src/time/datetime';
 
 import type { Cells } from '@t/panel';
+import { getGridWidthAndLeftPercentValues, getWidth, TOTAL_WIDTH } from '@src/util/gridHelper';
 
 const setRenderInfo = (
   viewModel: ScheduleViewModel,
@@ -90,7 +90,7 @@ export const setViewModelsInfo = (
   const { narrowWeekend = false } = options;
 
   const matrices = getMatrices(viewModels);
-  const { widthList } = getGridStyleInfo(cells, narrowWeekend, TOTAL_WIDTH);
+  const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
 
   matrices.forEach((matrix, top) => {
     matrix.forEach((viewModel) => {
@@ -98,64 +98,3 @@ export const setViewModelsInfo = (
     });
   });
 };
-
-const getSchedulePosition = (
-  viewModel: ScheduleViewModel,
-  cells: Cells,
-  widthList: number[],
-  top: number
-) => {
-  const modelStart = viewModel.getStarts();
-  const modelEnd = viewModel.getEnds();
-  let gridStartIndex = 0;
-  let gridEndIndex = cells.length - 1;
-
-  cells.forEach((cell, index) => {
-    if (cell <= modelStart) {
-      gridStartIndex = index;
-    }
-    if (cell <= modelEnd) {
-      gridEndIndex = index;
-    }
-  });
-
-  const left = !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1);
-
-  let exceedRight = true;
-  cells.forEach((cell) => {
-    const modelEndDate = toStartOfDay(modelEnd).getDate();
-    const gridDate = toStartOfDay(cell).getDate();
-
-    if (modelEndDate === gridDate) {
-      exceedRight = false;
-    }
-  });
-
-  return {
-    width: getWidth(widthList, gridStartIndex, gridEndIndex),
-    left,
-    top,
-    exceedRight,
-  };
-};
-
-export function getRenderViewModel(
-  viewModel: ScheduleViewModel,
-  cells: Cells,
-  narrowWeekend = false
-): ScheduleViewModel {
-  const { widthList } = getGridStyleInfo(cells, narrowWeekend, TOTAL_WIDTH);
-  const { width, left, top, exceedRight } = getSchedulePosition(
-    viewModel,
-    cells,
-    widthList,
-    viewModel.top
-  );
-
-  viewModel.width = width;
-  viewModel.left = left;
-  viewModel.top = top;
-  viewModel.exceedRight = exceedRight;
-
-  return viewModel;
-}

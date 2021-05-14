@@ -3,20 +3,19 @@ import { useContext, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import {
-  EVENT_HEIGHT,
-  getGridStyleInfo,
-  getViewModels,
-  isInGrid,
-  TOTAL_WIDTH,
-} from '@src/event/panelEvent';
+import { getViewModels } from '@src/event/panelEvent';
 import { setViewModelsInfo } from '@src/event/gridEvent';
 import Schedule from '@src/model/schedule';
 import { toStartOfDay } from '@src/time/datetime';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { PanelActionType, PanelState, PanelStore } from '@src/components/layout';
 
 import type { Cells } from '@t/panel';
+import {
+  EVENT_HEIGHT,
+  getExceedCount,
+  getGridWidthAndLeftPercentValues,
+  TOTAL_WIDTH,
+} from '@src/util/gridHelper';
 
 const DEFAULT_GRID_STYLE = {
   borderRight: '1px solid #ddd',
@@ -42,10 +41,6 @@ interface CollapseButtonProps {
   isClickedIndex: boolean;
   onClick: () => void;
 }
-
-const isExceededHeight = (panelHeight: number, eventHeight: number) => {
-  return ({ top }: ScheduleViewModel) => panelHeight < (top + 1) * eventHeight;
-};
 
 const ExceedCount: FunctionComponent<ExceedCountProps> = ({
   index,
@@ -114,16 +109,19 @@ export const PanelGrid: FunctionComponent<Props> = ({
     });
   };
 
-  const { widthList, leftList } = getGridStyleInfo(cells, narrowWeekend, TOTAL_WIDTH);
+  const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+    cells,
+    narrowWeekend,
+    TOTAL_WIDTH
+  );
 
   const gridCells = cells.map((cell, index) => {
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
     const gridDate = toStartOfDay(cell);
-    const exceedCount = viewModels
-      .filter(isExceededHeight(panelHeight, EVENT_HEIGHT))
-      .filter(isInGrid(gridDate)).length;
+
+    const exceedCount = getExceedCount(viewModels, panelHeight, EVENT_HEIGHT, gridDate);
     const isClickedIndex = index === clickedIndex;
 
     return (

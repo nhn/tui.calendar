@@ -11,18 +11,55 @@ interface GridEventProps {
   flat?: boolean;
 }
 
-const GridEvent: FunctionComponent<GridEventProps> = ({
-  viewModel,
-  eventHeight,
-  cellTopHeight,
-  flat = false,
-}) => {
+function getExceedClassName(exceedLeft: boolean, exceedRight: boolean) {
+  const className = [];
+
+  if (exceedLeft) {
+    className.push(cls('weekday-exceed-left'));
+  }
+
+  if (exceedRight) {
+    className.push(cls('weekday-exceed-right'));
+  }
+
+  return className.join(' ');
+}
+
+function getEventItemStyle({
+  flat,
+  bgColor,
+  borderColor,
+  exceedLeft,
+  exceedRight,
+}: EventItemStyleParam) {
+  const defualtItemStyle = {
+    color: '#333',
+    backgroundColor: bgColor,
+    borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
+    borderRadius: exceedLeft ? 0 : 2,
+    overflow: 'hidden',
+  };
+
+  return flat
+    ? {
+        marginTop: 5,
+        ...defualtItemStyle,
+      }
+    : {
+        marginLeft: exceedLeft ? 0 : 8,
+        marginRight: exceedRight ? 0 : 8,
+        ...defualtItemStyle,
+      };
+}
+
+function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridEventProps) {
   const {
     width,
     left,
     top,
+    exceedLeft,
     exceedRight,
-    model: { title, bgColor, borderColor },
+    model: { bgColor, borderColor },
   } = viewModel;
 
   const blockStyle = flat
@@ -34,34 +71,28 @@ const GridEvent: FunctionComponent<GridEventProps> = ({
         position: 'absolute',
       };
 
-  // @TODO: 테마 적용
-  const eventItemStyle = flat
-    ? {
-        color: '#333',
-        marginTop: 2,
-        marginBottom: 2,
-        backgroundColor: bgColor,
-        borderLeft: `3px solid ${borderColor}`,
-        borderRadius: 2,
-        overflow: 'hidden',
-      }
-    : {
-        color: '#333',
-        marginLeft: 8,
-        marginRight: 8,
-        backgroundColor: bgColor,
-        borderLeft: `3px solid ${borderColor}`,
-        borderRadius: 2,
-        overflow: 'hidden',
-      };
+  const eventItemStyle = getEventItemStyle({ flat, exceedLeft, exceedRight, bgColor, borderColor });
 
   const resizeIconStyle = {
     lineHeight: toPx(18),
   };
 
-  const dayEventBlockClassName = `${cls('weekday-event-block')} ${cls(
-    exceedRight ? 'weekday-exceed-right' : ''
+  const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
+    exceedLeft,
+    exceedRight
   )}`;
+
+  return { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle };
+}
+
+const GridEvent: FunctionComponent<GridEventProps> = (props) => {
+  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = useStyle(props);
+
+  const {
+    viewModel: {
+      model: { title },
+    },
+  } = props;
 
   // @TODO: 일정 타이틀 템플릿 적용
   return (

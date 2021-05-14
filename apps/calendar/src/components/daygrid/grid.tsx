@@ -6,12 +6,13 @@ import { getGridLeftAndWidth, toFormat, toStartOfDay } from '@src/time/datetime'
 import { toPercent, toPx } from '@src/util/units';
 import TZDate from '@src/time/date';
 import { useRef } from 'preact/hooks';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { EVENT_HEIGHT } from '@src/event/panelEvent';
 import { CSSValue } from '@t/components/daygrid/cell';
+import { EVENT_HEIGHT } from '@src/util/gridHelper';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+
 interface GridProps {
   cssHeight?: CSSValue;
-  gridModels?: Record<string, ScheduleViewModel[]>;
+  gridDateEventModelMap?: Record<string, ScheduleViewModel[]>;
   narrowWeekend?: boolean;
   startDayOfWeek?: number;
   workweek?: boolean;
@@ -30,7 +31,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
     workweek = false,
     calendar,
     appContainer,
-    gridModels = {},
+    gridDateEventModelMap = {},
     eventHeight = EVENT_HEIGHT,
     height = 0,
   } = props;
@@ -61,7 +62,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
             }}
             parentContainer={container.current}
             appContainer={appContainer.current}
-            events={gridModels[YMD]}
+            events={gridDateEventModelMap[YMD]}
             eventHeight={eventHeight}
             height={height}
           />

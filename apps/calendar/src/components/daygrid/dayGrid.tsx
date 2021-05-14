@@ -1,4 +1,7 @@
 import { h, FunctionComponent, Fragment } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
+
+import { useStore } from '@src/components/hooks/store';
 
 import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
@@ -7,15 +10,9 @@ import { toPercent } from '@src/util/units';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { CalendarMonthOption } from '@t/store';
-import { DataStore } from '@src/model';
-import { findByDateRange } from '@src/controller/month';
-import { getRenderViewModel } from '@src/event/gridEvent';
-import { EVENT_HEIGHT } from '@src/event/panelEvent';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { useStore } from '../hooks/store';
-import { useEffect, useRef, useState } from 'preact/hooks';
 import { getSize } from '@src/util/domutil';
 import { cls } from '@src/util/cssHelper';
+import { EVENT_HEIGHT, getRenderedEventViewModels } from '@src/util/gridHelper';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
@@ -24,40 +21,6 @@ interface DayGridProps {
   calendar: TZDate[][];
   appContainer: { current: HTMLDivElement };
   events?: Schedule[];
-}
-
-function renderEvents(cells: TZDate[], dataStore: DataStore, narrowWeekend: boolean) {
-  const { idsOfDay } = dataStore;
-  const eventViewModels = findByDateRange(dataStore, {
-    start: cells[0],
-    end: cells[cells.length - 1],
-  });
-  const data: Record<number, ScheduleViewModel> = [];
-
-  eventViewModels.forEach((matrix) => {
-    matrix.forEach((row) => {
-      row.forEach((viewModel) => {
-        const cid = viewModel.model.cid();
-        data[cid] = getRenderViewModel(viewModel, cells, narrowWeekend);
-      });
-    });
-  });
-
-  const gridModels = Object.keys(idsOfDay).reduce<Record<string, ScheduleViewModel[]>>(
-    (acc, ymd) => {
-      const ids = idsOfDay[ymd];
-
-      acc[ymd] = ids.map((cid) => data[cid]).filter((vm) => !!vm);
-
-      return acc;
-    },
-    {}
-  );
-
-  return {
-    viewModels: Object.values(data),
-    gridModels,
-  };
 }
 
 const DayGrid: FunctionComponent<DayGridProps> = (props) => {
@@ -81,7 +44,11 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   return (
     <Fragment>
       {calendar.map((week, index) => {
-        const { viewModels, gridModels } = renderEvents(week, dataStore, narrowWeekend);
+        const { viewModels, gridDateEventModelMap } = getRenderedEventViewModels(
+          week,
+          dataStore,
+          narrowWeekend
+        );
 
         return (
           <div
@@ -93,7 +60,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
             <div className={cls('weekday')}>
               <Grid
                 cssHeight={toPercent(TOTAL_PERCENT_HEIGHT)}
-                gridModels={gridModels}
+                gridDateEventModelMap={gridDateEventModelMap}
                 workweek={workweek}
                 startDayOfWeek={startDayOfWeek}
                 narrowWeekend={narrowWeekend}

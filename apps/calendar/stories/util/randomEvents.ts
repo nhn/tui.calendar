@@ -4,7 +4,7 @@ import TZDate from '@src/time/date';
 import { ScheduleData, ViewType, CalendarData } from '@src/model';
 import { calendars } from '@stories/util/mockCalendars';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
-import { getMonthCalendar } from '@src/components/view/month';
+import { getMonthCalendar } from '@src/time/datetime';
 
 const chance = new Chance();
 const EVENT_CATEGORY: ScheduleCategory[] = ['milestone', 'task'];
@@ -131,7 +131,7 @@ export function generateRandomEvents(
 }
 
 export function generateRandomScheduleViewModelsForMonth(length = defaultEventCount.month) {
-  const calendar = getMonthCalendar(new Date());
+  const calendar = getMonthCalendar(new Date(), {});
   const data = generateRandomEvents(
     'month',
     calendar[0][0],

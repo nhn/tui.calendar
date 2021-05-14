@@ -1,21 +1,22 @@
 import { h, FunctionComponent } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { cls } from '@src/util/cssHelper';
 import { useActions, useStore } from '@src/components/hooks/store';
+import CellBar from '@src/components/daygrid/cellBar';
+
+import { cls } from '@src/util/cssHelper';
 import { PopupType } from '@src/modules/layerPopup';
 import TZDate from '@src/time/date';
 import { getPosition, getSize } from '@src/util/domutil';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
 import { Day, toStartOfDay } from '@src/time/datetime';
-import CellBar from '@src/components/daygrid/cellBar';
-import { PopupRect } from '@t/store';
 import { toPercent } from '@src/util/units';
 import { getMousePosition } from '@src/util/domEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { getExceedCount } from '@src/util/event';
-import { EVENT_HEIGHT } from '@src/event/panelEvent';
+import { EVENT_HEIGHT, getExceedCount } from '@src/util/gridHelper';
+
+import { PopupRect } from '@t/store';
 import {
   CSSValue,
   SeeMoreOptions,

@@ -7,7 +7,7 @@ import range from 'tui-code-snippet/array/range';
 import inArray from 'tui-code-snippet/array/inArray';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import TZDate from '@src/time/date';
-import { TimeUnit } from '@src/model';
+import { MonthOption, TimeUnit } from '@src/model';
 
 export enum Day {
   SUN,
@@ -776,4 +776,22 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   const _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
   return Math.round((_d1 - _d2) / MILLISECONDS_PER_DAY);
+}
+
+export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
+  const date = new TZDate(renderMonthDate);
+  const {
+    startDayOfWeek = 0,
+    visibleWeeksCount = 0,
+    workweek = false,
+    isAlways6Week = true,
+  } = options;
+  const weekCount = Math.min(visibleWeeksCount, 6);
+
+  return arr2dCalendar(date, {
+    startDayOfWeek,
+    workweek,
+    isAlways6Week: visibleWeeksCount ? false : isAlways6Week,
+    visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
+  });
 }
