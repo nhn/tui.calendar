@@ -42,13 +42,13 @@ const calendar = new Calendar(querySelectorEl, {
         },
     },
     week: {
-        startDayOfWeek: 1,
+        startDayOfWeek: 0,
         narrowWeekend: true,
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     },
     month: {
         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        startDayOfWeek: 1,
+        startDayOfWeek: 0,
         visibleWeeksCount: 6,
         isAlways6Week: true,
         workweek: true,

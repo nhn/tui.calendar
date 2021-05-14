@@ -20,7 +20,7 @@ var mmin = Math.min;
  * @extends {View}
  * @param {object} options - options
  * @param {function} [options.scheduleFilter] - schedule filter
- * @param {number} [options.startDayOfWeek=1] - start day of week
+ * @param {number} [options.startDayOfWeek=0] - start day of week
  * @param {string} [options.renderMonth='2015-12'] - render month
  * @param {string[]} [options.daynames] - daynames to use upside of month view
  * @param {HTMLElement} container - container element
@@ -62,7 +62,7 @@ function Month(options, container, controller) {
             scheduleFilter: function (schedule) {
                 return Boolean(schedule.isVisible);
             },
-            startDayOfWeek: 1,
+            startDayOfWeek: 0,
             renderMonth: '2018-01',
             daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             narrowWeekend: false,
@@ -120,7 +120,7 @@ Month.prototype.viewName = 'month';
  */
 Month.prototype._getMonthCalendar = function (renderMonth) {
     var date = new TZDate(renderMonth);
-    var startDayOfWeek = this.options.startDayOfWeek || 1;
+    var startDayOfWeek = this.options.startDayOfWeek || 0;
     var visibleWeeksCount = mmin(this.options.visibleWeeksCount || 0, 6);
     var workweek = this.options.workweek || false;
     var datetimeOptions, calendar;

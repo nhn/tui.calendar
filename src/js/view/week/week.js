@@ -49,7 +49,7 @@ function Week(controller, options, container, panels, viewName) {
             renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
             renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
             narrowWeekend: false,
-            startDayOfWeek: 1,
+            startDayOfWeek: 0,
             workweek: false,
             showTimezoneCollapseButton: false,
             timezonesCollapsed: false,
