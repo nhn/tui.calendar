@@ -9,7 +9,6 @@ import TZDate from '@src/time/date';
 import { DateType, ScheduleData } from '@src/model';
 import { stamp } from '@src/util';
 import {
-  MILLISECONDS_SCHEDULE_MIN_DURATION,
   parse,
   toEndOfDay,
   toStartOfDay,
@@ -18,9 +17,7 @@ import {
   MILLISECONDS_PER_DAY,
 } from '@src/time/datetime';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-
-const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
-
+import { collidesWith } from '@src/util/events';
 /**
  * Schedule category
  * @readonly
@@ -386,47 +383,29 @@ export default class Schedule {
     return duration;
   }
 
+  valueOf() {
+    return this;
+  }
+
   /**
    * Returns true if the given Schedule coincides with the same time as the
    * calling Schedule.
    * @param {Schedule} schedule The other schedule to compare with this Schedule.
    * @returns {boolean} If the other schedule occurs within the same time as the first object.
    */
-  // eslint-disable-next-line complexity
   collidesWith(schedule: Schedule | ScheduleViewModel): boolean {
     schedule = schedule instanceof ScheduleViewModel ? schedule.model : schedule;
 
-    let ownStarts = Number(this.getStarts());
-    let ownEnds = Number(this.getEnds());
-    let start = Number(schedule.getStarts());
-    let end = Number(schedule.getEnds());
-    const ownGoingDuration = millisecondsFrom('minute', this.goingDuration);
-    const ownComingDuration = millisecondsFrom('minute', this.comingDuration);
-    const goingDuration = millisecondsFrom('minute', schedule.goingDuration);
-    const comingDuration = millisecondsFrom('minute', schedule.comingDuration);
-
-    if (Math.abs(ownEnds - ownStarts) < SCHEDULE_MIN_DURATION) {
-      ownEnds += SCHEDULE_MIN_DURATION;
-    }
-
-    if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
-      end += SCHEDULE_MIN_DURATION;
-    }
-
-    ownStarts -= ownGoingDuration;
-    ownEnds += ownComingDuration;
-    start -= goingDuration;
-    end += comingDuration;
-
-    if (
-      (start > ownStarts && start < ownEnds) ||
-      (end > ownStarts && end < ownEnds) ||
-      (start <= ownStarts && end >= ownEnds)
-    ) {
-      return true;
-    }
-
-    return false;
+    return collidesWith({
+      start: Number(this.getStarts()),
+      end: Number(this.getEnds()),
+      targetStart: Number(schedule.getStarts()),
+      targetEnd: Number(schedule.getEnds()),
+      goingDuration: this.goingDuration,
+      comingDuration: this.comingDuration,
+      targetGoingDuration: schedule.goingDuration,
+      targetComingDuration: schedule.comingDuration,
+    });
   }
 }
 
