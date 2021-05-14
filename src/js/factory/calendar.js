@@ -329,7 +329,7 @@ var mmin = Math.min;
 /**
  * Options for daily, weekly view.
  * @typedef {object} WeekOptions
- * @property {number} [startDayOfWeek=1] - The start day of week,
+ * @property {number} [startDayOfWeek=0] - The start day of week,
  * @property {Array.<string>} [daynames] - The day names in weekly and daily. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
  * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
  * @property {boolean} [workweek=false] - Show only 5 days except for weekend
@@ -343,7 +343,7 @@ var mmin = Math.min;
  * Options for monthly view.
  * @typedef {object} MonthOptions
  * @property {Array.<string>} [daynames] - The day names in monthly. Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
- * @property {number} [startDayOfWeek=1] - The start day of week
+ * @property {number} [startDayOfWeek=0] - The start day of week
  * @property {boolean} [narrowWeekend=false] - Make weekend column narrow(1/2 width)
  * @property {number} [visibleWeeksCount=6] - The visible week count in monthly(0 or null are same with 6)
  * @property {boolean} [isAlways6Week=true] - Always show 6 weeks. If false, show 5 weeks or 6 weeks based on the month.
@@ -542,12 +542,12 @@ var mmin = Math.min;
  *     },
  *     month: {
  *         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
- *         startDayOfWeek: 1,
+ *         startDayOfWeek: 0,
  *         narrowWeekend: true
  *     },
  *     week: {
  *         daynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
- *         startDayOfWeek: 1,
+ *         startDayOfWeek: 0,
  *         narrowWeekend: true
  *     }
  * });
@@ -729,7 +729,7 @@ Calendar.prototype._initialize = function (options) {
 
     this._options.week = util.extend(
         {
-            startDayOfWeek: 1,
+            startDayOfWeek: 0,
             workweek: false,
         },
         util.pick(this._options, 'week') || {}
@@ -739,7 +739,7 @@ Calendar.prototype._initialize = function (options) {
 
     this._options.month = util.extend(
         {
-            startDayOfWeek: 1,
+            startDayOfWeek: 0,
             workweek: false,
             scheduleFilter: function (schedule) {
                 return (
@@ -952,7 +952,7 @@ Calendar.prototype.deleteSchedule = function (scheduleId, calendarId, silent) {
 
 /**
  * @param {string|Date} date - The Date to show in calendar
- * @param {number} [startDayOfWeek=1] - The Start day of week
+ * @param {number} [startDayOfWeek=0] - The Start day of week
  * @param {boolean} [workweek=false] - The only show work week
  * @returns {array} render range
  * @private
@@ -963,7 +963,7 @@ Calendar.prototype._getWeekDayRange = function (date, startDayOfWeek, workweek) 
     var end;
     var range;
 
-    startDayOfWeek = startDayOfWeek || 1; // eslint-disable-line
+    startDayOfWeek = startDayOfWeek || 0; // eslint-disable-line
     date = util.isDate(date) ? date : new TZDate(date);
     day = date.getDay();
 
@@ -1144,7 +1144,7 @@ Calendar.prototype.move = function (offset) {
     offset = util.isExisty(offset) ? offset : 0;
 
     if (viewName === 'month') {
-        startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 1;
+        startDayOfWeek = util.pick(this._options, 'month', 'startDayOfWeek') || 0;
         visibleWeeksCount = mmin(util.pick(this._options, 'month', 'visibleWeeksCount') || 0, 6);
         workweek = util.pick(this._options, 'month', 'workweek') || false;
         isAlways6Week = util.pick(this._options, 'month', 'isAlways6Week');
@@ -1182,7 +1182,7 @@ Calendar.prototype.move = function (offset) {
         endDate = tempDate[tempDate.length - 1][tempDate[tempDate.length - 1].length - 1];
     } else if (viewName === 'week') {
         renderDate.addDate(offset * 7);
-        startDayOfWeek = util.pick(this._options, 'week', 'startDayOfWeek') || 1;
+        startDayOfWeek = util.pick(this._options, 'week', 'startDayOfWeek') || 0;
         workweek = util.pick(this._options, 'week', 'workweek') || false;
         tempDate = this._getWeekDayRange(renderDate.d, startDayOfWeek, workweek);
 

@@ -220,7 +220,7 @@ describe('datetime', function () {
 
     describe('arr2dCalendar()', function () {
         var options = {
-            startDayOfWeek: 1,
+            startDayOfWeek: 0,
             isAlways6Week: false,
         };
 
