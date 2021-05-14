@@ -65,7 +65,7 @@ function _adjustRenderRange(
 ) {
   viewModelColl.each((viewModel) => {
     if (viewModel.model.isAllDay || viewModel.model.hasMultiDates) {
-      limitRenderRange(start, end, viewModel);
+      limitRenderRange(toStartOfDay(start), toEndOfDay(end), viewModel);
     }
   });
 }
@@ -205,6 +205,7 @@ export function findByDateRange(
 
   const collisionGroup = getCollisionGroup(vList);
   const matrices = getMatrices(viewModelColl, collisionGroup);
+
   positionViewModels(start, end, matrices, _weightTopValue);
 
   if (alldayFirstMode) {
