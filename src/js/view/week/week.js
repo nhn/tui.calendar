@@ -39,20 +39,25 @@ function Week(controller, options, container, panels, viewName) {
     /**
      * @type {object} Options for view.
      */
-    this.options = util.extend({
-        scheduleFilter: [function(schedule) {
-            return Boolean(schedule.isVisible);
-        }],
-        renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
-        renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
-        narrowWeekend: false,
-        startDayOfWeek: 0,
-        workweek: false,
-        showTimezoneCollapseButton: false,
-        timezonesCollapsed: false,
-        hourStart: 0,
-        hourEnd: 24
-    }, options);
+    this.options = util.extend(
+        {
+            scheduleFilter: [
+                function (schedule) {
+                    return Boolean(schedule.isVisible);
+                },
+            ],
+            renderStartDate: datetime.format(range.start, 'YYYY-MM-DD'),
+            renderEndDate: datetime.format(range.end, 'YYYY-MM-DD'),
+            narrowWeekend: false,
+            startDayOfWeek: 1,
+            workweek: false,
+            showTimezoneCollapseButton: false,
+            timezonesCollapsed: false,
+            hourStart: 0,
+            hourEnd: 24,
+        },
+        options
+    );
 
     /**
      * Week controller mixin.
@@ -71,7 +76,7 @@ function Week(controller, options, container, panels, viewName) {
      * @type {object}
      */
     this.state = {
-        timezonesCollapsed: this.options.timezonesCollapsed
+        timezonesCollapsed: this.options.timezonesCollapsed,
     };
 
     if (viewName === 'day') {
@@ -90,7 +95,7 @@ util.inherit(Week, View);
  * @fires Week#afterRender
  * @override
  */
-Week.prototype.render = function() {
+Week.prototype.render = function () {
     var self = this,
         options = this.options,
         scheduleFilter = options.scheduleFilter,
@@ -111,7 +116,7 @@ Week.prototype.render = function() {
     );
 
     if (options.workweek && datetime.compare(renderStartDate, renderEndDate)) {
-        range = util.filter(range, function(date) {
+        range = util.filter(range, function (date) {
             return !datetime.isWeekend(date.getDay());
         });
 
@@ -127,12 +132,7 @@ Week.prototype.render = function() {
         this.options
     );
 
-    grids = datetime.getGridLeftAndWidth(
-        range.length,
-        narrowWeekend,
-        startDayOfWeek,
-        workweek
-    );
+    grids = datetime.getGridLeftAndWidth(range.length, narrowWeekend, startDayOfWeek, workweek);
 
     viewModel = {
         schedulesInDateRange: schedulesInDateRange,
@@ -141,10 +141,10 @@ Week.prototype.render = function() {
         grids: grids,
         range: range,
         theme: theme,
-        state: state
+        state: state,
     };
 
-    this.children.each(function(childView) {
+    this.children.each(function (childView) {
         var matrices;
         var viewName = util.pick(childView.options, 'viewName');
         childView.render(viewModel);
@@ -155,7 +155,7 @@ Week.prototype.render = function() {
             if (util.isArray(matrices)) {
                 self._invokeAfterRenderSchedule(matrices);
             } else {
-                util.forEach(matrices, function(matricesOfDay) {
+                util.forEach(matrices, function (matricesOfDay) {
                     self._invokeAfterRenderSchedule(matricesOfDay);
                 });
             }
@@ -173,16 +173,16 @@ Week.prototype.render = function() {
  * @param {Array} matrices - schedule matrices from view model
  * @fires Week#afterRenderSchedule
  */
-Week.prototype._invokeAfterRenderSchedule = function(matrices) {
+Week.prototype._invokeAfterRenderSchedule = function (matrices) {
     var self = this;
-    util.forEachArray(matrices, function(matrix) {
-        util.forEachArray(matrix, function(column) {
-            util.forEachArray(column, function(scheduleViewModel) {
+    util.forEachArray(matrices, function (matrix) {
+        util.forEachArray(matrix, function (column) {
+            util.forEachArray(column, function (scheduleViewModel) {
                 if (scheduleViewModel) {
                     /**
                      * @event Week#afterRenderSchedule
                      */
-                    self.fire('afterRenderSchedule', {schedule: scheduleViewModel.model});
+                    self.fire('afterRenderSchedule', { schedule: scheduleViewModel.model });
                 }
             });
         });
@@ -200,7 +200,7 @@ Week.prototype.viewName = 'week';
  * @param {Date} baseDate base date.
  * @returns {object} date range.
  */
-Week.prototype._getRenderDateRange = function(baseDate) {
+Week.prototype._getRenderDateRange = function (baseDate) {
     var base = datetime.start(baseDate),
         start = new TZDate(Number(base)),
         end = new TZDate(Number(base));
@@ -210,7 +210,7 @@ Week.prototype._getRenderDateRange = function(baseDate) {
 
     return {
         start: start,
-        end: end
+        end: end,
     };
 };
 

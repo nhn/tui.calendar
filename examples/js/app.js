@@ -169,8 +169,8 @@
                 target.querySelector('input').checked = options.month.narrowWeekend;
                 break;
             case 'toggle-start-day-1':
-                options.month.startDayOfWeek = options.month.startDayOfWeek ? 0 : 1;
-                options.week.startDayOfWeek = options.week.startDayOfWeek ? 0 : 1;
+                options.month.startDayOfWeek = options.month.startDayOfWeek ? 1 : 1;
+                options.week.startDayOfWeek = options.week.startDayOfWeek ? 1 : 1;
                 viewName = cal.getViewName();
 
                 target.querySelector('input').checked = options.month.startDayOfWeek;
