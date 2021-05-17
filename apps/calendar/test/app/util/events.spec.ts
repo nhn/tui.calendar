@@ -4,22 +4,37 @@ import { createDate } from '@test/helper';
 
 describe('events util', () => {
   describe('collidesWith', () => {
-    it('should check for conflicts for the date', () => {
-      const hasCollision = collidesWith({
+    it('should calculate collision only from start and end dates, if travel time is not used', () => {
+      const hasCollision2 = collidesWith({
         start: Number(createDate(2021, 5, 14)),
         end: Number(createDate(2021, 5, 16)),
-        targetStart: Number(createDate(2021, 5, 15)),
+        targetStart: Number(createDate(2021, 5, 16)),
         targetEnd: Number(createDate(2021, 5, 17)),
         goingDuration: 0,
         comingDuration: 30,
-        targetGoingDuration: 0,
-        targetComingDuration: 30,
+        targetGoingDuration: 30,
+        targetComingDuration: 0,
+        usingTravelTime: false,
       });
-      expect(hasCollision).toBe(true);
+
+      expect(hasCollision2).toBe(false);
     });
 
-    it('should check for conflicts for the time', () => {
+    it('should calculate collision with start time, end time and travel time, when using travel time', () => {
       const hasCollision = collidesWith({
+        start: Number(createDate(2021, 5, 14)),
+        end: Number(createDate(2021, 5, 16)),
+        targetStart: Number(createDate(2021, 5, 16)),
+        targetEnd: Number(createDate(2021, 5, 17)),
+        goingDuration: 0,
+        comingDuration: 30,
+        targetGoingDuration: 30,
+        targetComingDuration: 3,
+        usingTravelTime: true,
+      });
+      expect(hasCollision).toBe(true);
+
+      const hasCollision1 = collidesWith({
         start: Number(new TZDate(2021, 4, 16, 9)),
         end: Number(new TZDate(2021, 4, 16, 10)),
         targetStart: Number(new TZDate(2021, 4, 16, 11)),
@@ -28,8 +43,22 @@ describe('events util', () => {
         comingDuration: 60,
         targetGoingDuration: 30,
         targetComingDuration: 30,
+        usingTravelTime: true,
       });
-      expect(hasCollision).toBe(true);
+      expect(hasCollision1).toBe(true);
+
+      const hasCollision2 = collidesWith({
+        start: Number(new TZDate(2021, 4, 16, 9)),
+        end: Number(new TZDate(2021, 4, 16, 10)),
+        targetStart: Number(new TZDate(2021, 4, 16, 11)),
+        targetEnd: Number(new TZDate(2021, 4, 16, 12)),
+        goingDuration: 30,
+        comingDuration: 0,
+        targetGoingDuration: 0,
+        targetComingDuration: 30,
+        usingTravelTime: true,
+      });
+      expect(hasCollision2).toBe(false);
     });
   });
 });

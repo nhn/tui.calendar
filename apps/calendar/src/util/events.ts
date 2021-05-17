@@ -9,6 +9,7 @@ type CollisionParam = {
   comingDuration: number;
   targetGoingDuration: number;
   targetComingDuration: number;
+  usingTravelTime: boolean;
 };
 
 function hasCollision(start: number, end: number, targetStart: number, targetEnd: number) {
@@ -28,6 +29,7 @@ export function collidesWith({
   comingDuration,
   targetGoingDuration,
   targetComingDuration,
+  usingTravelTime,
 }: CollisionParam) {
   if (Math.abs(end - start) < MILLISECONDS_SCHEDULE_MIN_DURATION) {
     end += MILLISECONDS_SCHEDULE_MIN_DURATION;
@@ -37,10 +39,12 @@ export function collidesWith({
     end += MILLISECONDS_SCHEDULE_MIN_DURATION;
   }
 
-  start -= millisecondsFrom('minute', goingDuration);
-  end += millisecondsFrom('minute', comingDuration);
-  targetStart -= millisecondsFrom('minute', targetGoingDuration);
-  targetEnd += millisecondsFrom('minute', targetComingDuration);
+  if (usingTravelTime) {
+    start -= millisecondsFrom('minute', goingDuration);
+    end += millisecondsFrom('minute', comingDuration);
+    targetStart -= millisecondsFrom('minute', targetGoingDuration);
+    targetEnd += millisecondsFrom('minute', targetComingDuration);
+  }
 
   if (hasCollision(start, end, targetStart, targetEnd)) {
     return true;
