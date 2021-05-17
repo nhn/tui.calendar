@@ -8,7 +8,7 @@ import extend from 'tui-code-snippet/object/extend';
 import TZDate from '@src/time/date';
 import { DateType, ScheduleData } from '@src/model';
 import { stamp } from '@src/util';
-import { parse, toEndOfDay, toStartOfDay, compare, MILLISECONDS_PER_DAY } from '@src/time/datetime';
+import { parse, toEndOfDay, toStartOfDay, compare, MS_PER_DAY } from '@src/time/datetime';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { collidesWith } from '@src/util/events';
 /**
@@ -284,7 +284,7 @@ export default class Schedule {
     }
 
     // if over 24 hours
-    this.hasMultiDates = this.end.getTime() - this.start.getTime() > MILLISECONDS_PER_DAY;
+    this.hasMultiDates = this.end.getTime() - this.start.getTime() > MS_PER_DAY;
   }
 
   /**

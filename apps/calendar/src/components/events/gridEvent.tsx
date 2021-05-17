@@ -3,12 +3,20 @@ import { h, FunctionComponent } from 'preact';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { toPercent, toPx } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
+import { pick } from '@src/util/utils';
 
 interface GridEventProps {
   viewModel: ScheduleViewModel;
   eventHeight: number;
   headerHeight: number;
   flat?: boolean;
+}
+
+function getMargin(flat: boolean) {
+  return {
+    vertical: flat ? 5 : 2,
+    horizontal: 8,
+  };
 }
 
 function getExceedClassName(exceedLeft: boolean, exceedRight: boolean) {
@@ -31,28 +39,32 @@ function getEventItemStyle({
   borderColor,
   exceedLeft,
   exceedRight,
+  eventHeight,
 }: EventItemStyleParam) {
-  const defualtItemStyle = {
+  const defaultItemStyle = {
     color: '#333',
     backgroundColor: bgColor,
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
+    height: eventHeight,
+    lineHeight: toPx(eventHeight),
   };
+  const margin = getMargin(flat);
 
   return flat
     ? {
-        marginTop: 5,
-        ...defualtItemStyle,
+        marginTop: margin.vertical,
+        ...defaultItemStyle,
       }
     : {
-        marginLeft: exceedLeft ? 0 : 8,
-        marginRight: exceedRight ? 0 : 8,
-        ...defualtItemStyle,
+        marginLeft: exceedLeft ? 0 : margin.horizontal,
+        marginRight: exceedRight ? 0 : margin.horizontal,
+        ...defaultItemStyle,
       };
 }
 
-function useStyle({ viewModel, eventHeight, headerHeight, flat = false }: GridEventProps) {
+function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridEventProps) {
   const {
     width,
     left,
@@ -61,17 +73,25 @@ function useStyle({ viewModel, eventHeight, headerHeight, flat = false }: GridEv
     exceedRight,
     model: { bgColor, borderColor },
   } = viewModel;
+  const margin = getMargin(flat);
 
   const blockStyle = flat
     ? {}
     : {
         width: toPercent(width),
         left: toPercent(left),
-        top: toPx((top - 1) * eventHeight + headerHeight),
+        top: toPx((top - 1) * (eventHeight + margin.vertical) + headerHeight),
         position: 'absolute',
       };
 
-  const eventItemStyle = getEventItemStyle({ flat, exceedLeft, exceedRight, bgColor, borderColor });
+  const eventItemStyle = getEventItemStyle({
+    flat,
+    exceedLeft,
+    exceedRight,
+    bgColor,
+    borderColor,
+    eventHeight,
+  });
 
   const resizeIconStyle = {
     lineHeight: toPx(18),
@@ -86,7 +106,7 @@ function useStyle({ viewModel, eventHeight, headerHeight, flat = false }: GridEv
 }
 
 const GridEvent: FunctionComponent<GridEventProps> = (props) => {
-  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = useStyle(props);
+  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
 
   const {
     viewModel: {
@@ -101,7 +121,7 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
         <span className={cls('weekday-schedule-title')}>{title}</span>
         <span
           className={[cls('weekday-resize-handle'), cls('handle-y')].join(' ')}
-          style={{ position: 'absolute', right: 8, cursor: 'col-resize' }}
+          style={{ position: 'absolute', top: 0, right: 5, cursor: 'col-resize' }}
         >
           <i className={[cls('icon'), cls('ic-handle-y')].join(' ')} style={resizeIconStyle} />
         </span>

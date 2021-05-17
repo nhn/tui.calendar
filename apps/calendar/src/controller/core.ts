@@ -9,13 +9,7 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 import Collection, { Filter } from '@src/util/collection';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import {
-  makeDateRange,
-  MILLISECONDS_PER_DAY,
-  toFormat,
-  toStartOfDay,
-  toEndOfDay,
-} from '@src/time/datetime';
+import { makeDateRange, MS_PER_DAY, toFormat, toStartOfDay, toEndOfDay } from '@src/time/datetime';
 
 export type CollisionGroup = Array<number[]>;
 export type Matrix<T> = Array<Array<T[]>>;
@@ -173,7 +167,7 @@ export function positionViewModels(
   matrices: ScheduleMatrix<ScheduleViewModel>,
   iteratee?: (viewModel: ScheduleViewModel) => void
 ) {
-  const ymdListToRender = makeDateRange(start, end, MILLISECONDS_PER_DAY).map((date) => {
+  const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) => {
     return toFormat(date, 'YYYYMMDD');
   });
 
@@ -188,7 +182,7 @@ export function positionViewModels(
         const dateLength = makeDateRange(
           toStartOfDay(viewModel.getStarts()),
           toEndOfDay(viewModel.getEnds()),
-          MILLISECONDS_PER_DAY
+          MS_PER_DAY
         ).length;
 
         viewModel.top = index;

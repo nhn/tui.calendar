@@ -37,12 +37,22 @@ function useGridHeight() {
 const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const { options, calendar = [], appContainer } = props;
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
-  const rowHeight = TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount || 6, 1);
 
-  const { state: dataStore } = useStore('dataStore');
   const { ref, height } = useGridHeight();
 
-  const name = 'dayGrid';
+  const rowHeight =
+    TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
+
+  const {
+    state: { dataStore, theme },
+  } = useStore(['dataStore', 'theme']);
+
+  if (!theme || !dataStore) {
+    return null;
+  }
+
+  const { schedule: monthScheduleTheme } = theme.month;
+  const eventHeight = parseFloat(monthScheduleTheme.height);
 
   return (
     <Fragment>
@@ -69,7 +79,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 narrowWeekend={narrowWeekend}
                 calendar={week}
                 appContainer={appContainer}
-                eventHeight={EVENT_HEIGHT}
+                eventHeight={eventHeight}
                 height={height}
               />
               <GridEvents
@@ -78,6 +88,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 events={viewModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
+                eventHeight={eventHeight}
                 className={cls('weekday-schedules')}
               />
             </div>

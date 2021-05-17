@@ -2,7 +2,7 @@ import { createScheduleCollection, createSchedule, addToMatrix } from '@src/cont
 import { ScheduleData, DataStore } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import { MILLISECONDS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
+import { MS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
 import {
   hasCollision,
   generateTimeArrayInRow,
@@ -16,7 +16,7 @@ import Collection from '@src/util/collection';
 
 import type { Panel } from '@t/panel';
 
-const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
+const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
 describe('Base.Week', () => {
   let dataStore: DataStore;

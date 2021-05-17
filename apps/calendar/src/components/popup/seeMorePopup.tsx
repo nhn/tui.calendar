@@ -21,11 +21,10 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
     'paddingBottom'
   );
   // @TODO: 테마 적용
-  const headerHeight = 44;
-  const paddingBottom = 12;
+  const headerHeight = 56;
   const moreListStyle = {
     padding: '0 17px',
-    height: `calc(100% - ${headerHeight}px - 17px)`,
+    height: `calc(100% - ${headerHeight}px)`,
   };
   const eventHeight = EVENT_HEIGHT;
 
@@ -41,7 +40,7 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
             key={`see-more-event-item-${viewModel.cid()}`}
             viewModel={viewModel}
             eventHeight={eventHeight}
-            headerHeight={headerHeight + paddingBottom}
+            headerHeight={headerHeight}
             flat={true}
           />
         ))}

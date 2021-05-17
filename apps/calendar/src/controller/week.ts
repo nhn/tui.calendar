@@ -7,13 +7,13 @@ import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
 
 import {
-  MILLISECONDS_SCHEDULE_MIN_DURATION,
+  MS_SCHEDULE_MIN_DURATION,
   millisecondsFrom,
   toStartOfDay,
   toEndOfDay,
   toFormat,
   makeDateRange,
-  MILLISECONDS_PER_DAY,
+  MS_PER_DAY,
 } from '@src/time/datetime';
 import {
   ScheduleMatrix,
@@ -36,7 +36,7 @@ import array from '@src/util/array';
 
 import type { Panel } from '@t/panel';
 
-const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
+const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
 /**********
  * TIME GRID VIEW
@@ -427,11 +427,7 @@ export function getExceedDate(
           return;
         }
 
-        const period = makeDateRange(
-          viewModel.getStarts(),
-          viewModel.getEnds(),
-          MILLISECONDS_PER_DAY
-        );
+        const period = makeDateRange(viewModel.getStarts(), viewModel.getEnds(), MS_PER_DAY);
 
         period.forEach((date) => {
           const ymd = getYMD(date);

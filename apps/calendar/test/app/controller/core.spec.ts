@@ -168,23 +168,17 @@ describe('Base.Core', () => {
       });
 
       it('should get collision group properly with travel time.', () => {
-        actual = getCollisionGroup(eventList, true);
-        expected = [
+        expect(getCollisionGroup(eventList, true)).toEqual([
           [eventList[0].cid(), eventList[1].cid(), eventList[2].cid(), eventList[3].cid()],
-        ];
-
-        expect(actual).toEqual(expected);
+        ]);
       });
 
       it('should get collision group properly without travel time.', () => {
-        actual = getCollisionGroup(eventList, false);
-        expected = [
+        expect(getCollisionGroup(eventList, false)).toEqual([
           [eventList[0].cid()],
           [eventList[1].cid(), eventList[2].cid()],
           [eventList[3].cid()],
-        ];
-
-        expect(actual).toEqual(expected);
+        ]);
       });
     });
   });
@@ -225,7 +219,7 @@ describe('Base.Core', () => {
       });
     });
 
-    it('can calculate matrices accuratly.', () => {
+    it('can calculate matrices accurately.', () => {
       collection.add(...scheduleList);
       collisionGroup = getCollisionGroup(scheduleList);
 
@@ -292,24 +286,24 @@ describe('Base.Core', () => {
         collection.clear();
       });
 
-      it('can calculate matrices accuratly with travel time', () => {
+      it('can calculate matrices accurately with travel time', () => {
         const usingTravelTime = true;
         collisionGroup = getCollisionGroup(eventList, usingTravelTime);
-        actual = getMatrices(collection, collisionGroup, usingTravelTime);
 
-        expected = [[[eventList[0], eventList[1], eventList[2]], [eventList[3]]]];
-
-        expect(actual).toEqual(expected);
+        expect(getMatrices(collection, collisionGroup, usingTravelTime)).toEqual([
+          [[eventList[0], eventList[1], eventList[2]], [eventList[3]]],
+        ]);
       });
 
-      it('can calculate matrices accuratly without travel time', () => {
+      it('can calculate matrices accurately without travel time', () => {
         const usingTravelTime = false;
         collisionGroup = getCollisionGroup(eventList, usingTravelTime);
-        actual = getMatrices(collection, collisionGroup, usingTravelTime);
 
-        expected = [[[eventList[0]]], [[eventList[1], eventList[2]]], [[eventList[3]]]];
-
-        expect(actual).toEqual(expected);
+        expect(getMatrices(collection, collisionGroup, usingTravelTime)).toEqual([
+          [[eventList[0]]],
+          [[eventList[1], eventList[2]]],
+          [[eventList[3]]],
+        ]);
       });
     });
   });

@@ -52,11 +52,7 @@ export function getGridWidthAndLeftPercentValues(
   });
 
   const leftList = widthList.reduce<number[]>((acc, _, index) => {
-    if (!index) {
-      return [0];
-    }
-
-    return [...acc, acc[index - 1] + widthList[index - 1]];
+    return index ? [...acc, acc[index - 1] + widthList[index - 1]] : [0];
   }, []);
 
   return {
