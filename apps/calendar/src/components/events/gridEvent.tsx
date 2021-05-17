@@ -7,7 +7,7 @@ import { cls } from '@src/util/cssHelper';
 interface GridEventProps {
   viewModel: ScheduleViewModel;
   eventHeight: number;
-  cellTopHeight: number;
+  headerHeight: number;
   flat?: boolean;
 }
 
@@ -52,7 +52,7 @@ function getEventItemStyle({
       };
 }
 
-function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridEventProps) {
+function useStyle({ viewModel, eventHeight, headerHeight, flat = false }: GridEventProps) {
   const {
     width,
     left,
@@ -67,7 +67,7 @@ function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridE
     : {
         width: toPercent(width),
         left: toPercent(left),
-        top: toPx((top - 1) * eventHeight + cellTopHeight),
+        top: toPx((top - 1) * eventHeight + headerHeight),
         position: 'absolute',
       };
 

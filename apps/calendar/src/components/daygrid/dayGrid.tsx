@@ -23,23 +23,26 @@ interface DayGridProps {
   events?: Schedule[];
 }
 
-const DayGrid: FunctionComponent<DayGridProps> = (props) => {
-  const { options, calendar = [], appContainer } = props;
-  const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
-
-  const rowHeight = TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount || 6, 1);
-  const name = 'dayGrid';
-
-  const { state: dataStore } = useStore('dataStore');
-
-  const eventHeight = EVENT_HEIGHT;
-
+function useGridHeight() {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
     setHeight(getSize(ref.current).height);
   }, []);
+
+  return { ref, height };
+}
+
+const DayGrid: FunctionComponent<DayGridProps> = (props) => {
+  const { options, calendar = [], appContainer } = props;
+  const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
+  const rowHeight = TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount || 6, 1);
+
+  const { state: dataStore } = useStore('dataStore');
+  const { ref, height } = useGridHeight();
+
+  const name = 'dayGrid';
 
   return (
     <Fragment>
@@ -52,7 +55,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
 
         return (
           <div
-            key={`${name}-events-${index}`}
+            key={`dayGrid-events-${index}`}
             className={cls('month-week-item')}
             style={{ height: toPercent(rowHeight) }}
             ref={ref}
@@ -66,11 +69,11 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 narrowWeekend={narrowWeekend}
                 calendar={week}
                 appContainer={appContainer}
-                eventHeight={eventHeight}
+                eventHeight={EVENT_HEIGHT}
                 height={height}
               />
               <GridEvents
-                name={name}
+                name="month"
                 cells={week}
                 events={viewModels}
                 height={height}
