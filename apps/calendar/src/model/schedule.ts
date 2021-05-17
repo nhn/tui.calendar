@@ -8,14 +8,7 @@ import extend from 'tui-code-snippet/object/extend';
 import TZDate from '@src/time/date';
 import { DateType, ScheduleData } from '@src/model';
 import { stamp } from '@src/util';
-import {
-  parse,
-  toEndOfDay,
-  toStartOfDay,
-  millisecondsFrom,
-  compare,
-  MILLISECONDS_PER_DAY,
-} from '@src/time/datetime';
+import { parse, toEndOfDay, toStartOfDay, compare, MILLISECONDS_PER_DAY } from '@src/time/datetime';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { collidesWith } from '@src/util/events';
 /**
@@ -390,10 +383,11 @@ export default class Schedule {
   /**
    * Returns true if the given Schedule coincides with the same time as the
    * calling Schedule.
-   * @param {Schedule} schedule The other schedule to compare with this Schedule.
+   * @param {Schedule | ScheduleViewModel} schedule The other schedule to compare with this Schedule.
+   * @param {boolean = true} usingTravelTime When calculating collision, whether to calculate with travel time.
    * @returns {boolean} If the other schedule occurs within the same time as the first object.
    */
-  collidesWith(schedule: Schedule | ScheduleViewModel): boolean {
+  collidesWith(schedule: Schedule | ScheduleViewModel, usingTravelTime = true) {
     schedule = schedule instanceof ScheduleViewModel ? schedule.model : schedule;
 
     return collidesWith({
@@ -405,6 +399,7 @@ export default class Schedule {
       comingDuration: this.comingDuration,
       targetGoingDuration: schedule.goingDuration,
       targetComingDuration: schedule.comingDuration,
+      usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
   }
 }

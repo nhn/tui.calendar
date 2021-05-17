@@ -158,8 +158,9 @@ export function getViewModels(events: Schedule[], startColumnTime: TZDate, endCo
     .sort(array.compare.schedule.asc)
     .map(ScheduleViewModel.create);
   const viewModelColl = createScheduleCollection(...viewModels);
-  const collisionGroups = getCollisionGroup(viewModels);
-  const matrices = getCollides(getMatrices(viewModelColl, collisionGroups));
+  const usingTravelTime = true;
+  const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
+  const matrices = getCollides(getMatrices(viewModelColl, collisionGroups, usingTravelTime));
 
   matrices.forEach((matrix) => {
     const maxRowLength = Math.max(...matrix.map((row) => row.length));

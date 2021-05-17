@@ -271,11 +271,12 @@ export function getViewModelForTimeView(
   const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
 
   const _getViewModel = _makeGetViewModelFuncForTimeView(hourStart, hourEnd);
+  const usingTravelTime = true;
 
   forEach(ymdSplitted, (viewModelColl: Collection<ScheduleViewModel>, ymd: string) => {
     const viewModels = _getViewModel(viewModelColl);
-    const collisionGroups = getCollisionGroup(viewModels);
-    const matrices = getMatrices(viewModelColl, collisionGroups);
+    const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
+    const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
 
     result[ymd] = getCollides(matrices);
   });
@@ -321,9 +322,9 @@ export function getViewModelForAlldayView(
   limitRenderRange(start, end, viewModelColl);
 
   const viewModels = viewModelColl.sort(array.compare.schedule.asc);
-  const collisionGroups = getCollisionGroup(viewModels);
-
-  const matrices = getMatrices(viewModelColl, collisionGroups);
+  const usingTravelTime = true;
+  const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
+  const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
 
   positionViewModels(start, end, matrices);
 

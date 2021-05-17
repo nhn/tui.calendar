@@ -120,6 +120,73 @@ describe('Base.Core', () => {
 
       expect(actual).toEqual(expected);
     });
+
+    describe('When calculating the collision, it is affected by the travel time.', () => {
+      let eventList: Schedule[];
+
+      beforeEach(() => {
+        const events: ScheduleData[] = [
+          {
+            title: 'A',
+            isAllDay: false,
+            start: '2015-05-01T10:20:00',
+            end: '2015-05-01T10:40:00',
+            category: 'time',
+            goingDuration: 0,
+            comingDuration: 20,
+          },
+          {
+            title: 'B',
+            isAllDay: false,
+            start: '2015-05-01T10:40:00',
+            end: '2015-05-01T11:50:00',
+            category: 'time',
+            goingDuration: 10,
+            comingDuration: 10,
+          },
+          {
+            title: 'C',
+            isAllDay: false,
+            start: '2015-05-01T11:00:00',
+            end: '2015-05-01T12:00:00',
+            category: 'time',
+            goingDuration: 30,
+            comingDuration: 30,
+          },
+          {
+            title: 'D',
+            isAllDay: false,
+            start: '2015-05-01T12:00:00',
+            end: '2015-05-01T13:00:00',
+            category: 'time',
+            goingDuration: 10,
+            comingDuration: 10,
+          },
+        ];
+
+        eventList = events.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
+      });
+
+      it('should get collision group properly with travel time.', () => {
+        actual = getCollisionGroup(eventList, true);
+        expected = [
+          [eventList[0].cid(), eventList[1].cid(), eventList[2].cid(), eventList[3].cid()],
+        ];
+
+        expect(actual).toEqual(expected);
+      });
+
+      it('should get collision group properly without travel time.', () => {
+        actual = getCollisionGroup(eventList, false);
+        expected = [
+          [eventList[0].cid()],
+          [eventList[1].cid(), eventList[2].cid()],
+          [eventList[3].cid()],
+        ];
+
+        expect(actual).toEqual(expected);
+      });
+    });
   });
 
   describe('getLastRowInColumn()', () => {
@@ -156,11 +223,12 @@ describe('Base.Core', () => {
       collection = new Collection<Schedule>((model) => {
         return model.cid();
       });
-      collection.add(...scheduleList);
-      collisionGroup = getCollisionGroup(scheduleList);
     });
 
     it('can calculate matrices accuratly.', () => {
+      collection.add(...scheduleList);
+      collisionGroup = getCollisionGroup(scheduleList);
+
       expected = [
         [[scheduleList[0], scheduleList[1]], [scheduleList[2]], [scheduleList[3]]],
         [[scheduleList[4]]],
@@ -171,6 +239,78 @@ describe('Base.Core', () => {
       actual = getMatrices(collection, collisionGroup);
 
       expect(actual).toEqual(expected);
+    });
+
+    describe('When calculating matrices, it is affected by the travel time.', () => {
+      let eventList: Schedule[];
+
+      beforeEach(() => {
+        const events: ScheduleData[] = [
+          {
+            title: 'A',
+            isAllDay: false,
+            start: '2015-05-01T10:20:00',
+            end: '2015-05-01T10:40:00',
+            category: 'time',
+            goingDuration: 0,
+            comingDuration: 20,
+          },
+          {
+            title: 'B',
+            isAllDay: false,
+            start: '2015-05-01T10:40:00',
+            end: '2015-05-01T11:50:00',
+            category: 'time',
+            goingDuration: 10,
+            comingDuration: 10,
+          },
+          {
+            title: 'C',
+            isAllDay: false,
+            start: '2015-05-01T11:00:00',
+            end: '2015-05-01T12:00:00',
+            category: 'time',
+            goingDuration: 30,
+            comingDuration: 30,
+          },
+          {
+            title: 'D',
+            isAllDay: false,
+            start: '2015-05-01T12:00:00',
+            end: '2015-05-01T13:00:00',
+            category: 'time',
+            goingDuration: 10,
+            comingDuration: 10,
+          },
+        ];
+
+        eventList = events.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
+        collection.add(...eventList);
+      });
+
+      afterEach(() => {
+        collection.clear();
+      });
+
+      it('can calculate matrices accuratly with travel time', () => {
+        const usingTravelTime = true;
+        collisionGroup = getCollisionGroup(eventList, usingTravelTime);
+        actual = getMatrices(collection, collisionGroup, usingTravelTime);
+
+        expected = [[[eventList[0], eventList[1], eventList[2]], [eventList[3]]]];
+
+        expect(actual).toEqual(expected);
+      });
+
+      it('can calculate matrices accuratly without travel time', () => {
+        const usingTravelTime = false;
+        collisionGroup = getCollisionGroup(eventList, usingTravelTime);
+        actual = getMatrices(collection, collisionGroup, usingTravelTime);
+
+        expected = [[[eventList[0]]], [[eventList[1], eventList[2]]], [[eventList[3]]]];
+
+        expect(actual).toEqual(expected);
+      });
     });
   });
 
