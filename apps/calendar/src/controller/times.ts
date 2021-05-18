@@ -1,10 +1,9 @@
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import closest from 'tui-code-snippet/domUtil/closest';
 import TZDate from '@src/time/date';
 import { ratio, limit } from '@src/util/math';
 import { millisecondsTo, clone, addSeconds, addMilliseconds } from '@src/time/datetime';
-import { getSize } from '@src/util/domutil';
+import { closest, getSize } from '@src/util/domutil';
 import { TimeUnit } from '@src/model';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 

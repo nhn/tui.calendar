@@ -6,6 +6,7 @@ import isNull from 'tui-code-snippet/type/isNull';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import isString from 'tui-code-snippet/type/isString';
+import { includes } from './utils';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -109,4 +110,35 @@ export function isOverlapped(el1: Element, el2: Element) {
   const r2 = el2.getBoundingClientRect();
 
   return !(r1.top > r2.bottom || r1.right < r2.left || r1.bottom < r2.top || r1.left > r2.right);
+}
+
+const elProto = Element.prototype;
+const matchSelector =
+  elProto.matches ||
+  elProto.webkitMatchesSelector ||
+  elProto.msMatchesSelector ||
+  function (this: Element, selector: string) {
+    return includes(Array.from(document.querySelectorAll(selector)), this);
+  };
+
+function matches(element: Node & ParentNode, selector: string) {
+  return matchSelector.call(element, selector);
+}
+
+export function closest(element: HTMLElement, selector: string) {
+  if (matches(element, selector)) {
+    return element;
+  }
+
+  let parent = element.parentNode;
+
+  while (parent && parent !== document) {
+    if (parent && matches(parent, selector)) {
+      return parent as HTMLElement;
+    }
+
+    parent = parent.parentNode;
+  }
+
+  return null;
 }

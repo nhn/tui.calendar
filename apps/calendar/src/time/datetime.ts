@@ -795,3 +795,19 @@ export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthO
     visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
   });
 }
+
+export function getStartAndEndDateFromCalendar(calendar: TZDate[][]) {
+  const lastRow = calendar[calendar.length - 1];
+
+  return {
+    start: calendar[0][0],
+    end: lastRow[lastRow.length - 1],
+  };
+}
+
+export function getStartAndEndDateFromGrid(grid: TZDate[]) {
+  return {
+    start: grid[0],
+    end: grid[grid.length - 1],
+  };
+}

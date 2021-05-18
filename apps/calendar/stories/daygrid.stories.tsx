@@ -11,6 +11,7 @@ import Schedule from '@src/model/schedule';
 import { generateRandomEvents } from './util/randomEvents';
 import { ScheduleData } from '@src/model';
 import Panel from '@src/components/panel';
+import { getMonthCalendar, getStartAndEndDateFromCalendar } from '@src/time/datetime';
 
 export default { title: 'DayGrid' };
 
@@ -122,6 +123,39 @@ export const randomEvents = () => {
           options={options}
           calendar={[calendar]}
           events={events}
+          appContainer={{ current: document.createElement('div') }}
+        />
+      </Panel>
+    </ProviderWrapper>
+  );
+};
+
+export const creationGuide = () => {
+  const calendar = getMonthCalendar(new TZDate(), { visibleWeeksCount: 3 });
+
+  const options: CalendarMonthOption = {
+    visibleWeeksCount: 2,
+    workweek: false,
+    narrowWeekend: false,
+    startDayOfWeek: 0,
+    isAlways6Week: true,
+    daynames: [],
+    moreLayerSize: { width: null, height: null },
+    grid: {
+      header: { height: 31 },
+      footer: { height: 31 },
+    },
+    visibleScheduleCount: 6,
+    scheduleFilter: () => true,
+  };
+
+  return (
+    <ProviderWrapper>
+      <Panel name="weekday" height={400}>
+        <DayGrid
+          options={options}
+          calendar={calendar}
+          events={[]}
           appContainer={{ current: document.createElement('div') }}
         />
       </Panel>

@@ -22,11 +22,10 @@ type Props = {
 
 export function ProviderWrapper({
   children,
-  options: optionsUseInput = {},
+  options: optionsUserInput = {},
   events = [],
 }: RenderableProps<Props>) {
-  const store = createStore(optionsUseInput);
-
+  const store = createStore(optionsUserInput);
   store.dispatch('dataStore/clearSchedules', { events });
 
   if (events.length) {

@@ -12,7 +12,7 @@ export interface DragListeners {
   onCancel?: () => void;
 }
 
-export const DISTANCE = 10;
+export const DISTANCE = 5;
 
 export function useDrag({
   onDragStart = noop,

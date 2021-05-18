@@ -561,4 +561,30 @@ describe('datetime', () => {
       ]);
     });
   });
+
+  it('getStartAndEndDateFromCalendar', () => {
+    const data = [
+      [new TZDate(2021, 4, 10), new TZDate(2021, 4, 11), new TZDate(2021, 4, 12)],
+      [new TZDate(2021, 4, 17), new TZDate(2021, 4, 18), new TZDate(2021, 4, 19)],
+      [new TZDate(2021, 4, 24), new TZDate(2021, 4, 25), new TZDate(2021, 4, 26)],
+    ];
+
+    expect(dt.getStartAndEndDateFromCalendar(data)).toEqual({
+      start: new TZDate(2021, 4, 10),
+      end: new TZDate(2021, 4, 26),
+    });
+  });
+
+  it('getStartAndEndDateFromGrid', () => {
+    const data = [
+      new TZDate(2021, 4, 10),
+      new TZDate(2021, 4, 11),
+      new TZDate(2021, 4, 13),
+      new TZDate(2021, 4, 14),
+    ];
+    expect(dt.getStartAndEndDateFromGrid(data)).toEqual({
+      start: new TZDate(2021, 4, 10),
+      end: new TZDate(2021, 4, 14),
+    });
+  });
 });

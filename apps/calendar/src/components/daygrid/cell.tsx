@@ -42,6 +42,8 @@ interface CellProps {
   events?: ScheduleViewModel[];
   eventHeight?: number;
   height: number;
+  rowIndex?: number;
+  columnIndex?: number;
 }
 
 function getSeeMorePopupSize(
@@ -230,6 +232,8 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
     parentContainer,
     appContainer,
     height,
+    rowIndex = 0,
+    columnIndex = 0,
   } = props;
 
   const { popupRect, container } = usePopupRect(state.month, events, parentContainer, appContainer);
@@ -254,6 +258,8 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
       className={cls('daygrid-cell')}
       style={{ ...style, color: getDateColor(dayIndex, commonTheme) }}
       ref={container}
+      data-row-index={rowIndex}
+      data-column-index={columnIndex}
     >
       <CellBar
         exceedCount={exceedCount}

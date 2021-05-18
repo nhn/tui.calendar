@@ -81,7 +81,12 @@ const Month: FunctionComponent = () => {
         <MonthDayNames dayNames={dayNames} theme={theme.month.dayname} options={monthOptions} />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>
-        <DayGrid options={monthOptions} calendar={calendar} appContainer={container} />
+        <DayGrid
+          options={monthOptions}
+          calendar={calendar}
+          appContainer={container}
+          useCreationPopup={options.useCreationPopup}
+        />
       </Panel>
     </div>
   );

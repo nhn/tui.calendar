@@ -73,9 +73,7 @@ function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridE
 
   const eventItemStyle = getEventItemStyle({ flat, exceedLeft, exceedRight, bgColor, borderColor });
 
-  const resizeIconStyle = {
-    lineHeight: toPx(18),
-  };
+  const resizeIconStyle = { lineHeight: toPx(18) };
 
   const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
     exceedLeft,
@@ -99,12 +97,14 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
     <div className={dayEventBlockClassName} style={blockStyle}>
       <div className={cls('weekday-event')} style={eventItemStyle}>
         <span className={cls('weekday-schedule-title')}>{title}</span>
-        <span
-          className={[cls('weekday-resize-handle'), cls('handle-y')].join(' ')}
-          style={{ position: 'absolute', right: 8, cursor: 'col-resize' }}
-        >
-          <i className={[cls('icon'), cls('ic-handle-y')].join(' ')} style={resizeIconStyle} />
-        </span>
+        {props.flat ? null : (
+          <span
+            className={[cls('weekday-resize-handle'), cls('handle-y')].join(' ')}
+            style={{ position: 'absolute', right: 8, cursor: 'col-resize' }}
+          >
+            <i className={[cls('icon'), cls('ic-handle-y')].join(' ')} style={resizeIconStyle} />
+          </span>
+        )}
       </div>
     </div>
   );

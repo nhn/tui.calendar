@@ -20,6 +20,7 @@ interface GridProps {
   appContainer: { current: HTMLDivElement };
   eventHeight?: number;
   height?: number;
+  index?: number;
 }
 
 const Grid: FunctionComponent<GridProps> = (props) => {
@@ -34,6 +35,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
     gridDateEventModelMap = {},
     eventHeight = EVENT_HEIGHT,
     height = 0,
+    index: rowIndex = 0,
   } = props;
 
   const style = {
@@ -45,9 +47,9 @@ const Grid: FunctionComponent<GridProps> = (props) => {
 
   return (
     <div className={cls('grid')} style={style} ref={container}>
-      {calendar.map((date, index) => {
+      {calendar.map((date, columnIndex) => {
         const dayIndex = date.getDay();
-        const { width, left } = grids[index];
+        const { width, left } = grids[columnIndex];
         const YMD = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
         return (
@@ -65,6 +67,8 @@ const Grid: FunctionComponent<GridProps> = (props) => {
             events={gridDateEventModelMap[YMD]}
             eventHeight={eventHeight}
             height={height}
+            rowIndex={rowIndex}
+            columnIndex={columnIndex}
           />
         );
       })}
