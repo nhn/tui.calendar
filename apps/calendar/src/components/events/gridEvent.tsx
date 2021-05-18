@@ -17,7 +17,7 @@ function getMargin(flat: boolean) {
     horizontal: 8,
   };
 }
-  
+
 function getExceedClassName(exceedLeft: boolean, exceedRight: boolean) {
   const className = [];
 
@@ -46,17 +46,20 @@ function getEventItemStyle({
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
+    height: eventHeight,
+    lineHeight: toPx(eventHeight),
   };
+  const margin = getMargin(flat);
 
   return flat
     ? {
-        marginTop: 5,
-        ...defualtItemStyle,
+        marginTop: margin.vertical,
+        ...defaultItemStyle,
       }
     : {
-        marginLeft: exceedLeft ? 0 : 8,
-        marginRight: exceedRight ? 0 : 8,
-        ...defualtItemStyle,
+        marginLeft: exceedLeft ? 0 : margin.horizontal,
+        marginRight: exceedRight ? 0 : margin.horizontal,
+        ...defaultItemStyle,
       };
 }
 
@@ -71,12 +74,13 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
   } = viewModel;
 
   const margin = getMargin(flat);
+
   const blockStyle = flat
     ? {}
     : {
         width: toPercent(width),
         left: toPercent(left),
-        top: toPx((top - 1) * eventHeight + cellTopHeight),
+        top: toPx((top - 1) * (eventHeight + margin.vertical) + headerHeight),
         position: 'absolute',
       };
 
@@ -103,7 +107,6 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
 
 const GridEvent: FunctionComponent<GridEventProps> = (props) => {
   const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
-
 
   const {
     viewModel: {

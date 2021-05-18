@@ -55,7 +55,7 @@ export function getGridWidthAndLeftPercentValues(
     (acc, _, index) => (index ? [...acc, acc[index - 1] + widthList[index - 1]] : [0]),
     []
   );
-  
+
   return {
     widthList,
     leftList,

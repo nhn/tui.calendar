@@ -178,7 +178,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
       onGuideCancel={onGuideCancel}
       gridInfoList={gridInfoList}
     >
-      {calendar.map((week, index) => {
+      {calendar.map((week, rowIndex) => {
         const { viewModels, gridDateEventModelMap } = getRenderedEventViewModels(
           week,
           dataStore,
@@ -188,7 +188,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
 
         return (
           <div
-            key={`dayGrid-events-${index}`}
+            key={`dayGrid-events-${rowIndex}`}
             className={cls('month-week-item')}
             style={{ height: toPercent(rowHeight) }}
             ref={ref}
@@ -204,6 +204,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 appContainer={appContainer}
                 eventHeight={eventHeight}
                 height={height}
+                index={rowIndex}
               />
               <GridEvents
                 name="month"

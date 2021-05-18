@@ -796,24 +796,6 @@ export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthO
   });
 }
 
-export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
-  const date = new TZDate(renderMonthDate);
-  const {
-    startDayOfWeek = 0,
-    visibleWeeksCount = 0,
-    workweek = false,
-    isAlways6Week = true,
-  } = options;
-  const weekCount = Math.min(visibleWeeksCount, 6);
-
-  return arr2dCalendar(date, {
-    startDayOfWeek,
-    workweek,
-    isAlways6Week: visibleWeeksCount ? false : isAlways6Week,
-    visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
-  });
-}
-
 export function getStartAndEndDateFromCalendar(calendar: TZDate[][]) {
   const lastRow = calendar[calendar.length - 1];
 

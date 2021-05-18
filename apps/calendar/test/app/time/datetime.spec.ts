@@ -561,7 +561,7 @@ describe('datetime', () => {
       ]);
     });
   });
-  
+
   it('getStartAndEndDateFromCalendar', () => {
     const data = [
       [new TZDate(2021, 4, 10), new TZDate(2021, 4, 11), new TZDate(2021, 4, 12)],
@@ -587,5 +587,4 @@ describe('datetime', () => {
       end: new TZDate(2021, 4, 14),
     });
   });
-
 });
