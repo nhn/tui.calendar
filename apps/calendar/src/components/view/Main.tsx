@@ -5,22 +5,15 @@ import Store from '@src/store';
 import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
 import ToolbarContainer from '@src/components/toolbar/toolbarContainer';
 import ViewContainer from '@src/components/view/viewContainer';
-import { template, theme, options, layerPopup } from '@src/modules';
-
-import { CalendarState } from '@t/store';
 import { ViewListMap } from '@t/option';
 
 type Props = {
   initialView: string;
   components: ViewListMap;
+  store: Store;
 };
 
-const store = new Store<CalendarState>({
-  initStoreData: { options: {} },
-  modules: [template, theme, options, layerPopup],
-});
-
-const Main: FunctionComponent<Props> = ({ initialView, components }) => {
+const Main: FunctionComponent<Props> = ({ initialView, components, store }) => {
   const router = useCreateRouter({ initialView, components });
 
   return (

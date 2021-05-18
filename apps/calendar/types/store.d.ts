@@ -1,6 +1,7 @@
 import { MonthOption, WeekOption } from '@src/model';
 import Schedule from '@src/model/schedule';
-import { theme, template, options } from '@src/modules';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { theme, template, options, dataStore } from '@src/modules';
 import layerPopup, { PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import TZDate from '@src/time/date';
@@ -56,6 +57,7 @@ declare global {
     template: typeof template;
     theme: typeof theme;
     layerPopup: typeof layerPopup;
+    dataStore: typeof dataStore;
   }
 }
 
@@ -128,7 +130,7 @@ type PopupParamMap = {
 
 interface SeeMorePopupParam extends BasePopupParam {
   date: TZDate | Date;
-  events: Schedule[];
+  events: ScheduleViewModel[];
 }
 
 interface CreationPopupParam extends BasePopupParam {

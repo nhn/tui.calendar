@@ -14,7 +14,7 @@ function initializeDayNames(startDayOfWeek = 0) {
 function getInitialOptions(optionsData: Options = {}): OptionData {
   const month = {
     daynames: [],
-    visibleWeeksCount: 6,
+    visibleWeeksCount: 0,
     workweek: false,
     narrowWeekend: false,
     startDayOfWeek: Day.SUN,

@@ -4,6 +4,7 @@
  */
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
+import { collidesWith } from '@src/util/events';
 
 /**
  * Schedule ViewModel
@@ -184,16 +185,17 @@ export default class ScheduleViewModel {
     return this.model.duration();
   }
 
-  /**
-   * Link collidesWith method
-   * @param {ScheduleViewModel} viewModel - Model or viewmodel instance of Schedule.
-   * @returns {boolean} Schedule#collidesWith result.
-   */
-  collidesWith(viewModel: Schedule | ScheduleViewModel) {
-    if (viewModel instanceof Schedule) {
-      return this.model.collidesWith(viewModel);
-    }
-
-    return this.model.collidesWith(viewModel.model);
+  collidesWith(viewModel: Schedule | ScheduleViewModel, usingTravelTime = true) {
+    return collidesWith({
+      start: this.getStarts().getTime(),
+      end: this.getEnds().getTime(),
+      targetStart: viewModel.getStarts().getTime(),
+      targetEnd: viewModel.getEnds().getTime(),
+      goingDuration: this.model.goingDuration,
+      comingDuration: this.model.comingDuration,
+      targetGoingDuration: viewModel.valueOf().goingDuration,
+      targetComingDuration: viewModel.valueOf().comingDuration,
+      usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
+    });
   }
 }

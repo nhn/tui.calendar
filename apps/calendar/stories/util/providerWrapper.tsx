@@ -2,12 +2,10 @@ import { h, RenderableProps } from 'preact';
 import Provider from '@src/components/provider';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
-import template from '@src/modules/template';
-import theme from '@src/modules/theme';
-import layerPopup from '@src/modules/layerPopup';
 import { cls } from '@src/util/cssHelper';
-import options from '@src/modules/options';
 import { Options } from '@t/option';
+import { template, theme, layerPopup, options, dataStore } from '@src/modules';
+import Schedule from '@src/model/schedule';
 
 const style = {
   position: 'absolute',
@@ -19,13 +17,21 @@ const style = {
 
 type Props = {
   options?: Options;
+  events?: Schedule[];
 };
 
 export function ProviderWrapper({
   children,
   options: optionsUseInput = {},
+  events = [],
 }: RenderableProps<Props>) {
   const store = createStore(optionsUseInput);
+
+  store.dispatch('dataStore/clearSchedules', { events });
+
+  if (events.length) {
+    store.dispatch('dataStore/createSchedules', { events });
+  }
 
   return (
     <div className={cls('layout')} style={style}>
@@ -34,9 +40,9 @@ export function ProviderWrapper({
   );
 }
 
-function createStore(optionsUseInput: Options) {
+export function createStore(optionsUseInput: Options) {
   return new Store<CalendarState>({
     initStoreData: { options: optionsUseInput },
-    modules: [template, theme, options, layerPopup],
+    modules: [template, theme, options, dataStore, layerPopup],
   });
 }

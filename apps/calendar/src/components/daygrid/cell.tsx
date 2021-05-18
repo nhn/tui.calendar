@@ -1,18 +1,28 @@
 import { h, FunctionComponent } from 'preact';
-import { useCallback, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+
+import { useActions, useStore } from '@src/components/hooks/store';
+import CellBar from '@src/components/daygrid/cellBar';
 
 import { cls } from '@src/util/cssHelper';
-import { useActions, useStore } from '@src/components/hooks/store';
 import { PopupType } from '@src/modules/layerPopup';
 import TZDate from '@src/time/date';
 import { getPosition, getSize } from '@src/util/domutil';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
-import { Day } from '@src/time/datetime';
-import CellBar from '@src/components/daygrid/cellBar';
-import { PopupRect } from '@t/store';
+import { Day, toStartOfDay } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
 import { getMousePosition } from '@src/util/domEvent';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { EVENT_HEIGHT, getExceedCount } from '@src/util/gridHelper';
+
+import { PopupRect } from '@t/store';
+import {
+  CSSValue,
+  SeeMoreOptions,
+  SeeMorePopupTheme,
+  SeeMoreRectParam,
+} from '@t/components/daygrid/cell';
 
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;
@@ -29,6 +39,9 @@ interface CellProps {
   };
   parentContainer?: HTMLDivElement;
   appContainer?: HTMLDivElement;
+  events?: ScheduleViewModel[];
+  eventHeight?: number;
+  height: number;
 }
 
 function getSeeMorePopupSize(
@@ -36,7 +49,7 @@ function getSeeMorePopupSize(
   options: SeeMoreOptions,
   cell: HTMLDivElement,
   grid: HTMLDivElement,
-  events: Event[]
+  events: ScheduleViewModel[]
 ): Size {
   const minHeight = getSize(grid).height + OUT_PADDING * 2;
   let width: number = cell.offsetWidth + OUT_PADDING * 2;
@@ -116,10 +129,6 @@ function getSeeMorePopupPosition(
   return { left, top };
 }
 
-function getExceedCount() {
-  return 0; // @TODO: 높이 기준으로 초과 갯수 계산
-}
-
 function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
   const { holiday, saturday, today } = commonTheme;
 
@@ -166,6 +175,7 @@ function getSeeMorePopupRect({
 
 function usePopupRect(
   monthTheme: MonthTheme,
+  events: ScheduleViewModel[],
   parentContainer?: HTMLDivElement,
   appContainer?: HTMLDivElement
 ) {
@@ -173,7 +183,7 @@ function usePopupRect(
   const [popupRect, setPopupRect] = useState<PopupRect | null>(null);
   const { moreViewTitle, moreView, schedule: scheduleTheme } = monthTheme;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const { marginBottom, height } = moreViewTitle;
     const { paddingBottom } = moreView;
 
@@ -195,13 +205,13 @@ function usePopupRect(
         grid: parentContainer,
         theme,
         options,
-        events: [],
+        events,
         appContainer,
       });
 
       setPopupRect(rect);
     }
-  }, [parentContainer, appContainer, moreViewTitle, moreView, scheduleTheme]);
+  }, [parentContainer, appContainer, moreViewTitle, moreView, scheduleTheme, events]);
 
   return { popupRect, container };
 }
@@ -211,24 +221,33 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
   const { state } = useStore('theme');
 
   const { common: commonTheme } = state;
-  const { date, dayIndex, style, parentContainer, appContainer } = props;
+  const {
+    date,
+    dayIndex,
+    events = [],
+    eventHeight = EVENT_HEIGHT,
+    style,
+    parentContainer,
+    appContainer,
+    height,
+  } = props;
 
-  const { popupRect, container } = usePopupRect(state.month, parentContainer, appContainer);
+  const { popupRect, container } = usePopupRect(state.month, events, parentContainer, appContainer);
 
-  const onOpenSeeMorePopup1 = useCallback(() => {
+  const onOpenSeeMorePopup = useCallback(() => {
     if (popupRect) {
       show({
         type: PopupType.seeMore,
         param: {
           date,
           popupRect,
-          events: [], // @TODO: 해당 날짜의 모든 일정 넘기기
+          events,
         },
       });
     }
-  }, [date, popupRect, show]);
+  }, [date, events, popupRect, show]);
 
-  const exceedCount = getExceedCount();
+  const exceedCount = getExceedCount(events, height, eventHeight, toStartOfDay(date));
 
   return (
     <div
@@ -239,7 +258,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
       <CellBar
         exceedCount={exceedCount}
         date={date.getDate()}
-        onClickExceedCount={onOpenSeeMorePopup1}
+        onClickExceedCount={onOpenSeeMorePopup}
       />
     </div>
   );

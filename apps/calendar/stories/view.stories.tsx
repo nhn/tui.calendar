@@ -6,9 +6,12 @@ import WeekView from '@src/components/view/weekView';
 import DayView from '@src/components/view/dayView';
 import { cls } from '@src/util/cssHelper';
 import { ViewListMap } from '@t/option';
+import { createStore } from '@stories/util/providerWrapper';
+import { generateRandomScheduleViewModelsForMonth } from './util/randomEvents';
 
 export default { title: 'View' };
 
+const store = createStore({});
 const style = {
   position: 'absolute',
   left: 0,
@@ -46,6 +49,16 @@ const timeGridDay = {
   },
 };
 
+function createEvents() {
+  const events = generateRandomScheduleViewModelsForMonth();
+
+  store.dispatch('dataStore/clearSchedules');
+
+  if (events.length) {
+    store.dispatch('dataStore/createSchedules', { events });
+  }
+}
+
 export const main = () => {
   const components: ViewListMap = {
     dayGridMonth,
@@ -56,9 +69,11 @@ export const main = () => {
     },
   };
 
+  createEvents();
+
   return (
     <Wrapper>
-      <Main initialView="dayGridMonth" components={components} />
+      <Main initialView="dayGridMonth" components={components} store={store} />
     </Wrapper>
   );
 };

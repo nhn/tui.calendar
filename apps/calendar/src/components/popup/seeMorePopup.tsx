@@ -7,6 +7,7 @@ import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
+import { EVENT_HEIGHT } from '@src/util/gridHelper';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
@@ -19,6 +20,13 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
     'boxShadow',
     'paddingBottom'
   );
+  // @TODO: 테마 적용
+  const headerHeight = 56;
+  const moreListStyle = {
+    padding: '0 17px',
+    height: `calc(100% - ${headerHeight}px)`,
+  };
+  const eventHeight = EVENT_HEIGHT;
 
   // @TODO: 요일 템플릿 적용
   const dayName = capitalizeDayName(getDayName(date.getDay()));
@@ -26,9 +34,17 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   return (
     <div className={cls('see-more')} style={style}>
       <SeeMoreHeader date={date.getDate()} day={dayName} />
-      {events.map((event, index) => (
-        <GridEvent event={event} key={`see-more-event-item-${index}`} />
-      ))}
+      <div className={cls('month-more-list')} style={moreListStyle}>
+        {events.map((viewModel) => (
+          <GridEvent
+            key={`see-more-event-item-${viewModel.cid()}`}
+            viewModel={viewModel}
+            eventHeight={eventHeight}
+            headerHeight={headerHeight}
+            flat={true}
+          />
+        ))}
+      </div>
     </div>
   );
 };

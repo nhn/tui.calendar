@@ -7,6 +7,10 @@ import TZDate from '@src/time/date';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import { CalendarMonthOption } from '@t/store';
 import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
+import Schedule from '@src/model/schedule';
+import { generateRandomEvents } from './util/randomEvents';
+import { ScheduleData } from '@src/model';
+import Panel from '@src/components/panel';
 
 export default { title: 'DayGrid' };
 
@@ -15,7 +19,7 @@ export const cell = () => {
 
   return (
     <ProviderWrapper>
-      <Cell date={date} dayIndex={date.getDay()} style={{ width: 100, height: 100 }} />
+      <Cell date={date} dayIndex={date.getDay()} style={{ width: 100, height: 100 }} height={100} />
     </ProviderWrapper>
   );
 };
@@ -26,7 +30,7 @@ export const week = () => {
   return (
     <ProviderWrapper>
       <Grid
-        height={100}
+        cssHeight={100}
         calendar={calendar}
         appContainer={{ current: document.createElement('div') }}
       />
@@ -85,6 +89,42 @@ export const daygrid = () => {
         calendar={calendar}
         appContainer={{ current: document.createElement('div') }}
       />
+    </ProviderWrapper>
+  );
+};
+
+export const randomEvents = () => {
+  const calendar = getWeekDates();
+
+  const options: CalendarMonthOption = {
+    visibleWeeksCount: 1,
+    workweek: false,
+    narrowWeekend: false,
+    startDayOfWeek: 0,
+    isAlways6Week: true,
+    daynames: [],
+    moreLayerSize: { width: null, height: null },
+    grid: {
+      header: { height: 31 },
+      footer: { height: 31 },
+    },
+    visibleScheduleCount: 6,
+    scheduleFilter: () => true,
+  };
+
+  const data = generateRandomEvents('month', calendar[0], calendar[6], 10);
+  const events = data.map((event: ScheduleData) => Schedule.create(event));
+
+  return (
+    <ProviderWrapper events={events}>
+      <Panel name="weekday" height={400}>
+        <DayGrid
+          options={options}
+          calendar={[calendar]}
+          events={events}
+          appContainer={{ current: document.createElement('div') }}
+        />
+      </Panel>
     </ProviderWrapper>
   );
 };

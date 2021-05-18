@@ -5,11 +5,10 @@ import { cls } from '@src/util/cssHelper';
 import MonthDayNames from '@src/components/daygrid/dayNames';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import { useStore } from '@src/components/hooks/store';
-import { MonthOption, TemplateMonthDayName } from '@src/model';
+import { TemplateMonthDayName } from '@src/model';
 import Panel from '@src/components/panel';
 import { getSize } from '@src/util/domutil';
-import TZDate from '@src/time/date';
-import { arr2dCalendar, isWeekend } from '@src/time/datetime';
+import { getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { capitalizeDayName } from '@src/util/dayName';
 import { isNumber } from '@src/util/utils';
 import { DayNameItem } from '@t/components/daygrid/dayNames';
@@ -42,24 +41,6 @@ function getDayNameHeight(height?: string | number) {
   const dayNameHeight = height ?? 0;
 
   return isNumber(dayNameHeight) ? dayNameHeight : parseFloat(dayNameHeight);
-}
-
-function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
-  const date = new TZDate(renderMonthDate);
-  const {
-    startDayOfWeek = 0,
-    visibleWeeksCount = 0,
-    workweek = false,
-    isAlways6Week = true,
-  } = options;
-  const weekCount = Math.min(visibleWeeksCount, 6);
-
-  return arr2dCalendar(date, {
-    startDayOfWeek,
-    workweek,
-    isAlways6Week: visibleWeeksCount ? false : isAlways6Week,
-    visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
-  });
 }
 
 function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: number) {

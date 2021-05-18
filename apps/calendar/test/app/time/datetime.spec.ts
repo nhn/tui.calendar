@@ -35,7 +35,7 @@ describe('datetime', () => {
     it('makes date array by supplied dates.', () => {
       const start = new TZDate('2015/05/01');
       const end = new TZDate('2015/05/03');
-      const step = dt.MILLISECONDS_PER_DAY;
+      const step = dt.MS_PER_DAY;
 
       const expected = [
         new TZDate('2015/05/01'),
@@ -63,7 +63,7 @@ describe('datetime', () => {
         new TZDate('2015/05/01 18:30:00'),
       ];
 
-      expect(dt.makeDateRange(start, end, dt.MILLISECONDS_PER_HOUR)).toEqual(expected);
+      expect(dt.makeDateRange(start, end, dt.MS_PER_HOUR)).toEqual(expected);
     });
   });
 
@@ -514,5 +514,51 @@ describe('datetime', () => {
     const endOfYear = new TZDate('2020-12-31T23:59:59.999');
 
     expect(dt.toEndOfYear(date)).toEqual(endOfYear);
+  });
+
+  describe('getMonthCalendar', () => {
+    const date = createDate(2021, 5, 14);
+
+    it("should make a month with starting from Wednesday, If 'startDayOfWeek' is 3", () => {
+      expect(dt.getMonthCalendar(date, { startDayOfWeek: 3, visibleWeeksCount: 2 })).toEqual([
+        [
+          createDate(2021, 5, 12),
+          createDate(2021, 5, 13),
+          createDate(2021, 5, 14),
+          createDate(2021, 5, 15),
+          createDate(2021, 5, 16),
+          createDate(2021, 5, 17),
+          createDate(2021, 5, 18),
+        ],
+        [
+          createDate(2021, 5, 19),
+          createDate(2021, 5, 20),
+          createDate(2021, 5, 21),
+          createDate(2021, 5, 22),
+          createDate(2021, 5, 23),
+          createDate(2021, 5, 24),
+          createDate(2021, 5, 25),
+        ],
+      ]);
+    });
+
+    it("should return a month only weekdays, If 'workweek' is true", () => {
+      expect(dt.getMonthCalendar(date, { workweek: true, visibleWeeksCount: 2 })).toEqual([
+        [
+          createDate(2021, 5, 10),
+          createDate(2021, 5, 11),
+          createDate(2021, 5, 12),
+          createDate(2021, 5, 13),
+          createDate(2021, 5, 14),
+        ],
+        [
+          createDate(2021, 5, 17),
+          createDate(2021, 5, 18),
+          createDate(2021, 5, 19),
+          createDate(2021, 5, 20),
+          createDate(2021, 5, 21),
+        ],
+      ]);
+    });
   });
 });

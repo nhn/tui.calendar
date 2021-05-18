@@ -3,7 +3,7 @@ import { FunctionComponent, h } from 'preact';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { toPercent, toPx } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
-import { EVENT_HEIGHT } from '@src/event/panelEvent';
+import { EVENT_HEIGHT } from '@src/util/gridHelper';
 
 interface Props {
   viewModel: ScheduleViewModel;
