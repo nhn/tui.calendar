@@ -16,7 +16,7 @@ import { getSize } from '@src/util/domutil';
 import { cls } from '@src/util/cssHelper';
 import { getRenderedEventViewModels } from '@src/util/gridHelper';
 import { CreationGuideInfo } from '@src/components/timegrid';
-import { addDate, getStartAndEndDateFromGrid, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { getStartAndEndDateFromGrid, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getLeftWidthByDate } from '@src/controller/month';
 import { PopupType } from '@src/modules/layerPopup';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
@@ -126,8 +126,8 @@ function renderCreationGuide(
 
 function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
   return calendar.map((week) =>
-    week.map((day, index) => {
-      const start = toStartOfDay(addDate(day, index - day.getDay()));
+    week.map((day) => {
+      const start = toStartOfDay(day);
       const end = toEndOfDay(start);
 
       return {
