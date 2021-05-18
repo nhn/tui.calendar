@@ -7,6 +7,7 @@ import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
+import { EVENT_HEIGHT } from '@src/util/gridHelper';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
@@ -19,11 +20,14 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
     'boxShadow',
     'paddingBottom'
   );
-  const headerHeight = 44;
+
+  // @TODO: 테마 적용
+  const headerHeight = 56;
   const moreListStyle = {
-    padding: '0 17px', // @TODO: 테마 적용
-    height: `calc(100% - ${headerHeight}px - 17px)`,
+    padding: '0 17px',
+    height: `calc(100% - ${headerHeight}px)`,
   };
+  const eventHeight = EVENT_HEIGHT;
 
   // @TODO: 요일 템플릿 적용
   const dayName = capitalizeDayName(getDayName(date.getDay()));
@@ -36,8 +40,8 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
           <GridEvent
             key={`see-more-event-item-${viewModel.cid()}`}
             viewModel={viewModel}
-            eventHeight={20}
-            cellTopHeight={56}
+            eventHeight={eventHeight}
+            headerHeight={headerHeight}
             flat={true}
           />
         ))}

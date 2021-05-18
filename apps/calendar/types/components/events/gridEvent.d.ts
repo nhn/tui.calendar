@@ -4,4 +4,5 @@ type EventItemStyleParam = {
   borderColor: string;
   exceedLeft: boolean;
   exceedRight: boolean;
+  eventHeight: number;
 };

@@ -35,7 +35,7 @@ describe('datetime', () => {
     it('makes date array by supplied dates.', () => {
       const start = new TZDate('2015/05/01');
       const end = new TZDate('2015/05/03');
-      const step = dt.MILLISECONDS_PER_DAY;
+      const step = dt.MS_PER_DAY;
 
       const expected = [
         new TZDate('2015/05/01'),
@@ -63,7 +63,7 @@ describe('datetime', () => {
         new TZDate('2015/05/01 18:30:00'),
       ];
 
-      expect(dt.makeDateRange(start, end, dt.MILLISECONDS_PER_HOUR)).toEqual(expected);
+      expect(dt.makeDateRange(start, end, dt.MS_PER_HOUR)).toEqual(expected);
     });
   });
 
@@ -561,7 +561,7 @@ describe('datetime', () => {
       ]);
     });
   });
-
+  
   it('getStartAndEndDateFromCalendar', () => {
     const data = [
       [new TZDate(2021, 4, 10), new TZDate(2021, 4, 11), new TZDate(2021, 4, 12)],
@@ -587,4 +587,5 @@ describe('datetime', () => {
       end: new TZDate(2021, 4, 14),
     });
   });
+
 });

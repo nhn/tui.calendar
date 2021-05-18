@@ -162,25 +162,25 @@ const tokenFunc = {
  * The number of milliseconds one day.
  * @type {number}
  */
-export const MILLISECONDS_PER_DAY = 86400000;
+export const MS_PER_DAY = 86400000;
 
 /**
  * The number of milliseconds one hour.
  * @type {number}
  */
-export const MILLISECONDS_PER_HOUR = 3600000;
+export const MS_PER_HOUR = 3600000;
 
 /**
  * The number of milliseconds one minutes.
  * @type {number}
  */
-export const MILLISECONDS_PER_MINUTES = 60000;
+export const MS_PER_MINUTES = 60000;
 
 /**
  * The number of milliseconds 20 minutes for schedule min duration
  * @type {number}
  */
-export const MILLISECONDS_SCHEDULE_MIN_DURATION = 20 * 60000;
+export const MS_SCHEDULE_MIN_DURATION = 20 * MS_PER_MINUTES;
 
 export const SIXTY_SECONDS = 60;
 
@@ -775,7 +775,25 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   const _d1 = new TZDate(d1.getFullYear(), d1.getMonth(), d1.getDate()).getTime();
   const _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
-  return Math.round((_d1 - _d2) / MILLISECONDS_PER_DAY);
+  return Math.round((_d1 - _d2) / MS_PER_DAY);
+}
+
+export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
+  const date = new TZDate(renderMonthDate);
+  const {
+    startDayOfWeek = 0,
+    visibleWeeksCount = 0,
+    workweek = false,
+    isAlways6Week = true,
+  } = options;
+  const weekCount = Math.min(visibleWeeksCount, 6);
+
+  return arr2dCalendar(date, {
+    startDayOfWeek,
+    workweek,
+    isAlways6Week: visibleWeeksCount ? false : isAlways6Week,
+    visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
+  });
 }
 
 export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {

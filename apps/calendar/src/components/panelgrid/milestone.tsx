@@ -6,6 +6,7 @@ import { cls } from '@src/util/cssHelper';
 import { addDate } from '@src/time/datetime';
 import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelEvents } from '@src/components/panelgrid/panelEvents';
+import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
 import { PanelActionType, PanelStore } from '@src/components/layout';
@@ -35,12 +36,13 @@ export const Milestone: FunctionComponent<Props> = ({
   panelHeight = DEFAULT_MILESTONE_PANEL_HEIGHT,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
+  const panelType = 'milestone';
   const { state, dispatch } = useContext(PanelStore);
 
   useEffect(() => {
     dispatch({
       type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: 'milestone',
+      panelType,
       state: {
         panelHeight,
       },
@@ -49,18 +51,16 @@ export const Milestone: FunctionComponent<Props> = ({
 
   return (
     <Fragment>
-      <div className={cls('panel-title')} style={{ width: columnWidth }}>
-        Title
-      </div>
+      <PanelTitle width={columnWidth} template={panelType} model={panelType} />
       <div className={cls('panel-milestone')}>
         <PanelGrid
-          name="milestone"
+          name={panelType}
           cells={cells}
           events={events}
           defaultPanelHeight={panelHeight}
           options={state?.milestone}
         />
-        <PanelEvents name="milestone" cells={cells} events={events} options={state?.milestone} />
+        <PanelEvents name={panelType} cells={cells} events={events} options={state?.milestone} />
       </div>
     </Fragment>
   );

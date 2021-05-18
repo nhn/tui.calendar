@@ -50,7 +50,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
       {calendar.map((date, columnIndex) => {
         const dayIndex = date.getDay();
         const { width, left } = grids[columnIndex];
-        const YMD = toFormat(toStartOfDay(date), 'YYYYMMDD');
+        const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
         return (
           <Cell
@@ -64,7 +64,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
             }}
             parentContainer={container.current}
             appContainer={appContainer.current}
-            events={gridDateEventModelMap[YMD]}
+            events={gridDateEventModelMap[ymd]}
             eventHeight={eventHeight}
             height={height}
             rowIndex={rowIndex}

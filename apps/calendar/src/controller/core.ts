@@ -9,13 +9,7 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 import Collection, { Filter } from '@src/util/collection';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import {
-  makeDateRange,
-  MILLISECONDS_PER_DAY,
-  toFormat,
-  toStartOfDay,
-  toEndOfDay,
-} from '@src/time/datetime';
+import { makeDateRange, MS_PER_DAY, toFormat, toStartOfDay, toEndOfDay } from '@src/time/datetime';
 
 export type CollisionGroup = Array<number[]>;
 export type Matrix<T> = Array<Array<T[]>>;
@@ -27,7 +21,10 @@ export type ScheduleMatrix2d<T> = Array<T[]>;
  * @param {Array<Schedule|ScheduleViewModel>} schedules List of viewmodels.
  * @returns {Array<number[]>} Collision Group.
  */
-export function getCollisionGroup(schedules: Schedule[] | ScheduleViewModel[]) {
+export function getCollisionGroup(
+  schedules: Schedule[] | ScheduleViewModel[],
+  usingTravelTime = true
+) {
   const collisionGroups: CollisionGroup = [];
   let previousScheduleList: Array<Schedule | ScheduleViewModel>;
 
@@ -41,7 +38,7 @@ export function getCollisionGroup(schedules: Schedule[] | ScheduleViewModel[]) {
 
     // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
     const found = previousScheduleList.find((previous: Schedule | ScheduleViewModel) => {
-      return schedule.collidesWith(previous);
+      return schedule.collidesWith(previous, usingTravelTime);
     });
 
     if (!found) {
@@ -94,7 +91,8 @@ export function getLastRowInColumn(arr2d: Array<any[]>, col: number) {
  */
 export function getMatrices<T extends Schedule | ScheduleViewModel>(
   collection: Collection<T>,
-  collisionGroups: CollisionGroup
+  collisionGroups: CollisionGroup,
+  usingTravelTime = true
 ): ScheduleMatrix<T> {
   const result: ScheduleMatrix<T> = [];
 
@@ -114,7 +112,7 @@ export function getMatrices<T extends Schedule | ScheduleViewModel>(
         if (lastRowInColumn === -1) {
           matrix[0].push(schedule);
           found = true;
-        } else if (!schedule.collidesWith(matrix[lastRowInColumn][col])) {
+        } else if (!schedule.collidesWith(matrix[lastRowInColumn][col], usingTravelTime)) {
           nextRow = lastRowInColumn + 1;
           if (isUndefined(matrix[nextRow])) {
             matrix[nextRow] = [];
@@ -169,7 +167,7 @@ export function positionViewModels(
   matrices: ScheduleMatrix<ScheduleViewModel>,
   iteratee?: (viewModel: ScheduleViewModel) => void
 ) {
-  const ymdListToRender = makeDateRange(start, end, MILLISECONDS_PER_DAY).map((date) => {
+  const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) => {
     return toFormat(date, 'YYYYMMDD');
   });
 
@@ -184,7 +182,7 @@ export function positionViewModels(
         const dateLength = makeDateRange(
           toStartOfDay(viewModel.getStarts()),
           toEndOfDay(viewModel.getEnds()),
-          MILLISECONDS_PER_DAY
+          MS_PER_DAY
         ).length;
 
         viewModel.top = index;

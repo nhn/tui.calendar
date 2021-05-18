@@ -11,13 +11,7 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { isSameSchedule } from '@src/util';
 import Collection from '@src/util/collection';
 import TZDate from '@src/time/date';
-import {
-  toStartOfDay,
-  toEndOfDay,
-  MILLISECONDS_PER_DAY,
-  toFormat,
-  makeDateRange,
-} from '@src/time/datetime';
+import { toStartOfDay, toEndOfDay, MS_PER_DAY, toFormat, makeDateRange } from '@src/time/datetime';
 
 export type IDS_OF_DAY = Record<string, number[]>;
 
@@ -42,14 +36,13 @@ export function createScheduleCollection<T extends Schedule | ScheduleViewModel>
  * @returns {array} contain dates.
  */
 export function getDateRange(start: TZDate, end: TZDate) {
-  return makeDateRange(toStartOfDay(start), toEndOfDay(end), MILLISECONDS_PER_DAY);
+  return makeDateRange(toStartOfDay(start), toEndOfDay(end), MS_PER_DAY);
 }
 
 export function isAllDay(schedule: Schedule) {
   if (
     schedule.isAllDay ||
-    (schedule.category === 'time' &&
-      Number(schedule.end) - Number(schedule.start) > MILLISECONDS_PER_DAY)
+    (schedule.category === 'time' && Number(schedule.end) - Number(schedule.start) > MS_PER_DAY)
   ) {
     return true;
   }

@@ -51,14 +51,11 @@ export function getGridWidthAndLeftPercentValues(
     return isWeekend(day) ? widthPerDay : widthPerDay * 2;
   });
 
-  const leftList = widthList.reduce<number[]>((acc, _, index) => {
-    if (!index) {
-      return [0];
-    }
-
-    return [...acc, acc[index - 1] + widthList[index - 1]];
-  }, []);
-
+  const leftList = widthList.reduce<number[]>(
+    (acc, _, index) => (index ? [...acc, acc[index - 1] + widthList[index - 1]] : [0]),
+    []
+  );
+  
   return {
     widthList,
     leftList,

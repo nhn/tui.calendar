@@ -204,8 +204,9 @@ export function findByDateRange(
   _adjustRenderRange(start, end, viewModelColl);
   const vList = viewModelColl.sort(array.compare.schedule.asc);
 
-  const collisionGroup = getCollisionGroup(vList);
-  const matrices = getMatrices(viewModelColl, collisionGroup);
+  const usingTravelTime = false;
+  const collisionGroup = getCollisionGroup(vList, usingTravelTime);
+  const matrices = getMatrices(viewModelColl, collisionGroup, usingTravelTime);
 
   positionViewModels(start, end, matrices, _weightTopValue);
 

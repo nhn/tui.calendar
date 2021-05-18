@@ -9,6 +9,7 @@ import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 
 import type { MilestoneEvent } from '@t/events';
+import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 
 export default { title: 'Panel', component: Milestone, args: { primary: true } };
 
@@ -73,3 +74,11 @@ scrollMilestone.args = {
 };
 
 scrollMilestone.storyName = 'events milestone with scroll';
+
+export const title: Story = () => {
+  const type = 'milestone';
+
+  return <PanelTitle width={120} template={type} model={type} />;
+};
+
+title.storyName = 'panel title';

@@ -7,13 +7,13 @@ import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
 
 import {
-  MILLISECONDS_SCHEDULE_MIN_DURATION,
+  MS_SCHEDULE_MIN_DURATION,
   millisecondsFrom,
   toStartOfDay,
   toEndOfDay,
   toFormat,
   makeDateRange,
-  MILLISECONDS_PER_DAY,
+  MS_PER_DAY,
 } from '@src/time/datetime';
 import {
   ScheduleMatrix,
@@ -36,7 +36,7 @@ import array from '@src/util/array';
 
 import type { Panel } from '@t/panel';
 
-const SCHEDULE_MIN_DURATION = MILLISECONDS_SCHEDULE_MIN_DURATION;
+const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
 /**********
  * TIME GRID VIEW
@@ -271,11 +271,12 @@ export function getViewModelForTimeView(
   const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
 
   const _getViewModel = _makeGetViewModelFuncForTimeView(hourStart, hourEnd);
+  const usingTravelTime = true;
 
   forEach(ymdSplitted, (viewModelColl: Collection<ScheduleViewModel>, ymd: string) => {
     const viewModels = _getViewModel(viewModelColl);
-    const collisionGroups = getCollisionGroup(viewModels);
-    const matrices = getMatrices(viewModelColl, collisionGroups);
+    const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
+    const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
 
     result[ymd] = getCollides(matrices);
   });
@@ -321,9 +322,9 @@ export function getViewModelForAlldayView(
   limitRenderRange(start, end, viewModelColl);
 
   const viewModels = viewModelColl.sort(array.compare.schedule.asc);
-  const collisionGroups = getCollisionGroup(viewModels);
-
-  const matrices = getMatrices(viewModelColl, collisionGroups);
+  const usingTravelTime = true;
+  const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
+  const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
 
   positionViewModels(start, end, matrices);
 
@@ -426,11 +427,7 @@ export function getExceedDate(
           return;
         }
 
-        const period = makeDateRange(
-          viewModel.getStarts(),
-          viewModel.getEnds(),
-          MILLISECONDS_PER_DAY
-        );
+        const period = makeDateRange(viewModel.getStarts(), viewModel.getEnds(), MS_PER_DAY);
 
         period.forEach((date) => {
           const ymd = getYMD(date);

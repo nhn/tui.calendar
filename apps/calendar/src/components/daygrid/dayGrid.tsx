@@ -14,62 +14,32 @@ import TZDate from '@src/time/date';
 import { CalendarMonthOption } from '@t/store';
 import { getSize } from '@src/util/domutil';
 import { cls } from '@src/util/cssHelper';
-import { EVENT_HEIGHT, getRenderedEventViewModels } from '@src/util/gridHelper';
+import { getRenderedEventViewModels } from '@src/util/gridHelper';
 import { CreationGuideInfo } from '@src/components/timegrid';
 import { addDate, getStartAndEndDateFromGrid, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getLeftWidthByDate } from '@src/controller/month';
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { PopupType } from '@src/modules/layerPopup';
+import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
 interface DayGridProps {
   options: CalendarMonthOption;
-  useCreationPopup?: boolean;
   calendar: TZDate[][];
   appContainer: { current: HTMLDivElement };
   events?: Schedule[];
-  creationGuide?: CreationGuideInfo | null;
+  useCreationPopup?: boolean;
 }
 
-function renderCreationGuide(
-  creationGuide: CreationGuideInfo[],
-  startDate: TZDate,
-  endDate: TZDate
-) {
-  if (!creationGuide.length) {
-    return null;
-  }
+function useGridHeight() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
 
-  return creationGuide.map((guide, index) => {
-    const { start, end } = guide;
-    const { left, width } = getLeftWidthByDate(start, end, startDate, endDate);
+  useEffect(() => {
+    setHeight(getSize(ref.current).height);
+  }, []);
 
-    return width > 0 ? (
-      <CreationGuide
-        key={`month-creation-guide-${index}`}
-        {...creationGuide}
-        left={left}
-        width={width}
-      />
-    ) : null;
-  });
-}
-
-function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
-  return calendar.map((week) =>
-    week.map((day, index) => {
-      const start = toStartOfDay(addDate(day, index - day.getDay()));
-      const end = toEndOfDay(start);
-
-      return {
-        start,
-        end,
-        unit: 'date',
-        slot: 1,
-      } as GridGuideInfo;
-    })
-  );
+  return { ref, height };
 }
 
 function useCreationGuide(useCreationPopup = false) {
@@ -130,23 +100,51 @@ function useCreationGuide(useCreationPopup = false) {
   };
 }
 
+function renderCreationGuide(
+  creationGuide: CreationGuideInfo[],
+  startDate: TZDate,
+  endDate: TZDate
+) {
+  if (!creationGuide.length) {
+    return null;
+  }
+
+  return creationGuide.map((guide, index) => {
+    const { start, end } = guide;
+    const { left, width } = getLeftWidthByDate(start, end, startDate, endDate);
+
+    return width > 0 ? (
+      <CreationGuide
+        key={`month-creation-guide-${index}`}
+        {...creationGuide}
+        left={left}
+        width={width}
+      />
+    ) : null;
+  });
+}
+
+function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
+  return calendar.map((week) =>
+    week.map((day, index) => {
+      const start = toStartOfDay(addDate(day, index - day.getDay()));
+      const end = toEndOfDay(start);
+
+      return {
+        start,
+        end,
+        unit: 'date',
+        slot: 1,
+      } as GridGuideInfo;
+    })
+  );
+}
+
 const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const { options, calendar = [], appContainer, useCreationPopup = false } = props;
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
 
-  const rowHeight = TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount || 6, 1);
-  const name = 'dayGrid';
-
-  const { state: dataStore } = useStore('dataStore');
-
-  const eventHeight = EVENT_HEIGHT;
-
-  const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    setHeight(getSize(ref.current).height);
-  }, []);
+  const { ref, height } = useGridHeight();
 
   const {
     creationGuide,
@@ -155,6 +153,20 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     onGuideEnd,
     onGuideCancel,
   } = useCreationGuide(useCreationPopup);
+
+  const rowHeight =
+    TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
+
+  const {
+    state: { dataStore, theme },
+  } = useStore(['dataStore', 'theme']);
+
+  if (!theme || !dataStore) {
+    return null;
+  }
+
+  const { schedule: monthScheduleTheme } = theme.month;
+  const eventHeight = parseFloat(monthScheduleTheme.height);
 
   const gridInfoList = getGridInfoList(calendar);
 
@@ -176,7 +188,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
 
         return (
           <div
-            key={`${name}-events-${index}`}
+            key={`dayGrid-events-${index}`}
             className={cls('month-week-item')}
             style={{ height: toPercent(rowHeight) }}
             ref={ref}
@@ -192,14 +204,14 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 appContainer={appContainer}
                 eventHeight={eventHeight}
                 height={height}
-                index={index}
               />
               <GridEvents
-                name={name}
+                name="month"
                 cells={week}
                 events={viewModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
+                eventHeight={eventHeight}
                 className={cls('weekday-schedules')}
               />
               {renderCreationGuide(creationGuide, gridStart, gridEnd)}

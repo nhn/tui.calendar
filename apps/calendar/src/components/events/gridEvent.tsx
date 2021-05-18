@@ -7,10 +7,17 @@ import { cls } from '@src/util/cssHelper';
 interface GridEventProps {
   viewModel: ScheduleViewModel;
   eventHeight: number;
-  cellTopHeight: number;
+  headerHeight: number;
   flat?: boolean;
 }
 
+function getMargin(flat: boolean) {
+  return {
+    vertical: flat ? 5 : 2,
+    horizontal: 8,
+  };
+}
+  
 function getExceedClassName(exceedLeft: boolean, exceedRight: boolean) {
   const className = [];
 
@@ -31,8 +38,9 @@ function getEventItemStyle({
   borderColor,
   exceedLeft,
   exceedRight,
+  eventHeight,
 }: EventItemStyleParam) {
-  const defualtItemStyle = {
+  const defaultItemStyle = {
     color: '#333',
     backgroundColor: bgColor,
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
@@ -52,7 +60,7 @@ function getEventItemStyle({
       };
 }
 
-function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridEventProps) {
+function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridEventProps) {
   const {
     width,
     left,
@@ -62,6 +70,7 @@ function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridE
     model: { bgColor, borderColor },
   } = viewModel;
 
+  const margin = getMargin(flat);
   const blockStyle = flat
     ? {}
     : {
@@ -71,9 +80,18 @@ function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridE
         position: 'absolute',
       };
 
-  const eventItemStyle = getEventItemStyle({ flat, exceedLeft, exceedRight, bgColor, borderColor });
+  const eventItemStyle = getEventItemStyle({
+    flat,
+    exceedLeft,
+    exceedRight,
+    bgColor,
+    borderColor,
+    eventHeight,
+  });
 
-  const resizeIconStyle = { lineHeight: toPx(18) };
+  const resizeIconStyle = {
+    lineHeight: toPx(18),
+  };
 
   const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
     exceedLeft,
@@ -84,7 +102,8 @@ function useStyle({ viewModel, eventHeight, cellTopHeight, flat = false }: GridE
 }
 
 const GridEvent: FunctionComponent<GridEventProps> = (props) => {
-  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = useStyle(props);
+  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
+
 
   const {
     viewModel: {
@@ -100,7 +119,7 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
         {props.flat ? null : (
           <span
             className={[cls('weekday-resize-handle'), cls('handle-y')].join(' ')}
-            style={{ position: 'absolute', right: 8, cursor: 'col-resize' }}
+            style={{ position: 'absolute', top: 0, right: 5, cursor: 'col-resize' }}
           >
             <i className={[cls('icon'), cls('ic-handle-y')].join(' ')} style={resizeIconStyle} />
           </span>
