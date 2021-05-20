@@ -1,5 +1,5 @@
 import TZDate from '@src/time/date';
-import { getGridLeftAndWidth, GridInfo } from '@src/time/datetime';
+import { getGridLeftAndWidth } from '@src/time/datetime';
 import { getMousePositionData } from '@src/util/monthViewHelper';
 
 describe('monthView Helper', function () {
