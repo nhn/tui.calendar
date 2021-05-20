@@ -3,7 +3,6 @@ import { h, FunctionComponent } from 'preact';
 import { useDrag } from '@src/components/hooks/drag';
 
 import { CreationGuideInfo } from '@src/components/timegrid';
-import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import { addMilliseconds, isSame } from '@src/time/datetime';
 import { getNextGridTime, getPrevGridTimeFromMouseEvent } from '@src/controller/times';
 import { cls } from '@src/util/cssHelper';
@@ -13,9 +12,9 @@ import { closest } from '@src/util/domutil';
 
 interface Props {
   gridInfoList: GridGuideInfo[][];
-  onGuideStart: (guide: CreationGuideInfo) => void;
+  onGuideStart: (guide: CreationGuideInfo | null) => void;
+  onGuideEnd: (guide: CreationGuideInfo | null) => void;
   onGuideChange: (guide: CreationGuideInfo) => void;
-  onGuideEnd: (guide: CreationGuideInfo) => void;
   onGuideCancel: () => void;
 }
 
@@ -39,17 +38,28 @@ function getGuideTime(
   return { guideStartTime, guideEndTime };
 }
 
+function hasIgnoredTarget(target: HTMLElement) {
+  const seeMoreButton = closest(target, cls('.grid-cell-more-events'));
+
+  return !!seeMoreButton;
+}
+
 const GridsWithMouse: FunctionComponent<Props> = (props) => {
   let guideStartData: GridGuideCreationInfo | null = null;
 
   let guidePrevDragData: GridGuideCreationInfo | null = null;
 
   const getGridIndexFromMouse = (e: MouseEvent) => {
-    const target = getTarget(e);
+    const target = e.target as HTMLElement;
+
+    if (hasIgnoredTarget(target)) {
+      return null;
+    }
+
     let cell = closest(target, cls('.daygrid-cell')) || target;
 
     if (!cell) {
-      const weekDayContainer = target.closest(cls('.weekday'));
+      const weekDayContainer = closest(target, cls('.weekday'));
       cell = weekDayContainer?.querySelector(cls('.daygrid-cell')) || target;
     }
 
@@ -128,21 +138,21 @@ const GridsWithMouse: FunctionComponent<Props> = (props) => {
   };
 
   const onDragEnd = (e: MouseEvent) => {
-    guideStartData = getCreationGuideDataFromMouse(e);
+    const guideData = getCreationGuideDataFromMouse(e) ?? guidePrevDragData;
 
-    if (guideStartData && props.onGuideEnd) {
-      props.onGuideEnd(guideStartData);
+    if (guideData && props.onGuideEnd) {
+      props.onGuideEnd(guideData);
     }
   };
 
   const onClick = (e: MouseEvent) => {
     const guideData = getCreationGuideDataFromMouse(e);
 
-    if (guideData && props.onGuideStart) {
+    if (props.onGuideStart) {
       props.onGuideStart(guideData);
     }
 
-    if (guideData && props.onGuideEnd) {
+    if (props.onGuideEnd) {
       props.onGuideEnd(guideData);
     }
   };

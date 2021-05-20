@@ -122,6 +122,7 @@ interface OptionData {
 
 interface BasePopupParam {
   popupRect: PopupRect;
+  close?: () => void;
 }
 
 type PopupParamMap = {

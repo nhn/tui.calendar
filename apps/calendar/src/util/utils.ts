@@ -12,6 +12,10 @@ export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
 
+export function isFunction(value: unknown): value is Function {
+  return typeof value === 'function';
+}
+
 export function forEach<T extends object, K extends Extract<keyof T, string>, V extends T[K]>(
   obj: T,
   cb: (item: V, key: K) => void

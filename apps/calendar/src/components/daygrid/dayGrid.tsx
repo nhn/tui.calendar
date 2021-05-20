@@ -43,53 +43,57 @@ function useGridHeight() {
 }
 
 function useCreationGuide(useCreationPopup = false) {
-  const [creationGuide, setCreationGuide] = useState<CreationGuideInfo[]>([]);
+  const [creationGuide, setCreationGuide] = useState<CreationGuideInfo | null>(null);
+  const [popupFlag, setPopupFlag] = useState(false);
 
-  const { show } = useActions('layerPopup');
+  const { show, hide } = useActions('layerPopup');
 
-  const onOpenCreationPopup = useCallback(
-    ({ start, end }: { start: TZDate; end: TZDate }) => {
-      if (useCreationPopup) {
-        show({
-          type: PopupType.creation,
-          param: {
-            start,
-            end,
-            isAllDay: true,
-            popupRect: {
-              width: 474,
-              height: 272,
-              left: 102.695,
-              top: 257,
-            },
+  const onOpenCreationPopup = (guide: CreationGuideInfo) => {
+    if (useCreationPopup) {
+      const { start, end } = guide;
+
+      // @TODO: popupRect 계산 필요
+      show({
+        type: PopupType.creation,
+        param: {
+          start,
+          end,
+          isAllDay: true,
+          popupRect: {
+            width: 474,
+            height: 272,
+            left: 102.695,
+            top: 257,
           },
-        });
+          close: () => {
+            onGuideCancel();
+            setPopupFlag(false);
+          },
+        },
+      });
+
+      if (!popupFlag) {
+        setPopupFlag(true);
       }
-    },
-    [show, useCreationPopup]
-  );
-
-  const onCreateEvent = ({ start, end }: CreationGuideInfo) => {
-    onOpenCreationPopup({ start, end });
-    /*
-    // @TODO: beforeCreateSchedule 발생
-    externalEvent.fire('beforeCreateSchedule', {
-      start: guide.start,
-      end: guide.end,
-      isAllDay: false,
-    });
-    */
+    }
   };
-  const onGuideStart = (guide: CreationGuideInfo) => setCreationGuide([...creationGuide, guide]);
-  const onGuideEnd = (guide: CreationGuideInfo) => {
-    setCreationGuide([...creationGuide, guide]);
 
-    onCreateEvent(guide);
+  const onGuideStart = (guide: CreationGuideInfo | null) => {
+    setCreationGuide(guide);
+  };
+  const onGuideEnd = (guide: CreationGuideInfo | null) => {
+    setCreationGuide(guide);
+
+    if (guide) {
+      onOpenCreationPopup(guide);
+    } else if (!guide && popupFlag) {
+      hide();
+    }
   };
   const onGuideChange = (guide: CreationGuideInfo) => {
-    setCreationGuide([...creationGuide, guide]);
+    setCreationGuide(guide);
   };
-  const onGuideCancel = () => setCreationGuide([]);
+  const onGuideCancel = () => setCreationGuide(null);
 
   return {
     creationGuide,
@@ -101,27 +105,19 @@ function useCreationGuide(useCreationPopup = false) {
 }
 
 function renderCreationGuide(
-  creationGuide: CreationGuideInfo[],
+  creationGuide: CreationGuideInfo,
   startDate: TZDate,
-  endDate: TZDate
+  endDate: TZDate,
+  narrowWeekend: boolean
 ) {
-  if (!creationGuide.length) {
+  if (!creationGuide) {
     return null;
   }
 
-  return creationGuide.map((guide, index) => {
-    const { start, end } = guide;
-    const { left, width } = getLeftWidthByDate(start, end, startDate, endDate);
+  const { start, end } = creationGuide;
+  const { left, width } = getLeftWidthByDate(start, end, startDate, endDate, narrowWeekend);
 
-    return width > 0 ? (
-      <CreationGuide
-        key={`month-creation-guide-${index}`}
-        {...creationGuide}
-        left={left}
-        width={width}
-      />
-    ) : null;
-  });
+  return width > 0 ? <CreationGuide {...creationGuide} left={left} width={width} /> : null;
 }
 
 function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
@@ -215,7 +211,9 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 eventHeight={eventHeight}
                 className={cls('weekday-schedules')}
               />
-              {renderCreationGuide(creationGuide, gridStart, gridEnd)}
+              {creationGuide
+                ? renderCreationGuide(creationGuide, gridStart, gridEnd, narrowWeekend)
+                : null}
             </div>
           </div>
         );
