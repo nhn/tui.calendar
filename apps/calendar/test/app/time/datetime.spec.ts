@@ -575,16 +575,41 @@ describe('datetime', () => {
     });
   });
 
-  it('getStartAndEndDateFromGrid', () => {
+  it('getStartAndEndFromDates', () => {
     const data = [
       new TZDate(2021, 4, 10),
       new TZDate(2021, 4, 11),
       new TZDate(2021, 4, 13),
       new TZDate(2021, 4, 14),
     ];
-    expect(dt.getStartAndEndDateFromGrid(data)).toEqual({
+    expect(dt.getStartAndEndFromDates(data)).toEqual({
       start: new TZDate(2021, 4, 10),
       end: new TZDate(2021, 4, 14),
     });
+  });
+
+  it('isStartOfDay', () => {
+    expect(dt.isStartOfDay(new TZDate(2021, 4, 10))).toBe(true);
+    expect(dt.isStartOfDay(new TZDate(2021, 4, 10, 0, 0, 1))).toBe(false);
+  });
+
+  it('convertStartDayToLastDay', () => {
+    expect(dt.convertStartDayToLastDay(new TZDate(2021, 4, 10))).toEqual(
+      new TZDate(2021, 4, 9, 23, 59, 59)
+    );
+    expect(dt.convertStartDayToLastDay(new TZDate(2021, 4, 10, 13, 50))).toEqual(
+      new TZDate(2021, 4, 10, 13, 50)
+    );
+  });
+
+  it('withinRangeDate', () => {
+    const dates = [
+      new TZDate(2021, 4, 10),
+      new TZDate(2021, 4, 11),
+      new TZDate(2021, 4, 13),
+      new TZDate(2021, 4, 14),
+    ];
+    expect(dt.withinRangeDate(new TZDate(2021, 4, 9), new TZDate(2021, 4, 15), dates)).toBe(true);
+    expect(dt.withinRangeDate(new TZDate(2021, 4, 9), new TZDate(2021, 4, 11), dates)).toBe(false);
   });
 });

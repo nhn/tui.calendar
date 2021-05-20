@@ -23,6 +23,7 @@ export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
   onResizeEnd?: (panelName: string, dragPositionInfo: DragPositionInfo) => void;
   onPanelRectUpdated?: (name: string, rect: PanelRect) => void;
+  className?: string;
 }
 
 type Child = VNode<any> | string | number;
@@ -40,6 +41,7 @@ const Panel: FunctionComponent<Props> = (props) => {
     resizerHeight,
     resizable,
     children,
+    className,
   } = props;
 
   const panelRef = useRef<HTMLDivElement>(null);
@@ -126,7 +128,7 @@ const Panel: FunctionComponent<Props> = (props) => {
 
   return (
     <Fragment>
-      <div ref={panelRef} className={cls('panel')} style={styles}>
+      <div ref={panelRef} className={`${cls('panel')} ${className}`} style={styles}>
         {children}
       </div>
       {resizable ? getPanelResizer() : null}

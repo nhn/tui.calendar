@@ -136,7 +136,7 @@ export const creationGuide = () => {
   const options: CalendarMonthOption = {
     visibleWeeksCount: 2,
     workweek: false,
-    narrowWeekend: false,
+    narrowWeekend: true,
     startDayOfWeek: 0,
     isAlways6Week: true,
     daynames: [],

@@ -32,6 +32,12 @@ export type RawDate = {
   ms: number;
 };
 
+export type GridInfo = {
+  day: number;
+  width: number;
+  left: number;
+};
+
 const dateFormatRx = /^(\d{4}[-|/]*\d{2}[-|/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 
 const memo: {
@@ -681,11 +687,7 @@ export function getGridLeftAndWidth(
   narrowWeekend: boolean,
   startDayOfWeek: number,
   workweek: boolean
-): Array<{
-  day: number;
-  width: number;
-  left: number;
-}> {
+): GridInfo[] {
   const limitDaysToApplyNarrowWeekend = 5;
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
@@ -805,9 +807,29 @@ export function getStartAndEndDateFromCalendar(calendar: TZDate[][]) {
   };
 }
 
-export function getStartAndEndDateFromGrid(grid: TZDate[]) {
+export function getStartAndEndFromDates(grid: TZDate[]) {
   return {
     start: grid[0],
     end: grid[grid.length - 1],
   };
+}
+
+export function isStartOfDay(d: TZDate) {
+  return !compare(toStartOfDay(d), d);
+}
+
+export function convertStartDayToLastDay(d: TZDate) {
+  const date = new TZDate(d);
+  if (isStartOfDay(d)) {
+    date.setDate(date.getDate() - 1);
+    date.setHours(23, 59, 59);
+  }
+
+  return date;
+}
+
+export function withinRangeDate(minDate: TZDate, maxDate: TZDate, dates: TZDate[]) {
+  const { start, end } = getStartAndEndFromDates(dates);
+
+  return minDate <= start && maxDate >= end;
 }

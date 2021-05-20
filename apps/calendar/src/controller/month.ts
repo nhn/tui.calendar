@@ -21,7 +21,6 @@ import { toFormat, isSameDate, toEndOfDay, toStartOfDay } from '@src/time/dateti
 import { IDS_OF_DAY } from './base';
 import array from '@src/util/array';
 import { DataStore } from '@src/model';
-import { limit, ratio } from '@src/util/math';
 
 /**
  * Filter function for find allday schedule
@@ -217,25 +216,4 @@ export function findByDateRange(
   }
 
   return matrices;
-}
-
-export function getLeftPercentByDate(date: TZDate, start: TZDate, end: TZDate) {
-  const startTime = toStartOfDay(start).getTime();
-  const endTime = toEndOfDay(end).getTime();
-  const time = limit(date.getTime(), [startTime], [endTime]) - startTime;
-  const max = endTime - startTime;
-  const leftPercent = ratio(max, 100, time);
-
-  return limit(leftPercent, [0], [100]);
-}
-
-export function getLeftWidthByDate(start: TZDate, end: TZDate, minDate: TZDate, maxDate: TZDate) {
-  const left = getLeftPercentByDate(start, minDate, maxDate);
-  const right = getLeftPercentByDate(end, minDate, maxDate);
-  const width = right - left;
-
-  return {
-    left,
-    width,
-  };
 }

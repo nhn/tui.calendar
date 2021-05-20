@@ -16,6 +16,10 @@ export function isFunction(value: unknown): value is Function {
   return typeof value === 'function';
 }
 
+export function isNil(value: unknown): boolean {
+  return isUndefined(value) || value === null;
+}
+
 export function forEach<T extends object, K extends Extract<keyof T, string>, V extends T[K]>(
   obj: T,
   cb: (item: V, key: K) => void
@@ -123,4 +127,15 @@ export function includes<T>(arr: T[], searchItem: T, searchIndex?: number) {
   }
 
   return false;
+}
+export function findIndex<T>(arr: T[], predicate: (item: T) => boolean) {
+  const { length } = arr;
+
+  for (let i = 0; i < length; i += 1) {
+    if (predicate(arr[i])) {
+      return i;
+    }
+  }
+
+  return null;
 }
