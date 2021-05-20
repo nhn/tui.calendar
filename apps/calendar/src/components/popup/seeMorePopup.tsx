@@ -20,7 +20,6 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
     'boxShadow',
     'paddingBottom'
   );
-
   // @TODO: 테마 적용
   const headerHeight = 56;
   const moreListStyle = {

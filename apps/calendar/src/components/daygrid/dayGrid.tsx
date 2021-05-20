@@ -202,7 +202,6 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 appContainer={appContainer}
                 eventHeight={eventHeight}
                 height={height}
-                index={rowIndex}
               />
               <GridEvents
                 name="month"

@@ -20,7 +20,6 @@ interface GridProps {
   appContainer: { current: HTMLDivElement };
   eventHeight?: number;
   height?: number;
-  index?: number;
 }
 
 const Grid: FunctionComponent<GridProps> = (props) => {
@@ -35,7 +34,6 @@ const Grid: FunctionComponent<GridProps> = (props) => {
     gridDateEventModelMap = {},
     eventHeight = EVENT_HEIGHT,
     height = 0,
-    index: rowIndex = 0,
   } = props;
 
   const style = {
@@ -67,8 +65,6 @@ const Grid: FunctionComponent<GridProps> = (props) => {
             events={gridDateEventModelMap[ymd]}
             eventHeight={eventHeight}
             height={height}
-            rowIndex={rowIndex}
-            columnIndex={columnIndex}
           />
         );
       })}

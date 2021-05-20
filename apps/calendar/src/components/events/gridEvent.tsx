@@ -121,10 +121,10 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
         <span className={cls('weekday-schedule-title')}>{title}</span>
         {props.flat ? null : (
           <span
-            className={[cls('weekday-resize-handle'), cls('handle-y')].join(' ')}
+            className={`${cls('weekday-resize-handle')} ${cls('handle-y')}`}
             style={{ position: 'absolute', top: 0, right: 5, cursor: 'col-resize' }}
           >
-            <i className={[cls('icon'), cls('ic-handle-y')].join(' ')} style={resizeIconStyle} />
+            <i className={`${cls('icon')} ${cls('ic-handle-y')}`} style={resizeIconStyle} />
           </span>
         )}
       </div>

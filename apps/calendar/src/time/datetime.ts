@@ -22,21 +22,6 @@ export enum Day {
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
 }
-export type RawDate = {
-  y: number;
-  M: number;
-  d: number;
-  h: number;
-  m: number;
-  s: number;
-  ms: number;
-};
-
-export type GridInfo = {
-  day: number;
-  width: number;
-  left: number;
-};
 
 const dateFormatRx = /^(\d{4}[-|/]*\d{2}[-|/]*\d{2})\s?(\d{2}:\d{2}:\d{2})?$/;
 
@@ -807,14 +792,13 @@ export function getStartAndEndDateFromCalendar(calendar: TZDate[][]) {
   };
 }
 
-export function getStartAndEndFromDates(grid: TZDate[]) {
+function getStartAndEndFromDates(grid: TZDate[]) {
   return {
     start: grid[0],
     end: grid[grid.length - 1],
   };
 }
-
-export function isStartOfDay(d: TZDate) {
+function isStartOfDay(d: TZDate) {
   return !compare(toStartOfDay(d), d);
 }
 

@@ -1,6 +1,5 @@
 import { findIndex } from '@src/util/utils';
 import { ratio } from '@src/util/math';
-import { GridInfo } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 
 type ContainerPosition = {
