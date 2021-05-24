@@ -32,7 +32,7 @@ const defaultDayNameTheme = {
   fontWeight: 'normal',
   textAlign: 'left',
 };
-const defaultMarginLeft = 60;
+const defaultMarginLeft = 0;
 
 const DayNames: FunctionComponent<DayNamesProps> = ({
   dayNames = [],
