@@ -30,6 +30,8 @@ module.exports = {
     fixture: true,
   },
   rules: {
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/no-use-before-define': 0,

@@ -1,5 +1,9 @@
-.month-dayname {
+.daynames {
   width: 100%;
+}
+
+.dayname-item-wrapper {
+  position: relative;
 }
 
 .dayname-item {
