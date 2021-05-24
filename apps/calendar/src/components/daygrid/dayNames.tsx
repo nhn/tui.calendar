@@ -13,7 +13,7 @@ export interface DayNamesProps {
   dayNames: DayNameItem[];
   theme?: DayNameTheme;
   options?: CalendarMonthOption | CalendarWeekOption;
-  timezoneWidth?: number;
+  marginLeft?: number;
 }
 
 const defaultDayNameOption = {
@@ -32,21 +32,15 @@ const defaultDayNameTheme = {
   fontWeight: 'normal',
   textAlign: 'left',
 };
-const defaultTimezoneWidth = 60;
+const defaultMarginLeft = 60;
 
-const MonthDayNames: FunctionComponent<DayNamesProps> = ({
+const DayNames: FunctionComponent<DayNamesProps> = ({
   dayNames = [],
   theme = defaultDayNameTheme,
   options = defaultDayNameOption,
-  timezoneWidth = defaultTimezoneWidth,
+  marginLeft = defaultMarginLeft,
 }) => {
-  const {
-    narrowWeekend = false,
-    startDayOfWeek = 0,
-    workweek = false,
-    timezones = [],
-  } = options as CalendarWeekOption;
-  const marginLeft = toPx(timezones.length * timezoneWidth);
+  const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options;
 
   const {
     height,
@@ -63,6 +57,7 @@ const MonthDayNames: FunctionComponent<DayNamesProps> = ({
     height,
     borderLeft,
     backgroundColor,
+    marginLeft,
   };
 
   const dayNameStyle = {
@@ -78,22 +73,20 @@ const MonthDayNames: FunctionComponent<DayNamesProps> = ({
 
   return (
     <div className={cls('daynames')} style={style}>
-      <div className={cls('dayname-item-wrapper')} style={{ marginLeft }}>
-        {dayNames.map(({ name, dayIndex }, index) => (
-          <DayName
-            dayname={name}
-            dayIndex={dayIndex}
-            key={`dayNames-${name}-${dayIndex}`}
-            style={{
-              ...dayNameStyle,
-              width: toPercent(grids[index].width),
-              left: toPercent(grids[index].left),
-            }}
-          />
-        ))}
-      </div>
+      {dayNames.map(({ name, dayIndex }, index) => (
+        <DayName
+          dayname={name}
+          dayIndex={dayIndex}
+          key={`dayNames-${name}-${dayIndex}`}
+          style={{
+            ...dayNameStyle,
+            width: toPercent(grids[index].width),
+            left: toPercent(grids[index].left),
+          }}
+        />
+      ))}
     </div>
   );
 };
 
-export default MonthDayNames;
+export default DayNames;
