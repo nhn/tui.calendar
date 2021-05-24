@@ -2,8 +2,9 @@ import { ScheduleData } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
 import { includes, range } from '@src/util/utils';
-import { Options } from '@t/option';
-import { InitStoreData, OptionData } from '@t/store';
+
+import type { Options } from '@t/option';
+import type { CalendarMonthOption, CalendarWeekOption, InitStoreData, OptionData } from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {
   return range(startDayOfWeek, 7)
@@ -11,7 +12,28 @@ function initializeDayNames(startDayOfWeek = 0) {
     .map((day) => getDayName(day));
 }
 
-function getInitialOptions(optionsData: Options = {}): OptionData {
+function initializeWeekOption(optionsData: Options = {}): CalendarWeekOption {
+  return {
+    startDayOfWeek: 0,
+    daynames: [],
+    narrowWeekend: false,
+    workweek: false,
+    showTimezoneCollapseButton: false,
+    timezonesCollapsed: false,
+    timezones: [
+      {
+        timezoneOffset: 540,
+        displayLabel: 'GMT+09:00',
+        tooltip: 'Seoul',
+      },
+    ],
+    hourStart: 0,
+    hourEnd: 24,
+    ...optionsData.week,
+  };
+}
+
+function initializeMonthOption(optionsData: Options = {}): CalendarMonthOption {
   const month = {
     daynames: [],
     visibleWeeksCount: 0,
@@ -34,8 +56,13 @@ function getInitialOptions(optionsData: Options = {}): OptionData {
     month.daynames = initializeDayNames(month.startDayOfWeek);
   }
 
+  return month;
+}
+
+function getInitialOptions(optionsData: Options = {}): OptionData {
   return {
-    month,
+    month: initializeMonthOption(optionsData),
+    week: initializeWeekOption(optionsData),
   };
 }
 

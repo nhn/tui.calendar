@@ -2,7 +2,7 @@ import { h, FunctionComponent } from 'preact';
 import { Ref, useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
-import MonthDayNames from '@src/components/daygrid/dayNames';
+import DayNames from '@src/components/daygrid/dayNames';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import { useStore } from '@src/components/hooks/store';
 import { TemplateMonthDayName } from '@src/model';
@@ -78,7 +78,7 @@ const Month: FunctionComponent = () => {
   return (
     <div className={cls('month')} ref={container}>
       <Panel name="month-daynames" height={dayNameHeight}>
-        <MonthDayNames dayNames={dayNames} theme={theme.month.dayname} options={monthOptions} />
+        <DayNames dayNames={dayNames} theme={theme.month.dayname} options={monthOptions} />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>
         <DayGrid options={monthOptions} calendar={calendar} appContainer={container} />
