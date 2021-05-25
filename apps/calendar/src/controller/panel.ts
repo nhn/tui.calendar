@@ -1,6 +1,6 @@
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 import { Direction } from '@src/controller/layout';
-import { getElementRect as getRect } from '@src/util/domutil';
+import { getElementRect as getRect } from '@src/util/dom';
 
 export type Styles = Record<string, string | number>;
 export type PanelElementRectMap = Record<string, PanelRect>;

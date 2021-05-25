@@ -1,5 +1,7 @@
 import { h, FunctionComponent } from 'preact';
 
+import ResizeIcon from '@src/components/events/resizeIcon';
+
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { toPercent, toPx } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
@@ -109,6 +111,7 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
   const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
 
   const {
+    flat = false,
     viewModel: {
       model: { title },
     },
@@ -119,14 +122,7 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
     <div className={dayEventBlockClassName} style={blockStyle}>
       <div className={cls('weekday-event')} style={eventItemStyle}>
         <span className={cls('weekday-schedule-title')}>{title}</span>
-        {props.flat ? null : (
-          <span
-            className={`${cls('weekday-resize-handle')} ${cls('handle-y')}`}
-            style={{ position: 'absolute', top: 0, right: 5, cursor: 'col-resize' }}
-          >
-            <i className={`${cls('icon')} ${cls('ic-handle-y')}`} style={resizeIconStyle} />
-          </span>
-        )}
+        {flat ? null : <ResizeIcon style={resizeIconStyle} />}
       </div>
     </div>
   );

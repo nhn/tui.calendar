@@ -5,20 +5,20 @@ import { useActions, useStore } from '@src/components/hooks/store';
 
 import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
-import GridsWithMouse from '@src/components/daygrid/gridsWithMouse';
+import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import CreationGuide from '@src/components/daygrid/creationGuide';
 
 import { toPercent } from '@src/util/units';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { CalendarMonthOption } from '@t/store';
-import { getSize } from '@src/util/domutil';
+import { getSize } from '@src/util/dom';
 import { cls } from '@src/util/cssHelper';
 import { getLeftAndWidth, getRenderedEventViewModels } from '@src/util/gridHelper';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { PopupType } from '@src/modules/layerPopup';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
-import { GridGuideCreationInfo } from '@t/components/daygrid/gridsWithMouse';
+import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
@@ -109,10 +109,6 @@ function renderCreationGuide(
   cells: TZDate[],
   narrowWeekend: boolean
 ) {
-  if (!creationGuide) {
-    return null;
-  }
-
   const { start, end } = creationGuide;
   const { left, width } = getLeftAndWidth(start, end, cells, narrowWeekend);
 
@@ -169,7 +165,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const gridInfoList = getGridInfoList(calendar);
 
   return (
-    <GridsWithMouse
+    <GridWithMouse
       onGuideStart={onGuideStart}
       onGuideChange={onGuideChange}
       onGuideEnd={onGuideEnd}
@@ -217,7 +213,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
           </div>
         );
       })}
-    </GridsWithMouse>
+    </GridWithMouse>
   );
 };
 

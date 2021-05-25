@@ -12,7 +12,7 @@ import {
   VNode,
   toChildArray,
 } from 'preact';
-import { getOffsetParentPos, getOffsetParentRect } from '@src/util/domutil';
+import { getOffsetParentPos, getOffsetParentRect } from '@src/util/dom';
 import { limit } from '@src/util/math';
 import { Direction } from '@src/controller/layout';
 

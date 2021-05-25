@@ -139,3 +139,31 @@ export function findIndex<T>(arr: T[], predicate: (item: T) => boolean) {
 
   return null;
 }
+
+export function toArray<T>(arrayLike: T[] | NodeListOf<Element>) {
+  let arr;
+  try {
+    arr = Array.prototype.slice.call(arrayLike);
+  } catch (e) {
+    arr = [];
+    forEachArray(arrayLike, (value) => {
+      arr.push(value);
+    });
+  }
+
+  return arr;
+}
+
+export function forEachArray<T>(
+  arr: T[] | NodeListOf<Element>,
+  iteratee: (value: T | Element, index?: number, arr?: T[] | NodeListOf<Element>) => boolean | void
+) {
+  let index = 0;
+  const len = arr.length;
+
+  for (; index < len; index += 1) {
+    if (iteratee(arr[index], index, arr) === false) {
+      break;
+    }
+  }
+}

@@ -2,15 +2,9 @@ import { FunctionComponent, h } from 'preact';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { renderHook, act } from '@testing-library/preact-hooks';
-import StoreProvider from '@src/components/provider';
 import { useCalendarState, useStore, useActions } from '@src/components/hooks/store';
 import { counter, todos } from '@test/module/modules';
-
-function getStoreWrapper(store: Store): FunctionComponent {
-  return function wrapper({ children }) {
-    return <StoreProvider store={store}>{children}</StoreProvider>;
-  };
-}
+import { getStoreWrapper } from '@test/helper/storeProvider';
 
 describe('Store Provider', () => {
   let store: Store<CalendarState>;

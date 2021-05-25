@@ -36,7 +36,7 @@ describe('monthView Helper', function () {
     grids = getGridLeftAndWidth(7, false, 0, false);
   });
 
-  it('should calc date by mouse event.', function () {
+  it('should calc date by mouse event.', () => {
     const getBoundingClientRectSpy = jest.fn(
       () =>
         ({

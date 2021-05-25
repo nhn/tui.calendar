@@ -7,7 +7,7 @@ import DayGrid from '@src/components/daygrid/dayGrid';
 import { useStore } from '@src/components/hooks/store';
 import { TemplateMonthDayName } from '@src/model';
 import Panel from '@src/components/panel';
-import { getSize } from '@src/util/domutil';
+import { getSize } from '@src/util/dom';
 import { getGridLeftAndWidth, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { capitalizeDayName } from '@src/util/dayName';
 import { isNumber } from '@src/util/utils';
@@ -15,6 +15,8 @@ import { getMousePositionData } from '@src/util/monthViewHelper';
 
 import { DayNameItem } from '@t/components/daygrid/dayNames';
 import { OptionData } from '@t/store';
+
+const nullFn = () => null;
 
 function getDayNames(
   monthDayNameTemplate: (model: TemplateMonthDayName) => string,
@@ -64,7 +66,7 @@ function usePanelContainer(container: Ref<HTMLDivElement>) {
   useEffect(() => {
     if (container.current) {
       const panelContainer: HTMLElement | null = container.current.querySelector(
-        cls('.month-daygrid-panel')
+        `${cls('.panel')}.month-daygrid`
       );
 
       if (panelContainer) {
@@ -99,14 +101,14 @@ const Month: FunctionComponent = () => {
 
   const getMouseDataOnMonth = panelContainer
     ? getMousePositionData(calendar, grids, panelContainer)
-    : () => null;
+    : nullFn;
 
   return (
     <div className={cls('month')} ref={container}>
       <Panel name="month-daynames" height={dayNameHeight}>
         <DayNames dayNames={dayNames} theme={theme.month.dayname} options={monthOptions} />
       </Panel>
-      <Panel name="month-daygrid" className={cls('month-daygrid-panel')} height={gridPanelHeight}>
+      <Panel name="month-daygrid" height={gridPanelHeight}>
         <DayGrid
           options={monthOptions}
           calendar={calendar}

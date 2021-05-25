@@ -1,5 +1,5 @@
 import { findIndex } from '@src/util/utils';
-import { ratio } from '@src/util/math';
+import { limit, ratio } from '@src/util/math';
 import TZDate from '@src/time/date';
 
 type ContainerPosition = {
@@ -10,12 +10,9 @@ type ContainerPosition = {
 };
 
 function getX(grids: GridInfo[], left: number) {
-  const index = findIndex<GridInfo>(
-    grids,
-    (item) => item.left <= left && left <= item.left + item.width
+  return (
+    findIndex<GridInfo>(grids, (item) => item.left <= left && left <= item.left + item.width) ?? -1
   );
-
-  return index ?? -1;
 }
 
 function getMousePosition(
@@ -53,12 +50,7 @@ export function getMousePositionData(
     let x = getX(grids, ratio(width, 100, left));
     let y = Math.floor(ratio(height, weekCount, top));
 
-    if (y < 0) {
-      y = 0;
-    }
-    if (y >= calendar.length) {
-      y = calendar.length - 1;
-    }
+    y = limit(y, [0], [calendar.length - 1]);
 
     const dateRange = calendar[y];
 
@@ -66,12 +58,7 @@ export function getMousePositionData(
       return null;
     }
 
-    if (x < 0) {
-      x = 0;
-    }
-    if (x >= dateRange.length) {
-      x = dateRange.length - 1;
-    }
+    x = limit(x, [0], [dateRange.length - 1]);
 
     const date = dateRange[x];
 

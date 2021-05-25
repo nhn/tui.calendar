@@ -11,7 +11,6 @@ import Schedule from '@src/model/schedule';
 import { generateRandomEvents } from './util/randomEvents';
 import { ScheduleData } from '@src/model';
 import Panel from '@src/components/panel';
-import { getMonthCalendar, getStartAndEndDateFromCalendar } from '@src/time/datetime';
 
 export default { title: 'DayGrid' };
 

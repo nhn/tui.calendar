@@ -6,7 +6,7 @@ import isNull from 'tui-code-snippet/type/isNull';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import isString from 'tui-code-snippet/type/isString';
-import { includes } from './utils';
+import { includes, toArray } from './utils';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -118,7 +118,7 @@ const matchSelector =
   elProto.webkitMatchesSelector ||
   elProto.msMatchesSelector ||
   function (this: Element, selector: string) {
-    return includes(Array.from(document.querySelectorAll(selector)), this);
+    return includes(toArray(document.querySelectorAll(selector)), this);
   };
 
 function matches(element: Node & ParentNode, selector: string) {
@@ -133,7 +133,7 @@ export function closest(element: HTMLElement, selector: string) {
   let parent = element.parentNode;
 
   while (parent && parent !== document) {
-    if (parent && matches(parent, selector)) {
+    if (matches(parent, selector)) {
       return parent as HTMLElement;
     }
 

@@ -3,7 +3,7 @@ import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import TZDate from '@src/time/date';
 import { ratio, limit } from '@src/util/math';
 import { millisecondsTo, clone, addSeconds, addMilliseconds } from '@src/time/datetime';
-import { closest, getSize } from '@src/util/domutil';
+import { closest, getSize } from '@src/util/dom';
 import { TimeUnit } from '@src/model';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 

@@ -9,7 +9,7 @@ import { CreationGuideInfo } from '@src/components/timegrid';
 import { TimeUnit } from '@src/model';
 import { TimeProps } from '@src/components/timegrid/times';
 import TZDate from '@src/time/date';
-import { closest } from '@src/util/domutil';
+import { closest } from '@src/util/dom';
 
 const classNames = {
   columns: cls('columns'),
