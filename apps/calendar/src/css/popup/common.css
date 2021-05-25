@@ -1,0 +1,11 @@
+.popup-close {
+  position: absolute;
+  right: 0;
+  outline: 0;
+  background: none;
+  border: 0;
+  font-size: 14px;
+  line-height: 3.6;
+  padding: 0 17px;
+  cursor: pointer;
+}

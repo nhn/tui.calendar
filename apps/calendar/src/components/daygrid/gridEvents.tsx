@@ -23,8 +23,12 @@ const GridEvents: FunctionComponent<Props> = ({
   name,
   className,
 }) => {
-  const filteredViewModels = events.filter(isWithinHeight(height, eventHeight));
-  const headerHeight = 31; // @TODO: 테마에서 값 가져와서 설정
+  // @TODO: 테마에서 값 가져와서 설정
+  const headerHeight = 31;
+  const eventTopMargin = 2;
+  const filteredViewModels = events.filter(
+    isWithinHeight(height - headerHeight, eventHeight + eventTopMargin)
+  );
 
   const dayEvents = filteredViewModels.map((viewModel) => (
     <GridEvent

@@ -9,7 +9,7 @@ import { TimeUnit } from '@src/model';
 import { toFormat, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
 import { getTopPercentByTime } from '@src/controller/times';
 import { first, last } from '@src/util/array';
-import { isOverlapped } from '@src/util/domutil';
+import { isOverlapped } from '@src/util/dom';
 import { Template } from '@src/components/template';
 import { TemplateName } from '@src/template/default';
 import { prefixer } from '@src/components/timegrid';

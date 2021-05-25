@@ -1,4 +1,3 @@
-import getMouseButton from 'tui-code-snippet/domEvent/getMouseButton';
 import { noop } from '@src/util';
 import { isKey, ESCAPE } from '@src/util/keycode';
 
@@ -12,7 +11,7 @@ export interface DragListeners {
   onCancel?: () => void;
 }
 
-export const DISTANCE = 10;
+export const DISTANCE = 3;
 
 export function useDrag({
   onDragStart = noop,
@@ -47,8 +46,8 @@ export function useDrag({
   };
 
   const onMouseDown = (e: MouseEvent) => {
-    // only primary button can start drag.
-    if (getMouseButton(e) !== 0) {
+    // only primary button can start drag. 0 is primary button value.
+    if (e.button !== 0) {
       return;
     }
 

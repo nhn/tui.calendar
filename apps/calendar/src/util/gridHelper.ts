@@ -2,14 +2,21 @@ import { findByDateRange } from '@src/controller/month';
 import { DataStore } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
-import { isWeekend, toStartOfDay } from '@src/time/datetime';
+import {
+  convertStartDayToLastDay,
+  isWeekend,
+  toEndOfDay,
+  toStartOfDay,
+  withinRangeDate,
+} from '@src/time/datetime';
 import { Cells } from '@t/panel';
+import { findIndex, isNil } from './utils';
 
 export const EVENT_HEIGHT = 20;
 export const TOTAL_WIDTH = 100;
 
 export function isWithinHeight(containerHeight: number, eventHeight: number) {
-  return ({ top }: ScheduleViewModel) => containerHeight >= (top + 1) * eventHeight;
+  return ({ top }: ScheduleViewModel) => containerHeight >= top * eventHeight;
 }
 
 const isExceededHeight = (containerHeight: number, eventHeight: number) => {
@@ -51,9 +58,10 @@ export function getGridWidthAndLeftPercentValues(
     return isWeekend(day) ? widthPerDay : widthPerDay * 2;
   });
 
-  const leftList = widthList.reduce<number[]>((acc, _, index) => {
-    return index ? [...acc, acc[index - 1] + widthList[index - 1]] : [0];
-  }, []);
+  const leftList = widthList.reduce<number[]>(
+    (acc, _, index) => (index ? [...acc, acc[index - 1] + widthList[index - 1]] : [0]),
+    []
+  );
 
   return {
     widthList,
@@ -80,22 +88,42 @@ const isInGrid = (gridDate: TZDate) => {
   };
 };
 
-const getEventPosition = (
-  viewModel: ScheduleViewModel,
+function getGridDateIndex(date: TZDate, cells: TZDate[]) {
+  return findIndex(cells, (item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
+}
+
+export const getLeftAndWidth = (
+  start: TZDate,
+  end: TZDate,
   cells: Cells,
-  widthList: number[],
-  top: number
+  narrowWeekend: boolean
 ) => {
-  const modelStart = viewModel.getStarts();
-  const modelEnd = viewModel.getEnds();
+  const gridStartIndex = getGridDateIndex(start, cells);
+  const gridEndIndex = getGridDateIndex(convertStartDayToLastDay(end), cells);
+
+  if (isNil(gridStartIndex) && isNil(gridEndIndex)) {
+    return { left: 0, width: withinRangeDate(start, end, cells) ? 100 : 0 };
+  }
+
+  const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
+
+  return {
+    left: !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1),
+    width: getWidth(widthList, gridStartIndex ?? 0, gridEndIndex ?? cells.length - 1),
+  };
+};
+
+const getEventLeftAndWidth = (start: TZDate, end: TZDate, cells: Cells, narrowWeekend: boolean) => {
+  const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
+
   let gridStartIndex = 0;
   let gridEndIndex = cells.length - 1;
 
   cells.forEach((cell, index) => {
-    if (cell <= modelStart) {
+    if (cell <= start) {
       gridStartIndex = index;
     }
-    if (cell <= modelEnd) {
+    if (cell <= end) {
       gridEndIndex = index;
     }
   });
@@ -103,7 +131,6 @@ const getEventPosition = (
   return {
     width: getWidth(widthList, gridStartIndex, gridEndIndex),
     left: !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1),
-    top,
   };
 };
 
@@ -112,12 +139,12 @@ function getEventViewModelWithPosition(
   cells: Cells,
   narrowWeekend = false
 ): ScheduleViewModel {
-  const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
-  const { width, left, top } = getEventPosition(viewModel, cells, widthList, viewModel.top);
+  const modelStart = viewModel.getStarts();
+  const modelEnd = viewModel.getEnds();
+  const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
 
   viewModel.width = width;
   viewModel.left = left;
-  viewModel.top = top;
 
   return viewModel;
 }

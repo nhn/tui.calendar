@@ -8,6 +8,9 @@ import {
   includes,
   pick,
   isNumber,
+  isFunction,
+  isNil,
+  findIndex,
 } from '@src/util/utils';
 
 describe('utils', () => {
@@ -80,5 +83,30 @@ describe('utils', () => {
     expect(isNumber(null)).toBeFalsy();
     expect(isNumber('TOAST UI')).toBeFalsy();
     expect(isNumber(0)).toBeTruthy();
+  });
+
+  it('isFunction', () => {
+    expect(isFunction(() => 'test')).toBe(true);
+    expect(isFunction(1)).toBe(false);
+    expect(isFunction('String')).toBe(false);
+    expect(isFunction([1, 2, 3, 4, 'str'])).toBe(false);
+  });
+
+  it('isNil', () => {
+    // eslint-disable-next-line no-undefined
+    expect(isNil(undefined)).toBe(true);
+    expect(isNil(null)).toBe(true);
+    expect(isNil([])).toBe(false);
+    expect(isNil(1)).toBe(false);
+  });
+
+  it('findIndex', () => {
+    const arr = [
+      { id: 1, title: 'todo1' },
+      { id: 2, title: 'todo2' },
+      { id: 3, title: 'todo3' },
+    ];
+
+    expect(findIndex(arr, (item) => item.id === 2)).toBe(1);
   });
 });

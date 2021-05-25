@@ -61,6 +61,8 @@ function initializeMonthOption(optionsData: Options = {}): CalendarMonthOption {
 
 function getInitialOptions(optionsData: Options = {}): OptionData {
   return {
+    useCreationPopup: optionsData?.useCreationPopup ?? true,
+    useDetailPopup: optionsData?.useDetailPopup ?? true,
     month: initializeMonthOption(optionsData),
     week: initializeWeekOption(optionsData),
   };

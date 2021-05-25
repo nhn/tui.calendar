@@ -12,6 +12,14 @@ export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
 
+export function isFunction(value: unknown): value is Function {
+  return typeof value === 'function';
+}
+
+export function isNil(value: unknown): boolean {
+  return isUndefined(value) || value === null;
+}
+
 export function forEach<T extends object, K extends Extract<keyof T, string>, V extends T[K]>(
   obj: T,
   cb: (item: V, key: K) => void
@@ -119,4 +127,43 @@ export function includes<T>(arr: T[], searchItem: T, searchIndex?: number) {
   }
 
   return false;
+}
+export function findIndex<T>(arr: T[], predicate: (item: T) => boolean) {
+  const { length } = arr;
+
+  for (let i = 0; i < length; i += 1) {
+    if (predicate(arr[i])) {
+      return i;
+    }
+  }
+
+  return null;
+}
+
+export function toArray<T>(arrayLike: T[] | NodeListOf<Element>) {
+  let arr;
+  try {
+    arr = Array.prototype.slice.call(arrayLike);
+  } catch (e) {
+    arr = [];
+    forEachArray(arrayLike, (value) => {
+      arr.push(value);
+    });
+  }
+
+  return arr;
+}
+
+export function forEachArray<T>(
+  arr: T[] | NodeListOf<Element>,
+  iteratee: (value: T | Element, index?: number, arr?: T[] | NodeListOf<Element>) => boolean | void
+) {
+  let index = 0;
+  const len = arr.length;
+
+  for (; index < len; index += 1) {
+    if (iteratee(arr[index], index, arr) === false) {
+      break;
+    }
+  }
 }

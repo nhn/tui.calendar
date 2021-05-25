@@ -1,6 +1,5 @@
 import { h, FunctionComponent, ComponentChildren } from 'preact';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import closest from 'tui-code-snippet/domUtil/closest';
 import pick from 'tui-code-snippet/object/pick';
 import { cls } from '@src/util/cssHelper';
 import { getPrevGridTimeFromMouseEvent, getNextGridTime } from '@src/controller/times';
@@ -10,6 +9,7 @@ import { CreationGuideInfo } from '@src/components/timegrid';
 import { TimeUnit } from '@src/model';
 import { TimeProps } from '@src/components/timegrid/times';
 import TZDate from '@src/time/date';
+import { closest } from '@src/util/dom';
 
 const classNames = {
   columns: cls('columns'),

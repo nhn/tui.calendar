@@ -45,9 +45,9 @@ const Grid: FunctionComponent<GridProps> = (props) => {
 
   return (
     <div className={cls('grid')} style={style} ref={container}>
-      {calendar.map((date, index) => {
+      {calendar.map((date, columnIndex) => {
         const dayIndex = date.getDay();
-        const { width, left } = grids[index];
+        const { width, left } = grids[columnIndex];
         const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
         return (

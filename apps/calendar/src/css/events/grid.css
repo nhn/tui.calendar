@@ -8,3 +8,12 @@
   font-size: 12px;
 }
 
+.weekday-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 5
+}
+
+.weekday-resize-handle.handle-y {
+  cursor: col-resize;
+}

@@ -9,6 +9,7 @@ import {
   getRenderedEventViewModels,
   getWidth,
   isWithinHeight,
+  getLeftAndWidth,
 } from '@src/util/gridHelper';
 import { Cells } from '@t/panel';
 import { createDate } from '@test/helper';
@@ -22,8 +23,8 @@ const data = [
 describe('gridHelper', () => {
   describe('isWithinHeight', () => {
     it('should return a callback function that checks whether do not exceed height of container', () => {
-      expect(isWithinHeight(100, 20)({ top: 1 } as ScheduleViewModel)).toBeTruthy();
-      expect(isWithinHeight(100, 20)({ top: 5 } as ScheduleViewModel)).toBeFalsy();
+      expect(isWithinHeight(100, 20)({ top: 1 } as ScheduleViewModel)).toBe(true);
+      expect(isWithinHeight(100, 20)({ top: 6 } as ScheduleViewModel)).toBe(false);
     });
   });
 
@@ -221,6 +222,74 @@ describe('gridHelper', () => {
           expect(result).toBe(sum);
         }
       }
+    });
+  });
+
+  describe('getLeftAndWidth', () => {
+    const cells = [
+      new TZDate(2021, 3, 25),
+      new TZDate(2021, 3, 26),
+      new TZDate(2021, 3, 27),
+      new TZDate(2021, 3, 28),
+      new TZDate(2021, 3, 29),
+      new TZDate(2021, 3, 30),
+      new TZDate(2021, 4, 1),
+    ];
+
+    it('should be 0(left value), if start date is earlier than minimum date', () => {
+      expect(
+        getLeftAndWidth(new TZDate(2021, 3, 24), new TZDate(2021, 3, 26), cells, false)
+      ).toEqual({
+        left: 0,
+        width: 100 / cells.length,
+      });
+    });
+
+    it('should be 100(width value), if start date earlier than minimum date and end date exceeds the maximum date', () => {
+      expect(
+        getLeftAndWidth(new TZDate(2021, 3, 23), new TZDate(2021, 4, 3), cells, false)
+      ).toEqual({
+        left: 0,
+        width: 100,
+      });
+    });
+
+    it('should calculate with the maximum date, if end date is later than maximum date', () => {
+      expect(getLeftAndWidth(new TZDate(2021, 4, 1), new TZDate(2021, 4, 3), cells, false)).toEqual(
+        {
+          left: (100 / cells.length) * 6,
+          width: 100 / cells.length,
+        }
+      );
+    });
+
+    it('should calculate properly left and width value, if start and end dates ar within the cell dates range', () => {
+      const { widthList } = getGridWidthAndLeftPercentValues(cells, false, 100);
+
+      expect(
+        getLeftAndWidth(new TZDate(2021, 3, 26), new TZDate(2021, 3, 28), cells, false)
+      ).toEqual({
+        left: widthList[0],
+        width: widthList[1] + widthList[2],
+      });
+    });
+    it('should calculate properly left and width value with narrow weekend', () => {
+      const narrowWeekend = true;
+      const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, 100);
+
+      expect(
+        getLeftAndWidth(new TZDate(2021, 3, 25), new TZDate(2021, 3, 26), cells, narrowWeekend)
+      ).toEqual({
+        left: 0,
+        width: widthList[0],
+      });
+
+      expect(
+        getLeftAndWidth(new TZDate(2021, 3, 25), new TZDate(2021, 3, 27), cells, narrowWeekend)
+      ).toEqual({
+        left: 0,
+        width: widthList[0] + widthList[1],
+      });
     });
   });
 });

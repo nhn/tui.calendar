@@ -1,9 +1,9 @@
 import { h, FunctionComponent } from 'preact';
 
-import { useActions } from '@src/components/hooks/store';
-import { cls } from '@src/util/cssHelper';
-
 import SeeMoreTitle from '@src/components/popup/seeMoreTitle';
+import CloseButton from '@src/components/popup/closeButton';
+
+import { cls } from '@src/util/cssHelper';
 
 interface MoreHeaderProps {
   date: number;
@@ -12,14 +12,11 @@ interface MoreHeaderProps {
 
 const SeeMoreHeader: FunctionComponent<MoreHeaderProps> = (props) => {
   const { date, day } = props;
-  const { hide } = useActions('layerPopup');
 
   return (
     <div className={cls('see-more-header')}>
       <SeeMoreTitle date={date} day={day} />
-      <button type="button" className={cls('see-more-close')} onClick={hide}>
-        <i className={[cls('icon'), cls('ic-close')].join(' ')} />
-      </button>
+      <CloseButton />
     </div>
   );
 };

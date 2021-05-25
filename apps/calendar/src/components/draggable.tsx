@@ -12,8 +12,7 @@ import {
   VNode,
   toChildArray,
 } from 'preact';
-import getMouseButton from 'tui-code-snippet/domEvent/getMouseButton';
-import { getOffsetParentPos, getOffsetParentRect } from '@src/util/domutil';
+import { getOffsetParentPos, getOffsetParentRect } from '@src/util/dom';
 import { limit } from '@src/util/math';
 import { Direction } from '@src/controller/layout';
 
@@ -93,8 +92,8 @@ export class Draggable extends Component<Props, State> {
   }
 
   onMouseDown(e: MouseEvent) {
-    // only primary button can start drag.
-    if (getMouseButton(e) !== 0) {
+    // only primary button can start drag. 0 is primary button value.
+    if (e.button !== 0) {
       return;
     }
 

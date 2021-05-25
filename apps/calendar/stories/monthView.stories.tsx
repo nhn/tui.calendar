@@ -45,5 +45,6 @@ twoWeeks.args = {
 
 export const randomEvents = Template.bind({});
 randomEvents.args = {
+  options: { month: { narrowWeekend: true } },
   events: generateRandomScheduleViewModelsForMonth(40),
 };

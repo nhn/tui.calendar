@@ -126,7 +126,7 @@ const Panel: FunctionComponent<Props> = (props) => {
 
   return (
     <Fragment>
-      <div ref={panelRef} className={cls('panel')} style={styles}>
+      <div ref={panelRef} className={`${cls('panel')} ${name}`} style={styles}>
         {children}
       </div>
       {resizable ? getPanelResizer() : null}

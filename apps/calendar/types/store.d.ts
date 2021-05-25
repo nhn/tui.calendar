@@ -114,12 +114,15 @@ type CalendarMonthOption = Required<MonthOption>;
 type CalendarWeekOption = Required<WeekOption>;
 
 interface OptionData {
+  useCreationPopup: boolean;
+  useDetailPopup: boolean;
   month: CalendarMonthOption;
   week: CalendarWeekOption;
 }
 
 interface BasePopupParam {
   popupRect: PopupRect;
+  close?: () => void;
 }
 
 type PopupParamMap = {
@@ -135,7 +138,9 @@ interface SeeMorePopupParam extends BasePopupParam {
 
 interface CreationPopupParam extends BasePopupParam {
   // @TODO: 팝업 작성 시 타입 정의
-  date: TZDate | Date;
+  start: TZDate;
+  end: TZDate;
+  isAllDay: boolean;
 }
 
 interface DetailPopupParam extends BasePopupParam {

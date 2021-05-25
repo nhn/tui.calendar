@@ -20,7 +20,7 @@ import {
   ResizeMode,
 } from '@src/controller/layout';
 import { DragPositionInfo } from '@src/components/draggable';
-import { getSize } from '@src/util/domutil';
+import { getSize } from '@src/util/dom';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';

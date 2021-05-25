@@ -112,10 +112,6 @@ declare module 'tui-code-snippet/domUtil/removeClass' {
   export default function removeClass(element: HTMLElement, ...classes: string[]): void;
 }
 
-declare module 'tui-code-snippet/domUtil/closest' {
-  export default function closest(element: HTMLElement, selector: string): HTMLElement | null;
-}
-
 // browser
 declare module 'tui-code-snippet/browser/browser' {
   interface Browser {

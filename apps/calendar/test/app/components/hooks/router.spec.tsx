@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { renderHook, act } from '@testing-library/preact-hooks';
-import { Router, useCreateRouter } from '@src/components/hooks/router';
+import { useCreateRouter } from '@src/components/hooks/router';
 
 const View1: FunctionComponent = () => {
   return <div>View1</div>;
