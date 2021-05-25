@@ -18,7 +18,7 @@ import {
 } from '@src/util/gridHelper';
 
 const DEFAULT_GRID_STYLE = {
-  borderRight: '1px solid #ddd',
+  borderLeft: '1px solid #ddd',
 };
 
 interface Props {

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
-import { Milestone } from '@src/components/panelgrid/milestone';
+import { SpecialEvents } from '@src/components/panelgrid/specialEvents';
 import { addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
@@ -11,7 +11,7 @@ import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 
 import type { MilestoneEvent } from '@t/events';
 
-export default { title: 'Panel', component: Milestone, args: { primary: true } };
+export default { title: 'Panel', component: SpecialEvents, args: { primary: true } };
 
 const now = new TZDate();
 
@@ -43,7 +43,7 @@ const data = [
 const Template: Story = (args) => (
   <Layout height={500}>
     <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-      <Milestone events={args.events} />
+      <SpecialEvents events={args.events} type="milestone" />
     </Panel>
   </Layout>
 );

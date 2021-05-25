@@ -1,5 +1,7 @@
 import type TZDate from '@src/time/date';
 
+export type SpecialEventType = 'milestone' | 'allday' | 'task';
+
 export type PanelType = 'daygrid' | 'timegrid';
 
 export interface Panel {
