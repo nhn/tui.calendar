@@ -6,7 +6,7 @@ import { isSame } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { toPercent } from '@src/util/units';
-import { GridGuideCreationInfo } from '@t/components/daygrid/gridsWithMouse';
+import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
 
 interface Props {
   gridInfoList: GridGuideInfo[][];
@@ -42,7 +42,7 @@ function getCreationGuideData(
   return { start, end, rowIndex, columnIndex };
 }
 
-const GridsWithMouse: FunctionComponent<Props> = (props) => {
+const GridWithMouse: FunctionComponent<Props> = (props) => {
   const {
     gridInfoList,
     onGuideStart,
@@ -150,4 +150,4 @@ const GridsWithMouse: FunctionComponent<Props> = (props) => {
   );
 };
 
-export default GridsWithMouse;
+export default GridWithMouse;
