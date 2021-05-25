@@ -117,7 +117,7 @@ interface OptionData {
   useCreationPopup: boolean;
   useDetailPopup: boolean;
   month: CalendarMonthOption;
-  // week: CalendarWeekOption;
+  week: CalendarWeekOption;
 }
 
 interface BasePopupParam {

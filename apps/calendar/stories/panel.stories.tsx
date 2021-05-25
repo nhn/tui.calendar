@@ -7,9 +7,9 @@ import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
+import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 
 import type { MilestoneEvent } from '@t/events';
-import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 
 export default { title: 'Panel', component: Milestone, args: { primary: true } };
 

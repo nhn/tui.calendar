@@ -14,12 +14,16 @@ type CommonTheme = {
 type DayNameTheme = {
   height: number | string;
   borderLeft: number;
-  paddingRight: number;
-  paddingLeft: number;
+  paddingRight: string | number;
+  paddingLeft: string | number;
   backgroundColor: string;
-  fontSize: number;
+  fontSize: string | number;
   fontWeight: string | number;
   textAlign: string;
+};
+
+type WeekTheme = {
+  dayname: DayNameTheme;
 };
 
 type MonthTheme = {
