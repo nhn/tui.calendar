@@ -4,7 +4,7 @@ import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { cls } from '@src/util/cssHelper';
 import { Options } from '@t/option';
-import { template, theme, layerPopup, options, dataStore } from '@src/modules';
+import { template, theme, layerPopup, options, dataStore, layout } from '@src/modules';
 import Schedule from '@src/model/schedule';
 
 const style = {
@@ -48,6 +48,6 @@ export function ProviderWrapper({
 export function createStore(optionsUseInput: Options) {
   return new Store<CalendarState>({
     initStoreData: { options: optionsUseInput },
-    modules: [template, theme, options, dataStore, layerPopup],
+    modules: [template, theme, options, dataStore, layerPopup, layout],
   });
 }

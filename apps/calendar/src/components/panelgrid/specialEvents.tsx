@@ -1,5 +1,4 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useContext, useEffect } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
@@ -9,7 +8,6 @@ import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
-import { PanelActionType, PanelStore } from '@src/components/layout';
 
 import type { Cells, SpecialEventType } from '@t/panel';
 
@@ -38,31 +36,13 @@ export const SpecialEvents: FunctionComponent<Props> = ({
   panelHeight = DEFAULT_MILESTONE_PANEL_HEIGHT,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
-  const { state, dispatch } = useContext(PanelStore);
-
-  useEffect(() => {
-    dispatch({
-      type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: type,
-      state: {
-        panelHeight,
-      },
-    });
-    console.log(type, 'useeffect');
-  }, [dispatch, panelHeight, type]);
 
   return (
     <Fragment>
       <PanelTitle width={columnWidth} template={type} model={type} />
       <div className={cls('panel-milestone')}>
-        <PanelGrid
-          name={type}
-          cells={cells}
-          events={events}
-          defaultPanelHeight={panelHeight}
-          options={state?.milestone}
-        />
-        <PanelEvents name={type} cells={cells} events={events} options={state?.milestone} />
+        <PanelGrid name={type} cells={cells} events={events} defaultPanelHeight={panelHeight} />
+        <PanelEvents name={type} cells={cells} events={events} />
       </div>
     </Fragment>
   );

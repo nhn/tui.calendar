@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent, h, VNode } from 'preact';
-import { useCallback, useContext, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import isString from 'tui-code-snippet/type/isString';
 import isNumber from 'tui-code-snippet/type/isNumber';
@@ -17,7 +17,7 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { PanelActionType, PanelStore } from '@src/components/layout';
+import { useStore } from '@src/components/hooks/store';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -45,7 +45,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const { state, dispatch } = useContext(PanelStore);
+  const { state, actions } = useStore('layout');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);
@@ -54,12 +54,9 @@ const Panel: FunctionComponent<Props> = (props) => {
       props.minHeight ?? defaultPanelHeight,
       getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
     );
-    dispatch({
-      type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: name,
-      state: {
-        panelHeight,
-      },
+    actions.updatePanelHeight({
+      type: name,
+      height: panelHeight,
     });
   };
   const getPanelResizer = () => {
@@ -118,8 +115,8 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const panelHeight = state[name]?.panelHeight ?? props.height ?? defaultPanelHeight;
-  const panelWidth = state[name]?.panelHeight ?? props.width ?? defaultPanelHeight;
+  const panelHeight = state[name]?.height ?? props.height ?? defaultPanelHeight;
+  const panelWidth = state[name]?.height ?? props.width ?? defaultPanelHeight;
   const styleWithDirection =
     direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };
   const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });

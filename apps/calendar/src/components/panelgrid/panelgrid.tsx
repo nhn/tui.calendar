@@ -1,5 +1,5 @@
 import { FunctionComponent, h } from 'preact';
-import { useContext, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
@@ -7,7 +7,6 @@ import { getViewModels } from '@src/event/panelEvent';
 import { setViewModelsInfo } from '@src/event/gridEvent';
 import Schedule from '@src/model/schedule';
 import { toStartOfDay } from '@src/time/datetime';
-import { PanelActionType, PanelState, PanelStore } from '@src/components/layout';
 
 import type { Cells } from '@t/panel';
 import {
@@ -16,6 +15,9 @@ import {
   getGridWidthAndLeftPercentValues,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
+import { useStore } from '@src/components/hooks/store';
+
+import { CalendarWeekOption } from '@t/store';
 
 const DEFAULT_GRID_STYLE = {
   borderLeft: '1px solid #ddd',
@@ -26,7 +28,7 @@ interface Props {
   cells: Cells;
   events: Schedule[];
   defaultPanelHeight: number;
-  options?: PanelState;
+  options?: CalendarWeekOption;
 }
 
 interface ExceedCountProps {
@@ -80,8 +82,10 @@ export const PanelGrid: FunctionComponent<Props> = ({
 }) => {
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
-  const { dispatch } = useContext(PanelStore);
-  const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
+  const { narrowWeekend = false } = options;
+  const { state, actions } = useStore('layout');
+  const height = state[name]?.height ?? EVENT_HEIGHT;
+  const { updatePanelHeight } = actions;
 
   const viewModels = getViewModels(events, cells);
   setViewModelsInfo(viewModels, cells, {});
@@ -90,22 +94,16 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
     setClickedIndex(index);
-    dispatch({
-      type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: name,
-      state: {
-        panelHeight: (maxTop + 1) * EVENT_HEIGHT,
-      },
+    updatePanelHeight({
+      type: name,
+      height: (maxTop + 1) * EVENT_HEIGHT,
     });
   };
   const onClickCollapseButton = () => {
     setClickedCount(false);
-    dispatch({
-      type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: name,
-      state: {
-        panelHeight: defaultPanelHeight,
-      },
+    updatePanelHeight({
+      type: name,
+      height: defaultPanelHeight,
     });
   };
 
@@ -121,7 +119,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
 
     const gridDate = toStartOfDay(cell);
 
-    const exceedCount = getExceedCount(viewModels, panelHeight, EVENT_HEIGHT, gridDate);
+    const exceedCount = getExceedCount(viewModels, height, EVENT_HEIGHT, gridDate);
     const isClickedIndex = index === clickedIndex;
 
     return (

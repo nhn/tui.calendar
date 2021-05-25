@@ -1,7 +1,6 @@
 import { FunctionComponent, Fragment, h } from 'preact';
 
 import { useStore } from '@src/components/hooks/store';
-import { cls } from '@src/util/cssHelper';
 import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
 import { TemplateWeekDay } from '@src/model';
@@ -40,8 +39,7 @@ const Day: FunctionComponent = () => {
   const today = new TZDate();
 
   return (
-    // <div className={cls('day')}>
-    <Fragment>
+    <Layout>
       <Panel name="day-daynames" height={dayNameHeight}>
         <DayNames dayNames={dayNames} marginLeft={120} />
       </Panel>
@@ -51,11 +49,10 @@ const Day: FunctionComponent = () => {
       <Panel name="task" resizable>
         <SpecialEvents events={[]} cells={[today]} type="task" />
       </Panel>
-      <Panel name="all day" resizable>
+      <Panel name="allday" resizable>
         <SpecialEvents events={[]} cells={[today]} type="allday" />
       </Panel>
-    </Fragment>
-    // </div>
+    </Layout>
   );
 };
 

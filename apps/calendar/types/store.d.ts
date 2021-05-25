@@ -1,11 +1,10 @@
 import { MonthOption, WeekOption } from '@src/model';
-import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { theme, template, options, dataStore } from '@src/modules';
+import { theme, template, options, dataStore, layout } from '@src/modules';
 import layerPopup, { PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import TZDate from '@src/time/date';
-import { Options } from './option';
+import { Options } from '@t/option';
 
 type InitStoreData = {
   options: Options;
@@ -58,6 +57,7 @@ declare global {
     theme: typeof theme;
     layerPopup: typeof layerPopup;
     dataStore: typeof dataStore;
+    layout: typeof layout;
   }
 }
 
@@ -156,3 +156,11 @@ type PopupRect = {
   left?: number | string;
   right?: number | string;
 };
+
+interface PanelState {
+  height: number;
+}
+
+interface LayoutState {
+  [key: string]: PanelState;
+}
