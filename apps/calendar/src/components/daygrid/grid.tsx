@@ -44,7 +44,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
   const grids = getGridLeftAndWidth(calendar.length, narrowWeekend, startDayOfWeek, workweek);
 
   return (
-    <div className={cls('grid')} style={style} ref={container}>
+    <div className={cls('weekday-grid')} style={style} ref={container}>
       {calendar.map((date, columnIndex) => {
         const dayIndex = date.getDay();
         const { width, left } = grids[columnIndex];

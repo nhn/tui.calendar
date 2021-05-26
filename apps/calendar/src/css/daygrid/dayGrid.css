@@ -10,7 +10,7 @@
   position: relative;
 }
 
-.grid {
+.weekday-grid {
   position: absolute;
   min-height: inherit;
   width: 100%;
