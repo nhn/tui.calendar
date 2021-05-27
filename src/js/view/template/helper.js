@@ -351,7 +351,7 @@ var helpers = {
     'monthGridHeaderExceed-tmpl': function (hiddenSchedules) {
         var className = config.classname('weekday-grid-more-schedules');
 
-        return '<span class="' + className + '">' + hiddenSchedules + ' more</span>';
+        return '<span class="' + className + '">+' + hiddenSchedules + '</span>';
     },
 
     'monthGridFooter-tmpl': function () {
@@ -370,18 +370,18 @@ var helpers = {
     'weekDayname-tmpl': function (model) {
         var classDate = config.classname('dayname-date');
         var className = config.classname('dayname-name');
-
-        return (
-            '<span class="' +
-            classDate +
-            '">' +
-            model.date +
-            '</span>&nbsp;&nbsp;<span class="' +
-            className +
-            '">' +
-            model.dayName +
-            '</span>'
-        );
+        var dateColor = model.color !== '#333' && model.color !== '#bbb' ? model.color : '#dedede';
+        var nameColor = model.color !== '#333' && model.color !== '#bbb' ? model.color : '#3f51b5';
+        return `<span class="${classDate}" style="color:${dateColor};">${model.date}</span>&nbsp;&nbsp;<span class="${className}" style="color:${nameColor};">${model.dayName}</span>`;
+        // '<span class="' +
+        // classDate +
+        // '">' +
+        // model.date +
+        // '</span>&nbsp;&nbsp;<span class="' +
+        // className +
+        // '">' +
+        // model.dayName +
+        // '</span>'
     },
 
     'weekGridFooterExceed-tmpl': function (hiddenSchedules) {
