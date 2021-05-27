@@ -1,9 +1,9 @@
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { PanelState } from '@src/components/layout';
 import { toStartOfDay } from '@src/time/datetime';
+import { getGridWidthAndLeftPercentValues, getWidth, TOTAL_WIDTH } from '@src/util/gridHelper';
 
 import type { Cells } from '@t/panel';
-import { getGridWidthAndLeftPercentValues, getWidth, TOTAL_WIDTH } from '@src/util/gridHelper';
+import type { CalendarWeekOption } from '@t/store';
 
 const setRenderInfo = (
   viewModel: ScheduleViewModel,
@@ -85,7 +85,7 @@ const getMatrices = (viewModels: ScheduleViewModel[]) => {
 export const setViewModelsInfo = (
   viewModels: ScheduleViewModel[],
   cells: Cells,
-  options: PanelState
+  options: CalendarWeekOption
 ) => {
   const { narrowWeekend = false } = options;
 

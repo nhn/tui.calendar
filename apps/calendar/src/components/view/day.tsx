@@ -1,16 +1,17 @@
-import { FunctionComponent, Fragment, h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import { useStore } from '@src/components/hooks/store';
 import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
 import { TemplateWeekDay } from '@src/model';
-import { getDayName } from '@src/util/dayName';
-
-import type { OptionData } from '@t/store';
-import type { DayNameItem } from '@t/components/daygrid/dayNames';
+import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import { SpecialEvents } from '@src/components/panelgrid/specialEvents';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
+import { getSpecialEvents } from '@src/event/panelEvent';
+
+import type { OptionData } from '@t/store';
+import type { DayNameItem } from '@t/components/daygrid/dayNames';
 
 function getDayNames(template: (model: TemplateWeekDay) => string, options: OptionData) {
   const dayNames: DayNameItem[] = [];
@@ -20,7 +21,7 @@ function getDayNames(template: (model: TemplateWeekDay) => string, options: Opti
   const dayIndex = today.getDay();
   const name = getDayName(dayIndex);
 
-  dayNames.push({ name, dayIndex });
+  dayNames.push({ name: capitalizeDayName(name), dayIndex });
 
   return dayNames;
 }
@@ -28,15 +29,18 @@ function getDayNames(template: (model: TemplateWeekDay) => string, options: Opti
 const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
-  const { state } = useStore(['template', 'theme', 'options']);
-  const { template, theme, options } = state;
+  const {
+    state: { template, theme, options, dataStore },
+  } = useStore(['template', 'theme', 'options', 'dataStore']);
 
-  if (!template || !theme || !options) {
+  if (!template || !theme || !options || !dataStore) {
     return null;
   }
 
   const dayNames = getDayNames(template.weekDayname, options);
-  const today = new TZDate();
+  const { narrowWeekend } = options.week;
+  const today = new TZDate(); // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
+  const { milestone, task, allday } = getSpecialEvents([today], dataStore, narrowWeekend);
 
   return (
     <Layout>
@@ -44,7 +48,7 @@ const Day: FunctionComponent = () => {
         <DayNames dayNames={dayNames} marginLeft={120} />
       </Panel>
       <Panel name="milestone" resizable minHeight={20} maxHeight={120}>
-        <SpecialEvents events={[]} cells={[today]} type="milestone" />
+        <SpecialEvents events={milestone} cells={[today]} type="milestone" />
       </Panel>
       <Panel name="task" resizable>
         <SpecialEvents events={[]} cells={[today]} type="task" />

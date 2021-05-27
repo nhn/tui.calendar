@@ -88,7 +88,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const { updatePanelHeight } = actions;
 
   const viewModels = getViewModels(events, cells);
-  setViewModelsInfo(viewModels, cells, {});
+  setViewModelsInfo(viewModels, cells, {} as CalendarWeekOption);
   const maxTop = Math.max(0, ...viewModels.map(({ top }) => top));
 
   const onClickExceedCount = (index: number) => {
