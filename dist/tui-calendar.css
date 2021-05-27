@@ -305,8 +305,8 @@
   position: relative;
   height: 100%;
 }
-.tui-full-calendar-dayname-date,
-font-weight: bold {
+.tui-full-calendar-dayname-date {
+  font-weight: bold;
   font-size: 24px;
 }
 .tui-full-calendar-dayname-name {
