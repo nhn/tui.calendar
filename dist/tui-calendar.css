@@ -350,7 +350,7 @@
 .tui-full-calendar-timegrid-hour span {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 8px;
   left: 10px;
   font-size: 14px;
   font-weight: normal;
