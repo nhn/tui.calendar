@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Thu May 27 2021
+ * @version 1.13.0 | Fri May 28 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -18853,8 +18853,8 @@ var theme = {
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
 
-    'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.height': '26px',
+    'week.timegridOneHour.height': '38px',
+    'week.timegridHalfHour.height': '19px',
     'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
@@ -19103,8 +19103,8 @@ module.exports = Theme;
     'week.timegridLeftTimezoneLabel.height': '40px',
     'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
-    'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.height': '26px',
+    'week.timegridOneHour.height': '38px',
+    'week.timegridHalfHour.height': '19px',
     'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
@@ -19223,8 +19223,8 @@ var themeConfig = {
     'week.timegridLeftTimezoneLabel.height': '40px',
     'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
-    'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.height': '26px',
+    'week.timegridOneHour.height': '38px',
+    'week.timegridHalfHour.height': '19px',
     'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 

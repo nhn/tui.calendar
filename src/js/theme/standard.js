@@ -88,8 +88,8 @@ var theme = {
     'week.timegridLeft.borderRight': '1px solid #e5e5e5',
     'week.timegridLeft.fontSize': '11px',
 
-    'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.height': '26px',
+    'week.timegridOneHour.height': '38px',
+    'week.timegridHalfHour.height': '19px',
     'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 

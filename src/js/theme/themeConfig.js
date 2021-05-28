@@ -94,8 +94,8 @@
     'week.timegridLeftTimezoneLabel.height': '40px',
     'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
-    'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.height': '26px',
+    'week.timegridOneHour.height': '38px',
+    'week.timegridHalfHour.height': '19px',
     'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
@@ -214,8 +214,8 @@ var themeConfig = {
     'week.timegridLeftTimezoneLabel.height': '40px',
     'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
-    'week.timegridOneHour.height': '52px',
-    'week.timegridHalfHour.height': '26px',
+    'week.timegridOneHour.height': '38px',
+    'week.timegridHalfHour.height': '19px',
     'week.timegridHalfHour.borderBottom': 'none',
     'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
