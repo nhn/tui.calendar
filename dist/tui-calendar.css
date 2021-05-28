@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Thu May 27 2021
+ * @version 1.13.0 | Fri May 28 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -350,7 +350,8 @@
 .tui-full-calendar-timegrid-hour span {
   position: absolute;
   right: 10px;
-  top: 15px;
+  top: 10px;
+  left: 10px;
   font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
