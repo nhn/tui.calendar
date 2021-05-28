@@ -350,17 +350,18 @@ Month.prototype._getStyles = function (theme) {
  * @returns {string} style - color style
  */
 Month.prototype._getDayNameColor = function (theme, day) {
-    var color = '';
+    var color = '#3f51b5';
 
-    if (theme) {
-        if (day === 0) {
-            color = theme.common.holiday.color;
-        } else if (day === 6) {
-            color = theme.common.saturday.color;
-        } else {
-            color = theme.common.dayname.color;
-        }
-    }
+    // if (theme) {
+    //     if (day === 0) {
+    //         color = theme.common.holiday.color;
+    //     } else if (day === 6) {
+    //         color =
+    //             theme.common.saturday.color === '#333' ? '#3f51b5' : theme.common.saturday.color;
+    //     } else {
+    //         color = theme.common.dayname.color === '#333' ? '#3f51b5' : theme.common.dayname.color;
+    //     }
+    // }
 
     return color;
 };

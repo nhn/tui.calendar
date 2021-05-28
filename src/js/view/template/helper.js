@@ -339,13 +339,16 @@ var helpers = {
     'monthGridHeader-tmpl': function (model) {
         var date = parseInt(model.date.split('-')[2], 10);
         var classNames = [];
-
+        // var color = model.color === '#333' ? '#dedede' : model.color;
+        var color = '#dedede';
         classNames.push(config.classname('weekday-grid-date'));
         if (model.isToday) {
             classNames.push(config.classname('weekday-grid-date-decorator'));
         }
-
-        return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+        // '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+        return `<span class="${classNames.join(' ')}" style="${
+            model.isToday ? '' : `color:${color}`
+        }">${date}</span>`;
     },
 
     'monthGridHeaderExceed-tmpl': function (hiddenSchedules) {
@@ -370,8 +373,10 @@ var helpers = {
     'weekDayname-tmpl': function (model) {
         var classDate = config.classname('dayname-date');
         var className = config.classname('dayname-name');
-        var dateColor = model.color !== '#333' && model.color !== '#bbb' ? model.color : '#dedede';
-        var nameColor = model.color !== '#333' && model.color !== '#bbb' ? model.color : '#3f51b5';
+        // var dateColor = model.color !== '#333' && model.color !== '#bbb' ? model.color : '#dedede';
+        // var nameColor = model.color !== '#333' && model.color !== '#bbb' ? model.color : '#3f51b5';
+        var dateColor = model.isToday ? model.color : '#dedede';
+        var nameColor = model.isToday ? model.color : '#3f51b5';
         return `<span class="${classDate}" style="color:${dateColor};">${model.date}</span>&nbsp;&nbsp;<span class="${className}" style="color:${nameColor};">${model.dayName}</span>`;
         // '<span class="' +
         // classDate +
