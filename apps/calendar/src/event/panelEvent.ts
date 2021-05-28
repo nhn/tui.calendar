@@ -3,9 +3,12 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import array from '@src/util/array';
 import TZDate from '@src/time/date';
 
-import type { Cells } from '@t/panel';
+import type { Cells, Panel, PanelType } from '@t/panel';
 import { DataStore } from '@src/model';
-import { findByDateRange } from '@src/controller/month';
+import { findByDateRange } from '@src/controller/week';
+import { cell } from '@stories/daygrid.stories';
+import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { DayGridEventMatrix, TimeGridEventMatrix } from '@src/components/panelgrid/specialEvents';
 
 const isBetweenEvent = (schedule: Schedule, gridStart: TZDate, gridEnd: TZDate) => {
   const scheduleStart = schedule.getStarts();
@@ -27,13 +30,30 @@ export const getViewModels = (events: Schedule[], cells: Cells) => {
     .map(ScheduleViewModel.create);
 };
 
-export const getSpecialEvents = (cells: Cells, dataStore: DataStore, narrowWeekend: boolean) => {
-  const { idsOfDay } = dataStore;
+export const getSpecialEvents = (
+  cells: Cells,
+  dataStore: DataStore,
+  narrowWeekend: boolean
+): Record<string, DayGridEventMatrix | TimeGridEventMatrix> => {
+  const { idsOfDay, schedules } = dataStore;
+  const panels = [
+    {
+      name: 'milestone',
+      type: 'daygrid',
+      handlers: ['click', 'creation', 'move', 'resize'],
+      show: true,
+    },
+  ] as Panel[];
   const eventViewModels = findByDateRange(dataStore, {
-    start: cells[0],
-    end: cells[cells.length - 1],
+    start: toStartOfDay(cells[0]),
+    end: toEndOfDay(cells[cells.length - 1]),
+    panels,
+    andFilters: [],
+    options: {},
   });
   const idEventModelMap: Record<number, ScheduleViewModel> = [];
+
+  console.log(eventViewModels.milestone);
 
   // eventViewModels.forEach((matrix) => {
   //   matrix.forEach((row) => {
@@ -59,9 +79,5 @@ export const getSpecialEvents = (cells: Cells, dataStore: DataStore, narrowWeeke
   //   viewModels: Object.values(idEventModelMap),
   //   gridDateEventModelMap,
   // };
-  return {
-    milestone: eventViewModels,
-    task: [],
-    allday: [],
-  };
+  return eventViewModels;
 };

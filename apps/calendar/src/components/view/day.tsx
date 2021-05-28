@@ -12,6 +12,8 @@ import { getSpecialEvents } from '@src/event/panelEvent';
 
 import type { OptionData } from '@t/store';
 import type { DayNameItem } from '@t/components/daygrid/dayNames';
+import range from 'tui-code-snippet/array/range';
+import { addDate } from '@src/time/datetime';
 
 function getDayNames(template: (model: TemplateWeekDay) => string, options: OptionData) {
   const dayNames: DayNameItem[] = [];
@@ -40,7 +42,13 @@ const Day: FunctionComponent = () => {
   const dayNames = getDayNames(template.weekDayname, options);
   const { narrowWeekend } = options.week;
   const today = new TZDate(); // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
+  const tempWeek = range(0, 7).map((day) => {
+    const now = new TZDate();
+
+    return addDate(now, day - now.getDay());
+  });
   const { milestone, task, allday } = getSpecialEvents([today], dataStore, narrowWeekend);
+  // const { milestone, task, allday } = getSpecialEvents(tempWeek, dataStore, narrowWeekend);
 
   return (
     <Layout>
@@ -50,12 +58,12 @@ const Day: FunctionComponent = () => {
       <Panel name="milestone" resizable minHeight={20} maxHeight={120}>
         <SpecialEvents events={milestone} cells={[today]} type="milestone" />
       </Panel>
-      <Panel name="task" resizable>
-        <SpecialEvents events={[]} cells={[today]} type="task" />
-      </Panel>
-      <Panel name="allday" resizable>
-        <SpecialEvents events={[]} cells={[today]} type="allday" />
-      </Panel>
+      {/*<Panel name="task" resizable>*/}
+      {/*  <SpecialEvents events={[]} cells={[today]} type="task" />*/}
+      {/*</Panel>*/}
+      {/*<Panel name="allday" resizable>*/}
+      {/*  <SpecialEvents events={[]} cells={[today]} type="allday" />*/}
+      {/*</Panel>*/}
     </Layout>
   );
 };

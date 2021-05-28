@@ -16,8 +16,11 @@ import {
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
 import { useStore } from '@src/components/hooks/store';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import { CalendarWeekOption } from '@t/store';
+import { Matrix } from '@src/controller/core';
+import { DayGridEventMatrix, TimeGridEventMatrix } from '@src/components/panelgrid/specialEvents';
 
 const DEFAULT_GRID_STYLE = {
   borderLeft: '1px solid #ddd',
@@ -26,7 +29,7 @@ const DEFAULT_GRID_STYLE = {
 interface Props {
   name: string;
   cells: Cells;
-  events: Schedule[];
+  events: DayGridEventMatrix | TimeGridEventMatrix;
   defaultPanelHeight: number;
   options?: CalendarWeekOption;
 }
@@ -87,9 +90,27 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const height = state[name]?.height ?? EVENT_HEIGHT;
   const { updatePanelHeight } = actions;
 
-  const viewModels = getViewModels(events, cells);
-  setViewModelsInfo(viewModels, cells, {} as CalendarWeekOption);
-  const maxTop = Math.max(0, ...viewModels.map(({ top }) => top));
+  // const viewModels = getViewModels(events, cells);
+  // setViewModelsInfo(viewModels, cells, {} as CalendarWeekOption);
+  let filteredEvents;
+  if (Array.isArray(events)) {
+    filteredEvents = events.filter((matrix) => {
+      const [cell] = cells;
+      const start = matrix[0][0].getStarts();
+      const end = matrix[0][0].getEnds();
+
+      return start <= cell && cell <= end;
+    });
+  }
+  // const maxTop = Math.max(0, ...events.map((event)=> event.map(({ top }) => top));
+  let maxTop = 0;
+  if (Array.isArray(events)) {
+    events.forEach((matrix) => {
+      matrix.forEach((row) => {
+        maxTop = Math.max(maxTop, ...row.map(({ top }) => top));
+      });
+    });
+  }
 
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
@@ -117,9 +138,15 @@ export const PanelGrid: FunctionComponent<Props> = ({
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    const gridDate = toStartOfDay(cell);
+    console.log(events);
+    let viewModels: ScheduleViewModel[] = [];
+    if (Array.isArray(events)) {
+      if (Array.isArray(events[0])) {
+        [[viewModels]] = events;
+      }
+    }
 
-    const exceedCount = getExceedCount(viewModels, height, EVENT_HEIGHT, gridDate);
+    const exceedCount = getExceedCount(viewModels, height, EVENT_HEIGHT);
     const isClickedIndex = index === clickedIndex;
 
     return (

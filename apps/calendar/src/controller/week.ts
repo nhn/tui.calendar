@@ -322,7 +322,7 @@ export function getViewModelForAlldayView(
   limitRenderRange(start, end, viewModelColl);
 
   const viewModels = viewModelColl.sort(array.compare.schedule.asc);
-  const usingTravelTime = true;
+  const usingTravelTime = false;
   const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
   const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
 
@@ -337,7 +337,7 @@ export function getViewModelForAlldayView(
 
 /**
  * Populate schedules in date range.
- * @param {Collection<Schedule>} schedules - model controller
+ * @param {DataStore} dataStore - data store
  * @param {object} condition - find option
  *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
  *  @param {TZDate} condition.start start date.
@@ -369,7 +369,7 @@ export function findByDateRange(
     scheduleTypes,
     filterByCategory
   );
-  const resutGroup: Record<
+  const resultGroup: Record<
     string,
     ScheduleMatrix<ScheduleViewModel> | Record<string, ScheduleMatrix<ScheduleViewModel>>
   > = {
@@ -381,9 +381,9 @@ export function findByDateRange(
 
   panels.forEach(({ name, type }) => {
     if (type === 'daygrid') {
-      resutGroup[name] = getViewModelForAlldayView(start, end, group[name]);
+      resultGroup[name] = getViewModelForAlldayView(start, end, group[name]);
     } else if (type === 'timegrid') {
-      resutGroup[name] = getViewModelForTimeView(idsOfDay, {
+      resultGroup[name] = getViewModelForTimeView(idsOfDay, {
         start,
         end,
         viewModelTimeColl: group[name],
@@ -393,7 +393,7 @@ export function findByDateRange(
     }
   });
 
-  return resutGroup;
+  return resultGroup;
 }
 
 function getYMD(date: TZDate, format = 'YYYYMMDD') {

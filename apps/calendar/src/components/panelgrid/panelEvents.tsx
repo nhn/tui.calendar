@@ -10,11 +10,13 @@ import { useStore } from '@src/components/hooks/store';
 
 import type { Cells } from '@t/panel';
 import type { CalendarWeekOption } from '@t/store';
+import { DayGridEventMatrix, TimeGridEventMatrix } from '@src/components/panelgrid/specialEvents';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 interface Props {
   name: string;
   cells: Cells;
-  events: Schedule[];
+  events: DayGridEventMatrix | TimeGridEventMatrix;
   options?: CalendarWeekOption;
 }
 
@@ -22,12 +24,18 @@ export const PanelEvents: FunctionComponent<Props> = ({ name, cells, events, opt
   const { narrowWeekend = false } = options;
   const { state } = useStore('layout');
   const height = state[name]?.height ?? EVENT_HEIGHT;
-  const viewModels = getViewModels(events, cells);
-  setViewModelsInfo(viewModels, cells, { narrowWeekend });
+  // const viewModels = getViewModels(events, cells);
+  // setViewModelsInfo(viewModels, cells, { narrowWeekend } as CalendarWeekOption);
 
-  const filteredViewModels = viewModels.filter(isWithinHeight(height, EVENT_HEIGHT));
+  // const filteredViewModels = events.filter(isWithinHeight(height, EVENT_HEIGHT));
+  let viewModels: ScheduleViewModel[] = [];
+  if (Array.isArray(events)) {
+    if (Array.isArray(events[0])) {
+      [[viewModels]] = events;
+    }
+  }
 
-  const dayEvents = filteredViewModels.map((viewModel, index) => (
+  const dayEvents = viewModels.map((viewModel, index) => (
     <DayEvent viewModel={viewModel} key={`${name}-DayEvent-${index}`} />
   ));
 

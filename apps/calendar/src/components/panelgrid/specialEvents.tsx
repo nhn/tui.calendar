@@ -8,19 +8,25 @@ import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 import Schedule from '@src/model/schedule';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { Cells, SpecialEventType } from '@t/panel';
+import { Matrix } from '@src/controller/core';
 
-const DEFAULT_MILESTONE_PANEL_HEIGHT = 20;
+const DEFAULT_PANEL_HEIGHT = 20;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 
   return addDate(now, day - now.getDay());
 });
 
+export type DayGridEventMatrix = Matrix<ScheduleViewModel>;
+
+export type TimeGridEventMatrix = Record<string, Matrix<ScheduleViewModel>>;
+
 interface Props {
   type: SpecialEventType;
-  events: Schedule[];
+  events: DayGridEventMatrix | TimeGridEventMatrix;
   cells?: Cells;
   timesWidth?: number;
   timezonesCount?: number;
@@ -33,7 +39,7 @@ export const SpecialEvents: FunctionComponent<Props> = ({
   cells = defaultPanelInfoList,
   timesWidth = 120,
   timezonesCount = 1,
-  panelHeight = DEFAULT_MILESTONE_PANEL_HEIGHT,
+  panelHeight = DEFAULT_PANEL_HEIGHT,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
 
