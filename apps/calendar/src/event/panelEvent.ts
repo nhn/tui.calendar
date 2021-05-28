@@ -43,6 +43,18 @@ export const getSpecialEvents = (
       handlers: ['click', 'creation', 'move', 'resize'],
       show: true,
     },
+    {
+      name: 'task',
+      type: 'daygrid',
+      handlers: ['click', 'creation', 'move', 'resize'],
+      show: true,
+    },
+    {
+      name: 'allday',
+      type: 'daygrid',
+      handlers: ['click', 'creation', 'move', 'resize'],
+      show: true,
+    },
   ] as Panel[];
   const eventViewModels = findByDateRange(dataStore, {
     start: toStartOfDay(cells[0]),
@@ -52,8 +64,6 @@ export const getSpecialEvents = (
     options: {},
   });
   const idEventModelMap: Record<number, ScheduleViewModel> = [];
-
-  console.log(eventViewModels.milestone);
 
   // eventViewModels.forEach((matrix) => {
   //   matrix.forEach((row) => {

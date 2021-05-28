@@ -138,7 +138,6 @@ export const PanelGrid: FunctionComponent<Props> = ({
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    console.log(events);
     let viewModels: ScheduleViewModel[] = [];
     if (Array.isArray(events)) {
       if (Array.isArray(events[0])) {

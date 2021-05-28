@@ -58,12 +58,12 @@ const Day: FunctionComponent = () => {
       <Panel name="milestone" resizable minHeight={20} maxHeight={120}>
         <SpecialEvents events={milestone} cells={[today]} type="milestone" />
       </Panel>
-      {/*<Panel name="task" resizable>*/}
-      {/*  <SpecialEvents events={[]} cells={[today]} type="task" />*/}
-      {/*</Panel>*/}
-      {/*<Panel name="allday" resizable>*/}
-      {/*  <SpecialEvents events={[]} cells={[today]} type="allday" />*/}
-      {/*</Panel>*/}
+      <Panel name="task" resizable>
+        <SpecialEvents events={task} cells={[today]} type="task" />
+      </Panel>
+      <Panel name="allday" resizable>
+        <SpecialEvents events={allday} cells={[today]} type="allday" />
+      </Panel>
     </Layout>
   );
 };
