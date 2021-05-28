@@ -19736,9 +19736,10 @@ Month.prototype._getDayNameColor = function (theme, day) {
         if (day === 0) {
             color = theme.common.holiday.color;
         } else if (day === 6) {
-            color = theme.common.saturday.color;
+            color =
+                theme.common.saturday.color === '#333' ? '#3f51b5' : theme.common.saturday.color;
         } else {
-            color = theme.common.dayname.color;
+            color = theme.common.dayname.color === '#333' ? '#3f51b5' : theme.common.dayname.color;
         }
     }
 
@@ -21804,13 +21805,15 @@ var helpers = {
     'monthGridHeader-tmpl': function (model) {
         var date = parseInt(model.date.split('-')[2], 10);
         var classNames = [];
-
+        var color = model.color === '#333' ? '#dedede' : model.color;
         classNames.push(config.classname('weekday-grid-date'));
         if (model.isToday) {
             classNames.push(config.classname('weekday-grid-date-decorator'));
         }
-
-        return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+        // '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+        return `<span class="${classNames.join(' ')}" style="${
+            model.isToday ? '' : `color:${color}`
+        }">${date}</span>`;
     },
 
     'monthGridHeaderExceed-tmpl': function (hiddenSchedules) {

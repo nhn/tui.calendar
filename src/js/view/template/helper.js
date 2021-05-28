@@ -339,13 +339,15 @@ var helpers = {
     'monthGridHeader-tmpl': function (model) {
         var date = parseInt(model.date.split('-')[2], 10);
         var classNames = [];
-
+        var color = model.color === '#333' ? '#dedede' : model.color;
         classNames.push(config.classname('weekday-grid-date'));
         if (model.isToday) {
             classNames.push(config.classname('weekday-grid-date-decorator'));
         }
-
-        return '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+        // '<span class="' + classNames.join(' ') + '">' + date + '</span>';
+        return `<span class="${classNames.join(' ')}" style="${
+            model.isToday ? '' : `color:${color}`
+        }">${date}</span>`;
     },
 
     'monthGridHeaderExceed-tmpl': function (hiddenSchedules) {

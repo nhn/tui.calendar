@@ -356,9 +356,10 @@ Month.prototype._getDayNameColor = function (theme, day) {
         if (day === 0) {
             color = theme.common.holiday.color;
         } else if (day === 6) {
-            color = theme.common.saturday.color;
+            color =
+                theme.common.saturday.color === '#333' ? '#3f51b5' : theme.common.saturday.color;
         } else {
-            color = theme.common.dayname.color;
+            color = theme.common.dayname.color === '#333' ? '#3f51b5' : theme.common.dayname.color;
         }
     }
 

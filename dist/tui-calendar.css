@@ -124,10 +124,12 @@
 }
 .tui-full-calendar-weekday-grid-line .tui-full-calendar-weekday-grid-date {
   display: inline-block;
+  float: left;
   width: 27px;
   height: 27px;
   line-height: 27px;
   text-align: center;
+  font-weight: bold;
 }
 .tui-full-calendar-weekday-grid-line .tui-full-calendar-weekday-grid-date-title {
   line-height: 27px;
@@ -594,7 +596,6 @@
 }
 .tui-full-calendar-month-dayname-item {
   height: 100%;
-  font-weight: bold;
 }
 .tui-full-calendar-month-week-item {
   position: relative;
