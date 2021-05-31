@@ -10,7 +10,7 @@ import { cell } from '@stories/daygrid.stories';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { DayGridEventMatrix, TimeGridEventMatrix } from '@src/components/panelgrid/specialEvents';
 import {
-  getEventPosition,
+  getEventLeftAndWidth,
   getGridWidthAndLeftPercentValues,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
@@ -43,12 +43,12 @@ const getEventModels = (
   eventModels.forEach((matrix) => {
     matrix.forEach((row) => {
       row.forEach((viewModel) => {
-        const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
-        const { width, left, top } = getEventPosition(viewModel, cells, widthList, viewModel.top);
+        const modelStart = viewModel.getStarts();
+        const modelEnd = viewModel.getEnds();
+        const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
 
         viewModel.width = width;
         viewModel.left = left;
-        viewModel.top = top;
       });
     });
   });

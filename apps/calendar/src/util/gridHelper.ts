@@ -110,7 +110,7 @@ export const getLeftAndWidth = (
   };
 };
 
-const getEventLeftAndWidth = (start: TZDate, end: TZDate, cells: Cells, narrowWeekend: boolean) => {
+export const getEventLeftAndWidth = (start: TZDate, end: TZDate, cells: Cells, narrowWeekend: boolean) => {
   const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
 
   let gridStartIndex = 0;
