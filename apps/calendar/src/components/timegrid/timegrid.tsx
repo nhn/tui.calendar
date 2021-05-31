@@ -1,4 +1,4 @@
-import { h, createRef } from 'preact';
+import { h, createRef, FunctionComponent } from 'preact';
 import TZDate from '@src/time/date';
 import range from 'tui-code-snippet/array/range';
 import {
@@ -27,6 +27,7 @@ import { findIndex } from '@src/util/array';
 import ContextComponent from '@src/components/contextComponent';
 import { ColumnsWithMouse, ColumnInfo } from '@src/components/timegrid/columns';
 import pick from 'tui-code-snippet/object/pick';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
@@ -36,21 +37,17 @@ const classNames = {
 };
 
 interface Props {
-  currentTime: TZDate;
-  unit: TimeUnit;
-  timesWidth: number;
-  timezones: TimezoneConfig[];
-  columnInfoList: ColumnInfo[];
   events: Schedule[];
+  currentTime?: TZDate;
+  timesWidth?: number;
+  timezones?: TimezoneConfig[];
+  columnInfoList?: ColumnInfo[];
+  unit?: TimeUnit;
   start?: number;
   end?: number;
 }
 
-interface State {
-  stickyContainer: HTMLElement | null;
-  columnLeft: number;
-  creationGuide: CreationGuideInfo | null;
-}
+type TimerID = number | null;
 
 function calculateLeft(timesWidth: number, timezones: Array<any>) {
   return timesWidth * timezones.length;
@@ -65,203 +62,153 @@ function make24Hours(start: TZDate) {
   });
 }
 
-export class TimeGrid extends ContextComponent<Props, State> {
-  static displayName = 'TimeGrid';
+function useForceUpdate() {
+  const [, setForceUpdate] = useState(0);
 
-  static defaultProps = {
-    currentTime: new TZDate(),
-    unit: 'hour',
-    columnInfoList: range(0, 7).map((day) => {
-      const now = new TZDate();
-      const start = toStartOfDay(addDate(now, day + -now.getDay()));
-      const end = toEndOfDay(start);
+  return () => setForceUpdate((prev) => prev + 1);
+}
 
-      return {
-        start,
-        end,
-        unit: 'minute',
-        slot: 30,
-      };
-    }),
-    timesWidth: 72,
-    timezones: [{}],
-  } as Props;
-
-  state = {
-    stickyContainer: null,
-    columnLeft: 0,
-    creationGuide: null,
-  };
-
-  refStickyContainer = createRef<HTMLDivElement>();
-
-  intervalId: any;
-
-  timerId: any;
-
-  constructor() {
-    super();
-
-    this.initializeListeners();
-  }
-
-  initializeListeners() {
-    this.onGuideStart = this.onGuideStart.bind(this);
-    this.onGuideChange = this.onGuideChange.bind(this);
-    this.onGuideEnd = this.onGuideEnd.bind(this);
-    this.onGuideCancel = this.onGuideCancel.bind(this);
-  }
-
-  componentWillMount() {
-    this.onTick = this.onTick.bind(this);
-    this.onChangeCollapsed = this.onChangeCollapsed.bind(this);
-  }
-
-  componentDidMount() {
+export const TimeGrid: FunctionComponent<Props> = ({
+  currentTime = new TZDate(),
+  columnInfoList = range(0, 7).map((day) => {
     const now = new TZDate();
-    const { currentTime } = this.props;
+    const start = toStartOfDay(addDate(now, day + -now.getDay()));
+    const end = toEndOfDay(start);
+
+    return {
+      start,
+      end,
+      unit: 'minute',
+      slot: 30,
+    } as ColumnInfo;
+  }),
+  timesWidth = 72,
+  timezones = [{}],
+  unit = 'hour',
+  events,
+}) => {
+  const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
+  const [columnLeft, setColumnLeft] = useState(0);
+  const [creationGuide, setCreationGuide] = useState<CreationGuideInfo | null>(null);
+  const [intervalId, setIntervalId] = useState<TimerID>(null);
+  const [timerId, setTimerId] = useState<TimerID>(null);
+  const stickyContainerRef = useRef<HTMLDivElement>();
+  const forceUpdate = useForceUpdate();
+
+  const onCreateEvent = (e: CreationGuideInfo) => {
+    // const { externalEvent } = this.context;
+    //
+    // externalEvent.fire('beforeCreateSchedule', {
+    //   start: e.start,
+    //   end: e.end,
+    //   isAllDay: false,
+    // });
+  };
+  const onGuideStart = (e: CreationGuideInfo) => setCreationGuide(e);
+  const onGuideChange = (e: CreationGuideInfo) => setCreationGuide(e);
+  const onGuideEnd = (e: CreationGuideInfo) => onCreateEvent(e);
+  const onGuideCancel = () => setCreationGuide(null);
+
+  const onChangeCollapsed = (collapsed: boolean) =>
+    setColumnLeft(collapsed ? timesWidth : calculateLeft(timesWidth, timezones));
+
+  useEffect(() => {
+    const now = new TZDate();
     const showCurrentTime = isSameDate(currentTime, now);
+    const clearTimer = () => {
+      if (timerId) {
+        clearTimeout(timerId);
+        setTimerId(0);
+      }
+    };
+    const clearIntervalTimer = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        setIntervalId(0);
+      }
+    };
+    const onTick = () => {
+      clearTimer();
+
+      if (!intervalId) {
+        const id = window.setInterval(onTick, REFRESH_INTERVAL);
+        setIntervalId(id);
+      }
+
+      forceUpdate();
+    };
+    const addTimeoutOnExactMinutes = () => {
+      if (!timerId) {
+        const timeout = (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000;
+        setTimerId(window.setTimeout(onTick, timeout));
+      }
+    };
 
     if (showCurrentTime) {
-      this.addTimeoutOnExactMinutes();
+      addTimeoutOnExactMinutes();
     }
 
-    if (this.refStickyContainer.current) {
-      this.setState({ stickyContainer: this.refStickyContainer.current });
-    }
-  }
-
-  componentWillUnmount() {
-    this.clearTimeout();
-    this.clearInterval();
-  }
-
-  clearTimeout() {
-    if (this.timerId) {
-      clearTimeout(this.timerId);
-      this.timerId = 0;
-    }
-  }
-
-  clearInterval() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = 0;
-    }
-  }
-
-  refreshCurrentTime() {
-    this.forceUpdate();
-  }
-
-  addTimeoutOnExactMinutes() {
-    if (!this.timerId) {
-      this.timerId = setTimeout(this.onTick, (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000);
-    }
-  }
-
-  onTick() {
-    this.clearTimeout();
-
-    if (!this.intervalId) {
-      this.intervalId = setInterval(this.onTick, REFRESH_INTERVAL);
+    if (stickyContainerRef.current) {
+      setStickyContainer(stickyContainerRef.current);
     }
 
-    this.refreshCurrentTime();
-  }
+    return () => {
+      clearTimer();
+      clearIntervalTimer();
+    };
+  }, [currentTime, forceUpdate, intervalId, timerId]);
 
-  onChangeCollapsed(collapsed: boolean) {
-    const { timesWidth, timezones = [{}] } = this.props;
+  const showTimezoneLabel = timezones.length > 1;
+  const columnWidth = 100 / columnInfoList.length;
+  const left = columnLeft || calculateLeft(timesWidth, timezones);
+  const now = new TZDate();
+  const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
+  const columnIndex = findIndex(columnInfoList, ({ start, end }) =>
+    isBetweenWithDate(now, start, end)
+  );
+  const showCurrentTime = columnIndex >= 0;
+  const creationGuideColumnIndex: number = pick(creationGuide, 'columnIndex');
 
-    if (collapsed) {
-      this.setState({ columnLeft: timesWidth });
-    } else {
-      this.setState({ columnLeft: calculateLeft(timesWidth, timezones) });
-    }
-  }
-
-  onGuideStart(e: CreationGuideInfo) {
-    this.setState({ creationGuide: e });
-  }
-
-  onGuideChange(e: CreationGuideInfo) {
-    this.setState({ creationGuide: e });
-  }
-
-  onGuideEnd(e: CreationGuideInfo) {
-    this.onCreateEvent(e);
-  }
-
-  onGuideCancel() {
-    this.setState({ creationGuide: null });
-  }
-
-  onCreateEvent(e: CreationGuideInfo) {
-    const { externalEvent } = this.context;
-
-    externalEvent.fire('beforeCreateSchedule', {
-      start: e.start,
-      end: e.end,
-      isAllDay: false,
-    });
-  }
-
-  render(props: Props, state: State) {
-    const { columnInfoList, timesWidth, timezones = [{}], events } = props;
-    const { stickyContainer, creationGuide } = state;
-    const showTimezoneLabel = timezones.length > 1;
-    const columnWidth = 100 / columnInfoList.length;
-    const columnLeft = state.columnLeft || calculateLeft(timesWidth, timezones);
-    const now = new TZDate();
-    const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
-    const columnIndex = findIndex(columnInfoList, ({ start: startTime, end: endTime }) => {
-      return isBetweenWithDate(now, startTime, endTime);
-    });
-    const showCurrentTime = columnIndex >= 0;
-    const creationGuideColumnIndex: number = pick(creationGuide, 'columnIndex');
-
-    return (
-      <div className={classNames.timegrid}>
-        <div className={classNames.scrollArea}>
-          <MultipleTimezones
-            timezones={timezones}
-            currentTime={now}
-            showTimezoneLabel={showTimezoneLabel}
-            width={toPx(timesWidth)}
-            stickyContainer={stickyContainer}
-            onChangeCollapsed={this.onChangeCollapsed}
-          />
-          <ColumnsWithMouse
-            columnLeft={columnLeft}
-            columnInfoList={columnInfoList}
-            onGuideStart={this.onGuideStart}
-            onGuideChange={this.onGuideChange}
-            onGuideEnd={this.onGuideEnd}
-            onGuideCancel={this.onGuideCancel}
-          >
-            {columnInfoList.map(({ start }, index) => (
-              <Column
-                key={index}
-                index={index}
-                width={toPercent(columnWidth)}
-                times={make24Hours(start)}
-                events={events}
-                creationGuide={creationGuideColumnIndex === index ? creationGuide : null}
-              />
-            ))}
-
-            {showCurrentTime ? (
-              <CurrentTimeLine
-                top={currentTimeLineTop}
-                columnWidth={columnWidth}
-                columnCount={columnInfoList.length}
-                columnIndex={columnIndex}
-              />
-            ) : null}
-          </ColumnsWithMouse>
-        </div>
-        <div ref={this.refStickyContainer}></div>
+  return (
+    <div className={classNames.timegrid}>
+      <div className={classNames.scrollArea}>
+        <MultipleTimezones
+          timezones={timezones}
+          currentTime={now}
+          showTimezoneLabel={showTimezoneLabel}
+          width={toPx(timesWidth)}
+          stickyContainer={stickyContainer}
+          onChangeCollapsed={onChangeCollapsed}
+        />
+        <ColumnsWithMouse
+          columnLeft={left}
+          columnInfoList={columnInfoList}
+          onGuideStart={onGuideStart}
+          onGuideChange={onGuideChange}
+          onGuideEnd={onGuideEnd}
+          onGuideCancel={onGuideCancel}
+        >
+          {columnInfoList.map(({ start: startTime }, index) => (
+            <Column
+              key={index}
+              index={index}
+              width={toPercent(columnWidth)}
+              times={make24Hours(startTime)}
+              events={events}
+              creationGuide={creationGuideColumnIndex === index ? creationGuide : null}
+            />
+          ))}
+          {showCurrentTime ? (
+            <CurrentTimeLine
+              top={currentTimeLineTop}
+              columnWidth={columnWidth}
+              columnCount={columnInfoList.length}
+              columnIndex={columnIndex}
+            />
+          ) : null}
+        </ColumnsWithMouse>
       </div>
-    );
-  }
-}
+      <div ref={stickyContainerRef} />
+    </div>
+  );
+};
