@@ -49,7 +49,7 @@ var THEME_DOORAY = {
     'week.dayname.borderTop': '1px solid #ddd',
     'week.dayname.borderBottom': '1px solid #ddd',
     'week.dayname.borderLeft': '1px solid #ddd',
-    'week.dayname.paddingLeft': '5px',
+    'week.dayname.paddingLeft': '6px',
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#135de6',

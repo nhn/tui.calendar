@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Fri May 28 2021
+ * @version 1.13.0 | Mon May 31 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -18824,8 +18824,8 @@ var theme = {
     'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.borderLeft': 'none',
-    'week.dayname.paddingLeft': '0',
+    'week.dayname.borderLeft': '1px solid #e5e5e5',
+    'week.dayname.paddingLeft': '6px',
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#135de6',
@@ -19072,8 +19072,8 @@ module.exports = Theme;
     'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.borderLeft': 'inherit',
-    'week.dayname.paddingLeft': '0',
+    'week.dayname.borderLeft': '1px solid #e5e5e5',
+    'week.dayname.paddingLeft': '6px',
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#135de6',
@@ -19192,8 +19192,8 @@ var themeConfig = {
     'week.dayname.height': '42px',
     'week.dayname.borderTop': '1px solid #e5e5e5',
     'week.dayname.borderBottom': '1px solid #e5e5e5',
-    'week.dayname.borderLeft': 'inherit',
-    'week.dayname.paddingLeft': '0',
+    'week.dayname.borderLeft': '1px solid #e5e5e5',
+    'week.dayname.paddingLeft': '6px',
     'week.dayname.backgroundColor': 'inherit',
     'week.dayname.textAlign': 'left',
     'week.today.color': '#135de6',
