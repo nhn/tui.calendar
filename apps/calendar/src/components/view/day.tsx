@@ -42,6 +42,7 @@ const Day: FunctionComponent = () => {
   const dayNames = getDayNames(template.weekDayname, options);
   const { narrowWeekend } = options.week;
   const today = new TZDate(); // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
+  const tomorrow = today.addDate(1);
   const tempWeek = range(0, 7).map((day) => {
     const now = new TZDate();
 

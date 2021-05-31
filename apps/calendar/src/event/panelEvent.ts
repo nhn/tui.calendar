@@ -9,6 +9,11 @@ import { findByDateRange } from '@src/controller/week';
 import { cell } from '@stories/daygrid.stories';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { DayGridEventMatrix, TimeGridEventMatrix } from '@src/components/panelgrid/specialEvents';
+import {
+  getEventPosition,
+  getGridWidthAndLeftPercentValues,
+  TOTAL_WIDTH,
+} from '@src/util/gridHelper';
 
 const isBetweenEvent = (schedule: Schedule, gridStart: TZDate, gridEnd: TZDate) => {
   const scheduleStart = schedule.getStarts();
@@ -28,6 +33,27 @@ export const getViewModels = (events: Schedule[], cells: Cells) => {
     .filter((event) => isBetweenEvent(event, cellStart, cellEnd))
     .sort(array.compare.schedule.asc)
     .map(ScheduleViewModel.create);
+};
+
+const getEventModels = (
+  eventModels: DayGridEventMatrix,
+  cells: Cells,
+  narrowWeekend = false
+): DayGridEventMatrix => {
+  eventModels.forEach((matrix) => {
+    matrix.forEach((row) => {
+      row.forEach((viewModel) => {
+        const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
+        const { width, left, top } = getEventPosition(viewModel, cells, widthList, viewModel.top);
+
+        viewModel.width = width;
+        viewModel.left = left;
+        viewModel.top = top;
+      });
+    });
+  });
+
+  return eventModels;
 };
 
 export const getSpecialEvents = (
@@ -56,15 +82,21 @@ export const getSpecialEvents = (
       show: true,
     },
   ] as Panel[];
-  const eventViewModels = findByDateRange(dataStore, {
+  const eventModels = findByDateRange(dataStore, {
     start: toStartOfDay(cells[0]),
     end: toEndOfDay(cells[cells.length - 1]),
     panels,
     andFilters: [],
     options: {},
   });
-  const idEventModelMap: Record<number, ScheduleViewModel> = [];
+  // const idEventModelMap: Record<number, ScheduleViewModel> = [];
+  const eventModelMap: Record<string, DayGridEventMatrix> = {};
 
+  // console.log(milestone, task, allday);
+  Object.entries(eventModels).forEach(([name, events]) => {
+    eventModelMap[name] = getEventModels(events as DayGridEventMatrix, cells, narrowWeekend);
+  });
+  // Object.values(eventModels).forEach((events) => setEventModels(events as DayGridEventMatrix));
   // eventViewModels.forEach((matrix) => {
   //   matrix.forEach((row) => {
   //     row.forEach((viewModel) => {
@@ -89,5 +121,5 @@ export const getSpecialEvents = (
   //   viewModels: Object.values(idEventModelMap),
   //   gridDateEventModelMap,
   // };
-  return eventViewModels;
+  return eventModelMap;
 };
