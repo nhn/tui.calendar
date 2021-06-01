@@ -13,7 +13,9 @@ import { getSpecialEvents } from '@src/event/panelEvent';
 import type { OptionData } from '@t/store';
 import type { DayNameItem } from '@t/components/daygrid/dayNames';
 import range from 'tui-code-snippet/array/range';
-import { addDate } from '@src/time/datetime';
+import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { ColumnInfo } from '@src/components/timegrid/columns';
 
 function getDayNames(template: (model: TemplateWeekDay) => string, options: OptionData) {
   const dayNames: DayNameItem[] = [];
@@ -50,6 +52,9 @@ const Day: FunctionComponent = () => {
   });
   const { milestone, task, allday } = getSpecialEvents([today], dataStore, narrowWeekend);
   // const { milestone, task, allday } = getSpecialEvents(tempWeek, dataStore, narrowWeekend);
+  const now = new TZDate();
+  const start = toStartOfDay(now);
+  const end = toEndOfDay(start);
 
   return (
     <Layout>
@@ -64,6 +69,19 @@ const Day: FunctionComponent = () => {
       </Panel>
       <Panel name="allday" resizable>
         <SpecialEvents events={allday} cells={[today]} type="allday" />
+      </Panel>
+      <Panel name="time" resizable>
+        <TimeGrid
+          events={[]}
+          columnInfoList={[
+            {
+              start,
+              end,
+              unit: 'minute',
+              slot: 30,
+            } as ColumnInfo,
+          ]}
+        />
       </Panel>
     </Layout>
   );

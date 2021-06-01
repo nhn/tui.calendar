@@ -15,11 +15,6 @@ const Template: Story = (args) => (
 
 export const basic = Template.bind({});
 
-export const narrowWeekend = Template.bind({});
-narrowWeekend.args = {
-  options: { month: { narrowWeekend: true } },
-};
-
 export const startDayOfWeek = Template.bind({});
 startDayOfWeek.args = {
   options: { month: { startDayOfWeek: 3 } },
@@ -32,16 +27,6 @@ dayNames.args = {
       daynames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     },
   },
-};
-
-export const workweek = Template.bind({});
-workweek.args = {
-  options: { month: { workweek: true } },
-};
-
-export const twoWeeks = Template.bind({});
-twoWeeks.args = {
-  options: { month: { visibleWeeksCount: 2 } },
 };
 
 export const randomEvents = Template.bind({});

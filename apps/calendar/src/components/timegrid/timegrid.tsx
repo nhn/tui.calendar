@@ -82,7 +82,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
       slot: 30,
     } as ColumnInfo;
   }),
-  timesWidth = 72,
+  timesWidth = 120,
   timezones = [{}],
   unit = 'hour',
   events,

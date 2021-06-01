@@ -7,7 +7,7 @@ import Schedule from '@src/model/schedule';
 import { addHours, toStartOfDay, addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import normalEvents from '@stories/data/events.json';
-import { generateRandomEvents } from './util/randomEvents';
+import { generateRandomEvents } from '@stories/util/randomEvents';
 
 export default { title: 'TimeGrid' };
 
