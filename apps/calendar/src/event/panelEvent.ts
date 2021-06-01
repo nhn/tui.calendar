@@ -35,7 +35,7 @@ export const getViewModels = (events: Schedule[], cells: Cells) => {
     .map(ScheduleViewModel.create);
 };
 
-const getEventModels = (
+const getDayGridEventModels = (
   eventModels: DayGridEventMatrix,
   cells: Cells,
   narrowWeekend = false
@@ -56,11 +56,47 @@ const getEventModels = (
   return eventModels;
 };
 
+const getTimeGridEventModels = (
+  eventModels: TimeGridEventMatrix,
+  cells: Cells,
+  narrowWeekend = false
+): ScheduleViewModel[] => {
+  let result: ScheduleViewModel[] = [];
+
+  console.log('before', eventModels);
+
+  Object.values(eventModels).forEach((matrices) =>
+    matrices.forEach((matrix) => {
+      matrix.forEach((row) => {
+        row.forEach((model) => {
+          if (model) {
+            result.push(model);
+          }
+        });
+        // result = [...result, ...row];
+
+        // row.forEach((viewModel) => {
+        //   const modelStart = viewModel.getStarts();
+        //   const modelEnd = viewModel.getEnds();
+        //   const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
+        //
+        //   viewModel.width = width;
+        //   viewModel.left = left;
+        // });
+      });
+    })
+  );
+
+  console.log('result', result);
+
+  return result;
+};
+
 export const getSpecialEvents = (
   cells: Cells,
   dataStore: DataStore,
   narrowWeekend: boolean
-): Record<string, DayGridEventMatrix | TimeGridEventMatrix> => {
+): Record<string, DayGridEventMatrix | ScheduleViewModel[]> => {
   const { idsOfDay, schedules } = dataStore;
   const panels = [
     {
@@ -81,20 +117,32 @@ export const getSpecialEvents = (
       handlers: ['click', 'creation', 'move', 'resize'],
       show: true,
     },
+    {
+      name: 'time',
+      type: 'timegrid',
+      handlers: ['click', 'creation', 'move', 'resize'],
+      show: true,
+    },
   ] as Panel[];
   const eventModels = findByDateRange(dataStore, {
     start: toStartOfDay(cells[0]),
     end: toEndOfDay(cells[cells.length - 1]),
     panels,
     andFilters: [],
-    options: {},
+    options: {
+      hourStart: 0,
+      hourEnd: 24,
+    },
   });
   // const idEventModelMap: Record<number, ScheduleViewModel> = [];
-  const eventModelMap: Record<string, DayGridEventMatrix> = {};
+  const eventModelMap: Record<string, DayGridEventMatrix | ScheduleViewModel[]> = {};
 
-  // console.log(milestone, task, allday);
   Object.entries(eventModels).forEach(([name, events]) => {
-    eventModelMap[name] = getEventModels(events as DayGridEventMatrix, cells, narrowWeekend);
+    if (Array.isArray(events)) {
+      eventModelMap[name] = getDayGridEventModels(events, cells, narrowWeekend);
+    } else {
+      eventModelMap[name] = getTimeGridEventModels(events, cells, narrowWeekend);
+    }
   });
   // Object.values(eventModels).forEach((events) => setEventModels(events as DayGridEventMatrix));
   // eventViewModels.forEach((matrix) => {

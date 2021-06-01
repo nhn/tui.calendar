@@ -12,6 +12,7 @@ import { toPercent } from '@src/util/units';
 import { CreationGuide } from '@src/components/timegrid/creationGuide';
 import { cls } from '@src/util/cssHelper';
 import { getViewModels, isBetween } from '@src/controller/column';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 const classNames = {
   column: cls('column'),
@@ -30,7 +31,7 @@ interface Props {
   backgroundColor: string;
   start?: number;
   end?: number;
-  events: Schedule[];
+  events: ScheduleViewModel[];
   creationGuide: CreationGuideInfo | null;
   index: number;
   readOnly?: boolean;
@@ -52,17 +53,22 @@ function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) =
   );
 }
 
-function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: TZDate) {
+function renderBackgroundEvents(events: ScheduleViewModel[], startTime: TZDate, endTime: TZDate) {
   const backgroundEvents = events.filter(isBackgroundEvent);
 
   return (
     <div className={classNames.backgrounds}>
       {backgroundEvents.map((event, index) => {
-        const { top, height } = getTopHeightByTime(event.start, event.end, startTime, endTime);
+        const { top, height } = getTopHeightByTime(
+          event.model.start,
+          event.model.end,
+          startTime,
+          endTime
+        );
 
         return (
           <BackgroundEvent
-            model={event}
+            viewModel={event}
             top={toPercent(top)}
             height={toPercent(height)}
             key={`backgroundEvent-${index}`}
@@ -73,7 +79,7 @@ function renderBackgroundEvents(events: Schedule[], startTime: TZDate, endTime: 
   );
 }
 
-function renderEvents(events: Schedule[], startTime: TZDate, endTime: TZDate) {
+function renderEvents(events: ScheduleViewModel[], startTime: TZDate, endTime: TZDate) {
   const marginRight = 8;
   const style = {
     marginRight,

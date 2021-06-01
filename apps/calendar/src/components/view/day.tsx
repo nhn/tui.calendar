@@ -44,17 +44,33 @@ const Day: FunctionComponent = () => {
   const dayNames = getDayNames(template.weekDayname, options);
   const { narrowWeekend } = options.week;
   const today = new TZDate(); // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
-  const tomorrow = today.addDate(1);
+  // const tomorrow = today.addDate(1);
   const tempWeek = range(0, 7).map((day) => {
     const now = new TZDate();
 
     return addDate(now, day - now.getDay());
   });
-  const { milestone, task, allday } = getSpecialEvents([today], dataStore, narrowWeekend);
+  const { milestone, task, allday, time } = getSpecialEvents([today], dataStore, narrowWeekend);
   // const { milestone, task, allday } = getSpecialEvents(tempWeek, dataStore, narrowWeekend);
   const now = new TZDate();
   const start = toStartOfDay(now);
   const end = toEndOfDay(start);
+
+  console.log(
+    'total',
+    Object.values(dataStore.schedules.items).filter(
+      ({ category }) => category !== 'allday' && category !== 'milestone' && category !== 'task'
+    )
+  );
+  console.log(
+    'today',
+    Object.values(dataStore.schedules.items)
+      .filter(
+        ({ category }) => category !== 'allday' && category !== 'milestone' && category !== 'task'
+      )
+      .filter((s) => s.start.getDate() === 1 || s.end.getDate() === 1)
+  );
+  console.log('time', time);
 
   return (
     <Layout>
@@ -72,7 +88,7 @@ const Day: FunctionComponent = () => {
       </Panel>
       <Panel name="time" resizable>
         <TimeGrid
-          events={[]}
+          events={time}
           columnInfoList={[
             {
               start,

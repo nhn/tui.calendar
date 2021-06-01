@@ -26,5 +26,5 @@ export const backgroundEvent = () => {
     bgColor: 'rgba(100, 100, 100, .3)',
   });
 
-  return <BackgroundEvent model={event} />;
+  return <BackgroundEvent viewModel={event} />;
 };

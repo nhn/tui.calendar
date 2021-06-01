@@ -3,9 +3,23 @@ import { Story } from '@storybook/preact';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import DayView from '@src/components/view/dayView';
-import { generateRandomScheduleViewModelsForMonth } from '@stories/util/randomEvents';
+import {
+  generateRandomEvents,
+  generateRandomScheduleViewModelsForMonth,
+} from '@stories/util/randomEvents';
+import TZDate from '@src/time/date';
+import { addDate } from '@src/time/datetime';
+import Schedule from '@src/model/schedule';
 
 export default { title: 'DayView' };
+
+function generateTimeGridEvents() {
+  const today = new TZDate();
+  const start = addDate(new TZDate(), -today.getDay());
+  const end = addDate(start, 6);
+
+  return generateRandomEvents('week', start, end);
+}
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
@@ -31,5 +45,7 @@ dayNames.args = {
 
 export const randomEvents = Template.bind({});
 randomEvents.args = {
-  events: generateRandomScheduleViewModelsForMonth(40),
+  events: generateRandomScheduleViewModelsForMonth(40).concat(
+    generateTimeGridEvents() as Schedule[]
+  ),
 };

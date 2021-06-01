@@ -32,12 +32,6 @@ export function ProviderWrapper({
     store.dispatch('dataStore/createSchedules', { events });
   }
 
-  store.dispatch('dataStore/clearSchedules', { events });
-
-  if (events.length) {
-    store.dispatch('dataStore/createSchedules', { events });
-  }
-
   return (
     <div className={cls('layout')} style={style}>
       <Provider store={store}>{children}</Provider>

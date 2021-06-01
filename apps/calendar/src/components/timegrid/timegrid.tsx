@@ -1,6 +1,9 @@
 import { h, createRef, FunctionComponent } from 'preact';
-import TZDate from '@src/time/date';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
+import pick from 'tui-code-snippet/object/pick';
+
+import TZDate from '@src/time/date';
 import {
   addDate,
   clone,
@@ -11,7 +14,6 @@ import {
   isBetweenWithDate,
 } from '@src/time/datetime';
 import { TimeUnit, TimezoneConfig } from '@src/model';
-import Schedule from '@src/model/schedule';
 import { cls } from '@src/util/cssHelper';
 import { toPx, toPercent } from '@src/util/units';
 import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
@@ -24,10 +26,8 @@ import {
 import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
 import { getTopPercentByTime } from '@src/controller/times';
 import { findIndex } from '@src/util/array';
-import ContextComponent from '@src/components/contextComponent';
 import { ColumnsWithMouse, ColumnInfo } from '@src/components/timegrid/columns';
-import pick from 'tui-code-snippet/object/pick';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
@@ -37,7 +37,7 @@ const classNames = {
 };
 
 interface Props {
-  events: Schedule[];
+  events: ScheduleViewModel[];
   currentTime?: TZDate;
   timesWidth?: number;
   timezones?: TimezoneConfig[];
