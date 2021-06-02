@@ -25,7 +25,7 @@ const classNames = {
   first: prefixer('time-first'),
   last: prefixer('time-last'),
   hidden: prefixer('time-hidden'),
-  collpaseButton: prefixer('collapse-button'),
+  collapseButton: prefixer('collapse-button'),
   currentTime: prefixer('current-time'),
 };
 

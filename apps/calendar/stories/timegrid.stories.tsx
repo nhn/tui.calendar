@@ -8,6 +8,7 @@ import { addHours, toStartOfDay, addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import normalEvents from '@stories/data/events.json';
 import { generateRandomEvents } from '@stories/util/randomEvents';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 export default { title: 'TimeGrid' };
 
@@ -40,6 +41,12 @@ function getNormalEvents() {
       end,
     };
   });
+}
+
+function makeScheduleViewModel(data: ScheduleData[]) {
+  return data
+    .map((event: ScheduleData) => Schedule.create(event))
+    .map((event: Schedule) => ScheduleViewModel.create(event));
 }
 
 function getEvents() {
@@ -81,7 +88,7 @@ function getEvents() {
     getNormalEvents()
   );
 
-  return data.map((event: ScheduleData) => Schedule.create(event));
+  return makeScheduleViewModel(data);
 }
 
 export const basic = () => {
@@ -99,7 +106,7 @@ export const randomEvents = () => {
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
   const data: ScheduleData[] = generateRandomEvents('week', start, end);
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = makeScheduleViewModel(data);
 
   return (
     <Wrapper>

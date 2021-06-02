@@ -3,6 +3,8 @@ import { createDate } from '@test/helper';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
+import type { CalendarWeekOption } from '@t/store';
+
 describe('gridEvent', () => {
   const data = [
     { start: createDate(2021, 5, 10), end: createDate(2021, 5, 11) }, // Mon ~ Tue
@@ -19,7 +21,7 @@ describe('gridEvent', () => {
       return ScheduleViewModel.create(event);
     });
 
-    setViewModelsInfo(viewModels, cells, {});
+    setViewModelsInfo(viewModels, cells, {} as CalendarWeekOption);
 
     const top = [0, 1, 0];
     const left = [20, 20, 60];

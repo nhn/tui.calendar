@@ -1,5 +1,5 @@
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import Schedule, { isTimeEvent } from '@src/model/schedule';
+import { isTimeEvent } from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import { createScheduleCollection } from '@src/controller/base';
@@ -32,9 +32,9 @@ interface RenderInfoOption {
  */
 export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
   return (viewModel: ScheduleViewModel) => {
-    const { start, end, goingDuration = 0, comingDuration = 0 } = viewModel.model;
-    const ownStarts = addMinutes(start, -goingDuration);
-    const ownEnds = addMinutes(end, comingDuration);
+    const { goingDuration = 0, comingDuration = 0 } = viewModel.model;
+    const ownStarts = addMinutes(viewModel.getStarts(), -goingDuration);
+    const ownEnds = addMinutes(viewModel.getEnds(), comingDuration);
 
     return !(ownEnds <= startColumnTime || ownStarts >= endColumnTime);
   };

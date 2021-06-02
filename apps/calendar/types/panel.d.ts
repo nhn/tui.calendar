@@ -1,11 +1,13 @@
 import type TZDate from '@src/time/date';
 
+export type PanelName = 'milestone' | 'allday' | 'task' | string;
+
 export type SpecialEventType = 'milestone' | 'allday' | 'task';
 
 export type PanelType = 'daygrid' | 'timegrid';
 
 export interface Panel {
-  name: string;
+  name: PanelName;
   type: PanelType;
   minHeight?: number;
   maxHeight?: number;

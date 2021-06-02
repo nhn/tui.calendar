@@ -14,7 +14,9 @@
   height: 100%;
 }
 
-.panel-milestone {
+.panel-milestone,
+.panel-task,
+.panel-allday {
   position: relative;
   height: 100%;
   overflow-y: hidden;

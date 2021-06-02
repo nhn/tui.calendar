@@ -1,11 +1,26 @@
-import type TZDate from '@src/time/date';
+import TZDate from '@src/time/date';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+
+import type { PanelName, SpecialEventType } from '@t/panel';
 
 export interface BaseEvent {
   start: TZDate;
   end: TZDate;
 }
 
-export interface MilestoneEvent extends BaseEvent {
-  name: 'milestone';
-  type: 'daygrid';
-}
+export type CollisionGroup = Array<number[]>;
+export type Matrix<T> = Array<Array<T[]>>;
+export type ScheduleMatrix2d<T> = Array<T[]>;
+
+export type DayGridEventMatrix = Matrix<ScheduleViewModel>;
+export type TimeGridEventMatrix = Record<string, Matrix<ScheduleViewModel>>;
+
+export type EventGroupMap = Record<PanelName, DayGridEventMatrix | TimeGridEventMatrix>;
+
+export type EventModelMap =
+  | Record<string, DayGridEventMatrix | ScheduleViewModel[]>
+  | ({
+      [key in SpecialEventType]: DayGridEventMatrix;
+    } & {
+      time: ScheduleViewModel[];
+    });

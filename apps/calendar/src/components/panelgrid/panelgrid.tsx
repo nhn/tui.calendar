@@ -3,12 +3,6 @@ import { useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import { getViewModels } from '@src/event/panelEvent';
-import { setViewModelsInfo } from '@src/event/gridEvent';
-import Schedule from '@src/model/schedule';
-import { toStartOfDay } from '@src/time/datetime';
-
-import type { Cells } from '@t/panel';
 import {
   EVENT_HEIGHT,
   getExceedCount,
@@ -16,11 +10,11 @@ import {
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
 import { useStore } from '@src/components/hooks/store';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { getViewModels } from '@src/event/panelEvent';
 
-import { CalendarWeekOption } from '@t/store';
-import { Matrix } from '@src/controller/core';
-import { DayGridEventMatrix, TimeGridEventMatrix } from '@src/components/panelgrid/specialEvents';
+import type { Cells } from '@t/panel';
+import type { CalendarWeekOption } from '@t/store';
+import type { DayGridEventMatrix } from '@t/events';
 
 const DEFAULT_GRID_STYLE = {
   borderLeft: '1px solid #ddd',
@@ -29,7 +23,7 @@ const DEFAULT_GRID_STYLE = {
 interface Props {
   name: string;
   cells: Cells;
-  events: DayGridEventMatrix | TimeGridEventMatrix;
+  events: DayGridEventMatrix;
   defaultPanelHeight: number;
   options?: CalendarWeekOption;
 }
@@ -90,21 +84,8 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const height = state[name]?.height ?? EVENT_HEIGHT;
   const { updatePanelHeight } = actions;
 
-  // const viewModels = getViewModels(events, cells);
-  // setViewModelsInfo(viewModels, cells, {} as CalendarWeekOption);
-  let filteredEvents;
-  if (Array.isArray(events)) {
-    filteredEvents = events.filter((matrix) => {
-      const [cell] = cells;
-      const start = matrix[0][0].getStarts();
-      const end = matrix[0][0].getEnds();
-
-      return start <= cell && cell <= end;
-    });
-  }
-  // const maxTop = Math.max(0, ...events.map((event)=> event.map(({ top }) => top));
   let maxTop = 0;
-  if (Array.isArray(events)) {
+  if (!events.length) {
     events.forEach((matrix) => {
       matrix.forEach((row) => {
         maxTop = Math.max(maxTop, ...row.map(({ top }) => top));
@@ -138,13 +119,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    let viewModels: ScheduleViewModel[] = [];
-    if (Array.isArray(events)) {
-      if (Array.isArray(events[0])) {
-        [[viewModels]] = events;
-      }
-    }
-
+    const viewModels = getViewModels(events);
     const exceedCount = getExceedCount(viewModels, height, EVENT_HEIGHT);
     const isClickedIndex = index === clickedIndex;
 

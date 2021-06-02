@@ -11,10 +11,7 @@ import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toFormat, toStartOfDay, toEndOfDay } from '@src/time/datetime';
 import { isUndefined } from '@src/util/utils';
 
-export type CollisionGroup = Array<number[]>;
-export type Matrix<T> = Array<Array<T[]>>;
-export type ScheduleMatrix<T> = Matrix<T>;
-export type ScheduleMatrix2d<T> = Array<T[]>;
+import { CollisionGroup, Matrix, ScheduleMatrix2d } from '@t/events';
 
 /**
  * Calculate collision group.
@@ -22,23 +19,23 @@ export type ScheduleMatrix2d<T> = Array<T[]>;
  * @param {boolean} [usingTravelTime = true]
  * @returns {Array<number[]>} Collision Group.
  */
-export function getCollisionGroup<EVENTS extends Schedule | ScheduleViewModel>(
-  schedules: EVENTS[],
+export function getCollisionGroup<Events extends Schedule | ScheduleViewModel>(
+  schedules: Events[],
   usingTravelTime = true
 ) {
   const collisionGroups: CollisionGroup = [];
-  let previousScheduleList: Array<EVENTS>;
+  let previousScheduleList: Array<Events>;
 
   if (!schedules.length) {
     return collisionGroups;
   }
 
   collisionGroups[0] = [schedules[0].cid()];
-  schedules.slice(1).forEach((schedule: EVENTS, index: number) => {
+  schedules.slice(1).forEach((schedule: Events, index: number) => {
     previousScheduleList = schedules.slice(0, index + 1).reverse();
 
     // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
-    const found = previousScheduleList.find((previous: EVENTS) =>
+    const found = previousScheduleList.find((previous: Events) =>
       schedule.collidesWith(previous, usingTravelTime)
     );
 
@@ -95,8 +92,8 @@ export function getMatrices<T extends Schedule | ScheduleViewModel>(
   collection: Collection<T>,
   collisionGroups: CollisionGroup,
   usingTravelTime = true
-): ScheduleMatrix<T> {
-  const result: ScheduleMatrix<T> = [];
+): Matrix<T> {
+  const result: Matrix<T> = [];
 
   collisionGroups.forEach((group) => {
     const matrix: ScheduleMatrix2d<T> = [[]];
@@ -160,13 +157,13 @@ export function getScheduleInDateRangeFilter(
  * Position each view model for placing into container
  * @param {TZDate} start - start date to render
  * @param {TZDate} end - end date to render
- * @param {ScheduleMatrix} matrices - matrices from controller
+ * @param {Matrix} matrices - matrices from controller
  * @param {function} [iteratee] - iteratee function invoke each view models
  */
 export function positionViewModels(
   start: TZDate,
   end: TZDate,
-  matrices: ScheduleMatrix<ScheduleViewModel>,
+  matrices: Matrix<ScheduleViewModel>,
   iteratee?: (viewModel: ScheduleViewModel) => void
 ) {
   const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) =>

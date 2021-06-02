@@ -18,7 +18,7 @@ function generateTimeGridEvents() {
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
 
-  return generateRandomEvents('week', start, end);
+  return generateRandomEvents('week', start, end).map((event) => Schedule.create(event));
 }
 
 const Template: Story = (args) => (
@@ -29,23 +29,7 @@ const Template: Story = (args) => (
 
 export const basic = Template.bind({});
 
-export const startDayOfWeek = Template.bind({});
-startDayOfWeek.args = {
-  options: { month: { startDayOfWeek: 3 } },
-};
-
-export const dayNames = Template.bind({});
-dayNames.args = {
-  options: {
-    month: {
-      daynames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    },
-  },
-};
-
 export const randomEvents = Template.bind({});
 randomEvents.args = {
-  events: generateRandomScheduleViewModelsForMonth(40).concat(
-    generateTimeGridEvents() as Schedule[]
-  ),
+  events: [...generateRandomScheduleViewModelsForMonth(40), ...generateTimeGridEvents()],
 };

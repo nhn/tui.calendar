@@ -1,4 +1,4 @@
-import { h, createRef, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 import pick from 'tui-code-snippet/object/pick';
@@ -96,13 +96,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const forceUpdate = useForceUpdate();
 
   const onCreateEvent = (e: CreationGuideInfo) => {
-    // const { externalEvent } = this.context;
-    //
-    // externalEvent.fire('beforeCreateSchedule', {
-    //   start: e.start,
-    //   end: e.end,
-    //   isAllDay: false,
-    // });
+    // @TODO: beforeCreateSchedule 구현
   };
   const onGuideStart = (e: CreationGuideInfo) => setCreationGuide(e);
   const onGuideChange = (e: CreationGuideInfo) => setCreationGuide(e);

@@ -14,6 +14,7 @@ import {
 } from '@src/time/datetime';
 import { ScheduleData } from '@src/model';
 import { CreationGuideInfo } from '@src/components/timegrid';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 export default { title: 'Column' };
 
@@ -68,7 +69,9 @@ export const backgroundEvents = () => {
       bgColor: 'rgba(100, 200, 100, .3)',
     },
   ];
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = data.map((event: ScheduleData) =>
+    ScheduleViewModel.create(Schedule.create(event))
+  );
 
   return (
     <Wrapper>
@@ -90,7 +93,9 @@ export const showOnlyBusinessHours = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = data.map((event: ScheduleData) =>
+    ScheduleViewModel.create(Schedule.create(event))
+  );
 
   return (
     <Wrapper>
@@ -115,7 +120,9 @@ export const highlightBusinessHours = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = data.map((event: ScheduleData) =>
+    ScheduleViewModel.create(Schedule.create(event))
+  );
 
   return (
     <Wrapper>
@@ -144,7 +151,9 @@ export const highlightOffHours = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = data.map((event: ScheduleData) =>
+    ScheduleViewModel.create(Schedule.create(event))
+  );
 
   return (
     <Wrapper>
@@ -193,7 +202,9 @@ export const monthsInAnYear = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = data.map((event: ScheduleData) =>
+    ScheduleViewModel.create(Schedule.create(event))
+  );
 
   return (
     <Wrapper>

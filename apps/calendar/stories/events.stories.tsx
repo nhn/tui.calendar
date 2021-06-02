@@ -22,9 +22,11 @@ export const timeEvent = () => {
 };
 
 export const backgroundEvent = () => {
-  const event = Schedule.create({
-    bgColor: 'rgba(100, 100, 100, .3)',
-  });
+  const event = ScheduleViewModel.create(
+    Schedule.create({
+      bgColor: 'rgba(100, 100, 100, .3)',
+    })
+  );
 
   return <BackgroundEvent viewModel={event} />;
 };

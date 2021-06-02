@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { SpecialEvents } from '@src/components/panelgrid/specialEvents';
 import { addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
@@ -8,8 +9,9 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
-
-import type { MilestoneEvent } from '@t/events';
+import { generateRandomScheduleViewModelsForMonth } from '@stories/util/randomEvents';
+import { getSpecialEvents } from '@src/event/panelEvent';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 export default { title: 'Panel', component: SpecialEvents, args: { primary: true } };
 
@@ -38,25 +40,29 @@ const data = [
   { start: thu, end: fri },
   { start: thu, end: fri },
   { start: thu, end: fri },
-] as MilestoneEvent[];
+];
+
+const events = generateRandomScheduleViewModelsForMonth(40).map((schedule) =>
+  ScheduleViewModel.create(schedule)
+);
+
+// @TODO: 주간뷰 이벤트 데이터 생성
+const milestoneEvents = [[events.filter((event) => event.model.category === 'milestone')]];
 
 const Template: Story = (args) => (
-  <Layout height={500}>
-    <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-      <SpecialEvents events={args.events} type="milestone" />
-    </Panel>
-  </Layout>
+  <ProviderWrapper>
+    <Layout height={500}>
+      <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
+        <SpecialEvents events={milestoneEvents} type="milestone" />
+      </Panel>
+    </Layout>
+  </ProviderWrapper>
 );
 
 export const milestone = Template.bind({});
 
 milestone.args = {
-  events: data.map((e) => {
-    const event = Schedule.create(e);
-    event.isAllDay = true;
-
-    return event;
-  }),
+  events: generateRandomScheduleViewModelsForMonth(40),
 };
 
 milestone.storyName = 'events milestone';
