@@ -31,7 +31,7 @@ const CellBar: FunctionComponent<CellBarProps> = ({
     date: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),
     hiddenEventCount: exceedCount,
-    isOtherMonth: true,
+    isOtherMonth: true, // @TODO: 현재 렌더링된 월간뷰와 셀 날짜의 월을 비교
     isToday: ymd === todayYmd,
     month: date.getMonth(),
     ymd,
